@@ -336,6 +336,18 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "title");
 	});
 
+	it("aria-label is properly applied on the button tag", () => {
+		cy.mount(<Button design="Emphasized">Action</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+			
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Action Emphasized");
+	});
+
 	it("aria-expanded is properly applied on the button tag", () => {
 		cy.mount(<Button icon="home" design="Emphasized">Action Bar Button</Button>);
 
