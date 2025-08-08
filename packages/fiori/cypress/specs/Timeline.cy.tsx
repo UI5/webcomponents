@@ -265,6 +265,41 @@ describe("Timeline with growing mode", () => {
 			.last()
 			.should("be.focused");
 	});
+
+	it("Arrows navigation should work only on focused item", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem titleText="first item"></TimelineItem>
+				<TimelineItem titleText="second item">
+					<Input id="input" />
+				</TimelineItem>
+				<TimelineItem titleText="last item"></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("#input")
+			.realClick();
+
+		cy.realPress("ArrowDown");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.last()
+			.should("not.be.focused");
+
+		cy.get("#input")
+			.realClick();
+
+		cy.realPress("ArrowUp");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.first()
+			.should("not.be.focused");
+	});
 });
 
 describe("Keyboard interactions", () => {
