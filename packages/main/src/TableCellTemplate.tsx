@@ -5,7 +5,7 @@ export default function TableCellTemplate(this: TableCell) {
 		<>
 			{ this._popin &&
 				<>
-					<div class="popin-header" ref={this.injectHeaderNodes.bind(this)}></div>
+					<div class="popin-header" ref={this._injectHeaderNodes.bind(this)}></div>
 					<span class="popin-colon">{this._i18nPopinColon}</span>
 				</>
 			}

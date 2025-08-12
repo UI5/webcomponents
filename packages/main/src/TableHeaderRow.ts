@@ -4,6 +4,7 @@ import TableHeaderRowTemplate from "./TableHeaderRowTemplate.js";
 import TableHeaderRowStyles from "./generated/themes/TableHeaderRow.css.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableSelectionMulti from "./TableSelectionMulti.js";
+import { getAccessibilityDescription, updateInvisibleText } from "./TableUtils.js";
 import {
 	TABLE_SELECTION,
 	TABLE_ROW_POPIN,
@@ -90,6 +91,38 @@ class TableHeaderRow extends TableRowBase {
 
 	isHeaderRow(): boolean {
 		return true;
+	}
+
+	_onfocusin(e: FocusEvent, eventOrigin: HTMLElement) {
+		if (eventOrigin !== this) {
+			return;
+		}
+
+		const descriptions = [
+			TableRowBase.i18nBundle.getText(TABLE_COLUMN_HEADER_ROW),
+		];
+
+		const selectionDescription = this._selectionCellAriaDescription;
+		if (selectionDescription) {
+			descriptions.push(selectionDescription);
+		}
+
+		this._visibleCells.forEach(cell => {
+			const cellDescription = getAccessibilityDescription(cell, true);
+			descriptions.push(cellDescription);
+		});
+
+		if (this._rowActionCount > 0) {
+			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_ACTIONS));
+		}
+
+		updateInvisibleText(this, descriptions);
+	}
+
+	_onfocusout(e: FocusEvent, eventOrigin: HTMLElement) {
+		if (eventOrigin !== this) {
+			updateInvisibleText(this);
+		}
 	}
 
 	get _isSelectable() {

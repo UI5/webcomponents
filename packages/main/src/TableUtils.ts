@@ -1,5 +1,21 @@
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
+import type { AccessibilityInfo } from "@ui5/webcomponents-base";
+import I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
+
+import {
+	TABLE_ACC_STATE_EMPTY,
+	TABLE_ACC_STATE_REQUIRED,
+	TABLE_ACC_STATE_DISABLED,
+	TABLE_ACC_STATE_READONLY,
+	TABLE_CELL_CONTAINS,
+	TABLE_CELL_SINGLE_CONTROL,
+	TABLE_CELL_MULTIPLE_CONTROLS,
+} from "./generated/i18n/i18n-defaults.js";
+
+let invisibleText: HTMLElement;
+const i18nBundle = new I18nBundle("@ui5/webcomponents/main");
 
 const isInstanceOfTable = (obj: any): obj is Table => {
 	return !!obj && "isTable" in obj && !!obj.isTable;
@@ -111,6 +127,131 @@ const isValidColumnWidth = (width: string | undefined): width is string => {
 	return element.style.width !== "";
 };
 
+/**
+ * Manages an invisible text element for accessibility and associates it with the given element via `aria-labelledby`.
+ *
+ * - Ensures a single invisible text element with a specific ID exists in the DOM.
+ * - Updates the text content of the invisible text element to the provided `texts`.
+ * - Adds or removes the invisible text element's ID from the target element's `aria-labelledby` attribute.
+ * - If no text is provided, disassociates the invisible text element from the target element.
+ *
+ * @param element The target HTMLElement to associate with the invisible text for accessibility.
+ * @param texts An optional array of strings to be joined and set as the invisible text content.
+ */
+const updateInvisibleText = (element: HTMLElement, texts: string[] = [], joiner: string = " . ") => {
+	const invisibleTextId = "ui5-table-invisible-text";
+	if (!invisibleText || !invisibleText.isConnected) {
+		invisibleText = document.createElement("span");
+		invisibleText.id = invisibleTextId;
+		invisibleText.ariaHidden = "true";
+		invisibleText.style.display = "none";
+		document.body.appendChild(invisibleText);
+	}
+
+	let ariaLabelledBy = (element.getAttribute("aria-labelledby") || "").split(" ").filter(Boolean);
+	const invisibleTextAssociated = ariaLabelledBy.includes(invisibleTextId);
+
+	const text = texts.filter(Boolean).join(joiner).trim();
+	if (text && !invisibleTextAssociated) {
+		ariaLabelledBy.push(invisibleTextId);
+	} else if (!text && invisibleTextAssociated) {
+		ariaLabelledBy = ariaLabelledBy.filter(id => id !== invisibleTextId);
+	}
+
+	invisibleText.textContent = text;
+	if (ariaLabelledBy.length > 0) {
+		element.setAttribute("aria-labelledby", ariaLabelledBy.join(" "));
+	} else {
+		element.removeAttribute("aria-labelledby");
+	}
+};
+
+const checkVisibility = (element: HTMLElement): boolean => {
+	return element.checkVisibility() || getComputedStyle(element).display === "contents";
+};
+
+const getDefaultAccessibilityChildren = (element: Node, _nodes: Node[] = []): Node[] => {
+	element.childNodes.forEach(child => {
+		if (child.nodeType === Node.TEXT_NODE) {
+			_nodes.push(child);
+		} else if (child instanceof HTMLElement) {
+			if (child.localName === "slot") {
+				const assignedNodes = (child as HTMLSlotElement).assignedNodes();
+				_nodes.push(...assignedNodes);
+				return;
+			}
+			if (!checkVisibility(child)) {
+				return;
+			}
+			if (child.hasAttribute("data-ui5-acc-text") || "accessibilityInfo" in child) {
+				_nodes.push(child);
+			} else {
+				getDefaultAccessibilityChildren(child, _nodes);
+			}
+		}
+	});
+
+	return _nodes;
+};
+
+const getAccessibilityDescription = (element: Node, details: boolean = true, _isRootElement: boolean = true): string => {
+	if (element.nodeType === Node.TEXT_NODE) {
+		return (element as Text).data.trim();
+	}
+
+	if (!(element instanceof HTMLElement)) {
+		return "";
+	}
+
+	if (!_isRootElement && !checkVisibility(element)) {
+		return "";
+	}
+
+	if (element.dataset.ui5AccText) {
+		return element.dataset.ui5AccText;
+	}
+
+	const parts = { self: [] as string[], children: [] as string[] };
+	const accessibilityInfo = ((element as any).accessibilityInfo) as AccessibilityInfo | undefined;
+
+	const type = accessibilityInfo ? accessibilityInfo.type : element.ariaRoleDescription;
+	type && parts.self.push(type);
+
+	const description = accessibilityInfo ? accessibilityInfo.description : element.ariaLabel;
+	description && parts.self.push(description);
+
+	if (details) {
+		const required = accessibilityInfo ? accessibilityInfo.required : element.ariaRequired;
+		required && parts.self.push(i18nBundle.getText(TABLE_ACC_STATE_REQUIRED));
+
+		const disabled = accessibilityInfo ? accessibilityInfo.disabled : element.ariaDisabled;
+		disabled && parts.self.push(i18nBundle.getText(TABLE_ACC_STATE_DISABLED));
+
+		const readOnly = accessibilityInfo ? accessibilityInfo.readonly : element.ariaReadOnly;
+		readOnly && parts.self.push(i18nBundle.getText(TABLE_ACC_STATE_READONLY));
+	}
+
+	const children = accessibilityInfo ? accessibilityInfo.children || [] : getDefaultAccessibilityChildren(element);
+	children.forEach(child => {
+		const childDescription = getAccessibilityDescription(child, details, false);
+		childDescription && parts.children.push(childDescription);
+	});
+
+	if (_isRootElement && details && parts.children.length > 0 && getTabbableElements(element).length > 0) {
+		const childrenDescription = parts.children.join(" ");
+		parts.children = [i18nBundle.getText(TABLE_CELL_CONTAINS, childrenDescription)];
+	}
+
+	const fullDescription = [...parts.self, ...parts.children].join(" ").trim();
+	if (_isRootElement && fullDescription === "") {
+		const tabbables = getTabbableElements(element);
+		const emptyTextBundleKey = [TABLE_ACC_STATE_EMPTY, TABLE_CELL_SINGLE_CONTROL, TABLE_CELL_MULTIPLE_CONTROLS][Math.min(tabbables.length, 2)];
+		return i18nBundle.getText(emptyTextBundleKey);
+	}
+
+	return fullDescription;
+};
+
 export {
 	isInstanceOfTable,
 	isSelectionCheckbox,
@@ -122,4 +263,6 @@ export {
 	throttle,
 	toggleAttribute,
 	isValidColumnWidth,
+	getAccessibilityDescription,
+	updateInvisibleText,
 };

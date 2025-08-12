@@ -44,7 +44,7 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 
 			{ this._visibleCells.map(cell => {
 				cell.ariaColIndex = `${ariaColIndex++}`;
-				return <slot name={cell._individualSlot} key={cell._individualSlot}></slot>;
+				return <slot name={cell._individualSlot}></slot>;
 			})}
 
 			{ this._rowActionCount > 0 &&
@@ -56,6 +56,7 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 
 			{ this._popinCells.length > 0 &&
 				<TableHeaderCell id="popin-cell"
+					aria-colindex={ariaColIndex++}
 					aria-label={this._i18nRowPopin}
 					data-excluded-from-navigation
 				></TableHeaderCell>

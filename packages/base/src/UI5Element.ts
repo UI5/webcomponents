@@ -1115,8 +1115,8 @@ abstract class UI5Element extends HTMLElement {
 	 * Returns the component accessibility info.
 	 * @private
 	 */
-	get accessibilityInfo(): AccessibilityInfo {
-		return {};
+	get accessibilityInfo(): AccessibilityInfo | undefined {
+		return undefined;
 	}
 
 	/**

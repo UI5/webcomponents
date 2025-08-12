@@ -2,7 +2,7 @@ import { customElement, slot, property } from "@ui5/webcomponents-base/dist/deco
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import { toggleAttribute } from "./TableUtils.js";
+import { toggleAttribute, updateInvisibleText, getAccessibilityDescription } from "./TableUtils.js";
 import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
@@ -10,6 +10,15 @@ import type TableCell from "./TableCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
+import {
+	TABLE_ROW,
+	TABLE_ROW_INDEX,
+	TABLE_ROW_SELECTED,
+	TABLE_ROW_ACTIVE,
+	TABLE_ROW_NAVIGABLE,
+	TABLE_ROW_SINGLE_ACTION,
+	TABLE_ROW_MULTIPLE_ACTIONS,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -144,7 +153,7 @@ class TableRow extends TableRowBase {
 		if (this === getActiveElement()) {
 			if (this._isSelectable && !this._hasSelector) {
 				this._onSelectionChange();
-			} else 	if (this.interactive) {
+			} else 	if (this.interactive || this._isNavigable) {
 				this._table?._onRowClick(this);
 			}
 		}
@@ -154,8 +163,48 @@ class TableRow extends TableRowBase {
 		this.removeAttribute("_active");
 	}
 
-	_onfocusout() {
+	_onfocusin(e: FocusEvent, eventOrigin: HTMLElement) {
+		if (eventOrigin !== this) {
+			return;
+		}
+
+		const descriptions = [
+			TableRowBase.i18nBundle.getText(TABLE_ROW),
+			TableRowBase.i18nBundle.getText(TABLE_ROW_INDEX, this.ariaRowIndex!, this._table!._ariaRowCount),
+		];
+
+		if (this._isSelected) {
+			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_SELECTED));
+		}
+
+		if (this._isNavigable) {
+			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_NAVIGABLE));
+		} else if (this.interactive) {
+			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_ACTIVE));
+		}
+
+		[...this._visibleCells, ...this._popinCells].forEach(cell => {
+			const headerCell = cell._popin ? cell.getDomRef()! : (cell as TableCell)._headerCell;
+			const headerCellDescription = getAccessibilityDescription(headerCell, false);
+			const cellDescription = getAccessibilityDescription(cell, false);
+			descriptions.push(headerCellDescription);
+			descriptions.push(cellDescription);
+		});
+
+		const availableActionsCount = this._availableActionsCount;
+		if (availableActionsCount > 0) {
+			const rowActionBundleKey = availableActionsCount === 1 ? TABLE_ROW_SINGLE_ACTION : TABLE_ROW_MULTIPLE_ACTIONS;
+			descriptions.push(TableRowBase.i18nBundle.getText(rowActionBundleKey, availableActionsCount));
+		}
+
+		updateInvisibleText(this, descriptions);
+	}
+
+	_onfocusout(e: FocusEvent, eventOrigin: HTMLElement) {
 		this.removeAttribute("_active");
+		if (eventOrigin === this) {
+			updateInvisibleText(this);
+		}
 	}
 
 	_onOverflowButtonClick(e: UI5CustomEvent<Button, "click">) {
@@ -165,7 +214,13 @@ class TableRow extends TableRowBase {
 	}
 
 	get _isInteractive() {
-		return this.interactive || (this._isSelectable && !this._hasSelector);
+		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
+	}
+
+	get _isNavigable() {
+		return this._fixedActions.find(action => {
+			return action.hasAttribute("ui5-table-row-action-navigation") && !action._isInteractive;
+		}) !== undefined;
 	}
 
 	get _rowIndex() {
@@ -179,12 +234,12 @@ class TableRow extends TableRowBase {
 	}
 
 	get _hasOverflowActions() {
-		let renderedActionsCount = 0;
+		let renderableActionsCount = 0;
 		return this.actions.some(action => {
 			if (action.isFixedAction() || !action.invisible) {
-				renderedActionsCount++;
+				renderableActionsCount++;
 			}
-			return renderedActionsCount > this._rowActionCount;
+			return renderableActionsCount > this._rowActionCount;
 		});
 	}
 
@@ -228,6 +283,16 @@ class TableRow extends TableRowBase {
 		});
 
 		return overflowActions;
+	}
+
+	get _availableActionsCount() {
+		if (this._rowActionCount < 1) {
+			return 0;
+		}
+
+		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
+			return !action.invisible && action._isInteractive;
+		}).length + (this._hasOverflowActions ? 1 : 0);
 	}
 }
 

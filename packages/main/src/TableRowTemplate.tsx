@@ -5,13 +5,13 @@ import Button from "./Button.js";
 import ButtonDesign from "./types/ButtonDesign.js";
 import type TableRow from "./TableRow.js";
 
-export default function TableRowTemplate(this: TableRow) {
+export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 1) {
 	return (
 		<>
 			{ this._hasSelector &&
-				<TableCell
-					id="selection-cell"
+				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}
+					aria-colindex={ariaColIndex++}
 					data-ui5-table-cell-fixed
 					data-ui5-table-selection-component
 				>
@@ -34,12 +34,13 @@ export default function TableRowTemplate(this: TableRow) {
 				</TableCell>
 			}
 
-			{ this._visibleCells.map(cell => (
-				<slot name={cell._individualSlot}></slot>
-			))}
+			{ this._visibleCells.map(cell => {
+				cell.ariaColIndex = `${ariaColIndex++}`;
+				return <slot name={cell._individualSlot}></slot>;
+			})}
 
 			{ this._rowActionCount > 0 &&
-				<TableCell id="actions-cell">
+				<TableCell id="actions-cell" aria-colindex={ariaColIndex++}>
 					{ this._flexibleActions.map(action => (
 						<slot name={action._individualSlot}></slot>
 					))}
@@ -66,7 +67,7 @@ export default function TableRowTemplate(this: TableRow) {
 			}
 
 			{ this._popinCells.length > 0 &&
-				<TableCell id="popin-cell">
+				<TableCell id="popin-cell" aria-colindex={ariaColIndex++}>
 					{ this._popinCells.map(cell => (
 						<slot name={cell._individualSlot}></slot>
 					))}

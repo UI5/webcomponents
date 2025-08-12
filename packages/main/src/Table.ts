@@ -561,11 +561,13 @@ class Table extends UI5Element {
 		const headerIndex = this.headerRow[0].cells.indexOf(headerCell);
 		headerCell._popin = inPopin && this.overflowMode === TableOverflowMode.Popin;
 		headerCell._popinWidth = popinWidth;
+		headerCell.ariaColIndex = null;
 		this.rows.forEach(row => {
 			const cell = row.cells[headerIndex];
 			if (cell) {
 				row.cells[headerIndex]._popinHidden = headerCell.popinHidden;
 				row.cells[headerIndex]._popin = headerCell._popin;
+				row.cells[headerIndex].ariaColIndex = null;
 			}
 		});
 	}
@@ -680,6 +682,9 @@ class Table extends UI5Element {
 			ariaColCount++;
 		}
 		if (this.rowActionCount > 0) {
+			ariaColCount++;
+		}
+		if (this.headerRow[0]._popinCells.length > 0) {
 			ariaColCount++;
 		}
 
