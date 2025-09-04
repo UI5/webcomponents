@@ -2,19 +2,40 @@ import getSharedResource from "../getSharedResource.js";
 import type { I18nText } from "../i18nBundle.js";
 import { getTheme } from "../config/Theme.js";
 
+/**
+ * Loader function for lazy-loading illustration data.
+ */
 type IllustrationLoader = (illustrationName: string) => Promise<IllustrationData>;
 
+/**
+ * Core illustration properties containing SVG variants and metadata.
+ *
+ * @public
+ */
 type IllustrationProperties = {
+	/** SVG content for the medium variant (M breakpoint, ≤ 681px) */
 	dialogSvg: string,
+	/** SVG content for the large variant (L breakpoint, > 681px) */
 	sceneSvg: string,
+	/** SVG content for the small variant (S breakpoint, ≤ 360px) */
 	spotSvg: string,
+	/** SVG content for the extra small variant (XS breakpoint, ≤ 260px) */
 	dotSvg: string,
+	/** The illustration title text (supports i18n) */
 	title: I18nText,
+	/** The illustration subtitle text (supports i18n) */
 	subtitle: I18nText,
 };
 
+/**
+ * Complete illustration data for registration.
+ *
+ * @public
+ */
 type IllustrationData = IllustrationProperties & {
+	/** The illustration set identifier (e.g., "custom") */
 	set: string,
+	/** Collection identifier (defaults to "V4") */
 	collection: string,
 };
 
@@ -65,6 +86,28 @@ const processName = (name: string) => {
 	};
 };
 
+/**
+ * Registers a custom illustration in the global registry.
+ *
+ * @param name - The name of the illustration (without set prefix)
+ * @param data - The illustration data (see {@link IllustrationData})
+ *
+ * @public
+ * @example
+ * ```js
+ * import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+ *
+ * registerIllustration("EmptyCart", {
+ *   sceneSvg: "<svg>...</svg>",
+ *   dialogSvg: "<svg>...</svg>",
+ *   spotSvg: "<svg>...</svg>",
+ *   dotSvg: "<svg>...</svg>",
+ *   title: "Your cart is empty",
+ *   subtitle: "Add items to get started",
+ *   set: "custom"
+ * });
+ * ```
+ */
 const registerIllustration = (name: string, data: IllustrationData) => {
 	const collection = data.collection || FALLBACK_COLLECTION;
 	registry.set(`${data.set}/${collection}/${name}`, {
@@ -95,11 +138,27 @@ const _loadIllustrationOnce = (illustrationName: string) => {
 	return illustrationPromises.get(registryKey);
 };
 
+/**
+ * Synchronously retrieves illustration data from the registry.
+ *
+ * @param illustrationName - The illustration identifier in format "set/name"
+ * @returns The illustration properties or undefined if not available
+ *
+ * @public
+ */
 const getIllustrationDataSync = (illustrationName: string) => {
 	const { registryKey } = processName(illustrationName);
 	return registry.get(registryKey);
 };
 
+/**
+ * Asynchronously retrieves illustration data, loading it if necessary.
+ *
+ * @param illustrationName - The illustration identifier in format "set/name"
+ * @returns Promise resolving to illustration properties or undefined
+ *
+ * @public
+ */
 const getIllustrationData = async (illustrationName: string) => {
 	const { registryKey } = processName(illustrationName);
 
@@ -112,4 +171,9 @@ export {
 	registerIllustration,
 	registerIllustrationLoader,
 	getIllustrationData,
+};
+
+export type {
+	IllustrationData,
+	IllustrationProperties,
 };
