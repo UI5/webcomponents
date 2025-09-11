@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Shell Bar - Content Button Overflow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+    <script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+    <link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+</head>
+
+<body class="shellbar1auto">
+
+    <!-- Overflow popover for hidden items -->
+    <ui5-popover id="overflowPopover" placement-type="Bottom" horizontal-align="Right">
+        <div style="padding: 1rem; min-width: 200px;">
+            <ui5-title level="H5" style="margin-bottom: 0.5rem;">Hidden Items</ui5-title>
+            <div id="hiddenItemsContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Hidden items will be dynamically added here -->
+            </div>
+        </div>
+    </ui5-popover>
+
+    <!-- Context menu for actions -->
+    <ui5-menu id="actionsMenu" opener="actionsButton">
+        <ui5-menu-item text="Export Data" icon="download"></ui5-menu-item>
+        <ui5-menu-item text="Print Report" icon="print"></ui5-menu-item>
+        <ui5-menu-item text="Share" icon="share-2">
+            <ui5-menu-item text="Email" icon="email"></ui5-menu-item>
+            <ui5-menu-item text="Copy Link" icon="copy"></ui5-menu-item>
+        </ui5-menu-item>
+        <ui5-menu-item text="Settings" icon="action-settings" starts-section></ui5-menu-item>
+    </ui5-menu>
+
+    <ui5-shellbar id="shellbarOverflow" show-notifications>
+        <ui5-shellbar-branding slot="branding">
+            Analytics Dashboard
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+        </ui5-shellbar-branding>
+
+        <ui5-button icon="menu2" slot="startButton"></ui5-button>
+        <ui5-button icon="nav-back" slot="startButton"></ui5-button>
+
+        <!-- Multiple content items that can be hidden -->
+        <ui5-tag design="Set1" color-scheme="1" slot="content" id="regionTag" data-hide-order="1">North
+            America</ui5-tag>
+
+        <ui5-button id="refreshButton" icon="refresh" slot="content" data-hide-order="2"
+            tooltip="Refresh Data">Refresh</ui5-button>
+
+        <ui5-button id="filterButton" icon="filter" end-icon="slim-arrow-down" slot="content"
+            data-hide-order="3">Filters</ui5-button>
+
+        <div slot="content" style="display: flex; align-items: center; gap: 0.5rem;" id="statusContainer"
+            data-hide-order="4">
+            <ui5-label>Live Updates</ui5-label>
+            <ui5-switch id="liveUpdatesSwitch" checked></ui5-switch>
+        </div>
+
+        <ui5-button id="actionsButton" icon="action" end-icon="slim-arrow-down" slot="content"
+            data-hide-order="5">Actions</ui5-button>
+
+        <ui5-button id="exportButton" icon="download" slot="content" data-hide-order="6">Export</ui5-button>
+
+        <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+        <div slot="content" style="display: flex; align-items: center; gap: 0.5rem;" id="dateContainer"
+            data-hide-order="7">
+            <ui5-label>Report Date:</ui5-label>
+            <ui5-date-picker id="reportDatePicker" value="2024-03-15"></ui5-date-picker>
+        </div>
+
+        <!-- Overflow button - only shown when items are hidden -->
+        <ui5-button id="overflowButton" icon="overflow" slot="content" data-hide-order="999"
+            tooltip="Show hidden items"></ui5-button>
+
+        <ui5-shellbar-search placeholder="Search reports..." slot="searchField" show-suggestions>
+        </ui5-shellbar-search>
+
+        <ui5-toggle-button id="assistantOverflow" icon="sap-icon://da" slot="assistant" text="Assistant"
+            title="Assistant"></ui5-toggle-button>
+        <ui5-avatar slot="profile" initials="AD"></ui5-avatar>
+    </ui5-shellbar>
+
+    <div class="content">
+        <div style="padding: 2rem;">
+            <ui5-title level="H3">ShellBar Content Button Overflow Management</ui5-title>
+            <ui5-text>Uses a button in the content area that appears when items are hidden. Resize the browser
+                window to see how overflow management works.</ui5-text>
+            <div id="statusDisplay" style="margin-top: 1rem;">
+                <ui5-text>All items visible</ui5-text>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to key elements
+        const shellbarOverflow = document.getElementById("shellbarOverflow");
+        const overflowButton = document.getElementById("overflowButton");
+        const overflowPopover = document.getElementById("overflowPopover");
+        const hiddenItemsContainer = document.getElementById("hiddenItemsContainer");
+        const statusDisplay = document.getElementById("statusDisplay");
+        const actionsMenu = document.getElementById("actionsMenu");
+        const actionsButton = document.getElementById("actionsButton");
+
+        overflowButton.remove();
+
+        // Data-driven configuration
+        const itemsConfig = {
+            regionTag: {
+                type: 'tag',
+                text: 'North America',
+                design: 'Set1',
+                colorScheme: '1',
+                action: () => console.log('Region tag clicked from overflow')
+            },
+            refreshButton: {
+                type: 'button',
+                text: 'Refresh',
+                icon: 'refresh',
+                tooltip: 'Refresh Data',
+                action: () => {
+                    console.log('Refresh clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            filterButton: {
+                type: 'button',
+                text: 'Filters',
+                icon: 'filter',
+                endIcon: 'slim-arrow-down',
+                action: () => {
+                    console.log('Filter clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            statusContainer: {
+                type: 'container',
+                content: [
+                    { type: 'label', text: 'Live Updates' },
+                    { type: 'switch', id: 'liveUpdatesSwitch_overflow', checked: true }
+                ],
+                action: (element) => {
+                    const switchEl = element.querySelector('ui5-switch');
+                    if (switchEl) {
+                        switchEl.addEventListener('change', (event) => {
+                            console.log('Live updates toggled from overflow:', event.target.checked);
+                            const originalSwitch = document.getElementById('liveUpdatesSwitch');
+                            if (originalSwitch) {
+                                originalSwitch.checked = event.target.checked;
+                            }
+                        });
+                    }
+                }
+            },
+            actionsButton: {
+                type: 'button',
+                text: 'Actions',
+                icon: 'action',
+                endIcon: 'slim-arrow-down',
+                action: () => {
+                    console.log('Actions clicked from overflow');
+                    overflowPopover.open = false;
+                    actionsMenu.open = true;
+                }
+            },
+            exportButton: {
+                type: 'button',
+                text: 'Export',
+                icon: 'download',
+                action: () => {
+                    console.log('Export clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            dateContainer: {
+                type: 'container',
+                content: [
+                    { type: 'label', text: 'Report Date:' },
+                    { type: 'date-picker', id: 'reportDatePicker_overflow', value: '2024-03-15' }
+                ],
+                action: (element) => {
+                    const datePickerEl = element.querySelector('ui5-date-picker');
+                    if (datePickerEl) {
+                        datePickerEl.addEventListener('change', (event) => {
+                            console.log('Report date changed from overflow:', event.target.value);
+                            const originalDatePicker = document.getElementById('reportDatePicker');
+                            if (originalDatePicker) {
+                                originalDatePicker.value = event.target.value;
+                            }
+                        });
+                    }
+                }
+            }
+        };
+
+        // Create new popover item based on configuration
+        function createPopoverItem(originalItem) {
+            const config = itemsConfig[originalItem.id];
+            const element = document.createElement(config.type === 'container' ? 'div' : `ui5-${config.type}`);
+            
+            if (config.type === 'container') {
+                element.style.cssText = 'display: flex; align-items: center; gap: 0.5rem; width: 100%;';
+                config.content.forEach(item => {
+                    const child = document.createElement(`ui5-${item.type}`);
+                    child.textContent = item.text;
+                    if (item.checked) child.checked = item.checked;
+                    if (item.value) child.value = item.value;
+                    if (item.id) child.id = item.id;
+                    element.appendChild(child);
+                });
+                config.action(element);
+            } else {
+                element.textContent = config.text;
+                element.style.width = '100%';
+                if (config.icon) element.icon = config.icon;
+                if (config.endIcon) element.setAttribute('end-icon', config.endIcon);
+                if (config.design) element.design = config.design;
+                if (config.colorScheme) element.setAttribute('color-scheme', config.colorScheme);
+                element.addEventListener('click', config.action);
+            }
+            
+            return element;
+        }
+
+        // Handle content item visibility changes
+        shellbarOverflow.addEventListener("content-item-visibility-change", (event) => {
+            const hiddenItems = event.detail.items;
+            hiddenItemsContainer.innerHTML = '';
+
+            if (hiddenItems.length > 0) {
+                // overflowButton.style.display = 'block';
+                shellbarOverflow.appendChild(overflowButton);
+                hiddenItems.forEach(item => {
+                    const popoverItem = createPopoverItem(item);
+                    hiddenItemsContainer.appendChild(popoverItem);
+                });
+                statusDisplay.innerHTML = `<ui5-text>${hiddenItems.length} item(s) hidden - available in overflow menu</ui5-text>`;
+                console.log(`${hiddenItems.length} items hidden:`, hiddenItems.map(item => item.id || item.textContent));
+            } else {
+                overflowButton.remove();
+                statusDisplay.innerHTML = '<ui5-text>All items visible</ui5-text>';
+                console.log('All items visible');
+            }
+        });
+
+        // Event handlers
+        overflowButton.addEventListener('click', () => {
+            overflowPopover.opener = overflowButton;
+            overflowPopover.open = true;
+        });
+
+        actionsButton.addEventListener('click', () => {
+            actionsMenu.open = true;
+        });
+
+        document.getElementById('refreshButton').addEventListener('click', () => {
+            console.log('Refresh data');
+        });
+
+        document.getElementById('filterButton').addEventListener('click', () => {
+            console.log('Open filters');
+        });
+
+        document.getElementById('exportButton').addEventListener('click', () => {
+            console.log('Export data');
+        });
+
+        document.getElementById('liveUpdatesSwitch').addEventListener('change', (event) => {
+            console.log('Live updates:', event.target.checked);
+        });
+
+        document.getElementById('reportDatePicker').addEventListener('change', (event) => {
+            console.log('Report date changed:', event.target.value);
+        });
+    </script>
+
+</body>
+
+</html>
