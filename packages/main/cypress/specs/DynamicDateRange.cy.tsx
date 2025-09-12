@@ -549,3 +549,13 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.should('have.attr', 'selected');
 	});
 });
+
+describe('DynamicDateRange DateTimeRange Option', () => {
+	beforeEach(() => {
+		cy.mount(<DynamicDateRange options="DATETIMERANGE"></DynamicDateRange>);
+	});
+
+	it("should select DateTimeRange option and pick 2 dates from the DateTimePickers", () => {
+
+	});
+});
