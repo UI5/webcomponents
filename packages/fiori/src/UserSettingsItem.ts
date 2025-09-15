@@ -5,7 +5,6 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import UserSettingsItemTemplate from "./UserSettingsItemTemplate.js";
 import type UserSettingsView from "./UserSettingsView.js";
 import UserSettingsItemCss from "./generated/themes/UserSettingsItem.css.js";
@@ -42,7 +41,7 @@ type UserSettingsItemBackClickEventDetail = {
 	tag: "ui5-user-settings-item",
 	renderer: jsxRenderer,
 	template: UserSettingsItemTemplate,
-	styles: [getEffectiveScrollbarStyle(), UserSettingsItemCss],
+	styles: [UserSettingsItemCss],
 })
 
 /**

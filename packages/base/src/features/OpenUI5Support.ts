@@ -6,7 +6,7 @@ import {
 	removeOpenedPopup,
 	getTopmostPopup,
 } from "./patchPopup.js";
-import type { OpenUI5Popup } from "./patchPopup.js";
+import type { OpenUI5Popup, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
@@ -230,8 +230,8 @@ class OpenUI5Support {
 		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
 	}
 
-	static addOpenedPopup(popup: object) {
-		addOpenedPopup(popup);
+	static addOpenedPopup(popupInfo: PopupInfo) {
+		addOpenedPopup(popupInfo);
 	}
 
 	static removeOpenedPopup(popup: object) {

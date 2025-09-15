@@ -68,12 +68,12 @@ const generateIllustrations = async (config) => {
 
 // Parse configuration from command-line arguments
 const config = {
-	inputFolder: process.argv[2],
-	outputFile: process.argv[3],
-	set: process.argv[4],
-	collection: process.argv[5],
-	location: process.argv[6],
-	filterOut: process.argv.slice[7],
+  inputFolder: process.argv[2],
+  outputFile: process.argv[3],
+  set: process.argv[4],
+  collection: process.argv[5],
+  location: process.argv[6],
+  filterOut: process.argv[7].slice().split(","),
 };
 
 // Run the generation process

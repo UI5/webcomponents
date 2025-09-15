@@ -343,7 +343,7 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("button")
 			.as("button");
-			
+
 		cy.get("@button")
 			.should("have.attr", "aria-label", "Action Emphasized");
 	});
@@ -486,6 +486,31 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("button")
 			.should("have.attr", "aria-controls", "registration-dialog");
+	});
+
+	it("aria-label and aria-keyshortcuts are properly applied on the button tag", () => {
+		cy.mount(<Button accessibilityAttributes={{ariaKeyShortcuts: "Alt+G", ariaLabel: "Some text"}}>Show Registration Dialog</Button>);
+
+		cy.get("[ui5-button]")
+			.as("button");
+
+		cy.get<Button>("@button")
+			.then($el => {
+				$el.get(0).accessibilityAttributes = {
+					ariaKeyShortcuts: "Alt+G",
+					ariaLabel: "Some text",
+				};
+			});
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Some text");
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-keyshortcuts", "Alt+G");
 	});
 
 	it("aria-busy is properly applied on the button with busy indicator", () => {

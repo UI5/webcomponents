@@ -4,9 +4,9 @@ const LIB = path.join(__dirname, `../lib/`);
 let websiteBaseUrl = "/";
 
 if (process.env.DEPLOY) {
-	websiteBaseUrl = "/ui5-webcomponents/";
+	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
-	websiteBaseUrl = "/ui5-webcomponents/nightly/";
+	websiteBaseUrl = "/webcomponents/nightly/";
 }
 
 const getScripts = (options) => {
@@ -17,7 +17,7 @@ const getScripts = (options) => {
 	const createIllustrationsJSImportsScript = illustrations.join(" && ");
 
 	// The script creates the "src/generated/js-imports/Illustration.js" file that registers loaders (dynamic JS imports) for each illustration
-	const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}/generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(" ")}`).join(" && ");
+	const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}/generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`).join(" && ");
 
 	const tsOption = !options.legacy || options.jsx;
 	const tsCommandOld = tsOption ? "tsc" : "";
