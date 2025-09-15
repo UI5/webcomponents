@@ -5,9 +5,6 @@
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
-const { promisify } = require("util");
-
-const execAsync = promisify(exec);
 
 const SCRIPT_NAMES = [
 	"package-scripts.js",
@@ -29,7 +26,12 @@ class Parser {
 
 		this.scripts = scripts;
 		this.envs = envs;
+
+		// Parse scripts on initialization
 		this.parseScripts();
+		this.parsedScripts.keys().forEach(key => {
+			this.resolveScripts(`${key}`);
+		});
 	}
 
 	/**
@@ -68,7 +70,7 @@ class Parser {
 		}
 
 		let executableCommand = this.parsedScripts.get(commandName);
-		if (!executableCommand) {
+		if (executableCommand === undefined) {
 			throw new Error(`Command "${commandName}" not found in scripts`);
 		}
 
@@ -150,13 +152,31 @@ class Parser {
 	 */
 	async executeCommand(command) {
 		if (typeof command === "string" && command) {
-			console.log("	= Executing command:");
-			console.log("	", command);
-			return execAsync(command, { stdio: "inherit", env: { ...process.env, ...this.envs } });
+			return new Promise((resolve, reject) => {
+				console.log(`= Executing command: ${command}`);
+				const child = exec(command, { stdio: "inherit", env: { ...process.env, ...this.envs } });
+
+				child.stdout.on("data", (data) => {
+					console.log(data);
+				});
+
+				child.stderr.on("data", (data) => {
+					console.error(data);
+				});
+
+				child.on("error", (err) => {
+					console.error("Failed to start:", err);
+					reject(err);
+				});
+
+				child.on("close", (code) => {
+					code === 0 ? resolve() : reject(new Error(`Exit ${code}`));
+				});
+			});
 		} else if (typeof command === "object" && command.commands) {
 			if (command.parallel) {
 				// Execute commands in parallel
-				const promises = command.commands.map(cmd => this.executeCommand(cmd));
+				const promises = command.commands.filter(Boolean).map(cmd => this.executeCommand(cmd));
 				await Promise.all(promises);
 			} else {
 				// Execute commands sequentially
@@ -173,7 +193,11 @@ class Parser {
 	 * @returns {Promise} Promise that resolves when execution completes
 	 */
 	async execute(commandName) {
-		this.resolveScripts(commandName);
+		const command = this.resolvedScripts.get(commandName);
+
+		if (!command) {
+			throw new Error(`Command "${commandName}" not found in scripts`);
+		}
 
 		return this.executeCommand(this.resolvedScripts.get(commandName));
 	}
