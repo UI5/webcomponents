@@ -16,7 +16,7 @@ const createIconImportsCommand = (options) => {
 	return command;
 }
 
-const hashesCheck = cmd => `(node "${LIB}/icons-hash/index.mjs" check) || (${cmd}) && (node "${LIB}/icons-hash/index.mjs" save)`;
+const hashesCheck = cmd => `(node "${LIB}/icons-hash/icons-hash.mjs" check) || (${cmd} && node "${LIB}/icons-hash/icons-hash.mjs" save)`;
 
 const copyIconAssetsCommand = (options) => {
 	if (!options.versions) {
