@@ -16,6 +16,8 @@ const createIconImportsCommand = (options) => {
 	return command;
 }
 
+const hashesCheck = cmd => `(node "${LIB}/icons-hash/index.mjs" check) || (${cmd})`;
+
 const copyIconAssetsCommand = (options) => {
 	if (!options.versions) {
 		return 	{
@@ -47,10 +49,10 @@ const getScripts = (options) => {
 	const scripts = {
 		clean: "rimraf dist && rimraf src/generated",
 		copy: copyAssetsCmd,
-		generate: `(node "${LIB}/icons-hash/index.mjs" check) || (${tsCrossEnv} nps clean copy build.i18n build.icons build.jsonImports copyjson build.hashes)`,
+		generate: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n build.icons build.jsonImports copyjson build.hashes`),
 		copyjson: "copy-and-watch \"src/generated/**/*.json\" dist/generated/",
 		build: {
-			default: `(node "${LIB}/icons-hash/index.mjs" check) || (${tsCrossEnv} nps clean copy build.i18n typescript build.icons build.jsonImports build.hashes)`,
+			default: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n typescript build.icons build.jsonImports build.hashes`),
 			i18n: {
 				default: "nps build.i18n.defaultsjs build.i18n.json",
 				defaultsjs: `mkdirp dist/generated/i18n && node "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
