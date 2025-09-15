@@ -150,8 +150,8 @@ class Toolbar extends UI5Element {
 
 	/**
 	 * Defines the items of the component.
-     *
-     * **Note:** Currently only `ui5-toolbar-button`, `ui5-toolbar-select`, `ui5-toolbar-separator` and `ui5-toolbar-spacer` are allowed here.
+	 *
+	 * **Note:** Currently only `ui5-toolbar-button`, `ui5-toolbar-select`, `ui5-toolbar-separator` and `ui5-toolbar-spacer` are allowed here.
 	 * @public
 	 */
 	@slot({
@@ -281,8 +281,11 @@ class Toolbar extends UI5Element {
 	}
 
 	onInvalidation(changeInfo: ChangeInfo) {
-		if (changeInfo.reason === "childchange" && changeInfo.child === this.itemsToOverflow[0]) {
-			this.onToolbarItemChange();
+		if (changeInfo.reason === "childchange") {
+			const currentItemsWidth = this.items.reduce((total, item) => total + this.getItemWidth(item), 0);
+			if (currentItemsWidth !== this.itemsWidth) {
+				this.onToolbarItemChange();
+			}
 		}
 	}
 
@@ -301,7 +304,7 @@ class Toolbar extends UI5Element {
 		this.storeItemsWidth();
 		this.processOverflowLayout();
 		this.items.forEach(item => {
-			 item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
+			item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
 		});
 	}
 
