@@ -12,7 +12,9 @@ const _checkConcerns = (accessibilityConcerns: any[]) => {
     } else {
         cy.log("No accessibility concerns found");
     }
-    cy.then(() => expect(accessibilityConcerns).to.have.length(0));
+    cy.wrap(accessibilityConcerns)
+    .should((concerns) => expect(concerns).to.have.length(0));
+
 };
 
 const _prepareAccessEngine = () => {

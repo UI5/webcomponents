@@ -22,7 +22,7 @@ const cypressEnvVariables = (options, predefinedVars) => {
 	variables.push(`CYPRESS_COVERAGE=${!!cypress_code_coverage}`);
 
 	if (cypress_acc_tests) {
-		variables.push("CYPRESS_UI5_ACC=true");
+		variables.push(`CYPRESS_UI5_ACC=${cypress_acc_tests}`);
 	}
 
 	return variables.length ? `cross-env ${variables.join(" ")}` : "";
