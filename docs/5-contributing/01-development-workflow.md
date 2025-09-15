@@ -53,7 +53,9 @@ For detailed instructions on cloning, see [GitHub's guide on cloning a repositor
 
 **3.0.** Make sure you have the following prerequisites installed:
 - [Yarn](https://yarnpkg.com/en);
-- [Node.js](https://nodejs.org/) (**version 14 or higher**).
+- [Node.js](https://nodejs.org/) (**version 21 or higher**).
+
+**Note:** These requirements are also documented in the main [README.md](../../README.md#requirements) file.
 
 
 **3.1.** Install all dependencies.
