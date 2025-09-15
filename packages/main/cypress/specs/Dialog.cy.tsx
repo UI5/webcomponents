@@ -765,7 +765,7 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
-	it.only("RTL resizable - should not move dialog when resizing from the left with max-width is set", () => {
+	it("RTL resizable - should not move dialog when resizing from the left with max-width is set", () => {
 		cy.mount(
 			<div dir="rtl">
 				<Dialog id="resizable-dialog" resizable style={{maxWidth: "300px"}}>
