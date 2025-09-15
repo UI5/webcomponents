@@ -180,3 +180,5 @@ We welcome all comments, suggestions, questions, and bug reports. Please follow 
 
 ## Contribute
 Please check our [Contribution Guidelines](docs/5-contributing/02-conventions-and-guidelines.md).
+
+**For contributors using a different GitHub account:** See our detailed [Development Workflow](docs/5-contributing/01-development-workflow.md) guide which includes step-by-step instructions for forking, cloning, and branching from another account.

@@ -18,6 +18,20 @@ There are three important things to know:
 Due to legal reasons, contributors will be asked to accept a DCO before they submit the first pull request to this projects, this happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
 
 ## How to Contribute
+
+### Contributing from Another GitHub Account
+
+If you're contributing to UI5 Web Components using a different GitHub account (not the original repository owner), follow these steps:
+
+1. **Fork the repository** to your GitHub account by clicking the "Fork" button on the [UI5 Web Components GitHub page](https://github.com/UI5/webcomponents)
+2. **Clone your fork** (not the original repository) to your local machine:
+   ```sh
+   git clone https://github.com/YOUR_USERNAME/webcomponents.git
+   ```
+3. **Follow the detailed development workflow** in our [Development Workflow Guide](docs/5-contributing/01-development-workflow.md)
+
+### General Contribution Process
+
 1. Make sure the change is welcome (see [General Remarks](#general-remarks)).
 1. Create a branch by forking the relevant UI5 Web Components repository and apply your change.
 1. Commit and push your change on that branch.
