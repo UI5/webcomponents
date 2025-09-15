@@ -61,6 +61,63 @@
 					}
 				}).placeAt("content");
 			});
+
+			document.getElementById("myButton").addEventListener("click", function() {
+				document.getElementById("dialog1").open = true;
+			});
+
+			sap.ui.require(["sap/m/Select",
+					"sap/m/ComboBox",
+					"sap/m/Button",
+					"sap/ui/core/Item",
+					"sap/ui/core/ShortcutHintsMixin"],
+				(Select,
+				 ComboBox,
+				 Button,
+				 Item,
+				 ShortcutHintsMixin) => {
+					new Select({
+						items: [
+							new Item({ text: "Item 1" }),
+							new Item({ text: "Item 2" }),
+							new Item({ text: "Item 3" })
+						],
+						change: function (oEvent) {
+							console.error("Selected item:", oEvent.getParameter("selectedItem").getText());
+						}
+					}).placeAt("dialog1content");
+
+					new ComboBox({
+						items: [
+							new Item({ text: "Item 1" }),
+							new Item({ text: "Item 2" }),
+							new Item({ text: "Item 3" })
+						]
+					}).placeAt("dialog1content");
+
+					const button = new Button({
+						text: "OpenUI5 with Shortcut (Ctrl+S)",
+						press: function () {
+							openUI5Dialog();
+						}
+					}).placeAt("dialog1content");
+
+
+					ShortcutHintsMixin.addConfig(button, {
+						event: "press",
+						position: "0 0",
+						addAccessibilityLabel: true,
+						message: "Save"
+					}, button);
+				});
+
+			document.getElementById("dialogButton").addEventListener("click", function () {
+				openUI5Dialog();
+			});
+
+			document.getElementById("popoverButtonNoFocus").addEventListener("click", function (event) {
+				openUI5Popover(event.target);
+			});
 		}
 
 		function openUI5Dialog() {
@@ -116,68 +173,9 @@
 				}).openBy(opener);
 			});
 		}
-
-		function init() {
-			document.getElementById("myButton").addEventListener("click", function() {
-				document.getElementById("dialog1").open = true;
-			});
-
-			sap.ui.require(["sap/m/Select",
-					"sap/m/ComboBox",
-					"sap/m/Button",
-					"sap/ui/core/Item",
-					"sap/ui/core/ShortcutHintsMixin"],
-				(Select,
-				 ComboBox,
-				 Button,
-				 Item,
-				 ShortcutHintsMixin) => {
-				new Select({
-					items: [
-						new Item({ text: "Item 1" }),
-						new Item({ text: "Item 2" }),
-						new Item({ text: "Item 3" })
-					],
-					change: function (oEvent) {
-						console.error("Selected item:", oEvent.getParameter("selectedItem").getText());
-					}
-				}).placeAt("dialog1content");
-
-				new ComboBox({
-					items: [
-						new Item({ text: "Item 1" }),
-						new Item({ text: "Item 2" }),
-						new Item({ text: "Item 3" })
-					]
-				}).placeAt("dialog1content");
-
-				const button = new Button({
-					text: "OpenUI5 with Shortcut (Ctrl+S)",
-					press: function () {
-						openUI5Dialog();
-					}
-				}).placeAt("dialog1content");
-
-
-				ShortcutHintsMixin.addConfig(button, {
-					event: "press",
-					position: "0 0",
-					addAccessibilityLabel: true,
-					message: "Save"
-				}, button);
-			});
-
-			document.getElementById("dialogButton").addEventListener("click", function () {
-				openUI5Dialog();
-			});
-
-			document.getElementById("popoverButtonNoFocus").addEventListener("click", function (event) {
-				openUI5Popover(event.target);
-			});
-		}
 	</script>
 </head>
-<body class="sapUiBody" onload="init()">
+<body class="sapUiBody">
 	<div id="buttonP">
 		<ui5-button id="myButton">Open WebC Dialog</ui5-button>
 	</div>
