@@ -7,7 +7,7 @@ const createIconImportsCommand = (options) => {
 		return `node "${LIB}/create-icons/index.js" "${options.collectionName}"`;
 	}
 
-	const command  = { default: "nps" };
+	const command = { default: "nps" };
 	options.versions.forEach((v) => {
 		command.default += ` build.icons.create${v}`;
 		command[`create${v}`] = `node "${LIB}/create-icons/index.js" "${options.collectionName}" "${v}"`;
@@ -16,18 +16,18 @@ const createIconImportsCommand = (options) => {
 	return command;
 }
 
-const hashesCheck = cmd => `(node "${LIB}/icons-hash/index.mjs" check) || (${cmd})`;
+const hashesCheck = cmd => `(node "${LIB}/icons-hash/index.mjs" check) || (${cmd}) && (node "${LIB}/icons-hash/index.mjs" save)`;
 
 const copyIconAssetsCommand = (options) => {
 	if (!options.versions) {
-		return 	{
+		return {
 			default: "nps copy.json-imports copy.icon-collection",
 			"json-imports": `node "${LIB}/copy-and-watch/index.js" --silent "src/**/*.js" dist/`,
 			"icon-collection": `node "${LIB}/copy-and-watch/index.js" --silent "src/*.json" src/generated/assets/`,
 		}
 	}
 
-	const command  = {
+	const command = {
 		default: "nps copy.json-imports ",
 		"json-imports": `node "${LIB}/copy-and-watch/index.js" --silent "src/**/*.js" dist/`,
 	};
@@ -49,10 +49,10 @@ const getScripts = (options) => {
 	const scripts = {
 		clean: "rimraf dist && rimraf src/generated",
 		copy: copyAssetsCmd,
-		generate: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n build.icons build.jsonImports copyjson build.hashes`),
+		generate: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n build.icons build.jsonImports copyjson`),
 		copyjson: "copy-and-watch \"src/generated/**/*.json\" dist/generated/",
 		build: {
-			default: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n typescript build.icons build.jsonImports build.hashes`),
+			default: hashesCheck(`${tsCrossEnv} nps clean copy build.i18n typescript build.icons build.jsonImports`),
 			i18n: {
 				default: "nps build.i18n.defaultsjs build.i18n.json",
 				defaultsjs: `mkdirp dist/generated/i18n && node "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
@@ -63,7 +63,6 @@ const getScripts = (options) => {
 				i18n: `node "${LIB}/generate-json-imports/i18n.js" src/generated/assets/i18n src/generated/json-imports`,
 			},
 			icons: createJSImportsCmd,
-			hashes: `node "${LIB}/icons-hash/index.mjs" save`
 		},
 		typescript: tsCommand,
 	};
