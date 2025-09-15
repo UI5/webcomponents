@@ -198,6 +198,35 @@ describe("Input Tests", () => {
 		cy.get("@change").should("have.been.calledOnce");
 	});
 
+	it("should not fire 'submit' event when there is more than one input field in a form", () => {
+		cy.mount(
+			<form>
+				<Input id="first-input" onChange={cy.stub().as("change")}></Input>
+				<Input></Input>
+			</form>
+		);
+
+		// spy submit event and prevent it
+		cy.get("form")
+			.then($form => {
+				$form.get(0).addEventListener("submit", cy.spy().as("submit"));
+			});
+
+		// check if submit is triggered after change
+		cy.get("#first-input")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.realType("test");
+
+		cy.realPress("Enter");
+
+		cy.get("@submit").should("have.not.been.called");
+	});
+
 	it("tests if pressing enter twice fires submit 2 times and change once", () => {
 		cy.mount(
 			<form>
@@ -442,6 +471,78 @@ describe("Input general interaction", () => {
 		// check typedInValue property
 		cy.get("@input")
 			.should("have.prop", "typedInValue", "");
+	});
+
+	it("Should fire 'change' event once when clicking a suggestion equal to the typed value", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-click"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-click")
+		.shadow()
+		.find("input")
+		.click()
+		.realType("Cozy");
+
+		cy.get("#input-equal-click")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
+
+		cy.get('#input-equal-click')
+		.find('ui5-suggestion-item[text="Cozy"]')
+		.click();
+
+		cy.get("#input-equal-click").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
+	it("Should fire 'change' event once when selecting a suggestion equal to the typed value with keyboard", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-keyboard"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-keyboard")
+		.shadow()
+		.find("input")
+		.click()
+		.realType("Cozy");
+
+		cy.get("#input-equal-keyboard")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowDown");
+		cy.realPress("Enter");
+
+		cy.get("#input-equal-keyboard").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
 });
 

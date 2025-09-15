@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
+
+
+### Bug Fixes
+
+* **ui5-side-navigation:** prevent TypeError when selected item has no DomRef ([#12286](https://github.com/UI5/webcomponents/issues/12286)) ([f458819](https://github.com/UI5/webcomponents/commit/f4588196459705f6cde35ee17bf23d1660a5191a)), closes [#12261](https://github.com/UI5/webcomponents/issues/12261)
+
+
+### Features
+
+* **ui5-view-settings-dialog:** add group option ([#11950](https://github.com/UI5/webcomponents/issues/11950)) ([77bd73e](https://github.com/UI5/webcomponents/commit/77bd73ed3b3a2127a59c256598908c7d94dafeee)), closes [#11815](https://github.com/UI5/webcomponents/issues/11815)
+
+
+
+
+
+# [2.14.0](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.7...v2.14.0) (2025-09-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.14.0-rc.7](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.6...v2.14.0-rc.7) (2025-09-04)
+
+
+### Bug Fixes
+
+* **ScrollbarStyles:** introduce centralized scrollbar styling ([#12207](https://github.com/SAP/ui5-webcomponents/issues/12207)) ([5481bb3](https://github.com/SAP/ui5-webcomponents/commit/5481bb3f1e3f78dc3a0cb13a16c97d19f176ed37))
+
+
+### Features
+
+* **ui5-shellbar:** add preventable search field clear event ([#12227](https://github.com/SAP/ui5-webcomponents/issues/12227)) ([c178acd](https://github.com/SAP/ui5-webcomponents/commit/c178acd70fe0d740af9ab0acc46951e01227dc3c))
+
+
+
+
+
 # [2.14.0-rc.6](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.5...v2.14.0-rc.6) (2025-08-29)
 
 

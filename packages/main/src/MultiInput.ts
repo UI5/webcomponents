@@ -13,6 +13,8 @@ import {
 	isHome,
 	isEnd,
 	isDown,
+	isEnter,
+
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
@@ -226,6 +228,10 @@ class MultiInput extends Input implements IFormInputElement {
 		if (isHomeInBeginning) {
 			this._skipOpenSuggestions = true; // Prevent input focus when navigating through the tokens
 			return this._focusFirstToken(e);
+		}
+
+		if (isEnter(e)) {
+			e.preventDefault();
 		}
 
 		if (isLeft(e)) {

@@ -325,20 +325,20 @@ describe("Toolbar general interaction", () => {
 	it("Should render ui5-button by toolbar template, when slotting ui5-toolbar-button elements", () => {
 		cy.mount(
 			<Toolbar>
-				<ToolbarButton 
-					icon="decline" 
+				<ToolbarButton
+					icon="decline"
 					stableDomRef="tb-button-decline"
-					overflowPriority="NeverOverflow" 
-					text="Left 2" 
-				/>
-				<ToolbarButton 
-					icon="employee" 
 					overflowPriority="NeverOverflow"
-					text="Left 3" 
+					text="Left 2"
+				/>
+				<ToolbarButton
+					icon="employee"
+					overflowPriority="NeverOverflow"
+					text="Left 3"
 				/>
 			</Toolbar>
 		);
-	
+
 		cy.get("[ui5-toolbar]")
 			.find("[ui5-toolbar-button]")
 			.first()
@@ -353,51 +353,51 @@ describe("Toolbar general interaction", () => {
 			.should("be.visible")
 			.should("have.length", 2);
 	});
-	
+
 	it("Should call child events only once", () => {
 		cy.mount(
 			<>
 				<Toolbar data-testid="clickCountToolbar">
-					<ToolbarButton 
-						icon="add" 
-						text="Left 1 (long)" 
+					<ToolbarButton
+						icon="add"
+						text="Left 1 (long)"
 						data-testid="clickCounter"
 					/>
-					<ToolbarButton 
-						icon="decline" 
-						text="Left 2" 
+					<ToolbarButton
+						icon="decline"
+						text="Left 2"
 						data-testid="clearCounter"
 					/>
 				</Toolbar>
 				<input data-testid="input" defaultValue="0" />
 			</>
 		);
-	
+
 		// Create stubs for event tracking
 		cy.get("[data-testid='clickCountToolbar']")
 			.as("toolbar")
 			.then($toolbar => {
 				$toolbar.get(0).addEventListener("click", cy.stub().as("toolbarClickStub"));
 			});
-	
+
 		cy.get("[data-testid='clickCounter']")
 			.as("clickCounter")
 			.then($button => {
 				$button.get(0).addEventListener("click", cy.stub().as("counterClickStub"));
 			});
-	
+
 		cy.get("[data-testid='clearCounter']")
 			.as("clearCounter")
 			.then($button => {
 				$button.get(0).addEventListener("click", cy.stub().as("clearClickStub"));
 			});
-	
+
 		// Set up input manipulation logic
 		cy.get("@toolbar").then($toolbar => {
 			$toolbar.get(0).addEventListener("click", (e) => {
 				const input = document.querySelector("[data-testid='input']") as HTMLInputElement;
 				const target = e.target as HTMLElement;
-				
+
 				if (target.dataset.testid === "clearCounter") {
 					input.value = "0";
 				} else if (target.dataset.testid === "clickCounter") {
@@ -406,16 +406,16 @@ describe("Toolbar general interaction", () => {
 				}
 			});
 		});
-	
+
 		cy.get("[data-testid='input']").invoke("val", "0");
-	
+
 		cy.get("@clickCounter").realClick();
-	
+
 		cy.get("[data-testid='input']").should("have.prop", "value", "1");
-	
+
 		cy.get("@toolbarClickStub").should("have.been.calledOnce");
 		cy.get("@counterClickStub").should("have.been.calledOnce");
-	
+
 		cy.get("[data-testid='input']").invoke("val", "0");
 	});
 });
@@ -495,54 +495,6 @@ describe("Toolbar in Dialog", () => {
 
 //ToolbarSelect
 describe("Toolbar Select", () => {
-	it("Should render the select with the correct attributes inside the popover", () => {
-		cy.mount(
-			<div style="width: 250px;">
-				<Toolbar id="otb_e">
-					<ToolbarSelect value-state="Critical" accessible-name="Add" accessible-name-ref="title" id="toolbar-select">
-						<ToolbarSelectOption>1</ToolbarSelectOption>
-						<ToolbarSelectOption selected>2</ToolbarSelectOption>
-						<ToolbarSelectOption>3</ToolbarSelectOption>
-					</ToolbarSelect>
-
-
-					<ToolbarSelect disabled class="custom-class">
-						<ToolbarSelectOption>1</ToolbarSelectOption>
-						<ToolbarSelectOption selected>2</ToolbarSelectOption>
-						<ToolbarSelectOption>3</ToolbarSelectOption>
-					</ToolbarSelect>
-				</Toolbar>
-			</div>
-		);
-
-		const otb = cy.get("#otb_e").as("otb");
-
-		cy.get("@otb")
-			.shadow()
-			.find(".ui5-tb-overflow-btn")
-			.click();
-		const overflowButton = otb.shadow().find(".ui5-tb-overflow-btn");
-
-		cy.get("@otb")
-			.shadow()
-			.find(".ui5-overflow-popover").as("popover")
-			.should("have.attr", "open", "open");
-		overflowButton.click();
-		cy.wait(500);
-
-		cy.get("@otb")
-			.find("#toolbar-select")
-			.should("have.attr", "value-state", "Critical")
-
-			.should("have.attr", "accessible-name", "Add")
-
-			.should("have.attr", "accessible-name-ref", "title")
-
-		cy.get("@otb")
-			.find(".custom-class")
-			.should("have.attr", "disabled", "disabled");
-
-	});
 
 	//ToolbarButton
 	it.skip("Should render the button with the correct text inside the popover", async () => {
@@ -618,5 +570,50 @@ describe("Toolbar Button", () => {
 		// Test clicking the non-disabled button
 		cy.get("ui5-toolbar-button:not([disabled])").realClick();
 		cy.get("#value-input").should("have.value", "1");
+	});
+
+	it("Should not recalculate overflow when button state changes without affecting width", () => {
+		cy.mount(
+			<Toolbar id="state-change-toolbar">
+				<ToolbarButton text="Bold" icon="bold-text"></ToolbarButton>
+				<ToolbarButton text="Italic" icon="italic-text"></ToolbarButton>
+				<ToolbarButton text="Underline" icon="underline-text"></ToolbarButton>
+				<ToolbarButton id="add-btn" text="Add" icon="add" disabled></ToolbarButton>
+				<ToolbarButton text="More" icon="employee"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.viewport(800, 600);
+		cy.get("[ui5-toolbar]").as("toolbar");
+
+		cy.get("@toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.viewport(300, 600);
+
+		cy.get("@toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.get("@toolbar").then($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar;
+			const addButton = document.getElementById("add-btn") as ToolbarButton;
+			
+			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
+			
+			const initialOverflowCount = toolbar.itemsToOverflow.length;
+			const initialItemsWidth = toolbar.itemsWidth;
+			
+			addButton.disabled = !addButton.disabled;
+
+			cy.get("@toolbar").then($toolbarAfter => {
+				const toolbarAfter = $toolbarAfter[0] as Toolbar;
+				expect(toolbarAfter.itemsToOverflow.length).to.equal(initialOverflowCount);
+				expect(toolbarAfter.itemsWidth).to.equal(initialItemsWidth);
+			});
+		});
 	});
 });

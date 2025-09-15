@@ -5,7 +5,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import SideContentPosition from "./types/SideContentPosition.js";
@@ -119,7 +118,7 @@ type DynamicSideContentAccessibilityAttributes = {
 @customElement({
 	tag: "ui5-dynamic-side-content",
 	renderer: jsxRenderer,
-	styles: [DynamicSideContentCss, getEffectiveScrollbarStyle()],
+	styles: [DynamicSideContentCss],
 	template: DynamicSideContentTemplate,
 })
 /**
