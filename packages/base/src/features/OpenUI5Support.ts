@@ -101,13 +101,24 @@ class OpenUI5Support {
 
 	static awaitForOpenUI5() {
 		const w = window as Record<string, any>;
+
+		// First, look for window.onInit and if found, patch it
+		let oldOnInit = w.onInit;
+		if (oldOnInit) {
+			w.onInit = function onInit(...rest: any[]) {
+				oldOnInit.apply(this, ...rest);
+				OpenUI5Support.OpenUI5DelayedInit();
+			};
+		}
+
+		// If window.onInit is not found, go for the sap-ui-config script
 		w["sap-ui-config"] = w["sap-ui-config"] || {};
-		const oldInit = w["sap-ui-config"].onInit;
-		if (!oldInit) {
+		oldOnInit = w["sap-ui-config"].onInit;
+		if (!oldOnInit) {
 			w["sap-ui-config"].onInit = OpenUI5Support.OpenUI5DelayedInit;
 		} else {
 			w["sap-ui-config"].onInit = function onInit(...rest: any[]) {
-				oldInit.apply(this, ...rest);
+				oldOnInit.apply(this, ...rest);
 				OpenUI5Support.OpenUI5DelayedInit();
 			};
 		}
@@ -175,7 +186,7 @@ class OpenUI5Support {
 				formatSettings: {
 					firstDayOfWeek: CalendarUtils.getWeekConfigurationValues().firstDayOfWeek,
 					legacyDateCalendarCustomizing: Formatting.getCustomIslamicCalendarData?.()
-												?? Formatting.getLegacyDateCalendarCustomizing?.(),
+						?? Formatting.getLegacyDateCalendarCustomizing?.(),
 				},
 			};
 		}
