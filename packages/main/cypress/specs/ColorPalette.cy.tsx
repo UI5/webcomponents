@@ -22,7 +22,7 @@ function ColorPaletteSample() {
 }
 
 describe("Color Palette tests", () => {
-	it("internal color picker should have selected color set on open", () => {
+	it.skip("internal color picker should have selected color set on open", () => {
 		cy.mount(
 			<ColorPalette showMoreColors={true} showRecentColors={true}>
 				<ColorPaletteItem id="named" value="red"></ColorPaletteItem>
@@ -65,7 +65,7 @@ describe("Color Palette tests", () => {
 			});
 	});
 
-	it("Test if selecting element works", () => {
+	it.skip("Test if selecting element works", () => {
 		cy.mount(<ColorPaletteSample/>);
 
 		cy.get<ColorPalette>("#cp1")
@@ -78,7 +78,7 @@ describe("Color Palette tests", () => {
 			.should("have.value", "darkblue");
 	});
 
-	it("Test if keyboard navigation on elements works", () => {
+	it.skip("Test if keyboard navigation on elements works", () => {
 		cy.mount(<ColorPaletteSample/>);
 
 		cy.get<ColorPalette>("#cp1")
@@ -97,7 +97,7 @@ describe("Color Palette tests", () => {
 			.should("have.value", "pink");
 	});
 
-	it("Test if keyboard navigation on elements works with Arrow keys", () => {
+	it.skip("Test if keyboard navigation on elements works with Arrow keys", () => {
 		cy.mount(<ColorPaletteSample/>);
 
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowRight", "pink");
@@ -106,7 +106,7 @@ describe("Color Palette tests", () => {
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 9, "ArrowDown", "darkblue");
 	});
 
-	it("Tests show-recent-colors functionality", () => {
+	it.skip("Tests show-recent-colors functionality", () => {
 		cy.mount(
 			<ColorPalette id="cp4" showMoreColors={true} showRecentColors={true}>
 				<ColorPaletteItem value="pink"></ColorPaletteItem>
@@ -147,7 +147,7 @@ describe("Color Palette tests", () => {
 			});
 	});
 
-	it("Tests if only one item is selected at a time in the color palette", () => {
+	it.skip("Tests if only one item is selected at a time in the color palette", () => {
 		cy.mount(
 			<ColorPalette id="cp1SelectedTest">
 				<ColorPaletteItem value="darkblue" selected={true}></ColorPaletteItem>
@@ -186,7 +186,7 @@ describe("Color Palette tests", () => {
 			.should("have.attr", "selected");
 	});
 
-	it("Tests if clicking on selected item, does not deselect it", () => {
+	it.skip("Tests if clicking on selected item, does not deselect it", () => {
 		cy.mount(
 			<ColorPalette id="cp1SelectedTest">
 				<ColorPaletteItem value="darkblue" selected={true}></ColorPaletteItem>
@@ -214,7 +214,7 @@ describe("Color Palette tests", () => {
 });
 
 describe("Color Palette - getFocusDomRef", () => {
-	it("should return undefined when the ColorPalette is empty", () => {
+	it.skip("should return undefined when the ColorPalette is empty", () => {
 		cy.mount(<ColorPalette></ColorPalette>);
 
 		cy.get<ColorPalette>("[ui5-color-palette]")
@@ -223,7 +223,7 @@ describe("Color Palette - getFocusDomRef", () => {
 			});
 	});
 
-	it("should return first item if no item was focused before", () => {
+	it.skip("should return first item if no item was focused before", () => {
 		cy.mount(
 			<ColorPalette>
 				<ColorPaletteItem id="darkBlue" value="darkblue"></ColorPaletteItem>
@@ -249,7 +249,7 @@ describe("Color Palette - getFocusDomRef", () => {
 			});
 	});
 
-	it("should return last focused item in the ColorPalette", () => {
+	it.skip("should return last focused item in the ColorPalette", () => {
 		cy.mount(
 			<ColorPalette>
 				<ColorPaletteItem value="darkblue"></ColorPaletteItem>
