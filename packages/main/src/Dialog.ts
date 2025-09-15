@@ -612,10 +612,10 @@ class Dialog extends Popup {
 				width: `${newWidth}px`,
 			});
 
-			const dX = newWidth - this.getBoundingClientRect().width;
+			const deltaWidth = newWidth - this.getBoundingClientRect().width;
 
 			newLeft = clamp(
-				this._initialLeft! + (clientX - this._initialX!) + dX,
+				this._initialLeft! + (clientX - this._initialX!) + deltaWidth,
 				0,
 				this._initialX! + this._initialWidth! - this._minWidth!,
 			);
