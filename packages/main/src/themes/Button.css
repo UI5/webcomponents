@@ -306,7 +306,7 @@ bdi {
 /* Button with badge */
 ::slotted([slot="badge"][design="InlineText"]) {
 	pointer-events: initial;
-	font-family: "72override", var(--sapButton_FontFamily);
+	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);
 	padding-inline-start: 0.25rem;
 	--_ui5-tag-height: 0.625rem;
@@ -319,7 +319,7 @@ bdi {
 	inset-inline-end: 0;
 	margin: -0.5rem;
 	z-index: 1;
-	font-family: "72override", var(--sapButton_FontFamily);
+	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);
 	--_ui5-tag-height: 0.625rem;
 }

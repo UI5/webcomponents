@@ -168,7 +168,7 @@ Will result in the shadow DOM as:
 ```
 
 The `accessibleName` property is currently supported in most of the available components.
-Additionally `headerAccessibleName` is available for [ListItemGroup](https://sap.github.io/ui5-webcomponents/nightly/components/ListItemGroup/) component, which gives the possibility to add accessible name to the groups headers in a list.
+Additionally `headerAccessibleName` is available for [ListItemGroup](https://ui5.github.io/webcomponents/nightly/components/ListItemGroup/) component, which gives the possibility to add accessible name to the groups headers in a list.
 
 ---
 
@@ -207,13 +207,18 @@ Will result in the shadow DOM as:
 ```
 
 The `accessibleDescription` property is currently supported in:
-* [List](https://sap.github.io/ui5-webcomponents/nightly/components/List/)
-* [Tree](https://sap.github.io/ui5-webcomponents/nightly/components/Tree/)
-* [Input](https://sap.github.io/ui5-webcomponents/nightly/components/Input/)
-* [Select](https://sap.github.io/ui5-webcomponents/nightly/components/Select/)
-* [Popover](https://sap.github.io/ui5-webcomponents/nightly/components/Popover/)
-* [ResponsivePopover](https://sap.github.io/ui5-webcomponents/nightly/components/ResponsivePopover/)
-* [Dialog](https://sap.github.io/ui5-webcomponents/nightly/components/Dialog/)
+* [List](https://ui5.github.io/webcomponents/nightly/components/List/)
+* [Tree](https://ui5.github.io/webcomponents/nightly/components/Tree/)
+* [Input](https://ui5.github.io/webcomponents/nightly/components/Input/)
+* [Select](https://ui5.github.io/webcomponents/nightly/components/Select/)
+* [Popover](https://ui5.github.io/webcomponents/nightly/components/Popover/)
+* [ResponsivePopover](https://ui5.github.io/webcomponents/nightly/components/ResponsivePopover/)
+* [Dialog](https://ui5.github.io/webcomponents/nightly/components/Dialog/)
+* [DatePicker](https://ui5.github.io/webcomponents/nightly/components/DatePicker/)
+* [DateRangePicker](https://ui5.github.io/webcomponents/nightly/components/DateRangePicker/)
+* [DateTimePicker](https://ui5.github.io/webcomponents/nightly/components/DateTimePicker/)
+* [TimePicker](https://ui5.github.io/webcomponents/nightly/components/TimePicker/)
+* [FileUploader](https://ui5.github.io/webcomponents/nightly/components/FileUploader/)
 
 ---
 
@@ -236,13 +241,18 @@ Will result in the shadow DOM as:
 ```
 
 The `accessibleDescriptionRef` property is currently supported in:
-* [List](https://sap.github.io/ui5-webcomponents/nightly/components/List/)
-* [Tree](https://sap.github.io/ui5-webcomponents/nightly/components/Tree/)
-* [Input](https://sap.github.io/ui5-webcomponents/nightly/components/Input/)
-* [Select](https://sap.github.io/ui5-webcomponents/nightly/components/Select/)
-* [Popover](https://sap.github.io/ui5-webcomponents/nightly/components/Popover/)
-* [ResponsivePopover](https://sap.github.io/ui5-webcomponents/nightly/components/ResponsivePopover/)
-* [Dialog](https://sap.github.io/ui5-webcomponents/nightly/components/Dialog/)
+* [List](https://ui5.github.io/webcomponents/nightly/components/List/)
+* [Tree](https://ui5.github.io/webcomponents/nightly/components/Tree/)
+* [Input](https://ui5.github.io/webcomponents/nightly/components/Input/)
+* [Select](https://ui5.github.io/webcomponents/nightly/components/Select/)
+* [Popover](https://ui5.github.io/webcomponents/nightly/components/Popover/)
+* [ResponsivePopover](https://ui5.github.io/webcomponents/nightly/components/ResponsivePopover/)
+* [Dialog](https://ui5.github.io/webcomponents/nightly/components/Dialog/)
+* [DatePicker](https://ui5.github.io/webcomponents/nightly/components/DatePicker/)
+* [DateRangePicker](https://ui5.github.io/webcomponents/nightly/components/DateRangePicker/)
+* [DateTimePicker](https://ui5.github.io/webcomponents/nightly/components/DateTimePicker/)
+* [TimePicker](https://ui5.github.io/webcomponents/nightly/components/TimePicker/)
+* [FileUploader](https://ui5.github.io/webcomponents/nightly/components/FileUploader/)
 
 ---
 
@@ -263,21 +273,21 @@ Will result in the shadow DOM as:
 ```
 
 The `accessible-role` property is currently supported in:
-* [Panel](https://sap.github.io/ui5-webcomponents/nightly/components/Panel/)
-* [List](https://sap.github.io/ui5-webcomponents/nightly/components/List/)
-* [Icon](https://sap.github.io/ui5-webcomponents/nightly/components/Icon/)
-* [Popover](https://sap.github.io/ui5-webcomponents/nightly/components/Popover/)
-* [ResponsivePopover](https://sap.github.io/ui5-webcomponents/nightly/components/ResponsivePopover/)
-* [Dialog](https://sap.github.io/ui5-webcomponents/nightly/components/Dialog/)
-* [Link](https://sap.github.io/ui5-webcomponents/nightly/components/Link/)
-* [Button](https://sap.github.io/ui5-webcomponents/nightly/components/Button/)
-* [ToggleButton](https://sap.github.io/ui5-webcomponents/nightly/components/ToggleButton/)
+* [Panel](https://ui5.github.io/webcomponents/nightly/components/Panel/)
+* [List](https://ui5.github.io/webcomponents/nightly/components/List/)
+* [Icon](https://ui5.github.io/webcomponents/nightly/components/Icon/)
+* [Popover](https://ui5.github.io/webcomponents/nightly/components/Popover/)
+* [ResponsivePopover](https://ui5.github.io/webcomponents/nightly/components/ResponsivePopover/)
+* [Dialog](https://ui5.github.io/webcomponents/nightly/components/Dialog/)
+* [Link](https://ui5.github.io/webcomponents/nightly/components/Link/)
+* [Button](https://ui5.github.io/webcomponents/nightly/components/Button/)
+* [ToggleButton](https://ui5.github.io/webcomponents/nightly/components/ToggleButton/)
 
 ---
 
 ### accessibilityAttributes
 
-This property accepts an `object` with property values, which will be used to generate additional accessibility attributes to the root element. For more detailed information on every object property, read the API description in [Button](https://sap.github.io/ui5-webcomponents/nightly/components/Button/).
+This property accepts an `object` with property values, which will be used to generate additional accessibility attributes to the root element. For more detailed information on every object property, read the API description in [Button](https://ui5.github.io/webcomponents/nightly/components/Button/).
 
 Setting the property on the custom element as:
 ```html
@@ -301,20 +311,22 @@ Will result in the shadow DOM as:
 ```
 
 The `accessibilityAttributes` property is currently supported in:
-* [Avatar](https://sap.github.io/ui5-webcomponents/nightly/components/Avatar/)
-* [AvatarGroup](https://sap.github.io/ui5-webcomponents/nightly/components/AvatarGroup/)
-* [Button](https://sap.github.io/ui5-webcomponents/nightly/components/Button/)
-* [Link](https://sap.github.io/ui5-webcomponents/nightly/components/Link/)
-* [ToggleButton](https://sap.github.io/ui5-webcomponents/nightly/components/ToggleButton/)
-* [Link](https://sap.github.io/ui5-webcomponents/nightly/components/Link/)
-* List Items (for example [ListItemStandard](https://sap.github.io/ui5-webcomponents/nightly/components/ListItemStandard/))
+* [Avatar](https://ui5.github.io/webcomponents/nightly/components/Avatar/)
+* [AvatarGroup](https://ui5.github.io/webcomponents/nightly/components/AvatarGroup/)
+* [Button](https://ui5.github.io/webcomponents/nightly/components/Button/)
+* [Button](https://ui5.github.io/webcomponents/nightly/components/ai/Button/)
+* [Link](https://ui5.github.io/webcomponents/nightly/components/Link/)
+* [ToggleButton](https://ui5.github.io/webcomponents/nightly/components/ToggleButton/)
+* [Link](https://ui5.github.io/webcomponents/nightly/components/Link/)
+* List Items (for example [ListItemStandard](https://ui5.github.io/webcomponents/nightly/components/ListItemStandard/))
 
 `accessibilityAttributes` is also supported for composite components, where the application can enrich the accessibility of elements inside the component. For a more detailed information check the documentation of the property in:
-* [FlexibleColumnLayout](https://sap.github.io/ui5-webcomponents/nightly/components/fiori/FlexibleColumnLayout/)
-* [ShellBar](https://sap.github.io/ui5-webcomponents/nightly/components/fiori/ShellBar/)
-* [ShellBarItem](https://sap.github.io/ui5-webcomponents/nightly/components/fiori/ShellBarItem/)
-* [MenuItem](https://sap.github.io/ui5-webcomponents/nightly/components/MenuItem/)
-* [List](https://sap.github.io/ui5-webcomponents/nightly/components/List/)
+* [FlexibleColumnLayout](https://ui5.github.io/webcomponents/nightly/components/fiori/FlexibleColumnLayout/)
+* [ShellBar](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBar/)
+* [ShellBarItem](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBarItem/)
+* [SplitButton](https://ui5.github.io/webcomponents/nightly/components/SplitButton/)
+* [MenuItem](https://ui5.github.io/webcomponents/nightly/components/MenuItem/)
+* [List](https://ui5.github.io/webcomponents/nightly/components/List/)
 
 ---
 
@@ -342,10 +354,10 @@ Will result in the shadow DOM as:
 </div>
 ```
 The `level` property is currently supported in:
- * [Title](https://sap.github.io/ui5-webcomponents/nightly/components/Title/)
+ * [Title](https://ui5.github.io/webcomponents/nightly/components/Title/)
 
 The `header-level` property is currently supported in:
- * [Panel](https://sap.github.io/ui5-webcomponents/nightly/components/Panel/)
+ * [Panel](https://ui5.github.io/webcomponents/nightly/components/Panel/)
 
 ---
 
@@ -362,7 +374,7 @@ Will result in the shadow DOM as:
 ```
 
 The `interactive` property is currently supported in:
-* [Avatar](https://sap.github.io/ui5-webcomponents/nightly/components/Avatar/)
+* [Avatar](https://ui5.github.io/webcomponents/nightly/components/Avatar/)
 
 ---
 

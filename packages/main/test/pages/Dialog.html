@@ -83,6 +83,9 @@
 		<br>
 		<br>
 		<ui5-button id="multiple-show">Open dialog calling ".open = true" multiple times</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="open-big-content">Open dialog with big content</ui5-button>
 	</div>
 	<ui5-block-layer></ui5-block-layer>
 
@@ -719,6 +722,113 @@
 		<ui5-button id="scrolledBtn" class="scrolledBtn">open</ui5-button>
 	</div>
 
+	<ui5-dialog id="dlgBigContent" header-text="Register Form">
+		<section class="login-form">
+			<div>
+				<ui5-label for="username" required show-colon>Username</ui5-label>
+				<ui5-input id="username"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="password" required show-colon>Password</ui5-label>
+				<ui5-input id="password" type="Password" value-state="Negative"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="email" type="Email" required show-colon>Email</ui5-label>
+				<ui5-input id="email"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="address" show-colon>Address</ui5-label>
+				<ui5-input id="address"></ui5-input>
+			</div>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+		</section>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				design="Emphasized"
+				text="Submit"
+			>
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+				design="Transparent"
+				text="Cancel"
+			>
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+	</ui5-dialog>
+
 	<script>
 		cbCompact.addEventListener("ui5-change", function () {
 			document.body.classList.toggle("ui5-content-density-compact", cbCompact.checked);
@@ -965,6 +1075,10 @@
 
 		document.getElementById("theme-switch").addEventListener("ui5-selection-change", event => {
 			window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.detail.selectedItems[0].getAttribute("data-ui5-theme-name"));
+		});
+
+		document.getElementById("open-big-content").addEventListener("click", function () {
+			window["dlgBigContent"].open = true;
 		});
 	</script>
 </body>

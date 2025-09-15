@@ -100,9 +100,9 @@ export default function ShellBarTemplate(this: ShellBar) {
 									}}></div>
 								)}
 								{this.startContent.map(item => {
-									const itemInfo = this._contentInfo.find(info => info.id === item._individualSlot);
+									const itemInfo = this._contentInfo.find(info => info.id === (item as any)._individualSlot);
 									return (
-										<div key={item._individualSlot} id={item._individualSlot} class={itemInfo?.classes}>
+										<div key={(item as any)._individualSlot} id={(item as any)._individualSlot} class={itemInfo?.classes}>
 											{this.shouldIncludeSeparator(itemInfo, this.startContentInfoSorted) && (
 												// never displayed, only "packed" with last item that was hidden, used for measurement purposes
 												<div class={{
@@ -110,16 +110,16 @@ export default function ShellBarTemplate(this: ShellBar) {
 													"ui5-shellbar-separator-start": true,
 												}}></div>
 											)}
-											<slot name={item._individualSlot}></slot>
+											<slot name={(item as any)._individualSlot}></slot>
 										</div>
 									);
 								})}
 								<div class="ui5-shellbar-spacer"></div>
 								{this.endContent.map(item => {
-									const itemInfo = this._contentInfo.find(info => info.id === item._individualSlot);
+									const itemInfo = this._contentInfo.find(info => info.id === (item as any)._individualSlot);
 									return (
-										<div key={item._individualSlot} id={item._individualSlot} class={itemInfo?.classes}>
-											<slot name={item._individualSlot}></slot>
+										<div key={(item as any)._individualSlot} id={(item as any)._individualSlot} class={itemInfo?.classes}>
+											<slot name={(item as any)._individualSlot}></slot>
 											{this.shouldIncludeSeparator(itemInfo, this.endContentInfoSorted) && (
 												// never displayed, only "packed" with last item that was hidden, used for measurement purposes
 												<div class={{

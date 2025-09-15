@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-icons-business-suite",
-  "version": "2.14.0-rc.1",
+  "version": "2.15.0-rc.0",
   "description": "UI5 Web Components: SAP Fiori Tools icon set",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -24,13 +24,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/icons-business-suite"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "2.14.0-rc.1"
+    "@ui5/webcomponents-base": "2.15.0-rc.0"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.14.0-rc.1"
+    "@ui5/webcomponents-tools": "2.15.0-rc.0"
   }
 }

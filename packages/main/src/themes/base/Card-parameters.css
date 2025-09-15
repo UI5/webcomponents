@@ -12,7 +12,7 @@
 	--_ui5_card_header_focus_radius: 0px;
 	--_ui5_card_header_focus_bottom_radius: 0px;
 	--_ui5_card_header_focus_offset: 1px;
-	--_ui5_card_header_title_font_family: "72override", var(--sapFontFamily);
+	--_ui5_card_header_title_font_family: var(--sapFontFamily);
 	--_ui5_card_header_title_font_size: var(--sapFontHeader5Size);
 	--_ui5_card_header_title_font_weight: normal;
 	--_ui5_card_header_subtitle_margin_top: .25rem;

@@ -129,15 +129,14 @@ async function checkHashes(repoPath, ig) {
 		console.log(`No changes detected in the ${getRepoName(repoPath)} package.`);
 	} else {
 		console.log(`Changes detected in the ${getRepoName(repoPath)} package. Rebuilding it.`);
-		process.exit(2);
+		process.exit(1);
 	}
 }
 
 async function main() {
 	const mode = process.argv[2];
 	if (!["save", "check"].includes(mode)) {
-		console.error("Usage: node hashes.js <save|check>");
-		process.exit(1);
+		throw new Error("Usage: node hashes.js <save|check>");
 	}
 
 	const repoPath = process.cwd();

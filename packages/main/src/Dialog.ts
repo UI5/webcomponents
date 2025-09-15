@@ -2,7 +2,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import {
 	isUp, isDown, isLeft, isRight,
 	isUpShift, isDownShift, isLeftShift, isRightShift,
@@ -109,7 +108,6 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
 		Popup.styles,
 		PopupsCommonCss,
 		dialogCSS,
-		getEffectiveScrollbarStyle(),
 	],
 })
 class Dialog extends Popup {

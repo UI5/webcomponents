@@ -27,7 +27,7 @@ const importAndCheck = async (localeId) => {
 const localeIds = [${languagesKeysStringArray}];
 
 localeIds.forEach(localeId => {
-	registerI18nLoader("${packageName}", localeId, importAndCheck);
+	registerI18nLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, localeId, importAndCheck);
 });
 `;
 }

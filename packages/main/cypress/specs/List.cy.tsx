@@ -13,36 +13,17 @@ import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
 
+function getGrowingWithScrollList(length: number, height: string = "100px") {
+	return (
+		<List growing="Scroll" style={{ height }}>
+			{Array.from({ length }, (_, index) => (
+				<ListItemStandard key={index}>Item {index + 1}</ListItemStandard>
+			))}
+		</List>
+	);
+}
+
 describe("List Tests", () => {
-	it("tests 'loadMore' event fired upon infinite scroll", () => {
-		cy.mount(
-			<List style="height: 300px;" growing="Scroll">
-				<ListItemStandard>Laptop Lenovo</ListItemStandard>
-				<ListItemStandard>IPhone 3</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>DVD set</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard id="lastItem">Last Item</ListItemStandard>
-			</List>);
-
-		cy.get("[ui5-list]")
-			.as("list");
-
-		cy.get<List>("@list")
-			.then(list => {
-				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
-			})
-			.shadow()
-			.find(".ui5-list-scroll-container")
-			.as("scrollContainer")
-			.scrollTo("bottom", { duration: 100 });
-
-		cy.get("@loadMore")
-			.should("have.been.calledOnce");
-	});
-
 	it("Arrow down and up navigation between last item and growing button", () => {
 		cy.mount(
 			<List growing="Button">
@@ -190,6 +171,150 @@ describe("List Tests", () => {
 			.shadow()
 			.find("[id$='growing-btn']")
 			.should("not.have.attr", "aria-labelledby");
+	});
+});
+
+describe("List - Growing with scroll", () => {
+	it("tests 'loadMore' event not fired initially when the list did not overflow", () => {
+		cy.mount(
+			<div>
+				<input value="0" />
+				<List growing="Scroll">
+					<ListItemGroup headerText="New Items" />
+				</List>
+			</div>
+		);
+
+		cy.get("input").should("have.value", "0");
+	});
+	it("tests start marker is present in DOM", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-start-marker")
+			.should("exist")
+			.should("have.attr", "tabindex", "-1")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("tests end marker is present in DOM", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-end-marker")
+			.should("exist")
+			.should("have.attr", "tabindex", "-1")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("End marker has correct CSS properties", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-end-marker")
+			.should("have.css", "display", "inline-block");
+	});
+
+	it("tests start marker observation works when scrolled", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]").as("list");
+
+		// Initially, start marker should be in view, so _startMarkerOutOfView should be false
+		cy.get<List>("@list")
+			.should(($el) => {
+				const list = $el.get(0);
+				expect(list._startMarkerOutOfView).to.be.false;
+			});
+
+		// Scroll down so start marker goes out of view
+		cy.get("@list")
+			.shadow()
+			.find(".ui5-list-scroll-container")
+			.scrollTo(0, 200, { duration: 100 });
+
+		cy.get<List>("@list")
+			.should(($el) => {
+				const list = $el.get(0);
+				expect(list._startMarkerOutOfView).to.be.true;
+			});
+	});
+
+	it("tests end marker observation works when scrolled to bottom as load-more is being fired", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]").as("list");
+
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll to bottom so end marker becomes visible
+		cy.get("@list")
+			.shadow()
+			.find(".ui5-list-scroll-container")
+			.scrollTo("bottom", { duration: 100 });
+
+		// The load-more event should be fired when end marker becomes visible
+		// (assuming start marker is also out of view due to scrolling)
+		cy.get("@loadMore")
+			.should("have.been.called");
+	});
+
+	it("tests rerender/content change does not fire load-more event if conditions are met", () => {
+		cy.mount(
+			<div style="height: 6rem; overflow: auto; border: 1px solid black">
+				{getGrowingWithScrollList(5, "")}
+			</div>
+		);
+
+		cy.get("[ui5-list]").as("list");
+
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll the container to bottom to meet the conditions
+		cy.get("@list")
+			.parent()
+			.scrollTo("bottom", { duration: 100 });
+
+		cy.get("@loadMore").invoke("resetHistory");
+
+		// Simulate rerender by replacing content
+		cy.get<List>("@list")
+			.then(($list) => {
+				$list[0].innerHTML = '<ui5-li>New Item</ui5-li>';
+			});
+
+		cy.get("@loadMore")
+			.should("not.have.been.called");
+	});
+
+	it("tests load-more event fires when the scrollable container is a parent element", () => {
+		cy.mount(
+			<div id="scrollable-container" style="height: 150px; overflow-y: auto;">
+				<List growing="Scroll">
+					{getGrowingWithScrollList(5, "")}
+				</List>
+			</div>
+		);
+
+		cy.get("[ui5-list]").as("list");
+
+		// Set up load-more event listener
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll the parent container (not the list itself) to bottom
+		cy.get("#scrollable-container")
+			.scrollTo("bottom", { duration: 100 });
+
+		// The load-more event should still fire because intersection observers use viewport
+		cy.get("@loadMore")
+			.should("have.been.called");
 	});
 });
 
@@ -1180,19 +1305,6 @@ describe("List Tests", () => {
 		cy.get("[ui5-li]").first().should("be.focused");
 	});
 
-	it("tests 'loadMore' event not fired initially when the list did not overflow", () => {
-		cy.mount(
-			<div>
-				<input value="0" />
-				<List growing="Scroll">
-					<ListItemGroup headerText="New Items" />
-				</List>
-			</div>
-		);
-
-		cy.get("input").should("have.value", "0");
-	});
-
 	it("detailPress event is fired", () => {
 		cy.mount(
 			<div>
@@ -1568,7 +1680,7 @@ describe("List Tests", () => {
 		cy.mount(
 			<List>
 				<ListItemStandard>
-					<a href="https://sap.github.io/ui5-webcomponents/playground/components" target="_blank">
+					<a href="https://ui5.github.io/webcomponents/playground/components" target="_blank">
 						Link to UI5 Playground
 					</a>
 				</ListItemStandard>
@@ -1579,7 +1691,7 @@ describe("List Tests", () => {
 
 		cy.get("[ui5-li]")
 			.find("a")
-			.should("have.attr", "href", "https://sap.github.io/ui5-webcomponents/playground/components")
+			.should("have.attr", "href", "https://ui5.github.io/webcomponents/playground/components")
 			.should("have.attr", "target", "_blank");
 
 		cy.get("[ui5-li]")
@@ -1636,26 +1748,6 @@ describe("List Tests", () => {
 			.shadow()
 			.find(".ui5-li-root")
 			.should("have.attr", "tabindex", "0");
-	});
-
-	it("End marker has correct CSS properties", () => {
-		cy.mount(
-			<List growing="Scroll">
-				<ListItemStandard>Laptop Lenovo</ListItemStandard>
-				<ListItemStandard>IPhone 3</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>DVD set</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>Last Item</ListItemStandard>
-			</List>
-		);
-
-		cy.get("[ui5-list]")
-			.shadow()
-			.find(".ui5-list-end-marker")
-			.should("have.css", "display", "inline-block");
 	});
 
 	it("Checks if tooltip property value equals the title of li element", () => {
@@ -1777,7 +1869,6 @@ describe("List - Drag and Drop", () => {
 			<div>
 				<CheckBox text="Movable items" checked />
 				<CheckBox text="Compact density" />
-				<a href="http://sap.com" draggable={true}>http://sap.com</a>
 
 				<section>
 					<h2>Drag and drop</h2>
@@ -1980,38 +2071,6 @@ describe("List - Drag and Drop", () => {
 
 		cy.get("[ui5-list]").first().find("[ui5-li]").should("have.length.at.least", 3);
 		cy.get("[ui5-list]").eq(1).find("[ui5-li]").should("have.length.at.least", 2);
-	});
-
-	it("Moving link to list that doesn't accept it", () => {
-		const dataTransfer = new DataTransfer();
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragstart", { dataTransfer });
-
-		cy.get("[ui5-list]").first().find("[ui5-li]").first()
-			.trigger("dragover", { dataTransfer })
-			.trigger("drop", { dataTransfer });
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragend", { dataTransfer });
-
-		cy.get("[ui5-list]").first().find("[ui5-li]").should("have.length", 3);
-	});
-
-	it("Moving link to list that accepts it", () => {
-		const dataTransfer = new DataTransfer();
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragstart", { dataTransfer });
-
-		cy.get("[ui5-list]").eq(1).find("[ui5-li]").eq(1)
-			.trigger("dragover", { dataTransfer })
-			.trigger("drop", { dataTransfer });
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragend", { dataTransfer });
-
-		cy.get("[ui5-list]").eq(1).find("[ui5-li]").should("have.length.at.least", 3);
 	});
 });
 

@@ -1,4 +1,5 @@
 import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import Dialog from "../../src/Dialog.js";
 import Label from "../../src/Label.js";
 import Title from "../../src/Title.js";
@@ -377,6 +378,32 @@ describe("Dialog general interaction", () => {
 		cy.get("#dialog").invoke("prop", "open", false);
 		cy.get("#dialog")
 			.should("not.be.visible");
+	});
+
+	it("dialog ResizeHandler registration", () => {
+		cy.spy(ResizeHandler, "register").as("registerResizeSpy");
+
+		cy.mount(
+			<>
+				<Dialog id="dialog">
+					<div>Content</div>
+				</Dialog>
+			</>
+		);
+
+		cy.get<Dialog>("#dialog")
+			.should((dialog => {
+				expect(dialog.get(0).getDomRef()).to.exist;
+			}));
+
+		cy.get("@registerResizeSpy")
+			.should("not.be.called");
+
+		cy.get("#dialog")
+			.invoke("attr", "open", true);
+
+		cy.get("@registerResizeSpy")
+			.should("be.calledOnce");
 	});
 
 

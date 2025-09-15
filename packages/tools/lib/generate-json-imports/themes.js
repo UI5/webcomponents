@@ -11,10 +11,10 @@ const generate = async () => {
 	const outputFileDynamicImportJSONAttr = path.normalize(`${process.argv[3]}/Themes-node.${ext}`);
 	const outputFileFetchMetaResolve = path.normalize(`${process.argv[3]}/Themes-fetch.${ext}`);
 
-// All supported optional themes
+	// All supported optional themes
 	const allThemes = assets.themes.all;
 
-// All themes present in the file system
+	// All themes present in the file system
 	const dirs = await fs.readdir(inputFolder);
 	const themesOnFileSystem = dirs.map(dir => {
 		const matches = dir.match(/sap_.*$/);
@@ -28,7 +28,7 @@ const generate = async () => {
 	const dynamicImportJSONAttrLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle.css.json", {with: { type: 'json'}})).default;`).join("\n");
 	const fetchMetaResolveLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await fetch(new URL("../assets/themes/${theme}/parameters-bundle.css.json", import.meta.url))).json();`).join("\n");
 
-// dynamic imports file content
+	// dynamic imports file content
 	const contentDynamic = function (lines) {
 		return `// @ts-nocheck
 import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
@@ -49,7 +49,7 @@ const loadAndCheck = async (themeName) => {
 };
 
 ${availableThemesArray}
-  .forEach(themeName => registerThemePropertiesLoader("${packageName}", themeName, loadAndCheck));
+  .forEach(themeName => registerThemePropertiesLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, themeName, loadAndCheck));
 `;
 	}
 

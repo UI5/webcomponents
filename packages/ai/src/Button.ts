@@ -24,7 +24,7 @@ import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 
-type AIButtonRootAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title">;
+type AIButtonRootAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
 type AIButtonArrowButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
 type AIButtonAccessibilityAttributes = { root?: AIButtonRootAccessibilityAttributes, arrowButton?: AIButtonArrowButtonAccessibilityAttributes}
 
@@ -142,6 +142,9 @@ class Button extends UI5Element {
 	 *     Accepts string values: `"dialog"`, `"grid"`, `"listbox"`, `"menu"`, or `"tree"`.
 	 *   - **roleDescription**: Defines a human-readable description for the button's role.
 	 *     Accepts any string value.
+	 *   - **title**: Specifies a tooltip or description for screen readers.
+	 *     Accepts any string value.
+	 *  - **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or focus the button.
 	 *
 	 * - **arrowButton**: Accessibility attributes that will be applied to the arrow (split) button element.
 	 *   - **hasPopup**: Indicates the type of popup triggered by the arrow button.
@@ -357,6 +360,7 @@ class Button extends UI5Element {
 				hasPopup: this.accessibilityAttributes?.root?.hasPopup || "false",
 				roleDescription: this.accessibilityAttributes?.root?.roleDescription,
 				title: this.accessibilityAttributes?.root?.title || title,
+				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},
 			arrowButton: {
 				hasPopup: this.accessibilityAttributes?.arrowButton?.hasPopup,

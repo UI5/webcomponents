@@ -395,6 +395,29 @@ describe("General Interaction", () => {
 			.find(".ui5-li-title")
 			.should("have.text", "I #1");
 	});
+
+	it("should not render ComboBox items list when no items are present", () => {
+		cy.mount(
+            <ComboBox valueState="Negative" open>
+                {/* No ComboBox items */}
+            </ComboBox>
+        );
+
+		cy.get("[ui5-combobox]")
+            .as("combo")
+            .shadow()
+            .find("ui5-responsive-popover")
+            .as("popover")
+            .should("have.attr", "open");
+
+		cy.get("@popover")
+            .find(".ui5-responsive-popover-header.ui5-valuestatemessage-root")
+            .should("exist");
+
+		cy.get("@popover")
+            .find("ui5-list")
+            .should("not.exist");
+	});
 });
 
 describe("Keyboard navigation", () => {

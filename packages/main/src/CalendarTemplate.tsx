@@ -84,11 +84,11 @@ export default function CalendarTemplate(this: Calendar) {
 						_currentYearRange = {this._currentYearRange}
 						onChange={this.onSelectedYearRangeChange}
 						onNavigate={this.onNavigate}
-						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between"
+						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
 					/>
 				</div>
 
-				<div class="ui5-calheader">
+				<div class="ui5-calheader" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
 					{ CalendarHeaderTemplate.call(this) }
 				</div>
 			</div>

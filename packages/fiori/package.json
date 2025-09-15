@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-fiori",
-  "version": "2.14.0-rc.1",
+  "version": "2.15.0-rc.0",
   "description": "UI5 Web Components: webcomponents.fiori",
   "ui5": {
     "webComponentsPackage": true
@@ -50,20 +50,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/fiori"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.14.0-rc.1",
-    "@ui5/webcomponents-base": "2.14.0-rc.1",
-    "@ui5/webcomponents-icons": "2.14.0-rc.1",
-    "@ui5/webcomponents-theming": "2.14.0-rc.1",
+    "@ui5/webcomponents": "2.15.0-rc.0",
+    "@ui5/webcomponents-base": "2.15.0-rc.0",
+    "@ui5/webcomponents-icons": "2.15.0-rc.0",
+    "@ui5/webcomponents-theming": "2.15.0-rc.0",
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.14.0-rc.1",
-    "chromedriver": "^138.0.5",
+    "@ui5/webcomponents-tools": "2.15.0-rc.0",
+    "chromedriver": "^139.0.3",
     "lit": "^2.0.0"
   }
 }

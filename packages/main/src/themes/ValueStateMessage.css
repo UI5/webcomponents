@@ -36,7 +36,7 @@
 	display: inline-block;
 	color: var(--sapTextColor);
 	font-size: var(--sapFontSmallSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	height: auto;
 	padding: var(--_ui5_value_state_message_padding);
 	overflow: hidden;

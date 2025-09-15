@@ -837,9 +837,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (isEnter(e)) {
 			const isValueUnchanged = this.previousValue === this.getInputDOMRefSync()!.value;
+			const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
+
 			this._enterKeyDown = true;
 
-			if (isValueUnchanged && this._internals.form) {
+			if (isValueUnchanged && shouldSubmit) {
 				submitForm(this);
 			}
 
@@ -1138,6 +1140,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_handleChange() {
+		const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
+
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
@@ -1159,7 +1163,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			} else {
 				fireChange();
 
-				if (this._enterKeyDown && this._internals.form) {
+				if (this._enterKeyDown && shouldSubmit) {
 					submitForm(this);
 				}
 			}
@@ -1424,10 +1428,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		const value = this.typedInValue || this.value;
 		const itemText = item.text || "";
 		const fireChange = keyboardUsed
-			? this.valueBeforeItemSelection !== itemText : value !== itemText;
+			? this.valueBeforeItemSelection !== itemText : this.previousValue !== itemText;
 
 		this.hasSuggestionItemSelected = true;
 		this.value = itemText;

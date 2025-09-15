@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
+
+
+### Features
+
+* **ui5-view-settings-dialog:** add group option ([#11950](https://github.com/UI5/webcomponents/issues/11950)) ([77bd73e](https://github.com/UI5/webcomponents/commit/77bd73ed3b3a2127a59c256598908c7d94dafeee)), closes [#11815](https://github.com/UI5/webcomponents/issues/11815)
+
+
+
+
+
+# [2.14.0](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.7...v2.14.0) (2025-09-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.14.0-rc.7](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.6...v2.14.0-rc.7) (2025-09-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.14.0-rc.6](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.5...v2.14.0-rc.6) (2025-08-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.14.0-rc.5](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.4...v2.14.0-rc.5) (2025-08-28)
+
+
+### Features
+
+* **ui5-search-item-show-more:** introduce new show more item ([#11931](https://github.com/SAP/ui5-webcomponents/issues/11931)) ([f133a70](https://github.com/SAP/ui5-webcomponents/commit/f133a709a578155bbc235c275135a9145d0e891d))
+
+
+
+
+
+# [2.14.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.3...v2.14.0-rc.4) (2025-08-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.14.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.2...v2.14.0-rc.3) (2025-08-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.14.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.1...v2.14.0-rc.2) (2025-08-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
 # [2.14.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.0...v2.14.0-rc.1) (2025-08-14)
 
 

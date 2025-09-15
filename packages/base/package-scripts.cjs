@@ -3,6 +3,7 @@ const path = require("path");
 
 const assetParametersScript = resolve.sync("@ui5/webcomponents-base/lib/generate-asset-parameters/index.js");
 const stylesScript = resolve.sync("@ui5/webcomponents-base/lib/generate-styles/index.js");
+const fontFaceScript = resolve.sync("@ui5/webcomponents-base/lib/css-processors/css-processor-font-face.mjs");
 const versionScript = resolve.sync("@ui5/webcomponents-base/lib/generate-version-info/index.js");
 const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/index.js");
 const amdToES6 = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/index.js");
@@ -15,8 +16,8 @@ const viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-p
 const scripts = {
 	clean: "rimraf src/generated && rimraf dist && rimraf .port",
 	lint: `eslint .`,
-	generate: "cross-env UI5_TS=true nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateTemplates build.jsonImports",
-	prepare: "cross-env UI5_TS=true nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateTemplates typescript integrate.no-remaining-require build.jsonImports",
+	generate: "cross-env UI5_TS=true nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace generateTemplates build.jsonImports",
+	prepare: "cross-env UI5_TS=true nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace generateTemplates typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
 	integrate: {
 		default: "nps integrate.copy-used-modules integrate.amd-to-es6 integrate.third-party",
@@ -49,6 +50,7 @@ const scripts = {
 	generateAssetParameters: `node "${assetParametersScript}"`,
 	generateVersionInfo: `node "${versionScript}"`,
 	generateStyles: `node "${stylesScript}"`,
+	generateFontFace: `node "${fontFaceScript}"`,
 	generateTemplates: ``,
 	generateTestTemplates: `mkdirp test/test-elements/generated/templates && cross-env UI5_BASE=true UI5_TS=true node "${LIB}/hbs2ui5/index.js" -d test/test-elements -o test/test-elements/generated/templates`,
 	generateProd: {

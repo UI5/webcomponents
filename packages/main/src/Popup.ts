@@ -252,6 +252,7 @@ abstract class Popup extends UI5Element {
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_opened = false;
 	_open = false;
+	_resizeHandlerRegistered = false;
 
 	constructor() {
 		super();
@@ -272,24 +273,34 @@ abstract class Popup extends UI5Element {
 		renderFinished().then(() => {
 			this._updateMediaRange();
 		});
+
+		if (this.open) {
+			this._registerResizeHandler();
+		} else {
+			this._deregisterResizeHandler();
+		}
 	}
 
 	onEnterDOM() {
 		this.setAttribute("popover", "manual");
-		ResizeHandler.register(this, this._resizeHandler);
+
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
 
 		this.tabIndex = -1;
 
+		this.handleOpenOnEnterDOM();
+
+		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
+		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
+	}
+
+	handleOpenOnEnterDOM() {
 		if (this.open) {
 			this.showPopover();
 			this.openPopup();
 		}
-
-		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
-		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
 	}
 
 	onExitDOM() {
@@ -600,6 +611,20 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
+		}
+	}
+
+	_registerResizeHandler() {
+		if (!this._resizeHandlerRegistered) {
+			ResizeHandler.register(this, this._resizeHandler);
+			this._resizeHandlerRegistered = true;
+		}
+	}
+
+	_deregisterResizeHandler() {
+		if (this._resizeHandlerRegistered) {
+			ResizeHandler.deregister(this, this._resizeHandler);
+			this._resizeHandlerRegistered = false;
 		}
 	}
 

@@ -8,7 +8,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -77,7 +76,6 @@ type TextAreaInputEventDetail = {
 	styles: [
 		textareaStyles,
 		valueStateMessageStyles,
-		getEffectiveScrollbarStyle(),
 	],
 	renderer: jsxRenderer,
 	template: TextAreaTemplate,
@@ -549,7 +547,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return {
 			root: {
 				"ui5-textarea-root": true,
-				"ui5-content-custom-scrollbars": !!getEffectiveScrollbarStyle(),
 			},
 			valueStateMsg: {
 				"ui5-valuestatemessage-header": true,

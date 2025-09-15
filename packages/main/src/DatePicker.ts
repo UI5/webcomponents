@@ -13,7 +13,13 @@ import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateB
 import getRoundedTimestamp from "@ui5/webcomponents-localization/dist/dates/getRoundedTimestamp.js";
 import getTodayUTCTimestamp from "@ui5/webcomponents-localization/dist/dates/getTodayUTCTimestamp.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getAllAccessibleNameRefTexts,
+	getEffectiveAriaDescriptionText,
+	getAllAccessibleDescriptionRefTexts,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
@@ -113,7 +119,7 @@ type Picker = "day" | "month" | "year";
  * the input field, it must fit to the used date format.
  *
  * Supported format options are pattern-based on Unicode LDML Date Format notation.
- * For more information, see [UTS #35: Unicode Locale Data Markup Language](http://unicode.org/reports/tr35/#Date_Field_Symbol_Table).
+ * For more information, see [UTS #35: Unicode Locale Data Markup Language](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
  *
  * For example, if the `format-pattern` is "yyyy-MM-dd",
  * a valid value string is "2015-07-30" and the same is displayed in the input.
@@ -336,6 +342,24 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 */
 	@property()
 	accessibleNameRef?: string;
+
+	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the input.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
 
 	@property({ type: Object })
 	_respPopoverConfig?: object;
@@ -641,6 +665,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Checks if a value is valid against the current date format of the DatePicker.
 	 * @public
 	 * @param value A value to be tested against the current date format
+	 * @deprecated Use isValidValue or isValidDisplayValue instead
 	 */
 	isValid(value: string): boolean {
 		if (value === "" || value === undefined) {
@@ -768,7 +793,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return DatePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.ariaLabelText || DatePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get showHeader() {
@@ -793,11 +818,16 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get accInfo(): InputAccInfo {
 		return {
-			"ariaRoledescription": this.dateAriaDescription,
+			"ariaRoledescription": this.roleDescription,
 			"ariaHasPopup": "grid",
 			"ariaRequired": this.required,
-			"ariaLabel": getEffectiveAriaLabelText(this),
+			"ariaLabel": this.ariaLabelText || undefined,
+			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
 		};
+	}
+
+	get ariaLabelText() {
+		return getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || "";
 	}
 
 	get valueStateDefaultText(): string | undefined {
@@ -837,12 +867,12 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		return "appointment-2";
 	}
 
-	get dateAriaDescription() {
+	get roleDescription() {
 		return DatePicker.i18nBundle.getText(DATEPICKER_DATE_DESCRIPTION);
 	}
 
 	get pickerAccessibleName() {
-		return DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	/**

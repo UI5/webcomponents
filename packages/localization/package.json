@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-localization",
-  "version": "2.14.0-rc.1",
+  "version": "2.15.0-rc.0",
   "description": "Localization for UI5 Web Components",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/localization"
   },
   "exports": {
@@ -33,15 +33,15 @@
     "@babel/generator": "^7.23.6",
     "@babel/parser": "^7.23.6",
     "@openui5/sap.ui.core": "1.120.17",
-    "@ui5/webcomponents-tools": "2.14.0-rc.1",
+    "@ui5/webcomponents-tools": "2.15.0-rc.0",
     "babel-plugin-amd-to-esm": "^2.0.3",
-    "chromedriver": "^138.0.5",
+    "chromedriver": "^139.0.3",
     "estree-walk": "^2.2.0",
     "mkdirp": "^1.0.4",
     "resolve": "^1.20.0"
   },
   "dependencies": {
     "@types/openui5": "^1.113.0",
-    "@ui5/webcomponents-base": "2.14.0-rc.1"
+    "@ui5/webcomponents-base": "2.15.0-rc.0"
   }
 }

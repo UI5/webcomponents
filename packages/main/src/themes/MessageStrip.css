@@ -77,7 +77,7 @@
 	width: 100%;
 	color: var(--sapTextColor);
 	line-height: 1.2;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 }
 

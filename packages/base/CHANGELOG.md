@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
+
+
+### Bug Fixes
+
+* **f6navigation:** backward navigation in N level nesting ([#12279](https://github.com/UI5/webcomponents/issues/12279)) ([2fb71a7](https://github.com/UI5/webcomponents/commit/2fb71a779cce8b6671637c4ecfaeac4c15a7be88)), closes [#12268](https://github.com/UI5/webcomponents/issues/12268)
+
+
+
+
+
+# [2.14.0](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.7...v2.14.0) (2025-09-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.7](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.6...v2.14.0-rc.7) (2025-09-04)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** improve focus handling for OpenUI5 and Web Component popups ([#12230](https://github.com/SAP/ui5-webcomponents/issues/12230)) ([6937756](https://github.com/SAP/ui5-webcomponents/commit/6937756e40b3dc5c8fd6ed0db8c2920328e2b6b2))
+* **ScrollbarStyles:** introduce centralized scrollbar styling ([#12207](https://github.com/SAP/ui5-webcomponents/issues/12207)) ([5481bb3](https://github.com/SAP/ui5-webcomponents/commit/5481bb3f1e3f78dc3a0cb13a16c97d19f176ed37))
+* **ui5-form-item:** update host element display ([#12208](https://github.com/SAP/ui5-webcomponents/issues/12208)) ([bd9299e](https://github.com/SAP/ui5-webcomponents/commit/bd9299e884215375b52badca943aae68d1e77d6a)), closes [#12201](https://github.com/SAP/ui5-webcomponents/issues/12201)
+
+
+
+
+
+# [2.14.0-rc.6](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.5...v2.14.0-rc.6) (2025-08-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.5](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.4...v2.14.0-rc.5) (2025-08-28)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.3...v2.14.0-rc.4) (2025-08-25)
+
+
+### Bug Fixes
+
+* **DnD:** fix drag and drop in Shadow DOM ([#11975](https://github.com/SAP/ui5-webcomponents/issues/11975)) ([fb561aa](https://github.com/SAP/ui5-webcomponents/commit/fb561aa92fdc2d9dddfab9d5ec15bf90ff3a979c))
+
+
+
+
+
+# [2.14.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.2...v2.14.0-rc.3) (2025-08-22)
+
+
+### Bug Fixes
+
+* **f6navigation:** skip non-element nodes when resolving groups ([#12174](https://github.com/SAP/ui5-webcomponents/issues/12174)) ([060af95](https://github.com/SAP/ui5-webcomponents/commit/060af95baf3273a8dc09460122e3dc76bf5f5a1c))
+* **framework:** improve CSS variables from OpenUI5 detection ([#12177](https://github.com/SAP/ui5-webcomponents/issues/12177)) ([9199825](https://github.com/SAP/ui5-webcomponents/commit/9199825e6aecb9c407f6e67d8768025233e10f16))
+
+
+
+
+
+# [2.14.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.1...v2.14.0-rc.2) (2025-08-21)
+
+
+### Bug Fixes
+
+* **framework:** use font-face declarations from theming-base-content ([#12144](https://github.com/SAP/ui5-webcomponents/issues/12144)) ([50deee9](https://github.com/SAP/ui5-webcomponents/commit/50deee9b9f512d3bd506de1648d3dc8f145a7d88))
+* **ui5-side-navigation:** expand SideNavigation item activation to Enter with modifier keys ([d660c37](https://github.com/SAP/ui5-webcomponents/commit/d660c37a81c9a6a6c73715ee9889e6ee140d08d2))
+
+
+### Features
+
+* **framework:** adds `unsafeRegisterIcon` base method for custom SVG icons ([#12145](https://github.com/SAP/ui5-webcomponents/issues/12145)) ([3b67132](https://github.com/SAP/ui5-webcomponents/commit/3b67132f6293a76b3bbc10f5fb3080d75fba10e5)), closes [#clip0_2221_23716](https://github.com/SAP/ui5-webcomponents/issues/clip0_2221_23716)
+
+
+
+
+
 # [2.14.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.0...v2.14.0-rc.1) (2025-08-14)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

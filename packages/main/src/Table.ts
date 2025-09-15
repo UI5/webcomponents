@@ -404,7 +404,7 @@ class Table extends UI5Element {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	_events = ["keydown", "keyup", "click", "focusin", "focusout", "dragenter", "dragleave", "dragover", "drop"];
+	_events = ["keydown", "keyup", "click", "focusin", "focusout", "dragstart", "dragenter", "dragleave", "dragover", "drop", "dragend"];
 	_onEventBound: (e: Event) => void;
 	_onResizeBound: ResizeObserverCallback;
 	_tableNavigation?: TableNavigation;
