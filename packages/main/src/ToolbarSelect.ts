@@ -210,7 +210,7 @@ class ToolbarSelect extends ToolbarItem {
 
 	get styles() {
 		return {
-			width: this.width,
+			width: this.isOverflowed ? undefined : this.width,
 		};
 	}
 

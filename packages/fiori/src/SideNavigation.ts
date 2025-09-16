@@ -534,9 +534,11 @@ class SideNavigation extends UI5Element {
 
 		if (selectedItem) {
 			const selectedItemDomRef = selectedItem.getDomRef();
-			const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef!);
 
-			itemsHeight += selectedItemDomRef!.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			if (selectedItemDomRef) {
+				const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef);
+				itemsHeight += selectedItemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			}
 		}
 
 		overflowItems.forEach(item => {

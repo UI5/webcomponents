@@ -350,6 +350,11 @@ class Tokenizer extends UI5Element {
 	_previousToken: Token | null = null;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_deletedDialogItems!: Token[];
+	/**
+	 * Scroll to end when tokenizer is expanded
+	 * @private
+	 */
+	_scrollToEndOnExpand = false;
 
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
@@ -403,7 +408,6 @@ class Tokenizer extends UI5Element {
 
 		if (!this.preventPopoverOpen) {
 			this.open = true;
-			this.scrollToEnd();
 		}
 
 		this._tokens.forEach(token => {
@@ -418,14 +422,13 @@ class Tokenizer extends UI5Element {
 	_onmousedown(e: MouseEvent) {
 		if ((e.target as HTMLElement).hasAttribute("ui5-token")) {
 			const target = e.target as Token;
-			this.expanded = true;
 
 			if (this.open) {
 				this._preventCollapse = true;
 			}
 
 			if (!target.toBeDeleted) {
-				this._itemNav.setCurrentItem(target);
+				this._addTokenToNavigation(target);
 				this._scrollToToken(target);
 			}
 		}
@@ -474,7 +477,24 @@ class Tokenizer extends UI5Element {
 			this._expandedScrollWidth = this.contentDom.scrollWidth;
 		}
 
+		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
+	}
+
+	/**
+	 * Scrolls the container to the end to ensure very long tokens are visible at their end.
+	 * Otherwise, tokens may appear visually cut off.
+	 * @protected
+	 */
+	_scrollToEndIfNeeded() {
+		// if scroll to end is prevented, skip scroll to the end
+		if (!this._scrollToEndOnExpand) {
+			return;
+		}
+
+		if (this.tokens.length || this.expanded) {
+			this.scrollToEnd();
+		}
 	}
 
 	_delete(e: CustomEvent<TokenDeleteEventDetail>) {
@@ -894,13 +914,14 @@ class Tokenizer extends UI5Element {
 	}
 
 	_onfocusin(e: FocusEvent) {
-		const target = e.target as Token;
 		this.open = false;
-		this._itemNav.setCurrentItem(target);
+		this.expanded = true;
+		this._addTokenToNavigation(e.target as Token);
+	}
 
-		if (!this.expanded) {
-			this.expanded = true;
-		}
+	_addTokenToNavigation(token: Token) {
+		this._scrollToEndOnExpand = false;
+		this._itemNav.setCurrentItem(token);
 	}
 
 	_onfocusout(e: FocusEvent) {
@@ -1004,7 +1025,8 @@ class Tokenizer extends UI5Element {
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 4 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * For the last token, if its width is more than the needed space, scroll to the end without offset
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
@@ -1014,11 +1036,18 @@ class Tokenizer extends UI5Element {
 
 		const tokenRect = token.getBoundingClientRect();
 		const tokenContainerRect = this.contentDom.getBoundingClientRect();
+		const oneSideBorderAndPaddingOffset = 5;
+
+		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
+		if (isLastToken) {
+			this.scrollToEnd();
+			return;
+		}
 
 		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
 		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
 		}
 	}
 

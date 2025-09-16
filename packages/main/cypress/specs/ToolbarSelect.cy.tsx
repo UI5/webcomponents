@@ -259,4 +259,27 @@ describe("Toolbar general interaction", () => {
 				.should("have.attr", "value", "Option 3");
 		});
 	});
+
+	it("Should handle toolbar-select with width larger than the toolbar", async () => {
+		cy.mount(
+			<Toolbar id="otb_d">
+				<ToolbarSelect style="width: 201px;" id="toolbar-select">
+						<ToolbarSelectOption>1</ToolbarSelectOption>
+						<ToolbarSelectOption selected>2</ToolbarSelectOption>
+						<ToolbarSelectOption>3</ToolbarSelectOption>
+					</ToolbarSelect>
+			</Toolbar>
+		);
+		cy.viewport(220, 1080); // Set a small viewport width to trigger overflow
+
+		// Add a toolbar-select element with a large width
+		cy.get("#otb_d").shadow().within(() => {
+			cy.wait(2000);
+			// Click the overflow button
+			cy.get(".ui5-tb-overflow-btn").click();
+		});
+
+		// Verify the toolbar-select is rendered inside the popover
+		cy.get("ui5-toolbar-select").should("be.visible");
+	});
 });

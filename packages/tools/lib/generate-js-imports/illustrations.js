@@ -77,7 +77,7 @@ const config = {
   set: process.argv[4],
   collection: process.argv[5],
   location: process.argv[6],
-  filterOut: process.argv.slice[7],
+  filterOut: process.argv[7].slice().split(","),
 };
 
 // Run the generation process
