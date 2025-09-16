@@ -426,8 +426,7 @@ slot[name="profile"] {
 	margin-inline-start: 0.5rem;
 }
 
-.ui5-shellbar-overflow-container-right-child > :first-child,
-.ui5-shellbar-search-field:first-child + .ui5-shellbar-button:not(.ui5-shellbar-search-button) {
+.ui5-shellbar-overflow-container-right-child > :first-child {
 	margin-inline-start: 0;
 }
 
