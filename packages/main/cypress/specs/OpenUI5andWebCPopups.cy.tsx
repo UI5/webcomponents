@@ -241,7 +241,7 @@ describe("ui5 and web components integration", () => {
 		// add ui5 bootstrap
 		cy.document().then((doc) => {
 			const ui5Script = doc.createElement('script');
-			ui5Script.src = 'https://sapui5untested.int.sap.eu2.hana.ondemand.com/resources/sap-ui-core.js';
+			ui5Script.src = 'https://openui5.hana.ondemand.com/resources/sap-ui-core.js';
 			ui5Script.id = 'sap-ui-bootstrap';
 			ui5Script.setAttribute('data-sap-ui-libs', 'sap.m');
 			ui5Script.setAttribute('data-sap-ui-oninit', 'onOpenUI5Init');
@@ -249,8 +249,7 @@ describe("ui5 and web components integration", () => {
 		});
 	});
 
-	it("User interaction", () => {
-		// act: open WebC Dialog
+	it("Open WebC dialog", () => {
 		cy.get('#myButton')
 			.should('be.visible')
 			.realClick();

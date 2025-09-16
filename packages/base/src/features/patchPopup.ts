@@ -16,9 +16,9 @@ type OpenUI5Popup = {
 	}
 };
 
-type OpenUI5Element = {
+type OpenUI5PopupControl = {
 	prototype: {
-		_handleEvent: (e: Event) => void,
+		onsapescape: (e: Event) => void,
 		isA: (type: string) => boolean,
 		oPopup: OpenUI5Popup,
 	}
@@ -28,15 +28,6 @@ type PopupInfo = {
 	type: "OpenUI5" | "WebComponent";
 	instance: object;
 };
-
-const openUI5PopupTypes = [
-	"sap.m.Popover",
-	"sap.m.Dialog",
-];
-
-const openUI5Events = [
-	"sapescape",
-];
 
 // contains all OpenUI5 and Web Component popups that are currently opened
 const AllOpenedPopupsRegistry = getSharedResource<{ openedRegistry: Array<PopupInfo> }>("AllOpenedPopupsRegistry", { openedRegistry: [] });
@@ -100,16 +91,14 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 	});
 };
 
-const patchElementHandleEvent = (Element: OpenUI5Element) => {
-	const origHandleEvent = Element.prototype._handleEvent;
-	Element.prototype._handleEvent = function _handleEvent(e: Event) {
-		if (openUI5Events.includes(e.type)
-			&& openUI5PopupTypes.some(PopupType => this.isA(PopupType))
-			&& hasWebComponentPopupAbove(this.oPopup)) {
+const patchPopupControl = (PopupControl: OpenUI5PopupControl) => {
+	const origOnsapescape = PopupControl.prototype.onsapescape;
+	PopupControl.prototype.onsapescape = function onsapescape(e: Event) {
+		if (hasWebComponentPopupAbove(this.oPopup)) {
 			return;
 		}
 
-		origHandleEvent.call(this, e);
+		origOnsapescape.call(this, e);
 	};
 };
 
@@ -165,12 +154,13 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Element: OpenUI5Element, Popup: OpenUI5Popup) => {
-	patchElementHandleEvent(Element); // Element.prototype._handleEvent
+const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupControl, Popover: OpenUI5PopupControl) => {
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
 	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
+	patchPopupControl(Dialog); // Dialog.prototype.onsapescape
+	patchPopupControl(Popover); // Popover.prototype.onsapescape
 };
 
 export {
@@ -180,4 +170,4 @@ export {
 	getTopmostPopup,
 };
 
-export type { OpenUI5Element, OpenUI5Popup, PopupInfo };
+export type { OpenUI5Popup, OpenUI5PopupControl, PopupInfo };
