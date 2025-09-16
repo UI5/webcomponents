@@ -113,6 +113,7 @@ import Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import SuggestionItem from "./SuggestionItem.js";
+import type InputComposition from "./features/InputComposition.js";
 
 /**
  * Interface for components that may be slotted inside a `ui5-multi-combobox` as items
@@ -480,6 +481,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
+
+	/**
 	 * Defines the component items.
 	 * @public
 	 */
@@ -533,8 +542,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_itemsBeforeOpen: Array<MultiComboboxItemWithSelection>;
 	selectedItems: Array<IMultiComboBoxItem>;
 	_valueStateLinks: Array<HTMLElement>;
+	_composition?: InputComposition;
+	_suppressNextLiveChange: boolean; // prevent unwanted live change events during IME composition
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
 		return MultiComboBox.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
@@ -584,15 +596,18 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._lastValue = this.getAttribute("value") || "";
 		this.currentItemIdx = -1;
 		this._valueStateLinks = [];
+		this._suppressNextLiveChange = false;
 	}
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
+		this._enableComposition();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
 		this._removeLinksEventListeners();
+		this._composition?.removeEventListeners();
 	}
 
 	_handleResize() {
@@ -683,6 +698,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_inputLiveChange(e: InputEvent) {
+		// This ensures proper input clearing after Enter-based token creation during composition
+		if (this._suppressNextLiveChange) {
+			this._suppressNextLiveChange = false;
+			return;
+		}
+
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
 		const filteredItems: Array<IMultiComboBoxItem> = this._filterItems(value);
@@ -1349,6 +1370,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this._previouslySelectedItems = this._getSelectedItems();
 				matchingItem.selected = true;
 				this.value = "";
+				// during composition prevent _inputLiveChange for proper input clearing
+				if (this._isComposing) {
+					this._suppressNextLiveChange = true;
+				}
+
 				const changePrevented = this.fireSelectionChange();
 
 				if (changePrevented) {
@@ -1728,7 +1754,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			// Keep the original typed in text intact
 			this.valueBeforeAutoComplete = value;
-			item && this._handleTypeAhead(item, value);
+			// Prevent typeahead during composition to avoid interfering with the composition process
+			if (!this._isComposing && item) {
+				this._handleTypeAhead(item, value);
+			}
 		}
 
 		if (this._shouldFilterItems) {
@@ -1895,6 +1924,35 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			if (!isPhone() && !this.noValidation && !focusIsGoingInPopover) {
 				this.value = "";
 			}
+		}
+	}
+	/**
+	 * Enables IME composition handling.
+	 * Dynamically loads the InputComposition feature and sets up event listeners.
+	 * @private
+	 */
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+
+		const setup = (InputCompositionClass: typeof InputComposition) => {
+			this._composition = new InputCompositionClass({
+				getInputEl: () => this._innerInput,
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (MultiComboBox.composition) {
+			setup(MultiComboBox.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				MultiComboBox.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
 		}
 	}
 

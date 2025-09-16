@@ -5,6 +5,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Link from "../../src/Link.js";
 import Input from "../../src/Input.js";
 import Button from "../../src/Button.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
 describe("General Interaction", () => {
 	it("Scrolls the selected item into view after opening the popover", () => {
@@ -89,6 +90,1240 @@ describe("Security", () => {
 			.should("have.text", "<b onmouseover=alert('XSS')></b>");
 		cy.get("ui5-cb-item").eq(2).shadow().find(".ui5-li-title")
 			.should("have.text", "Albania<button onClick='alert(1)'>alert</button>");
+	});
+});
+
+describe("General Interaction", () => {
+	it("should open/close popover when clicking on the arrow", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One"></ComboBoxItem>
+				<ComboBoxItem text="Two"></ComboBoxItem>
+				<ComboBoxItem text="Three"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.as("arrow");
+
+		cy.get("@arrow").realClick();
+		cy.get("@combobox").shadow().find("[ui5-responsive-popover]").should("have.attr", "open");
+
+		cy.get("@arrow").realClick();
+		cy.get("@combobox").shadow().find("[ui5-responsive-popover]").should("not.have.attr", "open");
+	});
+
+	it("tests items filtration", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One"></ComboBoxItem>
+				<ComboBoxItem text="Two"></ComboBoxItem>
+				<ComboBoxItem text="Three"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").should("have.length", 3);
+
+		cy.get("@combobox").realPress("O");
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(2).should("not.have.prop", "_isVisible", true);
+	});
+
+	it("should open the popover when typing a value", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One"></ComboBoxItem>
+				<ComboBoxItem text="Two"></ComboBoxItem>
+				<ComboBoxItem text="Three"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox").realPress("O");
+		cy.get("@combobox").shadow().find("[ui5-responsive-popover]").should("have.prop", "open");
+
+		cy.get("@combobox").should("have.prop", "value", "One");
+		cy.get("[ui5-cb-item]").first().should("have.prop", "selected", true);
+		
+		cy.window().then(window => {
+			return window.getSelection()?.toString();
+		}).should("contains", "ne");
+	});
+
+	it("check that popover closes when there are no matches", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Algeria" id="cbi"></ComboBoxItem>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").should("have.length", 3);
+
+		cy.get("@combobox").shadow().find("input").realPress("a");
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(2).should("not.have.prop", "_isVisible", true);
+
+		cy.get("@combobox").shadow().find("input").realPress("z");
+		cy.get("@combobox").shadow().find("ui5-responsive-popover").should("not.have.attr", "open");
+	});
+
+	it("should close popover on item click / change event", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One"></ComboBoxItem>
+				<ComboBoxItem text="Two"></ComboBoxItem>
+				<ComboBoxItem text="Three"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("@combobox").shadow().find("input").realPress("t");
+
+		cy.get("@combobox").shadow().find("ui5-responsive-popover").should("have.attr", "open");
+
+		cy.get("@combobox").shadow().find("input").realPress("Enter");
+		cy.get("@combobox").shadow().find("ui5-responsive-popover").should("not.have.attr", "open");
+
+		cy.get("@combobox").shadow().find("[ui5-icon]").realClick();
+		cy.get("@combobox").shadow().find("ui5-responsive-popover").should("have.attr", "open");
+
+		cy.get("[ui5-cb-item]").first().shadow().find("li").realClick();
+		cy.get("@combobox").shadow().find("ui5-responsive-popover").should("not.have.attr", "open");
+	});
+
+	it("tests focused property when clicking on the arrow", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").should("have.prop", "focused", false);
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realClick();
+		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
+	});
+
+	it("tests focused property when clicking on the input", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").should("have.prop", "focused", false);
+		cy.get("[ui5-combobox]").shadow().find("[inner-input]").realClick();
+		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
+	});
+
+	it("tests Combo with two-column layout", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem additionalText="DZ" text="Item 1" />
+				<ComboBoxItem additionalText="US" text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
+		cy.get("[ui5-cb-item]").first().shadow()
+			.find(".ui5-li-additional-text")
+			.should("have.text", "DZ");
+	});
+
+	it("should not open value state message when component is in readonly state", () => {
+		cy.mount(
+			<ComboBox id="readonly-value-state-cb" readonly valueState={ValueState.Negative}>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+		cy.get("[ui5-combobox]").shadow().find("[ui5-responsive-popover]").should("not.be.visible");
+	});
+
+	it("should check clear icon availability", () => {
+		cy.mount(
+			<ComboBox value="initial" showClearIcon>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").should("have.prop", "_effectiveShowClearIcon", true);
+
+		cy.get("[ui5-combobox]").shadow().find(".ui5-input-clear-icon-wrapper").realClick();
+		cy.get("[ui5-combobox]").should("have.prop", "_effectiveShowClearIcon", false);
+
+		cy.get("[ui5-combobox]").shadow().find("input").realClick();
+		cy.get("[ui5-combobox]").shadow().find("input").realType("c");
+		cy.get("[ui5-combobox]").should("have.prop", "_effectiveShowClearIcon", true);
+	});
+
+	it("tests Combo with contains filter", () => {
+		cy.mount(
+			<ComboBox filter="Contains">
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("@combobox").shadow().find(".inputIcon").realClick();
+		cy.get("@combobox").find("[ui5-cb-item]").should("have.length", 4);
+
+		cy.get("@combobox").shadow().find("[inner-input]").realType("n");
+		cy.get("@combobox")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 3);
+
+		cy.get("@combobox").shadow().find("[inner-input]").realType("a");
+		cy.get("@combobox").find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 2);
+
+		cy.get("@combobox").shadow().find("[inner-input]").realType("d");
+		cy.get("@combobox").find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1);
+
+		cy.get("@combobox").find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.first()
+			.shadow()
+			.find(".ui5-li-title")
+			.should("have.text", "Canada");
+	});
+
+	it("tests Combo with startswith filter", () => {
+		cy.mount(
+			<ComboBox filter="StartsWith">
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
+		cy.get("[ui5-cb-item]").should("have.length", 4);
+
+		cy.get("[ui5-combobox]").shadow().find("[inner-input]").realType("a");
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1)
+			.first()
+			.shadow()
+			.find(".ui5-li-title")
+			.should("have.text", "Argentina");
+
+		cy.get("[ui5-combobox]").shadow().find("[inner-input]").realType("a");
+		cy.get("[ui5-combobox]").shadow().find("ui5-responsive-popover").should("not.have.attr", "open");
+	});
+
+	it("should add items dynamically to the picker", () => {
+		cy.mount(
+			<>
+				<button id="add-items-btn" onClick={() => {
+					setTimeout(() => {
+						const combo: any = document.querySelector("[ui5-combobox]");
+						const newItem = document.createElement("ui5-cb-item");
+						newItem.setAttribute("text", `New item`);
+						combo.appendChild(newItem);
+					}, 1000);
+				}}>
+					Add items
+				</button>
+				<ComboBox>
+					<ComboBoxItem text="Initial Item" />
+				</ComboBox>
+			</>
+		);
+
+		cy.get("button").realClick();
+		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
+
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").its("length").as("initialCount");
+		cy.get("@initialCount").then(initialCount => {
+			expect(initialCount).to.equal(1, "item count should be updated");
+		});
+
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 2);
+	});
+
+	it("should filter items based on input with filter='None' and lazy loading", () => {
+		cy.mount(
+			<ComboBox filter="None"></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").then(() => {
+			const cb: ComboBox = document.querySelector("[ui5-combobox]")!;
+			let currentSearch: {
+				cancel: () => void;
+				items: Promise<string[] | undefined>;
+			} | undefined;
+			let debounce: number | undefined;
+
+			function reset() {
+				[...cb.children].forEach(c => cb.removeChild(c));
+			}
+
+			function fetchSearchResults(text: string) {
+				let cancel: () => void;
+				return {
+					cancel: () => cancel(),
+					items: new Promise<string[] | undefined>(resolve => {
+						const i = setTimeout(() => {
+							const items = [];
+							for (let i = 0; i < 5; i++) {
+								items.push(`${text} #${i + 1}`);
+							}
+							resolve(items);
+						}, 500);
+						cancel = () => {
+							clearTimeout(i);
+							resolve(undefined);
+						};
+					})
+				};
+			}
+
+			const inputHandler = (e: Event) => {
+				const debounceTime = 250;
+				if (debounce !== undefined) {
+					clearTimeout(debounce);
+				}
+				debounce = setTimeout(async () => {
+					debounce = undefined;
+					const combobox = e.target as ComboBox;
+					const value = combobox.value;
+
+					if (currentSearch !== undefined) {
+						currentSearch.cancel();
+					}
+
+					if (value) {
+						currentSearch = fetchSearchResults(value)!;
+						const items = await currentSearch.items;
+						if (items) {
+							currentSearch = undefined;
+							reset();
+							items.forEach(text => {
+								const item = document.createElement("ui5-cb-item");
+								item.setAttribute("text", text);
+								cb.appendChild(item);
+							});
+						}
+					} else {
+						reset();
+					}
+				}, debounceTime);
+			};
+
+			cy.wrap(cb).invoke('on', 'input', inputHandler);
+		});
+
+		cy.get("[ui5-combobox]").shadow().find("input").realClick();
+		cy.get("[ui5-combobox]").shadow().find("input").realPress("I");
+
+		cy.get("[ui5-cb-item]").should("have.length", 5);
+		cy.get("[ui5-cb-item]").first().shadow()
+			.find(".ui5-li-title")
+			.should("have.text", "I #1");
+	});
+
+	it("should not render ComboBox items list when no items are present", () => {
+		cy.mount(
+			<ComboBox valueState="Negative" open>
+				{/* No ComboBox items */}
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover")
+			.should("have.attr", "open");
+
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-header.ui5-valuestatemessage-root")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+});
+
+describe("Keyboard navigation", () => {
+	it("should focus the first item on arrow down and then the input on arrow up", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1.1" />
+					<ComboBoxItem text="Item 1.2" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@combo")
+			.find("[ui5-cb-item-group]")
+			.first()
+			.should("have.prop", "focused", true);
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowUp");
+		cy.get("@combo").should("have.prop", "focused", true);
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@combo")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowUp");
+
+		cy.get("@combo")
+			.find("[ui5-cb-item-group]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
+
+	it("should select the corresponding item on home/pgup/pgdown/end", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Australia"></ComboBoxItem>
+				<ComboBoxItem text="Austria"></ComboBoxItem>
+				<ComboBoxItem text="Bahrain"></ComboBoxItem>
+				<ComboBoxItem text="Belgium"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+				<ComboBoxItem text="Chile"></ComboBoxItem>
+				<ComboBoxItem text="China"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@comboBox").shadow().find("[ui5-icon]").as("pickerIcon");
+
+		cy.get("@pickerIcon").realClick();
+		cy.get("@input").realPress("ArrowDown");
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@input").realPress("Home");
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+		cy.get("@comboBox").should("not.have.prop", "focused", true);
+
+		cy.get("@input").realPress("End");
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.eq(10)
+			.should("have.prop", "focused", true);
+
+		cy.get("@input").realPress("PageUp");
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+
+		cy.get("@input").realPress("PageDown");
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.eq(10)
+			.should("have.prop", "focused", true);
+
+		cy.get("@pickerIcon").realClick();
+
+		cy.get("@comboBox").invoke("attr", "value", "");
+
+		cy.get("@input").realPress("Home");
+		cy.get("@input").should("have.value", "Algeria");
+
+		cy.get("@comboBox").invoke("attr", "value", "");
+
+		cy.get("@input").realPress("End");
+		cy.get("@input").should("have.value", "China");
+
+		cy.get("@input").realPress("PageUp");
+		cy.get("@input").should("have.value", "Algeria");
+
+		cy.get("@input").realPress("PageDown");
+		cy.get("@input").should("have.value", "China");
+	});
+
+	it("should select the matching item when input has matching value and F4 is pressed", () => {
+		cy.mount(
+			<ComboBox value="Bulgaria">
+				<ComboBoxItem text="Algeria" />
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+				<ComboBoxItem text="Austria" />
+				<ComboBoxItem text="Bahrain" />
+				<ComboBoxItem text="Belgium" />
+				<ComboBoxItem text="Brazil" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+				<ComboBoxItem text="Chile" />
+				<ComboBoxItem text="China" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@comboBox").realPress("F4");
+
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.eq(7)
+			.as("selectedListItem");
+
+		cy.get("@selectedListItem").shadow().find(".ui5-li-title").invoke("text").then(text => {
+			cy.get("@input").should("have.value", text);
+		});
+	});
+
+	it("tests disabled autocomplete(type-ahead)", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Bahrain" />
+				<ComboBoxItem text="Belgium" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realPress("b");
+
+		cy.get("@comboBox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input").should("have.value", "b");
+	});
+});
+
+describe("Grouping", () => {
+	it("tests input value while group item is focused", () => {
+		cy.mount(
+			<ComboBox id="combo-grouping">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1.1" />
+					<ComboBoxItem text="Item 1.2" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group 2">
+					<ComboBoxItem text="Item 2.1" />
+					<ComboBoxItem text="Item 2.2" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("#combo-grouping").shadow().find("input").realClick();
+		cy.get("#combo-grouping").shadow().find("input").realType("i");
+
+		cy.get("#combo-grouping").shadow().find("input").realPress("ArrowDown");
+		cy.get("#combo-grouping").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("#combo-grouping")
+			.find("[ui5-cb-item-group]")
+			.eq(1)
+			.should("have.prop", "focused", true);
+		cy.get("#combo-grouping").should("have.prop", "filterValue", "i");
+		cy.get("#combo-grouping").should("have.prop", "value", "");
+	});
+
+	it("grouped items should be filtered and with the correct role attributes", () => {
+		cy.mount(
+			<ComboBox id="combo-grouping">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1.1" />
+					<ComboBoxItem text="Item 1.2" />
+					<ComboBoxItem text="Item 1.3" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group 2">
+					<ComboBoxItem text="Item 2.1" />
+					<ComboBoxItem text="Item 2.2" />
+					<ComboBoxItem text="Item 2.3" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("#combo-grouping").shadow().find("input").realClick();
+		cy.get("#combo-grouping").shadow().find("input").realType("Item 2");
+
+		cy.get("#combo-grouping")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.find("ui5-list")
+			.should("have.attr", "accessible-role", "ListBox");
+
+		cy.get("#combo-grouping")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.first()
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option");
+
+		cy.get("#combo-grouping")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 3);
+	});
+
+	it("tests group filtering", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Group A">
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group B">
+					<ComboBoxItem text="Belgium" />
+					<ComboBoxItem text="Brazil" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group C">
+					<ComboBoxItem text="Canada" />
+					<ComboBoxItem text="Chile" />
+					<ComboBoxItem text="China" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group D">
+					<ComboBoxItem text="Denmark" />
+					<ComboBoxItem text="Donut" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.find("[ui5-cb-item-group]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 4);
+
+		cy.get("@combo")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 10);
+
+		cy.get("@combo").shadow().find("input").realPress("c");
+
+		cy.get("@combo")
+			.find("[ui5-cb-item-group]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1);
+
+		cy.get("@combo")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 3);
+	});
+
+	it("tests group item focusability", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1.1" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@combo")
+			.find("[ui5-cb-item-group]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
+
+	it("pressing enter on a group item should not close the picker", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1.1" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		cy.get("@combo").shadow().find("input").realPress("Enter");
+
+		cy.get("@combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("have.prop", "open", true);
+	});
+});
+
+describe("Accessibility", () => {
+	it("announce item on selection", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+				<ComboBoxItem text="Item 3" />
+				<ComboBoxItem text="Item 4" />
+				<ComboBoxItem text="Item 5" />
+				<ComboBoxItem text="Item 6" />
+				<ComboBoxItem text="Item 7" />
+				<ComboBoxItem text="Item 8" />
+				<ComboBoxItem text="Item 9" />
+				<ComboBoxItem text="Item 10" />
+				<ComboBoxItem text="Item 11" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "List item 1 of 11");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "List item 2 of 11");
+	});
+
+	it("should render aria-haspopup attribute with value 'dialog'", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-haspopup", "dialog");
+	});
+
+	it("announce item with additional text on selection", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" additionalText="A1" />
+				<ComboBoxItem text="Item 2" additionalText="A2" />
+				<ComboBoxItem text="Item 3" additionalText="A3" />
+				<ComboBoxItem text="Item 4" additionalText="A4" />
+				<ComboBoxItem text="Item 5" additionalText="A5" />
+				<ComboBoxItem text="Item 6" additionalText="A6" />
+				<ComboBoxItem text="Item 7" additionalText="A7" />
+				<ComboBoxItem text="Item 8" additionalText="A8" />
+				<ComboBoxItem text="Item 9" additionalText="CA" />
+				<ComboBoxItem text="Item 10" additionalText="CL" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "A1 List item 1 of 10");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "A2 List item 2 of 10");
+	});
+
+	it("announce group item when accessed via keyboard", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Group Header A">
+					<ComboBoxItem text="Item 1" />
+					<ComboBoxItem text="Item 2" />
+					<ComboBoxItem text="Item 3" />
+					<ComboBoxItem text="Item 4" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group Header Donut">
+					<ComboBoxItem text="Item 5" />
+					<ComboBoxItem text="Item 6" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header A");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "List item 1 of 6");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header Donut");
+	});
+
+	it("tests setting value programmatically", () => {
+		cy.mount(
+			<>
+				<ComboBox value="Bulgaria">
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Bulgaria" />
+					<ComboBoxItem text="Canada" />
+				</ComboBox>
+				<button onClick={() => {
+					const combo = document.querySelector("[ui5-combobox]") as ComboBox;
+					combo.value = "new value";
+				}}>Set Value</button>
+			</>
+		);
+
+		cy.get("[ui5-combobox]").as("combo");
+		cy.get("@combo").should("have.prop", "value", "Bulgaria");
+
+		cy.get("button").realClick();
+
+		cy.get("@combo").should("have.prop", "value", "new value");
+		cy.get("@combo").shadow().find("input").should("have.value", "new value");
+	});
+
+	it("should focus the ComboBox with the API", () => {
+		cy.mount(
+			<>
+				<ComboBox>
+					<ComboBoxItem text="Item 1" />
+				</ComboBox>
+				<button onClick={() => {
+					const combo = document.querySelector("[ui5-combobox]") as ComboBox;
+					combo.focus();
+				}}>Focus ComboBox</button>
+			</>
+		);
+
+		cy.get("button").realClick();
+
+		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
+	});
+
+	it("value state type should be added to the screen readers default value states announcement", () => {
+		cy.mount(
+			<>
+				<ComboBox valueState="Critical">
+					<ComboBoxItem text="Item 1" />
+				</ComboBox>
+				<ComboBox valueState="Positive">
+					<ComboBoxItem text="Item 1" />
+				</ComboBox>
+				<ComboBox valueState="Information">
+					<ComboBoxItem text="Item 1" />
+				</ComboBox>
+			</>
+		);
+
+		cy.get("[ui5-combobox]").eq(0).as("warningCombo").realClick();
+
+		cy.get("@warningCombo")
+			.shadow()
+			.find("#value-state-description")
+			.should("contain.text", "Value State");
+
+		cy.get("@warningCombo")
+			.shadow()
+			.find("ui5-popover")
+			.find("div")
+			.should("contain.text", "Warning issued");
+
+		cy.get("@warningCombo").realPress("Escape");
+		cy.get("[ui5-combobox]").eq(2).as("infoCombo").realClick();
+
+		cy.get("@infoCombo")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Value State");
+
+		cy.get("@infoCombo")
+			.shadow()
+			.find("ui5-popover")
+			.find("div")
+			.should("contain.text", "Informative entry");
+
+		cy.get("@infoCombo").realPress("Escape");
+		cy.get("[ui5-combobox]").eq(1).as("successCombo").realClick();
+
+		cy.get("@successCombo")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Value State");
+	});
+
+	it("value state type should be added to the screen readers custom value states announcement", () => {
+		cy.mount(
+			<ComboBox valueState="Negative">
+				<div slot="valueStateMessage">
+					Custom error value state message with a <Link href="#">Link</Link>.
+				</div>
+				<ComboBoxItem text="Item 1" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combo").realClick();
+		cy.get("@combo").realPress("a");
+
+		cy.get("@combo")
+			.find("div[slot='valueStateMessage']")
+			.should("contain.text", "Custom error");
+
+		cy.get("@combo")
+			.shadow()
+			.find("#value-state-description")
+			.should("contain.text", "Value State");
+	});
+
+	it("should apply aria-controls pointing to the responsive popover", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@combo").scrollIntoView();
+
+		cy.get("@innerInput").invoke("attr", "aria-controls").then(ariaControls => {
+			cy.get("@popover").invoke("attr", "id").should("equal", ariaControls);
+		});
+	});
+
+	it("should announce the associated label when ComboBox is focused", () => {
+		cy.mount(
+			<>
+				<label for="cb">Should be the aria-label</label>
+				<ComboBox id="cb"/>
+			</>
+		);
+
+		cy.get('label[for="cb"]')
+			.invoke('text')
+			.then((labelText) => {
+
+				cy.get("[ui5-combobox]")
+					.shadow()
+					.find("input")
+					.as("innerInput");
+
+				cy.get("@innerInput")
+					.realClick();
+
+				cy.get("@innerInput")
+					.should("have.attr", "aria-label", labelText);
+			});
+	});
+});
+
+describe("Additional Navigation", () => {
+	it("Previous focus should not remain on the item after reopening the picker and choosing another one", () => {
+		cy.mount(
+			<ComboBox id="value-state-grouping" valueState="Critical">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+					<ComboBoxItem text="Austria" />
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Bahrain" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("#value-state-grouping")
+			.as("combo")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("A");
+
+		cy.get("#value-state-grouping")
+			.find("[ui5-cb-item]")
+			.eq(1)
+			.should("not.have.prop", "focused", true);
+
+		cy.get("@combo").shadow().find("[ui5-icon]").realClick();
+
+		// Navigate to last item and press ENTER
+		for (let i = 0; i < 7; i++) {
+			cy.get("@input").realPress("ArrowDown");
+		}
+		cy.get("@input").realPress("Enter");
+
+		cy.get("@combo").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("#value-state-grouping")
+			.find("[ui5-cb-item]")
+			.eq(3)
+			.realClick();
+
+		cy.get("@combo").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("#value-state-grouping")
+			.find("[ui5-cb-item]")
+			.eq(4)
+			.should("not.have.prop", "focused", true);
+	});
+
+	it("Navigates back and forward through items in multiple groups", () => {
+		cy.mount(
+			<ComboBox id="value-state-grouping" valueState="Critical">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+					<ComboBoxItem text="Austria" />
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Bahrain" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("#value-state-grouping")
+			.as("combo")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Navigate down 5 times to reach Bahrain
+		for (let i = 0; i < 5; i++) {
+			cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		}
+
+		cy.get("#value-state-grouping").should("have.prop", "value", "Bahrain");
+
+		// Navigate back up 4 times to reach Argentina
+		for (let i = 0; i < 4; i++) {
+			cy.get("@combo").shadow().find("input").realPress("ArrowUp");
+		}
+
+		cy.get("#value-state-grouping").should("have.prop", "value", "Argentina");
+	});
+
+	it("Should select previous item when the last suggestion is selected and the picker is closed", () => {
+		cy.mount(
+			<ComboBox id="combo-grouping">
+				<ComboBoxItemGroup headerText="Group A">
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group B">
+					<ComboBoxItem text="Belgium" />
+					<ComboBoxItem text="Brazil" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group C">
+					<ComboBoxItem text="Canada" />
+					<ComboBoxItem text="Chile" />
+					<ComboBoxItem text="China" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group D">
+					<ComboBoxItem text="Denmark" />
+					<ComboBoxItem text="Albania" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("#combo-grouping").realClick();
+		cy.get("#combo-grouping").realPress("End");
+		cy.get("#combo-grouping").realPress("ArrowUp");
+
+		cy.get("#combo-grouping").should("have.prop", "value", "Denmark");
+	});
+
+	it("Should scroll to items that are in the scroll area upon navigation", () => {
+		cy.mount(
+			<ComboBox id="combo-grouping">
+				<ComboBoxItemGroup headerText="Group A">
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group B">
+					<ComboBoxItem text="Belgium" />
+					<ComboBoxItem text="Brazil" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group C">
+					<ComboBoxItem text="Canada" />
+					<ComboBoxItem text="Chile" />
+					<ComboBoxItem text="China" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Group D">
+					<ComboBoxItem text="Denmark" />
+					<ComboBoxItem text="Donut" />
+					<ComboBoxItem text="Dubai" />
+					<ComboBoxItem text="Dublin" />
+					<ComboBoxItem text="Durban" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.viewport(1000, 400);
+
+		cy.get("#combo-grouping")
+			.as("combo")
+			.scrollIntoView()
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		// Navigate to last item
+		for (let i = 0; i < 16; i++) {
+			cy.get("@combo").realPress("ArrowDown");
+		}
+
+		// Check if last item is now visible
+		cy.window().then(win => {
+			const combobox = win.document.getElementById("combo-grouping") as any;
+			return combobox._getPicker();
+		}).then(picker => {
+			const scrollableRect = picker[0].shadowRoot.querySelector(".ui5-popup-content").getBoundingClientRect();
+			const lastItem = document.querySelector("#combo-grouping ui5-cb-item-group:last-child ui5-cb-item:last-child");
+			const elementRect = lastItem!.getBoundingClientRect();
+			
+			const isInVisibleArea = !(
+				elementRect.bottom < scrollableRect.top ||
+				elementRect.top > scrollableRect.bottom ||
+				elementRect.right < scrollableRect.left ||
+				elementRect.left > scrollableRect.right
+			);
+			
+			expect(isInVisibleArea).to.be.true;
+		});
+
+		// Navigate to first item
+		cy.get("@combo").realPress("Home");
+
+		// Check if first item is visible
+		cy.window().then(win => {
+			const combobox = win.document.getElementById("combo-grouping") as any;
+			return combobox._getPicker();
+		}).then(picker => {
+			const scrollableRect = picker[0].shadowRoot.querySelector(".ui5-popup-content").getBoundingClientRect();
+			const firstItem = document.querySelector("#combo-grouping ui5-cb-item-group:first-child ui5-cb-item:first-child");
+			const elementRect = firstItem!.getBoundingClientRect();
+			
+			const isInVisibleArea = !(
+				elementRect.bottom < scrollableRect.top ||
+				elementRect.top > scrollableRect.bottom ||
+				elementRect.right < scrollableRect.left ||
+				elementRect.left > scrollableRect.right
+			);
+			
+			expect(isInVisibleArea).to.be.true;
+		});
 	});
 });
 
@@ -729,5 +1964,241 @@ describe("Selection-change event", () => {
 
 		cy.get("@selectionChangeSpy")
 			.should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
+	});
+});
+
+describe("Scrolling", () => {
+	it("Scrolls the selected item into view after opening the popover", () => {
+		cy.mount(
+			<>
+			<ComboBox>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+				<ComboBoxItem text="Austria"></ComboBoxItem>
+				<ComboBoxItem text="Australia"></ComboBoxItem>
+				<ComboBoxItem text="Mexico"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+			</ComboBox>
+			<Button>Dummy Button</Button>
+			</>
+		);
+		cy.viewport(500,200);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.as("dropdownIcon");
+
+		cy.get("@dropdownIcon")
+			.realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.should("exist")
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.shadow()
+			.find(".ui5-popup-content")
+			.as("scrollContainer");
+
+		cy.get("@scrollContainer")
+			.scrollTo("bottom");
+
+		cy.get("[ui5-cb-item]")
+			.eq(4)
+			.realClick();
+
+		cy.get("@dropdownIcon")
+			.realClick();
+
+		cy.get("@scrollContainer")
+			.scrollTo("top");
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@dropdownIcon")
+			.realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-cb-item]")
+			.eq(4)
+			.should("be.visible");
+	});
+});
+
+describe("ComboBox Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-korean"
+				placeholder="Type in Korean ..."
+			>
+				<ComboBoxItem text="안녕하세요" />
+				<ComboBoxItem text="고맙습니다" />
+				<ComboBoxItem text="사랑" />
+				<ComboBoxItem text="한국" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "사랑");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-japanese"
+				placeholder="Type in Japanese ..."
+			>
+				<ComboBoxItem text="こんにちは" />
+				<ComboBoxItem text="ありがとう" />
+				<ComboBoxItem text="東京" />
+				<ComboBoxItem text="日本" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "ありがとう");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-chinese"
+				placeholder="Type in Chinese ..."
+			>
+				<ComboBoxItem text="你好" />
+				<ComboBoxItem text="谢谢" />
+				<ComboBoxItem text="北京" />
+				<ComboBoxItem text="中国" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "谢谢");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "谢谢");
 	});
 });
