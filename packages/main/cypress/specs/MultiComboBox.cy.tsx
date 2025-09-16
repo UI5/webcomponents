@@ -3907,7 +3907,7 @@ describe("Keyboard Handling", () => {
 	});
 
 	describe("Copy/Cut/Paste keyboard shortcuts", () => {
-		const dispatchCopyEvent = () => {
+		const dispatchPasteEvent = () => {
 			cy.get("@input").then($input => {
 				const input = $input.get(0) as HTMLInputElement;
 
@@ -3969,14 +3969,14 @@ describe("Keyboard Handling", () => {
 			cy.get("@input").realClick();
 			cy.get("@input").should("be.focused");
 
-			dispatchCopyEvent();
+			dispatchPasteEvent();
 
 			cy.get("@clipboardRead").should("have.been.calledOnce");
 
 			cy.get("@input").should("have.value", "22222");
 			cy.get("@mcb2").should("have.prop", "open", true);
 
-			dispatchCopyEvent();
+			dispatchPasteEvent();
 
 			cy.get("@clipboardRead").should("have.been.calledTwice");
 
@@ -3995,7 +3995,7 @@ describe("Keyboard Handling", () => {
 			cy.get("@input").realClick();
 			cy.get("@input").should("be.focused");
 
-			dispatchCopyEvent();
+			dispatchPasteEvent();
 
 			cy.get("@clipboardRead").should("have.been.calledOnce");
 
