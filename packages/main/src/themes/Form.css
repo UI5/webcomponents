@@ -3,14 +3,44 @@
 
 :host {
 	display: block;
+	container-type: inline-size;
 }
 
 .ui5-form-root {
 	display: flex;
 	flex-direction: column;
 	background-color: var(--sapGroup_ContentBackground);
-    border-radius: 0.75rem;
-	container-type: inline-size;
+	border-radius: 0.75rem;
+
+	/* Edit mode - Cozy */
+	/* Space between input and label in horizontal layout */
+	--ui5-form-item-horizontal-label-input-spacing: 0.25rem;
+	--ui5-form-item-vertical-label-input-spacing: 0.125rem;
+
+	/* Space between multiple items in content slot */
+	--ui5-form-item-content-spacing: 0.5rem;
+
+	/* Space between form items (should be 0 when layout is horizontal) */
+	--ui5-form-items-vertical-spacing: 0.625rem;
+
+	/* Space between form groups */
+	--ui5-form-groups-horizontal-spacing: 2rem;
+	--ui5-form-groups-vertical-spacing: 2rem;
+}
+
+:host([item-spacing="Large"]) .ui5-form-root {
+	/* Display mode - Cozy */
+	/* Space between input and label in horizontal layout */
+	--ui5-form-item-horizontal-label-input-spacing: 1rem;
+	--ui5-form-item-vertical-label-input-spacing: 0.25rem;
+
+	/* Space between form items (should be 0 when layout is horizontal) */
+	--ui5-form-items-vertical-spacing: 1rem;
+	/* 0.313rem cozy */
+
+	/* Space between form groups */
+	--ui5-form-groups-horizontal-spacing: 2rem;
+	--ui5-form-groups-vertical-spacing: 2rem;
 }
 
 .ui5-form-header {
@@ -18,32 +48,36 @@
 	min-height: 2.75rem;
 	align-items: center;
 	border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
-	padding: 0.875rem 1rem;
+	padding-inline: 1rem;
 	box-sizing: border-box;
 }
 
 .ui5-form-layout {
 	display: grid;
-	column-gap: 1rem;
-	row-gap: 0.125rem;
-	padding: 1rem 0.75rem;
+	column-gap: var(--ui5-form-groups-horizontal-spacing);
+	/* Scenario when there are no groups - direct children are form items */
+	row-gap: var(--ui5-form-items-vertical-spacing);
+	padding: 1rem;
+}
+
+.ui5-form-layout:has(.ui5-form-group-layout) {
+	/* Scenario when there are groups - direct children are form groups */
+	row-gap: var(--ui5-form-groups-vertical-spacing);
 }
 
 .ui5-form-group-layout {
 	display: grid;
-	column-gap: 1rem;
+	column-gap: var(--ui5-form-groups-horizontal-spacing);
+	row-gap: var(--ui5-form-items-vertical-spacing);
 }
 
 .ui5-form-group-heading {
 	height: var(--_ui5-form-group-heading-height);
 	line-height: var(--_ui5-form-group-heading-height);
-	padding-inline-start: 0.25rem;
 }
 
 .ui5-form-column {
-	padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 ::slotted([ui5-form-group]) {
