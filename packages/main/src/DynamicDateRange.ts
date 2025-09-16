@@ -180,6 +180,10 @@ class DynamicDateRange extends UI5Element {
 	@property({ type: Object })
 	_currentOption?: IDynamicDateRangeOption;
 
+	_lastSelectedOption?: IDynamicDateRangeOption;
+
+	_shouldFocusLastSelected = false;
+
 	@property({ type: Object })
 	currentValue?: DynamicDateRangeValue;
 
@@ -196,6 +200,15 @@ class DynamicDateRange extends UI5Element {
 	onBeforeRendering() {
 		this.optionsObjects = this._createNormalizedOptions();
 		this._focusSelectedItem();
+	}
+
+	onAfterRendering() {
+		if (this._shouldFocusLastSelected) {
+			setTimeout(() => {
+				this._focusLastSelectedItem();
+			}, 0);
+			this._shouldFocusLastSelected = false;
+		}
 	}
 
 	/**
@@ -241,6 +254,25 @@ class DynamicDateRange extends UI5Element {
 		}
 	}
 
+	_focusLastSelectedItem() {
+		if (!this._lastSelectedOption) {
+			return;
+		}
+
+		// Ensure the list exists and has items
+		if (!this._list || !this._list.items.length) {
+			return;
+		}
+
+		// Find the index of the last selected option in the options array
+		const optionIndex = this.optionsObjects.findIndex(option => option.operator === this._lastSelectedOption?.operator);
+
+		if (optionIndex >= 0 && optionIndex < this._list.items.length) {
+			const listItem = this._list.items[optionIndex];
+			this._list.focusItem(listItem as ListItem);
+		}
+	}
+
 	/**
 	 * Defines whether the value help icon is hidden
 	 * @private
@@ -263,6 +295,7 @@ class DynamicDateRange extends UI5Element {
 
 	_selectOption(e: CustomEvent): void {
 		this._currentOption = this.optionsObjects.find(option => option.text === e.detail.item.textContent);
+		this._lastSelectedOption = this._currentOption;
 
 		if (!this._currentOption?.template) {
 			this.currentValue = this._currentOption?.parse(this._currentOption.text);
@@ -325,6 +358,7 @@ class DynamicDateRange extends UI5Element {
 
 	onButtonBackClick() {
 		this._currentOption = undefined;
+		this._shouldFocusLastSelected = true;
 	}
 
 	/**
