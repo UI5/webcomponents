@@ -10,6 +10,10 @@ import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
+	DATERANGE_VALUE_MISSING,
+	DATERANGE_PATTERN_MISMATCH,
+	DATERANGE_UNDERFLOW,
+	DATERANGE_OVERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 import DateRangePickerTemplate from "./DateRangePickerTemplate.js";
 
@@ -81,6 +85,35 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_tempValue?: string;
 
 	private _prevDelimiter: string | null;
+
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_UNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_OVERFLOW, this.maxDate);
+		}
+		return ""; // No error
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !!this.value && !this.isValidValue(this.value),
+			rangeUnderflow: !!this.value && !this.isValidMin(this.value),
+			rangeOverflow: !!this.value && !this.isValidMax(this.value),
+		};
+	}
 
 	get formFormattedValue() {
 		const values = this._splitValueByDelimiter(this.value || "").filter(Boolean);
@@ -286,6 +319,20 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		parts = parts.filter(str => str !== " "); // remove empty strings
 
 		return parts.length <= 2 && parts.every(dateString => super.isInValidRange(dateString));
+	}
+
+	isValidMin(value: string): boolean {
+		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
+		parts = parts.filter(str => str !== " "); // remove empty strings
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMin(dateString));
+	}
+
+	isValidMax(value: string): boolean {
+		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
+		parts = parts.filter(str => str !== " "); // remove empty strings
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMax(dateString));
 	}
 
 	/**
