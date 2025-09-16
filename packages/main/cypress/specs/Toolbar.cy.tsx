@@ -571,4 +571,49 @@ describe("Toolbar Button", () => {
 		cy.get("ui5-toolbar-button:not([disabled])").realClick();
 		cy.get("#value-input").should("have.value", "1");
 	});
+
+	it("Should not recalculate overflow when button state changes without affecting width", () => {
+		cy.mount(
+			<Toolbar id="state-change-toolbar">
+				<ToolbarButton text="Bold" icon="bold-text"></ToolbarButton>
+				<ToolbarButton text="Italic" icon="italic-text"></ToolbarButton>
+				<ToolbarButton text="Underline" icon="underline-text"></ToolbarButton>
+				<ToolbarButton id="add-btn" text="Add" icon="add" disabled></ToolbarButton>
+				<ToolbarButton text="More" icon="employee"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.viewport(800, 600);
+		cy.get("[ui5-toolbar]").as("toolbar");
+
+		cy.get("@toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.viewport(300, 600);
+
+		cy.get("@toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.get("@toolbar").then($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar;
+			const addButton = document.getElementById("add-btn") as ToolbarButton;
+			
+			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
+			
+			const initialOverflowCount = toolbar.itemsToOverflow.length;
+			const initialItemsWidth = toolbar.itemsWidth;
+			
+			addButton.disabled = !addButton.disabled;
+
+			cy.get("@toolbar").then($toolbarAfter => {
+				const toolbarAfter = $toolbarAfter[0] as Toolbar;
+				expect(toolbarAfter.itemsToOverflow.length).to.equal(initialOverflowCount);
+				expect(toolbarAfter.itemsWidth).to.equal(initialItemsWidth);
+			});
+		});
+	});
 });

@@ -376,6 +376,37 @@ describe("SegmentedButton Accessibility", () => {
 			.find(".ui5-segmented-button-root")
 			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
 	});
+
+	it("segmented button should have correct aria-multiselectable", () => {
+		cy.mount(
+			<>
+				<SegmentedButton>
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+				<SegmentedButton selectionMode="Multiple">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		// Test Single mode (default) should have aria-multiselectable="false"
+		cy.get("[ui5-segmented-button]")
+			.first()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "false")
+			.should("have.attr", "aria-orientation", "horizontal");
+
+		// Test Multiple mode should have aria-multiselectable="true"
+		cy.get("[ui5-segmented-button]")
+			.last()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "true")
+			.should("have.attr", "aria-orientation", "horizontal");
+	});
 });
 
 
