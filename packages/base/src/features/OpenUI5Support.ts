@@ -108,7 +108,7 @@ class OpenUI5Support {
 				target.onInit = OpenUI5Support.OpenUI5DelayedInit;
 			} else {
 				target.onInit = function onInit(...rest: any[]) {
-					oldOnInit.apply(this, ...rest);
+					oldOnInit.apply(this, rest);
 					OpenUI5Support.OpenUI5DelayedInit();
 				};
 			}
