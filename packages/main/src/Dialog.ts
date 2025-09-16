@@ -608,7 +608,13 @@ class Dialog extends Popup {
 				this._initialLeft! + this._initialWidth!,
 			);
 
-			const rightEdge = this._initialLeft! + this._initialWidth!;
+			Object.assign(this.style, {
+				width: `${newWidth}px`,
+			});
+
+			const deltaWidth = newWidth - this.getBoundingClientRect().width;
+			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
+
 			newLeft = clamp(
 				rightEdge - newWidth,
 				0,
