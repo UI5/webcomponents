@@ -34,6 +34,15 @@ html, body {
     flex-wrap: wrap;
 }
 
+.status {
+     display: grid;
+     grid-template-columns: max-content auto;
+}
+
+.status [ui5-label] {
+    align-self: center;;
+}
+
 .fcl1auto {
     background-color: var(--sapBackgroundColor);
 }
