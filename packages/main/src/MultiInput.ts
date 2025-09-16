@@ -220,7 +220,7 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		super._onkeydown(e);
+		!this._isComposing && super._onkeydown(e);
 
 		const target = e.target as HTMLInputElement;
 		const isHomeInBeginning = isHome(e) && target.selectionStart === 0;
