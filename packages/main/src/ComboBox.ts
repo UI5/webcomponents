@@ -1202,6 +1202,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return item;
 		});
 
+		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
+		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
+		if (this._initialRendering || noUserInteraction) {
+			return;
+		}
+
 		// Fire selection-change event only when selection actually changes
 		if (previouslySelectedItem !== itemToBeSelected) {
 			if (itemToBeSelected) {
