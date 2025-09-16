@@ -252,9 +252,8 @@ describe("ui5 and web components integration", () => {
 	});
 
 	function OpenWebCDialog() {
-		cy.get('#myButton')
-			.should('be.visible')
-			.realClick();
+		cy.get('#myButton').should('be.visible');
+		cy.get('#myButton').realClick();
 
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
@@ -265,9 +264,8 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenWebCDialogOpenUI5Select() {
-		cy.get('#myButton')
-			.should('be.visible')
-			.realClick();
+		cy.get('#myButton').should('be.visible');
+		cy.get('#myButton').realClick();
 
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
@@ -290,9 +288,8 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenWebCDialogOpenUI5ComboBox() {
-		cy.get('#myButton')
-			.should('be.visible')
-			.realClick();
+		cy.get('#myButton').should('be.visible');
+		cy.get('#myButton').realClick();
 
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
@@ -313,7 +310,7 @@ describe("ui5 and web components integration", () => {
 
 		cy.realPress("Escape");
 
-		// comobo box value is reset, dialog stays open
+		// combo box value is reset, dialog stays open
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
 		cy.realPress("Escape");
