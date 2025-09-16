@@ -68,7 +68,8 @@
     "slash": "3.0.0",
     "vite": "^5.4.8",
     "vite-plugin-istanbul": "^6.0.2",
-    "wdio-chromedriver-service": "^7.3.2"
+    "wdio-chromedriver-service": "^7.3.2",
+    "ignore": "^7.0.5"
   },
   "peerDependencies": {
     "chromedriver": "*",
