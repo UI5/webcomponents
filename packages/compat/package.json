@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-compat",
-  "version": "2.14.0",
+  "version": "2.15.0-rc.0",
   "description": "UI5 Web Components: webcomponents.compat",
   "ui5": {
     "webComponentsPackage": true
@@ -48,14 +48,14 @@
     "directory": "packages/compat"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.14.0",
-    "@ui5/webcomponents-base": "2.14.0",
-    "@ui5/webcomponents-icons": "2.14.0",
-    "@ui5/webcomponents-theming": "2.14.0"
+    "@ui5/webcomponents": "2.15.0-rc.0",
+    "@ui5/webcomponents-base": "2.15.0-rc.0",
+    "@ui5/webcomponents-icons": "2.15.0-rc.0",
+    "@ui5/webcomponents-theming": "2.15.0-rc.0"
   },
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.14.0",
+    "@ui5/webcomponents-tools": "2.15.0-rc.0",
     "chromedriver": "^139.0.3"
   }
 }

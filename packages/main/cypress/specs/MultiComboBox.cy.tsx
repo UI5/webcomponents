@@ -3906,3 +3906,182 @@ describe("Keyboard Handling", () => {
 			.should("not.have.attr", "open")
 	});
 });
+
+describe("MultiComboBox Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<MultiComboBox
+				id="multicombobox-composition-korean"
+				placeholder="Type in Korean ..."
+			>
+				<MultiComboBoxItem text="안녕하세요" />
+				<MultiComboBoxItem text="고맙습니다" />
+				<MultiComboBoxItem text="사랑" />
+				<MultiComboBoxItem text="한국" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multicombobox")
+			.realClick();
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@multicombobox").should("have.attr", "value", "사랑");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multicombobox")
+			.realPress("Enter");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("@multicombobox").should("have.attr", "value", "");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<MultiComboBox
+				id="multicombobox-composition-japanese"
+				placeholder="Type in Japanese ..."
+			>
+				<MultiComboBoxItem text="こんにちは" />
+				<MultiComboBoxItem text="ありがとう" />
+				<MultiComboBoxItem text="東京" />
+				<MultiComboBoxItem text="日本" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multicombobox")
+			.realClick();
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@multicombobox").should("have.attr", "value", "ありがとう");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multicombobox")
+			.realPress("Enter");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("@multicombobox").should("have.attr", "value", "");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<MultiComboBox
+				id="multicombobox-composition-chinese"
+				placeholder="Type in Chinese ..."
+			>
+				<MultiComboBoxItem text="你好" />
+				<MultiComboBoxItem text="谢谢" />
+				<MultiComboBoxItem text="北京" />
+				<MultiComboBoxItem text="中国" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multicombobox")
+			.realClick();
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@multicombobox").should("have.attr", "value", "谢谢");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multicombobox")
+			.realPress("Enter");
+
+		cy.get("@multicombobox")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("@multicombobox").should("have.attr", "value", "");
+	});
+});
