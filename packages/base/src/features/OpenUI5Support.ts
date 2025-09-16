@@ -102,26 +102,26 @@ class OpenUI5Support {
 	static awaitForOpenUI5() {
 		const w = window as Record<string, any>;
 
+		const patchOnInit = (target: Record<string, any>) => {
+			const oldOnInit = target.onInit;
+			if (!oldOnInit) {
+				target.onInit = OpenUI5Support.OpenUI5DelayedInit;
+			} else {
+				target.onInit = function onInit(...rest: any[]) {
+					oldOnInit.apply(this, ...rest);
+					OpenUI5Support.OpenUI5DelayedInit();
+				};
+			}
+		};
+
 		// First, look for window.onInit and if found, patch it
-		let oldOnInit = w.onInit;
-		if (oldOnInit) {
-			w.onInit = function onInit(...rest: any[]) {
-				oldOnInit.apply(this, ...rest);
-				OpenUI5Support.OpenUI5DelayedInit();
-			};
+		if (w.onInit) {
+			patchOnInit(w);
 		}
 
 		// If window.onInit is not found, go for the sap-ui-config script
 		w["sap-ui-config"] = w["sap-ui-config"] || {};
-		oldOnInit = w["sap-ui-config"].onInit;
-		if (!oldOnInit) {
-			w["sap-ui-config"].onInit = OpenUI5Support.OpenUI5DelayedInit;
-		} else {
-			w["sap-ui-config"].onInit = function onInit(...rest: any[]) {
-				oldOnInit.apply(this, ...rest);
-				OpenUI5Support.OpenUI5DelayedInit();
-			};
-		}
+		patchOnInit(w["sap-ui-config"] as Record<string, any>);
 	}
 
 	static init() {
