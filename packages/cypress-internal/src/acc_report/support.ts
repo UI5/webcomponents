@@ -18,28 +18,6 @@ type TestReport = {
     testFile: string,
     errors: TestVialotation[]
 }
-
-function checkA11TerminalLog(violations: typeof AxeResults.violations) {
-    const violationData = violations.map<Vialotation>(
-        ({ id, impact, description, nodes }) => ({
-            id,
-            impact,
-            description,
-            nodes: nodes.length
-        })
-    )
-
-    const report: TestReport = {
-        testFile: Cypress.spec.relative,
-        errors: [{
-            testTitlePath: Cypress.currentTest.titlePath,
-            violations: violationData,
-        }]
-    }
-
-    cy.task('ui5ReportA11y', report)
-}
-
 declare global {
     namespace Cypress {
         interface Chainable {
@@ -49,14 +27,13 @@ declare global {
 }
 
 Cypress.Commands.add("ui5CheckA11y", (context?: string | Node | undefined, options?: Options | undefined) => {
-    return cy.checkA11y(context || "[data-cy-root]", options, checkA11TerminalLog, false)
+    if (Cypress.env('UI5_ACC') === "axe") {
+        return cy.checkA11y(context, options)
+    } else if (Cypress.env('UI5_ACC') === "continuum") {
+        // @ts-ignore
+        return context ? cy.runAllTestsForAssertionsForNode(context) : cy.runAllTestsForAssertions()
+    }
 })
-
-if (Cypress.env('ui5AccTasksRegistered') === true) {
-    before(() => {
-        cy.task('ui5ReportA11yReset', Cypress.spec.relative);
-    })
-}
 
 export type {
     TestReport,

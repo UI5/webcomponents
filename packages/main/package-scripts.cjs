@@ -7,7 +7,7 @@ const options = {
 	dev: true,
 	internal: {
 		cypress_code_coverage: false,
-		cypress_acc_tests: false,
+		cypress_acc_tests: "axe", // "axe" | "continuum"
 	},
 };
 

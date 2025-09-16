@@ -25,6 +25,16 @@
     "cypress-axe": "^1.6.0"
   },
   "peerDependencies": {
-    "@ui5/webcomponents-base": "2.13.0-rc.2"
+    "@ui5/webcomponents-base": "2.13.0-rc.2",
+    "@continuum/continuum-javascript-professional": "^7.3.0",
+    "selenium-webdriver": "4.7.1"
+  },
+  "peerDependenciesMeta": {
+    "@continuum/continuum-javascript-professional": {
+      "optional": true
+    },
+    "selenium-webdriver": {
+      "optional": true
+    }
   }
 }
