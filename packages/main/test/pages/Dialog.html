@@ -79,6 +79,9 @@
 		<ui5-button id="draggable-and-resizable-open">Open draggable & resizable dialog</ui5-button>
 		<br>
 		<br>
+		<ui5-button id="rtl-draggable-and-resizable-open">Open RTL draggable & resizable dialog</ui5-button>
+		<br>
+		<br>
 		<ui5-button id="dynamic-open">Open dialog which is created dynamically</ui5-button>
 		<br>
 		<br>
@@ -410,6 +413,17 @@
 			<ui5-button id="draggable-and-resizable-close" design="Emphasized">Close</ui5-button>
 		</div>
 	</ui5-dialog>
+
+	<div dir="rtl">
+		<ui5-dialog id="rtl-draggable-and-resizable-dialog" header-text="Draggable/Resizable dialog" draggable resizable>
+			<p>Move this dialog around the screen by dragging it by its header.</p>
+			<p>Resize this dialog by dragging it by its resize handle.</p>
+			<p>These features are available only on Desktop.</p>
+			<ui5-toolbar slot="footer">
+				<ui5-toolbar-button id="rtl-draggable-and-resizable-close" design="Emphasized" text="OK"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-dialog>
+	</div>
 
 	<ui5-popover header-text="My Heading" id="pop" class="dialog8auto" placement="Top">
 		<!-- <div slot="header">
@@ -938,6 +952,8 @@
 		window["resizable-custom-header-close"].addEventListener("click", function () { window["resizable-dialog-custom-header"].open = false; });
 		window["draggable-and-resizable-open"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = true; });
 		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = false; });
+		window["rtl-draggable-and-resizable-open"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = true; });
+		window["rtl-draggable-and-resizable-close"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = false; });
 
 		window["dynamic-open"].addEventListener("click", function () {
 			var dialog = document.createElement("ui5-dialog"),
