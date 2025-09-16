@@ -9,13 +9,14 @@ import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 
 
 function onOpenUI5InitMethod(win) {
-	OpenUI5Support.init();
+	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], (HTML, Button, Dialog, Popover, Input) => {
 
-	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Input"], (HTML, Button, Dialog, Input) => {
+		OpenUI5Support.init();
+
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
 			press: function () {
-				new Dialog({
+				new Dialog("openUI5Dialog1", {
 					title: "OpenUI5 Dialog",
 					content: [
 						new HTML({
@@ -222,17 +223,6 @@ describe("ui5 and web components integration", () => {
 			</>
 		);
 
-		// inject ui5 configuration
-		cy.document().then((doc) => {
-			const configScript = doc.createElement('script');
-			configScript.setAttribute('data-ui5-config', '');
-			configScript.type = 'application/json';
-			configScript.textContent = JSON.stringify({
-				language: 'EN'
-			});
-			doc.head.appendChild(configScript);
-		});
-
 		// define initialization function before loading ui5
 		cy.window().then((win) => {
 			(win as any).onOpenUI5Init = function () {
@@ -325,9 +315,54 @@ describe("ui5 and web components integration", () => {
 			.should('not.be.visible');
 	}
 
-	it("Open WebC dialog", () => {
+	function OpenUI5Dialog() {
+		cy.get("#openUI5Button")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+	}
+
+	function OpenUI5DialogWebCDialogNoFocus() {
+		cy.get("#openUI5Button")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.get("#openResPopoverNoInitialFocusButton")
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#respPopoverNoInitialFocus").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("#respPopoverNoInitialFocus")
+			.should('not.be.visible');
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+	}
+
+	it("Keyboard", () => {
 		OpenWebCDialog();
 		OpenWebCDialogOpenUI5Select();
 		OpenWebCDialogOpenUI5ComboBox();
+
+		OpenUI5Dialog();
+		// OpenUI5DialogWebCDialogNoFocus();
 	});
 });

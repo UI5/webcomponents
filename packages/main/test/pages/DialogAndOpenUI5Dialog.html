@@ -122,7 +122,7 @@
 
 		function openUI5Dialog() {
 			sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
-				new Dialog({
+				new Dialog("openUI5Dialog1", {
 					title: "OpenUI5 Dialog",
 					content: [
 						new Button({
