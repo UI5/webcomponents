@@ -142,8 +142,8 @@ class ToolbarItem extends UI5Element {
 	 * Handles the click event on the toolbar item.
 	 * If `preventOverflowClosing` is false, it will fire a "close-overflow" event.
 	 */
-	onClick(e: Event): void {
-		if (!this.preventOverflowClosing) {
+	onClick(e?: Event): void {
+		if (e && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
 	}
