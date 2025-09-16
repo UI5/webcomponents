@@ -153,7 +153,7 @@ yarn # to install all dependencies
 # start the playground from the project root
 yarn start:website
 
-# open http://localhost:3000/ui5-webcomponents/nightly/
+# open http://localhost:3000/webcomponents/nightly/
 ```
 
 **Note:** If you wish to manually install dependencies & run the Playground you can check out our [in depth tutorial](docs/5-contributing/03-website.md)
