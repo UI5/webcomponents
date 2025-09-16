@@ -1,4 +1,4 @@
-import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
+import OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import Select from "@ui5/webcomponents/dist/Select.js";
@@ -9,6 +9,8 @@ import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 
 
 function onOpenUI5InitMethod(win) {
+	OpenUI5Support.init();
+
 	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Input"], (HTML, Button, Dialog, Input) => {
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
@@ -64,7 +66,7 @@ function onOpenUI5InitMethod(win) {
 		 Button,
 		 Item,
 		 ShortcutHintsMixin) => {
-			new Select({
+			new Select("openUI5Select1", {
 				items: [
 					new Item({ text: "Item 1" }),
 					new Item({ text: "Item 2" }),
@@ -75,7 +77,7 @@ function onOpenUI5InitMethod(win) {
 				}
 			}).placeAt("dialog1content");
 
-			new ComboBox({
+			new ComboBox("openUI5Combobox1", {
 				items: [
 					new Item({ text: "Item 1" }),
 					new Item({ text: "Item 2" }),
@@ -249,7 +251,7 @@ describe("ui5 and web components integration", () => {
 		});
 	});
 
-	it("Open WebC dialog", () => {
+	function OpenWebCDialog() {
 		cy.get('#myButton')
 			.should('be.visible')
 			.realClick();
@@ -258,6 +260,71 @@ describe("ui5 and web components integration", () => {
 
 		cy.realPress("Escape");
 
-		cy.get('#dialog1').should('not.be.visible');
+		cy.get('#dialog1')
+			.should('not.be.visible');
+	}
+
+	function OpenWebCDialogOpenUI5Select() {
+		cy.get('#myButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get('#openUI5Select1')
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#__popover0")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#__popover0")
+			.should('not.be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get('#dialog1')
+			.should('not.be.visible');
+	}
+
+	function OpenWebCDialogOpenUI5ComboBox() {
+		cy.get('#myButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get('#openUI5Combobox1')
+			.should('be.visible')
+			.realClick()
+			.type("I");
+
+		cy.get("#openUI5Combobox1-popup")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Combobox1-popup")
+			.should('not.be.visible');
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		// comobo box value is reset, dialog stays open
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		cy.get('#dialog1')
+			.should('not.be.visible');
+	}
+
+	it("Open WebC dialog", () => {
+		OpenWebCDialog();
+		OpenWebCDialogOpenUI5Select();
+		OpenWebCDialogOpenUI5ComboBox();
 	});
 });

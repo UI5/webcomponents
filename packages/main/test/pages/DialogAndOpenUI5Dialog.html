@@ -76,7 +76,7 @@
 				 Button,
 				 Item,
 				 ShortcutHintsMixin) => {
-					new Select({
+					new Select("openUI5Select1", {
 						items: [
 							new Item({ text: "Item 1" }),
 							new Item({ text: "Item 2" }),
@@ -87,7 +87,7 @@
 						}
 					}).placeAt("dialog1content");
 
-					new ComboBox({
+					new ComboBox("openUI5Combobox1", {
 						items: [
 							new Item({ text: "Item 1" }),
 							new Item({ text: "Item 2" }),
