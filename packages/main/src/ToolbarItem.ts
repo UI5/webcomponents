@@ -20,10 +20,6 @@ type ToolbarItemEventDetail = {
 	bubbles: true,
 })
 
-@event("click", {
-	bubbles: true,
-})
-
 @customElement({
 	tag: "ui5-toolbar-item",
 	languageAware: true,
@@ -75,9 +71,9 @@ class ToolbarItem extends UI5Element {
 	isOverflowed: boolean = false;
 
 	/**
-	 * Defines if the toolbar item is overflowed.
-	 * @default false
-	 * @since 2.11.0
+	 * Wrapped component slot.
+	 * @public
+	 * @since 2.15.0
 	 */
 
 	@slot({
@@ -142,7 +138,6 @@ class ToolbarItem extends UI5Element {
 	 * If `preventOverflowClosing` is false, it will fire a "close-overflow" event.
 	 */
 	onClick(e: Event): void {
-		e.stopImmediatePropagation();
 		if (!this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}

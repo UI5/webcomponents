@@ -62,6 +62,43 @@
 				</ui5-toolbar-item>
 			</ui5-toolbar>
 		</section>
+		<ui5-title level="H3">Toolbar with various components</ui5-title>
+		<br />
+		<section>
+			<ui5-toolbar id="otb_standard">
+				<ui5-toolbar-item>
+					<ui5-input id="myInput" class="input2auto" show-suggestions placeholder="Search for a country ...">
+				</ui5-toolbar-item>
+				<ui5-toolbar-item></ui5-toolbar-item>
+					<ui5-text style="max-width:50px; text-overflow: ellipsis;white-space: nowrap;display: inline-block;">Simple text</ui5-text>
+				</ui5-toolbar-item>
+				<ui5-toolbar-item>
+					<ui5-combobox id="combo" class="combobox2auto" value="Bulgaria" accessible-name-ref="countryLabel">
+						<ui5-cb-item text="Algeria"></ui5-cb-item>
+						<ui5-cb-item text="Argentina"></ui5-cb-item>
+						<ui5-cb-item text="Australia"></ui5-cb-item>
+						<ui5-cb-item text="Austria"></ui5-cb-item>
+						<ui5-cb-item text="Bahrain"></ui5-cb-item>
+						<ui5-cb-item text="Belgium"></ui5-cb-item>
+						<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+						<ui5-cb-item text="Brazil"></ui5-cb-item>
+						<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+						<ui5-cb-item text="Canada"></ui5-cb-item>
+						<ui5-cb-item text="Chile"></ui5-cb-item>
+					</ui5-combobox>
+				</ui5-toolbar-item>
+				<ui5-toolbar-item prevent-overflow-closing>
+					<ui5-title>Simple title</ui5-title>
+				</ui5-toolbar-item>
+				<ui5-toolbar-item>
+					<ui5-toggle-button icon="sap-icon://employee"></ui5-toggle-button>
+				</ui5-toolbar-item>
+				<ui5-toolbar-item prevent-overflow-closing>
+					<div>div with <a onclick="alert(100)" href="#">Link</a> and text</div>
+				</ui5-toolbar-item>
+
+			</ui5-toolbar>
+		</section>
 	</div>
 </body>
 
