@@ -19,7 +19,6 @@ type OpenUI5Popup = {
 type OpenUI5PopupControl = {
 	prototype: {
 		onsapescape: (e: Event) => void,
-		isA: (type: string) => boolean,
 		oPopup: OpenUI5Popup,
 	}
 };
