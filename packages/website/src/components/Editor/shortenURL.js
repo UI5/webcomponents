@@ -1,11 +1,11 @@
 const URL_SHORTEN_API = "https://linkshortener.int.sap/api/url";
-const URL_API_KEY = process.env.URL_SHORTENER_API_KEY;
 
 export default async function shortenURL(longUrl) {
 	if (process.env.NODE_ENV === 'development' ) {
 		return;
 	}
 
+	const URL_API_KEY = process.env.URL_SHORTENER_API_KEY;
 	if (!URL_API_KEY) {
 		console.warn("URL shortener API key not available.");
 		return "";
