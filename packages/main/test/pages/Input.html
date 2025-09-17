@@ -535,6 +535,36 @@
 	<ui5-input accessible-description="Accessible description works"></ui5-input>
 
 	<br>
+	<br>
+	<h3>Input Composition</h3>
+	<ui5-label id="description">Input Composition with Korean Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-korean" show-suggestions placeholder="Type in Korean ...">
+		<ui5-suggestion-item text="안녕하세요"></ui5-suggestion-item>
+		<ui5-suggestion-item text="고맙습니다"></ui5-suggestion-item>
+		<ui5-suggestion-item text="사랑"></ui5-suggestion-item>
+		<ui5-suggestion-item text="한국"></ui5-suggestion-item>
+	</ui5-input>
+	<br>
+	<ui5-label id="description">Input Composition with Japanese Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-japanese" show-suggestions placeholder="Type in Japanese ...">
+		<ui5-suggestion-item text="こんにちは"></ui5-suggestion-item>
+		<ui5-suggestion-item text="ありがとう"></ui5-suggestion-item>
+		<ui5-suggestion-item text="日本"></ui5-suggestion-item>
+		<ui5-suggestion-item text="東京"></ui5-suggestion-item>
+	</ui5-input>
+	<br>
+	<ui5-label id="description">Input Composition with Chinese Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-chinese" show-suggestions placeholder="Type in Chinese ...">
+		<ui5-suggestion-item text="你好"></ui5-suggestion-item>
+		<ui5-suggestion-item text="謝謝"></ui5-suggestion-item>
+		<ui5-suggestion-item text="北京"></ui5-suggestion-item>
+		<ui5-suggestion-item text="上海"></ui5-suggestion-item>
+	</ui5-input>
+
+	<br>
 
 	<script>
 		const dynamicValueState = document.getElementById("dynamic-value-state");

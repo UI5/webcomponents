@@ -6,7 +6,6 @@ import TableCell from "../../src/TableCell.js";
 import TableGrowing from "../../src/TableGrowing.js";
 import Bar from "../../src/Bar.js";
 import Title from "../../src/Title.js";
-import Slider from "../../src/Slider.js";
 
 describe("Table - Keyboard Navigation", () => {
 	beforeEach(() => {
@@ -225,20 +224,7 @@ describe("Table - Keyboard Navigation", () => {
 	});
 });
 
-function Proba({ rows }: { rows: Array<Array<any>> }) {
-	return rows.map((row, index) => (
-		<TableRow id={`row-${index + 1}`}>
-			{
-				row.map((cell, cellIndex) => <TableCell>{cell || <span>{cellIndex + 1}</span>}</TableCell>)
-			}
-		</TableRow>
-	))
-}
-
-describe.only("Table - Keyboard Navigation with Fixed Headers", () => {
-	// before(async() => {
-	// 	await browser.url("test/pages/TableFixedHeader.html");
-	// });
+describe("Table - Keyboard Navigation with Fixed Headers", () => {
 
 	it("scrollable container - focused row should always be below the header", () => {
 		cy.mount(<div style="height:300px; overflow:auto;">

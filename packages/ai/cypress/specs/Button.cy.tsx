@@ -59,6 +59,28 @@ describe("Accessibility", () => {
 			.ui5AIButtonCheckAttributeInArrowButton("aria-haspopup", "menu");
 	});
 
+	it("should set correct aria-keyshortcuts to SplitButton root element", () => {
+		cy.mount(
+			<Button accessibilityAttributes={{ root: { ariaKeyShortcuts: "Alt+G" } }}>
+				<ButtonState name="generate" text="Generate" icon="ai">Click me</ButtonState>
+			</Button>
+		);
+
+		cy.get("[ui5-ai-button]")
+			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-keyshortcuts", "Alt+G");
+	});
+
+	it("should set correct aria-label to SplitButton root element", () => {
+		cy.mount(
+			<Button id="aiButton" accessibilityAttributes={{ root: { title: "Some title" } }}>
+				<ButtonState name="generate" text="Generate" icon="ai"  showArrowButton={false}>Click me</ButtonState>
+			</Button>
+		);
+
+		cy.get("[ui5-ai-button]")
+			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-label", "Some title");
+	});
+
 	it("should set correct aria attributes with default values when not provided", () => {
 		cy.mount(
 			<Button>
