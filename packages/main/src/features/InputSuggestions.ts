@@ -472,7 +472,7 @@ class Suggestions {
 
 		const itemPositionText = Suggestions.i18nBundle.getText(LIST_ITEM_POSITION, this.accInfo.currentPos || 0, this.accInfo.listSize || 0);
 
-		return `${this.accInfo.additionalText} ${itemPositionText}`;
+		return `${this.accInfo.additionalText} ${itemPositionText}`.trim();
 	}
 
 	hightlightInput(text: string, input: string) {

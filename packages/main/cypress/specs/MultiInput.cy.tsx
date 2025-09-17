@@ -924,7 +924,7 @@ describe("ARIA attributes", () => {
 				cy.get("[ui5-multi-input]")
 					.shadow()
 					.find("#selectionText")
-					.should("have.text", ` ${miSelectionText}`);
+					.should("have.text", `${miSelectionText}`);
 			});
 	});
 })
