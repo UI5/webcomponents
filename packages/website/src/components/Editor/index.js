@@ -502,7 +502,7 @@ ${fixAssetPaths(_js)}`,
                       }}></ui5-button>
                     </div>
 
-                    <ui5-label>Shorten URL</ui5-label>
+                    <ui5-label>Short URL</ui5-label>
                     <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                       <ui5-input readonly value={shortURL || "Service unavailable - use long URL"}></ui5-input>
                       <ui5-button
