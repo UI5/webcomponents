@@ -84,7 +84,22 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: [],
+  plugins: [
+    function() {
+      return {
+        name: 'environment-variables',
+        configureWebpack() {
+          return {
+            plugins: [
+              new (require('webpack')).DefinePlugin({
+                'process.env.URL_SHORTENER_API_KEY': JSON.stringify(process.env.URL_SHORTENER_API_KEY)
+              })
+            ]
+          };
+        }
+      };
+    }
+  ],
   themeConfig: {
     algolia: {
       // The application ID provided by Algolia

@@ -137,8 +137,6 @@ const getScripts = (options) => {
 		"test-cy-ci-suite-1": `yarn cypress run --component --browser chrome`,
 		"test-cy-ci-suite-2": `yarn cypress run --component --browser chrome`,
 		"test-cy-open": `yarn cypress open --component --browser chrome`,
-		"test-suite-1": `node "${LIB}/test-runner/test-runner.js" --suite suite1 --spec "**/specs/base/*.cy.{jsx,tsx},**/specs/[A-I]*.cy.{js,jsx,ts,tsx}"`,
-		"test-suite-2": `node "${LIB}/test-runner/test-runner.js" --suite suite2 --spec "**/specs/[^A-I]*.cy.{js,jsx,ts,tsx}"`,
 		startWithScope: "ui5nps scope.prepare scope.watchWithBundle",
 		scope: {
 			prepare: "ui5nps scope.lint scope.testPages",

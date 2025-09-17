@@ -25,9 +25,7 @@
     "generateAPI": "ui5nps generateAPI",
     "build": "ui5nps build",
     "bundle": "ui5nps build.bundle",
-    "test": "ui5nps test",
-    "test:suite-1": "ui5nps test-suite-1",
-    "test:suite-2": "ui5nps test-suite-2",
+    "test": "yarn test:cypress",
     "test:cypress": "ui5nps test-cy-ci",
     "test:cypress:suite-1": "ui5nps test-cy-ci-suite-1",
     "test:cypress:suite-2": "ui5nps test-cy-ci-suite-2",
@@ -63,7 +61,6 @@
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chromedriver": "^139.0.3",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",
     "vitest": "^3.0.2"

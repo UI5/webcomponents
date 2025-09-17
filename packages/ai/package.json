@@ -25,7 +25,7 @@
     "generate": "ui5nps generate",
     "generateAPI": "ui5nps generateAPI",
     "bundle": "ui5nps build.bundle",
-    "test": "ui5nps test-cy-ci",
+    "test": "yarn test:cypress",
     "test:cypress": "ui5nps test-cy-ci",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:cypress:open": "ui5nps test-cy-open",
@@ -54,7 +54,6 @@
   },
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chromedriver": "^139.0.3"
+    "@ui5/webcomponents-tools": "2.15.0-rc.0"
   }
 }

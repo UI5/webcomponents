@@ -64,7 +64,6 @@
     "@sap-theming/theming-base-content": "11.29.3",
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chromedriver": "^139.0.3",
     "clean-css": "^5.2.2",
     "copy-and-watch": "^0.1.5",
     "cross-env": "^7.0.3",

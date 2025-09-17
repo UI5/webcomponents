@@ -50,12 +50,10 @@
     "ci:deploy:nightly": "DEPLOY_NIGHTLY=true yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build:nightly",
 
     "ci:test:base": "yarn workspace @ui5/webcomponents-base test",
-    "ci:test:main:suite-1": "yarn workspace @ui5/webcomponents test:ssr && yarn workspace @ui5/webcomponents test:vitest && yarn workspace @ui5/webcomponents test:suite-1",
-    "ci:test:main:suite-2": "yarn workspace @ui5/webcomponents test:suite-2",
-    "ci:test:main:cy:suite-1": "yarn workspace @ui5/webcomponents test:cypress:suite-1",
+    "ci:test:main:cy:suite-1": "yarn workspace @ui5/webcomponents test:ssr && yarn workspace @ui5/webcomponents test:vitest && yarn workspace @ui5/webcomponents test:cypress:suite-1",
     "ci:test:main:cy:suite-2": "yarn workspace @ui5/webcomponents test:cypress:suite-2",
-    "ci:test:fiori": "yarn workspace @ui5/webcomponents-fiori test:ssr && yarn workspace @ui5/webcomponents-fiori test:cypress && yarn workspace @ui5/webcomponents-fiori test",
-    "ci:test:compat": "yarn workspace @ui5/webcomponents-compat test:ssr && yarn workspace @ui5/webcomponents-compat test:cypress && yarn workspace @ui5/webcomponents-compat test",
+    "ci:test:fiori": "yarn workspace @ui5/webcomponents-fiori test:ssr && yarn workspace @ui5/webcomponents-fiori test:cypress",
+    "ci:test:compat": "yarn workspace @ui5/webcomponents-compat test:ssr && yarn workspace @ui5/webcomponents-compat test:cypress",
     "ci:test:ai": "yarn workspace @ui5/webcomponents-ai test:ssr && yarn workspace @ui5/webcomponents-ai test",
 
     "lint": "wsrun --exclude-missing lint",
@@ -72,7 +70,6 @@
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@semantic-release/github": "^11.0.0",
-    "@wdio/devtools-service": "^7.19.7",
     "command-line-args": "^5.1.1",
     "copy-and-watch": "^0.1.5",
     "globby": "^13.1.1",
