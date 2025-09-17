@@ -40,7 +40,7 @@
     "generate": "nps generate",
     "generateAPI": "nps generateAPI",
     "bundle": "nps build.bundle",
-    "test": "wc-dev test",
+    "test": "yarn test:cypress",
     "test:ssr": "node -e \"import('./test/ssr/component-imports.js')\"",
     "test:cypress": "nps test-cy-ci",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
@@ -63,7 +63,6 @@
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chromedriver": "^139.0.3",
     "lit": "^2.0.0"
   }
 }
