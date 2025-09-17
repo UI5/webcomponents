@@ -145,8 +145,6 @@ const getScripts = (options) => {
 		"test-cy-ci-suite-1": `${cypressEnvVariables(options, ["TEST_SUITE=SUITE1"])} yarn cypress run --component --browser chrome`,
 		"test-cy-ci-suite-2": `${cypressEnvVariables(options, ["TEST_SUITE=SUITE2"])} yarn cypress run --component --browser chrome`,
 		"test-cy-open": `${cypressEnvVariables(options)} yarn cypress open --component --browser chrome`,
-		"test-suite-1": `node "${LIB}/test-runner/test-runner.js" --suite suite1`,
-		"test-suite-2": `node "${LIB}/test-runner/test-runner.js" --suite suite2`,
 		startWithScope: "nps scope.prepare scope.watchWithBundle",
 		scope: {
 			prepare: "nps scope.lint scope.testPages",
