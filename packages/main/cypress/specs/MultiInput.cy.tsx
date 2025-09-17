@@ -8,7 +8,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import SuggestionItemCustom from "../../src/SuggestionItemCustom.js";
 import { MULTIINPUT_VALUE_HELP } from "../../src/generated/i18n/i18n-defaults.js";
 import { TOKENIZER_SHOW_ALL_ITEMS } from "../../src/generated/i18n/i18n-defaults.js";
-import { MULTIINPUT_SHOW_MORE_TOKENS } from "../../src/generated/i18n/i18n-defaults.js";
+import { MULTIINPUT_SHOW_MORE_TOKENS, LIST_ITEM_POSITION } from "../../src/generated/i18n/i18n-defaults.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
@@ -883,6 +883,50 @@ describe("ARIA attributes", () => {
 			.find("input")
 			.should("have.attr", "aria-haspopup", "dialog");
 	});
+
+	it("correct suggestions announcement", () => {
+		cy.mount(
+			<MultiInput show-suggestions id="suggestion-token">
+				<SuggestionItem text="Aute"></SuggestionItem>
+				<SuggestionItem text="ad"></SuggestionItem>
+				<SuggestionItem text="exercitation"></SuggestionItem>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.then(multiInput => {
+				multiInput[0].addEventListener("keydown", (event: KeyboardEvent) => {
+					const inputElement = multiInput[0] as HTMLInputElement;
+					if (event.key === "Enter" && inputElement.value) {
+						const token = createTokenFromText(inputElement.value);
+						inputElement.appendChild(token);
+						inputElement.value = "";
+					}
+				});
+			})
+
+		cy.get("[ui5-multi-input]")
+			.realClick();
+
+		cy.realType("a");
+		cy.realPress("Enter");
+
+		cy.realType("a");
+
+		cy.realPress("ArrowDown");
+		cy.realPress("Enter");
+
+		cy.get("[ui5-multi-input]")
+			.then(($mi) => {
+				const i18nBundle = ($mi[0].constructor as any).i18nBundle;
+				const miSelectionText = i18nBundle.getText(LIST_ITEM_POSITION.defaultText, 2, 3);
+
+				cy.get("[ui5-multi-input]")
+					.shadow()
+					.find("#selectionText")
+					.should("have.text", ` ${miSelectionText}`);
+			});
+	});
 })
 
 describe("Keyboard handling", () => {
@@ -1370,7 +1414,7 @@ describe("MultiInput Composition", () => {
 		cy.get("@multiinput").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "사랑")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -1424,7 +1468,7 @@ describe("MultiInput Composition", () => {
 		cy.get("@multiinput").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "ありがとう")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -1478,7 +1522,7 @@ describe("MultiInput Composition", () => {
 		cy.get("@multiinput").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "谢谢")
 			.trigger("input", { inputType: "insertCompositionText" });
