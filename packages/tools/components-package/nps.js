@@ -147,7 +147,7 @@ const getScripts = (options) => {
 				copy: `node "${LIB}/copy-and-watch/index.js" --silent "test/pages/**/*" test/pages/scoped`,
 				replace: `node "${LIB}/scoping/scope-test-pages.js" test/pages/scoped demo`,
 			},
-			watchWithBundle: 'ui5nps-p scope.watch ui5nps scope.bundle', // concurently
+			watchWithBundle: 'ui5nps-p scope.watch scope.bundle', // concurently
 			watch: 'ui5nps-p watch.templates watch.props watch.styles', // concurently
 			bundle: `node ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
 		},

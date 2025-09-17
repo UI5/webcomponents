@@ -82,6 +82,10 @@ class Parser {
 		const parts = executableCommand.trim().split(" ").filter(Boolean).slice(1); // Remove "ui5nps" or ui5nps-p part
 		const commands = [];
 		for (const part of parts) {
+			if (!this.parsedScripts.has(part)) {
+				throw new Error(`Referenced command "${part}" not found in scripts`);
+			}
+
 			const parsedScript = this.parsedScripts.get(part);
 
 			if (parsedScript && (parsedScript.startsWith("ui5nps") || parsedScript.startsWith("ui5nps-p"))) {

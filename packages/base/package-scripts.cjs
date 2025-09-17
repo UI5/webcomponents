@@ -51,6 +51,7 @@ const scripts = {
 	copy: {
 		default: "ui5nps copy.src",
 		src: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/`,
+		srcWithWatch: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
 	},
 	generateAssetParameters: `node "${assetParametersScript}"`,
 	generateVersionInfo: `node "${versionScript}"`,
@@ -70,7 +71,7 @@ const scripts = {
 	watch: {
 		default: 'ui5nps-p watch.src watch.styles', // concurently
 		withBundle: 'ui5nps-p watch.src watch.bundle watch.styles', // concurently
-		src: 'ui5nps "copy.src --watch --skip-initial-copy"',
+		src: 'ui5nps copy.srcWithWatch',
 		bundle: `node ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
 		styles: 'chokidar "src/css/*.css" -c "ui5nps generateStyles"'
 	},
@@ -79,11 +80,11 @@ const scripts = {
 		ssr: `mocha test/ssr`,
 		ssr2: "node -e \"import('./dist/Device.js')\"",
 		"test-cy-ci": {
-			default: "ui5nps test.generateTestTemplates test.test-cy-ci.cypress",
+			default: "ui5nps generateTestTemplates test.test-cy-ci.cypress",
 			cypress: ` yarn cypress run --component --browser chrome`
 		},
 		"test-cy-open": {
-			default: "ui5nps test.generateTestTemplates test.test-cy-ci.cypress",
+			default: "ui5nps generateTestTemplates test.test-cy-open.cypress",
 			cypress: ` yarn cypress open --component --browser chrome`
 		}
 	},
