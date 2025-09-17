@@ -22,7 +22,15 @@ const cypressEnvVariables = (options, predefinedVars) => {
 	variables.push(`CYPRESS_COVERAGE=${!!cypress_code_coverage}`);
 
 	if (cypress_acc_tests) {
-		variables.push("CYPRESS_UI5_ACC=true");
+		if (cypress_acc_tests === "continuum") {
+			try {
+				require("@continuum/continuum-javascript-professional");
+			} catch (e) {
+				console.error(`@continuum/continuum-javascript-professional is not found. Try to install it by running \`npm install --save-dev @continuum/continuum-javascript-professional\` if you are using npm or by running \`yarn add --dev @continuum/continuum-javascript-professional\` if you are using yarn.`);
+				process.exit(e.code);
+			}
+		}
+		variables.push(`CYPRESS_UI5_ACC=${cypress_acc_tests}`);
 	}
 
 	return variables.length ? `cross-env ${variables.join(" ")}` : "";
