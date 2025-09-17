@@ -11,7 +11,7 @@ import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 function onOpenUI5InitMethod(win) {
 	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], (HTML, Button, Dialog, Popover, Input) => {
 
-		OpenUI5Support.init();
+		// OpenUI5Support.init();
 
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
@@ -306,7 +306,7 @@ describe("ui5 and web components integration", () => {
 
 		cy.realPress("Escape");
 
-		// comobo box value is reset, dialog stays open
+		// combo box value is reset, dialog stays open
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
 		cy.realPress("Escape");
