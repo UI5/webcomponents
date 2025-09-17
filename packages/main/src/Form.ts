@@ -449,7 +449,7 @@ class Form extends UI5Element {
 			},
 		].forEach(layout => {
 			if (this.isValidFormItemLayout(layout.labelSpan, layout.emptySpan)) {
-				const formItemLayout = layout.labelSpan === MAX_FORM_ITEM_CELLS ? `1fr` : `${layout.labelSpan}fr ${MAX_FORM_ITEM_CELLS - (layout.labelSpan + layout.emptySpan)}fr ${layout.emptySpan}fr`;
+				const formItemLayout = layout.labelSpan === MAX_FORM_ITEM_CELLS ? `1fr` : `${layout.labelSpan}fr ${MAX_FORM_ITEM_CELLS - (layout.labelSpan + layout.emptySpan)}fr ${layout.emptySpan !== 0 ? `${layout.emptySpan}fr` : ""}`;
 				this.style.setProperty(getScopedVarName(`--ui5-form-item-layout-${layout.breakpoint}`), formItemLayout);
 			} else {
 				// eslint-disable-next-line

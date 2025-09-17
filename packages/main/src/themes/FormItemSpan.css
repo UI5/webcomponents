@@ -1,5 +1,5 @@
-/* 
-* By default, 
+/*
+* By default,
 * - in M, L ans XL sizes the Form's labels take 4 cells out 12 of the whole width, e.g 4:8:0
 * - in S size, it  the Form's labels take the whole width 12/12 cells, e.g the label and the input are displayed vertically.
 *
@@ -15,7 +15,6 @@
 	:host([label-span-s="12"]) .ui5-form-item,
 	:host([label-span-s="12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
 	}
 }
 
@@ -28,7 +27,6 @@
 	:host([label-span-m="12"]) .ui5-form-item,
 	:host([label-span-m="12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
 	}
 }
 
@@ -41,7 +39,6 @@
 	:host([label-span-l="12"]) .ui5-form-item,
 	:host([label-span-l="12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
 	}
 }
 
@@ -54,6 +51,5 @@
 	:host([label-span-xl="12"]) .ui5-form-item,
 	:host([label-span-xl="12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
 	}
 }

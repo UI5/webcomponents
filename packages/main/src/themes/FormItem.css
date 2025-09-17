@@ -36,12 +36,12 @@
 .ui5-form-item-layout {
 	display: grid;
 	grid-template-columns: var(--ui5-form-item-layout);
+	row-gap: var(--ui5-form-item-vertical-label-input-spacing);
+	column-gap: var(--ui5-form-item-horizontal-label-input-spacing);
 	align-items: center;
 }
 
 .ui5-form-item-label {
-	padding: var(--ui5-form-item-label-padding);
-	padding-inline-end: var(--ui5-form-item-label-padding-end);
 	justify-self: var(--ui5-form-item-label-justify);
 }
 
@@ -49,19 +49,16 @@
 	overflow: hidden;
 	width: 100%;
 	display: flex;
-	padding: 0 0.25rem;
+	gap: var(--ui5-form-item-content-spacing);
 }
 
 .ui5-form-item-content-child {
-	padding-inline-end: 0.5rem;
 	box-sizing: border-box;
 	width: 100%;
 }
 
 :host([item-spacing="Large"]) .ui5-form-item-layout {
-	min-height: var(--_ui5_form_item_min_height);
-	padding-top: var(--_ui5_form_item_padding);
-	padding-bottom: var(--_ui5_form_item_padding);
+	/* min-height: var(--_ui5_form_item_min_height); */
 	box-sizing: border-box;
 }
 
@@ -76,7 +73,7 @@
 }
 
 /* M  - 1 column by default, up to 2 columns */
-@container (width > 600px) and (width <= 1024px) {
+@container (width > 600px) and (width <=1024px) {
 	:host {
 		order: var(--ui5-form-item-order-M, unset);
 	}
@@ -84,7 +81,7 @@
 }
 
 /* L - 2 columns by default, up to 3 columns */
-@container (width > 1024px) and (width <= 1440px) {
+@container (width > 1024px) and (width <=1440px) {
 	:host {
 		order: var(--ui5-form-item-order-L, unset);
 	}
