@@ -995,6 +995,7 @@ class Select extends UI5Element implements IFormInputElement {
 		return {
 			popoverValueState: {
 				"ui5-valuestatemessage-root": true,
+				"ui5-valuestatemessage-header": !this._isPhone,
 				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
 				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
 				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
@@ -1009,11 +1010,12 @@ class Select extends UI5Element implements IFormInputElement {
 	get styles() {
 		return {
 			popoverHeader: {
-				"max-width": `${this.offsetWidth}px`,
+				"display": "block",
 			},
 			responsivePopoverHeader: {
 				"display": this.options.length && this._listWidth === 0 ? "none" : "inline-block",
 				"width": `${this.options.length ? this._listWidth : this.offsetWidth}px`,
+				"max-width": "100%",
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
