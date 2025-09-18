@@ -489,7 +489,6 @@ describe("Select - Popover", () => {
 				<Option id="opt3" value="option3">Option 3</Option>
 			</Select>
 		);
-
         cy.get("#select").realClick();
 
 		cy.get("#opt2").should("have.attr", "focused");
