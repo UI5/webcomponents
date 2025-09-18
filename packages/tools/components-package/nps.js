@@ -4,16 +4,16 @@ const LIB = path.join(__dirname, `../lib/`);
 let websiteBaseUrl = "/";
 
 if (process.env.DEPLOY) {
-	websiteBaseUrl = "/ui5-webcomponents/";
+	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
-	websiteBaseUrl = "/ui5-webcomponents/nightly/";
+	websiteBaseUrl = "/webcomponents/nightly/";
 }
 
 const cypressEnvVariables = (options, predefinedVars) => {
 	let variables = [];
 	const { cypress_code_coverage, cypress_acc_tests } = options.internal ?? {};
 
-	// Handle environment variables like TEST_SUITE  
+	// Handle environment variables like TEST_SUITE
 	if (predefinedVars) {
 		variables = [...predefinedVars];
 	}
@@ -36,7 +36,7 @@ const getScripts = (options) => {
 	const createIllustrationsJSImportsScript = illustrations.join(" && ");
 
 	// The script creates the "src/generated/js-imports/Illustration.js" file that registers loaders (dynamic JS imports) for each illustration
-	const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}/generate-js-imports/illustrations.js ${illustrations.destinationPath} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(" ")}`).join(" && ");
+	const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}/generate-js-imports/illustrations.js ${illustrations.destinationPath} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`).join(" && ");
 
 	const tsOption = !options.legacy || options.jsx;
 	const tsCommandOld = tsOption ? "tsc" : "";
@@ -145,8 +145,6 @@ const getScripts = (options) => {
 		"test-cy-ci-suite-1": `${cypressEnvVariables(options, ["TEST_SUITE=SUITE1"])} yarn cypress run --component --browser chrome`,
 		"test-cy-ci-suite-2": `${cypressEnvVariables(options, ["TEST_SUITE=SUITE2"])} yarn cypress run --component --browser chrome`,
 		"test-cy-open": `${cypressEnvVariables(options)} yarn cypress open --component --browser chrome`,
-		"test-suite-1": `node "${LIB}/test-runner/test-runner.js" --suite suite1`,
-		"test-suite-2": `node "${LIB}/test-runner/test-runner.js" --suite suite2`,
 		startWithScope: "nps scope.prepare scope.watchWithBundle",
 		scope: {
 			prepare: "nps scope.lint scope.testPages",

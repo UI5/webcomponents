@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from "clsx";
 import { useRef, useEffect, useState, useId, useContext } from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import playgroundSupport from "./playground-support.js";
@@ -6,17 +7,24 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from "./index.module.css";
 import { ThemeContext, ContentDensityContext, TextDirectionContext } from "@site/src/theme/Root";
-import { encodeToBase64, decodeFromBase64 } from "./share.js";
-import clsx from "clsx";
+import { encodeURL, decodeURL } from "./encodeURL.js";
+import shortenURL from './shortenURL.js';
+import downloadSample from './download.js';
+
+// UI5 Web Components resources
+import "@ui5/webcomponents/dist/Button.js";
+import "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents/dist/Input.js";
+import "@ui5/webcomponents/dist/Popover.js";
 import ShareIcon from "@ui5/webcomponents-icons/dist/v5/share-2.svg";
-import Splitter from './Splitter.js';
 import DownloadIcon from "@ui5/webcomponents-icons/dist/v5/download-from-cloud.svg";
+import CopyIcon from "@ui5/webcomponents-icons/dist/v5/copy.js";
 import EditIcon from "@ui5/webcomponents-icons/dist/v5/edit.svg";
 import ActionIcon from "@ui5/webcomponents-icons/dist/v5/action.svg";
 import HideIcon from "@ui5/webcomponents-icons/dist/v5/hide.svg";
-import downloadSample from './download.js';
-import ExamplesMenu from '../ExamplesMenu/index.tsx';
 
+import Splitter from './Splitter.js';
+import ExamplesMenu from '../ExamplesMenu/index.tsx';
 import hellowWorldHTML from "./examples/hello-world/html";
 import hellowWorldTS from "./examples/hello-world/main";
 import counterHTML from "./examples/counter/html";
@@ -48,6 +56,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   const projectRef = useRef(null);
   const previewRef = useRef(null);
   const tabBarRef = useRef(null);
+  const popoverRef = useRef(null);
   const fileEditorRef = useRef(null);
 
   const [firstRender, setFirstRender] = useState(true);
@@ -60,6 +69,9 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   const { textDirection, setTextDirection } = useContext(TextDirectionContext);
   const [copied, setCopied] = useState(false);
   const [activeExample, setActiveExample] = useState("");
+  const [longURL, setLongURL] = useState("");
+  const [shortURL, setShortURL] = useState("");
+  const [shareBtnToggled, setShareBtnToggled] = useState(false);
 
   function calcImports() {
     if (process.env.NODE_ENV === 'development' || siteConfig.customFields.ui5DeploymentType === "nightly") {
@@ -173,19 +185,25 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     return files;
   }
 
-
   const download = () => {
     const files = getSampleFiles();
     downloadSample(files);
   }
 
-  const share = () => {
+  const share = async () => {
     const files = getSampleFiles();
+    const hash = encodeURL(JSON.stringify(files));
+    const longURL = new URL(`#${hash}`, window.location.href).href;
+    
+    setShareBtnToggled(!shareBtnToggled);
+    setLongURL(longURL);
 
-    // encode and put in url
-    const hash = encodeToBase64(JSON.stringify(files));
-    navigator.clipboard.writeText(new URL(`#${hash}`, window.location.href).href);
-    setCopied(true);
+    try {
+      const shortURL = await shortenURL(longURL);
+      setShortURL(shortURL || "");
+    } catch (error) {
+      console.error("Error creating short URL:", error);
+    }
   }
 
   const saveProject = () => {
@@ -194,7 +212,11 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   }
 
   const resetProject = () => {
-    localStorage.clear("project");
+    localStorage.removeItem("project");
+    localStorage.removeItem("github_token");
+    localStorage.removeItem("activeExample");
+    setUser("");
+    setTokenInput("");
     location.hash = "";
   }
 
@@ -209,7 +231,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     const files = getSampleFiles();
 
     // encode and put in url
-    const hash = encodeToBase64(JSON.stringify(files));
+    const hash = encodeURL(JSON.stringify(files));
     const url = new URL(`${playUrl}#${hash}`, location.origin);
     window.open(url, "_blank");
     resetExampleMenuSelection();
@@ -285,7 +307,7 @@ ${fixAssetPaths(_js)}`,
     // shared content - should be after restore from localstorage
     if (location.pathname.includes("/play") && location.hash) {
       try {
-        const sharedConfig = JSON.parse(decodeFromBase64(location.hash.replace("#", "")));
+        const sharedConfig = JSON.parse(decodeURL(location.hash.replace("#", "")));
         sharedConfig["index.html"].content = addHeadContent(fixAssetPaths(sharedConfig["index.html"].content));
         const oldMainFile = sharedConfig["main.js"] || sharedConfig["main.ts"];
         if (oldMainFile && newConfig.files["main.tsx"]) {
@@ -329,6 +351,10 @@ ${fixAssetPaths(_js)}`,
       projectRef.current.addEventListener("compileStart", saveProject);
     }
 
+    popoverRef.current?.addEventListener("close", () => {
+      setShareBtnToggled(false);
+    })
+
     return function () {
       if (!standalone) {
         // component cleanup
@@ -355,7 +381,7 @@ ${fixAssetPaths(_js)}`,
     if (copied) {
       setTimeout(() => {
         setCopied(false);
-      }, 5000)
+      }, 3000)
     }
   }, [copied]);
 
@@ -443,15 +469,10 @@ ${fixAssetPaths(_js)}`,
               >
                 <DownloadIcon className={`${styles.btn__icon}`} />
                 Download
-                {copied
-                  ? <div style={{ position: "absolute" }}>
-                    <span className={styles["copy-status"]}>&#x2714; Link copied</span>
-                  </div>
-                  : <></>
-                }
               </button>
 
               <button
+                id="btnSharePopupOpen"
                 className={`button button--secondary ${styles.previewResult__share}`}
                 onClick={share}
               >
@@ -459,6 +480,42 @@ ${fixAssetPaths(_js)}`,
                 Share
               </button>
 
+              <ui5-popover 
+                  header-text="Share Sample" 
+                  open={shareBtnToggled ? true : undefined}
+                  opener="btnSharePopupOpen"
+                  placement="Bottom"
+                  ref={popoverRef}
+                >
+                <section>
+                  { copied ? <span className={styles["copy-status"]}>&#x2714; Link copied</span> : <></> }
+
+                    <ui5-label>Long URL</ui5-label>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                      <ui5-input readonly value={longURL}></ui5-input>
+                      <ui5-button
+                        icon={CopyIcon}
+                        design="Transparent" 
+                        onClick={() => {
+                          navigator.clipboard.writeText(longURL);
+                          setCopied(true);
+                      }}></ui5-button>
+                    </div>
+
+                    <ui5-label>Short URL</ui5-label>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                      <ui5-input readonly value={shortURL || "Service unavailable - use long URL"}></ui5-input>
+                      <ui5-button
+                        icon={CopyIcon} 
+                        design="Transparent"
+                        disabled={shortURL ? undefined : true}
+                        onClick={() => {
+                          navigator.clipboard.writeText(shortURL);
+                          setCopied(true);
+                      }}></ui5-button>
+                    </div>
+                </section>
+              </ui5-popover>
             </div>
           </div>
         </>

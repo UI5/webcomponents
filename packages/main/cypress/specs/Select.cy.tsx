@@ -462,7 +462,7 @@ describe("Select - Popover", () => {
 			.should("have.text", "Custom message");
 	});
 
-	it("ResponsivePopover should not have accessible name on desktop", () => {
+		it("ResponsivePopover should not have accessible name on desktop", () => {
 		cy.mount(
 			<Select id="desktopSelect">
 				<Option value="option1">Option 1</Option>
@@ -497,6 +497,44 @@ describe("Select - Popover", () => {
             .find(".ui5-li-root")
             .should("be.focused");
 	});
+
+	it("Value state message popover can extend beyond select width", () => {
+		cy.mount(
+			<Select valueState="Critical">
+				<Option>Short</Option>
+				<Option>Long</Option>
+				<div slot="valueStateMessage">
+					This is a very long value state message that should extend beyond the narrow select component width and not be constrained by it.
+				</div>
+			</Select>
+		);
+
+		// Trigger the value state popover by clicking and then pressing Escape
+		cy.get("[ui5-select]")
+			.realClick()
+			.realPress("Escape");
+
+		// Get the select width for comparison
+		cy.get("[ui5-select]")
+			.invoke("outerWidth")
+			.as("selectWidth");
+
+		// Find the standalone value state popover
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-valuestatemessage-popover")
+			.should("exist")
+			.as("valueStatePopover");
+
+		// Verify the popover width is greater than the select width
+		cy.get("@valueStatePopover")
+			.invoke("outerWidth")
+			.then((popoverWidth) => {
+				cy.get("@selectWidth").then((selectWidth) => {
+					expect(popoverWidth).to.be.greaterThan(Number(selectWidth));
+				});
+			});
+		});
 });
 
 describe("Select - Properties", () => {
