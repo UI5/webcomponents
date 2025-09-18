@@ -13,4 +13,4 @@ if (command === "watch") {
 	command = `test ${process.argv.slice(3).join(" ")}`;
 }
 
-child_process.execSync(`npx nps "${command}"`, {stdio: 'inherit'});
+child_process.execSync(`npx ui5nps "${command}"`, {stdio: 'inherit'});

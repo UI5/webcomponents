@@ -21,11 +21,11 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "clean": "ui5nps clean",
-    "lint": "ui5nps lint",
-    "start": "ui5nps start",
-    "build": "ui5nps build",
-    "generate": "ui5nps generate",
+    "clean": "wc-dev clean",
+    "lint": "wc-dev lint",
+    "start": "wc-dev start",
+    "build": "wc-dev build",
+    "generate": "wc-dev generate",
     "prepublishOnly": "tsc -b"
   },
   "devDependencies": {

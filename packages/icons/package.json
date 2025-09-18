@@ -17,9 +17,9 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "clean": "ui5nps clean",
-    "generate": "ui5nps generate",
-    "build": "ui5nps build",
+    "clean": "wc-dev clean",
+    "generate": "wc-dev generate",
+    "build": "wc-dev build",
     "prepublishOnly": "tsc -b"
   },
   "repository": {
