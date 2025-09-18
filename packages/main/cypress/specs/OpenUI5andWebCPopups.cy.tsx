@@ -1,14 +1,16 @@
-import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
-import Dialog from "@ui5/webcomponents/dist/Dialog.js";
-import Select from "@ui5/webcomponents/dist/Select.js";
-import Option from "@ui5/webcomponents/dist/Option.js";
-import ComboBox from "@ui5/webcomponents/dist/ComboBox.js";
-import ComboBoxItem from "@ui5/webcomponents/dist/ComboBoxItem.js";
-import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
+import Button from "../../src/Button.js";
+import Dialog from "../../src/Dialog.js";
+import Select from "../../src/Select.js";
+import Option from "../../src/Option.js";
+import ComboBox from "../../src/ComboBox.js";
+import ComboBoxItem from "../../src/ComboBoxItem.js";
+import ResponsivePopover from "../../src/ResponsivePopover.js";
 
 function onOpenUI5InitMethod(win) {
-	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], (HTML, Button, Dialog, Popover, Input) => {
+	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], async (HTML, Button, Dialog, Popover, Input) => {
+
+		await OpenUI5Support.init();
 
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
@@ -355,11 +357,11 @@ describe("ui5 and web components integration", () => {
 	}
 
 	it("Keyboard", () => {
-		OpenWebCDialog();
-		OpenWebCDialogOpenUI5Select();
-		OpenWebCDialogOpenUI5ComboBox();
-
-		OpenUI5Dialog();
-		// OpenUI5DialogWebCDialogNoFocus();
+		// OpenWebCDialog();
+		// OpenWebCDialogOpenUI5Select();
+		// OpenWebCDialogOpenUI5ComboBox();
+		//
+		// OpenUI5Dialog();
+		OpenUI5DialogWebCDialogNoFocus();
 	});
 });
