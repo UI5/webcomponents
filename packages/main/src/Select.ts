@@ -868,11 +868,11 @@ class Select extends UI5Element implements IFormInputElement {
 
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
-			if (option.selected) {
-				option.focused = true;
+			option.focused = option.selected;
+			if (option.focused && isPhone()) {
+				// on phone, the popover opens full screen (dialog)
+				// move focus to option to read out dialog header
 				option.focus();
-			} else {
-				option.focused = false;
 			}
 		});
 	}
