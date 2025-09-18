@@ -17,7 +17,7 @@ describe("Select mobile general interaction", () => {
 		// Open the popover
 		cy.get("#select").realClick();
 
-        // check if accessible-name is equal to select._headerTitleText
+        // Check if accessible-name is equal to select._headerTitleText
         cy.get("#select").invoke("prop", "_headerTitleText").then(_headerTitleText => {
             cy.get("#select")
                 .shadow()
