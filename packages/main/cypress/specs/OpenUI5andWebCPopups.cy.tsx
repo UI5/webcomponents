@@ -357,11 +357,11 @@ describe("ui5 and web components integration", () => {
 	}
 
 	it("Keyboard", () => {
-		// OpenWebCDialog();
-		// OpenWebCDialogOpenUI5Select();
-		// OpenWebCDialogOpenUI5ComboBox();
-		//
-		// OpenUI5Dialog();
+		OpenWebCDialog();
+		OpenWebCDialogOpenUI5Select();
+		OpenWebCDialogOpenUI5ComboBox();
+
+		OpenUI5Dialog();
 		OpenUI5DialogWebCDialogNoFocus();
 	});
 });
