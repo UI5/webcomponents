@@ -462,7 +462,7 @@ describe("Select - Popover", () => {
 			.should("have.text", "Custom message");
 	});
 
-		it("ResponsivePopover should not have accessible name on desktop", () => {
+	it("ResponsivePopover should not have accessible name on desktop", () => {
 		cy.mount(
 			<Select id="desktopSelect">
 				<Option value="option1">Option 1</Option>
