@@ -35,6 +35,7 @@ const config: Config = {
   customFields: {
     ui5Version: packageJson.version,
     ui5DeploymentType: process.env.DEPLOYMENT_TYPE,
+    urlShortenerApiKey: process.env.URL_SHORTENER_API_KEY,
   },
   title: 'UI5 Web Components',
   tagline: 'An open-source UI components library for building enterprise-ready applications!',
@@ -83,7 +84,22 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: [],
+  plugins: [
+    function() {
+      return {
+        name: 'environment-variables',
+        configureWebpack() {
+          return {
+            plugins: [
+              new (require('webpack')).DefinePlugin({
+                'process.env.URL_SHORTENER_API_KEY': JSON.stringify(process.env.URL_SHORTENER_API_KEY)
+              })
+            ]
+          };
+        }
+      };
+    }
+  ],
   themeConfig: {
     algolia: {
       // The application ID provided by Algolia
