@@ -255,15 +255,6 @@
 			{ name: 'Tomato', category: 'Vegetable' },
 		];
 
-		function createItems(parent, data) {
-			data.forEach(item => {
-				const searchItem = document.createElement('ui5-search-item');
-				searchItem.text = item.name;
-				searchItem.icon = 'search';
-				parent.appendChild(searchItem);
-			});
-		}
-
 		const filtering = document.getElementById('filtering');
 		createItems(filtering, data);
 		filtering.addEventListener('ui5-input', (event) => {
@@ -370,10 +361,11 @@
 
 		const searchDelete = document.getElementById('delete-search');
 
-		function onDelete(event) {
+		function onDelete(event, parent) {
 			const item = event.target;
 			if (item) {
 				item.remove();
+				parent.focus();
 			}
 		}
 
@@ -392,7 +384,7 @@
 				searchItem.text = item.name;
 				searchItem.icon = 'search';
 				searchItem.deletable = true;
-				searchItem.addEventListener('ui5-delete', onDelete);
+				searchItem.addEventListener('ui5-delete', (e) => onDelete(e, parent));
 				parent.appendChild(searchItem);
 			});
 		}
