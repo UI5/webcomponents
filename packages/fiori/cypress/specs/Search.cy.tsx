@@ -891,6 +891,122 @@ describe("Events", () => {
 			.should("not.exist")
 	});
 
+	it("delete event is fired on clicking the delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item]").eq(0)
+			.as("firstSearchItem");
+
+		cy.get("@firstSearchItem")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick();
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
+	it("Fast navigation with F2 key press", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item]").eq(0)
+			.as("firstSearchItem");
+
+		cy.get("@firstSearchItem")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("@firstSearchItem")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("@firstSearchItem")
+			.should("be.focused");
+	});
+
+	it("delete event is fired on pressing SPACE on the focused delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.realPress("Space");
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
+	it("delete event is fired on pressing ENTER on the focused delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.realPress("Enter");
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
 	it("should deselect items when backspace or delete key is pressed", () => {
 		cy.mount(
 			<Search>
