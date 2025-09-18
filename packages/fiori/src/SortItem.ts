@@ -7,12 +7,17 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
  *
  * ### Overview
  *
+ * The `ui5-sort-item` component defines the sorting criteria for data in `ui5-view-settings-dialog`.
+ * It represents a single sort option that users can select to organize data in ascending or descending order.
+ *
  * ### Usage
  *
- * For the `ui5-sort-item`
+ * The `ui5-sort-item` is used within the `ui5-view-settings-dialog` to provide sorting options.
+ * Each sort item represents a column or field by which data can be sorted.
+ *
  * ### ES6 Module Import
  *
- * `import @ui5/webcomponents-fiori/dist/SortItem.js";`
+ * `import "@ui5/webcomponents-fiori/dist/SortItem.js";`
  * @constructor
  * @extends UI5Element
  * @abstract
@@ -22,7 +27,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 @customElement("ui5-sort-item")
 class SortItem extends UI5Element {
 	/**
-	 * Defines the text of the component.
+	 * Defines the text of the sort item.
 	 * @default undefined
 	 * @public
 	 */
@@ -30,7 +35,7 @@ class SortItem extends UI5Element {
 	text?: string;
 
 	/**
-	 * Defines if the component is selected.
+	 * Defines if the sort item is selected.
 	 * @default false
 	 * @public
 	 */

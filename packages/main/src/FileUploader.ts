@@ -426,7 +426,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 
 		this.focused = false;
 		if (this._tokenizer) {
-			this._tokenizer.expanded = this._tokenizerOpen;
+			this._tokenizer.expanded = this._tokenizer.open;
 		}
 	}
 
@@ -667,7 +667,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	}
 
 	get shouldOpenValueStateMessagePopover(): boolean {
-		return this.focused && this.hasValueState && !this.hideInput && !this._tokenizerOpen;
+		return this.focused && this.hasValueState && !this.hideInput && !this._tokenizer?.open;
 	}
 
 	/**

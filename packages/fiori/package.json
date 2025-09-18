@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-fiori",
-  "version": "2.14.0-rc.6",
+  "version": "2.15.0-rc.0",
   "description": "UI5 Web Components: webcomponents.fiori",
   "ui5": {
     "webComponentsPackage": true
@@ -40,7 +40,7 @@
     "generate": "nps generate",
     "generateAPI": "nps generateAPI",
     "bundle": "nps build.bundle",
-    "test": "wc-dev test",
+    "test": "yarn test:cypress",
     "test:ssr": "node -e \"import('./test/ssr/component-imports.js')\"",
     "test:cypress": "nps test-cy-ci",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
@@ -50,20 +50,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/fiori"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.14.0-rc.6",
-    "@ui5/webcomponents-base": "2.14.0-rc.6",
-    "@ui5/webcomponents-icons": "2.14.0-rc.6",
-    "@ui5/webcomponents-theming": "2.14.0-rc.6",
+    "@ui5/webcomponents": "2.15.0-rc.0",
+    "@ui5/webcomponents-base": "2.15.0-rc.0",
+    "@ui5/webcomponents-icons": "2.15.0-rc.0",
+    "@ui5/webcomponents-theming": "2.15.0-rc.0",
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.14.0-rc.6",
-    "chromedriver": "^138.0.5",
+    "@ui5/webcomponents-tools": "2.15.0-rc.0",
     "lit": "^2.0.0"
   }
 }

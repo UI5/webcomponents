@@ -102,8 +102,8 @@ plug-and-play option for more complex features of the Table. This allows you to 
 code/functionality is being used.
 
 The `ui5-table` has a dedicated `features` slot to enable certain features, which are dedicated components. We are currently offering the following features:
-[TableSelectionSingle](https://sap.github.io/ui5-webcomponents/components/TableSelectionSingle/), [TableSelectionMulti](https://sap.github.io/ui5-webcomponents/components/TableSelectionMulti/),
- [TableGrowing](https://sap.github.io/ui5-webcomponents/components/TableGrowing/), and [TableVirtualizer](https://sap.github.io/ui5-webcomponents/components/TableVirtualizer/).
+[TableSelectionSingle](https://ui5.github.io/webcomponents/components/TableSelectionSingle/), [TableSelectionMulti](https://ui5.github.io/webcomponents/components/TableSelectionMulti/),
+ [TableGrowing](https://ui5.github.io/webcomponents/components/TableGrowing/), and [TableVirtualizer](https://ui5.github.io/webcomponents/components/TableVirtualizer/).
 
 ```html
 <ui5-table>
@@ -124,7 +124,7 @@ Additionally, selection is no longer handled at the row level. Previously, `ui5-
 the table, and the selection feature itself maintains a `selected` property containing the keys of selected rows. To enable this, you need to provide a `row-key` for your rows to uniquely
 identify them.
 
-For an example implementation, see [here](https://sap.github.io/ui5-webcomponents/components/TableSelectionMulti/#basic-sample).
+For an example implementation, see [here](https://ui5.github.io/webcomponents/components/TableSelectionMulti/#basic-sample).
 
 #### Growing Feature
 
@@ -137,8 +137,8 @@ We have slightly improved the `Scroll` behavior: If the table is not scrollable 
 that the table offers its growing capabilities when using `TableGrowing`.
 
 You can check these samples to see implementations of both growing modes:
-- [Growing with a Button](https://sap.github.io/ui5-webcomponents/nightly/components/TableGrowing/#growing-with-a-button)
-- [Growing with Scrolling](https://sap.github.io/ui5-webcomponents/nightly/components/TableGrowing/#growing-with-scrolling)
+- [Growing with a Button](https://ui5.github.io/webcomponents/nightly/components/TableGrowing/#growing-with-a-button)
+- [Growing with Scrolling](https://ui5.github.io/webcomponents/nightly/components/TableGrowing/#growing-with-scrolling)
 
 #### Virtualization
 
@@ -148,7 +148,7 @@ everything straight to the browser compromising performance.
 This feature ensures that only the rows visible in the current viewport are rendered and updated during scrolling. To achieve this, the `TableVirtualizer` offers a
 `range-change` event allowing you to exchange or update the row contexts and contents accordingly.
 
-A sample implementation can be found [here](https://sap.github.io/ui5-webcomponents/components/TableVirtualizer/#basic-sample).
+A sample implementation can be found [here](https://ui5.github.io/webcomponents/components/TableVirtualizer/#basic-sample).
 
 ![Example of the Virtualizer](./images/virtualizer.gif)
 
@@ -168,15 +168,15 @@ Furthermore, the "popin configuration" has changed. Instead of defining a `minWi
 column itself. If the table overflows, the columns that overflow, for example,  if they don't fit into the table anymore, will be moved into the "popin area". This is a more natural
 overflow behavior allowing you to just define the widths of your columns without worrying about the general table width.
 
-See [here](https://sap.github.io/ui5-webcomponents/components/Table/#overflow-mode) for a sample.
+See [here](https://ui5.github.io/webcomponents/components/Table/#overflow-mode) for a sample.
 
 #### Row Actions
 
 The `ui5-table` introduces row actions. The `ui5-table-row` has a dedicated `actions` slot, which allows you to add custom row actions to your rows.
 
 There are two row action options:
-* Use [`TableRowActionNavigation`](https://sap.github.io/ui5-webcomponents/components/TableRowActionNavigation/) to define a navigation action.
-* Use [`TableRowAction`](https://sap.github.io/ui5-webcomponents/components/TableRowAction/) to define a custom navigation. Provide a text and icon for your custom action.
+* Use [`TableRowActionNavigation`](https://ui5.github.io/webcomponents/components/TableRowActionNavigation/) to define a navigation action.
+* Use [`TableRowAction`](https://ui5.github.io/webcomponents/components/TableRowAction/) to define a custom navigation. Provide a text and icon for your custom action.
 
 ```html
 <ui5-table-row row-key="2">
@@ -204,5 +204,5 @@ The new table offers new and improved features, accessibility and user experienc
 For compatibility reasons, the old table is still available in the `compat` package, but please migrate to the new table implementation to leverage the newest
 features and functionalities.
 
-If you are interested in learning more about the `ui5-table`, check out the [documentation](https://sap.github.io/ui5-webcomponents/components/Table/), or join
+If you are interested in learning more about the `ui5-table`, check out the [documentation](https://ui5.github.io/webcomponents/components/Table/), or join
 us at [UI5con](https://openui5.org/ui5con/)!
