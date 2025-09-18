@@ -1206,6 +1206,42 @@ describe("Events", () => {
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
 			.ui5ResponsivePopoverOpened();
 	});
+
+	it("should not open picker if text is deleted and there are no items", () => {
+		const handleInput = (e: any) => {
+			if (e.target.value) {
+				const item = document.createElement("ui5-search-item");
+				item.setAttribute("text", e.target.value);
+				e.target.appendChild(item);
+			} else {
+				e.target.innerHTML = "";
+			}
+		};
+
+		cy.mount(<Search showClearIcon noTypeahead onInput={handleInput}></Search>);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realPress("I");
+
+		cy.get("@input")
+			.realPress("Backspace");
+
+		cy.get("@search")
+			.should("have.value", "");
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
 });
 
 describe("Accessibility", () => {
