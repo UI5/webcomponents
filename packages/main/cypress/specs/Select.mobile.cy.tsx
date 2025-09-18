@@ -27,6 +27,22 @@ describe("Select mobile general interaction", () => {
         });
     });
 
+	it("should focus the selected option when popover opens", () => {
+		cy.mount(
+			<Select id="select" value="option2">
+				<Option id="opt1" value="option1">Option 1</Option>
+				<Option id="opt2" value="option2">Option 2</Option>
+				<Option id="opt3" value="option3">Option 3</Option>
+			</Select>
+		);
+        cy.get("#select").realClick();
+
+		cy.get("#opt2").should("have.attr", "focused");
+		cy.get("#opt2").shadow()
+            .find(".ui5-li-root")
+            .should("be.focused");
+	});
+
 	it("Changes selection in Dialog", () => {
 		cy.mount(
 			<Select>
