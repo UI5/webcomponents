@@ -26,7 +26,6 @@ sap/base/util/uid.js
 sap/base/util/_merge.js
 sap/base/util/extend.js
 sap/base/util/deepClone.js
-sap/base/util/Version.js
 sap/ui/base/Interface.js
 sap/ui/base/Metadata.js
 sap/ui/base/Object.js

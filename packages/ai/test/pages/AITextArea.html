@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>AI Writing Assistant - Best Practice Example</title>
+	<meta name="description" content="Demonstration of AI Writing Assistant component with best practices">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		/* CSS Custom Properties for consistent theming */
+		:root {
+			--editor-width: 100%;
+			--editor-height: 320px;
+			--spacing-small: 0.5rem;
+			--spacing-medium: 1rem;
+			--border-radius: 0.25rem;
+			--font-size-small: 0.875rem;
+			--color-text-secondary: #556b82;
+			--color-border-debug: #ff0000;
+		}
+
+		/* Reset and base styles */
+		*,
+		*::before,
+		*::after {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			font-family: var(--sapFontFamily, 'Helvetica Neue', Arial, sans-serif);
+			background-color: var(--sapBackgroundColor, #ffffff);
+		}
+
+		body {
+			padding: var(--spacing-medium);
+		}
+
+		[ui5-ai-textarea] {
+			width: 800px;
+			margin: 0 auto;
+		}
+		.character-count {
+			margin-top: var(--spacing-small);
+			text-align: right;
+			color: var(--color-text-secondary);
+			font-size: var(--font-size-small);
+		}
+	</style>
+</head>
+
+<body>
+		<h1 class="sr-only">AI Writing Assistant Demo</h1>
+
+	<ui5-ai-textarea
+		id="textarea-ai"
+		value="Write your message here"
+		action-text=""
+		current-version-index="1"
+		total-versions="0"
+		rows="12"
+		assistant-state="Initial"
+		aria-label="AI-powered textarea">
+
+		<!-- Dynamic menu that changes content based on state -->
+		<ui5-menu slot="menu" id="ai-wa-menu" opener="ai-menu-btn">
+			<ui5-menu-item text="Generate text" data-menu-action="generate"></ui5-menu-item>
+		</ui5-menu>
+	</ui5-ai-textarea>
+
+	<script>
+		'use strict';
+
+		const CONFIG = {
+			ANALYZING_DELAY: 3000,
+			TYPING_SPEED: 10,
+			MAX_HISTORY_SIZE: 50,
+			DEBOUNCE_DELAY: 300
+		};
+
+		const UI_TEXTS = {
+			PLACEHOLDERS: {
+				loading: "Analyzing request...",
+				default: "Write your message here"
+			},
+			ARIA_MESSAGES: {
+				generating: "AI writing assistant is generating content. Press Escape to stop.",
+				generated: "Content generation completed.",
+				error: "An error occurred during content generation."
+			}
+		};
+
+		const SAMPLE_TEXTS = Object.freeze({
+			en: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
+			bg: "Мениджърите на иновации работят както с креативност, така и с бизнес проницателност.",
+			de: "Innovationsmanager arbeiten sowohl mit Kreativität als auch mit Geschäftssinn.",
+			bulleted: "Innovation managers:\n• Operate with creativity and business acumen\n• Drive initiatives that cultivate an innovation-friendly culture\n• Streamline the execution of new ideas\n• Unlock value for the organization and its customers",
+			expanded: "Innovation managers play a pivotal role in organizations by blending creativity with strategic business acumen. They are not just responsible for generating innovative ideas but also for fostering a culture that encourages experimentation, collaboration, and out-of-the-box thinking among teams. These professionals work tirelessly to identify opportunities for improvement, anticipate market trends, and develop solutions that align with the organization's goals and customer needs. In their efforts to promote an innovation-friendly environment, they implement frameworks and processes that remove barriers to creativity, making it easier for teams to brainstorm, prototype, and refine new concepts. Beyond idea generation, innovation managers ensure that these ideas are systematically evaluated and effectively executed, transforming them into tangible value propositions. This requires them to bridge the gap between visionary thinking and practical implementation, often by collaborating with cross-functional teams, securing resources, and navigating organizational dynamics. Ultimately, the work of innovation managers unlocks significant value, driving growth, enhancing customer satisfaction, and ensuring the organization remains competitive in a rapidly evolving landscape.",
+			rephrased: "Innovation managers leverage creativity and business expertise to foster a culture of innovation, simplify the process of implementing new ideas, and create value for both the organization and its customers.",
+			simplified: "Innovation managers use creativity and business skills to promote innovation, simplify the development of new ideas, and deliver value to the organization and its customers.",
+			summarized: "Innovation managers blend creativity and business skills to foster innovation, simplify idea implementation, and create value for organizations and customers."
+		});
+
+		const ACTION_CONFIG = new Map([
+			["generate", {
+				startLabel: "Generate text",
+				endLabel: "Generated text",
+				textKey: "en"
+			}],
+			["regenerate", {
+				startLabel: "Regenerate",
+				endLabel: "Regenerated text",
+				textKey: "en"
+			}],
+			["simplify", {
+				startLabel: "Simplify",
+				endLabel: "Simplified text",
+				textKey: "simplified"
+			}],
+			["expand", {
+				startLabel: "Expand",
+				endLabel: "Expanded text",
+				textKey: "expanded"
+			}],
+			["rephrase", {
+				startLabel: "Rephrase",
+				endLabel: "Rephrased text",
+				textKey: "rephrased"
+			}],
+			["summarize", {
+				startLabel: "Summarize",
+				endLabel: "Summarized text",
+				textKey: "summarized"
+			}],
+			["bullets", {
+				startLabel: "Make bulleted list",
+				endLabel: "Bulleted list",
+				textKey: "bulleted"
+			}],
+			["fixingSpelling", {
+				startLabel: "Fix spelling and grammar",
+				endLabel: "Fixed spelling and grammar",
+				textKey: "en"
+			}],
+			["translateBG", {
+				startLabel: "Translate to Bulgarian",
+				endLabel: "Translated to Bulgarian",
+				textKey: "bg"
+			}],
+			["translatedEN", {
+				startLabel: "Translate to English",
+				endLabel: "Translated to English",
+				textKey: "en"
+			}],
+			["translateDE", {
+				startLabel: "Translate to German",
+				endLabel: "Translated to German",
+				textKey: "de"
+			}]
+		]);
+
+		// Global state variables
+		let promptHistory = [];
+		let currentPage = 0;
+		let currentActionInProgress = null;
+		let typingInterval = null;
+		let isGenerating = false;
+		let changeCount = 0;
+		let inputCount = 0;
+
+		// DOM references
+		let editor = null;
+		let menu = null;
+
+		function delay(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		function debounce(func, wait) {
+			let timeout;
+			return function executedFunction(...args) {
+				const later = () => {
+					clearTimeout(timeout);
+					func.apply(this, args);
+				};
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+			};
+		}
+
+		function announceToScreenReader(message) {
+			const announcement = document.createElement('div');
+			announcement.setAttribute('aria-live', 'polite');
+			announcement.setAttribute('aria-atomic', 'true');
+			announcement.className = 'sr-only';
+			announcement.textContent = message;
+
+			document.body.appendChild(announcement);
+
+			setTimeout(() => {
+				if (document.body.contains(announcement)) {
+					document.body.removeChild(announcement);
+				}
+			}, 1000);
+		}
+
+		function updateCharacterCount(nativeEditor) {
+			const element = document.getElementById("text-editor-charactersCount");
+			if (element && nativeEditor.plugins.wordcount) {
+				const count = nativeEditor.plugins.wordcount.body.getCharacterCount();
+				element.textContent = `${count} characters`;
+			}
+		}
+
+		function updateDebugInfo(elementId, value) {
+			if (elementId && value) {
+				const element = document.getElementById(elementId);
+				if (element) {
+					element.textContent = value;
+				}
+			}
+
+			const changeCountEl = document.getElementById("change-count");
+			const inputCountEl = document.getElementById("input-count");
+
+			if (changeCountEl) changeCountEl.textContent = changeCount;
+			if (inputCountEl) inputCountEl.textContent = inputCount;
+		}
+
+		function addToHistory(entry) {
+			promptHistory.push(entry);
+
+			if (promptHistory.length > CONFIG.MAX_HISTORY_SIZE) {
+				promptHistory.shift();
+				if (currentPage > 0) {
+					currentPage--;
+				}
+			}
+		}
+
+		function saveCurrentVersion() {
+			if (promptHistory.length > 0 && promptHistory[currentPage]) {
+				promptHistory[currentPage].value = editor.value;
+			}
+		}
+
+		function loadVersion(index) {
+			if (promptHistory[index]) {
+				editor.value = promptHistory[index].value;
+			}
+		}
+
+		function updateComponentState() {
+			editor.currentVersionIndex = currentPage + 1;
+			editor.totalVersions = promptHistory.length;
+
+			if (promptHistory[currentPage]) {
+				editor.actionText = promptHistory[currentPage].endAction;
+			}
+
+			// State is determined by Loading vs Initial only
+			// Results are determined by totalVersions > 0
+			if (editor.assistantState !== "Loading") {
+				editor.assistantState = "Initial";
+			}
+		}
+
+		function addMenuItem(text, action, shortcut, startsSection) {
+			const item = document.createElement("ui5-menu-item");
+			item.setAttribute("text", text);
+
+			if (action) {
+				item.setAttribute("data-menu-action", action);
+			}
+			if (shortcut) {
+				item.setAttribute("additional-text", shortcut);
+			}
+			if (startsSection) {
+				item.setAttribute("starts-section", "");
+			}
+
+			menu.appendChild(item);
+			return item;
+		}
+
+		function addSubMenuItem(parentItem, text, action) {
+			const subItem = document.createElement("ui5-menu-item");
+			subItem.setAttribute("text", text);
+			subItem.setAttribute("data-menu-action", action);
+			parentItem.appendChild(subItem);
+			return subItem;
+		}
+
+		function updateMenuContent(hasHistory) {
+			menu.innerHTML = "";
+
+			if (!hasHistory) {
+				addMenuItem("Generate text", "generate");
+			} else {
+				addMenuItem("Regenerate", "regenerate", "Ctrl+Enter");
+				addMenuItem("Fix spelling and grammar", "fixingSpelling", null, true);
+
+				const rewriteItem = addMenuItem("Rewrite text", null);
+				addSubMenuItem(rewriteItem, "Simplify", "simplify");
+				addSubMenuItem(rewriteItem, "Expand", "expand");
+				addSubMenuItem(rewriteItem, "Rephrase", "rephrase");
+				addSubMenuItem(rewriteItem, "Summarize", "summarize");
+
+				addMenuItem("Make bulleted list", "bullets");
+
+				const translateItem = addMenuItem("Translate", null);
+				addSubMenuItem(translateItem, "English", "translatedEN");
+				addSubMenuItem(translateItem, "German", "translateDE");
+				addSubMenuItem(translateItem, "Bulgarian", "translateBG");
+			}
+		}
+
+		function stopTypingAnimation() {
+			if (typingInterval) {
+				clearInterval(typingInterval);
+				typingInterval = null;
+			}
+		}
+
+		function completeGeneration(action) {
+			stopTypingAnimation();
+
+			const actionConfig = ACTION_CONFIG.get(action);
+
+			addToHistory({
+				value: editor.value,
+				action: action,
+				endAction: actionConfig.endLabel,
+				timestamp: new Date().toISOString()
+			});
+
+			currentPage = promptHistory.length - 1;
+			currentActionInProgress = null;
+			isGenerating = false;
+
+			if (promptHistory.length === 1) {
+				updateMenuContent(true);
+			}
+
+			updateComponentState();
+			announceToScreenReader(UI_TEXTS.ARIA_MESSAGES.generated);
+		}
+
+		function animateTextGeneration(text, action) {
+			return new Promise((resolve) => {
+				const characters = text.split("");
+				let currentIndex = 0;
+
+				editor.value = "";
+				editor.assistantState = "Loading";
+
+				typingInterval = setInterval(() => {
+					if (currentIndex < characters.length) {
+						editor.value += characters[currentIndex];
+						currentIndex++;
+					} else {
+						completeGeneration(action);
+						resolve();
+					}
+				}, CONFIG.TYPING_SPEED);
+			});
+		}
+
+		function setLoadingState(actionText) {
+			editor.value = UI_TEXTS.PLACEHOLDERS.loading;
+			editor.assistantState = "Loading";
+			editor.actionText = actionText;
+		}
+
+		function resetGenerationState() {
+			stopTypingAnimation();
+			isGenerating = false;
+			currentActionInProgress = null;
+			editor.assistantState = "Initial";
+		}
+
+		async function executeAction(action) {
+			if (isGenerating) {
+				return;
+			}
+
+			const actionConfig = ACTION_CONFIG.get(action);
+			if (!actionConfig) {
+				announceToScreenReader(UI_TEXTS.ARIA_MESSAGES.error);
+				return;
+			}
+
+			try {
+				saveCurrentVersion();
+				currentActionInProgress = action;
+				isGenerating = true;
+
+				setLoadingState(actionConfig.startLabel);
+				announceToScreenReader(UI_TEXTS.ARIA_MESSAGES.generating);
+
+				await delay(CONFIG.ANALYZING_DELAY);
+
+				const text = SAMPLE_TEXTS[actionConfig.textKey] || SAMPLE_TEXTS.en;
+				await animateTextGeneration(text, action);
+
+			} catch (error) {
+				announceToScreenReader(UI_TEXTS.ARIA_MESSAGES.error);
+				resetGenerationState();
+			}
+		}
+
+		function stopGeneration() {
+			if (!isGenerating) return;
+
+			stopTypingAnimation();
+
+			const action = currentActionInProgress || "generate";
+			const actionConfig = ACTION_CONFIG.get(action);
+
+			addToHistory({
+				value: editor.value,
+				action: action,
+				endAction: actionConfig.endLabel + " (stopped)",
+				timestamp: new Date().toISOString()
+			});
+
+			currentPage = promptHistory.length - 1;
+			currentActionInProgress = null;
+			isGenerating = false;
+
+			if (promptHistory.length === 1) {
+				updateMenuContent(true);
+			}
+
+			updateComponentState();
+		}
+
+		function handleKeyboardShortcuts(event) {
+			if (event.ctrlKey && event.key === 'Enter' && promptHistory.length > 0) {
+				event.preventDefault();
+				executeAction('regenerate');
+			}
+
+			if (event.key === 'Escape' && isGenerating) {
+				event.preventDefault();
+				stopGeneration();
+			}
+		}
+
+		function handleNextVersion() {
+			if (currentPage < promptHistory.length - 1) {
+				saveCurrentVersion();
+				currentPage += 1;
+				loadVersion(currentPage);
+				updateComponentState();
+			}
+		}
+
+		function handlePreviousVersion() {
+			if (currentPage > 0) {
+				saveCurrentVersion();
+				currentPage -= 1;
+				loadVersion(currentPage);
+				updateComponentState();
+			}
+		}
+
+		const handleInput = debounce(function(event) {
+			inputCount++;
+			updateDebugInfo('input-event-detail', 'Input event fired');
+
+			if (event.target.editor?._nativeEditor) {
+				updateCharacterCount(event.target.editor._nativeEditor);
+			}
+		}, CONFIG.DEBOUNCE_DELAY);
+
+		function handleChange(event) {
+			changeCount++;
+			updateDebugInfo('change-event-detail', 'Change event fired');
+		}
+
+		async function handleMenuItemClick(event) {
+			const action = event.detail.item.dataset.menuAction;
+
+			if (!action) {
+				return;
+			}
+
+			await executeAction(action);
+		}
+
+		function setupTinyMCE(event) {
+			const config = event.detail.configuration;
+
+			if (!config.plugins.includes("wordcount")) {
+				config.plugins.push("wordcount");
+			}
+
+			const originalSetup = config.setup;
+			config.setup = (nativeEditor) => {
+				if (originalSetup) {
+					originalSetup(nativeEditor);
+				}
+
+				nativeEditor.on("loadContent", () => updateCharacterCount(nativeEditor));
+				nativeEditor.on("input", () => updateCharacterCount(nativeEditor));
+			};
+		}
+
+		function handleGlobalError(event) {
+			resetGenerationState();
+		}
+
+		function handleUnhandledRejection(event) {
+			resetGenerationState();
+		}
+
+		async function initializeApp() {
+			try {
+				editor = document.getElementById("textarea-ai");
+				menu = document.getElementById("ai-wa-menu");
+
+				if (!editor) {
+					throw new Error('Editor element not found');
+				}
+				if (!menu) {
+					throw new Error('Menu element not found');
+				}
+
+				editor.addEventListener("before-tinymce-init", setupTinyMCE);
+				editor.addEventListener("next-version-click", handleNextVersion);
+				editor.addEventListener("previous-version-click", handlePreviousVersion);
+				editor.addEventListener("stop-generation", stopGeneration);
+				editor.addEventListener("input", handleInput);
+				editor.addEventListener("change", handleChange);
+
+				menu.addEventListener("item-click", handleMenuItemClick);
+
+				document.addEventListener("keydown", handleKeyboardShortcuts);
+
+				window.addEventListener("error", handleGlobalError);
+				window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+				updateDebugInfo();
+			} catch (error) {
+				announceToScreenReader(UI_TEXTS.ARIA_MESSAGES.error);
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", initializeApp);
+	</script>
+</body>
+
+</html>
