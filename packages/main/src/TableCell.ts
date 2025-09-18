@@ -34,7 +34,7 @@ class TableCell extends TableCellBase {
 		if (this.horizontalAlign) {
 			this.style.justifyContent = this.horizontalAlign;
 		} else if (this._individualSlot) {
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
+			this.style.justifyContent = `var(--horizontal-align-${this._headerCell._id})`;
 		}
 	}
 
