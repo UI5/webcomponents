@@ -988,9 +988,7 @@ class Tokenizer extends UI5Element {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
 		const cutToClipboard = (e: ClipboardEvent) => {
-			if (e.clipboardData) {
-				e.clipboardData.setData("text/plain", tokensTexts);
-			}
+			navigator.clipboard.writeText(tokensTexts);
 
 			e.preventDefault();
 		};

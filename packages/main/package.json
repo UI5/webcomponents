@@ -25,9 +25,7 @@
     "generateAPI": "nps generateAPI",
     "build": "wc-dev build",
     "bundle": "nps build.bundle",
-    "test": "wc-dev test",
-    "test:suite-1": "wc-dev test-suite-1",
-    "test:suite-2": "wc-dev test-suite-2",
+    "test": "yarn test:cypress",
     "test:cypress": "nps test-cy-ci",
     "test:cypress:suite-1": "nps test-cy-ci-suite-1",
     "test:cypress:suite-2": "nps test-cy-ci-suite-2",
@@ -64,7 +62,6 @@
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chromedriver": "^139.0.3",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",
     "vitest": "^3.0.2"
