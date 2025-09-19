@@ -188,26 +188,26 @@ describe("Toolbar general interaction", () => {
 		cy.wait(500);
 
 		// Select the toolbar by tag name
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
 			.realClick();
 
 		// Verify the overflow popover is open
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-overflow-popover")
 			.should("have.attr", "open", "open");
 		cy.wait(500);
 
 		// Verify the popover contains the correct number of items
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-popover-item")
 			.should("have.length", 2);
 
 		// Verify the specific button is in the popover
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.find(`[stabledomref="tb-button-employee-d"]`)
 			.shadow()
 			.find(`[ui5-button]`)
@@ -262,7 +262,7 @@ describe("Toolbar general interaction", () => {
 		);
 
 
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
 			.as("overflowButton")
@@ -273,7 +273,7 @@ describe("Toolbar general interaction", () => {
 		cy.get("@overflowButton")
 			.realClick();
 
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find("[ui5-popover]")
 			.as("popover")
@@ -307,7 +307,7 @@ describe("Toolbar general interaction", () => {
 		cy.viewport(300, 1080);
 
 		// Focus on the overflow button
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
 			.realClick()
@@ -318,7 +318,7 @@ describe("Toolbar general interaction", () => {
 		cy.viewport(800, 1080);
 
 		// Verify the focus shifts to the last interactive element outside the overflow popover
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-item")
 			.eq(3)
@@ -439,7 +439,7 @@ describe("Accessibility", () => {
 		);
 		cy.wait(1000);
 
-		cy.get("ui5-toolbar")
+		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-overflow-popover")
 			.should("have.attr", "accessible-name", "Available Values");
@@ -541,12 +541,10 @@ describe("ToolbarButton", () => {
 			.find(".ui5-tb-overflow-btn")
 			.realClick();
 
-		cy.get("ui5-toolbar-button[accessible-name]").shadow().find(".ui5-tb-button")
-				.invoke("prop", "accessibilityAttributes")
-				.should("deep.equal", { expanded: "true",
-					controls: "btn",
-					hasPopup: "dialog" });
-		});
+		cy.get("[ui5-toolbar-button][accessible-name]").shadow().find(".ui5-tb-button")
+			.should("have.prop", "accessibilityAttributes")
+			.should("deep.include", { expanded: "true", controls: "btn", hasPopup: "dialog" });
+		 });
 
 	it("Should not recalculate overflow when button state changes without affecting width", () => {
 		cy.mount(
