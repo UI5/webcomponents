@@ -21,11 +21,11 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "clean": "nps clean",
-    "lint": "nps lint",
-    "start": "nps start",
-    "build": "nps build",
-    "generate": "nps generate",
+    "clean": "wc-dev clean",
+    "lint": "wc-dev lint",
+    "start": "wc-dev start",
+    "build": "wc-dev build",
+    "generate": "wc-dev generate",
     "prepublishOnly": "tsc -b"
   },
   "devDependencies": {
