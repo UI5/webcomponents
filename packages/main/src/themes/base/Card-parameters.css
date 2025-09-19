@@ -2,7 +2,7 @@
 	--_ui5_card_box_shadow: var(--sapContent_Shadow0);
 	--_ui5_card_hover_box_shadow: var(--_ui5_card_box_shadow);
 	--_ui5_card_border: 1px solid var(--sapTile_BorderColor);
-	--_ui5_card_border-radius: var(--sapElement_BorderCornerRadius);
+	--_ui5_card_border-radius: var(--sapTile_BorderCornerRadius);
 	--_ui5_card_header_padding: 1rem;
 	--_ui5_card_header_hover_bg: var(--sapList_Hover_Background);
 	--_ui5_card_header_active_bg: var(--_ui5_card_header_hover_bg);
