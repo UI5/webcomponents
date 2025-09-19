@@ -11,6 +11,7 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarSize from "@ui5/webcomponents/dist/types/AvatarSize.js";
+import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Properties", () => {
@@ -791,7 +792,7 @@ describe("Events", () => {
 
 		cy.get("[ui5-search]")
 			.then(search => {
-				search.get(0).addEventListener("ui5-close", cy.stub().as("closed"));
+				search.get(0).addEventListener("ui5-close", cy.spy().as("closed"));
 			});
 
 		cy.get("[ui5-search]")
@@ -818,7 +819,7 @@ describe("Events", () => {
 
 		cy.get("[ui5-search]")
 			.then(search => {
-				search.get(0).addEventListener("ui5-close", cy.stub().as("closed"));
+				search.get(0).addEventListener("ui5-close", cy.spy().as("closed"));
 			});
 
 		cy.get("[ui5-search]")
@@ -1074,6 +1075,172 @@ describe("Events", () => {
 
 		cy.get("ui5-search-item").eq(0)
 			.should("not.have.attr", "selected");
+	});
+
+	it("should reset suggestions highlight on pressing 'clear' button", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+		
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("I");
+
+		cy.get("@search")
+			.should("have.value", "Item 1");
+		
+		cy.get("[ui5-search-item]").eq(0)
+			.should("have.attr", "highlight-text", "I");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='decline']")
+			.realClick();
+
+		cy.get("@search")
+			.should("have.value", "");
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+
+		cy.get("@search")
+			.invoke("prop", "open", true);
+
+		cy.get("ui5-search-item").eq(0)
+			.should("have.attr", "highlight-text", "");
+	});
+
+	it("should close the popover on search if no suggestion is selected", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+		
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("P"); // no matching suggestion
+
+		cy.get("@search")
+			.should("have.value", "P");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='search']")
+			.realClick();
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
+
+	it("should close the popover on 'search' if suggestion is selected", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+		
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("I"); // no matching suggestion
+
+		cy.get("@search")
+			.should("have.value", "Item 1");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='search']")
+			.realClick();
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
+
+	it("should open picker by default when 'open' property is set to true", () => {
+		cy.mount(
+			<Search open>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+	});
+
+	it("should not open picker if text is deleted and there are no items", () => {
+		const handleInput = (e: any) => {
+			if (e.target.value) {
+				const item = document.createElement("ui5-search-item");
+				item.setAttribute("text", e.target.value);
+				e.target.appendChild(item);
+			} else {
+				e.target.innerHTML = "";
+			}
+		};
+
+		cy.mount(<Search showClearIcon noTypeahead onInput={handleInput}></Search>);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realPress("I");
+
+		cy.get("@input")
+			.realPress("Backspace");
+
+		cy.get("@search")
+			.should("have.value", "");
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
 	});
 });
 
