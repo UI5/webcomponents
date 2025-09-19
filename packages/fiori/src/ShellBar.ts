@@ -1272,7 +1272,7 @@ class ShellBar extends UI5Element {
 				const bIndex = PREDEFINED_PLACE_ACTIONS.indexOf(b.icon || "");
 				return aIndex - bIndex;
 			}).map((item: ShellBarItem) => {
-				item._getRealDomRef = () => this.getDomRef()!.querySelector(`*[data-ui5-stable=${item.stableDomRef}]`)!;
+				item._getRealDomRef = () => this.shadowRoot!.querySelector(`*[data-ui5-stable=${item.stableDomRef}]`)!;
 				// check if included for lean mode
 				const show = !!item.icon || false;
 				return {
