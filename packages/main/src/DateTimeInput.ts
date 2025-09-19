@@ -1,4 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
 // Styles
 import Input from "./Input.js";
@@ -33,6 +34,40 @@ class DateTimeInput extends Input {
 
 	get _isMobileDevice() {
 		return !isDesktop() && (isPhone() || isTablet());
+	}
+
+	/**
+	 * Override to handle nested slot structure from DatePicker -> DateTimeInput slot forwarding.
+	 * Assumes DateTimeInput always has slot-within-slot structure for valueStateMessage.
+	 * @override
+	 */
+	get ariaValueStateHiddenText(): string | undefined {
+		if (!this.hasValueState) {
+			return;
+		}
+
+		const valueState = this.valueState !== ValueState.None ? this.valueStateTypeMappings[this.valueState] : "";
+
+		if (this.shouldDisplayDefaultValueStateMessage) {
+			return this.valueStateText ? `${valueState} ${this.valueStateText}` : valueState;
+		}
+
+		// Handle the specific nested slot case: outer slot -> inner slot -> actual content
+		if (this.valueStateMessage.length) {
+			const outerSlot = this.valueStateMessage[0];
+			if (outerSlot.tagName === "SLOT") {
+				const assignedNodes = (outerSlot as HTMLSlotElement).assignedNodes({ flatten: true });
+				const textContent = assignedNodes
+					.map(node => node.textContent || "")
+					.join(" ")
+					.trim();
+				return textContent ? `${valueState} ${textContent}` : valueState;
+			}
+			// Fallback for non-slot content
+			return `${valueState} ${outerSlot.textContent || ""}`.trim();
+		}
+
+		return valueState;
 	}
 }
 
