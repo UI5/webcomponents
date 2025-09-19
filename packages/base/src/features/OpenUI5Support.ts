@@ -11,6 +11,7 @@ import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
 import type { LegacyDateCalendarCustomizing } from "../features/LegacyDateFormats.js";
+import { secondaryBoot } from "../Boot.js";
 
 type OpenUI5Core = {
 	attachInit: (callback: () => void) => void,
@@ -90,9 +91,42 @@ class OpenUI5Support {
 
 	static initPromise?: Promise<void>;
 
+	/**
+	 * Important - if OpenUI5 is loaded after UI5 Web Components, configuration is not synchronized and it's up to the app to initialize OpenUI5 with the same settings as UI5 Web Components for consistency.
+	 */
+	static OpenUI5DelayedInit = async () => {
+		OpenUI5Support.init(); // This ensures patchPopover and patchPatcher are called; and from this point OpenUI5 CSS vars start being detected
+		await secondaryBoot(); // Re-run the parts of boot that were skipped due to OpenUI5 not having been loaded
+	}
+
+	static awaitForOpenUI5() {
+		const w = window as Record<string, any>;
+
+		const patchOnInit = (target: Record<string, any>) => {
+			const oldOnInit = target.onInit;
+			if (!oldOnInit) {
+				target.onInit = OpenUI5Support.OpenUI5DelayedInit;
+			} else {
+				target.onInit = function onInit(...rest: any[]) {
+					oldOnInit.apply(this, rest);
+					OpenUI5Support.OpenUI5DelayedInit();
+				};
+			}
+		};
+
+		// First, look for window.onInit and if found, patch it
+		if (w.onInit) {
+			patchOnInit(w);
+		}
+
+		// If window.onInit is not found, go for the sap-ui-config script
+		w["sap-ui-config"] = w["sap-ui-config"] || {};
+		patchOnInit(w["sap-ui-config"] as Record<string, any>);
+	}
+
 	static init() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return Promise.resolve();
+			return OpenUI5Support.awaitForOpenUI5();
 		}
 
 		if (!OpenUI5Support.initPromise) {
@@ -152,7 +186,7 @@ class OpenUI5Support {
 				formatSettings: {
 					firstDayOfWeek: CalendarUtils.getWeekConfigurationValues().firstDayOfWeek,
 					legacyDateCalendarCustomizing: Formatting.getCustomIslamicCalendarData?.()
-												?? Formatting.getLegacyDateCalendarCustomizing?.(),
+						?? Formatting.getLegacyDateCalendarCustomizing?.(),
 				},
 			};
 		}
@@ -210,10 +244,11 @@ class OpenUI5Support {
 
 	static attachListeners() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return;
+			return false;
 		}
 
 		OpenUI5Support._listenForThemeChange();
+		return true;
 	}
 
 	static cssVariablesLoaded() {
