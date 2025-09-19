@@ -210,7 +210,7 @@ class DynamicPage extends UI5Element {
 			this.dynamicPageTitle.removeAttribute("hovered");
 		}
 		if (this.dynamicPageHeader) {
-			this.dynamicPageHeader.snapped = this._headerSnapped;
+			this.dynamicPageHeader._snapped = this._headerSnapped;
 		}
 		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;

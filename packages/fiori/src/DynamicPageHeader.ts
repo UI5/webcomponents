@@ -69,11 +69,10 @@ class DynamicPageHeader extends UI5Element {
 	 * Defines if the header is snapped.
 	 *
 	 * @default false
-	 * @public
-	 * @since 2.16.0
+	 * @private
 	 */
 	@property({ type: Boolean })
-	snapped = false;
+	_snapped = false;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -83,7 +82,7 @@ class DynamicPageHeader extends UI5Element {
 	 * @internal
 	 */
 	get _headerRegionAriaLabel(): string {
-		const defaultText = this.snapped
+		const defaultText = this._snapped
 			? DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER
 			: DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER;
 
