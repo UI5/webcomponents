@@ -25,17 +25,24 @@
 				new Button("openUI5Button", {
 					text: "Open OpenUI5 Dialog",
 					press: function () {
-						new Dialog({
+						new Dialog("openUI5Dialog", {
 							title: "OpenUI5 Dialog",
 							content: [
 								new HTML({
-									content: `<ui5-select>
-												<ui5-option>Option 1</ui5-option>
-												<ui5-option>Option 2</ui5-option>
-												<ui5-option>Option 3</ui5-option>
-												<ui5-option>Option 4</ui5-option>
-												<ui5-option>Option 5</ui5-option>
-											</ui5-select>`
+									content:
+`<ui5-select id="webCSelect1">
+	<ui5-option>Option 1</ui5-option>
+	<ui5-option>Option 2</ui5-option>
+	<ui5-option>Option 3</ui5-option>
+	<ui5-option>Option 4</ui5-option>
+	<ui5-option>Option 5</ui5-option>
+</ui5-select>
+<ui5-combobox id="webCComboBox1">
+	<ui5-combobox-item text="Algeria"></ui5-combobox-item>
+	<ui5-combobox-item text="Argentina"></ui5-combobox-item>
+	<ui5-combobox-item text="Australia"></ui5-combobox-item>
+</ui5-combobox>
+<br><br>`
 								}),
 								new Input(),
 								new Button({
@@ -122,7 +129,7 @@
 
 		function openUI5Dialog() {
 			sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
-				new Dialog("openUI5Dialog1", {
+				new Dialog("openUI5DialogWithButtons", {
 					title: "OpenUI5 Dialog",
 					content: [
 						new Button({

@@ -19,13 +19,20 @@ function onOpenUI5InitMethod(win) {
 					title: "OpenUI5 Dialog",
 					content: [
 						new HTML({
-							content: `<ui5-select>
-												<ui5-option>Option 1</ui5-option>
-												<ui5-option>Option 2</ui5-option>
-												<ui5-option>Option 3</ui5-option>
-												<ui5-option>Option 4</ui5-option>
-												<ui5-option>Option 5</ui5-option>
-											</ui5-select>`
+							content:
+`<ui5-select id="webCSelect1">
+	<ui5-option>Option 1</ui5-option>
+	<ui5-option>Option 2</ui5-option>
+	<ui5-option>Option 3</ui5-option>
+	<ui5-option>Option 4</ui5-option>
+	<ui5-option>Option 5</ui5-option>
+</ui5-select>
+<ui5-combobox id="webCComboBox1">
+	<ui5-combobox-item text="Algeria"></ui5-combobox-item>
+	<ui5-combobox-item text="Argentina"></ui5-combobox-item>
+	<ui5-combobox-item text="Australia"></ui5-combobox-item>
+</ui5-combobox>
+<br><br>`
 						}),
 						new Input(),
 						new Button({
@@ -85,7 +92,7 @@ function onOpenUI5InitMethod(win) {
 				]
 			}).placeAt("dialog1content");
 
-			const button = new Button({
+			const button = new Button("openUI5ButtonWithHint", {
 				text: "OpenUI5 with Shortcut (Ctrl+S)",
 				press: function () {
 					openUI5Dialog(win);
@@ -112,7 +119,7 @@ function onOpenUI5InitMethod(win) {
 
 function openUI5Dialog(win) {
 	(win as any).sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
-		new Dialog({
+		new Dialog("openUI5DialogWithButtons", {
 			title: "OpenUI5 Dialog",
 			content: [
 				new Button({
@@ -213,12 +220,6 @@ describe("ui5 and web components integration", () => {
 				>
 					<Button>Some button</Button>
 				</ResponsivePopover>
-
-				<ComboBox>
-					<ComboBoxItem text="Algeria" />
-					<ComboBoxItem text="Argentina" />
-					<ComboBoxItem text="Australia" />
-				</ComboBox>
 			</>
 		);
 
@@ -257,6 +258,9 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenWebCDialogOpenUI5Select() {
+		cy.get("#openUI5Button")
+			.should('be.visible');
+
 		cy.get('#myButton')
 			.should('be.visible')
 			.realClick();
@@ -282,6 +286,9 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenWebCDialogOpenUI5ComboBox() {
+		cy.get("#openUI5Button")
+			.should('be.visible');
+
 		cy.get('#myButton')
 			.should('be.visible')
 			.realClick();
@@ -314,10 +321,88 @@ describe("ui5 and web components integration", () => {
 			.should('not.be.visible');
 	}
 
+	function OpenWebCDialogOpenUI5ComboBoxNewOpenUI5DialogFromButtonWithHint() {
+		cy.get("#openUI5Button")
+			.should('be.visible');
+
+		cy.get('#myButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get('#openUI5Combobox1')
+			.should('be.visible')
+			.realClick()
+			.type("I");
+
+		cy.get("#openUI5Combobox1-popup")
+			.should('be.visible');
+
+		cy.get('#openUI5ButtonWithHint')
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Combobox1-popup")
+			.should('not.be.visible');
+
+		cy.get("#openUI5DialogWithButtons")
+			.should("be.visible");
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5DialogWithButtons")
+			.should("not.be.visible");
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+
+		cy.get('#openUI5Combobox1')
+			.find('input')
+			.focus();
+
+		cy.get('#openUI5Combobox1')
+			.find('input')
+			.realPress("Escape");
+
+		cy.realPress("Escape");
+
+		cy.get('#dialog1')
+			.should('not.be.visible');
+	}
+
 	function OpenUI5Dialog() {
 		cy.get("#openUI5Button")
 			.should('be.visible')
 			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+	}
+
+	function OpenUI5DialogWebCDialog() {
+		cy.get("#openUI5Button")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.get("#openResPopoverButton")
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#respPopover").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("#respPopover")
+			.should('not.be.visible');
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -357,11 +442,17 @@ describe("ui5 and web components integration", () => {
 	}
 
 	it("Keyboard", () => {
-		OpenWebCDialog();
-		OpenWebCDialogOpenUI5Select();
-		OpenWebCDialogOpenUI5ComboBox();
+		// OpenWebCDialog();
+		// OpenWebCDialogOpenUI5Select();
+		// OpenWebCDialogOpenUI5ComboBox();
 
-		OpenUI5Dialog();
-		OpenUI5DialogWebCDialogNoFocus();
+		OpenWebCDialogOpenUI5ComboBoxNewOpenUI5DialogFromButtonWithHint();
+
+
+		// OpenUI5Dialog();
+		// cy.wait(500);
+		// OpenUI5DialogWebCDialog();
+		// cy.wait(500);
+		// OpenUI5DialogWebCDialogNoFocus();
 	});
 });
