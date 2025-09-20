@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Flexible Column Layout</title>
+
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-B6KdO0Ny.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FCLCustom-An-juj4k.css">
+</head>
+
+<body class="fclcustom1auto">
+
+	<ui5-flexible-column-layout id="fcl3" layout="ThreeColumnsMidExpanded">
+		<!-- start column -->
+		<div class="fclcustom2auto" slot="startColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fclcustom2auto" slot="midColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 2</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- end column -->
+		<div class="fclcustom2auto" slot="endColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 3</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<script>
+		var fcl = document.getElementById("fcl3");
+		fcl._layoutsConfiguration = {
+			desktop: {
+				"OneColumn": {
+					layout: ["100%", 0, 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsStartExpanded": {
+					layout: ["90%", "10%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsMidExpanded": {
+					layout: ["10%", "90%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpanded": {
+					layout: ["15%", "70%", "15%"],
+					separators:	[
+						{ visible: true, gripVisible: true },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"ThreeColumnsEndExpanded": {
+					layout: ["15%", "15%", "70%"],
+					separators: [
+						{ visible: true, gripVisible: false },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"ThreeColumnsStartExpandedEndHidden": {
+					layout: ["90%", "10%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpandedEndHidden": {
+					layout: ["10%", "90%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"MidColumnFullScreen": {
+					layout: [0, "100%", 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"EndColumnFullScreen": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+			},
+			tablet: {
+				"OneColumn": {
+					layout: ["100%", 0, 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsStartExpanded": {
+					layout: ["90%", "10%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsMidExpanded": {
+					layout: ["10%", "90%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpanded": {
+					layout: [0, "90%", "10%"],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"ThreeColumnsEndExpanded": {
+					layout: [0, "10%", "90%"],
+					separators: [
+						{ visible: false },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"ThreeColumnsStartExpandedEndHidden": {
+					layout: ["90%", "10%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpandedEndHidden": {
+					layout: ["10%", "90%", 0],
+					separators: [
+						{ visible: true, gripVisible: true },
+						{ visible: true, gripVisible: true },
+					],
+				},
+				"MidColumnFullScreen": {
+					layout: [0, "100%", 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"EndColumnFullScreen": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+			},
+			phone: {
+				"OneColumn": {
+					layout: ["100%", 0, 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsStartExpanded": {
+					layout: [0, "100%", 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"TwoColumnsMidExpanded": {
+					layout: [0, "100%", 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsStartExpanded": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpanded": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsEndExpanded": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsStartExpandedEndHidden": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"ThreeColumnsMidExpandedEndHidden": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"MidColumnFullScreen": {
+					layout: [0, "100%", 0],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+				"EndColumnFullScreen": {
+					layout: [0, 0, "100%"],
+					separators: [
+						{ visible: false },
+						{ visible: false },
+					],
+				},
+			},
+		};
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+"use strict";import o from"./isElementTabbable.js";const b=t=>a([...t.children]),E=t=>{const n=a([...t.children]);return n.length?n[n.length-1]:null},a=(t,n)=>{const l=n||[];return t&&t.forEach(r=>{if(r.nodeType===Node.TEXT_NODE||r.nodeType===Node.COMMENT_NODE)return;const e=r;if(!e.hasAttribute("data-sap-no-tab-ref"))if(o(e)&&l.push(e),e.tagName==="SLOT")a(e.assignedNodes(),l);else{const s=e.shadowRoot?e.shadowRoot.children:e.children;a([...s],l)}}),l};export{b as getTabbableElements,E as getLastTabbableElement};
+//# sourceMappingURL=TabbableElements.js.map

@@ -1,0 +1,2 @@
+"use strict";import{hasStyle as e,createStyle as o}from"./ManagedStyles.js";import{getFeature as r}from"./FeaturesRegistry.js";import n from"./generated/css/FontFace.css.js";import{getDefaultFontLoading as p}from"./config/Fonts.js";const a=()=>{const t=r("OpenUI5Support");(!t||!t.isOpenUI5Detected())&&f()},f=()=>{const t=document.querySelector("head>style[data-ui5-font-face]");!p()||t||e("data-ui5-font-face")||o(n,"data-ui5-font-face")};export default a;
+//# sourceMappingURL=FontFace.js.map
