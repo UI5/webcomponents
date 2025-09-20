@@ -136,52 +136,6 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     }
   };
 
-  const createGistSampleConfig = (gistFiles) => {
-    const gistConfig = {
-      files: {},
-      importMap: {
-        "imports": calcImports(),
-      }
-    };
-
-    // process each gist file 
-    Object.keys(gistFiles).forEach(filename => {
-      const gistFile = gistFiles[filename];
-
-      if (filename === "index.html") {
-        //  add required head content to html file
-        gistConfig.files[filename] = {
-          ...gistFile,
-          content: addHeadContent(fixAssetPaths(gistFile.content))
-        };
-      } else {
-        //  keep other files as-is but fix asset paths
-        gistConfig.files[filename] = {
-          ...gistFile,
-          content: fixAssetPaths(gistFile.content)
-        };
-      }
-    });
-
-    //  ensure playground support exists 
-    if (!gistConfig.files["playground-support.js"]) {
-      gistConfig.files["playground-support.js"] = {
-        name: "playground-support.js",
-        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
-        hidden: true
-      };
-    } else {
-      //  update existing playground support with current settings
-      gistConfig.files["playground-support.js"] = {
-        ...gistConfig.files["playground-support.js"],
-        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
-        hidden: true
-      };
-    }
-
-    return gistConfig;
-  };
-
   function calcImports() {
     if (process.env.NODE_ENV === "development" || siteConfig.customFields.ui5DeploymentType === "nightly") {
       return {
@@ -352,6 +306,77 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     localStorage.setItem("activeExample", "counter");
   }
 
+  const createGistProjectConfig = (gistFiles) => {
+    const gistConfig = {
+      files: {},
+      importMap: {
+        "imports": calcImports(),
+      }
+    };
+
+    // process each gist file 
+    Object.keys(gistFiles).forEach(filename => {
+      const gistFile = gistFiles[filename];
+
+      if (filename === "index.html") {
+        //  add required head content to html file
+        gistConfig.files[filename] = {
+          ...gistFile,
+          content: addHeadContent(fixAssetPaths(gistFile.content))
+        };
+      } else {
+        //  keep other files as-is but fix asset paths
+        gistConfig.files[filename] = {
+          ...gistFile,
+          content: fixAssetPaths(gistFile.content)
+        };
+      }
+    });
+
+    //  ensure playground support exists 
+    if (!gistConfig.files["playground-support.js"]) {
+      gistConfig.files["playground-support.js"] = {
+        name: "playground-support.js",
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        hidden: true
+      };
+    } else {
+      //  update existing playground support with current settings
+      gistConfig.files["playground-support.js"] = {
+        ...gistConfig.files["playground-support.js"],
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        hidden: true
+      };
+    }
+
+    return gistConfig;
+  };
+
+  const loadGistProject = (projectRef, projectContainerRef, gistId) => {
+    loadGist(gistId)
+      .then(gistFiles => {
+        if (!gistFiles || Object.keys(gistFiles).length === 0) {
+          console.error("No files found in gist.");
+          return;
+        }
+        
+        const gistConfig = createGistProjectConfig(gistFiles);
+        projectRef.current.config = gistConfig;
+        
+        if (!projectContainerRef.current.contains(projectRef.current)) {
+          projectContainerRef.current.appendChild(projectRef.current);
+        }
+      })
+      .catch(error => {
+        console.log(`Failed fetching gist by id: ${error}. Falling back to default config.`);
+        projectRef.current.config = newConfig;
+        
+        if (!projectContainerRef.current.contains(projectRef.current)) {
+          projectContainerRef.current.appendChild(projectRef.current);
+        }
+      });
+  }
+
   useEffect(() => {
     projectRef.current = getProjectFromPool();
 
@@ -389,32 +414,9 @@ ${fixAssetPaths(_js)}`,
     }
 
     const gistId = getGistIdFromURL();
+
     if (gistId) {
-      console.log(`detected gist id: ${gistId}, loading gist files...`);
-      
-      loadGist(gistId)
-        .then(gistFiles => {
-          if (!gistFiles || Object.keys(gistFiles).length === 0) {
-            throw new Error("no files found in gist");
-          }
-          
-          const gistConfig = createGistSampleConfig(gistFiles);
-          console.log("gist config created:", gistConfig);
-          
-          projectRef.current.config = gistConfig;
-          
-          if (!projectContainerRef.current.contains(projectRef.current)) {
-            projectContainerRef.current.appendChild(projectRef.current);
-          }
-        })
-        .catch(error => {
-          console.log(`Failed fetching gist by id ${error}, so falling back to default config`);
-          projectRef.current.config = newConfig;
-          
-          if (!projectContainerRef.current.contains(projectRef.current)) {
-            projectContainerRef.current.appendChild(projectRef.current);
-          }
-        });
+      loadGistProject(projectRef, projectContainerRef, gistId);
     } else {
       // restore project if saved
       if (location.pathname.endsWith("/play") || location.pathname.endsWith("/play/")) {
