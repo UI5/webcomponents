@@ -764,6 +764,47 @@ describe("Dialog general interaction", () => {
 			});
 		});
 	});
+
+	it("RTL resizable - should not move dialog when resizing from the left with max-width is set", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Dialog id="resizable-dialog" resizable style={{maxWidth: "300px"}}>
+					<div id="header-slot" slot="header">Header</div>
+					<div>Content</div>
+					<Button id="resizable-close">Close</Button>
+				</Dialog>
+			</div>
+		);
+
+		cy.get("#resizable-dialog").invoke("attr", "open", true);
+
+		cy.get("#resizable-dialog").then(dialog => {
+			const widthBeforeResizing = parseInt(dialog.css("width"));
+			const heightBeforeResizing = parseInt(dialog.css("height"));
+			const topBeforeResizing = parseInt(dialog.css("top"));
+			const leftBeforeResizing = parseInt(dialog.css("left"));
+
+			cy.get("#resizable-dialog")
+				.shadow()
+				.find(".ui5-popup-resize-handle") 
+				.realMouseDown({ position: "left" }) 
+				.realMouseMove(-100, 100) 
+				.realMouseUp();
+
+			cy.get("#resizable-dialog").should(dialogAfterResizing => {
+				const widthAfterResizing = parseInt(dialogAfterResizing.css("width"));
+				const heightAfterResizing = parseInt(dialogAfterResizing.css("height"));
+				const topAfterResizing = parseInt(dialogAfterResizing.css("top"));
+				const leftAfterResizing = parseInt(dialogAfterResizing.css("left"));
+
+				expect(widthBeforeResizing).to.equal(widthAfterResizing);
+				expect(heightBeforeResizing).not.to.equal(heightAfterResizing);
+				expect(topBeforeResizing).to.equal(topAfterResizing);
+				expect(leftBeforeResizing).not.to.equal(leftAfterResizing + 100); 
+			});
+		});
+	});
+
 	it("initial focus after dynamic dialog creation", () => {
 		cy.mount(
 			<>
