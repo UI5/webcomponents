@@ -608,6 +608,7 @@ class Dialog extends Popup {
 				this._initialLeft! + this._initialWidth!,
 			);
 
+			// check if width is changed to avoid "left" jumping when max width is reached
 			Object.assign(this.style, {
 				width: `${newWidth}px`,
 			});
