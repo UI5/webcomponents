@@ -499,7 +499,7 @@ describe("ui5 and web components integration", () => {
 			.should('be.focused');
 	}
 
-	function OpenUI5DialogWebCDialogNoFocus() {
+	function OpenUI5DialogWebCPopoverNoFocus() {
 		cy.get("#openUI5Button")
 			.should('be.visible')
 			.realClick();
@@ -532,15 +532,14 @@ describe("ui5 and web components integration", () => {
 
 	it("Keyboard", () => {
 		OpenWebCDialog();
-		OpenWebCDialogOpenUI5Select();
-		OpenWebCDialogOpenUI5ComboBox();
-
 		OpenWebCDialogOpenOpenUI5Dialog();
 		OpenWebCDialogOpenOpenUI5PopoverNoFocus();
+		OpenWebCDialogOpenUI5Select();
+		OpenWebCDialogOpenUI5ComboBox();
 		OpenWebCDialogOpenUI5ComboBoxNewOpenUI5DialogFromButtonWithHint();
 
 		OpenUI5Dialog();
 		OpenUI5DialogWebCDialog();
-		OpenUI5DialogWebCDialogNoFocus();
+		OpenUI5DialogWebCPopoverNoFocus();
 	});
 });
