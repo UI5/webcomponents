@@ -27,6 +27,9 @@ class DateTimeRange implements IDynamicDateRangeOption {
 	}
 
 	parse(value: string): DynamicDateRangeValue {
+		if (!value) {
+			return { operator: this.operator, values: [] };
+		}
 		const splitValue = value.split(DEFAULT_DELIMITER);
 		const startDate = this._parseDate(splitValue[0].trim()) as Date;
 		const endDate = this._parseDate(splitValue[1].trim()) as Date;
@@ -35,6 +38,10 @@ class DateTimeRange implements IDynamicDateRangeOption {
 
 		returnValue.operator = this.operator;
 		returnValue.values = [startDate, endDate];
+
+		if (returnValue.values[0].getTime() > returnValue.values[1].getTime()) {
+			returnValue.values.reverse();
+		}
 
 		return returnValue;
 	}
@@ -46,14 +53,18 @@ class DateTimeRange implements IDynamicDateRangeOption {
 	format(value: DynamicDateRangeValue) {
 		const valuesArray = value?.values as Array<Date>;
 
-		if (!valuesArray || valuesArray.length !== 2 || !valuesArray[1]) {
+		if (!valuesArray || valuesArray.length !== 2 || !valuesArray[0] || !valuesArray[1]) {
 			return "";
 		}
 
-		const startDate = this.getFormat().format(valuesArray[0]);
-		const endDate = this.getFormat().format(valuesArray[1]);
+		const startDate = this._formatDate(valuesArray[0]);
+		const endDate = this._formatDate(valuesArray[1]);
 
 		return `${startDate} ${DEFAULT_DELIMITER} ${endDate}`;
+	}
+
+	_formatDate(date: Date) {
+		return this.getFormat().format(date);
 	}
 
 	toDates(value: DynamicDateRangeValue): Array<Date> {

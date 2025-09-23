@@ -11,15 +11,14 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 
 	const getStartDate = () => {
 		if (this.value?.operator === currentOperator && this.value.values && this.value.values.length === 2) {
-			// console.warn(this.getOption(this.value.operator)?.format(this.value)?.split("-")[0])
-			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[0];
+			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[0].trim();
 		}
 		return undefined;
 	};
 
 	const getEndDate = () => {
 		if (this.value?.operator === currentOperator && this.value.values && this.value.values.length === 2) {
-			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[1];
+			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[1].trim();
 		}
 		return undefined;
 	};
@@ -45,19 +44,15 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 
 		let updatedValues: Date[];
 
-		if (existingValues.length === 0) {
-			updatedValues = [dateValue];
-		} else if (pickerId === "from-picker") {
-			updatedValues = [dateValue, existingValues[1]];
-		} else {
+		if (pickerId === "to-picker") {
 			updatedValues = [existingValues[0], dateValue];
+		} else {
+			updatedValues = [dateValue, existingValues[1]];
 		}
 
-		if (updatedValues.length === 2 && updatedValues[0].getTime() > updatedValues[1].getTime()) {
+		if (updatedValues[0] && updatedValues[1] && updatedValues[0].getTime() > updatedValues[1].getTime()) {
 			updatedValues.reverse();
 		}
-
-		console.log("Updated Values:", updatedValues);
 
 		this.currentValue = {
 			operator: currentOperator,
@@ -66,17 +61,17 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 	};
 	return (
 		<div class="ui5-last-next-container ui5-last-next-container-padded">
-			<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_TIME_RANGE_TEXT_TO_LABEL)}</Label>
-			<DateTimePicker
-				id="from-picker"
-				onChange={ handleSelectionChange }>
-				value={ getStartDate() }
-			</DateTimePicker>
 			<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_TIME_RANGE_TEXT_FROM_LABEL)}</Label>
 			<DateTimePicker
+				id="from-picker"
+				onChange={handleSelectionChange}
+				value={getStartDate()}>
+			</DateTimePicker>
+			<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_TIME_RANGE_TEXT_TO_LABEL)}</Label>
+			<DateTimePicker
 				id="to-picker"
-				onChange={handleSelectionChange}>
-				value={ getEndDate()}
+				onChange={handleSelectionChange}
+				value={getEndDate()}>
 			</DateTimePicker>
 		</div>
 	);
