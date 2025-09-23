@@ -547,22 +547,11 @@
 		<section id='sapui5content'></section>
 		<br><br><br>
 
-
 		<section>
-			<form id="myForm" class="addressForm" header-text="WebC :: Edit">
-				<!-- <ui5-form-item>
+			<ui5-form class="addressForm" header-text="WebC :: Edit">
+				<ui5-form-item>
 					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
 					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
-				</ui5-form-item>
-
-				<ui5-form-item>
-					<ui5-label for="tok" slot="labelContent">Tokens: </ui5-label>
-					<ui5-tokenizer id="tok">
-						<ui5-token text="Token 1"></ui5-token>
-						<ui5-token text="Token 2"></ui5-token>
-						<ui5-token text="Token 3"></ui5-token>
-						<ui5-token text="Token 4"></ui5-token>
-					</ui5-tokenizer>
 				</ui5-form-item>
 
 				<ui5-form-item>
@@ -594,130 +583,9 @@
 				<ui5-form-item>
 					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
 					<ui5-input value="Newtown" id="delInp"></ui5-input>
-				</ui5-form-item> -->
-				 <ui5-tokenizer id="tok" name="myTokens">
-    <ui5-token text="Token 1"></ui5-token>
-    <ui5-token text="Token 2"></ui5-token>
-    <ui5-token text="Token 3"></ui5-token>
-  </ui5-tokenizer>
-  <ui5-input></ui5-input>
-<ui5-multi-input name="miform" show-suggestions id="token-unique" show-value-help-icon>
-	<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
-	<ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
-</ui5-multi-input>
-				<ui5-button submits="true" type="Submit">Submit</ui5-button>
-			</form>
+				</ui5-form-item>
+			</ui5-form>
 		</section>
-
-<script>
-	const form = document.getElementById("myForm");
-	form.addEventListener("submit", e => {
-		debugger;
-		e.preventDefault();
-
-		const fd = new FormData(form);
-		for (const [key, value] of fd.entries()) {
-			console.log(key, value);
-		}
-	});
-
-	document.getElementById("token-unique").addEventListener("ui5-change", function (event) {
-			if (!event.target.value) {
-				return;
-			}
-
-			var isDuplicate = event.target.tokens.some(function(token) {
-				return token.text === event.target.value
-			});
-
-			if (isDuplicate) {
-				event.target.valueState = "Negative";
-
-				setTimeout(function () {
-					event.target.valueState = "None";
-				}, 2000);
-
-				return;
-			}
-
-			event.target.appendChild(createTokenFromText(event.target.value));
-
-			event.target.value = "";
-		});
-		document
-			.getElementById("token-unique")
-			.addEventListener("ui5-value-help-trigger", function (event) {
-				event.target.open = true;
-			});
-
-			document.getElementById("token-unique").addEventListener("paste", function (event) {
-			event.preventDefault();
-
-			let pastedText = (event.clipboardData || window.clipboardData).getData('text/plain');;
-
-			if (!pastedText) {
-				return;
-			}
-
-			let separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter(t => !!t);
-
-			if (separatedTexts.length === 1) {
-				event.target.value = separatedTexts[0];
-				return;
-			}
-
-			separatedTexts.forEach((tokenText) => {
-				if (tokenText) {
-					event.target.appendChild(createTokenFromText(tokenText));
-				}
-			})
-		});
-		var createTokenFromText = function (text) {
-			var token = document.createElement("ui5-token");
-
-			token.setAttribute("text", text);
-			token.setAttribute("slot", "tokens");
-
-			return token;
-		}
-</script>
-
-<ui5-form id="ui5Form">
-  <ui5-form-item>
-    <ui5-label slot="labelContent">Tokens:</ui5-label>
-    <ui5-tokenizer id="tok" name="myTokens">
-      <ui5-token text="Token 1"></ui5-token>
-      <ui5-token text="Token 2"></ui5-token>
-      <ui5-token text="Token 3"></ui5-token>
-    </ui5-tokenizer>
-  </ui5-form-item>
-
-  <ui5-form-item>
-    <ui5-label slot="labelContent">MultiInput:</ui5-label>
-    <ui5-multi-input name="miform" show-suggestions id="token-unique" show-value-help-icon>
-      <div slot="valueStateMessage">Token is already in the list</div>
-      <ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
-    </ui5-multi-input>
-  </ui5-form-item>
-
-  <ui5-button design="Emphasized" submits="true" type="Submit">Submit</ui5-button>
-</ui5-form>
-
-<script>
-  const ui5Form = document.getElementById("ui5Form");
-
-  ui5Form.addEventListener("submit", e => {
-	debugger;
-    e.preventDefault();
-
-    // UI5 provides formData in the event detail
-    const fd = e.detail.formData;
-    console.log("UI5 <ui5-form> submission:");
-    for (const [key, value] of fd.entries()) {
-      console.log(key, value);
-    }
-  });
-</script>
 
 		<section id='sapui5content2'></section>
 		<br><br><br>
@@ -1041,17 +909,6 @@
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
-					<ui5-form-item>
-						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
-						<!-- <span class="text">411 Maintown</span> -->
-						 <ui5-tokenizer name="mytokenizer">
-							<ui5-token text="asd"></ui5-token>
-							<ui5-token text="abv"></ui5-token>
-							<ui5-token text="bdz"></ui5-token>
-						 </ui5-tokenizer>
-					</ui5-form-item>
-					<ui5-button submits="true" type="Submit">Submit</ui5-button>
 
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>

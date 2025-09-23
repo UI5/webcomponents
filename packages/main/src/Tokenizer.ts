@@ -365,8 +365,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	get formFormattedValue(): FormData | null | string {
 		const tokens = this.tokens || [];
 
-		console.log(this.tokens);
-
 		if (this.name && tokens.length) {
 			const formData = new FormData();
 

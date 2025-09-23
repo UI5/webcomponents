@@ -1327,3 +1327,52 @@ describe("Keyboard Handling", () => {
 			.should("have.attr", "selected");
 	});
 });
+
+describe("Tokenizer inside a form", () => {
+	it("submits token texts as form data when name is set", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer id="tokenizer" name="tags">
+					<Token text="Apple"></Token>
+					<Token text="Banana"></Token>
+				</Tokenizer>
+				<Button submits>Submit</Button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			const form = $form.get(0)! as HTMLFormElement;
+			form.addEventListener("submit", e => {
+				e.preventDefault();
+				const formData = new FormData(form);
+
+				expect(formData.getAll("tags")).to.deep.equal(["Apple", "Banana"]);
+			});
+		});
+
+		cy.get("[ui5-button]")
+			.realClick();
+	});
+
+	it("does not submit anything if no tokens", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer id="emptyTokenizer" name="tags"></Tokenizer>
+				<Button submits>Submit</Button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			const form = $form.get(0)! as HTMLFormElement;
+			form.addEventListener("submit", e => {
+				e.preventDefault();
+				const formData = new FormData(form);
+
+				expect(formData.has("tags")).to.be.false;
+			});
+		});
+
+		cy.get("[ui5-button]")
+			.realClick();
+	});
+});
