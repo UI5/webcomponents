@@ -1322,7 +1322,7 @@ describe("Date Picker Tests", () => {
 			.should("have.focus");
 	});
 
-	it("Value state changes only on submit", () => {
+	it("Value state changes on change", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
@@ -1334,13 +1334,21 @@ describe("Date Picker Tests", () => {
 			.realType("test");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value-state", "None");
+			.should("have.attr", "value-state", "Negative");
 
 		cy.get("@input")
 			.realPress("Enter");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value-state", "Negative");
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.clear()
+			.realType("Mar 31, 1995")
+			.realPress("Enter");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.attr", "value-state", "None");
 	});
 
 	it("Prevent value-state-change event", () => {
@@ -1363,38 +1371,6 @@ describe("Date Picker Tests", () => {
 
 		cy.get("@datePicker")
 			.should("have.attr", "value-state", "None");
-	});
-
-	it("Prevent change event", () => {
-		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.then($datePicker => {
-				$datePicker.on("change", cy.stub().as("changeHandler").callsFake((event: Event) => {
-					event.preventDefault();
-				}));
-			});
-
-		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetInnerInput()
-			.realClick()
-			.should("be.focused")
-			.realType("Mar 31, 1995")
-			.realPress("Enter");
-
-		cy.get<DatePicker>("@datePicker")
-			.should("have.value", "")
-			.and("have.attr", "value-state", "None");
-
-		cy.get("@changeHandler")
-			.should("have.been.calledOnce")
-			.and("have.been.calledWithMatch", {
-				detail: {
-					value: "Mar 31, 1995",
-					valid: true,
-				}
-			});
 	});
 
 	it("DatePicker's formatter has strict parsing enabled", () => {
@@ -1689,6 +1665,7 @@ describe("Validation inside a form ", () => {
 
 		cy.get("form")
 			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
@@ -1734,6 +1711,7 @@ describe("Validation inside a form ", () => {
 
 		cy.get("form")
 			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
@@ -1784,6 +1762,7 @@ describe("Validation inside a form ", () => {
 		cy.get("form")
 			.then($item => {
 				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
 		cy.get("#datePicker3")
@@ -1828,6 +1807,7 @@ describe("Validation inside a form ", () => {
 		cy.get("form")
 			.then($item => {
 				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
 		cy.get("#datePicker3")

@@ -616,13 +616,14 @@ describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
 		cy.mount(
 			<form>
-				<DateTimePicker id="dateTimePicker" required={true} valueFormat="yyyy-MM-dd hh:mm:ss"></DateTimePicker>
+				<DateTimePicker id="dateTimePicker" required={true}></DateTimePicker>
 				<button type="submit" id="submitBtn" > Submits forms </button>
 			</form>
 		);
 
 		cy.get("form")
 			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
@@ -632,7 +633,7 @@ describe("Validation inside a form", () => {
 		cy.get("@submit")
 			.should("have.not.been.called");
 
-		cy.get("[ui5-datetime-picker]")
+		cy.get("#dateTimePicker")
 			.as("dateTimePicker")
 			.ui5AssertValidityState({
 				formValidity: { valueMissing: true },
@@ -655,7 +656,8 @@ describe("Validation inside a form", () => {
 				reportValidity: true
 			});
 
-		cy.get("#dateTimePicker:invalid").should("not.exist", "Required DatePicker with value should not have :invalid CSS class");
+		cy.get("#dateTimePicker:invalid")
+			.should("not.exist", "Required DatePicker with value should not have :invalid CSS class");
 	});
 
 	it("has correct validity for patternMismatch", () => {
@@ -668,6 +670,7 @@ describe("Validation inside a form", () => {
 
 		cy.get("form")
 			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
@@ -718,11 +721,18 @@ describe("Validation inside a form", () => {
 		cy.get("form")
 			.then($item => {
 				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
 		cy.get("#dateTimePicker")
 			.as("dateTimePicker")
 			.ui5DatePickerTypeDate("Jan 5, 2024 08:00:00");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
 
 		cy.get("@dateTimePicker")
 			.ui5AssertValidityState({
@@ -761,11 +771,18 @@ describe("Validation inside a form", () => {
 		cy.get("form")
 			.then($item => {
 				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
 		cy.get("#dateTimePicker")
 			.as("dateTimePicker")
 			.ui5DatePickerTypeDate("Jan 15, 2024 08:00:00");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
 
 		cy.get("@dateTimePicker")
 			.ui5AssertValidityState({

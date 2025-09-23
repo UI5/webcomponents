@@ -797,6 +797,7 @@ describe("Validation inside a form", () => {
 		);
 
 		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
 			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
 		});
 
@@ -842,6 +843,7 @@ describe("Validation inside a form", () => {
 		);
 
 		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
 			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
 		});
 
@@ -891,6 +893,7 @@ describe("Validation inside a form", () => {
 
 		cy.get("form").then($form => {
 			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
 		});
 
 		cy.get("#dateRangePicker")
@@ -933,6 +936,7 @@ describe("Validation inside a form", () => {
 
 		cy.get("form").then($form => {
 			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
 		});
 
 		cy.get("#dateRangePicker")

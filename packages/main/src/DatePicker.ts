@@ -372,6 +372,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	liveValue?: string;
 
+	isLiveUpdate?: boolean;
+
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
 	 *
@@ -466,7 +468,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			}
 		});
 
-		this.value = this.normalizeFormattedValue(this.value) || this.value;
+		if (!this.isLiveUpdate) {
+			this.value = this.normalizeFormattedValue(this.value) || this.value;
+		}
+
 		this.liveValue = this.value;
 	}
 
@@ -567,10 +572,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
 	}
 
-	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue = true) {
+	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue: boolean = true) {
 		const valid = this._checkValueValidity(value);
-
-		if (valid && normalizeValue) {
+		this.isLiveUpdate = !updateValue;
+		if ((valid && normalizeValue) || !this.isLiveUpdate) { // in case that value is not valid we format it in change event
 			value = this.getDisplayValueFromValue(value);
 			value = this.normalizeDisplayValue(value); // transform valid values (in any format) to the correct format
 		}
@@ -579,12 +584,14 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		this.liveValue = value;
 
 		const previousValue = this.value;
+		this._dateTimeInput.value = value;
+		this.value = value;
 
 		if (updateValue) {
-			this._dateTimeInput.value = value;
 			this.value = this.getValueFromDisplayValue(value);
-			this._updateValueState(); // Change the value state to Error/None, but only if needed
 		}
+
+		this._updateValueState();
 
 		events.forEach(e => {
 			if (!this.fireDecoratorEvent(e, { value, valid })) {
@@ -592,7 +599,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			}
 		});
 
-		if (!executeEvent && updateValue) {
+		if (!executeEvent) {
 			if (this.value !== previousValue && this.value !== this._dateTimeInput.value) {
 				return; // If the value was changed in the change event, do not revert it
 			}
@@ -864,6 +871,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 		if (!this.value) {
 			return "";
+		}
+
+		if (this.isLiveUpdate) {
+			return this.liveValue!;
 		}
 
 		return this.getDisplayFormat().format(this.getValueFormat().parse(this.value, true), true);
