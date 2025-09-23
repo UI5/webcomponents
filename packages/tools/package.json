@@ -54,6 +54,7 @@
     "glob-parent": "^6.0.2",
     "globby": "^13.1.1",
     "handlebars": "^4.7.7",
+    "ignore": "^7.0.5",
     "is-port-reachable": "^3.1.0",
     "json-beautify": "^1.1.1",
     "mkdirp": "^1.0.4",
@@ -66,10 +67,10 @@
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
     "slash": "3.0.0",
+    "string-argv": "^0.3.2",
     "vite": "^5.4.8",
     "vite-plugin-istanbul": "^6.0.2",
-    "wdio-chromedriver-service": "^7.3.2",
-    "ignore": "^7.0.5"
+    "wdio-chromedriver-service": "^7.3.2"
   },
   "peerDependencies": {
     "chromedriver": "*",

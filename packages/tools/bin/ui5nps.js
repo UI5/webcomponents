@@ -5,6 +5,7 @@
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
+var { parseArgsStringToArgv } = require('string-argv');
 
 const SCRIPT_NAMES = [
 	"package-scripts.js",
@@ -156,8 +157,19 @@ class Parser {
 	 */
 	async executeCommand(command) {
 		if (typeof command === "string" && command) {
-			return new Promise((resolve, reject) => {
+			return new Promise(async (resolve, reject) => {
 				console.log(`= Executing command: ${command}`);
+				try {
+					if (command.trim().startsWith("node")) {
+						const argv = parseArgsStringToArgv(command);
+						const _ui5mainFn = require(argv[1])._ui5mainFn;
+
+						return _ui5mainFn(argv).then(resolve).catch(reject);
+					}
+				} catch {
+					console.error(`= Failed to execute as module, falling back to shell command:\n  ${command}`);
+				}
+
 				const child = exec(command, { stdio: "inherit", env: { ...process.env, ...this.envs } });
 
 				child.stdout.on("data", (data) => {
@@ -218,6 +230,8 @@ if (commands.length === 0) {
 }
 
 (async () => {
+	process.env = { ...process.env, ...parser.envs };
+
 	for (const commandName of commands) {
 		await parser.execute(commandName);
 	}
