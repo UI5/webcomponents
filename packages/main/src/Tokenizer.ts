@@ -218,7 +218,16 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean })
 	multiLine = false;
 
-	@property({type: String})
+	/**
+	 * Determines the name by which the component will be identified upon submission in an HTML form.
+	 *
+	 * **Note:** This property is only applicable within the context of an HTML Form element.
+	 * **Note:** When the component is used inside a form element,
+	 * the value is sent as the first element in the form data, even if it's empty.
+	 * @default undefined
+	 * @public
+	 */
+	@property({ type: String })
 	declare name?: string;
 
 	/**
@@ -368,8 +377,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (this.name && tokens.length) {
 			const formData = new FormData();
 
-
-			for(let i = 0; i < this.tokens.length; i++) {
+			for (let i = 0; i < this.tokens.length; i++) {
 				formData.append(this.name, this.tokens[i].text || "");
 			}
 
@@ -377,7 +385,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 
 		return null;
-
 	}
 
 	constructor() {

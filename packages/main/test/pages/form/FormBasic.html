@@ -6,6 +6,7 @@
 	<title>Form Basic</title>
 	<script src="../%VITE_BUNDLE_PATH%" type="module"></script>
 	<link rel="stylesheet" type="text/css" href="../styles/FormLayout.css">
+		
 	<script id='sap-ui-bootstrap'
 		src='https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js'
 		data-sap-ui-theme='sap_horizon'
@@ -297,6 +298,7 @@
 				]
 			});
 			oForm4.placeAt("sapui5content4");
+			
 
 			var oLayout5 = new sap.ui.layout.form.ColumnLayout("L5", {
 				columnsM: 2,
@@ -491,8 +493,8 @@
 				]
 			});
 			oForm6.placeAt("sapui5content6");
-
-
+			
+	
 			window.oForm = oForm;
 			window.oLayout = oLayout;
 
@@ -516,7 +518,7 @@
 
 <body class="bg">
 	<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
-
+	
 	<section id="container">
 		<div class="banner"><div class="banner-inner"></div></div>
 
@@ -526,12 +528,12 @@
 					<ui5-label slot="labelContent">Name:</ui5-label>
 					<span class="text">Red Point Stores</span>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 					<span class="text">411 Maintown</span>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label slot="labelContent">Street:</ui5-label>
 					<span class="text">Main St 1618</span>
@@ -543,7 +545,7 @@
 				</ui5-form-item>
 			</ui5-form>
 		</section>
-
+		
 		<section id='sapui5content'></section>
 		<br><br><br>
 
@@ -553,7 +555,7 @@
 					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
 					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
 					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
@@ -565,7 +567,7 @@
 					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
 					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
 					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
@@ -596,12 +598,12 @@
 					<ui5-label slot="labelContent">Name:</ui5-label>
 					<span class="text">Red Point Stores</span>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 					<span class="text">411 Maintown</span>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label slot="labelContent">Street:</ui5-label>
 					<span class="text">Main St 1618</span>
@@ -635,22 +637,22 @@
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -662,22 +664,22 @@
 						<ui5-label slot="labelContent">Twitter:</ui5-label>
 						<span class="text">@sap</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Email:</ui5-label>
 						<span class="text">john.smith@sap.com</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Tel:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">SMS:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Mobile:</ui5-label>
 						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
@@ -696,7 +698,7 @@
 				</ui5-form-group>
 			</ui5-form>
 		</section>
-
+		
 		<section id='sapui5content3'></section>
 		<br><br><br>
 
@@ -708,22 +710,22 @@
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -735,22 +737,22 @@
 						<ui5-label slot="labelContent">Twitter:</ui5-label>
 						<span class="text">@sap</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Email:</ui5-label>
 						<span class="text">john.smith@sap.com</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Tel:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">SMS:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Mobile:</ui5-label>
 						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
@@ -767,28 +769,28 @@
 					</ui5-form-item>
 
 				</ui5-form-group>
-
+			
 				<ui5-form-group id="testFormGroup8" header-text="Other info">
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -809,22 +811,22 @@
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -836,22 +838,22 @@
 						<ui5-label slot="labelContent">Twitter:</ui5-label>
 						<span class="text">@sap</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Email:</ui5-label>
 						<span class="text">john.smith@sap.com</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Tel:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">SMS:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Mobile:</ui5-label>
 						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
@@ -868,28 +870,28 @@
 					</ui5-form-item>
 
 				</ui5-form-group>
-
+			
 				<ui5-form-group header-text="Other info">
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -909,22 +911,22 @@
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -936,22 +938,22 @@
 						<ui5-label slot="labelContent">Twitter:</ui5-label>
 						<span class="text">@sap</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Email:</ui5-label>
 						<span class="text">john.smith@sap.com</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Tel:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">SMS:</ui5-label>
 						<span class="text">+49 6227 747474</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Mobile:</ui5-label>
 						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
@@ -968,28 +970,28 @@
 					</ui5-form-item>
 
 				</ui5-form-group>
-
+			
 				<ui5-form-group id="testFormGroup3" header-text="Other info">
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Name:</ui5-label>
 						<span class="text">Red Point Stores</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
 						<span class="text">411 Maintown</span>
 					</ui5-form-item>
-
+					
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Street:</ui5-label>
 						<span class="text">Main St 1618</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">Country:</ui5-label>
 						<span class="text">Germany</span>
 					</ui5-form-item>
-
+	
 					<ui5-form-item>
 						<ui5-label slot="labelContent">WebSite:</ui5-label>
 						<ui5-link href="sap.com">sap.com</ui5-link>
@@ -1006,7 +1008,7 @@
 					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
 					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
 					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
@@ -1018,7 +1020,7 @@
 					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
 					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
 				</ui5-form-item>
-
+				
 				<ui5-form-item>
 					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
 					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
