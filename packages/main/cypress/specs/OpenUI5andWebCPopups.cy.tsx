@@ -141,7 +141,7 @@ function openUI5Dialog(win) {
 
 function openUI5Popover(win, opener) {
 	(win as any).sap.ui.require(["sap/m/Popover", "sap/m/Button"], (Popover, Button) => {
-		new Popover({
+		new Popover("openUI5PopoverSecond", {
 			title: "OpenUI5 Popover",
 			content: [
 				new Button("someButton", {
@@ -255,6 +255,9 @@ describe("ui5 and web components integration", () => {
 
 		cy.get('#dialog1')
 			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
 	}
 
 	function OpenWebCDialogOpenUI5Select() {
@@ -283,6 +286,9 @@ describe("ui5 and web components integration", () => {
 
 		cy.get('#dialog1')
 			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
 	}
 
 	function OpenWebCDialogOpenUI5ComboBox() {
@@ -319,6 +325,79 @@ describe("ui5 and web components integration", () => {
 
 		cy.get('#dialog1')
 			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
+	}
+
+	function OpenWebCDialogOpenOpenUI5Dialog() {
+		cy.get("#openUI5Button")
+			.should('be.visible');
+
+		cy.get('#myButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get('#dialogButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('not.be.visible');
+
+		cy.get('#dialogButton')
+			.should('be.focused');
+
+		cy.realPress("Escape");
+
+		cy.get('#dialog1')
+			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
+	}
+
+	function OpenWebCDialogOpenOpenUI5PopoverNoFocus() {
+		cy.get("#openUI5Button")
+			.should('be.visible');
+
+		cy.get('#myButton')
+			.should('be.visible')
+			.realClick();
+
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get('#popoverButtonNoFocus')
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5PopoverSecond")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5PopoverSecond")
+			.should('not.exist');
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get('#dialogButton')
+			.should('be.focused');
+
+		cy.realPress("Escape");
+
+		cy.get('#dialog1')
+			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
 	}
 
 	function OpenWebCDialogOpenUI5ComboBoxNewOpenUI5DialogFromButtonWithHint() {
@@ -352,23 +431,24 @@ describe("ui5 and web components integration", () => {
 		cy.realPress("Escape");
 
 		cy.get("#openUI5DialogWithButtons")
-			.should("not.be.visible");
+			.should("not.exist");
 
 		cy.get<Dialog>("#dialog1").ui5DialogOpened();
 
+		cy.get('#openUI5ButtonWithHint')
+			.should('be.focused')
 
 		cy.get('#openUI5Combobox1')
 			.find('input')
 			.focus();
 
-		cy.get('#openUI5Combobox1')
-			.find('input')
-			.realPress("Escape");
-
 		cy.realPress("Escape");
 
 		cy.get('#dialog1')
 			.should('not.be.visible');
+
+		cy.get('#myButton')
+			.should('be.focused');
 	}
 
 	function OpenUI5Dialog() {
@@ -382,7 +462,10 @@ describe("ui5 and web components integration", () => {
 		cy.realPress("Escape");
 
 		cy.get("#openUI5Dialog1")
-			.should('not.be.visible');
+			.should('not.exist');
+
+		cy.get("#openUI5Button")
+			.should('be.focused');
 	}
 
 	function OpenUI5DialogWebCDialog() {
@@ -410,7 +493,10 @@ describe("ui5 and web components integration", () => {
 		cy.realPress("Escape");
 
 		cy.get("#openUI5Dialog1")
-			.should('not.be.visible');
+			.should('not.exist');
+
+		cy.get("#openUI5Button")
+			.should('be.focused');
 	}
 
 	function OpenUI5DialogWebCDialogNoFocus() {
@@ -439,20 +525,22 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
+
+		cy.get("#openResPopoverNoInitialFocusButton")
+			.should('be.focused');
 	}
 
 	it("Keyboard", () => {
-		// OpenWebCDialog();
-		// OpenWebCDialogOpenUI5Select();
-		// OpenWebCDialogOpenUI5ComboBox();
+		OpenWebCDialog();
+		OpenWebCDialogOpenUI5Select();
+		OpenWebCDialogOpenUI5ComboBox();
 
+		OpenWebCDialogOpenOpenUI5Dialog();
+		OpenWebCDialogOpenOpenUI5PopoverNoFocus();
 		OpenWebCDialogOpenUI5ComboBoxNewOpenUI5DialogFromButtonWithHint();
 
-
-		// OpenUI5Dialog();
-		// cy.wait(500);
-		// OpenUI5DialogWebCDialog();
-		// cy.wait(500);
-		// OpenUI5DialogWebCDialogNoFocus();
+		OpenUI5Dialog();
+		OpenUI5DialogWebCDialog();
+		OpenUI5DialogWebCDialogNoFocus();
 	});
 });

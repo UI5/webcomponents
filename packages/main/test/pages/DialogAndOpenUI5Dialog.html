@@ -151,7 +151,7 @@
 
 		function openUI5Popover(opener) {
 			sap.ui.require(["sap/m/Popover", "sap/m/Button"], (Popover, Button) => {
-				new Popover({
+				new Popover("openUI5PopoverSecond", {
 					title: "OpenUI5 Popover",
 					content: [
 						new Button("someButton", {
