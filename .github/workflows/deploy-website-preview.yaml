@@ -52,41 +52,43 @@ jobs:
     - name: Comment PR with preview link
       uses: actions/github-script@v7
       with:
-        script: |
-          const prNumber = context.payload.pull_request.number;
-          const previewUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${prNumber}/`;
-          
-          const { data: comments } = await github.rest.issues.listComments({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: prNumber
-          });
-          
-          const existingComment = comments.find(comment => 
-            comment.body.includes('🚀 Preview deployment');
-          );
-          
-          const commentBody = `🚀 **Preview deployment ready!**
-
-          📖 **Documentation preview:** ${previewUrl}
-
-          The preview will be updated automatically when you push new commits to this PR.`;
-          
-          if (existingComment) {
-            await github.rest.issues.updateComment({
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const previewUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${prNumber}/`;
+            
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: existingComment.id,
-              body: commentBody
+              issue_number: prNumber
             });
-          } else {
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              body: commentBody
-            });
-          }
+            
+            const existingComment = comments.find(comment => 
+              comment.body.includes('🚀 Preview deployment') && 
+              comment.user.type === 'Bot'
+            );
+            
+            const commentBody = `🚀 **Preview deployment ready!**
+      
+            **Documentation preview:** ${previewUrl}
+            
+            The preview will be updated automatically when you push new commits to this PR.
+            `;
+            
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+            }
 
   cleanup-preview:
     if: github.event.action == 'closed'
