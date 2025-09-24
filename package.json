@@ -49,6 +49,8 @@
     "ci:test:base": "yarn workspace @ui5/webcomponents-base test",
     "ci:test:main:cy:suite-1": "yarn workspace @ui5/webcomponents test:ssr && yarn workspace @ui5/webcomponents test:vitest && yarn workspace @ui5/webcomponents test:cypress:suite-1",
     "ci:test:main:cy:suite-2": "yarn workspace @ui5/webcomponents test:cypress:suite-2",
+    "ci:test:main:cy:suite-3": "yarn workspace @ui5/webcomponents test:cypress:suite-3",
+    "ci:test:main:cy:suite-4": "yarn workspace @ui5/webcomponents test:cypress:suite-4",
     "ci:test:fiori": "yarn workspace @ui5/webcomponents-fiori test:ssr && yarn workspace @ui5/webcomponents-fiori test:cypress",
     "ci:test:compat": "yarn workspace @ui5/webcomponents-compat test:ssr && yarn workspace @ui5/webcomponents-compat test:cypress",
     "ci:test:ai": "yarn workspace @ui5/webcomponents-ai test:ssr && yarn workspace @ui5/webcomponents-ai test",

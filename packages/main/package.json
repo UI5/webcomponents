@@ -28,6 +28,8 @@
     "test:cypress": "wc-dev test-cy-ci",
     "test:cypress:suite-1": "wc-dev test-cy-ci-suite-1",
     "test:cypress:suite-2": "wc-dev test-cy-ci-suite-2",
+    "test:cypress:suite-3": "wc-dev test-cy-ci-suite-3",
+    "test:cypress:suite-4": "wc-dev test-cy-ci-suite-4",
     "test:cypress:open": "wc-dev test-cy-open",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:vitest": "yarn vitest run",

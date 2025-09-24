@@ -134,8 +134,10 @@ const getScripts = (options) => {
 		start: "ui5nps prepare watch.devServer",
 		test: `node "${LIB}/test-runner/test-runner.js"`,
 		"test-cy-ci": `yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-1": `yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-2": `yarn cypress run --component --browser chrome`,
+		"test-cy-ci-suite-1": `yarn cypress run --component --browser chrome --spec "**/specs/[A-C]*.cy.{js,jsx,ts,tsx},**/specs/[^D-Z]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-2": `yarn cypress run --component --browser chrome --spec "**/specs/[D-L]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-3": `yarn cypress run --component --browser chrome --spec "**/specs/[M-S]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-4": `yarn cypress run --component --browser chrome --spec "**/specs/[T-Z]*.cy.{js,jsx,ts,tsx}"`,
 		"test-cy-open": `yarn cypress open --component --browser chrome`,
 		startWithScope: "ui5nps scope.prepare scope.watchWithBundle",
 		scope: {
