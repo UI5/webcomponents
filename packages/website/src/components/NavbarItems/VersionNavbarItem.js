@@ -3,12 +3,11 @@ import clsx from "clsx";
 import { useState } from "react";
 import NavbarNavLink from "@theme/NavbarItem/NavbarNavLink";
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import NavbarItem from "@theme/NavbarItem";
 import packageJson from "../../../package.json";
-const { siteConfig, siteMetadata } = useDocusaurusContext();
 
 const packageJsonVersion = packageJson.version;
-const DEPLOYMENT_PRREVIEW = siteConfig.customFields.ui5DeploymentType === "preview";
 
 import {
     Collapsible,
@@ -47,6 +46,8 @@ function getLabel(version) {
 function VersionNavbarItemDesktop() {
     const [version, setVersion] = useState(getVersion());
     const [showDropdown, setShowDropdown] = useState(false);
+    const { siteConfig, siteMetadata } = useDocusaurusContext();
+    const showPreviewItem = siteConfig.customFields.ui5DeploymentType === "preview";
 
     return <div
         className={clsx('navbar__item', 'dropdown', 'dropdown--hoverable', 'dropdown--right', {
@@ -69,7 +70,7 @@ function VersionNavbarItemDesktop() {
             }}>
         </NavbarNavLink>
         <ul className="dropdown__menu">
-            { DEPLOYMENT_PRREVIEW && <NavbarItem
+            { showPreviewItem && <NavbarItem
                 label="Preview 🔍"
                 isDropdownItem
                 target="_self"
