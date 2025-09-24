@@ -70,6 +70,7 @@
     "concurrently": "^9.2.1",
     "copy-and-watch": "^0.1.5",
     "cross-env": "^7.0.3",
+    "cypress": "^13.0.0",
     "eslint": "^7.22.0",
     "mkdirp": "^1.0.4",
     "nps": "^5.10.0",

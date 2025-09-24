@@ -55,6 +55,7 @@
     "@custom-elements-manifest/analyzer": "^0.10.6",
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
-    "chokidar-cli": "^3.0.0"
+    "chokidar-cli": "^3.0.0",
+    "cypress": "^13.0.0"
   }
 }
