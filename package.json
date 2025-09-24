@@ -46,6 +46,8 @@
     "ci:testbuild": "npm-run-all --sequential generate ts generateProd bundle ci:test:prepare",
     "ci:deploy": "DEPLOY=true yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build",
     "ci:deploy:nightly": "DEPLOY_NIGHTLY=true yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build:nightly",
+    "ci:deploy:preview": "yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build:preview",
+
     "ci:test:base": "yarn workspace @ui5/webcomponents-base test",
     "ci:test:main:cy:suite-1": "yarn workspace @ui5/webcomponents test:ssr && yarn workspace @ui5/webcomponents test:vitest && yarn workspace @ui5/webcomponents test:cypress:suite-1",
     "ci:test:main:cy:suite-2": "yarn workspace @ui5/webcomponents test:cypress:suite-2",
