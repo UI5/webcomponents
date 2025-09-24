@@ -10,12 +10,18 @@ const LATEST_URL_PARTH = "/webcomponents/";
 const NIGHTLY_URL_PARTH = "/webcomponents/nightly/";
 
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
+const PREVIEW_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "preview";
 const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
 
 const getBaseURL = () => {
   // localhost
   if (DEVELOPMENT_ENVIRONMENT) {
     return "/";
+  }
+
+  // PR preview deployment
+  if (PREVIEW_DEPLOYMENT) {
+    return `/webcomponents/pr-${process.env.PR_NUMBER}/`;
   }
 
   // latest deployment or nightly deployment

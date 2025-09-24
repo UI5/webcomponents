@@ -37,8 +37,7 @@ jobs:
     - name: Build website
       env:
         DEPLOYMENT_TYPE: "preview"
-        # Set base URL to include PR subfolder
-        BASE_URL: "/pr-${{ github.event.number }}/"
+        PR_NUMBER: "${{ github.event.number }}"
       run: |
         yarn ci:deploy
 
