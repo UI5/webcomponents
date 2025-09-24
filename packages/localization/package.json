@@ -21,11 +21,11 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "clean": "nps clean",
-    "lint": "nps lint",
-    "start": "nps start",
-    "build": "nps build",
-    "generate": "nps generate",
+    "clean": "wc-dev clean",
+    "lint": "wc-dev lint",
+    "start": "wc-dev start",
+    "build": "wc-dev build",
+    "generate": "wc-dev generate",
     "prepublishOnly": "tsc -b"
   },
   "devDependencies": {
@@ -35,7 +35,6 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
     "babel-plugin-amd-to-esm": "^2.0.3",
-    "chromedriver": "^139.0.3",
     "estree-walk": "^2.2.0",
     "mkdirp": "^1.0.4",
     "resolve": "^1.20.0"

@@ -19,7 +19,7 @@
   "scripts": {
     "clean": "wc-dev clean",
     "build": "wc-dev build",
-    "generate": "nps generate",
+    "generate": "wc-dev generate",
     "prepublishOnly": "tsc -b"
   },
   "repository": {
