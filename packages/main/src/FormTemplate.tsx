@@ -44,7 +44,11 @@ export default function FormTemplate(this: Form) {
 												}
 
 												<div class="ui5-form-group-layout">
-													<slot name={groupItem._individualSlot}></slot>
+													<dl aria-labelledby={`${groupItem._id}-group-header-text`}>
+													 <div>
+														<slot name={groupItem._individualSlot}></slot>
+													 </div>
+													</dl>
 												</div>
 											</div>
 										</div>
@@ -54,17 +58,20 @@ export default function FormTemplate(this: Form) {
 						</>
 						:
 						<>
-							{
+							
+								{
 								this.itemsInfo.map(itemInfo => {
 									const item = itemInfo.item;
 									return (
-										<div class={{
-											"ui5-form-item": true,
-											[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
-										}}
-										>
-											<slot name={item._individualSlot}></slot>
-										</div>
+										<dl>
+											<div class={{
+												"ui5-form-item": true,
+												[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
+											}}
+											>
+												<slot name={item._individualSlot}></slot>
+											</div>
+										</dl>
 									);
 								})
 							}
