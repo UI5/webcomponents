@@ -403,24 +403,29 @@
 
 		const searchLazy = document.getElementById('search-lazy');
 		searchLazy.addEventListener('ui5-input', (e) => {
-			// clear search items
-			searchLazy.innerHTML = '';
-
-			searchLazy.getSlottedNodes("items").forEach(item => {
-				item.remove();
-			});
-
-			// simulate lazy loading
 			setTimeout(() => {
-				const lazyData = [
-					{ name: 'Red Apple', category: 'Fruit' },
-					{ name: 'Apple', category: 'Fruit' },
-					{ name: 'Banana', category: 'Fruit' },
-					{ name: 'Orange', category: 'Fruit' },
-					{ name: 'Grapes', category: 'Fruit' },
-				];
-				createItems(searchLazy, lazyData);
-			}, 100);
+				// clear search items
+				searchLazy.innerHTML = '';
+
+				searchLazy.getSlottedNodes("items").forEach(item => {
+					item.remove();
+				});
+			}, 100)
+			
+
+			if(e.target.value.length){
+				// simulate lazy loading
+				setTimeout(() => {
+					const lazyData = [
+						{ name: `Red Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Banana ${Math.random()}`, category: 'Fruit' },
+						{ name: `Orange ${Math.random()}`, category: 'Fruit' },
+						{ name: `Grapes ${Math.random()}`, category: 'Fruit' },
+					];
+					createItems(searchLazy, lazyData);
+				}, 300);
+			}
 		});
 	</script>
 </body>
