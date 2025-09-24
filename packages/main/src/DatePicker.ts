@@ -582,16 +582,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 		let executeEvent = true;
 		this.liveValue = value;
-
 		const previousValue = this.value;
-		this._dateTimeInput.value = value;
-		this.value = value;
 
 		if (updateValue) {
+			this._dateTimeInput.value = value;
 			this.value = this.getValueFromDisplayValue(value);
+			this._updateValueState();
 		}
-
-		this._updateValueState();
 
 		events.forEach(e => {
 			if (!this.fireDecoratorEvent(e, { value, valid })) {

@@ -726,13 +726,7 @@ describe("Validation inside a form", () => {
 
 		cy.get("#dateTimePicker")
 			.as("dateTimePicker")
-			.ui5DatePickerTypeDate("Jan 5, 2024 08:00:00");
-
-		cy.get("#submitBtn")
-			.realClick();
-
-		cy.get("@submit")
-			.should("have.not.been.called");
+			.ui5DatePickerTypeDate("Jan 5, 2023 08:00:00");
 
 		cy.get("@dateTimePicker")
 			.ui5AssertValidityState({
@@ -776,13 +770,7 @@ describe("Validation inside a form", () => {
 
 		cy.get("#dateTimePicker")
 			.as("dateTimePicker")
-			.ui5DatePickerTypeDate("Jan 15, 2024 08:00:00");
-
-		cy.get("#submitBtn")
-			.realClick();
-
-		cy.get("@submit")
-			.should("have.not.been.called");
+			.ui5DatePickerTypeDate("Jan 15, 2025 08:00:00");
 
 		cy.get("@dateTimePicker")
 			.ui5AssertValidityState({

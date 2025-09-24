@@ -1322,7 +1322,7 @@ describe("Date Picker Tests", () => {
 			.should("have.focus");
 	});
 
-	it("Value state changes on change", () => {
+	it("Value state changes only on submit", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
@@ -1334,21 +1334,13 @@ describe("Date Picker Tests", () => {
 			.realType("test");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value-state", "Negative");
+			.should("have.attr", "value-state", "None");
 
 		cy.get("@input")
 			.realPress("Enter");
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetInnerInput()
-			.realClick()
-			.should("be.focused")
-			.clear()
-			.realType("Mar 31, 1995")
-			.realPress("Enter");
-
-		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value-state", "None");
+			.should("have.attr", "value-state", "Negative");
 	});
 
 	it("Prevent value-state-change event", () => {
@@ -1372,6 +1364,39 @@ describe("Date Picker Tests", () => {
 		cy.get("@datePicker")
 			.should("have.attr", "value-state", "None");
 	});
+
+	it("Prevent change event", () => {
+		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.then($datePicker => {
+				$datePicker.on("change", cy.stub().as("changeHandler").callsFake((event: Event) => {
+					event.preventDefault();
+				}));
+			});
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 1995")
+			.realPress("Enter");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "")
+			.and("have.attr", "value-state", "None");
+
+		cy.get("@changeHandler")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", {
+				detail: {
+					value: "Mar 31, 1995",
+					valid: true,
+				}
+			});
+	});
+
 
 	it("DatePicker's formatter has strict parsing enabled", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
