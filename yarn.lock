@@ -6853,6 +6853,7 @@ __metadata:
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6897,6 +6898,7 @@ __metadata:
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6915,6 +6917,7 @@ __metadata:
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
     lit: "npm:^2.0.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6924,6 +6927,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.0"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6933,6 +6937,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.0"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6942,6 +6947,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.0"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6960,6 +6966,7 @@ __metadata:
     estree-walk: "npm:^2.2.0"
     mkdirp: "npm:^1.0.4"
     resolve: "npm:^1.20.0"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -6974,6 +6981,7 @@ __metadata:
     json-beautify: "npm:^1.1.1"
     postcss: "npm:^8.4.5"
     postcss-import: "npm:^14.0.2"
+    rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -7089,6 +7097,7 @@ __metadata:
     cypress: "npm:^13.0.0"
     jsdom: "npm:^26.0.0"
     lit: "npm:^2.0.0"
+    rimraf: "npm:^6.0.1"
     vitest: "npm:^3.0.2"
   languageName: unknown
   linkType: soft

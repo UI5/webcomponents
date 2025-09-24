@@ -37,7 +37,8 @@
     "babel-plugin-amd-to-esm": "^2.0.3",
     "estree-walk": "^2.2.0",
     "mkdirp": "^1.0.4",
-    "resolve": "^1.20.0"
+    "resolve": "^1.20.0",
+    "rimraf": "^6.0.1"
   },
   "dependencies": {
     "@types/openui5": "^1.113.0",
