@@ -371,15 +371,16 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._nMoreCount = this.overflownTokens.length;
 	}
 
-	get formFormattedValue(): FormData | null | string {
+	get formFormattedValue(): FormData | null {
 		const tokens = this.tokens || [];
 
 		if (this.name && tokens.length) {
 			const formData = new FormData();
+			const name = this.name;
 
-			for (let i = 0; i < this.tokens.length; i++) {
-				formData.append(this.name, this.tokens[i].text || "");
-			}
+			tokens.forEach(token => {
+				formData.append(name, token.text || "");
+			});
 
 			return formData;
 		}
