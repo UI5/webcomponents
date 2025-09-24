@@ -5,6 +5,28 @@ on:
     types: [opened, closed, synchronize, reopened]
     branches:
       - main
+    paths:
+      # Website-specific changes
+      - 'packages/website/**'
+      # Documentation changes
+      - 'docs/**'
+      - '*.md'
+      - 'README.md'
+      # Component CSS/TS changes that affect documentation
+      - 'packages/base/src/**/*.css'
+      - 'packages/base/src/**/*.ts'
+      - 'packages/ai/src/**/*.css' 
+      - 'packages/ai/src/**/*.ts'
+      - 'packages/compat/src/**/*.css'
+      - 'packages/compat/src/**/*.ts'
+      - 'packages/fiori/src/**/*.css'
+      - 'packages/fiori/src/**/*.ts'
+      - 'packages/main/src/**/*.css'
+      - 'packages/main/src/**/*.ts'
+      # Exclude test files to avoid unnecessary builds
+      - '!**/*.spec.ts'
+      - '!**/*.test.ts'
+      - '!**/test/**'
 
 jobs:
   deploy-preview:
