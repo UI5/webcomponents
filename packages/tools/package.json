@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-tools",
-  "version": "2.14.0-rc.4",
+  "version": "2.15.0-rc.0",
   "description": "UI5 Web Components: webcomponents.tools",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -13,11 +13,12 @@
   "scripts": {},
   "bin": {
     "wc-dev": "bin/dev.js",
+    "ui5nps": "bin/ui5nps.js",
     "wc-create-ui5-element": "bin/create-ui5-element.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/tools"
   },
   "dependencies": {
@@ -56,7 +57,6 @@
     "is-port-reachable": "^3.1.0",
     "json-beautify": "^1.1.1",
     "mkdirp": "^1.0.4",
-    "nps": "^5.10.0",
     "postcss": "^8.4.5",
     "postcss-cli": "^9.1.0",
     "postcss-selector-parser": "^6.0.10",
@@ -68,7 +68,8 @@
     "slash": "3.0.0",
     "vite": "^5.4.8",
     "vite-plugin-istanbul": "^6.0.2",
-    "wdio-chromedriver-service": "^7.3.2"
+    "wdio-chromedriver-service": "^7.3.2",
+    "ignore": "^7.0.5"
   },
   "peerDependencies": {
     "chromedriver": "*",

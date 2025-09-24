@@ -89,6 +89,7 @@ import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
+import type InputComposition from "./features/InputComposition.js";
 
 const SKIP_ITEMS_SIZE = 10;
 
@@ -406,6 +407,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
+
+	/**
 	 * Defines the component items.
 	 * @public
 	 */
@@ -449,8 +458,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_selectedItemText = "";
 	_userTypedValue = "";
 	_valueStateLinks: Array<HTMLElement> = [];
+	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
 		return ComboBox.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
@@ -529,8 +540,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	onEnterDOM() {
+		this._enableComposition();
+	}
+
 	onExitDOM() {
 		this._removeLinksEventListeners();
+		this._composition?.removeEventListeners();
 	}
 
 	_focusin(e: FocusEvent) {
@@ -705,7 +721,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._clearFocus();
 
 		// autocomplete
-		if (shouldAutocomplete && !isAndroid()) {
+		if (shouldAutocomplete && !this._isComposing && !isAndroid()) {
 			this._handleTypeAhead(value, value);
 		}
 
@@ -1320,6 +1336,35 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (valueStateText) {
 			announce(valueStateText, InvisibleMessageMode.Polite);
+		}
+	}
+	/**
+	 * Enables IME composition handling.
+	 * Dynamically loads the InputComposition feature and sets up event listeners.
+	 * @private
+	 */
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+
+		const setup = (InputCompositionClass: typeof InputComposition) => {
+			this._composition = new InputCompositionClass({
+				getInputEl: () => this.inner,
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (ComboBox.composition) {
+			setup(ComboBox.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				ComboBox.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
 		}
 	}
 

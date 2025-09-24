@@ -3,6 +3,7 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
+	container-type: inline-size; /* container queries */
 }
 
 .ui5-dsc-root {
@@ -12,11 +13,12 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 	display: flex;
+	flex-direction: row; /* default: side-by-side */
 }
 
 .ui5-dsc-main,
 .ui5-dsc-side {
-	display: inline;
+	display: block;
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -24,43 +26,243 @@
 	flex: none;
 }
 
-.ui5-dsc-root > div[class^="ui5-dcs-span"],
-.ui5-dsc-root > aside[class^="ui5-dsc-span"] {
-	overflow: auto;
+/* Hide/Show Content (Highest Priority - must be before other rules) */
+
+/* Hide Main Content - highest specificity */
+:host([hide-main-content]) .ui5-dsc-main {
+	display: none;
+}
+:host([hide-main-content]) .ui5-dsc-side {
+	width: 100%;
+	min-width: 0;
 }
 
-.ui5-dsc-main.ui5-dsc-span-fixed {
-	width: calc(100% - 21.25rem);
+/* Hide Side Content - highest specificity */
+:host([hide-side-content]) .ui5-dsc-side {
+	display: none;
+}
+:host([hide-side-content]) .ui5-dsc-main {
+	width: 100%;
+	min-width: 0;
 }
 
-.ui5-dsc-side.ui5-dsc-span-fixed {
-	width: 21.25rem;
-}
-
-.ui5-dsc-root > .ui5-dsc-span-0 {
+/* When both main and side are hidden */
+:host([hide-main-content][hide-side-content]) .ui5-dsc-root {
 	display: none;
 }
 
-.ui5-dsc-root > .ui5-dsc-span-3 {
-	width: 25%;
-}
-
-.ui5-dsc-root > .ui5-dsc-span-4 {
-	width: 33.333%;
-}
-
-.ui5-dsc-root > .ui5-dsc-span-6 {
+/* Equal Split */
+:host([equal-split]) .ui5-dsc-main,
+:host([equal-split]) .ui5-dsc-side {
 	width: 50%;
+	min-width: 0;
 }
 
-.ui5-dsc-root > .ui5-dsc-span-8 {
-	width: 66.666%;
+
+/* XL: >1440px */
+@container (min-width: 1441px) {
+	.ui5-dsc-main { width: 75%; min-width: 320px; }
+	.ui5-dsc-side { width: 25%; min-width: 320px; }
+
+	/* Hide rules override other width rules in XL */
+	:host([hide-main-content]) .ui5-dsc-side,
+	:host([hide-side-content]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
 }
 
-.ui5-dsc-root > .ui5-dsc-span-9 {
-	width: 75%;
+/* L: 1025px–1440px */
+@container (min-width: 1025px) and (max-width: 1440px) {
+	.ui5-dsc-main { width: 66.666%; min-width: 320px; }
+	.ui5-dsc-side { width: 33.333%; min-width: 320px; }
+
+	/* Fall Down: BelowXL */
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-root {
+		flex-direction: column;
+	}
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-main,
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-side {
+		width: 100%;
+	}
+
+	/* Visibility: ShowAboveL - hide in L */
+	:host([side-content-visibility="ShowAboveL"]) .ui5-dsc-side {
+		display: none;
+	}
+	:host([side-content-visibility="ShowAboveL"]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
+
+	/* Hide rules override other width rules in L */
+	:host([hide-main-content]) .ui5-dsc-side,
+	:host([hide-side-content]) .ui5-dsc-main,
+	:host([side-content-fall-down="BelowXL"][hide-main-content]) .ui5-dsc-side,
+	:host([side-content-fall-down="BelowXL"][hide-side-content]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
 }
 
-.ui5-dsc-root > .ui5-dsc-span-12 {
+/* M: 721px–1024px */
+@container (min-width: 721px) and (max-width: 1024px) {
+	.ui5-dsc-main { width: calc(100% - 340px); }
+	.ui5-dsc-side { width: 340px; }
+
+	/* Fall Down: BelowXL, BelowL, BelowM */
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-root,
+	:host([side-content-fall-down="BelowL"]) .ui5-dsc-root {
+		flex-direction: column;
+	}
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-main,
+	:host([side-content-fall-down="BelowXL"]) .ui5-dsc-side,
+	:host([side-content-fall-down="BelowL"]) .ui5-dsc-main,
+	:host([side-content-fall-down="BelowL"]) .ui5-dsc-side {
+		width: 100%;
+	}
+
+	/* Visibility: ShowAboveM, ShowAboveL - hide in M */
+	:host([side-content-visibility="ShowAboveM"]) .ui5-dsc-side,
+	:host([side-content-visibility="ShowAboveL"]) .ui5-dsc-side {
+		display: none;
+	}
+	:host([side-content-visibility="ShowAboveM"]) .ui5-dsc-main,
+	:host([side-content-visibility="ShowAboveL"]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
+
+	/* Hide rules override other width rules in M */
+	:host([hide-main-content]) .ui5-dsc-side,
+	:host([hide-side-content]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+/* M Sub-breakpoint: OnMinimumWidth (721px–960px) */
+@container (min-width: 721px) and (max-width: 960px) {
+	/* Fall Down: OnMinimumWidth */
+	:host([side-content-fall-down="OnMinimumWidth"]) .ui5-dsc-root {
+		flex-direction: column;
+	}
+	:host([side-content-fall-down="OnMinimumWidth"]) .ui5-dsc-main,
+	:host([side-content-fall-down="OnMinimumWidth"]) .ui5-dsc-side {
+		width: 100%;
+	}
+
+	/* Side content visibility when falling down with OnMinimumWidth - but not when hidden */
+	:host([side-content-fall-down="OnMinimumWidth"]:not([side-content-visibility="NeverShow"]):not([side-content-visibility="ShowAboveM"]):not([side-content-visibility="ShowAboveL"]):not([hide-side-content])) .ui5-dsc-side {
+		display: block;
+	}
+
+	/* Exception: still respect NeverShow, ShowAboveM, ShowAboveL, and hide-side-content */
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="NeverShow"]) .ui5-dsc-side,
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="ShowAboveM"]) .ui5-dsc-side,
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="ShowAboveL"]) .ui5-dsc-side,
+	:host([side-content-fall-down="OnMinimumWidth"][hide-side-content]) .ui5-dsc-side {
+		display: none;
+	}
+
+	/* When side is hidden by visibility rules, main takes full width */
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="NeverShow"]) .ui5-dsc-main,
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="ShowAboveM"]) .ui5-dsc-main,
+	:host([side-content-fall-down="OnMinimumWidth"][side-content-visibility="ShowAboveL"]) .ui5-dsc-main,
+	:host([side-content-fall-down="OnMinimumWidth"][hide-side-content]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
+
+	/* Hide rules override OnMinimumWidth behavior */
+	:host([side-content-fall-down="OnMinimumWidth"][hide-main-content]) .ui5-dsc-side {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+/* S: ≤720px */
+@container (max-width: 720px) {
+	/* Default: both containers take 100% width (column layout) */
+	.ui5-dsc-main, .ui5-dsc-side {
+		width: 100%;
+	}
+	.ui5-dsc-root {
+		flex-direction: column;
+	}
+
+	/* Equal Split */
+	:host([equal-split]) .ui5-dsc-main,
+	:host([equal-split]) .ui5-dsc-side {
+		width: 100%;
+		min-width: 0;
+	}
+
+   /* Visibility in S breakpoint */
+	/* Default: hide side content in S unless AlwaysShow */
+	:host(:not([side-content-visibility="AlwaysShow"]):not([hide-side-content])) .ui5-dsc-side {
+		display: none;
+	}
+	:host(:not([side-content-visibility="AlwaysShow"]):not([hide-main-content])) .ui5-dsc-main {
+		display: block;
+	}
+
+	/* AlwaysShow: show side content in S */
+	:host([side-content-visibility="AlwaysShow"]:not([hide-side-content])) .ui5-dsc-side {
+		display: block;
+	}
+	:host([side-content-visibility="AlwaysShow"]:not([hide-main-content])) .ui5-dsc-main {
+		display: block;
+	}
+
+	/* Hide rules in S breakpoint */
+	:host([hide-main-content]) .ui5-dsc-side,
+	:host([hide-side-content]) .ui5-dsc-main {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+/* Visibility Rules for All Breakpoints */
+
+/* NeverShow: always hide side content */
+:host([side-content-visibility="NeverShow"]:not([hide-main-content])) .ui5-dsc-side {
+	display: none;
+}
+:host([side-content-visibility="NeverShow"]:not([hide-side-content])) .ui5-dsc-main {
+	display: block;
 	width: 100%;
+	min-width: 0;
+}
+
+/* ShowAboveL: only show in XL */
+@container (min-width: 1441px) {
+	:host([side-content-visibility="ShowAboveL"]:not([hide-side-content])) .ui5-dsc-side {
+		display: block;
+	}
+}
+
+/* ShowAboveM: show in L and XL */
+@container (min-width: 1025px) {
+	:host([side-content-visibility="ShowAboveM"]:not([hide-side-content])) .ui5-dsc-side {
+		display: block;
+	}
+}
+
+/* ShowAboveS: show in M, L and XL (default behavior above S) */
+@container (min-width: 721px) {
+	:host([side-content-visibility="ShowAboveS"]:not([hide-side-content])) .ui5-dsc-side {
+		display: block;
+	}
+}
+
+/* When toggled: hide main content, show side content with full width */
+:host(:not([side-content-visibility="NeverShow"]):not([hide-main-content])) .ui5-dsc-root.ui5-dsc-toggled .ui5-dsc-main {
+	display: none;
+}
+
+:host(:not([side-content-visibility="NeverShow"]):not([hide-side-content])) .ui5-dsc-root.ui5-dsc-toggled .ui5-dsc-side {
+	display: block;
+	width: 100%;
+	min-width: 0;
 }

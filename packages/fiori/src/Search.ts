@@ -213,6 +213,12 @@ class Search extends SearchField {
 	 */
 	_proposedItem?: ISearchSuggestionItem;
 
+	/**
+	 * This property is used during rendering to indicate that the user has started typing in the input
+	 * @private
+	 */
+	_isTyping: boolean;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -222,13 +228,21 @@ class Search extends SearchField {
 		// The typed in value.
 		this._typedInValue = "";
 		this._valueBeforeOpen = this.getAttribute("value") || "";
+		this._isTyping = false;
 	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
+		if (this.collapsed && !isPhone()) {
+			this.open = false;
+			return;
+		}
+
 		const innerInput = this.nativeInput;
 		const autoCompletedChars = innerInput && (innerInput.selectionEnd! - innerInput.selectionStart!);
+
+		this.open = this.open || (this._popoupHasAnyContent() && this._isTyping && innerInput!.value.length > 0);
 
 		// If there is already a selection the autocomplete has already been performed
 		if (this._shouldAutocomplete && !autoCompletedChars) {
@@ -237,30 +251,24 @@ class Search extends SearchField {
 
 			if (item) {
 				this._handleTypeAhead(item);
-				this._deselectItems();
-				item.selected = true;
+				this._selectMatchingItem(item);
 			} else {
-				this._typedInValue = this.value;
+				this._deselectItems();
 			}
-		} else {
-			this._typedInValue = this.value;
 		}
 
 		if (isPhone() && this.open) {
 			const item = this._getFirstMatchingItem(this.value);
 			this._proposedItem = item;
-			this._deselectItems();
 
 			if (item && this._performItemSelectionOnMobile) {
-				item.selected = true;
+				this._selectMatchingItem(item);
 			}
 		}
 
 		this._flattenItems.forEach(item => {
 			(item as SearchItem).highlightText = this._typedInValue;
 		});
-
-		this._shouldAutocomplete = false;
 	}
 
 	onAfterRendering(): void {
@@ -287,6 +295,7 @@ class Search extends SearchField {
 
 		this.fireDecoratorEvent("input");
 	}
+
 	_shouldPerformSelectionOnMobile(inputType: string): boolean {
 		const allowedEventTypes = [
 			"deleteWordBackward",
@@ -334,6 +343,11 @@ class Search extends SearchField {
 		});
 	}
 
+	_selectMatchingItem(item: ISearchSuggestionItem) {
+		this._deselectItems();
+		item.selected = true;
+	}
+
 	_handleDown(e: KeyboardEvent) {
 		if (this.open) {
 			e.preventDefault();
@@ -379,6 +393,7 @@ class Search extends SearchField {
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -397,16 +412,28 @@ class Search extends SearchField {
 	_handleEscape() {
 		this.value = this._typedInValue || this.value;
 		this._innerValue = this.value;
+		this._isTyping = false;
 	}
 
 	_handleInput(e: InputEvent) {
 		super._handleInput(e);
+		this._typedInValue = this.value;
 
 		if (isPhone()) {
 			return;
 		}
 
-		this.open = ((e.currentTarget as HTMLInputElement).value.length > 0) && this._popoupHasAnyContent();
+		this._isTyping = true;
+		this.open = this.value.length > 0;
+	}
+
+	_handleClear(): void {
+		super._handleClear();
+
+		this._typedInValue = "";
+		this._innerValue = "";
+		this._shouldAutocomplete = false;
+		this.open = false;
 	}
 
 	_popoupHasAnyContent() {
@@ -461,7 +488,10 @@ class Search extends SearchField {
 		this.value = item.text;
 		this._innerValue = this.value;
 		this._typedInValue = this.value;
+		this._shouldAutocomplete = false;
+		this._performTextSelection = true;
 		this.open = false;
+		this._isTyping = false;
 		this.focus();
 	}
 
@@ -482,6 +512,11 @@ class Search extends SearchField {
 		if (isEscape(e)) {
 			this._handleEscape();
 		}
+
+		// deselect item on backspace or delete
+		if (isBackSpace(e) || isDelete(e)) {
+			this._deselectItems();
+		}
 	}
 
 	_onFocusOutSearch(e:FocusEvent) {
@@ -492,6 +527,7 @@ class Search extends SearchField {
 		}
 
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_handleBeforeClose(e: CustomEvent<PopupBeforeCloseEventDetail>) {
@@ -508,6 +544,7 @@ class Search extends SearchField {
 
 	_handleClose() {
 		this.open = false;
+		this._isTyping = false;
 		this.fireDecoratorEvent("close");
 	}
 

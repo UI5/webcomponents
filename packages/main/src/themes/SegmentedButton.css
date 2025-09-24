@@ -70,3 +70,8 @@
 ::slotted([ui5-segmented-button-item][active]:hover) {
 	border-color: var(--sapButton_Selected_BorderColor);
 }
+
+::slotted([ui5-segmented-button-item]:active) {
+	background-color: var(--sapButton_Selected_Background);
+}
+

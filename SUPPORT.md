@@ -8,7 +8,7 @@
 ## 🔍 Analyzing Issues
 Analyzing issue reports can be a lot of effort. Any help is welcome! 👍
 
-Go to [the Github issue tracker](https://github.com/SAP/ui5-webcomponents/issues?state=open) and find an open issue which needs additional work or a bugfix.
+Go to [the Github issue tracker](https://github.com/UI5/webcomponents/issues?state=open) and find an open issue which needs additional work or a bugfix.
 Especially check for issues with the labels **`good first issue`**, **`help wanted`**, or **`information required`**.
 
 You may be able to add additional or missing information, such as a step-by-step guide on how to reproduce an issue or an analysis of the root cause. In case of the latter, you might even be able to [contribute](/CONTRIBUTING.md#how-to-contribute) a bugfix. 🙌

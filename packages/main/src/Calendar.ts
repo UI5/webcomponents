@@ -46,7 +46,14 @@ import CalendarTemplate from "./CalendarTemplate.js";
 // Styles
 import calendarCSS from "./generated/themes/Calendar.css.js";
 import CalendarHeaderCss from "./generated/themes/CalendarHeader.css.js";
-import { CALENDAR_HEADER_NEXT_BUTTON, CALENDAR_HEADER_PREVIOUS_BUTTON } from "./generated/i18n/i18n-defaults.js";
+import {
+	CALENDAR_HEADER_MONTH_BUTTON,
+	CALENDAR_HEADER_MONTH_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_YEAR_BUTTON,
+	CALENDAR_HEADER_YEAR_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_YEAR_RANGE_BUTTON,
+	CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT,
+} from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
 
 interface ICalendarPicker {
@@ -506,13 +513,8 @@ class Calendar extends CalendarPart {
 		this._headerYearButtonText = String(yearFormat.format(this._localDate, true));
 
 		const currentYearRange = this._currentYearRange;
-		const rangeStart = new CalendarDateComponent(this._calendarDate, this._primaryCalendarType);
-		const rangeEnd = new CalendarDateComponent(this._calendarDate, this._primaryCalendarType);
-
-		rangeStart.setYear(currentYearRange.startYear);
-		rangeEnd.setYear(currentYearRange.endYear);
-
-		this._headerYearRangeButtonText = `${yearFormat.format(rangeStart.toLocalJSDate())} - ${yearFormat.format(rangeEnd.toLocalJSDate())}`;
+		const { rangeStartText, rangeEndText } = this._formatYearRangeText(currentYearRange);
+		this._headerYearRangeButtonText = `${rangeStartText} - ${rangeEndText}`;
 
 		this._secondaryCalendarType && this._setSecondaryCalendarTypeButtonText();
 	}
@@ -594,10 +596,7 @@ class Calendar extends CalendarPart {
 		this._headerYearButtonTextSecType = String(yearFormatSecType.format(this._localDate, true));
 
 		const currentYearRange = this._currentYearRange;
-		const rangeStart = new CalendarDateComponent(this._calendarDate, this._primaryCalendarType);
-		const rangeEnd = new CalendarDateComponent(this._calendarDate, this._primaryCalendarType);
-		rangeStart.setYear(currentYearRange.startYear);
-		rangeEnd.setYear(currentYearRange.endYear);
+		const { rangeStart, rangeEnd } = this._createYearRangeDates(currentYearRange);
 
 		const rangeStartSecType = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, rangeStart.valueOf() / 1000, true)
 			.firstDate;
@@ -789,18 +788,65 @@ class Calendar extends CalendarPart {
 	}
 
 	get accInfo() {
+		const currentYearRange = this._currentYearRange;
+		const { rangeStartText, rangeEndText } = this._formatYearRangeText(currentYearRange);
+
+		const headerMonthButtonText = this.hasSecondaryCalendarType
+			? `${this._headerMonthButtonText}, ${this.secondMonthButtonText}` : `${this._headerMonthButtonText}`;
+
+		// Get base labels
+		const monthLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON, headerMonthButtonText);
+		const yearLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_BUTTON, this._headerYearButtonText as string);
+		const yearRangeLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON, rangeStartText, rangeEndText);
+
+		// Get shortcuts
+		const monthShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON_SHORTCUT);
+		const yearShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_BUTTON_SHORTCUT);
+		const yearRangeShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT);
+
 		return {
-			ariaLabelMonthButton: this.hasSecondaryCalendarType
-				? `${this._headerMonthButtonText}, ${this.secondMonthButtonText}` : `${this._headerMonthButtonText}`,
+			ariaLabelMonthButton: monthLabel,
+			ariaLabelYearButton: yearLabel,
+			ariaLabelYearRangeButton: yearRangeLabel,
+
+			// Keyboard shortcuts for aria-keyshortcuts
+			keyShortcutMonthButton: monthShortcut,
+			keyShortcutYearButton: yearShortcut,
+			keyShortcutYearRangeButton: yearRangeShortcut,
+
+			// Tooltips combining label and shortcut
+			tooltipMonthButton: `${monthLabel} (${monthShortcut})`,
+			tooltipYearButton: `${yearLabel} (${yearShortcut})`,
+			tooltipYearRangeButton: `${yearRangeLabel} (${yearRangeShortcut})`,
 		};
 	}
 
-	get headerPreviousButtonText() {
-		return Calendar.i18nBundle?.getText(CALENDAR_HEADER_PREVIOUS_BUTTON);
+	/**
+	 * Helper method to create CalendarDateComponent instances for year range
+	 * @private
+	 */
+	_createYearRangeDates(yearRange: CalendarYearRangeT, calendarType: string = this._primaryCalendarType) {
+		const rangeStart = new CalendarDateComponent(this._calendarDate, calendarType);
+		const rangeEnd = new CalendarDateComponent(this._calendarDate, calendarType);
+
+		rangeStart.setYear(yearRange.startYear);
+		rangeEnd.setYear(yearRange.endYear);
+
+		return { rangeStart, rangeEnd };
 	}
 
-	get headerNextButtonText() {
-		return Calendar.i18nBundle?.getText(CALENDAR_HEADER_NEXT_BUTTON);
+	/**
+	 * Helper method to format year range text
+	 * @private
+	 */
+	_formatYearRangeText(yearRange: CalendarYearRangeT) {
+		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
+		const { rangeStart, rangeEnd } = this._createYearRangeDates(yearRange, this.primaryCalendarType);
+
+		const rangeStartText = yearFormat.format(rangeStart.toLocalJSDate());
+		const rangeEndText = yearFormat.format(rangeEnd.toLocalJSDate());
+
+		return { rangeStartText, rangeEndText };
 	}
 
 	get secondMonthButtonText() {

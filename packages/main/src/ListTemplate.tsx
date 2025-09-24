@@ -29,7 +29,10 @@ export default function ListTemplate(this: List) {
 				active={this.showBusyIndicatorOverlay}
 				class="ui5-list-busy-indicator"
 			>
+
 				<div class="ui5-list-scroll-container">
+					<span tabindex={-1} aria-hidden="true" class="ui5-list-start-marker"></span>
+
 					{this.header.length > 0 && <slot name="header" />}
 
 					{this.shouldRenderH1 &&

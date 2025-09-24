@@ -328,6 +328,10 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		const input: Input = (e.target as Input);
 		let inputValueLowerCase = input.value.toLowerCase();
 
+		if (inputValueLowerCase.startsWith("#")) {
+			inputValueLowerCase = inputValueLowerCase.slice(1);
+		}
+
 		// Shorthand Syntax
 		if (inputValueLowerCase.length === 3) {
 			inputValueLowerCase = `${inputValueLowerCase[0]}${inputValueLowerCase[0]}${inputValueLowerCase[1]}${inputValueLowerCase[1]}${inputValueLowerCase[2]}${inputValueLowerCase[2]}`;
