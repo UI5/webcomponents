@@ -79,6 +79,7 @@
     "turbo": "^1.7.0",
     "typescript": "^5.6.2",
     "vite-plugin-checker": "0.6.2",
+    "vite-plugin-istanbul": "^7.2.0",
     "vite-tsconfig-paths": "^4.2.1",
     "wsrun": "^5.2.4",
     "yarnhook": "^0.6.0"
