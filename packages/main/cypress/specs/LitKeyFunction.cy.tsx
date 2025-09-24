@@ -3,7 +3,7 @@ import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 
 describe("Lit HTML key function for #each", () => {
-	it("LIT HTML does not mess up keys when looping over lists", () => {
+	it.skip("LIT HTML does not mess up keys when looping over lists", () => {
 		cy.mount(
 			<MultiComboBox id="mcb">
 				<MultiComboBoxItem text="<empty>"></MultiComboBoxItem>

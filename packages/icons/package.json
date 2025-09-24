@@ -18,7 +18,7 @@
   },
   "scripts": {
     "clean": "wc-dev clean",
-    "generate": "nps generate",
+    "generate": "wc-dev generate",
     "build": "wc-dev build",
     "prepublishOnly": "tsc -b"
   },
