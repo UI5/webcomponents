@@ -3,16 +3,16 @@ import cypressConfig from "@ui5/cypress-internal/cypress.config.js";
 const suites = {
 	SUITE1: [
 		"**/specs/base/*.cy.{jsx,tsx}",
-		"**/specs/[A-D]*.cy.{js,jsx,ts,tsx}",
+		"**/specs/[A-C]*.cy.{js,jsx,ts,tsx}",
 	],
 	SUITE2: [
-		"**/specs/[E-L]*.cy.{js,jsx,ts,tsx}",
+		"**/specs/[D-L]*.cy.{js,jsx,ts,tsx}",
 	],
     SUITE3: [
-        "**/specs/[M-R]*.cy.{js,jsx,ts,tsx}",
+        "**/specs/[M-S]*.cy.{js,jsx,ts,tsx}",
     ],
     SUITE4: [
-        "**/specs/[S-Z]*.cy.{js,jsx,ts,tsx}",
+        "**/specs/[T-Z]*.cy.{js,jsx,ts,tsx}",
     ],
 };
 
