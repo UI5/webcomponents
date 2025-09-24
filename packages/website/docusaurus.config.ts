@@ -42,6 +42,7 @@ const config: Config = {
   customFields: {
     ui5Version: packageJson.version,
     ui5DeploymentType: process.env.DEPLOYMENT_TYPE,
+    ui5PreviewPath: PREVIEW_URL_PATH,
   },
   title: 'UI5 Web Components',
   tagline: 'An open-source UI components library for building enterprise-ready applications!',
