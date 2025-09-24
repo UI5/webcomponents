@@ -6853,6 +6853,7 @@ __metadata:
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    eslint: "npm:^7.22.0"
     rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -6898,6 +6899,7 @@ __metadata:
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    eslint: "npm:^7.22.0"
     rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -6916,6 +6918,7 @@ __metadata:
     "@zxing/library": "npm:^0.21.3"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    eslint: "npm:^7.22.0"
     lit: "npm:^2.0.0"
     rimraf: "npm:^6.0.1"
   languageName: unknown
@@ -6963,6 +6966,7 @@ __metadata:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.0"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     babel-plugin-amd-to-esm: "npm:^2.0.3"
+    eslint: "npm:^7.22.0"
     estree-walk: "npm:^2.2.0"
     mkdirp: "npm:^1.0.4"
     resolve: "npm:^1.20.0"
@@ -7095,6 +7099,7 @@ __metadata:
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.0"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^13.0.0"
+    eslint: "npm:^7.22.0"
     jsdom: "npm:^26.0.0"
     lit: "npm:^2.0.0"
     rimraf: "npm:^6.0.1"
