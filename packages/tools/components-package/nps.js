@@ -7,6 +7,8 @@ if (process.env.DEPLOY) {
 	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
 	websiteBaseUrl = "/webcomponents/nightly/";
+} else if (process.env.DEPLOYMENT_TYPE === "preview" && process.env.PR_NUMBER) {
+	websiteBaseUrl = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
 }
 
 const getScripts = (options) => {

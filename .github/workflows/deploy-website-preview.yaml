@@ -61,7 +61,7 @@ jobs:
         DEPLOYMENT_TYPE: "preview"
         PR_NUMBER: "${{ github.event.number }}"
       run: |
-        yarn ci:deploy
+        yarn ci:deploy:preview
 
     - name: Deploy to PR subfolder
       uses: JamesIves/github-pages-deploy-action@v4.6.4

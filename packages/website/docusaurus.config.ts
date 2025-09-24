@@ -6,8 +6,9 @@ import packageJson from "./package.json";
 
 console.log("DEPLOYMENT_TYPE", process.env.DEPLOYMENT_TYPE); // eslint-disable-line
 
-const LATEST_URL_PARTH = "/webcomponents/";
-const NIGHTLY_URL_PARTH = "/webcomponents/nightly/";
+const LATEST_URL_PATH = "/webcomponents/";
+const NIGHTLY_URL_PATH = "/webcomponents/nightly/";
+const PREVIEW_URL_PATH = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
 
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
 const PREVIEW_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "preview";
@@ -21,17 +22,17 @@ const getBaseURL = () => {
 
   // PR preview deployment
   if (PREVIEW_DEPLOYMENT) {
-    return `/webcomponents/pr-${process.env.PR_NUMBER}/`;
+    return PREVIEW_URL_PATH;
   }
 
   // latest deployment or nightly deployment
-  return LATEST_DEPLOYMENT ? LATEST_URL_PARTH : NIGHTLY_URL_PARTH;
+  return LATEST_DEPLOYMENT ? LATEST_URL_PATH : NIGHTLY_URL_PATH;
 };
 
 const BASE_URL = getBaseURL();
 
 const getFullURL = () => {
-  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://ui5.github.io${BASE_URL}`
+  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://ui5.github.io${BASE_URL}`;
 }
 
 // ["v1", "nightly", "current"]
@@ -41,7 +42,6 @@ const config: Config = {
   customFields: {
     ui5Version: packageJson.version,
     ui5DeploymentType: process.env.DEPLOYMENT_TYPE,
-    urlShortenerApiKey: process.env.URL_SHORTENER_API_KEY,
   },
   title: 'UI5 Web Components',
   tagline: 'An open-source UI components library for building enterprise-ready applications!',
@@ -91,20 +91,6 @@ const config: Config = {
     ],
   ],
   plugins: [
-    function() {
-      return {
-        name: 'environment-variables',
-        configureWebpack() {
-          return {
-            plugins: [
-              new (require('webpack')).DefinePlugin({
-                'process.env.URL_SHORTENER_API_KEY': JSON.stringify(process.env.URL_SHORTENER_API_KEY)
-              })
-            ]
-          };
-        }
-      };
-    }
   ],
   themeConfig: {
     algolia: {
