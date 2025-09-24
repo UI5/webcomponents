@@ -1327,4 +1327,3 @@ describe("Keyboard Handling", () => {
 			.should("have.attr", "selected");
 	});
 });
-
