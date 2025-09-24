@@ -30,10 +30,9 @@ class Parser {
 		// Parse scripts on initialization
 		this.parseScripts();
 
-		for (const key of this.parsedScripts.keys()) {
-			console.log(`Resolving script: ${key}`);
+		[...this.parsedScripts.keys()].forEach(key => {
 			this.resolveScripts(`${key}`);
-		}
+		});
 	}
 
 	/**
