@@ -56,18 +56,17 @@ export default function FormTemplate(this: Form) {
 						</>
 						:
 						<>
-							
-								{
+							{
 								this.itemsInfo.map(itemInfo => {
 									const item = itemInfo.item;
 									return (
-											<dl class={{
-												"ui5-form-item": true,
-												[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
-											}}
-											>
-												<slot name={item._individualSlot}></slot>
-											</dl>
+										<dl class={{
+											"ui5-form-item": true,
+											[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
+										}}
+										>
+											<slot name={item._individualSlot}></slot>
+										</dl>
 									);
 								})
 							}
