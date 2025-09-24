@@ -74,7 +74,7 @@ function VersionNavbarItemDesktop() {
                 label="Preview 🔍"
                 isDropdownItem
                 target="_self"
-                href={`https://ui5.github.io/webcomponents/${siteConfig.customFields.ui5PreviewPath}`}
+                href={`https://ui5.github.io/${siteConfig.customFields.ui5PreviewPath}`}
                 onClick={() => { setVersion("Preview") }}
                 className={clsx({ 'menu__link--active': version === "Preview" })}
             />}
