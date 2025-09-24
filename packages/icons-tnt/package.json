@@ -5,7 +5,6 @@
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
   "type": "module",
-  "private": false,
   "keywords": [
     "openui5",
     "sapui5",

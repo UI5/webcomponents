@@ -129,7 +129,7 @@ const getScripts = (options) => {
 				components: `ui5nps build.styles.componentsWithWatch`,
 			},
 			templates: options.legacy ? 'chokidar "src/**/*.hbs" -i "src/generated" -c "ui5nps build.templates"' : "",
-			i18n: 'chokidar "src/i18n/messagebundle.properties" -c "ui5nps build.i18n.defaultsjs"'
+			i18n: 'yarn chokidar "src/i18n/messagebundle.properties" -c "ui5nps build.i18n.defaultsjs"'
 		},
 		start: "ui5nps prepare watch.devServer",
 		test: `node "${LIB}/test-runner/test-runner.js"`,

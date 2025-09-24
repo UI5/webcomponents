@@ -8,8 +8,7 @@
   "type": "module",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
-  "private": false,
-  "customElements": "./dist/custom-elements.json",
+  "customElements": "dist/custom-elements.json",
   "keywords": [
     "openui5",
     "sapui5",
@@ -60,8 +59,10 @@
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.6",
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
+    "chokidar-cli": "^3.0.0",
     "lit": "^2.0.0"
   }
 }

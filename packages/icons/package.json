@@ -4,7 +4,6 @@
   "description": "UI5 Web Components: webcomponents.SAP-icons",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
-  "private": false,
   "type": "module",
   "keywords": [
     "openui5",
