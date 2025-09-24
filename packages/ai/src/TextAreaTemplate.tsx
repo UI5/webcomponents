@@ -1,9 +1,9 @@
-import type AITextArea from "./AITextArea.js";
-import AITextAreaToolbar from "./AITextAreaToolbar.js";
+import type AITextArea from "./TextArea.js";
+import WritingAssistant from "./WritingAssistant.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
 
-export default function AITextAreaTemplate(this: AITextArea) {
+export default function TextAreaTemplate(this: AITextArea) {
 	const isBusy = this.assistantState === "Loading";
 
 	return (
@@ -53,17 +53,16 @@ export default function AITextAreaTemplate(this: AITextArea) {
 							onScroll={this._onscroll}>
 						</textarea>
 					</BusyIndicator>
-			<div part="footer" class={`ui5-ai-writing-assistant-footer-bar ${this.assistantState !== "Initial" ? "ui5-ai-writing-assistant-footer-bar--with-border" : ""}`}>
+					<div part="footer">
 						<slot name="footer">
-							<AITextAreaToolbar
+							<WritingAssistant
 								assistantState={this.assistantState}
 								currentVersionIndex={this.currentVersionIndex}
 								totalVersions={this.totalVersions}
 								actionText={this.actionText}
-								onGenerateClick={this.handleGenerateClick}
+								onButtonClick={this.handleGenerateClick}
 								onStopGeneration={this.handleStopGeneration}
-								onPreviousVersionClick={this._handlePreviousVersionClick}
-								onNextVersionClick={this._handleNextVersionClick}
+								onVersionChange={this._handleVersionChange}
 							/>
 						</slot>
 					</div>

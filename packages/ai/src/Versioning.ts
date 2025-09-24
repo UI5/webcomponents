@@ -10,18 +10,6 @@ import VersioningTemplate from "./VersioningTemplate.js";
 // Styles
 import VersioningCss from "./generated/themes/Versioning.css.js";
 
-type VersionClickEventDetail = {
-	/**
-	 * The current version index (1-based).
-	 */
-	currentIndex: number;
-	
-	/**
-	 * The total number of versions available.
-	 */
-	totalVersions: number;
-}
-
 /**
  * @class
  *
@@ -61,40 +49,32 @@ type VersionClickEventDetail = {
 })
 
 /**
- * Fired when the user clicks on the "Previous Version" button.
+ * Fired when the user clicks on version navigation buttons.
  *
  * @public
  */
-@event("previous-version-click")
-
-/**
- * Fired when the user clicks on the "Next Version" button.
- *
- * @public
- */
-@event("next-version-click")
+@event("version-change")
 
 class Versioning extends UI5Element {
 	eventDetails!: {
-		"previous-version-click": VersionClickEventDetail;
-		"next-version-click": VersionClickEventDetail;
+		"version-change": {
+			backwards: boolean;
+		},
 	}
 
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
-	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	currentStep = 1;
+	currentStep = 0;
 
 	/**
-	 * Indicates the total number of result versions available.
+	 * The total number of available result versions.
 	 *
-	 * When not set or `0`, versioning UI will be hidden.
+	 * Note: Versioning is hidden if the value is `0`.
 	 *
 	 * @default 0
 	 * @public
@@ -102,9 +82,9 @@ class Versioning extends UI5Element {
 	@property({ type: Number })
 	totalSteps = 0;
 
-	private _previousCurrentStep: number = 1;
-	private _previousTotalSteps: number = 0;
-	private _lastClickedButton: "previous" | "next" | "" = "";
+	_previousCurrentStep = 0;
+	_previousTotalSteps = 0;
+	_lastClickedButton: "previous" | "next" | "" = "";
 
 	onAfterRendering() {
 		this._manageFocus();
@@ -125,54 +105,33 @@ class Versioning extends UI5Element {
 
 		const previousButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"previous\"]") as HTMLElement;
 		const nextButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"next\"]") as HTMLElement;
-		
+
 		if (!previousButton || !nextButton) {
 			return;
 		}
 
 		const isPreviousDisabled = this.currentStep <= 1;
-		const isNextDisabled = this.currentStep === this.totalSteps || this.totalSteps === 0;
+		const isNextDisabled = this.currentStep === this.totalSteps;
 		const wasPreviousDisabled = this._previousCurrentStep <= 1;
-		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps || this._previousTotalSteps === 0;
+		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps;
 
-		// Move focus to next button if previous becomes disabled and next is available
 		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === "previous") {
 			nextButton.focus();
 			this._lastClickedButton = "";
-		} 
-		// Move focus to previous button if next becomes disabled and previous is available
-		else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === "next") {
+		} else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === "next") {
 			previousButton.focus();
 			this._lastClickedButton = "";
 		}
 	}
 
-	/**
-	 * Handles the click event for the "Previous Version" button.
-	 * Updates internal state and fires the previous-version-click event with proper details.
-	 * 
-	 * @public
-	 */
-	handlePreviousVersionClick(): void {
+	handlePreviousVersionClick() {
 		this._lastClickedButton = "previous";
-		this.fireDecoratorEvent("previous-version-click", {
-			currentIndex: this.currentStep,
-			totalVersions: this.totalSteps
-		});
+		this.fireDecoratorEvent("version-change", { backwards: true });
 	}
 
-	/**
-	 * Handles the click event for the "Next Version" button.
-	 * Updates internal state and fires the next-version-click event with proper details.
-	 * 
-	 * @public
-	 */
-	handleNextVersionClick(): void {
+	handleNextVersionClick() {
 		this._lastClickedButton = "next";
-		this.fireDecoratorEvent("next-version-click", {
-			currentIndex: this.currentStep,
-			totalVersions: this.totalSteps
-		});
+		this.fireDecoratorEvent("version-change", { backwards: false });
 	}
 }
 

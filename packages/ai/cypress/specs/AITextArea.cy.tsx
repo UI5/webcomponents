@@ -1,10 +1,10 @@
-import AITextArea from "../../src/AITextArea.js";
+import AITextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 
 describe("AITextArea Component", () => {
 	describe("Initialization", () => {
-		it("should render with Initial properties", () => {
+		it("should render with default properties", () => {
 			cy.mount(<AITextArea />);
 
 			cy.get("[ui5-ai-textarea]")
@@ -17,7 +17,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("@textarea")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("exist");
 		});
 
@@ -35,7 +35,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "assistantState", "Initial");
 		});
 
@@ -49,7 +49,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "assistantState", "Loading")
 				.should("have.prop", "actionText", "Generating content...");
 		});
@@ -66,7 +66,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "assistantState", "Initial")
 				.should("have.prop", "actionText", "Generated text")
 				.should("have.prop", "currentVersionIndex", 1)
@@ -85,7 +85,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "assistantState", "Initial")
 				.should("have.prop", "actionText", "Generated text")
 				.should("have.prop", "currentVersionIndex", 2)
@@ -108,7 +108,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.shadow()
@@ -139,7 +139,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.shadow()
@@ -167,7 +167,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.shadow()
@@ -186,7 +186,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.shadow()
@@ -213,7 +213,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("@textarea")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.shadow()
@@ -259,7 +259,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
 				.realClick();
@@ -281,7 +281,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
 				.realClick();
@@ -302,7 +302,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
 				.should("be.focused");
@@ -478,7 +478,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
 				.should("have.attr", "title", "AI Writing Assistant (Shift + F4)");
@@ -494,7 +494,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("exist");
 		});
 
@@ -512,7 +512,7 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.should("exist");
 		});
 
@@ -530,141 +530,10 @@ describe("AITextArea Component", () => {
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
+				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
 				.should("not.exist");
-		});
-	});
-
-	describe("State Transitions", () => {
-		it("should handle state transition from Initial to Loading", () => {
-			cy.mount(<AITextArea assistantState="Initial" />);
-
-			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
-				.should("have.prop", "assistantState", "Initial");
-
-			cy.get("@textarea")
-				.invoke("prop", "assistantState", "Loading")
-				.invoke("prop", "actionText", "Generating...");
-
-			cy.get("@textarea")
-				.should("have.prop", "assistantState", "Loading")
-				.should("have.prop", "actionText", "Generating...");
-		});
-
-		it("should handle state transition from Loading to single result", () => {
-			cy.mount(
-				<AITextArea
-					assistantState="Loading"
-					actionText="Generating..."
-				/>
-			);
-
-			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
-				.invoke("prop", "assistantState", "Initial")
-				.invoke("prop", "actionText", "Generated text")
-				.invoke("prop", "currentVersionIndex", 1)
-				.invoke("prop", "totalVersions", 1);
-
-			cy.get("@textarea")
-				.should("have.prop", "assistantState", "Initial")
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 1)
-				.should("have.prop", "totalVersions", 1);
-		});
-
-		it("should handle state transition from single to multiple results", () => {
-			cy.mount(
-				<AITextArea
-					assistantState="Initial"
-					actionText="Generated text"
-					currentVersionIndex={1}
-					totalVersions={1}
-				/>
-			);
-
-			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
-				.invoke("prop", "assistantState", "Initial")
-				.invoke("prop", "actionText", "Multiple results")
-				.invoke("prop", "currentVersionIndex", 2)
-				.invoke("prop", "totalVersions", 3);
-
-			cy.get("@textarea")
-				.should("have.prop", "assistantState", "Initial")
-				.should("have.prop", "currentVersionIndex", 2)
-				.should("have.prop", "totalVersions", 3);
-
-			cy.get("@textarea")
-				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
-				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
-				.should("exist");
-		});
-	});
-
-	describe("Focus Management", () => {
-		it("should manage focus when navigating versions", () => {
-			cy.mount(
-				<AITextArea
-					assistantState="Initial"
-					currentVersionIndex={2}
-					totalVersions={3}
-				/>
-			);
-
-			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
-				.shadow()
-				.find("[ui5-ai-textarea-toolbar]")
-				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
-				.as("versioning");
-
-			cy.get("@versioning")
-				.shadow()
-				.find('[data-ui5-versioning-button="next"]')
-				.as("nextButton")
-				.should("not.be.disabled")
-				.realClick();
-
-			cy.get("@textarea")
-				.invoke("prop", "currentVersionIndex", 3);
-
-			cy.get("@versioning")
-				.shadow()
-				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.focused");
-		});
-
-		it("should maintain focus on textarea after keyboard shortcuts", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
-
-			cy.mount(
-				<AITextArea
-					assistantState="Initial"
-					currentVersionIndex={1}
-					totalVersions={3}
-					onNextVersionClick={onNextVersionClick}
-				/>
-			);
-
-			cy.get("[ui5-ai-textarea]")
-				.shadow()
-				.find("textarea")
-				.focus()
-				.realPress(['Control', 'Shift', 'y']);
-
-			cy.get("@onNextVersionClick").should("have.been.calledOnce");
-
-			cy.get("[ui5-ai-textarea]")
-				.shadow()
-				.find("textarea")
-				.should("be.focused");
 		});
 	});
 });

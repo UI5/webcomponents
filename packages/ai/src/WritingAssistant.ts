@@ -2,16 +2,22 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import UI5Element from "@ui5/webcomponents-base";
+import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 // Styles
-import AITextAreaCss from "./generated/themes/AITextArea.css.js";
+import WritingAssistantCss from "./generated/themes/WritingAssistant.css.js";
 
 // Templates
-import AITextAreaToolbarTemplate from "./AITextAreaToolbarTemplate.js";
+import WritingAssistantTemplate from "./WritingAssistantTemplate.js";
 import Versioning from "./Versioning.js";
 import type AssistantState from "./types/AssistantState.js";
+
+// UI5 Components
+import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
+import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
+import Label from "@ui5/webcomponents/dist/Label.js";
+import Button from "@ui5/webcomponents/dist/Button.js";
 
 // Icons
 import "@ui5/webcomponents-icons/dist/ai.js";
@@ -41,36 +47,33 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  * @private
  */
 @customElement({
-	tag: "ui5-ai-textarea-toolbar",
+	tag: "ui5-ai-writing-assistant",
 	languageAware: true,
 	renderer: jsxRenderer,
-	template: AITextAreaToolbarTemplate,
-	styles: [AITextAreaCss],
+	template: WritingAssistantTemplate,
+	styles: [WritingAssistantCss],
 	dependencies: [
 		Versioning,
+		Toolbar,
+		ToolbarSpacer,
+		Label,
+		Button,
 	],
 })
 
 /**
- * Fired when the user clicks on the "Previous Version" button.
+ * Fired when the user clicks on version navigation buttons.
  *
  * @public
  */
-@event("previous-version-click")
+@event("version-change")
 
 /**
- * Fired when the user clicks on the "Next Version" button.
+ * Fired when the user clicks on the AI button.
  *
  * @public
  */
-@event("next-version-click")
-
-/**
- * Fired when the user clicks on the "Generate" button to start AI text generation.
- *
- * @public
- */
-@event("generate-click")
+@event("button-click")
 
 /**
  * Fired when the user clicks on the "Stop" button to stop ongoing AI text generation.
@@ -79,30 +82,32 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  */
 @event("stop-generation")
 
-class AITextAreaToolbar extends UI5Element {
+class WritingAssistant extends UI5Element {
 	eventDetails!: {
-		"previous-version-click": object;
-		"next-version-click": object;
-		"generate-click": { clickTarget?: HTMLElement };
+		"version-change": {
+			backwards: boolean;
+		};
+		"button-click": {
+			clickTarget: HTMLElement;
+		};
 		"stop-generation": object;
 	};
 
 	/**
-	 * Defines the current state of the AI TextArea.
+	 * Defines the current state of the AI Writing Assistant.
 	 *
 	 * Available values are:
 	 * - `"Initial"`: Shows only the main toolbar button.
 	 * - `"Loading"`: Indicates that an action is in progress.
-	 *
-	 * Single vs multiple results are determined internally based on totalVersions.
 	 *
 	 * @default "Initial"
 	 * @public
 	 */
 	@property()
 	assistantState: `${AssistantState}` = "Initial";
+
 	/**
-	 * Defines the action text of the `ui5-ai-textarea`.
+	 * Defines the action text of the AI Writing Assistant.
 	 *
 	 * @default ""
 	 * @public
@@ -124,50 +129,36 @@ class AITextAreaToolbar extends UI5Element {
 	/**
 	 * Indicates the total number of result versions available.
 	 *
-	 * When not set or `0`, versioning UI will be hidden.
-	 *
-	 * @default 0
+	 * @default 1
 	 * @public
 	 */
 	@property({ type: Number })
-	totalVersions = 0;
+	totalVersions = 1;
 
 	/**
-	 * Handles the click event for the "Previous Version" button.
-	 *
-	 * @public
+	 * Handles the version change event from the versioning component.
 	 */
-	handlePreviousVersionClick(): void {
-		this.fireDecoratorEvent("previous-version-click");
-	}
-
-	/**
-	 * Handles the click event for the "Next Version" button.
-	 *
-	 * @public
-	 */
-	handleNextVersionClick(): void {
-		this.fireDecoratorEvent("next-version-click");
+	handleVersionChange(e: CustomEvent<{ backwards: boolean }>) {
+		this.fireDecoratorEvent("version-change", { backwards: e.detail.backwards });
 	}
 
 	/**
 	 * Handles the click event for the AI generate button.
 	 * Toggles between generate and stop states based on current button state.
 	 *
-	 * @private
+	 * @public
 	 */
-	_handleGenerateClick(e: Event) {
+	handleButtonClick(e: Event): void {
 		const target = e.target as HTMLElement & { state?: string };
 		if (target?.state === "generating") {
-			// If the button is in generating state, stop the generation
 			this.fireDecoratorEvent("stop-generation");
 		} else {
-			this.fireDecoratorEvent("generate-click", { clickTarget: target });
+			this.fireDecoratorEvent("button-click", { clickTarget: target });
 			announce("AI writing assistant generating. Stop generating (ESC)", "Polite");
 		}
 	}
 }
 
-AITextAreaToolbar.define();
+WritingAssistant.define();
 
-export default AITextAreaToolbar;
+export default WritingAssistant;

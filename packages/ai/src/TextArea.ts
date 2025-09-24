@@ -14,8 +14,8 @@ import textareaStyles from "@ui5/webcomponents/dist/generated/themes/TextArea.cs
 import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
 
 // Templates
-import AITextAreaTemplate from "./AITextAreaTemplate.js";
-import AITextAreaToolbar from "./AITextAreaToolbar.js";
+import TextAreaTemplate from "./TextAreaTemplate.js";
+import WritingAssistant from "./WritingAssistant.js";
 import Versioning from "./Versioning.js";
 
 type VersionClickEventDetail = {
@@ -23,7 +23,7 @@ type VersionClickEventDetail = {
 	 * The current version index (1-based).
 	 */
 	currentIndex: number;
-	
+
 	/**
 	 * The total number of versions available.
 	 */
@@ -49,12 +49,12 @@ type VersionClickEventDetail = {
  * The `ui5-ai-textarea` supports multiple states:
  * - Initial: Shows only the AI button
  * - Loading: Indicates AI generation in progress
- * 
+ *
  * Single vs multiple result display is determined internally based on totalVersions count.
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/AITextArea.js";`
+ * `import "@sap-webcomponents/ai/dist/TextArea.js";`
  *
  * @constructor
  * @extends TextArea
@@ -66,14 +66,14 @@ type VersionClickEventDetail = {
 	tag: "ui5-ai-textarea",
 	languageAware: true,
 	renderer: jsxRenderer,
-	template: AITextAreaTemplate,
+	template: TextAreaTemplate,
 	styles: [
 		textareaStyles,
 		valueStateMessageStyles,
 		AITextAreaCss,
 	],
 	dependencies: [
-		AITextAreaToolbar,
+		WritingAssistant,
 		Versioning,
 		BusyIndicator,
 	],
@@ -158,10 +158,10 @@ class AITextArea extends TextArea {
 	 * Handles the click event for the "Previous Version" button.
 	 * Updates the current version index and syncs content.
 	 */
-	_handlePreviousVersionClick() {
+	_handlePreviousVersionClick(): void {
 		this.fireDecoratorEvent("previous-version-click", {
 			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions
+			totalVersions: this.totalVersions,
 		});
 		this._syncContent();
 	}
@@ -170,12 +170,23 @@ class AITextArea extends TextArea {
 	 * Handles the click event for the "Next Version" button.
 	 * Updates the current version index and syncs content.
 	 */
-	_handleNextVersionClick() {
+	_handleNextVersionClick(): void {
 		this.fireDecoratorEvent("next-version-click", {
 			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions
+			totalVersions: this.totalVersions,
 		});
 		this._syncContent();
+	}
+
+	/**
+	 * Handles the version change event from the writing assistant.
+	 */
+	_handleVersionChange(e: CustomEvent<{ backwards: boolean }>): void {
+		if (e.detail.backwards) {
+			this._handlePreviousVersionClick();
+		} else {
+			this._handleNextVersionClick();
+		}
 	}
 
 	/**
@@ -198,9 +209,9 @@ class AITextArea extends TextArea {
 	_handleKeydown(keyboardEvent: KeyboardEvent) {
 		const isCtrlOrCmd = keyboardEvent.ctrlKey || keyboardEvent.metaKey;
 		const isShift = keyboardEvent.shiftKey;
-		
+
 		if (isShift && keyboardEvent.key.toLowerCase() === "f4") {
-			const toolbar = this.shadowRoot?.querySelector("ui5-ai-textarea-toolbar") as HTMLElement;
+			const toolbar = this.shadowRoot?.querySelector("ui5-ai-writing-assistant") as HTMLElement;
 			const aiButton = toolbar?.shadowRoot?.querySelector("#ai-menu-btn") as HTMLElement;
 
 			if (aiButton) {
@@ -224,30 +235,12 @@ class AITextArea extends TextArea {
 	}
 
 	/**
-	 * Opens the AI menu.
-	 * @private
-	 */
-	_openMenu() {
-		const menuNodes = this.getSlottedNodes("menu");
-		if (menuNodes.length > 0) {
-			const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
-			const toolbar = this.shadowRoot?.querySelector("ui5-ai-textarea-toolbar") as HTMLElement;
-			const aiButton = toolbar?.shadowRoot?.querySelector("#ai-menu-btn") as HTMLElement;
-
-			if (aiButton) {
-				menu.opener = aiButton;
-				menu.open = true;
-			}
-		}
-	}
-
-	/**
 	 * Overrides the parent's onAfterRendering to add keydown handler.
 	 * @private
 	 */
 	onAfterRendering() {
 		super.onAfterRendering();
-		
+
 		// Add keydown event listener to the textarea
 		const textarea = this.shadowRoot?.querySelector("textarea");
 		if (textarea) {

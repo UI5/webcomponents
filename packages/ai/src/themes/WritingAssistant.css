@@ -31,6 +31,11 @@
 	box-shadow: none;
 	border-bottom: none;
 	border-top: none;
+	padding: 0.5rem;
+	min-height: 2.75rem;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
 }
 
 /* Show border when component has results or is loading */
@@ -38,11 +43,27 @@
 	border-top: 1px solid var(--sapPageFooter_BorderColor);
 }
 
-/* Action Label */
+/* Action Label - takes up available space */
 .ui5-ai-writing-assistant-action-label {
-	margin-left: 0.5rem;
 	color: var(--sapContent_LabelColor);
 	font-size: var(--sapFontSmallSize);
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	flex: 1;
+}
+
+/* Versioning component styling - positioned on the left */
+ui5-ai-versioning {
+	margin-right: 0.5rem;
+	flex-shrink: 0;
+	order: -1;
+}
+
+/* AI button styling - positioned on the right */
+#ai-menu-btn {
+	margin-left: auto;
+	margin-right: 0.5rem;
+	flex-shrink: 0;
 }
 
 /* Menu wrapper positioning */

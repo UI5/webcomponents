@@ -11,6 +11,10 @@ export default function VersioningTemplate(this: Versioning) {
 				design="Transparent"
 				icon="navigation-left-arrow"
 				title="Previous Version (Shift+Ctrl+Z)"
+				accessibleName="Previous Version"
+				aria-roledescription="button"
+				aria-haspopup="false"
+				aria-keyshortcut="Shift+Ctrl+Z"
 				disabled={this.currentStep <= 1}
 				onClick={this.handlePreviousVersionClick}
 				data-ui5-versioning-button="previous"
@@ -22,7 +26,11 @@ export default function VersioningTemplate(this: Versioning) {
 				design="Transparent"
 				icon="navigation-right-arrow"
 				title="Next Version (Shift+Ctrl+Y)"
-				disabled={this.totalSteps === 0 || this.currentStep === this.totalSteps}
+				accessibleName="Next Version"
+				aria-roledescription="button"
+				aria-haspopup="false"
+				aria-keyshortcut="Shift+Ctrl+Y"
+				disabled={this.totalSteps <= 0 || this.currentStep === this.totalSteps}
 				onClick={this.handleNextVersionClick}
 				data-ui5-versioning-button="next"
 			></Button>

@@ -34,7 +34,7 @@
 }
 
 /* Show border when component has results or is loading */
-.ui5-ai-writing-assistant-footer-bar--with-border {
+.ui5-ai-writing-assistant-footer-bar-with-border {
 	border-top: 1px solid var(--sapPageFooter_BorderColor);
 }
 
