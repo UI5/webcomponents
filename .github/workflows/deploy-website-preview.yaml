@@ -3,10 +3,8 @@ name: Deploy Website Preview
 on:
   pull_request:
     types: [opened, closed, synchronize, reopened]
-    paths:
-      - 'packages/website/**'
-      - 'packages/main/**'
-      - 'docs/**'
+    branches:
+      - main
 
 jobs:
   deploy-preview:
