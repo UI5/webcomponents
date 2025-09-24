@@ -73,6 +73,7 @@
     "cypress": "^13.0.0",
     "eslint": "^7.22.0",
     "mkdirp": "^1.0.4",
+    "mocha": "^11.7.2",
     "nps": "^5.10.0",
     "replace-in-file": "^6.3.5",
     "resolve": "^1.20.0",
