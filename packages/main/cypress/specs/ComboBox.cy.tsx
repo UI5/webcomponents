@@ -395,6 +395,29 @@ describe("General Interaction", () => {
 			.find(".ui5-li-title")
 			.should("have.text", "I #1");
 	});
+
+	it("should not render ComboBox items list when no items are present", () => {
+		cy.mount(
+			<ComboBox valueState="Negative" open>
+				{/* No ComboBox items */}
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover")
+			.should("have.attr", "open");
+
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-header.ui5-valuestatemessage-root")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
 });
 
 describe("Keyboard navigation", () => {
@@ -2719,5 +2742,169 @@ describe("Scrolling", () => {
 		cy.get("[ui5-cb-item]")
 			.eq(4)
 			.should("be.visible");
+	});
+});
+
+describe("ComboBox Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-korean"
+				placeholder="Type in Korean ..."
+			>
+				<ComboBoxItem text="안녕하세요" />
+				<ComboBoxItem text="고맙습니다" />
+				<ComboBoxItem text="사랑" />
+				<ComboBoxItem text="한국" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "사랑");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-japanese"
+				placeholder="Type in Japanese ..."
+			>
+				<ComboBoxItem text="こんにちは" />
+				<ComboBoxItem text="ありがとう" />
+				<ComboBoxItem text="東京" />
+				<ComboBoxItem text="日本" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "ありがとう");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-chinese"
+				placeholder="Type in Chinese ..."
+			>
+				<ComboBoxItem text="你好" />
+				<ComboBoxItem text="谢谢" />
+				<ComboBoxItem text="北京" />
+				<ComboBoxItem text="中国" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "谢谢");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "谢谢");
 	});
 });

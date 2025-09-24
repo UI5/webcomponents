@@ -81,6 +81,7 @@
 
 .ui5-uci-file-name-text {
 	color: var(--sapList_TextColor);
+	width: 100%;
 }
 
 [ui5-link].ui5-uci-file-name {

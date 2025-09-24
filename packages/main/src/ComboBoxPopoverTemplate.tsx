@@ -86,6 +86,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				</div>
 				}
 
+				{!!this._filteredItems.length &&
 				<List
 					class="ui5-combobox-items-list"
 					separators="None"
@@ -97,6 +98,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				>
 					{ this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
 				</List>
+				}
 
 				{this._isPhone &&
 			<div slot="footer" class="ui5-responsive-popover-footer">

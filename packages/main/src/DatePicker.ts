@@ -665,6 +665,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Checks if a value is valid against the current date format of the DatePicker.
 	 * @public
 	 * @param value A value to be tested against the current date format
+	 * @deprecated Use isValidValue or isValidDisplayValue instead
 	 */
 	isValid(value: string): boolean {
 		if (value === "" || value === undefined) {

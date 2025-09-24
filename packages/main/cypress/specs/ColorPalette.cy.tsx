@@ -101,7 +101,7 @@ describe("Color Palette tests", () => {
 		cy.mount(<ColorPaletteSample/>);
 
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowRight", "pink");
-		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowLeft", "#ff6699");
+		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowLeft", "orange");
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowUp", "orange");
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 9, "ArrowDown", "darkblue");
 	});
