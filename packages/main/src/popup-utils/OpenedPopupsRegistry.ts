@@ -3,6 +3,7 @@ import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
 import type OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import type Popup from "../Popup.js";
+import type { PopupInfo } from "@ui5/webcomponents-base/dist/features/patchPopup.js";
 
 type RegisteredPopup = {
 	instance: Popup;
@@ -12,8 +13,8 @@ type RegisteredPopup = {
 const OpenedPopupsRegistry = getSharedResource<{ openedRegistry: Array<RegisteredPopup> }>("OpenedPopupsRegistry", { openedRegistry: [] });
 const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
 
-function registerPopupWithOpenUI5Support(popup: object) {
-	openUI5Support?.addOpenedPopup(popup);
+function registerPopupWithOpenUI5Support(popupInfo: PopupInfo) {
+	openUI5Support?.addOpenedPopup(popupInfo);
 }
 
 function unregisterPopupWithOpenUI5Support(popup: object) {
@@ -27,7 +28,10 @@ const addOpenedPopup = (instance: Popup, parentPopovers: Array<Popup> = []) => {
 			parentPopovers,
 		});
 
-		registerPopupWithOpenUI5Support(instance);
+		registerPopupWithOpenUI5Support({
+			type: "WebComponent",
+			instance,
+		});
 	}
 
 	_updateTopModalPopup();

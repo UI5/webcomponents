@@ -21,6 +21,7 @@ import SideNavigation from "../../dist/SideNavigation.js";
 import SideNavigationItem from "../../dist/SideNavigationItem.js";
 import SideNavigationSubItem from "../../dist/SideNavigationSubItem.js";
 import SortItem from "../../dist/SortItem.js";
+import GroupItem from "../../dist/GroupItem.js";
 import Timeline from "../../dist/Timeline.js";
 import UploadCollection from "../../dist/UploadCollection.js";
 import UploadCollectionItem from "../../dist/UploadCollectionItem.js";

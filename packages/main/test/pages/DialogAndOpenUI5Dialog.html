@@ -21,13 +21,14 @@
 			data-sap-ui-compatVersion="edge"></script>
 	<script>
 		function onOpenUI5Init() {
-			sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
+			sap.ui.require(["sap/m/Button", "sap/m/Dialog", "sap/m/Input"], (Button, Dialog, Input) => {
 				new Button("openUI5Button", {
 					text: "Open OpenUI5 Dialog",
 					press: function () {
 						new Dialog({
 							title: "OpenUI5 Dialog",
 							content: [
+								new Input(),
 								new Button({
 									text: "Focus stop"
 								}),
@@ -47,12 +48,41 @@
 			});
 		}
 
+		function openUI5Dialog() {
+			sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
+				new Dialog({
+					title: "OpenUI5 Dialog",
+					content: [
+						new Button({
+							text: "Focus stop"
+						}),
+						new Button("openUI5DialogButton", {
+							text: "Open WebC Dialog",
+							press: function () {
+								document.getElementById("newDialog1").open = true;
+							}
+						})
+					],
+					afterClose: function () {
+						this.destroy();
+					}
+				}).open();
+			});
+		}
+
 		function init() {
 			document.getElementById("myButton").addEventListener("click", function() {
 				document.getElementById("dialog1").open = true;
 			});
 
-			sap.ui.require(["sap/m/Select", "sap/ui/core/Item"], (Select, Item) => {
+			sap.ui.require(["sap/m/Select",
+					"sap/m/Button",
+					"sap/ui/core/Item",
+					"sap/ui/core/ShortcutHintsMixin"],
+				(Select,
+				 Button,
+				 Item,
+				 ShortcutHintsMixin) => {
 				new Select({
 					items: [
 						new Item({ text: "Item 1" }),
@@ -62,29 +92,26 @@
 					change: function (oEvent) {
 						console.error("Selected item:", oEvent.getParameter("selectedItem").getText());
 					}
-				}).placeAt("dilog1content");
+				}).placeAt("dialog1content");
+
+				const button = new Button({
+					text: "OpenUI5 with Shortcut (Ctrl+S)",
+					press: function () {
+						openUI5Dialog();
+					}
+				}).placeAt("dialog1content");
+
+
+				ShortcutHintsMixin.addConfig(button, {
+					event: "press",
+					position: "0 0",
+					addAccessibilityLabel: true,
+					message: "Save"
+				}, button);
 			});
 
 			document.getElementById("dialogButton").addEventListener("click", function () {
-				sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
-					new Dialog({
-						title: "OpenUI5 Dialog",
-						content: [
-							new Button({
-								text: "Focus stop"
-							}),
-							new Button("openUI5DialogButton", {
-								text: "Open WebC Dialog",
-								press: function () {
-									document.getElementById("newDialog1").open = true;
-								}
-							})
-						],
-						afterClose: function () {
-							this.destroy();
-						}
-					}).open();
-				});
+				openUI5Dialog();
 			});
 		}
 	</script>
@@ -94,7 +121,7 @@
 		<ui5-button id="myButton">Open WebC Dialog</ui5-button>
 	</div>
 	<ui5-dialog id="dialog1" header-text="This is an WebC Dialog 1">
-		<div id="dilog1content"></div>
+		<div id="dialog1content"></div>
 		<ui5-button id="dialogButton">Open UI5 dialog</ui5-button>
 	</ui5-dialog>
 	<ui5-dialog id="newDialog1" header-text="This is an WebC Dialog 2">

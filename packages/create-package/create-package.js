@@ -23,10 +23,11 @@ const DEST_DIR = process.cwd();
 const FILES_TO_RENAME = {
 	[path.normalize("eslintignore")]: path.normalize(".eslintignore"),
 	[path.normalize("eslintrc.cjs")]: path.normalize(".eslintrc.cjs"),
+	[path.normalize("gitignore")]: path.normalize(".gitignore"),
+	[path.normalize("npmignore")]: path.normalize(".npmignore"),
 	[path.normalize("npsrc.json")]: path.normalize(".npsrc.json"),
 	[path.normalize("npmrc")]: path.normalize(".npmrc"),
 	[path.normalize("env")]: path.normalize(".env"),
-	[path.normalize("gitignore")]: path.normalize(".gitignore"),
 	[path.normalize("tsconfig.template.json")]: path.normalize("tsconfig.json"),
 	[path.normalize("cypress/tsconfig.template.json")]: path.normalize("cypress/tsconfig.json")
 };

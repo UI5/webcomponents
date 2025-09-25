@@ -146,7 +146,7 @@ describe("DateTimePicker general interaction", () => {
 		setAnimationMode(AnimationMode.Full);
 	});
 
-	// Unstable test, needs investigation => https://github.com/SAP/ui5-webcomponents/issues/11376
+	// Unstable test, needs investigation => https://github.com/UI5/webcomponents/issues/11376
 	it.skip("tests selection of new date without changing the time section", () => {
 		setAnimationMode(AnimationMode.None);
 

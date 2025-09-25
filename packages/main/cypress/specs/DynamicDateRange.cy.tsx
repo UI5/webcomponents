@@ -106,7 +106,7 @@ describe('DynamicDateRange Component', () => {
 	});
 
 	// Check why it fails remotely
-	it.skip('selects the Date option and updates the current value', () => {
+	it('selects the Date option and updates the current value', () => {
 		cy.get('[ui5-dynamic-date-range]')
 			.as("ddr");
 
@@ -174,7 +174,6 @@ describe('DynamicDateRange Component', () => {
 			.contains('2035')
 			.realClick();
 
-		cy.realPress("Tab");
 		cy.realPress("Tab");
 
 		cy.get("@calendar")
