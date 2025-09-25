@@ -6989,6 +6989,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.2"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.2"
+    copy-and-watch: "npm:^0.1.5"
     rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -6999,6 +7000,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.2"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.2"
+    copy-and-watch: "npm:^0.1.5"
     rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -7009,6 +7011,7 @@ __metadata:
   dependencies:
     "@ui5/webcomponents-base": "npm:2.15.0-rc.2"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.2"
+    copy-and-watch: "npm:^0.1.5"
     rimraf: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -7041,6 +7044,7 @@ __metadata:
     "@sap-theming/theming-base-content": "npm:11.29.3"
     "@ui5/webcomponents-base": "npm:2.15.0-rc.2"
     "@ui5/webcomponents-tools": "npm:2.15.0-rc.2"
+    copy-and-watch: "npm:^0.1.5"
     globby: "npm:^13.1.1"
     json-beautify: "npm:^1.1.1"
     postcss: "npm:^8.4.5"
