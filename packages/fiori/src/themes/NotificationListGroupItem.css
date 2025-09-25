@@ -68,7 +68,7 @@
 
 .ui5-nli-group-title-text {
 	color: var(--sapGroup_TitleTextColor);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontHeader5Size);
 	font-weight: bold;
 	white-space: nowrap;

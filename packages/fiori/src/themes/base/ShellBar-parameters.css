@@ -22,4 +22,5 @@
 	--_ui5-shellbar-content-margin-start: 0.5rem;
 	--_ui5-shellbar-overflow-button-margin: 0.5rem;
 	--_ui5-shellbar_separator-color: var(--sapToolbar_SeparatorColor);
+	--_ui5-shellbar_cancel-button-color: var(--sapButton_Lite_TextColor);
 }

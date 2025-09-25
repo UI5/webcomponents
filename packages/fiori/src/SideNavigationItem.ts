@@ -9,6 +9,9 @@ import {
 	isRight,
 	isSpace,
 	isEnter,
+	isEnterShift,
+	isEnterCtrl,
+	isEnterAlt,
 	isMinus,
 	isPlus,
 } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -261,12 +264,14 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 			return;
 		}
 
+		// "Space" + modifier is often reserved by the operating system or window manager
 		if (this.unselectable && isSpace(e)) {
 			this._toggle();
 			return;
 		}
 
-		if (this.unselectable && isEnter(e)) {
+		// "Enter" + "Meta" is missing since it is often reserved by the operating system or window manager
+		if (this.unselectable && (isEnter(e) || isEnterShift(e) || isEnterCtrl(e) || isEnterAlt(e))) {
 			this._toggle();
 		}
 

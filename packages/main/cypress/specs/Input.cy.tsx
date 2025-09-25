@@ -198,6 +198,35 @@ describe("Input Tests", () => {
 		cy.get("@change").should("have.been.calledOnce");
 	});
 
+	it("should not fire 'submit' event when there is more than one input field in a form", () => {
+		cy.mount(
+			<form>
+				<Input id="first-input" onChange={cy.stub().as("change")}></Input>
+				<Input></Input>
+			</form>
+		);
+
+		// spy submit event and prevent it
+		cy.get("form")
+			.then($form => {
+				$form.get(0).addEventListener("submit", cy.spy().as("submit"));
+			});
+
+		// check if submit is triggered after change
+		cy.get("#first-input")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.realType("test");
+
+		cy.realPress("Enter");
+
+		cy.get("@submit").should("have.not.been.called");
+	});
+
 	it("tests if pressing enter twice fires submit 2 times and change once", () => {
 		cy.mount(
 			<form>
@@ -442,6 +471,78 @@ describe("Input general interaction", () => {
 		// check typedInValue property
 		cy.get("@input")
 			.should("have.prop", "typedInValue", "");
+	});
+
+	it("Should fire 'change' event once when clicking a suggestion equal to the typed value", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-click"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-click")
+		.shadow()
+		.find("input")
+		.click()
+		.realType("Cozy");
+
+		cy.get("#input-equal-click")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
+
+		cy.get('#input-equal-click')
+		.find('ui5-suggestion-item[text="Cozy"]')
+		.click();
+
+		cy.get("#input-equal-click").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
+	it("Should fire 'change' event once when selecting a suggestion equal to the typed value with keyboard", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-keyboard"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-keyboard")
+		.shadow()
+		.find("input")
+		.click()
+		.realType("Cozy");
+
+		cy.get("#input-equal-keyboard")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowDown");
+		cy.realPress("Enter");
+
+		cy.get("#input-equal-keyboard").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
 });
 
@@ -2527,5 +2628,172 @@ describe("Property open", () => {
 		.shadow()
 		.find<ResponsivePopover>("[ui5-responsive-popover]")
 		.ui5ResponsivePopoverClosed();
+	});
+});
+
+describe("Input Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-korean"
+				showSuggestions
+				placeholder="Type in Korean ..."
+			>
+				<SuggestionItem text="안녕하세요" />
+				<SuggestionItem text="고맙습니다" />
+				<SuggestionItem text="사랑" />
+				<SuggestionItem text="한국" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "사랑");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-japanese"
+				showSuggestions
+				placeholder="Type in Japanese ..."
+			>
+				<SuggestionItem text="こんにちは" />
+				<SuggestionItem text="ありがとう" />
+				<SuggestionItem text="東京" />
+				<SuggestionItem text="日本" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "ありがとう");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-chinese"
+				showSuggestions
+				placeholder="Type in Chinese ..."
+			>
+				<SuggestionItem text="你好" />
+				<SuggestionItem text="谢谢" />
+				<SuggestionItem text="北京" />
+				<SuggestionItem text="中国" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "谢谢");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "谢谢");
 	});
 });

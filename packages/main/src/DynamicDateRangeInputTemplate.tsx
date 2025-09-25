@@ -5,12 +5,7 @@ import appointment from "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 export default function DynamicDateRangeInputTemplate(this: DynamicDateRange) {
 	return (
-		<div
-			class="ui5-dynamic-date-range-root"
-			style={{
-				width: "100%",
-			}}
-		>
+		<div class="ui5-dynamic-date-range-root">
 			<Input
 				data-sap-focus-ref
 				id={`${this._id}-inner`}

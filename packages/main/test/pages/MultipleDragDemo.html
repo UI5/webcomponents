@@ -156,9 +156,60 @@
             }
         });
 
-
         // Initialize
         [0, 1].forEach(updateUI);
+
+		function handleMoveOver(event) {
+			const { source, destination } = event.detail;
+
+			// Allow drops from both lists
+			const sourceList = source.element.closest('ui5-list');
+			if (lists.includes(sourceList)) {
+				// Allow reordering within lists
+				if (destination.placement === "Before" ||
+					destination.placement === "After") {
+					event.preventDefault();
+				}
+			}
+		}
+
+		function handleMove(event) {
+			const { source, destination } = event.detail;
+
+			// Get the source list to find all selected items
+			const sourceList = source.element.closest('ui5-list');
+			const selectedItems = getSelectedItems(sourceList);
+
+			// Determine which items to move: all selected items or just the dragged item
+			const itemsToMove = selectedItems.length > 1 && selectedItems.includes(source.element)
+				? selectedItems
+				: [source.element];
+
+			// Move the items using spread operator
+			switch (destination.placement) {
+				case "Before":
+					destination.element.before(...itemsToMove);
+					break;
+				case "After":
+					destination.element.after(...itemsToMove);
+					break;
+				case "On":
+					destination.element.prepend(...itemsToMove);
+					break;
+			}
+
+			// Update selection counts after move
+			setTimeout(() => {
+				[0, 1].forEach(updateUI);
+			}, 0);
+		}
+
+		lists.forEach((list, index) => {
+			// setupSelectionChangeListener(index);
+			// list.addEventListener("dragstart", handleDragStart(index));
+			list.addEventListener("ui5-move-over", handleMoveOver);
+			list.addEventListener("ui5-move", handleMove);
+		});
     </script>
 </body>
 </html>

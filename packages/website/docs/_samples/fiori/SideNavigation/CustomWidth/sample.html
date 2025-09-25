@@ -1,0 +1,31 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+	<link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<!-- playground-fold-end -->
+
+	<ui5-side-navigation>
+		<ui5-side-navigation-item text="Home" icon="home"></ui5-side-navigation-item>
+		<ui5-side-navigation-group text="Group" expanded>
+			<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Events" icon="calendar">
+				<ui5-side-navigation-sub-item text="Local"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history"></ui5-side-navigation-item>
+	</ui5-side-navigation>
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end --> 

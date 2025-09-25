@@ -34,6 +34,10 @@
 	display: none;
 }
 
+:host([side-nav-collapsed]) .ui5-sn-item {
+	transition: none;
+}
+
 :host([design="Action"]) {
 	color:  var(--sapButton_TextColor);
 }
@@ -235,7 +239,7 @@ and there is an additional border that appears on hover. */
 	padding-inline-start: 0.25rem;
 }
 
-:host([unselectable]:not([side-nav-collapsed])) .ui5-sn-item-toggle-icon::part(root), 
+:host([unselectable]:not([side-nav-collapsed])) .ui5-sn-item-toggle-icon::part(root),
 :host(:not([side-nav-collapsed])) .ui5-sn-item-group .ui5-sn-item-toggle-icon::part(root),
 :host([unselectable][side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):hover .ui5-sn-item-toggle-icon,
 :host([unselectable][side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):focus .ui5-sn-item-toggle-icon {

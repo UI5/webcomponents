@@ -23,7 +23,7 @@ class Tomorrow implements IDynamicDateRangeOption {
 		return "Tomorrow";
 	}
 
-	toDates(): Date[] {
+	toDates() : Array<Date> {
 		return tomorrowToDates();
 	}
 

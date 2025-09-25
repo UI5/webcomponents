@@ -35,7 +35,6 @@ import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/Navigation
 
 import "@ui5/webcomponents/dist/Menu.js";
 import "@ui5/webcomponents/dist/MenuItem.js";
-import "@ui5/webcomponents/dist/MessageStrip.js";
 import "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListItem.js";

@@ -255,7 +255,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
-	get dateAriaDescription() {
+	get roleDescription() {
 		return DateTimePicker.i18nBundle.getText(DATETIME_DESCRIPTION);
 	}
 
@@ -263,7 +263,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @override
 	 */
 	get pickerAccessibleName() {
-		return DateTimePicker.i18nBundle.getText(DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return DateTimePicker.i18nBundle.getText(DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	/**

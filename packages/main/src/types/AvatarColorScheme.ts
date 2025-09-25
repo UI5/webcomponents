@@ -63,6 +63,11 @@ enum AvatarColorScheme {
 	 * @public
 	 */
 	Placeholder = "Placeholder",
+
+	/**
+	 * @public
+	 */
+	Transparent = "Transparent",
 }
 
 export default AvatarColorScheme;

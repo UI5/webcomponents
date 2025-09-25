@@ -43,6 +43,7 @@ import { ModifierKey } from "./commands/common/types.js";
 // Please keep this list in alphabetical order
 import "./commands/Calendar.commands.js";
 import "./commands/ColorPalette.commands.js";
+import "./commands/ColorPalettePopover.commands.js";
 import "./commands/ColorPicker.commands.js";
 import "./commands/DateTimePicker.commands.js";
 import "./commands/DateRangePicker.commands.js";

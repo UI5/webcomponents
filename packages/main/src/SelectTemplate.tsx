@@ -29,7 +29,9 @@ export default function SelectTemplate(this: Select) {
 					role="combobox"
 					aria-haspopup="listbox"
 					aria-label={this.ariaLabelText}
-					aria-describedby={this.valueStateTextId}
+					{...this.ariaDescribedByIds && {
+						"aria-describedby": this.ariaDescribedByIds
+					}}
 					aria-disabled={this.isDisabled}
 					aria-required={this.required}
 					aria-readonly={this.readonly}
@@ -40,6 +42,7 @@ export default function SelectTemplate(this: Select) {
 					onKeyUp={this._onkeyup}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}
+					aria-controls={this.responsivePopoverId}
 				>
 					{this.hasCustomLabel
 						? <slot name="label"></slot>
@@ -80,6 +83,12 @@ export default function SelectTemplate(this: Select) {
 				{this.hasValueState &&
 					<span id={`${this._id}-valueStateDesc`} class="ui5-hidden-text">
 						{this.valueStateText}
+					</span>
+				}
+
+				{this.ariaDescriptionText &&
+					<span id="accessibleDescription" class="ui5-hidden-text">
+						{this.ariaDescriptionText}
 					</span>
 				}
 			</div>

@@ -328,8 +328,31 @@ describe("TimePicker Tests", () => {
 			.ui5ResponsivePopoverOpened()
 	});
 
-	it("picker popover should have accessible name", () => {
-		cy.mount(<TimePicker></TimePicker>);
+	it("displays value state message header in popover when value state is set", () => {
+		cy.mount(<TimePicker valueState="Negative"></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find(".ui5-valuestatemessage-header")
+			.should("exist")
+			.and("have.class", "ui5-valuestatemessage--error");
+	});
+});
+
+describe("Accessibility", () => {
+	it("picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(<TimePicker accessible-name={LABEL}></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
 			.as("timePicker")
@@ -346,7 +369,65 @@ describe("TimePicker Tests", () => {
 		cy.get<TimePicker>("@timePicker")
 			.shadow()
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("have.attr", "accessible-name", "Choose Time");
+			.should("have.attr", "accessible-name", `Choose Time for ${LABEL}`);
+	});
+
+	it("picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+		cy.mount(<>
+			<Label for="timePicker">{LABEL}</Label>
+			<TimePicker id="timePicker"></TimePicker>
+		</>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realPress("F4");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Time for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "Some description";
+		cy.mount(<TimePicker accessibleDescription={DESCRIPTION}></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.ui5TimePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="descr">{DESCRIPTION}</p>
+				<TimePicker accessibleDescriptionRef="descr"></TimePicker>
+			</>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.ui5TimePickerGetInnerInput()
+			.should("have.attr", "aria-describedby")
+			.and("contain", "descr");
+
+		cy.get("#descr").should("have.text", DESCRIPTION);
 	});
 
 	it("input should have accessible name", () => {
@@ -369,24 +450,4 @@ describe("TimePicker Tests", () => {
 			.ui5TimePickerGetInnerInput()
 			.should("have.attr", "aria-label", "Pick a time");
 	});
-
-	it("displays value state message header in popover when value state is set", () => {
-		cy.mount(<TimePicker valueState="Negative"></TimePicker>);
-
-		cy.get<TimePicker>("[ui5-time-picker]")
-			.as("timePicker")
-			.ui5TimePickerValueHelpIconPress();
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.find(".ui5-valuestatemessage-header")
-			.should("exist")
-			.and("have.class", "ui5-valuestatemessage--error");
-	});
-}); 
+});

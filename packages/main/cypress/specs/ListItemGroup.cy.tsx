@@ -1,3 +1,5 @@
+import List from "../../src/List.js";
+import ListItemStandard from "../../src/ListItemStandard.js";
 import ListItemGroup from "../../src/ListItemGroup.js";
 
 describe("ListItemGroup Tests", () => {
@@ -5,7 +7,7 @@ describe("ListItemGroup Tests", () => {
 		cy.mount(<ListItemGroup headerText="New Items" />);
 
 		cy.get("[ui5-li-group]").should("exist");
-		
+
 		cy.get("[ui5-li-group]")
 			.shadow()
 			.find("ui5-li-group-header")
@@ -93,7 +95,7 @@ describe("List drag and drop tests", () => {
 						destination: { element: $target[0], placement }
 					}
 				});
-				
+
 				const listElement = $target[0].closest("[ui5-li-group]");
 				if (listElement) {
 					listElement.dispatchEvent(moveEvent);
@@ -246,66 +248,43 @@ describe("List drag and drop tests", () => {
 		cy.get("@list1").find("ui5-li").should("have.length", 4);
 		cy.get("@list2").find("ui5-li").should("have.length", 2);
 	});
+});
 
-	it("Moving link to list that doesn't accept it", () => {
+describe("Focus", () => {
+	it("getFocusDomRef should return header element if available", () => {
 		cy.mount(
-			<div>
-				<a draggable={true} style={{ display: "block", marginBottom: "10px" }}>
-					http://sap.com
-				</a>
-				<ListItemGroup headerText="List 1" />
-			</div>
+			<List>
+				<ListItemGroup headerText="Group Header">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</ListItemGroup>
+			</List>
 		);
 
-		cy.get("[ui5-li-group]").eq(0).as("list1").should("exist");
-		setupDragAndDrop("@list1", false);
+		cy.get<ListItemGroup>("[ui5-li-group]")
+			.then(($el) => {
+				const group = $el[0];
+				expect(group.getFocusDomRef()).to.have.attr("ui5-li-group-header");
+			});
 
-		cy.get("@list1").then($list => {
-			$list[0].innerHTML = `
-				<ui5-li movable>1. Bulgaria</ui5-li>
-				<ui5-li movable>1. Germany</ui5-li>
-				<ui5-li movable>1. Spain</ui5-li>
-			`;
-		});
-
-		cy.get("@list1").find("ui5-li").should("have.length", 3);
-		cy.get("a").as("link").should("contain.text", "http://sap.com");
-		cy.get("@list1").find("ui5-li").eq(0).as("first").should("contain.text", "1. Bulgaria");
-
-		dispatchMoveEvent("@link", "@first", "After");
-
-		cy.get("@list1").find("ui5-li").should("have.length", 3);
-		cy.get("a").should("exist").and("contain.text", "http://sap.com");
 	});
 
-	it("Moving link to list that accepts it", () => {
+	it("getFocusDomRef should return list item when header is not available", () => {
 		cy.mount(
-			<div>
-				<a draggable={true} style={{ display: "block", marginBottom: "10px" }}>
-					http://sap.com
-				</a>
-				<ListItemGroup headerText="List 2" />
-			</div>
+			<List>
+				<ListItemGroup>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</ListItemGroup>
+			</List>
 		);
 
-		cy.get("[ui5-li-group]").eq(0).as("list2").should("exist");
-		setupDragAndDrop("@list2", true);
-
-		cy.get("@list2").then($list => {
-			$list[0].innerHTML = `
-				<ui5-li movable>2. Bulgaria</ui5-li>
-				<ui5-li movable data-allows-nesting>2. Germany (Allows nesting)</ui5-li>
-				<ui5-li movable>2. Spain</ui5-li>
-			`;
-		});
-
-		cy.get("@list2").find("ui5-li").should("have.length", 3);
-		cy.get("a").as("link").should("contain.text", "http://sap.com");
-		cy.get("@list2").find("ui5-li").eq(1).as("second").should("contain.text", "2. Germany (Allows nesting)");
-
-		dispatchMoveEvent("@link", "@second", "Before");
-
-		cy.get("@list2").children().should("have.length", 4);
-		cy.get("@list2").find("a").should("exist").and("contain.text", "http://sap.com");
+		cy.get<ListItemGroup>("[ui5-li-group]")
+			.then(($el) => {
+				const group = $el[0];
+				expect(group.getFocusDomRef()).to.have.attr("ui5-li");
+			});
 	});
 });

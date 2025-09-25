@@ -48,7 +48,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 							</Select>
 							<div class="ui5-search-field-separator"></div>
 						</>
-					) : this.filterButton ? (
+					) : this.filterButton?.length ? (
 						<>
 							<div class="ui5-filter-wrapper" style="display: contents">
 								<slot name="filterButton"></slot>

@@ -6,10 +6,12 @@ import packageJson from "./package.json";
 
 console.log("DEPLOYMENT_TYPE", process.env.DEPLOYMENT_TYPE); // eslint-disable-line
 
-const LATEST_URL_PARTH = "/ui5-webcomponents/";
-const NIGHTLY_URL_PARTH = "/ui5-webcomponents/nightly/";
+const LATEST_URL_PATH = "/webcomponents/";
+const NIGHTLY_URL_PATH = "/webcomponents/nightly/";
+const PREVIEW_URL_PATH = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
 
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
+const PREVIEW_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "preview";
 const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
 
 const getBaseURL = () => {
@@ -18,14 +20,19 @@ const getBaseURL = () => {
     return "/";
   }
 
+  // PR preview deployment
+  if (PREVIEW_DEPLOYMENT) {
+    return PREVIEW_URL_PATH;
+  }
+
   // latest deployment or nightly deployment
-  return LATEST_DEPLOYMENT ? LATEST_URL_PARTH : NIGHTLY_URL_PARTH;
+  return LATEST_DEPLOYMENT ? LATEST_URL_PATH : NIGHTLY_URL_PATH;
 };
 
 const BASE_URL = getBaseURL();
 
 const getFullURL = () => {
-  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://sap.github.io${BASE_URL}`
+  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://ui5.github.io${BASE_URL}`;
 }
 
 // ["v1", "nightly", "current"]
@@ -35,13 +42,14 @@ const config: Config = {
   customFields: {
     ui5Version: packageJson.version,
     ui5DeploymentType: process.env.DEPLOYMENT_TYPE,
+    ui5PreviewPath: PREVIEW_URL_PATH,
   },
   title: 'UI5 Web Components',
   tagline: 'An open-source UI components library for building enterprise-ready applications!',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://sap.github.io',
+  url: 'https://ui5.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: BASE_URL,
@@ -51,7 +59,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'SAP', // Usually your GitHub org/user name.
-  projectName: 'ui5-webcomponents', // Usually your repo name.
+  projectName: 'webcomponents', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -83,7 +91,8 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: [],
+  plugins: [
+  ],
   themeConfig: {
     algolia: {
       // The application ID provided by Algolia
@@ -168,7 +177,7 @@ const config: Config = {
       copyright: `© Copyright ${new Date().getFullYear()}, SAP SE and UI5 Web Components Contributors`,
       logo: {
         alt: 'SAP Logo',
-        src: 'https://sap.github.io/ui5-webcomponents/img/footer/sap-1920-1440.svg',
+        src: 'https://ui5.github.io/webcomponents/img/footer/sap-1920-1440.svg',
         width: 160,
         height: 51,
       },
@@ -190,7 +199,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              to: 'https://github.com/SAP/ui5-webcomponents/',
+              to: 'https://github.com/UI5/webcomponents/',
             },
             // {
             //   html: `
@@ -204,7 +213,7 @@ const config: Config = {
             //     <a href="https://www.youtube.com/watch?v=9P5Jk4S3438&list=PLHUs_FUbq4dXkQpUt6b4eCXAAjiOg0IC-" target="_blank" rel="noreferrer noopener" aria-label="Youtube">
             //       <img src="img/footer/sap-youtube-1920-1440.svg" alt="Youtube" style="width: 2rem; height:2rem;margin-inline-end: 1rem;"/>
             //     </a>
-            //     <a href="https://sap.github.io/ui5-webcomponents/" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+            //     <a href="https://ui5.github.io/webcomponents/" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
             //       <img src="img/footer/sap-slack-1920-1440.svg" alt="GitHub" style="width: 2rem; height:2rem;margin-inline-end: 1rem;"/>
             //     </a>
             //   </div>
@@ -251,7 +260,7 @@ const config: Config = {
           items: [
             {
               label: 'Report Issue',
-              to: 'https://github.com/SAP/ui5-webcomponents/issues/new',
+              to: 'https://github.com/UI5/webcomponents/issues/new',
             },
             {
               label: 'Technical Questions',

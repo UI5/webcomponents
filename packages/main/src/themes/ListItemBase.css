@@ -88,7 +88,7 @@
 	flex: auto;
 	overflow: hidden;
 	max-width: 100%;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	color: var(--sapList_TextColor);
 }
 

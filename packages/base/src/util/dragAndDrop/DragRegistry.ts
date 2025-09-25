@@ -1,4 +1,3 @@
-import type UI5Element from "../../UI5Element.js";
 import type MovePlacement from "../../types/MovePlacement.js";
 import MultipleDragGhostCss from "../../generated/css/MultipleDragGhost.css.js";
 
@@ -10,54 +9,15 @@ import {
 
 const MIN_MULTI_DRAG_COUNT = 2;
 
-let customDragElementPromise: Promise<HTMLElement> | null = null;
 let draggedElement: HTMLElement | null = null;
-let globalHandlersAttached = false;
-const subscribers = new Set<UI5Element>();
-const selfManagedDragAreas = new Set<HTMLElement | ShadowRoot>();
-
-const ondragstart = (e: DragEvent) => {
-	if (!e.dataTransfer || !(e.target instanceof HTMLElement)) {
-		return;
-	}
-
-	if (!selfManagedDragAreas.has(e.target)) {
-		draggedElement = e.target;
-	}
-
-	handleMultipleDrag(e);
-};
-
-const handleMultipleDrag = async (e: DragEvent) => {
-	if (!customDragElementPromise || !e.dataTransfer) {
-		return;
-	}
-	const dragElement = await customDragElementPromise;
-	// Add to document body temporarily
-	document.body.appendChild(dragElement);
-
-	e.dataTransfer.setDragImage(dragElement, 0, 0);
-
-	// Clean up the temporary element after the drag operation starts
-	requestAnimationFrame(() => {
-		dragElement.remove();
-	});
-};
-
-const ondragend = () => {
-	draggedElement = null;
-	customDragElementPromise = null;
-};
-
-const ondrop = () => {
-	draggedElement = null;
-	customDragElementPromise = null;
-};
 
 const setDraggedElement = (element: HTMLElement | null) => {
 	draggedElement = element;
 };
-type SetDraggedElementFunction = typeof setDraggedElement;
+
+const clearDraggedElement = () => {
+	draggedElement = null;
+};
 
 const getDraggedElement = () => {
 	return draggedElement;
@@ -86,58 +46,27 @@ const createDefaultMultiDragElement = async (count: number): Promise<HTMLElement
  * @param {DragEvent} e - The drag event that triggered the operation.
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const startMultipleDrag = (count: number, e: DragEvent): void => {
+const startMultipleDrag = async (count: number, e: DragEvent) => {
 	if (count < MIN_MULTI_DRAG_COUNT) {
 		console.warn(`Cannot start multiple drag with count ${count}. Minimum is ${MIN_MULTI_DRAG_COUNT}.`); // eslint-disable-line
 		return;
 	}
 
-	customDragElementPromise = createDefaultMultiDragElement(count);
-};
-
-const attachGlobalHandlers = () => {
-	if (globalHandlersAttached) {
+	if (!e.dataTransfer) {
 		return;
 	}
 
-	document.body.addEventListener("dragstart", ondragstart);
-	document.body.addEventListener("dragend", ondragend);
-	document.body.addEventListener("drop", ondrop);
-	globalHandlersAttached = true;
-};
+	const customDragElement = await createDefaultMultiDragElement(count);
 
-const detachGlobalHandlers = () => {
-	document.body.removeEventListener("dragstart", ondragstart);
-	document.body.removeEventListener("dragend", ondragend);
-	document.body.removeEventListener("drop", ondrop);
-	globalHandlersAttached = false;
-};
+	// Add to document body temporarily
+	document.body.appendChild(customDragElement);
 
-const subscribe = (subscriber: UI5Element) => {
-	subscribers.add(subscriber);
+	e.dataTransfer.setDragImage(customDragElement, 0, 0);
 
-	if (!globalHandlersAttached) {
-		attachGlobalHandlers();
-	}
-};
-
-const unsubscribe = (subscriber: UI5Element) => {
-	subscribers.delete(subscriber);
-
-	if (subscribers.size === 0 && globalHandlersAttached) {
-		detachGlobalHandlers();
-	}
-};
-
-const addSelfManagedArea = (area: HTMLElement | ShadowRoot) => {
-	selfManagedDragAreas.add(area);
-
-	return setDraggedElement;
-};
-
-const removeSelfManagedArea = (area: HTMLElement | ShadowRoot) => {
-	selfManagedDragAreas.delete(area);
+	// Clean up the temporary element after the drag operation starts
+	requestAnimationFrame(() => {
+		customDragElement.remove();
+	});
 };
 
 type DragAndDropSettings = {
@@ -163,10 +92,8 @@ type MoveEventDetail = {
 };
 
 const DragRegistry = {
-	subscribe,
-	unsubscribe,
-	addSelfManagedArea,
-	removeSelfManagedArea,
+	setDraggedElement,
+	clearDraggedElement,
 	getDraggedElement,
 	startMultipleDrag,
 };
@@ -175,8 +102,8 @@ export default DragRegistry;
 export {
 	startMultipleDrag,
 };
+
 export type {
-	SetDraggedElementFunction,
 	DragAndDropSettings,
 	MoveEventDetail,
 };

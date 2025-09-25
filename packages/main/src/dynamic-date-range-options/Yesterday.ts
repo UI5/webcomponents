@@ -24,7 +24,7 @@ class Yesterday implements IDynamicDateRangeOption {
 		return "Yesterday";
 	}
 
-	toDates(): Date[] {
+	toDates() : Array<Date> {
 		return yesterdayToDates();
 	}
 

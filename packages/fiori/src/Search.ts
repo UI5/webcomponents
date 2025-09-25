@@ -18,14 +18,13 @@ import {
 	isPageDown,
 	isHome,
 	isEnd,
-	isRight,
 	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 
 import SearchTemplate from "./SearchTemplate.js";
 import SearchCss from "./generated/themes/Search.css.js";
 import SearchField from "./SearchField.js";
-import { StartsWith, StartsWithPerTerm } from "@ui5/webcomponents/dist/Filters.js";
+import { StartsWith } from "@ui5/webcomponents/dist/Filters.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type SearchItem from "./SearchItem.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -128,7 +127,11 @@ class Search extends SearchField {
 	 *
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true })
+	@slot({
+		type: HTMLElement,
+		"default": true,
+		invalidateOnChildChange: true,
+	})
 	items!: Array<SearchItem | SearchItemGroup>;
 
 	/**
@@ -205,16 +208,16 @@ class Search extends SearchField {
 	_valueBeforeOpen: string;
 
 	/**
-	 * True if the first matching item is matched by starts with per term, rather than by starts with.
-	 * @private
-	 */
-	_matchedPerTerm: boolean;
-
-	/**
 	 * Holds the currently proposed item which will be selected if the user presses Enter.
 	 * @private
 	 */
 	_proposedItem?: ISearchSuggestionItem;
+
+	/**
+	 * This property is used during rendering to indicate that the user has started typing in the input
+	 * @private
+	 */
+	_isTyping: boolean;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -224,15 +227,22 @@ class Search extends SearchField {
 
 		// The typed in value.
 		this._typedInValue = "";
-		this._matchedPerTerm = false;
 		this._valueBeforeOpen = this.getAttribute("value") || "";
+		this._isTyping = false;
 	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
+		if (this.collapsed && !isPhone()) {
+			this.open = false;
+			return;
+		}
+
 		const innerInput = this.nativeInput;
 		const autoCompletedChars = innerInput && (innerInput.selectionEnd! - innerInput.selectionStart!);
+
+		this.open = this.open || (this._popoupHasAnyContent() && this._isTyping && innerInput!.value.length > 0);
 
 		// If there is already a selection the autocomplete has already been performed
 		if (this._shouldAutocomplete && !autoCompletedChars) {
@@ -241,30 +251,24 @@ class Search extends SearchField {
 
 			if (item) {
 				this._handleTypeAhead(item);
-				this._deselectItems();
-				item.selected = true;
+				this._selectMatchingItem(item);
 			} else {
-				this._typedInValue = this.value;
+				this._deselectItems();
 			}
-		} else {
-			this._typedInValue = this.value;
 		}
 
 		if (isPhone() && this.open) {
 			const item = this._getFirstMatchingItem(this.value);
 			this._proposedItem = item;
-			this._deselectItems();
 
 			if (item && this._performItemSelectionOnMobile) {
-				item.selected = true;
+				this._selectMatchingItem(item);
 			}
 		}
 
 		this._flattenItems.forEach(item => {
 			(item as SearchItem).highlightText = this._typedInValue;
 		});
-
-		this._shouldAutocomplete = false;
 	}
 
 	onAfterRendering(): void {
@@ -291,6 +295,7 @@ class Search extends SearchField {
 
 		this.fireDecoratorEvent("input");
 	}
+
 	_shouldPerformSelectionOnMobile(inputType: string): boolean {
 		const allowedEventTypes = [
 			"deleteWordBackward",
@@ -313,37 +318,34 @@ class Search extends SearchField {
 
 	_handleTypeAhead(item: ISearchSuggestionItem) {
 		const originalValue = item.text || "";
-		let displayValue = originalValue;
-
-		if (!originalValue.toLowerCase().startsWith(this.value.toLowerCase())) {
-			this._matchedPerTerm = true;
-			displayValue = `${this.value} - ${originalValue}`;
-		} else {
-			this._matchedPerTerm = false;
-		}
 
 		this._typedInValue = this.value;
-		this._innerValue = displayValue;
+		this._innerValue = originalValue;
 		this._performTextSelection = true;
-		this.value = displayValue;
+		this.value = originalValue;
 	}
 
 	_startsWithMatchingItems(str: string): Array<ISearchSuggestionItem> {
-		return StartsWith(str, this._flattenItems.filter(item => !this._isGroupItem(item)), "text");
+		return StartsWith(str, this._flattenItems.filter(item => !this._isGroupItem(item) && !this._isShowMoreItem(item)), "text");
 	}
 
-	_startsWithPerTermMatchingItems(str: string): Array<ISearchSuggestionItem> {
-		return StartsWithPerTerm(str, this._flattenItems.filter(item => !this._isGroupItem(item)), "text");
-	}
-
-	_isGroupItem(item: ISearchSuggestionItem) {
+	_isGroupItem(item: HTMLElement): item is SearchItemGroup {
 		return item.hasAttribute("ui5-search-item-group");
+	}
+
+	_isShowMoreItem(item: ISearchSuggestionItem) {
+		return item.hasAttribute("ui5-search-item-show-more");
 	}
 
 	_deselectItems() {
 		this._flattenItems.forEach(item => {
 			item.selected = false;
 		});
+	}
+
+	_selectMatchingItem(item: ISearchSuggestionItem) {
+		this._deselectItems();
+		item.selected = true;
 	}
 
 	_handleDown(e: KeyboardEvent) {
@@ -354,7 +356,8 @@ class Search extends SearchField {
 	}
 
 	_handleArrowDown() {
-		const firstListItem = this._getItemsList()?.getSlottedNodes<ISearchSuggestionItem>("items")[0];
+		const focusableItems = this._getItemsList().listItems;
+		const firstListItem = focusableItems.at(0);
 
 		if (this.open) {
 			this._deselectItems();
@@ -362,15 +365,6 @@ class Search extends SearchField {
 			this._innerValue = this.value;
 
 			firstListItem?.focus();
-		}
-	}
-
-	_handleRight(e: KeyboardEvent) {
-		if (this._matchedPerTerm) {
-			e.preventDefault();
-			this.value = this._typedInValue;
-			this._innerValue = this._typedInValue;
-			this._proposedItem = undefined;
 		}
 	}
 
@@ -396,15 +390,10 @@ class Search extends SearchField {
 		}
 
 		const innerInput = this.nativeInput!;
-		if (this._matchedPerTerm) {
-			this.value = this._proposedItem?.text || this.value;
-			this._innerValue = this.value;
-			this._typedInValue = this.value;
-			this._matchedPerTerm = false;
-		}
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -423,16 +412,28 @@ class Search extends SearchField {
 	_handleEscape() {
 		this.value = this._typedInValue || this.value;
 		this._innerValue = this.value;
+		this._isTyping = false;
 	}
 
 	_handleInput(e: InputEvent) {
 		super._handleInput(e);
+		this._typedInValue = this.value;
 
 		if (isPhone()) {
 			return;
 		}
 
-		this.open = ((e.currentTarget as HTMLInputElement).value.length > 0) && this._popoupHasAnyContent();
+		this._isTyping = true;
+		this.open = this.value.length > 0;
+	}
+
+	_handleClear(): void {
+		super._handleClear();
+
+		this._typedInValue = "";
+		this._innerValue = "";
+		this._shouldAutocomplete = false;
+		this.open = false;
 	}
 
 	_popoupHasAnyContent() {
@@ -449,8 +450,13 @@ class Search extends SearchField {
 	}
 
 	_onItemKeydown(e: KeyboardEvent) {
-		const isFirstItem = this._flattenItems[0] === e.target;
-		const isLastItem = this._flattenItems[this._flattenItems.length - 1] === e.target;
+		const target = e.target as HTMLElement;
+		// if focus is on the group header (in group's shadow dom) the target is the group itself,
+		// if so using getFocusDomRef ensures the actual focused element is used
+		const focusedItem = this._isGroupItem(target) ? target?.getFocusDomRef() : target;
+		const focusableItems = this._getItemsList().listItems;
+		const isFirstItem = focusableItems.at(0) === focusedItem;
+		const isLastItem = focusableItems.at(-1) === focusedItem;
 		const isArrowUp = isUp(e);
 		const isArrowDown = isDown(e);
 		const isTab = isTabNext(e);
@@ -482,7 +488,10 @@ class Search extends SearchField {
 		this.value = item.text;
 		this._innerValue = this.value;
 		this._typedInValue = this.value;
+		this._shouldAutocomplete = false;
+		this._performTextSelection = true;
 		this.open = false;
+		this._isTyping = false;
 		this.focus();
 	}
 
@@ -496,10 +505,6 @@ class Search extends SearchField {
 		this._shouldAutocomplete = !this.noTypeahead
 			&& !(isBackSpace(e) || isDelete(e) || isEscape(e) || isUp(e) || isDown(e) || isTabNext(e) || isEnter(e) || isPageUp(e) || isPageDown(e) || isHome(e) || isEnd(e) || isEscape(e));
 
-		if (isRight(e)) {
-			this._handleRight(e);
-		}
-
 		if (isDown(e)) {
 			this._handleDown(e);
 		}
@@ -507,15 +512,11 @@ class Search extends SearchField {
 		if (isEscape(e)) {
 			this._handleEscape();
 		}
-	}
 
-	_onfocusout() {
-		super._onfocusout();
-		if (this._matchedPerTerm) {
-			this.value = this._typedInValue;
-			this._innerValue = this._typedInValue;
+		// deselect item on backspace or delete
+		if (isBackSpace(e) || isDelete(e)) {
+			this._deselectItems();
 		}
-		this._matchedPerTerm = false;
 	}
 
 	_onFocusOutSearch(e:FocusEvent) {
@@ -526,6 +527,7 @@ class Search extends SearchField {
 		}
 
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_handleBeforeClose(e: CustomEvent<PopupBeforeCloseEventDetail>) {
@@ -542,6 +544,7 @@ class Search extends SearchField {
 
 	_handleClose() {
 		this.open = false;
+		this._isTyping = false;
 		this.fireDecoratorEvent("close");
 	}
 
@@ -573,19 +576,12 @@ class Search extends SearchField {
 		}
 
 		const startsWithMatches = this._startsWithMatchingItems(current);
-		const partialMatches = this._startsWithPerTermMatchingItems(current);
 
 		if (!startsWithMatches.length) {
-			return partialMatches[0] ?? undefined;
+			return undefined;
 		}
 
-		if (!partialMatches.length) {
-			return startsWithMatches[0];
-		}
-
-		return this._flattenItems.indexOf(startsWithMatches[0]) <= this._flattenItems.indexOf(partialMatches[0])
-			? startsWithMatches[0]
-			: partialMatches[0];
+		return startsWithMatches[0];
 	}
 
 	_getPicker() {
@@ -602,7 +598,7 @@ class Search extends SearchField {
 
 	get _flattenItems(): Array<ISearchSuggestionItem> {
 		return this.getSlottedNodes<ISearchSuggestionItem>("items").flatMap(item => {
-			return this._isGroupItem(item) ? [item, ...item.items!] : [item];
+			return this._isGroupItem(item) ? [item, ...item.items] : [item];
 		});
 	}
 

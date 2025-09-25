@@ -1,7 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import type NavigationMenu from "./NavigationMenu.js";
@@ -17,10 +16,7 @@ import {
 	isTablet,
 	isCombi,
 } from "@ui5/webcomponents-base/dist/Device.js";
-import {
-	isSpace,
-	isEnter,
-} from "@ui5/webcomponents-base/dist/Keys.js";
+
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
 import { isInstanceOfSideNavigationSelectableItemBase } from "./SideNavigationSelectableItemBase.js";
@@ -78,9 +74,11 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * The items can consist of text only or an icon with text. The use or non-use of icons must be consistent for all items on one level.
  * You must not combine entries with and without icons on the same level. We strongly recommend that you do not use icons on the second level.
  *
- * The `ui5-side-navigation` component is intended for use within an `ui5-navigation-layout` component.
- * While it can function independently, it is recommended to use it with
- * the `ui5-navigation-layout` for optimal user experience.
+ * The `ui5-side-navigation` component is designed to be used within a `ui5-navigation-layout` component to ensure an optimal user experience.
+ *
+ * Using it standalone may not match the intended design and functionality.
+ * For example, the side navigation may not exhibit the correct behavior on phones and tablets.
+ * Padding of the `ui5-shellbar` will not match the padding of the side navigation.
  *
  * ### Keyboard Handling
  *
@@ -110,7 +108,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	fastNavigation: true,
 	renderer: jsxRender,
 	template: SideNavigationTemplate,
-	styles: [SideNavigationCss, SideNavigationPopoverCss, getEffectiveScrollbarStyle()],
+	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
 /**
  * Fired when the selection has changed via user interaction
@@ -536,9 +534,11 @@ class SideNavigation extends UI5Element {
 
 		if (selectedItem) {
 			const selectedItemDomRef = selectedItem.getDomRef();
-			const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef!);
 
-			itemsHeight += selectedItemDomRef!.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			if (selectedItemDomRef) {
+				const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef);
+				itemsHeight += selectedItemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			}
 		}
 
 		overflowItems.forEach(item => {
@@ -714,22 +714,6 @@ class SideNavigation extends UI5Element {
 
 	get isOverflow() {
 		return this._isOverflow;
-	}
-
-	_onkeydownOverflow(e: KeyboardEvent) {
-		if (isSpace(e)) {
-			e.preventDefault();
-		}
-
-		if (isEnter(e)) {
-			this._handleOverflowClick();
-		}
-	}
-
-	_onkeyupOverflow(e: KeyboardEvent) {
-		if (isSpace(e)) {
-			this._handleOverflowClick();
-		}
 	}
 
 	captureRef(ref: HTMLElement & { associatedItem?: UI5Element} | null) {

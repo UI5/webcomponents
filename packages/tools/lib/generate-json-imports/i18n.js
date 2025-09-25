@@ -27,7 +27,7 @@ const importAndCheck = async (localeId) => {
 const localeIds = [${languagesKeysStringArray}];
 
 localeIds.forEach(localeId => {
-	registerI18nLoader("${packageName}", localeId, importAndCheck);
+	registerI18nLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, localeId, importAndCheck);
 });
 `;
 }
@@ -44,7 +44,7 @@ const generate = async () => {
 	// All languages present in the file system
 	const files = await fs.readdir(inputFolder);
 	const languages = files.map(file => {
-		const matches = file.match(/messagebundle_(.+?).json$/);
+		const matches = file.match(/messagebundle_(.+?).properties$/);
 		return matches ? matches[1] : undefined;
 	}).filter(key => !!key);
 

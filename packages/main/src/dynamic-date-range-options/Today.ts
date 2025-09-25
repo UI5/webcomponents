@@ -23,7 +23,7 @@ class Today implements IDynamicDateRangeOption {
 		return "Today";
 	}
 
-	toDates(): Date[] {
+	toDates(): Array<Date> {
 		return todayToDates();
 	}
 

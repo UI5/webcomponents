@@ -19,7 +19,7 @@
 }
 
 ::slotted([ui5-navigation-menu-item]) {
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 }
 
 :host([design="Action"]) {

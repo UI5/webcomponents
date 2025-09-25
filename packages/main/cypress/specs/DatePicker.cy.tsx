@@ -5,6 +5,7 @@ import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
 
 describe("Date Picker Tests", () => {
+
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -1548,19 +1549,6 @@ describe("Date Picker Tests", () => {
 			.find("ui5-yearpicker")
 			.should("be.visible");
 	});
-
-	it("picker popover should have accessible name", () => {
-		cy.mount(<DatePicker></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.ui5DatePickerValueHelpIconPress();
-
-		cy.get<DatePicker>("@datePicker")
-			.shadow()
-			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", "Choose Date");
-	});
 });
 
 describe("Legacy date customization and Islamic calendar type", () => {
@@ -1687,5 +1675,86 @@ describe("Legacy date customization and Islamic calendar type", () => {
 			.shadow()
 			.find("ui5-datetime-input")
 			.should("have.attr", "value-state", "None");
+	});
+});
+
+describe("Accessibility", () => {
+	it("picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+
+		cy.mount(
+			<>
+				<Label for="datePicker">{LABEL}</Label>
+				<DatePicker id="datePicker"></DatePicker>
+			</>
+		);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+	});
+
+	it("picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(
+			<DatePicker id="datePicker" accessible-name={LABEL}></DatePicker>
+		);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "This is a date picker";
+		cy.mount(<DatePicker accessibleDescription={DESCRIPTION}></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "This is a date picker";
+		cy.mount(
+			<>
+				<p id="datePickerDescription">{DESCRIPTION}</p>
+				<DatePicker accessibleDescriptionRef="datePickerDescription"></DatePicker>
+			</>
+		);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
 	});
 });

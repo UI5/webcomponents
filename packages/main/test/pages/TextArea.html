@@ -210,6 +210,11 @@
 		<ui5-textarea id="taWithLabelID2" class="textarea-width" placeholder="Enter some text here" accessible-name="Here aria label should be this one"></ui5-textarea>
 	</section>
 
+	<section class="group">
+		<ui5-label>Text Area: Escape Prevention</ui5-title>
+		<ui5-textarea id="textarea-prevent-escape" class="textarea-width" placeholder="Escape prevention test"></ui5-textarea>
+	</section>
+
 	<script>
 		var changeCounter = 0;
 		var inputCounter = 0;
@@ -222,6 +227,12 @@
 		document.getElementById('textarea-input').addEventListener("ui5-input", function (event) {
 			inputCounter += 1;
 			document.getElementById('inputResult').value = `${inputCounter}`;
+		});
+
+		document.getElementById('textarea-prevent-escape').addEventListener("ui5-input", function (event) {
+			if (event.detail.escapePressed) {
+				event.preventDefault();
+			}
 		});
 	</script>
 

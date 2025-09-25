@@ -42,8 +42,8 @@
 	--_ui5_side_navigation_group_expanded_border_width: 0;
 	--_ui5_side_navigation_group_icon_width: var(--_ui5_side_navigation_collapsed_width);
 	--_ui5_side_navigation_icon_padding_inline_end: 1rem;
-	--_ui5_side_navigation_item_font_family: "72override", var(--sapFontFamily);
-	--_ui5_side_navigation_parent_item_font_family: "72override", var(--sapFontSemiboldDuplexFamily);
+	--_ui5_side_navigation_item_font_family: var(--sapFontFamily);
+	--_ui5_side_navigation_parent_item_font_family: var(--sapFontSemiboldDuplexFamily);
 	--_ui5_side_navigation_group_padding: 0.5rem;
 	--_ui5_side_navigation_padding-flexible: 0;
 	--_ui5_side_navigation_padding-fixed: 0;

@@ -2,7 +2,7 @@
 	display: inline-block;
 	box-sizing: border-box;
 	position: relative;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 }
 
 /* The ui5_hovered class is set by FileUploader to indicate hover state of the control */
@@ -275,6 +275,12 @@
 	border-color: var(--sapAvatar_Lite_BorderColor);
 }
 
+:host([_color-scheme="Transparent"]),
+:host([ui5-avatar][color-scheme="Transparent"]) {
+	background-color: transparent;
+	border-color: transparent;
+}
+
 :host([_has-image]) {
 	color: var(--ui5-avatar-accent10-color);
 	border: var(--ui5-avatar-optional-border);
@@ -308,7 +314,7 @@
 	right: 0;
 	width: 1.125rem;
 	height: 1.125rem;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
 	color: var(--sapBackgroundColor);
 

@@ -6,7 +6,7 @@ import {
 	removeOpenedPopup,
 	getTopmostPopup,
 } from "./patchPopup.js";
-import type { OpenUI5Popup } from "./patchPopup.js";
+import type { OpenUI5Popup, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
@@ -226,11 +226,12 @@ class OpenUI5Support {
 			return false;
 		}
 
-		return !!link.href.match(/\/css(-|_)variables\.css/);
+		// The file name is "css_variables.css" until 1.127 and "library.css" from 1.127 onwards
+		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
 	}
 
-	static addOpenedPopup(popup: object) {
-		addOpenedPopup(popup);
+	static addOpenedPopup(popupInfo: PopupInfo) {
+		addOpenedPopup(popupInfo);
 	}
 
 	static removeOpenedPopup(popup: object) {

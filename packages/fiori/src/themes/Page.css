@@ -13,19 +13,19 @@
 	z-index: 0;
 	box-sizing: border-box;
 	background-color: inherit;
+	display: flex;
+	flex-direction: column;
 }
 
 .ui5-page-header-root {
 	z-index: 1;
+	flex-shrink: 0;
 }
 
 .ui5-page-content-root {
 	overflow: hidden auto;
-	position: absolute;
 	will-change: scroll-position;
-	width: 100%;
-	top: 2.75rem;
-	bottom: 0;
+	flex: 1;
 	box-sizing: border-box;
 	font-size: var(--sapFontSize);
 	color: var(--sapTextColor);

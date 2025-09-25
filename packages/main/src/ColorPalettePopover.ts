@@ -172,7 +172,7 @@ class ColorPalettePopover extends UI5Element {
 		} else if (colorPalette.showRecentColors && colorPalette.recentColorsElements.length) {
 			colorPalette.recentColorsElements[0].focus();
 		} else if (colorPalette.showDefaultColor) {
-			colorPalette.colorPaletteNavigationElements[0].focus();
+			colorPalette._defaultColorButton?.focus();
 		}
 
 		// since height is dynamically determined by padding-block-start

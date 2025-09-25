@@ -32,9 +32,9 @@ class SingleDate implements IDynamicDateRangeOption {
 	}
 
 	format(value: DynamicDateRangeValue) {
-		const valuesArray = value?.values as Date[];
+		const valuesArray = value?.values as Array<Date>;
 
-		if (!valuesArray || valuesArray.length !== 1) {
+		if (!valuesArray) {
 			return "";
 		}
 
@@ -43,7 +43,7 @@ class SingleDate implements IDynamicDateRangeOption {
 		return this.getFormat().format(date);
 	}
 
-	toDates(value: DynamicDateRangeValue): Date[] {
+	toDates(value: DynamicDateRangeValue): Array<Date> {
 		return dateOptionToDates(value);
 	}
 

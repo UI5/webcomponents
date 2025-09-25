@@ -1,5 +1,6 @@
 import ProductSwitch from "../../src/ProductSwitch.js";
 import ProductSwitchItem from "../../src/ProductSwitchItem.js";
+import Avatar from "../../../main/src/Avatar.js";
 import type UI5Element from "@ui5/webcomponents-base";
 
 describe("List - getFocusDomRef Method", () => {
@@ -47,6 +48,26 @@ describe("List - getFocusDomRef Method", () => {
 
 				expect(ps.getFocusDomRef()).to.equal(psItem.getFocusDomRef());
 			});
+	});
+
+	describe("image slot", () => {
+		it("should render custom content in the image slot and not render the icon", () => {
+			cy.mount(
+				<ProductSwitch>
+					<ProductSwitchItem
+						titleText="With Avatar"
+						icon="file"
+					>
+						<Avatar slot="image" size="XS" />
+					</ProductSwitchItem>
+				</ProductSwitch>
+			);
+
+			cy.get("ui5-product-switch-item").within(() => {
+				cy.get("ui5-avatar").should("exist");
+				cy.get("ui5-icon").should("not.exist");
+			});
+		});
 	});
 });
 

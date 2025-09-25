@@ -42,11 +42,38 @@
 			border: 2px solid #7b1fa2;
 		}
 
+		.header-parts-demo::part(calendar-header-arrow-button) {
+			color: #354a5f;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			min-width: 36px;
+			min-height: 36px;
+		}
+
+		.header-parts-demo::part(calendar-header-arrow-button):hover {
+			border-color: #9ca3af;
+		}
+
+		.header-parts-demo::part(year-range-picker-root) {
+			padding: 20px 24px;
+			background: #fafbfc;
+			border: 1px solid #e1e5e9;
+			border-radius: 8px;
+			margin: 4px;
+		}
+
 		.header-parts-demo::part(calendar-header-middle-button) {
-			background: #673ab7;
-			color: white;
-			border: 2px solid #512da8;
-			transform: scale(1.1);
+			background: #ffffff;
+			border: 1px solid #d1d5db;
+			color: #374151;
+			padding: 8px 16px;
+			border-radius: 6px;
+		}
+
+		.header-parts-demo::part(calendar-header-middle-button):hover {
+			background: #f9fafb;
+			border-color: #9ca3af;
+			color: #111827;
 		}
 	</style>
 </head>

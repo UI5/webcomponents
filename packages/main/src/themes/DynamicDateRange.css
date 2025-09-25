@@ -5,3 +5,7 @@
     width: var(--_ui5_input_width, 12.5625rem);
     display: inline-block;
 }
+
+.ui5-dynamic-date-range-root {
+    width: 100%;
+}

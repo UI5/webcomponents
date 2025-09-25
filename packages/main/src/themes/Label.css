@@ -5,7 +5,7 @@
 :host {
 	max-width: 100%;
 	color: var(--sapContent_LabelColor);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 	cursor: text;

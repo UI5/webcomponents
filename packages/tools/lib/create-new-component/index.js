@@ -2,6 +2,8 @@ const fs = require("fs");
 const prompts = require("prompts");
 const Component = require("./Component.js");
 const ComponentTemplate= require("./ComponentTemplate.js");
+const dotenv = require('dotenv');
+dotenv.config();
 
 /**
  * Hyphanates the given PascalCase string and adds prefix, f.e.:
@@ -11,7 +13,7 @@ const ComponentTemplate= require("./ComponentTemplate.js");
 const hyphaneteComponentName = (componentName) => {
 	const result = componentName.replace(/([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
 
-	return `my-${result}`;
+	return `${process.env.UI5_TAG_NAME_PREFIX ?? "my"}-${result}`;
 };
 
 /**
@@ -62,7 +64,7 @@ const generateFiles = (componentName, tagName, library, packageName) => {
 	const filePaths = {
 		"main": `./src/${componentName}.ts`,
 		"css": `./src/themes/${componentName}.css`,
-		"template": `./src/${componentName}Template.tsx`,
+		"template": `./src/${componentName}${process.env.UI5_TEMPLATE_FILENAME_SUFFIX ?? "Template"}.tsx`,
 	};
 
 	fs.writeFileSync(filePaths.main, Component(componentName, tagName, library, packageName), { flag: "wx+" });

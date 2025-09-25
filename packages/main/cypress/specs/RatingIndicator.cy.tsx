@@ -275,5 +275,29 @@ describe("RatingIndicator", () => {
 
 			cy.get("@changeEvent").should("have.callCount", 17);
 		});
+
+		it("Second click on same star clears the RatingIndicator value", () => {
+			cy.mount(
+				<RatingIndicator></RatingIndicator>
+			);
+
+			cy.get("[ui5-rating-indicator")
+				.shadow()
+				.find("li")
+				.eq(3)
+				.as("star");
+
+			cy.get("@star")
+				.realClick();
+
+			cy.get("[ui5-rating-indicator")
+				.should("have.attr", "value", 4);
+
+			cy.get("@star")
+				.realClick();
+
+			cy.get("[ui5-rating-indicator]")
+				.should("have.attr", "value", 0);
+		})
 	});
 });

@@ -13,9 +13,9 @@ export default function CalendarTemplate(this: Calendar) {
 					"ui5-calheader-arrowbtn": true,
 					"ui5-calheader-arrowbtn-disabled": this._previousButtonDisabled,
 				}}
+				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onPrevButtonClick}
-				title={this.headerPreviousButtonText}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowLeft}/>
 			</div>
@@ -29,6 +29,9 @@ export default function CalendarTemplate(this: Calendar) {
 					tabindex={0}
 					role="button"
 					aria-label={this.accInfo.ariaLabelMonthButton}
+					aria-description={this.accInfo.ariaLabelMonthButton}
+					title={this.accInfo.tooltipMonthButton}
+					aria-keyshortcuts={this.accInfo.keyShortcutMonthButton}
 					onClick={this.onHeaderShowMonthPress}
 					onKeyDown={this.onMonthButtonKeyDown}
 					onKeyUp={this.onMonthButtonKeyUp}
@@ -46,9 +49,13 @@ export default function CalendarTemplate(this: Calendar) {
 					hidden={this._isHeaderYearButtonHidden}
 					tabindex={0}
 					role="button"
+					aria-label={this.accInfo.ariaLabelYearButton}
+					aria-description={this.accInfo.ariaLabelYearButton}
 					onClick={this.onHeaderShowYearPress}
 					onKeyDown={this.onYearButtonKeyDown}
 					onKeyUp={this.onYearButtonKeyUp}
+					title={this.accInfo.tooltipYearButton}
+					aria-keyshortcuts={this.accInfo.keyShortcutYearButton}
 				>
 					<span>{this._headerYearButtonText}</span>
 					{this.hasSecondaryCalendarType &&
@@ -62,6 +69,10 @@ export default function CalendarTemplate(this: Calendar) {
 					hidden={this._isHeaderYearRangeButtonHidden}
 					tabindex={0}
 					role="button"
+					aria-label={this.accInfo.ariaLabelYearRangeButton}
+					aria-description={this.accInfo.ariaLabelYearRangeButton}
+					title={this.accInfo.tooltipYearRangeButton}
+					aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
 					onClick={this.onHeaderShowYearRangePress}
 					onKeyDown={this.onYearRangeButtonKeyDown}
 					onKeyUp={this.onYearRangeButtonKeyUp}
@@ -79,9 +90,9 @@ export default function CalendarTemplate(this: Calendar) {
 					"ui5-calheader-arrowbtn": true,
 					"ui5-calheader-arrowbtn-disabled": this._nextButtonDisabled,
 				}}
+				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onNextButtonClick}
-				title={this.headerNextButtonText}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowRight}/>
 			</div>

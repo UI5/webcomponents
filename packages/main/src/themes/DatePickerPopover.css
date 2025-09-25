@@ -1,5 +1,5 @@
 .ui5-date-picker-popover {
-	width: 20rem;
+	width: var(--_ui5_calendar_width);
 	.ui5-popover-header {
 		width: 100%;
 	}

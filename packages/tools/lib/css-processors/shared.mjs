@@ -24,16 +24,6 @@ const writeFileIfChanged = async (fileName, content) => {
     }
 }
 
-// strips the unnecessary theming data coming from @sap-theming/theming-base-content and leaves only the css parameters
-const stripThemingBaseContent = css => {
-	css = css.replace(/\.sapThemeMeta[\s\S]*?:root/, ":root");
-	css = css.replace(/\.background-image.*{.*}/, "");
-	css = css.replace(/\.sapContrast[ ]*:root[\s\S]*?}/, "");
-	css = css.replace(/--sapFontUrl.*\);?/, "");
-	return css;
-}
-
-
 const DEFAULT_THEME = assets.themes.default;
 
 const getDefaultThemeCode = packageName => {
@@ -42,8 +32,8 @@ const getDefaultThemeCode = packageName => {
 import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.css.js";
 import defaultTheme from "./${DEFAULT_THEME}/parameters-bundle.css.js";
 
-registerThemePropertiesLoader("@ui5/webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
-registerThemePropertiesLoader("${packageName}", "${DEFAULT_THEME}", async () => defaultTheme);
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
+registerThemePropertiesLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, "${DEFAULT_THEME}", async () => defaultTheme);
 `;
 };
 
@@ -53,4 +43,4 @@ const getFileContent = (packageName, css, includeDefaultTheme) => {
 }
 
 
-export { writeFileIfChanged, stripThemingBaseContent, getFileContent}
+export { writeFileIfChanged, getFileContent}
