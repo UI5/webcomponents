@@ -58,6 +58,7 @@ import {
 	INPUT_SUGGESTIONS_TITLE,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	COMBOBOX_DIALOG_OK_BUTTON,
+	COMBOBOX_DIALOG_CANCEL_BUTTON,
 	SELECT_OPTIONS,
 	LIST_ITEM_POSITION,
 	LIST_ITEM_GROUP_HEADER,
@@ -1382,6 +1383,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButtonText() {
 		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_OK_BUTTON);
+	}
+
+	get _dialogCancelButtonText() {
+		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get inner(): HTMLInputElement {
