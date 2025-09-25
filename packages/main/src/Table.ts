@@ -9,6 +9,7 @@ import TableStyles from "./generated/themes/Table.css.js";
 import TableExtension from "./TableExtension.js";
 import TableNavigation from "./TableNavigation.js";
 import TableOverflowMode from "./types/TableOverflowMode.js";
+import GlobalDragDropManager from "@ui5/webcomponents-base/dist/util/dragAndDrop/GlobalDragDropManager.js";
 import TableDragAndDrop from "./TableDragAndDrop.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import {
@@ -404,7 +405,7 @@ class Table extends UI5Element {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	_events = ["keydown", "keyup", "click", "focusin", "focusout", "dragstart", "dragenter", "dragleave", "dragover", "drop", "dragend"];
+	_events = ["keydown", "keyup", "click", "focusin", "focusout", "dragenter", "dragleave", "dragover", "drop"];
 	_onEventBound: (e: Event) => void;
 	_onResizeBound: ResizeObserverCallback;
 	_tableNavigation?: TableNavigation;
@@ -423,12 +424,14 @@ class Table extends UI5Element {
 		this.features.forEach(feature => feature.onTableActivate?.(this));
 		this._tableNavigation = new TableNavigation(this);
 		this._tableDragAndDrop = new TableDragAndDrop(this);
+		GlobalDragDropManager.subscribe(this);
 	}
 
 	onExitDOM() {
 		this._tableNavigation = undefined;
 		this._tableDragAndDrop = undefined;
 		this._events.forEach(eventType => this.removeEventListener(eventType, this._onEventBound));
+		GlobalDragDropManager.unsubscribe(this);
 	}
 
 	onBeforeRendering(): void {
