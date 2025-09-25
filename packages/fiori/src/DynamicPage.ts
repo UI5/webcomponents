@@ -202,6 +202,20 @@ class DynamicPage extends UI5Element {
 		super();
 	}
 
+	onAfterRendering() {
+		if (this.scrollContainer && !this.scrollContainer.dataset.focusListenerAdded) {
+			this.scrollContainer.addEventListener("focusin", (e: FocusEvent) => {
+				const target = e.target as HTMLElement;
+				if (target && target !== this.scrollContainer) {
+					requestAnimationFrame(() => {
+						target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+					});
+				}
+			});
+			this.scrollContainer.dataset.focusListenerAdded = "true";
+		}
+	}
+
 	onBeforeRendering() {
 		if (this.dynamicPageTitle) {
 			this.dynamicPageTitle.snapped = this._headerSnapped;
