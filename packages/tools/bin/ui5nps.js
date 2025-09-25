@@ -161,9 +161,15 @@ class Parser {
 			return new Promise(async (resolve, reject) => {
 				if (command.trim().startsWith("node")) {
 					const argv = parseArgsStringToArgv(command);
-					const moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
+					let moduleContent;
 
-					if (moduleContent.includes("_ui5mainFn")) {
+					try {
+						moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
+					} catch {
+						moduleContent = null
+					}
+
+					if (moduleContent?.includes("_ui5mainFn")) {
 						const importedContent = require(argv[1]);
 						let _ui5mainFn;
 
