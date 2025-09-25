@@ -1757,4 +1757,85 @@ describe("Accessibility", () => {
 			.find("span#descr")
 			.should("have.text", DESCRIPTION);
 	});
+
+	describe("Accessibility - ariaValueStateHiddenText", () => {
+		it("should correctly extract text from nested slot structure in value state messages", () => {
+			const ERROR_MESSAGE = "Invalid date format";
+			
+			cy.mount(
+				<DatePicker valueState="Negative">
+					<div slot="valueStateMessage">{ERROR_MESSAGE}</div>
+				</DatePicker>
+			);
+
+			cy.get("[ui5-date-picker]")
+				.as("datePicker");
+
+			// Get the inner datetime input
+			cy.get<DatePicker>("@datePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.as("datetimeInput");
+
+			// Verify the input has proper value state
+			cy.get("@datetimeInput")
+				.should("have.attr", "value-state", "Negative");
+
+			// Test the ariaValueStateHiddenText getter directly
+			cy.get("@datetimeInput")
+				.then(($input) => {
+					const datetimeInput = $input[0] as any;
+					const ariaText = datetimeInput.ariaValueStateHiddenText;
+					
+					// Should contain both the value state type and the custom message
+					expect(ariaText).to.include("Error");
+					expect(ariaText).to.include(ERROR_MESSAGE);
+				});
+
+			// Verify the aria-describedby points to an element with the correct text
+			cy.get("@datetimeInput")
+				.shadow()
+				.find("input")
+				.should("have.attr", "aria-describedby")
+				.then((describedBy) => {
+					cy.get("@datetimeInput")
+						.shadow()
+						.find(`#${describedBy}`)
+						.should("contain.text", "Error")
+						.and("contain.text", ERROR_MESSAGE);
+				});
+		});
+
+		it("should handle complex nested slot structure from DatePicker forwarding", () => {
+			const CUSTOM_ERROR = "Please select a valid date";
+			
+			cy.mount(
+				<DatePicker valueState="Critical">
+					<div slot="valueStateMessage">
+						<span>{CUSTOM_ERROR}</span>
+					</div>
+				</DatePicker>
+			);
+
+			cy.get("[ui5-date-picker]")
+				.as("datePicker");
+
+			cy.get<DatePicker>("@datePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.as("datetimeInput");
+
+			// Test nested slot content extraction
+			cy.get("@datetimeInput")
+				.then(($input) => {
+					const datetimeInput = $input[0] as any;
+					const ariaText = datetimeInput.ariaValueStateHiddenText;
+					
+					// Should extract text from nested structure
+					expect(ariaText).to.include("Warning");
+					expect(ariaText).to.include(CUSTOM_ERROR);
+					expect(ariaText.trim()).to.not.be.empty;
+				});
+		});
+	});
 });
