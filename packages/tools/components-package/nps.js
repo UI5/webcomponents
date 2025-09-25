@@ -12,16 +12,24 @@ if (process.env.DEPLOY) {
 }
 
 const getScripts = (options) => {
-
 	// The script creates all JS modules (dist/illustrations/{illustrationName}.js) out of the existing SVGs
 	const illustrationsData = options.illustrationsData || [];
-	const illustrations = illustrationsData.map(illustration => `node "${LIB}create-illustrations/index.js" ${illustration.path} ${illustration.defaultText} ${illustration.illustrationsPrefix} ${illustration.set} ${illustration.destinationPath} ${illustration.collection}`);
-	const createIllustrationsJSImportsScript = illustrations.join(" && ");
-
+	const createIllustrationsJSImportsScript = {
+		default: `ui5nps-p ${illustrationsData.map(illustrations => `build.illustrations.build-${illustrations.set}-${illustrations.collection}`).join(" ")}` // concurently,
+	}
+	illustrationsData.forEach((illustration) => {
+		createIllustrationsJSImportsScript[`build-${illustration.set}-${illustration.collection}`] = `node "${LIB}create-illustrations/index.js" ${illustration.path} ${illustration.defaultText} ${illustration.illustrationsPrefix} ${illustration.set} ${illustration.destinationPath} ${illustration.collection}`
+	});
 	// The script creates the "src/generated/js-imports/Illustration.js" file that registers loaders (dynamic JS imports) for each illustration
-	const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`).join(" && ");
+	const createIllustrationsLoadersScript = {
+		default: `ui5nps-p ${illustrationsData.map(illustrations => `build.jsImports.illustrationsLoaders.generate-${illustrations.set}-${illustrations.collection}`).join(" ")}` // concurently,
+	}
+	illustrationsData.forEach((illustrations) => {
+		createIllustrationsLoadersScript[`generate-${illustrations.set}-${illustrations.collection}`] = `node ${LIB}generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`
+	});
 
-	const tsOption = !options.legacy || options.jsx;
+
+	const tsOption = !!(!options.legacy || options.jsx);
 	const tsCommandOld = tsOption ? "tsc" : "";
 	let tsWatchCommandStandalone = tsOption ? "tsc --watch" : "";
 	// this command is only used for standalone projects. monorepo projects get their watch from vite, so opt-out here
@@ -62,7 +70,7 @@ const getScripts = (options) => {
 	const scripts = {
 		__ui5envs: {
 			UI5_CEM_MODE: options.dev,
-			UI5_TS: !!tsOption,
+			UI5_TS: `${tsOption}`,
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
 			CYPRESS_UI5_ACC: !!(options.internal?.cypress_acc_tests),
 		},

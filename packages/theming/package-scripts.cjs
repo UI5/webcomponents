@@ -11,7 +11,7 @@ const generateReportScript = path.join(CURRENT_LIB, "./generate-css-vars-usage-r
 module.exports = {
 	scripts: {
 		__ui5envs: {
-			UI5_TS: true,
+			UI5_TS: "true",
 		},
 		clean: "rimraf dist && rimraf src/generated",
 		generate: `ui5nps build.postcss build.jsonImports`,

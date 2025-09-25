@@ -45,4 +45,3 @@ if (require.main === module) {
 }
 
 exports._ui5mainFn = generate;
-// module.exports = generate;

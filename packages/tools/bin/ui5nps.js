@@ -94,7 +94,7 @@ class Parser {
 				this.resolveScripts(part);
 			}
 
-			commands.push(this.resolvedScripts.get(part) || parsedScript);
+			commands.push(this.resolvedScripts.get(part) || { commandName: part, commands: [parsedScript], parallel: executableCommand.startsWith("ui5nps-p") });
 		}
 
 
@@ -156,21 +156,35 @@ class Parser {
 	 * @param {string|Object} command - Command string or command object with commands array
 	 * @returns {Promise} Promise that resolves when command(s) complete
 	 */
-	async executeCommand(command) {
+	async executeCommand(command, commandName = "unknown") {
 		if (typeof command === "string" && command) {
 			return new Promise(async (resolve, reject) => {
-				console.log(`= Executing command: ${command}`);
-				try {
-					if (command.trim().startsWith("node")) {
-						const argv = parseArgsStringToArgv(command);
-						const _ui5mainFn = require(argv[1])._ui5mainFn;
+				if (command.trim().startsWith("node")) {
+					const argv = parseArgsStringToArgv(command);
+					const moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
 
-						return _ui5mainFn(argv).then(resolve).catch(reject);
+					if (moduleContent.includes("_ui5mainFn")) {
+						const importedContent = require(argv[1]);
+						let _ui5mainFn;
+
+						if (importedContent.__esModule) {
+							_ui5mainFn = importedContent.default._ui5mainFn;
+						} else {
+							_ui5mainFn = importedContent._ui5mainFn;
+						}
+
+						console.log(` |  Executing command ${commandName} as module.`);
+						const result = _ui5mainFn(argv);
+
+						if (result instanceof Promise) {
+							return result.then(resolve).catch(reject);
+						} else {
+							return resolve();
+						}
 					}
-				} catch {
-					console.error(`= Failed to execute as module, falling back to shell command:\n  ${command}`);
 				}
 
+				console.log(` |  Executing command ${commandName} as command.\n    Running: ${command}`);
 				const child = exec(command, { stdio: "inherit", env: { ...process.env, ...this.envs } });
 
 				child.stdout.on("data", (data) => {
@@ -193,12 +207,12 @@ class Parser {
 		} else if (typeof command === "object" && command.commands) {
 			if (command.parallel) {
 				// Execute commands in parallel
-				const promises = command.commands.filter(Boolean).map(cmd => this.executeCommand(cmd));
+				const promises = command.commands.filter(Boolean).map(cmd => this.executeCommand(cmd, cmd.commandName || commandName));
 				await Promise.all(promises);
 			} else {
 				// Execute commands sequentially
 				for (const cmd of command.commands) {
-					await this.executeCommand(cmd);
+					await this.executeCommand(cmd, cmd.commandName || commandName);
 				}
 			}
 		}
@@ -216,7 +230,7 @@ class Parser {
 			throw new Error(`Command "${commandName}" not found in scripts`);
 		}
 
-		return this.executeCommand(this.resolvedScripts.get(commandName));
+		return this.executeCommand(this.resolvedScripts.get(commandName), commandName);
 	}
 }
 
@@ -228,6 +242,15 @@ if (commands.length === 0) {
 	console.error("Usage: ui5nps <command> [command2] [command3] ...");
 	console.error("No commands provided.");
 	process.exit(1);
+}
+
+if (commands.includes("--help") || commands.includes("-h")) {
+	console.log("Usage: ui5nps <command> [command2] [command3] ...");
+	console.log("Available commands:");
+	for (const key of parser.parsedScripts.keys()) {
+		console.log(`  - ${key}`);
+	}
+	process.exit(0);
 }
 
 (async () => {

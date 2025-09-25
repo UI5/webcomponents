@@ -48,7 +48,7 @@ const getScripts = (options) => {
 
 	const scripts = {
 		__ui5envs:{
-			UI5_TS: tsOption,
+			UI5_TS: `${tsOption}`,
 		},
 		clean: "rimraf dist && rimraf src/generated",
 		copy: copyAssetsCmd,
