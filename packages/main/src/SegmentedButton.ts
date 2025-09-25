@@ -161,15 +161,17 @@ class SegmentedButton extends UI5Element {
 
 	onBeforeRendering() {
 		const items = this.getSlottedNodes<SegmentedButtonItem>("items");
+		const visibleItems = items.filter(item => !item.hidden);
+		let index = 1;
 
-		items.forEach((item, index, arr) => {
-			item.posInSet = index + 1;
-			item.sizeOfSet = arr.length;
+		items.forEach(item => {
+			item.posInSet = item.hidden ? undefined : index++;
+			item.sizeOfSet = item.hidden ? undefined : visibleItems.length;
 		});
 
 		this.normalizeSelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${items.length}`);
+		this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
 	}
 
 	normalizeSelection() {

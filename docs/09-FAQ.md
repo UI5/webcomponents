@@ -12,7 +12,7 @@ sidebar_label: FAQ
 **Q: Where is the documentation?**
 
 **A:** There are several resources:
-- [Web Components APIs](https://sap.github.io/ui5-webcomponents/play/)
+- [Web Components APIs](https://ui5.github.io/webcomponents/play/)
 - [How to get started?](https://blogs.sap.com/2019/04/01/the-fastest-way-to-get-started-with-ui5-web-components/)
 
 **Q: Is there a CDN to load UI5 Web Components from?**
@@ -46,7 +46,7 @@ Additional features, settings and old browser support will increase bundle size 
 
 **Q: What is the difference between UI5 Web Components and OpenUI5?**
 
-**A:** See the project's [readme.md](https://github.com/SAP/ui5-webcomponents) for more on this.
+**A:** See the project's [readme.md](https://github.com/UI5/webcomponents) for more on this.
 
 
 **Q: Can I use UI5 Web Components in an OpenUI5 application?**

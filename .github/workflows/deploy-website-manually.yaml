@@ -29,6 +29,9 @@ jobs:
         git log -1 &>> packages/website/static/version.md
 
     - name: Build
+      env:
+        DEPLOYMENT_TYPE: "nightly"
+        URL_SHORTENER_API_KEY: ${{ secrets.URL_SHORTENER_API_KEY }}
       run: |
         yarn ci:deploy:nightly
 

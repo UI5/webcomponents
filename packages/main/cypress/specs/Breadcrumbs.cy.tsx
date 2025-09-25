@@ -886,6 +886,62 @@ describe("Breadcrumbs general interaction", () => {
 				"Max stack of calling not hit for invalidation of control").to.equal(1);
 		});
 	});
+
+	it("current location link truncates", () => {
+		cy.mount(
+			<>
+				<div style={{ width: "900px" }}>
+					<Breadcrumbs id="breadcrumbs1">
+							<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+							<BreadcrumbsItem href="#">Link2</BreadcrumbsItem>
+					</Breadcrumbs>
+				</div>
+				<div style={{ width: "300px" }}>
+					<Breadcrumbs id="breadcrumbs2">
+						<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link2</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link3</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link4</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link5</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link6</BreadcrumbsItem>
+						<BreadcrumbsItem id="currentLocation">This is a very long current location text that should be truncated</BreadcrumbsItem>
+					</Breadcrumbs>
+				</div>
+			</>
+		);
+
+		// assert that last link in the narrow Breadcrumbs is truncated
+		cy.get("#breadcrumbs2")
+			.shadow()
+			.find("li:last-child")
+			.then(($lastLink) => {
+				const linkRect = $lastLink[0].getBoundingClientRect();
+				const maxExpectedWidth = 300;
+
+				expect(linkRect.width, "link wrapper should be shrinkable and less than parent width")
+					.to.be.lessThan(maxExpectedWidth);
+		});
+
+		// assert that height of both Breadcrumbs (one that fits and one that truncates)
+		// is the same
+		cy.get("#breadcrumbs1")
+			.then(($breadcrumbs1) => {
+				const breadcrumbs1DOMRef = ($breadcrumbs1[0] as Breadcrumbs).getDomRef();
+				const breadcrumbs1Rect = breadcrumbs1DOMRef.getBoundingClientRect();
+				const breadcrumbs1Height = breadcrumbs1Rect.height;
+
+
+				cy.get("#breadcrumbs2")
+					.then(($breadcrumbs2) => {
+						const breadcrumbs2DOMRef = ($breadcrumbs2[0] as Breadcrumbs).getDomRef();
+						const breadcrumbs2Rect = breadcrumbs2DOMRef.getBoundingClientRect();
+						const breadcrumbs2Height = breadcrumbs2Rect.height;
+
+						expect(breadcrumbs2Height, "link height should remain the same")
+							.to.be.equal(breadcrumbs1Height);
+				});
+		});
+	});
 });
 
 describe("Breadcrumbs with item for current page", () => {
