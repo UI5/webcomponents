@@ -23,7 +23,7 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel2")
 			.shadow()
 			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
-			.should("have.length", 1);
+			.should("have.length", 2);
 	});
 
 	it("Buttons (navigation arrows) are rendered in the navigation without hovering (arrows-placement)", () => {
