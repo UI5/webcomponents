@@ -1,413 +1,257 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
-
-	<title>Button</title>
-	<script>
-		// delete Document.prototype.adoptedStyleSheets
-	</script>
-
-
+	<title>Button Click vs Long Press Menu Test</title>
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
-
-
-	<link rel="stylesheet" type="text/css" href="./styles/Button.css">
-
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			padding: 40px;
+			margin: 0;
+			background-color: #f5f5f5;
+		}
+		
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+			background: white;
+			padding: 30px;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		}
+		
+		.instructions {
+			background-color: #e3f2fd;
+			padding: 20px;
+			border-radius: 4px;
+			margin-bottom: 30px;
+			border-left: 4px solid #2196f3;
+		}
+		
+		.test-button {
+			/* Long press suppression */
+			-webkit-touch-callout: none;
+			touch-action: manipulation;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+		}
+		
+		.button-area {
+			text-align: center;
+			padding: 40px 20px;
+		}
+		
+		.log {
+			background-color: #1e1e1e;
+			color: #00ff00;
+			padding: 15px;
+			border-radius: 4px;
+			font-family: 'Courier New', monospace;
+			height: 150px;
+			overflow-y: scroll;
+			margin-top: 20px;
+			font-size: 12px;
+		}
+		
+		h1 {
+			text-align: center;
+			color: #333;
+			margin-bottom: 20px;
+		}
+	</style>
 </head>
-
-<body class="button1auto">
-	<ui5-button design="Negative" icon="decline">Reject</ui5-button>
-	<ui5-button design="Positive" icon="add">Add</ui5-button>
-	<ui5-button icon="home" id="icon-only-comment"><!----><!----></ui5-button>
-	<ui5-button icon="text" id="icon-only-blank-text"> </ui5-button>
-	<ui5-button accessible-role="Link" id="button-role-link"> Navigation Button </ui5-button>
-	<ui5-button>
-		<ui5-avatar id="btnImage" size="XS">
-			<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
-		</ui5-avatar>
-	</ui5-button>
-	<ui5-icon name="invalid_name"></ui5-icon>
-	<ui5-button design="Emphasized" icon="invalid_name">Press</ui5-button>
-
-	<ui5-button id="download" icon="download" accessible-name="Download application"></ui5-button>
-	<ui5-button id="button1" icon="home" design="Emphasized">Action Bar Button</ui5-button>
-	<ui5-button class="button2auto">Primary <br> button</ui5-button>
-	<ui5-button class="button2auto button3auto" design="Transparent">Secondary <span>button</span></ui5-button>
-	<ui5-button disabled id="button-disabled">Inactive</ui5-button>
-	<ui5-button design="Positive">Accept</ui5-button>
-	<ui5-button design="Negative" accessible-description="Decline the action">Decline</ui5-button>
-
-	<br />
-	<br />
-
-	<div>
-		<ui5-toggle-button design="Positive" icon="add"></ui5-toggle-button>
-		<ui5-toggle-button design="Negative" icon="add"></ui5-toggle-button>
-	</div>
-
-	<br />
-	<br />
-
-	<ui5-input id="click-counter"></ui5-input>
-
-	<ui5-button id="button-with-slot" class="button2auto" design="Emphasized">Action<br> <i>Bar</i><br>
-		Button</ui5-button>
-	<ui5-button>Primary button</ui5-button>
-	<ui5-button design="Transparent">Secondary button</ui5-button>
-	<ui5-button disabled>Inactive</ui5-button>
-	<ui5-button design="Positive">Agree</ui5-button>
-	<ui5-button design="Negative">Decline</ui5-button>
-	<ui5-button design="Attention">Warning</ui5-button>
-	<ui5-button id="attentionIconButton" design="Attention" icon="message-warning">Warning</ui5-button>
-	<ui5-button design="Attention" icon="message-warning"></ui5-button>
-	<br />
-	<br />
-	<br />
-
-	<ui5-button icon="download" accessible-name="Download application"></ui5-button>
-	<ui5-button icon="employee" accessible-name="Download book">Action Bar Button</ui5-button>
-	<ui5-button icon="download"></ui5-button>
-
-	<ui5-button icon="employee" accessible-name="Download book" class="button4auto">Action Bar Button</ui5-button>
-	<ui5-button end-icon="employee" accessible-name="Download book" class="button4auto">Action Bar Button</ui5-button>
-
-	<ui5-label>Button with accessibleDescription:</ui5-label>
-	<ui5-button icon="bar-code" accessible-description="Scan bar code">Scan</ui5-button>
-
-	<br />
-	<br />
-
-	<ui5-label id="1download-text">Download Application</ui5-label>
-	<ui5-label id="download-text2">From This Button</ui5-label>
-
-	<ui5-button icon="employee" accessible-name="Help me">Action Bar Button</ui5-button>
-	<ui5-button id="buttonAccNameRef" icon="download" accessible-name="Help me"
-		accessible-name-ref="1download-text"></ui5-button>
-
-	<ui5-button icon="employee" accessible-name-ref="1download-text download-text2">Action Bar Button</ui5-button>
-	<ui5-button icon="download" accessible-name-ref="1download-text"></ui5-button>
-
-
-
-	<br />
-	<br />
-	<br />
-
-	<ui5-button design="Default" icon="employee">Default</ui5-button>
-	<ui5-button disabled design="Default" icon="employee">Default</ui5-button>
-	<br />
-	<br />
-
-	<ui5-button design="Positive" icon="employee">Agree</ui5-button>
-	<ui5-button disabled design="Positive" icon="employee">Agree</ui5-button>
-	<br />
-	<br />
-
-	<ui5-button design="Negative" icon="employee">Decline</ui5-button>
-	<ui5-button disabled design="Negative" icon="employee">Decline</ui5-button>
-	<br />
-	<br />
-
-	<ui5-button design="Transparent" icon="employee">Transparent</ui5-button>
-	<ui5-button disabled design="Transparent" icon="employee">Transparent
-	</ui5-button>
-	<br />
-	<br />
-
-	<ui5-title>Cozy</ui5-title>
-
-	<ui5-button icon="employee">Emphasized
-		<ui5-button-badge design="InlineText" text="72" slot="badge"></ui5-button-badge>
-	</ui5-button>
-
-	<ui5-button design="Emphasized" icon="employee">Emphasized
-		<ui5-button-badge design="OverlayText" text="999+" slot="badge"></ui5-button-badge>
-	</ui5-button>
-	<ui5-button icon="employee">Emphasized
-		<ui5-button-badge design="AttentionDot" slot="badge"></ui5-button-badge>
-	</ui5-button>
-
-	<br><br>
-
-	<ui5-title>Compact</ui5-title>
-
-	<div data-ui5-compact-size>
-		<ui5-button icon="employee">Emphasized
-			<ui5-button-badge design="InlineText" text="72" slot="badge"></ui5-button-badge>
-		</ui5-button>
-
-		<ui5-button design="Emphasized" icon="employee">Emphasized
-			<ui5-button-badge design="OverlayText" text="999+" slot="badge"></ui5-button-badge>
-		</ui5-button>
-		<ui5-button icon="employee">Emphasized
-			<ui5-button-badge design="AttentionDot" slot="badge"></ui5-button-badge>
-		</ui5-button>
-	</div>
-
-	<div dir="rtl">
-		<ui5-title>Cozy</ui5-title>
-
-		<ui5-button icon="employee">Emphasized
-			<ui5-button-badge design="InlineText" text="72" slot="badge"></ui5-button-badge>
-		</ui5-button>
-
-		<ui5-button design="Emphasized" icon="employee">Emphasized
-			<ui5-button-badge design="OverlayText" text="999+" slot="badge"></ui5-button-badge>
-		</ui5-button>
-		<ui5-button icon="employee">Emphasized
-			<ui5-button-badge design="AttentionDot" slot="badge"></ui5-button-badge>
-		</ui5-button>
-
-		<br><br>
-
-		<ui5-title>Compact</ui5-title>
-
-		<div data-ui5-compact-size>
-			<ui5-button icon="employee">Emphasized
-				<ui5-button-badge design="InlineText" text="72" slot="badge"></ui5-button-badge>
+<body>
+	<div class="container">
+		<h1>Button Menu Test</h1>
+		
+		<div class="instructions">
+			<h3>Instructions:</h3>
+			<ul>
+				<li><strong>Quick Click/Tap:</strong> Opens "Actions" menu</li>
+				<li><strong>Long Press (300ms+):</strong> Opens "Context" menu</li>
+				<li><strong>Desktop:</strong> Right-click also opens context menu</li>
+			</ul>
+		</div>
+		
+		<div class="button-area">
+			<ui5-button 
+				id="test-button" 
+				class="test-button" 
+				design="Emphasized" 
+				icon="menu"
+				accessibilityAttributes='{"hasPopup": "menu"}'>
+				Click or Long Press Me
 			</ui5-button>
-
-			<ui5-button design="Emphasized" icon="employee">Emphasized
-				<ui5-button-badge design="OverlayText" text="999+" slot="badge"></ui5-button-badge>
-			</ui5-button>
-			<ui5-button icon="employee">Emphasized
-				<ui5-button-badge design="AttentionDot" slot="badge"></ui5-button-badge>
-			</ui5-button>
+		</div>
+		
+		<!-- Quick click menu -->
+		<ui5-menu id="actions-menu" header-text="Actions">
+			<ui5-menu-item icon="add" text="New Item"></ui5-menu-item>
+			<ui5-menu-item icon="edit" text="Edit"></ui5-menu-item>
+			<ui5-menu-item icon="refresh" text="Refresh"></ui5-menu-item>
+		</ui5-menu>
+		
+		<!-- Long press context menu -->
+		<ui5-menu id="context-menu" header-text="Context Options">
+			<ui5-menu-item icon="copy" text="Copy"></ui5-menu-item>
+			<ui5-menu-item icon="paste" text="Paste"></ui5-menu-item>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item icon="delete" text="Delete"></ui5-menu-item>
+		</ui5-menu>
+		
+		<div class="log" id="log">
+			<div>Event Log:</div>
 		</div>
 	</div>
 
-	<br><br>
-
-	<ui5-button disabled design="Emphasized" icon="employee">Emphasized</ui5-button>
-
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-
-	<ui5-button end-icon icon="employee">Icon last</ui5-button>
-	<ui5-button icon="employee" id="disabled-button-icon-only" disabled></ui5-button>
-	<ui5-button id="disabled-button-without-icon" disabled>Disabled Buton</ui5-button>
-
-
-
-	<ui5-checkbox text="Option A"></ui5-checkbox>
-	<ui5-checkbox disabled text="Option A"></ui5-checkbox>
-	<br />
-	<ui5-label>"This is a label, this is a label"</ui5-label>
-
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Emphasized">Action Bar Button</ui5-toggle-button>
-	<ui5-toggle-button>Primary button</ui5-toggle-button>
-	<ui5-toggle-button design="Transparent">Secondary button</ui5-toggle-button>
-	<ui5-toggle-button disabled>Inactive</ui5-toggle-button>
-	<ui5-toggle-button design="Positive">Agree</ui5-toggle-button>
-	<ui5-toggle-button design="Negative">Decline</ui5-toggle-button>
-
-	<br />
-	<br />
-	<br />
-
-	<ui5-toggle-button icon="employee">Action Bar Button</ui5-toggle-button>
-	<ui5-toggle-button icon="download"></ui5-toggle-button>
-	<ui5-toggle-button icon="download"></ui5-toggle-button>
-
-	<br />
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Default" icon="employee">Default</ui5-toggle-button>
-	<ui5-toggle-button disabled design="Default" icon="employee">Default</ui5-toggle-button>
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Positive" icon="employee">Agree</ui5-toggle-button>
-	<ui5-toggle-button disabled design="Positive" icon="employee">Agree</ui5-toggle-button>
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Negative" icon="employee">Decline</ui5-toggle-button>
-	<ui5-toggle-button disabled design="Negative" icon="employee">Decline</ui5-toggle-button>
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Transparent" icon="employee">Transparent</ui5-toggle-button>
-	<ui5-toggle-button disabled design="Transparent" icon="employee">Transparent</ui5-toggle-button>
-	<br />
-	<br />
-
-	<ui5-toggle-button design="Emphasized" icon="employee">Emphasized</ui5-toggle-button>
-	<ui5-toggle-button disabled design="Emphasized" icon="employee">Emphasized</ui5-toggle-button>
-
-	<br />
-	<br />
-	<ui5-button class="long-button long-button-begin" icon="download">Download</ui5-button>
-	<ui5-button class="long-button" icon="download">Download</ui5-button>
-	<ui5-button class="long-button long-button-end" icon="download">Download</ui5-button>
-
-	<br />
-	<br />
-	<ui5-title>Buttons with tooltip</ui5-title>
-	<br />
-	<ui5-button id="customTooltip" icon="message-information" tooltip="Go home"></ui5-button>
-	<ui5-button icon="accept" tooltip="Accept terms & conditions"></ui5-button>
-	<ui5-button icon="action-settings" tooltip="Go to settings"></ui5-button>
-	<ui5-button icon="alert" tooltip="Fire an alert"></ui5-button>
-	<ui5-button icon="arrow-down" tooltip="Go down"></ui5-button>
-	<ui5-button icon="arrow-down" disabled tooltip="Go down"></ui5-button>
-
-	<br />
-	<br />
-	<ui5-title>Buttons with busy indicator</ui5-title>
-	<br />
-	<ui5-button tooltip="Button with busy indicator" icon="accept" loading="true"></ui5-button>
-	<ui5-button tooltip="Button with busy indicator" loading="true">Busy Indicator</ui5-button>
-	<ui5-button design="Transparent" tooltip="Button with busy indicator" loading="true">Busy Indicator</ui5-button>
-	<ui5-button tooltip="Button with busy indicator" icon="home" design="Emphasized" loading="true">Busy Indicator</ui5-button>
-	<ui5-button design="Positive" tooltip="Button with busy indicator" loading="true">Busy Indicator</ui5-button>
-	<ui5-button design="Negative" tooltip="Button with busy indicator" loading="true">Busy Indicator</ui5-button>
-	<ui5-button design="Attention" tooltip="Button with busy indicator" loading="true">Busy Indicator</ui5-button>
-
-	<br />
-	<br />
-	<ui5-title>Menu Buttons</ui5-title>
-	<br />
-	<ui5-button id="menuButtonText" end-icon="navigation-down-arrow">Menu Button</ui5-button>
-	<ui5-button id="menuButtonIcon" icon="action-settings" end-icon="navigation-down-arrow"></ui5-button>
-	<ui5-button id="menuButtonTextIcon" icon="action-settings" end-icon="navigation-down-arrow">Menu Button</ui5-button>
-	<ui5-button id="menuButtonIconEnd" end-icon="navigation-down-arrow"
-		tooltip="Menu Button with End Icon only"></ui5-button>
-
-	<ui5-menu id="menu">
-		<ui5-menu-item text="Item 1"></ui5-menu-item>
-		<ui5-menu-item text="Item 2"></ui5-menu-item>
-		<ui5-menu-item text="Item 3"></ui5-menu-item>
-	</ui5-menu>
-
-	<br />
-	<br />
-
-	<form>
-		<input value="Native input in a form">
-		<ui5-input value="UI5 Input in a form"></ui5-input>
-		<ui5-button type="Submit">Submit</ui5-button>
-		<ui5-button type="Reset">Reset</ui5-button>
-	</form>
-
-	<ui5-button id="openDialogButton" design="Emphasized">Show Registration Dialog</ui5-button>
-
-	<ui5-dialog id="registration-dialog" header-text="Register Form">
-		<section class="login-form">
-			<div>
-				<ui5-label for="username" required>Username: </ui5-label>
-				<ui5-input id="username"></ui5-input>
-			</div>
-
-			<div>
-				<ui5-label for="password" required>Password: </ui5-label>
-				<ui5-input id="password" type="Password" value-state="Negative"></ui5-input>
-			</div>
-
-			<div>
-				<ui5-label for="email" type="Email" required>Email: </ui5-label>
-				<ui5-input id="email"></ui5-input>
-			</div>
-
-			<div>
-				<ui5-label for="address">Address: </ui5-label>
-				<ui5-input id="address"></ui5-input>
-			</div>
-		</section>
-
-		<div slot="footer">
-			<div style="flex: 1;"></div>
-			<ui5-button id="closeDialogButton" design="Emphasized">Register</ui5-button>
-		</div>
-	</ui5-dialog>
-
-	<a href="#test2">
-		<ui5-button id="btnInLink">Submit </ui5-button>
-	</a>
 	<script>
-		var clickCounter = document.querySelector("#click-counter");
-		var button = document.querySelector("#button1");
-		var disabledButton = document.querySelector("#button-disabled");
-		var disabledButtonIconOnly = document.querySelector("#disabled-button-icon-only");
-		var disabledButtonWithoutIcon = document.querySelector("#disabled-button-without-icon")
-		var clickCount = 0;
-
-		[button, disabledButton, disabledButtonIconOnly, disabledButtonWithoutIcon].forEach(function (el) {
-			el.addEventListener("ui5-click", function(event) {
-				clickCount += 1;
-				clickCounter.value = clickCount;
-			});
-		});
-
-		button.accessibilityAttributes = {
-			expanded: "true"
-		};
-
-		button.addEventListener("ui5-click", function(event) {
-			button.accessibilityAttributes = {
-				expanded: button.accessibilityAttributes.expanded === "true" ? "false" : "true"
-			};
-		});
-
-		var dialogOpener = document.getElementById("openDialogButton");
-		var dialog = document.getElementById("registration-dialog");
-		var dialogCloser = document.getElementById("closeDialogButton");
-
-		dialogOpener.accessibilityAttributes = {
-			hasPopup: "dialog",
-			controls: dialog.id,
+		const button = document.getElementById('test-button');
+		const actionsMenu = document.getElementById('actions-menu');
+		const contextMenu = document.getElementById('context-menu');
+		const logEl = document.getElementById('log');
+		
+		let touchTimeout;
+		let longPressTriggered = false;
+		
+		// Logging function
+		function log(message) {
+			const timestamp = new Date().toLocaleTimeString();
+			logEl.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+			logEl.scrollTop = logEl.scrollHeight;
 		}
-
-
-		dialogOpener.addEventListener("ui5-click", function() {
-			dialog.open = true;
-		});
-
-		dialogCloser.addEventListener("ui5-click", function() {
-			dialog.open = false;
-		});
-
-		function showMenu(target) {
-			menu.opener = target;
-			menu.open = true;
+		
+		// Show menu function
+		function showMenu(menuElement, menuName) {
+			// Close any open menus first
+			actionsMenu.open = false;
+			contextMenu.open = false;
+			
+			// Open the specified menu
+			menuElement.opener = button;
+			menuElement.open = true;
+			
+			log(`${menuName} menu opened`);
 		}
-
-		menuButtonText.addEventListener("ui5-click", function(event) {
-			showMenu(event.target);
+		
+		// Touch/Mouse Events
+		button.addEventListener('touchstart', (e) => {
+			log('Touch start');
+			longPressTriggered = false;
+			
+			touchTimeout = setTimeout(() => {
+				longPressTriggered = true;
+				log('Long press detected (300ms)');
+				showMenu(contextMenu, 'Context');
+			}, 300);
 		});
-
-		menuButtonIcon.addEventListener("ui5-click", function(event) {
-			showMenu(event.target);
+		
+		button.addEventListener('touchend', (e) => {
+			clearTimeout(touchTimeout);
+			log('Touch end');
+			
+			// Prevent click if long press was triggered
+			if (longPressTriggered) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
 		});
-
-		menuButtonTextIcon.addEventListener("ui5-click", function(event) {
-			showMenu(event.target);
+		
+		button.addEventListener('touchcancel', (e) => {
+			clearTimeout(touchTimeout);
+			log('Touch canceled');
+			longPressTriggered = false;
 		});
-
-		menuButtonIconEnd.addEventListener("ui5-click", function(event) {
-			showMenu(event.target);
+		
+		// Click event (for regular clicks and desktop)
+		button.addEventListener('click', (e) => {
+			if (!longPressTriggered) {
+				log('Click detected');
+				showMenu(actionsMenu, 'Actions');
+			}
 		});
-
-
-		const btnInLink = document.querySelector('#btnInLink');
-
-		btnInLink.addEventListener("ui5-click", (e) => {
-			e.preventDefault();
+		
+		// Right-click for desktop context menu simulation
+		button.addEventListener('contextmenu', (e) => {
+			e.preventDefault(); // Suppress browser context menu
+			log('Right-click detected (desktop context menu)');
+			showMenu(contextMenu, 'Context');
+		});
+		
+		// Menu event listeners
+		actionsMenu.addEventListener('item-click', (e) => {
+			log(`Actions menu item clicked: ${e.detail.text}`);
+			actionsMenu.open = false;
+		});
+		
+		contextMenu.addEventListener('item-click', (e) => {
+			log(`Context menu item clicked: ${e.detail.text}`);
+			contextMenu.open = false;
+		});
+		
+		// Initialize
+		document.addEventListener('DOMContentLoaded', () => {
+			log('Button Menu Test initialized');
 		});
 	</script>
-</body>
+	
+	<!-- Summary Section -->
+	<div class="container" style="margin-top: 30px;">
+		<div style="background-color: #fff3cd; padding: 20px; border-radius: 4px; border-left: 4px solid #ffc107;">
+			<h2 style="margin-top: 0; color: #856404;">📋 Long Press Suppression Summary</h2>
+			
+			<h3>How to Suppress Long Press/Tap on UI5 Button:</h3>
+			
+			<h4>1. CSS Method (Primary)</h4>
+			<pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>.ui5-button-suppress-longpress {
+	/* Prevent iOS Safari context menu/touch callout */
+	-webkit-touch-callout: none;
+	
+	/* Prevent Android long press & optimize touch response */
+	touch-action: manipulation;
+	
+	/* Prevent text selection (additional protection) */
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}</code></pre>
+			
+			<h4>2. JavaScript Event Handling (Additional)</h4>
+			<pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>// Suppress browser context menu
+button.addEventListener('contextmenu', (e) => {
+	e.preventDefault();
+	return false;
+});
 
+// Handle custom long press detection
+let touchTimeout;
+button.addEventListener('touchstart', (e) => {
+	touchTimeout = setTimeout(() => {
+		// Custom long press logic here
+	}, 300); // 300ms threshold
+});
+
+button.addEventListener('touchend', (e) => {
+	clearTimeout(touchTimeout);
+});</code></pre>
+			
+			<h4>3. Key Points</h4>
+			<ul>
+				<li><strong>CSS is the primary method</strong> - handles most browser behavior</li>
+				<li><strong>JavaScript provides fine control</strong> - for custom interactions</li>
+				<li><strong>Both methods combined</strong> ensure maximum compatibility</li>
+				<li><strong>Works across platforms</strong> - iOS, Android, Desktop browsers</li>
+			</ul>
+			
+			<h4>4. Browser Support</h4>
+			<ul>
+				<li><code>-webkit-touch-callout: none</code> → iOS Safari, Chrome</li>
+				<li><code>touch-action: manipulation</code> → All modern browsers</li>
+				<li><code>contextmenu</code> event prevention → Universal</li>
+			</ul>
+		</div>
+	</div>
+</body>
 </html>
