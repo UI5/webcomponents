@@ -37,6 +37,10 @@
 
 :host([content="ContentFit"]) ::slotted([ui5-segmented-button-item]) {
 	width: fit-content;
+	max-width: 400px;
+  	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
 }
 
 ::slotted([ui5-segmented-button-item]:hover) {
