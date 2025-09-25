@@ -60,13 +60,16 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.6",
+    "@types/add": "^2",
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.0",
+    "add": "^2.0.6",
     "chokidar-cli": "^3.0.0",
     "cypress": "^13.0.0",
     "eslint": "^7.22.0",
     "lit": "^2.0.0",
     "rimraf": "^6.0.1",
-    "vite": "^7.1.7"
+    "vite": "5.4.8",
+    "yarn": "^1.22.22"
   }
 }
