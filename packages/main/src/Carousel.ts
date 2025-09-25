@@ -15,7 +15,6 @@ import {
 	isPageDown,
 	isPageUp,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
@@ -39,7 +38,6 @@ import type BackgroundDesign from "./types/BackgroundDesign.js";
 import type BorderDesign from "./types/BorderDesign.js";
 import CarouselTemplate from "./CarouselTemplate.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-
 
 // Styles
 import CarouselCss from "./generated/themes/Carousel.css.js";
@@ -456,14 +454,14 @@ class Carousel extends UI5Element {
 
 	async _handleF7Key(e: KeyboardEvent) {
 		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedActivePageIndex];
-		if(!this._lastInnerFocusedElement) {
+		if (!this._lastInnerFocusedElement) {
 			const firstFocusable = await getFirstFocusableElement(this.items[this._selectedIndex].item);
-			firstFocusable?.focus()
+			firstFocusable?.focus();
 			this._lastInnerFocusedElement = firstFocusable || undefined;
 		} else if (this.carouselItemDomRef(this._selectedIndex)[0] === lastFocusedElement && lastFocusedElement !== e.target) {
 			lastFocusedElement.focus();
 			this._lastInnerFocusedElement = e.target as HTMLElement;
-		} else if(this._lastInnerFocusedElement) {
+		} else if (this._lastInnerFocusedElement) {
 			this._lastInnerFocusedElement.focus();
 		}
 	}
