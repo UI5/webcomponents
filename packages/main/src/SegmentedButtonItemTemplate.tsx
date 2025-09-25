@@ -5,7 +5,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 	return (
 		<li
 			role="option"
-			class="ui5-segmented-button-item-root"
+			class={`ui5-segmented-button-item-root ${this.content ? `ui5-segmented-button-item-root--${this.content}` : ""}`}
 			aria-posinset={this.posInSet}
 			aria-setsize={this.sizeOfSet}
 			aria-selected={this.selected}

@@ -30,6 +30,7 @@ import SegmentedButtonTemplate from "./SegmentedButtonTemplate.js";
 
 // Styles
 import SegmentedButtonCss from "./generated/themes/SegmentedButton.css.js";
+import type SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 
 /**
  * Interface for components that may be slotted inside `ui5-segmented-button` as items
@@ -127,6 +128,8 @@ class SegmentedButton extends UI5Element {
 	@property()
 	selectionMode: `${SegmentedButtonSelectionMode}` = "Single";
 
+	@property()
+	content: `${SegmentedButtonContentMode}` = "EqualSized";
 	/**
 	 * Defines the items of `ui5-segmented-button`.
 	 *
@@ -167,6 +170,7 @@ class SegmentedButton extends UI5Element {
 		items.forEach(item => {
 			item.posInSet = item.hidden ? undefined : index++;
 			item.sizeOfSet = item.hidden ? undefined : visibleItems.length;
+			item.content = this.content;
 		});
 
 		this.normalizeSelection();

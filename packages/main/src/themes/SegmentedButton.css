@@ -17,6 +17,13 @@
 	box-shadow: inset 0 0 0 var(--sapButton_BorderWidth) var(--sapButton_BorderColor);
 }
 
+.ui5-segmented-button-root--ContentFit {
+	display: inline-grid;
+	grid-template-columns: none;
+	grid-auto-flow: column;
+	gap: 0.0625rem;
+}
+
 ::slotted([ui5-segmented-button-item]) {
 	border-radius: var(--sapButton_Segment_BorderCornerRadius);
 	border-color: var(--_ui5_segmented_btn_border_color);
@@ -26,6 +33,10 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	z-index: initial;
+}
+
+:host([content="ContentFit"]) ::slotted([ui5-segmented-button-item]) {
+	width: fit-content;
 }
 
 ::slotted([ui5-segmented-button-item]:hover) {

@@ -20,6 +20,7 @@ import SegmentedButtonItemTemplate from "./SegmentedButtonItemTemplate.js";
 
 import type { IButton } from "./Button.js";
 import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.js";
+import SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 /**
  * @class
  *
@@ -167,6 +168,9 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	 */
 	@property({ type: Boolean })
 	hidden = false;
+
+	@property({ noAttribute: true })
+	content?: string;
 
 	/**
 	 * Defines the text of the component.
