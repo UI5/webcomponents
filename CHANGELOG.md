@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** add dynamic aria-label based on header state ([#12333](https://github.com/UI5/webcomponents/issues/12333)) ([529e765](https://github.com/UI5/webcomponents/commit/529e7656511422a64d5f6df6a81c1a7864858322)), closes [#12274](https://github.com/UI5/webcomponents/issues/12274)
+
+
+
+
+
+# [2.15.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.0...v2.15.0-rc.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* **create-new-package:** missing files ([#12327](https://github.com/UI5/webcomponents/issues/12327)) ([c80c4e9](https://github.com/UI5/webcomponents/commit/c80c4e96d853657e4618328c3b0fb0d1cb457e80))
+* **OpenUI5Support:** override default [popover] styles ([#12301](https://github.com/UI5/webcomponents/issues/12301)) ([9b1ee59](https://github.com/UI5/webcomponents/commit/9b1ee5916fb987757f37911f8e6934ed9a5fcf5d))
+* **ui5-card:** standardize border-radius variable usage and remove redundant definitions in sap_horizon themes ([#12323](https://github.com/UI5/webcomponents/issues/12323)) ([bc25e9f](https://github.com/UI5/webcomponents/commit/bc25e9f01ad7570a01365449fbda50946ecc28eb))
+* **ui5-date-picker:** use variable for popover width in compact density mode ([#12305](https://github.com/UI5/webcomponents/issues/12305)) ([c410c3f](https://github.com/UI5/webcomponents/commit/c410c3f8694e2c2975e902aa059206a1ef8e01c4)), closes [#12277](https://github.com/UI5/webcomponents/issues/12277)
+* **ui5-dialog:** fix dialog resizing in RTL mode when max-width is set ([#12304](https://github.com/UI5/webcomponents/issues/12304)) ([e7a538a](https://github.com/UI5/webcomponents/commit/e7a538a1a181e45be8a1ff17cc74326693325e56))
+* **ui5-dialog:** fix RTL Dialog resizing to keep right edge anchored ([#12313](https://github.com/UI5/webcomponents/issues/12313)) ([e50d0b8](https://github.com/UI5/webcomponents/commit/e50d0b83f6ef4d0f3570e6559b6b834e32023d62)), closes [#12310](https://github.com/UI5/webcomponents/issues/12310)
+* **ui5-dialog:** overriding of the header paddings when there is a state icon ([a8b2328](https://github.com/UI5/webcomponents/commit/a8b23281622527ededdea08a6f55cf7d3b25158d)), closes [#12228](https://github.com/UI5/webcomponents/issues/12228)
+* **ui5-dialog:** overstyling of the header is now possible ([#12252](https://github.com/UI5/webcomponents/issues/12252)) ([fbf1584](https://github.com/UI5/webcomponents/commit/fbf158464e5b658354f6de68958e54d8a6bab561)), closes [#12024](https://github.com/UI5/webcomponents/issues/12024)
+* **ui5-illustrated-message:** fix imports filter ([#12271](https://github.com/UI5/webcomponents/issues/12271)) ([f62d703](https://github.com/UI5/webcomponents/commit/f62d703b58aa4460dbc5a293c277290b48ca851f))
+* **ui5-search:** fix opening and closing of the search items popover  ([#12241](https://github.com/UI5/webcomponents/issues/12241)) ([32077a8](https://github.com/UI5/webcomponents/commit/32077a8a19b9659747f088b9af48ee6ac253fd03))
+* **ui5-segmented-button:** correct aria-multiselectable and aria-orientation="horizontal" ([#12270](https://github.com/UI5/webcomponents/issues/12270)) ([9864285](https://github.com/UI5/webcomponents/commit/98642857668624b5184ff6e725e0e7f7c47c3934)), closes [#12263](https://github.com/UI5/webcomponents/issues/12263)
+* **ui5-select:** allow popover to extend beyond select width ([#12291](https://github.com/UI5/webcomponents/issues/12291)) ([4ad9725](https://github.com/UI5/webcomponents/commit/4ad9725d5227003770dcc6d3ce9b7032d9e7eb60))
+* **ui5-select:** announce header text on mobile ([#11849](https://github.com/UI5/webcomponents/issues/11849)) ([972e6db](https://github.com/UI5/webcomponents/commit/972e6dba29d0966bcf3f4136be67114571a69745))
+* **ui5-shellbar:** correct spacing after expanded search field ([#12298](https://github.com/UI5/webcomponents/issues/12298)) ([ac38505](https://github.com/UI5/webcomponents/commit/ac385052898d78dc12ebf0a0b3f261446f4687b8))
+* **ui5-shellbar:** ensure avatar click event is triggered correctly ([#12055](https://github.com/UI5/webcomponents/issues/12055)) ([5bbb264](https://github.com/UI5/webcomponents/commit/5bbb2645a79df9b75cf2407cc2a1d47d2e4489d4)), closes [#11920](https://github.com/UI5/webcomponents/issues/11920)
+* **ui5-tokenizer:** scroll to end when adding tokens from suggestions ([#12242](https://github.com/UI5/webcomponents/issues/12242)) ([f2cd8c4](https://github.com/UI5/webcomponents/commit/f2cd8c45d1aad7dc23f52c36f88a1d106a66f722))
+* **ui5-toolbar:** fix async toolbar tests ([#12330](https://github.com/UI5/webcomponents/issues/12330)) ([ddd6cbd](https://github.com/UI5/webcomponents/commit/ddd6cbd7b68d8fc95b1f13d174c87c9071ea923d))
+* **ui5-toolbar:** prevent flickering ([#12285](https://github.com/UI5/webcomponents/issues/12285)) ([f7f98d6](https://github.com/UI5/webcomponents/commit/f7f98d652f8e14c5eab4879416e199ca87592679))
+* **ui5-toolbar:** prevent flickering on item state changes ([#12222](https://github.com/UI5/webcomponents/issues/12222)) ([669262b](https://github.com/UI5/webcomponents/commit/669262b14bb522dc3699d5b49c771aa6862528a0)), closes [#12209](https://github.com/UI5/webcomponents/issues/12209)
+
+
+### Features
+
+* **ui5-button, ui5-ai-button:** extend accessibility ([f6a0504](https://github.com/UI5/webcomponents/commit/f6a05045b7b07afca69b9dec7049649607f488f3))
+* **ui5-input,ui5-multi-input,ui5-combobox,ui5-multi-combobox:** comp… ([#12292](https://github.com/UI5/webcomponents/issues/12292)) ([4a9f238](https://github.com/UI5/webcomponents/commit/4a9f23898799feab90beeb5decdf90779ac532e4))
+* **ui5-search:** enable fast navigation with F2 ([#12314](https://github.com/UI5/webcomponents/issues/12314)) ([5199bd0](https://github.com/UI5/webcomponents/commit/5199bd0b868b2b1c330fba3c39b26350cf3dac8a))
+* **ui5-tokenizer:** enable tokenizer in forms ([#12248](https://github.com/UI5/webcomponents/issues/12248)) ([c16ca9e](https://github.com/UI5/webcomponents/commit/c16ca9e44730e3d21204f0308c7c2da63b597b81))
+
+
+
+
+
 # [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
 
 
