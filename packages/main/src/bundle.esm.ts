@@ -52,6 +52,7 @@ import DateTimePicker from "./DateTimePicker.js";
 import Dialog from "./Dialog.js";
 import DynamicDateRange from "./DynamicDateRange.js";
 import Today from "./dynamic-date-range-options/Today.js";
+import TodayFromTo from "./dynamic-date-range-options/TodayFromTo.js";
 import Yesterday from "./dynamic-date-range-options/Yesterday.js";
 import Tomorrow from "./dynamic-date-range-options/Tomorrow.js";
 import SingleDate from "./dynamic-date-range-options/SingleDate.js";
