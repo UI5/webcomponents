@@ -30,7 +30,8 @@ class Parser {
 
 		// Parse scripts on initialization
 		this.parseScripts();
-		this.parsedScripts.keys().forEach(key => {
+
+		[...this.parsedScripts.keys()].forEach(key => {
 			this.resolveScripts(`${key}`);
 		});
 	}

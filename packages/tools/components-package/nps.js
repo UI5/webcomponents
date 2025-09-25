@@ -7,6 +7,8 @@ if (process.env.DEPLOY) {
 	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
 	websiteBaseUrl = "/webcomponents/nightly/";
+} else if (process.env.DEPLOYMENT_TYPE === "preview" && process.env.PR_NUMBER) {
+	websiteBaseUrl = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
 }
 
 const getScripts = (options) => {
@@ -132,11 +134,13 @@ const getScripts = (options) => {
 			i18n: 'chokidar "src/i18n/messagebundle.properties" -c "ui5nps build.i18n.defaultsjs"'
 		},
 		start: "ui5nps prepare watch.devServer",
-		test: `node "${LIB}test-runner/test-runner.js"`,
-		"test-cy-ci": `yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-1": `yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-2": `yarn cypress run --component --browser chrome`,
-		"test-cy-open": `yarn cypress open --component --browser chrome`,
+		test: `node "${LIB}/test-runner/test-runner.js"`,
+		"test-cy-ci": `cypress run --component --browser chrome`,
+		"test-cy-ci-suite-1": `cypress run --component --browser chrome --spec "**/specs/[A-C]*.cy.{js,jsx,ts,tsx},**/specs/[^D-Z]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-2": `cypress run --component --browser chrome --spec "**/specs/[D-L]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-3": `cypress run --component --browser chrome --spec "**/specs/[M-S]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-4": `cypress run --component --browser chrome --spec "**/specs/[T-Z]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-open": `cypress open --component --browser chrome`,
 		startWithScope: "ui5nps scope.prepare scope.watchWithBundle",
 		scope: {
 			prepare: "ui5nps scope.lint scope.testPages",

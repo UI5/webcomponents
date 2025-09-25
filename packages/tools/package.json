@@ -4,17 +4,15 @@
   "description": "UI5 Web Components: webcomponents.tools",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
-  "private": false,
   "keywords": [
     "openui5",
     "sapui5",
     "ui5"
   ],
-  "scripts": {},
   "bin": {
-    "wc-dev": "bin/dev.js",
     "ui5nps": "bin/ui5nps.js",
-    "wc-create-ui5-element": "bin/create-ui5-element.js"
+    "wc-create-ui5-element": "bin/create-ui5-element.js",
+    "wc-dev": "bin/dev.js"
   },
   "repository": {
     "type": "git",
