@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>AI TextArea - Demo</title>
+	<meta name="description" content="AI-powered textarea component demonstration">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		:root {
+			--demo-spacing: 1rem;
+			--demo-max-width: 800px;
+		}
+
+		body {
+			font-family: var(--sapFontFamily, 'Helvetica Neue', Arial, sans-serif);
+			background-color: var(--sapBackgroundColor, #ffffff);
+			margin: 0;
+			padding: var(--demo-spacing);
+		}
+
+		.demo-container {
+			max-width: var(--demo-max-width);
+			margin: 0 auto;
+		}
+
+		.demo-title {
+			font-size: 1.5rem;
+			margin-bottom: var(--demo-spacing);
+			color: var(--sapTextColor);
+		}
+
+		ui5-ai-textarea {
+			width: 100%;
+			margin-bottom: var(--demo-spacing);
+		}
+
+		.demo-controls {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: var(--demo-spacing);
+			flex-wrap: wrap;
+		}
+
+		.demo-info {
+			background: var(--sapInfoBackground);
+			border: 1px solid var(--sapInfoBorderColor);
+			border-radius: 0.25rem;
+			padding: 0.75rem;
+			margin-top: var(--demo-spacing);
+			font-size: 0.875rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="demo-container">
+		<h1 class="demo-title">AI TextArea Component</h1>
+
+		<ui5-ai-textarea
+			id="ai-textarea"
+			value="Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
+			assistant-state="Initial"
+			action-text=""
+			current-version-index="1"
+			total-versions="1"
+			rows="8"
+			placeholder="Write your content here...">
+
+			<ui5-menu slot="menu" id="ai-menu">
+				<ui5-menu-item text="Generate text" data-action="generate"></ui5-menu-item>
+				<ui5-menu-item text="Simplify" data-action="simplify" starts-section></ui5-menu-item>
+				<ui5-menu-item text="Expand" data-action="expand"></ui5-menu-item>
+				<ui5-menu-item text="Rephrase" data-action="rephrase"></ui5-menu-item>
+				<ui5-menu-item text="Summarize" data-action="summarize"></ui5-menu-item>
+				<ui5-menu-item text="Make bullet list" data-action="bullets" starts-section></ui5-menu-item>
+				<ui5-menu-item text="Translate to German" data-action="translate-de"></ui5-menu-item>
+			</ui5-menu>
+		</ui5-ai-textarea>
+
+		<div class="demo-controls">
+			<ui5-button id="reset-btn" design="Outlined">Reset</ui5-button>
+			<ui5-button id="readonly-toggle" design="Outlined">Toggle Readonly</ui5-button>
+			<ui5-button id="disabled-toggle" design="Outlined">Toggle Disabled</ui5-button>
+		</div>
+
+		<div class="demo-info">
+			<strong>Keyboard Shortcuts:</strong><br>
+			• Shift + F4: Focus AI button<br>
+			• Ctrl + Shift + Z: Previous version (when multiple versions exist)<br>
+			• Ctrl + Shift + Y: Next version (when multiple versions exist)<br>
+			• Escape: Stop generation (during loading)
+		</div>
+	</div>
+
+	<script>
+		'use strict';
+
+		// Sample texts for different actions
+		const SAMPLE_TEXTS = {
+			generate: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
+			simplify: "Innovation managers use creativity and business skills to promote innovation and create value for organizations and customers.",
+			expand: "Innovation managers play a pivotal role in modern organizations by seamlessly blending creative thinking with strategic business acumen. They are responsible not only for generating innovative ideas but also for fostering a comprehensive culture that encourages experimentation, collaboration, and out-of-the-box thinking among all team members. These professionals work diligently to identify opportunities for improvement, anticipate emerging market trends, and develop solutions that align perfectly with both organizational goals and evolving customer needs.",
+			rephrase: "Innovation managers leverage creativity and business expertise to foster a culture of innovation, simplify the process of implementing new ideas, and create value for both the organization and its customers.",
+			summarize: "Innovation managers blend creativity and business skills to foster innovation and create value.",
+			bullets: "Innovation managers:\n• Operate with creativity and business acumen\n• Drive innovation-friendly culture initiatives\n• Streamline new idea execution\n• Unlock organizational and customer value",
+			"translate-de": "Innovationsmanager arbeiten sowohl mit Kreativität als auch mit Geschäftssinn und treiben Initiativen voran, die eine innovationsfreundliche Kultur fördern."
+		};
+
+		// Configuration
+		const CONFIG = {
+			GENERATION_DELAY: 2000,
+			TYPING_SPEED: 25
+		};
+
+		// State management
+		let currentVersions = [];
+		let currentVersionIndex = 0;
+		let isGenerating = false;
+		let typingInterval = null;
+
+		// DOM elements
+		const textarea = document.getElementById('ai-textarea');
+		const menu = document.getElementById('ai-menu');
+		const resetBtn = document.getElementById('reset-btn');
+		const readonlyToggle = document.getElementById('readonly-toggle');
+		const disabledToggle = document.getElementById('disabled-toggle');
+
+		// Utility functions
+		function delay(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		function typeText(text, callback) {
+			let index = 0;
+			textarea.value = '';
+			
+			typingInterval = setInterval(() => {
+				if (index < text.length) {
+					textarea.value += text[index];
+					index++;
+				} else {
+					clearInterval(typingInterval);
+					typingInterval = null;
+					callback();
+				}
+			}, CONFIG.TYPING_SPEED);
+		}
+
+		function stopTyping() {
+			if (typingInterval) {
+				clearInterval(typingInterval);
+				typingInterval = null;
+			}
+		}
+
+		function updateVersionState() {
+			textarea.currentVersionIndex = currentVersionIndex + 1;
+			textarea.totalVersions = currentVersions.length;
+			
+			if (currentVersions.length > 0) {
+				textarea.actionText = currentVersions[currentVersionIndex].actionText;
+			}
+		}
+
+		// AI simulation functions
+		async function simulateAIGeneration(action) {
+			if (isGenerating) return;
+
+			isGenerating = true;
+			const actionText = getActionText(action);
+			
+			// Set loading state
+			textarea.assistantState = 'Loading';
+			textarea.actionText = `${actionText}...`;
+
+			try {
+				await delay(CONFIG.GENERATION_DELAY);
+				
+				const resultText = SAMPLE_TEXTS[action] || SAMPLE_TEXTS.generate;
+				
+				// Animate typing
+				await new Promise(resolve => {
+					typeText(resultText, resolve);
+				});
+
+				// Save version
+				currentVersions.push({
+					text: resultText,
+					action: action,
+					actionText: actionText
+				});
+				currentVersionIndex = currentVersions.length - 1;
+
+				// Update state
+				textarea.assistantState = 'Initial';
+				updateVersionState();
+
+			} catch (error) {
+				console.error('Generation error:', error);
+				textarea.assistantState = 'Initial';
+				textarea.actionText = 'Generation failed';
+			} finally {
+				isGenerating = false;
+			}
+		}
+
+		function getActionText(action) {
+			const actionTexts = {
+				generate: 'Generated text',
+				simplify: 'Simplified text',
+				expand: 'Expanded text', 
+				rephrase: 'Rephrased text',
+				summarize: 'Summarized text',
+				bullets: 'Created bullet list',
+				'translate-de': 'Translated to German'
+			};
+			return actionTexts[action] || 'Generated text';
+		}
+
+		function stopGeneration() {
+			if (!isGenerating) return;
+
+			stopTyping();
+			isGenerating = false;
+			textarea.assistantState = 'Initial';
+			
+			// Save partial result if any
+			if (textarea.value.trim()) {
+				currentVersions.push({
+					text: textarea.value,
+					action: 'stopped',
+					actionText: 'Generation stopped'
+				});
+				currentVersionIndex = currentVersions.length - 1;
+				updateVersionState();
+			}
+		}
+
+		// Event handlers
+		function handleMenuItemClick(event) {
+			const action = event.detail.item.dataset.action;
+			if (action) {
+				simulateAIGeneration(action);
+			}
+		}
+
+		function handlePreviousVersion(event) {
+			if (currentVersionIndex > 0) {
+				currentVersionIndex--;
+				if (currentVersions[currentVersionIndex]) {
+					textarea.value = currentVersions[currentVersionIndex].text;
+					updateVersionState();
+				}
+			}
+		}
+
+		function handleNextVersion(event) {
+			if (currentVersionIndex < currentVersions.length - 1) {
+				currentVersionIndex++;
+				if (currentVersions[currentVersionIndex]) {
+					textarea.value = currentVersions[currentVersionIndex].text;
+					updateVersionState();
+				}
+			}
+		}
+
+		function handleStopGeneration() {
+			stopGeneration();
+		}
+
+		function handleKeydown(event) {
+			// Stop generation with Escape
+			if (event.key === 'Escape' && isGenerating) {
+				event.preventDefault();
+				stopGeneration();
+			}
+		}
+
+		function resetDemo() {
+			stopGeneration();
+			currentVersions = [];
+			currentVersionIndex = 0;
+			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
+			textarea.assistantState = 'Initial';
+			textarea.actionText = '';
+			textarea.currentVersionIndex = 1;
+			textarea.totalVersions = 1;
+		}
+
+		function toggleReadonly() {
+			textarea.readonly = !textarea.readonly;
+			readonlyToggle.textContent = textarea.readonly ? 'Enable Editing' : 'Toggle Readonly';
+		}
+
+		function toggleDisabled() {
+			textarea.disabled = !textarea.disabled;
+			disabledToggle.textContent = textarea.disabled ? 'Enable Component' : 'Toggle Disabled';
+		}
+
+		// Initialize demo
+		function initDemo() {
+			// Event listeners - need to handle AI button click to open menu
+			menu.addEventListener('item-click', handleMenuItemClick);
+			textarea.addEventListener('previous-version-click', handlePreviousVersion);
+			textarea.addEventListener('next-version-click', handleNextVersion);
+			textarea.addEventListener('stop-generation', handleStopGeneration);
+			document.addEventListener('keydown', handleKeydown);
+			
+			// The AI button click is handled internally by the component
+			// The component's handleGenerateClick method should automatically open the menu
+			// We don't need to listen for this event in the HTML page
+			// The menu integration is handled via the handleGenerateClick method in TextArea.ts
+			
+			// Control buttons
+			resetBtn.addEventListener('click', resetDemo);
+			readonlyToggle.addEventListener('click', toggleReadonly);
+			disabledToggle.addEventListener('click', toggleDisabled);
+
+			console.log('AI TextArea demo initialized');
+		}
+
+		// Start demo when DOM is loaded
+		document.addEventListener('DOMContentLoaded', initDemo);
+	</script>
+</body>
+
+</html>
