@@ -10,6 +10,10 @@ import {
 	isDown,
 	isUp,
 	isF7,
+	isHome,
+	isEnd,
+	isPageDown,
+	isPageUp,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -18,7 +22,6 @@ import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnable
 import type { ScrollEnablementEventListenerParam } from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
@@ -35,8 +38,8 @@ import CarouselPageIndicatorType from "./types/CarouselPageIndicatorType.js";
 import type BackgroundDesign from "./types/BackgroundDesign.js";
 import type BorderDesign from "./types/BorderDesign.js";
 import CarouselTemplate from "./CarouselTemplate.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 
-import type Button from "./Button.js";
 
 // Styles
 import CarouselCss from "./generated/themes/Carousel.css.js";
@@ -277,6 +280,8 @@ class Carousel extends UI5Element {
 	_resizing: boolean;
 	_lastFocusedElements: Array<HTMLElement>;
 	_orderOfLastFocusedPages: Array<number>;
+	_lastInnerFocusedElement?: HTMLElement;
+	_pageStep: number = 10;
 	_visibleItemsIndexes: Array<number>;
 	_calculatedX: number = 0;
 	_itemIndicator: number = 0;
@@ -384,10 +389,24 @@ class Carousel extends UI5Element {
 			this._handleF7Key(e);
 			return;
 		}
+		if (isHome(e)) {
+			this._handleHome(e);
+		}
+		if (isEnd(e)) {
+			this._handleEnd(e);
+		}
+		if (isPageUp(e)) {
+			this._handlePageUp(e);
+		}
+		if (isPageDown(e)) {
+			this._handlePageDown(e);
+		}
 
 		if (isLeft(e) || isDown(e)) {
+			e.preventDefault();
 			this.navigateLeft();
 		} else if (isRight(e) || isUp(e)) {
+			e.preventDefault();
 			this.navigateRight();
 		}
 	}
@@ -435,15 +454,38 @@ class Carousel extends UI5Element {
 		}
 	}
 
-	_handleF7Key(e: KeyboardEvent) {
+	async _handleF7Key(e: KeyboardEvent) {
 		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedActivePageIndex];
-
-		if (e.target === this.getDomRef() && lastFocusedElement) {
+		if(!this._lastInnerFocusedElement) {
+			const firstFocusable = await getFirstFocusableElement(this.items[this._selectedIndex].item);
+			firstFocusable?.focus()
+			this._lastInnerFocusedElement = firstFocusable || undefined;
+		} else if (this.carouselItemDomRef(this._selectedIndex)[0] === lastFocusedElement && lastFocusedElement !== e.target) {
 			lastFocusedElement.focus();
-		} else {
-			//@TODO where shoul the focus go?
-			this.getDomRef()!.focus();
+			this._lastInnerFocusedElement = e.target as HTMLElement;
+		} else if(this._lastInnerFocusedElement) {
+			this._lastInnerFocusedElement.focus();
 		}
+	}
+
+	_handleHome(e: KeyboardEvent) {
+		e.preventDefault();
+		this.navigateTo(0);
+	}
+
+	_handleEnd(e: KeyboardEvent) {
+		e.preventDefault();
+		this.navigateTo(this.items.length - 1);
+	}
+
+	_handlePageUp(e: KeyboardEvent) {
+		e.preventDefault();
+		this.navigateTo(this._selectedIndex	+ this._pageStep < this.items.length ? this._selectedIndex + this._pageStep : this.items.length - 1);
+	}
+
+	_handlePageDown(e: KeyboardEvent) {
+		e.preventDefault();
+		this.navigateTo(this._selectedIndex	- this._pageStep > 0 ? this._selectedIndex - this._pageStep : 0);
 	}
 
 	get _backgroundDesign() {
@@ -468,9 +510,7 @@ class Carousel extends UI5Element {
 		const previousSelectedIndex = this._selectedIndex;
 
 		if (this._selectedIndex - 1 < 0) {
-			// TODO clean up logic, no cyclic for morre than pne page 
-			if (this.cyclic) {
-				// make better
+			if (this.cyclic && this._visibleItemsIndexes.length >= 1) {
 				if (this._selectedIndex === 0 && this.effectiveItemsPerPage > 1) {
 					this._selectedIndex = 0;
 				} else {
@@ -493,7 +533,6 @@ class Carousel extends UI5Element {
 		const previousSelectedIndex = this._selectedIndex;
 
 		if (this._selectedIndex + 1 > this.items.length - 1) {
-			// TODO clean up logic, no cyclic for mоre than оne page 
 			if (this.cyclic) {
 				if (this._selectedIndex === this.items.length - 1 && this.effectiveItemsPerPage > 1) {
 					this._selectedIndex = this.items.length - 1;
@@ -507,7 +546,6 @@ class Carousel extends UI5Element {
 			++this._selectedIndex;
 		}
 
-		//TOOD fix fast clicking of arrow left breaks animation
 		if (previousSelectedIndex !== this._selectedIndex) {
 			this.skipToItem(this._selectedIndex, 1);
 			this.fireDecoratorEvent("navigate", { selectedIndex: this._selectedIndex });
@@ -515,6 +553,9 @@ class Carousel extends UI5Element {
 	}
 
 	_calculateItemSlideIndex(currentSlideIndex: number, itemStep: number) {
+		if (this.isItemInViewport(this._selectedIndex)) {
+			return 0;
+		}
 		const itemsPerPage = this.effectiveItemsPerPage;
 
 		let slideIndex;
@@ -566,12 +607,12 @@ class Carousel extends UI5Element {
 	}
 
 	focusItem() {
-		this.carouselItemDomRef(this._selectedIndex)[0].focus();
+		this.carouselItemDomRef(this._selectedIndex)[0].focus({ preventScroll: true });
 	}
 
-	_navButtonClick(e: UI5CustomEvent<Button, "click">) {
-		const button = e.target as Button;
-		if (button.hasAttribute("data-ui5-arrow-forward")) {
+	_navButtonClick(e: MouseEvent) {
+		const target = e.currentTarget as HTMLElement;
+		if (target.hasAttribute("data-ui5-arrow-forward")) {
 			this.navigateRight();
 		} else {
 			this.navigateLeft();
@@ -585,22 +626,30 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number) {
-		//TODO test this and fix
 		this._resizing = false;
-		//TODO check if _SelectedIndex is grater or smaller than itemIndex for skipToItemOffset
-		this._selectedIndex = itemIndex;
-		this._currentSlideIndex = itemIndex;
 
+		if (this._selectedIndex < itemIndex) {
+			this._itemIndicator = 1;
+		}
+		this._selectedIndex = itemIndex;
+		this._currentSlideIndex = itemIndex - this._itemIndicator;
+		if (this.isItemInViewport(itemIndex)) {
+			this._currentSlideIndex = this._visibleItemsIndexes[0];
+			this._resizing = false;
+			this.focusItem();
+			return;
+		}
 		this.skipToItem(this._selectedIndex, 1);
 	}
-	async skipToItem(focusIndex: number, offset: number) {
+
+	skipToItem(focusIndex: number, offset: number) {
 		if (!this.isItemInViewport(focusIndex)) {
-			const slideIndex = this._calculateItemSlideIndex(this._currentSlideIndex, offset);
-			console.log(" SLIDE INDEX ", slideIndex);
+			let slideIndex = this._calculateItemSlideIndex(this._currentSlideIndex, offset);
+			if (focusIndex === 0) {
+				slideIndex = 0;
+			}
 			this._moveToItem(slideIndex);
 		}
-
-		await renderFinished();
 		this.focusItem();
 	}
 	/**
@@ -612,7 +661,7 @@ class Carousel extends UI5Element {
 			return {
 				id: `${this._id}-carousel-item-${idx + 1}`,
 				item,
-				tabIndex: this._selectedIndex === idx ? 0 : -1,
+				tabIndex: this.isItemInViewport(this._selectedIndex) ? 0 : -1,
 				posinset: idx + 1,
 				setsize: this.content.length,
 				visible: this.isItemInViewport(idx),
@@ -680,7 +729,6 @@ class Carousel extends UI5Element {
 		for (let i = newItemIndex; i < lastItemIndex; i++) {
 			this._visibleItemsIndexes.push(i);
 		}
-		console.log(" VISIBLE ", this._visibleItemsIndexes);
 	}
 
 	isIndexInRange(index: number): boolean {

@@ -1,5 +1,5 @@
 import type Carousel from "./Carousel.js";
-import Button from "./Button.js";
+import Icon from "./Icon.js";
 import slimArrowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
@@ -52,11 +52,9 @@ export default function CarouselTemplate(this: Carousel) {
 			{this.renderNavigation &&
 				<div class={this.classes.navigation}>
 					{this.showArrows.navigation && arrowBack.call(this)}
-
 					<div class="ui5-carousel-navigation">
 						{ !this.hidePageIndicator && navIndicator.call(this) }
 					</div>
-
 					{this.showArrows.navigation && arrowForward.call(this)}
 				</div>
 			}
@@ -65,38 +63,48 @@ export default function CarouselTemplate(this: Carousel) {
 }
 
 function arrowBack(this: Carousel) {
-	return <Button
-		icon={slimArrowLeft}
-		tabindex={-1}
-		tooltip={this.previousPageText}
-		class={{
-			"ui5-carousel-navigation-button": true,
-			"ui5-carousel-navigation-button--hidden": !this.hasPrev
-		}}
-		data-ui5-arrow-back
-		onClick={this._navButtonClick}
-	/>;
-}
-
-function arrowForward(this: Carousel) {
-	return <Button
-		icon={slimArrowRight}
-		tabindex={-1}
-		tooltip={this.nextPageText}
+	return <span
+		role="presentation"
+		aria-hidden="true"
+		title={this.previousPageText}
 		class={{
 			"ui5-carousel-navigation-button": true,
 			"ui5-carousel-navigation-button--hidden": !this.hasNext
 		}}
+		data-ui5-arrow-back
+		onClick={e => this._navButtonClick(e as MouseEvent)}
+	>
+		<Icon name={slimArrowLeft}
+			data-ui5-arrow-back
+			tabindex={-1}
+		/>
+	</span>;
+}
+
+function arrowForward(this: Carousel) {
+	return <span
 		data-ui5-arrow-forward
-		onClick={this._navButtonClick}
-	/>;
+		title={this.nextPageText}
+		role="presentation"
+		aria-hidden="true"
+		onClick={e => this._navButtonClick(e as MouseEvent)}
+		class={{
+			"ui5-carousel-navigation-button": true,
+			"ui5-carousel-navigation-button--hidden": !this.hasNext
+		}}
+	>
+		<Icon name={slimArrowRight}
+			tabindex={-1}
+		/>
+	</span>;
 }
 
 function navIndicator(this: Carousel) {
 	return this.isPageTypeDots ? this.dots.map(dot =>
 		<div
-			role="img"
 			aria-label={dot.ariaLabel}
+			role="presentation"
+			aria-hidden="true"
 			class={{
 				"ui5-carousel-navigation-dot": true,
 				"ui5-carousel-navigation-dot--active": dot.active
