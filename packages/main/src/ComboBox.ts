@@ -836,7 +836,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const isGroupItem = currentItem && currentItem.isGroupItem;
 		const nextItem = isForward ? allItems[indexOfItem + 1] : allItems[indexOfItem - 1];
 
-		if ((!this.open) && ((isGroupItem && !nextItem) || (!isGroupItem && !currentItem))) {
+		// do not navigate items while popup is closed
+		if (!this.open) {
+			return;
+		}
+
+		if ((isGroupItem && !nextItem) || (!isGroupItem && !currentItem)) {
 			return;
 		}
 
@@ -945,6 +950,27 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._autocomplete = !(isBackSpace(e) || isDelete(e));
 		this._isKeyNavigation = false;
+
+		// open popover on first ArrowDown/ArrowUp
+		if ((isDown(e) || isUp(e)) && !this.open && !this.readonly && this._filteredItems.length) {
+			this._openRespPopover();
+			if (isDown(e)) {
+				const firstNonGroupIndex = this._getItems().findIndex(item => item._isVisible && !item.isGroupItem);
+				if (firstNonGroupIndex > -1) {
+					this._handleItemNavigation(e, firstNonGroupIndex, true);
+				}
+				return;
+			}
+			// For ArrowUp: focus last visible non-group item
+			if (isUp(e)) {
+				const items = this._getItems().filter(i => i._isVisible && !i.isGroupItem);
+				if (items.length) {
+					const lastIndex = this._getItems().indexOf(items[items.length - 1]);
+					this._handleItemNavigation(e, lastIndex, false);
+				}
+				return;
+			}
+		}
 
 		if (isNavKey && !this.readonly && this._filteredItems.length) {
 			this.handleNavKeyPress(e);
