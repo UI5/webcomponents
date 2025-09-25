@@ -63,7 +63,22 @@ jobs:
       run: |
         yarn ci:deploy:preview
 
+    - name: Check PR open state
+      id: prCheckID
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        script: |
+          const { data: pr } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number
+          });
+          
+          core.setOutput('shouldDeploy', pr.state === 'open' ? 'true' : 'false');
+
     - name: Deploy to PR subfolder
+      if: steps.prCheckID.outputs.shouldDeploy == 'true'
       uses: JamesIves/github-pages-deploy-action@v4.6.4
       with:
         branch: gh-pages
@@ -72,6 +87,7 @@ jobs:
         clean: false
         
     - name: Comment PR with preview link
+      if: steps.prCheckID.outputs.shouldDeploy == 'true'
       uses: actions/github-script@v7
       with:
           github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
