@@ -512,12 +512,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress(["Shift", "F4"])
-			.realPress("F4");
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
+
+		// Wait for year picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
 
 		cy.get("@calendar")
 			.shadow()
@@ -532,12 +555,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress("F4")
-			.realPress(["Shift", "F4"]);
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
+
+		// Wait for month picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
 
 		cy.get("@calendar")
 			.shadow()
@@ -1664,7 +1710,9 @@ describe("Legacy date customization and Islamic calendar type", () => {
 			.ui5DatePickerGetInnerInput()
 			.as("input")
 			.realClick()
-			.should("be.focused")
+			.should("be.focused");
+
+		cy.get("@input")
 			.realType("Rab. I 6, 1440 AH")
 			.realPress("Enter");
 

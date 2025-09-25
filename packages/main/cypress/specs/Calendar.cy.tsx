@@ -408,9 +408,19 @@ describe("Calendar general interaction", () => {
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find("[tabindex='0']")
-			.realClick();
+			.realClick()
+			.should("have.focus");
 
 		cy.focused().realPress(["Shift", "F4"]);
+		
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearpicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+		
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -418,6 +428,14 @@ describe("Calendar general interaction", () => {
 			.then(_timestamp => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1980, 9, 1, 0, 0, 0)));
 			});
+
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearpicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
 
 		cy.focused().realPress("PageDown");
 
@@ -441,6 +459,14 @@ describe("Calendar general interaction", () => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1998, 9, 16, 0, 0, 0)));
 			});
 
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearrangepicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -462,6 +488,14 @@ describe("Calendar general interaction", () => {
 			.then(_timestamp => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1998, 9, 16, 0, 0, 0)));
 			});
+
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearrangepicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
 
 		cy.focused().realPress("PageDown");
 
@@ -503,7 +537,8 @@ describe("Calendar general interaction", () => {
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
 
 		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
-			.focus();
+			.focus()
+			.should("have.focus");
 
 		// Select the focused date
 		cy.focused().realPress("Space");
