@@ -75,9 +75,10 @@ interface IDynamicDateRangeOption {
 	format: (value: DynamicDateRangeValue) => string;
 	parse: (value: string) => DynamicDateRangeValue | undefined;
 	toDates: (value: DynamicDateRangeValue) => Array<Date>;
-	handleSelectionChange?: (event: CustomEvent) => DynamicDateRangeValue | undefined;
+	handleSelectionChange?: (event: CustomEvent, value: DynamicDateRangeValue | undefined) => DynamicDateRangeValue | undefined;
 	template?: JsxTemplate;
 	isValidString: (value: string) => boolean;
+	resetState?: () => void;
 }
 
 /**
@@ -255,7 +256,7 @@ class DynamicDateRange extends UI5Element {
 
 	_togglePicker(): void {
 		if (this.open) {
-			this.open = false;
+			this._close();
 		} else {
 			this.open = true;
 		}
@@ -359,11 +360,19 @@ class DynamicDateRange extends UI5Element {
 			this.value = undefined;
 		}
 
+		if (this._currentOption?.resetState) {
+			this._currentOption.resetState();
+		}
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
 
 	_close() {
+		if (this._currentOption?.resetState) {
+			this._currentOption.resetState();
+		}
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
@@ -401,7 +410,12 @@ class DynamicDateRange extends UI5Element {
 	}
 
 	handleSelectionChange(e: CustomEvent) {
-		this.currentValue = this._currentOption?.handleSelectionChange && this._currentOption?.handleSelectionChange(e) as DynamicDateRangeValue;
+		const value = this._currentOption?.handleSelectionChange && this._currentOption?.handleSelectionChange(e, this.currentValue) as DynamicDateRangeValue;
+
+		this.currentValue = JSON.parse(JSON.stringify(value)); // deep clone
+		if (this.currentValue) {
+			this.currentValue.values = value?.values;
+		}
 
 		// Update _currentOption if the operator changed
 		if (this.currentValue && this.currentValue.operator !== this._currentOption?.operator) {

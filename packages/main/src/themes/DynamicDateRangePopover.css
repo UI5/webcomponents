@@ -4,12 +4,12 @@
 
 [ui5-responsive-popover] {
 	width: 320px;
-	height: 512px;
+	height: 570px;
 }
 
 [ui5-responsive-popover]::part(content) {
 	width: 320px;
-	height: 512px;
+	height: 570px;
 }
 
 .ui5-dynamic-date-range-option-container {
@@ -133,4 +133,14 @@
 	align-items: center;
 	justify-content: flex-start;
 	height: 2.5rem;
+}
+
+.ui5-dynamic-date-range-option-datetime-container {
+	height: 100%;
+}
+
+.ui5-dt-picker-header {
+	display: flex;
+    justify-content: center;
+	padding-top: 0.5rem;
 }
