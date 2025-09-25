@@ -5,7 +5,7 @@ We enforce code style rules using [ESLint](https://eslint.org). Execute `npm run
 You may also find an ESLint integration for your favorite IDE [here](https://eslint.org/docs/user-guide/integrations).
 
 ## Testing
-Integration testing is based on [Webdriver.io](https://webdriver.io/). You can run all tests using `npm run test`.
+Integration tests are implemented with [Cypress](https://www.cypress.io/). You can run all tests using `npm run test`.
 If reasonable, take the time and write a test for the proposed change or fix. Learn more about testing at the [Testing UI5 Web Components page](../4-development/10-testing.md).
 
 ## Git Guidelines

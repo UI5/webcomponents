@@ -7,9 +7,9 @@ const noRequire = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/no-remai
 const scripts = {
 	clean: "rimraf src/generated && rimraf dist",
 	lint: "eslint .",
-	generate: "nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports",
+	generate: "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports",
 	build: {
-		"default": "nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports build.typescript build.no-remaining-require",
+		"default": "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports build.typescript build.no-remaining-require",
 		"amd-to-es6": `node "${amdToES6}" dist/`,
 		"no-remaining-require": `node "${noRequire}" dist/`,
 		typescript: "tsc --build",

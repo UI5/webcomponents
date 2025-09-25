@@ -140,9 +140,251 @@
 		</ui5-user-settings-view>
 	</ui5-user-settings-item>
 
-	<ui5-user-settings-item icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
+	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
 		<ui5-user-settings-view slot="pages">
-			<ui5-checkbox checked text="Show High-Priority Notification Alerts"></ui5-checkbox>
+			<ui5-list class="custom-list-main">
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" color-scheme="Accent5" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">SuccessFactors</span>
+								<span class="item-subtitle">Compensation | Learning | HR</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">S/4HANA | EMEA</span>
+								<span class="item-subtitle">Finance EMEA</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch"></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">S/4HANA | AJP</span>
+								<span class="item-subtitle">Finance AJP</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view slot="pages" id="notification-second-page" secondary>
+			<ui5-li-custom class="ui5-list-secondary">
+				<div class="list-item">
+					<div class="item-left">
+						<div class="item-texts">
+							<span>Allow Notifications</span>
+						</div>
+					</div>
+					<div class="item-right">
+						<ui5-switch class="switch" checked></ui5-switch>
+					</div>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+			<ui5-list class="ui5-list-sales-order">
+				<ui5-title class="list-header" size="H3">Sales</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Updates</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Approvals</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Release</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+			<ui5-list class="ui5-list-secondary">
+				<ui5-title class="list-header" size="H3">Purchasing</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Approval</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Rejection</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch"></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Overdue</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view slot="pages" id="sales-order-second-page" secondary>
+			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
+
+			<ui5-list class="ui5-list-secondary" separators="None">
+
+				<ui5-li-custom >
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span>Allow Sales Order Updates</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				</ui5-list>
+			<ui5-list separators="None">
+				<ui5-title class="list-header" size="H3">Choose how you get notified</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">In-App Notification</span>
+								<span class="item-subtitle">Delivered inside the app</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Allow Fly-Inn</span>
+								<span class="item-subtitle">Notifications fly in as banner from the figth se of the application while working</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom class="push-notifications">
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Push Notifications</span>
+								<span class="item-subtitle">Pushed to your device immediately</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">E-Mail</span>
+								<span class="item-subtitle">Send on your primary e-mail</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Frequency</span>
+								<span class="item-subtitle">Pushed to your device immedietly</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-combobox value="Immediate">
+								<ui5-cb-item text="Immediate"></ui5-cb-item>
+								<ui5-cb-item text="After 5 minutes"></ui5-cb-item>
+								<ui5-cb-item text="After 24 hours"></ui5-cb-item>
+							</ui5-combobox>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
 		</ui5-user-settings-view>
 	</ui5-user-settings-item>
 
@@ -198,6 +440,15 @@
 	const toastReset =  document.getElementById("toastReset");
 	const toastResetAll =  document.getElementById("toastResetAll");
 	const themeSave =document.getElementById("themeSave");
+	const notificationsItem = document.getElementById("notifications");
+	const notificationNavIcon = document.querySelectorAll(".nav-icon");
+	const notificationSwitch = document.querySelectorAll(".switch");
+	const notificationSecondPage = document.getElementById("notification-second-page");
+	const salesOrderList = document.querySelectorAll(".ui5-list-sales-order");
+
+	const salesOrderSecondPage = document.getElementById("sales-order-second-page");
+
+	const notificationList = document.querySelectorAll(".custom-list-main");
 	menuShellBar.addEventListener("item-click", function (event) {
 		const item = event.detail.item.getAttribute("data-id");
 
@@ -258,8 +509,8 @@
 	});
 
 	settingsDialog.addEventListener("selection-change", function (event) {
-		console.log(`Selection change: ${event.detail.item.text}`, event.detail);
-		if(event.detail.item.text ==="Language & Region"){
+		console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
+		if(event.detail.item?.text ==="Language & Region"){
 			event.detail.item.loading=true;
 			event.detail.item.loadingReason="Language & Region loading data...";
 			setTimeout(function(){
@@ -270,7 +521,7 @@
 
 	settingsDialogItems.forEach((settingsDialogItem) => {
 		settingsDialogItem.addEventListener("selection-change", function (event) {
-			console.log(`Selection change: ${event.detail.view.text}`, event.detail);
+			console.log(`Selection change: ${event.detail?.view?.text}`, event.detail);
 		});
 	});
 
@@ -287,6 +538,65 @@
 
 	settingsDialog.addEventListener("close", function (event) {
 		console.log("Settings dialog closed", event);
+	});
+
+	//Notification Tab
+	notificationNavIcon.forEach(icon => {
+		icon.addEventListener("click", (e) => {
+			const title = e.target.closest(".list-item").querySelector(".item-title").textContent;
+			console.log("Navigate to: " + title +" icon clicked");
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
+	});
+
+	notificationList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
+	});
+
+	salesOrderList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".sales-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = false;
+			salesOrderSecondPage.selected = true;
+			salesOrderSecondPage.text = title;
+		});
+	});
+
+	notificationsItem.addEventListener("selection-change", (e) => {
+		if(e?.detail?.view?.id ==='sales-order-second-page'){
+			e.preventDefault();
+			console.log("Navigate back: " + notificationSecondPage.title);
+			salesOrderSecondPage.selected = false;
+			notificationSecondPage.selected = true;
+		}
+	});
+
+	notificationSwitch.forEach(sw => {
+		sw.addEventListener("change", (e) => {
+			var title = e.target.closest(".list-item").querySelector(".item-title")?.textContent;
+			if(!title){
+				title = e.target?.closest(".list-item").querySelector(".item-text-title")?.textContent;
+			}
+
+			const state = e.target.checked ? "ON" : "OFF";
+			console.log(title + " switch changed to " + state);
+		});
+	});
+
+	notificationList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
 	});
 </script>
 </body>

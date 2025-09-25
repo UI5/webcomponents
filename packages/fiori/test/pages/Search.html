@@ -255,15 +255,6 @@
 			{ name: 'Tomato', category: 'Vegetable' },
 		];
 
-		function createItems(parent, data) {
-			data.forEach(item => {
-				const searchItem = document.createElement('ui5-search-item');
-				searchItem.text = item.name;
-				searchItem.icon = 'search';
-				parent.appendChild(searchItem);
-			});
-		}
-
 		const filtering = document.getElementById('filtering');
 		createItems(filtering, data);
 		filtering.addEventListener('ui5-input', (event) => {
@@ -370,10 +361,11 @@
 
 		const searchDelete = document.getElementById('delete-search');
 
-		function onDelete(event) {
+		function onDelete(event, parent) {
 			const item = event.target;
 			if (item) {
 				item.remove();
+				parent.focus();
 			}
 		}
 
@@ -392,7 +384,7 @@
 				searchItem.text = item.name;
 				searchItem.icon = 'search';
 				searchItem.deletable = true;
-				searchItem.addEventListener('ui5-delete', onDelete);
+				searchItem.addEventListener('ui5-delete', (e) => onDelete(e, parent));
 				parent.appendChild(searchItem);
 			});
 		}
@@ -411,24 +403,29 @@
 
 		const searchLazy = document.getElementById('search-lazy');
 		searchLazy.addEventListener('ui5-input', (e) => {
-			// clear search items
-			searchLazy.innerHTML = '';
-
-			searchLazy.getSlottedNodes("items").forEach(item => {
-				item.remove();
-			});
-
-			// simulate lazy loading
 			setTimeout(() => {
-				const lazyData = [
-					{ name: 'Red Apple', category: 'Fruit' },
-					{ name: 'Apple', category: 'Fruit' },
-					{ name: 'Banana', category: 'Fruit' },
-					{ name: 'Orange', category: 'Fruit' },
-					{ name: 'Grapes', category: 'Fruit' },
-				];
-				createItems(searchLazy, lazyData);
-			}, 100);
+				// clear search items
+				searchLazy.innerHTML = '';
+
+				searchLazy.getSlottedNodes("items").forEach(item => {
+					item.remove();
+				});
+			}, 100)
+			
+
+			if(e.target.value.length){
+				// simulate lazy loading
+				setTimeout(() => {
+					const lazyData = [
+						{ name: `Red Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Banana ${Math.random()}`, category: 'Fruit' },
+						{ name: `Orange ${Math.random()}`, category: 'Fruit' },
+						{ name: `Grapes ${Math.random()}`, category: 'Fruit' },
+					];
+					createItems(searchLazy, lazyData);
+				}, 300);
+			}
 		});
 	</script>
 </body>

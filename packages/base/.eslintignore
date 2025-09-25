@@ -9,7 +9,6 @@ cypress/*
 bundle.esm.js
 bundle.es5.js
 rollup.config*.js
-wdio.conf.cjs
 cypress.config.js
 postcss.config.cjs
 package-scripts.cjs

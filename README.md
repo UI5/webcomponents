@@ -113,10 +113,11 @@ This section might be of interest to you mainly if you need to run or build the 
 
 ### Requirements
 - [Node.js](https://nodejs.org/) (**version 21 or higher**)
-- [Yarn](https://yarnpkg.com/en) (**version 1.22 or higher**)
+- [Yarn](https://yarnpkg.com/en) (**version 1.22 or higher for branches released before v2.15**)
+- Yarn v4 is managed via [Corepack](https://github.com/nodejs/corepack), run `corepack enable` in case the `yarn` command is not found.
 
 **Note:** The UI5 Web Components project is set up with the [Yarn](https://yarnpkg.com/) node package manager.
-This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/UI5/webcomponents). Note that npm [might add](https://github.com/npm/npm/pull/15900#issuecomment-315335381) this feature in the future.
+This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/UI5/webcomponents).
 
 ### Structure
 
