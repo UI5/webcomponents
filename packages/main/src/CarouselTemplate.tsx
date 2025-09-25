@@ -69,13 +69,14 @@ function arrowBack(this: Carousel) {
 		title={this.previousPageText}
 		class={{
 			"ui5-carousel-navigation-button": true,
-			"ui5-carousel-navigation-button--hidden": !this.hasNext
+			"ui5-carousel-navigation-button--hidden": !this.hasPrev
 		}}
 		data-ui5-arrow-back
 		onClick={e => this._navButtonClick(e as MouseEvent)}
 	>
 		<Icon name={slimArrowLeft}
 			data-ui5-arrow-back
+			inert
 			tabindex={-1}
 		/>
 	</span>;
@@ -94,6 +95,7 @@ function arrowForward(this: Carousel) {
 		}}
 	>
 		<Icon name={slimArrowRight}
+			inert
 			tabindex={-1}
 		/>
 	</span>;

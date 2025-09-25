@@ -121,7 +121,7 @@ describe("Carousel general interaction", () => {
 			.trigger('mouseover')
 			.shadow()
 			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
-			.should("have.length", 2);
+			.should("have.length", 1);
 
 		cy.get("#carousel2")
 			.trigger('mouseover')
@@ -481,13 +481,13 @@ describe("Carousel general interaction", () => {
 		cy.get(".myCard").should("be.visible");
 		cy.get("#carouselF7").shadow().find(".ui5-carousel-content").find(".ui5-carousel-item").first().focus();
 
-		cy.realPress("F7")
-		cy.wait(500)
+		cy.realPress("F7");
+		cy.wait(100)
 
 		cy.get("#carouselF7Button").should('be.focused');
 
-		cy.realPress("F7")
-		cy.wait(500)
+		cy.realPress("F7");
+		cy.wait(100)
 
 		cy.get("#carouselF7").shadow().find(".ui5-carousel-content").find(":first-child").should("be.focused");
 	});

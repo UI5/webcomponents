@@ -142,6 +142,7 @@
 	padding: 0 0.5rem;
 	border: 1px solid var(--sapButton_Hover_BorderColor);
 	display: flex;
+	background: var(--sapButton_Background);
 }
 
 .ui5-carousel-navigation-button {

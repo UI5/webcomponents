@@ -812,11 +812,11 @@ class Carousel extends UI5Element {
 	}
 
 	get hasPrev() {
-		return (this.cyclic && this._selectedIndex - 1 >= 0) || this.effectiveItemsPerPage === 1;
+		return this.cyclic || this._selectedIndex - 1 >= 0 && this._currentSlideIndex !== 0;
 	}
 
 	get hasNext() {
-		return (this.cyclic && this._selectedIndex + 1 <= this.content.length - 1) || this.effectiveItemsPerPage === 1;
+		return this.cyclic || this._selectedIndex + 1 <= this.content.length - 1 && this._currentSlideIndex < this.pagesCount - 1;
 	}
 
 	get suppressAnimation() {
