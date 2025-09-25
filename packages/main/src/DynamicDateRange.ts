@@ -7,6 +7,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { renderFinished } from "@ui5/webcomponents-base";
 import type { JsxTemplate } from "@ui5/webcomponents-base";
 import { isF4, isShow } from "@ui5/webcomponents-base/dist/Keys.js";
 import DynamicDateRangeTemplate from "./DynamicDateRangeTemplate.js";
@@ -202,13 +203,11 @@ class DynamicDateRange extends UI5Element {
 		this._focusSelectedItem();
 	}
 
-	onAfterRendering() {
-		if (this._shouldFocusLastSelected) {
-			setTimeout(() => {
-				this._focusLastSelectedItem();
-			}, 0);
-			this._shouldFocusLastSelected = false;
-		}
+	async onAfterRendering() {
+		await renderFinished();
+		setTimeout(() => {
+			this._focusLastSelectedItem();
+		}, 0);
 	}
 
 	/**
