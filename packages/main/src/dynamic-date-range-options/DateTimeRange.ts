@@ -16,7 +16,7 @@ const DEFAULT_DELIMITER = "-";
  * @class
  * @constructor
  * @public
- * @since 2.11.0
+ * @since 2.16.0
  */
 
 class DateTimeRange implements IDynamicDateRangeOption {

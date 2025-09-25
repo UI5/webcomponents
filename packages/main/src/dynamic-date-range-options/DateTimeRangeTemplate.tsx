@@ -23,13 +23,15 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 		return undefined;
 	};
 
-	const handleSelectionChange = (e: CustomEvent) => {
-		const dateTimePicker = e.target as DateTimePicker;
-		const dateValue = dateTimePicker.dateValue;
-		const pickerId = dateTimePicker.id;
+	const handleSelectionChange = () => {
+		const fromPicker = this.shadowRoot?.querySelector("[ui5-datetime-picker]#from-picker") as DateTimePicker;
+		const toPicker = this.shadowRoot?.querySelector("[ui5-datetime-picker]#to-picker") as DateTimePicker;
 
-		// Validate the date value before proceeding
-		if (!dateValue || !e.detail?.value || Number.isNaN(dateValue.getTime())) {
+		const fromDateValue = fromPicker.dateValue;
+		const toDateValue = toPicker.dateValue;
+
+		// If there are no dates selected, clear the value
+		if (!(fromDateValue && toDateValue)) {
 			this.currentValue = {
 				operator: currentOperator,
 				values: []
@@ -37,26 +39,15 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 			return;
 		}
 
-		// Get current values if from same operator, otherwise start fresh
-		const existingValues = (this.currentValue?.operator === currentOperator && this.currentValue.values)
-			? [...(this.currentValue.values as Date[])]
-			: [];
+		const newValue = [fromDateValue, toDateValue];
 
-		let updatedValues: Date[];
-
-		if (pickerId === "to-picker") {
-			updatedValues = [existingValues[0], dateValue];
-		} else {
-			updatedValues = [dateValue, existingValues[1]];
-		}
-
-		if (updatedValues[0] && updatedValues[1] && updatedValues[0].getTime() > updatedValues[1].getTime()) {
-			updatedValues.reverse();
+		if (newValue[0] && newValue[1] && newValue[0].getTime() > newValue[1].getTime()) {
+			newValue.reverse();
 		}
 
 		this.currentValue = {
 			operator: currentOperator,
-			values: updatedValues,
+			values: newValue,
 		};
 	};
 	return (
