@@ -10,10 +10,13 @@ const generateReportScript = path.join(CURRENT_LIB, "./generate-css-vars-usage-r
 
 module.exports = {
 	scripts: {
+		__ui5envs: {
+			UI5_TS: true,
+		},
 		clean: "rimraf dist && rimraf src/generated",
-		generate: `cross-env UI5_TS=true nps build.postcss build.jsonImports`,
+		generate: `ui5nps build.postcss build.jsonImports`,
 		build: {
-			default: `cross-env UI5_TS=true nps clean build.src build.postcss build.jsonImports build.typescript generateReport`,
+			default: `ui5nps clean build.src build.postcss build.jsonImports build.typescript generateReport`,
 			src: `copy-and-watch "src/**/*.{json}" dist/`,
 			typescript: "tsc",
 			postcss: `node "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
