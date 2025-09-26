@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, closed, synchronize, reopened]
     branches:
-      - main
+      - asdf-main # to exlude it from the workflow
     paths:
       # Website-specific changes
       - 'packages/website/**'
