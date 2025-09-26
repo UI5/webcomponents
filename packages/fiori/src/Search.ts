@@ -418,6 +418,7 @@ class Search extends SearchField {
 	_handleInput(e: InputEvent) {
 		super._handleInput(e);
 		this._typedInValue = this.value;
+		this._proposedItem = undefined;
 
 		if (isPhone()) {
 			return;
