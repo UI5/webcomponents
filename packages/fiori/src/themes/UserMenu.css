@@ -65,6 +65,7 @@
 }
 
 .ui5-user-menu-selected-account-subtitleText {
+	text-align: center;
 	margin-bottom: 0.25rem;
     font-family: var(--sapFontFamily);
     font-size: var(--sapFontSize);
