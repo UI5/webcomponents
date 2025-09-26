@@ -72,7 +72,11 @@ type Locale = {
 	_get: () => CLDRData,
 };
 
+const OPENUI5_POLLING_INTERVAL = 100;
+
 class OpenUI5Support {
+	static disablePolling = false; // can be set to true as a micro-optimization when it's known that OpenUI5 will be loaded before UI5 Web Components
+
 	static isAtLeastVersion116() {
 		if (!window.sap.ui!.version) {
 			return true; // sap.ui.version will be removed in newer OpenUI5 versions
@@ -100,32 +104,16 @@ class OpenUI5Support {
 	}
 
 	static awaitForOpenUI5() {
-		const w = window as Record<string, any>;
-
-		const patchOnInit = (target: Record<string, any>) => {
-			const oldOnInit = target.onInit;
-			if (!oldOnInit) {
-				target.onInit = OpenUI5Support.OpenUI5DelayedInit;
-			} else {
-				target.onInit = function onInit(...rest: any[]) {
-					oldOnInit.apply(this, ...rest);
-					OpenUI5Support.OpenUI5DelayedInit();
-				};
+		const interval = setInterval(() => {
+			if (OpenUI5Support.isOpenUI5Detected()) {
+				clearInterval(interval);
+				OpenUI5Support.OpenUI5DelayedInit();
 			}
-		};
-
-		// First, look for window.onInit and if found, patch it
-		if (w.onInit) {
-			patchOnInit(w);
-		}
-
-		// If window.onInit is not found, go for the sap-ui-config script
-		w["sap-ui-config"] = w["sap-ui-config"] || {};
-		patchOnInit(w["sap-ui-config"] as Record<string, any>);
+		}, OPENUI5_POLLING_INTERVAL);
 	}
 
 	static init() {
-		if (!OpenUI5Support.isOpenUI5Detected()) {
+		if (!OpenUI5Support.isOpenUI5Detected() && !OpenUI5Support.disablePolling) {
 			return OpenUI5Support.awaitForOpenUI5();
 		}
 
