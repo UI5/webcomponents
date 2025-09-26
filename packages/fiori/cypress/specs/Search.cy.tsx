@@ -1242,6 +1242,38 @@ describe("Events", () => {
 		cy.get("@search")
 			.should("not.have.attr", "open");
 	});
+
+	it("should not send outdated suggestion item on enter", () => {
+		cy.mount(
+			<Search onSearch={cy.spy().as("searchSpy")}>
+				<SearchItem text="Abc" />
+				<SearchItem text="AbN" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realType("Ab"); // should autocomplete to "Abc"
+
+		cy.get("@input")
+			.realPress("Backspace") // remove "c" so no suggestion is selected
+
+		cy.get("@input")
+			.realPress("Enter"); // submit search with no suggestion selected
+
+		cy.get("@searchSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item === undefined;
+		}));
+	});
 });
 
 describe("Accessibility", () => {
