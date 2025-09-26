@@ -31,7 +31,7 @@ const scripts = {
 		"no-remaining-require": `node "${noRequire}" dist/`,
 		"third-party": {
 			default: "ui5nps integrate.third-party.copy integrate.third-party.fix",
-			copy: `node "${LIB}copy-and-watch/index.js" ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/`,
+			copy: "copy-and-watch ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/",
 			fix: "replace-in-file 240 xA0 dist/sap/ui/thirdparty/caja-html-sanitizer.js"
 		},
 	},
@@ -50,8 +50,8 @@ const scripts = {
 	},
 	copy: {
 		default: "ui5nps copy.src",
-		src: `node "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/`,
-		srcWithWatch: `node "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
+		src: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/`,
+		srcWithWatch: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
 	},
 	generateAssetParameters: `node "${assetParametersScript}"`,
 	generateVersionInfo: `node "${versionScript}"`,
@@ -61,7 +61,7 @@ const scripts = {
 	generateProd: {
 		"default": "ui5nps generateProd.remove-dev-mode generateProd.copy-prod",
 		"remove-dev-mode": `node "${LIB}/remove-dev-mode/remove-dev-mode.mjs"`,
-		"copy-prod": `node "${LIB}copy-and-watch/index.js" "dist/sap/**/*" dist/prod/sap/ && node "${LIB}copy-and-watch/index.js""dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/ && node "${LIB}copy-and-watch/index.js" "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
+		"copy-prod": `copy-and-watch "dist/sap/**/*" dist/prod/sap/ && copy-and-watch "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/ && copy-and-watch "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
 	},
 	generateAPI: {
 		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
