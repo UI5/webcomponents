@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Shell Bar - ShellBar Item Overflow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+    <script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+    <link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+</head>
+
+<body class="shellbar1auto">
+
+    <!-- Overflow popover for hidden items -->
+    <ui5-popover id="overflowPopover" placement-type="Bottom" horizontal-align="Right">
+        <div style="padding: 1rem; min-width: 200px;">
+            <ui5-title level="H5" style="margin-bottom: 0.5rem;">Hidden Items</ui5-title>
+            <div id="hiddenItemsContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Hidden items will be dynamically added here -->
+            </div>
+        </div>
+    </ui5-popover>
+
+    <!-- Context menu for notifications -->
+    <ui5-menu id="notificationsMenu">
+        <ui5-menu-item text="System Alert" icon="alert"></ui5-menu-item>
+        <ui5-menu-item text="New Messages" icon="message-information"></ui5-menu-item>
+        <ui5-menu-item text="Task Updates" icon="task"></ui5-menu-item>
+        <ui5-menu-item text="Mark All as Read" icon="accept" starts-section></ui5-menu-item>
+    </ui5-menu>
+
+    <ui5-shellbar id="shellbarOverflow" show-notifications>
+        <ui5-shellbar-branding slot="branding">
+            Project Management
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+        </ui5-shellbar-branding>
+
+        <ui5-button icon="menu2" slot="startButton"></ui5-button>
+        <ui5-button icon="home" slot="startButton"></ui5-button>
+
+        <!-- Multiple content items that can be hidden -->
+        <ui5-tag design="Set3" color-scheme="5" slot="content" id="projectTag" data-hide-order="1">Project
+            Alpha</ui5-tag>
+
+        <ui5-button id="createTaskButton" icon="add" slot="content" data-hide-order="2">New Task</ui5-button>
+
+        <ui5-button id="kanbanButton" icon="grid" slot="content" data-hide-order="3">Kanban View</ui5-button>
+
+        <div slot="content" style="display: flex; align-items: center; gap: 0.5rem;" id="priorityContainer"
+            data-hide-order="4">
+            <ui5-label>High Priority</ui5-label>
+            <ui5-badge color-scheme="8">5</ui5-badge>
+        </div>
+
+        <ui5-button id="teamButton" icon="group" slot="content" data-hide-order="5">Team</ui5-button>
+
+        <ui5-button id="reportsButton" icon="business-objects-experience" slot="content"
+            data-hide-order="6">Reports</ui5-button>
+
+        <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+        <div slot="content" style="display: flex; align-items: center; gap: 0.5rem;" id="deadlineContainer"
+            data-hide-order="7">
+            <ui5-label>Deadline:</ui5-label>
+            <ui5-date-picker id="deadlineDatePicker" value="2024-04-30"></ui5-date-picker>
+        </div>
+
+        <ui5-shellbar-search placeholder="Search tasks..." slot="searchField">
+        </ui5-shellbar-search>
+
+        <ui5-avatar slot="profile" initials="PM"></ui5-avatar>
+    </ui5-shellbar>
+
+    <div class="content">
+        <div style="padding: 2rem;">
+            <ui5-title level="H3">ShellBar Item Overflow Management</ui5-title>
+            <ui5-text>Uses a ui5-shellbar-item that appears when content items are hidden. This provides a more
+                integrated look in the actions area.</ui5-text>
+            <div id="statusDisplay" style="margin-top: 1rem;">
+                <ui5-text>All items visible</ui5-text>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to key elements
+        const shellbarOverflow = document.getElementById("shellbarOverflow");
+        const overflowPopover = document.getElementById("overflowPopover");
+        const hiddenItemsContainer = document.getElementById("hiddenItemsContainer");
+        const statusDisplay = document.getElementById("statusDisplay");
+        const notificationsMenu = document.getElementById("notificationsMenu");
+
+        const overflowShellbarItem = document.createElement("ui5-shellbar-item");
+        overflowShellbarItem.setAttribute("icon", "overflow");
+        overflowShellbarItem.setAttribute("text", "More");
+        overflowShellbarItem.setAttribute("tooltip", "Show hidden items");
+
+        // Data-driven configuration
+        const itemsConfig = {
+            projectTag: {
+                type: 'tag',
+                text: 'Project Alpha',
+                design: 'Set3',
+                colorScheme: '5',
+                action: () => console.log('Project tag clicked from overflow')
+            },
+            createTaskButton: {
+                type: 'button',
+                text: 'New Task',
+                icon: 'add',
+                action: () => {
+                    console.log('Create task clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            kanbanButton: {
+                type: 'button',
+                text: 'Kanban View',
+                icon: 'grid',
+                action: () => {
+                    console.log('Kanban view clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            priorityContainer: {
+                type: 'container',
+                content: [
+                    { type: 'label', text: 'High Priority' },
+                    { type: 'badge', text: '5', colorScheme: '8' }
+                ],
+                action: () => console.log('Priority container clicked from overflow')
+            },
+            teamButton: {
+                type: 'button',
+                text: 'Team',
+                icon: 'group',
+                action: () => {
+                    console.log('Team clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            reportsButton: {
+                type: 'button',
+                text: 'Reports',
+                icon: 'business-objects-experience',
+                action: () => {
+                    console.log('Reports clicked from overflow');
+                    overflowPopover.open = false;
+                }
+            },
+            deadlineContainer: {
+                type: 'container',
+                content: [
+                    { type: 'label', text: 'Deadline:' },
+                    { type: 'date-picker', id: 'deadlineDatePicker_overflow', value: '2024-04-30' }
+                ],
+                action: (element) => {
+                    const datePickerEl = element.querySelector('ui5-date-picker');
+                    if (datePickerEl) {
+                        datePickerEl.addEventListener('change', (event) => {
+                            console.log('Deadline changed from overflow:', event.target.value);
+                            const originalDatePicker = document.getElementById('deadlineDatePicker');
+                            if (originalDatePicker) {
+                                originalDatePicker.value = event.target.value;
+                            }
+                        });
+                    }
+                }
+            }
+        };
+
+        // Create new popover item based on configuration
+        function createPopoverItem(originalItem) {
+            const config = itemsConfig[originalItem.id];
+            const element = document.createElement(config.type === 'container' ? 'div' : `ui5-${config.type}`);
+            
+            if (config.type === 'container') {
+                element.style.cssText = 'display: flex; align-items: center; gap: 0.5rem; width: 100%;';
+                config.content.forEach(item => {
+                    const child = document.createElement(`ui5-${item.type}`);
+                    child.textContent = item.text;
+                    if (item.checked) child.checked = item.checked;
+                    if (item.value) child.value = item.value;
+                    if (item.id) child.id = item.id;
+                    if (item.colorScheme) child.setAttribute('color-scheme', item.colorScheme);
+                    element.appendChild(child);
+                });
+                config.action(element);
+            } else {
+                element.textContent = config.text;
+                element.style.width = '100%';
+                if (config.icon) element.icon = config.icon;
+                if (config.design) element.design = config.design;
+                if (config.colorScheme) element.setAttribute('color-scheme', config.colorScheme);
+                element.addEventListener('click', config.action);
+            }
+            
+            return element;
+        }
+
+        // Handle content item visibility changes
+        shellbarOverflow.addEventListener("content-item-visibility-change", (event) => {
+            const hiddenItems = event.detail.items;
+            hiddenItemsContainer.innerHTML = '';
+            console.error('Content item visibility changed', hiddenItems);
+
+            if (hiddenItems.length > 0) {
+                shellbarOverflow.appendChild(overflowShellbarItem);
+                hiddenItems.forEach(item => {
+                    const popoverItem = createPopoverItem(item);
+                    hiddenItemsContainer.appendChild(popoverItem);
+                });
+                statusDisplay.innerHTML = `<ui5-text>${hiddenItems.length} item(s) hidden - available via shellbar action</ui5-text>`;
+                console.log(`${hiddenItems.length} items hidden:`, hiddenItems.map(item => item.id || item.textContent));
+            } else {
+                overflowShellbarItem.remove();
+                statusDisplay.innerHTML = '<ui5-text>All items visible</ui5-text>';
+                console.log('All items visible');
+            }
+        });
+
+        // Event handlers
+        overflowShellbarItem.addEventListener('click', () => {
+            overflowPopover.opener = overflowShellbarItem;
+            overflowPopover.open = true;
+        });
+
+        shellbarOverflow.addEventListener('ui5-notifications-click', (event) => {
+            event.preventDefault();
+            notificationsMenu.opener = event.detail.targetRef;
+            console.error(event.detail.targetRef);
+            notificationsMenu.open = !notificationsMenu.open;
+        });
+
+        document.getElementById('createTaskButton').addEventListener('click', () => {
+            console.log('Create new task');
+        });
+
+        console.error(document.getElementById('kanbanButton'))
+        document.getElementById('kanbanButton').addEventListener('click', () => {
+            console.log('Switch to kanban view');
+        });
+
+        document.getElementById('teamButton').addEventListener('click', () => {
+            console.log('Open team management');
+        });
+
+        document.getElementById('reportsButton').addEventListener('click', () => {
+            console.log('Open reports');
+        });
+
+        document.getElementById('deadlineDatePicker').addEventListener('change', (event) => {
+            console.log('Deadline changed:', event.target.value);
+        });
+    </script>
+
+</body>
+
+</html>
