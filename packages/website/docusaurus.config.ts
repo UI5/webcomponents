@@ -13,10 +13,11 @@ const PREVIEW_URL_PATH = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
 const PREVIEW_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "preview";
 const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
+const PREVIEW_NETLIFY_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "netlify_preview";
 
 const getBaseURL = () => {
   // localhost
-  if (DEVELOPMENT_ENVIRONMENT) {
+  if (DEVELOPMENT_ENVIRONMENT || PREVIEW_NETLIFY_DEPLOYMENT) {
     return "/";
   }
 
