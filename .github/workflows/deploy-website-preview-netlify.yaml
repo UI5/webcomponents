@@ -60,7 +60,8 @@ jobs:
 
     - name: Build website
       env:
-        DEPLOYMENT_TYPE: "preview"
+        DEPLOYMENT_TYPE: "netlify_preview"
+        DEPLOYMENT_NETLIFY_PREVIEW_BASE_URL: "pr-${{ github.event.number }}--ui5-webcomponents.netlify.app"
         PR_NUMBER: "${{ github.event.number }}"
       run: |
         yarn ci:deploy:preview
