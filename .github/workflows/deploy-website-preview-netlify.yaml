@@ -60,7 +60,8 @@ jobs:
 
     - name: Build website
       env:
-        DEPLOYMENT_TYPE: "preview"
+        DEPLOYMENT_TYPE: "netlify_preview"
+        DEPLOYMENT_NETLIFY_PREVIEW_BASE_URL: "https://pr-${{ github.event.number }}--ui5-webcomponents-preview.netlify.app"
         PR_NUMBER: "${{ github.event.number }}"
       run: |
         yarn ci:deploy:preview
@@ -87,6 +88,24 @@ jobs:
           console.log(`PR #${pr.number} is still open, proceeding with deployment`);
           core.setOutput('should_deploy', 'true');
 
+    - name: Config Netlify CORS
+      if: steps.final-pr-check.outputs.should_deploy == 'true'
+      run: |
+            cat > packages/website/build/netlify.toml << 'EOF'
+            [build]
+              publish = "."
+              
+            # CORS headers for local-cdn resources
+            [[headers]]
+              for = "/local-cdn/*"
+              [headers.values]
+                Access-Control-Allow-Origin = "*"
+                Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+                Access-Control-Allow-Headers = "Content-Type, Accept"
+                Access-Control-Max-Age = "86400"
+                Cache-Control = "public, max-age=31536000, immutable"
+            EOF
+            
     - name: Deploy to Netlify
       if: steps.final-pr-check.outputs.should_deploy == 'true'
       uses: nwtgck/actions-netlify@v3.0

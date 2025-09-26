@@ -3,12 +3,20 @@ const fs = require("fs");
 const LIB = path.join(__dirname, `../lib/`);
 let websiteBaseUrl = "/";
 
+const isPreview = !!process.env.PR_NUMBER;
+const getPreviewBaseUrl = () => {
+	if (process.env.DEPLOYMENT_TYPE === "netlify_preview") {
+		return "/";
+	}
+	return `/webcomponents/pr-${process.env.PR_NUMBER}/`;
+}	
+
 if (process.env.DEPLOY) {
 	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
 	websiteBaseUrl = "/webcomponents/nightly/";
-} else if (process.env.DEPLOYMENT_TYPE === "preview" && process.env.PR_NUMBER) {
-	websiteBaseUrl = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
+} else if (isPreview) {
+	websiteBaseUrl = getPreviewBaseUrl();
 }
 
 const getScripts = (options) => {
