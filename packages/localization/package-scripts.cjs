@@ -1,9 +1,11 @@
 const resolve = require("resolve");
+const path = require('path');
 
 const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/index.js");
 const amdToES6 = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/index.js");
 const noRequire = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/no-remaining-require.js");
 const generateCLDR = resolve.sync("@ui5/webcomponents-localization/lib/generate-json-imports/cldr.js");
+const TOOLS_LIB = path.join(__dirname, `../tools/lib/`);
 
 const scripts = {
 	clean: "rimraf src/generated && rimraf dist",
@@ -19,8 +21,8 @@ const scripts = {
 	typescript: "tsc --build",
 	copy: {
 		"used-modules": `node "${copyUsedModules}" ./used-modules.txt dist/`,
-		cldr: `copy-and-watch "../../node_modules/@openui5/sap.ui.core/src/sap/ui/core/cldr/*" dist/generated/assets/cldr/`,
-		overlay: `copy-and-watch "overlay/**/*.js" dist/`,
+		cldr: `node "${TOOLS_LIB}copy-and-watch/index.js" "../../node_modules/@openui5/sap.ui.core/src/sap/ui/core/cldr/*" dist/generated/assets/cldr/`,
+		overlay: `node "${TOOLS_LIB}copy-and-watch/index.js" "overlay/**/*.js" dist/`,
 	},
 };
 

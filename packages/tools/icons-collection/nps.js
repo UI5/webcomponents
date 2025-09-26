@@ -53,7 +53,7 @@ const getScripts = (options) => {
 		clean: "rimraf dist && rimraf src/generated",
 		copy: copyAssetsCmd,
 		generate: hashesCheck(`ui5nps clean copy build.i18n build.icons build.jsonImports copyjson`),
-		copyjson: "copy-and-watch \"src/generated/**/*.json\" dist/generated/",
+		copyjson: `node "${LIB}copy-and-watch/index.js" \"src/generated/**/*.json\" dist/generated/`,
 		build: {
 			default: hashesCheck(`ui5nps clean copy build.i18n typescript build.icons build.jsonImports`),
 			i18n: {
