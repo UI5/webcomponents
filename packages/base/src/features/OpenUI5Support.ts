@@ -75,7 +75,7 @@ type Locale = {
 const OPENUI5_POLLING_INTERVAL = 100;
 
 class OpenUI5Support {
-	static disablePolling = false; // can be set to true as a micro-optimization when it's known that OpenUI5 will be loaded before UI5 Web Components
+	static disablePolling = false; // if set to true, OpenUI5Support will only work if OpenUI5 is loaded before UI5 Web Components
 
 	static isAtLeastVersion116() {
 		if (!window.sap.ui!.version) {
