@@ -3,6 +3,7 @@ import DynamicPageTitle from "../../src/DynamicPageTitle.js";
 import DynamicPageHeader from "../../src/DynamicPageHeader.js";
 import Bar from "@ui5/webcomponents/dist/Bar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import Input from "@ui5/webcomponents/dist/Input.js";
 import { setAnimationMode } from "@ui5/webcomponents-base";
 
 before(() => {
@@ -729,6 +730,80 @@ describe("Page general interaction", () => {
 
 		cy.get("[ui5-dynamic-page]")
 			.should("have.prop", "headerSnapped", true);
+	});
+});
+
+describe("Focus Accessibility", () => {
+	it("scrolls focused elements into view when they are clipped by header/footer", () => {
+		cy.mount(
+			<DynamicPage showFooter style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "60px", backgroundColor: "#f5f5f5", padding: "10px" }}>
+						Header Content
+					</div>
+				</DynamicPageHeader>
+				<div style={{ height: "800px", padding: "20px" }}>
+					<div style={{ marginTop: "50px" }}>
+						<Input data-testid="top-input" placeholder="Top input field" />
+					</div>
+					<div style={{ marginTop: "200px" }}>
+						<Input data-testid="middle-input" placeholder="Middle input field" />
+					</div>
+					<div style={{ marginTop: "200px" }}>
+						<Input data-testid="bottom-input" placeholder="Bottom input field" />
+					</div>
+				</div>
+				<Bar slot="footerArea" design="FloatingFooter">
+					<Button slot="endContent">Save</Button>
+				</Bar>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.scrollTo(0, 200);
+
+		cy.get("[data-testid='middle-input']")
+			.shadow()
+			.find("input")
+			.focus();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const scrollTop = $container[0].scrollTop;
+		
+				expect(scrollTop).to.not.equal(200);
+			});
+
+		cy.get("[data-testid='middle-input']")
+			.shadow()
+			.find("input")
+			.should("be.focused");
+
+		cy.get("[data-testid='bottom-input']")
+			.shadow()
+			.find("input")
+			.focus();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const scrollTop = $container[0].scrollTop;
+
+				expect(scrollTop).to.be.greaterThan(300);
+			});
+
+		cy.get("[data-testid='bottom-input']")
+			.shadow()
+			.find("input")
+			.should("be.focused");
 	});
 });
 
