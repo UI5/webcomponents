@@ -204,10 +204,11 @@ class DynamicDateRange extends UI5Element {
 	}
 
 	async onAfterRendering() {
-		await renderFinished();
-		setTimeout(() => {
-			this._focusLastSelectedItem();
-		}, 0);
+		await renderFinished().then(() => {
+			setTimeout(() => {
+				this._focusLastSelectedItem();
+			}, 0);
+		});
 	}
 
 	/**
