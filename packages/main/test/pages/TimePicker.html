@@ -96,6 +96,15 @@
 		<ui5-time-picker readonly></ui5-time-picker>
 		<ui5-time-picker disabled></ui5-time-picker>
 
+		<section>
+			<h3>Form validation</h3>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-time-picker required id="formTimepicker" format-pattern="HH:mm"></ui5-time-picker>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+
 		<script>
 				var counter = 0;
 				timepickerChange.addEventListener("ui5-change", function() {
@@ -111,6 +120,32 @@
 				document.getElementById('setTimeButton').addEventListener("click", function(e) {
 					tp.setAttribute("value", tp.formatValue(new Date(2020, 3, 13, 3, 16, 16)));
 				});
+
+				var btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+				var formValidationMessage = document.getElementById('formValidationMessage');
+				var formTimepicker = document.getElementById('formTimepicker');
+
+				btnCheckFormValidity.addEventListener('click', function() {
+					checkFormValidity('formTimepicker');
+				});
+
+				formTimepicker.addEventListener('ui5-change', function() {
+					setTimeout(() => {
+						checkFormValidity('formTimepicker', true);
+					}, 0);
+				});
+
+				function checkFormValidity(elementId, delayed = false) {
+					const element = document.getElementById(elementId);
+					const isValid = element.checkValidity();
+
+					element.reportValidity();
+
+					// Show result
+					formValidationMessage.hidden = false;
+					formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+					formValidationMessage.design = isValid ? "Positive" : "Negative";
+				}
 		</script>
 	</body>
 </html>
