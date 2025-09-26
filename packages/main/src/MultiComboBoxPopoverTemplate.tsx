@@ -1,4 +1,3 @@
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import multiSelectAll from "@ui5/webcomponents-icons/dist/multiselect-all.js";
 import type MultiComboBox from "./MultiComboBox.js";
 import ResponsivePopover from "./ResponsivePopover.js";

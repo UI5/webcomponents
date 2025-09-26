@@ -7,7 +7,6 @@ import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type ComboBox from "./ComboBox.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
 	return (

@@ -1,7 +1,6 @@
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 import Input from "../Input.js";
 import Icon from "../Icon.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 
 import List from "../List.js";
 import ResponsivePopover from "../ResponsivePopover.js";
