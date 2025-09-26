@@ -4,6 +4,7 @@ import type ShellBar from "./ShellBar.js";
 import ShellBarPopoverTemplate from "./ShellBarPopoverTemplate.js";
 import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
+import ShellBarItem from "./ShellBarItem.js";
 
 export default function ShellBarTemplate(this: ShellBar) {
 	return (
@@ -207,22 +208,28 @@ export default function ShellBarTemplate(this: ShellBar) {
 								</Button>
 							)}
 							{this.customItemsInfo.map(item => (
-								<Button
-									key={item.id}
+								<ShellBarItem
 									id={item.id}
-									class={`${item.classes} ui5-shellbar-items-for-arrow-nav`}
-									icon={item.icon}
-									tooltip={item.tooltip}
-									data-ui5-notifications-count={this.notificationsCount}
-									data-ui5-external-action-item-id={item.refItemid}
-									data-ui5-stable={item.stableDomRef}
-									onClick={item.press}
-									accessibilityAttributes={item.accessibilityAttributes}
-								>
-									{item.count && (
-										<ButtonBadge slot="badge" design="OverlayText" text={item.count} />
-									)}
-								</Button>
+									isOverflowing={false}
+									count={item.count}
+									icon={item.icon}>
+								</ShellBarItem>
+								// <Button
+								// 	key={item.id}
+								// 	id={item.id}
+								// 	class={`${item.classes} ui5-shellbar-items-for-arrow-nav`}
+								// 	icon={item.icon}
+								// 	tooltip={item.tooltip}
+								// 	data-ui5-notifications-count={this.notificationsCount}
+								// 	data-ui5-external-action-item-id={item.refItemid}
+								// 	data-ui5-stable={item.stableDomRef}
+								// 	onClick={item.press}
+								// 	accessibilityAttributes={item.accessibilityAttributes}
+								// >
+								// 	{item.count && (
+								// 		<ButtonBadge slot="badge" design="OverlayText" text={item.count} />
+								// 	)}
+								// </Button>
 							))}
 						</div>
 					</div>
