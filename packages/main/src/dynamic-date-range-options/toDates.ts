@@ -21,6 +21,13 @@ const dateRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 	return [startDate, endDate];
 };
 
+const dateTimeRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
+	const endDate = value.values ? value.values[1] as Date : UI5Date.getInstance();
+
+	return [startDate, endDate];
+};
+
 const todayToDates = (): Array<Date> => {
 	const startDate = UI5Date.getInstance();
 	const endDate = UI5Date.getInstance();
@@ -180,6 +187,7 @@ const toDatesLastNext = (value: DynamicDateRangeValue, option: IDynamicDateRange
 export {
 	dateOptionToDates,
 	dateRangeOptionToDates,
+	dateTimeRangeOptionToDates,
 	todayToDates,
 	tomorrowToDates,
 	yesterdayToDates,
