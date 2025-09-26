@@ -65,6 +65,7 @@
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
     "slash": "3.0.0",
+    "string-argv": "^0.3.2",
     "vite": "^5.4.8",
     "vite-plugin-istanbul": "^6.0.2",
     "wdio-chromedriver-service": "^7.3.2"

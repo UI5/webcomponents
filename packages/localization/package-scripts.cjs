@@ -3,6 +3,7 @@ const resolve = require("resolve");
 const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/index.js");
 const amdToES6 = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/index.js");
 const noRequire = resolve.sync("@ui5/webcomponents-tools/lib/amd-to-es6/no-remaining-require.js");
+const generateCLDR = resolve.sync("@ui5/webcomponents-localization/lib/generate-json-imports/cldr.js");
 
 const scripts = {
 	clean: "rimraf src/generated && rimraf dist",
@@ -13,7 +14,7 @@ const scripts = {
 		"amd-to-es6": `node "${amdToES6}" dist/`,
 		"no-remaining-require": `node "${noRequire}" dist/`,
 		typescript: "tsc --build",
-		jsonImports: "node ./lib/generate-json-imports/cldr.js",
+		jsonImports: `node ${generateCLDR}`,
 	},
 	typescript: "tsc --build",
 	copy: {

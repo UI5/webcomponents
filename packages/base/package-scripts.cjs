@@ -15,7 +15,7 @@ const viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-p
 
 const scripts = {
 	__ui5envs: {
-		UI5_TS: true,
+		UI5_TS: "true",
 		UI5_BASE: true,
 		UI5_CEM_MODE: "dev",
 	},
