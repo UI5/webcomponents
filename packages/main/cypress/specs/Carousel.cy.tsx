@@ -236,31 +236,6 @@ describe("Carousel general interaction", () => {
 			.should("have.attr", "aria-posinset", CAROUSEL_ITEM4_POS)
 			.and("have.attr", "aria-setsize", SETSIZE);
 
-		cy.get<Carousel>('#carousel5')
-			.then(($carousel) => {
-				const el = $carousel[0];
-
-				cy.get('#carousel5')
-					.shadow()
-					.find('.ui5-carousel-root')
-					.should('have.attr', 'aria-activedescendant', `${el._id}-carousel-item-1`);
-			});
-
-		cy.get("#carousel5")
-			.trigger('mouseover')
-			.shadow()
-			.find(".ui5-carousel-navigation-button:nth-child(1)")
-			.realClick();
-
-		cy.get<Carousel>('#carousel5')
-			.then(($carousel) => {
-				const el = $carousel[0];
-				cy.get('#carousel5')
-					.shadow()
-					.find('.ui5-carousel-root')
-					.should('have.attr', 'aria-activedescendant', `${el._id}-carousel-item-1`);
-			});
-
 		cy.get("#carouselAccName")
 			.shadow()
 			.find(".ui5-carousel-root")

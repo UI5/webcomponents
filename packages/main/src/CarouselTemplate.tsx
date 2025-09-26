@@ -13,7 +13,6 @@ export default function CarouselTemplate(this: Carousel) {
 			role="list"
 			aria-label={this.ariaLabelTxt}
 			aria-roledescription={this._roleDescription}
-			aria-activedescendant={this.ariaActiveDescendant}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 			onMouseOut={this._onmouseout}
