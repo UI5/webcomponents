@@ -137,7 +137,10 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   };
 
   function calcImports() {
-    if (process.env.NODE_ENV === "development" || siteConfig.customFields.ui5DeploymentType === "nightly") {
+    const deployment = siteConfig.customFields.ui5DeploymentType;
+    const useLocalCDN = process.env.NODE_ENV === "development" || deployment === "nightly" || deployment === "preview";
+
+    if (useLocalCDN) {
       return {
         "@ui5/webcomponents/": `${getHostBaseUrl()}local-cdn/main/`,
         "@ui5/webcomponents-ai/": `${getHostBaseUrl()}local-cdn/ai/`,

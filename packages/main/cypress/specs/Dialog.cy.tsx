@@ -694,6 +694,66 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
+	it("dialog remains anchored after resizing in RTL mode", () => {
+		cy.mount(
+			<>
+				<div dir="rtl">
+					<Dialog id="rtl-min-width-dialog" resizable>
+						<div id="header-slot" slot="header">Header</div>
+						<div>Content Content Content Content Content Content Content Content Content Content Content Content</div>
+						<Button id="resizable-close">Close</Button>
+					</Dialog>
+				</div>
+			</>
+		);
+
+		// Open dialog
+		cy.get("#rtl-min-width-dialog").invoke("attr", "open", true);
+		cy.get<Dialog>("#rtl-min-width-dialog").ui5DialogOpened();
+
+		// Capture initial dimensions and position
+		cy.get("#rtl-min-width-dialog").then(dialog => {
+			const initialLeft = parseInt(dialog.css("left"));
+			const initialWidth = parseInt(dialog.css("width"));
+			const initialRightEdge = initialLeft + initialWidth;
+
+			// First resize to reach minimum width
+			cy.get("#rtl-min-width-dialog")
+				.shadow()
+				.find(".ui5-popup-resize-handle")
+				.realMouseDown()
+				.realMouseMove(800, 0) // Large movement to ensure we hit min width
+				.realMouseUp();
+
+			cy.get("#rtl-min-width-dialog").then(dialogAtMinWidth => {
+				const leftAtMinWidth = parseInt(dialogAtMinWidth.css("left"));
+				const widthAtMinWidth = parseInt(dialogAtMinWidth.css("width"));
+				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
+
+				expect(widthAtMinWidth).to.equal(320);
+				expect(rightEdgeAtMinWidth).to.equal(initialRightEdge);
+
+				cy.get("#rtl-min-width-dialog")
+					.shadow()
+					.find(".ui5-popup-resize-handle")
+					.realMouseDown()
+					.realMouseMove(150, 0) // Additional rightward movement beyond min width
+					.realMouseUp();
+
+				cy.get("#rtl-min-width-dialog").then(dialogAfterExtraResize => {
+					const finalLeft = parseInt(dialogAfterExtraResize.css("left"));
+					const finalWidth = parseInt(dialogAfterExtraResize.css("width"));
+					const finalRightEdge = finalLeft + finalWidth;
+
+					expect(finalLeft).to.equal(leftAtMinWidth, "Dialog left position should not change when at min width");
+					expect(finalWidth).to.equal(widthAtMinWidth, "Dialog width should remain at min width");
+					expect(finalRightEdge).to.equal(rightEdgeAtMinWidth, "Dialog right edge should remain fixed");
+					expect(finalRightEdge).to.equal(initialRightEdge, "Dialog right edge should remain fixed from initial position");
+				});
+			});
+		});
+	});
+
 	it("resizable - keyboard support", () => {
 		cy.mount(
 			<>
