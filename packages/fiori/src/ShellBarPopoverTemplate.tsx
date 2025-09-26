@@ -32,6 +32,7 @@ export default function PopoversTemplate(this: ShellBar) {
 							key={index}
 							data-count={icon.count}
 							data-ui5-external-action-item-id={icon.refItemid}
+							data-ui5-stable={icon.stableDomRef}
 							icon={icon.icon ? icon.icon : ""}
 							type="Active"
 							onui5-_press={icon.press}
