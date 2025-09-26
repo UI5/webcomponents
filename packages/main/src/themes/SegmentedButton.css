@@ -18,10 +18,10 @@
 }
 
 .ui5-segmented-button-root--ContentFit {
-	display: inline-grid;
+	display: inline-flex;
 	grid-template-columns: none;
 	grid-auto-flow: column;
-	gap: 0.0625rem;
+	gap: 0;
 }
 
 ::slotted([ui5-segmented-button-item]) {
@@ -37,7 +37,6 @@
 
 :host([content="ContentFit"]) ::slotted([ui5-segmented-button-item]) {
 	width: fit-content;
-	max-width: 400px;
   	white-space: nowrap;
   	overflow: hidden;
   	text-overflow: ellipsis;
