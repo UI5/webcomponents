@@ -456,7 +456,7 @@ describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
 		cy.mount(<form method="get">
 			<TimePicker id="timePicker" required={true}></TimePicker>
-			<button type="submit" id="submitBtn" > Submits forms </button>
+			<button type="submit" id="submitBtn">Submits forms</button>
 		</form>);
 
 		cy.get("form")
@@ -507,7 +507,7 @@ describe("Validation inside a form", () => {
 		cy.mount(
 			<form>
 				<TimePicker id="timePicker" required format-pattern="HH:mm:ss"></TimePicker>
-				<button type="submit" id="submitBtn" > Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 

@@ -617,7 +617,7 @@ describe("Validation inside a form", () => {
 		cy.mount(
 			<form>
 				<DateTimePicker id="dateTimePicker" required={true}></DateTimePicker>
-				<button type="submit" id="submitBtn" > Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 
@@ -664,7 +664,7 @@ describe("Validation inside a form", () => {
 		cy.mount(
 			<form>
 				<DateTimePicker id="dateTimePicker" required={true} valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
-				<button type="submit" id="submitBtn" > Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 

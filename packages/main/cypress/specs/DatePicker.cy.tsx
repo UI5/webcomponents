@@ -1397,7 +1397,6 @@ describe("Date Picker Tests", () => {
 			});
 	});
 
-
 	it("DatePicker's formatter has strict parsing enabled", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 
@@ -1706,7 +1705,7 @@ describe("Validation inside a form ", () => {
 		cy.mount(
 			<form>
 				<DatePicker id="datePicker1" required={true}></DatePicker>
-				<button type="submit" id="submitBtn" > Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 
@@ -1752,7 +1751,7 @@ describe("Validation inside a form ", () => {
 		cy.mount(
 			<form>
 				<DatePicker id="datePicker2" required={true} valueFormat="MMM d, y"></DatePicker>
-				<button type="submit" id="submitBtn" > Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 

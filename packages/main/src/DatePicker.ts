@@ -596,7 +596,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			}
 		});
 
-		if (!executeEvent) {
+		if (!executeEvent && updateValue) {
 			if (this.value !== previousValue && this.value !== this._dateTimeInput.value) {
 				return; // If the value was changed in the change event, do not revert it
 			}
@@ -640,7 +640,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "submit" event handler - fire change event when the user presses enter
 	 * @protected
 	 */
-	_onInputSubmit() { }
+	_onInputSubmit() {}
 
 	/**
 	 * The ui5-input "change" event handler - fire change event when the user focuses out of the input

@@ -692,7 +692,7 @@ describe("Validation inside form", () => {
 		cy.mount(
 			<form>
 				<StepInput id="stepInput" valuePrecision={3}></StepInput>
-				<button type="submit" id="submitBtn"> Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 
@@ -743,7 +743,7 @@ describe("Validation inside form", () => {
 		cy.mount(
 			<form>
 				<StepInput id="stepInput" min={3}></StepInput>
-				<button type="submit" id="submitBtn"> Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 
@@ -795,7 +795,7 @@ describe("Validation inside form", () => {
 		cy.mount(
 			<form>
 				<StepInput id="stepInput" max={3}></StepInput>
-				<button type="submit" id="submitBtn"> Submits forms </button>
+				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
 
