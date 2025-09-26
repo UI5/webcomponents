@@ -138,7 +138,12 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
 
   function calcImports() {
     const deployment = siteConfig.customFields.ui5DeploymentType;
-    const useLocalCDN = process.env.NODE_ENV === "development" || deployment === "nightly" || deployment === "preview";
+    // temporary keep "preview" (GitHub Pages) and "netlify_preview" (Netlify) - later only "preview" which will deploy on Netlify
+    const isNetlifyPreview = deployment === "netlify_preview";
+    const isPreview = deployment === "preview";
+    const isNightly = deployment === "nightly";
+    // use local CDN for development, nightly, preview and netlify_preview - all others (release, beta) use jsdelivr
+    const useLocalCDN = process.env.NODE_ENV === "development" || isNightly || isPreview || isNetlifyPreview;
 
     if (useLocalCDN) {
       return {
