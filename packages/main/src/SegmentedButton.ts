@@ -79,6 +79,7 @@ type SegmentedButtonSelectionChangeEventDetail = {
 	bubbles: true,
 })
 
+//TODO: when content is with contentFit we can have a truncation so for acc we should add tooltip to each segmented button item, these should happen with api (tooltip: enable, disable)
 class SegmentedButton extends UI5Element {
 	eventDetails!: {
 		"selection-change": SegmentedButtonSelectionChangeEventDetail,
