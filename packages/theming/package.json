@@ -1,10 +1,9 @@
 {
   "name": "@ui5/webcomponents-theming",
-  "version": "2.15.0-rc.0",
+  "version": "2.15.0-rc.2",
   "description": "UI5 Web Components: webcomponents.theming",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
-  "private": false,
   "type": "module",
   "keywords": [
     "openui5",
@@ -31,14 +30,14 @@
   },
   "dependencies": {
     "@sap-theming/theming-base-content": "11.29.3",
-    "@ui5/webcomponents-base": "2.15.0-rc.0"
+    "@ui5/webcomponents-base": "2.15.0-rc.2"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.15.0-rc.0",
+    "@ui5/webcomponents-tools": "2.15.0-rc.2",
     "globby": "^13.1.1",
     "json-beautify": "^1.1.1",
     "postcss": "^8.4.5",
-    "postcss-import": "^14.0.2"
-  },
-  "resolutions": {}
+    "postcss-import": "^14.0.2",
+    "rimraf": "^6.0.1"
+  }
 }
