@@ -9,11 +9,19 @@ console.log("DEPLOYMENT_TYPE", process.env.DEPLOYMENT_TYPE); // eslint-disable-l
 const LATEST_URL_PATH = "/webcomponents/";
 const NIGHTLY_URL_PATH = "/webcomponents/nightly/";
 const PREVIEW_URL_PATH = `/webcomponents/pr-${process.env.PR_NUMBER}/`;
+const NETLIFY_PREVIEW_URL_PATH = process.env.DEPLOYMENT_NETLIFY_PREVIEW_BASE_URL;
 
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
 const PREVIEW_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "preview";
-const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
 const PREVIEW_NETLIFY_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "netlify_preview";
+const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
+
+const getSiteUrl = () => {
+  if (PREVIEW_NETLIFY_DEPLOYMENT) {
+    return NETLIFY_PREVIEW_URL_PATH;
+  }
+  return 'https://ui5.github.io';
+}
 
 const getBaseURL = () => {
   // localhost
@@ -30,10 +38,11 @@ const getBaseURL = () => {
   return LATEST_DEPLOYMENT ? LATEST_URL_PATH : NIGHTLY_URL_PATH;
 };
 
+const SITE_URL = getSiteUrl();
 const BASE_URL = getBaseURL();
 
 const getFullURL = () => {
-  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://ui5.github.io${BASE_URL}`;
+  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `${SITE_URL}${BASE_URL}`;
 }
 
 // ["v1", "nightly", "current"]
@@ -50,7 +59,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://ui5.github.io',
+  url: SITE_URL,
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: BASE_URL,

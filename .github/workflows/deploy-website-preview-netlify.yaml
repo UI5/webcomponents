@@ -61,6 +61,7 @@ jobs:
     - name: Build website
       env:
         DEPLOYMENT_TYPE: "netlify_preview"
+        DEPLOYMENT_NETLIFY_PREVIEW_BASE_URL: "${{ env.DEPLOY_PRIME_URL }}"
         PR_NUMBER: "${{ github.event.number }}"
       run: |
         yarn ci:deploy:preview
