@@ -60,6 +60,7 @@ export default function FormTemplate(this: Form) {
 								this.itemsInfo.map(itemInfo => {
 									const item = itemInfo.item;
 									return (
+										// REVISIT: axe core complains about the structure
 										<dl class={{
 											"ui5-form-item": true,
 											[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
