@@ -1,0 +1,1 @@
+const T="{0} Zeichen verbleibend",e="{0} Zeichen über Limit",_="{0} mit künstlicher Intelligenz",E={PROMPT_INPUT_CHARACTERS_LEFT:T,PROMPT_INPUT_CHARACTERS_EXCEEDED:e,BUTTON_TOOLTIP_TEXT:_};export{_ as BUTTON_TOOLTIP_TEXT,e as PROMPT_INPUT_CHARACTERS_EXCEEDED,T as PROMPT_INPUT_CHARACTERS_LEFT,E as default};

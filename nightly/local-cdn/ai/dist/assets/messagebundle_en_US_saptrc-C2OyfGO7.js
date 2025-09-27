@@ -1,0 +1,1 @@
+const T="ApfX3Ybp+LpUZGYmQzr70w_{0} characters remaining",_="j5kNPkXE7zFJCcHSJi7nbg_{0} characters over limit",E="6X8mtmOry2zJh+9Uw46jBg_{0} with Artificial Intelligence",P={PROMPT_INPUT_CHARACTERS_LEFT:T,PROMPT_INPUT_CHARACTERS_EXCEEDED:_,BUTTON_TOOLTIP_TEXT:E};export{E as BUTTON_TOOLTIP_TEXT,_ as PROMPT_INPUT_CHARACTERS_EXCEEDED,T as PROMPT_INPUT_CHARACTERS_LEFT,P as default};

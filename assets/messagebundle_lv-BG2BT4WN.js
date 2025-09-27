@@ -1,0 +1,1 @@
+const E="Atlikušas {0} rakstzīmes",T="{0} rakstzīmes pārsniedz limitu",_={PROMPT_INPUT_CHARACTERS_LEFT:E,PROMPT_INPUT_CHARACTERS_EXCEEDED:T};export{T as PROMPT_INPUT_CHARACTERS_EXCEEDED,E as PROMPT_INPUT_CHARACTERS_LEFT,_ as default};

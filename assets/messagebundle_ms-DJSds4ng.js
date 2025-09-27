@@ -1,0 +1,1 @@
+const E="{0} aksara yang tinggal",T="{0} aksara melebihi had",_={PROMPT_INPUT_CHARACTERS_LEFT:E,PROMPT_INPUT_CHARACTERS_EXCEEDED:T};export{T as PROMPT_INPUT_CHARACTERS_EXCEEDED,E as PROMPT_INPUT_CHARACTERS_LEFT,_ as default};
