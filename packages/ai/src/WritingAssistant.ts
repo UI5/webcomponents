@@ -157,6 +157,9 @@ class WritingAssistant extends UI5Element {
 			announce("AI writing assistant generating. Stop generating (ESC)", "Polite");
 		}
 	}
+	get _ariaLabel() {
+		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+	}
 }
 
 WritingAssistant.define();

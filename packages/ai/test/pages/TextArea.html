@@ -72,7 +72,7 @@
 			rows="8"
 			placeholder="Write your content here...">
 
-			<ui5-menu slot="menu" id="ai-menu">
+			<ui5-menu slot="menu" id="ai-menu" data-completed-label="Generation complete">
 				<ui5-menu-item text="Generate text" data-action="generate"></ui5-menu-item>
 				<ui5-menu-item text="Simplify" data-action="simplify" starts-section></ui5-menu-item>
 				<ui5-menu-item text="Expand" data-action="expand"></ui5-menu-item>
@@ -112,26 +112,22 @@
 			"translate-de": "Innovationsmanager arbeiten sowohl mit Kreativität als auch mit Geschäftssinn und treiben Initiativen voran, die eine innovationsfreundliche Kultur fördern."
 		};
 
-		// Configuration
 		const CONFIG = {
 			GENERATION_DELAY: 2000,
 			TYPING_SPEED: 25
 		};
 
-		// State management
 		let currentVersions = [];
 		let currentVersionIndex = 0;
 		let isGenerating = false;
 		let typingInterval = null;
 
-		// DOM elements
 		const textarea = document.getElementById('ai-textarea');
 		const menu = document.getElementById('ai-menu');
 		const resetBtn = document.getElementById('reset-btn');
 		const readonlyToggle = document.getElementById('readonly-toggle');
 		const disabledToggle = document.getElementById('disabled-toggle');
 
-		// Utility functions
 		function delay(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
 		}
@@ -168,14 +164,12 @@
 			}
 		}
 
-		// AI simulation functions
 		async function simulateAIGeneration(action) {
 			if (isGenerating) return;
 
 			isGenerating = true;
 			const actionText = getActionText(action);
 			
-			// Set loading state
 			textarea.assistantState = 'Loading';
 			textarea.actionText = `${actionText}...`;
 
@@ -184,12 +178,10 @@
 				
 				const resultText = SAMPLE_TEXTS[action] || SAMPLE_TEXTS.generate;
 				
-				// Animate typing
 				await new Promise(resolve => {
 					typeText(resultText, resolve);
 				});
 
-				// Save version
 				currentVersions.push({
 					text: resultText,
 					action: action,
@@ -197,7 +189,6 @@
 				});
 				currentVersionIndex = currentVersions.length - 1;
 
-				// Update state
 				textarea.assistantState = 'Initial';
 				updateVersionState();
 
@@ -230,7 +221,6 @@
 			isGenerating = false;
 			textarea.assistantState = 'Initial';
 			
-			// Save partial result if any
 			if (textarea.value.trim()) {
 				currentVersions.push({
 					text: textarea.value,
@@ -242,7 +232,6 @@
 			}
 		}
 
-		// Event handlers
 		function handleMenuItemClick(event) {
 			const action = event.detail.item.dataset.action;
 			if (action) {
@@ -275,7 +264,6 @@
 		}
 
 		function handleKeydown(event) {
-			// Stop generation with Escape
 			if (event.key === 'Escape' && isGenerating) {
 				event.preventDefault();
 				stopGeneration();
@@ -312,17 +300,9 @@
 			textarea.addEventListener('stop-generation', handleStopGeneration);
 			document.addEventListener('keydown', handleKeydown);
 			
-			// The AI button click is handled internally by the component
-			// The component's handleGenerateClick method should automatically open the menu
-			// We don't need to listen for this event in the HTML page
-			// The menu integration is handled via the handleGenerateClick method in TextArea.ts
-			
-			// Control buttons
 			resetBtn.addEventListener('click', resetDemo);
 			readonlyToggle.addEventListener('click', toggleReadonly);
 			disabledToggle.addEventListener('click', toggleDisabled);
-
-			console.log('AI TextArea demo initialized');
 		}
 
 		// Start demo when DOM is loaded

@@ -4,6 +4,13 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import {
+	VERSIONING_PREVIOUS_BUTTON_TEXT,
+	VERSIONING_NEXT_BUTTON_TEXT,
+} from "./generated/i18n/i18n-defaults.js";
+
 // Types
 import VersioningTemplate from "./VersioningTemplate.js";
 
@@ -86,6 +93,12 @@ class Versioning extends UI5Element {
 	_previousTotalSteps = 0;
 	_lastClickedButton: "previous" | "next" | "" = "";
 
+	static i18nBundle: I18nBundle;
+
+	static async onDefine() {
+		Versioning.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+	}
+
 	onAfterRendering() {
 		this._manageFocus();
 		this._previousCurrentStep = this.currentStep;
@@ -132,6 +145,14 @@ class Versioning extends UI5Element {
 	handleNextVersionClick() {
 		this._lastClickedButton = "next";
 		this.fireDecoratorEvent("version-change", { backwards: false });
+	}
+
+	get _previousButtonAccessibleName() {
+		return Versioning.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+	}
+
+	get _nextButtonAccessibleName() {
+		return Versioning.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
 	}
 }
 

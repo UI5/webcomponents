@@ -7,7 +7,11 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TextArea from "@ui5/webcomponents/dist/TextArea.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import type AssistantState from "./types/AssistantState.js";
-
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import {
+	WRITING_ASSISTANT_LABEL,
+} from "./generated/i18n/i18n-defaults.js";
 // Styles
 import AITextAreaCss from "./generated/themes/AITextArea.css.js";
 import textareaStyles from "@ui5/webcomponents/dist/generated/themes/TextArea.css.js";
@@ -154,6 +158,12 @@ class AITextArea extends TextArea {
 	@slot({ type: HTMLElement })
 	menu!: Array<HTMLElement>;
 
+	static i18nBundle: I18nBundle;
+
+	static async onDefine() {
+		TextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+	}
+
 	/**
 	 * Handles the click event for the "Previous Version" button.
 	 * Updates the current version index and syncs content.
@@ -268,6 +278,10 @@ class AITextArea extends TextArea {
 			// eslint-disable-next-line no-console
 			console.error("Error handling generate click:", error);
 		}
+	}
+	
+	get _ariaLabel() {
+		return TextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	/**

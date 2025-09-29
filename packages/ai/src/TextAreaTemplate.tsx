@@ -12,6 +12,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 				class={this.classes.root}
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
+				aria-label={this._ariaLabel}
 			>
 				<div class="ui5-textarea-wrapper">
 					{this.growing &&

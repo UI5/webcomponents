@@ -35,7 +35,6 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				id="ai-menu-btn"
 				design="Transparent"
 				icon={isBusy ? "stop" : "ai"}
-				title="AI Writing Assistant (Shift + F4)"
 				onClick={this.handleButtonClick}
 			/>
 		</Toolbar>
