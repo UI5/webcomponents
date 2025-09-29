@@ -90,11 +90,22 @@
 		</div>
 
 		<div class="demo-info">
+			<strong>AI TextArea Features:</strong><br>
+			• Click the AI button (⚡) to open the action menu<br>
+			• During generation, the AI button becomes a stop button (⏹)<br>
+			• Click stop button or press Escape to cancel generation<br>
+			• Version navigation appears when multiple versions exist<br><br>
+			
 			<strong>Keyboard Shortcuts:</strong><br>
 			• Shift + F4: Focus AI button<br>
 			• Ctrl + Shift + Z: Previous version (when multiple versions exist)<br>
 			• Ctrl + Shift + Y: Next version (when multiple versions exist)<br>
-			• Escape: Stop generation (during loading)
+			• Escape: Stop generation (during loading)<br><br>
+			
+			<strong>Generation Behavior:</strong><br>
+			• Selecting a new action while generating will stop current generation<br>
+			• Stopped generations are saved as versions with "(stopped)" suffix<br>
+			• History is limited to 50 versions to prevent memory issues
 		</div>
 	</div>
 
@@ -113,13 +124,17 @@
 		};
 
 		const CONFIG = {
-			GENERATION_DELAY: 2000,
-			TYPING_SPEED: 25
+			GENERATION_DELAY: 2000, // Milliseconds to simulate AI processing time
+			TYPING_SPEED: 25, // Milliseconds between each character during typing animation
+			VERSION_INDEX_BASE: 1, // 1-based indexing for version numbers
+			MAX_HISTORY: 50 // Maximum number of versions to keep in history
 		};
 
 		let currentVersions = [];
 		let currentVersionIndex = 0;
 		let isGenerating = false;
+		let currentGenerationId = 0; // Used to cancel stale generation runs
+		let currentActionInProgress = null;
 		let typingInterval = null;
 
 		const textarea = document.getElementById('ai-textarea');
@@ -165,9 +180,22 @@
 		}
 
 		async function simulateAIGeneration(action) {
-			if (isGenerating) return;
+			if (isGenerating) {
+				// If already generating, stop the current generation
+				stopGeneration();
+				return;
+			}
+			
+			if (!action || !SAMPLE_TEXTS.hasOwnProperty(action)) {
+				console.warn('Invalid action provided:', action);
+				return;
+			}
 
 			isGenerating = true;
+			currentActionInProgress = action;
+			currentGenerationId++;
+			const generationIdForThisRun = currentGenerationId;
+			
 			const actionText = getActionText(action);
 			
 			textarea.assistantState = 'Loading';
@@ -176,28 +204,28 @@
 			try {
 				await delay(CONFIG.GENERATION_DELAY);
 				
+				// Check if generation was cancelled while waiting
+				if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
+					resetGenerationState();
+					return;
+				}
+				
 				const resultText = SAMPLE_TEXTS[action] || SAMPLE_TEXTS.generate;
 				
 				await new Promise(resolve => {
-					typeText(resultText, resolve);
+					typeText(resultText, () => {
+						// Check again if generation was cancelled during typing
+						if (isGenerating && generationIdForThisRun === currentGenerationId) {
+							completeGeneration(action, actionText);
+						}
+						resolve();
+					});
 				});
-
-				currentVersions.push({
-					text: resultText,
-					action: action,
-					actionText: actionText
-				});
-				currentVersionIndex = currentVersions.length - 1;
-
-				textarea.assistantState = 'Initial';
-				updateVersionState();
 
 			} catch (error) {
 				console.error('Generation error:', error);
-				textarea.assistantState = 'Initial';
+				resetGenerationState();
 				textarea.actionText = 'Generation failed';
-			} finally {
-				isGenerating = false;
 			}
 		}
 
@@ -214,28 +242,69 @@
 			return actionTexts[action] || 'Generated text';
 		}
 
+		function resetGenerationState() {
+			stopTyping();
+			isGenerating = false;
+			currentActionInProgress = null;
+			textarea.assistantState = 'Initial';
+		}
+
+		function completeGeneration(action, actionText) {
+			currentVersions.push({
+				text: textarea.value,
+				action: action,
+				actionText: actionText,
+				timestamp: new Date().toISOString()
+			});
+			
+			// Limit history size
+			if (currentVersions.length > CONFIG.MAX_HISTORY) {
+				currentVersions.shift();
+				if (currentVersionIndex > 0) currentVersionIndex--;
+			}
+			
+			currentVersionIndex = currentVersions.length - 1;
+			resetGenerationState();
+			updateVersionState();
+		}
+
 		function stopGeneration() {
 			if (!isGenerating) return;
 
+			currentGenerationId++; // Cancel any ongoing generation
 			stopTyping();
-			isGenerating = false;
-			textarea.assistantState = 'Initial';
+			
+			const action = currentActionInProgress || 'generate';
+			const actionText = getActionText(action);
 			
 			if (textarea.value.trim()) {
 				currentVersions.push({
 					text: textarea.value,
-					action: 'stopped',
-					actionText: 'Generation stopped'
+					action: action,
+					actionText: actionText + ' (stopped)',
+					timestamp: new Date().toISOString()
 				});
 				currentVersionIndex = currentVersions.length - 1;
 				updateVersionState();
 			}
+			
+			resetGenerationState();
 		}
 
 		function handleMenuItemClick(event) {
 			const action = event.detail.item.dataset.action;
 			if (action) {
 				simulateAIGeneration(action);
+			}
+		}
+
+		// Handle AI button clicks from the WritingAssistant toolbar
+		function handleAIButtonClick() {
+			if (isGenerating) {
+				stopGeneration();
+			} else {
+				// If not generating, focus the menu to allow action selection
+				// This will be handled by the component's built-in functionality
 			}
 		}
 
@@ -271,9 +340,16 @@
 		}
 
 		function resetDemo() {
+			// Stop any ongoing generation
 			stopGeneration();
+			
+			// Reset all state
 			currentVersions = [];
 			currentVersionIndex = 0;
+			currentGenerationId = 0;
+			currentActionInProgress = null;
+			
+			// Reset component state
 			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
 			textarea.assistantState = 'Initial';
 			textarea.actionText = '';
@@ -293,13 +369,24 @@
 
 		// Initialize demo
 		function initDemo() {
-			// Event listeners - need to handle AI button click to open menu
+			// Event listeners for menu actions
 			menu.addEventListener('item-click', handleMenuItemClick);
+			
+			// Event listeners for textarea component
 			textarea.addEventListener('previous-version-click', handlePreviousVersion);
 			textarea.addEventListener('next-version-click', handleNextVersion);
 			textarea.addEventListener('stop-generation', handleStopGeneration);
+			
+			// Global keyboard shortcuts
 			document.addEventListener('keydown', handleKeydown);
 			
+			// Prevent memory leaks on page unload
+			window.addEventListener('beforeunload', () => {
+				stopTyping();
+				resetGenerationState();
+			});
+			
+			// Demo control buttons
 			resetBtn.addEventListener('click', resetDemo);
 			readonlyToggle.addEventListener('click', toggleReadonly);
 			disabledToggle.addEventListener('click', toggleDisabled);

@@ -35,6 +35,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				id="ai-menu-btn"
 				design="Transparent"
 				icon={isBusy ? "stop" : "ai"}
+				data-state={isBusy ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
 			/>
 		</Toolbar>

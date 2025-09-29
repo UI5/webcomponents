@@ -4,6 +4,11 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import {
+	WRITING_ASSISTANT_LABEL,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import WritingAssistantCss from "./generated/themes/WritingAssistant.css.js";
@@ -100,17 +105,31 @@ class WritingAssistant extends UI5Element {
 	 * - `"Initial"`: Shows only the main toolbar button.
 	 * - `"Loading"`: Indicates that an action is in progress.
 	 *
+	 * The state controls the visual appearance and behavior of the assistant.
+	 * During "Loading" state, a stop button is shown instead of the AI button.
+	 *
 	 * @default "Initial"
 	 * @public
+	 * @since 1.0.0-rc.1
 	 */
 	@property()
 	assistantState: `${AssistantState}` = "Initial";
 
+	static i18nBundle: I18nBundle;
+
+	static async onDefine() {
+		WritingAssistant.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+	}
+
 	/**
 	 * Defines the action text of the AI Writing Assistant.
 	 *
+	 * This text is displayed in the toolbar to indicate the current or last
+	 * performed AI action (e.g., "Generated text", "Simplified text").
+	 *
 	 * @default ""
 	 * @public
+	 * @since 1.0.0-rc.1
 	 */
 	@property()
 	actionText = "";
@@ -119,9 +138,11 @@ class WritingAssistant extends UI5Element {
 	 * Indicates the index of the currently displayed result version.
 	 *
 	 * The index is **1-based** (i.e. `1` represents the first result).
+	 * This property is synchronized with the parent AI TextArea component.
 	 *
 	 * @default 1
 	 * @public
+	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	currentVersionIndex = 1;
@@ -129,8 +150,12 @@ class WritingAssistant extends UI5Element {
 	/**
 	 * Indicates the total number of result versions available.
 	 *
+	 * This property determines whether version navigation controls are displayed.
+	 * When totalVersions > 1, previous/next buttons become available.
+	 *
 	 * @default 1
 	 * @public
+	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	totalVersions = 1;
@@ -149,8 +174,8 @@ class WritingAssistant extends UI5Element {
 	 * @public
 	 */
 	handleButtonClick(e: Event): void {
-		const target = e.target as HTMLElement & { state?: string };
-		if (target?.state === "generating") {
+		const target = e.target as HTMLElement & { dataset?: { state?: string } };
+		if (target?.dataset?.state === "generating") {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
 			this.fireDecoratorEvent("button-click", { clickTarget: target });

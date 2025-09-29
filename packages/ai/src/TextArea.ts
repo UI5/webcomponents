@@ -111,6 +111,9 @@ class AITextArea extends TextArea {
 		"stop-generation": null;
 	};
 
+	// Store bound handler for proper cleanup
+	private _keydownHandler?: (event: KeyboardEvent) => void;
+
 	/**
 	 * Defines the current state of the AI Writing Assistant.
 	 *
@@ -161,7 +164,7 @@ class AITextArea extends TextArea {
 	static i18nBundle: I18nBundle;
 
 	static async onDefine() {
-		TextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+		AITextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
 	}
 
 	/**
@@ -253,8 +256,23 @@ class AITextArea extends TextArea {
 
 		// Add keydown event listener to the textarea
 		const textarea = this.shadowRoot?.querySelector("textarea");
-		if (textarea) {
-			textarea.addEventListener("keydown", this._handleKeydown.bind(this));
+		if (textarea && !this._keydownHandler) {
+			this._keydownHandler = this._handleKeydown.bind(this);
+			textarea.addEventListener("keydown", this._keydownHandler);
+		}
+	}
+
+	/**
+	 * Cleanup event listeners to prevent memory leaks.
+	 * @private
+	 */
+	onBeforeUnmount() {
+		if (this._keydownHandler) {
+			const textarea = this.shadowRoot?.querySelector("textarea");
+			if (textarea) {
+				textarea.removeEventListener("keydown", this._keydownHandler);
+			}
+			this._keydownHandler = undefined;
 		}
 	}
 
@@ -267,21 +285,32 @@ class AITextArea extends TextArea {
 	handleGenerateClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
 		try {
 			const menuNodes = this.getSlottedNodes("menu");
-			if (menuNodes.length > 0 && e.detail?.clickTarget) {
-				const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
-				if (menu && typeof menu.open !== "undefined") {
-					menu.opener = e.detail.clickTarget;
-					menu.open = true;
-				}
+			if (menuNodes.length === 0) {
+				// eslint-disable-next-line no-console
+				console.warn("[AITextArea] No menu element found in slot");
+				return;
+			}
+			if (!e.detail?.clickTarget) {
+				// eslint-disable-next-line no-console
+				console.warn("[AITextArea] No click target provided");
+				return;
+			}
+
+			const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
+			if (menu && typeof menu.open !== "undefined") {
+				menu.opener = e.detail.clickTarget;
+				menu.open = true;
+			} else {
+				// eslint-disable-next-line no-console
+				console.warn("[AITextArea] Menu element does not support open property");
 			}
 		} catch (error) {
 			// eslint-disable-next-line no-console
-			console.error("Error handling generate click:", error);
+			console.error("[AITextArea] Error handling generate click:", error);
 		}
 	}
-	
 	get _ariaLabel() {
-		return TextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return AITextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	/**
@@ -295,7 +324,7 @@ class AITextArea extends TextArea {
 			this.fireDecoratorEvent("stop-generation");
 		} catch (error) {
 			// eslint-disable-next-line no-console
-			console.error("Error handling stop generation:", error);
+			console.error("[AITextArea] Error handling stop generation:", error);
 		}
 	}
 }

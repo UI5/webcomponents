@@ -72,6 +72,9 @@ class Versioning extends UI5Element {
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
+	 * This property represents the current position in the version history.
+	 * The value is 0-based for internal calculations but displayed as 1-based to users.
+	 *
 	 * @default 0
 	 * @public
 	 */
@@ -85,6 +88,7 @@ class Versioning extends UI5Element {
 	 *
 	 * @default 0
 	 * @public
+	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	totalSteps = 0;
@@ -116,8 +120,8 @@ class Versioning extends UI5Element {
 			return;
 		}
 
-		const previousButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"previous\"]") as HTMLElement;
-		const nextButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"next\"]") as HTMLElement;
+		const previousButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"previous\"]");
+		const nextButton = this.shadowRoot.querySelector("[data-ui5-versioning-button=\"next\"]");
 
 		if (!previousButton || !nextButton) {
 			return;
@@ -128,10 +132,10 @@ class Versioning extends UI5Element {
 		const wasPreviousDisabled = this._previousCurrentStep <= 1;
 		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps;
 
-		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === "previous") {
+		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === "previous" && nextButton instanceof HTMLElement) {
 			nextButton.focus();
 			this._lastClickedButton = "";
-		} else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === "next") {
+		} else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === "next" && previousButton instanceof HTMLElement) {
 			previousButton.focus();
 			this._lastClickedButton = "";
 		}

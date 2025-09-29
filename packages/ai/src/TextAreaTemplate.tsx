@@ -80,6 +80,11 @@ export default function TextAreaTemplate(this: AITextArea) {
 
 			{TextAreaPopoverTemplate.call(this)}
 
+			{/* ARIA live region for screen readers */}
+			<div aria-live="polite" aria-atomic="true" class="ui5-hidden-text">
+				{this.assistantState === "Loading" ? this.actionText : ""}
+			</div>
+
 			<div id="ai-menu-wrapper">
 				<slot name="menu"></slot>
 			</div>
