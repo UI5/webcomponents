@@ -9,7 +9,7 @@ const getPreviewBaseUrl = () => {
 		return "/";
 	}
 	return `/webcomponents/pr-${process.env.PR_NUMBER}/`;
-}	
+}
 
 if (process.env.DEPLOY) {
 	websiteBaseUrl = "/webcomponents/";
