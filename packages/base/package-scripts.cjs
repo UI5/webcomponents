@@ -80,7 +80,7 @@ const scripts = {
 	watch: {
 		default: 'ui5nps-p watch.src watch.styles', // concurently
 		withBundle: 'ui5nps-p watch.src watch.bundle watch.styles', // concurently
-		src: '',
+		src: 'ui5nps copy.srcWithWatch',
 		bundle: `ui5nps-script ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
 		styles: 'chokidar "src/css/*.css" -c "ui5nps generateStyles"'
 	},
