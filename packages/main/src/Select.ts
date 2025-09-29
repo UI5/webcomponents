@@ -613,15 +613,15 @@ class Select extends UI5Element implements IFormInputElement {
 		if (!selectedOption) {
 			return "";
 		}
-		
+
 		// Only show separator when readonly and there's additional text
 		if (this.readonly && selectedOption.additionalText) {
 			return this._buildDisplayText(
 				selectedOption.effectiveDisplayText,
-				selectedOption.additionalText
+				selectedOption.additionalText,
 			);
 		}
-		
+
 		return selectedOption.effectiveDisplayText;
 	}
 
@@ -630,31 +630,31 @@ class Select extends UI5Element implements IFormInputElement {
 		if (this.tooltip) {
 			return this.tooltip;
 		}
-		
+
 		// Provide default tooltip for readonly mode to show full content
 		if (this.readonly) {
 			const selectedOption = this.selectedOption;
 			if (!selectedOption) {
 				return undefined;
 			}
-			
+
 			// Use textContent for tooltip to show actual text content, not display text
 			const mainText = selectedOption.textContent || "";
 			return this._buildDisplayText(mainText, selectedOption.additionalText);
 		}
-		
+
 		return undefined;
 	}
 
 	get _separatorSymbol(): string {
 		switch (this.twoColumnSeparator) {
-			case SelectTwoColumnSeparator.Bullet:
-				return "·"; // Middle dot (U+00B7)
-			case SelectTwoColumnSeparator.VerticalLine:
-				return "|"; // Vertical line (U+007C)
-			case SelectTwoColumnSeparator.Dash:
-			default:
-				return "–"; // En dash (U+2013)
+		case SelectTwoColumnSeparator.Bullet:
+			return "·"; // Middle dot (U+00B7)
+		case SelectTwoColumnSeparator.VerticalLine:
+			return "|"; // Vertical line (U+007C)
+		case SelectTwoColumnSeparator.Dash:
+		default:
+			return "–"; // En dash (U+2013)
 		}
 	}
 
