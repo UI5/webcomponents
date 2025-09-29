@@ -1,4 +1,3 @@
-/* Versioning component styling */
 ui5-ai-versioning {
 	display: flex;
 	align-items: center;
@@ -28,7 +27,6 @@ ui5-ai-versioning ui5-label {
 	vertical-align: middle;
 }
 
-/* Version navigation buttons */
 ui5-ai-versioning ui5-button {
 	margin: 0;
 	display: flex;
@@ -40,7 +38,6 @@ ui5-ai-versioning ui5-button {
 	vertical-align: middle;
 }
 
-/* Ensure proper spacing in the footer bar */
 .ui5-ai-writing-assistant-footer-bar ui5-ai-versioning {
 	margin-right: 0.5rem;
 }

@@ -1,4 +1,3 @@
-/* AI TextArea Root Container */
 .ui5-ai-textarea-root {
 	position: relative;
 	display: flex;
@@ -7,7 +6,6 @@
 	height: 100%;
 }
 
-/* Textarea wrapper modifications for AI component */
 .ui5-ai-textarea-root .ui5-textarea-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -15,7 +13,6 @@
 	position: relative;
 }
 
-/* Footer container for the toolbar */
 .ui5-ai-textarea-root [part="footer"] {
 	position: relative;
 	width: 100%;
@@ -23,7 +20,6 @@
 	flex-shrink: 0;
 }
 
-/* AI Writing Assistant Footer Bar */
 .ui5-ai-writing-assistant-footer-bar {
 	background: var(--_ui5_texteditor_toolbar_background, var(--sapPageFooter_Background));
 	width: 100%;
@@ -33,19 +29,16 @@
 	border-top: none;
 }
 
-/* Show border when component has results or is loading */
 .ui5-ai-writing-assistant-footer-bar--with-border {
 	border-top: 1px solid var(--sapPageFooter_BorderColor);
 }
 
-/* Action Label */
 .ui5-ai-writing-assistant-action-label {
 	margin-left: 0.5rem;
 	color: var(--sapContent_LabelColor);
 	font-size: var(--sapFontSmallSize);
 }
 
-/* Menu wrapper positioning */
 #ai-menu-wrapper {
 	position: relative;
 	z-index: 1000;

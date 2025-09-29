@@ -283,30 +283,18 @@ class AITextArea extends TextArea {
 	 * @private
 	 */
 	handleGenerateClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
-		try {
-			const menuNodes = this.getSlottedNodes("menu");
-			if (menuNodes.length === 0) {
-				// eslint-disable-next-line no-console
-				console.warn("[AITextArea] No menu element found in slot");
-				return;
-			}
-			if (!e.detail?.clickTarget) {
-				// eslint-disable-next-line no-console
-				console.warn("[AITextArea] No click target provided");
-				return;
-			}
+		const menuNodes = this.getSlottedNodes("menu");
+		if (menuNodes.length === 0) {
+			return;
+		}
+		if (!e.detail?.clickTarget) {
+			return;
+		}
 
-			const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
-			if (menu && typeof menu.open !== "undefined") {
-				menu.opener = e.detail.clickTarget;
-				menu.open = true;
-			} else {
-				// eslint-disable-next-line no-console
-				console.warn("[AITextArea] Menu element does not support open property");
-			}
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("[AITextArea] Error handling generate click:", error);
+		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
+		if (menu && typeof menu.open !== "undefined") {
+			menu.opener = e.detail.clickTarget;
+			menu.open = true;
 		}
 	}
 	get _ariaLabel() {
@@ -320,12 +308,7 @@ class AITextArea extends TextArea {
 	 * @private
 	 */
 	handleStopGeneration = () => {
-		try {
-			this.fireDecoratorEvent("stop-generation");
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("[AITextArea] Error handling stop generation:", error);
-		}
+		this.fireDecoratorEvent("stop-generation");
 	}
 }
 
