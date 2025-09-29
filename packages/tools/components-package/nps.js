@@ -19,6 +19,33 @@ if (process.env.DEPLOY) {
 	websiteBaseUrl = getPreviewBaseUrl();
 }
 
+const cypressEnvVariables = (options, predefinedVars) => {
+	let variables = [];
+	const { cypress_code_coverage, cypress_acc_tests } = options.internal ?? {};
+
+	// Handle environment variables like TEST_SUITE
+	if (predefinedVars) {
+		variables = [...predefinedVars];
+	}
+
+	// The coverage task is always registered and requires an explicit variable whether to generate a report or not
+	variables.push(`CYPRESS_COVERAGE=${!!cypress_code_coverage}`);
+
+	if (cypress_acc_tests) {
+		if (cypress_acc_tests === "continuum") {
+			try {
+				require("@continuum/continuum-javascript-professional");
+			} catch (e) {
+				console.error(`@continuum/continuum-javascript-professional is not found. Try to install it by running \`npm install --save-dev @continuum/continuum-javascript-professional\` if you are using npm or by running \`yarn add --dev @continuum/continuum-javascript-professional\` if you are using yarn.`);
+				process.exit(e.code);
+			}
+		}
+		variables.push(`CYPRESS_UI5_ACC=${cypress_acc_tests}`);
+	}
+
+	return variables.length ? `cross-env ${variables.join(" ")}` : "";
+}
+
 const getScripts = (options) => {
 
 	// The script creates all JS modules (dist/illustrations/{illustrationName}.js) out of the existing SVGs
