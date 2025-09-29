@@ -35,7 +35,7 @@ const scripts = {
 		"no-remaining-require": `node "${noRequire}" dist/`,
 		"third-party": {
 			default: "ui5nps integrate.third-party.copy integrate.third-party.fix",
-			copy: "copy-and-watch ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/",
+			copy: `node "${LIB}copy-and-watch/index.js" ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/`,
 			fix: "replace-in-file 240 xA0 dist/sap/ui/thirdparty/caja-html-sanitizer.js"
 		},
 	},
@@ -54,8 +54,8 @@ const scripts = {
 	},
 	copy: {
 		default: "ui5nps copy.src",
-		src: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/`,
-		srcWithWatch: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
+		src: `node "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/`,
+		srcWithWatch: `node "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
 	},
 	generateAssetParameters: `node "${assetParametersScript}"`,
 	generateVersionInfo: `node "${versionScript}"`,
@@ -65,8 +65,13 @@ const scripts = {
 	generateProd: {
 		"default": "ui5nps generateProd.remove-dev-mode generateProd.copy-prod",
 		"remove-dev-mode": `node "${LIB}/remove-dev-mode/remove-dev-mode.mjs"`,
-		"copy-prod": `copy-and-watch "dist/sap/**/*" dist/prod/sap/ && copy-and-watch "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/ && copy-and-watch "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
-	},
+		"copy-prod": {
+			default: "ui5nps generateProd.copy-prod.ui5 generateProd.copy-prod.preact generateProd.copy-prod.assets",
+			"ui5": `node "${LIB}copy-and-watch/index.js" "dist/sap/**/*" dist/prod/sap/`,
+			"preact": `node "${LIB}copy-and-watch/index.js" "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/`,
+			"assets": `node "${LIB}copy-and-watch/index.js" "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
+	}
+},
 	generateAPI: {
 		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
 		generateCEM: `node "${LIB}/cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
