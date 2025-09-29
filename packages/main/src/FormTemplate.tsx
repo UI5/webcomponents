@@ -41,11 +41,11 @@ function groupLayout(this: Form) {
 			>
 				{ this.itemSpacing === "Large" ?
 					<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
-						{ groupContent.call(this, groupItem) }
+						{ groupLayoutContent.call(this, groupItem) }
 					</div>
 					:
 					<dl class="ui5-form-group" aria-labelledby={groupItemInfo.accessibleNameRef}>
-						{ groupContent.call(this, groupItem) }
+						{ groupLayoutContent.call(this, groupItem) }
 					</dl>
 				}
 			</div>;
@@ -53,7 +53,7 @@ function groupLayout(this: Form) {
 	</div>;
 }
 
-function groupContent(this: Form, groupItem: IFormItem) {
+function groupLayoutContent(this: Form, groupItem: IFormItem) {
 	return <>
 		{ groupItem.headerText &&
 			<div class="ui5-form-group-heading">
@@ -92,5 +92,5 @@ function layoutContent(this: Form) {
 				<slot name={item._individualSlot}></slot>
 			</div>
 		);
-	})
+	});
 }
