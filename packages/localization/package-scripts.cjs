@@ -10,23 +10,23 @@ const generateCLDR = resolve.sync("@ui5/webcomponents-localization/lib/generate-
 const scripts = {
 	clean: {
 		"default": "ui5nps clean.generated clean.dist",
-		"generated": `node "${LIB}/rimraf/rimraf.js src/generated`,
-		"dist": `node "${LIB}/rimraf/rimraf.js dist`,
+		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
+		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
 	lint: "eslint .",
 	generate: "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports",
 	build: {
 		"default": "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports build.typescript build.no-remaining-require",
-		"amd-to-es6": `node "${amdToES6}" dist/`,
-		"no-remaining-require": `node "${noRequire}" dist/`,
+		"amd-to-es6": `ui5nps-script "${amdToES6}" dist/`,
+		"no-remaining-require": `ui5nps-script "${noRequire}" dist/`,
 		typescript: "tsc --build",
-		jsonImports: `node ${generateCLDR}`,
+		jsonImports: `ui5nps-script ${generateCLDR}`,
 	},
 	typescript: "tsc --build",
 	copy: {
-		"used-modules": `node "${copyUsedModules}" ./used-modules.txt dist/`,
-		cldr: `node "${LIB}copy-and-watch/index.js" "../../node_modules/@openui5/sap.ui.core/src/sap/ui/core/cldr/*" dist/generated/assets/cldr/`,
-		overlay: `node "${LIB}copy-and-watch/index.js" "overlay/**/*.js" dist/`,
+		"used-modules": `ui5nps-script "${copyUsedModules}" ./used-modules.txt dist/`,
+		cldr: `ui5nps-script "${LIB}copy-and-watch/index.js" "../../node_modules/@openui5/sap.ui.core/src/sap/ui/core/cldr/*" dist/generated/assets/cldr/`,
+		overlay: `ui5nps-script "${LIB}copy-and-watch/index.js" "overlay/**/*.js" dist/`,
 	},
 };
 

@@ -76,7 +76,7 @@ class Parser {
 			throw new Error(`Command "${commandName}" not found in scripts`);
 		}
 
-		if (!executableCommand.startsWith("ui5nps") && !executableCommand.startsWith("ui5nps-p")) {
+		if (!executableCommand.startsWith("ui5nps") || executableCommand.startsWith("ui5nps-script")) {
 			this.resolvedScripts.set(commandName, { commandName, commands: [executableCommand], parallel: false });
 			return this.resolvedScripts.get(commandName);
 		}
@@ -159,17 +159,11 @@ class Parser {
 	async executeCommand(command, commandName = "unknown") {
 		if (typeof command === "string" && command) {
 			return new Promise(async (resolve, reject) => {
-				if (command.trim().startsWith("node")) {
+				if (command.trim().startsWith("ui5nps-script")) {
 					const argv = parseArgsStringToArgv(command);
-					let moduleContent;
+					let moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
 
-					try {
-						moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
-					} catch {
-						moduleContent = null
-					}
-
-					if (moduleContent?.includes("_ui5mainFn")) {
+					if (moduleContent.includes("_ui5mainFn")) {
 						const importedContent = require(argv[1]);
 						let _ui5mainFn;
 
