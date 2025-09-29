@@ -297,12 +297,10 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	async onSelectedDatesChange(e: CustomEvent<CalendarSelectionChangeEventDetail>) {
 		e.preventDefault();
-		// @ts-ignore Needed for FF
-		const dateTimePickerContent = e.path ? e.path[1] : e.composedPath()[1];
 
 		// Try to get the current time value from the time picker,
 		// but fallback to last valid value if current picker time is empty or invalid
-		let timeValue = dateTimePickerContent.lastChild.value as string;
+		let timeValue = this._clocks?.value || "";
 		if (!timeValue || !this.isValidValue(timeValue)) {
 			timeValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
 		}
