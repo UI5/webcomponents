@@ -19,7 +19,11 @@ const scripts = {
 		UI5_BASE: true,
 		UI5_CEM_MODE: "dev",
 	},
-	clean: "rimraf src/generated && rimraf dist",
+	clean: {
+		default: "ui5nps clean.generated clean.dist",
+		"generated": `node "${LIB}/rimraf/rimraf.js src/generated`,
+		"dist": `node "${LIB}/rimraf/rimraf.js dist`,
+	},
 	lint: `eslint .`,
 	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
 	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
@@ -65,7 +69,7 @@ const scripts = {
 	},
 	generateAPI: {
 		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
-		generateCEM: `cem analyze --config "${LIB}/cem/custom-elements-manifest.config.mjs"`,
+		generateCEM: `node "${LIB}/cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 		validateCEM: `node "${LIB}/cem/validate.js"`,
 	},
 	watch: {

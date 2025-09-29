@@ -83,8 +83,9 @@ const getScripts = (options) => {
 			CYPRESS_UI5_ACC: !!(options.internal?.cypress_acc_tests),
 		},
 		clean: {
-			default: 'ui5nps clean.generated scope.testPages.clean',
-			generated: 'rimraf src/generated && rimraf dist',
+			"default": "ui5nps clean.generated clean.dist scope.testPages.clean",
+			"generated": `node "${LIB}/rimraf/rimraf.js src/generated`,
+			"dist": `node "${LIB}/rimraf/rimraf.js dist`,
 		},
 		lint: `eslint . ${eslintConfig}`,
 		lintfix: `eslint . ${eslintConfig} --fix`,
@@ -163,7 +164,7 @@ const getScripts = (options) => {
 			lint: `node "${LIB}scoping/lint-src.js"`,
 			testPages: {
 				default: "ui5nps scope.testPages.clean scope.testPages.copy scope.testPages.replace",
-				clean: "rimraf test/pages/scoped",
+				"clean": `node "${LIB}/rimraf/rimraf.js test/pages/scoped`,
 				copy: `node "${LIB}copy-and-watch/index.js" --silent "test/pages/**/*" test/pages/scoped`,
 				replace: `node "${LIB}scoping/scope-test-pages.js" test/pages/scoped demo`,
 			},
@@ -173,7 +174,7 @@ const getScripts = (options) => {
 		},
 		generateAPI: {
 			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM" : "",
-			generateCEM: `cem analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
+			generateCEM: `node "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `node "${LIB}cem/validate.js"`,
 		},
 	};

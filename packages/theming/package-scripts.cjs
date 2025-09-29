@@ -13,7 +13,11 @@ module.exports = {
 		__ui5envs: {
 			UI5_TS: "true",
 		},
-		clean: "rimraf dist && rimraf src/generated",
+		clean: {
+			"default": "ui5nps clean.generated clean.dist",
+			"generated": `node "${TOOLS_LIB}/rimraf/rimraf.js src/generated`,
+			"dist": `node "${TOOLS_LIB}/rimraf/rimraf.js dist`,
+		},
 		generate: `ui5nps build.postcss build.jsonImports`,
 		build: {
 			default: `ui5nps clean build.src build.postcss build.jsonImports build.typescript generateReport`,

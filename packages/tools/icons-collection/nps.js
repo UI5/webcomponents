@@ -47,10 +47,14 @@ const getScripts = (options) => {
 	const tsOption = !options.legacy;
 
 	const scripts = {
-		__ui5envs:{
+		__ui5envs: {
 			UI5_TS: `${tsOption}`,
 		},
-		clean: "rimraf dist && rimraf src/generated",
+		clean: {
+			default: "ui5nps clean.generated clean.dist",
+			"generated": `node "${LIB}/rimraf/rimraf.js src/generated`,
+			"dist": `node "${LIB}/rimraf/rimraf.js dist`,
+		},
 		copy: copyAssetsCmd,
 		generate: hashesCheck(`ui5nps clean copy build.i18n build.icons build.jsonImports copyjson`),
 		copyjson: "copy-and-watch \"src/generated/**/*.json\" dist/generated/",
