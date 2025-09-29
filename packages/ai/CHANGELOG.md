@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.15.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.0...v2.15.0-rc.1) (2025-09-25)
+
+
+### Features
+
+* **ui5-button, ui5-ai-button:** extend accessibility ([f6a0504](https://github.com/UI5/webcomponents/commit/f6a05045b7b07afca69b9dec7049649607f488f3))
+
+
+
+
+
 # [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
 
 **Note:** Version bump only for package @ui5/webcomponents-ai
