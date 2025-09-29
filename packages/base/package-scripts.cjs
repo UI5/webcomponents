@@ -87,7 +87,7 @@ const scripts = {
 	test: {
 		default: 'ui5nps-p test.ssr test.ssr2 test.test-cy-ci', // concurently
 		ssr: `mocha test/ssr`,
-		ssr2: "ui5nps-script -e \"import('./dist/Device.js')\"",
+		ssr2: "node -e \"import('./dist/Device.js')\"",
 		"test-cy-ci": {
 			default: "ui5nps generateTestTemplates test.test-cy-ci.cypress",
 			cypress: ` yarn cypress run --component --browser chrome`

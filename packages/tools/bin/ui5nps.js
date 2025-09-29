@@ -94,7 +94,7 @@ class Parser {
 				this.resolveScripts(part);
 			}
 
-			commands.push(this.resolvedScripts.get(part) || { commandName: part, commands: [parsedScript], parallel: executableCommand.startsWith("ui5nps-p") });
+			commands.push(this.resolvedScripts.get(part) || { commandName: part, commands: [parsedScript], parallel: parsedScript.startsWith("ui5nps-p") });
 		}
 
 
