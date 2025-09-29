@@ -35,12 +35,10 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@ui5/webcomponents-tools": "2.15.0-rc.2",
     "babel-plugin-amd-to-esm": "^2.0.3",
-    "copy-and-watch": "^0.1.5",
     "eslint": "^7.22.0",
     "estree-walk": "^2.2.0",
     "mkdirp": "^1.0.4",
-    "resolve": "^1.20.0",
-    "rimraf": "^6.0.1"
+    "resolve": "^1.20.0"
   },
   "dependencies": {
     "@types/openui5": "^1.113.0",
