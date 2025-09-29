@@ -1,5 +1,6 @@
 import type Form from "./Form.js";
 import Title from "./Title.js";
+import type { IFormItem } from "./Form.js";
 
 export default function FormTemplate(this: Form) {
 	return (
@@ -19,61 +20,77 @@ export default function FormTemplate(this: Form) {
 				</div>
 			}
 
-			<div class="ui5-form-layout" part="layout">
-				{
-					this.hasGroupItems ?
-						<>
-							{
-								this.groupItemsInfo.map(groupItemInfo => {
-									const groupItem = groupItemInfo.groupItem;
-									return (
-										<div class={{
-											"ui5-form-column": true,
-											[`ui5-form-column-spanL-${groupItem.colsL}`]: true,
-											[`ui5-form-column-spanXL-${groupItem.colsXl}`]: true,
-											[`ui5-form-column-spanM-${groupItem.colsM}`]: true,
-											[`ui5-form-column-spanS-${groupItem.colsS}`]: true,
-										}}
-										part="column"
-										>
-											<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
-												{groupItem.headerText &&
-												<div class="ui5-form-group-heading">
-													<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
-												</div>
-												}
-
-												<div class="ui5-form-group-layout">
-													<dl aria-labelledby={`${groupItem._id}-group-header-text`}>
-														<slot name={groupItem._individualSlot}></slot>
-													</dl>
-												</div>
-											</div>
-										</div>
-									);
-								}
-								)}
-						</>
-						:
-						<>
-							{
-								this.itemsInfo.map(itemInfo => {
-									const item = itemInfo.item;
-									return (
-										// REVISIT: axe core complains about the structure
-										<dl class={{
-											"ui5-form-item": true,
-											[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
-										}}
-										>
-											<slot name={item._individualSlot}></slot>
-										</dl>
-									);
-								})
-							}
-						</>
-				}
-			</div>
+			{ this.hasGroupItems ? groupLayout.call(this) : layout.call(this) }
 		</div>
 	);
+}
+
+function groupLayout(this: Form) {
+	return <div class="ui5-form-layout" part="layout">
+		{ this.groupItemsInfo.map(groupItemInfo => {
+			const groupItem = groupItemInfo.groupItem;
+			return <div
+				class={{
+					"ui5-form-column": true,
+					[`ui5-form-column-spanL-${groupItem.colsL}`]: true,
+					[`ui5-form-column-spanXL-${groupItem.colsXl}`]: true,
+					[`ui5-form-column-spanM-${groupItem.colsM}`]: true,
+					[`ui5-form-column-spanS-${groupItem.colsS}`]: true,
+				}}
+				part="column"
+			>
+				{ this.itemSpacing === "Large" ?
+					<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
+						{ groupContent.call(this, groupItem) }
+					</div>
+					:
+					<dl class="ui5-form-group" aria-labelledby={groupItemInfo.accessibleNameRef}>
+						{ groupContent.call(this, groupItem) }
+					</dl>
+				}
+			</div>;
+		})}
+	</div>;
+}
+
+function groupContent(this: Form, groupItem: IFormItem) {
+	return <>
+		{ groupItem.headerText &&
+			<div class="ui5-form-group-heading">
+				<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
+			</div>
+		}
+
+		<div class="ui5-form-group-layout">
+			<slot name={groupItem._individualSlot}></slot>
+		</div>
+	</>;
+}
+
+function layout(this: Form) {
+	return (
+		this.itemSpacing === "Large" ?
+			<div class="ui5-form-layout" part="layout">
+				{ layoutContent.call(this) }
+			</div>
+			:
+			<dl class="ui5-form-layout" part="layout">
+				{ layoutContent.call(this) }
+			</dl>
+	);
+}
+
+function layoutContent(this: Form) {
+	return this.itemsInfo.map(itemInfo => {
+		const item = itemInfo.item;
+		return (
+			<div class={{
+				"ui5-form-item": true,
+				[`ui5-form-item-span-${item.columnSpan}`]: item.columnSpan !== undefined,
+			}}
+			>
+				<slot name={item._individualSlot}></slot>
+			</div>
+		);
+	})
 }
