@@ -44,7 +44,7 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/AITextAreaToolbar.js";`
+ * `import "@sap-webcomponents/ai/dist/WritingAssistant.js";`
  *
  * @constructor
  * @extends UI5Element
