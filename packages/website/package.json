@@ -35,12 +35,11 @@
     "clsx": "^2.0.0",
     "docusaurus-lunr-search": "^3.3.2",
     "dotenv": "^16.4.5",
-    "playground-elements": "^0.18.1",
+    "playground-elements": "patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch",
     "prism-react-renderer": "^2.3.0",
     "raw-loader": "^4.0.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-splitter-light": "^1.0.3",
     "rimraf": "^3.0.2",
     "tarts": "^2.0.1"
   },
