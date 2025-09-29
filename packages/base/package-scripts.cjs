@@ -61,7 +61,7 @@ const scripts = {
 	generateVersionInfo: `ui5nps-script "${versionScript}"`,
 	generateStyles: `ui5nps-script "${stylesScript}"`,
 	generateFontFace: `ui5nps-script "${fontFaceScript}"`,
-	generateTestTemplates: `ui5nps-script "${LIB}/hbs2ui5/index.js" -d test/test-elements -o test/test-elements/generated/templates`,
+	generateTestTemplates: `node "${LIB}/hbs2ui5/index.js" -d test/test-elements -o test/test-elements/generated/templates`,
 	generateProd: {
 		"default": "ui5nps generateProd.remove-dev-mode generateProd.copy-prod",
 		"remove-dev-mode": `ui5nps-script "${LIB}/remove-dev-mode/remove-dev-mode.mjs"`,

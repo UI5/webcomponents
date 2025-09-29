@@ -181,6 +181,8 @@ class Parser {
 						} else {
 							return resolve();
 						}
+					} else {
+						return reject(new Error(`Script cannot be executed. The module does not export a _ui5mainFn function.`));
 					}
 				}
 
