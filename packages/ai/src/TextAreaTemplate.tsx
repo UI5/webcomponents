@@ -1,3 +1,4 @@
+import type AITextArea from "./TextArea.js";
 import WritingAssistant from "./WritingAssistant.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
