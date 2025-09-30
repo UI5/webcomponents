@@ -181,6 +181,17 @@ class Carousel extends UI5Element {
 	hideNavigationArrows = false;
 
 	/**
+	 * Defines the current first visible item in the viewport.
+	 * Default value is 0, which means the first item.
+	 *
+	 * @since 1.0.0-rc.15
+	 * @default 0
+	 * @public
+	 */
+	@property({ type: Number })
+	_firstVisibleItemIndex = 0;
+
+	/**
 	 * Defines the visibility of the page indicator.
 	 * If set to true the page indicator will be hidden.
 	 * @since 1.0.0-rc.15
@@ -550,6 +561,26 @@ class Carousel extends UI5Element {
 		}
 	}
 
+	navigateArrowRight() {
+		if (this._selectedIndex === this._visibleItemsIndexes[0]) {
+			this.navigateTo(this._selectedIndex + 1);
+			this._moveToItem(this._currentSlideIndex + 1);
+		} else {
+			this._moveToItem(this._currentSlideIndex + 1);
+			this.navigateTo(this._selectedIndex);
+		}
+	}
+
+	navigateArrowLeft() {
+		if (this._selectedIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
+			this.navigateTo(this._selectedIndex - 1);
+			this._moveToItem(this._currentSlideIndex - 1);
+		} else {
+			this._moveToItem(this._currentSlideIndex - 1);
+			this.navigateTo(this._selectedIndex);
+		}
+	}
+
 	_calculateItemSlideIndex(currentSlideIndex: number, itemStep: number) {
 		if (this.isItemInViewport(this._selectedIndex)) {
 			return 0;
@@ -611,9 +642,11 @@ class Carousel extends UI5Element {
 	_navButtonClick(e: MouseEvent) {
 		const target = e.currentTarget as HTMLElement;
 		if (target.hasAttribute("data-ui5-arrow-forward")) {
-			this.navigateRight();
+			this.navigateArrowRight();
+			this._firstVisibleItemIndex += 1;
 		} else {
-			this.navigateLeft();
+			this.navigateArrowLeft();
+			this._firstVisibleItemIndex -= 1;
 		}
 	}
 
