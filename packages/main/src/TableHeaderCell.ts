@@ -131,7 +131,7 @@ class TableHeaderCell extends TableCellBase {
 		super.onBeforeRendering();
 		if (this._individualSlot) {
 			// overwrite setting of TableCellBase so that the TableHeaderCell always uses the slot variable
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
+			this.style.justifyContent = `var(--horizontal-align-${this._id})`;
 		}
 		toggleAttribute(this, "aria-sort", this.sortIndicator !== SortOrder.None, this.sortIndicator.toLowerCase());
 	}
