@@ -48,10 +48,10 @@ const getTopmostPopup = () => {
 };
 
 /**
- * Checks if Web Component popups opened on top of it.
+ * Determines whether there is a Web Component popup opened above (a specified popup).
  *
  * @param {object} popup The popup instance to check against.
- * @returns {boolean} `true` if a Web Component popup is stacked above; otherwise `false`.
+ * @returns {boolean} `true` if a Web Component popup is opened above (the given popup instance); otherwise `false`.
  */
 const hasWebComponentPopupAbove = (popup: object) => {
 	for (let i = AllOpenedPopupsRegistry.openedRegistry.length - 1; i >= 0; i--) {
