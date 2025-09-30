@@ -2,7 +2,7 @@ import AITextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 
-describe("AITextArea Component", () => {
+describe("Basioc", () => {
 	describe("Initialization", () => {
 		it("should render with default properties", () => {
 			cy.mount(<AITextArea />);
