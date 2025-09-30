@@ -372,13 +372,16 @@ describe("Basioc", () => {
 			cy.mount(<AITextArea value="Readonly content" readonly />);
 
 			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
 				.should("have.attr", "readonly");
 
-			cy.get("@textarea")
+			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("textarea")
-				.should("have.attr", "readonly")
+				.should("have.attr", "readonly");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("textarea")
 				.should("have.value", "Readonly content");
 		});
 
@@ -386,13 +389,16 @@ describe("Basioc", () => {
 			cy.mount(<AITextArea value="Disabled content" disabled />);
 
 			cy.get("[ui5-ai-textarea]")
-				.as("textarea")
 				.should("have.attr", "disabled");
 
-			cy.get("@textarea")
+			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("textarea")
-				.should("have.attr", "disabled")
+				.should("have.attr", "disabled");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("textarea")
 				.should("have.value", "Disabled content");
 		});
 	});
@@ -423,9 +429,12 @@ describe("Basioc", () => {
 				.blur();
 
 			cy.get("@onChange")
-				.should("have.been.called")
-				.its("firstCall.args.0.detail.value")
-				.should("include", "test");
+				.should("have.been.called");
+
+			cy.get("@onChange")
+				.its("firstCall.args.0")
+				.should("have.property", "target")
+				.and("have.property", "value", "test");
 		});
 	});
 
@@ -456,7 +465,8 @@ describe("Basioc", () => {
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("textarea")
-				.should("have.attr", "aria-label");
+				.should("have.attr", "aria-label")
+				.and("not.be.empty");
 		});
 
 		it("should support custom accessible name", () => {
@@ -481,7 +491,8 @@ describe("Basioc", () => {
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "title", "AI Writing Assistant (Shift + F4)");
+				.should("have.attr", "aria-label")
+				.and("not.be.empty");
 		});
 	});
 

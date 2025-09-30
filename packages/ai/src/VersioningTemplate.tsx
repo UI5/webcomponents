@@ -11,6 +11,7 @@ export default function VersioningTemplate(this: Versioning) {
 				design="Transparent"
 				icon="navigation-left-arrow"
 				accessibleName={this._previousButtonAccessibleName}
+				title="Previous Version (Shift+Ctrl+Z)"
 				disabled={this.currentStep <= 1}
 				onClick={this.handlePreviousVersionClick}
 				data-ui5-versioning-button="previous"
@@ -22,7 +23,8 @@ export default function VersioningTemplate(this: Versioning) {
 				design="Transparent"
 				icon="navigation-right-arrow"
 				accessibleName={this._nextButtonAccessibleName}
-				disabled={this.totalSteps <= 0 || this.currentStep === this.totalSteps}
+				title="Next Version (Shift+Ctrl+Y)"
+				disabled={this.totalSteps <= 0 || this.currentStep >= this.totalSteps}
 				onClick={this.handleNextVersionClick}
 				data-ui5-versioning-button="next"
 			></Button>

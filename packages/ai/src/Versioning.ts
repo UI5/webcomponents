@@ -62,10 +62,32 @@ import VersioningCss from "./generated/themes/Versioning.css.js";
  */
 @event("version-change")
 
+/**
+ * Fired when the user clicks the previous version button.
+ *
+ * @public
+ */
+@event("previous-version-click")
+
+/**
+ * Fired when the user clicks the next version button.
+ *
+ * @public
+ */
+@event("next-version-click")
+
 class Versioning extends UI5Element {
 	eventDetails!: {
 		"version-change": {
 			backwards: boolean;
+		},
+		"previous-version-click": {
+			currentIndex: number;
+			totalVersions: number;
+		},
+		"next-version-click": {
+			currentIndex: number;
+			totalVersions: number;
 		},
 	}
 
@@ -73,25 +95,25 @@ class Versioning extends UI5Element {
 	 * Indicates the index of the currently displayed result version.
 	 *
 	 * This property represents the current position in the version history.
-	 * The value is 0-based for internal calculations but displayed as 1-based to users.
+	 * The value is 1-based for display purposes.
 	 *
-	 * @default 0
+	 * @default 1
 	 * @public
 	 */
 	@property({ type: Number })
-	currentStep = 0;
+	currentStep = 1;
 
 	/**
 	 * The total number of available result versions.
 	 *
 	 * Note: Versioning is hidden if the value is `0`.
 	 *
-	 * @default 0
+	 * @default 1
 	 * @public
 	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
-	totalSteps = 0;
+	totalSteps = 1;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
@@ -144,11 +166,19 @@ class Versioning extends UI5Element {
 	handlePreviousVersionClick() {
 		this._lastClickedButton = "previous";
 		this.fireDecoratorEvent("version-change", { backwards: true });
+		this.fireDecoratorEvent("previous-version-click", { 
+			currentIndex: this.currentStep, 
+			totalVersions: this.totalSteps 
+		});
 	}
 
 	handleNextVersionClick() {
 		this._lastClickedButton = "next";
 		this.fireDecoratorEvent("version-change", { backwards: false });
+		this.fireDecoratorEvent("next-version-click", { 
+			currentIndex: this.currentStep, 
+			totalVersions: this.totalSteps 
+		});
 	}
 
 	get _previousButtonAccessibleName() {

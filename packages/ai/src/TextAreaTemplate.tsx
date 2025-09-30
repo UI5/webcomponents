@@ -39,7 +39,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 							placeholder={this.placeholder}
 							disabled={this.disabled}
 							readonly={this.readonly}
-							aria-label={this.ariaLabelText}
+							aria-label={this.ariaLabelText || this._ariaLabel}
 							aria-describedby={this.ariaDescribedBy}
 							aria-invalid={this._ariaInvalid}
 							aria-required={this.required}

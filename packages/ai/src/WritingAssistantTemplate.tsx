@@ -37,6 +37,8 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				icon={isBusy ? "stop" : "ai"}
 				data-state={isBusy ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
+				aria-label={isBusy ? "Stop AI Generation" : "AI Writing Assistant (Shift + F4)"}
+				title={isBusy ? "Stop AI Generation" : "AI Writing Assistant (Shift + F4)"}
 			/>
 		</Toolbar>
 	);
