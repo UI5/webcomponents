@@ -2,13 +2,14 @@ import Input from "../../src/Input.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 import SuggestionItem from "../../src/SuggestionItem.js";
-import { INPUT_SUGGESTIONS_OK_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { INPUT_SUGGESTIONS_OK_BUTTON, INPUT_SUGGESTIONS_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Input on mobile device", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");
 	});
-	it("checks OK button text in dialog on mobile device", () => {
+	
+	it("checks OK and Cancel button text in dialog on mobile device", () => {
 		cy.mount(
 			<Input showSuggestions={true}>
 				<SuggestionItem text="First item"></SuggestionItem>
@@ -30,7 +31,14 @@ describe("Input on mobile device", () => {
 		cy.get("@popover")
 			.find(".ui5-responsive-popover-footer")
 			.find("[ui5-button]")
+			.eq(0)
 			.should("have.text", INPUT_SUGGESTIONS_OK_BUTTON.defaultText);
+
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.eq(1)
+			.should("have.text", INPUT_SUGGESTIONS_CANCEL_BUTTON.defaultText);
 	});
 });
 
