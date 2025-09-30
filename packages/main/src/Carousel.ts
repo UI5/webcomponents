@@ -4,6 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isLeft,
 	isRight,
@@ -572,12 +573,12 @@ class Carousel extends UI5Element {
 	}
 
 	navigateArrowLeft() {
-		if (this._selectedIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
+		if (this._selectedIndex > 0 && this._selectedIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
 			this.navigateTo(this._selectedIndex - 1);
 			this._moveToItem(this._currentSlideIndex - 1);
 		} else {
-			this._moveToItem(this._currentSlideIndex - 1);
-			this.navigateTo(this._selectedIndex);
+			this._moveToItem(this._currentSlideIndex === 0 ? this.pagesCount - 1 : this._currentSlideIndex - 1);
+			this.navigateTo(this._selectedIndex === 0 ? this.items.length - 1 : this._selectedIndex);
 		}
 	}
 
@@ -641,12 +642,20 @@ class Carousel extends UI5Element {
 
 	_navButtonClick(e: MouseEvent) {
 		const target = e.currentTarget as HTMLElement;
-		if (target.hasAttribute("data-ui5-arrow-forward")) {
-			this.navigateArrowRight();
-			this._firstVisibleItemIndex += 1;
-		} else {
-			this.navigateArrowLeft();
-			this._firstVisibleItemIndex -= 1;
+		if (this._visibleItemsIndexes.length > 1) {
+			if (target.hasAttribute("data-ui5-arrow-forward")) {
+				this.navigateArrowRight();
+				this._firstVisibleItemIndex += 1;
+			} else {
+				this.navigateArrowLeft();
+				this._firstVisibleItemIndex -= 1;
+			}
+		} else if (this._visibleItemsIndexes.length <= 1) {
+			if (target.hasAttribute("data-ui5-arrow-forward")) {
+				this.navigateRight();
+			} else {
+				this.navigateLeft();
+			}
 		}
 	}
 
@@ -657,8 +666,6 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number) {
-		this._resizing = false;
-
 		if (this._selectedIndex < itemIndex) {
 			this._itemIndicator = 1;
 		}
@@ -666,14 +673,13 @@ class Carousel extends UI5Element {
 		this._currentSlideIndex = itemIndex - this._itemIndicator;
 		if (this.isItemInViewport(itemIndex)) {
 			this._currentSlideIndex = this._visibleItemsIndexes[0];
-			this._resizing = false;
 			this.focusItem();
 			return;
 		}
 		this.skipToItem(this._selectedIndex, 1);
 	}
 
-	skipToItem(focusIndex: number, offset: number) {
+	async skipToItem(focusIndex: number, offset: number) {
 		if (!this.isItemInViewport(focusIndex)) {
 			let slideIndex = this._calculateItemSlideIndex(this._currentSlideIndex, offset);
 			if (focusIndex === 0) {
@@ -681,8 +687,12 @@ class Carousel extends UI5Element {
 			}
 			this._moveToItem(slideIndex);
 		}
+
+		await renderFinished();
+
 		this.focusItem();
 	}
+
 	/**
 	 * Assuming that all items have the same width
 	 * @private
