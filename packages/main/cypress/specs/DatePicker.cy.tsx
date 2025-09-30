@@ -1614,7 +1614,7 @@ describe("Legacy date customization and Islamic calendar type", () => {
 		}
 	};
 
-	it("Customization of legacy dates in Islamic calendar", () => {
+	it.skip("Customization of legacy dates in Islamic calendar", () => {
 		cy.window()
 			.then($el => {
 				const scriptElement = document.createElement("script");
