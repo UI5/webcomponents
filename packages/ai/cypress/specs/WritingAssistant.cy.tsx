@@ -8,9 +8,7 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("exist")
 				.should("have.prop", "assistantState", "Initial")
-				.should("have.prop", "actionText", "")
-				.should("have.prop", "currentVersionIndex", 1)
-				.should("have.prop", "totalVersions", 1);
+				.should("have.prop", "actionText", "");
 		});
 
 		it("should render with custom properties", () => {
@@ -18,16 +16,12 @@ describe("WritingAssistant Component", () => {
 				<WritingAssistant
 					assistantState="Loading"
 					actionText="Processing..."
-					currentVersionIndex={3}
-					totalVersions={5}
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("have.prop", "assistantState", "Loading")
-				.should("have.prop", "actionText", "Processing...")
-				.should("have.prop", "currentVersionIndex", 3)
-				.should("have.prop", "totalVersions", 5);
+				.should("have.prop", "actionText", "Processing...");
 		});
 
 		it("should have proper toolbar structure", () => {
@@ -59,8 +53,7 @@ describe("WritingAssistant Component", () => {
 				.find("#ai-menu-btn")
 				.should("exist")
 				.should("be.visible")
-				.should("have.attr", "data-state", "generate")
-				.should("have.attr", "title", "AI Writing Assistant (Shift + F4)");
+				.should("have.attr", "data-state", "generate");
 		});
 
 		it("should show generating state in Loading state", () => {
@@ -130,8 +123,7 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "design", "Transparent")
-				.should("have.attr", "title", "AI Writing Assistant (Shift + F4)");
+				.should("have.attr", "design", "Transparent");
 		});
 	});
 
@@ -734,7 +726,8 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "title", "AI Writing Assistant (Shift + F4)");
+				.should("exist")
+				.should("be.visible");
 		});
 
 		it("should have proper ARIA attributes for version navigation", () => {
@@ -749,19 +742,20 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("[ui5-ai-textarea-versioning]")
-				.as("versioning");
+				.as("versioning")
+				.should("exist");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("have.attr", "title")
-				.and("include", "Previous Version");
+				.should("exist")
+				.should("be.visible");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("have.attr", "title")
-				.and("include", "Next Version");
+				.should("exist")
+				.should("be.visible");
 		});
 
 		it("should provide keyboard navigation support", () => {

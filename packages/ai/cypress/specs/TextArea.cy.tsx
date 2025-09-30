@@ -486,13 +486,11 @@ describe("Basioc", () => {
 				/>
 			);
 
+			// Verify that the loading state content is announced via aria-live region
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
-				.find("[ui5-ai-writing-assistant]")
-				.shadow()
-				.find("#ai-menu-btn")
-				.should("have.attr", "aria-label")
-				.and("not.be.empty");
+				.find("[aria-live='polite']")
+				.should("contain.text", "Generating content...");
 		});
 	});
 

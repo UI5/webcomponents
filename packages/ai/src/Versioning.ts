@@ -17,6 +17,12 @@ import VersioningTemplate from "./VersioningTemplate.js";
 // Styles
 import VersioningCss from "./generated/themes/Versioning.css.js";
 
+enum LastClickedButton {
+	None = "",
+	Previous = "previous",
+	Next = "next"
+}
+
 /**
  * @class
  *
@@ -62,62 +68,38 @@ import VersioningCss from "./generated/themes/Versioning.css.js";
  */
 @event("version-change")
 
-/**
- * Fired when the user clicks the previous version button.
- *
- * @public
- */
-@event("previous-version-click")
-
-/**
- * Fired when the user clicks the next version button.
- *
- * @public
- */
-@event("next-version-click")
-
 class Versioning extends UI5Element {
 	eventDetails!: {
 		"version-change": {
 			backwards: boolean;
-		},
-		"previous-version-click": {
-			currentIndex: number;
-			totalVersions: number;
-		},
-		"next-version-click": {
-			currentIndex: number;
-			totalVersions: number;
-		},
+		}
 	}
 
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
 	 * This property represents the current position in the version history.
-	 * The value is 1-based for display purposes.
-	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	currentStep = 1;
+	currentStep = 0;
 
 	/**
 	 * The total number of available result versions.
 	 *
 	 * Note: Versioning is hidden if the value is `0`.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
-	totalSteps = 1;
+	totalSteps = 0;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
-	_lastClickedButton: "previous" | "next" | "" = "";
+	_lastClickedButton = LastClickedButton.None;
 
 	static i18nBundle: I18nBundle;
 
@@ -129,7 +111,7 @@ class Versioning extends UI5Element {
 		this._manageFocus();
 		this._previousCurrentStep = this.currentStep;
 		this._previousTotalSteps = this.totalSteps;
-		this._lastClickedButton = "";
+		this._lastClickedButton = LastClickedButton.None;
 	}
 
 	/**
@@ -154,31 +136,23 @@ class Versioning extends UI5Element {
 		const wasPreviousDisabled = this._previousCurrentStep <= 1;
 		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps;
 
-		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === "previous" && nextButton instanceof HTMLElement) {
+		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === LastClickedButton.Previous && nextButton instanceof HTMLElement) {
 			nextButton.focus();
-			this._lastClickedButton = "";
-		} else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === "next" && previousButton instanceof HTMLElement) {
+			this._lastClickedButton = LastClickedButton.None;
+		} else if (isNextDisabled && !wasNextDisabled && !isPreviousDisabled && this._lastClickedButton === LastClickedButton.Next && previousButton instanceof HTMLElement) {
 			previousButton.focus();
-			this._lastClickedButton = "";
+			this._lastClickedButton = LastClickedButton.None;
 		}
 	}
 
 	handlePreviousVersionClick() {
-		this._lastClickedButton = "previous";
+		this._lastClickedButton = LastClickedButton.Previous;
 		this.fireDecoratorEvent("version-change", { backwards: true });
-		this.fireDecoratorEvent("previous-version-click", { 
-			currentIndex: this.currentStep, 
-			totalVersions: this.totalSteps 
-		});
 	}
 
 	handleNextVersionClick() {
-		this._lastClickedButton = "next";
+		this._lastClickedButton = LastClickedButton.Next;
 		this.fireDecoratorEvent("version-change", { backwards: false });
-		this.fireDecoratorEvent("next-version-click", { 
-			currentIndex: this.currentStep, 
-			totalVersions: this.totalSteps 
-		});
 	}
 
 	get _previousButtonAccessibleName() {

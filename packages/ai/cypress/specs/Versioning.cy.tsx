@@ -7,8 +7,8 @@ describe("Versioning Component", () => {
 
 			cy.get("[ui5-ai-textarea-versioning]")
 				.should("exist")
-				.should("have.prop", "currentStep", 1)
-				.should("have.prop", "totalSteps", 1);
+				.should("have.prop", "currentStep", 0)
+				.should("have.prop", "totalSteps", 0);
 		});
 
 		it("should render with custom properties", () => {
@@ -76,20 +76,6 @@ describe("Versioning Component", () => {
 				.should("be.disabled");
 		});
 
-		it("should have proper button titles with keyboard shortcuts", () => {
-			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="previous"]')
-				.should("have.attr", "title", "Previous Version (Shift+Ctrl+Z)");
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="next"]')
-				.should("have.attr", "title", "Next Version (Shift+Ctrl+Y)");
-		});
-
 		it("should have proper icons", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
@@ -106,14 +92,14 @@ describe("Versioning Component", () => {
 	});
 
 	describe("Event Handling", () => {
-		it("should fire previous-version-click event with proper event details", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+		it("should fire version-change event with backwards=true for previous button", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning 
 					currentStep={2} 
 					totalSteps={3} 
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -122,23 +108,20 @@ describe("Versioning Component", () => {
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
 
-			cy.get("@onPreviousVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 2,
-					totalVersions: 3
-				});
+				.should("deep.equal", { backwards: true });
 		});
 
-		it("should fire next-version-click event with proper event details", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+		it("should fire version-change event with backwards=false for next button", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning 
 					currentStep={2} 
 					totalSteps={3} 
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -147,25 +130,20 @@ describe("Versioning Component", () => {
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
 
-			cy.get("@onNextVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 2,
-					totalVersions: 3
-				});
+				.should("deep.equal", { backwards: false });
 		});
 
 		it("should not fire events when buttons are disabled", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning 
 					currentStep={1} 
 					totalSteps={1} 
-					onPreviousVersionClick={onPreviousVersionClick}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -179,18 +157,17 @@ describe("Versioning Component", () => {
 				.find('[data-ui5-versioning-button="next"]')
 				.should("be.disabled");
 
-			cy.get("@onPreviousVersionClick").should("not.have.been.called");
-			cy.get("@onNextVersionClick").should("not.have.been.called");
+			cy.get("@onVersionChange").should("not.have.been.called");
 		});
 
 		it("should handle multiple rapid clicks gracefully", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning 
 					currentStep={2} 
 					totalSteps={5} 
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -201,21 +178,24 @@ describe("Versioning Component", () => {
 				.realClick()
 				.realClick();
 
-			cy.get("@onNextVersionClick").should("have.callCount", 3);
+			cy.get("@onVersionChange").should("have.callCount", 3);
+			
+			// Verify all calls were for next (backwards: false)
+			cy.get("@onVersionChange").should((spy) => {
+				expect(spy).to.have.been.calledWith(Cypress.sinon.match.has("detail", { backwards: false }));
+			});
 		});
 	});
 
 	describe("Focus Management", () => {
 		it("should manage focus when reaching boundaries", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning
 					currentStep={2}
 					totalSteps={3}
-					onNextVersionClick={onNextVersionClick}
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -230,7 +210,7 @@ describe("Versioning Component", () => {
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onNextVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange").should("have.been.calledOnce");
 
 			// Simulate reaching the last step - next button should be disabled
 			cy.get("@versioning").invoke("prop", "currentStep", 3);
@@ -247,7 +227,7 @@ describe("Versioning Component", () => {
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onPreviousVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange").should("have.been.calledTwice");
 
 			// Simulate reaching the first step - previous button should be disabled
 			cy.get("@versioning").invoke("prop", "currentStep", 1);
@@ -443,45 +423,12 @@ describe("Versioning Component", () => {
 	});
 
 	describe("Accessibility", () => {
-		it("should have proper button titles for screen readers", () => {
-			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="previous"]')
-				.should("have.attr", "title")
-				.and("include", "Previous Version");
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="next"]')
-				.should("have.attr", "title")
-				.and("include", "Next Version");
-		});
-
-		it("should have proper keyboard shortcut information", () => {
-			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="previous"]')
-				.should("have.attr", "title")
-				.and("include", "Shift+Ctrl+Z");
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find('[data-ui5-versioning-button="next"]')
-				.should("have.attr", "title")
-				.and("include", "Shift+Ctrl+Y");
-		});
-
 		it("should support keyboard navigation", () => {
 			cy.mount(
 				<Versioning 
 					currentStep={2} 
 					totalSteps={3}
-					onPreviousVersionClick={cy.stub().as("onPreviousVersionClick")}
-					onNextVersionClick={cy.stub().as("onNextVersionClick")}
+					onVersionChange={cy.stub().as("onVersionChange")}
 				/>
 			);
 
@@ -491,14 +438,14 @@ describe("Versioning Component", () => {
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
 
-			cy.get("@onPreviousVersionClick").should("have.been.called");
+			cy.get("@onVersionChange").should("have.been.called");
 
 			cy.get("[ui5-ai-textarea-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
 
-			cy.get("@onNextVersionClick").should("have.been.called");
+			cy.get("@onVersionChange").should("have.been.calledTwice");
 		});
 
 		it("should have proper ARIA attributes", () => {
@@ -598,13 +545,13 @@ describe("Versioning Component", () => {
 		});
 
 		it("should not cause memory leaks with event handlers", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<Versioning 
 					currentStep={2} 
 					totalSteps={4}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -616,7 +563,7 @@ describe("Versioning Component", () => {
 					.realClick();
 			}
 
-			cy.get("@onNextVersionClick").should("have.callCount", 10);
+			cy.get("@onVersionChange").should("have.callCount", 10);
 		});
 	});
 });

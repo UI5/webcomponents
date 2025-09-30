@@ -298,7 +298,7 @@ class AITextArea extends TextArea {
 		}
 	}
 	get _ariaLabel() {
-		return AITextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return this.accessibleName || AITextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	/**

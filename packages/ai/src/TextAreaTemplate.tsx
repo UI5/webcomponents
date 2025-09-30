@@ -1,4 +1,3 @@
-import type AITextArea from "./TextArea.js";
 import WritingAssistant from "./WritingAssistant.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
@@ -12,7 +11,6 @@ export default function TextAreaTemplate(this: AITextArea) {
 				class={this.classes.root}
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
-				aria-label={this._ariaLabel}
 			>
 				<div class="ui5-textarea-wrapper">
 					{this.growing &&
@@ -39,7 +37,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 							placeholder={this.placeholder}
 							disabled={this.disabled}
 							readonly={this.readonly}
-							aria-label={this.ariaLabelText || this._ariaLabel}
+							aria-label={this._ariaLabel}
 							aria-describedby={this.ariaDescribedBy}
 							aria-invalid={this._ariaInvalid}
 							aria-required={this.required}
