@@ -182,7 +182,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Defines the current first visible item in the viewport.
-	 * Default value is 0, which means the first item.
+	 * Default value is 0, which means the first item in the viewport.
 	 *
 	 * @since 1.0.0-rc.15
 	 * @default 0
