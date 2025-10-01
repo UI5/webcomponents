@@ -20,7 +20,7 @@
     "directory": "packages/tools"
   },
   "dependencies": {
-    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "@wdio/cli": "^7.19.7",

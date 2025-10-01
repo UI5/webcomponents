@@ -2,7 +2,7 @@ import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
 import ComboBoxItemGroup from "../../src/ComboBoxItemGroup.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
-import { COMBOBOX_DIALOG_OK_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { COMBOBOX_DIALOG_OK_BUTTON, COMBOBOX_DIALOG_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic mobile picker rendering and interaction", () => {
 	beforeEach(() => {
@@ -129,7 +129,7 @@ describe("Basic mobile picker rendering and interaction", () => {
 			.ui5ResponsivePopoverClosed();
 	});
 
-	it("checks OK button text in dialog on mobile device", () => {
+	it("checks OK and Cancel button text in dialog on mobile device", () => {
 		cy.mount(
 			<ComboBox>
 				<ComboBoxItem text="Algeria" />
@@ -143,8 +143,19 @@ describe("Basic mobile picker rendering and interaction", () => {
 		cy.get("[ui5-combobox]")
 			.shadow()
 			.find("[ui5-responsive-popover]")
-			.find(".ui5-responsive-popover-footer [ui5-button]")
+			.as("popover");
+		
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.eq(0)
 			.should("have.text", COMBOBOX_DIALOG_OK_BUTTON.defaultText);
+
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.eq(1)
+			.should("have.text", COMBOBOX_DIALOG_CANCEL_BUTTON.defaultText);
 	});
 });
 

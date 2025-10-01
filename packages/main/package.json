@@ -60,11 +60,11 @@
     "@ui5/webcomponents-theming": "2.15.0-rc.2"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.10.6",
-    "@ui5/cypress-internal": "0.0.0",
+    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch",
+    "@ui5/cypress-internal": "0.1.0",
     "@ui5/webcomponents-tools": "2.15.0-rc.2",
     "chokidar-cli": "^3.0.0",
-    "cypress": "^13.0.0",
+    "cypress": "^15.3.0",
     "eslint": "^7.22.0",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",
