@@ -13,7 +13,7 @@ import "@ui5/webcomponents-fiori/dist/SearchItemGroup.js";
 			{ text: "List Item 5", icon: "search" },
 			{ text: "List Item 6", icon: "globe" }
 		];
-
+		const searchShow = document.getElementById("searchShowMore");
 		const group1 = document.getElementById("group1");
 		const visibleCount = 3;
 
@@ -60,11 +60,10 @@ import "@ui5/webcomponents-fiori/dist/SearchItemGroup.js";
 					}
 				}
 
-				showMoreEl.addEventListener("click", () => expandHiddenItems());
+			searchShow.addEventListener("ui5-search", (e) => {
 
-				showMoreEl.addEventListener("keydown", (e) => {
-					if (e.key === "Enter") {
-						expandHiddenItems({ focusFirst: true })
+					if (e.detail.item.tagName === "UI5-SEARCH-ITEM-SHOW-MORE") {
+						expandHiddenItems({ focusFirst: true });
 					}
 				});
 			}

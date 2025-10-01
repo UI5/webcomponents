@@ -31,6 +31,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 import type IllustratedMessage from "./IllustratedMessage.js";
 import type SearchItemGroup from "./SearchItemGroup.js";
+import SearchItemShowMore from "./SearchItemShowMore.js";
 import type SearchMessageArea from "./SearchMessageArea.js";
 import { SEARCH_CANCEL_BUTTON, SEARCH_SUGGESTIONS } from "./generated/i18n/i18n-defaults.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -486,14 +487,16 @@ class Search extends SearchField {
 			return;
 		}
 
-		this.value = item.text;
-		this._innerValue = this.value;
-		this._typedInValue = this.value;
-		this._shouldAutocomplete = false;
-		this._performTextSelection = true;
-		this.open = false;
-		this._isTyping = false;
-		this.focus();
+		if (!(item instanceof SearchItemShowMore)) {
+			this.value = item.text;
+			this._innerValue = this.value;
+			this._typedInValue = this.value;
+			this._shouldAutocomplete = false;
+			this._performTextSelection = true;
+			this.open = false;
+			this._isTyping = false;
+			this.focus();
+		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {
