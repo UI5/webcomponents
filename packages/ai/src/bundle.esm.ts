@@ -8,5 +8,6 @@ import Button from "./Button.js";
 import ButtonState from "./ButtonState.js";
 import PromptInput from "./PromptInput.js";
 import AITextArea from "./TextArea.js";
+import AIInput from "./AIInput.js";
 
 export default testAssets;

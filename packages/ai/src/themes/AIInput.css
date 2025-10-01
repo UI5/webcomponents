@@ -1,0 +1,78 @@
+/* @import "../../../main/src/themes/InputIcon.css"; */
+/* @import "@ui5/webcomponents/src/generated/themes/Input.css.js"; */
+
+[ui5-ai-input] {
+  --ui5_input_focus_pseudo_element_content: none;
+}
+
+.ui5-ai-input-root {
+	width: 100%;
+	height: 100%;
+    border-right: none;
+}
+
+.ui5-ai-input-icon {
+    cursor: pointer;
+    color: var(--sapButton_Selected_TextColor);
+    border: none;
+}
+
+.ui5-ai-input-icon:hover {
+    background-color: white;
+}
+
+.ui5-input-ai-icon {
+	height: var(--_ui5_input_icon_wrapper_height);
+	padding: 0;
+	box-sizing: border-box;
+	width: var(--_ui5_input_icon_width);
+	min-width: var(--_ui5_input_icon_width);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ui5-input-ai-icon:hover {
+    box-shadow: var(--sapField_Hover_Shadow);
+}
+
+/* .ui5-ai-input-icon:active {
+    border: 1px solid var(--sapField_Hover_BorderColor);
+} */
+
+.ui5-input-icon-menu-open {
+  /* border: 1px solid var(--sapField_Hover_Shadow); */
+  box-shadow: var(--sapField_Hover_Shadow);
+}
+
+.ui5-ai-input1-busy-indicator{
+    width: 100%;
+    height: 100%;
+}
+
+.ui5-ai-input-icon-hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+[ui5-button].ai-arrow-button {
+    border: none;
+}
+
+.ai-arrow-button:hover {
+    background-color: none;
+}
+
+.ui5-ai-versioning-menu-footer-hidden {
+    display: none;
+}
+
+#arrow-left:hover {
+    background-color: white;
+    border: 1px solid lightblue;
+}
+
+
+[ui5-menu-item].ui5-ai-versioning-menu-footer:hover {
+    background-color: inherit;
+}
