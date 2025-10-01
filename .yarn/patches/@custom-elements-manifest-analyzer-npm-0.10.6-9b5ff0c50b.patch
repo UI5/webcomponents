@@ -1,0 +1,15 @@
+diff --git a/src/features/post-processing/apply-inheritance.js b/src/features/post-processing/apply-inheritance.js
+index bd4e9b1bba2021bf03543e65290202f9bca3a881..bc7ec7b68fcd69510114ba8ed955f6f0c60fdfa1 100644
+--- a/src/features/post-processing/apply-inheritance.js
++++ b/src/features/post-processing/apply-inheritance.js
+@@ -53,10 +53,6 @@ export function applyInheritancePlugin() {
+                   ? {
+                       ...newItem,
+                       ...existing,
+-                      ...{
+-                        ...(newItem.type ? { type: newItem.type } : {}),
+-                        ...(newItem.privacy ? { privacy: newItem.privacy } : {})
+-                      }
+                     }
+                   : item);
+               } else {
