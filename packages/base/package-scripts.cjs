@@ -15,23 +15,27 @@ const viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-p
 
 const scripts = {
 	__ui5envs: {
-		UI5_TS: true,
+		UI5_TS: "true",
 		UI5_BASE: true,
 		UI5_CEM_MODE: "dev",
 	},
-	clean: "rimraf src/generated && rimraf dist",
+	clean: {
+		default: "ui5nps clean.generated clean.dist",
+		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
+		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
+	},
 	lint: `eslint .`,
 	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
 	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
 	integrate: {
 		default: "ui5nps integrate.copy-used-modules integrate.amd-to-es6 integrate.third-party",
-		"copy-used-modules": `node "${copyUsedModules}" ./used-modules.txt dist/`,
-		"amd-to-es6": `node "${amdToES6}" dist/`,
-		"no-remaining-require": `node "${noRequire}" dist/`,
+		"copy-used-modules": `ui5nps-script "${copyUsedModules}" ./used-modules.txt dist/`,
+		"amd-to-es6": `ui5nps-script "${amdToES6}" dist/`,
+		"no-remaining-require": `ui5nps-script "${noRequire}" dist/`,
 		"third-party": {
 			default: "ui5nps integrate.third-party.copy integrate.third-party.fix",
-			copy: "copy-and-watch ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/",
+			copy: `ui5nps-script "${LIB}copy-and-watch/index.js" ../../node_modules/@openui5/sap.ui.core/src/sap/ui/thirdparty/caja-html-sanitizer.js dist/sap/ui/thirdparty/`,
 			fix: "replace-in-file 240 xA0 dist/sap/ui/thirdparty/caja-html-sanitizer.js"
 		},
 	},
@@ -40,39 +44,44 @@ const scripts = {
 		bundle: `vite build ${viteConfig}`,
 		i18n: {
 			default: "ui5nps build.i18n.defaultsjs build.i18n.json",
-			defaultsjs: `node "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
-			json: `node "${LIB}/i18n/toJSON.js" src/i18n dist/generated/assets/i18n`,
+			defaultsjs: `ui5nps-script "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
+			json: `ui5nps-script "${LIB}/i18n/toJSON.js" src/i18n dist/generated/assets/i18n`,
 		},
 		jsonImports: {
 			default: "ui5nps build.jsonImports.i18n",
-			i18n: `node "${LIB}/generate-json-imports/i18n.js" dist/generated/assets/i18n src/generated/json-imports`,
+			i18n: `ui5nps-script "${LIB}/generate-json-imports/i18n.js" dist/generated/assets/i18n src/generated/json-imports`,
 		},
 	},
 	copy: {
 		default: "ui5nps copy.src",
-		src: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/`,
-		srcWithWatch: `copy-and-watch "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
+		src: `ui5nps-script "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/`,
+		srcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
 	},
-	generateAssetParameters: `node "${assetParametersScript}"`,
-	generateVersionInfo: `node "${versionScript}"`,
-	generateStyles: `node "${stylesScript}"`,
-	generateFontFace: `node "${fontFaceScript}"`,
+	generateAssetParameters: `ui5nps-script "${assetParametersScript}"`,
+	generateVersionInfo: `ui5nps-script "${versionScript}"`,
+	generateStyles: `ui5nps-script "${stylesScript}"`,
+	generateFontFace: `ui5nps-script "${fontFaceScript}"`,
 	generateTestTemplates: `node "${LIB}/hbs2ui5/index.js" -d test/test-elements -o test/test-elements/generated/templates`,
 	generateProd: {
 		"default": "ui5nps generateProd.remove-dev-mode generateProd.copy-prod",
-		"remove-dev-mode": `node "${LIB}/remove-dev-mode/remove-dev-mode.mjs"`,
-		"copy-prod": `copy-and-watch "dist/sap/**/*" dist/prod/sap/ && copy-and-watch "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/ && copy-and-watch "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
-	},
+		"remove-dev-mode": `ui5nps-script "${LIB}/remove-dev-mode/remove-dev-mode.mjs"`,
+		"copy-prod": {
+			default: "ui5nps-p generateProd.copy-prod.ui5 generateProd.copy-prod.preact generateProd.copy-prod.assets",
+			"ui5": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/sap/**/*" dist/prod/sap/`,
+			"preact": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/`,
+			"assets": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
+	}
+},
 	generateAPI: {
 		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
-		generateCEM: `cem analyze --config "${LIB}/cem/custom-elements-manifest.config.mjs"`,
-		validateCEM: `node "${LIB}/cem/validate.js"`,
+		generateCEM: `ui5nps-script "${LIB}/cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
+		validateCEM: `ui5nps-script "${LIB}/cem/validate.js"`,
 	},
 	watch: {
 		default: 'ui5nps-p watch.src watch.styles', // concurently
 		withBundle: 'ui5nps-p watch.src watch.bundle watch.styles', // concurently
 		src: 'ui5nps copy.srcWithWatch',
-		bundle: `node ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
+		bundle: `ui5nps-script ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
 		styles: 'chokidar "src/css/*.css" -c "ui5nps generateStyles"'
 	},
 	test: {

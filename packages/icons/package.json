@@ -30,7 +30,6 @@
     "@ui5/webcomponents-base": "2.15.0-rc.2"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.15.0-rc.2",
-    "rimraf": "^6.0.1"
+    "@ui5/webcomponents-tools": "2.15.0-rc.2"
   }
 }
