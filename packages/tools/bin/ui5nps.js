@@ -161,28 +161,22 @@ class Parser {
 			return new Promise(async (resolve, reject) => {
 				if (command.trim().startsWith("ui5nps-script")) {
 					const argv = parseArgsStringToArgv(command);
-					let moduleContent = fs.readFileSync(path.normalize(argv[1]), 'utf8');
+					const importedContent = require(argv[1]);
+					let _ui5mainFn;
 
-					if (moduleContent.includes("_ui5mainFn")) {
-						const importedContent = require(argv[1]);
-						let _ui5mainFn;
-
-						if (importedContent.__esModule) {
-							_ui5mainFn = importedContent.default._ui5mainFn;
-						} else {
-							_ui5mainFn = importedContent._ui5mainFn;
-						}
-
-						console.log(` |  Executing command ${commandName} as module.`);
-						const result = _ui5mainFn(argv);
-
-						if (result instanceof Promise) {
-							return result.then(resolve).catch(reject);
-						} else {
-							return resolve();
-						}
+					if (importedContent.__esModule) {
+						_ui5mainFn = importedContent.default._ui5mainFn;
 					} else {
-						return reject(new Error(`Script cannot be executed. The module does not export a _ui5mainFn function.`));
+						_ui5mainFn = importedContent._ui5mainFn;
+					}
+
+					console.log(` |  Executing command ${commandName} as module.`);
+					const result = _ui5mainFn(argv);
+
+					if (result instanceof Promise) {
+						return result.then(resolve).catch(reject);
+					} else {
+						return resolve();
 					}
 				}
 
@@ -249,8 +243,8 @@ if (commands.length === 0) {
 if (commands.includes("--help") || commands.includes("-h")) {
 	console.log("Usage: ui5nps <command> [command2] [command3] ...");
 	console.log("Available commands:");
-	for (const key of parser.parsedScripts.keys()) {
-		console.log(`  - ${key}`);
+	for (const [key, value] of parser.parsedScripts.entries()) {
+		console.log(`  - ${key}: ${value}`);
 	}
 	process.exit(0);
 }
