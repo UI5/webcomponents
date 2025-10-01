@@ -43,12 +43,12 @@ const copyAndWatchFn = async (argv) => {
 	});
 
 	if (args.length < 2) {
-		console.error('Not enough arguments: copy-and-watch [options] <sources> <target>'.red);
+		console.error('Not enough arguments: copy-and-watch [options] <sources> <target>');
 		process.exit(1);
 	}
 
 	if (options['skip-initial-copy'] && !options['watch']) {
-		console.error('--skip-initial-copy argument is meant to be used with --watch, otherwise no files will be copied'.red);
+		console.error('--skip-initial-copy argument is meant to be used with --watch, otherwise no files will be copied');
 		process.exit(1);
 	}
 
@@ -88,12 +88,12 @@ const copyAndWatchFn = async (argv) => {
 			return;
 		}
 		fs.writeFileSync(to, fs.readFileSync(from));
-		options.silent || console.log('[COPY]'.yellow, from, 'to'.yellow, to);
+		options.silent || console.log('[COPY]', from, 'to', to);
 	};
 	const remove = from => {
 		const to = findTarget(from);
 		fs.unlinkSync(to);
-		options.silent || console.log('[DELETE]'.yellow, to);
+		options.silent || console.log('[DELETE]', to);
 	};
 	const rimraf = dir => {
 		if (fs.existsSync(dir)) {
@@ -135,14 +135,14 @@ const copyAndWatchFn = async (argv) => {
 		chokidar
 			.watch(sources, chokidarOptions)
 			.on('ready', () => sources.forEach(s => {
-				options.silent || console.log('[WATCH]'.yellow, s);
+				options.silent || console.log('[WATCH]', s);
 			}))
 			.on('add', copy)
 			.on('addDir', copy)
 			.on('change', copy)
 			.on('unlink', remove)
 			.on('unlinkDir', remove)
-			.on('error', e => console.log('[ERROR]'.red, e));
+			.on('error', e => console.log('[ERROR]', e));
 	}
 }
 
