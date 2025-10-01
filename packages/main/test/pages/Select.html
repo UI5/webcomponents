@@ -142,6 +142,48 @@
 		</div>
 	</section>
 
+	<section>
+		<h2>Select with accessible description</h2>
+		<ui5-label for="select-with-description">Select your preferred mode:</ui5-label>
+		<ui5-select
+			id="select-with-description"
+			accessible-description="Choose the display density that best suits your needs">
+			<ui5-option>Cozy</ui5-option>
+			<ui5-option selected>Compact</ui5-option>
+			<ui5-option>Condensed</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select with accessible description ref</h2>
+		<ui5-label for="select-with-description-ref">Country:</ui5-label>
+		<p id="country-description">Select your home country from the list below. This information will be used for shipping calculations.</p>
+		<ui5-select
+			id="select-with-description-ref"
+			accessible-description-ref="country-description">
+			<ui5-option>United States</ui5-option>
+			<ui5-option>United Kingdom</ui5-option>
+			<ui5-option selected>Germany</ui5-option>
+			<ui5-option>France</ui5-option>
+			<ui5-option>Italy</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select with multiple description references</h2>
+		<ui5-label for="select-multiple-refs">Product:</ui5-label>
+		<span id="product-info">Available products in your region</span>
+		<span id="product-note">Some products may have shipping restrictions</span>
+		<ui5-select
+			id="select-multiple-refs"
+			accessible-description-ref="product-info product-note">
+			<ui5-option>Laptop</ui5-option>
+			<ui5-option selected>Desktop</ui5-option>
+			<ui5-option>Monitor</ui5-option>
+			<ui5-option>Keyboard</ui5-option>
+		</ui5-select>
+	</section>
+
 	<section class="ui5-content-density-compact">
 		<h3>Select in Compact</h3>
 		<div>

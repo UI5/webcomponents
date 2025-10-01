@@ -1,12 +1,7 @@
 import type TextArea from "./TextArea.js";
-import BusyIndicator from "./BusyIndicator.js";
 import TextAreaPopoverTemplate from "./TextAreaPopoverTemplate.js";
-import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 
-export default function TextAreaTemplate(this: TextArea, hooks?: {
-	footer?: JsxTemplate,
-	busy?: boolean,
-}) {
+export default function TextAreaTemplate(this: TextArea) {
 	return (
 		<>
 			<div
@@ -27,38 +22,27 @@ export default function TextAreaTemplate(this: TextArea, hooks?: {
 						})}
 					</div>
 					}
-					<BusyIndicator
-						id={`${this._id}-busyIndicator`}
-						active={hooks?.busy}
-						class="ui5-textarea-busy-indicator"
-					>
-						<textarea
-							id={`${this._id}-inner`}
-							class="ui5-textarea-inner"
-							part="textarea"
-							placeholder={this.placeholder}
-							disabled={this.disabled}
-							readonly={this.readonly}
-							aria-label={this.ariaLabelText}
-							aria-describedby={this.ariaDescribedBy}
-							aria-invalid={this._ariaInvalid}
-							aria-required={this.required}
-							maxlength={this._exceededTextProps.calcedMaxLength}
-							value={this.value}
-							data-sap-focus-ref
-							onInput={this._oninput}
-							onChange={this._onchange}
-							onKeyUp={this._onkeyup}
-							onKeyDown={this._onkeydown}
-							onSelect={this._onselect}
-							onScroll={this._onscroll}>
-						</textarea>
-					</BusyIndicator>
-					<div part="footer">
-						<slot name="footer">
-							{(hooks?.footer || defaultFooter).call(this)}
-						</slot>
-					</div>
+					<textarea
+						id={`${this._id}-inner`}
+						class="ui5-textarea-inner"
+						part="textarea"
+						placeholder={this.placeholder}
+						disabled={this.disabled}
+						readonly={this.readonly}
+						aria-label={this.ariaLabelText}
+						aria-describedby={this.ariaDescribedBy}
+						aria-invalid={this._ariaInvalid}
+						aria-required={this.required}
+						maxlength={this._exceededTextProps.calcedMaxLength}
+						value={this.value}
+						data-sap-focus-ref
+						onInput={this._oninput}
+						onChange={this._onchange}
+						onKeyUp={this._onkeyup}
+						onKeyDown={this._onkeydown}
+						onSelect={this._onselect}
+						onScroll={this._onscroll}>
+					</textarea>
 				</div>
 
 				{ afterTextarea.call(this) }
@@ -77,5 +61,4 @@ export default function TextAreaTemplate(this: TextArea, hooks?: {
 	);
 }
 
-export function afterTextarea(this: TextArea) {}
-export function defaultFooter(this: TextArea) {}
+function afterTextarea(this: TextArea) {}

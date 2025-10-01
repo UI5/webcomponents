@@ -4,7 +4,7 @@ sidebar_label: Create Web Components Project
 
 # Create UI5 Web Components Project (Package)
 
-This tutorial explains how to create web components project, ready to be published as NPM package, on top of the  UI5 Web Components framework (`@ui5/webcomponents-base`) and tools (`@ui5/webcomponents-tools`) to make use of development server, theming, HBS template support, i18n, test setup, etc.
+This tutorial explains how to create web components project, ready to be published as NPM package, on top of the  UI5 Web Components framework (`@ui5/webcomponents-base`) and tools (`@ui5/webcomponents-tools`) to make use of development server, theming, JSX template support, i18n, test setup, etc.
 
 ## Initialize New Project
 
@@ -117,7 +117,7 @@ don't need to change any files there.
 
 #### Custom configuration
 
-The files in the `config/` directory simply import UI5 Web Components default configuration for all tasks: `rollup`, `wdio`, `eslint`, etc.
+The files in the `config/` directory simply import UI5 Web Components default configuration for all tasks: `rollup`, `eslint`, etc.
 
 If you need to customize any configuration, simply put your own content into the respective file in `config/`.
 
@@ -142,29 +142,6 @@ Examples:
   	}
 	```
 
- - Modifying `wdio` settings.
-
-    Open `config/wdio.conf.js`. It should look like this:
-
-    ```js
-	module.exports = require("@ui5/webcomponents-tools/components-package/wdio.js");
-	```
-
-	Again, this is a proxy to UI5 Web Components default configuration.
-
-	You could just paste the content of `@ui5/webcomponents-tools/components-package/wdio.js` here and modify at will.
-
-	However, let's not replace the whole file by hand this time, but just modify the exported configuration object.
-
-	```js
-	const result = require("@ui5/webcomponents-tools/components-package/wdio.js");
-	result.config.capabilities[0]["goog:chromeOptions"].args = ['--disable-gpu']; // From: ['--disable-gpu', '--headless']
-	module.exports = result;
-	```
-
-	In this example, what we did was simply replace one option in the configuration object to disable `headless` mode
-	so that we can use `browser.debug()` in our `*.spec.js` files. For more on testing, see [Testing Web Components](./10-testing.md).
-
 ### The `src/` directory
 
 This is where you'll do most of the development. Let's see the necessary files for your first web component.
@@ -176,7 +153,7 @@ The main files describing a Web Component are:
 | File                       | Purpose        |
 |----------------------------|----------------|
 | `src/MyComponent.js`  | Web Component class |
-| `src/MyComponent.hbs` | Handlebars template |
+| `src/MyComponentTemplate.tsx` | JSX template |
 
 In order to understand how a UI5 Web Component works and what lies behind these two files, read the next articles
 to understand more about [Developing web components](./02-component.md).
@@ -245,7 +222,6 @@ package assets (i18n and package-specific theme parameters). Users of your packa
 | File           | Purpose                                                                                             |
 |----------------|-----------------------------------------------------------------------------------------------------|
 | `test/pages/*` | Simple `.html` pages used for development and tests.                                                |
-| `src/specs/*`  | Test specs, based on [WDIO](https://www.npmjs.com/package/wdio). They use the test pages for setup. |
 
 You can execute all specs by running `yarn test` or `npm run test`.
 

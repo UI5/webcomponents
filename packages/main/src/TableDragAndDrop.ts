@@ -12,7 +12,14 @@ export default class TableDragAndDrop extends TableExtension {
 	constructor(table: Table) {
 		super();
 		this._table = table;
-		DragRegistry.subscribe(this._table); // TODO: Where unsubscribe?
+	}
+
+	_ondragstart(e: DragEvent) {
+		DragRegistry.setDraggedElement(e.target as HTMLElement);
+	}
+
+	_ondragend() {
+		DragRegistry.clearDraggedElement();
 	}
 
 	_ondragenter(e: DragEvent) {

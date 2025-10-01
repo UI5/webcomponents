@@ -109,7 +109,7 @@
 
 .ui5-card-header .ui5-card-header-additionalText {
 	display: inline-block;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
 	color: var(--sapTile_TextColor);
 	text-align: left;
@@ -131,7 +131,7 @@
 }
 
 .ui5-card-header .ui5-card-header-text .ui5-card-header-subtitle {
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 	color: var(--sapTile_TextColor);

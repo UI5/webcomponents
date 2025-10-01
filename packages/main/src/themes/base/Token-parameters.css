@@ -14,7 +14,7 @@
 	--_ui5_token_focused_selected_border: 1px solid var(--sapButton_Selected_BorderColor);
 	--ui5_token_focus_pseudo_element_content: none;
 	--_ui5_token_focus_offset: -0.25rem;
-	--_ui5_token_selected_text_font_family: "72override", var(--sapFontFamily);
+	--_ui5_token_selected_text_font_family: var(--sapFontFamily);
 	--_ui5_token_selected_internal_border_bottom: none;
 	--_ui5_token_selected_internal_border_bottom_radius: 0;
 }

@@ -229,6 +229,8 @@ class IllustratedMessage extends UI5Element {
 
 	/**
 	* Defines the component actions.
+	*
+	* **Note:** Not displayed when the `design` property is set to `Base`.
 	* @public
 	*/
 	@slot({ type: HTMLElement, "default": true })

@@ -1,6 +1,7 @@
 import "../../dist/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DateRangePicker from "../../src/DateRangePicker.js";
+import Label from "../../src/Label.js";
 
 type DateTimePickerTemplateOptions = Partial<{
 	formatPattern: string;
@@ -487,72 +488,6 @@ describe("DateRangePicker general interaction", () => {
 			});
 	});
 
-	it("Picker popover should have accessible name", () => {
-		cy.mount(<DateRangePicker></DateRangePicker>);
-
-		cy.get<DateRangePicker>("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realPress("F4");
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.ui5DateRangePickerExpectToBeOpen()
-
-		cy.get("@dateRangePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should("have.attr", "accessible-name", "Choose Date Range");
-	});
-
-	it("Selected days: accessibility semantics", () => {
-		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("en");
-			})
-
-		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
-
-		cy.get<DateRangePicker>("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realType("09/06/2024 - 15/06/2024");
-
-		cy.realPress("Enter")
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.should("have.value", "09/06/2024 - 15/06/2024");
-
-		cy.realPress("F4");
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.ui5DateRangePickerExpectToBeOpen()
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.shadow()
-			.find("[ui5-calendar]")
-			.shadow()
-			.find("[ui5-daypicker]")
-			.shadow()
-			.find(".ui5-dp-root .ui5-dp-content div > .ui5-dp-item")
-			.should(days => {
-				const startSelectionDay = days[14];
-				const dayInBetween = days[15];
-				const endSelectionDay = days[20];
-
-				expect(startSelectionDay).to.have.attr("aria-selected", "true");
-				expect(dayInBetween).to.have.attr("aria-selected", "true");
-				expect(endSelectionDay).to.have.attr("aria-selected", "true");
-			});
-	});
-
 	it("Min and max dates are set without format-pattern by using ISO (yyyy-MM-dd) format", () => {
 		cy.wrap({ setLanguage })
 			.then(api => {
@@ -718,6 +653,136 @@ describe("DateRangePicker general interaction", () => {
 				expect(startSelectionYear).to.have.class("ui5-yp-item--selected");
 				expect(yearInBetween).to.have.class("ui5-yp-item--selected-between");
 				expect(endSelectionYear).to.have.class("ui5-yp-item--selected");
+			});
+	});
+});
+
+describe("Accessibility", () => {
+	it("Picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(<DateRangePicker accessible-name={LABEL}></DateRangePicker>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get("@dateRangePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Date Range for ${LABEL}`);
+	});
+
+	it("Picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+		cy.mount(<>
+			<Label for="dateRangePicker">{LABEL}</Label>
+			<DateRangePicker id="dateRangePicker"></DateRangePicker>
+		</>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get("@dateRangePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Date Range for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "Some description";
+		cy.mount(<DateRangePicker accessibleDescription={DESCRIPTION}></DateRangePicker>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="descr">{DESCRIPTION}</p>
+				<DateRangePicker accessibleDescriptionRef="descr"></DateRangePicker>
+			</>
+		);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "descr");
+
+		cy.get("#descr").should("have.text", DESCRIPTION);
+	});
+
+	it("Selected days: accessibility semantics", () => {
+		cy.wrap({ setLanguage })
+			.then(api => {
+				return api.setLanguage("en");
+			})
+
+		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/06/2024 - 15/06/2024");
+
+		cy.realPress("Enter")
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.should("have.value", "09/06/2024 - 15/06/2024");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-root .ui5-dp-content div > .ui5-dp-item")
+			.should(days => {
+				const startSelectionDay = days[14];
+				const dayInBetween = days[15];
+				const endSelectionDay = days[20];
+
+				expect(startSelectionDay).to.have.attr("aria-selected", "true");
+				expect(dayInBetween).to.have.attr("aria-selected", "true");
+				expect(endSelectionDay).to.have.attr("aria-selected", "true");
 			});
 	});
 });

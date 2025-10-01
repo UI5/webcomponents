@@ -32,6 +32,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 						aria-roledescription={this.accInfo.ariaRoledescription}
 						aria-haspopup={this.accInfo.ariaHasPopup}
 						aria-label={this.accInfo.ariaLabel}
+						aria-description={this.accInfo.ariaDescription}
 						aria-required={this.accInfo.ariaRequired}
 						aria-invalid={this.accInfo.ariaInvalid}
 						onClick={this._onNativeInputClick}

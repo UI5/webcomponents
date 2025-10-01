@@ -65,6 +65,19 @@ describe("Color Picker general interaction tests", () => {
 			.ui5ColorPickerValidateInput(".ui5-color-picker-hex-input", "fafafa");
 	});
 
+	it("should correctly sanitize and parse HEX value to color", () => {
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]")
+			.as("colorPicker");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerUpdateInput(".ui5-color-picker-hex-input", "#fafafa");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput(".ui5-color-picker-hex-input", "fafafa");
+	});
+
 	it("should correctly parse short form HEX value to color", () => {
 		cy.mount(<ColorPicker value="#123"></ColorPicker>);
 

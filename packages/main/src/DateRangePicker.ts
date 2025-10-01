@@ -212,7 +212,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
-	get dateAriaDescription() {
+	get roleDescription() {
 		return DateRangePicker.i18nBundle.getText(DATERANGE_DESCRIPTION);
 	}
 
@@ -220,7 +220,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @override
 	 */
 	get pickerAccessibleName() {
-		return DateRangePicker.i18nBundle.getText(DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return DateRangePicker.i18nBundle.getText(DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	/**

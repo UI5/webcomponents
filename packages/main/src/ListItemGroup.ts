@@ -4,7 +4,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
@@ -159,14 +158,6 @@ class ListItemGroup extends UI5Element {
 			getDropIndicator: () => this.dropIndicatorDOM,
 			filterPlacements: this._filterPlacements.bind(this),
 		});
-	}
-
-	onEnterDOM() {
-		DragRegistry.subscribe(this);
-	}
-
-	onExitDOM() {
-		DragRegistry.unsubscribe(this);
 	}
 
 	get groupHeaderItem() {

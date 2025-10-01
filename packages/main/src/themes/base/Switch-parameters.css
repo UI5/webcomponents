@@ -103,10 +103,10 @@
 	--_ui5-switch-slider-texts-display: inline;
 
 	/* switch text */
-	--_ui5_switch_text_font_family: "72override", var(--sapFontFamily);
+	--_ui5_switch_text_font_family: var(--sapFontFamily);
 	--_ui5_switch_text_font_size: var(--sapFontSmallSize);
 
-	--_ui5_switch_text_with_label_font_family: "72override", var(--sapFontFamily);
+	--_ui5_switch_text_with_label_font_family: var(--sapFontFamily);
 	--_ui5_switch_text_with_label_font_size: var(--sapFontSmallSize);
 
 	--_ui5_switch_text_with_label_width: none;

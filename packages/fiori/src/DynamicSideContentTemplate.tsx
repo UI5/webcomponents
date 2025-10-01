@@ -3,7 +3,7 @@ import type DynamicSideContent from "./DynamicSideContent.js";
 export default function DynamicSideContentTemplate(this: DynamicSideContent) {
 	return (
 		<div
-			class="ui5-dsc-root"
+			class={this.classes.root}
 			style={this.styles.root}
 		>
 			{this._isSideContentFirst ?

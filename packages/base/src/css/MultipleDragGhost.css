@@ -5,7 +5,7 @@
     display: flex;
     color: var(--sapList_TextColor);
     background-color: var(--sapList_Background);
-    font-family: "72override", var(--sapFontFamily);
+    font-family: var(--sapFontFamily);
     height: var(--sapElement_LineHeight);
     border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
     /* drag and drop related */
