@@ -19,7 +19,7 @@ const options = {
 	fioriPackage: true,
 	noWatchTS: true,
 	internal: {
-		cypress_code_coverage: true,
+		cypress_code_coverage: false,
 		cypress_acc_tests: false,
 	},
 	illustrationsData: [
