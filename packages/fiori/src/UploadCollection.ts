@@ -252,23 +252,6 @@ class UploadCollection extends UI5Element {
 		this.fireDecoratorEvent("selection-change", { selectedItems: e.detail.selectedItems as UploadCollectionItem[] });
 	}
 
-	get classes() {
-		return {
-			content: {
-				"ui5-uc-content": true,
-				"ui5-uc-content-no-data": this.items.length === 0,
-			},
-		};
-	}
-
-	get _root() {
-		return this.shadowRoot!.querySelector(".ui5-uc-root");
-	}
-
-	get _dndOverlay() {
-		return this._root?.querySelector(".uc-dnd-overlay");
-	}
-
 	get _showDndOverlay() {
 		return this._dndOverlayMode !== UploadCollectionDnDOverlayMode.None;
 	}
