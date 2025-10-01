@@ -131,17 +131,12 @@
 	width: var(--ui5_carousel_button_size);
 	height: var(--ui5_carousel_button_size);
 	border-radius: 50%;
-	box-shadow: var(--sapContent_Shadow1);
-	cursor: pointer;
-	outline-offset: .1rem;
-	--_ui5-v2-15-0-rc-0_button_focused_border_radius: 50%;
 	box-sizing: border-box;
 	align-items: center;
 	justify-content: center;
 	display: flex;
 	padding: 0 0.5rem;
 	border: 1px solid var(--sapButton_Hover_BorderColor);
-	display: flex;
 	background: var(--sapButton_Background);
 }
 

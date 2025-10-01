@@ -39,6 +39,7 @@ import type BackgroundDesign from "./types/BackgroundDesign.js";
 import type BorderDesign from "./types/BorderDesign.js";
 import CarouselTemplate from "./CarouselTemplate.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 
 // Styles
 import CarouselCss from "./generated/themes/Carousel.css.js";
@@ -189,8 +190,8 @@ class Carousel extends UI5Element {
 	 * @default 0
 	 * @public
 	 */
-	@property({ type: Number })
-	_firstVisibleItemIndex = 0;
+	@property({ type: Number, noAttribute: true })
+	_currentSlideIndex: number = 0;
 
 	/**
 	 * Defines the visibility of the page indicator.
@@ -247,8 +248,8 @@ class Carousel extends UI5Element {
 	 * @default 0
 	 * @private
 	 */
-	@property({ type: Number })
-	_selectedIndex = 0;
+	@property({ type: Number, noAttribute: true })
+	_focusedItemIndex = 0;
 
 	/**
 	 * Defines the position of arrows.
@@ -293,9 +294,7 @@ class Carousel extends UI5Element {
 	_lastInnerFocusedElement?: HTMLElement;
 	_pageStep: number = 10;
 	_visibleItemsIndexes: Array<number>;
-	_calculatedX: number = 0;
 	_itemIndicator: number = 0;
-	_currentSlideIndex: number = 0;
 
 	/**
 	 * Defines the content of the component.
@@ -344,9 +343,6 @@ class Carousel extends UI5Element {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
-		this._width = this.offsetWidth;
-		this._updateVisibleItems(this._selectedIndex);
-		this._currentSlideIndex = Math.min(this._selectedIndex, this.pagesCount - 1);
 	}
 
 	onExitDOM() {
@@ -354,8 +350,8 @@ class Carousel extends UI5Element {
 	}
 
 	validateSelectedIndex() {
-		if (!this.isIndexInRange(this._selectedIndex)) {
-			this._selectedIndex = 0;
+		if (!this.isIndexInRange(this._focusedItemIndex)) {
+			this._focusedItemIndex = 0;
 		}
 	}
 
@@ -368,7 +364,7 @@ class Carousel extends UI5Element {
 		// Change transitively effectiveItemsPerPage by modifying _width
 		this._width = this.offsetWidth;
 		this._itemWidth = Math.floor(this._width / this.effectiveItemsPerPage);
-		this._updateVisibleItems(this._selectedIndex);
+		this._updateVisibleItems(this._focusedItemIndex);
 
 		// Items per page did not change or the current,
 		// therefore page index does not need to be re-adjusted
@@ -376,10 +372,7 @@ class Carousel extends UI5Element {
 			return;
 		}
 
-		if (this._selectedIndex > this.items.length - 1) {
-			this._selectedIndex = this.items.length - 1;
-			this.fireDecoratorEvent("navigate", { selectedIndex: this._selectedIndex });
-		}
+		this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - this.effectiveItemsPerPage);
 	}
 
 	_updateScrolling(e: ScrollEnablementEventListenerParam) {
@@ -440,7 +433,7 @@ class Carousel extends UI5Element {
 			return;
 		}
 
-		this._selectedIndex = pageIndex;
+		this._focusedItemIndex = pageIndex;
 		// Save reference of the last focused element for each page
 		this._lastFocusedElements[pageIndex] = target;
 
@@ -467,10 +460,10 @@ class Carousel extends UI5Element {
 	async _handleF7Key(e: KeyboardEvent) {
 		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedActivePageIndex];
 		if (!this._lastInnerFocusedElement) {
-			const firstFocusable = await getFirstFocusableElement(this.items[this._selectedIndex].item);
+			const firstFocusable = await getFirstFocusableElement(this.items[this._focusedItemIndex].item);
 			firstFocusable?.focus();
 			this._lastInnerFocusedElement = firstFocusable || undefined;
-		} else if (this.carouselItemDomRef(this._selectedIndex)[0] === lastFocusedElement && lastFocusedElement !== e.target) {
+		} else if (this.carouselItemDomRef(this._focusedItemIndex)[0] === lastFocusedElement && lastFocusedElement !== e.target) {
 			lastFocusedElement.focus();
 			this._lastInnerFocusedElement = e.target as HTMLElement;
 		} else if (this._lastInnerFocusedElement) {
@@ -490,12 +483,12 @@ class Carousel extends UI5Element {
 
 	_handlePageUp(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(this._selectedIndex	+ this._pageStep < this.items.length ? this._selectedIndex + this._pageStep : this.items.length - 1);
+		this.navigateTo(this._focusedItemIndex	+ this._pageStep < this.items.length ? this._focusedItemIndex + this._pageStep : this.items.length - 1);
 	}
 
 	_handlePageDown(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(this._selectedIndex	- this._pageStep > 0 ? this._selectedIndex - this._pageStep : 0);
+		this.navigateTo(this._focusedItemIndex	- this._pageStep > 0 ? this._focusedItemIndex - this._pageStep : 0);
 	}
 
 	get _backgroundDesign() {
@@ -511,79 +504,79 @@ class Carousel extends UI5Element {
 			}
 		}
 
-		return this._selectedIndex;
+		return this._focusedItemIndex;
 	}
 
 	navigateLeft() {
 		this._resizing = false;
 
-		const previousSelectedIndex = this._selectedIndex;
+		const previousSelectedIndex = this._focusedItemIndex;
 
-		if (this._selectedIndex - 1 < 0) {
+		if (this._focusedItemIndex - 1 < 0) {
 			if (this.cyclic && this._visibleItemsIndexes.length >= 1) {
-				if (this._selectedIndex === 0 && this.effectiveItemsPerPage > 1) {
-					this._selectedIndex = 0;
+				if (this._focusedItemIndex === 0 && this.effectiveItemsPerPage > 1) {
+					this._focusedItemIndex = 0;
 				} else {
-					this._selectedIndex = this.items.length - 1;
+					this._focusedItemIndex = this.items.length - 1;
 				}
 			}
 		} else {
-			--this._selectedIndex;
+			--this._focusedItemIndex;
 		}
 
-		if (previousSelectedIndex !== this._selectedIndex) {
-			this.skipToItem(this._selectedIndex, -1);
-			this.fireDecoratorEvent("navigate", { selectedIndex: this._selectedIndex });
+		if (previousSelectedIndex !== this._focusedItemIndex) {
+			this.skipToItem(this._focusedItemIndex, -1);
+			this.fireDecoratorEvent("navigate", { selectedIndex: this._focusedItemIndex });
 		}
 	}
 
 	navigateRight() {
 		this._resizing = false;
 
-		const previousSelectedIndex = this._selectedIndex;
+		const previousSelectedIndex = this._focusedItemIndex;
 
-		if (this._selectedIndex + 1 > this.items.length - 1) {
+		if (this._focusedItemIndex + 1 > this.items.length - 1) {
 			if (this.cyclic) {
-				if (this._selectedIndex === this.items.length - 1 && this.effectiveItemsPerPage > 1) {
-					this._selectedIndex = this.items.length - 1;
+				if (this._focusedItemIndex === this.items.length - 1 && this.effectiveItemsPerPage > 1) {
+					this._focusedItemIndex = this.items.length - 1;
 				} else {
-					this._selectedIndex = 0;
+					this._focusedItemIndex = 0;
 				}
 			} else {
 				return;
 			}
 		} else {
-			++this._selectedIndex;
+			++this._focusedItemIndex;
 		}
 
-		if (previousSelectedIndex !== this._selectedIndex) {
-			this.skipToItem(this._selectedIndex, 1);
-			this.fireDecoratorEvent("navigate", { selectedIndex: this._selectedIndex });
+		if (previousSelectedIndex !== this._focusedItemIndex) {
+			this.skipToItem(this._focusedItemIndex, 1);
+			this.fireDecoratorEvent("navigate", { selectedIndex: this._focusedItemIndex });
 		}
 	}
 
 	navigateArrowRight() {
-		if (this._selectedIndex === this._visibleItemsIndexes[0]) {
-			this.navigateTo(this._selectedIndex + 1);
+		if (this._focusedItemIndex === this._visibleItemsIndexes[0]) {
+			this.navigateTo(this._focusedItemIndex + 1);
 			this._moveToItem(this._currentSlideIndex + 1);
 		} else {
 			this._moveToItem(this._currentSlideIndex + 1);
-			this.navigateTo(this._selectedIndex);
+			this.navigateTo(this._focusedItemIndex);
 		}
 	}
 
 	navigateArrowLeft() {
-		if (this._selectedIndex > 0 && this._selectedIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
-			this.navigateTo(this._selectedIndex - 1);
+		if (this._focusedItemIndex > 0 && this._focusedItemIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
+			this.navigateTo(this._focusedItemIndex - 1);
 			this._moveToItem(this._currentSlideIndex - 1);
 		} else {
 			this._moveToItem(this._currentSlideIndex === 0 ? this.pagesCount - 1 : this._currentSlideIndex - 1);
-			this.navigateTo(this._selectedIndex === 0 ? this.items.length - 1 : this._selectedIndex);
+			this.navigateTo(this._focusedItemIndex === 0 ? this.items.length - 1 : this._focusedItemIndex);
 		}
 	}
 
 	_calculateItemSlideIndex(currentSlideIndex: number, itemStep: number) {
-		if (this.isItemInViewport(this._selectedIndex)) {
+		if (this.isItemInViewport(this._focusedItemIndex)) {
 			return 0;
 		}
 		const itemsPerPage = this.effectiveItemsPerPage;
@@ -637,7 +630,7 @@ class Carousel extends UI5Element {
 	}
 
 	focusItem() {
-		this.carouselItemDomRef(this._selectedIndex)[0].focus({ preventScroll: true });
+		this.carouselItemDomRef(this._focusedItemIndex)[0].focus({ preventScroll: true });
 	}
 
 	_navButtonClick(e: MouseEvent) {
@@ -645,10 +638,8 @@ class Carousel extends UI5Element {
 		if (this._visibleItemsIndexes.length > 1) {
 			if (target.hasAttribute("data-ui5-arrow-forward")) {
 				this.navigateArrowRight();
-				this._firstVisibleItemIndex += 1;
 			} else {
 				this.navigateArrowLeft();
-				this._firstVisibleItemIndex -= 1;
 			}
 		} else if (this._visibleItemsIndexes.length <= 1) {
 			if (target.hasAttribute("data-ui5-arrow-forward")) {
@@ -666,17 +657,17 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number) {
-		if (this._selectedIndex < itemIndex) {
+		if (this._focusedItemIndex < itemIndex) {
 			this._itemIndicator = 1;
 		}
-		this._selectedIndex = itemIndex;
+		this._focusedItemIndex = itemIndex;
 		this._currentSlideIndex = itemIndex - this._itemIndicator;
 		if (this.isItemInViewport(itemIndex)) {
 			this._currentSlideIndex = this._visibleItemsIndexes[0];
 			this.focusItem();
 			return;
 		}
-		this.skipToItem(this._selectedIndex, 1);
+		this.skipToItem(this._focusedItemIndex, 1);
 	}
 
 	async skipToItem(focusIndex: number, offset: number) {
@@ -702,7 +693,7 @@ class Carousel extends UI5Element {
 			return {
 				id: `${this._id}-carousel-item-${idx + 1}`,
 				item,
-				tabIndex: this.isItemInViewport(this._selectedIndex) ? 0 : -1,
+				tabIndex: this.isItemInViewport(this._focusedItemIndex) ? 0 : -1,
 				posinset: idx + 1,
 				setsize: this.content.length,
 				visible: this.isItemInViewport(idx),
@@ -855,11 +846,11 @@ class Carousel extends UI5Element {
 	}
 
 	get hasPrev() {
-		return this.cyclic || (this._selectedIndex - 1 >= 0 && this._currentSlideIndex !== 0);
+		return this.cyclic || (this._focusedItemIndex - 1 >= 0 && this._currentSlideIndex !== 0);
 	}
 
 	get hasNext() {
-		return this.cyclic || (this._selectedIndex + 1 <= this.content.length - 1 && this._currentSlideIndex < this.pagesCount - 1);
+		return this.cyclic || (this._focusedItemIndex + 1 <= this.content.length - 1 && this._currentSlideIndex < this.pagesCount - 1);
 	}
 
 	get suppressAnimation() {
@@ -871,7 +862,7 @@ class Carousel extends UI5Element {
 	}
 
 	get selectedIndexToShow() {
-		return this._isRTL ? this.items.length - (this.items.length - this._selectedIndex) + 1 : this._selectedIndex + 1;
+		return this._isRTL ? this.items.length - (this.items.length - this._focusedItemIndex) + 1 : this._focusedItemIndex + 1;
 	}
 
 	get ofText() {
@@ -879,7 +870,7 @@ class Carousel extends UI5Element {
 	}
 
 	get ariaActiveDescendant() {
-		return this.content.length ? `${this._id}-carousel-item-${this._selectedIndex + 1}` : undefined;
+		return this.content.length ? `${this._id}-carousel-item-${this._focusedItemIndex + 1}` : undefined;
 	}
 
 	get ariaLabelTxt() {
