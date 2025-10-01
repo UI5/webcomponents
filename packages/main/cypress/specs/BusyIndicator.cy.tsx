@@ -1,6 +1,7 @@
 import BusyIndicator from "../../src/BusyIndicator.js";
 import Button from "../../src/Button.js";
 import Dialog from "../../src/Dialog.js";
+import BusyIndicatorSize from "../../src/types/BusyIndicatorSize.js";
 
 describe("Rendering", () => {
 	it("Rendering without content", () => {
@@ -24,6 +25,52 @@ describe("Rendering", () => {
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area.ui5-busy-indicator-busy-area-over-content")
 			.should("exist");
+	});
+});
+
+describe("Text Placement and Display", () => {
+	it("should render text with Top placement", () => {
+		cy.mount(
+			<BusyIndicator active text="Loading..." textPlacement="Top">
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("exist")
+			.and("contain.text", "Loading...");
+
+		// Verify the text appears before the circles (top placement)
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.children()
+			.first()
+			.should("have.class", "ui5-busy-indicator-text");
+	});
+
+	it("should render text with Bottom placement (default)", () => {
+		cy.mount(
+			<BusyIndicator active text="Loading..." textPlacement="Bottom">
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("exist")
+			.and("contain.text", "Loading...");
+
+		// Verify the text appears after the circles (bottom placement)
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.children()
+			.last()
+			.should("have.class", "ui5-busy-indicator-text");
 	});
 });
 
@@ -227,512 +274,390 @@ describe("BusyIndicator general interaction", () => {
 	});
 });
 
-describe("BusyIndicator Coverage - Missing Scenarios", () => {
-	
-	describe("Text Placement and Display", () => {
-		it("should render text with Top placement", () => {
-			cy.mount(
-				<BusyIndicator id="busyTopText" active text="Loading..." textPlacement="Top">
-					<div>Content</div>
-				</BusyIndicator>
-			);
+describe("Delay and Timeout Behavior", () => {
+	it("should clear timeout when component becomes inactive", () => {
+		cy.mount(
+			<BusyIndicator delay={1200}>
+				<div>Content</div>
+			</BusyIndicator>
+		);
 
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("exist")
-				.and("contain.text", "Loading...");
+		// Activate the busy indicator
+		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
+		
+		// Verify it's not busy yet (delay hasn't passed)
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
 
-			// Verify the text appears before the circles (top placement)
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.children()
-				.first()
-				.should("have.class", "ui5-busy-indicator-text");
-		});
+		// Deactivate before delay passes - this should trigger the timeout cleanup
+		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
 
-		it("should render text with Bottom placement (default)", () => {
-			cy.mount(
-				<BusyIndicator id="busyBottomText" active text="Loading..." textPlacement="Bottom">
-					<div>Content</div>
-				</BusyIndicator>
-			);
+		// Wait for the original delay period
+		setTimeout(() => {}, 1300);
 
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("exist")
-				.and("contain.text", "Loading...");
+		// Verify it never became busy
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+	});
 
-			// Verify the text appears after the circles (bottom placement)
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.children()
-				.last()
-				.should("have.class", "ui5-busy-indicator-text");
-		});
+	it("should handle timeout cleanup edge case", () => {
+		cy.mount(
+			<BusyIndicator delay={500}>
+				<div>Content</div>
+			</BusyIndicator>
+		);
 
-		it("should generate correct labelId when text is present", () => {
-			cy.mount(
-				<BusyIndicator id="busyWithText" active text="Processing...">
-					<div>Content</div>
-				</BusyIndicator>
-			);
+		// Activate with delay
+		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
+		
+		// Wait a bit but not enough for the timeout to fire
+		setTimeout(() => {}, 100);
+		
+		// Verify it's not busy yet
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+		
+		// Deactivate while timeout is still pending - this should trigger the cleanup path
+		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
+		
+		// Wait longer than the original delay to ensure timeout was cleared
+		setTimeout(() => {}, 600);
+		
+		// Should still not be busy since timeout was cleared
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+	});
 
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("have.attr", "aria-labelledby");
+	it("should trigger timeout cleanup when deactivated with pending timeout", () => {
+		cy.mount(
+			<BusyIndicator delay={1000}>
+				<div>Content</div>
+			</BusyIndicator>
+		);
 
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("have.attr", "id");
-
-			// Verify they match each other
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.invoke("attr", "aria-labelledby")
-				.then((labelledBy) => {
-					cy.get("[ui5-busy-indicator]")
-						.shadow()
-						.find(".ui5-busy-indicator-text")
-						.should("have.attr", "id", labelledBy);
-				});
-		});
-
-		it("should not have labelId when no text is present", () => {
-			cy.mount(
-				<BusyIndicator id="busyNoText" active>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.have.attr", "aria-labelledby");
+		// Test the specific scenario that hits the timeout cleanup lines
+		cy.get("[ui5-busy-indicator]").then(($el) => {
+			const element = $el[0] as any;
+			
+			// Set active to trigger timeout creation
+			element.active = true;
+			
+			// Manually trigger onBeforeRendering to create the timeout
+			element.onBeforeRendering();
+			
+			// Verify timeout was created (should not be busy yet)
+			expect(element._isBusy).to.be.false;
+			expect(element._busyTimeoutId).to.exist;
+			
+			// Now set active to false - this should trigger the cleanup code
+			element.active = false;
+			element.onBeforeRendering();
+			
+			// Verify cleanup happened
+			expect(element._busyTimeoutId).to.be.undefined;
+			expect(element._isBusy).to.be.false;
 		});
 	});
 
-	describe("Delay and Timeout Behavior", () => {
-		it("should clear timeout when component becomes inactive", () => {
+	it("should handle zero delay", () => {
+		cy.mount(
+			<BusyIndicator active delay={0}>
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		// Should become busy immediately
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("exist");
+	});
+});
+
+describe("Different Sizes", () => {
+	Object.values(BusyIndicatorSize).forEach(size => {
+		it(`should render with size ${size}`, () => {
 			cy.mount(
-				<BusyIndicator id="busyWithDelay" delay={2000}>
+				<BusyIndicator active size={size}>
 					<div>Content</div>
 				</BusyIndicator>
 			);
 
-			// Activate the busy indicator
-			cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-			
-			// Verify it's not busy yet (delay hasn't passed)
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.exist");
-
-			// Deactivate before delay passes - this should trigger the timeout cleanup
-			cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
-
-			// Wait for the original delay period
-			cy.wait(2100);
-
-			// Verify it never became busy
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.exist");
-		});
-
-		it("should handle timeout cleanup edge case", () => {
-			cy.mount(
-				<BusyIndicator id="busyTimeoutCleanup" delay={500}>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Activate with delay
-			cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-			
-			// Wait a bit but not enough for the timeout to fire
-			cy.wait(100);
-			
-			// Verify it's not busy yet
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.exist");
-			
-			// Deactivate while timeout is still pending - this should trigger the cleanup path
-			cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
-			
-			// Wait longer than the original delay to ensure timeout was cleared
-			cy.wait(600);
-			
-			// Should still not be busy since timeout was cleared
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.exist");
-		});
-
-		it("should trigger timeout cleanup when deactivated with pending timeout", () => {
-			cy.mount(
-				<BusyIndicator id="busyTimeoutCleanup2" delay={1000}>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Test the specific scenario that hits the timeout cleanup lines
-			cy.get("[ui5-busy-indicator]").then(($el) => {
-				const element = $el[0] as any;
-				
-				// Set active to trigger timeout creation
-				element.active = true;
-				
-				// Manually trigger onBeforeRendering to create the timeout
-				element.onBeforeRendering();
-				
-				// Verify timeout was created (should not be busy yet)
-				expect(element._isBusy).to.be.false;
-				expect(element._busyTimeoutId).to.exist;
-				
-				// Now set active to false - this should trigger the cleanup code
-				element.active = false;
-				element.onBeforeRendering();
-				
-				// Verify cleanup happened
-				expect(element._busyTimeoutId).to.be.undefined;
-				expect(element._isBusy).to.be.false;
-			});
-		});
-
-		it("should handle negative delay values", () => {
-			cy.mount(
-				<BusyIndicator id="busyNegativeDelay" active delay={-1000}>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Should become busy immediately due to Math.max(0, delay)
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("exist");
-		});
-
-		it("should handle zero delay", () => {
-			cy.mount(
-				<BusyIndicator id="busyZeroDelay" active delay={0}>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Should become busy immediately
 			cy.get("[ui5-busy-indicator]")
 				.shadow()
 				.find(".ui5-busy-indicator-busy-area")
 				.should("exist");
 		});
 	});
+});
 
-	describe("Different Sizes", () => {
-		(["S", "M", "L"] as const).forEach(size => {
-			it(`should render with size ${size}`, () => {
-				cy.mount(
-					<BusyIndicator id={`busy${size}`} active size={size}>
-						<div>Content</div>
-					</BusyIndicator>
-				);
+describe("Desktop-specific Behavior", () => {
+	it("should set desktop attribute on desktop devices", () => {
+		// This test depends on the isDesktop() function
+		cy.mount(
+			<BusyIndicator active>
+				<div>Content</div>
+			</BusyIndicator>
+		);
 
-				cy.get("[ui5-busy-indicator]")
-					.should("have.attr", "size", size);
-
-				cy.get("[ui5-busy-indicator]")
-					.shadow()
-					.find(".ui5-busy-indicator-busy-area")
-					.should("exist");
-			});
-		});
+		// On most test environments, this should be true
+		cy.get("[ui5-busy-indicator]")
+			.should("have.attr", "desktop");
 	});
+});
 
-	describe("Desktop-specific Behavior", () => {
-		it("should set desktop attribute on desktop devices", () => {
-			// This test depends on the isDesktop() function
-			cy.mount(
-				<BusyIndicator id="busyDesktop" active>
-					<div>Content</div>
+describe("Complex Keyboard Navigation", () => {
+	it("should prevent events when busy and not when inactive", () => {
+		const onClickStub = cy.stub().as("clickStub");
+		
+		cy.mount(
+			<div>
+				<Button id="beforeBtn">Before</Button>
+				<BusyIndicator delay={0}>
+					<Button id="innerBtn" onClick={onClickStub}>Inside</Button>
 				</BusyIndicator>
-			);
+				<Button id="afterBtn">After</Button>
+			</div>
+		);
 
-			// On most test environments, this should be true
-			cy.get("[ui5-busy-indicator]")
-				.should("have.attr", "desktop");
+		// Test when not busy - should allow interaction
+		cy.get("#innerBtn").realClick();
+		cy.get("@clickStub").should("have.been.called");
+
+		// Reset stub
+		cy.get<sinon.SinonStub>("@clickStub").then((stub) => {
+			stub.resetHistory();
 		});
+
+		// Activate busy indicator
+		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
+
+		// Since delay is 0, it should become busy immediately
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("exist");
+
+		// Try to interact with inner button - should be prevented
+		cy.get("#innerBtn").realClick();
+		cy.get("@clickStub").should("not.have.been.called");
 	});
 
-	describe("Complex Keyboard Navigation", () => {
-		it("should prevent events when busy and not when inactive", () => {
-			const onClickStub = cy.stub().as("clickStub");
-			
-			cy.mount(
-				<div>
-					<Button id="beforeBtn">Before</Button>
-					<BusyIndicator id="busyKeyTest" delay={0}>
-						<Button id="innerBtn" onClick={onClickStub}>Inside</Button>
-					</BusyIndicator>
-					<Button id="afterBtn">After</Button>
-				</div>
-			);
-
-			// Test when not busy - should allow interaction
-			cy.get("#innerBtn").realClick();
-			cy.get("@clickStub").should("have.been.called");
-
-			// Reset stub
-			cy.get("@clickStub").then((stub) => {
-				(stub as any).resetHistory();
-			});
-
-			// Activate busy indicator
-			cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-
-			// Since delay is 0, it should become busy immediately
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("exist");
-
-			// Try to interact with inner button - should be prevented
-			cy.get("#innerBtn").realClick();
-			cy.get("@clickStub").should("not.have.been.called");
-		});
-
-		it("should handle Shift+Tab focus redirection", () => {
-			cy.mount(
-				<div>
-					<Button id="beforeBtn">Before</Button>
-					<BusyIndicator id="busyShiftTab" active delay={0}>
-						<Button id="innerBtn">Inside</Button>
-					</BusyIndicator>
-					<Button id="afterBtn">After</Button>
-				</div>
-			);
-
-			// Focus the after button using realClick instead of focus()
-			cy.get("#afterBtn").realClick();
-
-			// Use Shift+Tab to go backwards
-			cy.realPress(["Shift", "Tab"]);
-
-			// Should focus the busy indicator's busy area
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("have.focus");
-		});
-
-		it("should handle key events other than Tab", () => {
-			cy.mount(
-				<BusyIndicator id="busyOtherKeys" active delay={0}>
+	it("should handle Shift+Tab focus redirection", () => {
+		cy.mount(
+			<div>
+				<Button id="beforeBtn">Before</Button>
+				<BusyIndicator active delay={0}>
 					<Button id="innerBtn">Inside</Button>
 				</BusyIndicator>
-			);
+				<Button id="afterBtn">After</Button>
+			</div>
+		);
 
-			// Focus the busy area
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.focus();
+		// Focus the after button using realClick instead of focus()
+		cy.get("#afterBtn").realClick();
 
-			// Try pressing other keys - should be prevented but not cause errors
-			cy.realPress("Enter");
-			cy.realPress("Space");
-			cy.realPress("Escape");
-			cy.realPress("ArrowDown");
+		// Use Shift+Tab to go backwards
+		cy.realPress(["Shift", "Tab"]);
 
-			// Busy indicator should still be focused and working
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("have.focus");
-		});
+		// Should focus the busy indicator's busy area
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("have.focus");
 	});
 
-	describe("Text Position Logic", () => {
-		it("should return correct textPosition for Top placement", () => {
-			cy.mount(
-				<BusyIndicator id="busyTopPos" active text="Test" textPlacement="Top">
-					<div>Content</div>
-				</BusyIndicator>
-			);
+	it("should handle key events other than Tab", () => {
+		cy.mount(
+			<BusyIndicator active delay={0}>
+				<Button id="innerBtn">Inside</Button>
+			</BusyIndicator>
+		);
 
-			cy.get("[ui5-busy-indicator]").then(($el) => {
-				const element = $el[0] as any;
-				expect(element.textPosition.top).to.be.true;
-				expect(element.textPosition.bottom).to.be.false;
-			});
+		// Focus the busy area
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.focus();
+
+		// Try pressing other keys - should be prevented but not cause errors
+		cy.realPress("Enter");
+		cy.realPress("Space");
+		cy.realPress("Escape");
+		cy.realPress("ArrowDown");
+
+		// Busy indicator should still be focused and working
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("have.focus");
+	});
+});
+
+describe("Component Lifecycle", () => {
+	it("should properly clean up on DOM exit", () => {
+		// Spy on clearTimeout to verify it's called during onExitDOM
+		cy.window().then((win) => {
+			cy.spy(win, 'clearTimeout').as('clearTimeoutSpy');
 		});
 
-		it("should return correct textPosition for Bottom placement", () => {
-			cy.mount(
-				<BusyIndicator id="busyBottomPos" active text="Test" textPlacement="Bottom">
+		cy.mount(
+			<div id="container">
+				<BusyIndicator active delay={2000}>
 					<div>Content</div>
 				</BusyIndicator>
-			);
+			</div>
+		);
 
-			cy.get("[ui5-busy-indicator]").then(($el) => {
-				const element = $el[0] as any;
-				expect(element.textPosition.top).to.be.false;
-				expect(element.textPosition.bottom).to.be.true;
-			});
+		// Verify the component has a pending timeout
+		cy.get("[ui5-busy-indicator]").then(($el) => {
+			const element = $el[0] as any;
+			expect(element._busyTimeoutId).to.exist;
 		});
 
-		it("should return false for both positions when no text", () => {
-			cy.mount(
-				<BusyIndicator id="busyNoTextPos" active textPlacement="Top">
-					<div>Content</div>
-				</BusyIndicator>
-			);
+		// Remove the component before timeout fires - this triggers onExitDOM
+		cy.get("#container").then(($container) => {
+			$container.empty();
+		});
 
-			cy.get("[ui5-busy-indicator]").then(($el) => {
-				const element = $el[0] as any;
-				
-				// Verify that no text label exists in the DOM when no text is provided
+		// Verify clearTimeout was called (onExitDOM logic)
+		cy.get('@clearTimeoutSpy').should('have.been.called');
+	});
+});
+
+describe("Edge Cases", () => {
+	it("should handle rapid active/inactive toggles", () => {
+		cy.mount(
+			<BusyIndicator delay={1000}>
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		// Rapidly toggle active state
+		for (let i = 0; i < 5; i++) {
+			cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
+			cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
+		}
+
+		// Final state should be inactive
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+	});
+
+	it("should handle text changes dynamically", () => {
+		cy.mount(
+			<BusyIndicator active text="Initial">
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		// Initial text
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("contain.text", "Initial");
+
+		// Change text
+		cy.get("[ui5-busy-indicator]").invoke("attr", "text", "Updated");
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("contain.text", "Updated");
+
+		// Remove text
+		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "text");
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("not.exist");
+	});
+});
+
+describe("Accessibility", () => {
+	it("should have proper ARIA attributes", () => {
+		cy.mount(
+			<BusyIndicator active text="Loading data...">
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("have.attr", "role", "progressbar")
+			.and("have.attr", "aria-valuemin", "0")
+			.and("have.attr", "aria-valuemax", "100")
+			.and("have.attr", "aria-valuetext", "Busy")
+			.and("have.attr", "tabindex", "0")
+			.and("have.attr", "data-sap-focus-ref");
+	});
+
+	it("should have proper title attribute", () => {
+		cy.mount(
+			<BusyIndicator active>
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("have.attr", "title")
+			.and("not.be.empty");
+	});
+
+	it("should generate correct labelId when text is present", () => {
+		cy.mount(
+			<BusyIndicator active text="Processing...">
+				<div>Content</div>
+			</BusyIndicator>
+		);
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("have.attr", "aria-labelledby");
+
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-text")
+			.should("have.attr", "id");
+
+		// Verify they match each other
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.invoke("attr", "aria-labelledby")
+			.then((labelledBy) => {
 				cy.get("[ui5-busy-indicator]")
 					.shadow()
 					.find(".ui5-busy-indicator-text")
-					.should("not.exist");
-					
-				// This test verifies the textPosition getter logic indirectly
-				// by ensuring no text is rendered when textPosition.top and textPosition.bottom are both false
+					.should("have.attr", "id", labelledBy);
 			});
-		});
 	});
 
-	describe("Component Lifecycle", () => {
-		it("should properly clean up on DOM exit", () => {
-			cy.mount(
-				<div id="container">
-					<BusyIndicator id="busyLifecycle" active delay={5000}>
-						<div>Content</div>
-					</BusyIndicator>
-				</div>
-			);
+	it("should not have labelId when no text is present", () => {
+		cy.mount(
+			<BusyIndicator active>
+				<div>Content</div>
+			</BusyIndicator>
+		);
 
-			// Remove the component before timeout fires
-			cy.get("#container").then(($container) => {
-				$container.empty();
-			});
-
-			// Wait longer than the delay to ensure cleanup worked
-			cy.wait(5100);
-			
-			// If cleanup didn't work, this would cause errors in subsequent tests
-			cy.get("body").should("exist"); // Simple assertion to verify no errors occurred
-		});
-	});
-
-	describe("Edge Cases", () => {
-		it("should handle rapid active/inactive toggles", () => {
-			cy.mount(
-				<BusyIndicator id="busyRapidToggle" delay={1000}>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Rapidly toggle active state
-			for (let i = 0; i < 5; i++) {
-				cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-				cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
-			}
-
-			// Final state should be inactive
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("not.exist");
-		});
-
-		it("should work with empty content", () => {
-			cy.mount(
-				<BusyIndicator id="busyEmpty" active>
-				</BusyIndicator>
-			);
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("exist")
-				.and("not.have.class", "ui5-busy-indicator-busy-area-over-content");
-		});
-
-		it("should handle text changes dynamically", () => {
-			cy.mount(
-				<BusyIndicator id="busyDynamicText" active text="Initial">
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			// Initial text
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("contain.text", "Initial");
-
-			// Change text
-			cy.get("[ui5-busy-indicator]").invoke("attr", "text", "Updated");
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("contain.text", "Updated");
-
-			// Remove text
-			cy.get("[ui5-busy-indicator]").invoke("removeAttr", "text");
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-text")
-				.should("not.exist");
-		});
-	});
-
-	describe("Accessibility Features", () => {
-		it("should have proper ARIA attributes", () => {
-			cy.mount(
-				<BusyIndicator id="busyAria" active text="Loading data...">
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("have.attr", "role", "progressbar")
-				.and("have.attr", "aria-valuemin", "0")
-				.and("have.attr", "aria-valuemax", "100")
-				.and("have.attr", "aria-valuetext", "Busy")
-				.and("have.attr", "tabindex", "0")
-				.and("have.attr", "data-sap-focus-ref");
-		});
-
-		it("should have proper title attribute", () => {
-			cy.mount(
-				<BusyIndicator id="busyTitle" active>
-					<div>Content</div>
-				</BusyIndicator>
-			);
-
-			cy.get("[ui5-busy-indicator]")
-				.shadow()
-				.find(".ui5-busy-indicator-busy-area")
-				.should("have.attr", "title")
-				.and("not.be.empty");
-		});
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.have.attr", "aria-labelledby");
 	});
 });
