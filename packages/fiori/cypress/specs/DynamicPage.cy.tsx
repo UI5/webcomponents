@@ -3,7 +3,6 @@ import DynamicPageTitle from "../../src/DynamicPageTitle.js";
 import DynamicPageHeader from "../../src/DynamicPageHeader.js";
 import Bar from "@ui5/webcomponents/dist/Bar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
-import Input from "@ui5/webcomponents/dist/Input.js";
 import { setAnimationMode } from "@ui5/webcomponents-base";
 
 before(() => {
