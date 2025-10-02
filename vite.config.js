@@ -107,9 +107,6 @@ export default defineConfig(async () => {
 		build: {
 			emptyOutDir: false,
 		},
-		server: {
-			host: true,
-		},
 		plugins: [
 			await virtualIndex(),
 			tsconfigPaths(),

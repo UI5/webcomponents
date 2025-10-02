@@ -1,23 +1,17 @@
 import { customElement, slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import { toggleAttribute, updateInvisibleText, getAccessibilityDescription } from "./TableUtils.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
+import { toggleAttribute } from "./TableUtils.js";
 import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
 import type TableCell from "./TableCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
-import "@ui5/webcomponents-icons/dist/overflow.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
-	TABLE_ROW,
-	TABLE_ROW_INDEX,
-	TABLE_ROW_SELECTED,
-	TABLE_ROW_ACTIVE,
-	TABLE_ROW_NAVIGABLE,
-	TABLE_ROW_SINGLE_ACTION,
-	TABLE_ROW_MULTIPLE_ACTIONS,
+	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -123,6 +117,12 @@ class TableRow extends TableRowBase {
 	@property({ type: Boolean })
 	movable = false;
 
+	@query("#popin-cell")
+	_popinCell?: TableCell;
+
+	@query("#actions-cell")
+	_actionsCell?: TableCell;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		toggleAttribute(this, "aria-current", this._renderNavigated && this.navigated, "true");
@@ -163,48 +163,8 @@ class TableRow extends TableRowBase {
 		this.removeAttribute("_active");
 	}
 
-	_onfocusin(e: FocusEvent, eventOrigin: HTMLElement) {
-		if (eventOrigin !== this) {
-			return;
-		}
-
-		const descriptions = [
-			TableRowBase.i18nBundle.getText(TABLE_ROW),
-			TableRowBase.i18nBundle.getText(TABLE_ROW_INDEX, this.ariaRowIndex!, this._table!._ariaRowCount),
-		];
-
-		if (this._isSelected) {
-			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_SELECTED));
-		}
-
-		if (this._isNavigable) {
-			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_NAVIGABLE));
-		} else if (this.interactive) {
-			descriptions.push(TableRowBase.i18nBundle.getText(TABLE_ROW_ACTIVE));
-		}
-
-		[...this._visibleCells, ...this._popinCells].forEach(cell => {
-			const headerCell = cell._popin ? cell.getDomRef()! : (cell as TableCell)._headerCell;
-			const headerCellDescription = getAccessibilityDescription(headerCell, false);
-			const cellDescription = getAccessibilityDescription(cell, false);
-			descriptions.push(headerCellDescription);
-			descriptions.push(cellDescription);
-		});
-
-		const availableActionsCount = this._availableActionsCount;
-		if (availableActionsCount > 0) {
-			const rowActionBundleKey = availableActionsCount === 1 ? TABLE_ROW_SINGLE_ACTION : TABLE_ROW_MULTIPLE_ACTIONS;
-			descriptions.push(TableRowBase.i18nBundle.getText(rowActionBundleKey, availableActionsCount));
-		}
-
-		updateInvisibleText(this, descriptions);
-	}
-
-	_onfocusout(e: FocusEvent, eventOrigin: HTMLElement) {
+	_onfocusout() {
 		this.removeAttribute("_active");
-		if (eventOrigin === this) {
-			updateInvisibleText(this);
-		}
 	}
 
 	_onOverflowButtonClick(e: UI5CustomEvent<Button, "click">) {
@@ -293,6 +253,14 @@ class TableRow extends TableRowBase {
 		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
 			return !action.invisible && action._isInteractive;
 		}).length + (this._hasOverflowActions ? 1 : 0);
+	}
+
+	get _actionCellAccText() {
+		const availableActionsCount = this._availableActionsCount;
+		if (availableActionsCount > 0) {
+			const bundleKey = availableActionsCount === 1 ? TABLE_ROW_SINGLE_ACTION : TABLE_ROW_MULTIPLE_ACTIONS;
+			return TableRowBase.i18nBundle.getText(bundleKey, availableActionsCount);
+		}
 	}
 }
 

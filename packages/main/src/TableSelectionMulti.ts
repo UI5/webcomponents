@@ -1,7 +1,7 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { isSelectionCheckbox, isHeaderSelector, findRowInPath } from "./TableUtils.js";
+import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import { isUpShift } from "@ui5/webcomponents-base/dist/Keys.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
@@ -186,7 +186,7 @@ class TableSelectionMulti extends TableSelectionBase {
 		}
 
 		let description = "";
-		const seperator = " . ";
+		const seperator = " ";
 		const i18nBundle = (this._table.constructor as typeof Table).i18nBundle;
 		if (this.headerSelector === "SelectAll") {
 			description = i18nBundle.getText(TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION);
@@ -244,12 +244,12 @@ class TableSelectionMulti extends TableSelectionBase {
 			return;
 		}
 
-		if (isHeaderSelector(e)) {
+		if (isHeaderSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}
 
-		if (!isSelectionCheckbox(e)) {
+		if (!isSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}

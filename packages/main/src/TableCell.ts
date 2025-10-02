@@ -1,8 +1,8 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
-import { getAccessibilityDescription, updateInvisibleText } from "./TableUtils.js";
 import type TableRow from "./TableRow.js";
 import type Table from "./Table.js";
 import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
@@ -30,6 +30,12 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 	template: TableCellTemplate,
 })
 class TableCell extends TableCellBase {
+	@query("#popin-header")
+	_popinHeader?: HTMLElement;
+
+	@query("#popin-content")
+	_popinContent?: HTMLElement;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		if (this.horizontalAlign) {

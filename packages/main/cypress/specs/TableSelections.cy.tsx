@@ -377,7 +377,7 @@ describe("TableSelectionMulti", () => {
 	});
 
 	it("updates the header row checkbox when rows are added or removed", () => {
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Select All Checkbox Checked");
 		cy.get("@headerRowSelectionCell").children().first().as("headerRowCheckBox");
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
 		cy.get("@headerRowCheckBox").should("have.attr", "title", "Deselect All Rows");
@@ -389,11 +389,11 @@ describe("TableSelectionMulti", () => {
 				</ui5-table-row>`
 			);
 		});
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Not Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Select All Checkbox Not Checked");
 		cy.get("@headerRowCheckBox").should("not.have.attr", "checked");
 		cy.get("@headerRowCheckBox").should("have.attr", "title", "Select All Rows");
 		cy.get("#row3").invoke("remove");
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Select All Checkbox Checked");
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
 		cy.get("@headerRowCheckBox").should("have.attr", "title", "Deselect All Rows");
 		cy.get("#row2").invoke("remove");
@@ -410,7 +410,7 @@ describe("TableSelectionMulti", () => {
 			cy.get("@headerRowIcon").should("have.attr", "show-tooltip");
 			cy.get("@headerRowIcon").should("have.attr", "accessible-name", "Deselect All Rows");
 			cy.get("@headerRowIcon").should("have.attr", "design", hasSelection ? "Default" : "NonInteractive");
-			cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", hasSelection ? "Contains Clear All Button" : "Contains Clear All Button . Disabled");
+			cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", hasSelection ? "Clear All Button" : "Clear All Button Disabled");
 		}
 
 		cy.get("#selection").invoke("attr", "header-selector", "ClearAll");
