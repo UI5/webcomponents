@@ -1,0 +1,67 @@
+:host [ui5-li]::part(icon) {
+	color: var(--sapList_TextColor);
+}
+
+:host [ui5-li]::part(title) {
+	font-size: var(--sapFontSize);
+}
+
+:host [ui5-li]:after {
+	position: relative;
+	width: fit-content;
+	height: 1rem;
+	min-width: 1rem;
+	background: var(--sapContent_BadgeBackground);
+	border: var(--_ui5_shellbar_button_badge_border);
+	color: var(--sapContent_BadgeTextColor);
+	bottom: calc(100% + 0.0625rem);
+	left: 1.25rem;
+	padding: 0 0.3125rem;
+	border-radius: 0.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: var(--sapFontSmallSize);
+	font-family: var(--sapFontFamily);
+	z-index: 2;
+	box-sizing: border-box;
+	pointer-events: none;
+}
+
+:host [ui5-li][data-count]:after {
+	content: attr(data-count);
+}
+
+:host [ui5-button] {
+	height: 2.25rem;
+	width: 2.5rem;
+	padding: 0;
+	margin-inline-start: var(--_ui5-shellbar-overflow-button-margin);
+	border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
+	background: var(--sapButton_Lite_Background);
+	outline-color: var(--_ui5_shellbar_logo_outline_color);
+	color: var(--sapShell_TextColor);
+	box-sizing: border-box;
+	cursor: pointer;
+	border-radius: var(--_ui5_shellbar_button_border_radius);
+	position: relative;
+	font-weight: bold;
+	white-space: initial;
+	overflow: initial;
+	text-overflow: initial;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+}
+
+:host [ui5-button]:hover {
+	background: var(--sapShell_Hover_Background);
+	border-color: var(--sapButton_Lite_Hover_BorderColor);
+	color: var(--sapShell_TextColor);
+}
+
+:host [ui5-button]:active {
+	background: var(--sapShell_Active_Background);
+	border-color: var(--sapButton_Lite_Active_BorderColor);
+	color: var(--_ui5_shellbar_button_active_color);
+}

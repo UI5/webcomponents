@@ -1,7 +1,9 @@
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
-import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
+// import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBar from "./ShellBar.js";
+import ShellBarItem from "./ShellBarItem.js";
+import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 
 export default function PopoversTemplate(this: ShellBar) {
 	return (
@@ -27,21 +29,25 @@ export default function PopoversTemplate(this: ShellBar) {
 				onClose={this._overflowPopoverAfterClose}
 			>
 				<List separators="None" onItemClick={this._handleActionListClick}>
-					{this._hiddenIcons.map((icon, index) => (
-						<ListItemStandard
-							key={index}
-							data-count={icon.count}
-							data-ui5-external-action-item-id={icon.refItemid}
-							data-ui5-stable={icon.stableDomRef}
-							icon={icon.icon ? icon.icon : ""}
-							type="Active"
-							onui5-_press={icon.press}
-							tooltip={icon.tooltip}
-							accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
-						>
-							{icon.text}
-						</ListItemStandard>
-					))}
+
+					{this._hiddenIcons.map((icon, index) => {
+						return icon.custom ? (
+							<slot name={this.items.find(item => icon.id === item.id)!._individualSlot}></slot>
+						) : (
+							<ListItemStandard
+								key={index}
+								data-count={icon.count}
+								data-ui5-external-action-item-id={icon.refItemid}
+								icon={icon.icon ? icon.icon : ""}
+								type="Active"
+								onui5-_press={icon.press}
+								tooltip={icon.tooltip}
+								accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
+							>
+								{icon.text}
+							</ListItemStandard>
+						);
+					})}
 				</List>
 			</Popover>
 		</>

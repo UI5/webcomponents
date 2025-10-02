@@ -504,7 +504,12 @@ class ShellBar extends UI5Element {
 	 * You can use the `<ui5-shellbar-item></ui5-shellbar-item>`.
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true })
+	@slot({
+		type: HTMLElement,
+		"default": true,
+		invalidateOnChildChange: true,
+		individualSlots: true,
+	})
 	items!: Array<ShellBarItem>;
 
 	/**
