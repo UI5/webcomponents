@@ -279,8 +279,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValid(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValid(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -291,8 +290,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -303,8 +301,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidDisplayValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidDisplayValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -315,22 +312,19 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be checked
 	 */
 	isInValidRange(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isInValidRange(dateString));
 	}
 
 	isValidMin(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidMin(dateString));
 	}
 
 	isValidMax(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidMax(dateString));
 	}
