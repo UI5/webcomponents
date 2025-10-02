@@ -5,7 +5,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 	return (
 		<li
 			role="option"
-			class={`ui5-segmented-button-item-root ${this.content ? `ui5-segmented-button-item-root--${this.content}` : ""}`}
+			class="ui5-segmented-button-item-root"
 			aria-posinset={this.posInSet}
 			aria-setsize={this.sizeOfSet}
 			aria-selected={this.selected}
@@ -17,7 +17,7 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 			tabindex={this.tabIndexValue ? parseInt(this.tabIndexValue) : undefined }
 			aria-label={this.ariaLabelText}
 			aria-description={this.ariaDescriptionText}
-			title={this.tooltip}
+			title={this.tooltip || this.slotTextContent}
 		>
 			{this.icon &&
 				<Icon

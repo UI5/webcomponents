@@ -30,7 +30,7 @@ import SegmentedButtonTemplate from "./SegmentedButtonTemplate.js";
 
 // Styles
 import SegmentedButtonCss from "./generated/themes/SegmentedButton.css.js";
-import type SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
+import SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 
 /**
  * Interface for components that may be slotted inside `ui5-segmented-button` as items
@@ -79,7 +79,6 @@ type SegmentedButtonSelectionChangeEventDetail = {
 	bubbles: true,
 })
 
-//TODO: when content is with contentFit we can have a truncation so for acc we should add tooltip to each segmented button item, these should happen with api (tooltip: enable, disable)
 class SegmentedButton extends UI5Element {
 	eventDetails!: {
 		"selection-change": SegmentedButtonSelectionChangeEventDetail,
@@ -130,7 +129,7 @@ class SegmentedButton extends UI5Element {
 	selectionMode: `${SegmentedButtonSelectionMode}` = "Single";
 
 	@property()
-	content: `${SegmentedButtonContentMode}` = "EqualSized";
+	contentMode: `${SegmentedButtonContentMode}` = "EqualSized";
 	/**
 	 * Defines the items of `ui5-segmented-button`.
 	 *
@@ -171,12 +170,13 @@ class SegmentedButton extends UI5Element {
 		items.forEach(item => {
 			item.posInSet = item.hidden ? undefined : index++;
 			item.sizeOfSet = item.hidden ? undefined : visibleItems.length;
-			item.content = this.content;
 		});
 
 		this.normalizeSelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		if (this.contentMode === SegmentedButtonContentMode.EqualSized) {
+			this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		}
 	}
 
 	normalizeSelection() {
@@ -316,6 +316,17 @@ class SegmentedButton extends UI5Element {
 
 	get ariaRoleDescription() {
 		return SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIPTION);
+	}
+
+	get contentModeClass() {
+		switch (this.contentMode) {
+		case SegmentedButtonContentMode.EqualSized:
+			return "ui5-segmented-button-root-equal-sized-items";
+		case SegmentedButtonContentMode.ContentFit:
+			return "ui5-segmented-button-root-content-fit-items";
+		default:
+			return "";
+		}
 	}
 }
 

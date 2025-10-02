@@ -4,7 +4,7 @@ export default function SegmentedButtonTemplate(this: SegmentedButton) {
 	return (
 		<ul
 			role="listbox"
-			class={`ui5-segmented-button-root ${this.content ? `ui5-segmented-button-root--${this.content}` : ""}`}
+			class={`ui5-segmented-button-root ${this.contentModeClass}`}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}
 			onKeyDown={this._onkeydown}

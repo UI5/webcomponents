@@ -169,9 +169,6 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	@property({ type: Boolean })
 	hidden = false;
 
-	@property({ noAttribute: true })
-	content?: string;
-
 	/**
 	 * Defines the text of the component.
 	 *
@@ -241,6 +238,14 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 
 	get showIconTooltip() {
 		return getEnableDefaultTooltips() && this.iconOnly && !this.tooltip;
+	}
+
+	get slotTextContent(): string {
+		return this.text
+			.filter(node => node.nodeType === Node.TEXT_NODE)
+			.map(node => node.textContent?.trim() || "")
+			.filter(Boolean)
+			.join(" ");
 	}
 }
 
