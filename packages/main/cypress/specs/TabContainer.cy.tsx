@@ -494,7 +494,8 @@ describe("TabContainer general interaction", () => {
 		});
 	});
 
-	it.skip("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
+	it("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
+		cy.viewport(600, 1080);
 		cy.mount(
 			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
 				<Tab text="One">Tab 1</Tab>
@@ -530,16 +531,17 @@ describe("TabContainer general interaction", () => {
 			</TabContainer>
 		);
 
-		cy.viewport(600, 1080);
-
 		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
 		cy.get("#tabContainerStartAndEndOverflow").should("have.attr", "overflow-mode", "StartAndEnd");
-		cy.get("@startOverflow").should("have.text", "+4");
-
-		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:nth-child(5)").as("tab5");
-		cy.get("@tab5").click();
-
-		cy.get("@startOverflow").should("have.text", "+4");
+	
+		cy.get("@startOverflow").should("be.visible").invoke("text").then((initialOverflowText) => {
+			expect(initialOverflowText).to.equal("+4");
+			
+			cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
+			cy.get("@visibleTab").click();
+			
+			cy.get("@startOverflow").should("have.text", initialOverflowText);
+		});
 	});
 
 	it("tests end overflow behavior", () => {
