@@ -28,9 +28,9 @@ function onOpenUI5InitMethod(win) {
 	<ui5-option>Option 5</ui5-option>
 </ui5-select>
 <ui5-combobox id="webCComboBox1">
-	<ui5-combobox-item text="Algeria"></ui5-combobox-item>
-	<ui5-combobox-item text="Argentina"></ui5-combobox-item>
-	<ui5-combobox-item text="Australia"></ui5-combobox-item>
+	<ui5-cb-item text="Algeria"></ui5-cb-item>
+	<ui5-cb-item text="Argentina"></ui5-cb-item>
+	<ui5-cb-item text="Australia"></ui5-cb-item>
 </ui5-combobox>
 <br><br>`
 						}),
@@ -233,7 +233,7 @@ describe("ui5 and web components integration", () => {
 		// add ui5 bootstrap
 		cy.document().then((doc) => {
 			const ui5Script = doc.createElement('script');
-			ui5Script.src = 'https://openui5.hana.ondemand.com/resources/sap-ui-core.js';
+			ui5Script.src = 'https://sapui5untested.int.sap.eu2.hana.ondemand.com/resources/sap-ui-core.js';
 			ui5Script.id = 'sap-ui-bootstrap';
 			ui5Script.setAttribute('data-sap-ui-libs', 'sap.m');
 			ui5Script.setAttribute('data-sap-ui-oninit', 'onOpenUI5Init');
@@ -242,7 +242,7 @@ describe("ui5 and web components integration", () => {
 	});
 
 	function OpenWebCDialog() {
-		cy.get("#openUI5Button")
+		cy.get("#openUI5Button", { timeout: 3000 })
 			.should('be.visible');
 
 		cy.get('#myButton')
@@ -530,6 +530,81 @@ describe("ui5 and web components integration", () => {
 			.should('be.focused');
 	}
 
+	function OpenUI5DialogWebCSelect() {
+		cy.get("#openUI5Button")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.get("#webCSelect1")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#webCSelect1")
+			.shadow()
+			.find<Dialog>("[ui5-responsive-popover]").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("#webCSelect1")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should('not.be.visible');
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.exist');
+
+		cy.get("#openUI5Button")
+			.should('be.focused');
+	}
+
+	function OpenUI5DialogWebCComboBox() {
+		cy.get("#openUI5Button")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.get("#webCComboBox1")
+			.should('be.visible');
+
+		cy.get("#webCComboBox1")
+			.shadow()
+			.find('input')
+			.realClick()
+			.type("A");
+
+		cy.get("#webCComboBox1")
+			.shadow()
+			.find<Dialog>("[ui5-responsive-popover]").ui5DialogOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("#webCComboBox1")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should('not.be.visible');
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.exist');
+
+		cy.get("#openUI5Button")
+			.should('be.focused');
+	}
+
 	it("Keyboard", () => {
 		OpenWebCDialog();
 		OpenWebCDialogOpenOpenUI5Dialog();
@@ -541,5 +616,7 @@ describe("ui5 and web components integration", () => {
 		OpenUI5Dialog();
 		OpenUI5DialogWebCDialog();
 		OpenUI5DialogWebCPopoverNoFocus();
+		OpenUI5DialogWebCSelect();
+		OpenUI5DialogWebCComboBox();
 	});
 });

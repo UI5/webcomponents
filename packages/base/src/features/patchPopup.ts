@@ -17,7 +17,7 @@ type OpenUI5Popup = {
 	}
 };
 
-type OpenUI5PopupControl = {
+type OpenUI5PopupBasedControl = {
 	prototype: {
 		onsapescape: (e: Event) => void,
 		oPopup: OpenUI5Popup,
@@ -91,9 +91,9 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 	});
 };
 
-const patchPopupControl = (PopupControl: OpenUI5PopupControl) => {
-	const origOnsapescape = PopupControl.prototype.onsapescape;
-	PopupControl.prototype.onsapescape = function onsapescape(e: Event) {
+const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => {
+	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
+	PopupBasedControl.prototype.onsapescape = function onsapescape(e: Event) {
 		if (hasWebComponentPopupAbove(this.oPopup)) {
 			return;
 		}
@@ -154,14 +154,14 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupControl, Popover: OpenUI5PopupControl) => {
+const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl) => {
 	insertOpenUI5PopupStyles();
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
 	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
-	patchPopupControl(Dialog); // Dialog.prototype.onsapescape
-	patchPopupControl(Popover); // Popover.prototype.onsapescape
+	patchPopupBasedControl(Dialog); // Dialog.prototype.onsapescape
+	patchPopupBasedControl(Popover); // Popover.prototype.onsapescape
 };
 
 export {
@@ -171,4 +171,4 @@ export {
 	getTopmostPopup,
 };
 
-export type { OpenUI5Popup, OpenUI5PopupControl, PopupInfo };
+export type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo };
