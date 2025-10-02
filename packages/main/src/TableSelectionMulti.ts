@@ -12,7 +12,7 @@ import {
 	TABLE_COLUMNHEADER_SELECTALL_CHECKED,
 	TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED,
 	TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION,
-	TABLE_COLUMNHEADER_CLEARALL_DISABLED,
+	TABLE_ACC_STATE_DISABLED,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -193,7 +193,7 @@ class TableSelectionMulti extends TableSelectionBase {
 			description += seperator + i18nBundle.getText(this.areAllRowsSelected() ? TABLE_COLUMNHEADER_SELECTALL_CHECKED : TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED);
 		} else {
 			description = i18nBundle.getText(TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION);
-			description += this.getSelectedRows().length === 0 ? seperator + i18nBundle.getText(TABLE_COLUMNHEADER_CLEARALL_DISABLED) : "";
+			description += this.getSelectedRows().length === 0 ? seperator + i18nBundle.getText(TABLE_ACC_STATE_DISABLED) : "";
 		}
 		return description;
 	}
