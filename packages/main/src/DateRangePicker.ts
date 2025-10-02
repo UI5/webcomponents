@@ -10,6 +10,10 @@ import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
+	DATERANGE_VALUE_MISSING,
+	DATERANGE_PATTERN_MISMATCH,
+	DATERANGE_UNDERFLOW,
+	DATERANGE_OVERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 import DateRangePickerTemplate from "./DateRangePickerTemplate.js";
 
@@ -81,6 +85,35 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_tempValue?: string;
 
 	private _prevDelimiter: string | null;
+
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_UNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_OVERFLOW, this.maxDate);
+		}
+		return "";
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !!this.value && !this.isValidValue(this.value),
+			rangeUnderflow: !!this.value && !this.isValidMin(this.value),
+			rangeOverflow: !!this.value && !this.isValidMax(this.value),
+		};
+	}
 
 	get formFormattedValue() {
 		const values = this._splitValueByDelimiter(this.value || "").filter(Boolean);
@@ -246,8 +279,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValid(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValid(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -258,8 +290,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -270,8 +301,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidDisplayValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidDisplayValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -282,10 +312,21 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be checked
 	 */
 	isInValidRange(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isInValidRange(dateString));
+	}
+
+	isValidMin(value: string): boolean {
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMin(dateString));
+	}
+
+	isValidMax(value: string): boolean {
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMax(dateString));
 	}
 
 	/**
@@ -311,6 +352,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const firstDateTimestamp = this._exctractDisplayTimestamp(values[0]);
 		const lastDateTimestamp = this._exctractDisplayTimestamp(values[1]);
 
+		if (!firstDateTimestamp || !lastDateTimestamp) {
+			return value;
+		}
+
 		if (firstDateTimestamp && lastDateTimestamp && firstDateTimestamp > lastDateTimestamp) { // if both are timestamps (not undefined), flip if necessary
 			return this._buildDisplayValue(lastDateTimestamp, firstDateTimestamp);
 		}
@@ -329,7 +374,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		firstDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[0]) as number) * 1000);
 		lastDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[1]) as number) * 1000);
 
-		if (!firstDateString && !lastDateString) {
+		if (!firstDateString || !lastDateString) {
 			return value;
 		}
 
@@ -518,13 +563,17 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	getDisplayValueFromValue(value: string): string {
+		if (this.isLiveUpdate) {
+			return value;
+		}
+
 		let firstDateString = "";
 		let lastDateString = "";
 
 		firstDateString = this._getDisplayStringFromTimestamp((this._extractFirstTimestamp(value) as number) * 1000);
 		lastDateString = this._getDisplayStringFromTimestamp((this._extractLastTimestamp(value) as number) * 1000);
 
-		if (!firstDateString && !lastDateString) {
+		if (!firstDateString || !lastDateString) {
 			return value;
 		}
 
