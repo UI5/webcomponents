@@ -233,7 +233,7 @@ describe("ui5 and web components integration", () => {
 		// add ui5 bootstrap
 		cy.document().then((doc) => {
 			const ui5Script = doc.createElement('script');
-			ui5Script.src = 'https://sapui5untested.int.sap.eu2.hana.ondemand.com/resources/sap-ui-core.js';
+			ui5Script.src = 'https://ui5.sap.com/resources/sap-ui-core.js';
 			ui5Script.id = 'sap-ui-bootstrap';
 			ui5Script.setAttribute('data-sap-ui-libs', 'sap.m');
 			ui5Script.setAttribute('data-sap-ui-oninit', 'onOpenUI5Init');
@@ -242,7 +242,7 @@ describe("ui5 and web components integration", () => {
 	});
 
 	function OpenWebCDialog() {
-		cy.get("#openUI5Button", { timeout: 3000 })
+		cy.get("#openUI5Button", { timeout: 10000 })
 			.should('be.visible');
 
 		cy.get('#myButton')
@@ -532,7 +532,7 @@ describe("ui5 and web components integration", () => {
 
 	function OpenUI5DialogWebCSelect() {
 		cy.get("#openUI5Button")
-			.should('be.visible')
+			.should('be.focused')
 			.realClick();
 
 		cy.get("#openUI5Dialog1")
@@ -567,7 +567,7 @@ describe("ui5 and web components integration", () => {
 
 	function OpenUI5DialogWebCComboBox() {
 		cy.get("#openUI5Button")
-			.should('be.visible')
+			.should('be.focused')
 			.realClick();
 
 		cy.get("#openUI5Dialog1")
@@ -617,6 +617,7 @@ describe("ui5 and web components integration", () => {
 		OpenUI5DialogWebCDialog();
 		OpenUI5DialogWebCPopoverNoFocus();
 		OpenUI5DialogWebCSelect();
-		OpenUI5DialogWebCComboBox();
+		// Merge it after OpenUI5 Popup shadow dom focus fix is released
+		// OpenUI5DialogWebCComboBox();
 	});
 });
