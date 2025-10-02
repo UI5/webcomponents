@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
+
+
+### Bug Fixes
+
+* **ui5-combobox:** fire 'selection-change' event only after user inte… ([#12316](https://github.com/UI5/webcomponents/issues/12316)) ([f509612](https://github.com/UI5/webcomponents/commit/f50961264df4071a84214ca35d873037438aa706))
+* **ui5-input, ui5-combobox, ui5-multi-combobox:** adjust cancel button position ([#12375](https://github.com/UI5/webcomponents/issues/12375)) ([a50f10c](https://github.com/UI5/webcomponents/commit/a50f10cb9b8d3a2da3e27449854c42e777a8c220)), closes [#12356](https://github.com/UI5/webcomponents/issues/12356)
+* **ui5-tabcontainer:** Improve drag-and-drop to handle fast keyboard moves ([#12183](https://github.com/UI5/webcomponents/issues/12183)) ([ecf6298](https://github.com/UI5/webcomponents/commit/ecf6298ec3df124b83b21c181764eb3a0bf96b63))
+
+
+
+
+
 # [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
 
 **Note:** Version bump only for package @ui5/webcomponents
