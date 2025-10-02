@@ -7,7 +7,6 @@ import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type ComboBox from "./ComboBox.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
 	return (
@@ -38,13 +37,6 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
 							<span>{this._headerTitleText}</span>
-							<Button
-								class="ui5-responsive-popover-close-btn"
-								icon={declineIcon}
-								design="Transparent"
-								onClick={this._closeRespPopover}
-							>
-							</Button>
 						</div>
 
 						<div class="row">
@@ -103,9 +95,16 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				{this._isPhone &&
 			<div slot="footer" class="ui5-responsive-popover-footer">
 				<Button
-					design="Transparent"
+					design="Emphasized"
 					onClick={this._closeRespPopover}
 				>{this._dialogOkButtonText}</Button>
+				<Button
+					class="ui5-responsive-popover-close-btn"
+					design="Transparent"
+					onClick={this._closeRespPopover}
+				>
+					{this._dialogCancelButtonText}
+				</Button>
 			</div>
 				}
 			</ResponsivePopover>

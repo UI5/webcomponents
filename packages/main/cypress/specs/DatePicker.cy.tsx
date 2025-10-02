@@ -1,4 +1,3 @@
-import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
 import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DatePicker from "../../src/DatePicker.js";

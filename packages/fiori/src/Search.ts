@@ -213,6 +213,12 @@ class Search extends SearchField {
 	 */
 	_proposedItem?: ISearchSuggestionItem;
 
+	/**
+	 * This property is used during rendering to indicate that the user has started typing in the input
+	 * @private
+	 */
+	_isTyping: boolean;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -222,26 +228,32 @@ class Search extends SearchField {
 		// The typed in value.
 		this._typedInValue = "";
 		this._valueBeforeOpen = this.getAttribute("value") || "";
+		this._isTyping = false;
 	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
+		if (this.collapsed && !isPhone()) {
+			this.open = false;
+			return;
+		}
+
 		const innerInput = this.nativeInput;
 		const autoCompletedChars = innerInput && (innerInput.selectionEnd! - innerInput.selectionStart!);
+
+		this.open = this.open || (this._popoupHasAnyContent() && this._isTyping && innerInput!.value.length > 0);
 
 		// If there is already a selection the autocomplete has already been performed
 		if (this._shouldAutocomplete && !autoCompletedChars) {
 			const item = this._getFirstMatchingItem(this.value);
 			this._proposedItem = item;
 
-			if (!isPhone()) {
-				this.open = this._popoupHasAnyContent();
-			}
-
 			if (item) {
 				this._handleTypeAhead(item);
 				this._selectMatchingItem(item);
+			} else {
+				this._deselectItems();
 			}
 		}
 
@@ -311,8 +323,6 @@ class Search extends SearchField {
 		this._innerValue = originalValue;
 		this._performTextSelection = true;
 		this.value = originalValue;
-
-		this._shouldAutocomplete = false;
 	}
 
 	_startsWithMatchingItems(str: string): Array<ISearchSuggestionItem> {
@@ -383,6 +393,7 @@ class Search extends SearchField {
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -401,17 +412,29 @@ class Search extends SearchField {
 	_handleEscape() {
 		this.value = this._typedInValue || this.value;
 		this._innerValue = this.value;
+		this._isTyping = false;
 	}
 
 	_handleInput(e: InputEvent) {
 		super._handleInput(e);
 		this._typedInValue = this.value;
+		this._proposedItem = undefined;
 
 		if (isPhone()) {
 			return;
 		}
 
-		this.open = ((e.currentTarget as HTMLInputElement).value.length > 0) && this._popoupHasAnyContent();
+		this._isTyping = true;
+		this.open = this.value.length > 0;
+	}
+
+	_handleClear(): void {
+		super._handleClear();
+
+		this._typedInValue = "";
+		this._innerValue = "";
+		this._shouldAutocomplete = false;
+		this.open = false;
 	}
 
 	_popoupHasAnyContent() {
@@ -466,7 +489,10 @@ class Search extends SearchField {
 		this.value = item.text;
 		this._innerValue = this.value;
 		this._typedInValue = this.value;
+		this._shouldAutocomplete = false;
+		this._performTextSelection = true;
 		this.open = false;
+		this._isTyping = false;
 		this.focus();
 	}
 
@@ -502,6 +528,7 @@ class Search extends SearchField {
 		}
 
 		this.open = false;
+		this._isTyping = false;
 	}
 
 	_handleBeforeClose(e: CustomEvent<PopupBeforeCloseEventDetail>) {
@@ -518,6 +545,7 @@ class Search extends SearchField {
 
 	_handleClose() {
 		this.open = false;
+		this._isTyping = false;
 		this.fireDecoratorEvent("close");
 	}
 
