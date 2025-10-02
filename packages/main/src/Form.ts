@@ -3,6 +3,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 // Template
@@ -220,6 +221,15 @@ class Form extends UI5Element {
 	 */
 	@property()
 	accessibleName?: string;
+
+	/**
+	 * Defines id(or many ids) of the element (or elements) that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the number of columns to distribute the form content by breakpoint.
@@ -543,13 +553,18 @@ class Form extends UI5Element {
 	}
 
 	get effectiveAccessibleName() {
-		if (this.accessibleName) {
-			return this.accessibleName;
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
 		}
+
 		return this.hasHeader ? undefined : Form.i18nBundle.getText(FORM_ACCESSIBLE_NAME);
 	}
 
 	get effectiveАccessibleNameRef(): string | undefined {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return;
+		}
+
 		return this.hasHeaderText && !this.hasCustomHeader ? `${this._id}-header-text` : undefined;
 	}
 
