@@ -1,7 +1,7 @@
-diff --git a/node_modules/playground-elements/playground-code-editor.js b/node_modules/playground-elements/playground-code-editor.js
-index ef940bc..dc6aec8 100644
---- a/node_modules/playground-elements/playground-code-editor.js
-+++ b/node_modules/playground-elements/playground-code-editor.js
+diff --git a/playground-code-editor.js b/playground-code-editor.js
+index ef940bce1f277926c628f535469065864462ef16..dc6aec8ac9015046fa2305ec51b55a23e41b0855 100644
+--- a/playground-code-editor.js
++++ b/playground-code-editor.js
 @@ -388,6 +388,15 @@ let PlaygroundCodeEditor = class PlaygroundCodeEditor extends LitElement {
          }
      }
@@ -96,10 +96,10 @@ index ef940bc..dc6aec8 100644
              case 'css':
                  return 'css';
              case 'jsx':
-diff --git a/node_modules/playground-elements/playground-preview.js b/node_modules/playground-elements/playground-preview.js
-index 1c2996f..4259730 100644
---- a/node_modules/playground-elements/playground-preview.js
-+++ b/node_modules/playground-elements/playground-preview.js
+diff --git a/playground-preview.js b/playground-preview.js
+index 1c2996fe16a91fe52074e65144aca9e1098043fd..4259730b04a73d0f5f5fec00d558d97ca8fd4ad8 100644
+--- a/playground-preview.js
++++ b/playground-preview.js
 @@ -151,6 +151,7 @@ let PlaygroundPreview = class PlaygroundPreview extends PlaygroundConnectedEleme
  
          <iframe
@@ -117,16 +117,3 @@ index 1c2996f..4259730 100644
  ], PlaygroundPreview.prototype, "iframe", void 0);
  __decorate([
      query('slot')
-diff --git a/node_modules/playground-elements/playground-typescript-worker.js b/node_modules/playground-elements/playground-typescript-worker.js
-index 764edfe..6ff369d 100644
---- a/node_modules/playground-elements/playground-typescript-worker.js
-+++ b/node_modules/playground-elements/playground-typescript-worker.js
-@@ -58,7 +58,7 @@ class G{constructor(e,t){this._emittedExternalDependencies=new Set,this._nodeRes
-      * @license
-      * Copyright 2021 Google LLC
-      * SPDX-License-Identifier: BSD-3-Clause
--     */const se={target:ae.ScriptTarget.ES2021,module:ae.ModuleKind.ESNext,experimentalDecorators:!0,skipDefaultLibCheck:!0,skipLibCheck:!0,allowJs:!0,moduleResolution:ae.ModuleResolutionKind.NodeNext,jsx:ae.JsxEmit.React,lib:["dom","esnext"]};class ce{constructor(){this.compilerOptions=se,this.serviceHost=new _e(self.origin,se),this.service=ae.createLanguageService(this.serviceHost,ae.createDocumentRegistry())}}class _e{constructor(e,t){this.files=new Map,this.packageRoot=e,this.compilerOptions=t}updateFileContentIfNeeded(e,t){const n=this.files.get(e);n&&n.content!==t?(n.content=t,n.version+=1):this.files.set(e,{content:t,version:0})}sync(e){e.forEach(((e,t)=>this.updateFileContentIfNeeded(t,e))),this._removeDeletedFiles(e)}_removeDeletedFiles(e){this.getScriptFileNames().forEach((t=>{t.includes("node_modules")||e.has(t)||this.files.delete(t)}))}getCompilationSettings(){return this.compilerOptions}getScriptFileNames(){return[...this.files.keys()]}getScriptVersion(e){var t,n;return null!==(n=null===(t=this.files.get(e))||void 0===t?void 0:t.version.toString())&&void 0!==n?n:"-1"}fileExists(e){return this.files.has(e)}readFile(e){var t;return null===(t=this.files.get(e))||void 0===t?void 0:t.content}getScriptSnapshot(e){if(this.fileExists(e))return ae.ScriptSnapshot.fromString(this.readFile(e))}getCurrentDirectory(){return this.packageRoot}getDefaultLibFileName(){return"__lib.d.ts"}}
-+     */const se={target:ae.ScriptTarget.ES2021,module:ae.ModuleKind.ESNext,experimentalDecorators:!0,skipDefaultLibCheck:!0,skipLibCheck:!0,allowJs:!0,moduleResolution:ae.ModuleResolutionKind.NodeNext,jsx:ae.JsxEmit.ReactJSX,jsxImportSource:"@ui5/webcomponents-base",lib:["dom","esnext"]};class ce{constructor(){this.compilerOptions=se,this.serviceHost=new _e(self.origin,se),this.service=ae.createLanguageService(this.serviceHost,ae.createDocumentRegistry())}}class _e{constructor(e,t){this.files=new Map,this.packageRoot=e,this.compilerOptions=t}updateFileContentIfNeeded(e,t){const n=this.files.get(e);n&&n.content!==t?(n.content=t,n.version+=1):this.files.set(e,{content:t,version:0})}sync(e){e.forEach(((e,t)=>this.updateFileContentIfNeeded(t,e))),this._removeDeletedFiles(e)}_removeDeletedFiles(e){this.getScriptFileNames().forEach((t=>{t.includes("node_modules")||e.has(t)||this.files.delete(t)}))}getCompilationSettings(){return this.compilerOptions}getScriptFileNames(){return[...this.files.keys()]}getScriptVersion(e){var t,n;return null!==(n=null===(t=this.files.get(e))||void 0===t?void 0:t.version.toString())&&void 0!==n?n:"-1"}fileExists(e){return this.files.has(e)}readFile(e){var t;return null===(t=this.files.get(e))||void 0===t?void 0:t.content}getScriptSnapshot(e){if(this.fileExists(e))return ae.ScriptSnapshot.fromString(this.readFile(e))}getCurrentDirectory(){return this.packageRoot}getDefaultLibFileName(){return"__lib.d.ts"}}
- /**
-      * @license
-      * Copyright 2021 Google LLC
