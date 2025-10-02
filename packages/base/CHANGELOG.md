@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
 # [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-base
