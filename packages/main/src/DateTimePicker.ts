@@ -218,7 +218,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEOVERFLOW, this.maxDate);
 		}
 
-		return ""; // No error
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {

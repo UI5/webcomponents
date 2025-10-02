@@ -416,7 +416,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return DatePicker.i18nBundle.getText(DATEPICKER_RANGE_OVERFLOW, this.maxDate);
 		}
 
-		return ""; // No error
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {

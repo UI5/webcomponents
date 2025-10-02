@@ -103,7 +103,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		if (validity.rangeOverflow) {
 			return DateRangePicker.i18nBundle.getText(DATERANGE_OVERFLOW, this.maxDate);
 		}
-		return ""; // No error
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {

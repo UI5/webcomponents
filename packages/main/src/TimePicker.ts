@@ -362,7 +362,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return TimePicker.i18nBundle.getText(TIMEPICKER_PATTERN_MISSMATCH, this.getFormat().oFormatOptions.pattern as string);
 		}
 
-		return ""; // No error
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {

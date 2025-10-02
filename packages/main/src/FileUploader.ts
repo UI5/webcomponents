@@ -316,7 +316,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 			return FileUploader.i18nBundle.getText(FILEUPLOAER_VALUE_MISSING);
 		}
 
-		return ""; // No error
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {
