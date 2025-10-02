@@ -84,18 +84,18 @@
 }
 
 :host([state="Negative"]) .ui5-dialog-value-state-icon {
-	color: var(--sapNegativeElementColor);
+	color: var(--_ui5_dialog_header_error_state_icon_color);
 }
 
 :host([state="Information"]) .ui5-dialog-value-state-icon {
-	color: var(--sapInformativeElementColor);
+	color: var(--_ui5_dialog_header_information_state_icon_color);
 }
 :host([state="Positive"]) .ui5-dialog-value-state-icon {
-	color: var(--sapPositiveElementColor);
+	color: var(--_ui5_dialog_header_success_state_icon_color);
 }
 
 :host([state="Critical"]) .ui5-dialog-value-state-icon {
-	color: var(--sapCriticalElementColor);
+	color: var(--_ui5_dialog_header_warning_state_icon_color);
 }
 
 .ui5-popup-header-root {

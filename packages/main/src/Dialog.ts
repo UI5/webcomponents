@@ -608,18 +608,10 @@ class Dialog extends Popup {
 				this._initialLeft! + this._initialWidth!,
 			);
 
-			// check if width is changed to avoid "left" jumping when max width is reached
-			Object.assign(this.style, {
-				width: `${newWidth}px`,
-			});
-
-			const deltaWidth = newWidth - this.getBoundingClientRect().width;
-			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
-
 			newLeft = clamp(
-				rightEdge - newWidth,
+				this._initialLeft! + (clientX - this._initialX!),
 				0,
-				rightEdge - this._minWidth!,
+				this._initialX! + this._initialWidth! - this._minWidth!,
 			);
 		} else {
 			newWidth = clamp(
@@ -638,7 +630,7 @@ class Dialog extends Popup {
 		Object.assign(this.style, {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
-			left: this._isRTL ? `${newLeft}px` : undefined,
+			left: newLeft ? `${newLeft}px` : undefined,
 		});
 	}
 

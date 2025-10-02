@@ -91,7 +91,6 @@ import {
 	SELECT_OPTIONS,
 	SHOW_SELECTED_BUTTON,
 	MULTICOMBOBOX_DIALOG_OK_BUTTON,
-	MULTICOMBOBOX_DIALOG_CANCEL_BUTTON,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	VALUE_STATE_ERROR_ALREADY_SELECTED,
 	MCB_SELECTED_ITEMS,
@@ -114,7 +113,6 @@ import Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import SuggestionItem from "./SuggestionItem.js";
-import type InputComposition from "./features/InputComposition.js";
 
 /**
  * Interface for components that may be slotted inside a `ui5-multi-combobox` as items
@@ -482,14 +480,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
-	 * Indicates whether IME composition is currently active
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean, noAttribute: true })
-	_isComposing = false;
-
-	/**
 	 * Defines the component items.
 	 * @public
 	 */
@@ -543,11 +533,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_itemsBeforeOpen: Array<MultiComboboxItemWithSelection>;
 	selectedItems: Array<IMultiComboBoxItem>;
 	_valueStateLinks: Array<HTMLElement>;
-	_composition?: InputComposition;
-	_suppressNextLiveChange: boolean; // prevent unwanted live change events during IME composition
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
-	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
 		return MultiComboBox.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
@@ -597,18 +584,15 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._lastValue = this.getAttribute("value") || "";
 		this.currentItemIdx = -1;
 		this._valueStateLinks = [];
-		this._suppressNextLiveChange = false;
 	}
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
-		this._enableComposition();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
 		this._removeLinksEventListeners();
-		this._composition?.removeEventListeners();
 	}
 
 	_handleResize() {
@@ -679,7 +663,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_showFilteredItems() {
 		this.filterSelected = true;
 		this._showMorePressed = true;
-		this._tokenizer._scrollToEndOnExpand = true;
 
 		this._toggleTokenizerPopover();
 	}
@@ -700,12 +683,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_inputLiveChange(e: InputEvent) {
-		// This ensures proper input clearing after Enter-based token creation during composition
-		if (this._suppressNextLiveChange) {
-			this._suppressNextLiveChange = false;
-			return;
-		}
-
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
 		const filteredItems: Array<IMultiComboBoxItem> = this._filterItems(value);
@@ -931,22 +908,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	async _handlePaste(e: ClipboardEvent) {
-		if (this.readonly) {
+	_handlePaste(e: ClipboardEvent) {
+		if (this.readonly || !e.clipboardData) {
 			return;
 		}
 
-		e.preventDefault();
-
-		const pastedText = await navigator.clipboard.readText();
-		document.execCommand("insertText", true, pastedText ?? "");
-		const inputEvent = new Event("input", {
-			bubbles: true,
-			cancelable: true,
-		});
-
-		// Dispatch it
-		this._innerInput.dispatchEvent(inputEvent);
+		const pastedText = (e.clipboardData).getData("text/plain");
 
 		if (!pastedText) {
 			return;
@@ -969,17 +936,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this.readonly || isFirefox()) {
 			return;
 		}
-		e.preventDefault();
 
 		const pastedText = await navigator.clipboard.readText();
-		document.execCommand("insertText", true, pastedText ?? "");
-		const inputEvent = new Event("input", {
-			bubbles: true,
-			cancelable: true,
-		});
-
-		// Dispatch it
-		this._innerInput.dispatchEvent(inputEvent);
 
 		if (!pastedText) {
 			return;
@@ -1391,11 +1349,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this._previouslySelectedItems = this._getSelectedItems();
 				matchingItem.selected = true;
 				this.value = "";
-				// during composition prevent _inputLiveChange for proper input clearing
-				if (this._isComposing) {
-					this._suppressNextLiveChange = true;
-				}
-
 				const changePrevented = this.fireSelectionChange();
 
 				if (changePrevented) {
@@ -1775,10 +1728,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			// Keep the original typed in text intact
 			this.valueBeforeAutoComplete = value;
-			// Prevent typeahead during composition to avoid interfering with the composition process
-			if (!this._isComposing && item) {
-				this._handleTypeAhead(item, value);
-			}
+			item && this._handleTypeAhead(item, value);
 		}
 
 		if (this._shouldFilterItems) {
@@ -1799,8 +1749,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._tokenizer.preventInitialFocus = true;
 
 		if (this.open && !isPhone()) {
-			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;
+		}
+
+		if (this._tokenizer.expanded && this.hasAttribute("focused")) {
+			this._tokenizer.scrollToEnd();
 		}
 
 		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
@@ -1900,8 +1853,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	inputFocusIn(e: FocusEvent) {
 		if (!isPhone()) {
 			this.focused = true;
-			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;
+			this._tokenizer.scrollToEnd();
 		} else {
 			this._innerInput.blur();
 		}
@@ -1942,35 +1895,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			if (!isPhone() && !this.noValidation && !focusIsGoingInPopover) {
 				this.value = "";
 			}
-		}
-	}
-	/**
-	 * Enables IME composition handling.
-	 * Dynamically loads the InputComposition feature and sets up event listeners.
-	 * @private
-	 */
-	_enableComposition() {
-		if (this._composition) {
-			return;
-		}
-
-		const setup = (InputCompositionClass: typeof InputComposition) => {
-			this._composition = new InputCompositionClass({
-				getInputEl: () => this._innerInput,
-				updateCompositionState: (isComposing: boolean) => {
-					this._isComposing = isComposing;
-				},
-			});
-			this._composition.addEventListeners();
-		};
-
-		if (MultiComboBox.composition) {
-			setup(MultiComboBox.composition);
-		} else {
-			import("./features/InputComposition.js").then(CompositionModule => {
-				MultiComboBox.composition = CompositionModule.default;
-				setup(CompositionModule.default);
-			});
 		}
 	}
 
@@ -2076,7 +2000,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const links: Array<HTMLElement> = [];
 		if (this.valueStateMessage) {
 			this.valueStateMessage.forEach(element => {
-				if (element.children.length) {
+				if (element.children.length)	{
 					element.querySelectorAll("ui5-link").forEach(link => {
 						links.push(link as HTMLElement);
 					});
@@ -2177,10 +2101,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButton() {
 		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_OK_BUTTON);
-	}
-
-	get _dialogCancelButton() {
-		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _tokenizerExpanded() {

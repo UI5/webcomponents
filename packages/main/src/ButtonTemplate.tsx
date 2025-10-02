@@ -34,11 +34,10 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			onTouchStart={this._ontouchstart}
 			onTouchEnd={this._ontouchend}
 			tabindex={this.tabIndexValue}
-			aria-expanded={this._computedAccessibilityAttributes?.expanded}
-			aria-controls={this._computedAccessibilityAttributes?.controls}
-			aria-haspopup={this._computedAccessibilityAttributes?.hasPopup}
-			aria-label={this._computedAccessibilityAttributes?.ariaLabel}
-			aria-keyshortcuts={this._computedAccessibilityAttributes?.ariaKeyShortcuts}
+			aria-expanded={this.accessibilityAttributes.expanded}
+			aria-controls={this.accessibilityAttributes.controls}
+			aria-haspopup={this._hasPopup}
+			aria-label={this.ariaLabelText}
 			aria-description={this.ariaDescriptionText}
 			aria-busy={this.loading ? "true" : undefined}
 			title={this.buttonTitle}

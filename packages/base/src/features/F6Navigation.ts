@@ -100,20 +100,10 @@ class F6Navigation {
 				//     </ui5-list>
 				// </ui5-flexible-column-layout>
 				// Here for both FCL & List the firstFoccusableElement is the same (the ui5-li)
-				const currentGroupFocusable = await this.groupElementToFocus(this.groups[currentIndex]);
-				let distanceToNextGroup = 1;
+				const firstFocusable = await this.groupElementToFocus(this.groups[currentIndex - 1]);
+				const shouldSkipParent = firstFocusable === await this.groupElementToFocus(this.groups[currentIndex]);
 
-				for (let distanceIndex = 1; distanceIndex < this.groups.length; distanceIndex++) {
-					const firstFocusable = await this.groupElementToFocus(this.groups[currentIndex - distanceIndex]);
-
-					if (firstFocusable === currentGroupFocusable) {
-						distanceToNextGroup++;
-					} else {
-						break;
-					}
-				}
-
-				currentIndex -= distanceToNextGroup;
+				currentIndex = shouldSkipParent ? currentIndex - 2 : currentIndex - 1;
 
 				if (currentIndex < 0) {
 					currentIndex = this.groups.length - 1;

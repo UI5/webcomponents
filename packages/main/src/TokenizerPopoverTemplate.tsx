@@ -54,7 +54,6 @@ export default function TokenizerPopoverTemplate(this: Tokenizer) {
 				>{this._okButtonText}</Button>
 				<Button
 					design="Transparent"
-					class="ui5-responsive-popover-close-btn"
 					onClick={this.handleDialogButtonPress}
 				>{this._cancelButtonText}</Button>
 			</div>

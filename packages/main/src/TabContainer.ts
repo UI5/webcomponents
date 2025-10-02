@@ -313,8 +313,6 @@ class TabContainer extends UI5Element {
 	@property({ type: Number, noAttribute: true })
 	_width?: number;
 
-	_dragging = false;
-
 	/**
 	 * Defines the tabs.
 	 *
@@ -558,11 +556,9 @@ class TabContainer extends UI5Element {
 	}
 
 	_moveHeaderItem(tab: Tab, e: KeyboardEvent) {
-		if (!tab.movable || this._dragging) {
+		if (!tab.movable) {
 			return;
 		}
-
-		this._dragging = true;
 
 		const headerItems = this.items.map(item => item.getDomRefInStrip())
 			.filter((item): item is TabInStrip => !item?.hasAttribute("hidden"));
@@ -608,11 +604,7 @@ class TabContainer extends UI5Element {
 				},
 			});
 
-			tab.focus().then(() => {
-				this._dragging = false;
-			});
-		} else {
-			this._dragging = false;
+			tab.focus();
 		}
 	}
 

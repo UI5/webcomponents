@@ -49,9 +49,6 @@ import {
 	DAY_PICKER_NON_WORKING_DAY,
 	DAY_PICKER_TODAY,
 	LIST_ITEM_SELECTED,
-	DAY_PICKER_SELECTED_RANGE_START,
-	DAY_PICKER_SELECTED_RANGE_END,
-	DAY_PICKER_SELECTED_RANGE_BETWEEN,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -268,19 +265,9 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
-			let ariaLabel = this.hasSecondaryCalendarType
+			const ariaLabel = this.hasSecondaryCalendarType
 				? `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()}; ${secondaryMonthsNamesString} ${tempSecondDateNumber}, ${tempSecondYearNumber} ${tooltip}`.trim()
 				: `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()} ${tooltip}`.trim();
-
-			if (this.selectionMode === CalendarSelectionMode.Range) {
-				if (isSelected && this._isRangeEndDate(timestamp)) {
-					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_END, ariaLabel);
-				} else if (isSelected && this._isRangeStartDate(timestamp)) {
-					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_START, ariaLabel);
-				} else if (isSelectedBetween) {
-					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_BETWEEN, ariaLabel);
-				}
-			}
 
 			const day: Day = {
 				timestamp: timestamp.toString(),
@@ -446,14 +433,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		return timestamp === this.selectedDates[0] || timestamp === this.selectedDates[this.selectedDates.length - 1];
-	}
-
-	_isRangeEndDate(timestamp: number): boolean {
-		return this.selectionMode === CalendarSelectionMode.Range && timestamp === this.selectedDates[1];
-	}
-
-	_isRangeStartDate(timestamp: number): boolean {
-		return this.selectionMode === CalendarSelectionMode.Range && timestamp === this.selectedDates[0];
 	}
 
 	/**

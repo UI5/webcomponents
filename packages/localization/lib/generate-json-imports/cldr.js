@@ -39,16 +39,9 @@ const generate = async () => {
 		fs.writeFile("src/generated/json-imports/LocaleData.ts", contentDynamic(caseDynamicImports)),
 		fs.writeFile("src/generated/json-imports/LocaleData-fetch.ts", contentDynamic(caseFetchMetaResolve)),
 		fs.writeFile("src/generated/json-imports/LocaleData-node.ts", contentDynamic(caseDynamicImportJSONAttr)),
-	])
-		.then(() => {
-			console.log("CLDR files generated.");
-		});
+	]);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-	generate()
-}
-
-export default {
-	_ui5mainFn: generate
-}
+generate().then(() => {
+	console.log("CLDR files generated.");
+});

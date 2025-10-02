@@ -1,5 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
+const basePath = process.argv[2];
 const babelCore = require("@babel/core");
 const babelParser = require("@babel/parser");
 const babelGenerator = require("@babel/generator").default;
@@ -20,7 +21,7 @@ const convertAmdToEs6 = async (code) => {
 	})).code;
 }
 
-const convertAbsImportsToRelative = (filePath, code, basePath) => {
+const convertAbsImportsToRelative = (filePath, code) => {
 	let changed = false;
 	// console.log("File processing started: ", srcPath);
 
@@ -68,7 +69,7 @@ const convertAbsImportsToRelative = (filePath, code, basePath) => {
 }
 
 const replaceGlobalCoreUsage = (filePath, code) => {
-	if (!filePath.includes("Configuration")) {
+	if (!filePath.includes("Configuration"))  {
 		const replaced = code.replace(/sap\.ui\.getCore\(\)/g, `Core`);
 		return code !== replaced ? `import Core from 'sap/ui/core/Core';${replaced}` : code;
 	}
@@ -76,7 +77,7 @@ const replaceGlobalCoreUsage = (filePath, code) => {
 	return code;
 };
 
-const transformAmdToES6Module = async (filePath, basePath) => {
+const transformAmdToES6Module = async (filePath) => {
 	await convertSAPUIDefineToDefine(filePath);
 
 	let code = (await fs.readFile(filePath)).toString();
@@ -85,23 +86,17 @@ const transformAmdToES6Module = async (filePath, basePath) => {
 
 	code = replaceGlobalCoreUsage(filePath, code);
 
-	code = convertAbsImportsToRelative(filePath, code, basePath);
+	code = convertAbsImportsToRelative(filePath, code);
 
 	return fs.writeFile(filePath, code);
 }
 
-const transformAmdToES6Modules = async (argv) => {
-	const basePath = argv[2];
+const transformAmdToES6Modules = async () => {
 	const { globby } = await import("globby");
 	const fileNames = await globby(basePath.replace(/\\/g, "/") + "**/*.js");
-	return Promise.all(fileNames.map(fileName => transformAmdToES6Module(fileName, basePath)).filter(x => !!x))
-		.then(() => {
-			console.log("Success: all amd modules are transformed to es6!");
-		});
+	return Promise.all(fileNames.map(transformAmdToES6Module).filter(x => !!x));
 };
 
-if (require.main === module) {
-	transformAmdToES6Modules(process.argv)
-}
-
-exports._ui5mainFn = transformAmdToES6Modules;
+transformAmdToES6Modules().then(() => {
+	console.log("Success: all amd modules are transformed to es6!");
+});

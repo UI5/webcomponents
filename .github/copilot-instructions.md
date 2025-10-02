@@ -99,6 +99,7 @@ Ensure the PR includes:
 
 ### Test Frameworks
 - **Cypress** for end-to-end testing with component interaction
+- Custom WDIO configuration with UI5-specific hooks
 
 ### Test Quality Checks
 - ❌ **Flag framework-testing code** - tests should verify component behavior, not framework features

@@ -7,7 +7,6 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 		<Select
 			class={this.classes.root}
 			style={this.styles}
-			value={this.value}
 			data-ui5-external-action-item-id={this._id}
 			valueState={this.valueState}
 			disabled={this.disabled}
@@ -18,10 +17,6 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 			onOpen={(...args) => this.onOpen(...args)}
 			onChange={(...args) => this.onChange(...args)}
 		>
-			{this.hasCustomLabel &&
-				<slot name="label" slot="label">
-				</slot>
-			}
 			{this.options.map((option, index) => (
 				<Option
 					selected={option.selected}
@@ -30,5 +25,6 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 					{option.textContent}
 				</Option>
 			))}
-		</Select>);
+		</Select>
+	);
 }

@@ -25,14 +25,8 @@ export default VersionInfo;`;
 
 	await fs.mkdir("src/generated/", { recursive: true });
 	await fs.writeFile("src/generated/VersionInfo.ts", fileContent);
+}
 
+generate().then(() => {
 	console.log("Version info file generated.");
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-	generate()
-}
-
-export default {
-	_ui5mainFn: generate
-}
+});

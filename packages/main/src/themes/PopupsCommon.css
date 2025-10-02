@@ -104,7 +104,7 @@
 }
 
 .ui5-popup-header-root {
-	background: var(--sapPageHeader_Background);
+	background: var(--_ui5_popup_header_background);
 }
 
 /*** Responsive paddings for the Header and Footer ***/

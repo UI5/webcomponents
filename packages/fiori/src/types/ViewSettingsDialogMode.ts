@@ -1,5 +1,5 @@
 /**
- * Different types of ViewSettings.
+ * Different types of Bar.
  * @public
  */
 enum ViewSettingsDialogMode {
@@ -16,13 +16,6 @@ enum ViewSettingsDialogMode {
 	 * @public
 	 */
 	Filter = "Filter",
-
-	/**
-	 * Group type
-	 * @since 2.13.0
-	 * @public
-	 */
-	Group = "Group",
 }
 
 export default ViewSettingsDialogMode;

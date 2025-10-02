@@ -256,9 +256,7 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<div class="section" data-sap-ui-fastnavgroup="true">
-								<Button id="first">First focusable</Button>
-							</div>
+							<Button id="first">First focusable</Button>
 						</div>
 					</div>
 					<div class="section">
@@ -266,20 +264,14 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<div class="section" data-sap-ui-fastnavgroup="true">
-								<div class="section" data-sap-ui-fastnavgroup="true">
-									<div class="section" data-sap-ui-fastnavgroup="true">
-										<Button id="second">Second focusable</Button>
-									</div>
-								</div>
-							</div>
+							<Button id="second">First focusable</Button>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Third focusable</Button>
+						<Button id="third">Second focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>
@@ -678,9 +670,7 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<div class="section" data-sap-ui-fastnavgroup="true">
-								<Button id="first">First focusable</Button>
-							</div>
+							<Button id="first">First focusable</Button>
 						</div>
 					</div>
 					<div class="section">
@@ -688,20 +678,14 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<div class="section" data-sap-ui-fastnavgroup="true">
-								<div class="section" data-sap-ui-fastnavgroup="true">
-									<div class="section" data-sap-ui-fastnavgroup="true">
-										<Button id="second">Second focusable</Button>
-									</div>
-								</div>
-							</div>
+							<Button id="second">First focusable</Button>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Third focusable</Button>
+						<Button id="third">Second focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>

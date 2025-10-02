@@ -12,7 +12,6 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFocusedElement } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
-import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -140,7 +139,6 @@ enum ClipboardDataOperation {
 @customElement({
 	tag: "ui5-tokenizer",
 	languageAware: true,
-	formAssociated: true,
 	renderer: jsxRenderer,
 	template: TokenizerTemplate,
 	styles: [
@@ -186,7 +184,7 @@ enum ClipboardDataOperation {
 	bubbles: true,
 })
 
-class Tokenizer extends UI5Element implements IFormInputElement {
+class Tokenizer extends UI5Element {
 	eventDetails!: {
 		"token-delete": TokenizerTokenDeleteEventDetail,
 		"selection-change": TokenizerSelectionChangeEventDetail,
@@ -215,18 +213,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 */
 	@property({ type: Boolean })
 	multiLine = false;
-
-	/**
-	 * Determines the name by which the component will be identified upon submission in an HTML form.
-	 *
-	 * **Note:** This property is only applicable within the context of an HTML Form element.
-	 * **Note:** When the component is used inside a form element,
-	 * the value is sent as the first element in the form data, even if it's empty.
-	 * @default undefined
-	 * @public
-	 */
-	@property({ type: String })
-	declare name?: string;
 
 	/**
 	 * Defines whether "Clear All" button is present. Ensure `multiLine` is enabled, otherwise `showClearAll` will have no effect.
@@ -364,31 +350,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_previousToken: Token | null = null;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_deletedDialogItems!: Token[];
-	/**
-	 * Scroll to end when tokenizer is expanded
-	 * @private
-	 */
-	_scrollToEndOnExpand = false;
 
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
-	}
-
-	get formFormattedValue(): FormData | null {
-		const tokens = this.tokens || [];
-
-		if (this.name && tokens.length) {
-			const formData = new FormData();
-			const name = this.name;
-
-			tokens.forEach(token => {
-				formData.append(name, token.text || "");
-			});
-
-			return formData;
-		}
-
-		return null;
 	}
 
 	constructor() {
@@ -439,6 +403,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		if (!this.preventPopoverOpen) {
 			this.open = true;
+			this.scrollToEnd();
 		}
 
 		this._tokens.forEach(token => {
@@ -453,13 +418,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_onmousedown(e: MouseEvent) {
 		if ((e.target as HTMLElement).hasAttribute("ui5-token")) {
 			const target = e.target as Token;
+			this.expanded = true;
 
 			if (this.open) {
 				this._preventCollapse = true;
 			}
 
 			if (!target.toBeDeleted) {
-				this._addTokenToNavigation(target);
+				this._itemNav.setCurrentItem(target);
 				this._scrollToToken(target);
 			}
 		}
@@ -508,24 +474,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			this._expandedScrollWidth = this.contentDom.scrollWidth;
 		}
 
-		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
-	}
-
-	/**
-	 * Scrolls the container to the end to ensure very long tokens are visible at their end.
-	 * Otherwise, tokens may appear visually cut off.
-	 * @protected
-	 */
-	_scrollToEndIfNeeded() {
-		// if scroll to end is prevented, skip scroll to the end
-		if (!this._scrollToEndOnExpand) {
-			return;
-		}
-
-		if (this.tokens.length || this.expanded) {
-			this.scrollToEnd();
-		}
 	}
 
 	_delete(e: CustomEvent<TokenDeleteEventDetail>) {
@@ -945,14 +894,13 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_onfocusin(e: FocusEvent) {
+		const target = e.target as Token;
 		this.open = false;
-		this.expanded = true;
-		this._addTokenToNavigation(e.target as Token);
-	}
+		this._itemNav.setCurrentItem(target);
 
-	_addTokenToNavigation(token: Token) {
-		this._scrollToEndOnExpand = false;
-		this._itemNav.setCurrentItem(token);
+		if (!this.expanded) {
+			this.expanded = true;
+		}
 	}
 
 	_onfocusout(e: FocusEvent) {
@@ -1019,7 +967,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
 		const cutToClipboard = (e: ClipboardEvent) => {
-			navigator.clipboard.writeText(tokensTexts);
+			if (e.clipboardData) {
+				e.clipboardData.setData("text/plain", tokensTexts);
+			}
 
 			e.preventDefault();
 		};
@@ -1054,8 +1004,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
-	 * For the last token, if its width is more than the needed space, scroll to the end without offset
+	 * Adds 4 pixels to the scroll position to ensure padding and border visibility on both ends
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
@@ -1065,18 +1014,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		const tokenRect = token.getBoundingClientRect();
 		const tokenContainerRect = this.contentDom.getBoundingClientRect();
-		const oneSideBorderAndPaddingOffset = 5;
-
-		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
-		if (isLastToken) {
-			this.scrollToEnd();
-			return;
-		}
 
 		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + 5), 0);
 		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + 5), 0);
 		}
 	}
 

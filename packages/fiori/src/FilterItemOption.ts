@@ -7,17 +7,12 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
  *
  * ### Overview
  *
- * The `ui5-filter-item-option` component defines individual filter values within a `ui5-filter-item`.
- * It represents a single selectable option that users can choose to filter data.
- *
  * ### Usage
  *
- * The `ui5-filter-item-option` is used as a child component within `ui5-filter-item` in the context
- * of `ui5-view-settings-dialog`. Each option represents a specific value that can be used for filtering
- *
+ * For the `ui5-filter-item-option`
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents-fiori/dist/FilterItemOption.js";`
+ * `import @ui5/webcomponents-fiori/dist/FilterItemOption.js";`
  * @constructor
  * @extends UI5Element
  * @abstract
@@ -27,7 +22,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 @customElement("ui5-filter-item-option")
 class FilterItemOption extends UI5Element {
 	/**
-	 * Defines the text of the filter option.
+	 * Defines the text of the component.
 	 * @default undefined
 	 * @public
 	 */
@@ -35,7 +30,7 @@ class FilterItemOption extends UI5Element {
 	text?: string;
 
 	/**
-	 * Defines if the filter option is selected.
+	 * Defines if the component is selected.
 	 * @default false
 	 * @public
 	 */

@@ -1,7 +1,6 @@
 import "@ui5/webcomponents/dist/Button.js";
 
 import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
-import "@ui5/webcomponents-fiori/dist/GroupItem.js";
 import "@ui5/webcomponents-fiori/dist/SortItem.js";
 import "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import "@ui5/webcomponents-fiori/dist/FilterItemOption.js";

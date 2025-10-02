@@ -88,7 +88,6 @@ import {
 	INPUT_CLEAR_ICON_ACC_NAME,
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
-	INPUT_SUGGESTIONS_CANCEL_BUTTON,
 	FORM_TEXTFIELD_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -100,7 +99,6 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
-import type InputComposition from "./features/InputComposition.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -569,14 +567,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
-	 * Indicates whether IME composition is currently active
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean, noAttribute: true })
-	_isComposing = false;
-
-	/**
 	 * Defines the suggestion items.
 	 *
 	 * **Note:** The suggestions would be displayed only if the `showSuggestions`
@@ -638,10 +628,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_isLatestValueFromSuggestions: boolean;
 	_isChangeTriggeredBySuggestion: boolean;
 	_valueStateLinks: Array<HTMLElement>;
-	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
-	static composition: typeof InputComposition;
 
 	/**
 	 * Indicates whether link navigation is being handled.
@@ -719,14 +707,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
-		this._enableComposition();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
 		deregisterUI5Element(this);
 		this._removeLinksEventListeners();
-		this._composition?.removeEventListeners();
 	}
 
 	_highlightSuggestionItem(item: SuggestionItem) {
@@ -790,9 +776,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this._shouldAutocomplete && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
 			const item = this._getFirstMatchingItem(value);
 			if (item) {
-				if (!this._isComposing) {
-					this._handleTypeAhead(item);
-				}
+				this._handleTypeAhead(item);
 				this._selectMatchingItem(item);
 			}
 		}
@@ -1361,7 +1345,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		// Set initial focus to the native input
 		if (isPhone()) {
 			(this.getInputDOMRef())!.focus();
-			this._composition?.addEventListeners();
 		}
 
 		this._handlePickerAfterOpen();
@@ -1436,34 +1419,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		} else {
 			import("./features/InputSuggestions.js").then(SuggestionsModule => {
 				setup(SuggestionsModule.default);
-			});
-		}
-	}
-	/**
-	 * Enables IME composition handling.
-	 * Dynamically loads the InputComposition feature and sets up event listeners.
-	 * @private
-	 */
-	_enableComposition() {
-		if (this._composition) {
-			return;
-		}
-		const setup = (FeatureClass: typeof InputComposition) => {
-			this._composition = new FeatureClass({
-				getInputEl: () => this.getInputDOMRefSync(),
-				updateCompositionState: (isComposing: boolean) => {
-					this._isComposing = isComposing;
-				},
-			});
-			this._composition.addEventListeners();
-		};
-
-		if (Input.composition) {
-			setup(Input.composition);
-		} else {
-			import("./features/InputComposition.js").then(CompositionModule => {
-				Input.composition = CompositionModule.default;
-				setup(CompositionModule.default);
 			});
 		}
 	}
@@ -1681,10 +1636,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get _suggestionsOkButtonText() {
 		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
-	}
-
-	get _suggestionsCancelButtonText() {
-		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_CANCEL_BUTTON);
 	}
 
 	get clearIconAccessibleName() {

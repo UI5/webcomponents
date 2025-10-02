@@ -27,7 +27,6 @@ export default function SelectPopoverTemplate(this: Select) {
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}
 					onKeyDown={this._onkeydown}
-					accessibleName={this._isPhone ? this._headerTitleText : undefined}
 				>
 					{this._isPhone &&
 						<div slot="header" class="ui5-responsive-popover-header">

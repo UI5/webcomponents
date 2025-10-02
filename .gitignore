@@ -38,19 +38,11 @@ web.config
 .vscode/
 .idea/
 
-# Ignore yarn v1 files
+# Ignore yarn files
 yarn-error.log*
 yarn-debug.log*
 .yarn-integrity
 
-# yarn 4 non-zero installs
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
 
 # Playground
 packages/playground/_site/
