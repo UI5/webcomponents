@@ -241,8 +241,7 @@ class DynamicPage extends UI5Element {
 					return;
 				}
 
-				if (this.dynamicPageHeader?.contains(target) ||
-					this.dynamicPageTitle?.contains(target)) {
+				if (this.dynamicPageHeader?.contains(target) || this.dynamicPageTitle?.contains(target)) {
 					return;
 				}
 
