@@ -43,7 +43,17 @@ const getMatchingFiles = async (folder, pattern) => {
 	return dir.filter((fileName) => fileName.match(pattern));
 };
 
-const generateIllustrations = async (config) => {
+const generateIllustrations = async (argv) => {
+	const config = {
+		inputFolder: argv[2],
+		outputFile: argv[3],
+		set: argv[4],
+		collection: argv[5],
+		location: argv[6],
+		filterOut: argv[7].slice().split(","),
+	};
+
+
 	const { inputFolder, outputFile, collection, location, prefix, filterOut, set } = config;
 
 	const normalizedInputFolder = path.normalize(inputFolder);
@@ -64,19 +74,12 @@ const generateIllustrations = async (config) => {
 
 	await fs.mkdir(path.dirname(normalizedOutputFile), { recursive: true });
 	await fs.writeFile(normalizedOutputFile, contentDynamic);
+
+	console.log("Generated illustration imports.");
 };
 
-// Parse configuration from command-line arguments
-const config = {
-  inputFolder: process.argv[2],
-  outputFile: process.argv[3],
-  set: process.argv[4],
-  collection: process.argv[5],
-  location: process.argv[6],
-  filterOut: process.argv[7].slice().split(","),
-};
+if (require.main === module) {
+	generateIllustrations(process.argv)
+}
 
-// Run the generation process
-generateIllustrations(config).catch((error) => {
-	console.error("Error generating illustrations:", error);
-});
+exports._ui5mainFn = generateIllustrations;

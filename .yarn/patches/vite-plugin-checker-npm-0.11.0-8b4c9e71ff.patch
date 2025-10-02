@@ -1,0 +1,13 @@
+diff --git a/dist/checkers/typescript/main.js b/dist/checkers/typescript/main.js
+index 4d36f5dad056f4c261772e2f30c8ea8fdca69067..0c6065992c8b3a34f083d55c358217859f5326c9 100644
+--- a/dist/checkers/typescript/main.js
++++ b/dist/checkers/typescript/main.js
+@@ -106,7 +106,7 @@ const createDiagnostic = (pluginConfig) => {
+           void 0,
+           reportWatchStatusChanged
+         );
+-        ts.createSolutionBuilderWithWatch(host, [configFile], {}).build();
++        ts.createSolutionBuilderWithWatch(host, [configFile], {emitDeclarationOnly: true}).build();
+       } else {
+         const host = ts.createWatchCompilerHost(
+           configFile,

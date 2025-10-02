@@ -53,22 +53,25 @@ const customResolver = (id, source, options) => {
 			let resolved = join(dirname(virtSource), id);
 			// join returns paths with \\ on windows, so the replaces won't work unless converted to posix paths /
 			resolved = toPosixPath(resolved);
-			if (resolved.endsWith("sap/ui/core/Core.js") && resolved.includes("/dist/")) {
+			if (resolved.endsWith("localization/dist/sap/ui/core/Core.js") && resolved.includes("/dist/")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
 			if (resolved.endsWith("localization/dist/sap/base/i18n/Localization.js")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
-			if (resolved.endsWith("dist/sap/ui/core/Configuration.js")) {
+			if (resolved.endsWith("localization/dist/sap/ui/core/Configuration.js")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
-			if (resolved.endsWith("dist/sap/ui/core/FormatSettings.js")) {
+			if (resolved.endsWith("localization/dist/sap/ui/core/FormatSettings.js")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
-			if (resolved.endsWith("dist/sap/base/util/LoaderExtensions.js")) {
+			if (resolved.endsWith("localization/dist/sap/base/util/LoaderExtensions.js")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
-			if (resolved.endsWith("dist/sap/base/util/ObjectPath.js")) {
+			if (resolved.endsWith("localization/dist/sap/base/util/ObjectPath.js")) {
+				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
+			}
+			if (resolved.endsWith("localization/dist/sap/base/i18n/Formatting.js")) {
 				resolved = resolved.replace("/dist/", "/src/").replace(".js", ".ts");
 			}
 			return resolved;
