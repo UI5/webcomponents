@@ -6,6 +6,7 @@
 .ai-prompt-input-wrapper {
 	display: flex;
 	flex-direction: column;
+	min-width: 270px;
 }
 
 .ai-prompt-input-form-wrapper {
