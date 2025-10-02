@@ -20,7 +20,6 @@ import SegmentedButtonItemTemplate from "./SegmentedButtonItemTemplate.js";
 
 import type { IButton } from "./Button.js";
 import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.js";
-import SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 /**
  * @class
  *
