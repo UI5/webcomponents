@@ -1,6 +1,6 @@
 {
   "name": "@ui5/cypress-internal",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Common testing configuration used internally inside the monorepo",
   "private": true,
   "scripts": {
@@ -14,17 +14,17 @@
   },
   "type": "module",
   "dependencies": {
-    "eslint-plugin-cypress": "^3.4.0",
+    "@cypress/code-coverage": "^3.14.6",
     "@ui5/cypress-ct-ui5-webc": "0.0.4",
-    "cypress": "^13.11.0",
-    "typescript": "^5.6.2",
-    "rimraf": "^3.0.2",
-    "cypress-real-events": "^1.12.0",
-    "@cypress/code-coverage": "^3.13.11",
     "axe-core": "^4.10.2",
-    "cypress-axe": "^1.6.0"
+    "cypress": "^15.3.0",
+    "cypress-axe": "^1.7.0",
+    "cypress-real-events": "^1.15.0",
+    "eslint-plugin-cypress": "^3.4.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.6.2"
   },
   "peerDependencies": {
-    "@ui5/webcomponents-base": "2.13.0-rc.2"
+    "@ui5/webcomponents-base": "2.14.0-rc.6"
   }
 }

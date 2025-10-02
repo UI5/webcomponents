@@ -1,13 +1,22 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 // Template
 import DynamicPageHeaderTemplate from "./DynamicPageHeaderTemplate.js";
 
 // Styles
 import DynamicPageHeaderCss from "./generated/themes/DynamicPageHeader.css.js";
+
+// i18n
+import {
+	DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER,
+	DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -32,6 +41,10 @@ import DynamicPageHeaderCss from "./generated/themes/DynamicPageHeader.css.js";
  * The responsive behavior of the `DynamicPageHeader` depends on the behavior of the
  * content that is displayed.
  *
+ * ### Accessibility
+ *
+ * The `DynamicPageHeader` provides an accessible label for the header region.
+ *
  * @constructor
  * @extends UI5Element
  * @public
@@ -51,6 +64,30 @@ class DynamicPageHeader extends UI5Element {
 	 */
 	@slot({ "default": true, type: HTMLElement })
 	content!: HTMLElement[];
+
+	/**
+	 * Defines if the header is snapped.
+	 *
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_snapped = false;
+
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
+	/**
+	 * Returns the aria-label for the header region.
+	 * @internal
+	 */
+	get _headerRegionAriaLabel(): string {
+		const defaultText = this._snapped
+			? DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER
+			: DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER;
+
+		return DynamicPageHeader.i18nBundle.getText(defaultText);
+	}
 }
 
 DynamicPageHeader.define();

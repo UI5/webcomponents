@@ -58,6 +58,7 @@ import {
 	INPUT_SUGGESTIONS_TITLE,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	COMBOBOX_DIALOG_OK_BUTTON,
+	COMBOBOX_DIALOG_CANCEL_BUTTON,
 	SELECT_OPTIONS,
 	LIST_ITEM_POSITION,
 	LIST_ITEM_GROUP_HEADER,
@@ -1202,6 +1203,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return item;
 		});
 
+		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
+		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
+		if (this._initialRendering || noUserInteraction) {
+			return;
+		}
+
 		// Fire selection-change event only when selection actually changes
 		if (previouslySelectedItem !== itemToBeSelected) {
 			if (itemToBeSelected) {
@@ -1382,6 +1389,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButtonText() {
 		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_OK_BUTTON);
+	}
+
+	get _dialogCancelButtonText() {
+		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get inner(): HTMLInputElement {

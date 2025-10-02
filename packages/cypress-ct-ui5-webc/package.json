@@ -1,6 +1,6 @@
 {
   "name": "@ui5/cypress-ct-ui5-webc",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Custom framework definition adapter for Cypress Component Testing of UI5 Web Components",
   "license": "MIT",
   "types": "./dist/index.d.ts",
@@ -17,15 +17,15 @@
     "build:definition": "tsc -p tsconfig.definition.json"
   },
   "devDependencies": {
-    "typescript": "^5.6.2",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "^5.6.2"
   },
   "dependencies": {
-    "cypress": "^13.11.0",
-    "preact": "^10.25.4",
-    "@cypress/mount-utils": "^4.0.0"
+    "@cypress/mount-utils": "^4.1.2",
+    "cypress": "^15.3.0",
+    "preact": "^10.25.4"
   },
   "peerDependencies": {
-    "@ui5/webcomponents-base": "^2.6.0"
+    "@ui5/webcomponents-base": "^2.14.0"
   }
 }
