@@ -59,12 +59,8 @@ import "@ui5/webcomponents-fiori/dist/SearchItemGroup.js";
 						}, 0);
 					}
 				}
-
-			searchShow.addEventListener("ui5-search", (e) => {
-
-					if (e.detail.item.tagName === "UI5-SEARCH-ITEM-SHOW-MORE") {
-						expandHiddenItems({ focusFirst: true });
-					}
+				searchShow.addEventListener("ui5-show-more", (e) => {
+					expandHiddenItems({ focusFirst: true });
 				});
 			}
 		}

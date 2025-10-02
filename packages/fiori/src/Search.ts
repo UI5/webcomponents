@@ -50,6 +50,10 @@ type SearchEventDetails = {
 	item?: ISearchSuggestionItem;
 }
 
+type ShowMoreEventDetails = {
+	itemsToShowCount?: number;
+}
+
 /**
  * @class
  *
@@ -99,12 +103,21 @@ type SearchEventDetails = {
  */
 @event("close")
 
+/**
+ * Fired when show more item is selected.
+ *
+ * @public
+ * @since 2.15.0
+ */
+@event("show-more")
+
 class Search extends SearchField {
 	eventDetails!: SearchField["eventDetails"] & {
 		search: SearchEventDetails,
 		"popup-action-press": void,
 		"open": void,
 		"close": void,
+		"show-more": ShowMoreEventDetails
 	};
 
 	/**
@@ -477,6 +490,11 @@ class Search extends SearchField {
 
 	_onItemClick(e: CustomEvent) {
 		const item = e.detail.item as ISearchSuggestionItem;
+		if (item instanceof SearchItemShowMore) {
+			this.fireDecoratorEvent("show-more", { itemsToShowCount: item.itemsToShowCount });
+			return;
+		}
+
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {
@@ -487,16 +505,14 @@ class Search extends SearchField {
 			return;
 		}
 
-		if (!(item instanceof SearchItemShowMore)) {
-			this.value = item.text;
-			this._innerValue = this.value;
-			this._typedInValue = this.value;
-			this._shouldAutocomplete = false;
-			this._performTextSelection = true;
-			this.open = false;
-			this._isTyping = false;
-			this.focus();
-		}
+		this.value = item.text;
+		this._innerValue = this.value;
+		this._typedInValue = this.value;
+		this._shouldAutocomplete = false;
+		this._performTextSelection = true;
+		this.open = false;
+		this._isTyping = false;
+		this.focus();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
