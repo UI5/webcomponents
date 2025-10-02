@@ -31,7 +31,7 @@ const generate = async (argv) => {
 	// dynamic imports file content
 	const contentDynamic = function (lines) {
 		return `// @ts-nocheck
-import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base";
 
 const loadThemeProperties = async (themeName) => {
 	switch (themeName) {

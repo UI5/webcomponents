@@ -1,48 +1,23 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import {
-	isSpace,
-	isEnter,
-	isEscape,
-	isShift,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
-import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { getIconAccessibleName } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import UI5Element, { customElement, property, eventStrict as event, slot, jsxRenderer, i18n, AccessibilityTextsHelper, Keys, getIconAccessibleName, willShowContent, Device, Tooltips, toLowercaseEnumValue, InputElementsFormSupport } from "@ui5/webcomponents-base";
 
-import {
-	isDesktop,
-	isSafari,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
-import { submitForm, resetForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { getEnableDefaultTooltips } from "@ui5/webcomponents-base/dist/config/Tooltips.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
-import ButtonDesign from "./types/ButtonDesign.js";
-import ButtonType from "./types/ButtonType.js";
-import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
+import type { AccessibilityAttributes, AriaRole, ITabbable, I18nBundle, I18nText } from "@ui5/webcomponents-base";
+
+import type ButtonType from "./types/ButtonType.js";
+import type ButtonDesign from "./types/ButtonDesign.js";
 import type ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
-import {
-	BUTTON_ARIA_TYPE_ACCEPT,
-	BUTTON_ARIA_TYPE_REJECT,
-	BUTTON_ARIA_TYPE_EMPHASIZED,
-	BUTTON_ARIA_TYPE_ATTENTION,
-	BUTTON_BADGE_ONE_ITEM,
-	BUTTON_BADGE_MANY_ITEMS,
-} from "./generated/i18n/i18n-defaults.js";
+
+import { BUTTON_ARIA_TYPE_ACCEPT, BUTTON_ARIA_TYPE_REJECT, BUTTON_ARIA_TYPE_EMPHASIZED, BUTTON_ARIA_TYPE_ATTENTION, BUTTON_BADGE_ONE_ITEM, BUTTON_BADGE_MANY_ITEMS } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import buttonCss from "./generated/themes/Button.css.js";
+
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
+const { isSpace, isEnter, isEscape, isShift } = Keys;
+const { isDesktop, isSafari } = Device;
+const { getEnableDefaultTooltips } = Tooltips;
+const { submitForm, resetForm } = InputElementsFormSupport;
 
 /**
  * Interface for components that may be used as a button inside numerous higher-order components
@@ -458,7 +433,7 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_setBadgeOverlayStyle() {
-		const needsOverflowVisible = this.badge.length && (this.badge[0].design === ButtonBadgeDesign.AttentionDot || this.badge[0].design === ButtonBadgeDesign.OverlayText);
+		const needsOverflowVisible = this.badge.length && (this.badge[0].design === "AttentionDot" || this.badge[0].design === "OverlayText");
 
 		if (needsOverflowVisible) {
 			this._internals.states.add("has-overlay-badge");
@@ -579,7 +554,7 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get hasButtonType() {
-		return this.design !== ButtonDesign.Default && this.design !== ButtonDesign.Transparent;
+		return this.design !== "Default" && this.design !== "Transparent";
 	}
 
 	get isIconOnly() {
@@ -670,15 +645,15 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get _isSubmit() {
-		return this.type === ButtonType.Submit || this.submits;
+		return this.type === "Submit" || this.submits;
 	}
 
 	get _isReset() {
-		return this.type === ButtonType.Reset;
+		return this.type === "Reset";
 	}
 
 	get shouldRenderBadge() {
-		return !!this.badge.length && (!!this.badge[0].text.length || this.badge[0].design === ButtonBadgeDesign.AttentionDot);
+		return !!this.badge.length && (!!this.badge[0].text.length || this.badge[0].design === "AttentionDot");
 	}
 }
 

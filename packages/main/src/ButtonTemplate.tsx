@@ -1,7 +1,6 @@
 import type Button from "./Button.js";
 import Icon from "./Icon.js";
 import BusyIndicator from "./BusyIndicator.js";
-import BusyIndicatorSize from "./types/BusyIndicatorSize.js";
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,
@@ -77,7 +76,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			<BusyIndicator
 				id={`${this._id}-button-busy-indicator`}
 				class="ui5-button-busy-indicator"
-				size={this.iconOnly ? BusyIndicatorSize.S : BusyIndicatorSize.M}
+				size={this.iconOnly ? "S" : "M"}
 				active={true}
 				delay={this.loadingDelay}
 				inert={this.loading}

@@ -160,7 +160,7 @@ const processName = (name: string) => {
 	return { name, collection };
 };
 
-const getIconDataSync = (iconName: string) => {
+export const getIconDataSync = (iconName: string) => {
 	const { name, collection } = processName(iconName);
 	return getRegisteredIconData(collection, name);
 };
@@ -243,7 +243,6 @@ const _getRegisteredNames = async () => {
 export {
 	registerIconLoader,
 	getIconData,
-	getIconDataSync,
 	getIconAccessibleName,
 	registerIcon,
 	unsafeRegisterIcon,

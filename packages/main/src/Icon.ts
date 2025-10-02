@@ -1,21 +1,15 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type { IconData, UnsafeIconData } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
-import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
-import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
-import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
+import UI5Element, { jsxRenderer, customElement, eventStrict as event, property, Icons, getI18nBundle, Keys, executeTemplate, Device } from "@ui5/webcomponents-base";
+import type { I18nText, IconData, UnsafeIconData } from "@ui5/webcomponents-base";
 import IconTemplate from "./IconTemplate.js";
 import type IconDesign from "./types/IconDesign.js";
 import IconMode from "./types/IconMode.js";
 
 // Styles
 import iconCss from "./generated/themes/Icon.css.js";
+
+const { getIconData, getIconDataSync } = Icons;
+const { isSpace, isEnter } = Keys;
+const { isDesktop } = Device;
 
 /**
  * Interface for components that represent an icon, usable in numerous higher-order components
@@ -99,7 +93,7 @@ const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 	tag: "ui5-icon",
 	languageAware: true,
 	themeAware: true,
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	template: IconTemplate,
 	styles: iconCss,
 })
