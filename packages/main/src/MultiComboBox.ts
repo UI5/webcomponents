@@ -91,6 +91,7 @@ import {
 	SELECT_OPTIONS,
 	SHOW_SELECTED_BUTTON,
 	MULTICOMBOBOX_DIALOG_OK_BUTTON,
+	MULTICOMBOBOX_DIALOG_CANCEL_BUTTON,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	VALUE_STATE_ERROR_ALREADY_SELECTED,
 	MCB_SELECTED_ITEMS,
@@ -2176,6 +2177,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButton() {
 		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_OK_BUTTON);
+	}
+
+	get _dialogCancelButton() {
+		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _tokenizerExpanded() {
