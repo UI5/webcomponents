@@ -28,15 +28,15 @@ describe("ShellBarBranding", () => {
 
 	describe("Properties", () => {
 		it("Test ui5-shellbar-branding href property", () => {
-			basicTemplate({ href: "https://sap.github.io/ui5-webcomponents/", target: "_blank" });
+			basicTemplate({ href: "https://ui5.github.io/webcomponents/", target: "_blank" });
 
 			cy.get("@shellbarBranding")
 				.find("a")
-				.should("have.prop", "href", "https://sap.github.io/ui5-webcomponents/");
+				.should("have.prop", "href", "https://ui5.github.io/webcomponents/");
 		});
 
 		it("Test ui5-shellbar-branding target property", () => {
-			basicTemplate({ href: "https://sap.github.io/ui5-webcomponents/", target: "_blank" });
+			basicTemplate({ href: "https://ui5.github.io/webcomponents/", target: "_blank" });
 
 			cy.get("@shellbarBranding")
 				.find("a")
@@ -86,7 +86,7 @@ describe("ShellBarBranding", () => {
 		});
 
 		it("Test ui5-shellbar-branding accessibility - role when href is added", () => {
-			basicTemplate({ href: "https://sap.github.io/ui5-webcomponents/" });
+			basicTemplate({ href: "https://ui5.github.io/webcomponents/" });
 
 			cy.get("@shellbarBranding")
 				.find("a")

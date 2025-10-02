@@ -59,7 +59,7 @@ This command downloads the published source code of the UI5 Web Components to th
 
 ### Documentation
 
-Take a look at the available UI5 Web Components documentation in the [playground](https://sap.github.io/ui5-webcomponents/play).
+Take a look at the available UI5 Web Components documentation in the [playground](https://ui5.github.io/webcomponents/play).
 
 ### Usage
 

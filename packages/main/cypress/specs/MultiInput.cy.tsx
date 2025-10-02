@@ -544,6 +544,66 @@ describe("MultiInput tokens", () => {
 			.should("have.attr", "value", "Bulgaria");
 	});
 });
+
+describe("MultiInput Form Submission Prevention", () => {
+	it("should prevent form submission when Enter is pressed", () => {
+		cy.mount(
+			<form>
+				<MultiInput/>
+			</form>
+		);
+
+		cy.get("form")
+			.as("testForm")
+			.invoke('on', 'submit', cy.spy().as('formSubmit'));
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@innerInput")
+			.realType("test value");
+
+		cy.get("@innerInput")
+			.realPress("Enter");
+
+		// Form submission should be prevented when there's a value
+		cy.get("@formSubmit").should("not.have.been.called");
+	});
+
+	it("should prevent form submission when there are multiple inputs in form", () => {
+		cy.mount(
+			<form>
+				<MultiInput id="mi-form-multi1" />
+				<MultiInput id="mi-form-multi2" />
+			</form>
+		);
+
+		cy.get("form")
+			.as("testForm")
+			.invoke('on', 'submit', cy.spy().as('formSubmit'));
+
+		cy.get("#mi-form-multi1")
+			.shadow()
+			.find("input")
+			.as("firstInput");
+
+		cy.get("@firstInput")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@firstInput")
+			.realPress("Enter");
+
+		cy.get("@formSubmit").should("not.have.been.called");
+	});
+});
+
 describe("MultiInput Truncated Token", () => {
 	beforeEach(() => {
 		cy.mount(
@@ -1273,5 +1333,169 @@ describe("Keyboard handling", () => {
 
 		cy.get("[ui5-multi-input]")
 			.should("have.attr", "value-state", "None");
+	});
+});
+
+describe("MultiInput Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<MultiInput
+				id="multiinput-composition-korean"
+				showSuggestions
+				placeholder="Type in Korean ..."
+			>
+				<SuggestionItem text="안녕하세요" />
+				<SuggestionItem text="고맙습니다" />
+				<SuggestionItem text="사랑" />
+				<SuggestionItem text="한국" />
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiinput")
+			.realClick();
+
+		cy.get("@multiinput")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", false);
+
+		cy.get("@multiinput").should("have.attr", "value", "사랑");
+
+		cy.get("@multiinput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multiinput")
+			.realPress("Enter");
+
+		cy.get("@multiinput").should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<MultiInput
+				id="multiinput-composition-japanese"
+				showSuggestions
+				placeholder="Type in Japanese ..."
+			>
+				<SuggestionItem text="こんにちは" />
+				<SuggestionItem text="ありがとう" />
+				<SuggestionItem text="東京" />
+				<SuggestionItem text="日本" />
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiinput")
+			.realClick();
+
+		cy.get("@multiinput")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", false);
+
+		cy.get("@multiinput").should("have.attr", "value", "ありがとう");
+
+		cy.get("@multiinput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multiinput")
+			.realPress("Enter");
+
+		cy.get("@multiinput").should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<MultiInput
+				id="multiinput-composition-chinese"
+				showSuggestions
+				placeholder="Type in Chinese ..."
+			>
+				<SuggestionItem text="你好" />
+				<SuggestionItem text="谢谢" />
+				<SuggestionItem text="北京" />
+				<SuggestionItem text="中国" />
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiinput")
+			.realClick();
+
+		cy.get("@multiinput")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@multiinput").should("have.prop", "_isComposing", false);
+
+		cy.get("@multiinput").should("have.attr", "value", "谢谢");
+
+		cy.get("@multiinput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@multiinput")
+			.realPress("Enter");
+
+		cy.get("@multiinput").should("have.attr", "value", "谢谢");
 	});
 });
