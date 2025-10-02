@@ -1,23 +1,15 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
+import UI5Element, { customElement, property, slot, jsxRenderer, i18n, willShowContent, CustomElementsScopeUtils } from "@ui5/webcomponents-base";
+import type { I18nBundle } from "@ui5/webcomponents-base";
 import TextEmptyIndicatorMode from "./types/TextEmptyIndicatorMode.js";
 // Template
 import TextTemplate2 from "./TextTemplate.js";
 
-import {
-	EMPTY_INDICATOR_SYMBOL,
-	EMPTY_INDICATOR_ACCESSIBLE_TEXT,
-} from "./generated/i18n/i18n-defaults.js";
+import { EMPTY_INDICATOR_SYMBOL, EMPTY_INDICATOR_ACCESSIBLE_TEXT } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import styles from "./generated/themes/Text.css.js";
+
+const { getScopedVarName } = CustomElementsScopeUtils;
 
 /**
  * @class

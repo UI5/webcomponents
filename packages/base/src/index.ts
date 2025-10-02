@@ -33,8 +33,10 @@ import {
 // decorators/
 import customElement from "./decorators/customElement.js";
 import event from "./decorators/event.js";
+import eventStrict from "./decorators/event-strict.js";
 import property from "./decorators/property.js";
 import slot from "./decorators/slot.js";
+import i18n from "./decorators/i18n.js";
 
 // delegate/
 import ItemNavigation from "./delegate/ItemNavigation.js";
@@ -54,7 +56,7 @@ import { URLListValidator, sanitizeHTML } from "./util/HTMLSanitizer.js";
 import { registerI18nLoader } from "./asset-registries/i18n.js";
 import { registerLocaleDataLoader } from "./asset-registries/LocaleData.js";
 import { registerThemePropertiesLoader } from "./asset-registries/Themes.js";
-import { registerIconLoader } from "./asset-registries/Icons.js";
+import { registerIconLoader, getIconAccessibleName } from "./asset-registries/Icons.js";
 
 // Boot.ts
 import { attachBoot } from "./Boot.js";
@@ -105,6 +107,18 @@ import { addCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
 
+export { default as jsxRenderer } from "./renderer/JsxRenderer.js";
+export * as AccessibilityTextsHelper from "./util/AccessibilityTextsHelper.js";
+export * as Keys from "./Keys.js";
+export { default as willShowContent } from "./util/willShowContent.js";
+export * as Device from "./Device.js";
+export * as Tooltips from "./config/Tooltips.js";
+export { default as toLowercaseEnumValue } from "./util/toLowercaseEnumValue.js";
+export * as InputElementsFormSupport from "./features/InputElementsFormSupport.js";
+export * as Icons from "./asset-registries/Icons.js";
+export { default as executeTemplate } from "./renderer/executeTemplate.js";
+export * as CustomElementsScopeUtils from "./CustomElementsScopeUtils.js";
+
 export default UI5Element;
 export {
 	// drag and drop
@@ -139,8 +153,10 @@ export {
 	// decorators/
 	customElement,
 	event,
+	eventStrict,
 	property,
 	slot,
+	i18n,
 
 	// delegate/
 	ItemNavigation,
@@ -164,6 +180,7 @@ export {
 	registerLocaleDataLoader,
 	registerThemePropertiesLoader,
 	registerIconLoader,
+	getIconAccessibleName,
 
 	// Boot.ts
 	attachBoot,
@@ -221,3 +238,6 @@ export type JsxTemplate = () => JsxTemplateResult;
 
 export type * from "./types.d.ts";
 export type * from "./jsx-runtime.d.ts";
+export type { ITabbable } from "./delegate/ItemNavigation.js";
+export type { I18nText } from "./i18nBundle.js";
+export type { IconData, UnsafeIconData } from "./asset-registries/Icons.js";

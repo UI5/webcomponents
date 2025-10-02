@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- two bundles -->
+    <script type="importmap">
+        {
+            "imports1": {
+                "@ui5/webcomponents": "./packages/main/dist/bundle-main.js",
+                "@ui5/webcomponents-base": "./packages/base/dist/bundle-base.js"
+            }
+        }
+    </script>
+    <!-- base bundle, main CDN??? -->
+    <script type="importmap">
+        {
+            "imports": {
+                "@ui5/webcomponents": "./packages/main/dist/index.js",
+                "@ui5/webcomponents/dist/": "./packages/main/dist/",
+                "@ui5/webcomponents-base": "./packages/base/dist/bundle-base.js",
+                "@ui5/webcomponents-base/dist/ssr-dom.js": "./packages/base/dist/ssr-dom.js",
+                "@ui5/webcomponents-base/jsx-runtime": "./packages/base/dist/jsx-runtime.js",
+                "@ui5/webcomponents-theming/dist/": "./packages/theming/dist/"
+            }
+        }
+    </script>
+    <!-- all CDN -->
+    <script type="importmap">
+        {
+            "imports1": {
+                "@ui5/webcomponents": "./packages/main/dist/index.js",
+                "@ui5/webcomponents/dist/": "./packages/main/dist/",
+                "@ui5/webcomponents-base": "./packages/base/dist/index.js",
+                "@ui5/webcomponents-theming/dist/": "./packages/theming/dist/",
+                "@ui5/webcomponents-base2": "./packages/base/dist/index.js",
+                "@ui5/webcomponents-base/dist/ssr-dom.js": "./packages/base/dist/ssr-dom.js",
+                "@ui5/webcomponents-base/jsx-runtime": "./packages/base/dist/jsx-runtime.js",
+                "lit-html/static.js": "./node_modules/lit-html/static.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // import Button from "@ui5/webcomponents/dist/Button.js";
+        import { Button } from "@ui5/webcomponents";
+    </script>
+    <ui5-button>Button</ui5-button>
+</body>
+</html>
