@@ -1,7 +1,9 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type LocaleT from "sap/ui/core/Locale";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
@@ -133,11 +135,29 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 
 	_firstYear?: number;
 
+	@query("[data-sap-focus-ref]")
+	_focusableYear!: HTMLElement;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	get roleDescription() {
 		return YearPicker.i18nBundle.getText(YEAR_PICKER_DESCRIPTION);
+	}
+
+	async _focusCorrectYear() {
+		await renderFinished();
+		if (this._shouldFocusYear) {
+			this._focusableYear.focus();
+		}
+	}
+
+	get _shouldFocusYear() {
+		return document.activeElement !== this._focusableYear;
+	}
+
+	_onfocusin() {
+		this._focusCorrectYear();
 	}
 
 	onBeforeRendering() {
@@ -238,12 +258,6 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		this._yearsInterval = intervals;
-	}
-
-	onAfterRendering() {
-		if (!this._hidden) {
-			this.focus();
-		}
 	}
 
 	/**
@@ -348,13 +362,16 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * @param amount
 	 * @private
 	 */
-	_modifyTimestampBy(amount: number) {
+	async _modifyTimestampBy(amount: number) {
 		// Modify the current timestamp
 		this._safelyModifyTimestampBy(amount, "year");
 		this._updateSecondTimestamp();
 
 		// Notify the calendar to update its timestamp
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
+
+		await renderFinished();
+		this._focusableYear.focus();
 	}
 
 	_onkeyup(e: KeyboardEvent) {
@@ -417,9 +434,9 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the "<" button in the calendar header (same as "PageUp")
 	 * @protected
 	 */
-	_showPreviousPage() {
+	async _showPreviousPage() {
 		const pageSize = this._getPageSize();
-		this._modifyTimestampBy(-pageSize);
+		await this._modifyTimestampBy(-pageSize);
 	}
 
 	/**
@@ -427,8 +444,8 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the ">" button in the calendar header (same as "PageDown")
 	 * @protected
 	 */
-	_showNextPage() {
-		this._modifyTimestampBy(this._getPageSize());
+	async _showNextPage() {
+		await this._modifyTimestampBy(this._getPageSize());
 	}
 }
 
