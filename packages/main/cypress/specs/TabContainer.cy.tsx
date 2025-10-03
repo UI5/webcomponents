@@ -534,14 +534,12 @@ describe("TabContainer general interaction", () => {
 		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
 		cy.get("#tabContainerStartAndEndOverflow").should("have.attr", "overflow-mode", "StartAndEnd");
 	
-		cy.get("@startOverflow").should("be.visible").invoke("text").then((initialOverflowText) => {
-			expect(initialOverflowText).to.equal("+4");
-			
-			cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
-			cy.get("@visibleTab").click();
-			
-			cy.get("@startOverflow").should("have.text", initialOverflowText);
-		});
+		cy.get("@startOverflow").should("be.visible").invoke("text").should("equal", "+4");
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
+		cy.get("@visibleTab").realClick();
+
+		cy.get("@startOverflow").should("have.text", "+4");
 	});
 
 	it("tests end overflow behavior", () => {
