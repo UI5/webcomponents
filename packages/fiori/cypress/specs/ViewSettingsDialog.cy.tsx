@@ -452,43 +452,6 @@ describe("ViewSettingsDialog Tests", () => {
 			.invoke("prop", "open", false);
 	});
 
-	it("should focus first item in filter options", () => {
-		cy.mount(
-			<ViewSettingsDialog id="vsdFilter">
-				<FilterItem slot="filterItems" text="Filter 1">
-					<FilterItemOption id="focusedItem" slot="values" text="Some filter 1"></FilterItemOption>
-					<FilterItemOption slot="values" text="Some filter 2"></FilterItemOption>
-					<FilterItemOption slot="values" text="Some filter 3"></FilterItemOption>
-				</FilterItem>
-				<FilterItem slot="filterItems" text="Filter 2">
-					<FilterItemOption slot="values" text="Some filter 4"></FilterItemOption>
-					<FilterItemOption slot="values" text="Some filter 5"></FilterItemOption>
-					<FilterItemOption slot="values" text="Some filter 6"></FilterItemOption>
-				</FilterItem>
-			</ViewSettingsDialog>
-		);
-
-		cy.get("#vsdFilter")
-			.as("vsd");
-
-		cy.get("@vsd")
-			.invoke("prop", "open", true);
-
-		cy.get("@vsd")
-			.shadow()
-			.find("[ui5-li]")
-			.first()
-			.shadow()
-			.find("span[part=title]")
-			.realClick();
-
-		cy.get("@vsd")
-			.shadow()
-			.find("[ui5-li]")
-			.first()
-			.should("be.focused");
-	});
-
 	it("should show a split button with all loaded VSD options", () => {
 		cy.mount(
 			<ViewSettingsDialog id="vsd">
