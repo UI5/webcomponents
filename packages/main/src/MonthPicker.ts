@@ -1,6 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
@@ -133,9 +132,6 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	@property({ type: Number })
 	_secondTimestamp?: number;
 
-	@query("[data-sap-focus-ref]")
-	_focusableMonth!: HTMLElement;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -150,10 +146,6 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	get rowSize() {
 		return (this.secondaryCalendarType === CalendarType.Islamic && this.primaryCalendarType !== CalendarType.Islamic)
 			|| (this.secondaryCalendarType === CalendarType.Persian && this.primaryCalendarType !== CalendarType.Persian) ? 2 : 3;
-	}
-
-	get _shouldFocusMonth() {
-		return document.activeElement !== this._focusableMonth;
 	}
 
 	_buildMonths() {

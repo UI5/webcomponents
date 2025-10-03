@@ -1,6 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type LocaleT from "sap/ui/core/Locale";
@@ -134,18 +133,11 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 
 	_firstYear?: number;
 
-	@query("[data-sap-focus-ref]")
-	_focusableYear!: HTMLElement;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	get roleDescription() {
 		return YearPicker.i18nBundle.getText(YEAR_PICKER_DESCRIPTION);
-	}
-
-	get _shouldFocusYear() {
-		return document.activeElement !== this._focusableYear;
 	}
 
 	onBeforeRendering() {

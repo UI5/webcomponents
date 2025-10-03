@@ -57,8 +57,8 @@ import {
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
 
 interface ICalendarPicker extends HTMLElement {
-	_showPreviousPage: () => void | Promise<void>,
-	_showNextPage: () => void | Promise<void>,
+	_showPreviousPage: () => void,
+	_showNextPage: () => void,
 	_hasPreviousPage: () => boolean,
 	_hasNextPage: () => boolean,
 	_currentYearRange?: CalendarYearRangeT,
@@ -587,15 +587,15 @@ class Calendar extends CalendarPart {
 	/**
 	 * The year clicked the "Previous" button in the header
 	 */
-	async onHeaderPreviousPress() {
-		await this._currentPickerDOM._showPreviousPage();
+	onHeaderPreviousPress() {
+		this._currentPickerDOM._showPreviousPage();
 	}
 
 	/**
 	 * The year clicked the "Next" button in the header
 	 */
-	async onHeaderNextPress() {
-		await this._currentPickerDOM._showNextPage();
+	onHeaderNextPress() {
+		this._currentPickerDOM._showNextPage();
 	}
 
 	_setSecondaryCalendarTypeButtonText() {

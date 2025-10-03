@@ -8,7 +8,6 @@ import type LocaleData from "@ui5/webcomponents-localization/dist/LocaleData.js"
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isSpace,
@@ -614,21 +613,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		const hoveredItem = target.closest(".ui5-dp-item") as HTMLElement;
 		if (hoveredItem && this.selectionMode === CalendarSelectionMode.Range && this.selectedDates.length === 1) {
 			this._secondTimestamp = this._getTimestampFromDom(hoveredItem);
-		}
-	}
-
-	/**
-	 * Sets the focus reference to the day that was clicked with mousedown.
-	 * @param e
-	 * @private
-	 */
-	_onmousedown(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		const clickedItem = target.closest(".ui5-dp-item") as HTMLElement;
-
-		if (clickedItem && this._isDayPressed(clickedItem)) {
-			const timestamp = this._getTimestampFromDom(clickedItem);
-			this._setTimestamp(timestamp);
 		}
 	}
 

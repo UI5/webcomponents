@@ -1,9 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type LocaleT from "sap/ui/core/Locale";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
@@ -130,18 +128,11 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 
 	_gridStartYear?: number;
 
-	@query("[data-sap-focus-ref]")
-	_focusableYearRange!: HTMLElement;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	get roleDescription() {
 		return YearRangePicker.i18nBundle.getText(YEAR_RANGE_PICKER_DESCRIPTION);
-	}
-
-	get _shouldFocusYearRange() {
-		return document.activeElement !== this._focusableYearRange;
 	}
 
 	onBeforeRendering() {
@@ -484,9 +475,9 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the ">" button in the calendar header (same as "PageDown")
 	 * @protected
 	 */
-	async _showNextPage() {
+	_showNextPage() {
 		const pageSize = this._getPageSize();
-		await this._modifyTimestampBy(pageSize);
+		this._modifyTimestampBy(pageSize);
 
 		const amountInYears = pageSize * this._getRangeSize();
 		this._modifyGridStartBy(amountInYears);
