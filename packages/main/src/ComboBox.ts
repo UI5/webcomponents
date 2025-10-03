@@ -980,6 +980,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			const shouldResetValueAndStopPropagation = !this.open && this.value !== this._lastValue;
 			if (shouldResetValueAndStopPropagation) {
 				this.value = this._lastValue;
+				// stop propagation to prevent closing the popup when using the combobox inside it
 				e.stopPropagation();
 			}
 		}
