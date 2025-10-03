@@ -83,19 +83,13 @@ type VersionClickEventDetail = {
 	],
 })
 
-/**
- * Fired when the user clicks on the "Previous Version" button.
- *
- * @public
- */
-@event("previous-version-click")
 
 /**
- * Fired when the user clicks on the "Next Version" button.
+ * Fired when the user clicks on version navigation buttons.
  *
  * @public
  */
-@event("next-version-click")
+@event("version-change")
 
 /**
  * Fired when the user requests to stop AI text generation.
@@ -106,9 +100,10 @@ type VersionClickEventDetail = {
 
 class AITextArea extends TextArea {
 	eventDetails!: TextArea["eventDetails"] & {
-		"previous-version-click": VersionClickEventDetail;
-		"next-version-click": VersionClickEventDetail;
-		"stop-generation": null;
+		"version-change": {
+			backwards: boolean;
+		};		
+		"stop-generation": object;
 	};
 
 	// Store bound handler for proper cleanup
@@ -172,11 +167,7 @@ class AITextArea extends TextArea {
 	 * Updates the current version index and syncs content.
 	 */
 	_handlePreviousVersionClick(): void {
-		this.fireDecoratorEvent("previous-version-click", {
-			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions,
-		});
-		this._syncContent();
+		this.fireDecoratorEvent("version-change", { backwards: true });
 	}
 
 	/**
@@ -184,11 +175,7 @@ class AITextArea extends TextArea {
 	 * Updates the current version index and syncs content.
 	 */
 	_handleNextVersionClick(): void {
-		this.fireDecoratorEvent("next-version-click", {
-			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions,
-		});
-		this._syncContent();
+		this.fireDecoratorEvent("version-change", { backwards: false });
 	}
 
 	/**
@@ -200,19 +187,6 @@ class AITextArea extends TextArea {
 		} else {
 			this._handleNextVersionClick();
 		}
-	}
-
-	/**
-	 * Forces the textarea content to sync with the current value.
-	 * @private
-	 */
-	_syncContent() {
-		setTimeout(() => {
-			const textarea = this.shadowRoot?.querySelector("textarea");
-			if (textarea && textarea.value !== this.value) {
-				textarea.value = this.value;
-			}
-		}, 0);
 	}
 
 	/**
@@ -263,26 +237,12 @@ class AITextArea extends TextArea {
 	}
 
 	/**
-	 * Cleanup event listeners to prevent memory leaks.
-	 * @private
-	 */
-	onBeforeUnmount() {
-		if (this._keydownHandler) {
-			const textarea = this.shadowRoot?.querySelector("textarea");
-			if (textarea) {
-				textarea.removeEventListener("keydown", this._keydownHandler);
-			}
-			this._keydownHandler = undefined;
-		}
-	}
-
-	/**
 	 * Handles the generate click event from the AI toolbar.
 	 * Opens the AI menu and sets the opener element.
 	 *
 	 * @private
 	 */
-	handleGenerateClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
+	_handleAIButtonClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
 		const menuNodes = this.getSlottedNodes("menu");
 		if (menuNodes.length === 0) {
 			return;

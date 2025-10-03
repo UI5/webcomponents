@@ -2,7 +2,7 @@ import AITextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 
-describe("Basioc", () => {
+describe("Basic", () => {
 	describe("Initialization", () => {
 		it("should render with default properties", () => {
 			cy.mount(<AITextArea />);
@@ -94,15 +94,15 @@ describe("Basioc", () => {
 	});
 
 	describe("Version Navigation", () => {
-		it("should fire previous-version-click event with proper event details", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+		it("should fire version-change event with backwards=true for previous version", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
 					assistantState="Initial"
 					currentVersionIndex={2}
 					totalVersions={3}
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -116,24 +116,23 @@ describe("Basioc", () => {
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onPreviousVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 2,
-					totalVersions: 3
+				.should("deep.equal", {
+					backwards: true
 				});
 		});
 
-		it("should fire next-version-click event with proper event details", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+		it("should fire version-change event with backwards=false for next version", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
 					assistantState="Initial"
 					currentVersionIndex={1}
 					totalVersions={3}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -147,12 +146,11 @@ describe("Basioc", () => {
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onNextVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 1,
-					totalVersions: 3
+				.should("deep.equal", {
+					backwards: false
 				});
 		});
 
@@ -309,14 +307,14 @@ describe("Basioc", () => {
 		});
 
 		it("should handle Ctrl+Shift+Z for previous version when multiple versions exist", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
 					assistantState="Initial"
 					currentVersionIndex={2}
 					totalVersions={3}
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -326,18 +324,23 @@ describe("Basioc", () => {
 				.focus()
 				.realPress(['Control', 'Shift', 'z']);
 
-			cy.get("@onPreviousVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange")
+				.should("have.been.calledOnce")
+				.its("firstCall.args.0.detail")
+				.should("deep.equal", {
+					backwards: true
+				});
 		});
 
 		it("should handle Ctrl+Shift+Y for next version when multiple versions exist", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
 					assistantState="Initial"
 					currentVersionIndex={1}
 					totalVersions={3}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -347,7 +350,12 @@ describe("Basioc", () => {
 				.focus()
 				.realPress(['Control', 'Shift', 'y']);
 
-			cy.get("@onNextVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange")
+				.should("have.been.calledOnce")
+				.its("firstCall.args.0.detail")
+				.should("deep.equal", {
+					backwards: false
+				});
 		});
 	});
 

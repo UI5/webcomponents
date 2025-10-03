@@ -60,7 +60,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 								currentVersionIndex={this.currentVersionIndex}
 								totalVersions={this.totalVersions}
 								actionText={this.actionText}
-								onButtonClick={this.handleGenerateClick}
+								onButtonClick={this._handleAIButtonClick}
 								onStopGeneration={this.handleStopGeneration}
 								onVersionChange={this._handleVersionChange}
 							/>

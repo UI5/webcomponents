@@ -78,7 +78,10 @@ describe("WritingAssistant Component", () => {
 				.find("#ai-menu-btn")
 				.realClick();
 
-			cy.get("@onButtonClick").should("have.been.called");
+			cy.get("@onButtonClick")
+				.should("have.been.called")
+				.its("firstCall.args.0.detail")
+				.should("have.property", "clickTarget");
 		});
 
 		it("should fire stop-generation event when clicked in Loading state", () => {
