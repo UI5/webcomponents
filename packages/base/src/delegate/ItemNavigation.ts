@@ -193,6 +193,22 @@ class ItemNavigation {
 		this._focusCurrentItem();
 	}
 
+	/**
+	 * Sets the current index of the Item Navigation when navigating to the top boundary
+	 * @protected
+	 */
+	_setTopBoundaryIndex() {
+		this._currentIndex = 0; // Default behavior: go to first item
+	}
+
+	/**
+	 * Sets the current index of the Item Navigation when navigating to the bottom boundary
+	 * @protected
+	 */
+	_setBottomBoundaryIndex() {
+		this._currentIndex = this._getItems().length - 1; // Default behavior: go to last item
+	}
+
 	_handleUp() {
 		const itemsLength = this._getItems().length;
 		if (this._currentIndex - this._rowSize >= 0) { // no border reached, just decrease the index by a row
@@ -210,7 +226,7 @@ class ItemNavigation {
 			}
 			this._currentIndex = lastItemInPreviousColumnIndex;
 		} else { // not cyclic, so just go to the first item
-			this._currentIndex = 0;
+			this._setTopBoundaryIndex();
 		}
 	}
 
@@ -226,7 +242,7 @@ class ItemNavigation {
 			const firstItemInNextColumnIndex = (firstItemInThisColumnIndex + 1) % this._rowSize; // to get the first item in the next column, just increase the index by 1. The modulo by rows is for the case when we are at the last column
 			this._currentIndex = firstItemInNextColumnIndex;
 		} else { // not cyclic, so just go to the last item
-			this._currentIndex = itemsLength - 1;
+			this._setBottomBoundaryIndex();
 		}
 	}
 

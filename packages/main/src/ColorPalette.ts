@@ -191,6 +191,8 @@ class ColorPalette extends UI5Element {
 	_recentColors: Array<string>;
 	_currentlySelected?: ColorPaletteItem;
 	_shouldFocusRecentColors = false;
+	_colorsColumn = 0; // The column index of the last focused color in any palette (colors or recent colors)
+	_colorsDirection = false; // true: bottom-to-top, false: top-to-bottom
 
 	@query(".ui5-cp-default-color-button")
 	_defaultColorButton!: Button;
@@ -206,16 +208,101 @@ class ColorPalette extends UI5Element {
 		this._itemNavigation = new ItemNavigation(this, {
 			getItemsCallback: () => this.displayedColors,
 			rowSize: this.rowSize,
-			behavior: ItemNavigationBehavior.Cyclic,
+			behavior: ItemNavigationBehavior.Static,
 		});
+
+		this._itemNavigation._setTopBoundaryIndex = () => {
+			this._colorsDirection = true;
+			this._focusFirstAvailable(
+				() => this._focusDefaultColor(),
+				() => this._focusRecentColorInColumn(),
+				() => this._focusMoreColors(),
+				() => this._focusColorInColumn(),
+			);
+		};
+
+		this._itemNavigation._setBottomBoundaryIndex = () => {
+			const colorsColumn = this._colorsColumn;
+			this._colorsDirection = false;
+			this._focusFirstAvailable(
+				() => this._focusMoreColors(),
+				() => this._focusRecentColorInColumn(),
+				() => this._focusDefaultColor(),
+				() => this._focusFirstDisplayedColor(),
+			);
+			if (this._isColorsFocused()) {
+				this._colorsColumn = colorsColumn;
+				this._focusColorInColumn();
+			}
+		};
 
 		this._itemNavigationRecentColors = new ItemNavigation(this, {
 			getItemsCallback: () => this.recentColorsElements,
 			rowSize: this.rowSize,
-			behavior: ItemNavigationBehavior.Cyclic,
+			behavior: ItemNavigationBehavior.Static,
 		});
 
+		this._itemNavigationRecentColors._setTopBoundaryIndex = () => {
+			this._colorsDirection = true;
+			this._focusFirstAvailable(
+				() => this._focusMoreColors(),
+				() => this._focusColorInColumn(),
+				() => this._focusDefaultColor(),
+			);
+		};
+
+		this._itemNavigationRecentColors._setBottomBoundaryIndex = () => {
+			this._colorsDirection = false;
+			this._focusFirstAvailable(
+				() => this._focusDefaultColor(),
+				() => this._focusColorInColumn(),
+				() => this._focusMoreColors(),
+			);
+		};
+
 		this._recentColors = [];
+	}
+
+	onEnterDOM() {
+		const domRef = this.getDomRef();
+		if (domRef) {
+			domRef.addEventListener("focusin", this._onAnyItemNavigationFocus, true);
+		}
+	}
+
+	onExitDOM() {
+		const domRef = this.getDomRef();
+		if (domRef) {
+			domRef.removeEventListener("focusin", this._onAnyItemNavigationFocus, true);
+		}
+	}
+
+	/**
+	 * Handler for focusin event to detect which item navigation is focused
+	 * @private
+	 */
+	_onAnyItemNavigationFocus = (e: FocusEvent) => {
+		const focusedElement = e.target as HTMLElement;
+		const items1 = this._itemNavigation._getItems();
+		const items2 = this._itemNavigationRecentColors._getItems();
+
+		if (items1.includes(focusedElement)) {
+			this._colorsColumn = this._itemNavigation._currentIndex % this._itemNavigation._rowSize;
+		} else if (items2.includes(focusedElement)) {
+			this._colorsColumn = this._itemNavigationRecentColors._currentIndex % this._itemNavigationRecentColors._rowSize;
+		}
+	};
+
+	_isColorsFocused() {
+		const focusedElement = document.activeElement as HTMLElement;
+		const items = this._itemNavigation._getItems();
+		return items.includes(focusedElement);
+	}
+
+	_isRecentColorsFocused() {
+		const focusedElement = document.activeElement as HTMLElement;
+		const items = this._itemNavigationRecentColors._getItems();
+		return items.includes(focusedElement);
 	}
 
 	onBeforeRendering() {
@@ -409,23 +496,33 @@ class ColorPalette extends UI5Element {
 			this._handleDefaultColorClick(e);
 		}
 
-		if (this._isNext(e)) {
+		if (isDown(e)) {
 			e.stopPropagation();
-			this._focusFirstDisplayedColor();
+			this._colorsDirection = false;
+			this._focusColorInColumn();
+		} else if (isRight(e)) {
+			e.stopPropagation();
+			this._colorsDirection = false;
+			if (this.displayedColors.length) {
+				this._colorsColumn = 0;
+			}
+			this._focusColorInColumn();
 		} else if (isLeft(e)) {
 			e.stopPropagation();
+			this._colorsDirection = true;
+			this._colorsColumn = this._lastColumnIndex(this.recentColorsElements);
 			this._focusFirstAvailable(
-				() => this._focusLastRecentColor(),
+				() => this._focusRecentColorInColumn(),
 				() => this._focusMoreColors(),
-				() => this._focusLastDisplayedColor(),
+				() => this._focusColorInColumn(),
 			);
 		} else if (isUp(e)) {
 			e.stopPropagation();
+			this._colorsDirection = true;
 			this._focusFirstAvailable(
-				() => this._focusLastRecentColor(),
+				() => this._focusRecentColorInColumn(),
 				() => this._focusMoreColors(),
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
+				() => this._focusColorInColumn(),
 			);
 		} else if (isEnd(e)) {
 			e.stopPropagation();
@@ -439,19 +536,39 @@ class ColorPalette extends UI5Element {
 	_onMoreColorsKeyDown(e: KeyboardEvent) {
 		if (isLeft(e)) {
 			e.stopPropagation();
-			this._focusLastDisplayedColor();
+			this._colorsDirection = true;
+			this._colorsColumn = this._lastColumnIndex(this.displayedColors);
+			this._focusFirstAvailable(
+				() => this._focusColorInColumn(),
+				() => this._focusDefaultColor(),
+				() => this._focusRecentColorInColumn(),
+			);
 		} else if (isUp(e)) {
 			e.stopPropagation();
+			this._colorsDirection = true;
 			this._focusFirstAvailable(
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
-			);
-		} else if (this._isNext(e)) {
-			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusFirstRecentColor(),
+				() => this._focusColorInColumn(),
 				() => this._focusDefaultColor(),
-				() => this._focusFirstDisplayedColor(),
+				() => this._focusRecentColorInColumn(),
+			);
+		} else if (isDown(e)) {
+			e.stopPropagation();
+			this._colorsDirection = false;
+			this._focusFirstAvailable(
+				() => this._focusRecentColorInColumn(),
+				() => this._focusDefaultColor(),
+				() => this._focusColorInColumn(),
+			);
+		} else if (isRight(e)) {
+			e.stopPropagation();
+			this._colorsDirection = false;
+			if (this._recentColors.length) {
+				this._colorsColumn = 0;
+			}
+			this._focusFirstAvailable(
+				() => this._focusRecentColorInColumn(),
+				() => this._focusDefaultColor(),
+				() => this._focusColorInColumn(),
 			);
 		} else if (isHome(e)) {
 			e.stopPropagation();
@@ -464,7 +581,6 @@ class ColorPalette extends UI5Element {
 
 	_onColorContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
-		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(target, this.displayedColors);
 
 		if (this._isUpOrDownNavigatableColorPaletteItem(e)) {
 			this._currentlySelected = undefined;
@@ -479,21 +595,30 @@ class ColorPalette extends UI5Element {
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
-				() => this._focusLastRecentColor(),
+				() => this._focusRecentColorInColumn(),
 				() => this._focusMoreColors(),
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
+				() => this._focusColorInColumn(),
 			);
-		} else if ((isRight(e) && this._isLastSwatch(target, this.displayedColors))
-			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(target) || isLastSwatchInSingleRow))
-		) {
+			if (this._isColorsFocused()) {
+				if (isLeft(e)) {
+					this._colorsColumn = this._lastColumnIndex(this.displayedColors);
+				}
+				this._colorsDirection = true;
+				this._focusColorInColumn();
+			}
+		} else if (isRight(e) && this._isLastSwatch(target, this.displayedColors)) {
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
-				() => this._focusFirstRecentColor(),
+				() => this._focusRecentColorInColumn(),
 				() => this._focusDefaultColor(),
-				() => this._focusFirstDisplayedColor(),
+				() => this._focusColorInColumn(),
 			);
+			if (this._isColorsFocused()) {
+				this._colorsColumn = 0;
+				this._colorsDirection = false;
+				this._focusColorInColumn();
+			}
 		} else if (isHome(e) && this._isFirstSwatch(target, this.displayedColors)) {
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -567,6 +692,13 @@ class ColorPalette extends UI5Element {
 
 	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
 		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === target;
+	}
+
+	_lastColumnIndex(swatches: Array<IColorPaletteItem>): number {
+		if (!swatches.length) {
+			return this._colorsColumn;
+		}
+		return (swatches.length - 1) % this.rowSize;
 	}
 
 	/**
@@ -669,6 +801,73 @@ class ColorPalette extends UI5Element {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Focuses the color swatch in the given column (this._colorsColumn), searching from bottom to top if direction is true,
+	 * or from top to bottom if direction is false.
+	 * If no swatch exists in that column, focuses the last (or first) available color depending on direction.
+	 * @returns true if focus was set, false otherwise
+	 * @private
+	 */
+	_focusColorInColumn(): boolean {
+		const rowSize = this.rowSize;
+		const colors = this.displayedColors;
+		const total = colors.length;
+		const rowCount = Math.ceil(total / rowSize);
+
+		if (this._colorsDirection) { // bottom-to-top
+			for (let row = rowCount - 1; row >= 0; row--) {
+				const idx = row * rowSize + this._colorsColumn;
+				if (idx < total && colors[idx]) {
+					this.focusColorElement(colors[idx], this._itemNavigation);
+					return true;
+				}
+			}
+			// If not found, focus the last available color
+			if (colors.length) {
+				this.focusColorElement(colors[colors.length - 1], this._itemNavigation);
+				return true;
+			}
+		} else { // top-to-bottom
+			for (let row = 0; row < rowCount; row++) {
+				const idx = row * rowSize + this._colorsColumn;
+				if (idx < total && colors[idx]) {
+					this.focusColorElement(colors[idx], this._itemNavigation);
+					return true;
+				}
+			}
+			// If not found, focus the first available color
+			if (colors.length) {
+				this.focusColorElement(colors[0], this._itemNavigation);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Focuses the recent color swatch at this._colorsColumn if available,
+	 * otherwise focuses the last available recent color.
+	 * Returns false if there are no recent colors to focus.
+	 * @private
+	 */
+	_focusRecentColorInColumn(): boolean {
+		const recentColors = this.recentColorsElements;
+		const col = this._colorsColumn;
+
+		if (recentColors.length === 0) {
+			return false;
+		}
+
+		if (recentColors[col]) {
+			this.focusColorElement(recentColors[col], this._itemNavigationRecentColors);
+			return true;
+		}
+
+		// Fallback: focus the last available recent color
+		this.focusColorElement(recentColors[recentColors.length - 1], this._itemNavigationRecentColors);
+		return true;
 	}
 
 	/**
