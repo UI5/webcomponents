@@ -76,6 +76,7 @@
 			{ text: "List Item 6", icon: "globe" }
 		];
 
+		const searchShow = document.getElementById("searchShowMore");
 		const group1 = document.getElementById("group1");
 		const visibleCount = 3;
 
@@ -121,13 +122,9 @@
 					}
 				}
 
-				showMoreEl.addEventListener("click", () => expandHiddenItems());
-
-				showMoreEl.addEventListener("keydown", (e) => {
-					if (e.key === "Enter") {
-						expandHiddenItems({ focusFirst: true })
-					}
-				});
+			searchShow.addEventListener("ui5-show-more", (e) => {
+					expandHiddenItems({ focusFirst: true });
+			});
 			}
 		}
 
@@ -411,7 +408,7 @@
 					item.remove();
 				});
 			}, 100)
-			
+
 
 			if(e.target.value.length){
 				// simulate lazy loading
