@@ -416,19 +416,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		return dayNames.some(dayName => dayName.length > 4);
 	}
 
-	async _focusCorrectDay() {
-		await renderFinished();
-		if (this._shouldFocusDay) {
-			this._focusableDay.focus();
-		}
-	}
-
 	get _shouldFocusDay() {
 		return document.activeElement !== this._focusableDay && this._specialCalendarDates.length === 0;
-	}
-
-	_onfocusin() {
-		this._focusCorrectDay();
 	}
 
 	/**
@@ -748,16 +737,16 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Called by the Calendar component.
 	 * @protected
 	 */
-	async _showPreviousPage() {
-		await this._modifyTimestampBy(-1, "month", false);
+	_showPreviousPage() {
+		this._modifyTimestampBy(-1, "month", false);
 	}
 
 	/**
 	 * Called by the Calendar component.
 	 * @protected
 	 */
-	async _showNextPage() {
-		await this._modifyTimestampBy(1, "month", false);
+	_showNextPage() {
+		this._modifyTimestampBy(1, "month", false);
 	}
 
 	/**
@@ -767,15 +756,13 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @param preserveDate whether to preserve the day of the month (f.e. 15th of March + 1 month = 15th of April)
 	 * @private
 	 */
-	async _modifyTimestampBy(amount: number, unit: string, preserveDate?: boolean) {
+	_modifyTimestampBy(amount: number, unit: string, preserveDate?: boolean) {
 		// Modify the current timestamp
 		this._safelyModifyTimestampBy(amount, unit, preserveDate);
 		this._updateSecondTimestamp();
 
 		// Notify the calendar to update its timestamp
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
-
-		await this._focusCorrectDay();
 	}
 
 	/**
@@ -784,9 +771,12 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_setTimestamp(value: number) {
+		const oldTimestamp = this._timestamp;
 		this._safelySetTimestamp(value);
 		this._updateSecondTimestamp();
-		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
+		if (this.selectedDates.length === 1 && oldTimestamp === this._timestamp) {
+			this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
+		}
 	}
 
 	/**
@@ -795,7 +785,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_updateSecondTimestamp() {
-		if (this.selectionMode === CalendarSelectionMode.Range && (this.selectedDates.length === 1 || this.selectedDates.length === 2)) {
+		if (this.selectionMode === CalendarSelectionMode.Range && this.selectedDates.length === 2) {
 			this._secondTimestamp = this.timestamp;
 		}
 	}

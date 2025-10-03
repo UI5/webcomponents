@@ -3,7 +3,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type LocaleT from "sap/ui/core/Locale";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
@@ -145,19 +144,8 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 		return YearPicker.i18nBundle.getText(YEAR_PICKER_DESCRIPTION);
 	}
 
-	async _focusCorrectYear() {
-		await renderFinished();
-		if (this._shouldFocusYear) {
-			this._focusableYear.focus();
-		}
-	}
-
 	get _shouldFocusYear() {
 		return document.activeElement !== this._focusableYear;
-	}
-
-	_onfocusin() {
-		this._focusCorrectYear();
 	}
 
 	onBeforeRendering() {
@@ -362,16 +350,13 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * @param amount
 	 * @private
 	 */
-	async _modifyTimestampBy(amount: number) {
+	_modifyTimestampBy(amount: number) {
 		// Modify the current timestamp
 		this._safelyModifyTimestampBy(amount, "year");
 		this._updateSecondTimestamp();
 
 		// Notify the calendar to update its timestamp
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
-
-		await renderFinished();
-		this._focusableYear.focus();
 	}
 
 	_onkeyup(e: KeyboardEvent) {
@@ -434,9 +419,9 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the "<" button in the calendar header (same as "PageUp")
 	 * @protected
 	 */
-	async _showPreviousPage() {
+	_showPreviousPage() {
 		const pageSize = this._getPageSize();
-		await this._modifyTimestampBy(-pageSize);
+		this._modifyTimestampBy(-pageSize);
 	}
 
 	/**
@@ -444,8 +429,8 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the ">" button in the calendar header (same as "PageDown")
 	 * @protected
 	 */
-	async _showNextPage() {
-		await this._modifyTimestampBy(this._getPageSize());
+	_showNextPage() {
+		this._modifyTimestampBy(this._getPageSize());
 	}
 }
 

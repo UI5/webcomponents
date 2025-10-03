@@ -140,19 +140,8 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 		return YearRangePicker.i18nBundle.getText(YEAR_RANGE_PICKER_DESCRIPTION);
 	}
 
-	async _focusCorrectYearRange() {
-		await renderFinished();
-		if (this._shouldFocusYearRange) {
-			this._focusableYearRange.focus();
-		}
-	}
-
 	get _shouldFocusYearRange() {
 		return document.activeElement !== this._focusableYearRange;
-	}
-
-	_onfocusin() {
-		this._focusCorrectYearRange();
 	}
 
 	onBeforeRendering() {
@@ -482,9 +471,9 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** when the user presses the "<" button in the calendar header (same as "PageUp")
 	 * @protected
 	 */
-	async _showPreviousPage() {
+	_showPreviousPage() {
 		const pageSize = this._getPageSize();
-		await this._modifyTimestampBy(-pageSize);
+		this._modifyTimestampBy(-pageSize);
 
 		const amountInYears = pageSize * this._getRangeSize();
 		this._modifyGridStartBy(-amountInYears);
@@ -508,16 +497,13 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	 * @param amount
 	 * @private
 	 */
-	async _modifyTimestampBy(amount: number) {
+	_modifyTimestampBy(amount: number) {
 		// Modify the current timestamp
 		const amountInYears = amount * this._getRangeSize();
 		this._safelyModifyTimestampBy(amountInYears, "year");
 
 		// Notify the calendar to update its timestamp
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
-
-		await renderFinished();
-		this._focusableYearRange.focus();
 	}
 
 	_modifyGridStartBy(years: number) {

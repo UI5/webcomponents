@@ -14,7 +14,6 @@ export default function MonthPickerTemplate(this: MonthPicker) {
 			onKeyUp={this._onkeyup}
 			onClick={this._selectMonth}
 			onMouseDown={this._onmousedown}
-			onFocusIn={this._onfocusin}
 		>
 			{this._monthsInterval.map(months =>
 				<div role="row" class="ui5-mp-quarter">
