@@ -8,6 +8,8 @@ import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	WRITING_ASSISTANT_LABEL,
+	VERSIONING_PREVIOUS_BUTTON_TEXT,
+	VERSIONING_NEXT_BUTTON_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -15,14 +17,14 @@ import WritingAssistantCss from "./generated/themes/WritingAssistant.css.js";
 
 // Templates
 import WritingAssistantTemplate from "./WritingAssistantTemplate.js";
-import Versioning from "./Versioning.js";
+import VersioningButton from "./VersioningButton.js";
+import ToolbarLabel from "./ToolbarLabel.js";
 import type AssistantState from "./types/AssistantState.js";
 
 // UI5 Components
 import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 
 // Icons
 import "@ui5/webcomponents-icons/dist/ai.js";
@@ -58,11 +60,11 @@ import "@ui5/webcomponents-icons/dist/stop.js";
 	template: WritingAssistantTemplate,
 	styles: [WritingAssistantCss],
 	dependencies: [
-		Versioning,
+		VersioningButton,
+		ToolbarLabel,
 		Toolbar,
 		ToolbarSpacer,
-		Label,
-		Button,
+		ToolbarButton,
 	],
 })
 
@@ -184,6 +186,14 @@ class WritingAssistant extends UI5Element {
 	}
 	get _ariaLabel() {
 		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+	}
+
+	get _previousButtonAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+	}
+
+	get _nextButtonAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
 	}
 }
 

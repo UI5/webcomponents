@@ -20,19 +20,6 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
 import WritingAssistant from "./WritingAssistant.js";
-import Versioning from "./Versioning.js";
-
-type VersionClickEventDetail = {
-	/**
-	 * The current version index (1-based).
-	 */
-	currentIndex: number;
-
-	/**
-	 * The total number of versions available.
-	 */
-	totalVersions: number;
-}
 
 /**
  * @class
@@ -78,11 +65,9 @@ type VersionClickEventDetail = {
 	],
 	dependencies: [
 		WritingAssistant,
-		Versioning,
 		BusyIndicator,
 	],
 })
-
 
 /**
  * Fired when the user clicks on version navigation buttons.
@@ -102,7 +87,7 @@ class AITextArea extends TextArea {
 	eventDetails!: TextArea["eventDetails"] & {
 		"version-change": {
 			backwards: boolean;
-		};		
+		};
 		"stop-generation": object;
 	};
 

@@ -1,10 +1,13 @@
-import Versioning from "./Versioning.js";
 import type WritingAssistant from "./WritingAssistant.js";
+import VersioningButton from "./VersioningButton.js";
+import ToolbarLabel from "./ToolbarLabel.js";
 
 import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
+
+import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
+import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
 export default function WritingAssistantTemplate(this: WritingAssistant) {
 	const isBusy = this.assistantState === "Loading";
@@ -18,25 +21,52 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 			class={`ui5-ai-writing-assistant-footer-bar${hasResults ? "--with-border" : ""}`}
 		>
 			{isMultiResults && !isBusy && (
-				<Versioning
-					currentStep={this.currentVersionIndex}
-					totalSteps={this.totalVersions}
-					onVersionChange={this.handleVersionChange}
-				/>
+				<>
+					<VersioningButton
+						design="Transparent"
+						icon="navigation-left-arrow"
+						accessibleName={this._previousButtonAccessibleName}
+						disabled={this.currentVersionIndex <= 1}
+						backwards={true}
+						onVersionNavigate={this.handleVersionChange}
+						data-ui5-versioning-button="previous"
+						overflowPriority="Default"
+					/>
+					<ToolbarLabel
+						text={`${this.currentVersionIndex} / ${this.totalVersions}`}
+						class="version-step-counter"
+						overflowPriority="Default"
+					/>
+					<VersioningButton
+						design="Transparent"
+						icon="navigation-right-arrow"
+						accessibleName={this._nextButtonAccessibleName}
+						disabled={this.totalVersions <= 0 || this.currentVersionIndex >= this.totalVersions}
+						backwards={false}
+						onVersionNavigate={this.handleVersionChange}
+						data-ui5-versioning-button="next"
+						overflowPriority="Default"
+					/>
+				</>
 			)}
 
 			{hasResults && this.actionText && (
-				<Label class="ui5-ai-writing-assistant-action-label">{this.actionText}</Label>
+				<ToolbarLabel
+					text={this.actionText}
+					class="ui5-ai-writing-assistant-action-label"
+					overflowPriority="Default"
+				/>
 			)}
 
 			<ToolbarSpacer />
 
-			<Button
+			<ToolbarButton
 				id="ai-menu-btn"
 				design="Transparent"
 				icon={isBusy ? "stop" : "ai"}
 				data-state={isBusy ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
+				overflowPriority="NeverOverflow"
 			/>
 		</Toolbar>
 	);
