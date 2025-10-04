@@ -1,0 +1,1 @@
+const E="Na voljo je še toliko znakov: {0}",T="Preseženo za toliko znakov: {0}",o={PROMPT_INPUT_CHARACTERS_LEFT:E,PROMPT_INPUT_CHARACTERS_EXCEEDED:T};export{T as PROMPT_INPUT_CHARACTERS_EXCEEDED,E as PROMPT_INPUT_CHARACTERS_LEFT,o as default};
