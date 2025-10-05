@@ -10,6 +10,7 @@ import {
 	WRITING_ASSISTANT_LABEL,
 	VERSIONING_PREVIOUS_BUTTON_TEXT,
 	VERSIONING_NEXT_BUTTON_TEXT,
+	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -173,7 +174,7 @@ class WritingAssistant extends UI5Element {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
 			this.fireDecoratorEvent("button-click", { clickTarget: target });
-			announce("AI writing assistant generating. Stop generating (ESC)", "Polite");
+			announce(WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT), "Polite");
 		}
 	}
 	get _ariaLabel() {

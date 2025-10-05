@@ -89,7 +89,7 @@ class AITextArea extends TextArea {
 	private _keydownHandler?: (event: KeyboardEvent) => void;
 
 	/**
-	 * Defines whether the `sap-ai-rich-text-editor` is currently in a loading(processing) state.
+	 * Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.
 	 *
 	 * @default false
 	 * @since 1.0.0-rc.14
@@ -172,7 +172,7 @@ class AITextArea extends TextArea {
 		const isShift = keyboardEvent.shiftKey;
 
 		if (isShift && keyboardEvent.key.toLowerCase() === "f4") {
-			const toolbar = this.shadowRoot?.querySelector("ui5-ai-writing-assistant") as HTMLElement;
+			const toolbar = this.shadowRoot?.querySelector("[ui5-ai-writing-assistant]") as HTMLElement;
 			const aiButton = toolbar?.shadowRoot?.querySelector("#ai-menu-btn") as HTMLElement;
 
 			if (aiButton) {
