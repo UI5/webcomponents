@@ -1,5 +1,5 @@
-ui5-ai-versioning {
-	display: flex;
+:host {
+	display: inline-flex;
 	align-items: center;
 	margin-right: 0.5rem;
 }
@@ -19,7 +19,7 @@ ui5-ai-versioning {
 	line-height: 1;
 }
 
-ui5-ai-versioning ui5-label {
+:host ui5-label {
 	margin: 0;
 	color: var(--sapContent_LabelColor);
 	font-size: var(--sapFontSmallSize);
@@ -27,7 +27,7 @@ ui5-ai-versioning ui5-label {
 	vertical-align: middle;
 }
 
-ui5-ai-versioning ui5-button {
+:host ui5-button {
 	margin: 0;
 	display: flex;
 	align-items: center;
@@ -38,6 +38,19 @@ ui5-ai-versioning ui5-button {
 	vertical-align: middle;
 }
 
-.ui5-ai-writing-assistant-footer-bar ui5-ai-versioning {
+.ui5-ai-writing-assistant-footer-bar :host {
 	margin-right: 0.5rem;
+}
+
+/* When versioning component is displayed in toolbar overflow popover */
+:host.ui5-tb-popover-item {
+	justify-content: center;
+	padding: 0.5rem 1rem;
+	width: 100%;
+	margin-right: 0;
+}
+
+:host.ui5-tb-popover-item #versioning-history {
+	justify-content: center;
+	width: 100%;
 }

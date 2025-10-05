@@ -6,7 +6,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
 import TextArea from "@ui5/webcomponents/dist/TextArea.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
-import type AssistantState from "./types/AssistantState.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
@@ -35,11 +34,6 @@ import WritingAssistant from "./WritingAssistant.js";
  * - AI Toolbar: Specialized toolbar with AI generation controls
  * - Version Navigation: Controls for navigating between AI-generated versions
  * - Menu Integration: Support for AI action menu
- *
- * ### States
- * The `ui5-ai-textarea` supports multiple states:
- * - Initial: Shows only the AI button
- * - Loading: Indicates AI generation in progress
  *
  * Single vs multiple result display is determined internally based on totalVersions count.
  *
@@ -95,19 +89,14 @@ class AITextArea extends TextArea {
 	private _keydownHandler?: (event: KeyboardEvent) => void;
 
 	/**
-	 * Defines the current state of the AI Writing Assistant.
+	 * Defines whether the `sap-ai-rich-text-editor` is currently in a loading(processing) state.
 	 *
-	 * Available values are:
-	 * - `"Initial"`: Shows only the main toolbar button.
-	 * - `"Loading"`: Indicates that an action is in progress.
-	 *
-	 * Single vs multiple results are determined internally based on totalVersions.
-	 *
-	 * @default "Initial"
+	 * @default false
+	 * @since 1.0.0-rc.14
 	 * @public
 	 */
-	@property()
-	assistantState: `${AssistantState}` = "Initial";
+	@property({ type: Boolean })
+	loading = false;
 
 	/**
 	 * Defines the action text of the AI Writing Assistant.
@@ -192,7 +181,7 @@ class AITextArea extends TextArea {
 			return;
 		}
 
-		if (this.assistantState !== "Loading" && this.totalVersions > 1) {
+		if (this.totalVersions > 1) {
 			if (isCtrlOrCmd && isShift && keyboardEvent.key.toLowerCase() === "z") {
 				keyboardEvent.preventDefault();
 				this._handlePreviousVersionClick();

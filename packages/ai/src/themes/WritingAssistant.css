@@ -14,7 +14,6 @@
 }
 
 .ui5-ai-textarea-root [part="footer"] {
-	position: relative;
 	width: 100%;
 	margin-top: auto;
 	flex-shrink: 0;
@@ -41,15 +40,7 @@
 .ui5-ai-writing-assistant-action-label {
 	color: var(--sapContent_LabelColor);
 	font-size: var(--sapFontSmallSize);
-	margin-left: 0.5rem;
-	margin-right: 0.5rem;
 	flex: 1;
-}
-
-ui5-ai-versioning {
-	margin-right: 0.5rem;
-	flex-shrink: 0;
-	order: -1;
 }
 
 #ai-menu-btn {

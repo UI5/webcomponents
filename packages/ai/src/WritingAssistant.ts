@@ -17,9 +17,8 @@ import WritingAssistantCss from "./generated/themes/WritingAssistant.css.js";
 
 // Templates
 import WritingAssistantTemplate from "./WritingAssistantTemplate.js";
-import VersioningButton from "./VersioningButton.js";
+import Versioning from "./Versioning.js";
 import ToolbarLabel from "./ToolbarLabel.js";
-import type AssistantState from "./types/AssistantState.js";
 
 // UI5 Components
 import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
@@ -60,7 +59,7 @@ import "@ui5/webcomponents-icons/dist/stop.js";
 	template: WritingAssistantTemplate,
 	styles: [WritingAssistantCss],
 	dependencies: [
-		VersioningButton,
+		Versioning,
 		ToolbarLabel,
 		Toolbar,
 		ToolbarSpacer,
@@ -101,21 +100,14 @@ class WritingAssistant extends UI5Element {
 	};
 
 	/**
-	 * Defines the current state of the AI Writing Assistant.
+	 * Defines whether the Writing Assistant is currently loading.
 	 *
-	 * Available values are:
-	 * - `"Initial"`: Shows only the main toolbar button.
-	 * - `"Loading"`: Indicates that an action is in progress.
+	 * When `true`, indicates that an AI action is in progress.
 	 *
-	 * The state controls the visual appearance and behavior of the assistant.
-	 * During "Loading" state, a stop button is shown instead of the AI button.
-	 *
-	 * @default "Initial"
-	 * @public
-	 * @since 1.0.0-rc.1
+	 * @default false
 	 */
-	@property()
-	assistantState: `${AssistantState}` = "Initial";
+	@property({ type: Boolean })
+	loading = false;
 
 	static i18nBundle: I18nBundle;
 

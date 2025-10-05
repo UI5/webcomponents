@@ -65,7 +65,6 @@
 		<ui5-ai-textarea
 			id="ai-textarea"
 			value="Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
-			assistant-state="Initial"
 			action-text=""
 			current-version-index="1"
 			total-versions="1"
@@ -198,7 +197,7 @@
 			
 			const actionText = getActionText(action);
 			
-			textarea.assistantState = 'Loading';
+			textarea.loading = true;
 			textarea.actionText = `${actionText}...`;
 
 			try {
@@ -245,7 +244,7 @@
 			stopTyping();
 			isGenerating = false;
 			currentActionInProgress = null;
-			textarea.assistantState = 'Initial';
+			textarea.loading = false;
 		}
 
 		function completeGeneration(action, actionText) {
@@ -348,7 +347,7 @@
 			
 			// Reset component state
 			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
-			textarea.assistantState = 'Initial';
+			textarea.loading = false;
 			textarea.actionText = '';
 			textarea.currentVersionIndex = 1;
 			textarea.totalVersions = 1;

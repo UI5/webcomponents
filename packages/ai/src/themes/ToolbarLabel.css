@@ -1,12 +1,5 @@
-.ui5-ai-toolbar-label {
-	color: var(--sapTextColor);
+:host{
 	font-family: "72override", var(--sapFontFamily);
-	font-size: var(--sapFontSize);
-	white-space: nowrap;
-}
-
-.ui5-ai-tb-label {
-	display: inline-flex;
 	align-items: center;
-	padding: 0 0.25rem;
+	display: inline-flex;
 }

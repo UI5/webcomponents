@@ -62,7 +62,7 @@ class VersioningButton extends ToolbarButton {
 	 * @override
 	 */
 	get classes() {
-		return { 
+		return {
 			root: {
 				...super.classes.root,
 				"ui5-ai-versioning-button": true,
