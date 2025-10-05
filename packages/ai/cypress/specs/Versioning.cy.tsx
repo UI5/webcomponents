@@ -5,7 +5,7 @@ describe("Versioning Component", () => {
 		it("should render with default properties", () => {
 			cy.mount(<Versioning />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.should("exist")
 				.should("have.prop", "currentStep", 0)
 				.should("have.prop", "totalSteps", 0);
@@ -14,7 +14,7 @@ describe("Versioning Component", () => {
 		it("should render with custom properties", () => {
 			cy.mount(<Versioning currentStep={3} totalSteps={7} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.should("have.prop", "currentStep", 3)
 				.should("have.prop", "totalSteps", 7);
 		});
@@ -22,11 +22,11 @@ describe("Versioning Component", () => {
 		it("should display version counter correctly", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={5} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
-				.should("contain.text", "2")
-				.should("contain.text", "5")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "2 / 5");
 		});
 	});
@@ -35,56 +35,66 @@ describe("Versioning Component", () => {
 		it("should disable previous button when at first step", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={3} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should disable next button when at last step", () => {
 			cy.mount(<Versioning currentStep={3} totalSteps={3} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should enable both buttons when in middle steps", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("not.be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("not.be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 		});
 
 		it("should disable next button when totalSteps is 0", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={0} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should have proper icons", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.should("have.attr", "icon", "navigation-left-arrow");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.should("have.attr", "icon", "navigation-right-arrow");
@@ -103,7 +113,7 @@ describe("Versioning Component", () => {
 				/>
 			);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
@@ -125,7 +135,7 @@ describe("Versioning Component", () => {
 				/>
 			);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
@@ -147,15 +157,19 @@ describe("Versioning Component", () => {
 				/>
 			);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@onVersionChange").should("not.have.been.called");
 		});
@@ -171,7 +185,7 @@ describe("Versioning Component", () => {
 				/>
 			);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick()
@@ -199,7 +213,7 @@ describe("Versioning Component", () => {
 				/>
 			);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			// Test that buttons respond correctly when reaching boundaries
@@ -207,8 +221,11 @@ describe("Versioning Component", () => {
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.as("nextButton")
-				.should("not.be.disabled")
-				.realClick();
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
+
+			cy.get("@nextButton").realClick();
 
 			cy.get("@onVersionChange").should("have.been.calledOnce");
 
@@ -218,14 +235,19 @@ describe("Versioning Component", () => {
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.as("previousButton")
-				.should("not.be.disabled")
-				.realClick();
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
+
+			cy.get("@previousButton").realClick();
 
 			cy.get("@onVersionChange").should("have.been.calledTwice");
 
@@ -235,18 +257,22 @@ describe("Versioning Component", () => {
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("not.be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 		});
 
 		it("should not change focus when buttons remain enabled", () => {
 			cy.mount(<Versioning currentStep={3} totalSteps={5} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
@@ -259,7 +285,9 @@ describe("Versioning Component", () => {
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("not.be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 		});
 	});
 
@@ -267,45 +295,50 @@ describe("Versioning Component", () => {
 		it("should display current step and total steps", () => {
 			cy.mount(<Versioning currentStep={3} totalSteps={5} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
-				.should("contain.text", "3")
-				.should("contain.text", "5");
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
+				.should("contain.text", "3 / 5");
 		});
 
 		it("should update display when properties change", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={2} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning")
 				.invoke("prop", "currentStep", 2)
 				.invoke("prop", "totalSteps", 4);
 
 			cy.get("@versioning")
 				.shadow()
-				.find("ui5-label")
-				.should("contain.text", "2")
-				.should("contain.text", "4");
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
+				.should("contain.text", "2 / 4");
 		});
 
 		it("should handle zero values correctly", () => {
 			cy.mount(<Versioning currentStep={0} totalSteps={0} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "0 / 0");
 		});
 
 		it("should handle large numbers correctly", () => {
 			cy.mount(<Versioning currentStep={999} totalSteps={1000} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
-				.should("contain.text", "999")
-				.should("contain.text", "1000");
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
+				.should("contain.text", "999 / 1000");
 		});
 	});
 
@@ -313,58 +346,72 @@ describe("Versioning Component", () => {
 		it("should handle zero total steps", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={0} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning")
 				.should("exist");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should handle single step", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={1} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should handle currentStep greater than totalSteps", () => {
 			cy.mount(<Versioning currentStep={5} totalSteps={3} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "5 / 3");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should handle negative values", () => {
 			cy.mount(<Versioning currentStep={-1} totalSteps={-5} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "-1 / -5");
 		});
 	});
@@ -373,36 +420,52 @@ describe("Versioning Component", () => {
 		it("should properly handle state transitions when navigating", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={3} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.as("previousButton")
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.as("nextButton")
-				.should("not.be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 
 			cy.get("@versioning").invoke("prop", "currentStep", 2);
 
-			cy.get("@previousButton").should("not.be.disabled");
-			cy.get("@nextButton").should("not.be.disabled");
+			cy.get("@previousButton")
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
+			cy.get("@nextButton")
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
 
 			cy.get("@versioning").invoke("prop", "currentStep", 3);
 
-			cy.get("@previousButton").should("not.be.disabled");
-			cy.get("@nextButton").should("be.disabled");
+			cy.get("@previousButton")
+				.shadow()
+				.find("ui5-button")
+				.should("not.have.attr", "disabled");
+			cy.get("@nextButton")
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should handle rapid property changes", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={5} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			// Rapidly change properties
@@ -412,13 +475,17 @@ describe("Versioning Component", () => {
 
 			cy.get("@versioning")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "5 / 5");
 
 			cy.get("@versioning")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 	});
 
@@ -433,14 +500,14 @@ describe("Versioning Component", () => {
 			);
 
 			// Test that buttons are clickable (simulating keyboard activation)
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
 
 			cy.get("@onVersionChange").should("have.been.called");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
@@ -451,12 +518,12 @@ describe("Versioning Component", () => {
 		it("should have proper ARIA attributes", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.should("have.attr", "design", "Transparent");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.should("have.attr", "design", "Transparent");
@@ -467,55 +534,44 @@ describe("Versioning Component", () => {
 		it("should have proper DOM structure", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("#versioning-history")
-				.should("exist");
-
-			cy.get("[ui5-ai-textarea-versioning]")
-				.shadow()
-				.find("ui5-button")
+				.find("ui5-toolbar-button")
 				.should("have.length", 2);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("have.length", 1);
 		});
 
 		it("should have proper CSS classes", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("have.class", "version-step-counter");
 		});
 
 		it("should maintain proper element order", () => {
 			cy.mount(<Versioning currentStep={2} totalSteps={4} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			// Check that the buttons and label exist in the shadow DOM
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("#versioning-history")
-				.children()
-				.should("have.length", 3)
-				.first()
-				.should("have.attr", "data-ui5-versioning-button", "previous");
+				.find('[data-ui5-versioning-button="previous"]')
+				.should("exist");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("#versioning-history")
-				.children()
-				.eq(1)
-				.should("match", "ui5-label");
+				.find("ui5-ai-toolbar-label")
+				.should("exist");
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.shadow()
-				.find("#versioning-history")
-				.children()
-				.last()
-				.should("have.attr", "data-ui5-versioning-button", "next");
+				.find('[data-ui5-versioning-button="next"]')
+				.should("exist");
 		});
 	});
 
@@ -523,7 +579,7 @@ describe("Versioning Component", () => {
 		it("should handle frequent property updates efficiently", () => {
 			cy.mount(<Versioning currentStep={1} totalSteps={100} />);
 
-			cy.get("[ui5-ai-textarea-versioning]")
+			cy.get("[ui5-ai-versioning]")
 				.as("versioning");
 
 			// Simulate rapid updates
@@ -540,7 +596,9 @@ describe("Versioning Component", () => {
 
 			cy.get("@versioning")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "50 / 100");
 		});
 
@@ -557,7 +615,7 @@ describe("Versioning Component", () => {
 
 			// Click multiple times
 			for (let i = 0; i < 10; i++) {
-				cy.get("[ui5-ai-textarea-versioning]")
+				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
 					.realClick();

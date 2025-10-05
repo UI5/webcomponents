@@ -4,7 +4,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 
 import ToolbarItem from "@ui5/webcomponents/dist/ToolbarItem.js";
 import ToolbarLabelTemplate from "./ToolbarLabelTemplate.js";
-import ToolbarLabelCss from "./generated/themes/ToolbarLabel.css.js";
 
 /**
  * @class
@@ -24,7 +23,6 @@ import ToolbarLabelCss from "./generated/themes/ToolbarLabel.css.js";
 	tag: "ui5-ai-toolbar-label",
 	template: ToolbarLabelTemplate,
 	renderer: jsxRenderer,
-	styles: [ToolbarLabelCss],
 })
 class ToolbarLabel extends ToolbarItem {
 	/**

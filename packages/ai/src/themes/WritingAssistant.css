@@ -39,17 +39,7 @@
 
 .ui5-ai-writing-assistant-action-label {
 	color: var(--sapContent_LabelColor);
-	font-size: var(--sapFontSmallSize);
-	flex: 1;
-}
-
-#ai-menu-btn {
-	margin-left: auto;
-	margin-right: 0.5rem;
-	flex-shrink: 0;
-}
-
-#ai-menu-wrapper {
-	position: relative;
-	z-index: 1000;
+	font-size: var(--sapFontSize);
+	font-family: "72override", var(--sapFontFamily);
+	margin-left: 0.25rem;
 }

@@ -1,13 +1,13 @@
 import type Versioning from "./Versioning.js";
-import VersioningButton from "./VersioningButton.js";
 import ToolbarLabel from "./ToolbarLabel.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
 export default function VersioningTemplate(this: Versioning) {
 	return (
 		<>
-			<VersioningButton
+			<ToolbarButton
 				design="Transparent"
 				icon="navigation-left-arrow"
 				accessibleName={this._previousButtonAccessibleName}
@@ -19,7 +19,7 @@ export default function VersioningTemplate(this: Versioning) {
 				text={`${this.currentStep} / ${this.totalSteps}`}
 				class="version-step-counter"
 			/>
-			<VersioningButton
+			<ToolbarButton
 				design="Transparent"
 				icon="navigation-right-arrow"
 				accessibleName={this._nextButtonAccessibleName}

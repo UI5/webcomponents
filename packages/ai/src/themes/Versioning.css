@@ -1,7 +1,6 @@
 :host {
 	display: inline-flex;
 	align-items: center;
-	margin-right: 0.5rem;
 }
 
 #versioning-history {
@@ -19,38 +18,3 @@
 	line-height: 1;
 }
 
-:host ui5-label {
-	margin: 0;
-	color: var(--sapContent_LabelColor);
-	font-size: var(--sapFontSmallSize);
-	line-height: 1;
-	vertical-align: middle;
-}
-
-:host ui5-button {
-	margin: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 2rem;
-	height: 2rem;
-	width: 2rem;
-	vertical-align: middle;
-}
-
-.ui5-ai-writing-assistant-footer-bar :host {
-	margin-right: 0.5rem;
-}
-
-/* When versioning component is displayed in toolbar overflow popover */
-:host.ui5-tb-popover-item {
-	justify-content: center;
-	padding: 0.5rem 1rem;
-	width: 100%;
-	margin-right: 0;
-}
-
-:host.ui5-tb-popover-item #versioning-history {
-	justify-content: center;
-	width: 100%;
-}

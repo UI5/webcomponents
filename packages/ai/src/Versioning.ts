@@ -14,6 +14,8 @@ import {
 // UI5 Components
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
+import ToolbarLabel from "./ToolbarLabel.js";
 
 // Types
 import VersioningTemplate from "./VersioningTemplate.js";
@@ -71,6 +73,8 @@ enum LastClickedButton {
 	dependencies: [
 		Button,
 		Label,
+		ToolbarButton,
+		ToolbarLabel,
 	],
 })
 
