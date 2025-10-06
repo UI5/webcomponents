@@ -32,7 +32,7 @@ import { getFetchDefaultThemingCSSVars } from "@ui5/webcomponents-base/dist/conf
 
 import defaultTheme from "./${DEFAULT_THEME}/parameters-bundle.css.js";
 
-// If blbqblqblqba is true, do not load theme CSS properties from theming package.
+// If getFetchDefaultThemingCSSVars is false, do not load theme CSS properties from theming package.
 if (!getFetchDefaultThemingCSSVars()) {
     const defaultThemeBase = (await import("@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.css.js")).default;
 
