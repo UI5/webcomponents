@@ -136,7 +136,7 @@ class SegmentedButton extends UI5Element {
      *
      * @default "EqualSized"
      * @public
-     * @since 2.15.0
+     * @since 2.16.0
      */
 	@property()
 	contentMode: `${SegmentedButtonContentMode}` = "EqualSized";
