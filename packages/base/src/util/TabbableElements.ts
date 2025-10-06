@@ -8,7 +8,7 @@ import isElementTabbable from "./isElementTabbable.js";
  * @returns { Array<HTMLElement> } the tabbable elements
  */
 const getTabbableElements = (el: HTMLElement): Array<HTMLElement> => {
-	return getTabbables([...el.children]);
+	return getTabbables(el.tagName === "SLOT" ? [el] : [...el.children]);
 };
 
 /**
@@ -45,7 +45,7 @@ const getTabbables = (nodes: Array<Node>, tabbables?: Array<HTMLElement>): Array
 		}
 
 		if (currentElement.tagName === "SLOT") {
-			getTabbables((currentElement as HTMLSlotElement).assignedNodes() as Array<HTMLElement>, tabbableElements);
+			getTabbables((currentElement as HTMLSlotElement).assignedElements(), tabbableElements);
 		} else {
 			const children = currentElement.shadowRoot ? currentElement.shadowRoot.children : currentElement.children;
 			getTabbables([...children], tabbableElements);

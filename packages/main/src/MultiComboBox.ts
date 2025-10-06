@@ -91,6 +91,7 @@ import {
 	SELECT_OPTIONS,
 	SHOW_SELECTED_BUTTON,
 	MULTICOMBOBOX_DIALOG_OK_BUTTON,
+	MULTICOMBOBOX_DIALOG_CANCEL_BUTTON,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	VALUE_STATE_ERROR_ALREADY_SELECTED,
 	MCB_SELECTED_ITEMS,
@@ -930,12 +931,22 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	_handlePaste(e: ClipboardEvent) {
-		if (this.readonly || !e.clipboardData) {
+	async _handlePaste(e: ClipboardEvent) {
+		if (this.readonly) {
 			return;
 		}
 
-		const pastedText = (e.clipboardData).getData("text/plain");
+		e.preventDefault();
+
+		const pastedText = await navigator.clipboard.readText();
+		document.execCommand("insertText", true, pastedText ?? "");
+		const inputEvent = new Event("input", {
+			bubbles: true,
+			cancelable: true,
+		});
+
+		// Dispatch it
+		this._innerInput.dispatchEvent(inputEvent);
 
 		if (!pastedText) {
 			return;
@@ -958,8 +969,17 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this.readonly || isFirefox()) {
 			return;
 		}
+		e.preventDefault();
 
 		const pastedText = await navigator.clipboard.readText();
+		document.execCommand("insertText", true, pastedText ?? "");
+		const inputEvent = new Event("input", {
+			bubbles: true,
+			cancelable: true,
+		});
+
+		// Dispatch it
+		this._innerInput.dispatchEvent(inputEvent);
 
 		if (!pastedText) {
 			return;
@@ -2056,7 +2076,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const links: Array<HTMLElement> = [];
 		if (this.valueStateMessage) {
 			this.valueStateMessage.forEach(element => {
-				if (element.children.length)	{
+				if (element.children.length) {
 					element.querySelectorAll("ui5-link").forEach(link => {
 						links.push(link as HTMLElement);
 					});
@@ -2157,6 +2177,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButton() {
 		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_OK_BUTTON);
+	}
+
+	get _dialogCancelButton() {
+		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _tokenizerExpanded() {
