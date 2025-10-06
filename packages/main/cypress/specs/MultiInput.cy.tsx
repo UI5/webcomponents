@@ -884,7 +884,7 @@ describe("ARIA attributes", () => {
 			.should("have.attr", "aria-haspopup", "dialog");
 	});
 
-	it("correct suggestions announcement", () => {
+	it("announces correct suggestion position when selecting a suggestion with Enter", () => {
 		cy.mount(
 			<MultiInput show-suggestions id="suggestion-token">
 				<SuggestionItem text="Aute"></SuggestionItem>
