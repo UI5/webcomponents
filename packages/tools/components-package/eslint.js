@@ -104,7 +104,10 @@ module.exports = {
 		// }],
 		"valid-typeof": 2,
 		"no-restricted-imports": ["error", {
-			"patterns": ["@ui5/webcomponents-base/dist/*"],
+			"patterns": [
+				"@ui5/webcomponents-base/dist/*",
+				"@ui5/webcomponents/dist/*",
+			],
 		}],
 		"object-curly-newline": ["error", { "ImportDeclaration": "never", "ExportDeclaration": "never" }],
 

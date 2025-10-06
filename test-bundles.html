@@ -11,7 +11,8 @@
         {
             "imports1": {
                 "@ui5/webcomponents": "./packages/main/dist/bundle-main.js",
-                "@ui5/webcomponents-base": "./packages/base/dist/bundle-base.js"
+                "@ui5/webcomponents-base": "./packages/base/dist/bundle-base.js",
+                "@ui5/webcomponents-ai": "./packages/ai/dist/bundle-ai.js"
             }
         }
     </script>
@@ -20,10 +21,13 @@
         {
             "imports": {
                 "@ui5/webcomponents": "./packages/main/dist/index.js",
+                "@ui5/webcomponents-ai": "./packages/ai/dist/index.js",
+                "@ui5/webcomponents-ai/dist/": "./packages/ai/dist/",
                 "@ui5/webcomponents/dist/": "./packages/main/dist/",
                 "@ui5/webcomponents-base": "./packages/base/dist/bundle-base.js",
                 "@ui5/webcomponents-base/dist/ssr-dom.js": "./packages/base/dist/ssr-dom.js",
                 "@ui5/webcomponents-base/jsx-runtime": "./packages/base/dist/jsx-runtime.js",
+                "@ui5/webcomponents-icons/dist/": "./packages/icons/dist/",
                 "@ui5/webcomponents-theming/dist/": "./packages/theming/dist/"
             }
         }
@@ -34,6 +38,7 @@
             "imports1": {
                 "@ui5/webcomponents": "./packages/main/dist/index.js",
                 "@ui5/webcomponents/dist/": "./packages/main/dist/",
+                "@ui5/webcomponents-ai/dist/": "./packages/ai/dist/",
                 "@ui5/webcomponents-base": "./packages/base/dist/index.js",
                 "@ui5/webcomponents-theming/dist/": "./packages/theming/dist/",
                 "@ui5/webcomponents-base2": "./packages/base/dist/index.js",
@@ -46,8 +51,15 @@
 
     <script type="module">
         // import Button from "@ui5/webcomponents/dist/Button.js";
-        import { Button } from "@ui5/webcomponents";
+        // import { Button } from "@ui5/webcomponents";
+        import AiButton from "@ui5/webcomponents-ai/dist/Button.js";
+        // import { Button as AIButton } from "@ui5/webcomponents-ai";
     </script>
     <ui5-button>Button</ui5-button>
+    <ui5-ai-button id="myAiButton" state="generate">
+        <ui5-ai-button-state name="generate" text="Generate" icon="slim-arrow-down"></ui5-ai-button-state>
+        <ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
+        <ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
+    </ui5-ai-button>
 </body>
 </html>

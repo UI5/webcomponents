@@ -39,6 +39,9 @@
 			"path": "../base"
 		},
 		{
+			"path": "../main"
+		},
+		{
 			"path": "../localization"
 		},
 		{

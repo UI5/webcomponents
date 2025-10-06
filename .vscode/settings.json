@@ -1,9 +1,11 @@
 {
     "eslint.workingDirectories": [
+
         "./packages/base",
         "./packages/localization",
         "./packages/main",
         "./packages/fiori",
+        "./packages/ai",
     ],
     "html.customData": [
         "./packages/base/dist/vscode.html-custom-data.json",

@@ -1,28 +1,19 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type SplitButton from "@ui5/webcomponents/dist/SplitButton.js";
-import type ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
+import UI5Element, { renderFinished, customElement, property, eventStrict as event, slot, query, i18n, jsxRenderer, AccessibilityTextsHelper } from "@ui5/webcomponents-base";
+import type { SplitButton, ButtonDesign } from "@ui5/webcomponents";
 import type ButtonState from "./ButtonState.js";
 import { BUTTON_TOOLTIP_TEXT } from "./generated/i18n/i18n-defaults.js";
 import "./ButtonState.js";
 import ButtonTemplate from "./ButtonTemplate.js";
-import {
-	getEffectiveAriaLabelText,
-	getAssociatedLabelForTexts,
-	getAllAccessibleNameRefTexts,
-} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 // Styles
 import ButtonCss from "./generated/themes/Button.css.js";
-import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { I18nBundle, AccessibilityAttributes } from "@ui5/webcomponents-base";
+
+const {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getAllAccessibleNameRefTexts,
+} = AccessibilityTextsHelper;
 
 type AIButtonRootAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
 type AIButtonArrowButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
@@ -373,6 +364,4 @@ class Button extends UI5Element {
 
 Button.define();
 export default Button;
-export type {
-	AIButtonAccessibilityAttributes,
-};
+export type { AIButtonAccessibilityAttributes };

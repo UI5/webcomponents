@@ -38,6 +38,7 @@
     "prepublishOnly": "tsc -b"
   },
   "exports": {
+    ".": "./dist/index.js",
     "./src/*": "./src/*",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json",

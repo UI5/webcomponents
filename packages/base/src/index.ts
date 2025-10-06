@@ -28,6 +28,7 @@ import {
 	getTheme,
 	setTheme,
 	getDefaultTheme,
+	isLegacyThemeFamilyAsync,
 } from "./config/Theme.js";
 
 // decorators/
@@ -37,6 +38,7 @@ import eventStrict from "./decorators/event-strict.js";
 import property from "./decorators/property.js";
 import slot from "./decorators/slot.js";
 import i18n from "./decorators/i18n.js";
+import query from "./decorators/query.js";
 
 // delegate/
 import ItemNavigation from "./delegate/ItemNavigation.js";
@@ -56,7 +58,7 @@ import { URLListValidator, sanitizeHTML } from "./util/HTMLSanitizer.js";
 import { registerI18nLoader } from "./asset-registries/i18n.js";
 import { registerLocaleDataLoader } from "./asset-registries/LocaleData.js";
 import { registerThemePropertiesLoader } from "./asset-registries/Themes.js";
-import { registerIconLoader, getIconAccessibleName } from "./asset-registries/Icons.js";
+import { registerIconLoader, getIconAccessibleName, registerIcon } from "./asset-registries/Icons.js";
 
 // Boot.ts
 import { attachBoot } from "./Boot.js";
@@ -149,6 +151,7 @@ export {
 	getTheme,
 	setTheme,
 	getDefaultTheme,
+	isLegacyThemeFamilyAsync,
 
 	// decorators/
 	customElement,
@@ -157,6 +160,7 @@ export {
 	property,
 	slot,
 	i18n,
+	query,
 
 	// delegate/
 	ItemNavigation,
@@ -181,6 +185,7 @@ export {
 	registerThemePropertiesLoader,
 	registerIconLoader,
 	getIconAccessibleName,
+	registerIcon,
 
 	// Boot.ts
 	attachBoot,
