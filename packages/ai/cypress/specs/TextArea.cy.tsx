@@ -2,7 +2,7 @@ import AITextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 
-describe("Basioc", () => {
+describe("Basic", () => {
 	describe("Initialization", () => {
 		it("should render with default properties", () => {
 			cy.mount(<AITextArea />);
@@ -10,7 +10,7 @@ describe("Basioc", () => {
 			cy.get("[ui5-ai-textarea]")
 				.as("textarea")
 				.should("exist")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "actionText", "")
 				.should("have.prop", "currentVersionIndex", 1)
 				.should("have.prop", "totalVersions", 1);
@@ -29,20 +29,20 @@ describe("Basioc", () => {
 		});
 	});
 
-	describe("Assistant States", () => {
-		it("should display Initial state correctly", () => {
-			cy.mount(<AITextArea assistantState="Initial" />);
+	describe("Loading States", () => {
+		it("should display non-loading state correctly", () => {
+			cy.mount(<AITextArea loading={false} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
-				.should("have.prop", "assistantState", "Initial");
+				.should("have.prop", "loading", false);
 		});
 
-		it("should display Loading state correctly", () => {
+		it("should display loading state correctly", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating content..."
 				/>
 			);
@@ -50,14 +50,14 @@ describe("Basioc", () => {
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
-				.should("have.prop", "assistantState", "Loading")
+				.should("have.prop", "loading", true)
 				.should("have.prop", "actionText", "Generating content...");
 		});
 
 		it("should display single result correctly", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated text"
 					currentVersionIndex={1}
 					totalVersions={1}
@@ -67,7 +67,7 @@ describe("Basioc", () => {
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "actionText", "Generated text")
 				.should("have.prop", "currentVersionIndex", 1)
 				.should("have.prop", "totalVersions", 1);
@@ -76,7 +76,7 @@ describe("Basioc", () => {
 		it("should display multiple results correctly", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated text"
 					currentVersionIndex={2}
 					totalVersions={3}
@@ -86,7 +86,7 @@ describe("Basioc", () => {
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "actionText", "Generated text")
 				.should("have.prop", "currentVersionIndex", 2)
 				.should("have.prop", "totalVersions", 3);
@@ -94,15 +94,15 @@ describe("Basioc", () => {
 	});
 
 	describe("Version Navigation", () => {
-		it("should fire previous-version-click event with proper event details", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+		it("should fire version-change event with backwards=true for previous version", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={3}
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -110,30 +110,29 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onPreviousVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 2,
-					totalVersions: 3
+				.should("deep.equal", {
+					backwards: true
 				});
 		});
 
-		it("should fire next-version-click event with proper event details", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+		it("should fire version-change event with backwards=false for next version", () => {
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={3}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -141,25 +140,24 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.should("not.be.disabled")
 				.realClick();
 
-			cy.get("@onNextVersionClick")
+			cy.get("@onVersionChange")
 				.should("have.been.calledOnce")
 				.its("firstCall.args.0.detail")
-				.should("deep.include", {
-					currentIndex: 1,
-					totalVersions: 3
+				.should("deep.equal", {
+					backwards: false
 				});
 		});
 
 		it("should disable previous button when at first version", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={3}
 				/>
@@ -169,16 +167,18 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should disable next button when at last version", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={3}
 					totalVersions={3}
 				/>
@@ -188,10 +188,12 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("be.disabled");
+				.shadow()
+				.find("ui5-button")
+				.should("have.attr", "disabled");
 		});
 
 		it("should sync textarea content after version navigation", () => {
@@ -201,7 +203,7 @@ describe("Basioc", () => {
 			cy.mount(
 				<AITextArea
 					value={initialValue}
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={2}
 				/>
@@ -215,7 +217,7 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
@@ -274,7 +276,7 @@ describe("Basioc", () => {
 
 			cy.mount(
 				<AITextArea
-					assistantState="Loading"
+					loading={true}
 					onStopGeneration={onStopGeneration}
 				/>
 			);
@@ -309,14 +311,14 @@ describe("Basioc", () => {
 		});
 
 		it("should handle Ctrl+Shift+Z for previous version when multiple versions exist", () => {
-			const onPreviousVersionClick = cy.spy().as("onPreviousVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={3}
-					onPreviousVersionClick={onPreviousVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -326,18 +328,23 @@ describe("Basioc", () => {
 				.focus()
 				.realPress(['Control', 'Shift', 'z']);
 
-			cy.get("@onPreviousVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange")
+				.should("have.been.calledOnce")
+				.its("firstCall.args.0.detail")
+				.should("deep.equal", {
+					backwards: true
+				});
 		});
 
 		it("should handle Ctrl+Shift+Y for next version when multiple versions exist", () => {
-			const onNextVersionClick = cy.spy().as("onNextVersionClick");
+			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={3}
-					onNextVersionClick={onNextVersionClick}
+					onVersionChange={onVersionChange}
 				/>
 			);
 
@@ -347,7 +354,12 @@ describe("Basioc", () => {
 				.focus()
 				.realPress(['Control', 'Shift', 'y']);
 
-			cy.get("@onNextVersionClick").should("have.been.calledOnce");
+			cy.get("@onVersionChange")
+				.should("have.been.calledOnce")
+				.its("firstCall.args.0.detail")
+				.should("deep.equal", {
+					backwards: false
+				});
 		});
 	});
 
@@ -439,8 +451,8 @@ describe("Basioc", () => {
 	});
 
 	describe("Busy State", () => {
-		it("should show busy indicator when in Loading state", () => {
-			cy.mount(<AITextArea assistantState="Loading" />);
+		it("should show busy indicator when loading", () => {
+			cy.mount(<AITextArea loading={true} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -448,8 +460,8 @@ describe("Basioc", () => {
 				.should("have.attr", "active");
 		});
 
-		it("should hide busy indicator when not in Loading state", () => {
-			cy.mount(<AITextArea assistantState="Initial" />);
+		it("should hide busy indicator when not loading", () => {
+			cy.mount(<AITextArea loading={false} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -481,7 +493,7 @@ describe("Basioc", () => {
 		it("should announce AI actions to screen readers", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating content..."
 				/>
 			);
@@ -495,8 +507,8 @@ describe("Basioc", () => {
 	});
 
 	describe("Error Handling", () => {
-		it("should handle invalid assistant state gracefully", () => {
-			cy.mount(<AITextArea assistantState={"InvalidState" as any} />);
+		it("should handle invalid loading state gracefully", () => {
+			cy.mount(<AITextArea loading={"invalid" as any} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.should("exist");
@@ -510,7 +522,7 @@ describe("Basioc", () => {
 		it("should handle invalid version indices gracefully", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={-1}
 					totalVersions={3}
 				/>
@@ -528,7 +540,7 @@ describe("Basioc", () => {
 		it("should handle zero total versions", () => {
 			cy.mount(
 				<AITextArea
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={0}
 				/>
@@ -541,7 +553,7 @@ describe("Basioc", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 		});
 	});

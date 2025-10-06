@@ -1,4 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import ToolbarItem from "@ui5/webcomponents/dist/ToolbarItem.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -11,11 +11,21 @@ import {
 	VERSIONING_NEXT_BUTTON_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
+// UI5 Components
+import Button from "@ui5/webcomponents/dist/Button.js";
+import Label from "@ui5/webcomponents/dist/Label.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
+import ToolbarLabel from "./ToolbarLabel.js";
+
 // Types
 import VersioningTemplate from "./VersioningTemplate.js";
 
 // Styles
 import VersioningCss from "./generated/themes/Versioning.css.js";
+
+// Icons
+import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
+import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
 enum LastClickedButton {
 	None = "",
@@ -28,11 +38,12 @@ enum LastClickedButton {
  *
  * ### Overview
  *
- * The `sap-writing-assistant-versioning` component provides navigation controls for AI-generated content versions.
+ * The `ui5-ai-versioning` component provides navigation controls for AI-generated content versions.
  * It displays the current version index and total versions, with previous/next navigation buttons.
+ * This component extends ToolbarItem to participate in toolbar overflow behavior as a single unit.
  *
  * ### Structure
- * The `sap-writing-assistant-versioning` consists of the following elements:
+ * The `ui5-ai-versioning` consists of the following elements:
  * - Previous Button: Navigates to the previous version (disabled when at first version)
  * - Version Counter: Shows current version / total versions (e.g., "2 / 5")
  * - Next Button: Navigates to the next version (disabled when at last version)
@@ -41,24 +52,30 @@ enum LastClickedButton {
  * The component automatically manages focus when users reach version boundaries,
  * moving focus to the available navigation button when one becomes disabled.
  *
- * ### Keyboard Shortcuts
- * - Shift+Ctrl+Z: Navigate to previous version
- * - Shift+Ctrl+Y: Navigate to next version
+ * ### Responsive Behavior
+ * When used in a toolbar, the entire versioning component (buttons + label) will overflow
+ * together as a single unit when there is insufficient space.
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/Versioning.js";`
+ * `import "@ui5/webcomponents-ai/dist/Versioning.js";`
  *
  * @constructor
- * @extends UI5Element
+ * @extends ToolbarItem
  * @since 1.0.0-rc.1
  * @private
  */
 @customElement({
-	tag: "ui5-ai-textarea-versioning",
+	tag: "ui5-ai-versioning",
 	renderer: jsxRenderer,
 	styles: VersioningCss,
 	template: VersioningTemplate,
+	dependencies: [
+		Button,
+		Label,
+		ToolbarButton,
+		ToolbarLabel,
+	],
 })
 
 /**
@@ -68,12 +85,12 @@ enum LastClickedButton {
  */
 @event("version-change")
 
-class Versioning extends UI5Element {
-	eventDetails!: {
+class Versioning extends ToolbarItem {
+	eventDetails!: ToolbarItem["eventDetails"] & {
 		"version-change": {
 			backwards: boolean;
-		}
-	}
+		};
+	};
 
 	/**
 	 * Indicates the index of the currently displayed result version.
@@ -161,6 +178,18 @@ class Versioning extends UI5Element {
 
 	get _nextButtonAccessibleName() {
 		return Versioning.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+	}
+
+	/**
+	 * @override
+	 */
+	get classes() {
+		return {
+			root: {
+				...super.classes.root,
+				"ui5-ai-versioning": true,
+			},
+		};
 	}
 }
 

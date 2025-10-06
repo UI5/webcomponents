@@ -4,8 +4,6 @@ import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
 
 export default function TextAreaTemplate(this: AITextArea) {
-	const isBusy = this.assistantState === "Loading";
-
 	return (
 		<div class="ui5-ai-textarea-root">
 			<div
@@ -28,7 +26,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 					}
 					<BusyIndicator
 						id={`${this._id}-busyIndicator`}
-						active={isBusy}
+						active={this.loading}
 						class="ui5-textarea-busy-indicator"
 					>
 						<textarea
@@ -56,11 +54,11 @@ export default function TextAreaTemplate(this: AITextArea) {
 					<div part="footer">
 						<slot name="footer">
 							<WritingAssistant
-								assistantState={this.assistantState}
+								loading={this.loading}
 								currentVersionIndex={this.currentVersionIndex}
 								totalVersions={this.totalVersions}
 								actionText={this.actionText}
-								onButtonClick={this.handleGenerateClick}
+								onButtonClick={this._handleAIButtonClick}
 								onStopGeneration={this.handleStopGeneration}
 								onVersionChange={this._handleVersionChange}
 							/>
@@ -81,7 +79,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 
 			{/* ARIA live region for screen readers */}
 			<div aria-live="polite" aria-atomic="true" class="ui5-hidden-text">
-				{this.assistantState === "Loading" ? this.actionText : ""}
+				{this.loading ? this.actionText : ""}
 			</div>
 
 			<div id="ai-menu-wrapper">

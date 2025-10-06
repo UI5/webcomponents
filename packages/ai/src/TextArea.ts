@@ -6,7 +6,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
 import TextArea from "@ui5/webcomponents/dist/TextArea.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
-import type AssistantState from "./types/AssistantState.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
@@ -20,19 +19,6 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
 import WritingAssistant from "./WritingAssistant.js";
-import Versioning from "./Versioning.js";
-
-type VersionClickEventDetail = {
-	/**
-	 * The current version index (1-based).
-	 */
-	currentIndex: number;
-
-	/**
-	 * The total number of versions available.
-	 */
-	totalVersions: number;
-}
 
 /**
  * @class
@@ -48,11 +34,6 @@ type VersionClickEventDetail = {
  * - AI Toolbar: Specialized toolbar with AI generation controls
  * - Version Navigation: Controls for navigating between AI-generated versions
  * - Menu Integration: Support for AI action menu
- *
- * ### States
- * The `ui5-ai-textarea` supports multiple states:
- * - Initial: Shows only the AI button
- * - Loading: Indicates AI generation in progress
  *
  * Single vs multiple result display is determined internally based on totalVersions count.
  *
@@ -78,24 +59,16 @@ type VersionClickEventDetail = {
 	],
 	dependencies: [
 		WritingAssistant,
-		Versioning,
 		BusyIndicator,
 	],
 })
 
 /**
- * Fired when the user clicks on the "Previous Version" button.
+ * Fired when the user clicks on version navigation buttons.
  *
  * @public
  */
-@event("previous-version-click")
-
-/**
- * Fired when the user clicks on the "Next Version" button.
- *
- * @public
- */
-@event("next-version-click")
+@event("version-change")
 
 /**
  * Fired when the user requests to stop AI text generation.
@@ -106,28 +79,24 @@ type VersionClickEventDetail = {
 
 class AITextArea extends TextArea {
 	eventDetails!: TextArea["eventDetails"] & {
-		"previous-version-click": VersionClickEventDetail;
-		"next-version-click": VersionClickEventDetail;
-		"stop-generation": null;
+		"version-change": {
+			backwards: boolean;
+		};
+		"stop-generation": object;
 	};
 
 	// Store bound handler for proper cleanup
 	private _keydownHandler?: (event: KeyboardEvent) => void;
 
 	/**
-	 * Defines the current state of the AI Writing Assistant.
+	 * Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.
 	 *
-	 * Available values are:
-	 * - `"Initial"`: Shows only the main toolbar button.
-	 * - `"Loading"`: Indicates that an action is in progress.
-	 *
-	 * Single vs multiple results are determined internally based on totalVersions.
-	 *
-	 * @default "Initial"
+	 * @default false
+	 * @since 1.0.0-rc.14
 	 * @public
 	 */
-	@property()
-	assistantState: `${AssistantState}` = "Initial";
+	@property({ type: Boolean })
+	loading = false;
 
 	/**
 	 * Defines the action text of the AI Writing Assistant.
@@ -172,11 +141,7 @@ class AITextArea extends TextArea {
 	 * Updates the current version index and syncs content.
 	 */
 	_handlePreviousVersionClick(): void {
-		this.fireDecoratorEvent("previous-version-click", {
-			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions,
-		});
-		this._syncContent();
+		this.fireDecoratorEvent("version-change", { backwards: true });
 	}
 
 	/**
@@ -184,11 +149,7 @@ class AITextArea extends TextArea {
 	 * Updates the current version index and syncs content.
 	 */
 	_handleNextVersionClick(): void {
-		this.fireDecoratorEvent("next-version-click", {
-			currentIndex: this.currentVersionIndex,
-			totalVersions: this.totalVersions,
-		});
-		this._syncContent();
+		this.fireDecoratorEvent("version-change", { backwards: false });
 	}
 
 	/**
@@ -203,19 +164,6 @@ class AITextArea extends TextArea {
 	}
 
 	/**
-	 * Forces the textarea content to sync with the current value.
-	 * @private
-	 */
-	_syncContent() {
-		setTimeout(() => {
-			const textarea = this.shadowRoot?.querySelector("textarea");
-			if (textarea && textarea.value !== this.value) {
-				textarea.value = this.value;
-			}
-		}, 0);
-	}
-
-	/**
 	 * Handles keydown events for keyboard shortcuts.
 	 * @private
 	 */
@@ -224,7 +172,7 @@ class AITextArea extends TextArea {
 		const isShift = keyboardEvent.shiftKey;
 
 		if (isShift && keyboardEvent.key.toLowerCase() === "f4") {
-			const toolbar = this.shadowRoot?.querySelector("ui5-ai-writing-assistant") as HTMLElement;
+			const toolbar = this.shadowRoot?.querySelector("[ui5-ai-writing-assistant]") as HTMLElement;
 			const aiButton = toolbar?.shadowRoot?.querySelector("#ai-menu-btn") as HTMLElement;
 
 			if (aiButton) {
@@ -233,7 +181,7 @@ class AITextArea extends TextArea {
 			return;
 		}
 
-		if (this.assistantState !== "Loading" && this.totalVersions > 1) {
+		if (this.totalVersions > 1) {
 			if (isCtrlOrCmd && isShift && keyboardEvent.key.toLowerCase() === "z") {
 				keyboardEvent.preventDefault();
 				this._handlePreviousVersionClick();
@@ -263,26 +211,12 @@ class AITextArea extends TextArea {
 	}
 
 	/**
-	 * Cleanup event listeners to prevent memory leaks.
-	 * @private
-	 */
-	onBeforeUnmount() {
-		if (this._keydownHandler) {
-			const textarea = this.shadowRoot?.querySelector("textarea");
-			if (textarea) {
-				textarea.removeEventListener("keydown", this._keydownHandler);
-			}
-			this._keydownHandler = undefined;
-		}
-	}
-
-	/**
 	 * Handles the generate click event from the AI toolbar.
 	 * Opens the AI menu and sets the opener element.
 	 *
 	 * @private
 	 */
-	handleGenerateClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
+	_handleAIButtonClick = (e: CustomEvent<{ clickTarget?: HTMLElement }>) => {
 		const menuNodes = this.getSlottedNodes("menu");
 		if (menuNodes.length === 0) {
 			return;

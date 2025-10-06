@@ -8,6 +8,9 @@ import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	WRITING_ASSISTANT_LABEL,
+	VERSIONING_PREVIOUS_BUTTON_TEXT,
+	VERSIONING_NEXT_BUTTON_TEXT,
+	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -16,13 +19,12 @@ import WritingAssistantCss from "./generated/themes/WritingAssistant.css.js";
 // Templates
 import WritingAssistantTemplate from "./WritingAssistantTemplate.js";
 import Versioning from "./Versioning.js";
-import type AssistantState from "./types/AssistantState.js";
+import ToolbarLabel from "./ToolbarLabel.js";
 
 // UI5 Components
 import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 
 // Icons
 import "@ui5/webcomponents-icons/dist/ai.js";
@@ -59,10 +61,10 @@ import "@ui5/webcomponents-icons/dist/stop.js";
 	styles: [WritingAssistantCss],
 	dependencies: [
 		Versioning,
+		ToolbarLabel,
 		Toolbar,
 		ToolbarSpacer,
-		Label,
-		Button,
+		ToolbarButton,
 	],
 })
 
@@ -99,21 +101,14 @@ class WritingAssistant extends UI5Element {
 	};
 
 	/**
-	 * Defines the current state of the AI Writing Assistant.
+	 * Defines whether the Writing Assistant is currently loading.
 	 *
-	 * Available values are:
-	 * - `"Initial"`: Shows only the main toolbar button.
-	 * - `"Loading"`: Indicates that an action is in progress.
+	 * When `true`, indicates that an AI action is in progress.
 	 *
-	 * The state controls the visual appearance and behavior of the assistant.
-	 * During "Loading" state, a stop button is shown instead of the AI button.
-	 *
-	 * @default "Initial"
-	 * @public
-	 * @since 1.0.0-rc.1
+	 * @default false
 	 */
-	@property()
-	assistantState: `${AssistantState}` = "Initial";
+	@property({ type: Boolean })
+	loading = false;
 
 	static i18nBundle: I18nBundle;
 
@@ -179,11 +174,19 @@ class WritingAssistant extends UI5Element {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
 			this.fireDecoratorEvent("button-click", { clickTarget: target });
-			announce("AI writing assistant generating. Stop generating (ESC)", "Polite");
+			announce(WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT), "Polite");
 		}
 	}
 	get _ariaLabel() {
 		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+	}
+
+	get _previousButtonAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+	}
+
+	get _nextButtonAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
 	}
 }
 

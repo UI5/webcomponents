@@ -1,15 +1,14 @@
-import Versioning from "./Versioning.js";
 import type WritingAssistant from "./WritingAssistant.js";
+import Versioning from "./Versioning.js";
+import ToolbarLabel from "./ToolbarLabel.js";
 
 import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
-import Label from "@ui5/webcomponents/dist/Label.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 
 export default function WritingAssistantTemplate(this: WritingAssistant) {
-	const isBusy = this.assistantState === "Loading";
 	const isMultiResults = this.totalVersions > 1;
-	const hasResults = (this.totalVersions > 0 && this.actionText) || isBusy;
+	const hasResults = (this.totalVersions > 0 && this.actionText) || this.loading;
 
 	return (
 		<Toolbar
@@ -17,26 +16,30 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 			aria-roledescription="toolbar"
 			class={`ui5-ai-writing-assistant-footer-bar${hasResults ? "--with-border" : ""}`}
 		>
-			{isMultiResults && !isBusy && (
+			{isMultiResults && !this.loading && (
 				<Versioning
 					currentStep={this.currentVersionIndex}
 					totalSteps={this.totalVersions}
-					onVersionChange={this.handleVersionChange}
+					onVersion-change={this.handleVersionChange}
 				/>
 			)}
 
 			{hasResults && this.actionText && (
-				<Label class="ui5-ai-writing-assistant-action-label">{this.actionText}</Label>
+				<ToolbarLabel
+					text={this.actionText}
+					class="ui5-ai-writing-assistant-action-label"
+				/>
 			)}
 
 			<ToolbarSpacer />
 
-			<Button
+			<ToolbarButton
 				id="ai-menu-btn"
 				design="Transparent"
-				icon={isBusy ? "stop" : "ai"}
-				data-state={isBusy ? "generating" : "generate"}
+				icon={this.loading ? "stop" : "ai"}
+				data-state={this.loading ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
+				overflowPriority="NeverOverflow"
 			/>
 		</Toolbar>
 	);

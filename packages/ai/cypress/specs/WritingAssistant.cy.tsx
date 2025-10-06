@@ -7,20 +7,20 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("exist")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "actionText", "");
 		});
 
 		it("should render with custom properties", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Processing..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
-				.should("have.prop", "assistantState", "Loading")
+				.should("have.prop", "loading", true)
 				.should("have.prop", "actionText", "Processing...");
 		});
 
@@ -45,8 +45,8 @@ describe("WritingAssistant Component", () => {
 	});
 
 	describe("AI Generate Button", () => {
-		it("should render AI button in Initial state", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+		it("should render AI button in non-loading state", () => {
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -56,8 +56,8 @@ describe("WritingAssistant Component", () => {
 				.should("have.attr", "data-state", "generate");
 		});
 
-		it("should show generating state in Loading state", () => {
-			cy.mount(<WritingAssistant assistantState="Loading" />);
+		it("should show generating state when loading", () => {
+			cy.mount(<WritingAssistant loading={true} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -65,10 +65,10 @@ describe("WritingAssistant Component", () => {
 				.should("have.attr", "data-state", "generating");
 		});
 
-		it("should fire button-click event when clicked in Initial state", () => {
+		it("should fire button-click event when clicked in non-loading state", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					onButtonClick={cy.stub().as("onButtonClick")}
 				/>
 			);
@@ -78,13 +78,16 @@ describe("WritingAssistant Component", () => {
 				.find("#ai-menu-btn")
 				.realClick();
 
-			cy.get("@onButtonClick").should("have.been.called");
+			cy.get("@onButtonClick")
+				.should("have.been.called")
+				.its("firstCall.args.0.detail")
+				.should("have.property", "clickTarget");
 		});
 
-		it("should fire stop-generation event when clicked in Loading state", () => {
+		it("should fire stop-generation event when clicked in loading state", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					onStopGeneration={cy.stub().as("onStopGeneration")}
 				/>
 			);
@@ -99,7 +102,7 @@ describe("WritingAssistant Component", () => {
 
 		it("should have proper button states and icons", () => {
 			// Test generate state
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -108,7 +111,7 @@ describe("WritingAssistant Component", () => {
 				.should("have.attr", "icon", "ai");
 
 			// Test generating state
-			cy.mount(<WritingAssistant assistantState="Loading" />);
+			cy.mount(<WritingAssistant loading={true} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -127,18 +130,18 @@ describe("WritingAssistant Component", () => {
 		});
 	});
 
-	describe("Assistant States", () => {
-		it("should display Initial state correctly", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+	describe("Loading States", () => {
+		it("should display non-loading state correctly", () => {
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("not.exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -147,19 +150,25 @@ describe("WritingAssistant Component", () => {
 				.should("not.have.class", "ui5-ai-writing-assistant-footer-bar--with-border");
 		});
 
-		it("should display Loading state correctly", () => {
+		it("should display loading state correctly", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating content..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("exist")
-				.should("contain.text", "Generating content...")
+				.shadow()
+				.find("span")
+				.should("contain.text", "Generating content...");
+
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("ui5-ai-toolbar-label")
 				.should("have.class", "ui5-ai-writing-assistant-action-label");
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -176,7 +185,7 @@ describe("WritingAssistant Component", () => {
 		it("should display single result correctly", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated text"
 					currentVersionIndex={1}
 					totalVersions={1}
@@ -185,13 +194,15 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("exist")
+				.shadow()
+				.find("span")
 				.should("contain.text", "Generated text");
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -203,7 +214,7 @@ describe("WritingAssistant Component", () => {
 		it("should display multiple results correctly", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated text"
 					currentVersionIndex={2}
 					totalVersions={3}
@@ -212,13 +223,15 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("exist")
+				.shadow()
+				.find("span")
 				.should("contain.text", "Generated text");
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist")
 				.should("have.prop", "currentStep", 2)
 				.should("have.prop", "totalSteps", 3);
@@ -231,10 +244,10 @@ describe("WritingAssistant Component", () => {
 	});
 
 	describe("Version Navigation", () => {
-		it("should show version component when totalVersions > 1", () => {
+		it("should show version component when totalVersions > 1 and not loading", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={4}
 				/>
@@ -242,16 +255,16 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist")
 				.should("have.prop", "currentStep", 2)
 				.should("have.prop", "totalSteps", 4);
 		});
 
-		it("should hide version component in Initial state with no versions", () => {
+		it("should hide version component with no versions", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={0}
 				/>
@@ -259,59 +272,14 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 		});
 
-		it("should hide version component in Loading state", () => {
+		it("should hide version component when loading", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
-					currentVersionIndex={1}
-					totalVersions={0}
-				/>
-			);
-
-			cy.get("[ui5-ai-writing-assistant]")
-				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
-				.should("not.exist");
-		});
-
-		it("should not show version component with single version", () => {
-			cy.mount(
-				<WritingAssistant
-					assistantState="Initial"
-					currentVersionIndex={1}
-					totalVersions={1}
-				/>
-			);
-
-			cy.get("[ui5-ai-writing-assistant]")
-				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
-				.should("not.exist");
-		});
-
-		it("should show version component only when totalVersions > 1", () => {
-			// Test with totalVersions = 1
-			cy.mount(
-				<WritingAssistant
-					assistantState="Initial"
-					currentVersionIndex={1}
-					totalVersions={1}
-				/>
-			);
-
-			cy.get("[ui5-ai-writing-assistant]")
-				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
-				.should("not.exist");
-
-			// Test with totalVersions > 1
-			cy.mount(
-				<WritingAssistant
-					assistantState="Initial"
+					loading={true}
 					currentVersionIndex={1}
 					totalVersions={3}
 				/>
@@ -319,14 +287,59 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
+				.should("not.exist");
+		});
+
+		it("should not show version component with single version", () => {
+			cy.mount(
+				<WritingAssistant
+					loading={false}
+					currentVersionIndex={1}
+					totalVersions={1}
+				/>
+			);
+
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("[ui5-ai-versioning]")
+				.should("not.exist");
+		});
+
+		it("should show version component only when totalVersions > 1 and not loading", () => {
+			// Test with totalVersions = 1
+			cy.mount(
+				<WritingAssistant
+					loading={false}
+					currentVersionIndex={1}
+					totalVersions={1}
+				/>
+			);
+
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("[ui5-ai-versioning]")
+				.should("not.exist");
+
+			// Test with totalVersions > 1
+			cy.mount(
+				<WritingAssistant
+					loading={false}
+					currentVersionIndex={1}
+					totalVersions={3}
+				/>
+			);
+
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("[ui5-ai-versioning]")
 				.should("exist");
 		});
 
 		it("should fire version-change event for previous", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={3}
 					totalVersions={5}
 					onVersionChange={cy.stub().as("onVersionChange")}
@@ -335,7 +348,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
@@ -346,7 +359,7 @@ describe("WritingAssistant Component", () => {
 		it("should fire version-change event for next", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
@@ -355,7 +368,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
@@ -368,7 +381,7 @@ describe("WritingAssistant Component", () => {
 		it("should display action text with single result", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated content"
 					totalVersions={1}
 				/>
@@ -376,29 +389,37 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
-				.should("contain.text", "Generated content")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
+				.should("contain.text", "Generated content");
+
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("ui5-ai-toolbar-label")
 				.should("have.class", "ui5-ai-writing-assistant-action-label");
 		});
 
-		it("should display action text in Loading state", () => {
+		it("should display action text when loading", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "Generating...");
 		});
 
 		it("should display action text with multiple results", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Multiple results generated"
 					currentVersionIndex={2}
 					totalVersions={3}
@@ -407,56 +428,60 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "Multiple results generated");
 		});
 
-		it("should not display action text in Initial state", () => {
+		it("should not display action text when not loading and no actionText", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText=""
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("not.exist");
 		});
 
 		it("should update display when properties change", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
-				.invoke("prop", "assistantState", "Initial")
+				.invoke("prop", "loading", false)
 				.invoke("prop", "actionText", "Generated text")
 				.invoke("prop", "currentVersionIndex", 1)
 				.invoke("prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "Generated text");
 		});
 
-		it("should handle empty action text", () => {
+		it("should handle empty action text when loading", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText=""
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("not.exist");
 		});
 
@@ -465,21 +490,23 @@ describe("WritingAssistant Component", () => {
 			
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText={longText}
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", longText);
 		});
 	});
 
 	describe("Border Styling", () => {
-		it("should not have border class in Initial state with no results", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+		it("should not have border class when not loading and no results", () => {
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -488,8 +515,8 @@ describe("WritingAssistant Component", () => {
 				.should("not.have.class", "ui5-ai-writing-assistant-footer-bar--with-border");
 		});
 
-		it("should have border class in Loading state", () => {
-			cy.mount(<WritingAssistant assistantState="Loading" />);
+		it("should have border class when loading", () => {
+			cy.mount(<WritingAssistant loading={true} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -498,7 +525,7 @@ describe("WritingAssistant Component", () => {
 		});
 
 		it("should have border class when results exist", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" totalVersions={1} actionText="Generated" />);
+			cy.mount(<WritingAssistant loading={false} totalVersions={1} actionText="Generated" />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -513,7 +540,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					onButtonClick={onButtonClick}
 				/>
 			);
@@ -534,7 +561,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					onStopGeneration={onStopGeneration}
 				/>
 			);
@@ -552,7 +579,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={4}
 					onVersionChange={onVersionChange}
@@ -561,7 +588,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.realClick();
@@ -570,7 +597,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.realClick();
@@ -580,53 +607,53 @@ describe("WritingAssistant Component", () => {
 	});
 
 	describe("State Transitions", () => {
-		it("should handle state transition from Initial to Loading", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+		it("should handle state transition from non-loading to loading", () => {
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
-				.should("have.prop", "assistantState", "Initial");
+				.should("have.prop", "loading", false);
 
 			cy.get("@toolbar")
-				.invoke("prop", "assistantState", "Loading")
+				.invoke("prop", "loading", true)
 				.invoke("prop", "actionText", "Generating...");
 
 			cy.get("@toolbar")
-				.should("have.prop", "assistantState", "Loading")
+				.should("have.prop", "loading", true)
 				.should("have.prop", "actionText", "Generating...");
 		});
 
-		it("should handle state transition from Loading to single result", () => {
+		it("should handle state transition from loading to single result", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Generating..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
-				.invoke("prop", "assistantState", "Initial")
+				.invoke("prop", "loading", false)
 				.invoke("prop", "actionText", "Generated text")
 				.invoke("prop", "currentVersionIndex", 1)
 				.invoke("prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "actionText", "Generated text")
 				.should("have.prop", "currentVersionIndex", 1)
 				.should("have.prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 		});
 
 		it("should handle state transition from single result to multiple results", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated text"
 					currentVersionIndex={1}
 					totalVersions={1}
@@ -635,19 +662,19 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
-				.invoke("prop", "assistantState", "Initial")
+				.invoke("prop", "loading", false)
 				.invoke("prop", "actionText", "Multiple results")
 				.invoke("prop", "currentVersionIndex", 2)
 				.invoke("prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
-				.should("have.prop", "assistantState", "Initial")
+				.should("have.prop", "loading", false)
 				.should("have.prop", "currentVersionIndex", 2)
 				.should("have.prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist")
 				.should("have.prop", "currentStep", 2)
 				.should("have.prop", "totalSteps", 3);
@@ -658,7 +685,7 @@ describe("WritingAssistant Component", () => {
 		it("should handle zero total versions", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={0}
 				/>
@@ -669,14 +696,14 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 		});
 
 		it("should handle single version", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={1}
 					totalVersions={1}
 				/>
@@ -684,12 +711,12 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("not.exist");
 		});
 
-		it("should handle invalid assistant state gracefully", () => {
-			cy.mount(<WritingAssistant assistantState={"InvalidState" as any} />);
+		it("should handle invalid loading state gracefully", () => {
+			cy.mount(<WritingAssistant loading={"InvalidState" as any} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("exist");
@@ -703,7 +730,7 @@ describe("WritingAssistant Component", () => {
 		it("should handle negative version indices", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={-1}
 					totalVersions={3}
 				/>
@@ -714,14 +741,14 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist");
 		});
 	});
 
 	describe("Accessibility", () => {
 		it("should have proper ARIA attributes for AI button", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -733,7 +760,7 @@ describe("WritingAssistant Component", () => {
 		it("should have proper ARIA attributes for version navigation", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={5}
 				/>
@@ -741,7 +768,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.as("versioning")
 				.should("exist");
 
@@ -761,7 +788,7 @@ describe("WritingAssistant Component", () => {
 		it("should provide keyboard navigation support", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={2}
 					totalVersions={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
@@ -781,7 +808,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
 				.should("be.visible")
@@ -793,7 +820,7 @@ describe("WritingAssistant Component", () => {
 		it("should have proper semantic structure", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Loading"
+					loading={true}
 					actionText="Processing..."
 				/>
 			);
@@ -805,7 +832,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -819,7 +846,7 @@ describe("WritingAssistant Component", () => {
 		it("should properly integrate with Versioning component", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					currentVersionIndex={3}
 					totalVersions={5}
 				/>
@@ -827,23 +854,25 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist")
 				.should("have.prop", "currentStep", 3)
 				.should("have.prop", "totalSteps", 5);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
 				.should("contain.text", "3 / 5");
 		});
 
 		it("should maintain proper layout with all elements", () => {
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					actionText="Generated multiple results"
 					currentVersionIndex={2}
 					totalVersions={4}
@@ -859,12 +888,12 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("[ui5-ai-textarea-versioning]")
+				.find("[ui5-ai-versioning]")
 				.should("exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
-				.find("ui5-label")
+				.find("ui5-ai-toolbar-label")
 				.should("exist");
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -881,21 +910,21 @@ describe("WritingAssistant Component", () => {
 
 	describe("Performance", () => {
 		it("should handle rapid state changes efficiently", () => {
-			cy.mount(<WritingAssistant assistantState="Initial" />);
+			cy.mount(<WritingAssistant loading={false} />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar");
 
-			const states = ["Initial", "Loading"];
+			const loadingStates = [false, true];
 			
 			// Rapidly change states
-			states.forEach((state, index) => {
-				cy.get("@toolbar").invoke("prop", "assistantState", state);
+			loadingStates.forEach((loading, index) => {
+				cy.get("@toolbar").invoke("prop", "loading", loading);
 				cy.get("@toolbar").invoke("prop", "actionText", `State ${index}`);
 			});
 
 			cy.get("@toolbar")
-				.should("have.prop", "assistantState", "Loading");
+				.should("have.prop", "loading", true);
 		});
 
 		it("should not cause memory leaks with event handlers", () => {
@@ -903,7 +932,7 @@ describe("WritingAssistant Component", () => {
 
 			cy.mount(
 				<WritingAssistant
-					assistantState="Initial"
+					loading={false}
 					onButtonClick={onButtonClick}
 				/>
 			);
