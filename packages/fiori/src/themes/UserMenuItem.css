@@ -9,3 +9,8 @@
 :host(:first-of-type) {
     margin-top: 0;
 }
+
+ui5-user-menu-item::part(icon) {
+	min-width: 1.5rem;   /* adjust as needed */
+	display: inline-block;
+}

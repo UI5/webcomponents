@@ -5,6 +5,8 @@ import UserMenuItemTemplate from "./UserMenuItemTemplate.js";
 
 // Styles
 import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
+import {isInstanceOfMenuItemGroup} from "@ui5/webcomponents/dist/MenuItemGroup.js";
+import {isInstanceOfMenuSeparator} from "@ui5/webcomponents/dist/MenuSeparator.js";
 
 /**
  * @class

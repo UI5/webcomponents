@@ -32,6 +32,7 @@ import {
 	USER_MENU_CURRENT_INFORMATION_TXT,
 	USER_MENU_ACTIONS_TXT,
 } from "./generated/i18n/i18n-defaults.js";
+import {isInstanceOfMenuItem} from "@ui5/webcomponents/dist/MenuItem.js";
 
 type UserMenuItemClickEventDetail = {
 	item: UserMenuItem;
@@ -269,6 +270,11 @@ class UserMenu extends UI5Element {
 
 	onBeforeRendering() {
 		this._selectedAccount = this.accounts.find(account => account.selected) || this.accounts[0];
+		const siblingsWithIcon = this._menuItems.some(menuItem => !!menuItem.icon);
+
+		this._menuItems.forEach(item => {
+			item._siblingsWithIcon = siblingsWithIcon;
+		});
 	}
 
 	onAfterRendering(): void {
@@ -451,6 +457,10 @@ class UserMenu extends UI5Element {
 		if (ref) {
 			ref.associatedAccount = this;
 		}
+	}
+
+	get _menuItems() {
+		return this.menuItems.filter(isInstanceOfMenuItem);
 	}
 }
 
