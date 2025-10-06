@@ -367,6 +367,46 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 
 });
 
+describe("TableSelectionSingle", () => {
+	beforeEach(() => {
+		cy.mount(
+			<Table id="table1">
+				<TableSelectionSingle id="selection" slot="features"></TableSelectionSingle>
+				<TableHeaderRow id="headerRow" slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+	});
+
+	it("updates the header row selection cell when rows are added or removed", () => {
+		cy.get("#headerRow").shadow().find("#selection-cell").should("exist");
+
+		cy.get("#row1").invoke("remove");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
+
+		cy.get("#table1").then($table => {
+			$table.append(
+				`<ui5-table-row id="row1">
+					<ui5-table-cell>Cell A</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row id="row2">
+					<ui5-table-cell>Cell A</ui5-table-cell>
+				</ui5-table-row>`
+			);
+		});
+		cy.get("#headerRow").shadow().find("#selection-cell").should("exist");
+
+		cy.get("#row1").invoke("remove");
+		cy.get("#row2").invoke("remove");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
+	});
+});
+
+
 describe("TableSelectionMulti", () => {
 	beforeEach(() => {
 		cy.mount(

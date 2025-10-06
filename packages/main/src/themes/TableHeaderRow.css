@@ -12,7 +12,7 @@
 :host([sticky]) {
 	position: sticky;
 	top: var(--ui5_grid_sticky_top, 0);
-	z-index: 2;
+	z-index: 3;
 }
 
 #popin-cell {
