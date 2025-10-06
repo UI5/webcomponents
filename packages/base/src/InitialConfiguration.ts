@@ -23,6 +23,7 @@ type InitialConfig = {
 	noConflict: boolean,
 	formatSettings: FormatSettings,
 	fetchDefaultLanguage: boolean,
+	fetchDefaultThemingCSSVars: boolean,
 	defaultFontLoading: boolean,
 	enableDefaultTooltips: boolean,
 };
@@ -39,6 +40,7 @@ let initialConfig: InitialConfig = {
 	noConflict: false, // no URL
 	formatSettings: {},
 	fetchDefaultLanguage: false,
+	fetchDefaultThemingCSSVars: true,
 	defaultFontLoading: true,
 	enableDefaultTooltips: true,
 };
@@ -82,6 +84,16 @@ const getLanguage = () => {
 const getFetchDefaultLanguage = () => {
 	initConfiguration();
 	return initialConfig.fetchDefaultLanguage;
+};
+
+/**
+ * Returns if the default language, that is inlined at build time,
+ * should be fetched over the network instead.
+ * @returns {Boolean}
+ */
+const getFetchDefaultThemingCSSVars = () => {
+	initConfiguration();
+	return initialConfig.fetchDefaultThemingCSSVars;
 };
 
 const getNoConflict = () => {
@@ -257,4 +269,5 @@ export {
 	getDefaultFontLoading,
 	resetConfiguration,
 	getEnableDefaultTooltips,
+	getFetchDefaultThemingCSSVars,
 };

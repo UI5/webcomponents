@@ -1,4 +1,4 @@
-import { getTheme as getConfiguredTheme } from "../InitialConfiguration.js";
+import { getTheme as getConfiguredTheme, getFetchDefaultThemingCSSVars as getConfiguredFetchDefaultThemingCSSVars } from "../InitialConfiguration.js";
 import { reRenderAllUI5Elements } from "../Render.js";
 import applyTheme from "../theming/applyTheme.js";
 import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
@@ -7,6 +7,7 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
+let fetchDefaultThemingCSSVars: boolean | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
@@ -91,6 +92,14 @@ const isLegacyThemeFamilyAsync = async () => {
 
 const isKnownTheme = (theme: string) => SUPPORTED_THEMES.includes(theme);
 
+const getFetchDefaultThemingCSSVars = (): boolean => {
+	if (fetchDefaultThemingCSSVars === undefined) {
+		fetchDefaultThemingCSSVars = getConfiguredFetchDefaultThemingCSSVars();
+	}
+
+	return fetchDefaultThemingCSSVars;
+};
+
 export {
 	getTheme,
 	setTheme,
@@ -98,4 +107,5 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
+	getFetchDefaultThemingCSSVars,
 };

@@ -7,6 +7,7 @@ import { attachCustomThemeStylesToHead, getThemeRoot } from "../config/ThemeRoot
 import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
+import { getFetchDefaultThemingCSSVars } from "../config/Theme.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -21,6 +22,11 @@ const isThemeBaseRegistered = () => {
 };
 
 const loadThemeBase = async (theme: string) => {
+	// If getFetchDefaultThemingCSSVars is false, do not load theme CSS properties from theming package.
+	if (!getFetchDefaultThemingCSSVars()) {
+		return;
+	}
+
 	if (!isThemeBaseRegistered()) {
 		return;
 	}
