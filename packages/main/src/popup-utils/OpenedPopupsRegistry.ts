@@ -1,6 +1,7 @@
 import getSharedResource from "@ui5/webcomponents-base/dist/getSharedResource.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
+import isEventMarked from "@ui5/webcomponents-base/dist/util/isEventMarked.js";
 import type OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import type Popup from "../Popup.js";
 import type { PopupInfo } from "@ui5/webcomponents-base/dist/features/patchPopup.js";
@@ -64,7 +65,7 @@ const _keydownListener = (event: KeyboardEvent) => {
 		return;
 	}
 
-	if (isEscape(event)) {
+	if (isEscape(event) && !isEventMarked(event)) {
 		const topmostPopup = OpenedPopupsRegistry.openedRegistry[OpenedPopupsRegistry.openedRegistry.length - 1].instance;
 
 		if (openUI5Support && topmostPopup !== openUI5Support.getTopmostPopup()) {
