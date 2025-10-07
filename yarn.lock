@@ -2449,9 +2449,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@custom-elements-manifest/analyzer@npm:0.10.6":
-  version: 0.10.6
-  resolution: "@custom-elements-manifest/analyzer@npm:0.10.6"
+"@custom-elements-manifest/analyzer@npm:^0.10.10":
+  version: 0.10.10
+  resolution: "@custom-elements-manifest/analyzer@npm:0.10.10"
   dependencies:
     "@custom-elements-manifest/find-dependencies": "npm:^0.0.6"
     "@github/catalyst": "npm:^1.6.0"
@@ -2466,28 +2466,7 @@ __metadata:
   bin:
     cem: cem.js
     custom-elements-manifest: cem.js
-  checksum: 10c0/6f51d75dea6b1686581342491b8ace10d0d902f5e228c1c0691cc807ba49d80a885a2e5eb3825cf16c1c1c8c4bc5df8b8c60cbd5f1c12ca339b79c0bda834944
-  languageName: node
-  linkType: hard
-
-"@custom-elements-manifest/analyzer@patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch":
-  version: 0.10.6
-  resolution: "@custom-elements-manifest/analyzer@patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch::version=0.10.6&hash=ed4060"
-  dependencies:
-    "@custom-elements-manifest/find-dependencies": "npm:^0.0.6"
-    "@github/catalyst": "npm:^1.6.0"
-    "@web/config-loader": "npm:0.1.3"
-    chokidar: "npm:3.5.2"
-    command-line-args: "npm:5.1.2"
-    comment-parser: "npm:1.2.4"
-    custom-elements-manifest: "npm:1.0.0"
-    debounce: "npm:1.2.1"
-    globby: "npm:11.0.4"
-    typescript: "npm:~5.4.2"
-  bin:
-    cem: cem.js
-    custom-elements-manifest: cem.js
-  checksum: 10c0/73fa05172849711066372010ea6787e536c46e43ac661ac1737445c632c693882b12ab0b33168d6c5738f6d85db56849ae5b96c5854ca876915033f5dbb72729
+  checksum: 10c0/2fdc51f3f1b67a390650e75088e7113b1b30b2e232f0be323b44aae202ecb7539d3b9d4632afb5344614aae292620c6f9295cdad0e1a6f546d97f3a20e1aa2a0
   languageName: node
   linkType: hard
 
@@ -6864,7 +6843,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-ai@workspace:packages/ai"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents": "npm:2.15.0"
     "@ui5/webcomponents-base": "npm:2.15.0"
@@ -6882,7 +6861,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-base@workspace:packages/base"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@lit-labs/ssr-dom-shim": "npm:^1.1.2"
     "@openui5/sap.ui.core": "npm:1.120.17"
     "@sap-theming/theming-base-content": "npm:11.29.3"
@@ -6907,7 +6886,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-compat@workspace:packages/compat"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents": "npm:2.15.0"
     "@ui5/webcomponents-base": "npm:2.15.0"
@@ -6925,7 +6904,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-fiori@workspace:packages/fiori"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents": "npm:2.15.0"
     "@ui5/webcomponents-base": "npm:2.15.0"
@@ -7006,7 +6985,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-tools@workspace:packages/tools"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@typescript-eslint/eslint-plugin": "npm:^6.9.0"
     "@typescript-eslint/parser": "npm:^6.9.0"
     "@wdio/cli": "npm:^7.19.7"
@@ -7099,7 +7078,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents@workspace:packages/main"
   dependencies:
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch"
+    "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents-base": "npm:2.15.0"
     "@ui5/webcomponents-icons": "npm:2.15.0"
