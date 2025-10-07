@@ -317,19 +317,15 @@ describe("UploadCollection Rendering", () => {
 			<UploadCollection id="uploadCollection" />
 		);
 	
-		cy.get("#uploadCollection").then(($el) => {
-			const uploadCollection = $el[0] as UploadCollection;
-	
-			cy.get("#uploadCollection")
-				.shadow()
-				.find("> div.ui5-uc-root")
-				.should("exist");
+		cy.get("#uploadCollection")
+			.shadow()
+			.find("> div.ui5-uc-root")
+			.should("exist");
 			
-			cy.get("#uploadCollection")
-				.shadow()
-				.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
-				.should("exist");
-		});
+		cy.get("#uploadCollection")
+			.shadow()
+			.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
+			.should("exist");
 	});
 	
 	it("Tests classes update when items are present", () => {
@@ -339,14 +335,10 @@ describe("UploadCollection Rendering", () => {
 			</UploadCollection>
 		);
 	
-		cy.get("#uploadCollection").then(($el) => {
-			const uploadCollection = $el[0] as UploadCollection;
-	
-			cy.get("#uploadCollection")
-				.shadow()
-				.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
-				.should("not.exist");
-		});
+		cy.get("#uploadCollection")
+			.shadow()
+			.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
+			.should("not.exist");
 	});
 });
 
