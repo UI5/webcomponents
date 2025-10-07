@@ -1,18 +1,19 @@
 import { customElement, property, slot } from "@ui5/webcomponents-base";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import AIInputTemplate from "./AIInputTemplate.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
-import AIInputCss from "./generated/themes/AIInput.css.js";
-import InputCss from "@ui5/webcomponents/src/generated/themes/Input.css.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-
-import "@ui5/webcomponents-icons/dist/arrow-left.js";
-import "@ui5/webcomponents-icons/dist/arrow-right.js";
-import type Menu from "@ui5/webcomponents/src/Menu.js";
-import SuggestionsCss from "@ui5/webcomponents/src/generated/themes/Suggestions.css.js";
-import ValueStateMessageCss from "@ui5/webcomponents/src/generated/themes/ValueStateMessage.css.js";
-import ResponsivePopoverCommonCss from "@ui5/webcomponents/src/generated/themes/ResponsivePopoverCommon.css.js";
+import type Menu from "@ui5/webcomponents/dist/Menu.js";
 import type Button from "./Button.js";
+
+// styles
+import AIInputCss from "./generated/themes/AIInput.css.js";
+import InputCss from "@ui5/webcomponents/dist/generated/themes/Input.css.js";
+import ResponsivePopoverCommonCss from "@ui5/webcomponents/dist/generated/themes/ResponsivePopoverCommon.css.js";
+import ValueStateMessageCss from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
+import SuggestionsCss from "@ui5/webcomponents/dist/generated/themes/Suggestions.css.js";
+
+// templates
+import AIInputTemplate from "./AIInputTemplate.js";
 
 enum LastClickedButton {
 	None = "",
