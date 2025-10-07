@@ -138,12 +138,7 @@
 	padding: 0 0.5rem;
 	border: 1px solid var(--sapButton_Hover_BorderColor);
 	background: var(--sapButton_Background);
-}
-
-.ui5-carousel-navigation-button {
 	pointer-events: all;
-}
-.ui5-carousel-navigation-button [ui5-icon] {
 	color: var(--sapButton_TextColor);
 }
 
@@ -159,7 +154,6 @@
 	outline-offset: 1px;
 	color: var(--sapButton_Active_TextColor);
 	box-shadow: none;
-
 }
 
 .ui5-carousel-navigation-arrows .ui5-carousel-navigation-button {

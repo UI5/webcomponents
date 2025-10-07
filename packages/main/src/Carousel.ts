@@ -16,6 +16,7 @@ import {
 	isPageDown,
 	isPageUp,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
@@ -38,6 +39,7 @@ import CarouselPageIndicatorType from "./types/CarouselPageIndicatorType.js";
 import type BackgroundDesign from "./types/BackgroundDesign.js";
 import type BorderDesign from "./types/BorderDesign.js";
 import CarouselTemplate from "./CarouselTemplate.js";
+import type Icon from "./Icon.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 
@@ -633,8 +635,8 @@ class Carousel extends UI5Element {
 		this.carouselItemDomRef(this._focusedItemIndex)[0].focus({ preventScroll: true });
 	}
 
-	_navButtonClick(e: MouseEvent) {
-		const target = e.currentTarget as HTMLElement;
+	_navButtonClick(e: UI5CustomEvent<Icon, "click">) {
+		const target = e.target as Icon;
 		if (this._visibleItemsIndexes.length > 1) {
 			if (target.hasAttribute("data-ui5-arrow-forward")) {
 				this.navigateArrowRight();

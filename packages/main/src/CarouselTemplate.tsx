@@ -62,42 +62,31 @@ export default function CarouselTemplate(this: Carousel) {
 }
 
 function arrowBack(this: Carousel) {
-	return <span
-		role="presentation"
-		aria-hidden="true"
-		title={this.previousPageText}
+	return <Icon name={slimArrowLeft}
+		tabindex={-1}
+		data-ui5-arrow-back
+		title={this.previousPageText	}
+		mode="Decorative"
 		class={{
 			"ui5-carousel-navigation-button": true,
 			"ui5-carousel-navigation-button--hidden": !this.hasPrev
 		}}
-		data-ui5-arrow-back
-		onClick={e => this._navButtonClick(e as MouseEvent)}
-	>
-		<Icon name={slimArrowLeft}
-			data-ui5-arrow-back
-			inert
-			tabindex={-1}
-		/>
-	</span>;
+		onClick={this._navButtonClick}
+	/>;
 }
 
 function arrowForward(this: Carousel) {
-	return <span
+	return <Icon name={slimArrowRight}
+		tabindex={-1}
 		data-ui5-arrow-forward
 		title={this.nextPageText}
-		role="presentation"
-		aria-hidden="true"
-		onClick={e => this._navButtonClick(e as MouseEvent)}
+		mode="Decorative"
 		class={{
 			"ui5-carousel-navigation-button": true,
 			"ui5-carousel-navigation-button--hidden": !this.hasNext
 		}}
-	>
-		<Icon name={slimArrowRight}
-			inert
-			tabindex={-1}
-		/>
-	</span>;
+		onClick={this._navButtonClick}
+	/>;
 }
 
 function navIndicator(this: Carousel) {
