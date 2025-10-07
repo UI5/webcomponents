@@ -11,6 +11,9 @@ import {
 	VERSIONING_PREVIOUS_BUTTON_TEXT,
 	VERSIONING_NEXT_BUTTON_TEXT,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
+	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_BUTTON_TOOLTIP,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -187,6 +190,18 @@ class WritingAssistant extends UI5Element {
 
 	get _nextButtonAccessibleName() {
 		return WritingAssistant.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+	}
+
+	get _toolbarAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME);
+	}
+
+	get _buttonAccessibleName() {
+		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME);
+	}
+
+	get _buttonTooltip() {
+		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP);
 	}
 }
 

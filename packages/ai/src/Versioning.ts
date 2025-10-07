@@ -9,6 +9,8 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	VERSIONING_PREVIOUS_BUTTON_TEXT,
 	VERSIONING_NEXT_BUTTON_TEXT,
+	VERSIONING_PREVIOUS_BUTTON_TOOLTIP,
+	VERSIONING_NEXT_BUTTON_TOOLTIP,
 } from "./generated/i18n/i18n-defaults.js";
 
 // UI5 Components
@@ -46,7 +48,8 @@ enum LastClickedButton {
  * The `ui5-ai-versioning` consists of the following elements:
  * - Previous Button: Navigates to the previous version (disabled when at first version)
  * - Version Counter: Shows current version / total versions (e.g., "2 / 5")
- * - Next Button: Navigates to the next version (disabled when at last version)
+ * - Next Button: Navigates to the nex
+ * t version (disabled when at last version)
  *
  * ### Focus Management
  * The component automatically manages focus when users reach version boundaries,
@@ -178,6 +181,14 @@ class Versioning extends ToolbarItem {
 
 	get _nextButtonAccessibleName() {
 		return Versioning.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+	}
+
+	get _previousButtonTooltip() {
+		return Versioning.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TOOLTIP);
+	}
+
+	get _nextButtonTooltip() {
+		return Versioning.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TOOLTIP);
 	}
 
 	/**

@@ -10,6 +10,7 @@ export default function VersioningTemplate(this: Versioning) {
 			<ToolbarButton
 				design="Transparent"
 				icon="navigation-left-arrow"
+				tooltip={this._previousButtonTooltip}
 				accessibleName={this._previousButtonAccessibleName}
 				disabled={this.currentStep <= 1}
 				onClick={this.handlePreviousVersionClick}
@@ -22,6 +23,7 @@ export default function VersioningTemplate(this: Versioning) {
 			<ToolbarButton
 				design="Transparent"
 				icon="navigation-right-arrow"
+				tooltip={this._nextButtonTooltip}
 				accessibleName={this._nextButtonAccessibleName}
 				disabled={this.totalSteps <= 0 || this.currentStep >= this.totalSteps}
 				onClick={this.handleNextVersionClick}
