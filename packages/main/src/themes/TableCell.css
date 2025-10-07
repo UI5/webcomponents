@@ -4,14 +4,15 @@
 	align-items: center;
 }
 
-:host([_popin]) .popin-header {
+:host([_popin]) #popin-header {
 	color: var(--sapContent_LabelColor);
 }
 
-.popin-colon {
+#popin-colon {
 	padding-inline-end: 0.5rem;
+	white-space: pre;
 }
 
-.popin-header {
+#popin-header {
 	display: contents;
 }

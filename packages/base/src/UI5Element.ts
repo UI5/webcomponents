@@ -159,7 +159,7 @@ type KebabToCamel<T extends string> = T extends `${infer H}-${infer J}${infer K}
 	: T;
 type KebabToPascal<T extends string> = Capitalize<KebabToCamel<T>>;
 
-type GlobalHTMLAttributeNames = "accesskey" | "autocapitalize" | "autofocus" | "autocomplete" | "contenteditable" | "contextmenu" | "class" | "dir" | "draggable" | "enterkeyhint" | "hidden" | "id" | "inputmode" | "lang" | "nonce" | "part" | "exportparts" | "pattern" | "slot" | "spellcheck" | "style" | "tabIndex" | "tabindex" | "title" | "translate" | "ref" | "inert";
+type GlobalHTMLAttributeNames = "accesskey" | "autocapitalize" | "autofocus" | "autocomplete" | "contenteditable" | "contextmenu" | "class" | "dir" | "draggable" | "enterkeyhint" | "hidden" | "id" | "inputmode" | "lang" | "nonce" | "part" | "exportparts" | "pattern" | "slot" | "spellcheck" | "style" | "tabIndex" | "tabindex" | "title" | "translate" | "ref" | "inert" | "role";
 type ElementProps<I> = Partial<Omit<I, keyof HTMLElement>>;
 type TargetedCustomEvent<D, T> = Omit<CustomEvent<D>, "currentTarget"> & { currentTarget: T };
 // define as method and extract the function signature from the method to make it bivariant so that inheritance of event handlers is not checked via strictFunctionTypes
@@ -1115,8 +1115,8 @@ abstract class UI5Element extends HTMLElement {
 	 * Returns the component accessibility info.
 	 * @private
 	 */
-	get accessibilityInfo(): AccessibilityInfo {
-		return {};
+	get accessibilityInfo(): AccessibilityInfo | undefined {
+		return undefined;
 	}
 
 	/**

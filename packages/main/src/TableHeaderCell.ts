@@ -4,6 +4,7 @@ import TableCellBase from "./TableCellBase.js";
 import TableHeaderCellTemplate from "./TableHeaderCellTemplate.js";
 import TableHeaderCellStyles from "./generated/themes/TableHeaderCell.css.js";
 import SortOrder from "@ui5/webcomponents-base/dist/types/SortOrder.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import type TableHeaderCellActionBase from "./TableHeaderCellActionBase.js";
 
 /**
@@ -124,6 +125,12 @@ class TableHeaderCell extends TableCellBase {
 	@property({ type: Boolean, noAttribute: true })
 	_popin = false;
 
+	@query("slot:not([name])")
+	_defaultSlot!: HTMLSlotElement;
+
+	@query("slot[name=action]")
+	_actionSlot!: HTMLSlotElement;
+
 	protected ariaRole: string = "columnheader";
 	_popinWidth: number = 0;
 
@@ -134,6 +141,12 @@ class TableHeaderCell extends TableCellBase {
 			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
 		}
 		toggleAttribute(this, "aria-sort", this.sortIndicator !== SortOrder.None, this.sortIndicator.toLowerCase());
+	}
+
+	get accessibilityInfo() {
+		return {
+			children: [this._defaultSlot, this._actionSlot],
+		};
 	}
 }
 
