@@ -288,7 +288,7 @@ class Menu extends UI5Element {
 			if (isInstanceOfMenuItemGroup(item)) {
 				items.push(...item._menuItems);
 			} else if (!isInstanceOfMenuSeparator(item)) {
-				items.push(item as MenuItem);
+				items.push(item);
 			}
 		});
 

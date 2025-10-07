@@ -35,463 +35,287 @@
     aria-label="AI-powered inputs">
     <!-- value-state="Information" -->
     <!-- <div slot="valueStateMessage">Information message.</div> -->
-    <ui5-menu-item text="Generate text" slot="menuItems" additional-text="Ctrl + Enter" data-menu-action="generate"></ui5-menu-item>
+    <ui5-menu-item text="Generate text" slot="default" additional-text="Ctrl + Enter" data-menu-action="generate"></ui5-menu-item>
   </ui5-ai-input>
 
-  <!-- <script>
+  	<script>
+		const SAMPLE_TEXTS = {
+			en: "Innovation managers operate something.",
+			bg: "Translation in Bulgarian",
+			de: "Translation in German",
+			expanded: "Innovation managers play a pivotal role.",
+			rephrased: "Innovation managers leverage creativity.",
+			simplified: "Innovation managers alabala.",
+			summarized: "Innovation managers aaa."
+		};
 
-    'use strict';
+		const MENU_CONFIG = [
+			{
+				text: "Regenerate",
+				action: "regenerate",
+				shortcut: "Ctrl+Enter",
+				processingLabel: "Regenerating text",
+				completedLabel: "Regenerated text",
+				textKey: "en",
+				replaces: "generate"
+			},
+			{
+				text: "Fix spelling and grammar",
+				action: "fixSpelling",
+				processingLabel: "Fixing spelling and grammar",
+				completedLabel: "Fixed spelling and grammar",
+				textKey: "en",
+				startsSection: true
+			},
+			{
+				text: "Rewrite text",
+				isGroup: true,
+				children: [
+					{ text: "Simplify", action: "simplify", processingLabel: "Simplifying text", completedLabel: "Simplified text", textKey: "simplified", isChild: true },
+					{ text: "Expand", action: "expand", processingLabel: "Expanding text", completedLabel: "Expanded text", textKey: "expanded", isChild: true },
+					{ text: "Rephrase", action: "rephrase", processingLabel: "Rephrasing text", completedLabel: "Rephrased text", textKey: "rephrased", isChild: true },
+					{ text: "Summarize", action: "summarize", processingLabel: "Summarizing text", completedLabel: "Summarized text", textKey: "summarized", isChild: true }
+				]
+			},
+			{
+				text: "Translate",
+				isGroup: true,
+				children: [
+					{ text: "English", action: "translateEN", processingLabel: "Translating to English", completedLabel: "Translated to English", textKey: "en", isChild: true },
+					{ text: "German", action: "translateDE", processingLabel: "Translating to German", completedLabel: "Translated to German", textKey: "de", isChild: true },
+					{ text: "Bulgarian", action: "translateBG", processingLabel: "Translating to Bulgarian", completedLabel: "Translated to Bulgarian", textKey: "bg", isChild: true }
+				]
+			}
+		];
 
-    const CONFIG = {
-      ANALYZING_DELAY: 2000,
-      TYPING_SPEED: 20,
-      MAX_HISTORY_SIZE: 20,
-    };
+    // document.getElementById("ai-input").querySelector("ui5-icon")
 
-    const SAMPLE_RESPONSES = {
-      generate: [
-        "This is the first generated suggestion from the AI assistant.",
-        "Here’s an alternative generated response.",
-        "Another way the AI might phrase it."
-      ]
-    };
+		let versionHistory = [];
+		let currentIndexHistory = 0;
+		let currentActionInProgress = null;
+		let typingInterval = null;
+		let isGenerating = false;
+		let currentGenerationId = 0;  // used to cancel stale runs
 
-    let lastGeneratedIndex = -1;
-    let history = [];
-    let currentIndex = 0;
-    let isGenerating = false;
-    let typingInterval = null;
-    let changeCount = 0;
-    let inputCount = 0;
+		const aiInput = document.getElementById("ai-input");
+		menu = document.getElementById('ai-wa-menu');
 
-    const aiInput = document.getElementById("ai-input");
-    // aiInput.menuItems = [
-    //     {text: "Generate"}
-    // ]
+		aiInput.addEventListener('version-change', handleVersionChange);
+		aiInput.addEventListener('stop-generation', stopGeneration);
 
-    function addToHistory(value, label) {
-      // , valueState, valueStateMessage) {
-      history.push({ value, label });
-        // , valueState, valueStateMessage });
-      if (history.length > CONFIG.MAX_HISTORY_SIZE) {
-        history.shift();
-      }
-      currentIndex = history.length - 1;
-      aiInput.currentVersionIndex = currentIndex + 1;
-      aiInput.totalVersions = history.length;
-    }
+		aiInput.addEventListener('item-click', handleMenuItemClick);
 
-    function startTyping(text, label) {
-      return new Promise(resolve => {
-        let chars = text.split("");
-        let pos = 0;
-        aiInput.loading = true;
-        aiInput.value = "";
-        typingInterval = setInterval(() => {
-          if (pos < chars.length) {
-            aiInput.value += chars[pos++];
-          } else {
-            clearInterval(typingInterval);
-            typingInterval = null;
-            isGenerating = false;
-            aiInput.loading = false;
-            addToHistory(aiInput.value, label)
-            // , aiInput?.valueState, aiInput?.valueStateMessage[0]?.textContent);
-            resolve();
-          }
-        }, CONFIG.TYPING_SPEED);
-      });
-    }
+		function delay(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
 
-    async function runAction(action) {
-      if (isGenerating) return;
+		function addToHistory(entry) {
+			versionHistory.push(entry);
+			if (versionHistory.length > 50) {
+				versionHistory.shift();
+				if (currentIndexHistory > 0) currentIndexHistory--;
+			}
+		}
 
-      if (action === "generate" || action === "regenerate") {
-        isGenerating = true;
-        aiInput.loading = true;
-        aiInput.value = action === "generate" ? "Generating..." : "Regenerating...";
+		function saveCurrentVersion() {
+			if (versionHistory.length > 0 && versionHistory[currentIndexHistory]) {
+				versionHistory[currentIndexHistory].value = aiInput.value;
+			}
+		}
 
-        await new Promise(r => setTimeout(r, CONFIG.ANALYZING_DELAY));
+		function updateComponentState(versionIndex = null) {
+			if (versionIndex !== null && versionHistory[versionIndex]) {
+				currentIndexHistory = versionIndex;
+				aiInput.value = versionHistory[versionIndex].value;
+			}
 
-        // pick a different response than last time
-        let nextIndex;
-        do {
-          nextIndex = Math.floor(Math.random() * SAMPLE_RESPONSES.generate.length);
-        } while (nextIndex === lastGeneratedIndex && SAMPLE_RESPONSES.generate.length > 1);
+			aiInput.currentVersion = currentIndexHistory + 1;
+			aiInput.totalVersions = versionHistory.length;
 
-        const text = SAMPLE_RESPONSES.generate[nextIndex];
-        lastGeneratedIndex = nextIndex;
+			if (versionHistory[currentIndexHistory]) {
+				aiInput.promptDescription = versionHistory[currentIndexHistory].endAction;
+			} else {
+				aiInput.promptDescription = "";
+			}
+		}
 
-        await startTyping(text, action === "generate" ? "Generated" : "Regenerated");
+		function createMenuItem(cfg) {
+			const item = document.createElement('ui5-menu-item');
+			item.setAttribute('text', cfg.text || '');
 
-        // after first generation → swap menu
-        if (action === "generate") {
-          buildAdvancedMenu();
-        }
-      }
-
-      if (action === "translate") {
-        console.log("Translate clicked (not implemented)");
-      }
-
-      if (action === "checkSpelling") {
-        console.log("Check spelling clicked (not implemented)");
-      }
-    }
-
-    function stopGeneration() {
-      if (!isGenerating) return;
-      clearInterval(typingInterval);
-      aiInput.loading = false;
-      isGenerating = false;
-      addToHistory(aiInput.value, "Stopped");
-    }
-
-    function buildAdvancedMenu() {
-      aiInput.querySelectorAll("ui5-menu-item[slot='menuItems']").forEach(i => i.remove());
-
-      const items = [
-        { text: "Regenerate", action: "regenerate", additionalText: "Ctrl + Enter" },
-        { text: "Translate", action: "translate" },
-        { text: "Check spelling and grammar", action: "checkSpelling" }
-      ];
-
-      items.forEach(cfg => {
-        const item = document.createElement("ui5-menu-item");
-        item.setAttribute("slot", "menuItems");
-        item.text = cfg.text;
-        item.dataset.menuAction = cfg.action;
-        item.additionalText = cfg.additionalText;
-        aiInput.appendChild(item);
-      });
-    }
-
-    // --- Events ---
-    aiInput.addEventListener("stop-generation", stopGeneration);
-
-    aiInput.addEventListener("version-change", e => {
-      // const { currentIndex } = e.detail;
-      const backwards = e.detail.backwards;
-      if(backwards){
-        aiInput.value = history[currentIndex - 1].value;
-        currentIndex--;
-      } else {
-        aiInput.value = history[currentIndex + 1].value;
-        currentIndex++;
-      }
-      // if (history[currentIndex - 1]) {
-        // aiInput.valueState = history[currentIndex -1].valueState;
-        // aiInput.valueStateMessage = history[currentIndex -1].valueStateMessage;
-      // }
-    });
-
-    // --- menu item handler setup ---
-    function attachMenuItemHandler(item) {
-      item.addEventListener("click", async () => {
-      console.log("asd");
-
-        const action = item.dataset.menuAction;
-        if (action) {
-          await runAction(action);
-        }
-      });
-    }
-
-    aiInput.querySelectorAll("ui5-menu-item[slot='menuItems']").forEach(attachMenuItemHandler);
-
-    const observer = new MutationObserver(mutations => {
-      for (const m of mutations) {
-        m.addedNodes.forEach(node => {
-          if (node.nodeType === 1 && node.matches("ui5-menu-item[slot='menuItems']")) {
-            attachMenuItemHandler(node);
-          }
-        });
-      }
-    });
-    observer.observe(aiInput, { childList: true });
-  </script> -->
- <script>
-    'use strict';
-
-    const SAMPLE_TEXTS = {
-  en: "Innovation drives progres.",
-  bg: "Иновациите движат напредъка.",
-  de: "Innovation treibt den Fortschritt voran.",
-  fixed: "Innovation drives progress." // corrected grammar version
-};
-
-const MENU_CONFIG = [
-  {
-    text: "Regenerate",
-    action: "regenerate",
-    shortcut: "Ctrl+Enter",
-    processingLabel: "Regenerating...",
-    completedLabel: "Regenerated",
-    textKey: "en",
-    replaces: "generate"
-  },
-  {
-    text: "Fix spelling and grammar",
-    action: "fixSpelling",
-    processingLabel: "Fixing grammar...",
-    completedLabel: "Grammar fixed",
-    textKey: "fixed",
-    startsSection: true
-  },
-  {
-    text: "Translate",
-    action: "translate",
-    isGroup: true,
-    processingLabel: "Translating...",
-    completedLabel: "Translated",
-    textKey: "de",
-    children: [
-      // { text: "English", action: "translateEN", processingLabel: "Translating...", completedLabel: "Translated to English", textKey: "en" },
-      // { text: "German", action: "translateDE", processingLabel: "Translating...", completedLabel: "Translated to German", textKey: "de" },
-      // { text: "Bulgarian", action: "translateBG", processingLabel: "Translating...", completedLabel: "Translated to Bulgarian", textKey: "bg" }
-    ]
-  }
-];
-
-    // state
-    let versionHistory = [];
-    let currentIndexHistory = 0;
-    let currentActionInProgress = null;
-    let typingInterval = null;
-    let isGenerating = false;
-    let currentGenerationId = 0;
-
-    const aiInput = document.getElementById('ai-input');
-
-    // --- helpers ---
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function addToHistory(entry) {
-      versionHistory.push(entry);
-      if (versionHistory.length > 50) versionHistory.shift();
-      currentIndexHistory = versionHistory.length - 1;
-      // reflect indexes on the component
-      aiInput.currentVersionIndex = currentIndexHistory + 1;
-      aiInput.totalVersions = versionHistory.length;
-    }
-
-    function saveCurrentVersion() {
-      if (versionHistory.length > 0 && versionHistory[currentIndexHistory]) {
-        versionHistory[currentIndexHistory].value = aiInput.value;
-      }
-    }
-
-    function updateComponentState(versionIndex = null) {
-      if (versionIndex !== null && versionHistory[versionIndex]) {
-        currentIndexHistory = versionIndex;
-        aiInput.value = versionHistory[versionIndex].value;
-      }
-      aiInput.currentVersion = currentIndexHistory + 1;
-      aiInput.totalVersions = versionHistory.length;
-      aiInput.promptDescription = (versionHistory[currentIndexHistory] && versionHistory[currentIndexHistory].endAction) || "";
-    }
-
-    // menu item creation helper (creates ui5-menu-item elements in the light DOM with slot="menuItems")
-    function createMenuItem(cfg) {
-      const item = document.createElement('ui5-menu-item');
-      item.setAttribute('slot', 'menuItems');
-      item.setAttribute('text', cfg.text || '');
-      if (cfg.action) {
-        // debugger;
-        item.dataset.action = cfg.action; // data-action]
-        if (cfg.processingLabel) item.dataset.processingLabel = cfg.processingLabel;
-        if (cfg.completedLabel) item.dataset.completedLabel = cfg.completedLabel;
-        if (cfg.textKey) item.dataset.textKey = cfg.textKey;
-      }
-      if (cfg.shortcut) item.setAttribute('additional-text', cfg.shortcut);
-      if (cfg.startsSection) item.setAttribute('starts-section', '');
-      return item;
-    }
-
-    function buildMenuFromConfig() {
-      const hasHistory = versionHistory.length > 0;
-      // only replace menu when we have history (same behaviour as RTE)
-      if (hasHistory) {
-        // remove existing slotted menu items
-        aiInput.querySelectorAll("ui5-menu-item[slot='menuItems']").forEach(i => i.remove());
-
-        MENU_CONFIG.forEach(cfg => {
-          // if cfg.replaces is set, we only include it when hasHistory etc. (mirrors RTE logic)
-          if (cfg.replaces && !hasHistory) return;
-
-          if (cfg.isGroup && Array.isArray(cfg.children)) {
-            // create a parent group item and append children under it
-            const group = createMenuItem(cfg);
-            cfg.children.forEach(childCfg => {
-              const childItem = createMenuItem(childCfg);
-              group.appendChild(childItem);
-            });
-            aiInput.appendChild(group);
-          } else {
-            const item = createMenuItem(cfg);
-            aiInput.appendChild(item);
-          }
-        });
-      }
-    }
-
-    // typing animation
-    function animateTextGeneration(text, action, menuItem) {
-      return new Promise(resolve => {
-        const chars = text.split('');
-        let i = 0;
-        aiInput.value = "";
-        aiInput.loading = true;
-        typingInterval = setInterval(() => {
-          if (i < chars.length) {
-            aiInput.value += chars[i++];
-          } else {
-            clearInterval(typingInterval);
-            typingInterval = null;
-            // add to history with completed label (if available)
-            const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
-            addToHistory({
-              value: aiInput.value,
-              action,
-              endAction: completedLabel,
-              timestamp: new Date().toISOString()
-            });
-            currentIndexHistory = versionHistory.length - 1;
-            currentActionInProgress = null;
-            isGenerating = false;
-            aiInput.loading = false;
-
-            // after first generation, swap menu (like RTE)
-            if (versionHistory.length === 1) buildMenuFromConfig();
-
-            updateComponentState();
-            resolve();
-          }
-        }, 10);
-      });
-    }
-
-    function setLoadingState(promptDescription) {
-      aiInput.value = "Analyzing request...";
-      aiInput.loading = true;
-      aiInput.promptDescription = promptDescription || '';
-    }
-
-    function resetGenerationState() {
-      if (typingInterval) {
-        clearInterval(typingInterval);
-        typingInterval = null;
-      }
-      isGenerating = false;
-      currentActionInProgress = null;
-      aiInput.loading = false;
-    }
-
-    function findMenuItemByAction(action) {
-      // menu items live in the light DOM of aiInput (slot="menuItems"), so query aiInput
-      return aiInput.querySelector(`ui5-menu-item[data-action="${action}"]`);
-    }
-
-    async function executeAction(action) {
-      if (isGenerating) return;
-
-      // find menu item to read processing/completed labels and textKey (if any)
-      const menuItem = findMenuItemByAction(action);
-      if (!menuItem) {
-        // fallback behaviour for simple actions
-        if (action === 'generate' || action === 'regenerate') {
-          // use simpler path if needed
-        } else {
-          console.warn('Menu item for action not found:', action);
-          return;
-        }
+      if(!cfg.isChild) {
+        item.setAttribute('slot', 'default');
       }
 
-      const processingLabel = (menuItem && menuItem.dataset.processingLabel) ? menuItem.dataset.processingLabel : 'Processing...';
-      const textKey = (menuItem && menuItem.dataset.textKey) ? menuItem.dataset.textKey : 'en';
+			if (cfg.action) {
+				item.dataset.action = cfg.action;
+				if (cfg.processingLabel) item.dataset.processingLabel = cfg.processingLabel;
+				if (cfg.completedLabel) item.dataset.completedLabel = cfg.completedLabel;
+				if (cfg.textKey) item.dataset.textKey = cfg.textKey;
+			}
+			if (cfg.shortcut) item.setAttribute('additional-text', cfg.shortcut);
+			if (cfg.startsSection) item.setAttribute('starts-section', '');
+			return item;
+		}
 
-      if(action === "translate") {
-        // debugger;
-      }
+		function buildMenuFromConfig() {
+			const hasHistory = versionHistory.length > 0;
 
-      saveCurrentVersion();
-      currentActionInProgress = action;
-      isGenerating = true;
-      currentGenerationId += 1;
-      const generationIdForThisRun = currentGenerationId;
+			if (hasHistory) {
+				aiInput.querySelectorAll("ui5-menu-item").forEach(item => item.remove());
+				MENU_CONFIG.forEach(cfg => {
+					if (cfg.replaces && !hasHistory) return;
 
-      setLoadingState(processingLabel);
+					if (cfg.isGroup && Array.isArray(cfg.children)) {
+						const group = createMenuItem(cfg);
+						cfg.children.forEach(child => {
+							const childItem = createMenuItem(child);
+							group.appendChild(childItem);
+						});
+						aiInput.appendChild(group);
+					} else {
+						aiInput.appendChild(createMenuItem(cfg));
+					}
+				});
+			}
+		}
 
-      await delay(3000);
+		function stopTypingAnimation() {
+			if (typingInterval) {
+				clearInterval(typingInterval);
+				typingInterval = null;
+			}
+		}
 
-      if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
-        resetGenerationState();
-        return;
-      }
+		function completeGeneration(action, menuItem) {
+			stopTypingAnimation();
+			const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
 
-      // choose sample text according to textKey
-      const text = SAMPLE_TEXTS[textKey] || SAMPLE_TEXTS.en;
-      await animateTextGeneration(text, action, menuItem);
-    }
+			addToHistory({
+				value: aiInput.value,
+				action,
+				endAction: completedLabel,
+				timestamp: new Date().toISOString()
+			});
 
-    function stopGeneration() {
-      if (!isGenerating) return;
-      if (typingInterval) {
-        clearInterval(typingInterval);
-        typingInterval = null;
-      }
-      currentGenerationId += 1;
-      const action = currentActionInProgress || 'generate';
-      const menuItem = findMenuItemByAction(action);
-      const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
+			currentIndexHistory = versionHistory.length - 1;
+			currentActionInProgress = null;
+			isGenerating = false;
 
-      addToHistory({
-        value: aiInput.value,
-        action,
-        endAction: completedLabel + " (stopped)",
-        timestamp: new Date().toISOString()
-      });
+			if (versionHistory.length === 1) buildMenuFromConfig();
 
-      currentIndexHistory = versionHistory.length - 1;
-      currentActionInProgress = null;
-      isGenerating = false;
+			updateComponentState();
+			aiInput.loading = false;
+		}
 
-      if (versionHistory.length === 1) buildMenuFromConfig();
+		function animateTextGeneration(text, action, menuItem) {
+			return new Promise(resolve => {
+				const chars = text.split('');
+				let i = 0;
+				aiInput.value = "";
+				aiInput.loading = true;
 
-      updateComponentState();
-      aiInput.loading = false;
-    }
+				typingInterval = setInterval(() => {
+					if (i < chars.length) {
+						aiInput.value += chars[i++];
+					} else {
+						completeGeneration(action, menuItem);
+						resolve();
+					}
+				}, 10);
+			});
+		}
 
-    function handleVersionChange(event) {
-      const { backwards } = event.detail || {};
-      if (backwards && currentIndexHistory > 0) {
-        saveCurrentVersion();
-        updateComponentState(currentIndexHistory - 1);
-      } else if (!backwards && currentIndexHistory < versionHistory.length - 1) {
-        saveCurrentVersion();
-        updateComponentState(currentIndexHistory + 1);
-      }
-    }
+		function setLoadingState(promptDescription) {
+			aiInput.value = "Analyzing request..."
+			aiInput.loading = true;
+			aiInput.promptDescription = promptDescription || '';
+		}
 
-    // --- events ---
-    aiInput.addEventListener('version-change', handleVersionChange);
-    aiInput.addEventListener('stop-generation', stopGeneration);
+		function resetGenerationState() {
+			stopTypingAnimation();
+			isGenerating = false;
+			currentActionInProgress = null;
+			aiInput.loading = false;
+		}
 
-    // IMPORTANT: listen on aiInput.item-click (we forward the menu's item-click from the shadowRoot)
-    aiInput.addEventListener('item-click', async (event) => {
-      const clickedItem = event?.detail?.item;
-      // prefer data-action (from the MENU_CONFIG), but be tolerant with older data-menu-action
-      const action = clickedItem?.dataset?.action || clickedItem?.dataset?.menuAction;
-      if (!action) return;
-      await executeAction(action);
-    });
+		function findMenuItemByAction(action) {
+			return aiInput.querySelector(`ui5-menu-item[data-menu-action="${action}"]`) || aiInput.querySelector(`ui5-menu-item[data-action="${action}"]`);
+		}
 
-    // done: initial state unchanged (Generate item in markup). Everything else will be created by buildMenuFromConfig after first generation.
-  </script>
+		async function executeAction(action) {
+			if (isGenerating) return;
 
+			const menuItem = findMenuItemByAction(action);
+			if (!menuItem) return;
+
+			const processingLabel = menuItem.dataset.processingLabel || 'Processing...';
+			const textKey = menuItem.dataset.textKey || 'en';
+
+			saveCurrentVersion();
+			currentActionInProgress = action;
+			isGenerating = true;
+			currentGenerationId += 1;
+			const generationIdForThisRun = currentGenerationId;
+
+			setLoadingState(processingLabel);
+
+			await delay(3000);
+
+			if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
+				resetGenerationState();
+				return;
+			}
+
+			const text = SAMPLE_TEXTS[textKey] || SAMPLE_TEXTS.en;
+			await animateTextGeneration(text, action, menuItem);
+		}
+
+		function stopGeneration() {
+			if (!isGenerating) return;
+
+			stopTypingAnimation();
+			currentGenerationId += 1;
+			const action = currentActionInProgress || 'generate';
+			const menuItem = findMenuItemByAction(action);
+			const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
+
+			addToHistory({
+				value: aiInput.value,
+				action,
+				endAction: completedLabel + " (stopped)",
+				timestamp: new Date().toISOString()
+			});
+
+			currentIndexHistory = versionHistory.length - 1;
+			currentActionInProgress = null;
+			isGenerating = false;
+
+			if (versionHistory.length === 1) buildMenuFromConfig();
+
+			updateComponentState();
+			aiInput.loading = false;
+		}
+
+		function handleVersionChange(event) {
+      // debugger;
+			const { backwards } = event.detail || {};
+			if (backwards && currentIndexHistory > 0) {
+				saveCurrentVersion();
+				updateComponentState(currentIndexHistory - 1);
+			} else if (!backwards && currentIndexHistory < versionHistory.length - 1) {
+				saveCurrentVersion();
+				updateComponentState(currentIndexHistory + 1);
+			}
+		}
+
+		async function handleMenuItemClick(event) {
+
+			const action = event?.detail?.item?.dataset?.menuAction || event?.detail?.item?.dataset?.action;
+			if (!action) return;
+			await executeAction(action);
+		}
+	</script>
 </body>
 
 </html>
-
