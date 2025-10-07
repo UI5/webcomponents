@@ -1,13 +1,13 @@
 import type AIInput from "./AIInput.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
-import MenuItem from "@ui5/webcomponents/src/MenuItem.js";
+import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
-import Menu from "@ui5/webcomponents/src/Menu.js";
+import Menu from "@ui5/webcomponents/dist/Menu.js";
 import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
-import MenuSeparator from "@ui5/webcomponents/src/MenuSeparator.js";
-import InputPopoverTemplate from "@ui5/webcomponents/src/InputPopoverTemplate.js";
+import MenuSeparator from "@ui5/webcomponents/dist/MenuSeparator.js";
+import InputPopoverTemplate from "@ui5/webcomponents/dist/InputPopoverTemplate.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base";
 // import Versioning from "./Versioning.js";
 // import InputVersioning from "./InputVersioning.js";
