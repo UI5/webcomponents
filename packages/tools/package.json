@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-tools",
-  "version": "2.15.0-rc.2",
+  "version": "2.15.0-rc.3",
   "description": "UI5 Web Components: webcomponents.tools",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -37,7 +37,6 @@
     "chokidar-cli": "^3.0.0",
     "command-line-args": "^5.1.1",
     "comment-parser": "^1.4.0",
-    "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
     "custom-element-jet-brains-integration": "^1.4.4",
     "dotenv": "^16.5.0",
@@ -63,8 +62,8 @@
     "properties-reader": "^2.2.0",
     "recursive-readdir": "^2.2.2",
     "resolve": "^1.20.0",
-    "rimraf": "^3.0.2",
     "slash": "3.0.0",
+    "string-argv": "^0.3.2",
     "vite": "^5.4.8",
     "vite-plugin-istanbul": "^6.0.2",
     "wdio-chromedriver-service": "^7.3.2"

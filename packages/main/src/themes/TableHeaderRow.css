@@ -25,3 +25,8 @@
 	width: var(--_ui5_checkbox_inner_width_height);
 	height: var(--_ui5_checkbox_inner_width_height);
 }
+
+#actions-cell-content {
+	position: absolute;
+	clip: rect(0, 0, 0, 0);
+}
