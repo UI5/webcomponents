@@ -532,7 +532,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		firstDateString = this._getDisplayStringFromTimestamp((this._extractFirstTimestamp(value) as number) * 1000);
 		lastDateString = this._getDisplayStringFromTimestamp((this._extractLastTimestamp(value) as number) * 1000);
 
-		if (!firstDateString || !lastDateString) {
+		if (!firstDateString && !lastDateString) {
 			return value;
 		}
 
