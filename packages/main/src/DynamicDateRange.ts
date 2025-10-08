@@ -183,8 +183,6 @@ class DynamicDateRange extends UI5Element {
 
 	_lastSelectedOption?: IDynamicDateRangeOption;
 
-	_shouldFocusLastSelected = false;
-
 	@property({ type: Object })
 	currentValue?: DynamicDateRangeValue;
 
@@ -358,7 +356,6 @@ class DynamicDateRange extends UI5Element {
 
 	onButtonBackClick() {
 		this._currentOption = undefined;
-		this._shouldFocusLastSelected = true;
 	}
 
 	/**
