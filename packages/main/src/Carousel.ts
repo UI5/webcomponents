@@ -407,10 +407,10 @@ class Carousel extends UI5Element {
 			this._handlePageDown(e);
 		}
 
-		if (isLeft(e) || isDown(e)) {
+		if (isLeft(e) || isUp(e)) {
 			e.preventDefault();
 			this.navigateLeft();
-		} else if (isRight(e) || isUp(e)) {
+		} else if (isRight(e) || isDown(e)) {
 			e.preventDefault();
 			this.navigateRight();
 		}

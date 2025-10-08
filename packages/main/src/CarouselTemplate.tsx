@@ -10,7 +10,7 @@ export default function CarouselTemplate(this: Carousel) {
 				"ui5-carousel-root": true,
 				[`ui5-carousel-background-${this._backgroundDesign}`]: true,
 			}}
-			role="list"
+			role="region"
 			aria-label={this.ariaLabelTxt}
 			aria-roledescription={this._roleDescription}
 			onFocusIn={this._onfocusin}
@@ -19,7 +19,7 @@ export default function CarouselTemplate(this: Carousel) {
 			onMouseOver={this._onmouseover}
 		>
 			<div class={this.classes.viewport} part="content">
-				<div class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
+				<div role="list" class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
 					{this.items.map(itemInfo =>
 						<div
 							data-sap-focus-ref

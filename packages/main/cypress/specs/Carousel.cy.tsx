@@ -249,6 +249,11 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel5")
 			.shadow()
 			.find(".ui5-carousel-root")
+			.should("have.attr", "role", "region");
+
+		cy.get("#carousel5")
+			.shadow()
+			.find(".ui5-carousel-content")
 			.should("have.attr", "role", "list");
 
 		cy.get("#carousel5")
@@ -323,7 +328,7 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel8")
 			.trigger("mouseover")
 			.shadow()
-			.find("span.ui5-carousel-navigation-button[data-ui5-arrow-forward]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledOnce");
@@ -331,7 +336,7 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel8")
 			.trigger("mouseover")
 			.shadow()
-			.find("span.ui5-carousel-navigation-button[data-ui5-arrow-forward]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledTwice");
@@ -339,7 +344,7 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel8")
 			.trigger("mouseover")
 			.shadow()
-			.find("span.ui5-carousel-navigation-button[data-ui5-arrow-back]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-back]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledThrice");
@@ -347,7 +352,7 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel8")
 			.trigger("mouseover")
 			.shadow()
-			.find("span.ui5-carousel-navigation-button[data-ui5-arrow-back]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-back]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.callCount", 4);
