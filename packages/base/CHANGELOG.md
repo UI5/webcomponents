@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* **ui5-table:** custom row announcements are set ([#12117](https://github.com/UI5/webcomponents/issues/12117)) ([dcf014e](https://github.com/UI5/webcomponents/commit/dcf014e9d95bfe36644f300674cec726f3ec5029))
+
+
+
+
+
+# [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
 # [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-base
