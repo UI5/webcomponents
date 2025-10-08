@@ -232,6 +232,52 @@ describe("SegmentedButton - getFocusDomRef", () => {
 	});
 });
 
+describe("SegmentedButtonItems appearance", () => {
+	it("should not render items with hidden property and set correct aria-posinset and aria-setsize", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem hidden>Second</SegmentedButtonItem>
+				<SegmentedButtonItem>Third</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.as("segmentedButton");
+
+		cy.get("@segmentedButton")
+			.find("[ui5-segmented-button-item]:not([hidden])")
+			.as("visibleItems");
+
+		cy.get("@segmentedButton")
+			.find("[ui5-segmented-button-item][hidden]")
+			.as("hiddenItems");
+
+		// Only visible items should be counted by SegmentedButton
+		cy.get("@segmentedButton")
+			.invoke("attr", "style")
+			.should("satisfy", style => style.slice(-9) === "count: 2;");
+
+		// Assert aria-posinset and aria-setsize for visible items
+		cy.get("@visibleItems")
+			.shadow()
+			.find("li")
+			.each(($el, index, $list) => {
+				cy.wrap($el).should("have.attr", "aria-posinset", `${index + 1}`);
+				cy.wrap($el).should("have.attr", "aria-setsize", `${$list.length}`);
+			});
+
+		// Assert hidden item does not have aria-posinset and aria-setsize
+		cy.get("@hiddenItems")
+			.shadow()
+			.find("li")
+			.each(($el) => {
+				cy.wrap($el).should("not.have.attr", "aria-posinset");
+				cy.wrap($el).should("not.have.attr", "aria-setsize");
+			});
+	});
+});
+
 describe("SegmentedButton Accessibility", () => {
 	it("segmented button should have correct aria label when accessibleName is set", () => {
 		const LABEL = "Label";
@@ -329,6 +375,37 @@ describe("SegmentedButton Accessibility", () => {
 			.shadow()
 			.find(".ui5-segmented-button-root")
 			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+	});
+
+	it("segmented button should have correct aria-multiselectable", () => {
+		cy.mount(
+			<>
+				<SegmentedButton>
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+				<SegmentedButton selectionMode="Multiple">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		// Test Single mode (default) should have aria-multiselectable="false"
+		cy.get("[ui5-segmented-button]")
+			.first()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "false")
+			.should("have.attr", "aria-orientation", "horizontal");
+
+		// Test Multiple mode should have aria-multiselectable="true"
+		cy.get("[ui5-segmented-button]")
+			.last()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "true")
+			.should("have.attr", "aria-orientation", "horizontal");
 	});
 });
 

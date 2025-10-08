@@ -55,7 +55,7 @@ class DateComponentBase extends UI5Element {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
-	 * @deprecated
+	 * @deprecated Use displayFormat and valueFormat instead
 	 * @public
 	 */
 	@property()

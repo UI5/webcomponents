@@ -124,6 +124,10 @@ type ShellBarSearchFieldToggleEventDetail = {
 	expanded: boolean;
 };
 
+type ShellBarSearchFieldClearEventDetail = {
+	targetRef: HTMLElement;
+};
+
 interface IShellBarSearchField extends HTMLElement {
 	focused: boolean;
 	value: string;
@@ -292,6 +296,20 @@ const PREDEFINED_PLACE_ACTIONS = ["feedback", "sys-help"];
 })
 
 /**
+ * Fired, when the search cancel button is activated.
+ *
+ * **Note:** You can prevent the default behavior (clearing the search field value) by calling `event.preventDefault()`. The search will still be closed.
+ * **Note:** The `search-field-clear` event is in an experimental state and is a subject to change.
+ * @param {HTMLElement} targetRef dom ref of the cancel button element
+ * @since 2.14.0
+ * @public
+ */
+@event("search-field-clear", {
+	cancelable: true,
+	bubbles: true,
+})
+
+/**
  * Fired, when an item from the content slot is hidden or shown.
  * **Note:** The `content-item-visibility-change` event is in an experimental state and is a subject to change.
  *
@@ -312,6 +330,7 @@ class ShellBar extends UI5Element {
 		"menu-item-click": ShellBarMenuItemClickEventDetail,
 		"search-button-click": ShellBarSearchButtonEventDetail,
 		"search-field-toggle": ShellBarSearchFieldToggleEventDetail,
+		"search-field-clear": ShellBarSearchFieldClearEventDetail,
 		"content-item-visibility-change": ShellBarContentItemVisibilityChangeEventDetail
 	}
 
@@ -661,9 +680,16 @@ class ShellBar extends UI5Element {
 			this._detachSearchFieldListeners(e.target as HTMLElement);
 			return;
 		}
-		if (!isPhone() && !this.search?.value) {
-			this.setSearchState(!this.showSearchField);
+
+		// Decide when to toggle the search field:
+		// - On mobile, the search opens on its own (we don’t interfere).
+		// - If there’s already a value, onSearch is responsible for triggering the search (we don’t interfere)
+		// - If the field is closed, we must open it regardless.
+		if (isPhone() || (this.search?.value && this.showSearchField)) {
+			return;
 		}
+
+		this.setSearchState(!this.showSearchField);
 	}
 
 	_updateSearchFieldState() {
@@ -1104,8 +1130,17 @@ class ShellBar extends UI5Element {
 	}
 
 	_handleCancelButtonPress() {
+		const cancelButtonRef = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-cancel-button")!;
+		const clearDefaultPrevented = !this.fireDecoratorEvent("search-field-clear", {
+			targetRef: cancelButtonRef,
+		});
+
 		this.showFullWidthSearch = false;
 		this.setSearchState(false);
+
+		if (!clearDefaultPrevented) {
+			this._clearSearchFieldValue();
+		}
 	}
 
 	_handleProductSwitchPress(e: UI5CustomEvent<Button, "click">) {
@@ -1115,6 +1150,12 @@ class ShellBar extends UI5Element {
 		this._defaultItemPressPrevented = !this.fireDecoratorEvent("product-switch-click", {
 			targetRef: buttonRef.classList.contains("ui5-shellbar-hidden-button") ? target : buttonRef,
 		});
+	}
+
+	_clearSearchFieldValue() {
+		if (this.search) {
+			this.search.value = "";
+		}
 	}
 
 	/**
@@ -1231,7 +1272,7 @@ class ShellBar extends UI5Element {
 				const bIndex = PREDEFINED_PLACE_ACTIONS.indexOf(b.icon || "");
 				return aIndex - bIndex;
 			}).map((item: ShellBarItem) => {
-				item._getRealDomRef = () => this.getDomRef()!.querySelector(`*[data-ui5-stable=${item.stableDomRef}]`)!;
+				item._getRealDomRef = () => this.shadowRoot!.querySelector(`*[data-ui5-stable=${item.stableDomRef}]`)!;
 				// check if included for lean mode
 				const show = !!item.icon || false;
 				return {
@@ -1773,6 +1814,7 @@ export type {
 	ShellBarAccessibilityAttributes,
 	ShellBarSearchButtonEventDetail,
 	ShellBarSearchFieldToggleEventDetail,
+	ShellBarSearchFieldClearEventDetail,
 	IShellBarSelfCollapsibleSearch,
 	IShellBarSearchField,
 };

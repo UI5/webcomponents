@@ -56,7 +56,7 @@ export default function BreadcrumbsTemplate(this: Breadcrumbs) {
 							aria-current="page"
 							aria-label={this._currentLocationAccName}
 						>
-							<Label>
+							<Label wrappingType="None">
 								{this._currentLocationText}
 							</Label>
 						</span>

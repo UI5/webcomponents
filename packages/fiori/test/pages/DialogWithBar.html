@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Dialog test page</title>
+	<title>Dialog with Bar/Toolbar test page</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
 
@@ -15,6 +15,12 @@
 	#dialog-bar::part(header),
 	#dialog-bar::part(footer) {
 		padding-inline: 0;
+	}
+
+	#dialog-custom-colors::part(header) {
+		--sapPageHeader_TextColor: blue; 
+		--sapPageHeader_Background: lightblue;     
+		--sapNegativeElementColor: blue;
 	}
 </style>
 
@@ -59,6 +65,14 @@
 		</ui5-bar>
 	</ui5-dialog>
 
+	<ui5-button id="dialogOpener">Open Dialog with Toolbar and overstyled Header</ui5-button>
+    <ui5-dialog id="dialog-custom-colors" state="Negative" header-text="State :: Negative">
+        <ui5-text>Dialog with state</ui5-text>
+        <ui5-toolbar slot="footer">
+            <ui5-toolbar-button class="dialogCloser" text="Close"></ui5-toolbar-button>
+        </ui5-toolbar>
+    </ui5-dialog>
+
 	<script>
 		window["dialog-bar-open"].addEventListener("click", function () {
 			window["dialog-bar"].open = true;
@@ -82,6 +96,20 @@
 
 		window["closeDialogStateButton"].addEventListener("click", function () {
 			window["dialog-bar-state"].removeAttribute("open");
+		});
+
+		var dialogOpener = document.getElementById("dialogOpener");
+		var dialog = document.getElementById("dialog-custom-colors"); 
+		var dialogClosers = [...dialog.querySelectorAll(".dialogCloser")];
+
+
+		dialogOpener.addEventListener("click", () => {
+			dialog.open = true;
+		});
+		dialogClosers.forEach(btn => {
+			btn.addEventListener("click", () => {
+				dialog.open = false;
+			});
 		});
 	</script>
 </body>
