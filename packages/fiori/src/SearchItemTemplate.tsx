@@ -45,9 +45,9 @@ export default function SearchFieldTemplate(this: SearchItem) {
 					</div>
 
 					<div class="ui5-search-item-actions-container">
-						{this.hasSecondaryActions &&
-							<div class="ui5-search-item-secondary-actions">
-								<slot name="secondaryActions"></slot>
+						{this.hasActions &&
+							<div class="ui5-search-item-actions">
+								<slot name="actions"></slot>
 							</div>
 						}
 
