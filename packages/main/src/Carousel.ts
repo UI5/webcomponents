@@ -366,7 +366,7 @@ class Carousel extends UI5Element {
 		// Change transitively effectiveItemsPerPage by modifying _width
 		this._width = this.offsetWidth;
 		this._itemWidth = Math.floor(this._width / this.effectiveItemsPerPage);
-		this._updateVisibleItems(this._focusedItemIndex);
+		this._updateVisibleItems(this._currentSlideIndex);
 
 		// Items per page did not change or the current,
 		// therefore page index does not need to be re-adjusted
