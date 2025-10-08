@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.15.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.0...v2.15.0-rc.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* **ui5-dialog:** overriding of the header paddings when there is a state icon ([a8b2328](https://github.com/UI5/webcomponents/commit/a8b23281622527ededdea08a6f55cf7d3b25158d)), closes [#12228](https://github.com/UI5/webcomponents/issues/12228)
+
+
+
+
+
 # [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
 
 
