@@ -39,7 +39,7 @@ import DateTimePickerPopoverCss from "./generated/themes/DateTimePickerPopover.c
 import CalendarPickersMode from "./types/CalendarPickersMode.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import { renderFinished } from "@ui5/webcomponents-base";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
 
