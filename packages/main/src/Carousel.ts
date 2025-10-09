@@ -459,6 +459,20 @@ class Carousel extends UI5Element {
 		}
 	}
 
+	_ontouchstart(e: TouchEvent) {
+		const target = e.target as HTMLElement;
+		if (target.hasAttribute("data-ui5-arrow-forward") || target.hasAttribute("data-ui5-arrow-back")) {
+			e.preventDefault();
+		}
+	}
+
+	_onmousedown(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		if (target.hasAttribute("data-ui5-arrow-forward") || target.hasAttribute("data-ui5-arrow-back")) {
+			e.preventDefault();
+		}
+	}
+
 	async _handleF7Key(e: KeyboardEvent) {
 		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedActivePageIndex];
 		if (!this._lastInnerFocusedElement) {

@@ -17,6 +17,8 @@ export default function CarouselTemplate(this: Carousel) {
 			onKeyDown={this._onkeydown}
 			onMouseOut={this._onmouseout}
 			onMouseOver={this._onmouseover}
+			onTouchStart={this._ontouchstart}
+			onMouseDown={this._onmousedown}
 		>
 			<div class={this.classes.viewport} part="content">
 				<div role="list" class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
