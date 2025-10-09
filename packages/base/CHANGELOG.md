@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing popups with escape key ([#12278](https://github.com/UI5/webcomponents/issues/12278)) ([f54e8af](https://github.com/UI5/webcomponents/commit/f54e8afe3339a98bbf214523aba17158d7eb505b))
+
+
+
+
+
 # [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
 
 
