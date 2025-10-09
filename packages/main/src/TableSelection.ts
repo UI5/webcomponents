@@ -7,11 +7,11 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import TableSelectionMode from "./types/TableSelectionMode.js";
+import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import type Table from "./Table.js";
 import type { ITableFeature } from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowBase from "./TableRowBase.js";
-import { isSelectionCheckbox, isHeaderSelector, findRowInPath } from "./TableUtils.js";
 
 /**
  * @class
@@ -298,12 +298,12 @@ class TableSelection extends UI5Element implements ITableFeature {
 			return;
 		}
 
-		if (isHeaderSelector(e)) {
+		if (isHeaderSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}
 
-		if (!isSelectionCheckbox(e)) {
+		if (!isSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}

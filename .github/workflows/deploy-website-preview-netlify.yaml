@@ -6,13 +6,10 @@ on:
     branches:
         - main
     paths:
-        # Website-specific changes
         - 'packages/website/**'
-        # Documentation changes
         - 'docs/**'
         - '*.md'
         - 'README.md'
-        # Component CSS/TS changes that affect documentation
         - 'packages/base/src/**/*.css'
         - 'packages/base/src/**/*.ts'
         - 'packages/ai/src/**/*.css' 
@@ -23,14 +20,12 @@ on:
         - 'packages/fiori/src/**/*.ts'
         - 'packages/main/src/**/*.css'
         - 'packages/main/src/**/*.ts'
-        # Exclude test files to avoid unnecessary builds
         - '!**/*.spec.ts'
         - '!**/*.test.ts'
         - '!**/test/**'
 
 jobs:
   deploy-preview:
-    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     
     steps:
@@ -88,6 +83,24 @@ jobs:
           console.log(`PR #${pr.number} is still open, proceeding with deployment`);
           core.setOutput('should_deploy', 'true');
 
+    - name: Config Netlify CORS
+      if: steps.final-pr-check.outputs.should_deploy == 'true'
+      run: |
+            cat > packages/website/build/netlify.toml << 'EOF'
+            [build]
+              publish = "."
+              
+            # CORS headers for local-cdn resources
+            [[headers]]
+              for = "/local-cdn/*"
+              [headers.values]
+                Access-Control-Allow-Origin = "*"
+                Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+                Access-Control-Allow-Headers = "Content-Type, Accept"
+                Access-Control-Max-Age = "86400"
+                Cache-Control = "public, max-age=31536000, immutable"
+            EOF
+            
     - name: Deploy to Netlify
       if: steps.final-pr-check.outputs.should_deploy == 'true'
       uses: nwtgck/actions-netlify@v3.0

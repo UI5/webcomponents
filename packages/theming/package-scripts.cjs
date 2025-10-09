@@ -11,17 +11,21 @@ const generateReportScript = path.join(CURRENT_LIB, "./generate-css-vars-usage-r
 module.exports = {
 	scripts: {
 		__ui5envs: {
-			UI5_TS: true,
+			UI5_TS: "true",
 		},
-		clean: "rimraf dist && rimraf src/generated",
+		clean: {
+			"default": "ui5nps clean.generated clean.dist",
+			"generated": `ui5nps-script "${TOOLS_LIB}/rimraf/rimraf.js src/generated`,
+			"dist": `ui5nps-script "${TOOLS_LIB}/rimraf/rimraf.js dist`,
+		},
 		generate: `ui5nps build.postcss build.jsonImports`,
 		build: {
 			default: `ui5nps clean build.src build.postcss build.jsonImports build.typescript generateReport`,
-			src: `copy-and-watch "src/**/*.{json}" dist/`,
+			src: `ui5nps-script "${TOOLS_LIB}copy-and-watch/index.js" "src/**/*.{json}" dist/`,
 			typescript: "tsc",
-			postcss: `node "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
-			jsonImports: `node "${jsonImportsScript}" dist/generated/assets/themes src/generated/json-imports`,
+			postcss: `ui5nps-script "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
+			jsonImports: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports`,
 		},
-		generateReport: `node "${generateReportScript}"`,
+		generateReport: `ui5nps-script "${generateReportScript}"`,
 	},
 };

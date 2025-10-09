@@ -89,6 +89,7 @@ declare global {
 			ui5DatePickerGetMonthButton(): Chainable<JQuery<HTMLElement>>
 			ui5DatePickerGetYearButton(): Chainable<JQuery<HTMLElement>>
 			ui5DatePickerValueHelpIconPress(): Chainable<void>
+			ui5DatePickerTypeDate(value: string, delay?: number): Chainable<void>
 			ui5SegmentedButtonItemToggleSelect(deselect?: boolean): Chainable<void>
 			ui5SegmentedButtonFocusFirstItem(): Chainable<void>
 			ui5SwitchCheckAttributeInShadowDomRoot(attrName: string, attrValue: string): Chainable<void>
