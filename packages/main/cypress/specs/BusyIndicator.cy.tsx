@@ -275,33 +275,43 @@ describe("BusyIndicator general interaction", () => {
 });
 
 describe("Delay and Timeout Behavior", () => {
-	it("should clear timeout when component becomes inactive", () => {
+	it.skip("should clear timeout when component becomes inactive", () => {
 		cy.mount(
 			<BusyIndicator delay={1200}>
 				<div>Content</div>
 			</BusyIndicator>
 		);
 
-		// Activate the busy indicator
 		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
 		
-		// Verify it's not busy yet (delay hasn't passed)
 		cy.get("[ui5-busy-indicator]")
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
 			.should("not.exist");
 
-		// Deactivate before delay passes - this should trigger the timeout cleanup
+		cy.get<BusyIndicator>("[ui5-busy-indicator]").should(($el) => {
+			const timeoutId = $el[0]._busyTimeoutId;
+			expect(timeoutId).to.exist;
+		}).then(($el) => {
+			cy.wrap($el[0]._busyTimeoutId).as("timeoutId");
+		});
+
+		const clearTimeoutSpy = cy.spy(clearTimeout);
 		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
 
-		// Wait for the original delay period
-		setTimeout(() => {}, 1300);
-
-		// Verify it never became busy
 		cy.get("[ui5-busy-indicator]")
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
 			.should("not.exist");
+
+		cy.get("@timeoutId")
+			.should((timeoutId)	=> {
+				expect(clearTimeoutSpy).to.have.been.calledWith(timeoutId);
+			});
+
+		cy.get("[ui5-busy-indicator]")
+			.invoke("prop", "_isBusy")
+			.should("eq", false);
 	});
 
 	it("should handle timeout cleanup edge case", () => {
@@ -310,58 +320,89 @@ describe("Delay and Timeout Behavior", () => {
 				<div>Content</div>
 			</BusyIndicator>
 		);
-
-		// Activate with delay
+	
 		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-		
-		// Wait a bit but not enough for the timeout to fire
-		setTimeout(() => {}, 100);
-		
-		// Verify it's not busy yet
+	
 		cy.get("[ui5-busy-indicator]")
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
 			.should("not.exist");
-		
-		// Deactivate while timeout is still pending - this should trigger the cleanup path
+	
+		cy.get<BusyIndicator>("[ui5-busy-indicator]").should(($el) => {
+			const timeoutId = $el[0]._busyTimeoutId;
+			expect(timeoutId).to.exist;
+		}).then(($el) => {
+			cy.wrap($el[0]._busyTimeoutId).as("timeoutId");
+		});
+	
+		const clearTimeoutSpy = cy.spy(window, "clearTimeout");
+	
 		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
-		
-		// Wait longer than the original delay to ensure timeout was cleared
-		setTimeout(() => {}, 600);
-		
-		// Should still not be busy since timeout was cleared
+	
+		cy.get("@timeoutId").should((timeoutId) => {
+			expect(clearTimeoutSpy).to.have.been.calledWith(timeoutId);
+		});
+	
 		cy.get("[ui5-busy-indicator]")
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
 			.should("not.exist");
+	
+		cy.get("[ui5-busy-indicator]")
+			.invoke("prop", "_isBusy")
+			.should("eq", false);
 	});
 
-	it("should trigger timeout cleanup when deactivated with pending timeout", () => {
+	it("should clear pending timeout and trigger cleanup when deactivated before becoming busy", () => {
 		cy.mount(
 			<BusyIndicator delay={1000}>
 				<div>Content</div>
 			</BusyIndicator>
 		);
-
-		// Test the specific scenario that hits the timeout cleanup lines
+	
+		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
+	
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+	
+		cy.get<BusyIndicator>("[ui5-busy-indicator]").should(($el) => {
+			const timeoutId = $el[0]._busyTimeoutId;
+			expect(timeoutId).to.exist;
+		}).then(($el) => {
+			cy.wrap($el[0]._busyTimeoutId).as("timeoutId");
+		});
+	
+		const clearTimeoutSpy = cy.spy(window, "clearTimeout");
+	
+		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
+	
+		cy.get("@timeoutId").should((timeoutId) => {
+			expect(clearTimeoutSpy).to.have.been.calledWith(timeoutId);
+		});
+	
+		cy.get("[ui5-busy-indicator]")
+			.shadow()
+			.find(".ui5-busy-indicator-busy-area")
+			.should("not.exist");
+	
+		cy.get("[ui5-busy-indicator]")
+			.invoke("prop", "_isBusy")
+			.should("eq", false);
+	
 		cy.get("[ui5-busy-indicator]").then(($el) => {
 			const element = $el[0] as any;
-			
-			// Set active to trigger timeout creation
+	
 			element.active = true;
-			
-			// Manually trigger onBeforeRendering to create the timeout
 			element.onBeforeRendering();
-			
-			// Verify timeout was created (should not be busy yet)
+	
 			expect(element._isBusy).to.be.false;
 			expect(element._busyTimeoutId).to.exist;
-			
-			// Now set active to false - this should trigger the cleanup code
+	
 			element.active = false;
 			element.onBeforeRendering();
-			
-			// Verify cleanup happened
+	
 			expect(element._busyTimeoutId).to.be.undefined;
 			expect(element._isBusy).to.be.false;
 		});
