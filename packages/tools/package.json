@@ -77,6 +77,9 @@
       "optional": true
     }
   },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "devDependencies": {
     "esbuild": "^0.25.0",
     "yargs": "^17.5.1"
