@@ -9,8 +9,6 @@ import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import MenuSeparator from "@ui5/webcomponents/dist/MenuSeparator.js";
 import InputPopoverTemplate from "@ui5/webcomponents/dist/InputPopoverTemplate.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base";
-// import Versioning from "./Versioning.js";
-// import InputVersioning from "./InputVersioning.js";
 
 type TemplateHook = () => JsxTemplateResult;
 
@@ -21,7 +19,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 	return (
 		<>
 			<div
-				class="ui5-ai-input-root ui5-input-root ui5-input-focusable-element"
+				class={`ui5-ai-input-root ui5-input-root ui5-input-focusable-element ${this.loading && "busy"}`}
 				// part="root"
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
@@ -71,8 +69,6 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 									step={this.nativeInputAttributes.step}
 									min={this.nativeInputAttributes.min}
 									max={this.nativeInputAttributes.max}
-									onInput={this._handleNativeInput}
-									onChange={this._handleChange}
 									onSelect={this._handleSelect}
 									onKeyDown={this._onkeydown}
 									onKeyUp={this._onkeyup}
@@ -137,39 +133,29 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 						</div>
 
 					</BusyIndicator>
-					{/* } */}
-					{this.isFocused &&
-						<div class={`ui5-input-ai-icon ${this._isMenuOpen || this.loading ? "ui5-input-icon-menu-open" : ""}`} tabIndex={-1}>
-							<Icon
-								showTooltip={true}
-								accessibleName={this.iconAccName}
-								id="ai-menu-icon"
-								class={"ui5-ai-input-icon"}
-								name={this.loading ? "stop" : "ai"}
-								onClick={this._handleAIIconClick}
-							/>
-						</div>
-					}
+					<div
+						 hidden={!this.isFocused}
+						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen || this.loading ? "ui5-input-icon-menu-open" : ""}`}
+						 tabIndex={-1}
+						 title={ this.loading ? "Stop generating" : this.ariaLabel}
+						 aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
+						 aria-haspopup={this.loading ? "false" : "menu"}
+						 onClick={this._handleAIIconClick}
+						 >
+						<Icon
+							id="ai-menu-icon"
+							aria-label={this.ariaLabel}
+							class={`ui5-ai-input-icon ${this._isMenuOpen && this.loading ? "ai-menu-icon-menu-open" : ""}`}
+							name={this.loading ? "stop" : "ai"}
+						/>
+					</div>
 					<div id="ai-menu-wrapper">
 						<Menu
-							onBeforeOpen={() => { this._isMenuOpen = true; }}
-							onBeforeClose={() => { this._isMenuOpen = false; }}
+						 onBeforeOpen={() => { this._isMenuOpen = true; }}
+						 onBeforeClose={() => { this._isMenuOpen = false; }}
 						>
 							<slot name={"default"}></slot>
-							{/* {this.totalVersions > 1 && this._isMenuOpen  &&
-							<>
-							<MenuSeparator/>
-							<MenuItem  type="Inactive" class="ui5-ai-versioning-menu-footer" text={`${this.currentVersion} / ${this.totalVersions}`}>
-							<InputVersioning
-								slot={"endContent"}
-								currentStep={this.currentVersion}
-								totalSteps={this.totalVersions}
-								onVersion-change={this._handleVersionChange}/>
-							</MenuItem>
-							</>
-							} */}
-
-							{renderVersioning.call(this)}
+							{this.totalVersions > 1 && this._isMenuOpen && Versioning.call(this)}
 						</Menu>
 					</div>
 				</div>
@@ -179,11 +165,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 	);
 }
 
-function renderVersioning(this: AIInput) {
-	if (this.totalVersions <= 1 || !this._isMenuOpen) {
-		return null;
-	}
-
+function Versioning(this: AIInput) {
 	return (
 		<>
 			<MenuSeparator />
@@ -198,10 +180,12 @@ function renderVersioning(this: AIInput) {
 					slot="endContent"
 					design="Transparent"
 					icon="navigation-left-arrow"
-					aria-label="Previous version"
+					tooltip={this.previousButtonAccessibleName}
+					accessibleName={this.previousButtonAccessibleName}
 					aria-keyshortcut="Shift+Ctrl+Z"
 					disabled={this.currentVersion <= 1}
-					onClick={this._handleArrowLeftClick}
+					onClick={this._handlePreviousButtonClick}
+					data-ui5-versioning-button="previous"
 				>
 				</Button>
 				<Button
@@ -210,10 +194,12 @@ function renderVersioning(this: AIInput) {
 					slot="endContent"
 					design="Transparent"
 					icon="navigation-right-arrow"
-					aria-label="Next version"
+					tooltip={this.nextButtonAccessibleName}
+					accessibleName={this.nextButtonAccessibleName}
 					aria-keyshortcut="Shift+Ctrl+Y"
 					disabled={this.currentVersion >= this.totalVersions}
-					onClick={this._handleArrowRightClick}
+					onClick={this._handleNextButtonClick}
+					data-ui5-versioning-button="next"
 				/>
 			</MenuItem>
 		</>
