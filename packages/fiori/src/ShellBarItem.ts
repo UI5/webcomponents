@@ -5,6 +5,10 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import type { AccessibilityAttributes, UI5CustomEvent } from "@ui5/webcomponents-base";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import ShellBarItemTemplate from "./ShellBarItemTemplate.js";
+import ShellBarItemCss from "./generated/themes/ShellBarItem.css.js";
+
 type ShellBarItemClickEventDetail = {
 	targetRef: HTMLElement,
 };
@@ -28,7 +32,13 @@ type ShellBarItemAccessibilityAttributes = Pick<AccessibilityAttributes, "expand
  * @abstract
  * @public
  */
-@customElement("ui5-shellbar-item")
+@customElement({
+	tag: "ui5-shellbar-item",
+	template: ShellBarItemTemplate,
+	renderer: jsxRenderer,
+	styles: [ShellBarItemCss],
+})
+
 /**
  * Fired, when the item is pressed.
  * @param {HTMLElement} targetRef DOM ref of the clicked element
@@ -43,6 +53,10 @@ class ShellBarItem extends UI5Element {
 	eventDetails!: {
 		click: ShellBarItemClickEventDetail,
 	}
+
+	@property({ type: Boolean })
+	isOverflowing = false;
+
 	/**
 	 * Defines the name of the item's icon.
 	 * @default undefined

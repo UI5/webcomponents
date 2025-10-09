@@ -1,0 +1,41 @@
+.ui5-shellbar-item {
+	width: 2.5rem;
+}
+
+[ui5-button] {
+	width: 2.5rem;
+	height: 2.25rem;
+	padding: 0;
+	border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
+	background: var(--sapButton_Lite_Background);
+	outline-color: var(--_ui5_shellbar_logo_outline_color);
+	color: var(--sapShell_TextColor);
+	box-sizing: border-box;
+	cursor: pointer;
+	border-radius: var(--_ui5_shellbar_button_border_radius);
+	position: relative;
+	font-weight: bold;
+	white-space: initial;
+	overflow: initial;
+	text-overflow: initial;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+	--_ui5_button_focused_border: var(--_ui5_shellbar_button_focused_border);
+}
+
+[ui5-button]:hover {
+	background: var(--sapShell_Hover_Background);
+	border-color: var(--sapButton_Lite_Hover_BorderColor);
+	color: var(--sapShell_TextColor);
+}
+
+[ui5-button][active] {
+	background: var(--sapShell_Active_Background);
+	border-color: var(--sapButton_Lite_Active_BorderColor);
+	color: var(--_ui5_shellbar_button_active_color);
+}
+
+[ui5-button] [slot="badge"] {
+    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
+}

@@ -206,7 +206,13 @@ export default function ShellBarTemplate(this: ShellBar) {
 									)}
 								</Button>
 							)}
-							{this.customItemsInfo.map(item => (
+							{this.items.map(item => <>
+								{/* wrap in a div element that will always be rendered, we always measure the wrappers as actual items might be in the popover */}
+								<div id={(item as any)._individualSlot} class="ui5-shellbar-item">
+									{!item.isOverflowing && <slot name={(item as any)._individualSlot}></slot>}
+								</div>
+							</>)}
+							{/* {this.customItemsInfo.map(item => (
 								<Button
 									key={item.id}
 									id={item.id}
@@ -223,7 +229,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 										<ButtonBadge slot="badge" design="OverlayText" text={item.count} />
 									)}
 								</Button>
-							))}
+							))} */}
 						</div>
 					</div>
 				</div>

@@ -319,6 +319,16 @@
 			const searchButton = await shellbar_hide_search.getSearchButtonDomRef()
 			searchButton.focus();
 		});
+
+		// test click on a ui5-shellbar-item
+		const shellbarItems = document.querySelectorAll("ui5-shellbar-item");
+		shellbarItems.forEach(item => {
+			item.addEventListener("ui5-click", (e) => {
+				console.log("Target", e.target);
+				console.log("Target Ref", e.detail.targetRef);
+				alert(`You clicked on ${item.text}`);
+			});
+		});
 	</script>
 
 </body>
