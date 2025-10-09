@@ -286,7 +286,6 @@ class SplitButton extends UI5Element {
 	}
 
 	_onKeyDown(e: KeyboardEvent) {
-		console.log(`keydown ${e.key}`);
 		if (this._isArrowKeyAction(e)) {
 			this._handleArrowButtonAction(e);
 			this._activeArrowButton = true;
@@ -311,7 +310,6 @@ class SplitButton extends UI5Element {
 	}
 
 	_onKeyUp(e: KeyboardEvent) {
-		console.log(`keyup ${e.key}`);
 		const target = e.target as Button;
 		if (this._isArrowKeyAction(e)) {
 			e.preventDefault();
@@ -325,11 +323,9 @@ class SplitButton extends UI5Element {
 			this._textButtonActive = false;
 			if (!this._shiftOrEscapePressedDuringSpace) { // Do not fire click if Arrow button is focused by mouse and Space is pressed afterwards
 				if (target !== this.arrowButton) {
-					console.log("fire click");
 					this._fireClick();
 				} else {
 					this._fireArrowClick();
-					console.log("fire arrow click");
 				}
 			}
 
