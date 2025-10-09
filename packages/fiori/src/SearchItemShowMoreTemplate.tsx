@@ -11,6 +11,7 @@ export default function SearchItemShowMoreTemplate(this: SearchItemShowMore) {
 			onFocusOut={this._onfocusout}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
+			onKeyUp={this._onkeyup}
 		>
 			<span class="ui5-search-item-show-more-text">{this.showMoreTextCount}</span>
 		</li>

@@ -31,7 +31,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 import type IllustratedMessage from "./IllustratedMessage.js";
 import type SearchItemGroup from "./SearchItemGroup.js";
-import SearchItemShowMore from "./SearchItemShowMore.js";
 import type SearchMessageArea from "./SearchMessageArea.js";
 import { SEARCH_CANCEL_BUTTON, SEARCH_SUGGESTIONS } from "./generated/i18n/i18n-defaults.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -48,10 +47,6 @@ interface ISearchSuggestionItem extends UI5Element {
 
 type SearchEventDetails = {
 	item?: ISearchSuggestionItem;
-}
-
-type ShowMoreEventDetails = {
-	itemsToShowCount?: number;
 }
 
 /**
@@ -103,21 +98,12 @@ type ShowMoreEventDetails = {
  */
 @event("close")
 
-/**
- * Fired when show more item is selected.
- *
- * @public
- * @since 2.15.0
- */
-@event("show-more")
-
 class Search extends SearchField {
 	eventDetails!: SearchField["eventDetails"] & {
 		search: SearchEventDetails,
 		"popup-action-press": void,
 		"open": void,
 		"close": void,
-		"show-more": ShowMoreEventDetails
 	};
 
 	/**
@@ -490,11 +476,6 @@ class Search extends SearchField {
 
 	_onItemClick(e: CustomEvent) {
 		const item = e.detail.item as ISearchSuggestionItem;
-		if (item instanceof SearchItemShowMore) {
-			this.fireDecoratorEvent("show-more", { itemsToShowCount: item.itemsToShowCount });
-			return;
-		}
-
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {

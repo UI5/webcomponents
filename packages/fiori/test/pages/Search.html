@@ -122,8 +122,8 @@
 					}
 				}
 
-			searchShow.addEventListener("ui5-show-more", (e) => {
-					expandHiddenItems({ focusFirst: true });
+			showMoreEl.addEventListener("ui5-click", (e) => {
+					expandHiddenItems({ focusFirst: e.detail.fromKeyboard });
 			});
 			}
 		}

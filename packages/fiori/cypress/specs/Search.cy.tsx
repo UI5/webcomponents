@@ -623,7 +623,7 @@ describe("Events", () => {
 		}));
 	});
 
-	it("search event on show more item selection", () => {
+	it("click event on show-more-item selection with mouse", () => {
 		cy.mount(
 			<Search>
 				<SearchItem text="List Item"></SearchItem>
@@ -631,8 +631,36 @@ describe("Events", () => {
 			</Search>
 		);
 
+		cy.get("[ui5-search-item-show-more]")
+			.invoke("on", "ui5-click", cy.spy().as("clickSpy"));
+
 		cy.get("[ui5-search]")
-			.invoke("on", "ui5-show-more", cy.spy().as("showMoreSpy"));
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		cy.realType("l");
+
+		cy.get("[ui5-search-item-show-more]")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("click event on show-more-item selection with Enter", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore></SearchItemShowMore>
+			</Search>
+		);
+
+		cy.get("[ui5-search-item-show-more]")
+			.invoke("on", "ui5-click", cy.spy().as("clickSpy"));
 
 		cy.get("[ui5-search]")
 			.shadow()
@@ -649,7 +677,7 @@ describe("Events", () => {
 
 		cy.realPress("Enter");
 
-		cy.get("@showMoreSpy")
+		cy.get("@clickSpy")
 			.should("have.been.calledOnce");
 	});
 
