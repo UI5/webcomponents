@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing popups with escape key ([#12278](https://github.com/UI5/webcomponents/issues/12278)) ([f54e8af](https://github.com/UI5/webcomponents/commit/f54e8afe3339a98bbf214523aba17158d7eb505b))
+* **ui5-dynamic-page:** improve focus visibility for keyboard navigation ([#12372](https://github.com/UI5/webcomponents/issues/12372)) ([4c0ec2b](https://github.com/UI5/webcomponents/commit/4c0ec2bef1ec0f9c5b628f5171e98c931c4b633f)), closes [#11710](https://github.com/UI5/webcomponents/issues/11710)
+* **ui5-list-item:** change highlight state color variables ([#12427](https://github.com/UI5/webcomponents/issues/12427)) ([485aab5](https://github.com/UI5/webcomponents/commit/485aab51242876f2a10580da2ed23783408df00b)), closes [#12332](https://github.com/UI5/webcomponents/issues/12332)
+* **ui5-shellbar:** remove internal logo size restrictions ([#12418](https://github.com/UI5/webcomponents/issues/12418)) ([bca773a](https://github.com/UI5/webcomponents/commit/bca773ac7f41f730739f1e05bbcbf8e4012cdeaa))
+* **ui5-slider, ui5-range-slider:** persist tooltip visible on hover ([#12383](https://github.com/UI5/webcomponents/issues/12383)) ([0eb6258](https://github.com/UI5/webcomponents/commit/0eb62586bc708253eb4c711aecdde8407d2f44a0)), closes [#12329](https://github.com/UI5/webcomponents/issues/12329)
+* **ui5-table:** invalidate header row when rows count changes ([#12439](https://github.com/UI5/webcomponents/issues/12439)) ([65b5507](https://github.com/UI5/webcomponents/commit/65b5507232d7853e98bc55ee9a08ef9b46f8bca5)), closes [#12161](https://github.com/UI5/webcomponents/issues/12161) [#11996](https://github.com/UI5/webcomponents/issues/11996)
+* **ui5-view-settings-dialog:** remove focus on first item on filter options ([#12379](https://github.com/UI5/webcomponents/issues/12379)) ([737a6e0](https://github.com/UI5/webcomponents/commit/737a6e0f0fc44ae362831feb4e49eb30fbe81893))
+
+
+### Features
+
+* **ui5-ai-textarea:** introduce new component ([#12157](https://github.com/UI5/webcomponents/issues/12157)) ([d439d70](https://github.com/UI5/webcomponents/commit/d439d700cbd57594581666100e3aca37371a38b6))
+* **ui5-date-picker:** normalize display value only on change ([#12425](https://github.com/UI5/webcomponents/issues/12425)) ([3e8357e](https://github.com/UI5/webcomponents/commit/3e8357ed04a4165bd04f86e5ee5b58cff3c73699))
+* **ui5-select:** visible second column value and tooltip ([#12390](https://github.com/UI5/webcomponents/issues/12390)) ([54452e7](https://github.com/UI5/webcomponents/commit/54452e70e96b2cfd6e0b9cf663a54b0fed797f02))
+
+
+
+
+
 # [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
 
 
