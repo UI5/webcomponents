@@ -642,6 +642,11 @@ class Breadcrumbs extends UI5Element {
 	get _cancelButtonText() {
 		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_CANCEL_BUTTON);
 	}
+	/* Toolbar api */
+
+	get totalContentWidth() {
+		return this._getTotalContentWidth();
+	}
 }
 
 Breadcrumbs.define();

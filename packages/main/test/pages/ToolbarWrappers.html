@@ -40,8 +40,8 @@
 		<br />
 		<section>
 			<ui5-toolbar id="otb_standard">
-				<ui5-toolbar-item><ui5-button icon="add" stable-dom-ref="otb_button_1">Left 1 (long)</ui5-button></ui5-toolbar-item>
-				<ui5-toolbar-item><ui5-button icon="decline">Left 2</ui5-button></ui5-toolbar-item>
+				<ui5-toolbar-item expand-in-overflow><ui5-button icon="add" stable-dom-ref="otb_button_1">Left 1 (long)</ui5-button></ui5-toolbar-item>
+				<ui5-toolbar-item expand-in-overflow><ui5-button icon="decline">Left 2</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="employee">Left 3</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="decline">Left 4</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="add">Mid 1</ui5-button></ui5-toolbar-item>
@@ -66,6 +66,18 @@
 		<br />
 		<section>
 			<ui5-toolbar id="otb_standard">
+				<ui5-toolbar-item self-overflowed overflow-priority="NeverOverflow">
+					<ui5-breadcrumbs id="breadcrumbs2">
+						<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="#">Location</ui5-breadcrumbs-item>
+					</ui5-breadcrumbs>
+				</ui5-toolbar-item>
 				<ui5-toolbar-item>
 					<ui5-input id="myInput" class="input2auto" show-suggestions placeholder="Search for a country ...">
 				</ui5-toolbar-item>

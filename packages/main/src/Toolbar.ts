@@ -302,7 +302,7 @@ class Toolbar extends UI5Element {
 		await renderFinished();
 
 		this.storeItemsWidth();
-		this.processOverflowLayout();
+		setTimeout(() => this.processOverflowLayout(), 0);
 		this.items.forEach(item => {
 			item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
 		});
@@ -470,7 +470,7 @@ class Toolbar extends UI5Element {
 
 	onResize() {
 		this.closeOverflow();
-		this.processOverflowLayout();
+		setTimeout(() => this.processOverflowLayout(), 0);
 	}
 
 	/**

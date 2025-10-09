@@ -5,11 +5,17 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
+import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 type IEventOptions = {
 	preventClosing: boolean;
+}
+
+type ISelfOverflowedItem = {
+	totalContentWidth: () => number;
+	selfOverflowed: boolean;
 }
 
 type ToolbarItemEventDetail = {
@@ -25,6 +31,7 @@ type ToolbarItemEventDetail = {
 	languageAware: true,
 	renderer: jsxRenderer,
 	template: ToolbarItemTemplate,
+	styles: ToolbarItemCss,
 })
 
 /**
@@ -69,6 +76,24 @@ class ToolbarItem extends UI5Element {
 
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
+
+	/**
+	 * @default false
+	 * @public
+	 * @since 2.16.0
+	 */
+
+	@property({ type: Boolean })
+	selfOverflowed: boolean = false;
+
+	/**
+	 * @default false
+	 * @public
+	 * @since 2.16.0
+	 */
+
+	@property({ type: Boolean })
+	expandInOverflow: boolean = false;
 
 	_isRendering = true;
 
@@ -121,8 +146,26 @@ class ToolbarItem extends UI5Element {
 		return false;
 	}
 
+	/**
+	 * @protected
+	 */
+	get isDefaultWrapper() {
+		return false;
+	}
+
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
+	}
+
+	get flexBasis(): string {
+		const item = this.querySelector(":first-child") as ISelfOverflowedItem | null;
+
+		if (this.selfOverflowed && item && typeof item.totalContentWidth !== "undefined") {
+			const width = item.totalContentWidth;
+			return `flex-basis: ${width ? `${width + 1}px` : "auto"}`;
+		}
+
+		return "flex-basis: auto";
 	}
 
 	get classes() {
@@ -152,6 +195,7 @@ class ToolbarItem extends UI5Element {
 export type {
 	IEventOptions,
 	ToolbarItemEventDetail,
+	ISelfOverflowedItem,
 };
 ToolbarItem.define();
 
