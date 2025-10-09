@@ -21,7 +21,7 @@ import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
 import navigationMenuItemCss from "./generated/themes/NavigationMenuItem.css.js";
 
 import {
-	NAVIGATION_MENU_POPOVER_HIDDEN_TEXT,
+	NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -100,10 +100,9 @@ class NavigationMenuItem extends MenuItem {
 	get _accInfo() {
 		const accInfo = super._accInfo;
 
-		accInfo.role = this.href ? "none" : "treeitem";
-
-		if (!accInfo.ariaHaspopup) {
-			accInfo.ariaHaspopup = this.accessibilityAttributes.hasPopup;
+		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
+			// For the menu item on first level (parent item)
+			accInfo.ariaSelectedText = NavigationMenu.i18nBundle.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT as unknown as string);
 		}
 
 		return accInfo;
@@ -200,8 +199,9 @@ class NavigationMenuItem extends MenuItem {
 		}
 	}
 
-	get acessibleNameText() {
-		return NavigationMenu.i18nBundle.getText(NAVIGATION_MENU_POPOVER_HIDDEN_TEXT);
+	get accessibleNameText() {
+		// For the submenu's dialog
+		return this.text ?? "";
 	}
 }
 
