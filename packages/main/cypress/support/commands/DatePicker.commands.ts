@@ -280,5 +280,3 @@ Cypress.Commands.add("ui5DatePickerTypeDate", { prevSubject: true }, (subject: s
 	cy.realType(date, { delay });
 	cy.realPress("Enter");
 });
-
-

@@ -471,7 +471,6 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		if (!this.isLiveUpdate) {
 			this.value = this.normalizeFormattedValue(this.value) || this.value;
 		}
-
 		this.liveValue = this.value;
 	}
 
