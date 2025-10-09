@@ -112,6 +112,7 @@
 	flex: none;
 	top: 0;
 	left: 0;
+	max-width: 100%;
 }
 
 .ui5-popover-with-value-state-header-phone::part(content) {
