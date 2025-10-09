@@ -487,6 +487,10 @@ slot[name="profile"] {
 	max-height: 2rem;
 }
 
+::slotted([slot="logo"]):active {
+	pointer-events: none;
+}
+
 .ui5-shellbar-co-pilot-placeholder {
 	width: 2.75rem;
 	height: 2.75rem;

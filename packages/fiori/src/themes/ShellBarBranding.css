@@ -69,3 +69,7 @@
 	max-width: 3.75rem;
 	padding-inline: 0.25rem;
 }
+
+::slotted([slot="logo"]):active {
+	pointer-events: none;
+}
