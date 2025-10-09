@@ -12,7 +12,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 
 	return (
 		<Toolbar
-			accessibleName="AI Writing Assistant Toolbar"
+			accessibleName={this._toolbarAccessibleName}
 			aria-roledescription="toolbar"
 			class={`ui5-ai-writing-assistant-footer-bar${hasResults ? "--with-border" : ""}`}
 		>
@@ -39,6 +39,9 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				icon={this.loading ? "stop" : "ai"}
 				data-state={this.loading ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
+				tooltip={this._buttonTooltip}
+				accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
+				accessibleName={this._buttonAccessibleName}
 				overflowPriority="NeverOverflow"
 			/>
 		</Toolbar>

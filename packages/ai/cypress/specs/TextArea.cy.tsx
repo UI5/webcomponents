@@ -504,6 +504,51 @@ describe("Basic", () => {
 				.find("[aria-live='polite']")
 				.should("contain.text", "Generating content...");
 		});
+
+		it("should have translatable accessibility attributes from WritingAssistant", () => {
+			cy.mount(
+				<AITextArea
+					loading={false}
+					currentVersionIndex={2}
+					totalVersions={3}
+				/>
+			);
+
+			// Verify that the integrated WritingAssistant has translatable attributes
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("ui5-toolbar")
+				.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("have.attr", "accessible-name", "AI Writing Assistant")
+				.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+
+			// Verify versioning tooltips are translatable
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("[ui5-ai-versioning]")
+				.shadow()
+				.find('[data-ui5-versioning-button="previous"]')
+				.should("have.attr", "tooltip", "Previous Version");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("[ui5-ai-versioning]")
+				.shadow()
+				.find('[data-ui5-versioning-button="next"]')
+				.should("have.attr", "tooltip", "Next Version");
+		});
 	});
 
 	describe("Error Handling", () => {

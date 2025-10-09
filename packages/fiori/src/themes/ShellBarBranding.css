@@ -24,6 +24,7 @@
 
 .ui5-shellbar-branding-root:focus {
 	outline: var(--_ui5_shellbar_logo_outline);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
 	border-radius: var(--_ui5_shellbar_logo_border_radius);
 }
 
@@ -66,7 +67,6 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
-	max-width: 3.75rem;
 	pointer-events: none;
 	padding-inline: 0.25rem;
 }

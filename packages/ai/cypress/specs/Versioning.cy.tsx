@@ -106,9 +106,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning 
-					currentStep={2} 
-					totalSteps={3} 
+				<Versioning
+					currentStep={2}
+					totalSteps={3}
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -128,9 +128,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning 
-					currentStep={2} 
-					totalSteps={3} 
+				<Versioning
+					currentStep={2}
+					totalSteps={3}
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -150,9 +150,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning 
-					currentStep={1} 
-					totalSteps={1} 
+				<Versioning
+					currentStep={1}
+					totalSteps={1}
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -178,9 +178,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning 
-					currentStep={2} 
-					totalSteps={5} 
+				<Versioning
+					currentStep={2}
+					totalSteps={5}
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -193,7 +193,7 @@ describe("Versioning Component", () => {
 				.realClick();
 
 			cy.get("@onVersionChange").should("have.callCount", 3);
-			
+
 			// Verify all calls were for next (backwards: false)
 			cy.get("@onVersionChange").should((spy) => {
 				expect(spy).to.have.been.calledWith(Cypress.sinon.match.has("detail", { backwards: false }));
@@ -492,8 +492,8 @@ describe("Versioning Component", () => {
 	describe("Accessibility", () => {
 		it("should support keyboard navigation", () => {
 			cy.mount(
-				<Versioning 
-					currentStep={2} 
+				<Versioning
+					currentStep={2}
 					totalSteps={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
 				/>
@@ -527,6 +527,126 @@ describe("Versioning Component", () => {
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
 				.should("have.attr", "design", "Transparent");
+		});
+
+		describe("Translatable Accessibility Attributes", () => {
+			it("should have translatable previous button tooltip", () => {
+				cy.mount(<Versioning currentStep={2} totalSteps={3} />);
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version");
+			});
+
+			it("should have translatable next button tooltip", () => {
+				cy.mount(<Versioning currentStep={2} totalSteps={3} />);
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version");
+			});
+
+			it("should maintain tooltips when button states change", () => {
+				cy.mount(<Versioning currentStep={1} totalSteps={3} />);
+
+				cy.get("[ui5-ai-versioning]")
+					.as("versioning");
+
+				// Previous button disabled at first step, but still has tooltip
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version")
+					.shadow()
+					.find("ui5-button")
+					.should("have.attr", "disabled");
+
+				// Next button enabled and has tooltip
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version")
+					.shadow()
+					.find("ui5-button")
+					.should("not.have.attr", "disabled");
+
+				// Move to middle step
+				cy.get("@versioning").invoke("prop", "currentStep", 2);
+
+				// Both buttons enabled and have tooltips
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version")
+					.shadow()
+					.find("ui5-button")
+					.should("not.have.attr", "disabled");
+
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version")
+					.shadow()
+					.find("ui5-button")
+					.should("not.have.attr", "disabled");
+
+				// Move to last step
+				cy.get("@versioning").invoke("prop", "currentStep", 3);
+
+				// Previous button enabled and has tooltip
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version")
+					.shadow()
+					.find("ui5-button")
+					.should("not.have.attr", "disabled");
+
+				// Next button disabled at last step, but still has tooltip
+				cy.get("@versioning")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version")
+					.shadow()
+					.find("ui5-button")
+					.should("have.attr", "disabled");
+			});
+
+			it("should maintain tooltips with edge cases", () => {
+				// Single step case
+				cy.mount(<Versioning currentStep={1} totalSteps={1} />);
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version")
+					.shadow()
+					.find("ui5-button")
+					.should("have.attr", "disabled");
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version")
+					.shadow()
+					.find("ui5-button")
+					.should("have.attr", "disabled");
+
+				// Zero steps case
+				cy.mount(<Versioning currentStep={0} totalSteps={0} />);
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="previous"]')
+					.should("have.attr", "tooltip", "Previous Version");
+
+				cy.get("[ui5-ai-versioning]")
+					.shadow()
+					.find('[data-ui5-versioning-button="next"]')
+					.should("have.attr", "tooltip", "Next Version");
+			});
 		});
 	});
 
@@ -584,7 +704,7 @@ describe("Versioning Component", () => {
 
 			// Simulate rapid updates
 			const start = performance.now();
-			
+
 			for (let i = 1; i <= 50; i++) {
 				cy.get("@versioning").invoke("prop", "currentStep", i);
 			}
@@ -606,8 +726,8 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning 
-					currentStep={2} 
+				<Versioning
+					currentStep={2}
 					totalSteps={4}
 					onVersionChange={onVersionChange}
 				/>
