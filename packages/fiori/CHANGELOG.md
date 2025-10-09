@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** improve focus visibility for keyboard navigation ([#12372](https://github.com/UI5/webcomponents/issues/12372)) ([4c0ec2b](https://github.com/UI5/webcomponents/commit/4c0ec2bef1ec0f9c5b628f5171e98c931c4b633f)), closes [#11710](https://github.com/UI5/webcomponents/issues/11710)
+* **ui5-shellbar:** remove internal logo size restrictions ([#12418](https://github.com/UI5/webcomponents/issues/12418)) ([bca773a](https://github.com/UI5/webcomponents/commit/bca773ac7f41f730739f1e05bbcbf8e4012cdeaa))
+* **ui5-view-settings-dialog:** remove focus on first item on filter options ([#12379](https://github.com/UI5/webcomponents/issues/12379)) ([737a6e0](https://github.com/UI5/webcomponents/commit/737a6e0f0fc44ae362831feb4e49eb30fbe81893))
+
+
+
+
+
+# [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
 # [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
 
 
