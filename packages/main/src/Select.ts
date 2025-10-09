@@ -343,7 +343,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 *
 	 * @default "Dash"
 	 * @public
-	 * @since 2.15.0
+	 * @since 2.16.0
 	 */
 	@property()
 	twoColumnSeparator: `${SelectTwoColumnSeparator}` = "Dash";
