@@ -97,6 +97,7 @@ function moreRow(this: List) {
 				}}
 				aria-label={this.growingButtonAriaLabel}
 				aria-labelledby={this.growingButtonAriaLabelledBy}
+				aria-describedby={this.growingButtonAriaDescribedBy}
 				onClick={this._onLoadMoreClick}
 				onKeyDown={this._onLoadMoreKeydown}
 				onKeyUp={this._onLoadMoreKeyup}
@@ -112,6 +113,9 @@ function moreRow(this: List) {
 					</BusyIndicator>
 				}
 				<span id={`${this._id}-growingButton-text`} class="ui5-growing-button-text" growing-button-text>{this._growingButtonText}</span>
+				{this.accessibilityAttributes.growingButton?.description &&
+					<span id={`${this._id}-growingButton-description`} class="ui5-hidden-text">{this.accessibilityAttributes.growingButton.description}</span>
+				}
 			</div>
 		</div>
 	);
