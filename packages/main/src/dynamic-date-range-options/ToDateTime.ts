@@ -4,9 +4,10 @@ import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 // import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import {
-    DATETIME_PICKER_DATE_BUTTON,
-    DATETIME_PICKER_TIME_BUTTON,
-	DYNAMIC_DATE_RANGE_DATERANGE_TEXT,
+	DATETIME_PICKER_DATE_BUTTON,
+	DATETIME_PICKER_TIME_BUTTON,
+	DYNAMIC_DATE_RANGE_TO_INPUT_TEXT,
+	DYNAMIC_DATE_RANGE_TO_TEXT,
 } from "../generated/i18n/i18n-defaults.js";
 import { dateTimeOptionToDates } from "./toDates.js";
 import DynamicDateRange from "../DynamicDateRange.js";
@@ -30,8 +31,10 @@ class ToDateTime implements IDynamicDateRangeOption {
 	}
 
 	parse(value: string): DynamicDateRangeValue {
-		const date = this.getFormat().parse(value) as Date;
+		const dateText = value.replace(this.toText, "").trim();
+		const date = this.getFormat().parse(dateText) as Date;
 		const returnValue = { operator: "", values: [] } as DynamicDateRangeValue;
+
 		returnValue.operator = this.operator;
 		returnValue.values = [date];
 
@@ -47,7 +50,7 @@ class ToDateTime implements IDynamicDateRangeOption {
 
 		const formattedValue = this.getFormat().format(valuesArray[0]);
 
-		return formattedValue;
+		return `${this.toText} ${formattedValue}`;
 	}
 
 	toDates(value: DynamicDateRangeValue): Array<Date> {
@@ -59,8 +62,7 @@ class ToDateTime implements IDynamicDateRangeOption {
 	}
 
 	get text(): string {
-		return "To Date Time";
-		// return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_DATERANGE_TEXT);
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_TO_TEXT);
 	}
 
 	get operator() {
@@ -87,6 +89,10 @@ class ToDateTime implements IDynamicDateRangeOption {
 		return DynamicDateRange.i18nBundle.getText(DATETIME_PICKER_TIME_BUTTON);
 	}
 
+	get toText() {
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_TO_INPUT_TEXT);
+	}
+
 	getDateValue(date: Date | undefined) : string {
 		if (date) {
 			return this.getDateFormat().format(date);
@@ -108,7 +114,8 @@ class ToDateTime implements IDynamicDateRangeOption {
 	}
 
 	isValidString(value: string): boolean {
-		const date = this.getFormat().parse(value) as Date;
+		const dateText = value.replace(this.toText, "").trim();
+		const date = this.getFormat().parse(dateText) as Date;
 
 		if (!date || Number.isNaN(date.getTime())) {
 			return false;

@@ -6,7 +6,8 @@ import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import {
     DATETIME_PICKER_DATE_BUTTON,
     DATETIME_PICKER_TIME_BUTTON,
-	DYNAMIC_DATE_RANGE_DATERANGE_TEXT,
+	DYNAMIC_DATE_RANGE_FROM_INPUT_TEXT,
+	DYNAMIC_DATE_RANGE_FROM_TEXT,
 } from "../generated/i18n/i18n-defaults.js";
 import { dateTimeOptionToDates } from "./toDates.js";
 import DynamicDateRange from "../DynamicDateRange.js";
@@ -30,7 +31,8 @@ class FromDateTime implements IDynamicDateRangeOption {
 	}
 
 	parse(value: string): DynamicDateRangeValue {
-		const date = this.getFormat().parse(value) as Date;
+		const dateText = value.replace(this.fromText, "").trim();
+		const date = this.getFormat().parse(dateText) as Date;
 		const returnValue = { operator: "", values: [] } as DynamicDateRangeValue;
 		returnValue.operator = this.operator;
 		returnValue.values = [date];
@@ -47,7 +49,7 @@ class FromDateTime implements IDynamicDateRangeOption {
 
 		const formattedValue = this.getFormat().format(valuesArray[0]);
 
-		return formattedValue;
+		return `${this.fromText} ${formattedValue}`;
 	}
 
 	toDates(value: DynamicDateRangeValue): Array<Date> {
@@ -59,8 +61,7 @@ class FromDateTime implements IDynamicDateRangeOption {
 	}
 
 	get text(): string {
-		return "From Date Time";
-		// return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_DATERANGE_TEXT);
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_FROM_TEXT);
 	}
 
 	get operator() {
@@ -87,6 +88,10 @@ class FromDateTime implements IDynamicDateRangeOption {
 		return DynamicDateRange.i18nBundle.getText(DATETIME_PICKER_TIME_BUTTON);
 	}
 
+	get fromText() {
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_FROM_INPUT_TEXT);
+	}
+
 	getDateValue(date: Date | undefined) : string {
 		if (date) {
 			return this.getDateFormat().format(date);
@@ -108,7 +113,8 @@ class FromDateTime implements IDynamicDateRangeOption {
 	}
 
 	isValidString(value: string): boolean {
-		const date = this.getFormat().parse(value) as Date;
+		const dateText = value.replace(this.fromText, "").trim();
+		const date = this.getFormat().parse(dateText) as Date;
 
 		if (!date || Number.isNaN(date.getTime())) {
 			return false;
