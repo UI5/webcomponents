@@ -4,7 +4,7 @@
  */
 enum SegmentedButtonContentMode {
     /**
-	 * Each item fits its content and extra space is placed after the last item.
+	 * Each item is sized to fit its content, with any extra space placed after the last item.
 	 * @public
 	 */
     ContentFit = "ContentFit",

@@ -132,7 +132,7 @@ class SegmentedButton extends UI5Element {
      * Defines the content mode of the segmented button items.
      *
      * - "EqualSized": All items are sized equally to fill the available space.
-     * - "ContentFit": Each item fits its content and extra space is after the last item.
+     * - "ContentFit": Each item is sized to fit its content, with any extra space placed after the last item.
      *
      * @default "EqualSized"
      * @public
