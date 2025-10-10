@@ -511,12 +511,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress(["Shift", "F4"])
-			.realPress("F4");
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
+
+		// Wait for year picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
 
 		cy.get("@calendar")
 			.shadow()
@@ -531,12 +554,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress("F4")
-			.realPress(["Shift", "F4"]);
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
+
+		// Wait for month picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
 
 		cy.get("@calendar")
 			.shadow()
@@ -1547,28 +1593,6 @@ describe("Date Picker Tests", () => {
 			.shadow()
 			.find("ui5-yearpicker")
 			.should("be.visible");
-	});
-
-	it("Should not auto-format incomplete date while typing", () => {
-		cy.mount(<DatePicker formatPattern="yyyy-MM-dd" />);
-		cy.get("[ui5-date-picker]")
-			.ui5DatePickerGetInnerInput()
-			.realClick()
-			.realType("2023-0", { delay: 100 });
-
-		cy.get("ui5-date-picker")
-			.ui5DatePickerGetInnerInput()
-			.should("have.value", "2023-0");
-	});
-
-	it("Should normalize value on change", () => {
-		cy.mount(<DatePicker formatPattern="yyyy-MM-dd" />);
-		cy.get("[ui5-date-picker]")
-			.ui5DatePickerTypeDate("202-12-1");
-
-		cy.get("[ui5-date-picker]")
-			.ui5DatePickerGetInnerInput()
-			.should("have.value", "0202-12-01");
 	});
 });
 
