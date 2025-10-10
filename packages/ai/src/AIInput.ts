@@ -31,6 +31,12 @@ import { VERSIONING_NEXT_BUTTON_TEXT, VERSIONING_PREVIOUS_BUTTON_TEXT, WRITING_A
 })
 
 /**
+ * Fired when the user clicks on the AI button.
+ * @public
+ */
+@event("icon-click")
+
+/**
  * Fired when the user clicks on the "Stop" button to stop ongoing AI text generation.
  * @public
  */
@@ -50,6 +56,7 @@ class AIInput extends Input {
 			backwards: boolean;
 		};
 		"stop-generation": object;
+		"icon-click": object;
 	};
 
 	/**
@@ -158,7 +165,7 @@ class AIInput extends Input {
 		} else {
 			const menu = this.shadowRoot?.querySelector("ui5-menu") as Menu;
 			const opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
-			// this.fireDecoratorEvent("generate-icon-click", { clickTarget: target });
+			this.fireDecoratorEvent("icon-click");
 			menu.opener = opener;
 			menu.open = true;
 		}

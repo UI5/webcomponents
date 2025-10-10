@@ -6,7 +6,6 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
-import MenuSeparator from "@ui5/webcomponents/dist/MenuSeparator.js";
 import InputPopoverTemplate from "@ui5/webcomponents/dist/InputPopoverTemplate.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base";
 
@@ -69,6 +68,8 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 									step={this.nativeInputAttributes.step}
 									min={this.nativeInputAttributes.min}
 									max={this.nativeInputAttributes.max}
+									onInput={this._handleNativeInput}
+									onChange={this._handleChange}
 									onSelect={this._handleSelect}
 									onKeyDown={this._onkeydown}
 									onKeyUp={this._onkeyup}
@@ -141,23 +142,21 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 						 aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
 						 aria-haspopup={this.loading ? "false" : "menu"}
 						 onClick={this._handleAIIconClick}
+						 aria-label={this.ariaLabel}
 						 >
 						<Icon
 							id="ai-menu-icon"
-							aria-label={this.ariaLabel}
 							class={`ui5-ai-input-icon ${this._isMenuOpen && this.loading ? "ai-menu-icon-menu-open" : ""}`}
 							name={this.loading ? "stop" : "ai"}
 						/>
 					</div>
-					<div id="ai-menu-wrapper">
-						<Menu
-						 onBeforeOpen={() => { this._isMenuOpen = true; }}
-						 onBeforeClose={() => { this._isMenuOpen = false; }}
-						>
-							<slot name={"default"}></slot>
-							{this.totalVersions > 1 && this._isMenuOpen && Versioning.call(this)}
-						</Menu>
-					</div>
+					<Menu
+						onBeforeOpen={() => { this._isMenuOpen = true; }}
+						onBeforeClose={() => { this._isMenuOpen = false; }}
+					>
+						<slot name={"default"}></slot>
+						{this.totalVersions > 1 && Versioning.call(this)}
+					</Menu>
 				</div>
 			</div>
 			{InputPopoverTemplate.call(this, { suggestionsList })}
@@ -168,7 +167,6 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 function Versioning(this: AIInput) {
 	return (
 		<>
-			<MenuSeparator />
 			<MenuItem
 				type="Inactive"
 				class="ui5-ai-versioning-menu-footer"

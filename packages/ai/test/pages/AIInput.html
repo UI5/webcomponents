@@ -31,10 +31,7 @@
   <ui5-ai-input
     id="ai-input"
     placeholder="Ask me something..."
-    value=""
-    aria-label="AI-powered inputs">
-    <!-- value-state="Information" -->
-    <!-- <div slot="valueStateMessage">Information message.</div> -->
+	>
     <ui5-menu-item text="Generate text" slot="default" additional-text="Ctrl + Enter" data-menu-action="generate"></ui5-menu-item>
   </ui5-ai-input>
 
@@ -87,8 +84,6 @@
 				]
 			}
 		];
-
-    // document.getElementById("ai-input").querySelector("ui5-icon")
 
 		let versionHistory = [];
 		let currentIndexHistory = 0;
@@ -298,7 +293,6 @@
 		}
 
 		function handleVersionChange(event) {
-      // debugger;
 			const { backwards } = event.detail || {};
 			if (backwards && currentIndexHistory > 0) {
 				saveCurrentVersion();

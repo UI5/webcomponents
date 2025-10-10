@@ -106,9 +106,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning
-					currentStep={2}
-					totalSteps={3}
+				<Versioning 
+					currentStep={2} 
+					totalSteps={3} 
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -128,9 +128,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning
-					currentStep={2}
-					totalSteps={3}
+				<Versioning 
+					currentStep={2} 
+					totalSteps={3} 
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -150,9 +150,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning
-					currentStep={1}
-					totalSteps={1}
+				<Versioning 
+					currentStep={1} 
+					totalSteps={1} 
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -178,9 +178,9 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning
-					currentStep={2}
-					totalSteps={5}
+				<Versioning 
+					currentStep={2} 
+					totalSteps={5} 
 					onVersionChange={onVersionChange}
 				/>
 			);
@@ -193,7 +193,7 @@ describe("Versioning Component", () => {
 				.realClick();
 
 			cy.get("@onVersionChange").should("have.callCount", 3);
-
+			
 			// Verify all calls were for next (backwards: false)
 			cy.get("@onVersionChange").should((spy) => {
 				expect(spy).to.have.been.calledWith(Cypress.sinon.match.has("detail", { backwards: false }));
@@ -492,8 +492,8 @@ describe("Versioning Component", () => {
 	describe("Accessibility", () => {
 		it("should support keyboard navigation", () => {
 			cy.mount(
-				<Versioning
-					currentStep={2}
+				<Versioning 
+					currentStep={2} 
 					totalSteps={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
 				/>
@@ -704,7 +704,7 @@ describe("Versioning Component", () => {
 
 			// Simulate rapid updates
 			const start = performance.now();
-
+			
 			for (let i = 1; i <= 50; i++) {
 				cy.get("@versioning").invoke("prop", "currentStep", i);
 			}
@@ -726,8 +726,8 @@ describe("Versioning Component", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<Versioning
-					currentStep={2}
+				<Versioning 
+					currentStep={2} 
 					totalSteps={4}
 					onVersionChange={onVersionChange}
 				/>

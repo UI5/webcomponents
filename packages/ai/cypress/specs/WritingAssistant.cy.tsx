@@ -487,7 +487,7 @@ describe("WritingAssistant Component", () => {
 
 		it("should handle long action text", () => {
 			const longText = "This is a very long action text that should be displayed properly in the toolbar without breaking the layout";
-
+			
 			cy.mount(
 				<WritingAssistant
 					loading={true}
@@ -1086,7 +1086,7 @@ describe("WritingAssistant Component", () => {
 				.as("toolbar");
 
 			const loadingStates = [false, true];
-
+			
 			// Rapidly change states
 			loadingStates.forEach((loading, index) => {
 				cy.get("@toolbar").invoke("prop", "loading", loading);
