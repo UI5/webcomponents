@@ -275,7 +275,7 @@ describe("BusyIndicator general interaction", () => {
 });
 
 describe("Delay and Timeout Behavior", () => {
-	it.skip("should clear timeout when component becomes inactive", () => {
+	it("should clear timeout when component becomes inactive", () => {
 		cy.mount(
 			<BusyIndicator delay={1200}>
 				<div>Content</div>
@@ -296,7 +296,7 @@ describe("Delay and Timeout Behavior", () => {
 			cy.wrap($el[0]._busyTimeoutId).as("timeoutId");
 		});
 
-		const clearTimeoutSpy = cy.spy(clearTimeout);
+		cy.spy(window, "clearTimeout");
 		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
 
 		cy.get("[ui5-busy-indicator]")
@@ -306,48 +306,9 @@ describe("Delay and Timeout Behavior", () => {
 
 		cy.get("@timeoutId")
 			.should((timeoutId)	=> {
-				expect(clearTimeoutSpy).to.have.been.calledWith(timeoutId);
+				expect(clearTimeout).to.have.been.calledWith(timeoutId);
 			});
 
-		cy.get("[ui5-busy-indicator]")
-			.invoke("prop", "_isBusy")
-			.should("eq", false);
-	});
-
-	it("should handle timeout cleanup edge case", () => {
-		cy.mount(
-			<BusyIndicator delay={500}>
-				<div>Content</div>
-			</BusyIndicator>
-		);
-	
-		cy.get("[ui5-busy-indicator]").invoke("attr", "active", "");
-	
-		cy.get("[ui5-busy-indicator]")
-			.shadow()
-			.find(".ui5-busy-indicator-busy-area")
-			.should("not.exist");
-	
-		cy.get<BusyIndicator>("[ui5-busy-indicator]").should(($el) => {
-			const timeoutId = $el[0]._busyTimeoutId;
-			expect(timeoutId).to.exist;
-		}).then(($el) => {
-			cy.wrap($el[0]._busyTimeoutId).as("timeoutId");
-		});
-	
-		const clearTimeoutSpy = cy.spy(window, "clearTimeout");
-	
-		cy.get("[ui5-busy-indicator]").invoke("removeAttr", "active");
-	
-		cy.get("@timeoutId").should((timeoutId) => {
-			expect(clearTimeoutSpy).to.have.been.calledWith(timeoutId);
-		});
-	
-		cy.get("[ui5-busy-indicator]")
-			.shadow()
-			.find(".ui5-busy-indicator-busy-area")
-			.should("not.exist");
-	
 		cy.get("[ui5-busy-indicator]")
 			.invoke("prop", "_isBusy")
 			.should("eq", false);
