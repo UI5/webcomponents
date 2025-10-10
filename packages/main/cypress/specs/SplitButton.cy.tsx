@@ -124,13 +124,7 @@ describe("Split Button general interaction", () => {
 	});
 
 	it("tests arrow button 'arrow-click' event (Space up)", () => {
-		cy.mount(<SplitButton>Default</SplitButton>);
-
-		cy.get("[ui5-split-button]").then(($host) => {
-			const spy = cy.spy();
-			$host[0].addEventListener("arrow-click", spy);
-			cy.wrap(spy).as("arrowSpy");
-		});
+		cy.mount(<SplitButton onArrowClick={cy.stub().as("arrowClicked")}>Default</SplitButton>);
 
 		cy.get("[ui5-split-button]")
 			.shadow()
@@ -150,7 +144,7 @@ describe("Split Button general interaction", () => {
 				el.dispatchEvent(kd);
 			});
 
-		cy.get("@arrowSpy")
+		cy.get("@arrowClicked")
 			.should("not.have.been.called");
 
 		cy.get("[ui5-split-button]")
@@ -169,7 +163,7 @@ describe("Split Button general interaction", () => {
 				el.dispatchEvent(ku);
 			});
 
-		cy.get("@arrowSpy")
+		cy.get("@arrowClicked")
 			.should("have.been.calledOnce");
 	});
 
