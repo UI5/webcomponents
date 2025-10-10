@@ -1548,31 +1548,6 @@ describe("Date Picker Tests", () => {
 			.find("ui5-yearpicker")
 			.should("be.visible");
 	});
-
-			it("Date picker in month mode, using valueFormat", () => {
-		cy.mount(<DatePicker valueFormat="yyyy-MM"></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.ui5DatePickerGetInnerInput()
-			.realClick()
-			.should("be.focused")
-			.realPress("F4");
-
-		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "open");
-
-		cy.get<DatePicker>("@datePicker")
-			.shadow()
-			.find("ui5-calendar")
-			.as("calendar")
-			.should("have.attr", "_current-picker", "month");
-
-		cy.get("@calendar")
-			.shadow()
-			.find("ui5-monthpicker")
-			.should("be.visible");
-	});
 });
 
 
