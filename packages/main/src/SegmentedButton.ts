@@ -327,17 +327,6 @@ class SegmentedButton extends UI5Element {
 	get ariaRoleDescription() {
 		return SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIPTION);
 	}
-
-	get contentModeClass() {
-		switch (this.contentMode) {
-		case SegmentedButtonContentMode.EqualSized:
-			return "ui5-segmented-button-root-equal-sized-items";
-		case SegmentedButtonContentMode.ContentFit:
-			return "ui5-segmented-button-root-content-fit-items";
-		default:
-			return "";
-		}
-	}
 }
 
 SegmentedButton.define();
