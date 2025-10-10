@@ -1,3 +1,7 @@
+:host(:not([hidden])) {
+    display: inline-block;
+}
+
 .ai-prompt-input-button {
 	margin-left: .5rem;
 	margin-top: 3px;
