@@ -31,25 +31,24 @@ export type AccessibilityInfo = {
 	// The WAI-ARIA role of the component.
 	role?: AriaRole,
 
-	// A translated text that represents the component type. Used when several components share same role,
-	// f.e. Select and ComboBox both have role="combobox".
-	type?: LowercaseString<string>,
+	// A translated text that represents the component type.
+	type?: string,
 
 	// A translated text that represents relevant component description/state - value, placeholder, label, etc.
 	description?: string,
 
-	 // The component disabled state.
+	// Disabled state of the component.
 	disabled?: boolean,
 
-	// The component readonly state.
+	// Readonly state of the component.
 	readonly?: boolean,
 
-	// The component required state.
+	// Required state of the component.
 	required?: boolean,
 
-	// An array of elements, aggregated by the component
-	// <b>Note:</b> Children should only be provided when it is helpful to understand the accessibility context.
-	children?: Array<HTMLElement>,
+	// An array of nodes, aggregated by the component
+	// **Note:** Children should only be provided when it is helpful to understand the accessibility context.
+	children?: Array<Node>,
 }
 
 export type AccessibilityAttributes = {
