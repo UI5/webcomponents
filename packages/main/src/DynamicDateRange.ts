@@ -7,7 +7,8 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import type { JsxTemplate } from "@ui5/webcomponents-base";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
+import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import { isF4, isShow } from "@ui5/webcomponents-base/dist/Keys.js";
 import DynamicDateRangeTemplate from "./DynamicDateRangeTemplate.js";
 import IconMode from "./types/IconMode.js";
@@ -180,6 +181,8 @@ class DynamicDateRange extends UI5Element {
 	@property({ type: Object })
 	_currentOption?: IDynamicDateRangeOption;
 
+	_lastSelectedOption?: IDynamicDateRangeOption;
+
 	@property({ type: Object })
 	currentValue?: DynamicDateRangeValue;
 
@@ -196,6 +199,14 @@ class DynamicDateRange extends UI5Element {
 	onBeforeRendering() {
 		this.optionsObjects = this._createNormalizedOptions();
 		this._focusSelectedItem();
+	}
+
+	async onAfterRendering() {
+		await renderFinished().then(() => {
+			setTimeout(() => {
+				this._focusLastSelectedItem();
+			}, 0);
+		});
 	}
 
 	/**
@@ -241,6 +252,25 @@ class DynamicDateRange extends UI5Element {
 		}
 	}
 
+	_focusLastSelectedItem() {
+		if (!this._lastSelectedOption) {
+			return;
+		}
+
+		// Ensure the list exists and has items
+		if (!this._list || !this._list.items.length) {
+			return;
+		}
+
+		// Find the index of the last selected option in the options array
+		const optionIndex = this.optionsObjects.findIndex(option => option.operator === this._lastSelectedOption?.operator);
+
+		if (optionIndex >= 0 && optionIndex < this._list.items.length) {
+			const listItem = this._list.items[optionIndex];
+			this._list.focusItem(listItem as ListItem);
+		}
+	}
+
 	/**
 	 * Defines whether the value help icon is hidden
 	 * @private
@@ -263,6 +293,7 @@ class DynamicDateRange extends UI5Element {
 
 	_selectOption(e: CustomEvent): void {
 		this._currentOption = this.optionsObjects.find(option => option.text === e.detail.item.textContent);
+		this._lastSelectedOption = this._currentOption;
 
 		if (!this._currentOption?.template) {
 			this.currentValue = this._currentOption?.parse(this._currentOption.text);
