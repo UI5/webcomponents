@@ -480,11 +480,11 @@ class Calendar extends CalendarPart {
 	 */
 	_normalizeCurrentPicker() {
 		if (this._currentPicker === "day" && this._pickersMode !== CalendarPickersMode.DAY_MONTH_YEAR) {
-			this.showMonth(true);
+			this.switchToMonthPicker(true);
 		}
 
 		if (this._currentPicker === "month" && this._pickersMode === CalendarPickersMode.YEAR) {
-			this.showYear(true);
+			this.switchToYearPicker(true);
 		}
 	}
 
@@ -526,22 +526,22 @@ class Calendar extends CalendarPart {
 	/**
 	 * The user clicked the "month" button in the header
 	 */
-	onHeaderShowMonthPress() {
-		this.showMonth();
+	onHeaderMonthButtonPress() {
+		this.switchToMonthPicker();
 		this.fireDecoratorEvent("show-month-view");
 	}
 
-	async showDay(skipFocus = false) {
+	async switchToDayPicker(suppressFocus = false) {
 		this._currentPicker = "day";
-		if (!skipFocus) {
+		if (!suppressFocus) {
 			await renderFinished();
 			this._currentPickerDOM.focus();
 		}
 	}
 
-	async showMonth(skipFocus = false) {
+	async switchToMonthPicker(suppressFocus = false) {
 		this._currentPicker = "month";
-		if (!skipFocus) {
+		if (!suppressFocus) {
 			await renderFinished();
 			this._currentPickerDOM.focus();
 		}
@@ -550,14 +550,14 @@ class Calendar extends CalendarPart {
 	/**
 	 * The user clicked the "year" button in the header
 	 */
-	onHeaderShowYearPress() {
-		this.showYear();
+	onHeaderYearButtonPress() {
+		this.switchToYearPicker();
 		this.fireDecoratorEvent("show-year-view");
 	}
 
-	async showYear(skipFocus = false) {
+	async switchToYearPicker(suppressFocus = false) {
 		this._currentPicker = "year";
-		if (!skipFocus) {
+		if (!suppressFocus) {
 			await renderFinished();
 			this._currentPickerDOM.focus();
 		}
@@ -566,14 +566,14 @@ class Calendar extends CalendarPart {
 	/**
 	 * The user clicked the "year range" button in the YearPicker header
 	 */
-	onHeaderShowYearRangePress() {
-		this.showYearRange();
+	onHeaderYearRangeButtonPress() {
+		this.switchToYearRangePicker();
 		this.fireDecoratorEvent("show-year-range-view");
 	}
 
-	async showYearRange(skipFocus = false) {
+	async switchToYearRangePicker(suppressFocus = false) {
 		this._currentPicker = "yearrange";
-		if (!skipFocus) {
+		if (!suppressFocus) {
 			await renderFinished();
 			this._currentPickerDOM.focus();
 		}
@@ -722,7 +722,7 @@ class Calendar extends CalendarPart {
 		this.timestamp = e.detail.timestamp;
 
 		if (this._pickersMode === CalendarPickersMode.DAY_MONTH_YEAR) {
-			this.showDay();
+			this.switchToDayPicker();
 		} else {
 			this._fireEventAndUpdateSelectedDates(e.detail.dates);
 		}
@@ -732,9 +732,9 @@ class Calendar extends CalendarPart {
 		this.timestamp = e.detail.timestamp;
 
 		if (this._pickersMode === CalendarPickersMode.DAY_MONTH_YEAR) {
-			this.showDay();
+			this.switchToDayPicker();
 		} else if (this._pickersMode === CalendarPickersMode.MONTH_YEAR) {
-			this.showMonth();
+			this.switchToMonthPicker();
 		} else {
 			this._fireEventAndUpdateSelectedDates(e.detail.dates);
 		}
@@ -742,7 +742,7 @@ class Calendar extends CalendarPart {
 
 	onSelectedYearRangeChange(e: CustomEvent<YearRangePickerChangeEventDetail>) {
 		this.timestamp = e.detail.timestamp;
-		this.showYear();
+		this.switchToYearPicker();
 	}
 
 	async onNavigate(e: CustomEvent) {
@@ -753,7 +753,7 @@ class Calendar extends CalendarPart {
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isF4(e) && this._currentPicker !== "month") {
-			this.showMonth();
+			this.switchToMonthPicker();
 			this.fireDecoratorEvent("show-month-view");
 		}
 
@@ -762,10 +762,10 @@ class Calendar extends CalendarPart {
 		}
 
 		if (this._currentPicker !== "year") {
-			this.showYear();
+			this.switchToYearPicker();
 			this.fireDecoratorEvent("show-year-view");
 		} else {
-			this.showYearRange();
+			this.switchToYearRangePicker();
 			this.fireDecoratorEvent("show-year-range-view");
 		}
 	}
@@ -865,7 +865,7 @@ class Calendar extends CalendarPart {
 		}
 
 		if (isEnter(e)) {
-			this.showMonth();
+			this.switchToMonthPicker();
 			this.fireDecoratorEvent("show-month-view");
 		}
 	}
@@ -873,7 +873,7 @@ class Calendar extends CalendarPart {
 	onMonthButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
 			e.preventDefault();
-			this.showMonth();
+			this.switchToMonthPicker();
 			this.fireDecoratorEvent("show-month-view");
 		}
 	}
@@ -884,14 +884,14 @@ class Calendar extends CalendarPart {
 		}
 
 		if (isEnter(e)) {
-			this.showYear();
+			this.switchToYearPicker();
 			this.fireDecoratorEvent("show-year-view");
 		}
 	}
 
 	onYearButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
-			this.showYear();
+			this.switchToYearPicker();
 			this.fireDecoratorEvent("show-year-view");
 		}
 	}
@@ -902,14 +902,14 @@ class Calendar extends CalendarPart {
 		}
 
 		if (isEnter(e)) {
-			this.showYearRange();
+			this.switchToYearRangePicker();
 			this.fireDecoratorEvent("show-year-range-view");
 		}
 	}
 
 	onYearRangeButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
-			this.showYearRange();
+			this.switchToYearRangePicker();
 			this.fireDecoratorEvent("show-year-range-view");
 		}
 	}
