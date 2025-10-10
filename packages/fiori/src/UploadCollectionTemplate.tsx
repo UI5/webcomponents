@@ -36,7 +36,7 @@ export default function UploadCollectionTemplate(this: UploadCollection) {
 							type="Inactive"
 						>
 							<IllustratedMessage	name="Tent">
-								<Title slot="title" wrappingType="None" level="H2">{this._noDataText}</Title>
+								<Title slot="title" wrappingType="None" level={this.noDataHeaderLevel}>{this._noDataText}</Title>
 								<span slot="subtitle">{this._noDataDescription}</span>
 							</IllustratedMessage>
 						</ListItemCustom>

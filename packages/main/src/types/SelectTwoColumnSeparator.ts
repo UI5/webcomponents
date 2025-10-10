@@ -1,6 +1,7 @@
 /**
  * Defines the separator types for Select component two-column layout.
  * @public
+ * @since 2.16.0
  */
 enum SelectTwoColumnSeparator {
 	/**

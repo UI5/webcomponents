@@ -167,7 +167,7 @@
 	--_ui5_dynamic_page_title_actions_separator_height: var(--_ui5-toolbar-separator-height);
 
 	/* ShellBar */
-	--_ui5-shellbar-separator-height: 1.5rem;
+	--_ui5-shellbar-separator-height: 2rem;
 }
 
 [data-ui5-compact-size],
@@ -406,5 +406,5 @@
 	--_ui5_dynamic_page_title_actions_separator_height: var(--_ui5-toolbar-separator-height);
 
 	/* ShellBar */
-	--_ui5-shellbar-separator-height: 1.5rem;
+	--_ui5-shellbar-separator-height: 2rem;
 }
