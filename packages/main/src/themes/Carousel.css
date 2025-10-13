@@ -90,11 +90,6 @@
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
-    pointer-events: none;
-}
-
-.ui5-carousel-navigation-arrows > [ui5-button] {
-    pointer-events: all;
 }
 
 .ui5-carousel-navigation-wrapper {
@@ -138,8 +133,8 @@
 	padding: 0 0.5rem;
 	border: 1px solid var(--sapButton_Hover_BorderColor);
 	background: var(--sapButton_Background);
-	pointer-events: all;
 	color: var(--sapButton_TextColor);
+	cursor: pointer;
 }
 
 .ui5-carousel-navigation-button:hover {
