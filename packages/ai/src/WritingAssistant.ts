@@ -53,7 +53,7 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  *
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.1
+ * @since 2.16.0
  * @private
  */
 @customElement({
@@ -121,7 +121,6 @@ class WritingAssistant extends UI5Element {
 	 *
 	 * @default ""
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property()
 	actionText = "";
@@ -134,7 +133,7 @@ class WritingAssistant extends UI5Element {
 	 *
 	 * @default 1
 	 * @public
-	 * @since 1.0.0-rc.1
+	 * @since 2.16.0
 	 */
 	@property({ type: Number })
 	currentVersionIndex = 1;
@@ -147,7 +146,6 @@ class WritingAssistant extends UI5Element {
 	 *
 	 * @default 1
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	totalVersions = 1;
