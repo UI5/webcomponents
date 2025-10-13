@@ -14,10 +14,12 @@ import SuggestionsCss from "@ui5/webcomponents/dist/generated/themes/Suggestions
 
 // templates
 import AIInputTemplate from "./AIInputTemplate.js";
-import { VERSIONING_NEXT_BUTTON_TEXT,
-		VERSIONING_PREVIOUS_BUTTON_TEXT,
-		WRITING_ASSISTANT_LABEL,
-		WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT } from "./generated/i18n/i18n-defaults.js";
+import {
+	VERSIONING_NEXT_BUTTON_TEXT,
+	VERSIONING_PREVIOUS_BUTTON_TEXT,
+	WRITING_ASSISTANT_LABEL,
+	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
+} from "./generated/i18n/i18n-defaults.js";
 
 @customElement({
 	tag: "ui5-ai-input",
