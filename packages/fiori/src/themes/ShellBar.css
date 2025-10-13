@@ -485,6 +485,9 @@ slot[name="profile"] {
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
+}
+
+::slotted([slot="logo"]):active {
 	pointer-events: none;
 }
 
