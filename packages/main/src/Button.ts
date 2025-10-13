@@ -628,15 +628,18 @@ class Button extends UI5Element implements IButton {
 	get ariaLabelText() {
 		const textContent = this.textContent || "";
 		const ariaLabelText = getEffectiveAriaLabelText(this) || "";
-		const typeLabelText = this.hasButtonType ? this.buttonTypeText : "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
-		const labelParts = [textContent, ariaLabelText, typeLabelText, internalLabelText].filter(part => part);
+		const labelParts = [textContent, ariaLabelText, internalLabelText].filter(part => part);
 		return labelParts.join(" ");
 	}
 
 	get ariaDescriptionText() {
-		return this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const typeLabelText = this.hasButtonType ? this.buttonTypeText : "";
+		
+		const descriptionParts = [accessibleDescription, typeLabelText].filter(part => part);
+		return descriptionParts.length > 0 ? descriptionParts.join(" ") : undefined;
 	}
 
 	get _computedAccessibilityAttributes(): ButtonAccessibilityAttributes {
