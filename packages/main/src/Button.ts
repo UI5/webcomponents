@@ -637,7 +637,7 @@ class Button extends UI5Element implements IButton {
 	get ariaDescriptionText() {
 		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
 		const typeLabelText = this.hasButtonType ? this.buttonTypeText : "";
-		
+
 		const descriptionParts = [accessibleDescription, typeLabelText].filter(part => part);
 		return descriptionParts.length > 0 ? descriptionParts.join(" ") : undefined;
 	}
