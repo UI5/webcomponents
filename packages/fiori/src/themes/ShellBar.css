@@ -220,7 +220,6 @@ slot[name="profile"] {
 .ui5-shellbar-logo {
 	overflow: hidden;
 	cursor: pointer;
-	max-height: 2rem;
 }
 
 .ui5-shellbar-logo-area {
@@ -240,6 +239,7 @@ slot[name="profile"] {
 .ui5-shellbar-logo:focus,
 .ui5-shellbar-logo-area:focus {
 	outline: var(--_ui5_shellbar_logo_outline);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
 	border-radius: var(--_ui5_shellbar_logo_border_radius);
 }
 
@@ -485,6 +485,9 @@ slot[name="profile"] {
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
+}
+
+::slotted([slot="logo"]):active {
 	pointer-events: none;
 }
 

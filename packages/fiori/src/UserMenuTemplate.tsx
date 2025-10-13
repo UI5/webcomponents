@@ -106,14 +106,14 @@ function headerContent(this: UserMenu) {
 					}
 				</Avatar>
 				{this._selectedAccount.titleText &&
-					<Text maxLines={2} id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
+					<Text id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
 				}
 
 				{this._selectedAccount.subtitleText &&
-					<Text maxLines={1} class="ui5-user-menu-selected-account-subtitleText">{this._selectedAccount.subtitleText}</Text>
+					<Text class="ui5-user-menu-selected-account-subtitleText">{this._selectedAccount.subtitleText}</Text>
 				}
 				{this._selectedAccount.description &&
-					<Text maxLines={1} class="ui5-user-menu-selected-account-description">{this._selectedAccount.description}</Text>
+					<Text class="ui5-user-menu-selected-account-description">{this._selectedAccount.description}</Text>
 				}
 
 				{this.showManageAccount &&
@@ -162,13 +162,13 @@ function otherAccountsList(this: UserMenu) {
 						</Avatar>
 						<div class="ui5-user-menu-other-accounts-info">
 							{account.titleText &&
-								<Title class="ui5-user-menu-other-accounts-title" wrapping-type="None">{account.titleText}</Title>
+								<Title class="ui5-user-menu-other-accounts-title">{account.titleText}</Title>
 							}
 							{account.subtitleText &&
-								<Label class="ui5-user-menu-other-accounts-additional-info" wrapping-type="None">{account.subtitleText}</Label>
+								<Label class="ui5-user-menu-other-accounts-additional-info">{account.subtitleText}</Label>
 							}
 							{account.description &&
-								<Label class="ui5-user-menu-other-accounts-additional-info" wrapping-type="None">{account.description}</Label>
+								<Label class="ui5-user-menu-other-accounts-additional-info">{account.description}</Label>
 							}
 						</div>
 						<div>
