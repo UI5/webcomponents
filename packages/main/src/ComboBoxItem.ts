@@ -30,6 +30,15 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	text?: string;
 
 	/**
+	 * Defines the value of the `ui5-combobox-item`.
+	 * Used for selection. Check ComboBox' complexValue property for more information.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	value?: string;
+
+	/**
 	 * Defines the additional text of the component.
 	 * @default undefined
 	 * @since 1.0.0-rc.11

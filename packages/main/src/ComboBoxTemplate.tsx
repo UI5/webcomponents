@@ -16,7 +16,7 @@ export default function ComboBoxTemplate(this: ComboBox) {
 				}
 
 				<input id="ui5-combobox-input"
-					value={this.value}
+					value={this._useComplexValue ? this.complexValue[0] : this.value}
 					inner-input
 					placeholder={this.placeholder}
 					disabled={this.disabled}

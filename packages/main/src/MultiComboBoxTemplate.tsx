@@ -63,7 +63,7 @@ export default function MultiComboBoxTemplate(this: MultiComboBox) {
 
 			<input
 				id="ui5-multi-combobox-input"
-				value={this.value}
+				value={this._useComplexValue ? this.complexValue[0] : this.value}
 				inner-input
 				placeholder={this._getPlaceholder}
 				disabled={this.disabled}

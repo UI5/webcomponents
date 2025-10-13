@@ -79,6 +79,14 @@ const defaultConverter = {
 		if (type === Number) {
 			return value === null ? undefined : parseFloat(value);
 		}
+
+		if (type === Object || type === Array) {
+			try {
+				return JSON.parse(value as string) as object | Array<unknown>;
+			} catch {
+				return value;
+			}
+		}
 		return value;
 	},
 	toAttribute(value: unknown, type: unknown) {
@@ -88,7 +96,7 @@ const defaultConverter = {
 
 		// don't set attributes for arrays and objects
 		if (type === Object || type === Array) {
-			return null;
+			return JSON.stringify(value);
 		}
 
 		// object, array, other
