@@ -90,6 +90,7 @@
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
+	pointer-events: none;
 }
 
 .ui5-carousel-navigation-wrapper {
@@ -135,6 +136,7 @@
 	background: var(--sapButton_Background);
 	color: var(--sapButton_TextColor);
 	cursor: pointer;
+	pointer-events: all;
 }
 
 .ui5-carousel-navigation-button:hover {
