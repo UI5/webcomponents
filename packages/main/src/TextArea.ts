@@ -281,7 +281,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * Defines the accessible description of the component.
 	 * @default undefined
 	 * @public
-	 * @since 2.9.0
+	 * @since 2.16.0
 	 */
 	@property()
 	accessibleDescription?: string;
@@ -290,7 +290,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that describe the textarea.
 	 * @default undefined
 	 * @public
-	 * @since 2.9.0
+	 * @since 2.16.0
 	 */
 	@property()
 	accessibleDescriptionRef?: string;
