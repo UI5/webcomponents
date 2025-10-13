@@ -402,17 +402,29 @@
 		<h1 class="sample-container-title">Custom Suggestions</h1>
 
 		<ui5-multi-input id="mi-custom-suggestions" show-suggestions>
-			<ui5-suggestion-item-custom text="Bulgaria">
-				<span>Bulgaria</span>
+			<ui5-suggestion-item-custom text="Bulgaria" accessible-description-ref="custom-1">
+				<div >
+					<span>Bulgaria</span>
+					<span id="custom-1">BG</span>
+				</div>
 			</ui5-suggestion-item-custom>
-			<ui5-suggestion-item-custom text="Germany">
-				<span>Germany</span>
+			<ui5-suggestion-item-custom text="Germany" accessible-description="GE">
+				<div>
+					<span>Germany</span>
+					<span>DE</span>
+				</div>
 			</ui5-suggestion-item-custom>
-			<ui5-suggestion-item-custom text="USA">
-				<span>USA</span>
+			<ui5-suggestion-item-custom text="USA" accessible-description="Some random text that will not be read" accessible-description-ref="custom-3">
+				<div>
+					<span>USA</span>
+					<span id="custom-3">US - ref</span>
+				</div>
 			</ui5-suggestion-item-custom>
-			<ui5-suggestion-item-custom text="Romania">
-				<span>Romania</span>
+			<ui5-suggestion-item-custom text="Romania" accessible-description-ref="custom-4">
+				<div id="custom-4">
+					<span>Romania</span>
+					<span>RO</span>
+				</div>
 			</ui5-suggestion-item-custom>
 		</ui5-multi-input>
 	</div>

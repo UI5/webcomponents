@@ -94,6 +94,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 
 					{this._effectiveShowSuggestions &&
 						<>
+							<span id="selectionAccDescription" class="ui5-hidden-text" aria-live="polite" role="status"></span>
 							<span id="suggestionsText" class="ui5-hidden-text">{this.suggestionsText}</span>
 							<span id="selectionText" class="ui5-hidden-text" aria-live="polite" role="status"></span>
 							<span id="suggestionsCount" class="ui5-hidden-text" aria-live="polite">{this.availableSuggestionsCount}</span>

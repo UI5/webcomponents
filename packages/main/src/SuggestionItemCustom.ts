@@ -44,6 +44,22 @@ class SuggestionItemCustom extends ListItemBase implements IInputSuggestionItemS
 	text?: string;
 
 	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Defines the IDs of the elements that describe the component.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
+
+	/**
 	 * Defines the content of the component.
 	 *
 	 * @public

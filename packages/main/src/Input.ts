@@ -110,6 +110,8 @@ interface IInputSuggestionItem extends UI5Element {
 	focused: boolean;
 	additionalText?: string;
 	items?: IInputSuggestionItem[];
+	accessibleDescription?: string;
+	accessibleDescriptionRef?: string;
 }
 
 interface IInputSuggestionItemSelectable extends IInputSuggestionItem {
@@ -1616,6 +1618,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	onItemSelect(item: IInputSuggestionItem) {
 		this.valueBeforeItemSelection = this.value;
 		this.updateValueOnSelect(item);
+		this.announceSelectedItemAccDescription();
 		this.announceSelectedItem();
 
 		this.fireSelectionChange(item, true);
@@ -1654,6 +1657,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (invisibleText) {
 			invisibleText.textContent = this.itemSelectionAnnounce;
+		}
+	}
+
+	announceSelectedItemAccDescription() {
+		const invisibleText = this.shadowRoot!.querySelector(`#selectionAccDescription`)!;
+
+		if (invisibleText) {
+			invisibleText.textContent = this.suggestionAdditionalAccText;
 		}
 	}
 
@@ -1895,6 +1906,23 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get suggestionsText() {
 		return Input.i18nBundle.getText(INPUT_SUGGESTIONS);
+	}
+
+	get suggestionAdditionalAccText() {
+		if (!this.Suggestions || !this.Suggestions?._getItems().length) return "";
+
+		const selectedItem = this.Suggestions?._getItems()[this.Suggestions?.selectedItemIndex];
+
+		if (!selectedItem) {
+			return "";
+		}
+
+		if (!selectedItem.accessibleDescriptionRef) {
+			return selectedItem.accessibleDescription ? selectedItem.accessibleDescription : "";
+		}
+
+		const text = selectedItem.querySelector(`#${selectedItem.accessibleDescriptionRef}`);
+		return text ? text.textContent || "" : "";
 	}
 
 	get availableSuggestionsCount() {
