@@ -66,7 +66,6 @@ class TableSelectionMulti extends TableSelectionBase {
 	@property()
 	headerSelector: `${TableSelectionMultiHeaderSelector}` = "SelectAll";
 
-	private _rowsLength = 0;
 	private _rangeSelection?: {
 		selected: boolean,
 		isUp: boolean | null,
@@ -83,11 +82,7 @@ class TableSelectionMulti extends TableSelectionBase {
 	}
 
 	onTableBeforeRendering() {
-		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
-			this._rowsLength = this._table.rows.length;
-			this._table.headerRow[0]._invalidate++;
-		}
-
+		super.onTableBeforeRendering();
 		this._table?.removeEventListener("click", this._onClickCaptureBound);
 	}
 
