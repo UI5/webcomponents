@@ -370,6 +370,16 @@ class Table extends UI5Element {
 	rowActionCount = 0;
 
 	/**
+	 * Determines whether the table rows are displayed with alternating background colors.
+	 *
+	 * @default false
+	 * @since 2.17
+	 * @public
+	 */
+	@property({ type: Boolean })
+	alternateRowColors = false;
+
+	/**
 	 * Defines the sticky top offset of the table, if other sticky elements outside of the table exist.
 	 */
 	@property()
@@ -436,9 +446,10 @@ class Table extends UI5Element {
 
 	onBeforeRendering(): void {
 		this._renderNavigated = this.rows.some(row => row.navigated);
-		[...this.headerRow, ...this.rows].forEach(row => {
+		[...this.headerRow, ...this.rows].forEach((row, index) => {
 			row._renderNavigated = this._renderNavigated;
 			row._rowActionCount = this.rowActionCount;
+			row._alternate = this.alternateRowColors && index % 2 === 0;
 		});
 
 		this.style.setProperty(getScopedVarName("--ui5_grid_sticky_top"), this.stickyTop);
