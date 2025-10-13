@@ -537,6 +537,7 @@ describe("TabContainer general interaction", () => {
 		cy.get("@startOverflow").should("be.visible").invoke("text").should("equal", "+4");
 
 		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
+		cy.get("@visibleTab").should("exist");
 		cy.get("@visibleTab").realClick();
 
 		cy.get("@startOverflow").should("have.text", "+4");
