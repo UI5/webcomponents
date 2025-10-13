@@ -59,7 +59,7 @@
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch",
+    "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
     "@ui5/webcomponents-tools": "2.15.0",
     "chokidar-cli": "^3.0.0",
