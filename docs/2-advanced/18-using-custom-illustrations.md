@@ -49,14 +49,55 @@ assets/
 
 ## Implementation
 
-### Registration
+### Safe Registration (Recommended)
 
-Register your custom illustration using the `registerIllustration` function:
+The recommended approach is to use `registerIllustration` with template functions, which provides protection against XSS vulnerabilities:
+
+**TypeScript/JSX:**
+```tsx
+import "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
+import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+
+// Register the illustration with JSX templates
+registerIllustration("EmptyCart", {
+    sceneTemplate: () => (
+        <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 30h120l-8 60H28l-8-60z" 
+                  stroke="var(--sapContent_Illustrative_Color1)" 
+                  stroke-width="2" 
+                  fill="var(--sapContent_Illustrative_Color2)" />
+        </svg>
+    ),
+    dialogTemplate: () => (
+        <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            {/* Dialog variant SVG */}
+        </svg>
+    ),
+    spotTemplate: () => (
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            {/* Spot variant SVG */}
+        </svg>
+    ),
+    dotTemplate: () => (
+        <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            {/* Dot variant SVG */}
+        </svg>
+    ),
+    title: "Your cart is empty" as I18nText,
+    subtitle: "Add items to get started with your order" as I18nText,
+    set: "custom"
+});
+```
+
+### Unsafe Registration (Raw SVG Strings)
+
+Alternatively, you can use `unsafeRegisterIllustration` with raw SVG strings:
 
 **JavaScript:**
 ```js
 import "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
-import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 
 // Import SVG assets
 import sceneSvg from "./assets/custom-Scene-EmptyCart.js";
@@ -65,7 +106,7 @@ import spotSvg from "./assets/custom-Spot-EmptyCart.js";
 import dotSvg from "./assets/custom-Dot-EmptyCart.js";
 
 // Register the illustration
-registerIllustration("EmptyCart", {
+unsafeRegisterIllustration("EmptyCart", {
     sceneSvg,
     dialogSvg,
     spotSvg,
@@ -79,7 +120,7 @@ registerIllustration("EmptyCart", {
 **TypeScript:**
 ```ts
 import "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
-import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 // Import SVG assets
@@ -89,7 +130,7 @@ import spotSvg from "./assets/custom-Spot-EmptyCart.js";
 import dotSvg from "./assets/custom-Dot-EmptyCart.js";
 
 // Register the illustration with proper typing
-registerIllustration("EmptyCart", {
+unsafeRegisterIllustration("EmptyCart", {
     sceneSvg,
     dialogSvg,
     spotSvg,
@@ -100,7 +141,10 @@ registerIllustration("EmptyCart", {
 });
 ```
 
-### SVG Asset Structure
+> **⚠️ Security Warning:**  
+> The `unsafeRegisterIllustration` method accepts raw SVG strings without sanitization. Only use this function with SVG content that you trust and have validated yourself. Improperly sanitized SVG strings can lead to security vulnerabilities such as XSS (Cross-Site Scripting).
+
+### SVG Asset Structure (for Unsafe Registration)
 
 Each SVG asset file should export the SVG content as a string:
 
@@ -150,10 +194,16 @@ export default `<svg
 - Test illustrations across different UI5 themes
 
 **Security Compliance:**
-- ⚠️ **No inline JavaScript**: Avoid `<script>` tags or event handlers
-- ⚠️ **No unsafe styles**: Avoid `style` attributes that violate CSP policies  
+
+Since `unsafeRegisterIllustration` renders SVG content without sanitization, you must ensure your SVG files are secure:
+
+- ⚠️ **No inline JavaScript**: Avoid `<script>` tags or event handlers (`onclick`, `onload`, etc.)
+- ⚠️ **No unsafe styles**: Avoid `style` attributes that violate CSP policies
+- ⚠️ **Validate SVG content**: Only use SVG files from trusted sources that you have reviewed
+- ⚠️ **XSS Risk**: Malicious SVG content can execute arbitrary JavaScript and compromise your application
 - ✅ **Use CSS custom properties**: Prefer theme-aware styling
 - ✅ **Test with strict CSP**: Validate in CSP-enabled environments
+- ✅ **Static SVG only**: Use declarative SVG markup without dynamic or executable content
 
 ## Usage
 
