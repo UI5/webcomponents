@@ -14,7 +14,10 @@ import SuggestionsCss from "@ui5/webcomponents/dist/generated/themes/Suggestions
 
 // templates
 import AIInputTemplate from "./AIInputTemplate.js";
-import { VERSIONING_NEXT_BUTTON_TEXT, VERSIONING_PREVIOUS_BUTTON_TEXT, WRITING_ASSISTANT_LABEL } from "./generated/i18n/i18n-defaults.js";
+import { VERSIONING_NEXT_BUTTON_TEXT,
+		VERSIONING_PREVIOUS_BUTTON_TEXT,
+		WRITING_ASSISTANT_LABEL,
+		WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT } from "./generated/i18n/i18n-defaults.js";
 
 @customElement({
 	tag: "ui5-ai-input",
@@ -156,7 +159,7 @@ class AIInput extends Input {
 	/**
 	 * Handles the click event for the AI generate icon.
 	 * Toggles between generate and stop states based on current icon name.
-	 *
+	 * @private
 	 */
 	_handleAIIconClick(e: Event) {
 		const target = e.target as HTMLElement & { name?: string };
@@ -186,6 +189,7 @@ class AIInput extends Input {
 	/**
 	 * Handles the click event for the "Previous Version" button.
 	 * Updates the current version index and syncs content.
+	 * @private
 	 */
 	_handlePreviousButtonClick(): void {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: true } }));
@@ -194,6 +198,7 @@ class AIInput extends Input {
 	/**
 	 * Handles the click event for the "Next Version" button.
 	 * Updates the current version index and syncs content.
+	 * @private
 	 */
 	_handleNextButtonClick(): void {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: false } }));
@@ -228,6 +233,10 @@ class AIInput extends Input {
 
 	get ariaLabel() {
 		return AIInput.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+	}
+
+	get stopGeneratingTooltip() {
+		return AIInput.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
 	}
 
 	get nextButtonAccessibleName() {

@@ -19,7 +19,6 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 		<>
 			<div
 				class={`ui5-ai-input-root ui5-input-root ui5-input-focusable-element ${this.loading && "busy"}`}
-				// part="root"
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
 			>
@@ -27,7 +26,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 					<BusyIndicator
 						id={`${this._id}-busyIndicator`}
 						active={this.loading}
-						class="ui5-input-busy-indicator ui5-ai-input1-busy-indicator"
+						class="ui5-input-busy-indicator"
 					>
 
 						<div
@@ -80,8 +79,8 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 								{this._effectiveShowClearIcon &&
 									<div
 										tabindex={-1}
-										// class=""
 										part="clear-icon-wrapper"
+										class="ui5-input-clear-icon-wrapper inputIcon"
 										onClick={this._clear}
 										onMouseDown={this._iconMouseDown}
 									>
@@ -138,7 +137,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 						 hidden={!this.isFocused}
 						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen || this.loading ? "ui5-input-icon-menu-open" : ""}`}
 						 tabIndex={-1}
-						 title={ this.loading ? "Stop generating" : this.ariaLabel}
+						 title={ this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
 						 aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
 						 aria-haspopup={this.loading ? "false" : "menu"}
 						 onClick={this._handleAIIconClick}
@@ -146,7 +145,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 						 >
 						<Icon
 							id="ai-menu-icon"
-							class={`ui5-ai-input-icon ${this._isMenuOpen && this.loading ? "ai-menu-icon-menu-open" : ""}`}
+							class={"ui5-ai-input-icon"}
 							name={this.loading ? "stop" : "ai"}
 						/>
 					</div>
