@@ -51,4 +51,5 @@ SPDX-FileComment = "These files are following the oficial template to create com
 [[annotations]]
 path = "packages/tools/lib/cem/patch/@custom-elements-manifest/**"
 precedence = "aggregate"
+SPDX-FileCopyrightText = "Pascal Schilp, Benny Powers, Matias Huhta and other project contributors"
 SPDX-License-Identifier = "MIT"
