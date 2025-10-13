@@ -44,7 +44,6 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 									showClearIcon={this.showClearIcon}
 									placeholder={this.placeholder}
 									onInput={this._handleInput}
-									onChange={this._handleChange}
 								/>
 							</div>
 						</div>
@@ -79,14 +78,14 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 				<div slot="footer" class="ui5-responsive-popover-footer">
 					<Button
 						design="Emphasized"
-						onClick={this._closePicker}
+						onClick={this._confirmMobileValue}
 					>
 						{this._suggestionsOkButtonText}
 					</Button>
 					<Button
 						class="ui5-responsive-popover-close-btn"
 						design="Transparent"
-						onClick={this._closePicker}
+						onClick={this._cancelMobileValue}
 					>
 						{this._suggestionsCancelButtonText}
 					</Button>
