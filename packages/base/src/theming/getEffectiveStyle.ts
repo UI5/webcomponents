@@ -3,6 +3,7 @@ import getStylesString from "./getStylesString.js";
 import { getFeature } from "../FeaturesRegistry.js";
 import type UI5Element from "../UI5Element.js";
 import type OpenUI5Enablement from "../features/OpenUI5Enablement.js";
+import EffectiveScrollbarStylesCss from "../generated/css/EffectiveScrollbarStyles.css.js";
 
 const effectiveStyleMap = new Map<string, string>();
 
@@ -17,6 +18,7 @@ const getEffectiveStyle = (ElementClass: typeof UI5Element) => {
 
 	if (!effectiveStyleMap.has(key)) {
 		let busyIndicatorStyles = "";
+		const effectiveScrollbarStyles = getStylesString(EffectiveScrollbarStylesCss);
 
 		if (openUI5Enablement) {
 			busyIndicatorStyles = getStylesString(openUI5Enablement.getBusyIndicatorStyles());
@@ -25,7 +27,7 @@ const getEffectiveStyle = (ElementClass: typeof UI5Element) => {
 		const customStyle = getCustomCSS(tag) || "";
 		const builtInStyles = getStylesString(ElementClass.styles);
 
-		const effectiveStyle = `${builtInStyles} ${customStyle} ${busyIndicatorStyles}`;
+		const effectiveStyle = `${builtInStyles} ${customStyle} ${busyIndicatorStyles} ${effectiveScrollbarStyles}`;
 		effectiveStyleMap.set(key, effectiveStyle);
 	}
 
