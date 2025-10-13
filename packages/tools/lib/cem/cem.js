@@ -1,4 +1,4 @@
-const cemCLI = require("@custom-elements-manifest/analyzer/cli")
+const cemCLI = require("./patch/@custom-elements-manifest/analyzer/cli.js")
 
 const main = async argv => {
 	const patchedArgv = argv.slice(2);
