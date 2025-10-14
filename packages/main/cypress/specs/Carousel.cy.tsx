@@ -42,12 +42,12 @@ describe("Carousel general interaction", () => {
 			</Carousel>);
 
 		cy.get("#carousel1")
-			.realHover()
+			.trigger("mouseover")
 			.shadow()
-			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
+			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)").first()
 			.realClick();
 
-		cy.get("#carousel1").should("have.prop", "_selectedIndex", 2);
+		cy.get("#carousel1").should("have.prop", "_focusedItemIndex", 2);
 	});
 
 	it("Carousel navigates right", () => {
@@ -57,14 +57,15 @@ describe("Carousel general interaction", () => {
 				<Button>Button 2</Button>
 				<Button>Button 3</Button>
 			</Carousel>);
+		cy.get("#carousel1").should("have.prop", "_focusedItemIndex", 0);
 
 		cy.get("#carousel1")
-			.realHover()
+			.trigger("mouseover")
 			.shadow()
-			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
+			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)").last()
 			.realClick();
 
-		cy.get("#carousel1").should("have.prop", "_selectedIndex", 1);
+		cy.get("#carousel1").should("have.prop", "_focusedItemIndex", 1);
 	});
 
 	it("Navigation is rendered for carousel with less than 9 elements", () => {
@@ -117,19 +118,19 @@ describe("Carousel general interaction", () => {
 			</Carousel>);
 
 		cy.get("#carousel2")
-			.realHover()
+			.trigger('mouseover')
 			.shadow()
 			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
 			.should("have.length", 1);
 
 		cy.get("#carousel2")
-			.realHover()
+			.trigger('mouseover')
 			.shadow()
 			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
 			.realClick();
 
 		cy.get("#carousel2")
-			.realHover()
+			.trigger('mouseover')
 			.shadow()
 			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
 			.should("have.length", 2);
@@ -216,8 +217,12 @@ describe("Carousel general interaction", () => {
 
 		cy.get("#carousel5")
 			.shadow()
-			.find(".ui5-carousel-item:first-child")
-			.should("have.attr", "aria-selected", "true");
+			.find(".ui5-carousel-content").find(":first-child")
+			.realClick();
+		cy.get("#carousel5")
+			.shadow()
+			.find(".ui5-carousel-content").find(":first-child")
+			.should("have.attr", "aria-hidden");
 
 		cy.get("#carousel5")
 			.shadow()
@@ -230,30 +235,6 @@ describe("Carousel general interaction", () => {
 			.find(".ui5-carousel-item:nth-child(4)")
 			.should("have.attr", "aria-posinset", CAROUSEL_ITEM4_POS)
 			.and("have.attr", "aria-setsize", SETSIZE);
-
-		cy.get<Carousel>('#carousel5')
-			.then(($carousel) => {
-				const el = $carousel[0];
-
-				cy.get('#carousel5')
-					.shadow()
-					.find('.ui5-carousel-root')
-					.should('have.attr', 'aria-activedescendant', `${el._id}-carousel-item-1`);
-			});
-
-		cy.get("#carousel5")
-			.shadow()
-			.find(".ui5-carousel-navigation-button:nth-child(2)")
-			.realClick();
-
-		cy.get<Carousel>('#carousel5')
-			.then(($carousel) => {
-				const el = $carousel[0];
-				cy.get('#carousel5')
-					.shadow()
-					.find('.ui5-carousel-root')
-					.should('have.attr', 'aria-activedescendant', `${el._id}-carousel-item-2`);
-			});
 
 		cy.get("#carouselAccName")
 			.shadow()
@@ -268,6 +249,11 @@ describe("Carousel general interaction", () => {
 		cy.get("#carousel5")
 			.shadow()
 			.find(".ui5-carousel-root")
+			.should("have.attr", "role", "region");
+
+		cy.get("#carousel5")
+			.shadow()
+			.find(".ui5-carousel-content")
 			.should("have.attr", "role", "list");
 
 		cy.get("#carousel5")
@@ -328,7 +314,7 @@ describe("Carousel general interaction", () => {
 	it("Event navigate fired when pressing navigation arrows", () => {
 		const navigateEventStub = cy.stub().as("myStub");
 		cy.mount(
-			<Carousel id="carousel8" itemsPerPage="S1 M4 L4 XL4" onNavigate={navigateEventStub}>
+			<Carousel id="carousel8" onNavigate={navigateEventStub}>
 				<Button>Button 1</Button>
 				<Button>Button 2</Button>
 				<Button>Button 3</Button>
@@ -340,29 +326,33 @@ describe("Carousel general interaction", () => {
 			</Carousel>);
 
 		cy.get("#carousel8")
+			.trigger("mouseover")
 			.shadow()
-			.find("ui5-button[data-ui5-arrow-forward]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledOnce");
 
 		cy.get("#carousel8")
+			.trigger("mouseover")
 			.shadow()
-			.find("ui5-button[data-ui5-arrow-forward]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-forward]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledTwice");
 
 		cy.get("#carousel8")
+			.trigger("mouseover")
 			.shadow()
-			.find("ui5-button[data-ui5-arrow-back]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-back]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.been.calledThrice");
 
 		cy.get("#carousel8")
+			.trigger("mouseover")
 			.shadow()
-			.find("ui5-button[data-ui5-arrow-back]")
+			.find(".ui5-carousel-navigation-button[data-ui5-arrow-back]")
 			.should("exist")
 			.realClick();
 		cy.get("@myStub").should("have.callCount", 4);
@@ -403,43 +393,15 @@ describe("Carousel general interaction", () => {
 
 	});
 
-	it("navigateTo method and visibleItemsIndices", () => {
-		cy.mount(
-			<Carousel id="carousel9" itemsPerPage="S1 M2 L2 XL2">
-				<Button>Button 1</Button>
-				<Button>Button 2</Button>
-				<Button>Button 3</Button>
-				<Button>Button 4</Button>
-				<Button>Button 5</Button>
-				<Button>Button 6</Button>
-				<Button>Button 7</Button>
-				<Button>Button 8</Button>
-				<Button>Button 9</Button>
-				<Button>Button 10</Button>
-			</Carousel>);
-
-		cy.get("#carousel9")
-			.invoke("prop", "visibleItemsIndices")
-			.should("deep.equal", [0, 1]);
-
-		cy.get<Carousel>("#carousel9").then(($carousel) => {
-			$carousel[0].navigateTo(1);
-		});
-
-		cy.get("#carousel9")
-			.invoke("prop", "visibleItemsIndices")
-			.should("deep.equal", [1, 2]);
-	});
-
 	it("F7 keyboard navigation", () => {
 		cy.mount(
 			<Carousel id="carouselF7" itemsPerPage="S3 M3 L3 XL3">
 				<Card class="myCard">
 					<div>
 						Page 1 <br />
-						<Button>Button 1</Button>
+						<Button id="carouselF7Button">Button 1</Button>
 						<br />
-						<Button id="carouselF7Button">Button 2</Button>
+						<Button>Button 2</Button>
 						<br />
 						<Input></Input>
 					</div>
@@ -497,31 +459,83 @@ describe("Carousel general interaction", () => {
 			</Carousel>);
 
 		cy.get(".myCard").should("be.visible");
+		cy.get("#carouselF7").shadow().find(".ui5-carousel-content").find(".ui5-carousel-item").first().focus();
 
-		cy.get("#carouselF7Button").realClick();
+		cy.realPress("F7");
+		cy.wait(100)
+
 		cy.get("#carouselF7Button").should('be.focused');
 
 		cy.realPress("F7");
-		cy.focused().should("have.class", "ui5-carousel-root");
+		cy.wait(100)
 
-		cy.realPress("F7");
-		cy.focused().should("have.class", "ui5-button-root");
+		cy.get("#carouselF7").shadow().find(".ui5-carousel-content").find(":first-child").should("be.focused");
+	});
 
-		cy.get("#carouselF7Input").realClick();
-		cy.realPress("F7");
-		cy.focused().should("have.class", "ui5-carousel-root");
 
-		cy.realPress("F7");
-		cy.focused().should("have.class", "ui5-input-inner");
+	it("'Home' and 'End' button press", () => {
+		cy.mount(
+			<Carousel id="testHomeAndEnd" arrowsPlacement="Navigation" hidePageIndicator>
+				<Button id="firstButton">Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+				<Button>Button 4</Button>
+				<Button>Button 5</Button>
+				<Button>Button 6</Button>
+				<Button>Button 7</Button>
+				<Button>Button 8</Button>
+				<Button>Button 9</Button>
+				<Button>Button 10</Button>
+			</Carousel>);
 
-		cy.get("#carouselF7Button").realClick();
-		cy.realPress("F7");
+		cy.get("#firstButton").realClick();
+		cy.realPress("End");
+		cy.get("#testHomeAndEnd").should("have.prop", "_focusedItemIndex", 9);
+		cy.realPress("Home");
+		cy.get("#testHomeAndEnd").should("have.prop", "_focusedItemIndex", 0);
+	});
 
-		cy.get<Carousel>("#carouselF7").then(($carousel) => {
-			$carousel[0].navigateTo(1);
-		});
-		cy.realPress("F7");
-		cy.focused().should("have.class", "ui5-input-inner");
+	it("'PageUp' and 'PageDown' button press", () => {
+		cy.mount(
+			<Carousel id="testPageUpDown" itemsPerPage="S3 M3 L3 XL3">
+				<Button id="firstButton">Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+				<Button>Button 4</Button>
+				<Button>Button 5</Button>
+				<Button>Button 6</Button>
+				<Button>Button 7</Button>
+				<Button>Button 8</Button>
+				<Button>Button 9</Button>
+				<Button>Button 10</Button>
+				<Button>Button 11</Button>
+				<Button>Button 12</Button>
+				<Button>Button 13</Button>
+				<Button>Button 14</Button>
+				<Button>Button 15</Button>
+				<Button>Button 16</Button>
+				<Button>Button 17</Button>
+				<Button>Button 18</Button>
+				<Button>Button 19</Button>
+				<Button>Button 20</Button>
+				<Button>Button 21</Button>
+				<Button>Button 22</Button>
+			</Carousel>);
+
+		cy.get("#firstButton").realClick();
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
+		cy.realPress("PageUp");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 10);
+		cy.realPress("PageUp");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 20);
+		cy.realPress("PageUp");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 21);
+		cy.realPress("PageDown");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 11);
+		cy.realPress("PageDown");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 1);
+		cy.realPress("PageDown");
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
 	});
 
 	it("Items per page", () => {
