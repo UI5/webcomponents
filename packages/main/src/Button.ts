@@ -626,11 +626,13 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get ariaLabelText() {
+		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || "";
 		const textContent = this.textContent || "";
-		const ariaLabelText = getEffectiveAriaLabelText(this) || "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
-		const labelParts = [textContent, ariaLabelText, internalLabelText].filter(part => part);
+		// Use either the effective aria label text (if accessibleName is provided) or the button's text content
+		const mainLabelText = effectiveAriaLabelText || textContent;
+		const labelParts = [mainLabelText, internalLabelText].filter(part => part);
 		return labelParts.join(" ");
 	}
 

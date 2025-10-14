@@ -1357,9 +1357,20 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.open = false;
 	}
 
+	_confirmMobileValue() {
+		this._closePicker();
+		this._handleChange();
+	}
+
+	_cancelMobileValue() {
+		this.value = this.previousValue;
+		this._closePicker();
+	}
+
 	_afterOpenPicker() {
 		// Set initial focus to the native input
 		if (isPhone()) {
+			this.previousValue = this.value;
 			(this.getInputDOMRef())!.focus();
 			this._composition?.addEventListeners();
 		}

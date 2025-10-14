@@ -178,8 +178,8 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	@property({ type: Number })
 	positionInGroup?: number;
 
-	@i18n("@ui5/webcomponents")
-	static i18nBundle: I18nBundle;
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundleFiori: I18nBundle;
 
 	constructor() {
 		super();
@@ -206,7 +206,7 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	}
 
 	get timelineItemStateText() {
-		return this.state !== "None" ? TimelineItem.i18nBundle.getText(TimelineItem.typeTextMappings()[this.state]) : undefined;
+		return this.state !== "None" ? TimelineItem.i18nBundleFiori.getText(TimelineItem.typeTextMappings()[this.state]) : undefined;
 	}
 
 	get isGroupItem() {
