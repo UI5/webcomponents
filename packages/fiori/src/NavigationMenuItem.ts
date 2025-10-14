@@ -104,9 +104,11 @@ class NavigationMenuItem extends MenuItem {
 	get _accInfo() {
 		const accInfo = super._accInfo;
 
+		accInfo.role = "none";
+
 		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
 			// For the menu item on first level (parent item)
-			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundle.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT as unknown as string);
+			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundleFiori.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT);
 		}
 
 		return accInfo;

@@ -17,7 +17,8 @@ export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hoo
 	return <>
 		{
 			this._href ? (
-				<a class="ui5-navmenu-item-link"
+				<a role="menuitem"
+					class="ui5-navmenu-item-link"
 					href={this.href}
 					target={this.target}
 				>
