@@ -146,8 +146,7 @@ describe("DateTimePicker general interaction", () => {
 		setAnimationMode(AnimationMode.Full);
 	});
 
-	// Unstable test, needs investigation => https://github.com/UI5/webcomponents/issues/11376
-	it.skip("tests selection of new date without changing the time section", () => {
+	it("tests selection of new date without changing the time section", () => {
 		setAnimationMode(AnimationMode.None);
 
 		const PREVIOUS_VALUE = "14/04/2020, 02:14:19 PM";
