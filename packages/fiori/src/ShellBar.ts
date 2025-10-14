@@ -48,6 +48,7 @@ import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement
 import type ShellBarItem from "./ShellBarItem.js";
 import type { ShellBarItemAccessibilityAttributes } from "./ShellBarItem.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
+import type ShellBarSearch from "./ShellBarSearch.js";
 
 // Templates
 import ShellBarTemplate from "./ShellBarTemplate.js";
@@ -985,6 +986,13 @@ class ShellBar extends UI5Element {
 			const item = hidableDomElements[i];
 			hiddenItems.push(item.id);
 			item.classList.add("ui5-shellbar-hidden-button");
+		}
+
+		if (hiddenItems.length === 1) {
+			return {
+				itemsInfo: this._itemsInfo,
+				contentInfo: this._contentInfo,
+			};
 		}
 
 		if (hiddenItems.length === 1 && !this.showSearchField) {
