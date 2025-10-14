@@ -1,10 +1,11 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
-import NavigationMenu from "./NavigationMenu.js";
 import {
 	isSpace,
 	isEnter,
@@ -87,6 +88,9 @@ class NavigationMenuItem extends MenuItem {
 	@property()
 	design: `${SideNavigationItemDesign}` = "Default";
 
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundleFiori: I18nBundle;
+
 	associatedItem?: SideNavigationSelectableItemBase;
 
 	get isExternalLink() {
@@ -102,7 +106,7 @@ class NavigationMenuItem extends MenuItem {
 
 		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
 			// For the menu item on first level (parent item)
-			accInfo.ariaSelectedText = NavigationMenu.i18nBundle.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT as unknown as string);
+			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundle.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT as unknown as string);
 		}
 
 		return accInfo;

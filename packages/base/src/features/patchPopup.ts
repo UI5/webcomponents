@@ -17,6 +17,13 @@ type OpenUI5Popup = {
 	}
 };
 
+type OpenUI5PopupBasedControl = {
+	prototype: {
+		onsapescape: (e: Event) => void,
+		oPopup: OpenUI5Popup,
+	}
+};
+
 type PopupInfo = {
 	type: "OpenUI5" | "WebComponent";
 	instance: object;
@@ -41,17 +48,16 @@ const getTopmostPopup = () => {
 };
 
 /**
- * Original OpenUI5 popup focus event is triggered only
- * if there are no Web Component popups opened on top of it.
+ * Determines whether there is a Web Component popup opened above (a specified popup).
  *
- * @param {object} popup - The popup instance to check.
- * @returns {boolean} True if the focus event should be triggered, false otherwise.
+ * @param {object} popup The popup instance to check against.
+ * @returns {boolean} `true` if a Web Component popup is opened above (the given popup instance); otherwise `false`.
  */
-const shouldCallOpenUI5FocusEvent = (popup: object) => {
+const hasWebComponentPopupAbove = (popup: object) => {
 	for (let i = AllOpenedPopupsRegistry.openedRegistry.length - 1; i >= 0; i--) {
 		const popupInfo = AllOpenedPopupsRegistry.openedRegistry[i];
-		if (popupInfo.type !== "OpenUI5") {
-			return false;
+		if (popupInfo.type === "WebComponent") {
+			return true;
 		}
 
 		if (popupInfo.instance === popup) {
@@ -59,7 +65,7 @@ const shouldCallOpenUI5FocusEvent = (popup: object) => {
 		}
 	}
 
-	return true;
+	return false;
 };
 
 const openNativePopover = (domRef: HTMLElement) => {
@@ -83,6 +89,17 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 		const shadowRoot = element.shadowRoot;
 		return shadowRoot && isNativePopoverOpen(shadowRoot);
 	});
+};
+
+const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => {
+	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
+	PopupBasedControl.prototype.onsapescape = function onsapescape(e: Event) {
+		if (hasWebComponentPopupAbove(this.oPopup)) {
+			return;
+		}
+
+		origOnsapescape.call(this, e);
+	};
 };
 
 const patchOpen = (Popup: OpenUI5Popup) => {
@@ -125,7 +142,7 @@ const patchClosed = (Popup: OpenUI5Popup) => {
 const patchFocusEvent = (Popup: OpenUI5Popup) => {
 	const origFocusEvent = Popup.prototype.onFocusEvent;
 	Popup.prototype.onFocusEvent = function onFocusEvent(e: FocusEvent) {
-		if (shouldCallOpenUI5FocusEvent(this)) {
+		if (!hasWebComponentPopupAbove(this)) {
 			origFocusEvent.call(this, e);
 		}
 	};
@@ -137,12 +154,14 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Popup: OpenUI5Popup) => {
+const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl) => {
 	insertOpenUI5PopupStyles();
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
 	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
+	patchPopupBasedControl(Dialog); // Dialog.prototype.onsapescape
+	patchPopupBasedControl(Popover); // Popover.prototype.onsapescape
 };
 
 export {
@@ -152,4 +171,4 @@ export {
 	getTopmostPopup,
 };
 
-export type { OpenUI5Popup, PopupInfo };
+export type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo };
