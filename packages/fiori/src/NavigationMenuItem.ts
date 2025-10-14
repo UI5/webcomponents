@@ -1,10 +1,11 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
-import NavigationMenu from "./NavigationMenu.js";
 import {
 	isSpace,
 	isEnter,
@@ -86,6 +87,9 @@ class NavigationMenuItem extends MenuItem {
 
 	@property()
 	design: `${SideNavigationItemDesign}` = "Default";
+
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundleFiori: I18nBundle;
 
 	associatedItem?: SideNavigationSelectableItemBase;
 
@@ -201,7 +205,7 @@ class NavigationMenuItem extends MenuItem {
 	}
 
 	get acessibleNameText() {
-		return NavigationMenu.i18nBundle.getText(NAVIGATION_MENU_POPOVER_HIDDEN_TEXT);
+		return NavigationMenuItem.i18nBundleFiori.getText(NAVIGATION_MENU_POPOVER_HIDDEN_TEXT);
 	}
 }
 
