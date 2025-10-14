@@ -360,18 +360,14 @@ class DynamicDateRange extends UI5Element {
 			this.value = undefined;
 		}
 
-		if (this._currentOption?.resetState) {
-			this._currentOption.resetState();
-		}
+		this._currentOption?.resetState?.();
 
 		this._currentOption = undefined;
 		this.open = false;
 	}
 
 	_close() {
-		if (this._currentOption?.resetState) {
-			this._currentOption.resetState();
-		}
+		this._currentOption?.resetState?.();
 
 		this._currentOption = undefined;
 		this.open = false;
@@ -410,7 +406,7 @@ class DynamicDateRange extends UI5Element {
 	}
 
 	handleSelectionChange(e: CustomEvent) {
-		const value = this._currentOption?.handleSelectionChange && this._currentOption?.handleSelectionChange(e, this.currentValue) as DynamicDateRangeValue;
+		const value = this._currentOption?.handleSelectionChange?.(e, this.currentValue) as DynamicDateRangeValue;
 
 		this.currentValue = JSON.parse(JSON.stringify(value)); // deep clone
 		if (this.currentValue) {

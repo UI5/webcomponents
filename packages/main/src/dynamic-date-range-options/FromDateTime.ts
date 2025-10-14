@@ -1,11 +1,11 @@
 import FromDateTimeTemplate from "./FromDateTimeTemplate.js";
 import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicDateRange.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
-// import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
+import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import {
-    DATETIME_PICKER_DATE_BUTTON,
-    DATETIME_PICKER_TIME_BUTTON,
+	DATETIME_PICKER_DATE_BUTTON,
+	DATETIME_PICKER_TIME_BUTTON,
 	DYNAMIC_DATE_RANGE_FROM_INPUT_TEXT,
 	DYNAMIC_DATE_RANGE_FROM_TEXT,
 } from "../generated/i18n/i18n-defaults.js";
@@ -27,7 +27,7 @@ class FromDateTime implements IDynamicDateRangeOption {
 	constructor() {
 		this.template = FromDateTimeTemplate;
 		this._showTimeView = false;
-		this._currentDateValue = new Date();
+		this._currentDateValue = UI5Date.getInstance();
 	}
 
 	parse(value: string): DynamicDateRangeValue {
@@ -100,7 +100,7 @@ class FromDateTime implements IDynamicDateRangeOption {
 		return this._currentDateValue ? this.getDateFormat().format(this._currentDateValue) : "";
 	}
 
-	getTimeValue(date: Date | undefined) : string	 {
+	getTimeValue(date: Date | undefined) : string {
 		if (date) {
 			return this.getFormat().format(date);
 		}
@@ -154,7 +154,7 @@ class FromDateTime implements IDynamicDateRangeOption {
 
 		if (target.hasAttribute("ui5-calendar")) {
 			if (e.detail.selectedDates[0]) {
-				const tempDate = new Date(e.detail.selectedDates[0] * 1000);
+				const tempDate = UI5Date.getInstance(e.detail.selectedDates[0] * 1000);
 				this._currentDateValue.setFullYear(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate());
 				currentValue.values = [this._currentDateValue];
 			}
