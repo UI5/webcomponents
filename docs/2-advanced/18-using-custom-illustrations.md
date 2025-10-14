@@ -21,9 +21,7 @@ Each custom illustration must include all four variants to ensure optimal displa
 
 ## Prerequisites
 
-Before implementing custom illustrations, ensure you have:
-
-### 1. Installed the required packages
+Before implementing custom illustrations, ensure you have installed the required packages:
 
 ```bash
 npm install @ui5/webcomponents @ui5/webcomponents-fiori
@@ -31,27 +29,15 @@ npm install @ui5/webcomponents @ui5/webcomponents-fiori
 
 The [`@ui5/webcomponents`](https://www.npmjs.com/package/@ui5/webcomponents) package provides the base framework and asset registry functionality, while [`@ui5/webcomponents-fiori`](https://www.npmjs.com/package/@ui5/webcomponents-fiori) contains the `IllustratedMessage` component.
 
-### 2. Prepared SVG Assets
+## Custom Illustrations Registration
 
-Create four SVG files for each illustration following the naming convention:
-```
-{set}-{Variant}-{IllustrationName}.js
-```
+UI5 Web Components allow developers to register custom illustrations using the `registerIllustration` and `unsafeRegisterIllustration` methods. These methods enable you to add your own illustrations and make them available for use in your application.
 
-**Example file structure:**
-```
-assets/
-├── custom-Scene-EmptyCart.js     # Large variant
-├── custom-Dialog-EmptyCart.js    # Medium variant  
-├── custom-Spot-EmptyCart.js      # Small variant
-└── custom-Dot-EmptyCart.js       # Extra small variant
-```
+### registerIllustration (recommended)
 
-## Implementation
+The `registerIllustration` method is the preferred approach, as it includes built-in safety checks to prevent security vulnerabilities. You can register illustrations using JSX templates.
 
-### Safe Registration (Recommended)
-
-The recommended approach is to use `registerIllustration` with template functions, which provides protection against XSS vulnerabilities:
+**Note:** JSX templates only work if your project is scaffolded with `npm init @ui5/webcomponents-package`. Otherwise, use `unsafeRegisterIllustration`.
 
 **TypeScript/JSX:**
 ```tsx
@@ -90,9 +76,75 @@ registerIllustration("EmptyCart", {
 });
 ```
 
-### Unsafe Registration (Raw SVG Strings)
+**Parameters:**
 
-Alternatively, you can use `unsafeRegisterIllustration` with raw SVG strings:
+- `name`: unique identifier for the illustration
+- `illustrationData` (object): illustration configuration containing:
+  - `sceneTemplate`: template function for the Scene variant (large, > 681px)
+  - `dialogTemplate`: template function for the Dialog variant (medium, ≤ 681px)
+  - `spotTemplate`: template function for the Spot variant (small, ≤ 360px)
+  - `dotTemplate`: template function for the Dot variant (extra small, ≤ 260px)
+  - `title`: the illustration's title text
+  - `subtitle`: the illustration's subtitle text
+  - `set`: unique illustration set identifier (e.g., "custom")
+
+### unsafeRegisterIllustration
+
+The `unsafeRegisterIllustration` method allows you to register raw SVG strings **without sanitization**. Use this only if you trust the SVG source and have validated it yourself, or when JSX templates are not available in your project.
+
+#### Step 1: Prepare SVG Assets
+
+Create four SVG files for each illustration following the naming convention:
+```
+{set}-{Variant}-{IllustrationName}.js
+```
+
+**Example file structure:**
+```
+assets/
+├── custom-Scene-EmptyCart.js     # Large variant (> 681px)
+├── custom-Dialog-EmptyCart.js    # Medium variant (≤ 681px)
+├── custom-Spot-EmptyCart.js      # Small variant (≤ 360px)
+└── custom-Dot-EmptyCart.js       # Extra small variant (≤ 260px)
+```
+
+Each SVG asset file should export the SVG content as a string:
+
+**custom-Dialog-EmptyCart.js:**
+```js
+export default `<svg 
+    id="custom-Dialog-EmptyCart" 
+    width="160" 
+    height="120" 
+    viewBox="0 0 160 120" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <!-- Cart outline -->
+    <path 
+        d="M20 30h120l-8 60H28l-8-60z" 
+        stroke="var(--sapContent_Illustrative_Color1)" 
+        stroke-width="2" 
+        fill="var(--sapContent_Illustrative_Color2)"
+    />
+    <!-- Cart handle -->
+    <path 
+        d="M35 30V20a10 10 0 0 1 20 0v10" 
+        stroke="var(--sapContent_Illustrative_Color3)" 
+        stroke-width="2"
+    />
+    <!-- Empty state indicator -->
+    <circle 
+        cx="80" 
+        cy="60" 
+        r="15" 
+        fill="var(--sapContent_Illustrative_Color4)" 
+        opacity="0.3"
+    />
+</svg>`;
+```
+
+#### Step 2: Register the Illustration
 
 **JavaScript:**
 ```js
@@ -141,61 +193,34 @@ unsafeRegisterIllustration("EmptyCart", {
 });
 ```
 
+**Parameters:**
+
+- `name`: unique identifier for the illustration
+- `illustrationData` (object): illustration configuration containing:
+  - `sceneSvg`: SVG string for the Scene variant (large, > 681px)
+  - `dialogSvg`: SVG string for the Dialog variant (medium, ≤ 681px)
+  - `spotSvg`: SVG string for the Spot variant (small, ≤ 360px)
+  - `dotSvg`: SVG string for the Dot variant (extra small, ≤ 260px)
+  - `title`: the illustration's title text
+  - `subtitle`: the illustration's subtitle text
+  - `set`: unique illustration set identifier (e.g., "custom")
+
 > **⚠️ Security Warning:**  
 > The `unsafeRegisterIllustration` method accepts raw SVG strings without sanitization. Only use this function with SVG content that you trust and have validated yourself. Improperly sanitized SVG strings can lead to security vulnerabilities such as XSS (Cross-Site Scripting).
 
-### SVG Asset Structure (for Unsafe Registration)
-
-Each SVG asset file should export the SVG content as a string:
-
-**custom-Dialog-EmptyCart.js:**
-```js
-export default `<svg 
-    id="custom-Dialog-EmptyCart" 
-    width="160" 
-    height="120" 
-    viewBox="0 0 160 120" 
-    fill="none" 
-    xmlns="http://www.w3.org/2000/svg"
->
-    <!-- Cart outline -->
-    <path 
-        d="M20 30h120l-8 60H28l-8-60z" 
-        stroke="var(--sapContent_Illustrative_Color1)" 
-        stroke-width="2" 
-        fill="var(--sapContent_Illustrative_Color2)"
-    />
-    <!-- Cart handle -->
-    <path 
-        d="M35 30V20a10 10 0 0 1 20 0v10" 
-        stroke="var(--sapContent_Illustrative_Color3)" 
-        stroke-width="2"
-    />
-    <!-- Empty state indicator -->
-    <circle 
-        cx="80" 
-        cy="60" 
-        r="15" 
-        fill="var(--sapContent_Illustrative_Color4)" 
-        opacity="0.3"
-    />
-</svg>`;
-```
-
-### Design Guidelines
+## Design Guidelines
 
 **SVG Requirements:**
 - Include a unique `id` attribute: `{set}-{Variant}-{IllustrationName}`
 - Use responsive dimensions appropriate for each variant
+- All four size variants must be provided for optimal display
 
 **Theming Support:**
-- Use CSS custom properties for colors
+- Use CSS custom properties for colors (e.g., `var(--sapContent_Illustrative_Color1)`)
 - Avoid hard-coded colors to ensure theme compatibility
 - Test illustrations across different UI5 themes
 
-**Security Compliance:**
-
-Since `unsafeRegisterIllustration` renders SVG content without sanitization, you must ensure your SVG files are secure:
+**Security Compliance** (for `unsafeRegisterIllustration`):
 
 - ⚠️ **No inline JavaScript**: Avoid `<script>` tags or event handlers (`onclick`, `onload`, etc.)
 - ⚠️ **No unsafe styles**: Avoid `style` attributes that violate CSP policies
@@ -207,9 +232,7 @@ Since `unsafeRegisterIllustration` renders SVG content without sanitization, you
 
 ## Usage
 
-### Basic Implementation
-
-Use your registered illustration by referencing it with the format `{set}/{name}`:
+Once registered, custom illustrations can be used just like any other UI5 Web Components illustration by referencing them with the format `{set}/{name}`:
 
 **HTML:**
 ```html
@@ -231,7 +254,9 @@ function EmptyCartView() {
 }
 ```
 
-### Configuration
+## Configuration
+
+### Design Size
 
 Control illustration size and behavior using the [`design`](https://ui5.github.io/webcomponents/components/fiori/IllustratedMessage/#design) property:
 
@@ -247,7 +272,30 @@ Control illustration size and behavior using the [`design`](https://ui5.github.i
 </ui5-illustrated-message>
 ```
 
-### Accessibility
+### Override Title and Subtitle
+
+You can override the default title and subtitle texts defined during registration using the [`title-text`](https://ui5.github.io/webcomponents/components/fiori/IllustratedMessage/#title-text) and [`subtitle-text`](https://ui5.github.io/webcomponents/components/fiori/IllustratedMessage/#subtitle-text) properties:
+
+```html
+<ui5-illustrated-message 
+    name="custom/EmptyCart"
+    title-text="Your Shopping Cart is Empty"
+    subtitle-text="Browse our products and add items to your cart">
+    <ui5-button design="Emphasized">Start Shopping</ui5-button>
+</ui5-illustrated-message>
+```
+
+**React:**
+```jsx
+<IllustratedMessage 
+    name="custom/EmptyCart"
+    titleText="Your Shopping Cart is Empty"
+    subtitleText="Browse our products and add items to your cart">
+    <Button design="Emphasized">Start Shopping</Button>
+</IllustratedMessage>
+```
+
+## Accessibility
 
 For accessibility considerations, use the [`decorative`](https://ui5.github.io/webcomponents/components/fiori/IllustratedMessage/#decorative) property when appropriate:
 
