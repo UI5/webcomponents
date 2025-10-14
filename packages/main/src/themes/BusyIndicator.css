@@ -85,6 +85,12 @@
 	z-index: 99;
 }
 
+.ui5-busy-indicator-busy-area.ui5-busy-indicator-busy-area-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 99;
+}
+
 .ui5-busy-indicator-busy-area {
 	display: flex;
 	justify-content: center;

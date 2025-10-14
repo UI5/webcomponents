@@ -1,4 +1,5 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import Search from "./Search.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
@@ -10,6 +11,7 @@ import {
 	SHELLBAR_SEARCH_EXPANDED,
 	SHELLBAR_SEARCH_COLLAPSED,
 } from "./generated/i18n/i18n-defaults.js";
+import type BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 
 /**
  * @class
@@ -19,6 +21,7 @@ import {
  * @public
  * @since 2.10.0
  * @experimental
+ * @slot {Array<HTMLElement>} busyIndicator - Defines the busy indicator to be displayed as an overlay.
  */
 @customElement({
 	tag: "ui5-shellbar-search",
@@ -37,6 +40,24 @@ class ShellBarSearch extends Search {
 	 */
 	@property({ type: Boolean })
 	autoOpen = false;
+
+	/**
+	 * Defines the busy indicator to be displayed as an overlay.
+	 * @public
+	 */
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: true,
+	})
+	busyIndicator!: Array<BusyIndicator>;
+
+	/**
+	 * Tracks if the slotted BusyIndicator is active.
+	 * Used to apply reduced opacity to the search field content when busy.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_isBusy = false;
 
 	_handleSearchIconPress() {
 		super._handleSearchIconPress();
@@ -93,6 +114,11 @@ class ShellBarSearch extends Search {
 
 	onBeforeRendering(): void {
 		super.onBeforeRendering();
+
+		// Track if busy indicator is active to apply opacity to search content.
+		// The busy indicator renders as an overlay in the shadow DOM, so we reduce
+		// opacity of the underlying search field to show the busy state visually.
+		this._isBusy = this.busyIndicator.length > 0 && this.busyIndicator[0].hasAttribute("active");
 
 		if (isPhone()) {
 			this.collapsed = true;

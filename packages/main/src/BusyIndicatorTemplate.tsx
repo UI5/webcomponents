@@ -2,6 +2,36 @@ import type BusyIndicator from "./BusyIndicator.js";
 import Label from "./Label.js";
 
 export default function BusyIndicatorTemplate(this: BusyIndicator) {
+	// Overlay mode: When BusyIndicator has no slotted content, render only the busy area
+	// as an absolute positioned overlay. This allows it to be slotted inside other components
+	// without wrapping them, avoiding slot contract violations.
+	if (!this.hasContent) {
+		return this._isBusy ? (
+			<div
+				class={{
+					"ui5-busy-indicator-busy-area": true,
+					"ui5-busy-indicator-busy-area-overlay": true,
+				}}
+				title={this.ariaTitle}
+				tabindex={0}
+				role="progressbar"
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-valuetext="Busy"
+				aria-labelledby={this.labelId}
+				data-sap-focus-ref
+			>
+				{this.textPosition.top && BusyIndicatorBusyText.call(this)}
+				<div class="ui5-busy-indicator-circles-wrapper">
+					<div class="ui5-busy-indicator-circle circle-animation-0"></div>
+					<div class="ui5-busy-indicator-circle circle-animation-1"></div>
+					<div class="ui5-busy-indicator-circle circle-animation-2"></div>
+				</div>
+				{this.textPosition.bottom && BusyIndicatorBusyText.call(this)}
+			</div>
+		) : <></>;
+	}
+
 	return (
 		<div class="ui5-busy-indicator-root">
 			{this._isBusy && (

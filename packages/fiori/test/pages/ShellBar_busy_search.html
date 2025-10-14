@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar - Busy Search Demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			padding: 1rem;
+		}
+
+		.demo-section {
+			margin-bottom: 2rem;
+		}
+
+		h2 {
+			margin-bottom: 1rem;
+		}
+
+		.controls {
+			margin-bottom: 1rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="demo-section">
+		<h2>ShellBar with Busy Search - POC</h2>
+		<p>This demo shows a BusyIndicator slotted inside ShellBarSearch, rendering as an overlay.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusy">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar
+			id="shellbar"
+			primary-title="Corporate Portal"
+			secondary-title="secondary title"
+			show-notifications
+			notifications-count="22">
+			
+			<ui5-shellbar-search 
+				id="searchField"
+				placeholder="Search" 
+				slot="searchField">
+				<ui5-busy-indicator 
+					id="busyIndicator"
+					slot="busyIndicator" 
+					size="S"
+					delay="0">
+				</ui5-busy-indicator>
+			</ui5-shellbar-search>
+
+			<ui5-avatar slot="profile" initials="JD"></ui5-avatar>
+		</ui5-shellbar>
+	</div>
+
+	<div class="demo-section">
+		<h2>Standalone ShellBarSearch with Busy Indicator</h2>
+		<p>ShellBarSearch outside of ShellBar for easier testing.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyStandalone">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar-search 
+			id="standaloneSearch"
+			placeholder="Search items...">
+			<ui5-busy-indicator 
+				id="standaloneBusy"
+				slot="busyIndicator" 
+				size="M"
+				delay="0">
+			</ui5-busy-indicator>
+		</ui5-shellbar-search>
+	</div>
+
+	<div class="demo-section">
+		<h2>Comparison: Wrapped in BusyIndicator (Old Approach)</h2>
+		<p>For comparison: ShellBarSearch wrapped in BusyIndicator instead of slotted.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyWrapped">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-busy-indicator 
+			id="wrappedBusy"
+			size="M"
+			delay="0">
+			<ui5-shellbar-search 
+				id="wrappedSearch"
+				placeholder="Search wrapped...">
+			</ui5-shellbar-search>
+		</ui5-busy-indicator>
+	</div>
+
+	<script>
+		const busyIndicator = document.getElementById("busyIndicator");
+		const toggleButton = document.getElementById("toggleBusy");
+
+		toggleButton.addEventListener("click", () => {
+			busyIndicator.active = !busyIndicator.active;
+		});
+
+		const standaloneBusy = document.getElementById("standaloneBusy");
+		const toggleStandaloneButton = document.getElementById("toggleBusyStandalone");
+
+		toggleStandaloneButton.addEventListener("click", () => {
+			standaloneBusy.active = !standaloneBusy.active;
+		});
+
+		const wrappedBusy = document.getElementById("wrappedBusy");
+		const toggleWrappedButton = document.getElementById("toggleBusyWrapped");
+
+		toggleWrappedButton.addEventListener("click", () => {
+			wrappedBusy.active = !wrappedBusy.active;
+		});
+	</script>
+</body>
+</html>
+

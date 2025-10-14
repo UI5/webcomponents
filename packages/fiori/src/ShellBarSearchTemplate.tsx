@@ -5,7 +5,10 @@ import ShellBarSearchPopoverTemplate from "./ShellBarSearchPopoverTemplate.js";
 export default function ShellBarSearchTemplate(this: ShellBarSearch) {
 	return (
 		<>
-			{ SearchFieldTemplate.call(this) }
+			<div class="ui5-shellbar-search-busy-wrapper">
+				{ SearchFieldTemplate.call(this) }
+				<slot name="busyIndicator"></slot>
+			</div>
 			{ ShellBarSearchPopoverTemplate.call(this) }
 		</>
 	);
