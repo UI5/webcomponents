@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ComboBox test page</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+
+</head>
+
+<body class="combobox1auto">
+
+	<ui5-combobox value="Item 3">
+		<ui5-cb-item text="Item 1"></ui5-cb-item>
+		<ui5-cb-item text="Item 2"></ui5-cb-item>
+		<ui5-cb-item text="Item 3"></ui5-cb-item>
+		<ui5-cb-item text="Item 4"></ui5-cb-item>
+		<ui5-cb-item text="Item 5"></ui5-cb-item>
+	</ui5-combobox>
+
+	<br>
+	<br>
+
+	<ui5-combobox complex-value='["item 3", "3"]'>
+		<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+		<ui5-cb-item text="Item 2" value="2"></ui5-cb-item>
+		<ui5-cb-item text="Item 3" value="3"></ui5-cb-item>
+		<ui5-cb-item text="Item 4" value="4"></ui5-cb-item>
+		<ui5-cb-item text="Item 5" value="5"></ui5-cb-item>
+	</ui5-combobox>
+
+	<br>
+	<br>
+
+	<!-- Same text items  -->
+	<ui5-combobox complex-value='["Item 1", "2"]'>
+		<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+		<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+		<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+		<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+		<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
+	</ui5-combobox>
+
+	<br>
+	<br>
+
+	<ui5-multi-combobox complex-value='["", "3", "5"]'>
+		<ui5-mcb-item text="Item 1" value="1"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 2" value="2"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 3" value="3"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 4" value="4"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 5" value="5"></ui5-mcb-item>
+	</ui5-multi-combobox>
+
+
+	<br>
+	<br>
+
+	<ui5-multi-combobox no-validation complex-value='["initial value", "3", "5"]'>
+		<ui5-mcb-item text="Item 1" value="1"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 2" value="2"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 3" value="3"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 4" value="4"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 5" value="5"></ui5-mcb-item>
+	</ui5-multi-combobox>
+
+	<br>
+	<br>
+
+		<ui5-multi-combobox no-validation complex-value='[""]'>
+		<ui5-mcb-item text="Item 1" value="1"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 1" value="2"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 1" value="3"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 1" value="4"></ui5-mcb-item>
+		<ui5-mcb-item text="Item 1" value="5"></ui5-mcb-item>
+	</ui5-multi-combobox>
+</body>
+
+</html>
