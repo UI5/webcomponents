@@ -3,6 +3,7 @@ import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import {
+	isSpace,
 	isLeft,
 	isRight,
 	isMinus,
@@ -141,6 +142,10 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	_onkeydown(e: KeyboardEvent) {
 		if (this.disabled) {
 			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
 		}
 
 		const isRTL = this.effectiveDir === "rtl";
