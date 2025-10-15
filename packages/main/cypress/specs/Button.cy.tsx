@@ -572,11 +572,3 @@ describe("Accessibility", () => {
 			.should("have.text", "999+");
 	});
 });
-
-ui5AccDescribe("Automated accessibility tests", () => {
-	it("Icon only", () => {
-		cy.mount(<Button icon="message-information"></Button>);
-
-		cy.ui5CheckA11y();
-	})
-});

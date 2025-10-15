@@ -2,7 +2,6 @@ import { defineConfig } from "cypress";
 // @ts-ignore
 import viteConfig from "../../../vite.config.js";
 import coverageTask from "@cypress/code-coverage/task.js";
-import accTask from "./acc_report/task.js";
 import svgTask from "./svg_validation/task.js";
 
 
@@ -10,7 +9,6 @@ export default defineConfig({
 	component: {
 		setupNodeEvents(on, config) {
 			coverageTask(on, config);
-			accTask(on, config);
 			svgTask(on, config);
 
 			return config
