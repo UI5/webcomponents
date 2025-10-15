@@ -65,7 +65,7 @@ enum LastClickedButton {
  *
  * @constructor
  * @extends ToolbarItem
- * @since 1.0.0-rc.1
+ * @since 2.16.0
  * @private
  */
 @customElement({
@@ -112,7 +112,6 @@ class Versioning extends ToolbarItem {
 	 *
 	 * @default 0
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	totalSteps = 0;

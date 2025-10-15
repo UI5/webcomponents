@@ -617,7 +617,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logoArea")
-			.click();
+			.realClick();
 
 		cy.get("@logoClick")
 			.should("have.been.calledOnce");
@@ -637,7 +637,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logo")
-			.click();
+			.realClick();
 
 		cy.get("@logoClickSmall")
 			.should("have.been.calledOnce");
@@ -741,7 +741,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
@@ -842,7 +842,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -969,7 +969,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -987,7 +987,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
