@@ -69,7 +69,6 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@semantic-release/github": "^11.0.0",
     "command-line-args": "^5.1.1",
-    "copy-and-watch": "^0.1.5",
     "globby": "^13.1.1",
     "husky": "^7.0.4",
     "lerna": "^7.4.1",

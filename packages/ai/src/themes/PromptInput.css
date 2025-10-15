@@ -1,3 +1,7 @@
+:host(:not([hidden])) {
+    display: inline-block;
+}
+
 .ai-prompt-input-button {
 	margin-left: .5rem;
 	margin-top: 3px;
@@ -6,7 +10,7 @@
 .ai-prompt-input-wrapper {
 	display: flex;
 	flex-direction: column;
-	width: 270px;
+	min-width: 270px;
 }
 
 .ai-prompt-input-form-wrapper {

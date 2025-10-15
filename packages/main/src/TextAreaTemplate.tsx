@@ -51,6 +51,10 @@ export default function TextAreaTemplate(this: TextArea) {
 				<span class="ui5-textarea-exceeded-text">{this._exceededTextProps.exceededText}</span>
 				}
 
+				{this.ariaDescriptionText &&
+				<span id="accessibleDescription" class="ui5-hidden-text">{this.ariaDescriptionText}</span>
+				}
+
 				{this.hasValueState &&
 				<span id={`${this._id}-valueStateDesc`} class="ui5-hidden-text">{this.ariaValueStateHiddenText}</span>
 				}
