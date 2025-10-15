@@ -1,5 +1,5 @@
 import { getThemeProperties, getRegisteredPackages, isThemeRegistered } from "../asset-registries/Themes.js";
-import { removeStyle, createOrUpdateStyle } from "../ManagedStyles.js";
+import { createOrUpdateStyle } from "../ManagedStyles.js";
 import getThemeDesignerTheme from "./getThemeDesignerTheme.js";
 import { fireThemeLoaded } from "./ThemeLoaded.js";
 import { getFeature } from "../FeaturesRegistry.js";
@@ -29,10 +29,6 @@ const loadThemeBase = async (theme: string) => {
 	if (cssData) {
 		createOrUpdateStyle(cssData, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
 	}
-};
-
-const deleteThemeBase = () => {
-	removeStyle("data-ui5-theme-properties", BASE_THEME_PACKAGE);
 };
 
 const loadComponentPackages = async (theme: string, externalThemeName?: string) => {
@@ -79,16 +75,12 @@ const detectExternalTheme = async (theme: string) => {
 const applyTheme = async (theme: string) => {
 	const extTheme = await detectExternalTheme(theme);
 
-	// Only load theme_base properties if there is no externally loaded theme, or there is, but it is not being loaded
-	if (!extTheme || theme !== extTheme.themeName) {
-		await loadThemeBase(theme);
-	} else {
-		deleteThemeBase();
-	}
-
 	// Always load component packages properties. For non-registered themes, try with the base theme, if any
 	const packagesTheme = isThemeRegistered(theme) ? theme : extTheme && extTheme.baseThemeName;
-	await loadComponentPackages(packagesTheme || DEFAULT_THEME, extTheme && extTheme.themeName === theme ? theme : undefined);
+	const effectiveTheme = packagesTheme || DEFAULT_THEME;
+
+	await loadThemeBase(effectiveTheme);
+	await loadComponentPackages(effectiveTheme, extTheme && extTheme.themeName === theme ? theme : undefined);
 
 	fireThemeLoaded(theme);
 };
