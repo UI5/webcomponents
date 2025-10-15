@@ -312,49 +312,22 @@ describe("UploadCollection Rendering", () => {
 		// workaround since we do not set the button as diabled, possibly a bug
 	});
 
-	it("Tests _dndOverlay existence", () => {
-		cy.mount(<UploadCollection id="uploadCollection" />);
-	
-		cy.get("#uploadCollection").then(($el) => {
-			const uploadCollection = $el[0] as UploadCollection;
-	
-			const overlay = uploadCollection._dndOverlay;
-			expect(overlay).to.be.null;
-		});
-	
-		const dataTransfer = new DataTransfer();
-		dataTransfer.items.add(new File(["file content"], "test.txt"));
-	
-		cy.get("#uploadCollection")
-			.trigger("dragenter", {
-				eventConstructor: "DragEvent",
-				force: true,
-				dataTransfer,
-			})
-			.shadow()
-			.find(".uc-dnd-overlay")
-			.should("exist");
-	});
-
-	it("Tests computed classes and shadow DOM getters", () => {
+	it("Test UploadCollection rendering when no items are present", () => {
 		cy.mount(
 			<UploadCollection id="uploadCollection" />
 		);
 	
-		cy.get("#uploadCollection").then(($el) => {
-			const uploadCollection = $el[0] as UploadCollection;
-	
-			const classes = uploadCollection.classes;
-			expect(classes).to.have.property("content");
-			expect(classes.content).to.have.property("ui5-uc-content", true);
-			expect(classes.content).to.have.property("ui5-uc-content-no-data", true); // items.length === 0
-	
-			const root = uploadCollection._root;
-			expect(root).to.exist;
-			expect(root).to.have.class("ui5-uc-root");
-		});
+		cy.get("#uploadCollection")
+			.shadow()
+			.find("> div.ui5-uc-root")
+			.should("exist");
+			
+		cy.get("#uploadCollection")
+			.shadow()
+			.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
+			.should("exist");
 	});
-	
+
 	it("Tests classes update when items are present", () => {
 		cy.mount(
 			<UploadCollection id="uploadCollection">
@@ -362,12 +335,33 @@ describe("UploadCollection Rendering", () => {
 			</UploadCollection>
 		);
 	
-		cy.get("#uploadCollection").then(($el) => {
-			const uploadCollection = $el[0] as UploadCollection;
-	
-			const classes = uploadCollection.classes;
-			expect(classes.content).to.have.property("ui5-uc-content-no-data", false); // items.length > 0
-		});
+		cy.get("#uploadCollection")
+			.shadow()
+			.find(".ui5-uc-root > div.ui5-uc-content.ui5-uc-content-no-data")
+			.should("not.exist");
+	});
+
+	it("Tests 'no data' text and level", () => {
+		cy.mount(
+			<UploadCollection id="uploadCollection" noDataText="Custom text" noDataHeaderLevel="H3">
+			</UploadCollection>
+		);
+
+		cy.get("#uploadCollection")
+			.should("be.visible");
+
+		cy.get("#uploadCollection")
+			.shadow()
+			.find("[ui5-list] .uc-no-files [ui5-illustrated-message] [ui5-title]")
+			.as("title");
+
+		cy.get("@title")
+			.should("have.attr", "level", "H3");
+
+		cy.get("@title")
+			.should(elem => {
+				expect(elem.text().trim()).to.equal("Custom text");
+			});
 	});
 });
 
@@ -444,7 +438,7 @@ describe("Events", () => {
 			.shadow()
 			.find(".ui5-uci-root")
 			.should("have.attr", "tabindex", "0");
-			
+
 		cy.get("#item")
 			.shadow()
 			.find(".ui5-uci-root")
@@ -499,29 +493,6 @@ describe("Events", () => {
 
 		cy.wrap(terminateEventStub)
 			.should("have.been.called");
-	});
-
-	it("Tests _ondragenter early return when not dragging files", () => {
-		cy.mount(<UploadCollection id="uploadCollection" />);
-
-		cy.get("#uploadCollection")
-			.then(($el) => {
-				const uploadCollection = $el[0] as UploadCollection;
-				
-				// Set initial mode to verify it doesn't change
-				uploadCollection._dndOverlayMode = "None";
-				
-				const emptyDragEvent = {
-					dataTransfer: {
-						items: [],
-						types: [],
-						effectAllowed: 'none'
-					}
-				} as unknown as DragEvent;
-				
-				uploadCollection._ondragenter(emptyDragEvent);
-				expect(uploadCollection._dndOverlayMode).to.equal("None");
-			});
 	});
 
 	it("Tests _onSelectionChange method coverage", () => {
@@ -734,7 +705,10 @@ describe("Drag and Drop", () => {
 		const dataTransfer = new DataTransfer();
 		dataTransfer.items.add(new File([new Blob(["file content"], { type: "text/html" })], "test.txt"))
 
-		cy.get("#uploadCollection")
+		cy.document()
+			.then((document) => {
+				return document.body;
+			})
 			.trigger("dragenter", {
 				eventConstructor: "DragEvent",
 				force: true,
@@ -783,7 +757,10 @@ describe("Drag and Drop", () => {
 
 		const dataTransfer = new DataTransfer();
 
-		cy.get("#uploadCollection")
+		cy.document()
+			.then((document) => {
+				return document.body;
+			})
 			.trigger("dragenter", {
 				eventConstructor: "DragEvent",
 				force: true,
@@ -799,16 +776,26 @@ describe("Drag and Drop", () => {
 
 	it("Tests preventDefault in dragover when hideDragOverlay is false", () => {
 		cy.mount(<UploadCollection id="uploadCollection" />);
-	
+
 		const dataTransfer = new DataTransfer();
 		dataTransfer.items.add(new File([new Blob(["file content"], { type: "text/html" })], "test.txt"));
-	
+
 		cy.get("#uploadCollection")
 			.then(($el) => {
 				const uploadCollection = $el[0] as UploadCollection;
-	
-				const mockEvent = { preventDefault: cy.spy().as("preventDefault") } as unknown as DragEvent;
-	
+
+				const mockEvent = new DragEvent("dragover", {
+					bubbles: true,
+					cancelable: true
+				});
+
+				// Add preventDefault spy to the created event
+				const preventDefaultSpy = cy.spy().as("preventDefault");
+				Object.defineProperty(mockEvent, 'preventDefault', {
+					value: preventDefaultSpy,
+					writable: true
+				});
+
 				uploadCollection._ondragover(mockEvent);
 	
 				cy.get("@preventDefault").should("have.been.calledOnce");
@@ -821,64 +808,84 @@ describe("Drag and Drop", () => {
 		cy.get("#uploadCollection")
 			.then(($el) => {
 				const uploadCollection = $el[0] as UploadCollection;
-				
+
 				uploadCollection._dndOverlayMode = "Drop";
 				
-				const mockDragEvent = {
-					dataTransfer: {
-						items: [{ kind: 'file' }],
-						types: ['Files']
-					},
-					target: document.createElement('div'),
-					stopPropagation: cy.stub()
-				} as unknown as DragEvent;
+				const dataTransfer = new DataTransfer();
+				dataTransfer.items.add(new File([''], 'test.txt'));
+				const mockDragEvent = new DragEvent("drop", {
+					bubbles: true,
+					cancelable: true,
+					dataTransfer: dataTransfer
+				});
+
+				// Add target and stopPropagation to the created event
+				Object.defineProperty(mockDragEvent, 'target', {
+					value: document.createElement('div'),
+					writable: true
+				});
+
+				Object.defineProperty(mockDragEvent, 'stopPropagation', {
+					value: cy.stub(),
+					writable: true
+				});
 				
 				uploadCollection._ondrop(mockDragEvent);
-				
+
 				expect(uploadCollection._dndOverlayMode).to.equal("Drop");
 			});
 	});
 
 	it("Tests _ondragover early return when hideDragOverlay is true", () => {
 		cy.mount(<UploadCollection id="uploadCollection" hideDragOverlay={true} />);
-	
+
 		cy.get("#uploadCollection").then(($el) => {
 			const uploadCollection = $el[0] as UploadCollection;
-	
-			const mockDragEvent = {
-				preventDefault: cy.spy().as("preventDefault"),
-			} as unknown as DragEvent;
-	
+
+			const mockDragEvent = new DragEvent("dragover", {
+				bubbles: true,
+				cancelable: true
+			});
+
+			// Add preventDefault spy to the created event
+			const preventDefaultSpy = cy.spy().as("preventDefault");
+			Object.defineProperty(mockDragEvent, 'preventDefault', {
+				value: preventDefaultSpy,
+				writable: true
+			});
+
 			uploadCollection._ondragover(mockDragEvent);
-	
+
 			cy.get("@preventDefault").should("not.have.been.called");
 		});
 	});
 
 	it("Tests stopPropagation when drop target is not overlay", () => {
 		cy.mount(<UploadCollection id="uploadCollection" />);
-	
+
 		cy.get("#uploadCollection").then(($el) => {
 			const uploadCollection = $el[0] as UploadCollection;
 	
-			const mockDragEvent = {
-				target: document.createElement("div"),
-				stopPropagation: cy.spy().as("stopPropagation"),
-			} as unknown as DragEvent;
-	
-			const originalQuerySelector = uploadCollection.shadowRoot!.querySelector;
-			uploadCollection.shadowRoot!.querySelector = (selector: string) => {
-				if (selector === ".uc-dnd-overlay") {
-					return document.createElement("div");
-				}
-				return originalQuerySelector.call(uploadCollection.shadowRoot, selector);
-			};
-	
-			uploadCollection._ondrop(mockDragEvent);
-	
-			cy.get("@stopPropagation").should("have.been.calledOnce");
-	
-			uploadCollection.shadowRoot!.querySelector = originalQuerySelector;
+		const mockDragEvent = new DragEvent("drop", {
+			bubbles: true,
+			cancelable: true
+		});
+
+		// Add target and stopPropagation to the created event
+		Object.defineProperty(mockDragEvent, 'target', {
+			value: document.createElement("div"),
+			writable: true
+		});
+
+		Object.defineProperty(mockDragEvent, 'stopPropagation', {
+			value: cy.spy().as("stopPropagation"),
+			writable: true
+		});
+
+		uploadCollection._ondrop(mockDragEvent);
+
+		cy.get("@stopPropagation").should("have.been.calledOnce");
+
 		});
 	});
 
@@ -898,13 +905,13 @@ describe("Drag and Drop", () => {
 		cy.get("#uploadCollection")
 			.should("have.prop", "_dndOverlayMode", "Drag");
 
-		
+
 		cy.get("#uploadCollection")
 			.then(($el) => {
 				const uploadCollection = $el[0] as UploadCollection;
-				
+
 				cy.get("#uploadCollection").trigger("dragleave");
-				
+
 				expect(uploadCollection._dndOverlayMode).to.equal("Drag");
 			});
 	});
@@ -915,11 +922,11 @@ describe("Drag and Drop", () => {
 		cy.get("#uploadCollection")
 			.then(($el) => {
 				const uploadCollection = $el[0] as UploadCollection;
-				
+
 				uploadCollection._dndOverlayMode = "Drop";
-				
+
 				cy.get("#uploadCollection").trigger("dragleave");
-				
+
 				expect(uploadCollection._dndOverlayMode).to.equal("Drop");
 			});
 	});
@@ -930,19 +937,43 @@ describe("Drag and Drop", () => {
 		cy.get("#uploadCollection")
 			.then(($el) => {
 				const uploadCollection = $el[0] as UploadCollection;
-				
+
 				uploadCollection._dndOverlayMode = "None";
 				
-				const mockDragEvent = {
-					dataTransfer: {
-						items: [{ kind: 'file' }],
-						types: ['Files']
-					}
-				} as unknown as DragEvent;
+				const dataTransfer = new DataTransfer();
+				dataTransfer.items.add(new File([''], 'test.txt'));
+				const mockDragEvent = new DragEvent("dragenter", {
+					bubbles: true,
+					cancelable: true,
+					dataTransfer: dataTransfer
+				});
 				
 				uploadCollection._ondragenter(mockDragEvent);
-				
+
 				expect(uploadCollection._dndOverlayMode).to.equal("None");
 			});
 	});
+
+	it("Tests _ondragenter early return when not dragging files", () => {
+		cy.mount(<UploadCollection id="uploadCollection" />);
+
+		cy.get("#uploadCollection")
+			.then(($el) => {
+				const uploadCollection = $el[0] as UploadCollection;
+				
+				// Set initial mode to verify it doesn't change
+				uploadCollection._dndOverlayMode = "None";
+				
+				const emptyDataTransfer = new DataTransfer();
+				const emptyDragEvent = new DragEvent("dragenter", {
+					bubbles: true,
+					cancelable: true,
+					dataTransfer: emptyDataTransfer
+				});
+				
+				uploadCollection._ondragenter(emptyDragEvent);
+				expect(uploadCollection._dndOverlayMode).to.equal("None");
+			});
+	});
+
 });

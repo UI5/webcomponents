@@ -150,6 +150,13 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	@property({ type: Object })
 	_previewValues: PreviewValues = {};
 
+	/**
+	 * Stores the last valid value to preserve time when entering invalid values
+	 * @private
+	 */
+	@property()
+	_lastValidValue: string = "";
+
 	@query("[ui5-time-selection-clocks]")
 	_clocks!: TimeSelectionClocks;
 
@@ -189,9 +196,16 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		super._togglePicker();
 
 		if (this.open) {
+			let timeSelectionValue = this.value;
+
+			// If current value is invalid, use the last valid value for time selection
+			if (!timeSelectionValue || !this.isValidValue(timeSelectionValue)) {
+				timeSelectionValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+			}
+
 			this._previewValues = {
 				...this._previewValues,
-				timeSelectionValue: this.value || this.getValueFormat().format(UI5Date.getInstance()),
+				timeSelectionValue,
 			};
 		}
 	}
@@ -283,13 +297,19 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	async onSelectedDatesChange(e: CustomEvent<CalendarSelectionChangeEventDetail>) {
 		e.preventDefault();
-		// @ts-ignore Needed for FF
-		const dateTimePickerContent = e.path ? e.path[1] : e.composedPath()[1];
+
+		// Try to get the current time value from the time picker,
+		// but fallback to last valid value if current picker time is empty or invalid
+		let timeValue = this._clocks?.value || "";
+		if (!timeValue || !this.isValidValue(timeValue)) {
+			timeValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+		}
+
 		this._previewValues = {
 			...this._previewValues,
 			calendarTimestamp: e.detail.timestamp,
 			calendarValue: e.detail.selectedValues[0],
-			timeSelectionValue: dateTimePickerContent.lastChild.value,
+			timeSelectionValue: timeValue,
 		};
 		this._showTimeView = true;
 
@@ -373,6 +393,18 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 
 		const newValue = this.formatValue(modifiedLocalDate);
 		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+	}
+
+	/**
+	 * @override
+	 */
+	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue = true) {
+		super._updateValueAndFireEvents(value, normalizeValue, events, updateValue);
+
+		// Always store the current value if it's valid (handles both updates and initial values)
+		if (this.value && this.isValidValue(this.value)) {
+			this._lastValidValue = this.value;
+		}
 	}
 
 	/**

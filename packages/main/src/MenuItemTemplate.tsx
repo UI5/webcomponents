@@ -93,7 +93,7 @@ function listItemPostContent(this: MenuItem) {
 		allowTargetOverlap={true}
 		placement={this.placement}
 		verticalAlign="Top"
-		accessibleName={this.acessibleNameText}
+		accessibleName={this.accessibleNameText}
 		onBeforeOpen={this._beforePopoverOpen}
 		onOpen={this._afterPopoverOpen}
 		onBeforeClose={this._beforePopoverClose}
