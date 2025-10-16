@@ -12,7 +12,8 @@ export default defineConfig({
 		rollupOptions: {
 			external: [
 				"@ui5/webcomponents-base",
-				"@ui5/webcomponents-base/dist/thirdparty/preact/hooks.module.js",
+				/@ui5\/webcomponents-theming\//,
+				"@ui5/webcomponents-localization",
 			],
 		},
 	},

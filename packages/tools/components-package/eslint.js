@@ -106,6 +106,8 @@ module.exports = {
 		"no-restricted-imports": ["error", {
 			"patterns": [
 				"@ui5/webcomponents-base/dist/*",
+				"@ui5/webcomponents-theming/dist/*",
+				"@ui5/webcomponents-localization/dist/*",
 				"@ui5/webcomponents/dist/*",
 			],
 		}],

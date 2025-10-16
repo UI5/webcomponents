@@ -1,6 +1,24 @@
 import type Button from "./Button.js";
-import Icon from "./Icon.js";
-import BusyIndicator from "./BusyIndicator.js";
+import { useState } from "@ui5/webcomponents-base/dist/thirdparty/preact/hooks.module.js";
+import { jsx } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
+import type UI5Element from "@ui5/webcomponents-base";
+
+function lazy<T extends typeof UI5Element>(tag: string, fn: () => Promise<{ default: T }>): T {
+	return function Component(props: { [key: string]: unknown }) {
+		const [Comp, setComp] = useState<T | null>(null);
+		Promise.resolve().then(() => {
+			console.log("immediate promise");
+		});
+		const p = fn();
+		p.then(module => {
+			setComp(() => module.default);
+		});
+		return Comp ? <Comp {...props}></Comp> : jsx(tag, props, "");
+	} as unknown as T;
+}
+
+const LazyIcon = lazy("ui5-icon", () => import("./Icon.js"));
+const LazyBusyIndicator = lazy("ui5-busy-indicator", () => import("./BusyIndicator.js"));
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,
@@ -45,7 +63,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			role={this.effectiveAccRole}
 		>
 			{ this.icon &&
-				<Icon
+				<LazyIcon
 					class="ui5-button-icon"
 					name={this.icon}
 					mode="Decorative"
@@ -60,7 +78,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			</span>
 
 			{this.endIcon &&
-				<Icon
+				<LazyIcon
 					class="ui5-button-end-icon"
 					name={this.endIcon}
 					mode="Decorative"
@@ -73,7 +91,7 @@ export default function ButtonTemplate(this: Button, injectedProps?: {
 			}
 		</button>
 		{this.loading &&
-			<BusyIndicator
+			<LazyBusyIndicator
 				id={`${this._id}-button-busy-indicator`}
 				class="ui5-button-busy-indicator"
 				size={this.iconOnly ? "S" : "M"}
