@@ -1,19 +1,19 @@
 import { customElement, property, slot } from "@ui5/webcomponents-base";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import Input from "@ui5/webcomponents/dist/Input.js";
+import BaseInput from "@ui5/webcomponents/dist/Input.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type Menu from "@ui5/webcomponents/dist/Menu.js";
 import type Button from "./Button.js";
 
 // styles
-import AIInputCss from "./generated/themes/AIInput.css.js";
+import AIInputCss from "./generated/themes/Input.css.js";
 import InputCss from "@ui5/webcomponents/dist/generated/themes/Input.css.js";
 import ResponsivePopoverCommonCss from "@ui5/webcomponents/dist/generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
 import SuggestionsCss from "@ui5/webcomponents/dist/generated/themes/Suggestions.css.js";
 
 // templates
-import AIInputTemplate from "./AIInputTemplate.js";
+import InputTemplate from "./InputTemplate.js";
 import {
 	VERSIONING_NEXT_BUTTON_TEXT,
 	VERSIONING_PREVIOUS_BUTTON_TEXT,
@@ -25,7 +25,7 @@ import {
 	tag: "ui5-ai-input",
 	languageAware: true,
 	renderer: jsxRenderer,
-	template: AIInputTemplate,
+	template: InputTemplate,
 	styles: [
 		AIInputCss,
 		InputCss,
@@ -39,7 +39,9 @@ import {
  * Fired when the user clicks on the AI button.
  * @public
  */
-@event("icon-click")
+@event("button-click", {
+	cancelable: true,
+})
 
 /**
  * Fired when the user clicks on the "Stop" button to stop ongoing AI text generation.
@@ -55,13 +57,13 @@ import {
  */
 @event("version-change")
 
-class AIInput extends Input {
-	eventDetails!: Input["eventDetails"] & {
+class Input extends BaseInput {
+	eventDetails!: BaseInput["eventDetails"] & {
 		"version-change": {
 			backwards: boolean;
 		};
 		"stop-generation": object;
-		"icon-click": object;
+		"button-click": object;
 	};
 
 	/**
@@ -101,6 +103,10 @@ class AIInput extends Input {
 	@property({ type: Boolean })
 	_isMenuOpen: boolean = false;
 
+	/**
+	 * Defines the items of the menu for the component.
+	 * @public
+	 */
 	@slot({
 		type: HTMLElement,
 		// "default": true,
@@ -111,20 +117,6 @@ class AIInput extends Input {
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
 	isFocused: boolean = false;
-
-	onBeforeRendering(): void {
-		super.onBeforeRendering();
-		const menu = this.menu;
-
-		menu?.addEventListener("item-click", (e: Event) => {
-			const customEvent = e as CustomEvent;
-			this.dispatchEvent(new CustomEvent("item-click", {
-				detail: customEvent.detail,
-				bubbles: true,
-				composed: true,
-			}));
-		});
-	}
 
 	_onfocusin(e: FocusEvent): void {
 		super._onfocusin(e);
@@ -141,7 +133,7 @@ class AIInput extends Input {
 	 * Automatically moves focus to available button when user reaches boundaries.
 	 * @private
 	 */
-	_manageFocus() {
+	_manageVersionButtonsFocus() {
 		const previousButton = this.shadowRoot?.querySelectorAll("ui5-button")[0] as Button;
 		const nextButton = this.shadowRoot?.querySelectorAll("ui5-button")[1] as Button;
 		const isPreviousDisabled = this.currentVersion <= 1;
@@ -160,7 +152,7 @@ class AIInput extends Input {
 
 	/**
 	 * Handles the click event for the AI generate icon.
-	 * Toggles between generate and stop states based on current icon name.
+	 * Fires the appropriate event based on the AI icon state.
 	 * @private
 	 */
 	_handleAIIconClick(e: Event) {
@@ -168,11 +160,10 @@ class AIInput extends Input {
 		if (target?.name === "stop") {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
-			const menu = this.shadowRoot?.querySelector("ui5-menu") as Menu;
 			const opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
-			this.fireDecoratorEvent("icon-click");
-			menu.opener = opener;
-			menu.open = true;
+			this.fireDecoratorEvent("button-click");
+			this.menu.opener = opener;
+			this.menu.open = true;
 		}
 	}
 
@@ -185,7 +176,7 @@ class AIInput extends Input {
 		this.fireDecoratorEvent("version-change", {
 			backwards: e.detail.backwards,
 		});
-		this._manageFocus();
+		this._manageVersionButtonsFocus();
 	}
 
 	/**
@@ -206,47 +197,55 @@ class AIInput extends Input {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: false } }));
 	}
 
+	_onMenuIconClick(): void {
+		this.menu?.addEventListener("item-click", (e: Event) => {
+			const customEvent = e as CustomEvent;
+			this.dispatchEvent(new CustomEvent("item-click", {
+				detail: customEvent.detail,
+				bubbles: true,
+				composed: true,
+			}));
+		});
+	}
+
 	/**
 	 * Handles keydown events for keyboard shortcuts.
 	 * @private
 	 */
 	_onkeydown(e: KeyboardEvent): void {
 		super._onkeydown(e);
-		const menu = this.shadowRoot?.querySelector("ui5-menu") as Menu;
-		menu.opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
+		this.menu.opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
 
 		if (e.key === "F4" && e.shiftKey) {
 			e.preventDefault();
-			menu.open = true;
+			this.menu.open = true;
 		}
 		const goPreviousStep = e.key === "Z" && e.shiftKey && e.ctrlKey;
 		const goNextStep = e.key === "Y" && e.shiftKey && e.ctrlKey;
 
 		if (goPreviousStep) {
 			e.preventDefault();
-			menu.open = true;
 			this._handlePreviousButtonClick();
 		} else if (goNextStep) {
 			e.preventDefault();
-			menu.open = true;
 			this._handleNextButtonClick();
 		}
 	}
 
 	get ariaLabel() {
-		return AIInput.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return Input.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	get stopGeneratingTooltip() {
-		return AIInput.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
+		return Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
 	}
 
 	get nextButtonAccessibleName() {
-		return AIInput.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+		return Input.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
 	}
 
 	get previousButtonAccessibleName() {
-		return AIInput.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+		return Input.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
 	}
 
 	get menu() {
@@ -254,6 +253,6 @@ class AIInput extends Input {
 	}
 }
 
-AIInput.define();
+Input.define();
 
-export default AIInput;
+export default Input;

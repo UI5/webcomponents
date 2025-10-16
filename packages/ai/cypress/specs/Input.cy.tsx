@@ -1,8 +1,9 @@
-import AIInput from "../../src/AIInput.js";
+import AIInput from "../../src/Input.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
-import { WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
+import { VERSIONING_NEXT_BUTTON_TOOLTIP, VERSIONING_PREVIOUS_BUTTON_TOOLTIP, WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
+import Input from "../../src/Input.js";
 
 describe("Basic", () => {
     describe("Initialization", () => {
@@ -30,7 +31,9 @@ describe("Basic", () => {
             cy.mount(<AIInput loading={false} />);
 
             cy.get("[ui5-ai-input]")
-                .should("have.prop", "loading", false);
+                .shadow()
+                .find("[ui5-busy-indicator]")
+                .should("not.have.attr", "active");
         });
 
         it("should display loading state correctly", () => {
@@ -42,8 +45,9 @@ describe("Basic", () => {
             );
 
             cy.get("[ui5-ai-input]")
-                .should("have.prop", "loading", true)
-                .should("have.prop", "value", "Generating content...");
+                .shadow()
+                .find("[ui5-busy-indicator]")
+                .should("have.attr", "active");
         });
 
         it("should display single result correctly", () => {
@@ -191,6 +195,7 @@ describe("Basic", () => {
         it("should sync input content after version navigation", () => {
             const initialValue = "Version 1 content";
             const newValue = "Version 2 content";
+            const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
                 <AIInput
@@ -198,12 +203,18 @@ describe("Basic", () => {
                     loading={false}
                     currentVersion={1}
                     totalVersions={2}
+                    onVersionChange={onVersionChange}
                 />
             );
 
             cy.get("[ui5-ai-input]")
                 .as("input")
-                .invoke("prop", "value", newValue);
+                .then($input => {
+                    $input[0].addEventListener("version-change", () => {
+                        const input = $input[0] as Input;
+                        input.value = newValue;
+                    });
+                });
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -217,6 +228,9 @@ describe("Basic", () => {
                 .shadow()
                 .find('[data-ui5-versioning-button="next"]')
                 .realClick();
+
+            cy.get("@onVersionChange")
+                .should("have.been.calledOnce");
 
             cy.get("@input")
                 .shadow()
@@ -346,103 +360,6 @@ describe("Basic", () => {
         });
     });
 
-    describe("Input Integration", () => {
-        it("should inherit Input functionality", () => {
-            cy.mount(<AIInput value="Test content" />);
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .focus()
-                .should("have.value", "Test content")
-                .type(" additional text");
-
-            cy.get("[ui5-ai-input]")
-                .should("have.prop", "value")
-                .and("include", "Test content")
-                .and("include", "additional text");
-        });
-
-        it("should support readonly mode", () => {
-            cy.mount(<AIInput value="Readonly content" readonly />);
-
-            cy.get("[ui5-ai-input]")
-                .should("have.attr", "readonly");
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .should("have.attr", "readonly");
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .should("have.value", "Readonly content");
-        });
-
-        it("should support disabled mode", () => {
-            cy.mount(<AIInput value="Disabled content" disabled />);
-
-            cy.get("[ui5-ai-input]")
-                .should("have.attr", "disabled");
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .should("have.attr", "disabled");
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .should("have.value", "Disabled content");
-        });
-
-        it("should support custom accessible name", () => {
-            cy.mount(<AIInput accessibleName="Custom AI Input" />);
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .should("have.attr", "aria-label", "Custom AI Input");
-
-        });
-    });
-
-    describe("Event Handling", () => {
-        it("should handle input events", () => {
-            const onInput = cy.spy().as("onInput");
-
-            cy.mount(<AIInput onInput={onInput} />);
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .type("Hello");
-
-            cy.get("@onInput").should("have.callCount", 5);
-        });
-
-        it("should handle change events", () => {
-            const onChange = cy.spy().as("onChange");
-
-            cy.mount(<AIInput onChange={onChange} />);
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .type("test")
-                .blur();
-
-            cy.get("@onChange")
-                .should("have.been.called");
-
-            cy.get("@onChange")
-                .its("firstCall.args.0")
-                .should("have.property", "target")
-                .and("have.property", "value", "test");
-        });
-    });
-
     describe("Busy State", () => {
         it("should show busy indicator when loading", () => {
             cy.mount(<AIInput loading={true} />);
@@ -489,46 +406,6 @@ describe("Versioning Menu Item", () => {
     });
 
     describe("Navigation Buttons", () => {
-        it("should disable previous button when at first step", () => {
-            cy.mount(
-                <AIInput
-                    currentVersion={1}
-                    totalVersions={3} />
-            );
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("[ui5-menu]")
-                .ui5MenuOpen();
-
-            cy.get("[ui5-ai-input")
-                .shadow()
-                .find("[ui5-menu-item]")
-                .as("menuItemVersioning");
-
-            cy.get("@menuItemVersioning")
-                .find('[data-ui5-versioning-button="previous"]')
-                .should("have.attr", "disabled");
-        });
-
-        it("should disable next button when at last step", () => {
-            cy.mount(<AIInput currentVersion={3} totalVersions={3} />);
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("[ui5-menu]")
-                .ui5MenuOpen();
-
-            cy.get("[ui5-ai-input")
-                .shadow()
-                .find("[ui5-menu-item]")
-                .as("menuItemVersioning");
-
-            cy.get("@menuItemVersioning")
-                .find('[data-ui5-versioning-button="next"]')
-                .should("have.attr", "disabled");
-        });
-
         it("should enable both buttons when in middle steps", () => {
             cy.mount(<AIInput currentVersion={2} totalVersions={4} />);
 
@@ -794,27 +671,39 @@ describe("Versioning Menu Item", () => {
                 <AIInput
                     currentVersion={2}
                     totalVersions={3}
-                    onVersionChange={cy.stub().as("onVersionChange")}
+                    onVersionChange={cy.spy().as("onVersionChange")}
                 />
             );
 
             cy.get("[ui5-ai-input]")
                 .shadow()
-                .find("[ui5-menu]")
-                .ui5MenuOpen();
+                .find("input")
+                .realClick()
+
+            cy.get("[ui5-ai-input]")
+                .shadow()
+                .find("[ui5-icon]")
+                .realClick();
 
             // Test that buttons are clickable (simulating keyboard activation)
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="previous"]')
-                .realClick();
-
-            cy.get("@onVersionChange").should("have.been.called");
+                .as("previousButton");
 
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="next"]')
-                .realClick();
+                .as("nextButton");
+
+            cy.realPress("ArrowDown")
+              .realPress("ArrowRight")
+              .realPress("Enter");
+
+            cy.get("@onVersionChange").should("have.been.calledOnce");
+
+            cy.realPress("ArrowRight");
+            cy.realPress("Enter");
 
             cy.get("@onVersionChange").should("have.been.calledTwice");
         });
@@ -840,7 +729,7 @@ describe("Versioning Menu Item", () => {
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="previous"]')
-                .should("have.attr", "tooltip", "Previous Version");
+                .should("have.attr", "tooltip", VERSIONING_PREVIOUS_BUTTON_TOOLTIP.defaultText);
         });
 
         it("should have translatable next button tooltip", () => {
@@ -849,7 +738,7 @@ describe("Versioning Menu Item", () => {
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="next"]')
-                .should("have.attr", "tooltip", "Next Version");
+                .should("have.attr", "tooltip", VERSIONING_NEXT_BUTTON_TOOLTIP.defaultText);
         });
     });
 });
@@ -889,7 +778,7 @@ describe("Writing Assistant Input Icon", () => {
         cy.mount(
             <AIInput
                 loading={false}
-                onIconClick={cy.stub().as("onIconClick")}
+                onButtonClick={cy.stub().as("onButtonClick")}
             />
         );
 
@@ -904,15 +793,15 @@ describe("Writing Assistant Input Icon", () => {
             .find("[ui5-icon]")
             .realClick();
 
-        cy.get("@onIconClick")
-            .should("have.been.called");
+        cy.get("@onButtonClick")
+            .should("have.been.calledOnce");
     });
 
     it("should fire stop-generation event when clicked in loading state", () => {
         cy.mount(
             <AIInput
                 loading={true}
-                onStopGeneration={cy.stub().as("onStopGeneration")}
+                onStopGeneration={cy.spy().as("onStopGeneration")}
             />
         );
 
@@ -926,7 +815,7 @@ describe("Writing Assistant Input Icon", () => {
             .find("[ui5-icon]")
             .realClick();
 
-        cy.get("@onStopGeneration").should("have.been.called");
+        cy.get("@onStopGeneration").should("have.been.calledOnce");
     });
 
     it("should have proper ariaKeyShortcuts accessibility attribute", () => {

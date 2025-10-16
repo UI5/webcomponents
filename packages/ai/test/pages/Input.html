@@ -50,7 +50,6 @@
 			{
 				text: "Regenerate",
 				action: "regenerate",
-				shortcut: "Ctrl+Enter",
 				processingLabel: "Regenerating text",
 				completedLabel: "Regenerated text",
 				textKey: "en",
@@ -222,7 +221,7 @@
 		}
 
 		function setLoadingState(promptDescription) {
-			aiInput.value = "Analyzing request..."
+			aiInput.value = ""
 			aiInput.loading = true;
 			aiInput.promptDescription = promptDescription || '';
 		}

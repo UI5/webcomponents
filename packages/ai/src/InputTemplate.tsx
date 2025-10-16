@@ -1,4 +1,4 @@
-import type AIInput from "./AIInput.js";
+import type Input from "./Input.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
@@ -11,7 +11,7 @@ import type { JsxTemplateResult } from "@ui5/webcomponents-base";
 
 type TemplateHook = () => JsxTemplateResult;
 
-export default function AIInputTemplate(this: AIInput, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook }) {
+export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook }) {
 	const suggestionsList = hooks?.suggestionsList;
 	const preContent = hooks?.preContent || defaultPreContent;
 	const postContent = hooks?.postContent || defaultPostContent;
@@ -134,7 +134,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 
 					</BusyIndicator>
 					<div
-						 hidden={!this.isFocused}
+						 hidden={!this.isFocused || this.readonly}
 						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen || this.loading ? "ui5-input-icon-menu-open" : ""}`}
 						 tabIndex={-1}
 						 title={ this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
@@ -150,6 +150,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 						/>
 					</div>
 					<Menu
+						onItemClick={this._onMenuIconClick}
 						onBeforeOpen={() => { this._isMenuOpen = true; }}
 						onBeforeClose={() => { this._isMenuOpen = false; }}
 					>
@@ -163,7 +164,7 @@ export default function AIInputTemplate(this: AIInput, hooks?: { preContent: Tem
 	);
 }
 
-function Versioning(this: AIInput) {
+function Versioning(this: Input) {
 	return (
 		<>
 			<MenuItem
