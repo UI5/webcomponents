@@ -589,8 +589,8 @@ class Table extends UI5Element {
 	get styles() {
 		const virtualizer = this._getVirtualizer();
 		const headerStyleMap = this.headerRow?.[0]?.cells?.reduce((headerStyles, headerCell) => {
-			if (headerCell.horizontalAlign !== undefined && !headerCell._popin) {
-				headerStyles[`--horizontal-align-${headerCell._id}`] = headerCell.horizontalAlign;
+			if (!headerCell._popin) {
+				headerStyles[`--horizontal-align-${headerCell._id}`] = headerCell.horizontalAlign || "normal";
 			}
 			return headerStyles;
 		}, {} as { [key: string]: string });
