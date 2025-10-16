@@ -6827,9 +6827,7 @@ __metadata:
   dependencies:
     "@cypress/code-coverage": "npm:^3.14.6"
     "@ui5/cypress-ct-ui5-webc": "npm:0.0.4"
-    axe-core: "npm:^4.10.2"
     cypress: "npm:^15.3.0"
-    cypress-axe: "npm:^1.7.0"
     cypress-real-events: "npm:^1.15.0"
     eslint-plugin-cypress: "npm:^3.4.0"
     rimraf: "npm:^3.0.2"
@@ -8481,13 +8479,6 @@ __metadata:
   version: 1.12.0
   resolution: "aws4@npm:1.12.0"
   checksum: 10c0/1e39c266f53b04daf88e112de93a6006375b386a1b7ab6197260886e39abd012aa90bdd87949c3bf9c30754846031f6d5d8ac4f8676628097c11065b5d39847a
-  languageName: node
-  linkType: hard
-
-"axe-core@npm:^4.10.2":
-  version: 4.10.2
-  resolution: "axe-core@npm:4.10.2"
-  checksum: 10c0/0e20169077de96946a547fce0df39d9aeebe0077f9d3eeff4896518b96fde857f80b98f0d4279274a7178791744dd5a54bb4f322de45b4f561ffa2586ff9a09d
   languageName: node
   linkType: hard
 
@@ -10745,16 +10736,6 @@ __metadata:
   version: 1.0.0
   resolution: "custom-elements-manifest@npm:1.0.0"
   checksum: 10c0/6e8e4dcc6ae4f846e92b6ec0ef5c8d155889dae6df7210cbf3e9c47387ffab83fce8fde96a1aaa9766304cb08afa17198da4ef8560745311bdf3ba280fc77b40
-  languageName: node
-  linkType: hard
-
-"cypress-axe@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "cypress-axe@npm:1.7.0"
-  peerDependencies:
-    axe-core: ^3 || ^4
-    cypress: ^10 || ^11 || ^12 || ^13 || ^14 || ^15
-  checksum: 10c0/93d53eaaf0abb2eed61b0ecbf890bbb2b063db0941be70fa945697f09f5d33d0747fe518778eb25b32326bdea08cd8f4a00b8e4633aea4fe8a8d00b55fb02b15
   languageName: node
   linkType: hard
 
