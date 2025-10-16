@@ -1,3 +1,15 @@
 :host(:not([collapsed])) {
 	min-width: 13rem;
 }
+
+.ui5-shellbar-search-busy-wrapper {
+	position: relative;
+	display: contents;
+}
+
+/* Apply reduced opacity when busy indicator is active.
+   The busy indicator is slotted and renders as an overlay on top,
+   so we reduce opacity of the search field underneath to indicate busy state. */
+:host([_is-busy]) .ui5-search-field-root {
+	opacity: var(--sapContent_DisabledOpacity);
+}
