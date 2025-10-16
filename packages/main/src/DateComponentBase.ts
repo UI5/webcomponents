@@ -55,7 +55,7 @@ class DateComponentBase extends UI5Element {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
-	 * @deprecated
+	 * @deprecated Use displayFormat and valueFormat instead
 	 * @public
 	 */
 	@property()
@@ -155,7 +155,7 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get _formatPattern() {
-		return this.formatPattern || "medium"; // get from config
+		return this.formatPattern || this.valueFormat || "medium"; // get from config
 	}
 
 	get _isPattern() {

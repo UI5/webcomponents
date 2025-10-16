@@ -1,4 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
@@ -29,6 +30,12 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 	template: TableCellTemplate,
 })
 class TableCell extends TableCellBase {
+	@query("#popin-header")
+	_popinHeader?: HTMLElement;
+
+	@query("#popin-content")
+	_popinContent?: HTMLElement;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		if (this.horizontalAlign) {
@@ -38,7 +45,7 @@ class TableCell extends TableCellBase {
 		}
 	}
 
-	injectHeaderNodes(ref: HTMLElement | null) {
+	_injectHeaderNodes(ref: HTMLElement | null) {
 		if (ref && !ref.hasChildNodes()) {
 			ref.replaceChildren(...this._popinHeaderNodes);
 		}
@@ -52,10 +59,10 @@ class TableCell extends TableCellBase {
 	}
 
 	get _popinHeaderNodes() {
-		const nodes = [];
+		const nodes: Node[] = [];
 		const headerCell = this._headerCell;
 		if (headerCell.popinText) {
-			nodes.push(headerCell.popinText);
+			nodes.push(document.createTextNode(headerCell.popinText));
 		} else {
 			nodes.push(...this._headerCell.content.map(node => node.cloneNode(true)));
 		}

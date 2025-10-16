@@ -3,7 +3,7 @@ import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type { IconData } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import type { IconData, UnsafeIconData } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -212,7 +212,8 @@ class Icon extends UI5Element implements IIcon {
 	ltr?: boolean;
 	packageName?: string;
 	viewBox?: string;
-	customSvg?: object;
+	customTemplate?: object;
+	customTemplateAsString?: string;
 
 	_onkeydown(e: KeyboardEvent) {
 		if (this.mode !== IconMode.Interactive) {
@@ -272,7 +273,7 @@ class Icon extends UI5Element implements IIcon {
 			return;
 		}
 
-		let iconData: typeof ICON_NOT_FOUND | IconData | undefined = getIconDataSync(name);
+		let iconData: typeof ICON_NOT_FOUND | IconData | UnsafeIconData | undefined = getIconDataSync(name);
 		if (!iconData) {
 			iconData = await getIconData(name);
 		}
@@ -291,14 +292,20 @@ class Icon extends UI5Element implements IIcon {
 
 		this.viewBox = iconData.viewBox || "0 0 512 512";
 
-		if (iconData.customTemplate) {
-			iconData.pathData = [];
-			this.customSvg = executeTemplate(iconData.customTemplate, this);
+		if ("customTemplate" in iconData && iconData.customTemplate) {
+			this.customTemplate = executeTemplate(iconData.customTemplate, this);
+		}
+
+		if ("customTemplateAsString" in iconData) {
+			this.customTemplateAsString = iconData.customTemplateAsString;
 		}
 
 		// in case a new valid name is set, show the icon
 		this.invalid = false;
-		this.pathData = Array.isArray(iconData.pathData) ? iconData.pathData : [iconData.pathData];
+		if ("pathData" in iconData && iconData.pathData) {
+			this.pathData = Array.isArray(iconData.pathData) ? iconData.pathData : [iconData.pathData];
+		}
+
 		this.accData = iconData.accData;
 		this.ltr = iconData.ltr;
 		this.packageName = iconData.packageName;
@@ -306,8 +313,12 @@ class Icon extends UI5Element implements IIcon {
 		if (this.accessibleName) {
 			this.effectiveAccessibleName = this.accessibleName;
 		} else if (this.accData) {
-			const i18nBundle = await getI18nBundle(this.packageName);
-			this.effectiveAccessibleName = i18nBundle.getText(this.accData) || undefined;
+			if (this.packageName) {
+				const i18nBundle = await getI18nBundle(this.packageName);
+				this.effectiveAccessibleName = i18nBundle.getText(this.accData) || undefined;
+			} else {
+				this.effectiveAccessibleName = this.accData?.defaultText || undefined;
+			}
 		} else {
 			this.effectiveAccessibleName = undefined;
 		}

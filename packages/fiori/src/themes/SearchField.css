@@ -14,7 +14,7 @@
 	height: 2.25rem;
 	color: var(--sapShell_TextColor);
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-style: normal;
 	box-shadow: var(--sapField_Shadow);
 	border-radius: var(--_ui5_search_input_border_radius);
@@ -132,7 +132,7 @@
 /* input */
 .ui5-search-field-inner-input {
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-style: normal;
 	padding: 0.5rem 0;
 	height: 100%;

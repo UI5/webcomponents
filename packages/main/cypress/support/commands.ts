@@ -43,6 +43,7 @@ import { ModifierKey } from "./commands/common/types.js";
 // Please keep this list in alphabetical order
 import "./commands/Calendar.commands.js";
 import "./commands/ColorPalette.commands.js";
+import "./commands/ColorPalettePopover.commands.js";
 import "./commands/ColorPicker.commands.js";
 import "./commands/DateTimePicker.commands.js";
 import "./commands/DateRangePicker.commands.js";
@@ -88,6 +89,7 @@ declare global {
 			ui5DatePickerGetMonthButton(): Chainable<JQuery<HTMLElement>>
 			ui5DatePickerGetYearButton(): Chainable<JQuery<HTMLElement>>
 			ui5DatePickerValueHelpIconPress(): Chainable<void>
+			ui5DatePickerTypeDate(value: string, delay?: number): Chainable<void>
 			ui5SegmentedButtonItemToggleSelect(deselect?: boolean): Chainable<void>
 			ui5SegmentedButtonFocusFirstItem(): Chainable<void>
 			ui5SwitchCheckAttributeInShadowDomRoot(attrName: string, attrValue: string): Chainable<void>

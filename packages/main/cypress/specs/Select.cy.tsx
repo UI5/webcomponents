@@ -283,6 +283,236 @@ describe("Select - Accessibility", () => {
 			.should("have.attr", "aria-expanded", "false")
 			.should("have.attr", "aria-roledescription", EXPECTED_ARIA_ROLEDESCRIPTION);
 	});
+
+	it("tests Select with valueState Positive and aria-describedby", () => {
+		cy.mount(
+			<Select valueState="Positive">
+				<Option value="First">First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third" selected>Third</Option>
+			</Select>
+		);
+
+		// Test that valueState creates the correct aria-describedby reference
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "-valueStateDesc");
+
+		// Test that the value state description text contains "Success"
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[id$='-valueStateDesc']")
+			.should("contain.text", "Success");
+	});
+
+	it("tests accessibleDescription and accessibleDescriptionRef", () => {
+		cy.mount(
+			<>
+				<span id="descText">Description text</span>
+				<Select id="selectWithAccessibleDescription" accessibleDescription="Select description">
+					<Option value="First">First</Option>
+					<Option value="Second">Second</Option>
+					<Option value="Third" selected>Third</Option>
+				</Select>
+				<Select id="selectWithAccessibleDescriptionRef" accessibleDescriptionRef="descText">
+					<Option value="One">One</Option>
+					<Option value="Two">Two</Option>
+					<Option value="Three" selected>Three</Option>
+				</Select>
+				<Select id="selectWithoutDescription">
+					<Option value="A">A</Option>
+					<Option value="B">B</Option>
+					<Option value="C" selected>C</Option>
+				</Select>
+			</>
+		);
+
+		const EXPECTED_DESCRIPTION = "Select description";
+		const EXPECTED_DESCRIPTION_REF = "Description text";
+
+		// Test first select with accessibleDescription
+		cy.get("#selectWithAccessibleDescription")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", EXPECTED_DESCRIPTION);
+
+		cy.get("#selectWithAccessibleDescription")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "accessibleDescription");
+
+		// Test second select with accessibleDescriptionRef
+		cy.get("#selectWithAccessibleDescriptionRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", EXPECTED_DESCRIPTION_REF);
+
+		cy.get("#selectWithAccessibleDescriptionRef")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "accessibleDescription");
+
+		// Test select without description should not have aria-describedby
+		cy.get("#selectWithoutDescription")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("not.have.attr", "aria-describedby");
+
+		// Test that changing the referenced element updates the description
+		cy.get("#descText")
+			.invoke("text", "Updated description text");
+
+		cy.get("#selectWithAccessibleDescriptionRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "Updated description text");
+	});
+
+	it("tests Select with both valueState Positive and accessibleDescription", () => {
+		cy.mount(
+			<Select valueState="Positive" accessibleDescription="Additional description">
+				<Option value="First">First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third" selected>Third</Option>
+			</Select>
+		);
+
+		const EXPECTED_VALUE_STATE_TEXT = "Success";
+		const EXPECTED_DESCRIPTION = "Additional description";
+
+		// Test that both valueState and accessibleDescription are included in aria-describedby
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "-valueStateDesc")
+			.and("contain", "accessibleDescription");
+
+		// Test that the value state description text is correct
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[id$='-valueStateDesc']")
+			.should("contain.text", EXPECTED_VALUE_STATE_TEXT);
+
+		// Test that the accessible description text is correct
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", EXPECTED_DESCRIPTION);
+	});
+
+	it("tests Select with multiple accessibleDescriptionRef values", () => {
+		cy.mount(
+			<>
+				<span id="desc1">First description</span>
+				<span id="desc2">Second description</span>
+				<span id="desc3">Third description</span>
+				<Select accessibleDescriptionRef="desc1 desc2 desc3">
+					<Option value="First">First</Option>
+					<Option value="Second">Second</Option>
+					<Option value="Third" selected>Third</Option>
+				</Select>
+			</>
+		);
+
+		const EXPECTED_COMBINED_DESCRIPTION = "First description Second description Third description";
+
+		// Test that accessibleDescriptionRef with multiple IDs creates the correct aria-describedby reference
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "accessibleDescription");
+
+		// Test that the combined description text from multiple elements is correct
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", EXPECTED_COMBINED_DESCRIPTION);
+
+		// Test that changing one of the referenced elements updates the combined description
+		cy.get("#desc2")
+			.invoke("text", "Updated second description");
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "First description Updated second description Third description");
+	});
+
+	it("should not display tooltip when Select is not readonly", () => {
+		cy.mount(
+			<Select style="width: 50px">
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("should display user tooltip with precedence over the default tooltip", () => {
+		cy.mount(
+			<Select style="width: 50px" tooltip="Custom tooltip" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "Custom tooltip");
+	});
+
+	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option additionalText="AdditionalInfo" selected>VeryLongOptionText</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+	});
+
+	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+	});
+
+	it("should show the text and additionalText, separated by '-' when select is read-only", () => {
+		cy.mount(
+			<Select readonly>
+				<Option additionalText="ExtraInfo" selected>SelectedOption</Option>
+				<Option additionalText="OtherInfo">OtherOption</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "SelectedOption – ExtraInfo");
+	});
 });
 
 describe("Select - Popover", () => {
@@ -301,6 +531,63 @@ describe("Select - Popover", () => {
 			.should("be.visible")
 			.should("have.text", "Custom message");
 	});
+
+	it("ResponsivePopover should not have accessible name on desktop", () => {
+		cy.mount(
+			<Select id="desktopSelect">
+				<Option value="option1">Option 1</Option>
+				<Option value="option2">Option 2</Option>
+				<Option value="option3">Option 3</Option>
+			</Select>
+		);
+
+		// Open the popover
+		cy.get("#desktopSelect").realClick();
+
+		// Check that the ResponsivePopover does not have an accessible name on desktop
+		cy.get("#desktopSelect")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.have.attr", "accessible-name");
+	});
+
+	it("Value state message popover can extend beyond select width", () => {
+		cy.mount(
+			<Select valueState="Critical">
+				<Option>Short</Option>
+				<Option>Long</Option>
+				<div slot="valueStateMessage">
+					This is a very long value state message that should extend beyond the narrow select component width and not be constrained by it.
+				</div>
+			</Select>
+		);
+
+		// Trigger the value state popover by clicking and then pressing Escape
+		cy.get("[ui5-select]")
+			.realClick()
+			.realPress("Escape");
+
+		// Get the select width for comparison
+		cy.get("[ui5-select]")
+			.invoke("outerWidth")
+			.as("selectWidth");
+
+		// Find the standalone value state popover
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-valuestatemessage-popover")
+			.should("exist")
+			.as("valueStatePopover");
+
+		// Verify the popover width is greater than the select width
+		cy.get("@valueStatePopover")
+			.invoke("outerWidth")
+			.then((popoverWidth) => {
+				cy.get("@selectWidth").then((selectWidth) => {
+					expect(popoverWidth).to.be.greaterThan(Number(selectWidth));
+				});
+			});
+		});
 });
 
 describe("Select - Properties", () => {
@@ -328,6 +615,20 @@ describe("Select - Properties", () => {
 			</Select>);
 
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
+	});
+
+	it("Should show the selected two-column-separator when select is read-only", () => {
+		cy.mount(
+			<Select readonly two-column-separator="VerticalLine">
+				<Option additionalText="Additional1" selected>First</Option>
+				<Option additionalText="Additional2">Second</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", " | ");
 	});
 });
 
@@ -1392,5 +1693,51 @@ describe("Select general interaction", () => {
 			.should("contain.text", "Third");
 
 		cy.get("[ui5-select]").should("have.prop", "value", "Third");
+	});
+
+	it("navigates with ArrowDown when initial value does not match any option", () => {
+		cy.mount(
+			<Select value="missing">
+				<Option value="A">A</Option>
+				<Option value="B">B</Option>
+				<Option value="C">C</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.should("have.prop", "value", "missing")
+			.find("[ui5-option][selected]")
+			.should("not.exist");
+
+		cy.get("[ui5-select]").realClick().realPress("ArrowDown");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.should("have.attr", "selected");
+		cy.get("[ui5-select]").should("have.prop", "value", "A");
+	});
+
+	it("navigates with ArrowUp when initial value does not match any option", () => {
+		cy.mount(
+			<Select value="missing">
+				<Option value="A">A</Option>
+				<Option value="B">B</Option>
+				<Option value="C">C</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.should("have.prop", "value", "missing")
+			.find("[ui5-option][selected]")
+			.should("not.exist");
+
+		cy.get("[ui5-select]").realClick().realPress("ArrowUp");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(2)
+			.should("have.attr", "selected");
+		cy.get("[ui5-select]").should("have.prop", "value", "C");
 	});
 });

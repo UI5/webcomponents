@@ -29,7 +29,10 @@ export default function ListTemplate(this: List) {
 				active={this.showBusyIndicatorOverlay}
 				class="ui5-list-busy-indicator"
 			>
+
 				<div class="ui5-list-scroll-container">
+					<span tabindex={-1} aria-hidden="true" class="ui5-list-start-marker"></span>
+
 					{this.header.length > 0 && <slot name="header" />}
 
 					{this.shouldRenderH1 &&
@@ -94,6 +97,7 @@ function moreRow(this: List) {
 				}}
 				aria-label={this.growingButtonAriaLabel}
 				aria-labelledby={this.growingButtonAriaLabelledBy}
+				aria-describedby={this.growingButtonAriaDescribedBy}
 				onClick={this._onLoadMoreClick}
 				onKeyDown={this._onLoadMoreKeydown}
 				onKeyUp={this._onLoadMoreKeyup}
@@ -108,8 +112,15 @@ function moreRow(this: List) {
 						active>
 					</BusyIndicator>
 				}
-				<span id={`${this._id}-growingButton-text`} class="ui5-growing-button-text" growing-button-text>{this._growingButtonText}</span>
+				<span id={`${this._id}-growingButton-text`} class="ui5-growing-button-text" growing-button-text>
+					{this._growingButtonText}
+				</span>
 			</div>
+			{this.accessibilityAttributes.growingButton?.description &&
+				<span id={`${this._id}-growingButton-description`} class="ui5-hidden-text">
+					{this.accessibilityAttributes.growingButton.description}
+				</span>
+			}
 		</div>
 	);
 }

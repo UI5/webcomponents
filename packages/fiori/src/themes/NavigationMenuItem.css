@@ -19,7 +19,7 @@
 }
 
 ::slotted([ui5-navigation-menu-item]) {
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 }
 
 :host([design="Action"]) {
@@ -56,6 +56,10 @@
 
 .ui5-navigation-menu-item-root .ui5-sn-item-external-link-icon {
 	height: 0.875rem;
+}
+
+:host(.ui5-navigation-menu-item-root-parent)::part(content) {
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
 }
 
 :host([design="Action"]) .ui5-sn-item-external-link-icon {

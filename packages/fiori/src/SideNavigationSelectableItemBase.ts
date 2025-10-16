@@ -4,6 +4,9 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import {
 	isSpace,
 	isEnter,
+	isEnterShift,
+	isEnterCtrl,
+	isEnterAlt,
 	isLeft,
 	isRight,
 } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -255,8 +258,11 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 			e.preventDefault();
 		}
 
-		if (isEnter(e)) {
-			this._activate(e);
+		// "Enter" + "Meta" is missing since it is often reserved by the operating system or window manager
+		if (isEnter(e) || isEnterShift(e) || isEnterCtrl(e) || isEnterAlt(e)) {
+			if (!this.unselectable) {
+				this._activate(e);
+			}
 		}
 
 		if ((isRTL ? isLeft(e) : isRight(e)) && this.sideNavCollapsed && this.hasSubItems) {
@@ -269,6 +275,7 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
+		// "Space" + modifier is often reserved by the operating system or window manager
 		if (isSpace(e)) {
 			this._activate(e);
 

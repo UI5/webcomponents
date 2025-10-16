@@ -26,7 +26,7 @@
 	height: var(--_ui5_progress_indicator_root_height);
 	width: 100%;
 	font-size: var(--sapProgress_FontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	position: var(--_ui5_progress_indicator_root_position);
 	box-sizing: border-box;
 }

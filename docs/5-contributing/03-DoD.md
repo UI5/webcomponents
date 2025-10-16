@@ -59,11 +59,6 @@ may vary. Use the attribute notation: `[ui5-button].accept-btn { color: green; }
 Similarly, if you have code such as `this.shadowRoot.querySelector("ui5-popover")`,
 change it to: `this.shadowRoot.querySelector("[ui5-popover]")`.
 
- - Have I **imported and added to dependencies** all components used?
-
-All components used in the `.ts` and `.hbs` files of your component must be added to the `dependencies` metadata setting
-so that the compiler can scope them when converting the template to lit-html code.
-
  - Have I **imported all icons** that my component uses?
 
 The test bundle imports all icons by default, but in a real-world scenario only icons imported by the app will be available.

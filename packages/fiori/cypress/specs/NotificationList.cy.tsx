@@ -74,6 +74,34 @@ describe("Notification List Item Tests", () => {
 		cy.get("@clickStub").should("have.been.calledOnce");
 	});
 
+	it("tests e.preventDefault() called when item-toggle is prevented", () => {
+		const preventingHandler = (e: CustomEvent) => {
+			e.preventDefault();
+		};
+
+		cy.mount(
+			<NotificationList onItemToggle={preventingHandler}>
+				<NotificationListItem id="nli1" />
+			</NotificationList>
+		);
+
+		cy.get("[ui5-notification-list]")
+			.then(($list) => {
+				const notificationList = $list[0] as NotificationList;
+				const item = document.querySelector("#nli1") as NotificationListItem;
+
+				const customEvent = new CustomEvent("item-click", {
+					detail: { item }
+				});
+
+				cy.spy(customEvent, 'preventDefault').as('preventDefaultSpy');
+
+				notificationList._onItemToggle(customEvent);
+
+				cy.get("@preventDefaultSpy").should("have.been.calledOnce");
+			});
+	});
+
 	it("tests Group List Header keyboard shortcuts ", () => {
 		cy.mount(
 			<NotificationList id="notificationList">
@@ -154,6 +182,34 @@ describe("Notification List Item Tests", () => {
 		cy.get("@itemClick").should("have.been.calledTwice");
 	});
 
+	it("tests e.preventDefault() called when item-click is prevented", () => {
+		const preventingHandler = (e: CustomEvent) => {
+			e.preventDefault();
+		};
+
+		cy.mount(
+			<NotificationList onItemClick={preventingHandler}>
+				<NotificationListItem id="nli1" />
+			</NotificationList>
+		);
+
+		cy.get("[ui5-notification-list]")
+			.then(($list) => {
+				const notificationList = $list[0] as NotificationList;
+				const item = document.querySelector("#nli1") as NotificationListItem;
+
+				const customEvent = new CustomEvent("item-click", {
+					detail: { item }
+				});
+
+				cy.spy(customEvent, 'preventDefault').as('preventDefaultSpy');
+
+				notificationList._onItemClick(customEvent);
+
+				cy.get("@preventDefaultSpy").should("have.been.calledOnce");
+			});
+	});
+
 	it("tests 'item-close' fired", () => {
 		const itemClose = cy.stub().as("itemClose");
 		cy.mount(
@@ -175,6 +231,34 @@ describe("Notification List Item Tests", () => {
 		cy.realPress("Delete");
 
 		cy.get("@itemClose").should("have.been.calledTwice");
+	});
+
+	it("tests e.preventDefault() called when item-close is prevented", () => {
+		const preventingHandler = (e: CustomEvent) => {
+			e.preventDefault();
+		};
+
+		cy.mount(
+			<NotificationList onItemClose={preventingHandler}>
+				<NotificationListItem id="nli1" />
+			</NotificationList>
+		);
+
+		cy.get("[ui5-notification-list]")
+			.then(($list) => {
+				const notificationList = $list[0] as NotificationList;
+				const item = document.querySelector("#nli1") as NotificationListItem;
+
+				const customEvent = new CustomEvent("item-click", {
+					detail: { item }
+				});
+
+				cy.spy(customEvent, 'preventDefault').as('preventDefaultSpy');
+
+				notificationList._onItemClose(customEvent);
+
+				cy.get("@preventDefaultSpy").should("have.been.calledOnce");
+			});
 	});
 
 	it("tests click on ShowMore", () => {
@@ -668,6 +752,66 @@ describe("Notification List Item Tests", () => {
 			.find("svg")
 			.should("have.attr", "aria-hidden", "true");
 	});
+
+	it("getEnabledItems() method returns empty array when no items are present", () => {
+		cy.mount(<NotificationList id="emptyList" />);
+		
+		cy.get("#emptyList").then(($list) => {
+			const list = $list[0] as any;
+			const enabledItems = list.getEnabledItems();
+			expect(enabledItems).to.be.an('array');
+			expect(enabledItems).to.have.length(0);
+		});
+	});
+
+	it("getEnabledItems() method returns groups and their expanded children items", () => {
+		cy.mount(
+			<NotificationList id="expandedList">
+				<NotificationListGroupItem id="group1" titleText="Group 1">
+					<NotificationListItem id="item1">Item 1</NotificationListItem>
+					<NotificationListItem id="item2">Item 2</NotificationListItem>
+				</NotificationListGroupItem>
+				<NotificationListGroupItem id="group2" titleText="Group 2" collapsed>
+					<NotificationListItem id="item3">Item 3</NotificationListItem>
+				</NotificationListGroupItem>
+			</NotificationList>
+		);
+		
+		cy.get("#expandedList").then(($list) => {
+			const list = $list[0] as any;
+			const enabledItems = list.getEnabledItems();
+			expect(enabledItems).to.be.an('array');
+			expect(enabledItems).to.have.length(4); // 2 groups + 2 items from expanded group only
+			expect(enabledItems[0].id).to.equal('group1');
+			expect(enabledItems[1].id).to.equal('item1');
+			expect(enabledItems[2].id).to.equal('item2');
+			expect(enabledItems[3].id).to.equal('group2');
+		});
+	});
+
+	it("getEnabledItems() method returns empty array when innerList is not available", () => {
+		cy.mount(<NotificationList id="noInnerList" />);
+		
+		cy.get("#noInnerList").then(($list) => {
+			const list = $list[0] as any;
+			// Temporarily mock innerList to return null
+			const originalInnerList = list.innerList;
+			Object.defineProperty(list, 'innerList', {
+				get: () => null,
+				configurable: true
+			});
+			
+			const enabledItems = list.getEnabledItems();
+			expect(enabledItems).to.be.an('array');
+			expect(enabledItems).to.have.length(0);
+			
+			// Restore original innerList
+			Object.defineProperty(list, 'innerList', {
+				get: () => originalInnerList,
+				configurable: true
+			});
+		});
+	});
 });
 
 describe("Keyboard Navigation", () => {
@@ -985,4 +1129,5 @@ describe("Notification List Item Without a Group", () => {
 			.find(".ui5-nli-root")
 			.should("not.have.attr", "aria-level");
 	});
+	  
 });

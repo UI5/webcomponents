@@ -27,24 +27,24 @@ const importAndCheck = async (localeId) => {
 const localeIds = [${languagesKeysStringArray}];
 
 localeIds.forEach(localeId => {
-	registerI18nLoader("${packageName}", localeId, importAndCheck);
+	registerI18nLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, localeId, importAndCheck);
 });
 `;
 }
 
-const generate = async () => {
+const generate = async (argv) => {
 
 	const packageName = JSON.parse(await fs.readFile("package.json")).name;
 
-	const inputFolder = path.normalize(process.argv[2]);
-	const outputFileDynamic = path.normalize(`${process.argv[3]}/i18n.${ext}`);
-	const outputFileFetchMetaResolve = path.normalize(`${process.argv[3]}/i18n-fetch.${ext}`);
-	const outputFileDynamicImportJSONImport = path.normalize(`${process.argv[3]}/i18n-node.${ext}`);
+	const inputFolder = path.normalize(argv[2]);
+	const outputFileDynamic = path.normalize(`${argv[3]}/i18n.${ext}`);
+	const outputFileFetchMetaResolve = path.normalize(`${argv[3]}/i18n-fetch.${ext}`);
+	const outputFileDynamicImportJSONImport = path.normalize(`${argv[3]}/i18n-node.${ext}`);
 
 	// All languages present in the file system
 	const files = await fs.readdir(inputFolder);
 	const languages = files.map(file => {
-		const matches = file.match(/messagebundle_(.+?).json$/);
+		const matches = file.match(/messagebundle_(.+?).properties$/);
 		return matches ? matches[1] : undefined;
 	}).filter(key => !!key);
 
@@ -79,9 +79,13 @@ const generate = async () => {
 		fs.writeFile(outputFileDynamic, contentDynamic),
 		fs.writeFile(outputFileFetchMetaResolve, contentFetchMetaResolve),
 		fs.writeFile(outputFileDynamicImportJSONImport, contentDynamicImportJSONAttr),
-	]);
+	]).then(() => {
+		console.log("Generated i18n JSON imports.");
+	});
 }
 
-generate().then(() => {
-	console.log("Generated i18n JSON imports.");
-});
+if (require.main === module) {
+	generate(process.argv)
+}
+
+exports._ui5mainFn = generate;

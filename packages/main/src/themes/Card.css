@@ -14,7 +14,7 @@
 	border-radius: var(--_ui5_card_border-radius);
 	border: var(--_ui5_card_border);
 	overflow: hidden;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	box-sizing: border-box;
 }

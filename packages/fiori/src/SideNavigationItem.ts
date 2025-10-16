@@ -7,10 +7,9 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isLeft,
 	isRight,
-	isSpace,
-	isEnter,
 	isMinus,
 	isPlus,
+	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
@@ -19,6 +18,7 @@ import {
 	SIDE_NAVIGATION_ICON_COLLAPSE,
 	SIDE_NAVIGATION_ICON_EXPAND,
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
+	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Templates
@@ -149,6 +149,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 			return this.accessibilityAttributes.hasPopup;
 		}
 
+		if (this.isOverflow) {
+			return "menu";
+		}
+
 		return undefined;
 	}
 
@@ -174,6 +178,12 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		}
 
 		return this.expanded;
+	}
+
+	get _describedBy() {
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? "");
+		}
 	}
 
 	get classesArray() {
@@ -261,13 +271,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 			return;
 		}
 
-		if (this.unselectable && isSpace(e)) {
-			this._toggle();
-			return;
-		}
-
-		if (this.unselectable && isEnter(e)) {
-			this._toggle();
+		if (isEnter(e)) {
+			if (!this.inPopover && this.unselectable && !this.isExternalLink) {
+				e.preventDefault();
+			}
 		}
 
 		super._onkeydown(e);

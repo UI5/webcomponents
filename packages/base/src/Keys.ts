@@ -106,6 +106,10 @@ type KeyCodes = typeof KeyCodes[keyof typeof KeyCodes];
 
 const isEnter = (event: KeyboardEvent): boolean => (event.key ? event.key === "Enter" : event.keyCode === KeyCodes.ENTER) && !hasModifierKeys(event);
 
+const isEnterCtrl = (event: KeyboardEvent): boolean => (event.key ? event.key === "Enter" : event.keyCode === KeyCodes.ENTER) && checkModifierKeys(event, true, false, false);
+
+const isEnterAlt = (event: KeyboardEvent): boolean => (event.key ? event.key === "Enter" : event.keyCode === KeyCodes.ENTER) && checkModifierKeys(event, false, true, false);
+
 const isEnterShift = (event: KeyboardEvent): boolean => (event.key ? event.key === "Enter" : event.keyCode === KeyCodes.ENTER) && checkModifierKeys(event, false, false, true);
 
 const isCtrl = (event: KeyboardEvent): boolean => checkModifierKeys(event, true, false, false);
@@ -256,6 +260,8 @@ const isColon = (event: KeyboardEvent): boolean => ((event.key ? event.key === "
 
 export {
 	isEnter,
+	isEnterCtrl,
+	isEnterAlt,
 	isEnterShift,
 	isCtrl,
 	isSpace,

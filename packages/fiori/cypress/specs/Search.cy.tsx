@@ -2,6 +2,7 @@ import Title from "@ui5/webcomponents/dist/Title.js";
 import Search from "../../src/Search.js";
 import SearchItem from "../../src/SearchItem.js";
 import SearchItemGroup from "../../src/SearchItemGroup.js";
+import SearchItemShowMore from "../../src/SearchItemShowMore.js";
 import history from "@ui5/webcomponents-icons/dist/history.js";
 import IllustratedMessage from "../../src/IllustratedMessage.js";
 import searchIcon from "@ui5/webcomponents-icons/dist/search.js";
@@ -10,6 +11,8 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarSize from "@ui5/webcomponents/dist/types/AvatarSize.js";
+import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Properties", () => {
 	it("items slot with groups", () => {
@@ -179,6 +182,95 @@ describe("Properties", () => {
 			.should("not.exist");
 	});
 
+	it("tests show more item text with counter", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore itemsToShowCount={3}></SearchItemShowMore>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.realClick()
+			.realType("s");
+
+		cy.get("[ui5-search-item-show-more]")
+			.should("be.visible");
+
+		cy.get("[ui5-search-item-show-more]")
+			.shadow()
+			.find("span")
+			.as("itemText");
+
+		cy.get("[ui5-search-item-show-more]")
+			.then($item => {
+				const item = $item[0];
+				const resourceBundle = (item.constructor as any).i18nBundle;
+
+				cy.get("@itemText")
+					.should("have.text", resourceBundle.getText(SEARCH_ITEM_SHOW_MORE_COUNT.defaultText, 3));
+			});
+
+		cy.get("@itemText")
+			.should("have.class", "ui5-search-item-show-more-text");
+
+	});
+
+	it("tests show more item with no counter", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore></SearchItemShowMore>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.realClick()
+			.realType("s");
+
+		cy.get("[ui5-search-item-show-more]")
+			.should("be.visible");
+
+		cy.get("[ui5-search-item-show-more]")
+			.shadow()
+			.find("span")
+			.as("itemText");
+
+		cy.get("[ui5-search-item-show-more]")
+			.then($item => {
+				const item = $item[0];
+				const resourceBundle = (item.constructor as any).i18nBundle;
+
+				cy.get("@itemText")
+					.should("have.text", resourceBundle.getText(SEARCH_ITEM_SHOW_MORE_NO_COUNT.defaultText));
+			});
+
+		cy.get("@itemText")
+			.should("have.class", "ui5-search-item-show-more-text");
+	});
+
+	it("test show more item accessibility attributes", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore itemsToShowCount={2}></SearchItemShowMore>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.realClick()
+			.realType("l");
+
+		cy.realPress("ArrowDown");
+		cy.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item-show-more]")
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-selected", "true")
+			.should("have.attr", "role", "option");
+	});
+
 	it("tests loading property", () => {
 		cy.mount(
 			<Search loading={true}>
@@ -306,84 +398,6 @@ describe("Properties", () => {
 			.should("have.value", "I");
 	});
 
-	it("typeahead and value confirmation - autocomplete by contains", () => {
-		cy.mount(
-			<Search>
-				<SearchItem text="Item 1" icon={history} />
-				<SearchItem scopeName="Items" text="Item 2" selected />
-			</Search>
-		);
-
-		cy.get("[ui5-search]")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-search]")
-			.should("be.focused");
-
-		cy.get("[ui5-search]")
-			.realPress("2");
-
-		cy.get("[ui5-search]")
-			.realPress("Enter");
-
-		cy.get("[ui5-search]")
-			.should("have.value", "Item 2");
-	});
-
-	it("typeahead and Arrow Right - autocomplete by contains", () => {
-		cy.mount(
-			<Search>
-				<SearchItem text="Item 1" icon={history} />
-				<SearchItem scopeName="Items" text="Item 2" selected />
-			</Search>
-		);
-
-		cy.get("[ui5-search]")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-search]")
-			.should("be.focused");
-
-		cy.get("[ui5-search]")
-			.realPress("2");
-
-		cy.get("[ui5-search]")
-			.realPress("ArrowRight");
-
-		cy.get("[ui5-search]")
-			.should("have.value", "2");
-	});
-
-	it("typeahead and Escape - autocomplete by contains", () => {
-		cy.mount(
-			<Search>
-				<SearchItem text="Item 1" icon={history} />
-				<SearchItem scopeName="Items" text="Item 2" selected />
-			</Search>
-		);
-
-		cy.get("[ui5-search]")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-search]")
-			.should("be.focused");
-
-		cy.get("[ui5-search]")
-			.realPress("2");
-
-		cy.get("[ui5-search]")
-			.realPress("Escape");
-
-		cy.get("[ui5-search]")
-			.should("have.value", "2");
-	});
-
 	it("Popup properties", () => {
 		cy.mount(
 			<Search>
@@ -474,8 +488,8 @@ describe("Properties", () => {
 			.realClick();
 
 		cy.realPress("I");
-       
-        cy.get("[ui5-search-item]")
+
+		cy.get("[ui5-search-item]")
 			.eq(0)
 			.realHover();
 
@@ -609,20 +623,16 @@ describe("Events", () => {
 		}));
 	});
 
-	it("search event with autocomplete by contains", () => {
-		const spy = cy.spy();
+	it("click event on show-more-item selection with mouse", () => {
 		cy.mount(
 			<Search>
-				<SearchItem text="Item 1" icon={history} />
-				<SearchItem scopeName="Items" text="Item 2" selected />
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore></SearchItemShowMore>
 			</Search>
 		);
 
-		cy.get("[ui5-search]")
-			.then(search => {
-				search.get(0).addEventListener("ui5-search", spy);
-				search.get(0).addEventListener("ui5-search", cy.stub().as("searched"));
-			});
+		cy.get("[ui5-search-item-show-more]")
+			.invoke("on", "ui5-click", cy.spy().as("clickSpy"));
 
 		cy.get("[ui5-search]")
 			.shadow()
@@ -632,18 +642,43 @@ describe("Events", () => {
 		cy.get("[ui5-search]")
 			.should("be.focused");
 
-		cy.get("[ui5-search]")
-			.realPress("2");
+		cy.realType("l");
 
-		cy.get("[ui5-search]")
-			.realPress("Enter");
+		cy.get("[ui5-search-item-show-more]")
+			.realClick();
 
-		cy.get("@searched")
+		cy.get("@clickSpy")
 			.should("have.been.calledOnce");
+	});
 
-		cy.wrap(spy).should("have.been.calledWithMatch", Cypress.sinon.match(event => {
-			return event.detail.item.text === "Item 2";
-		}));
+	it("click event on show-more-item selection with Enter", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="List Item"></SearchItem>
+				<SearchItemShowMore></SearchItemShowMore>
+			</Search>
+		);
+
+		cy.get("[ui5-search-item-show-more]")
+			.invoke("on", "ui5-click", cy.spy().as("clickSpy"));
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		cy.realType("l");
+
+		cy.realPress("ArrowDown");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("Enter");
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
 	});
 
 	it("search event prevention", () => {
@@ -815,7 +850,7 @@ describe("Events", () => {
 
 		cy.get("[ui5-search]")
 			.then(search => {
-				search.get(0).addEventListener("ui5-close", cy.stub().as("closed"));
+				search.get(0).addEventListener("ui5-close", cy.spy().as("closed"));
 			});
 
 		cy.get("[ui5-search]")
@@ -842,7 +877,7 @@ describe("Events", () => {
 
 		cy.get("[ui5-search]")
 			.then(search => {
-				search.get(0).addEventListener("ui5-close", cy.stub().as("closed"));
+				search.get(0).addEventListener("ui5-close", cy.spy().as("closed"));
 			});
 
 		cy.get("[ui5-search]")
@@ -914,6 +949,389 @@ describe("Events", () => {
 		cy.get("ui5-search-item")
 			.should("not.exist")
 	});
+
+	it("delete event is fired on clicking the delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item]").eq(0)
+			.as("firstSearchItem");
+
+		cy.get("@firstSearchItem")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick();
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
+	it("Fast navigation with F2 key press", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item]").eq(0)
+			.as("firstSearchItem");
+
+		cy.get("@firstSearchItem")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("@firstSearchItem")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("@firstSearchItem")
+			.should("be.focused");
+	});
+
+	it("delete event is fired on pressing SPACE on the focused delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.realPress("Space");
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
+	it("delete event is fired on pressing ENTER on the focused delete button of a search item", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" onDelete={cy.spy().as('deleteSpy')} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.realPress("Enter");
+
+		cy.get("@deleteSpy").should("have.been.calledOnce");
+	});
+
+	it("should deselect items when backspace or delete key is pressed", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+				<SearchItem text="Item 2" icon={searchIcon} />
+				<SearchItem text="Item 3" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realPress("I");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("have.attr", "selected");
+
+		// Press backspace and verify item is deselected
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realPress("Backspace");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("not.have.attr", "selected");
+	});
+
+	it("should handle backspace and delete keys with grouped items", () => {
+		cy.mount(
+			<Search>
+				<SearchItemGroup headerText="Group 1">
+					<SearchItem text="Group 1 Item 1" icon={history} />
+					<SearchItem text="Group 1 Item 2" icon={searchIcon} />
+				</SearchItemGroup>
+				<SearchItemGroup headerText="Group 2">
+					<SearchItem text="Group 2 Item 1" icon={history} />
+					<SearchItem text="Group 2 Item 2" icon={searchIcon} />
+				</SearchItemGroup>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realPress("G");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("have.attr", "selected");
+
+		// Press backspace and verify item is deselected
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realPress("Backspace");
+
+		cy.get("ui5-search-item").eq(0)
+			.should("not.have.attr", "selected");
+	});
+
+	it("should reset suggestions highlight on pressing 'clear' button", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("I");
+
+		cy.get("@search")
+			.should("have.value", "Item 1");
+
+		cy.get("[ui5-search-item]").eq(0)
+			.should("have.attr", "highlight-text", "I");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='decline']")
+			.realClick();
+
+		cy.get("@search")
+			.should("have.value", "");
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+
+		cy.get("@search")
+			.invoke("prop", "open", true);
+
+		cy.get("ui5-search-item").eq(0)
+			.should("have.attr", "highlight-text", "");
+	});
+
+	it("should close the popover on search if no suggestion is selected", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("P"); // no matching suggestion
+
+		cy.get("@search")
+			.should("have.value", "P");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='search']")
+			.realClick();
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
+
+	it("should close the popover on 'search' if suggestion is selected", () => {
+		cy.mount(
+			<Search showClearIcon>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realPress("I"); // no matching suggestion
+
+		cy.get("@search")
+			.should("have.value", "Item 1");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='search']")
+			.realClick();
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
+
+	it("should open picker by default when 'open' property is set to true", () => {
+		cy.mount(
+			<Search open>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+	});
+
+	it("should not open picker if text is deleted and there are no items", () => {
+		const handleInput = (e: any) => {
+			if (e.target.value) {
+				const item = document.createElement("ui5-search-item");
+				item.setAttribute("text", e.target.value);
+				e.target.appendChild(item);
+			} else {
+				e.target.innerHTML = "";
+			}
+		};
+
+		cy.mount(<Search showClearIcon noTypeahead onInput={handleInput}></Search>);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realPress("I");
+
+		cy.get("@input")
+			.realPress("Backspace");
+
+		cy.get("@search")
+			.should("have.value", "");
+
+		cy.get("@search")
+			.should("not.have.attr", "open");
+	});
+
+	it("should not send outdated suggestion item on enter", () => {
+		cy.mount(
+			<Search onSearch={cy.spy().as("searchSpy")}>
+				<SearchItem text="Abc" />
+				<SearchItem text="AbN" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realType("Ab"); // should autocomplete to "Abc"
+
+		cy.get("@input")
+			.realPress("Backspace") // remove "c" so no suggestion is selected
+
+		cy.get("@input")
+			.realPress("Enter"); // submit search with no suggestion selected
+
+		cy.get("@searchSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item === undefined;
+		}));
+	});
 });
 
 describe("Accessibility", () => {
@@ -946,5 +1364,127 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-search]")
 			.should("be.focused");
+	});
+});
+
+describe("Lazy loaded items and autocomplete", () => {
+	it("Should mount search component with no items, load items onInput and properly autocomplete to a newly added item", () => {
+		const searchItems = [
+			{ text: "Banana" },
+			{ text: "Apple" },
+			{ text: "Orange"}
+		];
+
+		let searchComponent: any;
+
+		const handleInput = () => {
+			searchItems.forEach(data => {
+				const item = document.createElement("ui5-search-item");
+				item.setAttribute("text", data.text);
+				searchComponent.appendChild(item);
+			});
+		};
+
+		cy.mount(
+			<Search ref={(el: any) => { searchComponent = el; }} onInput={handleInput}>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.then(search => {
+				search.get(0).addEventListener("ui5-open", cy.stub().as("opened"));
+			});
+
+		cy.get("ui5-search-item")
+			.should("not.exist");
+
+		// Click on the search input to focus it
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		// Type "a" to trigger the onInput event
+		cy.get("[ui5-search]")
+			.realPress("a");
+
+		// Verify that suggestions are now open and items are added
+		cy.get("@opened")
+			.should("have.been.calledOnce");
+
+		// Verify all 3 items are present
+		cy.get("ui5-search-item")
+			.should("have.length", 3);
+
+		// Verify the second item is "Apple"
+		cy.get("ui5-search-item")
+			.eq(1)
+			.should("have.attr", "text", "Apple");
+
+		// Verify that the input text is autocompleted to "Apple" (first match starting with "a")
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+	});
+
+	it("Should mount search component with no items, load items onInput with a delay and properly autocomplete to a newly added item", () => {
+		const searchItems = [
+			{ text: "Banana" },
+			{ text: "Apple" },
+			{ text: "Orange"}
+		];
+
+		let searchComponent: any;
+
+		const handleInput = () => {
+			setTimeout(() =>
+				searchItems.forEach(data => {
+					const item = document.createElement("ui5-search-item");
+					item.setAttribute("text", data.text);
+					searchComponent.appendChild(item);
+				}),
+			1000)
+		};
+
+		cy.mount(
+			<Search ref={(el: any) => { searchComponent = el; }} onInput={handleInput}>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.then(search => {
+				search.get(0).addEventListener("ui5-open", cy.stub().as("opened"));
+			});
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		// Type "a" to trigger the onInput event
+		cy.get("[ui5-search]")
+			.realPress("a");
+
+		// Verify that suggestions are now open and items are added
+		cy.get("@opened")
+			.should("have.been.calledOnce");
+
+		// Verify all 3 items are present
+		cy.get("ui5-search-item")
+			.should("have.length", 3);
+
+		// Verify the second item is "Apple"
+		cy.get("ui5-search-item")
+			.eq(1)
+			.should("have.attr", "text", "Apple");
+
+		// Verify that the input text is autocompleted to "Apple" (first match starting with "a")
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
 	});
 });
