@@ -40,8 +40,8 @@ class TableCell extends TableCellBase {
 		super.onBeforeRendering();
 		if (this.horizontalAlign) {
 			this.style.justifyContent = this.horizontalAlign;
-		} else if (this._individualSlot) {
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
+		} else if (this.parentElement && this.parentElement.parentElement && this._headerCell && !this._headerCell._popin) {
+			this.style.justifyContent = `var(--horizontal-align-${this._headerCell._id})`;
 		}
 	}
 
