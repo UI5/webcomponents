@@ -1,4 +1,4 @@
-import "../../dist/Assets.js";
+import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DateRangePicker from "../../src/DateRangePicker.js";
 import Label from "../../src/Label.js";

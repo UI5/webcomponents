@@ -240,12 +240,6 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 		this._yearsInterval = intervals;
 	}
 
-	onAfterRendering() {
-		if (!this._hidden) {
-			this.focus();
-		}
-	}
-
 	/**
 	  * Returns true if year timestamp is inside the selection range.
 	  * @private
