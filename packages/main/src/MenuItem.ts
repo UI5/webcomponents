@@ -397,7 +397,7 @@ class MenuItem extends ListItem implements IMenuItem {
 		return MenuItem.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
 	}
 
-	get acessibleNameText() {
+	get accessibleNameText() {
 		return MenuItem.i18nBundle.getText(MENU_POPOVER_ACCESSIBLE_NAME);
 	}
 

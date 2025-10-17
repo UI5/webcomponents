@@ -495,6 +495,7 @@ describe("TabContainer general interaction", () => {
 	});
 
 	it("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
+		cy.viewport(600, 1080);
 		cy.mount(
 			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
 				<Tab text="One">Tab 1</Tab>
@@ -530,14 +531,14 @@ describe("TabContainer general interaction", () => {
 			</TabContainer>
 		);
 
-		cy.viewport(600, 1080);
-
 		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
 		cy.get("#tabContainerStartAndEndOverflow").should("have.attr", "overflow-mode", "StartAndEnd");
-		cy.get("@startOverflow").should("have.text", "+4");
+	
+		cy.get("@startOverflow").should("be.visible").invoke("text").should("equal", "+4");
 
-		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:nth-child(5)").as("tab5");
-		cy.get("@tab5").click();
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
+		cy.get("@visibleTab").should("exist");
+		cy.get("@visibleTab").realClick();
 
 		cy.get("@startOverflow").should("have.text", "+4");
 	});
@@ -1143,6 +1144,102 @@ describe("TabContainer keyboard handling", () => {
 		cy.get("@item").type("{downarrow}");
 		cy.get("@tabContainer").shadow().find("ui5-responsive-popover").as("popover");
 		cy.get("@popover").should("be.visible", "Popover is opened");
+	});
+
+	it("tests handling of the focus navigation with End overflow mode", () => {
+		cy.mount(
+			<>
+			<Button id="btn1"/>
+			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="End">
+				<Tab text="One">Tab 1</Tab>
+				<Tab text="Two">Tab 2</Tab>
+				<Tab id="activeTab" text="Three" selected>Tab 3</Tab>
+				<Tab text="Four">Tab 4</Tab>
+				<Tab text="Five">Tab 4</Tab>
+			</TabContainer>
+			<Button id="btn2"/>
+			</>
+		);
+
+		cy.viewport(300, 1080);
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--end").as("endOverflow");
+
+		cy.get("#btn1").realClick();
+
+		cy.realPress("Tab");
+
+		cy.realPress("ArrowRight");
+
+		cy.get("@endOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress("Tab");
+
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("@endOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("#btn1").should("be.focused");
+	});
+
+	it("tests handling of the focus navigation with Start overflow mode", () => {
+		cy.mount(
+			<>
+			<Button id="btn1"/>
+			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
+				<Tab text="One">Tab 1</Tab>
+				<Tab text="Two">Tab 2</Tab>
+				<Tab id="activeTab" text="Three" selected>Tab 3</Tab>
+				<Tab text="Four">Tab 4</Tab>
+				<Tab text="Five">Tab 4</Tab>
+			</TabContainer>
+			<Button id="btn2"/>
+			</>
+		);
+
+		cy.viewport(300, 1080);
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
+
+		cy.get("#btn1").realClick();
+
+		cy.realPress("Tab");
+
+		cy.realPress("ArrowLeft");
+
+		cy.get("@startOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress("Tab");
+
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("@startOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("#btn1").should("be.focused");
 	});
 });
 

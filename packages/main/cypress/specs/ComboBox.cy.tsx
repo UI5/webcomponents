@@ -398,25 +398,25 @@ describe("General Interaction", () => {
 
 	it("should not render ComboBox items list when no items are present", () => {
 		cy.mount(
-            <ComboBox valueState="Negative" open>
-                {/* No ComboBox items */}
-            </ComboBox>
-        );
+			<ComboBox valueState="Negative" open>
+				{/* No ComboBox items */}
+			</ComboBox>
+		);
 
 		cy.get("[ui5-combobox]")
-            .as("combo")
-            .shadow()
-            .find("ui5-responsive-popover")
-            .as("popover")
-            .should("have.attr", "open");
+			.as("combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover")
+			.should("have.attr", "open");
 
 		cy.get("@popover")
-            .find(".ui5-responsive-popover-header.ui5-valuestatemessage-root")
-            .should("exist");
+			.find(".ui5-responsive-popover-header.ui5-valuestatemessage-root")
+			.should("exist");
 
 		cy.get("@popover")
-            .find("ui5-list")
-            .should("not.exist");
+			.find("ui5-list")
+			.should("not.exist");
 	});
 });
 
@@ -892,6 +892,37 @@ describe("Accessibility", () => {
 		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
 
 		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header Donut");
+	});
+
+	it("should announce only the item text when accessed via keyboard and popover is not opened", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+				<ComboBoxItem text="Belgium" />
+				<ComboBoxItem text="Brazil" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("have.text", "");
+
+		// open the popover
+		cy.get("@combo").shadow().find("input").realPress("F4");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		
+		cy.get("@invisibleMessageSpan").should("have.text", "List item 2 of 6");
 	});
 
 	it("tests setting value programmatically", () => {
@@ -2513,6 +2544,40 @@ describe("Event firing", () => {
 		}));
 	});
 
+	it("should NOT fire selection-change event when ComboBox items are set asynchronously after initial render", () => {
+		cy.mount(
+			<ComboBox id="async-combo" value="Bulgaria" loading>
+				{/* Items will be added asynchronously */}
+			</ComboBox>
+		);
+
+		cy.get("#async-combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.window().then(win => {
+			const combo = win.document.getElementById("async-combo");
+			const item1 = win.document.createElement("ui5-cb-item");
+			item1.setAttribute("text", "Argentina");
+			const item2 = win.document.createElement("ui5-cb-item");
+			item2.setAttribute("text", "Bulgaria");
+			combo?.appendChild(item1);
+			combo?.appendChild(item2);
+			(combo as any).loading = false;
+		});
+
+		cy.get("#async-combo").should("not.have.prop", "loading", true);
+
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+
+		cy.get("#async-combo").shadow().find("input").realClick();
+		cy.get("#async-combo").shadow().find("input").clear().realType("Argentina");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item.text === "Argentina";
+		}));
+	});
+
 	it("should check clear icon events", () => {
 		cy.mount(
 			<>
@@ -2742,5 +2807,169 @@ describe("Scrolling", () => {
 		cy.get("[ui5-cb-item]")
 			.eq(4)
 			.should("be.visible");
+	});
+});
+
+describe("ComboBox Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-korean"
+				placeholder="Type in Korean ..."
+			>
+				<ComboBoxItem text="안녕하세요" />
+				<ComboBoxItem text="고맙습니다" />
+				<ComboBoxItem text="사랑" />
+				<ComboBoxItem text="한국" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "사랑");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-japanese"
+				placeholder="Type in Japanese ..."
+			>
+				<ComboBoxItem text="こんにちは" />
+				<ComboBoxItem text="ありがとう" />
+				<ComboBoxItem text="東京" />
+				<ComboBoxItem text="日本" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "ありがとう");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<ComboBox
+				id="combobox-composition-chinese"
+				placeholder="Type in Chinese ..."
+			>
+				<ComboBoxItem text="你好" />
+				<ComboBoxItem text="谢谢" />
+				<ComboBoxItem text="北京" />
+				<ComboBoxItem text="中国" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@combobox").should("have.prop", "_isComposing", false);
+
+		cy.get("@combobox").should("have.attr", "value", "谢谢");
+
+		cy.get("@combobox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@combobox")
+			.realPress("Enter");
+
+		cy.get("@combobox")
+			.should("have.attr", "value", "谢谢");
 	});
 });

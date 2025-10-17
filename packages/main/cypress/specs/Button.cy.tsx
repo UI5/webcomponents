@@ -343,9 +343,21 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("button")
 			.as("button");
-			
+
 		cy.get("@button")
 			.should("have.attr", "aria-label", "Action Emphasized");
+	});
+
+	it("aria-label uses accessibleName when both text and accessibleName are provided", () => {
+		cy.mount(<Button design="Emphasized" accessibleName="Custom Action Label">Button Text</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Custom Action Label Emphasized");
 	});
 
 	it("aria-expanded is properly applied on the button tag", () => {
@@ -488,6 +500,31 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-controls", "registration-dialog");
 	});
 
+	it("aria-label and aria-keyshortcuts are properly applied on the button tag", () => {
+		cy.mount(<Button accessibilityAttributes={{ariaKeyShortcuts: "Alt+G", ariaLabel: "Some text"}}>Show Registration Dialog</Button>);
+
+		cy.get("[ui5-button]")
+			.as("button");
+
+		cy.get<Button>("@button")
+			.then($el => {
+				$el.get(0).accessibilityAttributes = {
+					ariaKeyShortcuts: "Alt+G",
+					ariaLabel: "Some text",
+				};
+			});
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Some text");
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-keyshortcuts", "Alt+G");
+	});
+
 	it("aria-busy is properly applied on the button with busy indicator", () => {
 		cy.mount(<Button loading></Button>);
 
@@ -534,12 +571,4 @@ describe("Accessibility", () => {
 		cy.get("@tag")
 			.should("have.text", "999+");
 	});
-});
-
-ui5AccDescribe("Automated accessibility tests", () => {
-	it("Icon only", () => {
-		cy.mount(<Button icon="message-information"></Button>);
-
-		cy.ui5CheckA11y();
-	})
 });

@@ -18,6 +18,7 @@ import DynamicSideContent from "./DynamicSideContent.js";
 import FilterItem from "./FilterItem.js";
 import FilterItemOption from "./FilterItemOption.js";
 import FlexibleColumnLayout from "./FlexibleColumnLayout.js";
+import GroupItem from "./GroupItem.js";
 import IllustratedMessage from "./IllustratedMessage.js";
 import MediaGallery from "./MediaGallery.js";
 import MediaGalleryItem from "./MediaGalleryItem.js";

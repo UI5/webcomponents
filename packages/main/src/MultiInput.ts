@@ -13,6 +13,8 @@ import {
 	isHome,
 	isEnd,
 	isDown,
+	isEnter,
+
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
@@ -197,7 +199,6 @@ class MultiInput extends Input implements IFormInputElement {
 	_tokenizerFocusOut(e: FocusEvent) {
 		if (!this.contains(e.relatedTarget as HTMLElement) && !this.shadowRoot!.contains(e.relatedTarget as HTMLElement)) {
 			this.tokenizer._tokens.forEach(token => { token.selected = false; });
-			this.tokenizer.scrollToStart();
 		}
 	}
 
@@ -208,17 +209,21 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	innerFocusIn() {
+		this.tokenizer._scrollToEndOnExpand = true;
 		this.tokenizer.expanded = true;
 		this.focused = true;
-		this.tokenizer.scrollToEnd();
 
 		this.tokens.forEach(token => {
 			token.selected = false;
 		});
 	}
 
+	_showMoreItemsPress() {
+		this.tokenizer._scrollToEndOnExpand = true;
+	}
+
 	_onkeydown(e: KeyboardEvent) {
-		super._onkeydown(e);
+		!this._isComposing && super._onkeydown(e);
 
 		const target = e.target as HTMLInputElement;
 		const isHomeInBeginning = isHome(e) && target.selectionStart === 0;
@@ -226,6 +231,10 @@ class MultiInput extends Input implements IFormInputElement {
 		if (isHomeInBeginning) {
 			this._skipOpenSuggestions = true; // Prevent input focus when navigating through the tokens
 			return this._focusFirstToken(e);
+		}
+
+		if (isEnter(e)) {
+			e.preventDefault();
 		}
 
 		if (isLeft(e)) {
@@ -340,12 +349,6 @@ class MultiInput extends Input implements IFormInputElement {
 		super.onAfterRendering();
 
 		this.tokenizer.preventInitialFocus = true;
-
-		if (this.tokenizer.expanded) {
-			this.tokenizer.scrollToEnd();
-		} else {
-			this.tokenizer.scrollToStart();
-		}
 	}
 
 	get iconsCount() {

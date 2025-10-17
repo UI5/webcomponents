@@ -278,6 +278,50 @@ describe("SegmentedButtonItems appearance", () => {
 	});
 });
 
+describe("SegmentedButton: contentMode", () => {
+    it("should have items with width which fits item content in content mode: ContentFit", () => {
+        cy.mount(
+            <SegmentedButton contentMode="ContentFit">
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(shortWidth => {
+				cy.get("#item2")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+				cy.get("#item3")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+        });
+    });
+
+    it("should have items with equal width in content mode:EqualSized", () => {
+        cy.mount(
+            <SegmentedButton contentMode="EqualSized">
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(width1 => {
+            	cy.get("#item2")
+					.invoke("outerWidth")
+					.should("eq", width1);
+            	cy.get("#item3")
+					.invoke("outerWidth")
+					.should("eq", width1);
+        });
+    });
+});
+
 describe("SegmentedButton Accessibility", () => {
 	it("segmented button should have correct aria label when accessibleName is set", () => {
 		const LABEL = "Label";
@@ -376,6 +420,37 @@ describe("SegmentedButton Accessibility", () => {
 			.find(".ui5-segmented-button-root")
 			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
 	});
+
+	it("segmented button should have correct aria-multiselectable", () => {
+		cy.mount(
+			<>
+				<SegmentedButton>
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+				<SegmentedButton selectionMode="Multiple">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		// Test Single mode (default) should have aria-multiselectable="false"
+		cy.get("[ui5-segmented-button]")
+			.first()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "false")
+			.should("have.attr", "aria-orientation", "horizontal");
+
+		// Test Multiple mode should have aria-multiselectable="true"
+		cy.get("[ui5-segmented-button]")
+			.last()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "true")
+			.should("have.attr", "aria-orientation", "horizontal");
+	});
 });
 
 
@@ -454,4 +529,17 @@ describe("SebmentedButtonItem Accessibility", () => {
 			.find("li")
 			.should("have.attr", "aria-description", REF_DESCRIPTION);
 	});
+
+	it("should set title attribute to slot text when tooltip is not provided", () => {
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="item1">Segmented Item Text</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+            .shadow()
+            .find("li")
+            .should("have.attr", "title", "Segmented Item Text");
+    });
 });

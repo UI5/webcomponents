@@ -26,6 +26,7 @@ import {
 	getEffectiveAriaDescriptionText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import SelectTwoColumnSeparator from "./types/SelectTwoColumnSeparator.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -338,6 +339,16 @@ class Select extends UI5Element implements IFormInputElement {
 	tooltip?: string;
 
 	/**
+	 * Defines the separator type for the two columns layout when Select is in read-only mode.
+	 *
+	 * @default "Dash"
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	twoColumnSeparator: `${SelectTwoColumnSeparator}` = "Dash";
+
+	/**
 	 * Constantly updated value of texts collected from the associated description texts
 	 * @private
 	 */
@@ -582,8 +593,69 @@ class Select extends UI5Element implements IFormInputElement {
 		return this.options.find(option => option.selected);
 	}
 
-	get text() {
-		return this.selectedOption?.effectiveDisplayText;
+	/**
+	 * Helper function to build display text with separator when additional text exists
+	 * @param mainText - The main text content
+	 * @param additionalText - The additional text (optional)
+	 * @returns The combined text with separator if additionalText exists, otherwise just mainText
+	 * @private
+	 */
+	_buildDisplayText(mainText: string, additionalText?: string) {
+		if (!additionalText) {
+			return mainText;
+		}
+
+		return `${mainText} ${this._separatorSymbol} ${additionalText}`;
+	}
+
+	get text(): string {
+		const selectedOption = this.selectedOption;
+		if (!selectedOption) {
+			return "";
+		}
+
+		// Only show separator when readonly and there's additional text
+		if (this.readonly && selectedOption.additionalText) {
+			return this._buildDisplayText(
+				selectedOption.effectiveDisplayText,
+				selectedOption.additionalText,
+			);
+		}
+
+		return selectedOption.effectiveDisplayText;
+	}
+
+	get _effectiveTooltip(): string | undefined {
+		// User-defined tooltip takes precedence
+		if (this.tooltip) {
+			return this.tooltip;
+		}
+
+		// Provide default tooltip for readonly mode to show full content
+		if (this.readonly) {
+			const selectedOption = this.selectedOption;
+			if (!selectedOption) {
+				return undefined;
+			}
+
+			// Use textContent for tooltip to show actual text content, not display text
+			const mainText = selectedOption.textContent || "";
+			return this._buildDisplayText(mainText, selectedOption.additionalText);
+		}
+
+		return undefined;
+	}
+
+	get _separatorSymbol(): string {
+		switch (this.twoColumnSeparator) {
+		case SelectTwoColumnSeparator.Bullet:
+			return "·"; // Middle dot (U+00B7)
+		case SelectTwoColumnSeparator.VerticalLine:
+			return "|"; // Vertical line (U+007C)
+		case SelectTwoColumnSeparator.Dash:
+		default:
+			return "–"; // En dash (U+2013)
+		}
 	}
 
 	_toggleRespPopover() {
@@ -869,6 +941,11 @@ class Select extends UI5Element implements IFormInputElement {
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
 			option.focused = option.selected;
+			if (option.focused && isPhone()) {
+				// on phone, the popover opens full screen (dialog)
+				// move focus to option to read out dialog header
+				option.focus();
+			}
 		});
 	}
 
@@ -995,6 +1072,7 @@ class Select extends UI5Element implements IFormInputElement {
 		return {
 			popoverValueState: {
 				"ui5-valuestatemessage-root": true,
+				"ui5-valuestatemessage-header": !this._isPhone,
 				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
 				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
 				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
@@ -1009,11 +1087,12 @@ class Select extends UI5Element implements IFormInputElement {
 	get styles() {
 		return {
 			popoverHeader: {
-				"max-width": `${this.offsetWidth}px`,
+				"display": "block",
 			},
 			responsivePopoverHeader: {
 				"display": this.options.length && this._listWidth === 0 ? "none" : "inline-block",
 				"width": `${this.options.length ? this._listWidth : this.offsetWidth}px`,
+				"max-width": "100%",
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,

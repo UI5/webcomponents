@@ -19,9 +19,15 @@ export {
 
 const generate = async () => {
 	await fs.mkdir("src/generated/", { recursive: true });
-	return fs.writeFile("src/generated/AssetParameters.ts", fileContent);
+	await fs.writeFile("src/generated/AssetParameters.ts", fileContent);
+
+	console.log("Assets parameters generated.");
 }
 
-generate().then(() => {
-	console.log("Assets parameters generated.");
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+	generate()
+}
+
+export default {
+	_ui5mainFn: generate
+}
