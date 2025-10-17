@@ -2,12 +2,6 @@ import Button from "../../src/Button.js";
 import Carousel from "../../src/Carousel.js";
 import Card from "../../src/Card.js";
 import Input from "../../src/Input.js";
-import List from "../../src/List.js";
-import CardHeader from "../../src/CardHeader.js";
-import Icon from "../../src/Icon.js";
-import ListItemGroup from "../../src/ListItemGroup.js";
-import Avatar from "../../src/Avatar.js";
-import ListItemStandard from "../../src/ListItemStandard.js";
 
 describe("Carousel general interaction", () => {
 	it("rendering", () => {
@@ -591,5 +585,94 @@ describe("Carousel general interaction", () => {
 			.shadow()
 			.find(".ui5-carousel-item:nth-child(5)")
 			.should("have.class", "ui5-carousel-item--hidden");
+	});
+
+	it("should render only visible items", () => {
+		cy.mount(
+			<Carousel>
+				<Button />
+				<Button hidden/>
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 2);
+	});
+
+	it("should update navigation when items become hidden dynamically", () => {
+		cy.mount(
+			<Carousel>
+				<Button />
+				<Button id="btn2" />
+				<Button id="btn3" />
+				<Button id="btn4" />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 4);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 4);
+
+		cy.get("#btn2").invoke("attr", "hidden", "");
+		cy.get("#btn3").invoke("attr", "hidden", "");
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 2);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 2);
+
+		cy.get("ui5-carousel").realClick();
+		cy.get("ui5-carousel").realPress("ArrowRight");
+		cy.realPress("Tab");
+
+		cy.get("#btn4").should("be.focused");
+	});
+
+	it("should handle filtering with multiple items per page", () => {
+		cy.mount(
+			<Carousel itemsPerPage="S2 M2 L2 XL2">
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 4);
+	});
+
+	it("should update page count correctly with filtered content", () => {
+		cy.mount(
+			<Carousel itemsPerPage="S1 M2 L2 XL2">
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel").should("have.prop", "pagesCount", 3);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 3);
 	});
 });
