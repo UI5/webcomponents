@@ -424,8 +424,8 @@ class Carousel extends UI5Element {
 		}
 
 		let pageIndex = -1;
-		for (let i = 0; i < this.content.length; i++) {
-			if (this.content[i].isEqualNode(target?.querySelector("slot")?.assignedNodes()[0] as HTMLElement)) {
+		for (let i = 0; i < this._visibleItems.length; i++) {
+			if (this._visibleItems[i].isEqualNode(target?.querySelector("slot")?.assignedNodes()[0] as HTMLElement)) {
 				pageIndex = i;
 				break;
 			}
@@ -705,13 +705,13 @@ class Carousel extends UI5Element {
 	 * @private
 	 */
 	get items(): Array<ItemsInfo> {
-		return this.content.map((item, idx) => {
+		return this._visibleItems.map((item, idx) => {
 			return {
 				id: `${this._id}-carousel-item-${idx + 1}`,
 				item,
 				tabIndex: this.isItemInViewport(this._focusedItemIndex) ? 0 : -1,
 				posinset: idx + 1,
-				setsize: this.content.length,
+				setsize: this._visibleItems.length,
 				visible: this.isItemInViewport(idx),
 			};
 		});
@@ -828,7 +828,7 @@ class Carousel extends UI5Element {
 	}
 
 	get pagesCount() {
-		const items = this.content.length;
+		const items = this._visibleItems.length;
 		return items > this.effectiveItemsPerPage ? items - this.effectiveItemsPerPage + 1 : 1;
 	}
 	get isPageTypeDots() {
@@ -866,7 +866,7 @@ class Carousel extends UI5Element {
 	}
 
 	get hasNext() {
-		return this.cyclic || (this._focusedItemIndex + 1 <= this.content.length - 1 && this._currentSlideIndex < this.pagesCount - 1);
+		return this.cyclic || (this._focusedItemIndex + 1 <= this._visibleItems.length - 1 && this._currentSlideIndex < this.pagesCount - 1);
 	}
 
 	get suppressAnimation() {
@@ -886,7 +886,7 @@ class Carousel extends UI5Element {
 	}
 
 	get ariaActiveDescendant() {
-		return this.content.length ? `${this._id}-carousel-item-${this._focusedItemIndex + 1}` : undefined;
+		return this._visibleItems.length ? `${this._id}-carousel-item-${this._focusedItemIndex + 1}` : undefined;
 	}
 
 	get ariaLabelTxt() {
@@ -903,6 +903,15 @@ class Carousel extends UI5Element {
 
 	get _roleDescription() {
 		return Carousel.i18nBundle.getText(CAROUSEL_ARIA_ROLE_DESCRIPTION);
+	}
+
+	/**
+ 	 * Returns only visible (non-hidden) content items.
+	 * Items with the 'hidden' attribute are automatically excluded from carousel navigation.
+	 * @private
+	 */
+	get _visibleItems() {
+		return this.content.filter(x => !x.hasAttribute("hidden"));
 	}
 
 	carouselItemDomRef(idx: number) : Array<HTMLElement> {
