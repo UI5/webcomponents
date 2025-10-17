@@ -13,13 +13,13 @@
  */
 enum FormAccessibilityMode {
 	/**
-	 * Display mode. 
+	 * Display mode.
 	 * @public
 	 */
 	Display = "Display",
 
 	/**
-	 * Edit mode. 
+	 * Edit mode.
 	 * @public
 	 */
 	Edit = "Edit",
