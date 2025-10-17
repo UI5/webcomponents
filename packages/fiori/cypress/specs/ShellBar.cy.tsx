@@ -321,6 +321,37 @@ describe("Responsiveness", () => {
 });
 
 describe("Slots", () => {
+	describe("Profile slot", () => {
+		it("forwards click from shellbar profile button to slotted avatar (mount pattern)", () => {
+			const clickSpy = cy.spy().as("avatarClickSpy");
+			const profileClickSpy = cy.spy().as("profileClickSpy");
+
+			cy.mount(
+				<div>
+					<ShellBar id="test-shellbar">
+						<Avatar
+							id="test-avatar"
+							slot="profile"
+							interactive
+							initials="XY"
+						/>
+					</ShellBar>
+				</div>
+			);
+
+			cy.get("#test-avatar").then($el => {
+				$el[0].addEventListener("ui5-click", clickSpy);
+			});
+			cy.get("#test-shellbar").then($el => {
+				$el[0].addEventListener("ui5-profile-click", profileClickSpy);
+			});
+
+			cy.get("#test-shellbar").shadow().find(".ui5-shellbar-image-button").realClick();
+			cy.get("@profileClickSpy").should("have.been.calledOnce");
+			cy.get("@avatarClickSpy").should("have.been.calledOnce");
+		});
+	});
+
 	describe("Content slot", () => {
 		it("Test separators visibility", () => {
 			function assertStartSeparatorVisibility(expectedExist: boolean) {
@@ -586,7 +617,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logoArea")
-			.click();
+			.realClick();
 
 		cy.get("@logoClick")
 			.should("have.been.calledOnce");
@@ -606,7 +637,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logo")
-			.click();
+			.realClick();
 
 		cy.get("@logoClickSmall")
 			.should("have.been.calledOnce");
@@ -710,7 +741,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
@@ -763,7 +794,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find("[data-profile-btn]")
-				.click();
+    			.click({ force: true });
 
 			cy.get("@profileClick")
 				.should("have.been.calledOnce");
@@ -811,7 +842,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -938,7 +969,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -956,7 +987,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
@@ -985,7 +1016,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find("[data-profile-btn]")
-				.click();
+   				.click({ force: true });
 
 			cy.get("@profileClick")
 				.should("have.been.calledOnce");

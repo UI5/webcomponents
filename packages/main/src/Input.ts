@@ -88,6 +88,7 @@ import {
 	INPUT_CLEAR_ICON_ACC_NAME,
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
+	INPUT_SUGGESTIONS_CANCEL_BUTTON,
 	FORM_TEXTFIELD_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -1356,9 +1357,20 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.open = false;
 	}
 
+	_confirmMobileValue() {
+		this._closePicker();
+		this._handleChange();
+	}
+
+	_cancelMobileValue() {
+		this.value = this.previousValue;
+		this._closePicker();
+	}
+
 	_afterOpenPicker() {
 		// Set initial focus to the native input
 		if (isPhone()) {
+			this.previousValue = this.value;
 			(this.getInputDOMRef())!.focus();
 			this._composition?.addEventListeners();
 		}
@@ -1680,6 +1692,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get _suggestionsOkButtonText() {
 		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
+	}
+
+	get _suggestionsCancelButtonText() {
+		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_CANCEL_BUTTON);
 	}
 
 	get clearIconAccessibleName() {

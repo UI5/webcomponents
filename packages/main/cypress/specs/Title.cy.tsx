@@ -24,13 +24,43 @@ describe("Title", () => {
 			cy.mount(<Title id="titleH6" level="H6">Title Size 6</Title>);
 			cy.get("#titleH6").shadow().find("h6").should("exist");
 		});
+	});
 
-		// it("should wrap the text of the title", () => {
-		// 	cy.mount(<Title size="H6" level="H6" id="wrapping-title" style={{ width: "200px" }}>Wrapping Title Lorem Ipsum Dolor, Sit Amet Consectetur Adipisicing Elit. Numquam, Ab.</Title>);
-		// 	cy.get("#wrapping-title").should("have.css", "height", "64px");
+	describe("Title heading getters", () => {
+		const levels = ["H1", "H2", "H3", "H4", "H5", "H6"] as const;
+		
+		levels.forEach((level, index) => {
+			const getter = level.toLowerCase(); 
 
-		// 	cy.mount(<Title size="H6" level="H6" id="truncated-title" wrappingType="None" style={{ width: "200px" }}>Truncated Title Lorem Ipsum Dolor, Sit Amet Consectetur Adipisicing Elit. Numquam, Ab.</Title>);
-		// 	cy.get("#truncated-title").should("have.css", "height", "16px");
-		// });
+			it(`should return ${getter}() = true when level is ${level}`, () => {
+				cy.mount(<Title id={`title${level}`} level={level}>Title {level}</Title>);
+				cy.get(`#title${level}`).then(($el) => {
+					const title = $el[0] as Title;
+					expect((title as any)[getter]).to.be.true;
+				});
+			});
+
+			it(`should return ${getter}() = false when level is not ${level}`, () => {
+				const otherLevel = levels[(index + 1) % levels.length];
+				cy.mount(<Title id={`title${otherLevel}`} level={otherLevel}>Title {otherLevel}</Title>);
+				cy.get(`#title${otherLevel}`).then(($el) => {
+					const title = $el[0] as Title;
+					expect((title as any)[getter]).to.be.false;
+				});
+			});
+		});
+
+		it('should return h2() = true for default level and all others false', () => {
+			cy.mount(<Title id="titleDefault">Default Title</Title>);
+			cy.get('#titleDefault').then(($el) => {
+				const title = $el[0] as Title;
+				expect(title.h1).to.be.false;
+				expect(title.h2).to.be.true; // default level is H2
+				expect(title.h3).to.be.false;
+				expect(title.h4).to.be.false;
+				expect(title.h5).to.be.false;
+				expect(title.h6).to.be.false;
+			});
+		});
 	});
 });

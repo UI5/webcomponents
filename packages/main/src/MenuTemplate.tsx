@@ -18,7 +18,7 @@ export default function MenuTemplate(this: Menu) {
 			preventInitialFocus={true}
 			hideArrow={true}
 			allowTargetOverlap={true}
-			accessibleName={this.acessibleNameText}
+			accessibleName={this.accessibleNameText}
 			onBeforeOpen={this._beforePopoverOpen}
 			onOpen={this._afterPopoverOpen}
 			onBeforeClose={this._beforePopoverClose}
