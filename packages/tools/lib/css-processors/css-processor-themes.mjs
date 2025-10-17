@@ -8,6 +8,17 @@ import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import scopeVariables from "./scope-variables.mjs";
 
+const cloneThemingDeclaration = (decl) => {
+    if (!decl.prop.startsWith('--sap')) {
+        return decl.clone();
+    }
+
+    const originalProp = decl.prop;
+    const originalValue = decl.value;
+
+    return decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` });
+}
+
 const generate = async (argv) => {
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
@@ -28,7 +39,8 @@ const generate = async (argv) => {
         result.root.walkRules(selector, rule => {
             rule.walkDecls(decl => {
                 if (!decl.prop.startsWith('--sapFontUrl')) {
-                    newRule.append(decl.clone());
+
+                    newRule.append(cloneThemingDeclaration(decl));
                 }
             });
         });
