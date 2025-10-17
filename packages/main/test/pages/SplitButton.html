@@ -85,7 +85,7 @@
 	<ui5-split-button id="emptySpBtn" design="Default"></ui5-split-button>
 	<ui5-split-button id="defaultSpBtn" design="Default">Default</ui5-split-button>
 
-	<ui5-split-button id="splitBtnWithMenuDefaultActionDefaultAction">openMenu</ui5-split-button>
+	<ui5-split-button id="splitBtnWithMenuDefaultActionDefaultAction" style="width:300px">openMenu</ui5-split-button>
 	<ui5-menu id="menu">
 		<ui5-menu-item text="New File" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" icon="add-document"></ui5-menu-item>
 		<ui5-menu-item text="New Folder with very long title for a menu item" additional-text="Ctrl+F" icon="add-folder" disabled></ui5-menu-item>
@@ -102,13 +102,18 @@
 		<ui5-menu-item text="Save" icon="save"></ui5-menu-item>
 		<ui5-menu-item text="Delete" icon="delete"></ui5-menu-item>
 	</ui5-menu>
+
+	<h3>Split Buttons with fixed width</h3>
+	<ui5-split-button icon="add" style="width:300px">Fixed width</ui5-split-button>
+	<ui5-split-button style="width:300px">Fixed width</ui5-split-button>
+	<ui5-split-button icon="add" style="width:300px"></ui5-split-button>
 </body>
 <script>
 	const splitBtn = document.getElementById("splitBtnWithMenuDefaultActionDefaultAction");
 	const menu = document.getElementById("menu");
 
 	splitBtn.addEventListener("ui5-arrow-click", function() {
-		menu.opener = splitBtn; 
+		menu.opener = splitBtn;
 		menu.open = !menu.open;
 		splitBtn.activeArrowButton = !splitBtn.activeArrowButton;
 	});
@@ -128,7 +133,7 @@
 
 
 	splitBtnWithMenuWithAssociatedLastAction.addEventListener("ui5-arrow-click", function() {
-		menuInSplitBtnAssociatedLastAction.opener = splitBtnWithMenuWithAssociatedLastAction; 
+		menuInSplitBtnAssociatedLastAction.opener = splitBtnWithMenuWithAssociatedLastAction;
 		menuInSplitBtnAssociatedLastAction.menuInSplitBtnAssociatedLastAction = !menu.open;
 	})
 
