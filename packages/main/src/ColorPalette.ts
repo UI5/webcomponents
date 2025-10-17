@@ -494,17 +494,19 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isHome(e) && this._isFirstSwatch(target, this.displayedColors)) {
+		} else if (isHome(e) && this._isFirstSwatchInRow(target)) {
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
 				() => this._focusMoreColors(),
+				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isEnd(e) && this._isLastSwatch(target, this.displayedColors)) {
+		} else if (isEnd(e) && this._isLastSwatchInRow(target)) {
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
 				() => this._focusDefaultColor(),
+				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isEnd(e) && this._isSwatchInLastRow(target)) {
 			e.stopPropagation();
@@ -567,6 +569,24 @@ class ColorPalette extends UI5Element {
 
 	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
 		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === target;
+	}
+
+	/**
+	 * Checks if the target swatch is the first swatch in its row.
+	 * @private
+	 */
+	_isFirstSwatchInRow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		return index >= 0 ? index % this.rowSize === 0 : false;
+	}
+
+	/**
+	 * Checks if the target swatch is the last swatch in its row.
+	 * @private
+	 */
+	_isLastSwatchInRow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		return index >= 0 ? (index + 1) % this.rowSize === 0 || index === this.displayedColors.length - 1 : false;
 	}
 
 	/**
