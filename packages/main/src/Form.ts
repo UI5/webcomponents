@@ -320,16 +320,21 @@ class Form extends UI5Element {
 	itemSpacing: `${FormItemSpacing}` = "Normal";
 
 	/**
-	 * Defines the accessibility state of the component in "edit" and "display" use-cases.
+	 * Defines the accessibility state of the component in "edit" and "display" use-cases
+	 * without a visual impact.
 	 *
-	 * **Note:** The property does not have visual appearance, does not switch between text and input fields.
-	 * It is used to inform assistive technologies, whether the form is in "edit" mode or in "display" mode.
+	 * **Note:** The property does not have visual impact, it does not switch between text and input fields.
+	 * It is meant to inform assistive technologies, whether the form is in "edit" mode or in "display" mode
+	 * to get the best possible screen reader experience.
+	 *
+	 * **Usage:**
 	 * - Set this property to "false", when you use the form in "display" mode,
 	 * e.g. all form items are non-editable (e.g. texts).
 	 * - Set this property to "true", when you use the form in "edit" mode,
 	 * e.g. all form items are editable (e.g. input fields).
 	 *
-	 * @default "Normal"
+	 * @default false
+	 * @since 2.16.0
 	 * @public
 	 */
 	@property({ type: Boolean })
