@@ -14,15 +14,10 @@ export default function ToolbarTemplate(this: Toolbar) {
 			aria-label={this.accInfo.root.accessibleName}
 		>
 			{this.standardItems.map(item => {
-				if ("styles" in item) {
-					return (
-						<div class="ui5-tb-item" id={item._individualSlot} style={item.styles as string}>
-							<slot name={item._individualSlot}></slot>
-						</div>
-					);
-				}
+				const selfOverflowClass = item.selfOverflowed ? "ui5-tb-self-overflow" : "";
+				const classes = `ui5-tb-item ${selfOverflowClass}`;
 				return (
-					<div class="ui5-tb-item" id={item._individualSlot}>
+					<div class={classes} id={item._individualSlot} style={item.flexBasis}>
 						<slot name={item._individualSlot}></slot>
 					</div>
 				);
@@ -56,15 +51,11 @@ export default function ToolbarTemplate(this: Toolbar) {
 				"ui5-overflow-list": true
 			}}>
 				{this.overflowItems.map(item => {
-					if (item.isSeparator) {
-						return (
-							<div class="ui5-tb-popover-item ui5-tb-separator ui5-tb-separator-in-overflow" id={item._individualSlot}>
-								<slot name={item._individualSlot}></slot>
-							</div>
-						);
-					}
+					const separatorClass = item.isSeparator ? "ui5-tb-separator ui5-tb-separator-in-overflow" : "";
+					const selfOverflowClass = item.selfOverflowed ? "ui5-tb-popover-self-overflow" : "";
+					const classes = `ui5-tb-popover-item ${separatorClass}  ${selfOverflowClass}`;
 					return (
-						<div class="ui5-tb-popover-item" id={item._individualSlot}>
+						<div class={classes} id={item._individualSlot}>
 							<slot name={item._individualSlot}></slot>
 						</div>
 					);
