@@ -85,6 +85,12 @@ class FormItem extends UI5Element implements IFormItem {
 	@property()
 	itemSpacing: `${FormItemSpacing}` = "Normal"
 
+	/**
+	 * @private
+	 */
+	@property()
+	editable = false;
+
 	get isGroup() {
 		return false;
 	}

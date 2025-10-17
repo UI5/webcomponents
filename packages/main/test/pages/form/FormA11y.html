@@ -46,36 +46,6 @@
 			});
 			oForm1.placeAt("sapui5content1");
 
-			var oLayout1Editable = new sap.ui.layout.form.ColumnLayout("LEditable");
-			var oForm1Editable = new sap.ui.layout.form.Form("FEditable",{
-				title: "SAPUI5 :: Adress 2",
-				editable: true,
-				layout: oLayout1Editable,
-				formContainers: [
-					new sap.ui.layout.form.FormContainer("CEditable",{
-						formElements: [
-							new sap.ui.layout.form.FormElement({
-								label: new sap.m.Label({text:"Name"}),
-								fields: [new sap.m.Text({text: "Red Point Stores"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "ZIP Code/City",
-								fields: [new sap.m.Text({text: "411 Maintown"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: new sap.m.Label({text:"Street"}),
-								fields: [new sap.m.Text({text: "Main St 1618"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "Country",
-								fields: [new sap.m.Text({text: "Germany"})]
-							}),
-						]
-					})
-				]
-			});
-			oForm1Editable.placeAt("sapui5content11");
-
 			var oLayout2 = new sap.ui.layout.form.ColumnLayout("L2", {
 				columnsM: 2,
 				columnsL: 3,
@@ -190,48 +160,6 @@
 			});
 			oForm3.placeAt("sapui5content3");
 
-
-			var oLayout4 = new sap.ui.layout.form.ColumnLayout("L4");
-			var oForm4 = new sap.ui.layout.form.Form("F4",{
-				title: "SAPUI5 :: Edit 2 :: editable false",
-				editable: false,
-				layout: oLayout4,
-				formContainers: [
-					new sap.ui.layout.form.FormContainer("C4",{
-						formElements: [
-							new sap.ui.layout.form.FormElement({
-								label: new sap.m.Label({text:"Name"}),
-								fields: [new sap.m.Input({value: "Red Point Stores"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "ZIP Code/City",
-								fields: [new sap.m.Input({value: "411"}), new sap.m.Input({value: "Maintown"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: new sap.m.Label({text:"Street"}),
-								fields: [new sap.m.Input({value: "Main St", layoutData: new sap.ui.layout.form.ColumnElementData({cellsSmall: 6, cellsLarge: 2})}), new sap.m.Input({value: "1618"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "Country",
-								fields: [new sap.m.Select({selectedKey: "DE",
-									items: [new sap.ui.core.ListItem({key: "GB", text: "England"}),
-													new sap.ui.core.ListItem({key: "US", text: "USA"}),
-													new sap.ui.core.ListItem({key: "DE", text: "Germany"})]
-								})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "WebSite",
-								fields: [new sap.m.Input({value: "sap.com"})]
-							}),
-							new sap.ui.layout.form.FormElement({
-								label: "Delivery address",
-								fields: [new sap.m.Input({value: "Newtown"})]
-							}),
-						]
-					})
-				]
-			});
-			oForm4.placeAt("sapui5content4");
         });
     </script>
 </head>
@@ -267,33 +195,6 @@
 		</section>
 		
 		<section id='sapui5content1'></section>
-		<br><br><br>
-
-		<section>
-			<ui5-form class="addressForm" header-text="WebC :: Address 2" item-spacing="Large">
-				<ui5-form-item>
-					<ui5-label id="lblName" slot="labelContent">Name:</ui5-label>
-					<ui5-text aria-labelledby="lblName">Red Point Stores</ui5-text>
-				</ui5-form-item>
-				
-				<ui5-form-item>
-					<ui5-label id="lblCity" slot="labelContent">ZIP Code/City:</ui5-label>
-					<ui5-text aria-labelledby="lblCity">411 Maintown</ui5-text>
-				</ui5-form-item>
-				
-				<ui5-form-item>
-					<ui5-label id="lblStreet" slot="labelContent">Street:</ui5-label>
-					<ui5-text aria-labelledby="lblStreet">Main St 1618</ui5-text>
-				</ui5-form-item>
-
-				<ui5-form-item>
-					<ui5-label id="lblCountry" slot="labelContent">Country:</ui5-label>
-					<ui5-text aria-labelledby="lblCountry">Germany</ui5-text>
-				</ui5-form-item>
-			</ui5-form>
-		</section>
-
-		<section id='sapui5content11'></section>
 		<br><br><br>
 
 		<section>
@@ -370,7 +271,7 @@
 		<br><br><br>
 
 		<section>
-			<ui5-form class="addressForm" header-text="WebC :: Edit" item-spacing="Normal">
+			<ui5-form class="addressForm" header-text="WebC :: Edit" item-spacing="Normal" editable>
 				<ui5-form-item>
 					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
 					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
@@ -412,47 +313,6 @@
 		<section id='sapui5content3'></section>
 		<br><br><br>
 
-		<section>
-			<ui5-form class="addressForm" header-text="WebC :: Edit 2 :: item-spacing Large" item-spacing="Large">
-				<ui5-form-item>
-					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
-					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
-				</ui5-form-item>
-				
-				<ui5-form-item>
-					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
-					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
-					<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
-				</ui5-form-item>
-
-				<ui5-form-item>
-					<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
-					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
-					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
-				</ui5-form-item>
-				
-				<ui5-form-item>
-					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
-					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
-						<ui5-option>Australia</ui5-option>
-						<ui5-option selected>Germany</ui5-option>
-						<ui5-option>England</ui5-option>
-					</ui5-select>
-				</ui5-form-item>
-
-				<ui5-form-item>
-					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
-					<ui5-input value="sap.com" id="wsInp"></ui5-input>
-				</ui5-form-item>
-
-				<ui5-form-item>
-					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
-					<ui5-input value="Newtown" id="delInp"></ui5-input>
-				</ui5-form-item>
-			</ui5-form>
-		</section>
-
-		<section id='sapui5content4'></section>
 		<br><br><br>
 	</section>
 

@@ -49,6 +49,7 @@ interface IFormItem extends UI5Element {
 	columnSpan?: number;
 	headerText?: string;
 	headerLevel?: `${TitleLevel}`;
+	editable?: boolean;
 }
 
 type GroupItemsInfo = {
@@ -308,15 +309,31 @@ class Form extends UI5Element {
 	/**
 	 * Defines the vertical spacing between form items.
 	 *
-	 * **Note:** If the Form is meant to be switched between "non-edit" and "edit" modes,
-	 * we recommend using "Large" item spacing in "non-edit" mode, and "Normal" - for "edit" mode,
-	 * to avoid "jumping" effect, caused by the hight difference between texts in "non-edit" mode and the input fields in "edit" mode.
+	 * **Note:** If the Form is meant to be switched between "display"("non-edit") and "edit" modes,
+	 * we recommend using "Large" item spacing in "display"("non-edit") mode, and "Normal" - for "edit" mode,
+	 * to avoid "jumping" effect, caused by the hight difference between texts in "display"("non-edit") mode and the input fields in "edit" mode.
 	 *
 	 * @default "Normal"
 	 * @public
 	 */
 	@property()
 	itemSpacing: `${FormItemSpacing}` = "Normal";
+
+	/**
+	 * Defines the accessibility state of the component in "edit" and "display" use-cases.
+	 *
+	 * **Note:** The property does not have visual appearance, does not switch between text and input fields.
+	 * It is used to inform assistive technologies, whether the form is in "edit" mode or in "display" mode.
+	 * - Set this property to "false", when you use the form in "display" mode,
+	 * e.g. all form items are non-editable (e.g. texts).
+	 * - Set this property to "true", when you use the form in "edit" mode,
+	 * e.g. all form items are editable (e.g. input fields).
+	 *
+	 * @default "Normal"
+	 * @public
+	 */
+	@property({ type: Boolean })
+	editable = false;
 
 	/**
 	 * Defines the component header area.
@@ -387,7 +404,7 @@ class Form extends UI5Element {
 		this.setGroupsColSpan();
 
 		// Set item spacing
-		this.setItemSpacing();
+		this.setItemsState();
 	}
 
 	onAfterRendering() {
@@ -535,9 +552,10 @@ class Form extends UI5Element {
 		return index === 0 ? MIN_COL_SPAN + (delta - groups) + 1 : MIN_COL_SPAN + 1;
 	}
 
-	setItemSpacing() {
+	setItemsState() {
 		this.items.forEach((item: IFormItem) => {
 			item.itemSpacing = this.itemSpacing;
+			item.editable = this.editable;
 		});
 	}
 
@@ -605,12 +623,12 @@ class Form extends UI5Element {
 
 			return {
 				groupItem,
-				accessibleName: this.itemSpacing === "Large" ?(groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
-				accessibleNameInner: this.itemSpacing === "Large" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
-				accessibleNameRef: this.itemSpacing === "Large" ? accessibleNameRef : undefined,
-				accessibleNameRefInner: this.itemSpacing === "Large" ? undefined : accessibleNameRef,
+				accessibleName: this.editable ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.editable ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: this.editable ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.editable ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
-				role: this.itemSpacing === "Large" ? "form" : undefined,
+				role: this.editable ? "form" : undefined,
 			};
 		});
 	}

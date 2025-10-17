@@ -5,7 +5,7 @@ export default function FormItemTemplate(this: FormItem) {
 	return (
 		<div class="ui5-form-item-root">
 			<div class="ui5-form-item-layout" part="layout">
-				{ this.itemSpacing === "Large" ? content.call(this) : contentAsDefinitionList.call(this) }
+				{ this.editable ? content.call(this) : contentAsDefinitionList.call(this) }
 			</div>
 		</div>
 	);
