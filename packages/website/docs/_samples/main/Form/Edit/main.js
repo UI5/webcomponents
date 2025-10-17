@@ -32,8 +32,8 @@ swEditable.addEventListener("selection-change", function () {
 	// set itemSpacing Normal/Large to avoid jumping when switching from texts to inputs.
 	editableForm.itemSpacing =  editable ? "Normal" : "Large";
 
-	// set editable true/false to inform assistive technologies for the best screen reader experience
-	editableForm.editable = editable;
+	// set accessibilityMode Edit/Display for best screen reader experience
+	editableForm.accessibilityMode =  editable ? "Edit" : "Display";
 });
 
 const displayTemplate = `

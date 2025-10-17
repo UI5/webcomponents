@@ -6,6 +6,9 @@ import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsSco
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+
 // Template
 import FormTemplate from "./FormTemplate.js";
 
@@ -13,12 +16,11 @@ import FormTemplate from "./FormTemplate.js";
 import FormCss from "./generated/themes/Form.css.js";
 
 import type FormItemSpacing from "./types/FormItemSpacing.js";
+import type FormAccessibilityMode from "./types/FormAccessibilityMode.js";
 import type FormGroup from "./FormGroup.js";
 import type TitleLevel from "./types/TitleLevel.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 import { FORM_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
-import type { AriaRole } from "@ui5/webcomponents-base";
 
 const additionalStylesMap = new Map<string, string>();
 
@@ -49,7 +51,7 @@ interface IFormItem extends UI5Element {
 	columnSpan?: number;
 	headerText?: string;
 	headerLevel?: `${TitleLevel}`;
-	editable?: boolean;
+	accessibilityMode?: `${FormAccessibilityMode}`;
 }
 
 type GroupItemsInfo = {
@@ -229,7 +231,7 @@ class Form extends UI5Element {
 	accessibleName?: string;
 
 	/**
-	 * Defines id(or many ids) of the element (or elements) that label the component.
+	 * Defines id (or many ids) of the element (or elements) that label the component.
 	 * @default undefined
 	 * @public
 	 * @since 2.16.0
@@ -320,25 +322,21 @@ class Form extends UI5Element {
 	itemSpacing: `${FormItemSpacing}` = "Normal";
 
 	/**
-	 * Defines the accessibility state of the component in "edit" and "display" use-cases
-	 * without a visual impact.
+	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
 	 *
-	 * **Note:** The property does not have visual impact, it does not switch between text and input fields.
-	 * It is meant to inform assistive technologies, whether the form is in "edit" mode or in "display" mode
-	 * to get the best possible screen reader experience.
+	 * Based on the mode, the component renders different HTML elements and ARIA attributes,
+	 * which are appropriate for the use-case.
 	 *
 	 * **Usage:**
-	 * - Set this property to "false", when you use the form in "display" mode,
-	 * e.g. all form items are non-editable (e.g. texts).
-	 * - Set this property to "true", when you use the form in "edit" mode,
-	 * e.g. all form items are editable (e.g. input fields).
+	 * - Set this property to "Display", when the form consists of non-editable (e.g. texts) form items.
+	 * - Set this property to "Edit", when the form consists of editable (e.g. input fields) form items.
 	 *
-	 * @default false
+	 * @default "Display"
 	 * @since 2.16.0
 	 * @public
 	 */
-	@property({ type: Boolean })
-	editable = false;
+	@property()
+	accessibilityMode: `${FormAccessibilityMode}` = "Display";
 
 	/**
 	 * Defines the component header area.
@@ -560,7 +558,7 @@ class Form extends UI5Element {
 	setItemsState() {
 		this.items.forEach((item: IFormItem) => {
 			item.itemSpacing = this.itemSpacing;
-			item.editable = this.editable;
+			item.accessibilityMode = this.accessibilityMode;
 		});
 	}
 
@@ -628,12 +626,12 @@ class Form extends UI5Element {
 
 			return {
 				groupItem,
-				accessibleName: this.editable ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
-				accessibleNameInner: this.editable ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
-				accessibleNameRef: this.editable ? accessibleNameRef : undefined,
-				accessibleNameRefInner: this.editable ? undefined : accessibleNameRef,
+				accessibleName: this.accessibilityMode === "Edit" ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.accessibilityMode === "Edit" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: this.accessibilityMode === "Edit" ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.accessibilityMode === "Edit" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
-				role: this.editable ? "form" : undefined,
+				role: this.accessibilityMode === "Edit" ? "form" : undefined,
 			};
 		});
 	}
