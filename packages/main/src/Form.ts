@@ -18,6 +18,7 @@ import type TitleLevel from "./types/TitleLevel.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 import { FORM_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
 
 const additionalStylesMap = new Map<string, string>();
 
@@ -53,7 +54,9 @@ interface IFormItem extends UI5Element {
 type GroupItemsInfo = {
 	groupItem: IFormItem,
 	items: Array<ItemsInfo>,
-	accessibleNameRef: string | undefined
+	accessibleNameRef: string | undefined,
+	accessibleNameRefInner: string | undefined,
+	role: AriaRole | undefined,
 }
 
 type ItemsInfo = {
@@ -596,10 +599,14 @@ class Form extends UI5Element {
 				}
 			});
 
+			const accessibleNameRef = (groupItem as FormGroup).headerText ? `${groupItem._id}-group-header-text` : undefined;
+
 			return {
 				groupItem,
-				accessibleNameRef: (groupItem as FormGroup).headerText ? `${groupItem._id}-group-header-text` : undefined,
+				accessibleNameRef: this.itemSpacing === "Large" ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.itemSpacing === "Large" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
+				role: this.itemSpacing === "Large" ? "form" : undefined,
 			};
 		});
 	}

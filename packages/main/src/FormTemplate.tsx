@@ -1,6 +1,5 @@
 import type Form from "./Form.js";
 import Title from "./Title.js";
-import type { IFormItem } from "./Form.js";
 
 export default function FormTemplate(this: Form) {
 	return (
@@ -39,9 +38,9 @@ function groupedItemsLayout(this: Form) {
 				}}
 				part="column"
 			>
-				<div class="ui5-form-group" 
-					role={this.itemSpacing === "Large" ? "form" : undefined}
-					aria-labelledby={this.itemSpacing === "Large" ? groupItemInfo.accessibleNameRef : undefined}
+				<div class="ui5-form-group"
+					role={groupItemInfo.role}
+					aria-labelledby={groupItemInfo.accessibleNameRef}
 				>
 					{ groupItem.headerText &&
 						<div class="ui5-form-group-heading">
@@ -53,7 +52,7 @@ function groupedItemsLayout(this: Form) {
 							<slot name={groupItem._individualSlot}></slot>
 						</div>
 						:
-						<dl class="ui5-form-group-layout" aria-labelledby={groupItemInfo.accessibleNameRef}>
+						<dl class="ui5-form-group-layout" aria-labelledby={groupItemInfo.accessibleNameRefInner}>
 							<slot name={groupItem._individualSlot}></slot>
 						</dl>
 					}
@@ -62,7 +61,6 @@ function groupedItemsLayout(this: Form) {
 		})}
 	</div>;
 }
-
 
 function standaloneItemsLayout(this: Form) {
 	return (
