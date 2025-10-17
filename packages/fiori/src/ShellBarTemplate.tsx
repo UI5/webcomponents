@@ -206,24 +206,14 @@ export default function ShellBarTemplate(this: ShellBar) {
 									)}
 								</Button>
 							)}
-							{this.customItemsInfo.map(item => (
-								<Button
-									key={item.id}
-									id={item.id}
-									class={`${item.classes} ui5-shellbar-items-for-arrow-nav`}
-									icon={item.icon}
-									tooltip={item.tooltip}
-									data-ui5-notifications-count={this.notificationsCount}
-									data-ui5-external-action-item-id={item.refItemid}
-									data-ui5-stable={item.icon && !this.isIconHidden(item.icon) ? item.stableDomRef : undefined}
-									onClick={item.press}
-									accessibilityAttributes={item.accessibilityAttributes}
-								>
-									{item.count && (
-										<ButtonBadge slot="badge" design="OverlayText" text={item.count} />
-									)}
-								</Button>
-							))}
+
+							{this.items.map(item => <>
+								{/* wrap in a div element that will always be rendered, we always measure the wrappers as actual items might be in the popover */}
+								<div id={(item as any)._individualSlot} class="ui5-shellbar-item">
+									{!item.isOverflowing && <slot name={(item as any)._individualSlot}></slot>}
+								</div>
+							</>)}
+
 						</div>
 					</div>
 				</div>

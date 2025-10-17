@@ -1,7 +1,8 @@
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
-import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
+// import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBar from "./ShellBar.js";
+import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 
 export default function PopoversTemplate(this: ShellBar) {
 	return (
@@ -27,6 +28,8 @@ export default function PopoversTemplate(this: ShellBar) {
 				onClose={this._overflowPopoverAfterClose}
 			>
 				<List separators="None" onItemClick={this._handleActionListClick}>
+					{this.items.filter(item => item.isOverflowing).map(item => <slot name={(item as any)._individualSlot}></slot>)}
+
 					{this._hiddenIcons.map((icon, index) => (
 						<ListItemStandard
 							key={index}
