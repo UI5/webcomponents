@@ -20,12 +20,12 @@ export default function FormTemplate(this: Form) {
 				</div>
 			}
 
-			{ this.hasGroupItems ? groupLayout.call(this) : layout.call(this) }
+			{ this.hasGroupItems ? groupedItemsLayout.call(this) : standaloneItemsLayout.call(this) }
 		</div>
 	);
 }
 
-function groupLayout(this: Form) {
+function groupedItemsLayout(this: Form) {
 	return <div class="ui5-form-layout" part="layout">
 		{ this.groupItemsInfo.map(groupItemInfo => {
 			const groupItem = groupItemInfo.groupItem;
@@ -39,48 +39,45 @@ function groupLayout(this: Form) {
 				}}
 				part="column"
 			>
-				{ this.itemSpacing === "Large" ?
-					<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
-						{ groupLayoutContent.call(this, groupItem) }
-					</div>
-					:
-					<dl class="ui5-form-group" aria-labelledby={groupItemInfo.accessibleNameRef}>
-						{ groupLayoutContent.call(this, groupItem) }
-					</dl>
-				}
+				<div class="ui5-form-group" 
+					role={this.itemSpacing === "Large" ? "form" : undefined}
+					aria-labelledby={this.itemSpacing === "Large" ? groupItemInfo.accessibleNameRef : undefined}
+				>
+					{ groupItem.headerText &&
+						<div class="ui5-form-group-heading">
+							<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
+						</div>
+					}
+					{ this.itemSpacing === "Large" ?
+						<div class="ui5-form-group-layout">
+							<slot name={groupItem._individualSlot}></slot>
+						</div>
+						:
+						<dl class="ui5-form-group-layout" aria-labelledby={groupItemInfo.accessibleNameRef}>
+							<slot name={groupItem._individualSlot}></slot>
+						</dl>
+					}
+				</div>
 			</div>;
 		})}
 	</div>;
 }
 
-function groupLayoutContent(this: Form, groupItem: IFormItem) {
-	return <>
-		{ groupItem.headerText &&
-			<div class="ui5-form-group-heading">
-				<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
-			</div>
-		}
 
-		<div class="ui5-form-group-layout">
-			<slot name={groupItem._individualSlot}></slot>
-		</div>
-	</>;
-}
-
-function layout(this: Form) {
+function standaloneItemsLayout(this: Form) {
 	return (
 		this.itemSpacing === "Large" ?
 			<div class="ui5-form-layout" part="layout">
-				{ layoutContent.call(this) }
+				{ standaloneItemsLayoutContent.call(this) }
 			</div>
 			:
 			<dl class="ui5-form-layout" part="layout">
-				{ layoutContent.call(this) }
+				{ standaloneItemsLayoutContent.call(this) }
 			</dl>
 	);
 }
 
-function layoutContent(this: Form) {
+function standaloneItemsLayoutContent(this: Form) {
 	return this.itemsInfo.map(itemInfo => {
 		const item = itemInfo.item;
 		return (

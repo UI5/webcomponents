@@ -724,9 +724,9 @@ describe("Accessibility", () => {
 
 		cy.get("@form")
 			.shadow()
-			.find(".ui5-form-group")
+			.find(".ui5-form-group-layout")
 			.eq(0)
-			.as("firstGroupDOMRef");
+			.as("firstGroupDefinitionList");
 
 		cy.get("@form")
 			.shadow()
@@ -740,11 +740,11 @@ describe("Accessibility", () => {
 		cy.get("@formGroup")
 			.should("have.attr", "data-sap-ui-fastnavgroup", "true");
 
-		cy.get("@firstGroupDOMRef")
-			.should("have.attr", "role", "form");
+		cy.get("@firstGroupDefinitionList")
+			.should("not.have.attr", "role", "form");
 
 		// assert: the form group's aria-labelledby is equal to the form group title's ID
-		cy.get("@firstGroupDOMRef")
+		cy.get("@firstGroupDefinitionList")
 			.invoke("attr", "aria-labelledby")
 			.then(ariaLabelledBy => {
 				cy.get("@firstGroupTitle")
