@@ -41,6 +41,7 @@ function groupedItemsLayout(this: Form) {
 				<div class="ui5-form-group"
 					role={groupItemInfo.role}
 					aria-labelledby={groupItemInfo.accessibleNameRef}
+					aria-label={groupItemInfo.accessibleName}
 				>
 					{ groupItem.headerText &&
 						<div class="ui5-form-group-heading">
@@ -52,7 +53,7 @@ function groupedItemsLayout(this: Form) {
 							<slot name={groupItem._individualSlot}></slot>
 						</div>
 						:
-						<dl class="ui5-form-group-layout" aria-labelledby={groupItemInfo.accessibleNameRefInner}>
+						<dl class="ui5-form-group-layout" aria-labelledby={groupItemInfo.accessibleNameRefInner} aria-label={groupItemInfo.accessibleNameInner}>
 							<slot name={groupItem._individualSlot}></slot>
 						</dl>
 					}

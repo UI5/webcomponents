@@ -54,6 +54,8 @@ interface IFormItem extends UI5Element {
 type GroupItemsInfo = {
 	groupItem: IFormItem,
 	items: Array<ItemsInfo>,
+	accessibleName: string | undefined,
+	accessibleNameInner: string | undefined,
 	accessibleNameRef: string | undefined,
 	accessibleNameRefInner: string | undefined,
 	role: AriaRole | undefined,
@@ -576,7 +578,7 @@ class Form extends UI5Element {
 	}
 
 	get groupItemsInfo(): Array<GroupItemsInfo> {
-		return this.items.map((groupItem: IFormItem) => {
+		return this.items.map((groupItem: IFormItem, index: number) => {
 			const items = this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>));
 			breakpoints.forEach(breakpoint => {
 				const cols = ((groupItem[`cols${breakpoint}` as keyof IFormItem]) as number || 1);
@@ -599,10 +601,12 @@ class Form extends UI5Element {
 				}
 			});
 
-			const accessibleNameRef = (groupItem as FormGroup).headerText ? `${groupItem._id}-group-header-text` : undefined;
+			const accessibleNameRef = (groupItem as FormGroup).effectiveAccessibleNameRef;
 
 			return {
 				groupItem,
+				accessibleName: this.itemSpacing === "Large" ?(groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.itemSpacing === "Large" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
 				accessibleNameRef: this.itemSpacing === "Large" ? accessibleNameRef : undefined,
 				accessibleNameRefInner: this.itemSpacing === "Large" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
