@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "data-store";
+const pathData = "M269 511q-42 0-83-6t-74-18.5-53.5-32T38 409q0-11 7.5-18t18.5-7 18 7 7 18-7 18.5-18 7.5-18.5-7.5T38 409V102q0-11 7.5-18T64 77t18 7 7 18v67q-23-12-37-28.5T38 102q0-26 20.5-45.5t53.5-32T186 6t83-6q23 0 61.5 3.5t76 14.5 65 31 27.5 53v307q0 33-27.5 53t-65 31-76 14.5T269 511zm0-460q-45 0-78.5 6t-56 14-34 16.5T89 102t11.5 14.5 34 16.5 56 14 78.5 6q44 0 77.5-6t56-14 34-16.5T448 102t-11.5-14.5-34-16.5-56-14-77.5-6zm0 256q-50 0-98-8.5T89 272v35q0 6 11.5 14.5t34 16.5 56 14 78.5 6q44 0 77.5-6t56-14 34-16.5T448 307v-35q-34 18-82 26.5t-97 8.5zm0 102q-50 0-98-8.5T89 374v35q0 6 11.5 14.5t34 17 56 14T269 460q44 0 77.5-5.5t56-14 34-17T448 409v-35q-34 18-82 26.5t-97 8.5zm0-204q-50 0-98-9t-82-27v36q0 6 11.5 14.5t34 16.5 56 14 78.5 6q44 0 77.5-6t56-14 34-16.5T448 205v-36q-34 18-82 27t-97 9z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/data-store";
+export { pathData, ltr, accData };

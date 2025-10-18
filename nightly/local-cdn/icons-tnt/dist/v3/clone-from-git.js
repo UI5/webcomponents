@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "clone-from-git";
+const pathData = "M256.5 422q0-16-12-27t-27-11-25 10q-13 11-13 28 0 16 11 27.5t27 11.5 27.5-11.5 11.5-27.5zm-1-315q0-3 1-4v-4q0-14-11-25t-25-11q-4 0-4 1-16 1-26 11t-11 25v2q0 17 13 28 9 10 25 10h2q7 0 13-2.5t11-6.5q12-12 12-24zm128 199q16 0 27.5-11t11.5-27-11.5-27-27.5-11h-2q-14 1-24.5 11t-11.5 25v2q0 16 11 27t27 11zm0-128q38 0 64 26.5t26 63.5q0 38-26 64t-64 26q-18 0-34.5-7t-28.5-19.5-19-29-7-35.5q0-23 10-42l-44-44q-8 4-17 7v148q28 8 46 32t18 54q0 38-26 64t-64 26q-37 0-63-26t-26-64q0-30 18-54t46-32V188q-28-8-46-32t-18-56q0-22 10-41l-15-15q-8-8-8-18t8-18 18-8 18 8l15 15q20-11 43-11 38 0 64 26t26 64q0 23-11 43l45 44q19-11 42-11z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/clone-from-git";
+export { pathData, ltr, accData };

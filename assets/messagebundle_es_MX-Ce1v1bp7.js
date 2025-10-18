@@ -1,0 +1,1 @@
+const e="Quedan {0} caracteres",E="{0} caracteres por encima del límite",T={PROMPT_INPUT_CHARACTERS_LEFT:e,PROMPT_INPUT_CHARACTERS_EXCEEDED:E};export{E as PROMPT_INPUT_CHARACTERS_EXCEEDED,e as PROMPT_INPUT_CHARACTERS_LEFT,T as default};
