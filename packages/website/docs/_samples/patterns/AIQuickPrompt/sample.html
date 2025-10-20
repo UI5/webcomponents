@@ -30,7 +30,9 @@
 					<ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
 				</ui5-ai-button>
 			</div>
-			<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+				<ui5-busy-indicator class="quickPromptBusyIndicator" id="quickPromptBusyIndicator">
+				<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+
 		</section>
 		<div class="quickPromptCardFooter">
 			<ui5-button id="footerBtnSend" design="Emphasized">Send</ui5-button>
