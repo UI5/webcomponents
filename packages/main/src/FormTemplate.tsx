@@ -36,7 +36,7 @@ export default function FormTemplate(this: Form) {
 										}}
 										part="column"
 										>
-											<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
+											<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef} aria-label={groupItemInfo.accessibleName}>
 												{groupItem.headerText &&
 												<div class="ui5-form-group-heading">
 													<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
