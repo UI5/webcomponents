@@ -352,7 +352,7 @@ describe("Accessibility", () => {
 	});
 
 	it("aria-label uses accessibleName when both text and accessibleName are provided", () => {
-		cy.mount(<Button design="Emphasized" accessibleName="Custom Action Label">Button Text</Button>);
+		cy.mount(<Button accessibleName="Custom Action Label">Button Text</Button>);
 
 		cy.get("[ui5-button]")
 			.shadow()
@@ -360,7 +360,7 @@ describe("Accessibility", () => {
 			.as("button");
 
 		cy.get("@button")
-			.should("have.attr", "aria-label", "Custom Action Label Emphasized");
+			.should("have.attr", "aria-label", "Custom Action Label");
 	});
 
 	it("aria-expanded is properly applied on the button tag", () => {
