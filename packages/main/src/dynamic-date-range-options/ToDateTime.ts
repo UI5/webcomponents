@@ -41,7 +41,7 @@ class ToDateTime implements IDynamicDateRangeOption {
 		return returnValue;
 	}
 
-	format(value: DynamicDateRangeValue) {
+	format(value: DynamicDateRangeValue): string {
 		const valuesArray = value?.values as Array<Date>;
 
 		if (!valuesArray || valuesArray.length === 0) {
