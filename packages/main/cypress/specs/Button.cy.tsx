@@ -345,11 +345,14 @@ describe("Accessibility", () => {
 			.as("button");
 			
 		cy.get("@button")
-			.should("have.attr", "aria-label", "Action Emphasized");
+			.should("have.attr", "aria-label", "Action");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", "Emphasized");
 	});
 
 	it("aria-label uses accessibleName when both text and accessibleName are provided", () => {
-		cy.mount(<Button design="Emphasized" accessibleName="Custom Action Label">Button Text</Button>);
+		cy.mount(<Button accessibleName="Custom Action Label">Button Text</Button>);
 
 		cy.get("[ui5-button]")
 			.shadow()
@@ -357,7 +360,7 @@ describe("Accessibility", () => {
 			.as("button");
 
 		cy.get("@button")
-			.should("have.attr", "aria-label", "Custom Action Label Emphasized");
+			.should("have.attr", "aria-label", "Custom Action Label");
 	});
 
 	it("aria-expanded is properly applied on the button tag", () => {
@@ -424,7 +427,7 @@ describe("Accessibility", () => {
 			.as("button");
 
 		cy.get("@button")
-			.should("have.attr", "aria-description", "Decline");
+			.should("have.attr", "aria-description", "Decline Negative Action");
 	});
 
 
@@ -455,7 +458,10 @@ describe("Accessibility", () => {
 			.as("button");
 
 		cy.get("@button")
-			.should("have.attr", "aria-label", `Download ${BUTTON_ARIA_TYPE_EMPHASIZED.defaultText} 1 item`);
+			.should("have.attr", "aria-label", `Download 1 item`);
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", BUTTON_ARIA_TYPE_EMPHASIZED.defaultText);
 	});
 
 	it("setting accessible-name-ref on the host is reflected on the button tag", () => {
