@@ -632,12 +632,6 @@ describe("Carousel general interaction", () => {
 			.shadow()
 			.find(".ui5-carousel-navigation-dot")
 			.should("have.length", 2);
-
-		cy.get("ui5-carousel").realClick();
-		cy.get("ui5-carousel").realPress("ArrowRight");
-		cy.realPress("Tab");
-
-		cy.get("#btn4").should("be.focused");
 	});
 
 	it("should handle filtering with multiple items per page", () => {

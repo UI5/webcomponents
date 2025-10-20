@@ -326,7 +326,7 @@ class Carousel extends UI5Element {
 
 		this._contentItemsObserver = new MutationObserver(() => {
 			this._currentSlideIndex = clamp(this._currentSlideIndex, 0, Math.max(0, this.items.length - this.effectiveItemsPerPage));
-			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - this.effectiveItemsPerPage);
+			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - 1);
 			this._contentUpdateTrigger = !this._contentUpdateTrigger;
 			this._moveToItem(this._currentSlideIndex);
 		});
