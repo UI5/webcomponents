@@ -861,7 +861,10 @@
 		</ui5-card>
 	</ui5-carousel>
 
-	<ui5-carousel arrows-placement="Navigation" page-indicator-type="Numeric">
+	<ui5-button id="hideLastCarouselBtn" design="Negative">Hide Last Item</ui5-button>
+	<ui5-button id="addItem" >add Item</ui5-button>
+	
+	<ui5-carousel id="lastCarousel" arrows-placement="Navigation" page-indicator-type="Numeric">
 		<ui5-card class="myCard">
 			<ui5-card-header slot="header" status="1 of 4" title-text="Visible Card 1"
 				subtitle-text="This card is visible" interactive>
@@ -920,6 +923,36 @@
 
 	carousel9.addEventListener("ui5-navigate", function (event) {
 		visibleItems.value = carousel9.visibleItemsIndices;
+	});
+
+	var hideLastCarouselBtn = document.getElementById("hideLastCarouselBtn");
+	var lastCarousel = document.getElementById("lastCarousel");
+
+	hideLastCarouselBtn.addEventListener("click", function() {
+		var cards = lastCarousel.querySelectorAll("ui5-card");
+		var lastCard = cards[cards.length - 1]; 
+		
+		if (lastCard.hasAttribute("hidden")) {
+			lastCard.removeAttribute("hidden");
+			hideLastCarouselBtn.textContent = "Hide Item";
+		} else {
+			lastCard.setAttribute("hidden", "");
+			hideLastCarouselBtn.textContent = "Show Item";
+		}
+	});
+
+	var addItemBtn = document.getElementById("addItem");
+	addItemBtn.addEventListener("click", function() {
+		var newCard = document.createElement("ui5-card");
+		newCard.className = "myCard";
+		var header = document.createElement("ui5-card-header");
+		header.setAttribute("slot", "header");
+		header.setAttribute("status", (lastCarousel.content.length + 1) + " of 5");
+		header.setAttribute("title-text", "New Card " + (lastCarousel.content.length + 1));
+		header.setAttribute("subtitle-text", "This is a new card");
+		header.setAttribute("interactive", "");
+		newCard.appendChild(header);	
+		lastCarousel.appendChild(newCard);
 	});
 
 </script>

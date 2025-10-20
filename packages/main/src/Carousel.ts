@@ -288,6 +288,13 @@ class Carousel extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_visibleNavigationArrows = false;
 
+	/**
+	 * Internal trigger flag that forces component re-rendering when content items change.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_contentUpdateTrigger = false;
+
 	_scrollEnablement: ScrollEnablement;
 	_onResizeBound: ResizeObserverCallback;
 	_resizing: boolean;
@@ -297,6 +304,8 @@ class Carousel extends UI5Element {
 	_pageStep: number = 10;
 	_visibleItemsIndexes: Array<number>;
 	_itemIndicator: number = 0;
+	_contentItemsObserver: MutationObserver;
+	_observableContent: Array<HTMLElement> = [];
 
 	/**
 	 * Defines the content of the component.
@@ -315,6 +324,13 @@ class Carousel extends UI5Element {
 	constructor() {
 		super();
 
+		this._contentItemsObserver = new MutationObserver(() => {
+			this._currentSlideIndex = clamp(this._currentSlideIndex, 0, Math.max(0, this.items.length - this.effectiveItemsPerPage));
+			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - this.effectiveItemsPerPage);
+			this._contentUpdateTrigger = !this._contentUpdateTrigger;
+			this._moveToItem(this._currentSlideIndex);
+		});
+
 		this._scrollEnablement = new ScrollEnablement(this);
 		this._scrollEnablement.attachEvent("touchend", e => {
 			this._updateScrolling(e);
@@ -328,6 +344,8 @@ class Carousel extends UI5Element {
 	}
 
 	onBeforeRendering() {
+		this._observeContentItems();
+
 		if (this.arrowsPlacement === CarouselArrowsPlacement.Navigation || !isDesktop()) {
 			this._visibleNavigationArrows = true;
 		}
@@ -348,6 +366,8 @@ class Carousel extends UI5Element {
 	}
 
 	onExitDOM() {
+		this._contentItemsObserver.disconnect();
+		this._observableContent = [];
 		ResizeHandler.deregister(this, this._onResizeBound);
 	}
 
@@ -485,6 +505,33 @@ class Carousel extends UI5Element {
 		} else if (this._lastInnerFocusedElement) {
 			this._lastInnerFocusedElement.focus();
 		}
+	}
+
+	_observeContentItems() {
+		if (this.hasMatchingContent) {
+			return;
+		}
+
+		this.content.forEach(item => {
+			if (!this._observableContent.includes(item)) {
+				this._contentItemsObserver.observe(item, {
+					characterData: false,
+					childList: false,
+					subtree: false,
+					attributes: true,
+				});
+			}
+		});
+		this._observableContent = this.content;
+	}
+
+	get hasMatchingContent() {
+		if (this._observableContent.length !== this.content.length) {
+			return false;
+		}
+
+		const observableContentSet = new WeakSet(this._observableContent);
+		return this.content.every(item => observableContentSet.has(item));
 	}
 
 	_handleHome(e: KeyboardEvent) {
@@ -673,6 +720,10 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number) {
+		if (!this.isIndexInRange(itemIndex)) {
+			return;
+		}
+
 		if (this._focusedItemIndex < itemIndex) {
 			this._itemIndicator = 1;
 		}
