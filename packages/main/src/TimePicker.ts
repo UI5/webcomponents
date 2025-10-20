@@ -22,6 +22,7 @@ import {
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js"; // default calendar for bundling
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import IconMode from "./types/IconMode.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import {
 	isShow,
@@ -456,6 +457,14 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	get shouldDisplayValueStateMessageInResponsivePopover() {
 		return this.hasValueStateText && !this._inputsPopover?.open;
+	}
+
+	/**
+	 * Defines whether the value help icon is hidden
+	 * @private
+	 */
+	get _iconMode() {
+		return isDesktop() ? IconMode.Decorative : IconMode.Interactive;
 	}
 
 	onTimeSelectionChange(e: CustomEvent<TimeSelectionChangeEventDetail>) {
