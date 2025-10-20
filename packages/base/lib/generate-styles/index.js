@@ -9,7 +9,12 @@ const generate = async () => {
 	const filesPromises = files.map(async file => {
 		let content = await fs.readFile(path.join("src/css/", file));
 		const res = new CleanCSS().minify(`${content}`);
-		content = `export default \`${res.styles.replaceAll("--sap", "--ui5-sap")}\`;`;
+
+		// Scope used variables
+		content = await processComponentPackageFile(res.styles);
+
+		content = `export default \`${content}\`;`;
+
 		return fs.writeFile(path.join("src/generated/css/", `${file}.ts`), content);
 	});
 

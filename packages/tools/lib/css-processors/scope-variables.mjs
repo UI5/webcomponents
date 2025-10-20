@@ -36,7 +36,7 @@ const getOverrideVersion = filePath => {
 	return overrideVersion;
 }
 
-const scopeVariables = (cssText, packageJSON, inputFile) => {
+const scopeUi5Variables = (cssText, packageJSON, inputFile) => {
 	const escapeVersion = version => "v" + version?.replaceAll(/[^0-9A-Za-z\-_]/g, "-");
 	const versionStr = escapeVersion(getOverrideVersion(inputFile) || packageJSON.version);
 	const expr = /(--_?ui5)([^\,\:\)\s]+)/g;
@@ -45,5 +45,12 @@ const scopeVariables = (cssText, packageJSON, inputFile) => {
 	return newText.replaceAll("--sap", `--ui5-sap`);
 }
 
-export default scopeVariables;
+const scopeThemingVariables = (cssText) => {
+	return cssText.replaceAll("--sap", `--ui5-sap`);
+}
+
+export {
+	scopeUi5Variables,
+	scopeThemingVariables,
+};
 
