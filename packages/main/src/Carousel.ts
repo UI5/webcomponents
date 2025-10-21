@@ -277,6 +277,14 @@ class Carousel extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_visibleNavigationArrows = false;
 
+	/**
+	 * Defines the current slide index, which contains the visible item in the viewport.
+	 * @private
+	 * @since 2.16.0-r.c1
+	 */
+	@property({ type: Number, noAttribute: true })
+	_currentSlideIndex: number = 0;
+
 	_scrollEnablement: ScrollEnablement;
 	_onResizeBound: ResizeObserverCallback;
 	_resizing: boolean;
@@ -286,7 +294,7 @@ class Carousel extends UI5Element {
 	_pageStep: number = 10;
 	_visibleItemsIndexes: Array<number>;
 	_itemIndicator: number = 0;
-	_currentSlideIndex: number = 0;
+
 
 	/**
 	 * Defines the content of the component.
