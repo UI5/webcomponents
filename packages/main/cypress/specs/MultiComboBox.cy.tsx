@@ -332,7 +332,7 @@ describe("General", () => {
 			.should("have.been.called");
 	});
 
-	it.only("Should delete token when clicking on token decline icon - regression test for long token deletion fix", () => {
+	it("Should delete token when clicking on token decline icon - regression test for long token deletion fix", () => {
 		cy.mount(
 			<MultiComboBox noValidation={true}>
 				<MultiComboBoxItem selected={true} text="This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable"></MultiComboBoxItem>
