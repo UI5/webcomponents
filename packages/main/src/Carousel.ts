@@ -295,7 +295,6 @@ class Carousel extends UI5Element {
 	_visibleItemsIndexes: Array<number>;
 	_itemIndicator: number = 0;
 
-
 	/**
 	 * Defines the content of the component.
 	 * @public
