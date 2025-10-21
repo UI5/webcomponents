@@ -6851,7 +6851,7 @@ __metadata:
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
@@ -6876,7 +6876,7 @@ __metadata:
     resolve: "npm:^1.20.0"
     touch: "npm:^3.1.0"
     typescript: "npm:^5.6.2"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
@@ -6894,7 +6894,7 @@ __metadata:
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
@@ -6914,7 +6914,7 @@ __metadata:
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
     lit: "npm:^2.0.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
     yarn: "npm:^1.22.22"
   languageName: unknown
   linkType: soft
@@ -7090,7 +7090,7 @@ __metadata:
     eslint: "npm:^7.22.0"
     jsdom: "npm:^26.0.0"
     lit: "npm:^2.0.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
     vitest: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
@@ -25833,9 +25833,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.8":
-  version: 5.4.8
-  resolution: "vite@npm:5.4.8"
+"vite@npm:5.4.21":
+  version: 5.4.21
+  resolution: "vite@npm:5.4.21"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -25872,7 +25872,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/af70af6d6316a3af71f44ebe3ab343bd66450d4157af73af3b32239e1b6ec43ff6f651d7cc4193b21ed3bff2e9356a3de9e96aee53857f39922e4a2d9fad75a1
+  checksum: 10c0/468336a1409f728b464160cbf02672e72271fb688d0e605e776b74a89d27e1029509eef3a3a6c755928d8011e474dbf234824d054d07960be5f23cd176bc72de
   languageName: node
   linkType: hard
 
