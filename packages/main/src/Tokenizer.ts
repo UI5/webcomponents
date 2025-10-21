@@ -461,7 +461,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			if (!target.toBeDeleted) {
 				this._addTokenToNavigation(target);
 				this._scrollToToken(target);
+				this._tokenDeleting	= false;
+
+				return;
 			}
+
+			this._scrollToEndOnExpand = false;
 		}
 	}
 
@@ -538,7 +543,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			return;
 		}
 
+		target.toBeDeleted = false;
+
 		this.deleteToken(target, e.detail.backSpace);
+		this._tokenDeleting = false;
 	}
 
 	_tokenClickDelete(e: CustomEvent<TokenDeleteEventDetail>, token: Token) {
@@ -945,6 +953,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_onfocusin(e: FocusEvent) {
+		const target = e.target as Token;
+
+		if (target && target.toBeDeleted) {
+			this._tokenDeleting = true;
+
+			return;
+		}
+
 		this.open = false;
 		this.expanded = true;
 		this._addTokenToNavigation(e.target as Token);
