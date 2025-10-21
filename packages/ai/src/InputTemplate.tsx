@@ -18,7 +18,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 	return (
 		<>
 			<div
-				class={`ui5-ai-input-root ui5-input-root ui5-input-focusable-element ${this.loading && "busy"}`}
+				class={`ui5-ai-input-root ui5-input-root ui5-input-focusable-element ${this.loading && "ui5-ai-input-busy"}`}
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
 			>
@@ -135,7 +135,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 					</BusyIndicator>
 					<div
 						 hidden={!this.isFocused || this.readonly}
-						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen || this.loading ? "ui5-input-icon-menu-open" : ""}`}
+						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen && "ui5-input-icon-menu-open"} ${this.loading && "ui5-ai-input-loading"}`}
 						 tabIndex={-1}
 						 title={ this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
 						 aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
