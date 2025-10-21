@@ -1290,7 +1290,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (isGroupItem) {
 			announce(`${groupHeaderText} ${currentItem.headerText}`, InvisibleMessageMode.Polite);
 		} else {
-			announce(`${currentItemAdditionalText} ${itemPositionText}`.trim(), InvisibleMessageMode.Polite);
+			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), InvisibleMessageMode.Polite);
 		}
 	}
 

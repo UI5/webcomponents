@@ -131,7 +131,7 @@ class TableHeaderCell extends TableCellBase {
 	@query("slot[name=action]")
 	_actionSlot!: HTMLSlotElement;
 
-	protected ariaRole: string = "columnheader";
+	ariaRole: string = "columnheader";
 	_popinWidth: number = 0;
 
 	onBeforeRendering() {
