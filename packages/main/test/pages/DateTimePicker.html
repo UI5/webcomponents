@@ -205,10 +205,10 @@
 		</section>
 
 	<script>
-		var counter = 0;
-		var btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
-		var formValidationMessage = document.getElementById('formValidationMessage');
-		var formDateRangePicker = document.getElementById('formDateTimePicker');
+		const counter = 0;
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDateRangePicker = document.getElementById('formDateTimePicker');
 
 		btnCheckFormValidity.addEventListener('click', function() {
 			checkFormValidity('formDateTimePicker');
@@ -242,13 +242,13 @@
 			event.preventDefault();
 		});
 
-		var counter2 = 0;
+		const counter2 = 0;
 		dt2.addEventListener("ui5-change", function(event) {
 			input3.value = `${++counter2}`;
 			input4.value = "{ value: " + dt2.value + " , valid: " + event.detail.valid + " }";
 		});
 
-		var dtp = document.getElementById('defaultPattern');
+		const dtp = document.getElementById('defaultPattern');
 		document.getElementById('setButton').addEventListener("click", function(e) {
 			dtp.setAttribute("value", dtp.formatValue(new Date(2020, 3, 13, 3, 16, 16)));
 		});
