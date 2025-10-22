@@ -134,7 +134,7 @@ class FormGroup extends UI5Element implements IFormItem {
 		return FormGroup.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, index + 1);
 	}
 
-	get effectiveАccessibleNameRef() {
+	get effectiveAccessibleNameRef() {
 		return this.headerText ? `${this._id}-group-header-text` : undefined;
 	}
 
