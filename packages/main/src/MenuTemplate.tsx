@@ -11,7 +11,7 @@ export default function MenuTemplate(this: Menu) {
 			id={`${this._id}-menu-rp`}
 			class="ui5-menu-rp"
 			placement="Bottom"
-			verticalAlign="Bottom"
+			verticalAlign={this.verticalAlign}
 			horizontalAlign={this.horizontalAlign}
 			opener={this.opener}
 			open={this.open}
