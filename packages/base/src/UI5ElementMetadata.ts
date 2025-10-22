@@ -22,7 +22,7 @@ type Property = {
 	type?: BooleanConstructor | StringConstructor | ObjectConstructor | NumberConstructor | ArrayConstructor,
 	noAttribute?: boolean,
 	converter?: {
-		fromAttribute(value: string | null, type: unknown): string | number | boolean | null | undefined,
+		fromAttribute(value: string | null, type: unknown): PropertyValue,
 		toAttribute(value: unknown, type: unknown): string | null,
 	}
 }

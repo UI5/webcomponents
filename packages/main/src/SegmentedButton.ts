@@ -30,6 +30,7 @@ import SegmentedButtonTemplate from "./SegmentedButtonTemplate.js";
 
 // Styles
 import SegmentedButtonCss from "./generated/themes/SegmentedButton.css.js";
+import SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 
 /**
  * Interface for components that may be slotted inside `ui5-segmented-button` as items
@@ -128,6 +129,18 @@ class SegmentedButton extends UI5Element {
 	selectionMode: `${SegmentedButtonSelectionMode}` = "Single";
 
 	/**
+     * Defines the content mode of the segmented button items.
+     *
+     * - "EqualSized": All items are sized equally to fill the available space.
+     * - "ContentFit": Each item is sized to fit its content, with any extra space placed after the last item.
+     *
+     * @default "EqualSized"
+     * @public
+     * @since 2.16.0
+     */
+	@property()
+	contentMode: `${SegmentedButtonContentMode}` = "EqualSized";
+	/**
 	 * Defines the items of `ui5-segmented-button`.
 	 *
 	 * **Note:** Multiple items are allowed.
@@ -171,7 +184,9 @@ class SegmentedButton extends UI5Element {
 
 		this.normalizeSelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		if (this.contentMode === SegmentedButtonContentMode.EqualSized) {
+			this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		}
 	}
 
 	normalizeSelection() {

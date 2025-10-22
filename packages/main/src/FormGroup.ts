@@ -1,4 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
@@ -7,6 +9,8 @@ import type FormItem from "./FormItem.js";
 import type { IFormItem } from "./Form.js";
 import type FormItemSpacing from "./types/FormItemSpacing.js";
 import type TitleLevel from "./types/TitleLevel.js";
+
+import { FORM_GROUP_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -69,6 +73,15 @@ class FormGroup extends UI5Element implements IFormItem {
 	columnSpan?: number;
 
 	/**
+	 * Defines the accessible ARIA name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the items of the component.
 	 * @public
 	 */
@@ -96,6 +109,9 @@ class FormGroup extends UI5Element implements IFormItem {
 	@property()
 	itemSpacing: `${FormItemSpacing}` = "Normal";
 
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
 	onBeforeRendering() {
 		this.processFormItems();
 	}
@@ -104,6 +120,22 @@ class FormGroup extends UI5Element implements IFormItem {
 		this.items.forEach((item: FormItem) => {
 			item.itemSpacing = this.itemSpacing;
 		});
+	}
+
+	getEffectiveAccessibleName(index: number) {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+
+		if (this.headerText) {
+			return undefined;
+		}
+
+		return FormGroup.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, index + 1);
+	}
+
+	get effectiveАccessibleNameRef() {
+		return this.headerText ? `${this._id}-group-header-text` : undefined;
 	}
 
 	get isGroup() {

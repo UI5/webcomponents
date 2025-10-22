@@ -7,7 +7,8 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import type { JsxTemplate } from "@ui5/webcomponents-base";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
+import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import { isF4, isShow } from "@ui5/webcomponents-base/dist/Keys.js";
 import DynamicDateRangeTemplate from "./DynamicDateRangeTemplate.js";
 import IconMode from "./types/IconMode.js";
@@ -75,9 +76,10 @@ interface IDynamicDateRangeOption {
 	format: (value: DynamicDateRangeValue) => string;
 	parse: (value: string) => DynamicDateRangeValue | undefined;
 	toDates: (value: DynamicDateRangeValue) => Array<Date>;
-	handleSelectionChange?: (event: CustomEvent) => DynamicDateRangeValue | undefined;
+	handleSelectionChange?: (event: CustomEvent, value: DynamicDateRangeValue | undefined) => DynamicDateRangeValue | undefined;
 	template?: JsxTemplate;
 	isValidString: (value: string) => boolean;
+	resetState?: () => void;
 }
 
 /**
@@ -104,6 +106,8 @@ interface IDynamicDateRangeOption {
  * - "TOMORROW" - Represents the next date. An example value is `{ operator: "TOMORROW"}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/Tomorrow.js";`
  * - "DATE" - Represents a single date. An example value is `{ operator: "DATE", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/SingleDate.js";`
  * - "DATERANGE" - Represents a range of dates. An example value is `{ operator: "DATERANGE", values: [new Date(), new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";`
+ * - "FROMDATETIME" - Represents a range from date and time. An example value is `{ operator: "FROMDATETIME", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/FromDateTime.js";`
+ * - "TODATETIME" - Represents a range to date and time. An example value is `{ operator: "TODATETIME", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/ToDateTime.js";`
  * - "LASTDAYS" - Represents Last X Days from today. An example value is `{ operator: "LASTDAYS", values: [2]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
  * - "LASTWEEKS" - Represents Last X Weeks from today. An example value is `{ operator: "LASTWEEKS", values: [3]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
  * - "LASTMONTHS" - Represents Last X Months from today. An example value is `{ operator: "LASTMONTHS", values: [6]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
@@ -180,6 +184,8 @@ class DynamicDateRange extends UI5Element {
 	@property({ type: Object })
 	_currentOption?: IDynamicDateRangeOption;
 
+	_lastSelectedOption?: IDynamicDateRangeOption;
+
 	@property({ type: Object })
 	currentValue?: DynamicDateRangeValue;
 
@@ -196,6 +202,14 @@ class DynamicDateRange extends UI5Element {
 	onBeforeRendering() {
 		this.optionsObjects = this._createNormalizedOptions();
 		this._focusSelectedItem();
+	}
+
+	async onAfterRendering() {
+		await renderFinished().then(() => {
+			setTimeout(() => {
+				this._focusLastSelectedItem();
+			}, 0);
+		});
 	}
 
 	/**
@@ -241,6 +255,25 @@ class DynamicDateRange extends UI5Element {
 		}
 	}
 
+	_focusLastSelectedItem() {
+		if (!this._lastSelectedOption) {
+			return;
+		}
+
+		// Ensure the list exists and has items
+		if (!this._list || !this._list.items.length) {
+			return;
+		}
+
+		// Find the index of the last selected option in the options array
+		const optionIndex = this.optionsObjects.findIndex(option => option.operator === this._lastSelectedOption?.operator);
+
+		if (optionIndex >= 0 && optionIndex < this._list.items.length) {
+			const listItem = this._list.items[optionIndex];
+			this._list.focusItem(listItem as ListItem);
+		}
+	}
+
 	/**
 	 * Defines whether the value help icon is hidden
 	 * @private
@@ -255,7 +288,7 @@ class DynamicDateRange extends UI5Element {
 
 	_togglePicker(): void {
 		if (this.open) {
-			this.open = false;
+			this._close();
 		} else {
 			this.open = true;
 		}
@@ -263,6 +296,7 @@ class DynamicDateRange extends UI5Element {
 
 	_selectOption(e: CustomEvent): void {
 		this._currentOption = this.optionsObjects.find(option => option.text === e.detail.item.textContent);
+		this._lastSelectedOption = this._currentOption;
 
 		if (!this._currentOption?.template) {
 			this.currentValue = this._currentOption?.parse(this._currentOption.text);
@@ -359,11 +393,15 @@ class DynamicDateRange extends UI5Element {
 			this.value = undefined;
 		}
 
+		this._currentOption?.resetState?.();
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
 
 	_close() {
+		this._currentOption?.resetState?.();
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
@@ -401,7 +439,12 @@ class DynamicDateRange extends UI5Element {
 	}
 
 	handleSelectionChange(e: CustomEvent) {
-		this.currentValue = this._currentOption?.handleSelectionChange && this._currentOption?.handleSelectionChange(e) as DynamicDateRangeValue;
+		const value = this._currentOption?.handleSelectionChange?.(e, this.currentValue) as DynamicDateRangeValue;
+
+		this.currentValue = JSON.parse(JSON.stringify(value)); // deep clone
+		if (this.currentValue) {
+			this.currentValue.values = value?.values;
+		}
 
 		// Update _currentOption if the operator changed
 		if (this.currentValue && this.currentValue.operator !== this._currentOption?.operator) {

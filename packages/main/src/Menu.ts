@@ -311,7 +311,7 @@ class Menu extends UI5Element {
 		return items;
 	}
 
-	get acessibleNameText() {
+	get accessibleNameText() {
 		return Menu.i18nBundle.getText(MENU_POPOVER_ACCESSIBLE_NAME);
 	}
 
