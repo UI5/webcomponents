@@ -2,6 +2,10 @@ import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicD
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 
 const dateOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 1) {
+		return [];
+	}
+
 	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
 	const endDate = UI5Date.getInstance(startDate.getTime());
 
@@ -12,6 +16,10 @@ const dateOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 };
 
 const dateRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 2) {
+		return [];
+	}
+
 	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
 	const endDate = value.values ? value.values[1] as Date : UI5Date.getInstance();
 
@@ -22,6 +30,10 @@ const dateRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 };
 
 const dateTimeRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 2) {
+		return [];
+	}
+
 	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
 	const endDate = value.values ? value.values[1] as Date : UI5Date.getInstance();
 
