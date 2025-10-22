@@ -433,103 +433,6 @@ describe('DynamicDateRange Last/Next Options', () => {
 	});
 });
 
-describe('DynamicDateRange DateTimeRange Option', () => {
-	beforeEach(() => {
-		cy.mount(<DynamicDateRange options="DATETIMERANGE"></DynamicDateRange>);
-	});
-
-	it("should select DateTimeRange option and pick 2 dates from the DateTimePickers", () => {
-		cy.get("[ui5-dynamic-date-range]")
-			.as("ddr")
-			.ui5DynamicDateRangeOpen()
-			.ui5DynamicDateRangeSelectOption()
-            .ui5DynamicDateRangeSetDateTime("from-picker", "Dec 25, 2023, 2:30:00 PM")
-			.ui5DynamicDateRangeSetDateTime("to-picker", "Dec 26, 2023, 4:45:00 AM")
-            .ui5DynamicDateRangeSubmit();
-
-        cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
-			.as("input");
-
-		cy.get("@input")
-			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
-	});
-
-	it("should auto-correct date order when second date is earlier than first", () => {
-		cy.get("[ui5-dynamic-date-range]")
-			.as("ddr")
-			.ui5DynamicDateRangeOpen()
-			.ui5DynamicDateRangeSelectOption()
-            .ui5DynamicDateRangeSetDateTime("to-picker", "Dec 25, 2023, 2:30:00 PM")
-			.ui5DynamicDateRangeSetDateTime("from-picker", "Dec 26, 2023, 4:45:00 AM")
-            .ui5DynamicDateRangeSubmit();
-
-        cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
-			.as("input");
-
-		cy.get("@input")
-			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
-    });
-
-	it("should parse input value correctly when option is reopened", () => {
-		cy.get("[ui5-dynamic-date-range]")
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-input]")
-			.as("input");
-
-		cy.get("@input")
-			.shadow()
-			.find("input")
-			.as("innerInput");
-
-		cy.get("@innerInput")
-			.clear()
-			.realType("Jan 4, 2025, 12:00:00 AM - Feb 26, 2025, 11:59:00 PM")
-			.realPress("Enter");
-
-		cy.get("[ui5-dynamic-date-range]")
-			.as("ddr")
-			.ui5DynamicDateRangeOpen()
-			.ui5DynamicDateRangeSelectOption();
-
-		// Verify the parsed dates are displayed in the pickers
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.as("popover");
-
-		cy.get("@popover")
-			.find("[ui5-datetime-picker]#from-picker")
-			.as("fromPicker");
-
-		cy.get("@fromPicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.as("fromInput");
-
-		cy.get("@fromInput")
-			.should("have.value", "Jan 4, 2025, 12:00:00 AM");
-
-		cy.get("@popover")
-			.find("[ui5-datetime-picker]#to-picker")
-			.as("toPicker");
-
-		cy.get("@toPicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.as("toInput");
-
-		cy.get("@toInput")
-			.should("have.value", "Feb 26, 2025, 11:59:00 PM");
-	});
-});
-
 describe('FromDateTime Option', () => {
 	beforeEach(() => {
 		cy.mount(<DynamicDateRange options="FROMDATETIME">
@@ -753,5 +656,102 @@ describe('ToDateTime Option', () => {
 			.shadow()
 			.find("input")
 			.should('contain.value', 'To Oct 13, 2025');
+	});
+});
+
+describe('DynamicDateRange DateTimeRange Option', () => {
+	beforeEach(() => {
+		cy.mount(<DynamicDateRange options="DATETIMERANGE"></DynamicDateRange>);
+	});
+
+	it("should select DateTimeRange option and pick 2 dates from the DateTimePickers", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+            .ui5DynamicDateRangeSetDateTime("from-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("to-picker", "Dec 26, 2023, 4:45:00 AM")
+            .ui5DynamicDateRangeSubmit();
+
+        cy.get("@ddr")
+            .shadow()
+            .find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
+	});
+
+	it("should auto-correct date order when second date is earlier than first", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+            .ui5DynamicDateRangeSetDateTime("to-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("from-picker", "Dec 26, 2023, 4:45:00 AM")
+            .ui5DynamicDateRangeSubmit();
+
+        cy.get("@ddr")
+            .shadow()
+            .find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
+    });
+
+	it("should parse input value correctly when option is reopened", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput")
+			.clear()
+			.realType("Jan 4, 2025, 12:00:00 AM - Feb 26, 2025, 11:59:00 PM")
+			.realPress("Enter");
+
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
+
+		// Verify the parsed dates are displayed in the pickers
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-datetime-picker]#from-picker")
+			.as("fromPicker");
+
+		cy.get("@fromPicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.as("fromInput");
+
+		cy.get("@fromInput")
+			.should("have.value", "Jan 4, 2025, 12:00:00 AM");
+
+		cy.get("@popover")
+			.find("[ui5-datetime-picker]#to-picker")
+			.as("toPicker");
+
+		cy.get("@toPicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.as("toInput");
+
+		cy.get("@toInput")
+			.should("have.value", "Feb 26, 2025, 11:59:00 PM");
 	});
 });
