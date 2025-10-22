@@ -64,7 +64,7 @@ describe('DynamicDateRange Component', () => {
 		cy.get('[ui5-dynamic-date-range]')
 			.as("ddr");
 
-			cy.get("@ddr")
+		cy.get("@ddr")
 			.ui5DynamicDateRangeOpen()
 			.ui5DynamicDateRangeGetOptionsList()
 			.as("listItems");
@@ -210,13 +210,8 @@ describe('DynamicDateRange Component', () => {
 			.eq(22) // May 21, 2035 is the 21st day
 			.realClick();
 
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.should('exist')
-			.realClick();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
@@ -331,12 +326,8 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.clear()
 			.realType('7');
 
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.realClick();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@innerInput")
 			.should('have.value', 'Last 7 Days');
@@ -388,12 +379,8 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.find(".ui5-ddr-current-value")
 			.should('contain.text', 'Selected:');
 
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.realClick();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@innerInput")
 			.should('have.value', 'Next 3 Weeks');
@@ -553,37 +540,15 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-		
-		cy.get("@input")
-			.should('exist');
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
-		
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get("@list")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
 
 		cy.get("@popover")
 			.find(".ui5-dynamic-date-range-option-datetime-container")
@@ -602,17 +567,10 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
@@ -620,18 +578,12 @@ describe('FromDateTime Option', () => {
 			.as("popover");
 
 		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
-
-		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
 			.should('have.attr', 'selected');
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
@@ -643,7 +595,7 @@ describe('FromDateTime Option', () => {
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
@@ -654,28 +606,15 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
 		
 		cy.get("@popover")
 			.find("[ui5-calendar]")
@@ -687,11 +626,10 @@ describe('FromDateTime Option', () => {
 			.shadow()
 			.find(".ui5-dp-daytext")
 			.eq(15)
-			.click(); // Select day 13
+			.realClick(); // Select day 13
 		
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.click();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
@@ -715,37 +653,15 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-		
-		cy.get("@input")
-			.should('exist');
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
-		
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get("@list")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
 
 		cy.get("@popover")
 			.find(".ui5-dynamic-date-range-option-datetime-container")
@@ -764,17 +680,10 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
@@ -782,18 +691,12 @@ describe('ToDateTime Option', () => {
 			.as("popover");
 
 		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
-
-		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
 			.should('have.attr', 'selected');
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
@@ -805,7 +708,7 @@ describe('ToDateTime Option', () => {
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
@@ -816,28 +719,15 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
 		
 		cy.get("@popover")
 			.find("[ui5-calendar]")
@@ -849,11 +739,10 @@ describe('ToDateTime Option', () => {
 			.shadow()
 			.find(".ui5-dp-daytext")
 			.eq(15)
-			.click(); // Select day 13
+			.realClick(); // Select day 13
 		
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.click();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
