@@ -4,6 +4,7 @@ import Search from "./Search.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ShellBarSearchTemplate from "./ShellBarSearchTemplate.js";
 import ShellBarSearchCss from "./generated/themes/ShellBarSearch.css.js";
+import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 
 import {
 	SEARCH_FIELD_SEARCH_ICON,
@@ -27,6 +28,9 @@ import {
 		Search.styles,
 		ShellBarSearchCss,
 	],
+	dependencies: [
+		BusyIndicator,
+	],
 })
 
 class ShellBarSearch extends Search {
@@ -37,6 +41,14 @@ class ShellBarSearch extends Search {
 	 */
 	@property({ type: Boolean })
 	autoOpen = false;
+
+	/**
+	 * Indicates whether the search field is in busy state.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	busy = false;
 
 	_handleSearchIconPress() {
 		super._handleSearchIconPress();
