@@ -14,7 +14,7 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[index].trim();
 		}
 		return undefined;
-	}
+	};
 
 	const handleSelectionChange = () => {
 		const fromPicker = this.shadowRoot?.querySelector("[ui5-datetime-picker]#from-picker") as DateTimePicker;
