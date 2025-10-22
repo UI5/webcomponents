@@ -5,6 +5,8 @@ import Today from '../../src/dynamic-date-range-options/Today.js';
 import LastOptions from '../../src/dynamic-date-range-options/LastOptions.js';
 import NextOptions from '../../src/dynamic-date-range-options/NextOptions.js';
 import DateTimeRange from '../../src/dynamic-date-range-options/DateTimeRange.js';
+import FromDateTime from '../../src/dynamic-date-range-options/FromDateTime.js';
+import ToDateTime from '../../src/dynamic-date-range-options/ToDateTime.js';
 
 describe('DynamicDateRange Component', () => {
 	beforeEach(() => {
@@ -538,5 +540,329 @@ describe('DynamicDateRange DateTimeRange Option', () => {
 
 		cy.get("@toInput")
 			.should("have.value", "Feb 26, 2025, 11:59:00 PM");
+	});
+});
+
+describe('FromDateTime Option', () => {
+	beforeEach(() => {
+		cy.mount(<DynamicDateRange options="FROMDATETIME">
+		</DynamicDateRange>
+		);
+	});
+	it('should select FromDateTime option and display date/time picker', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new FromDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+		
+		cy.get("@input")
+			.should('exist');
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+		
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.as("list");
+
+		cy.get("@list")
+			.find("[ui5-li]")
+			.contains('From')
+			.click();
+
+		cy.get("@popover")
+			.find(".ui5-dynamic-date-range-option-datetime-container")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button]")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+	});
+
+	it('should toggle between date and time views', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new FromDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.contains('From')
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
+			.should('have.attr', 'selected');
+
+		cy.get("@popover")
+			.find("[ui5-time-selection-clocks]")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+	});
+
+	it('should select a date and time, then submit the value', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new FromDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.contains('From')
+			.click();
+		
+		cy.get("@popover")
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find(".ui5-dp-daytext")
+			.eq(15)
+			.click(); // Select day 13
+		
+		cy.get("@popover")
+			.find("[ui5-button][design='Emphasized']")
+			.click();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.should('contain.value', 'From');
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.should('contain.value', 'From Oct 13, 2025');
+	});
+});
+
+describe('ToDateTime Option', () => {
+	beforeEach(() => {
+		cy.mount(<DynamicDateRange options="TODATETIME">
+		</DynamicDateRange>
+		);
+	});
+	it('should select FromDateTime option and display date/time picker', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new ToDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+		
+		cy.get("@input")
+			.should('exist');
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+		
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.as("list");
+
+		cy.get("@list")
+			.find("[ui5-li]")
+			.contains('To')
+			.click();
+
+		cy.get("@popover")
+			.find(".ui5-dynamic-date-range-option-datetime-container")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button]")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+	});
+
+	it('should toggle between date and time views', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new ToDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.contains('To')
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
+			.should('have.attr', 'selected');
+
+		cy.get("@popover")
+			.find("[ui5-time-selection-clocks]")
+			.should('exist');
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.click();
+
+		cy.get("@popover")
+			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
+			.should('have.attr', 'selected');
+	});
+
+	it('should select a date and time, then submit the value', () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new ToDateTime(),
+		];
+		cy.get('[ui5-dynamic-date-range]')
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find('[ui5-input]')
+			.as("input");
+
+		cy.get("@input")
+			.find('[ui5-icon]')
+			.click();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.contains('To')
+			.click();
+		
+		cy.get("@popover")
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find(".ui5-dp-daytext")
+			.eq(15)
+			.click(); // Select day 13
+		
+		cy.get("@popover")
+			.find("[ui5-button][design='Emphasized']")
+			.click();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.should('contain.value', 'To');
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.should('contain.value', 'To Oct 13, 2025');
 	});
 });

@@ -196,6 +196,20 @@ const toDatesLastNext = (value: DynamicDateRangeValue, option: IDynamicDateRange
 	return lastNextToDates(value, unit, direction);
 };
 
+const dateTimeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length === 0) {
+		return [];
+	}
+
+	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
+	const endDate = UI5Date.getInstance(startDate.getTime());
+
+	startDate.setMilliseconds(0);
+	endDate.setMilliseconds(999);
+
+	return [startDate, endDate];
+};
+
 export {
 	dateOptionToDates,
 	dateRangeOptionToDates,
@@ -205,4 +219,5 @@ export {
 	yesterdayToDates,
 	lastNextToDates,
 	toDatesLastNext,
+	dateTimeOptionToDates,
 };

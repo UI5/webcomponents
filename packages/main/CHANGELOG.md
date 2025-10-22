@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* apply @custom-elements-manifest/analyzer patch ([#12441](https://github.com/UI5/webcomponents/issues/12441)) ([a9ec6e2](https://github.com/UI5/webcomponents/commit/a9ec6e217bb59dbffb0db79c6008cecf77bc0649))
+* **ui5-bar:** truncate long content in startContent slot ([8482891](https://github.com/UI5/webcomponents/commit/8482891934c8148470815129ca4494a5a9ba4dc3))
+* **ui5-button:** prioritize accessibleName over button text in aria-label ([#12473](https://github.com/UI5/webcomponents/issues/12473)) ([68e6a3e](https://github.com/UI5/webcomponents/commit/68e6a3e43eaad261414a68d18ab8dfac37a2124b)), closes [#12398](https://github.com/UI5/webcomponents/issues/12398)
+* **ui5-date-picker:** adjust value state message text ([#12245](https://github.com/UI5/webcomponents/issues/12245)) ([8d32312](https://github.com/UI5/webcomponents/commit/8d3231276a36a32b5055c247ec0b989b30f4f11a)), closes [#11803](https://github.com/UI5/webcomponents/issues/11803)
+* **ui5-date-picker:** open picker on correct view based on valueFormat/formatPattern ([#12436](https://github.com/UI5/webcomponents/issues/12436)) ([b55b301](https://github.com/UI5/webcomponents/commit/b55b30141e99b759877354bebbb18e89366e9539))
+* **ui5-datetime-picker:** restore last valid value ([#12202](https://github.com/UI5/webcomponents/issues/12202)) ([2e2f882](https://github.com/UI5/webcomponents/commit/2e2f88255326b9f59074fa000c71bb38bf363f05))
+* **ui5-dynamic-date-range:** focus last selected option, upon navigate back ([#12233](https://github.com/UI5/webcomponents/issues/12233)) ([e99d266](https://github.com/UI5/webcomponents/commit/e99d266a5ea81eb5ca256aa7190f4aa33edebdd9))
+* **ui5-input:** prevent change firing when canceling on mobile ([#12420](https://github.com/UI5/webcomponents/issues/12420)) ([d9470dc](https://github.com/UI5/webcomponents/commit/d9470dc4f6758712c9f16d8b319cd18cf6609315)), closes [#9453](https://github.com/UI5/webcomponents/issues/9453)
+* **ui5-list:** add missing accessible description for growing button ([#12463](https://github.com/UI5/webcomponents/issues/12463)) ([8cfdbf9](https://github.com/UI5/webcomponents/commit/8cfdbf954daac3c50276da08500e3c983baa79d8)), closes [#12443](https://github.com/UI5/webcomponents/issues/12443)
+* **ui5-raiting-indicator:** visual spec alignment ([#12488](https://github.com/UI5/webcomponents/issues/12488)) ([9256d97](https://github.com/UI5/webcomponents/commit/9256d9707da53dd000f9764c88799ed39dd5bae4))
+* **ui5-shellbar:** adjust sizes-parameters for shellbar ([#12462](https://github.com/UI5/webcomponents/issues/12462)) ([79adbee](https://github.com/UI5/webcomponents/commit/79adbeeea1cf72559d88318e5d763c350ae9a9d1))
+* **ui5-side-navigation:** add parent item to submenu and enhance ACC ([#12457](https://github.com/UI5/webcomponents/issues/12457)) ([69a2413](https://github.com/UI5/webcomponents/commit/69a24138a0220fe724db0e4ac0e02e9814a93867))
+* **ui5-split-button:** handle space on keyup properly ([e338e1c](https://github.com/UI5/webcomponents/commit/e338e1c2e6bbbf9812daa80a13e53331559a0f27))
+* **ui5-tab-container:** improve overflow behavior test ([#12422](https://github.com/UI5/webcomponents/issues/12422)) ([cfef814](https://github.com/UI5/webcomponents/commit/cfef814ab1737a851fbd953565e95c7b9f7704c3)), closes [#12344](https://github.com/UI5/webcomponents/issues/12344)
+
+
+### Features
+
+* **ui5-carousel:** improve keyboard handling and update accessibility attributes ([#12256](https://github.com/UI5/webcomponents/issues/12256)) ([a4ec76e](https://github.com/UI5/webcomponents/commit/a4ec76e5993eb8d7b76f08c6b6d15909b8517db3)), closes [#11429](https://github.com/UI5/webcomponents/issues/11429) [#11515](https://github.com/UI5/webcomponents/issues/11515) [#11634](https://github.com/UI5/webcomponents/issues/11634) [#11873](https://github.com/UI5/webcomponents/issues/11873) [#11429](https://github.com/UI5/webcomponents/issues/11429)
+* **ui5-segmented-button:** add api which controls items width behavior ([616c716](https://github.com/UI5/webcomponents/commit/616c716657289182ba0b679b7e6884f4785c8035))
+* **ui5-textarea:** support accessible description and description ref ([#12470](https://github.com/UI5/webcomponents/issues/12470)) ([c6c23d1](https://github.com/UI5/webcomponents/commit/c6c23d19f9e7565b12bf095c169f6a069a427037)), closes [#12004](https://github.com/UI5/webcomponents/issues/12004)
+
+
+
+
+
+# [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing popups with escape key ([#12278](https://github.com/UI5/webcomponents/issues/12278)) ([f54e8af](https://github.com/UI5/webcomponents/commit/f54e8afe3339a98bbf214523aba17158d7eb505b))
+* **ui5-list-item:** change highlight state color variables ([#12427](https://github.com/UI5/webcomponents/issues/12427)) ([485aab5](https://github.com/UI5/webcomponents/commit/485aab51242876f2a10580da2ed23783408df00b)), closes [#12332](https://github.com/UI5/webcomponents/issues/12332)
+* **ui5-slider, ui5-range-slider:** persist tooltip visible on hover ([#12383](https://github.com/UI5/webcomponents/issues/12383)) ([0eb6258](https://github.com/UI5/webcomponents/commit/0eb62586bc708253eb4c711aecdde8407d2f44a0)), closes [#12329](https://github.com/UI5/webcomponents/issues/12329)
+* **ui5-table:** invalidate header row when rows count changes ([#12439](https://github.com/UI5/webcomponents/issues/12439)) ([65b5507](https://github.com/UI5/webcomponents/commit/65b5507232d7853e98bc55ee9a08ef9b46f8bca5)), closes [#12161](https://github.com/UI5/webcomponents/issues/12161) [#11996](https://github.com/UI5/webcomponents/issues/11996)
+
+
+### Features
+
+* **ui5-date-picker:** normalize display value only on change ([#12425](https://github.com/UI5/webcomponents/issues/12425)) ([3e8357e](https://github.com/UI5/webcomponents/commit/3e8357ed04a4165bd04f86e5ee5b58cff3c73699))
+* **ui5-select:** visible second column value and tooltip ([#12390](https://github.com/UI5/webcomponents/issues/12390)) ([54452e7](https://github.com/UI5/webcomponents/commit/54452e70e96b2cfd6e0b9cf663a54b0fed797f02))
+
+
+
+
+
+# [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* **ui5-datetime-picker:** render picker in playground samples ([#12393](https://github.com/UI5/webcomponents/issues/12393)) ([e486ea6](https://github.com/UI5/webcomponents/commit/e486ea6c6ff937c732714d233eae14dea50fc915))
+* **ui5-table:** custom row announcements are set ([#12117](https://github.com/UI5/webcomponents/issues/12117)) ([dcf014e](https://github.com/UI5/webcomponents/commit/dcf014e9d95bfe36644f300674cec726f3ec5029))
+
+
+
+
+
 # [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
 
 

@@ -52,7 +52,8 @@ interface IFormItem extends UI5Element {
 type GroupItemsInfo = {
 	groupItem: IFormItem,
 	items: Array<ItemsInfo>,
-	accessibleNameRef: string | undefined
+	accessibleNameRef: string | undefined,
+	accessibleName: string | undefined,
 }
 
 type ItemsInfo = {
@@ -558,7 +559,7 @@ class Form extends UI5Element {
 	}
 
 	get groupItemsInfo(): Array<GroupItemsInfo> {
-		return this.items.map((groupItem: IFormItem) => {
+		return this.items.map((groupItem: IFormItem, index: number) => {
 			const items = this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>));
 			breakpoints.forEach(breakpoint => {
 				const cols = ((groupItem[`cols${breakpoint}` as keyof IFormItem]) as number || 1);
@@ -583,7 +584,8 @@ class Form extends UI5Element {
 
 			return {
 				groupItem,
-				accessibleNameRef: (groupItem as FormGroup).headerText ? `${groupItem._id}-group-header-text` : undefined,
+				accessibleName: (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: (groupItem as FormGroup).effectiveАccessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
 			};
 		});

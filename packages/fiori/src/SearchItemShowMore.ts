@@ -1,5 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -8,6 +9,11 @@ import SearchItemShowMoreTemplate from "./SearchItemShowMoreTemplate.js";
 import SearchItemCss from "./generated/themes/SearchItem.css.js";
 import SearchItemShowMoreCss from "./generated/themes/SearchItemShowMore.css.js";
 import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "./generated/i18n/i18n-defaults.js";
+import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
+
+type ShowMoreItemClickEventDetail = {
+	fromKeyboard: boolean;
+}
 
 /**
  * @class
@@ -25,7 +31,6 @@ import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "./g
  * @since 2.14.0
  * @experimental
  */
-
 @customElement({
 	tag: "ui5-search-item-show-more",
 	languageAware: true,
@@ -38,7 +43,23 @@ import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "./g
 	],
 })
 
+/**
+ * Fired when the component is activated, either with a mouse/tap
+ * or by pressing the Enter or Space keys.
+ *
+ * @public
+ * @param {boolean} fromKeyboard Indicates whether the event was fired
+ * due to keyboard interaction (Enter or Space) rather than mouse/tap.
+ */
+@event("click", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class SearchItemShowMore extends ListItemBase {
+	eventDetails!: ListItemBase["eventDetails"] & {
+		"click": ShowMoreItemClickEventDetail;
+	}
 	/**
 	 * Specifies the number of additional items available to show.
 	 * This value replaces the placeholder (N) in the "Show more (N)" text.
@@ -76,8 +97,31 @@ class SearchItemShowMore extends ListItemBase {
 	_onfocusout() {
 		this.selected = false;
 	}
+
+	_onclick(e: MouseEvent | KeyboardEvent, fromKeyboard = false) {
+		e.stopImmediatePropagation();
+		this.fireDecoratorEvent("click", { fromKeyboard });
+	}
+
+	_onkeydown(e: KeyboardEvent) {
+		if (isEnter(e)) {
+			this._onclick(e, true);
+			e.preventDefault();
+		}
+	}
+
+	_onkeyup(e: KeyboardEvent) {
+		if (isSpace(e)) {
+			this._onclick(e, true);
+			e.preventDefault();
+		}
+	}
 }
 
 SearchItemShowMore.define();
 
 export default SearchItemShowMore;
+
+export type {
+	ShowMoreItemClickEventDetail,
+};

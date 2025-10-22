@@ -15,8 +15,9 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 					aria-label={this._i18nSelection}
 					aria-description={this._selectionCellAriaDescription}
 					aria-colindex={ariaColIndex++}
+					data-ui5-table-selection-cell
 					data-ui5-table-cell-fixed
-					data-ui5-table-selection-component
+					data-ui5-table-acc-text=""
 				>
 					{ !this._isMultiSelect ?
 						<></>
@@ -42,23 +43,28 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 				</TableHeaderCell>
 			}
 
-			{ this._visibleCells.map(cell => {
-				cell.ariaColIndex = `${ariaColIndex++}`;
-				return <slot name={cell._individualSlot} key={cell._individualSlot}></slot>;
+			{ this.cells.flatMap(cell => {
+				if (cell._popin) {
+					cell.role = null;
+					cell.ariaColIndex = null;
+					return [];
+				}
+
+				cell.role ??= cell.ariaRole;
+				cell.ariaColIndex = (cell.role === cell.ariaRole) ? `${ariaColIndex++}` : null;
+				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
 			{ this._rowActionCount > 0 &&
-				<TableHeaderCell id="actions-cell"
-					aria-colindex={ariaColIndex++}
-					aria-label={this._i18nRowActions}
-				></TableHeaderCell>
+				<TableHeaderCell id="actions-cell" aria-colindex={ariaColIndex++}>
+					<div id="actions-cell-content">{this._i18nRowActions}</div>
+				</TableHeaderCell>
 			}
 
 			{ this._popinCells.length > 0 &&
-				<TableHeaderCell id="popin-cell"
-					aria-label={this._i18nRowPopin}
-					data-excluded-from-navigation
-				></TableHeaderCell>
+				<TableHeaderCell id="popin-cell" aria-colindex={ariaColIndex++} data-excluded-from-navigation>
+					<div id="popin-cell-content">{this._i18nRowPopin}</div>
+				</TableHeaderCell>
 			}
 		</>
 	);
