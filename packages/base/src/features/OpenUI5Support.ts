@@ -75,7 +75,7 @@ type Locale = {
 const OPENUI5_POLLING_INTERVAL = 100;
 
 class OpenUI5Support {
-	static disablePolling = false; // if set to true, OpenUI5Support will only work if OpenUI5 is loaded before UI5 Web Components
+	static enablePolling = false; // set to true for old OpenUI5 versions
 
 	static isAtLeastVersion116() {
 		if (!window.sap.ui!.version) {
@@ -104,16 +104,22 @@ class OpenUI5Support {
 	}
 
 	static awaitForOpenUI5() {
-		const interval = setInterval(() => {
-			if (OpenUI5Support.isOpenUI5Detected()) {
-				clearInterval(interval);
+		if (OpenUI5Support.enablePolling) {
+			const interval = setInterval(() => {
+				if (OpenUI5Support.isOpenUI5Detected()) {
+					clearInterval(interval);
+					OpenUI5Support.OpenUI5DelayedInit();
+				}
+			}, OPENUI5_POLLING_INTERVAL);
+		} else {
+			document.addEventListener("sap-ui-core-ready", () => {
 				OpenUI5Support.OpenUI5DelayedInit();
-			}
-		}, OPENUI5_POLLING_INTERVAL);
+			});
+		}
 	}
 
 	static init() {
-		if (!OpenUI5Support.isOpenUI5Detected() && !OpenUI5Support.disablePolling) {
+		if (!OpenUI5Support.isOpenUI5Detected()) {
 			return OpenUI5Support.awaitForOpenUI5();
 		}
 
