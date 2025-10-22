@@ -7,21 +7,14 @@ import {
 } from "../generated/i18n/i18n-defaults.js";
 
 export default function DateTimeRangeTemplate(this: DynamicDateRange) {
-	const currentOperator = "DATETIMERANGE";
+	const currentOperator = this.currentValue?.operator || "DATETIMERANGE";
 
-	const getStartDate = () => {
+	const getDateFromValue = (index = 0) => {
 		if (this.value?.operator === currentOperator && this.value.values && this.value.values.length === 2) {
-			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[0].trim();
+			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[index].trim();
 		}
 		return undefined;
-	};
-
-	const getEndDate = () => {
-		if (this.value?.operator === currentOperator && this.value.values && this.value.values.length === 2) {
-			return this.getOption(this.value.operator)?.format(this.value)?.split("-")[1].trim();
-		}
-		return undefined;
-	};
+	}
 
 	const handleSelectionChange = () => {
 		const fromPicker = this.shadowRoot?.querySelector("[ui5-datetime-picker]#from-picker") as DateTimePicker;
@@ -56,13 +49,13 @@ export default function DateTimeRangeTemplate(this: DynamicDateRange) {
 			<DateTimePicker
 				id="from-picker"
 				onChange={handleSelectionChange}
-				value={getStartDate()}>
+				value={getDateFromValue()}>
 			</DateTimePicker>
 			<Label class="ui5-ddr-label">{DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_TIME_RANGE_TEXT_TO_LABEL)}</Label>
 			<DateTimePicker
 				id="to-picker"
 				onChange={handleSelectionChange}
-				value={getEndDate()}>
+				value={getDateFromValue(1)}>
 			</DateTimePicker>
 		</div>
 	);

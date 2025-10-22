@@ -27,16 +27,15 @@ class DateTimeRange implements IDynamicDateRangeOption {
 	}
 
 	parse(value: string): DynamicDateRangeValue {
+		const returnValue = { operator: this.operator, values: [] } as DynamicDateRangeValue;
+
 		if (!value) {
-			return { operator: this.operator, values: [] };
+			return returnValue;
 		}
 		const splitValue = value.split(DEFAULT_DELIMITER);
 		const startDate = this._parseDate(splitValue[0].trim()) as Date;
 		const endDate = this._parseDate(splitValue[1].trim()) as Date;
 
-		const returnValue = { operator: "", values: [] } as DynamicDateRangeValue;
-
-		returnValue.operator = this.operator;
 		returnValue.values = [startDate, endDate];
 
 		if (returnValue.values[0].getTime() > returnValue.values[1].getTime()) {
