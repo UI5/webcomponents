@@ -17,7 +17,7 @@ import InputTemplate from "./InputTemplate.js";
 import {
 	VERSIONING_NEXT_BUTTON_TEXT,
 	VERSIONING_PREVIOUS_BUTTON_TEXT,
-	WRITING_ASSISTANT_LABEL,
+	INPUT_WRITING_ASSISTANT_LABEL,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -109,10 +109,9 @@ class Input extends BaseInput {
 	 */
 	@slot({
 		type: HTMLElement,
-		// "default": true,
 		invalidateOnChildChange: true,
 	})
-	default!: Array<HTMLElement>;
+	actions!: Array<HTMLElement>;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
@@ -164,6 +163,7 @@ class Input extends BaseInput {
 			this.fireDecoratorEvent("button-click");
 			this.menu.opener = opener;
 			this.menu.open = true;
+			this.menu.horizontalAlign = "End";
 		}
 	}
 
@@ -219,6 +219,7 @@ class Input extends BaseInput {
 		if (e.key === "F4" && e.shiftKey) {
 			e.preventDefault();
 			this.menu.open = true;
+			this.menu.horizontalAlign = "End";
 		}
 		const goPreviousStep = e.key === "Z" && e.shiftKey && e.ctrlKey;
 		const goNextStep = e.key === "Y" && e.shiftKey && e.ctrlKey;
@@ -233,7 +234,7 @@ class Input extends BaseInput {
 	}
 
 	get ariaLabel() {
-		return Input.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return this.accessibleName || !this.loading ? Input.i18nBundle.getText(INPUT_WRITING_ASSISTANT_LABEL) : Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
 	}
 
 	get stopGeneratingTooltip() {

@@ -5,6 +5,15 @@
 	border-right: none;
 }
 
+:host([focused]:not([opened])[_is-menu-open]) .ui5-ai-input-root:hover {
+	border-radius: var(--_ui5_input_border_radius);
+	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+:host([focused]:not([opened])[_is-menu-open]) .ui5-input-focusable-element::after {
+	border: var(--_ui5-input-border);
+}
+
 .ui5-input-busy-indicator {
 	flex: 1;
 	width: 100%;
@@ -35,7 +44,7 @@
 	height: var(--_ui5_input_icon_wrapper_height);
 	padding: 0;
 	box-sizing: border-box;
-	border-radius: var(--sapButton_BorderCornerRadius);
+	border-radius: var(--_ui5_input_border_radius);
 	cursor: pointer;
 	color: var(--sapButton_Selected_TextColor);
 	border: none;
@@ -50,8 +59,7 @@
 .ui5-ai-input-icon-wrapper.ui5-input-icon-menu-open,
 .ui5-ai-input-icon-wrapper:active {
 	background-color: var(--sapButton_Selected_Background);
-	border: 1px solid var(--sapButton_Selected_BorderColor);
-	box-shadow: inset 0 0 0 0.0625rem var(--sapField_Hover_Shadow);
+	box-shadow: var(--sapField_Hover_Shadow);
 }
 
 /* Hover state */
@@ -66,15 +74,13 @@
 
 .ui5-input-icon-menu-open {
 	background-color: var(--sapButton_Selected_Background);
-	border: 1px solid var(--sapButton_Selected_BorderColor);
-	box-shadow: inset 0 0 0 0.0625rem var(--sapField_Hover_Shadow);
-}
-
-.versioning-button:hover {
-	background-color: transparent;
-	border: 1px solid var(--sapButton_Selected_BorderColor);
+	box-shadow: var(--sapField_Hover_Shadow);
 }
 
 [ui5-menu-item].ui5-ai-versioning-menu-footer:hover {
 	background-color: inherit;
+}
+
+.ui5-ai-versioning-menu-footer::part(native-li) {
+  padding-right: 0.25rem;
 }

@@ -2,7 +2,7 @@ import AIInput from "../../src/Input.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
-import { VERSIONING_NEXT_BUTTON_TOOLTIP, VERSIONING_PREVIOUS_BUTTON_TOOLTIP, WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
+import { VERSIONING_NEXT_BUTTON_TOOLTIP, VERSIONING_PREVIOUS_BUTTON_TOOLTIP, INPUT_WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
 import Input from "../../src/Input.js";
 
 describe("Basic", () => {
@@ -243,7 +243,7 @@ describe("Basic", () => {
         it("should open menu when AI Icon is clicked", () => {
             cy.mount(
                 <AIInput>
-                    <MenuItem slot={"default"} text="Generate text" />
+                    <MenuItem slot={"actions"} text="Generate text" />
                 </AIInput>
             );
 
@@ -291,7 +291,7 @@ describe("Basic", () => {
         it("should handle Shift+F4 to open menu", () => {
             cy.mount(
                 <AIInput>
-                    <MenuItem slot="default" text="Generate"></MenuItem>
+                    <MenuItem slot="actions" text="Generate"></MenuItem>
                 </AIInput>
             );
 
@@ -833,7 +833,7 @@ describe("Writing Assistant Input Icon", () => {
         cy.get("[ui5-ai-input]")
             .shadow()
             .find(".ui5-input-ai-icon")
-            .should("have.attr", "aria-label", WRITING_ASSISTANT_LABEL.defaultText);
+            .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_LABEL.defaultText);
     });
 })
 

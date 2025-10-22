@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <title>AI Input Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ui5-ai-input</title>
   <script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
   <style>
@@ -32,19 +33,19 @@
     id="ai-input"
     placeholder="Ask me something..."
 	>
-    <ui5-menu-item text="Generate text" slot="default" additional-text="Ctrl + Enter" data-menu-action="generate"></ui5-menu-item>
+    <ui5-menu-item text="Generate text" slot="actions" additional-text="Ctrl + Enter" data-menu-action="generate"></ui5-menu-item>
   </ui5-ai-input>
 
   	<script>
 		const SAMPLE_TEXTS = {
-			en: "Innovation managers operate something.",
-			bg: "Translation in Bulgarian",
-			de: "Translation in German",
-			expanded: "Innovation managers play a pivotal role.",
-			rephrased: "Innovation managers leverage creativity.",
-			simplified: "Innovation managers alabala.",
-			summarized: "Innovation managers aaa."
-		};
+				en: "AI can help you write faster.",
+				bg: "ИИ може да ви помогне да пишете по-бързо.",
+				de: "KI kann Ihnen beim schnelleren Schreiben helfen.",
+				expanded: "AI assists in generating detailed content quickly.",
+				rephrased: "AI helps reword sentences clearly.",
+				simplified: "AI makes text simpler.",
+				summarized: "AI shortens long content."
+			};
 
 		const MENU_CONFIG = [
 			{
@@ -138,7 +139,7 @@
 			item.setAttribute('text', cfg.text || '');
 
       if(!cfg.isChild) {
-        item.setAttribute('slot', 'default');
+        item.setAttribute('slot', 'actions');
       }
 
 			if (cfg.action) {

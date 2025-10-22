@@ -18,7 +18,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 	return (
 		<>
 			<div
-				class={`ui5-ai-input-root ui5-input-root ui5-input-focusable-element ${this.loading && "ui5-ai-input-busy"}`}
+				class={`ui5-ai-input-root ui5-input-focusable-element ${this.loading && "ui5-ai-input-busy"}`}
 				onFocusIn={this._onfocusin}
 				onFocusOut={this._onfocusout}
 			>
@@ -32,8 +32,6 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						<div
 							class="ui5-input-root"
 							part="root"
-							onFocusIn={this._onfocusin}
-							onFocusOut={this._onfocusout}
 						>
 							<div class="ui5-input-content">
 								{preContent.call(this)}
@@ -60,7 +58,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 									aria-roledescription={this.accInfo.ariaRoledescription}
 									aria-autocomplete={this.accInfo.ariaAutoComplete}
 									aria-expanded={this.accInfo.ariaExpanded}
-									aria-label={this.accInfo.ariaLabel}
+									aria-label={this.ariaLabel}
 									aria-required={this.required}
 									autocomplete="off"
 									data-sap-focus-ref
@@ -154,7 +152,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						onBeforeOpen={() => { this._isMenuOpen = true; }}
 						onBeforeClose={() => { this._isMenuOpen = false; }}
 					>
-						<slot name={"default"}></slot>
+						<slot name="actions"></slot>
 						{this.totalVersions > 1 && Versioning.call(this)}
 					</Menu>
 				</div>
