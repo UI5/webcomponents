@@ -8,9 +8,10 @@
     height: 100%;
 }
 
-:host([desktop]) .ui5-carousel-root:focus,
-.ui5-carousel-root:focus-visible {
+:host([desktop]) .ui5-carousel-item:focus,
+.ui5-carousel-item:focus-visible {
     outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: -1px;
 }
 
 .ui5-carousel-root {
@@ -70,14 +71,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 0.75rem;
+    padding: 0.75rem;
     box-sizing: border-box;
-    transition: opacity 0.5s linear;
-    will-change: opacity;
 }
 
 .ui5-carousel-item--hidden {
-    opacity: 0;
+	transition: visibility 0.5s linear;
+    will-change: visibility;
+	visibility: hidden;
 }
 
 .ui5-carousel-navigation-arrows {
@@ -89,11 +90,7 @@
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
-    pointer-events: none;
-}
-
-.ui5-carousel-navigation-arrows > [ui5-button] {
-    pointer-events: all;
+	pointer-events: none;
 }
 
 .ui5-carousel-navigation-wrapper {
@@ -127,13 +124,33 @@
 }
 
 .ui5-carousel-navigation-button {
-    width: var(--ui5_carousel_button_size);
-    height: var(--ui5_carousel_button_size);
-    border-radius: 50%;
-    box-shadow: none;
-    cursor: pointer;
-    outline-offset: .1rem;
-    --_ui5_button_focused_border_radius: 50%;
+	width: var(--ui5_carousel_button_size);
+	height: var(--ui5_carousel_button_size);
+	border-radius: 50%;
+	box-sizing: border-box;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	padding: 0 0.5rem;
+	border: 1px solid var(--sapButton_Hover_BorderColor);
+	background: var(--sapButton_Background);
+	color: var(--sapButton_TextColor);
+	cursor: pointer;
+	pointer-events: all;
+}
+
+.ui5-carousel-navigation-button:hover {
+	background: var(--sapButton_Hover_Background);
+	border: 1px solid var(--sapButton_Hover_BorderColor);
+	color: var(--sapButton_Hover_TextColor);
+}
+
+.ui5-carousel-navigation-button:active {
+	background-color: var(--sapButton_Active_Background);
+	border-color: var(--sapButton_Active_BorderColor);
+	outline-offset: 1px;
+	color: var(--sapButton_Active_TextColor);
+	box-shadow: none;
 }
 
 .ui5-carousel-navigation-arrows .ui5-carousel-navigation-button {

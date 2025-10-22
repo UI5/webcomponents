@@ -10,7 +10,6 @@
 		"types": [
 			"cypress",
 			"cypress-real-events",
-			"cypress-axe",
 		],
 		"paths": {
 			"@ui5/webcomponents-base/dist/*": [

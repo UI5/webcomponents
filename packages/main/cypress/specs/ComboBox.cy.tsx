@@ -894,6 +894,37 @@ describe("Accessibility", () => {
 		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header Donut");
 	});
 
+	it("should announce only the item text when accessed via keyboard and popover is not opened", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+				<ComboBoxItem text="Belgium" />
+				<ComboBoxItem text="Brazil" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("have.text", "");
+
+		// open the popover
+		cy.get("@combo").shadow().find("input").realPress("F4");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		
+		cy.get("@invisibleMessageSpan").should("have.text", "List item 2 of 6");
+	});
+
 	it("tests setting value programmatically", () => {
 		cy.mount(
 			<>
@@ -2510,6 +2541,40 @@ describe("Event firing", () => {
 
 		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
 				return event.detail.item.text === "Bulgaria";
+		}));
+	});
+
+	it("should NOT fire selection-change event when ComboBox items are set asynchronously after initial render", () => {
+		cy.mount(
+			<ComboBox id="async-combo" value="Bulgaria" loading>
+				{/* Items will be added asynchronously */}
+			</ComboBox>
+		);
+
+		cy.get("#async-combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.window().then(win => {
+			const combo = win.document.getElementById("async-combo");
+			const item1 = win.document.createElement("ui5-cb-item");
+			item1.setAttribute("text", "Argentina");
+			const item2 = win.document.createElement("ui5-cb-item");
+			item2.setAttribute("text", "Bulgaria");
+			combo?.appendChild(item1);
+			combo?.appendChild(item2);
+			(combo as any).loading = false;
+		});
+
+		cy.get("#async-combo").should("not.have.prop", "loading", true);
+
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+
+		cy.get("#async-combo").shadow().find("input").realClick();
+		cy.get("#async-combo").shadow().find("input").clear().realType("Argentina");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item.text === "Argentina";
 		}));
 	});
 
