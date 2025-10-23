@@ -102,5 +102,42 @@
 			<ui5-label for="infoInput">Choose files:</ui5-label>
 			<ui5-file-uploader id="infoInput" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Information"></ui5-file-uploader>
 		</div>
+		<div>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-label for="formFileUploader">Choose files:</ui5-label>
+				<ui5-file-uploader id="formFileUploader" placeholder="Upload your files here" style="width: 350px;" required></ui5-file-uploader>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</div>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const formFileUploader = document.getElementById('formFileUploader');
+
+			btnCheckFormValidity.addEventListener('click', function() {
+				checkFormValidity('formFileUploader');
+			});
+
+			formFileUploader.addEventListener('ui5-change', function() {
+				setTimeout(() => {
+					checkFormValidity('formFileUploader', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
 </body>
 </html>
