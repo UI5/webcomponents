@@ -69,6 +69,19 @@ Cypress.Commands.add("ui5TimePickerGetSubmitButton", { prevSubject: true }, subj
 		.find("#submit");
 });
 
+Cypress.Commands.add("ui5TimePickerTypeTime", { prevSubject: true }, (subject: string, time) => {
+	cy.wrap(subject)
+		.as("timePicker");
+
+	cy.get("@timePicker")
+		.ui5TimePickerGetInnerInput()
+		.realClick()
+		.should("be.focused")
+
+	cy.realType(time);
+	cy.realPress("Enter");
+});
+
 declare global {
 	namespace Cypress {
 		interface Chainable {
@@ -88,6 +101,10 @@ declare global {
 			ui5TimePickerGetSubmitButton(
 				this: Chainable<JQuery<TimePicker>>
 			): Chainable<JQuery<Button>>;
+			ui5TimePickerTypeTime(
+				this: Chainable<JQuery<TimePicker>>,
+				time: string
+			): Chainable<void>;
 		}
 	}
 }
