@@ -62,7 +62,19 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [], classes: string) {
 	return <List accessibleRole="Menu" onItemClick={this._handleItemClick} class={classes} separators="None">
 		{items.map(item => (
-			<ListItemStandard id={`setting-${item._id}`} icon={item._icon} tooltip={item._tooltip} ref={this.captureRef.bind(item)} selected={item.selected} disabled={item.disabled} accessibleName={item.ariaLabelledByText} type={this._showSettingWithNavigation ? "Navigation" : "Active"}>{item.text}</ListItemStandard>
+			<ListItemStandard
+				class={!item._icon && item._siblingsWithIcon ? "ui5-user-settings-item-no-icon" : ""}
+				id={`setting-${item._id}`}
+				icon={!item._icon && item._siblingsWithIcon ? undefined : item._icon}
+				tooltip={item._tooltip}
+				ref={this.captureRef.bind(item)}
+				selected={item.selected}
+				disabled={item.disabled}
+				accessibleName={item.ariaLabelledByText}
+				type={this._showSettingWithNavigation ? "Navigation" : "Active"}
+			>
+				{item.text}
+			</ListItemStandard>
 		))}
 	</List>;
 }

@@ -184,6 +184,12 @@ class UserSettingsItem extends UI5Element {
 	pages!: Array<UserSettingsView>;
 
 	/**
+	 * Indicates whether any of the element siblings have icon.
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_siblingsWithIcon = false;
+
+	/**
 	 * @private
 	 */
 	_individualSlot?: string;
