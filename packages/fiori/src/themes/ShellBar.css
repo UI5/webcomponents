@@ -1,5 +1,10 @@
 @import "./InvisibleTextStyles.css";
 
+.ui5-shellbar-item {
+	/* those styles are set on the item's wrapper outside of the popover. They are used to measure the item once they are in the popover */
+	width: calc(2.5rem + var(--_ui5-shellbar-overflow-button-margin));
+}
+
 :host(:not([hidden])) {
 	display: inline-block;
 	width: 100%;
@@ -406,10 +411,6 @@ slot[name="profile"] {
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-bell-button [slot="badge"] {
-    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
-}
-
-.ui5-shellbar-overflow-container-right-child .ui5-shellbar-custom-item [slot="badge"] {
     inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
 }
 
