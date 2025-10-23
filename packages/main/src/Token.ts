@@ -194,11 +194,6 @@ class Token extends UI5Element implements IToken {
 		}
 	}
 
-	onBeforeRendering() {
-		this.toBeDeleted = false;
-		// this.fireMyEvent("select");
-	}
-
 	get tokenDeletableText() {
 		return Token.i18nBundle.getText(TOKEN_ARIA_REMOVE);
 	}

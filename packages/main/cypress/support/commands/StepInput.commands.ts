@@ -60,6 +60,21 @@ Cypress.Commands.add("ui5StepInputCheckInnerInputProperty", { prevSubject: true 
 		.should("have.prop", propName, expectedValue);
 });
 
+Cypress.Commands.add("ui5StepInputTypeNumber", { prevSubject: true }, (subject, value: number) => {
+	cy.wrap(subject)
+		 .as("stepInput")
+		.should("be.visible");
+
+	cy.get("@stepInput")
+		.shadow()
+		.find("[ui5-input]")
+		.shadow()
+		.find("input")
+		.clear()
+		.realType(value.toString())
+		.realPress("Enter");
+});
+
 declare global {
 	namespace Cypress {
 		interface Chainable {
@@ -67,6 +82,7 @@ declare global {
 			ui5StepInputChangeValueWithButtons(expectedValue: number, decreaseValue?: boolean): Chainable<void>
 			ui5StepInputAttachHandler(eventName: string, stubName: string): Chainable<void>
 			ui5StepInputCheckInnerInputProperty(propName: string, expectedValue: any): Chainable<void>
+			ui5StepInputTypeNumber(value: number): Chainable<void>
 		}
 	}
 }

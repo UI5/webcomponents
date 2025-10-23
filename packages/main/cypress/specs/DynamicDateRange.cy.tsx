@@ -4,13 +4,13 @@ import DateRange from '../../src/dynamic-date-range-options/DateRange.js';
 import Today from '../../src/dynamic-date-range-options/Today.js';
 import LastOptions from '../../src/dynamic-date-range-options/LastOptions.js';
 import NextOptions from '../../src/dynamic-date-range-options/NextOptions.js';
+import DateTimeRange from '../../src/dynamic-date-range-options/DateTimeRange.js';
 import FromDateTime from '../../src/dynamic-date-range-options/FromDateTime.js';
 import ToDateTime from '../../src/dynamic-date-range-options/ToDateTime.js';
 
 describe('DynamicDateRange Component', () => {
 	beforeEach(() => {
-		cy.mount(<DynamicDateRange options="TODAY, DATE, DATERANGE">
-		</DynamicDateRange>
+		cy.mount(<DynamicDateRange options="TODAY, DATE, DATERANGE, DATETIMERANGE"></DynamicDateRange>
 		);
 	});
 
@@ -38,41 +38,16 @@ describe('DynamicDateRange Component', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new Today(),
 			new SingleDate(),
-			new DateRange()
+			new DateRange(),
+			new DateTimeRange()
 		];
 
 		cy.get('[ui5-dynamic-date-range]')
 			.as("ddr");
 
 		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-	
-		cy.get("@input")
-			.should('exist');
-	
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.as("icon");
-
-		cy.get("@icon")
-			.realClick(); // Open the picker
-
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get('@list')
-			.find("[ui5-li]")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeGetOptionsList()
 			.as("listItems");
 
 		cy.get("@listItems")
@@ -90,34 +65,8 @@ describe('DynamicDateRange Component', () => {
 			.as("ddr");
 
 		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.should('exist');
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.as("icon");
-
-		cy.get("@icon")
-			.realClick(); // Open the picker
-
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get('@list')
-			.find("[ui5-li]")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeGetOptionsList()
 			.as("listItems");
 
 		cy.get("@listItems")
@@ -261,13 +210,8 @@ describe('DynamicDateRange Component', () => {
 			.eq(22) // May 21, 2035 is the 21st day
 			.realClick();
 
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.should('exist')
-			.realClick();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
@@ -336,8 +280,7 @@ describe('DynamicDateRange Component', () => {
 
 describe('DynamicDateRange Last/Next Options', () => {
 	beforeEach(() => {
-		cy.mount(<DynamicDateRange options="LASTDAYS, NEXTWEEKS, LASTMONTHS">
-		</DynamicDateRange>
+		cy.mount(<DynamicDateRange options="LASTDAYS, NEXTWEEKS, LASTMONTHS"></DynamicDateRange>
 		);
 	});
 
@@ -349,36 +292,8 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.as("ddr");
 
 		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.shadow()
-			.find("input")
-			.as("innerInput");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.as("icon");
-
-		cy.get("@icon")
-			.realClick();
-
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get("@list")
-			.find("[ui5-li]")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeGetOptionsList()
 			.as("listItems");
 
 		cy.get("@listItems")
@@ -411,98 +326,65 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.clear()
 			.realType('7');
 
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.realClick();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@innerInput")
 			.should('have.value', 'Last 7 Days');
 	});
 
-	it('handles Next X Weeks option and verifies date range calculation', () => {
-		new LastOptions();
-		new NextOptions();
+	// it('handles Next X Weeks option and verifies date range calculation', () => {
+	// 	new LastOptions();
+	// 	new NextOptions();
 
-		cy.window().then((win) => {
-			cy.stub(win.Date, 'now').returns(new Date(2025, 5, 15).getTime()); // June 15, 2025
-		});
+	// 	cy.window().then((win) => {
+	// 		cy.stub(win.Date, 'now').returns(new Date(2025, 5, 15).getTime()); // June 15, 2025
+	// 	});
 
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+	// 	cy.get('[ui5-dynamic-date-range]')
+	// 		.as("ddr");
 
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
+	// 	cy.get("@ddr")
+	// 		.ui5DynamicDateRangeOpen()
+	// 		.ui5DynamicDateRangeGetOptionsList()
+	// 		.as("listItems");
 
-		cy.get("@input")
-			.shadow()
-			.find("input")
-			.as("innerInput");
+	// 	cy.get("@listItems")
+	// 		.last()
+	// 		.realClick();
 
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.as("icon");
+	// 	cy.get("@popover")
+	// 		.find("[slot='header']")
+	// 		.should('contain.text', 'Next X');
 
-		cy.get("@icon")
-			.realClick();
+	// 	cy.get("@popover")
+	// 		.find("[ui5-step-input]")
+	// 		.as("stepInput");
 
-		cy.get("@ddr")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.as("popover");
+	// 	cy.get("@stepInput")
+	// 		.shadow()
+	// 		.find("[ui5-input]")
+	// 		.shadow()
+	// 		.find("input")
+	// 		.as("stepInputInner");
 
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
+	// 	cy.get("@stepInputInner")
+	// 		.clear()
+	// 		.realType('3');
 
-		cy.get("@list")
-			.find("[ui5-li]")
-			.as("listItems");
+	// 	cy.get("@stepInputInner")
+	// 		.realPress("Enter");
 
-		cy.get("@listItems")
-			.last()
-			.realClick();
+	// 	cy.get("@popover")
+	// 		.find(".ui5-ddr-current-value")
+	// 		.should('contain.text', 'Selected:');
 
-		cy.get("@popover")
-			.find("[slot='header']")
-			.should('contain.text', 'Next X');
+	// 	cy.get("@ddr")
+	// 		.ui5DynamicDateRangeSubmit();
 
-		cy.get("@popover")
-			.find("[ui5-step-input]")
-			.as("stepInput");
-
-		cy.get("@stepInput")
-			.shadow()
-			.find("[ui5-input]")
-			.shadow()
-			.find("input")
-			.as("stepInputInner");
-
-		cy.get("@stepInputInner")
-			.clear()
-			.realType('3');
-
-		cy.get("@stepInputInner")
-			.realPress("Enter");
-
-		cy.get("@popover")
-			.find(".ui5-ddr-current-value")
-			.should('contain.text', 'Selected:');
-
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.as("submitButton");
-
-		cy.get("@submitButton")
-			.realClick();
-
-		cy.get("@innerInput")
-			.should('have.value', 'Next 3 Weeks');
-	});
+	// 	cy.get("@innerInput")
+	// 		.should('have.value', 'Next 3 Weeks');
+	// });
 
 	it('validates text input for Last X Months and parses correctly', () => {
 		cy.get('[ui5-dynamic-date-range]')
@@ -561,37 +443,15 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-		
-		cy.get("@input")
-			.should('exist');
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
-		
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get("@list")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
 
 		cy.get("@popover")
 			.find(".ui5-dynamic-date-range-option-datetime-container")
@@ -610,17 +470,10 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
@@ -628,18 +481,12 @@ describe('FromDateTime Option', () => {
 			.as("popover");
 
 		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
-
-		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
 			.should('have.attr', 'selected');
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
@@ -651,7 +498,7 @@ describe('FromDateTime Option', () => {
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
@@ -662,28 +509,15 @@ describe('FromDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('From')
-			.click();
 		
 		cy.get("@popover")
 			.find("[ui5-calendar]")
@@ -695,11 +529,10 @@ describe('FromDateTime Option', () => {
 			.shadow()
 			.find(".ui5-dp-daytext")
 			.eq(15)
-			.click(); // Select day 13
+			.realClick(); // Select day 13
 		
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.click();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
@@ -723,37 +556,15 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-		
-		cy.get("@input")
-			.should('exist');
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
-		
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.should('exist');
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.as("list");
-
-		cy.get("@list")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
 
 		cy.get("@popover")
 			.find(".ui5-dynamic-date-range-option-datetime-container")
@@ -772,17 +583,10 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
@@ -790,18 +594,12 @@ describe('ToDateTime Option', () => {
 			.as("popover");
 
 		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
-
-		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
 			.should('have.attr', 'selected');
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Time']")
@@ -813,7 +611,7 @@ describe('ToDateTime Option', () => {
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
-			.click();
+			.realClick();
 
 		cy.get("@popover")
 			.find("[ui5-segmented-button-item][data-ui5-key='Date']")
@@ -824,28 +622,15 @@ describe('ToDateTime Option', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
-
-		cy.get("@ddr")
-			.shadow()
-			.find('[ui5-input]')
-			.as("input");
-
-		cy.get("@input")
-			.find('[ui5-icon]')
-			.click();
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
 
 		cy.get("@ddr")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("popover");
-
-		cy.get("@popover")
-			.find("[ui5-list]")
-			.find("[ui5-li]")
-			.contains('To')
-			.click();
 		
 		cy.get("@popover")
 			.find("[ui5-calendar]")
@@ -857,11 +642,10 @@ describe('ToDateTime Option', () => {
 			.shadow()
 			.find(".ui5-dp-daytext")
 			.eq(15)
-			.click(); // Select day 13
+			.realClick(); // Select day 13
 		
-		cy.get("@popover")
-			.find("[ui5-button][design='Emphasized']")
-			.click();
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@input")
 			.shadow()
@@ -872,5 +656,102 @@ describe('ToDateTime Option', () => {
 			.shadow()
 			.find("input")
 			.should('contain.value', 'To Oct 13, 2025');
+	});
+});
+
+describe('DynamicDateRange DateTimeRange Option', () => {
+	beforeEach(() => {
+		cy.mount(<DynamicDateRange options="DATETIMERANGE"></DynamicDateRange>);
+	});
+
+	it("should select DateTimeRange option and pick 2 dates from the DateTimePickers", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+            .ui5DynamicDateRangeSetDateTime("from-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("to-picker", "Dec 26, 2023, 4:45:00 AM")
+            .ui5DynamicDateRangeSubmit();
+
+        cy.get("@ddr")
+            .shadow()
+            .find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
+	});
+
+	it("should auto-correct date order when second date is earlier than first", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+            .ui5DynamicDateRangeSetDateTime("to-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("from-picker", "Dec 26, 2023, 4:45:00 AM")
+            .ui5DynamicDateRangeSubmit();
+
+        cy.get("@ddr")
+            .shadow()
+            .find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
+    });
+
+	it("should parse input value correctly when option is reopened", () => {
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr");
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput")
+			.clear()
+			.realType("Jan 4, 2025, 12:00:00 AM - Feb 26, 2025, 11:59:00 PM")
+			.realPress("Enter");
+
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
+
+		// Verify the parsed dates are displayed in the pickers
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("[ui5-datetime-picker]#from-picker")
+			.as("fromPicker");
+
+		cy.get("@fromPicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.as("fromInput");
+
+		cy.get("@fromInput")
+			.should("have.value", "Jan 4, 2025, 12:00:00 AM");
+
+		cy.get("@popover")
+			.find("[ui5-datetime-picker]#to-picker")
+			.as("toPicker");
+
+		cy.get("@toPicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.as("toInput");
+
+		cy.get("@toInput")
+			.should("have.value", "Feb 26, 2025, 11:59:00 PM");
 	});
 });

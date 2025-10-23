@@ -348,7 +348,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", "Action");
 
 		cy.get("@button")
-			.should("have.attr", "aria-description", "Emphasized");
+			.should("have.attr", "aria-description", Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
 	});
 
 	it("aria-label uses accessibleName when both text and accessibleName are provided", () => {
@@ -461,7 +461,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", `Download 1 item`);
 
 		cy.get("@button")
-			.should("have.attr", "aria-description", BUTTON_ARIA_TYPE_EMPHASIZED.defaultText);
+			.should("have.attr", "aria-description", Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
 	});
 
 	it("setting accessible-name-ref on the host is reflected on the button tag", () => {
