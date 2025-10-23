@@ -2,12 +2,8 @@ import Button from "../../src/Button.js";
 import Carousel from "../../src/Carousel.js";
 import Card from "../../src/Card.js";
 import Input from "../../src/Input.js";
-import List from "../../src/List.js";
-import CardHeader from "../../src/CardHeader.js";
-import Icon from "../../src/Icon.js";
-import ListItemGroup from "../../src/ListItemGroup.js";
-import Avatar from "../../src/Avatar.js";
-import ListItemStandard from "../../src/ListItemStandard.js";
+
+import { CAROUSEL_DOT_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Carousel general interaction", () => {
 	it("rendering", () => {
@@ -168,8 +164,8 @@ describe("Carousel general interaction", () => {
 	});
 
 	it("Aria attributes are set", () => {
-		const PAGE_INDICATOR_ARIA_LABEL1 = "Item 1 of 5 displayed";
-		const PAGE_INDICATOR_ARIA_LABEL2 = "Item 2 of 5 displayed";
+		const PAGE_INDICATOR_ARIA_LABEL1 = Carousel.i18nBundle.getText(CAROUSEL_DOT_TEXT, 1, 5);
+		const PAGE_INDICATOR_ARIA_LABEL2 = Carousel.i18nBundle.getText(CAROUSEL_DOT_TEXT, 2, 5);
 		const CAROUSEL_ITEM3_POS = "3";
 		const CAROUSEL_ITEM4_POS = "4";
 		const SETSIZE = "8";
