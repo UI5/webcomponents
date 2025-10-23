@@ -80,8 +80,44 @@
 		<ui5-daterange-picker id="daterange-picker16" value-state="Negative">
 			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
 		</ui5-daterange-picker>
+
+		<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-daterange-picker min-date="06/01/2020" max-date="05/01/2021" format-pattern="dd/MM/yyyy" required id="formDateRangePicker"></ui5-daterange-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
 	</div>
 	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDateRangePicker = document.getElementById('formDateRangePicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDateRangePicker');
+		});
+
+		formDateRangePicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDateRangePicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
 		document.getElementById('daterange-picker1').addEventListener('ui5-change', function(e) {
 			document.getElementById("labelChange").innerHTML = Number(document.getElementById("labelChange").innerHTML) + 1;
 		});

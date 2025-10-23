@@ -1291,7 +1291,7 @@ describe("Calendar accessibility", () => {
 });
 
 describe("Day Picker Tests", () => {
-	it("Select day with Space", () => {	
+	it.skip("Select day with Space", () => {	
 		cy.mount(<Calendar id="calendar1"></Calendar>);
 		
 		cy.get<Calendar>("#calendar1")

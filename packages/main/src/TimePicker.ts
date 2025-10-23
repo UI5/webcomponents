@@ -53,11 +53,12 @@ import {
 	TIMEPICKER_INPUT_DESCRIPTION,
 	TIMEPICKER_POPOVER_ACCESSIBLE_NAME,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
-	FORM_TEXTFIELD_REQUIRED,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_INFORMATION,
 	VALUE_STATE_SUCCESS,
 	VALUE_STATE_WARNING,
+	TIMEPICKER_VALUE_MISSING,
+	TIMEPICKER_PATTERN_MISSMATCH,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -351,11 +352,25 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return TimePicker.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return TimePicker.i18nBundle.getText(TIMEPICKER_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return TimePicker.i18nBundle.getText(TIMEPICKER_PATTERN_MISSMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !this.isValid(this.value),
+		};
 	}
 
 	async formElementAnchor() {

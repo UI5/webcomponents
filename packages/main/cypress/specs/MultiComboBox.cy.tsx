@@ -332,6 +332,43 @@ describe("General", () => {
 			.should("have.been.called");
 	});
 
+	it("Should delete token when clicking on token decline icon - regression test for long token deletion fix", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true}>
+				<MultiComboBoxItem selected={true} text="This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer")
+			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
+
+		// The first token is the long one and should be hidden in the n-more, so we target the second token
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.eq(1)
+			.as("token")
+			.should("exist");
+
+		cy.get("@token")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@tokenDelete")
+			.should("have.been.calledOnce")
+			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.tokens.length === 1;
+			}));
+
+		cy.get("@token")
+			.should("not.exist");
+	});
+
 	it("Autocomplete (typeahead)", () => {
 		cy.mount(
 			<MultiComboBox>

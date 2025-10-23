@@ -175,12 +175,45 @@
 			<ui5-date-picker id="datepicker10" calendar-week-numbering="WesternTraditional">
 			</ui5-date-picker>
 		</section>
-
+		<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-date-picker min-date="6/1/2020" max-date="5/1/2021" format-pattern="dd/MM/yyyy" required id="formDatepicker"></ui5-date-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
 	</div>
 	<script>
-		var dp = document.getElementById('dp5');
-		var labelChange = document.getElementById('lblChange');
-		var labelLiveChange = document.getElementById('lblLiveChange');
+		const dp = document.getElementById('dp5');
+		const labelChange = document.getElementById('lblChange');
+		const labelLiveChange = document.getElementById('lblLiveChange');
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDatepicker = document.getElementById('formDatepicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDatepicker');
+		});
+
+		formDatepicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDatepicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
 
 		dp.addEventListener('click', function() { console.log('click')});
 		dp.addEventListener('focus', function() {console.log('focus')});
@@ -197,10 +230,10 @@
 			labelLiveChange.innerHTML = 'input: ' + JSON.stringify(e.detail);
 		});
 
-		var dpPrevent = document.getElementById('dpPrevent');
-		var labelChangePrevent = document.getElementById('lblChangePrevent');
-		var labelChangePreventTargetValue = document.getElementById('lblChangePreventTargetValue');
-		var labelLiveChangePrevent = document.getElementById('lblLiveChangePrevent');
+		const dpPrevent = document.getElementById('dpPrevent');
+		const labelChangePrevent = document.getElementById('lblChangePrevent');
+		const labelChangePreventTargetValue = document.getElementById('lblChangePreventTargetValue');
+		const labelLiveChangePrevent = document.getElementById('lblLiveChangePrevent');
 
 		dpPrevent.addEventListener('ui5-change', function(e) {
 			e.preventDefault();
@@ -214,32 +247,32 @@
 		});
 
 		function datePickerInputChangeHandler(e) {
-			var dp = e.currentTarget;
+			const dp = e.currentTarget;
 			dp.setAttribute('value-state', e.detail.valid ? 'None' : 'Negative');
 		}
 
 		document.getElementById('ui5-datepicker--startDate').addEventListener('ui5-input change', datePickerInputChangeHandler);
 		document.getElementById('ui5-datepicker--startDate').addEventListener('change', datePickerInputChangeHandler);
 
-		var dp11 = document.getElementById('dp11');
+		const dp11 = document.getElementById('dp11');
 
 		document.getElementById('b1').addEventListener("click", function(e) {
 			dp11.setAttribute("value", dp11.formatValue(new Date(2018, 11, 11)));
 		});
 
 		const datePickerValueStateChangePrevented = document.getElementById("dpVsChangePrevented");
-	
+
 		datePickerValueStateChangePrevented.addEventListener("value-state-change", function(e) {
 			e.preventDefault();
-	});
+		});
 
-	dpCalendarModeDays.addEventListener("ui5-open", function(e) {
-		console.log("Picker is opened");
-	});
+		dpCalendarModeDays.addEventListener("ui5-open", function(e) {
+			console.log("Picker is opened");
+		});
 
-	dpCalendarModeDays.addEventListener("ui5-close", function(e) {
-		console.log("Picker is closed");
-	});
+		dpCalendarModeDays.addEventListener("ui5-close", function(e) {
+			console.log("Picker is closed");
+		});
 
 	</script>
 </body>
