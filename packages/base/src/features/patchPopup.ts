@@ -13,13 +13,13 @@ type OpenUI5Popup = {
 		_closed: (...args: any[]) => void,
 		getOpenState: () => "CLOSED" | "CLOSING" | "OPEN" | "OPENING",
 		getContent: () => Control | HTMLElement | null, // this is the OpenUI5 Element/Control instance that opens the Popup (usually sap.m.Popover/sap.m.Dialog)
-		onFocusEvent: (e: FocusEvent) => void,
+		onFocusEvent: (...args: any[]) => void,
 	}
 };
 
 type OpenUI5PopupBasedControl = {
 	prototype: {
-		onsapescape: (e: Event) => void,
+		onsapescape: (...args: any[]) => void,
 		oPopup: OpenUI5Popup,
 	}
 };
@@ -93,12 +93,12 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 
 const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => {
 	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
-	PopupBasedControl.prototype.onsapescape = function onsapescape(e: Event) {
+	PopupBasedControl.prototype.onsapescape = function onsapescape(...args: any[]) {
 		if (hasWebComponentPopupAbove(this.oPopup)) {
 			return;
 		}
 
-		origOnsapescape.call(this, e);
+		origOnsapescape.apply(this, args);
 	};
 };
 
@@ -141,9 +141,9 @@ const patchClosed = (Popup: OpenUI5Popup) => {
 
 const patchFocusEvent = (Popup: OpenUI5Popup) => {
 	const origFocusEvent = Popup.prototype.onFocusEvent;
-	Popup.prototype.onFocusEvent = function onFocusEvent(e: FocusEvent) {
+	Popup.prototype.onFocusEvent = function onFocusEvent(...args: any[]) {
 		if (!hasWebComponentPopupAbove(this)) {
-			origFocusEvent.call(this, e);
+			origFocusEvent.apply(this, args);
 		}
 	};
 };
