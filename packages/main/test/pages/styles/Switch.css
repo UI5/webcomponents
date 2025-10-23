@@ -81,3 +81,7 @@ ui5-switch {
     border-radius: var(--sapElement_BorderCornerRadius);
     padding: 1rem;
 }
+
+#formValidation ui5-switch:invalid{
+    outline: 2px solid var(--sapNegativeColor);
+}
