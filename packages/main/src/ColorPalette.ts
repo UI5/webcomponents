@@ -353,12 +353,6 @@ class ColorPalette extends UI5Element {
 		if (isSpace(e)) {
 			e.preventDefault();
 		}
-
-		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
-		if (!this.popupMode && (isHome(e) || isEnd(e))) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
 	}
 
 	handleSelection(target: ColorPaletteItem) {
@@ -410,9 +404,11 @@ class ColorPalette extends UI5Element {
 		}
 
 		if (this._isNext(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstDisplayedColor();
 		} else if (isLeft(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastRecentColor(),
@@ -420,6 +416,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isUp(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastRecentColor(),
@@ -428,6 +425,13 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isEnd(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -438,15 +442,18 @@ class ColorPalette extends UI5Element {
 
 	_onMoreColorsKeyDown(e: KeyboardEvent) {
 		if (isLeft(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
 		} else if (isUp(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastSwatchOfLastFullRow(),
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (this._isNext(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusFirstRecentColor(),
@@ -454,17 +461,41 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isHome(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
+		} else if (isEnd(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			// More Colors button is typically the last element, so END key stays here
+			e.preventDefault();
+			e.stopPropagation();
 		}
 	}
 
 	_onColorContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
 		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(target, this.displayedColors);
+
+		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
 
 		if (this._isUpOrDownNavigatableColorPaletteItem(e)) {
 			this._currentlySelected = undefined;
@@ -476,6 +507,7 @@ class ColorPalette extends UI5Element {
 		}
 
 		if (this._isPrevious(e) && this._isFirstSwatch(target, this.displayedColors)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
@@ -487,6 +519,7 @@ class ColorPalette extends UI5Element {
 		} else if ((isRight(e) && this._isLastSwatch(target, this.displayedColors))
 			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(target) || isLastSwatchInSingleRow))
 		) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -495,6 +528,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isHome(e) && this._isFirstSwatchInRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
@@ -502,6 +536,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isEnd(e) && this._isLastSwatchInRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -509,6 +544,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isEnd(e) && this._isSwatchInLastRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
 		}
@@ -517,11 +553,19 @@ class ColorPalette extends UI5Element {
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
 
+		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
 		if (this._isUpOrDownNavigatableColorPaletteItem(e)) {
 			this._currentlySelected = undefined;
 		}
 
 		if (this._isNext(e) && this._isLastSwatch(target, this.recentColorsElements)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
@@ -529,6 +573,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (this._isPrevious(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -537,6 +582,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 			);
 		} else if (isEnd(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastRecentColor();
 		}
@@ -612,6 +658,17 @@ class ColorPalette extends UI5Element {
 		const index = this.displayedColors.indexOf(target);
 		const lastRowSwatchesCount = this.displayedColors.length % this.rowSize;
 		return index >= 0 && index >= this.displayedColors.length - lastRowSwatchesCount;
+	}
+
+	/**
+	 * Checks if HOME/END navigation should be prevented in embedded mode.
+	 * In embedded mode, HOME/END keys are blocked as they only work in popup mode per design.
+	 * @private
+	 * @param e The keyboard event to check
+	 * @returns True if the event should be prevented, false otherwise
+	 */
+	_shouldPreventHomeEnd(e: KeyboardEvent): boolean {
+		return !this.popupMode && (isHome(e) || isEnd(e));
 	}
 
 	/**
