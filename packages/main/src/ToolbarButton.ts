@@ -162,6 +162,15 @@ class ToolbarButton extends ToolbarItem {
 		};
 	}
 
+	/**
+	 * Returns the effective text to display based on overflow state.
+	 * When not overflowed, returns the original text.
+	 * When overflowed, returns text if available, otherwise tooltip as fallback.
+	 */
+	get effectiveText(): string | undefined {
+		return this.isOverflowed ? (this.text || this.tooltip) : this.text;
+	}
+
 	onClick(e: Event) {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });

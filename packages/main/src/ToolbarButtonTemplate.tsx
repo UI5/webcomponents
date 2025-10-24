@@ -22,7 +22,7 @@ export default function ToolbarButtonTemplate(this: ToolbarButton) {
 			data-ui5-stable={this.stableDomRef}
 			onClick={(...args) => this.onClick(...args)}
 		>
-			{this.text}
+			{this.effectiveText}
 		</Button>
 	);
 }
