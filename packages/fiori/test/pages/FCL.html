@@ -19,12 +19,20 @@
 	<br><br>
 	<ui5-title class="sectionTitle">List-Detail: List View Expanded</ui5-title>
 	<ui5-toggle-button id="switchBtn1" class="testButton">Set to ThreeColumnsMidExpanded</ui5-toggle-button><br>
-	<ui5-input id="layoutChangeRes" placeholder="layout..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes2" placeholder="columns visibility..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes3" placeholder="resize or separator movement..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes4" placeholder="change counter..." class="fcl2auto"></ui5-input><br>
-	<div>
-		<ui5-label show-colon>Switch RTL: </ui5-label>
+	<div class="status">
+		<ui5-label show-colon>Layout</ui5-label>
+		<ui5-input id="layoutChangeRes" placeholder="layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns layout</ui5-label>
+		<ui5-input id="layoutChangeRes1" placeholder="columns layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns visibility</ui5-label>
+		<ui5-input id="layoutChangeRes2" placeholder="columns visibility..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>resize or separator movement</ui5-label>
+		<ui5-input id="layoutChangeRes3" placeholder="resize or separator movement..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes4" placeholder="layout-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-distribution-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes5" placeholder="layout-distribution-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>Switch RTL</ui5-label>
 		<ui5-switch id="swRTL"></ui5-switch>
 	</div>
 	<div>
@@ -776,8 +784,10 @@
 
 		var counter = 0;
 		var counter2 = 0;
+		var layoutConfigurationChangeCounter = 0;
 		fcl1.addEventListener("ui5-layout-change", function(e) {
-			layoutChangeRes.value = "layout ::" + e.detail.layout + " columns ::" + e.detail.columnLayout;
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
 			layoutChangeRes2.value =
 			"startColumnVisible :: " + e.detail.startColumnVisible
 			+ ", midColumnVisible :: " + e.detail.midColumnVisible
@@ -785,6 +795,12 @@
 			layoutChangeRes3.value = "separatorsUsed :: " + e.detail.separatorsUsed + ", resizing :: " + e.detail.resized;
 			layoutChangeRes4.value = `${++counter}`;
 
+		});
+
+		fcl1.addEventListener("ui5-layout-configuration-change", function(e) {
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
+			layoutChangeRes5.value = `${++layoutConfigurationChangeCounter}`;
 		});
 
 		fcl3.addEventListener("ui5-layout-change", function(e) {
