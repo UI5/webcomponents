@@ -945,6 +945,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_onfocusin(e: FocusEvent) {
+		const target = e.target as Token;
+
+		if (target && target.toBeDeleted) {
+			this._tokenDeleting = true;
+
+			return;
+		}
+
 		this.open = false;
 		this.expanded = true;
 		this._addTokenToNavigation(e.target as Token);
