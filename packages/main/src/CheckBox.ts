@@ -21,8 +21,7 @@ import {
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
 	VALUE_STATE_SUCCESS,
-	FORM_CHECKABLE_REQUIRED,
-	CHECKBOX_ARIA_TYPE,
+	FORM_CHECKABLE_REQUIRED
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -469,7 +468,6 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	get accessibilityInfo() {
 		return {
 			role: this.accInfo.role,
-			type: CheckBox.i18nBundle.getText(CHECKBOX_ARIA_TYPE),
 			description: this.ariaLabelText || this.text || "",
 			disabled: !!this.accInfo.ariaDisabled,
 			readonly: !!this.accInfo.ariaReadonly,

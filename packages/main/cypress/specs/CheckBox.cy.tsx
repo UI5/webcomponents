@@ -405,8 +405,6 @@ describe("Accessibility", () => {
 			const checkbox = $checkbox[0] as CheckBox;
 			const accInfo = checkbox.accessibilityInfo;
 			
-			expect(accInfo.type).to.equal("checkbox");
-			
             // Description should come from accessibleName property
 			expect(accInfo.description).to.equal("Custom Aria Label");
 			
@@ -418,7 +416,6 @@ describe("Accessibility", () => {
 		});    
 	});
 
-    // should provide correct accessibilityInfo description from associated label wits accessibleNameRef
     it("should provide correct accessibilityInfo description from accessibleNameRef", () => {
         cy.mount(
             <>
