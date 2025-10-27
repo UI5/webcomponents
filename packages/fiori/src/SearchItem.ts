@@ -10,7 +10,8 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import { SEARCH_ITEM_DELETE_BUTTON } from "./generated/i18n/i18n-defaults.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-import { isSpace, isEnter, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
+import { isSpace, isEnter, isF2, isTabNext, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 // @ts-expect-error
@@ -118,7 +119,7 @@ class SearchItem extends ListItemBase {
 	image!: Array<HTMLElement>;
 
 	/**
-	 * Defines the secondary actionable elements.
+	 * Defines the actionable elements.
 	 * This slot allows placing additional interactive elements (such as buttons, icons, or tags)
 	 * next to the delete button, providing flexible customization for various user actions.
 	 *
@@ -126,10 +127,10 @@ class SearchItem extends ListItemBase {
 	 * it's recommended to use `ui5-button` with `Transparent` design or `ui5-icon` elements.
 	 *
 	 * @public
-	 * @since 2.13.0
+	 * @since 2.15.0
 	 */
 	@slot()
-	secondaryActions!: Array<HTMLElement>;
+	actions!: Array<HTMLElement>;
 
 	_markupText = "";
 
@@ -147,8 +148,20 @@ class SearchItem extends ListItemBase {
 	}
 
 	async _onkeydown(e: KeyboardEvent) {
+		// Handle manual tab navigation between action items
+		if (isTabNext(e) || isTabPrevious(e)) {
+			const handled = this._handleTabNavigation(e);
+			if (handled) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+		}
+
+		// Call super for other key handling
 		super._onkeydown(e);
 
+		// Handle space/enter when focus is within action items
 		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
 			if (isSpace(e) || isEnter(e)) {
 				e.preventDefault();
@@ -156,6 +169,7 @@ class SearchItem extends ListItemBase {
 			}
 		}
 
+		// Handle F2 for focus navigation
 		if (isF2(e)) {
 			e.stopImmediatePropagation();
 			const activeElement = getActiveElement();
@@ -172,6 +186,51 @@ class SearchItem extends ListItemBase {
 				focusDomRef.focus();
 			}
 		}
+	}
+
+	/**
+	 * Handles manual tab navigation between action items and delete button
+	 */
+	_handleTabNavigation(e: KeyboardEvent): boolean {
+		const focusDomRef = this.getFocusDomRef();
+		if (!focusDomRef) {
+			return false;
+		}
+
+		const tabbableElements = getTabbableElements(focusDomRef);
+		if (tabbableElements.length === 0) {
+			return false;
+		}
+
+		const activeElement = getActiveElement() as HTMLElement;
+		const currentIndex = tabbableElements.indexOf(activeElement);
+
+		if (currentIndex === -1) {
+			return false;
+		}
+
+		let nextElement: HTMLElement | null = null;
+
+		if (isTabNext(e)) {
+			if (currentIndex < tabbableElements.length - 1) {
+				nextElement = tabbableElements[currentIndex + 1];
+			} else {
+				return false;
+			}
+		} else if (isTabPrevious(e)) {
+			if (currentIndex > 0) {
+				nextElement = tabbableElements[currentIndex - 1];
+			} else {
+				return false;
+			}
+		}
+
+		if (nextElement) {
+			nextElement.focus();
+			return true;
+		}
+
+		return false;
 	}
 
 	_onDeleteButtonClick() {
@@ -191,12 +250,23 @@ class SearchItem extends ListItemBase {
 		this._markupText = this.highlightText ? generateHighlightedMarkup((this.text || ""), this.highlightText) : encodeXML(this.text || "");
 	}
 
+	/**
+	 * Determines if the current search item either has no tabbable content or
+	 * [Tab] is performed on the last tabbable content item.
+	 * This method is crucial for proper tab navigation between action items.
+	 */
+	shouldForwardTabAfter() {
+		const aContent = getTabbableElements(this.getFocusDomRef()!);
+
+		return aContent.length === 0 || (aContent[aContent.length - 1] === getActiveElement());
+	}
+
 	get _deleteButtonTooltip() {
 		return SearchItem.i18nBundle.getText(SEARCH_ITEM_DELETE_BUTTON);
 	}
 
-	get hasSecondaryActions() {
-		return !!this.secondaryActions.length;
+	get hasActions() {
+		return !!this.actions.length;
 	}
 }
 

@@ -34,7 +34,7 @@
 	display: none;
 }
 
-:host([desktop]) .ui5-search-item-secondary-actions {
+:host([desktop]) .ui5-search-item-actions {
 	display: none;
 }
 
@@ -44,12 +44,12 @@
 		display: inline-block;
 	}
 	
-	.ui5-search-item-secondary-actions {
+	.ui5-search-item-actions {
 		display: flex;
 	}
 }
 
-.ui5-search-item-secondary-actions {
+.ui5-search-item-actions {
 	display: flex;
 	align-items: center;
 	gap: 0.25rem;
