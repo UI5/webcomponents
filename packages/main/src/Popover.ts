@@ -6,7 +6,6 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
 import { getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import Popup from "./Popup.js";
@@ -81,7 +80,6 @@ type CalculatedPlacement = {
 		Popup.styles,
 		PopupsCommonCss,
 		PopoverCss,
-		getEffectiveScrollbarStyle(),
 	],
 	template: PopoverTemplate,
 })
@@ -190,7 +188,7 @@ class Popover extends Popup {
 	@slot({ type: HTMLElement })
 	footer!: Array<HTMLElement>;
 
-	_opener?: HTMLElement | string;
+	_opener?: HTMLElement | string | null | undefined;
 	_openerRect?: DOMRect;
 	_preventRepositionAndClose?: boolean;
 	_top?: number;
@@ -216,7 +214,7 @@ class Popover extends Popup {
 	 * @since 1.2.0
 	 */
 	@property({ converter: DOMReferenceConverter })
-	set opener(value: HTMLElement | string) {
+	set opener(value: HTMLElement | string | null) {
 		if (this._opener === value) {
 			return;
 		}
@@ -228,7 +226,7 @@ class Popover extends Popup {
 		}
 	}
 
-	get opener(): HTMLElement | string | undefined {
+	get opener(): HTMLElement | string | null | undefined {
 		return this._opener;
 	}
 
@@ -243,7 +241,7 @@ class Popover extends Popup {
 			return;
 		}
 
-		if (this.isOpenerOutsideViewport(opener.getBoundingClientRect())) {
+		if (!opener || this.isOpenerOutsideViewport(opener.getBoundingClientRect())) {
 			await renderFinished();
 			this.open = false;
 			this.fireDecoratorEvent("close");
@@ -290,8 +288,8 @@ class Popover extends Popup {
 		removeOpenedPopover(this);
 	}
 
-	getOpenerHTMLElement(opener: HTMLElement | string | undefined): HTMLElement | null | undefined {
-		if (opener === undefined) {
+	getOpenerHTMLElement(opener: HTMLElement | string | null | undefined): HTMLElement | null | undefined {
+		if (opener === undefined || opener === null) {
 			return opener;
 		}
 
@@ -375,6 +373,14 @@ class Popover extends Popup {
 
 		const opener = this.getOpenerHTMLElement(this.opener);
 
+		if (!opener) {
+			Object.assign(this.style, {
+				top: `0px`,
+				left: `0px`,
+			});
+			return;
+		}
+
 		if (opener && instanceOfUI5Element(opener) && !opener.getDomRef()) {
 			return;
 		}
@@ -393,7 +399,7 @@ class Popover extends Popup {
 
 		if (this.open) {
 			// update opener rect if it was changed during the popover being opened
-			this._openerRect = opener!.getBoundingClientRect();
+			this._openerRect = opener.getBoundingClientRect();
 		}
 
 		if (this._oldPlacement && this.shouldCloseDueToNoOpener(this._openerRect!) && this.isFocusWithin()) {
@@ -468,10 +474,24 @@ class Popover extends Popup {
 		return top + (Number.parseInt(this.style.top || "0") - actualTop);
 	}
 
-	getPopoverSize(): PopoverSize {
-		const rect = this.getBoundingClientRect(),
-			width = rect.width,
+	getPopoverSize(calcScrollHeight: boolean = false): PopoverSize {
+		const rect = this.getBoundingClientRect();
+		const width = rect.width;
+		let height;
+
+		const domRef = this.getDomRef();
+
+		if (calcScrollHeight && domRef) {
+			const header = domRef.querySelector(".ui5-popup-header-root");
+			const content = domRef.querySelector(".ui5-popup-content");
+			const footer = domRef.querySelector(".ui5-popup-footer-root");
+
+			height = content?.scrollHeight || 0;
+			height += header?.scrollHeight || 0;
+			height += footer?.scrollHeight || 0;
+		} else {
 			height = rect.height;
+		}
 
 		return { width, height };
 	}
@@ -512,7 +532,7 @@ class Popover extends Popup {
 		let maxHeight = clientHeight;
 		let maxWidth = clientWidth;
 
-		const placement = this.getActualPlacement(targetRect, popoverSize);
+		const placement = this.getActualPlacement(targetRect);
 
 		this._preventRepositionAndClose = this.shouldCloseDueToNoOpener(targetRect) || this.shouldCloseDueToOverflow(placement, targetRect);
 
@@ -647,14 +667,14 @@ class Popover extends Popup {
 
 		// Restricts the arrow's translate value along each dimension,
 		// so that the arrow does not clip over the popover's rounded borders.
-		const safeRangeForArrowY = popoverSize.height / 2 - borderRadius - ARROW_SIZE / 2;
+		const safeRangeForArrowY = popoverSize.height / 2 - borderRadius - ARROW_SIZE / 2 - 2;
 		arrowTranslateY = clamp(
 			arrowTranslateY,
 			-safeRangeForArrowY,
 			safeRangeForArrowY,
 		);
 
-		const safeRangeForArrowX = popoverSize.width / 2 - borderRadius - ARROW_SIZE / 2;
+		const safeRangeForArrowX = popoverSize.width / 2 - borderRadius - ARROW_SIZE / 2 - 2;
 		arrowTranslateX = clamp(
 			arrowTranslateX,
 			-safeRangeForArrowX,
@@ -689,22 +709,31 @@ class Popover extends Popup {
 		}
 	}
 
-	getActualPlacement(targetRect: DOMRect, popoverSize: PopoverSize): `${PopoverPlacement}` {
+	getActualPlacement(targetRect: DOMRect): `${PopoverPlacement}` {
 		const placement = this.placement;
 		let actualPlacement = placement;
+		const isVertical = placement === PopoverPlacement.Top
+			|| placement === PopoverPlacement.Bottom;
+		const popoverSize = this.getPopoverSize(!this.allowTargetOverlap);
 
 		const clientWidth = document.documentElement.clientWidth;
-		const clientHeight = document.documentElement.clientHeight;
+		let clientHeight = document.documentElement.clientHeight;
+		let popoverHeight = popoverSize.height;
+
+		if (isVertical) {
+			popoverHeight += this.hideArrow ? 0 : ARROW_SIZE;
+			clientHeight -= Popover.VIEWPORT_MARGIN;
+		}
 
 		switch (placement) {
 		case PopoverPlacement.Top:
-			if (targetRect.top < popoverSize.height
+			if (targetRect.top < popoverHeight
 				&& targetRect.top < clientHeight - targetRect.bottom) {
 				actualPlacement = PopoverPlacement.Bottom;
 			}
 			break;
 		case PopoverPlacement.Bottom:
-			if (clientHeight - targetRect.bottom < popoverSize.height
+			if (clientHeight - targetRect.bottom < popoverHeight
 				&& clientHeight - targetRect.bottom < targetRect.top) {
 				actualPlacement = PopoverPlacement.Top;
 			}

@@ -2,7 +2,7 @@ import type Popover from "../../../src/Popover.js";
 import { isPopupOpen } from "./utils/popup-open.js";
 
 Cypress.Commands.add("ui5PopoverOpened", { prevSubject: true }, (subject: JQuery<Popover>) => {
-	isPopupOpen(subject);
+	isPopupOpen(() => cy.wrap(subject))
 });
 
 declare global {

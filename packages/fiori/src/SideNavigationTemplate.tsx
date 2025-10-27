@@ -19,6 +19,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					class="ui5-sn-list ui5-sn-flexible"
 					aria-orientation="vertical"
 					aria-roledescription={this.ariaRoleDescNavigationList}
+					aria-label={this.navigationMenuPrimaryHiddenText}
 				>
 					<slot></slot>
 					<SideNavigationItem
@@ -35,6 +36,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 				<ul role="tree"
 					class="ui5-sn-list ui5-sn-flexible"
 					aria-roledescription={this.ariaRoleDescNavigationList}
+					aria-label={this.navigationMenuPrimaryHiddenText}
 				>
 					<slot></slot>
 				</ul>
@@ -47,6 +49,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 						class="ui5-sn-list ui5-sn-fixed"
 						aria-orientation="vertical"
 						aria-roledescription={this.ariaRoleDescNavigationList}
+						aria-label={this.navigationMenuFooterHiddenText}
 					>
 						<slot name="fixedItems"></slot>
 					</div>
@@ -54,6 +57,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					<ul role="tree"
 						class="ui5-sn-list ui5-sn-fixed"
 						aria-roledescription={this.ariaRoleDescNavigationList}
+						aria-label={this.navigationMenuFooterHiddenText}
 					>
 						<slot name="fixedItems"></slot>
 					</ul>

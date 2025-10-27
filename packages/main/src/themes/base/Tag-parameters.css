@@ -5,8 +5,6 @@
 	--_ui5-tag-text-transform: uppercase;
 	--_ui5-tag-icon-width: 0.75rem;
 	--_ui5-tag-icon-gap: 0.125rem;
-	--_ui5-tag-font-size: var(--sapFontSmallSize);
-	--_ui5-tag-font: "72override", var(--sapFontFamily);
 	--_ui5-tag-font-weight: bold;
 	--_ui5-tag-letter-spacing: 0.0125em;
 
@@ -124,5 +122,4 @@
 	--_ui5-tag-icon_min_height_size_l:1.25rem;
 	--_ui5-tag-icon_height_size_l: 1.25rem;
 	--_ui5-tag-text_padding_size_l: 0.125rem 0.25rem;
-	--_ui5-tag-text-height_size_l: 1.5rem;
 }

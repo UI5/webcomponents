@@ -107,6 +107,7 @@
 
 	submitBtn.addEventListener("click", function(e) {
 		if (myForm.checkValidity()) {
+			console.log(myForm);
 			e.preventDefault();
 			alert("Form submitted successfully!");
 		}

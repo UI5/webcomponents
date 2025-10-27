@@ -10,10 +10,10 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
-
-    <ui5-file-uploader>
-        <ui5-button icon="upload" accessible-name-ref="upload-single-file-label">Upload File</ui5-button>
-    </ui5-file-uploader>
+     <div style="height: 100px">
+        <ui5-label for="single-file-uploader">Upload a single file:</ui5-label>
+        <ui5-file-uploader id="single-file-uploader"></ui5-file-uploader>
+     </div>
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

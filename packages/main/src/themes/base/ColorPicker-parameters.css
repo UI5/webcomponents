@@ -3,7 +3,6 @@
     --_ui5_color_picker_slider_handle_border: 0.125rem solid var(--sapField_BorderColor);
     --_ui5_color_picker_slider_handle_outline_hover: 0.125rem solid var(--sapButton_Hover_BorderColor);
     --_ui5_color_picker_slider_handle_outline_focus: 0.0625rem dotted var(--sapContent_FocusColor);
-    --_ui5_color_picker_slider_handle_margin_top: -0.125rem;
     --_ui5_color_picker_slider_handle_inner_border_color: #fff;
     --_ui5_color_picker_circle_outer_border: 0.0625rem solid var(--sapContent_ContrastShadowColor);
     --_ui5_color_picker_circle_inner_border: var(--sapField_Picker_BorderWidth) solid var(--sapField_BorderColor);

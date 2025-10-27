@@ -37,6 +37,16 @@ describe("TableRowActions", () => {
 		cy.get("@table").then($table => {
 			$table[0].addEventListener("row-action-click", cy.stub().as("rowActionClick"));
 		});
+		cy.get("@innerTable").should("have.attr", "aria-colcount", "1");
+	}
+
+	function checkTemplateColumn(expectedWidth: string) {
+		cy.get("@innerTable").should($table => {
+			const gridTemplateColumns = getComputedStyle($table[0]).gridTemplateColumns;
+			console.log(gridTemplateColumns, expectedWidth, gridTemplateColumns.startsWith(expectedWidth));
+			// eslint-disable-next-line no-unused-expressions
+			expect(gridTemplateColumns.startsWith(expectedWidth)).to.be.true;
+		});
 	}
 
 	describe("Rendering", () => {
@@ -58,7 +68,7 @@ describe("TableRowActions", () => {
 			);
 
 			cy.get("@headerRow").shadow().find("#actions-cell").should("exist");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 8}px`);
 			cy.get("@row1").find("[icon=add]").shadow().find("ui5-button").should("exist");
 			cy.get("@row2").find("[icon=add]").should("have.css", "display", "block");
 			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-icon").should("have.attr", "name", "navigation-right-arrow");
@@ -91,8 +101,12 @@ describe("TableRowActions", () => {
 			</>
 			);
 
+			cy.get("@table").then($table => {
+				$table[0].addEventListener("row-click", cy.stub().as("rowClick"));
+			});
+
 			cy.get("@headerRow").shadow().find("#actions-cell").should("exist");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 4 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 4 + 36 + 8}px`);
 			cy.get("@row1").shadow().find("#actions-cell").children().as("actions");
 			cy.get("@actions").should("have.length", 2);
 			cy.get("@actions").eq(0).as("overflowButton");
@@ -122,7 +136,7 @@ describe("TableRowActions", () => {
 			cy.get("@rowActionClick").invoke("getCall", 1).its("args.0.detail.action.id").should("equal", "editAction");
 
 			cy.get("@table").invoke("attr", "row-action-count", "3");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 4 + 36 + 4 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 4 + 36 + 4 + 36 + 8}px`);
 			cy.get("@actions").should("have.length", 3);
 			cy.get("@actions").eq(0).should("have.attr", "name", "actions-2");
 			cy.get("@actions").eq(1).as("overflowButton").should("have.attr", "icon", "overflow");
@@ -136,7 +150,7 @@ describe("TableRowActions", () => {
 			cy.get("@rowActionClick").invoke("getCall", 2).its("args.0.detail.action.id").should("equal", "editAction");
 
 			cy.get("@table").invoke("attr", "row-action-count", "4");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 8}px`);
 			cy.get("@actions").should("have.length", 4);
 			cy.get("@actions").eq(0).should("have.attr", "name", "actions-2");
 			cy.get("@actions").eq(1).should("have.attr", "name", "actions-3");
@@ -144,7 +158,7 @@ describe("TableRowActions", () => {
 			cy.get("@actions").eq(3).should("have.attr", "name", "actions-1");
 
 			cy.get("@table").invoke("attr", "row-action-count", "5");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 4 + 36 + 8}px`);
 			cy.get("@actions").should("have.length", 4);
 			cy.get("@row1").find("[slot=actions-4],[slot=actions-1]").then($lastActions => {
 				const lastAction = $lastActions[0];
@@ -154,9 +168,11 @@ describe("TableRowActions", () => {
 			}).should("be.true");
 
 			cy.get("@table").invoke("attr", "row-action-count", "1");
-			cy.get("@innerTable").should("have.css", "gridTemplateColumns", `${8 + 36 + 8}px`);
+			checkTemplateColumn(`${8 + 36 + 8}px`);
 			cy.get("@actions").should("have.length", 1);
 			cy.get("@actions").eq(0).should("have.attr", "icon", "overflow");
+
+			cy.get("@rowClick").should("have.callCount", 0);
 		});
 
 		it("tests that invisible actions occupy space for alignment", () => {

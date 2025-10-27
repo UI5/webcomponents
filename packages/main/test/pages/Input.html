@@ -121,7 +121,7 @@
 	<h3>Input with valueState and Dynamic suggestions</h3>
 	<ui5-input id="inputError" class="input2auto" show-suggestions value-state="Negative"
 		placeholder="Search for a country ...">
-		<div slot="valueStateMessage">Custom error value state message with a <a href="#">Link</a>.</div>
+		<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link</ui5-link>.</div>
 	</ui5-input>
 
 	<h3>Input with long suggestions with valueState and ui5-li</h3>
@@ -159,7 +159,7 @@
 
 	<h3> Test 'input' event</h3>
 	<ui5-input id="input2" value-state="Negative" placeholder="Negative state ...">
-		<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an
+		<div slot="valueStateMessage">Information message. This is a <ui5-link href="#">Link</ui5-link>. Extra long text used as an
 			information message. Extra long text used as an information message - 2. Extra long text used as an information
 			message - 3.</div>
 	</ui5-input>
@@ -528,11 +528,41 @@
 
 	<ui5-label id="description">Input with accessible description ref</ui5-label>
 	<ui5-input accessible-description-ref="description"></ui5-input>
-	
+
 	<br>
 
 	<ui5-label id="description">Input with just accessible description</ui5-label>
 	<ui5-input accessible-description="Accessible description works"></ui5-input>
+
+	<br>
+	<br>
+	<h3>Input Composition</h3>
+	<ui5-label id="description">Input Composition with Korean Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-korean" show-suggestions placeholder="Type in Korean ...">
+		<ui5-suggestion-item text="안녕하세요"></ui5-suggestion-item>
+		<ui5-suggestion-item text="고맙습니다"></ui5-suggestion-item>
+		<ui5-suggestion-item text="사랑"></ui5-suggestion-item>
+		<ui5-suggestion-item text="한국"></ui5-suggestion-item>
+	</ui5-input>
+	<br>
+	<ui5-label id="description">Input Composition with Japanese Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-japanese" show-suggestions placeholder="Type in Japanese ...">
+		<ui5-suggestion-item text="こんにちは"></ui5-suggestion-item>
+		<ui5-suggestion-item text="ありがとう"></ui5-suggestion-item>
+		<ui5-suggestion-item text="日本"></ui5-suggestion-item>
+		<ui5-suggestion-item text="東京"></ui5-suggestion-item>
+	</ui5-input>
+	<br>
+	<ui5-label id="description">Input Composition with Chinese Suggestions</ui5-label>
+	<br>
+	<ui5-input id="input-composition-chinese" show-suggestions placeholder="Type in Chinese ...">
+		<ui5-suggestion-item text="你好"></ui5-suggestion-item>
+		<ui5-suggestion-item text="謝謝"></ui5-suggestion-item>
+		<ui5-suggestion-item text="北京"></ui5-suggestion-item>
+		<ui5-suggestion-item text="上海"></ui5-suggestion-item>
+	</ui5-input>
 
 	<br>
 

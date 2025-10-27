@@ -110,6 +110,10 @@ class TimelineGroupItem extends UI5Element implements ITimelineItem {
 			return;
 		}
 
+		this.items.forEach(item => {
+			item.effectiveRole = "treeitem";
+		});
+
 		this._setGroupItemProps();
 	}
 

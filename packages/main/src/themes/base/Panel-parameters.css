@@ -7,7 +7,6 @@
 	--_ui5_panel_border_radius_expanded: 0;
 	--_ui5_panel_default_header_border: none;
 	--_ui5_panel_border_bottom: var(--sapGroup_TitleBorderWidth) solid var(--sapGroup_TitleBorderColor);
-	--_ui5_panel_outline_offset: -3px;
 	--_ui5_panel_icon_color: var(--sapContent_IconColor);
 	--_ui5_panel_header_padding_right: 0.5rem;
 	--_ui5_panel_header_button_wrapper_padding: .25rem;

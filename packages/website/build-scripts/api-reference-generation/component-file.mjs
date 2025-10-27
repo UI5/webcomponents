@@ -231,7 +231,7 @@ No enum fields available for this enum.`
     result = `${result}
 | Name | Description |
 |------|-------------|
-${enumFields.map(field => `| ${field.name} | ${processDescription(field.description)} |`).join("\n")}`
+${enumFields.map(field => `| ${field.name} ${field.deprecated ? `<br /> <span className="badge badge--primary">Deprecated</span>` : ""} | ${processDescription(field.description)} ${field.deprecated ? `<br /> <small style={{fontStyle: "italic"}}>${deprecatedText(field)}</small>` : ""} |`).join("\n")}`
 
     return result;
 }

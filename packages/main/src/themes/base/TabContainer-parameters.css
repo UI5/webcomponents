@@ -21,8 +21,6 @@
 	--_ui5_tc_headerItem_additional_text_font_weight: normal;
 	--_ui5_tc_headerItem_neutral_border_color: var(--sapTab_Neutral_ForegroundColor);
 	--_ui5_tc_headerItem_transition: none;
-	--_ui5_tc_headerItem_hover_border_visibility: hidden;
-	--_ui5_tc_headerItem_focus_offset: 0px;
 
 	--_ui5_tc_headerItemContent_border_radius: 0.125rem 0.125rem 0 0;
 	--_ui5_tc_headerItemContent_border_bg: transparent;
@@ -31,7 +29,6 @@
 	--_ui5_tc_headerItem_negative_border_bg: transparent;
 	--_ui5_tc_headerItem_critical_border_bg: transparent;
 	--_ui5_tc_headerItemContent_border_height: 0;
-	--_ui5_tc_headerItemContent_focus_offset: 1rem;
 	--_ui5_tc_headerItem_focus_border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_tc_headerItem_text_focus_border_offset_left: 0px;
 	--_ui5_tc_headerItem_text_focus_border_offset_right: 0px;
@@ -41,7 +38,6 @@
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_right: 	0.625rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_top: 0.75rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_bottom: 0.75rem;
-	--_ui5_tc_headerItemContent_focus_border: none;
 	--_ui5_tc_headerItemContent_default_focus_border: none;
 	--_ui5_tc_headerItemContent_focus_border_radius: 0;
 	--_ui5_tc_headerItemSemanticIcon_display: none;

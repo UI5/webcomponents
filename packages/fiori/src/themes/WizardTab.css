@@ -163,6 +163,7 @@
 	height: 1px;
 	flex-grow: 1;
 	margin-right: .25rem;
+	min-width: .5rem;
 }
 
 :host([active-separator]) .ui5-wiz-step-hr {

@@ -1,0 +1,10 @@
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+#output {
+	margin: 1rem 0;
+}

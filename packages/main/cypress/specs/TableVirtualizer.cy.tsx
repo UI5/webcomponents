@@ -51,7 +51,7 @@ describe("TableVirtualizer", () => {
 			cy.get("[ui5-table-row]")
 				.eq(i - start)
 				.should("have.attr", "position", `${i}`)
-				.should("have.attr", "aria-rowindex", `${i + 1}`)
+				.should("have.attr", "aria-rowindex", `${i + 2}`)
 				.find("ui5-table-cell")
 				.should("have.text", `${i}`);
 		}

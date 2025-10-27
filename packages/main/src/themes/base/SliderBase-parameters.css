@@ -20,7 +20,6 @@
 	--_ui5_slider_handle_top: -0.825rem;
 	--_ui5_slider_tickmark_bg: var(--sapField_BorderColor);
 	--_ui5_slider_tickmark_in_range_bg: var(--sapButton_Active_Background);
-	--_ui5_slider_handle_margin_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2));
 	--_ui5_slider_handle_hover_background: var(--sapButton_Hover_Background);
 	--_ui5_slider_handle_hover_border: 0.125rem solid var(--sapButton_Hover_BorderColor);
 	--_ui5_slider_handle_outline: 0.0625rem dotted var(--sapContent_FocusColor);

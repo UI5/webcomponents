@@ -43,13 +43,6 @@ Last element is: overflow button or tb-item when overflow button is hidden */
 	margin-inline-start: 0;
 }
 
-.ui5-tb-separator {
-	height: var(--_ui5-toolbar-separator-height);
-	width: 0.0625rem;
-	background: var(--sapToolbar_SeparatorColor);
-	box-sizing: border-box;
-}
-
 .ui5-tb-overflow-btn-hidden {
 	visibility: hidden;
 	position: absolute;

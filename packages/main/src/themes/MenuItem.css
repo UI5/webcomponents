@@ -49,10 +49,6 @@
 	background-color: var(--sapList_Hover_Background);
 }
 
-:host(:not([is-phone]))::part(native-li) {
-	padding: var(--_ui5_menu_item_padding);
-}
-
 :host::part(additional-text) {
 	margin: unset;
 	margin-inline-start: 1rem;
@@ -84,6 +80,7 @@
 }
 
 :host(:not([is-phone]))::part(native-li) {
+	user-select: none;
 	padding: var(--_ui5_menu_item_padding);
 }
 
@@ -117,6 +114,18 @@
 	min-height: var(--_ui5_list_item_icon_size);
 	display: inline-block;
 	vertical-align: middle;
-	padding-inline-end: 0.5rem;
+	padding-inline-end: 0.75rem;
 	pointer-events: none;
+}
+
+.ui5-menu-item-checked {
+	padding-inline-start: 0.5rem;
+	padding-inline-end: 0;
+	font-weight: normal;
+	text-align: center;
+}
+
+.ui5-menu-item-icon-checked {
+	color: var(--sapContent_BusyColor);
+	padding-top: 0.25rem;
 }

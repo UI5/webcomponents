@@ -16,7 +16,7 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				class="ui5-date-picker-input"
 				placeholder={this._placeholder}
 				type={this.type}
-				value={this.value}
+				value={this.displayValue}
 				disabled={this.disabled}
 				required={this.required}
 				readonly={this.readonly}

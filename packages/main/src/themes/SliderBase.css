@@ -93,7 +93,7 @@
 
 .ui5-slider-tickmarks li {
 	height: var(--_ui5_slider_tickmark_height);
-	border-inline-start: 1px solid var(--_ui5_slider_tickmark_bg);
+	border-inline-start: 0.0625rem solid var(--_ui5_slider_tickmark_bg);
 }
 
 .ui5-slider-handle {
@@ -203,28 +203,38 @@
 	margin: 0;
 	padding: 0;
 	white-space: nowrap;
+    height: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .ui5-slider-labels li {
-	position: relative;
+    position: relative;
 	list-style: none;
-	padding-top: 0.3125rem;
-	height: 1rem;
 	margin: 0;
 	text-align: center;
 	display: inline-block;
-	color: var(--_ui5_slider_label_color);
 	font-family: var(--sapFontFamily);
 	font-size: var(--_ui5_slider_label_fontsize);
 	padding-top: 0;
 	box-sizing: border-box;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	vertical-align: top;
+    width: 0.0625rem;
+    visibility: hidden;
 }
 
-.ui5-slider-hidden-labels li:not(:first-child):not(:last-child) {
+.ui5-slider-labels li::after {
+	content: attr(data-counter);
+	position: absolute;
+	top: 0;
+	visibility: visible;
+    display: inline-block;
+    width: 2rem;
+	color: var(--_ui5_slider_label_color);
+    transform: translateX(-50%);
+}
+
+.ui5-slider-hidden-labels li:not(:first-child):not(:last-child)::after {
 	visibility: hidden;
 }
 

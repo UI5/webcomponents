@@ -110,6 +110,14 @@ describe("Card general interaction", () => {
 			</Card>
 		);
 
+		cy.get("#actionBtn").then($header => {
+			// Buttons have the same button which bubbles
+			$header.get(0).addEventListener("ui5-click", (e) => {
+				e.stopImmediatePropagation();
+				e.stopPropagation();
+			});
+		});
+
 		cy.get("#cardHeader").then($header => {
 			$header.get(0).addEventListener("ui5-click", cy.stub().as("headerClick"));
 		});

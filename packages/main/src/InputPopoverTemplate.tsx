@@ -29,7 +29,7 @@ export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsL
 					open={this.valueStateOpen}
 					onClose={this._handleValueStatePopoverAfterClose}
 				>
-					<div slot="header" class={this.classes.popoverValueState} style={this.styles.popoverHeader}>
+					<div slot="header" class={this.classes.popoverValueState}>
 						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
 						{ this.valueStateOpen && valueStateMessage.call(this) }
 					</div>

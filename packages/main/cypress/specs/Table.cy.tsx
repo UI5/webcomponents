@@ -16,6 +16,12 @@ import Button from "../../src/Button.js";
 const ROLE_COLUMN_HEADER = "columnheader";
 
 describe("Table - Rendering", () => {
+	function checkWidth(id: string, expectedWidth: number) {
+		cy.get(id).then($cell => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	};
+
 	it("tests if table is rendered", () => {
 		cy.mount(
 			<Table id="table">
@@ -35,6 +41,15 @@ describe("Table - Rendering", () => {
 		cy.get("ui5-table-row").should("exist");
 		cy.get("ui5-table-header-cell").should("have.length", 2);
 		cy.get("ui5-table-header-row").should("have.attr", "aria-roledescription", "Column Header Row");
+		cy.get("ui5-table-header-row").should("have.attr", "aria-rowindex", "1");
+		cy.get("ui5-table-row").should("have.attr", "aria-rowindex", "2");
+		cy.get("ui5-table-header-cell").first().should("have.attr", "aria-colindex", "1");
+		cy.get("ui5-table-header-cell").last().should("have.attr", "aria-colindex", "2");
+
+		cy.get("#table").shadow().find("#table").as("innerTable");
+		cy.get("@innerTable").should("have.attr", "role", "grid");
+		cy.get("@innerTable").should("have.attr", "aria-colcount", "2");
+		cy.get("@innerTable").should("have.attr", "aria-rowcount", "2");
 	});
 
 	it("tests if initial empty table renders without errors", () => {
@@ -56,6 +71,183 @@ describe("Table - Rendering", () => {
 
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(500);
+	});
+
+	it("tests if table is rendered with no data slot", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell></TableHeaderCell>
+				</TableHeaderRow>
+				<div slot="noData" id="noData">
+					<Label>No data found</Label>
+				</div>
+			</Table>
+		);
+
+		cy.get("#table").shadow().find('slot[name=noData]').as("noDataSlot");
+		cy.get("@noDataSlot").should("exist");
+		cy.get("@noDataSlot").then(($noDataSlot) => {
+			const noDataElement = ($noDataSlot[0] as HTMLSlotElement).assignedElements()[0];
+			cy.wrap(noDataElement).should("have.attr", "id", "noData")
+		});
+	});
+
+	it("columns have equal widths width default width", () => {
+		cy.mount(
+			<Table style="width: 400px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		const expectedWidth = 100;
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("columns have width set", () => {
+		cy.mount(
+			<Table style="width: 200px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="100px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		const expectedWidth = 100;
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("columns have relative width set", () => {
+		cy.mount(
+			<Table style="width: 200px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" width="10%"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell id="colB" width="25%"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell id="colC" width="25%"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell id="colD" width="40%"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		checkWidth("#colA", 48);
+		checkWidth("#colB", 50);
+		checkWidth("#colC", 50);
+		checkWidth("#colD", 80);
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "800px");
+		});
+
+		checkWidth("#colA", 80);
+		checkWidth("#colB", 200);
+		checkWidth("#colC", 200);
+		checkWidth("#colD", 320);
+	});
+
+	it("columns have min-width set", () => {
+		cy.mount(
+			<Table style="width: 800px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell minWidth="100px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 200;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "400px");
+		});
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 100;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "100px");
+		});
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 100;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("column width settings combined", () => {
+		cy.mount(
+			<Table style="width: 800px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" minWidth="50px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell id="colB" width="300px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell id="colC" minWidth="200px" width="50%"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell id="colD" width="2fr"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		checkWidth("#colA", 50);
+		checkWidth("#colB", 300);
+		checkWidth("#colC", 400);
+		checkWidth("#colD", 50);
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "200px");
+		});
+
+		checkWidth("#colA", 50);
+		checkWidth("#colB", 300);
+		checkWidth("#colC", 200);
+		// 2fr is being ignored
+		checkWidth("#colD", 48);
 	});
 });
 
@@ -605,7 +797,9 @@ describe("Table - Horizontal Scrolling", () => {
 			.shadow()
 			.find("#navigated-cell")
 			.should("have.css", "position", "sticky")
-			.should("have.css", "right", "0px");
+			.should("have.css", "right", "0px")
+			.should("have.attr", "aria-hidden", "true")
+			.should("have.attr", "data-excluded-from-navigation");
 	});
 
 	it("selection column should be fixed to the left", () => {

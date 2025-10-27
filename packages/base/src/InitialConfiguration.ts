@@ -56,6 +56,16 @@ const getTheme = () => {
 
 const getThemeRoot = () => {
 	initConfiguration();
+
+	if (initialConfig.themeRoot === undefined) {
+		return;
+	}
+
+	if (!validateThemeRoot(initialConfig.themeRoot)) {
+		console.warn(`The ${initialConfig.themeRoot} is not valid. Check the allowed origins as suggested in the "setThemeRoot" description.`); // eslint-disable-line
+		return;
+	}
+
 	return initialConfig.themeRoot;
 };
 

@@ -12,8 +12,6 @@
 	--_ui5_input_error_warning_text_indent: 0.125rem;
 	--_ui5_input_error_font_weight: bold;
 	--_ui5_input_warning_font_weight: bold;
-	--_ui5_input_disabled_color: var(--sapContent_DisabledTextColor);
-	--_ui5_input_disabled_font_weight: normal;
 	--_ui5_input_placeholder_style: normal;
 	--_ui5_input_information_icon_padding: .5625rem;
 	--_ui5_input_information_custom_icon_padding: .5625rem .625rem;

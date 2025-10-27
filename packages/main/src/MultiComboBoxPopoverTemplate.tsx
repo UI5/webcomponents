@@ -1,4 +1,3 @@
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import multiSelectAll from "@ui5/webcomponents-icons/dist/multiselect-all.js";
 import type MultiComboBox from "./MultiComboBox.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -35,13 +34,6 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 				<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
 					<div class="row">
 						<span>{this._headerTitleText}</span>
-						<Button
-							class="ui5-responsive-popover-close-btn"
-							icon={decline}
-							design="Transparent"
-							onClick={this.handleCancel}
-						>
-						</Button>
 					</div>
 					<div class="row">
 						<Input
@@ -78,7 +70,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 
 			{!this._isPhone && <>
 				{this.hasValueStateMessage &&
-					<div slot="header" onKeyDown={this._onListHeaderKeydown} tabIndex={0} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
+					<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
 						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
 						{this.open && valueStateMessage.call(this)}
 					</div>
@@ -100,9 +92,16 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
 					<Button
-						design="Transparent"
+						design="Emphasized"
 						onClick={this.handleOK}
 					>{this._dialogOkButton}</Button>
+					<Button
+						class="ui5-responsive-popover-close-btn"
+						design="Transparent"
+						onClick={this.handleCancel}
+					>
+						{this._dialogCancelButton}
+					</Button>
 				</div>
 			}
 		</ResponsivePopover>

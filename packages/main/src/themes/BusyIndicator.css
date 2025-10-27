@@ -76,13 +76,16 @@
 	border-radius: inherit;
 }
 
-.ui5-busy-indicator-busy-area {
+.ui5-busy-indicator-busy-area.ui5-busy-indicator-busy-area-over-content {
 	position: absolute;
-	z-index: 99;
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
+	z-index: 99;
+}
+
+.ui5-busy-indicator-busy-area {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -91,8 +94,8 @@
 	border-radius: inherit;
 }
 
-:host(:not(:empty)) .ui5-busy-indicator-busy-area {
-	background-color: var(--_ui5_busy_indicator_block_layer);
+:host([active]) ::slotted(*) {
+	opacity: var(--sapContent_DisabledOpacity);	
 }
 
 :host([desktop]) .ui5-busy-indicator-busy-area:focus,

@@ -102,13 +102,13 @@ index.html?sap-ui-theme=mytheme@https://my-example-host.com/
 
 In this example, "mytheme" theme will be applied and its resources (CSS variables specific to the theme) will be loaded from https://my-example-host.com/UI5/Base/baseLib/mytheme/css_variables.css.
 
-**Note:** Certain security restrictions will apply before loading the custom theme. Absolute URLs to a different origin than the current page will return the current page as an origin. To allow certain origins, you have to use `<meta name="sap-allowedThemeOrigins" content="https://my-example-host.com/">` tag inside the head of the page.
+**Note:** Certain security restrictions will apply before loading the custom theme. Absolute URLs to a different origin than the current page will return the current page as an origin. To allow certain origins, you have to use `<meta name="sap-allowed-theme-origins" content="https://my-example-host.com/">` tag inside the head of the page.
 
 ### Using JS API
 
 To load a custom theme via URL, you can also use the available `setThemeRoot` method. The specified theme root will be applied to the currently set theme.
 
-**Note:** Certain security restrictions will apply before loading the custom theme. Absolute URLs to a different origin than the current page will return the current page as an origin. To allow certain origins, you have to use `<meta name="sap-allowedThemeOrigins" content="https://my-example-host.com/">` tag inside the head of the page.
+**Note:** Certain security restrictions will apply before loading the custom theme. Absolute URLs to a different origin than the current page will return the current page as an origin. To allow certain origins, you have to use `<meta name="sap-allowed-theme-origins" content="https://my-example-host.com/">` tag inside the head of the page.
 
 ```js
 import { setThemeRoot } from "@ui5/webcomponents-base/dist/config/ThemeRoot.js";

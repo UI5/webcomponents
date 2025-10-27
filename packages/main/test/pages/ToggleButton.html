@@ -59,7 +59,7 @@
 	var clickResult = document.getElementById("click-result");
 
 	Array.prototype.slice.call(document.querySelectorAll(".toggleButton")).forEach(function (el) {
-		el.addEventListener("click", function (event) {
+		el.addEventListener("ui5-click", function (event) {
 			clickResult.innerHTML = event.target.textContent + ": " + (event.target.pressed);
 		});
 	});

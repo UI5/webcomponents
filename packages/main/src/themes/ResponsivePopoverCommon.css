@@ -5,7 +5,7 @@
 	height: var(--_ui5_input_height);
 	color: var(--sapField_TextColor);
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	background: var(--sapField_BackgroundStyle);
 	background-color: var(--_ui5_input_background_color);
 	border: var(--_ui5-input-border);
@@ -70,12 +70,12 @@
 
 /* Input placeholder */
 [inner-input]::-webkit-input-placeholder {
-	font-style: italic;
+	font-style: var(--_ui5_input_placeholder_style);
 	color: var(--sapField_PlaceholderTextColor);
 }
 
 [inner-input]::-moz-placeholder {
-	font-style: italic;
+	font-style: var(--_ui5_input_placeholder_style);
 	color: var(--sapField_PlaceholderTextColor);
 }
 
@@ -190,7 +190,11 @@
 	width: 100%;
 }
 
-.ui5-responsive-popover-close-btn {
+.ui5-responsive-popover-footer .ui5-responsive-popover-close-btn {
+	margin-left: 0.5rem;
+}
+
+.ui5-responsive-popover-header .ui5-responsive-popover-close-btn {
 	position: absolute;
 	right: 1rem;
 }

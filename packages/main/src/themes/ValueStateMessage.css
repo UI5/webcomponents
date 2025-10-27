@@ -36,7 +36,7 @@
 	display: inline-block;
 	color: var(--sapTextColor);
 	font-size: var(--sapFontSmallSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	height: auto;
 	padding: var(--_ui5_value_state_message_padding);
 	overflow: hidden;
@@ -47,7 +47,10 @@
 }
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header, [ui5-popover] .ui5-valuestatemessage-header  {
-	min-height: 2rem;
+	min-height: var(--_ui5_value_state_message_popover_header_min_height);
+	min-width: var(--_ui5_value_state_message_popover_header_min_width);
+	max-width: var(--_ui5_value_state_message_popover_header_max_width);
+	width: var(--_ui5_value_state_message_popover_header_width);
 }
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header {
@@ -74,7 +77,7 @@
 	background: var(--sapInformationBackground);
 }
 
-.ui5-responsive-popover-header.ui5-responsive-popover-header--focused, .ui5-responsive-popover-header:focus {
+.ui5-responsive-popover-header:focus {
 	outline-offset: var(--_ui5_value_state_header_offset);
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 }
@@ -109,6 +112,7 @@
 	flex: none;
 	top: 0;
 	left: 0;
+	max-width: 100%;
 }
 
 .ui5-popover-with-value-state-header-phone::part(content) {

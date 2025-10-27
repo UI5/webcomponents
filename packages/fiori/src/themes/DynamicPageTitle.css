@@ -55,12 +55,12 @@
     margin: var(--_ui5_dynamic_page_title_heading_margin);
 }
 
-::slotted([ui5-title][slot="heading"]) {
+::slotted([ui5-title][size="H5"][slot="heading"]) {
     font-size: var(--sapObjectHeader_Title_FontSize);
 }
 
-::slotted([ui5-title][slot="snappedHeading"]),
-:host([snapped]) ::slotted([ui5-title][slot="heading"]) {
+::slotted([ui5-title][size="H5"][slot="snappedHeading"]),
+:host([snapped]) ::slotted([ui5-title][size="H5"][slot="heading"]) {
     font-size: var(--sapObjectHeader_Title_SnappedFontSize);
     text-overflow: ellipsis;
 }

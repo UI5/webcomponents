@@ -9,21 +9,31 @@ var prevTriggerState = "generate";
 
 function startGeneration(button) {
 	console.warn("startGeneration");
-	generationId = setTimeout(function() {
+	generationId = setTimeout(function () {
 		console.warn("Generation completed");
 		button.state = "regenerate";
+		button.accessibilityAttributes = {
+			root: {
+				hasPopup: "menu"
+			}
+		};
 	}, 3000);
 }
 
-function stopGeneration() {
+function stopGeneration(button) {
 	console.warn("stopGeneration");
 	clearTimeout(generationId);
+	button.accessibilityAttributes = {
+		root: {
+			hasPopup: "false"
+		}
+	};
 }
 
 function aiButtonClickHandler(evt) {
 	var button = evt.target;
 
-	switch(button.state) {
+	switch (button.state) {
 		case "":
 		case "generate":
 			prevTriggerState = "generate";
@@ -32,7 +42,7 @@ function aiButtonClickHandler(evt) {
 			break;
 		case "generating":
 			button.state = prevTriggerState;
-			stopGeneration();
+			stopGeneration(button);
 			break;
 		case "regenerate":
 			menu.open = false;

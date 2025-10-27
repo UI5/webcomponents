@@ -15,6 +15,7 @@ import {
 import styles from "./generated/themes/MultiComboBoxItem.css.js";
 import MultiComboBoxItemTemplate from "./MultiComboBoxItemTemplate.js";
 import type { SelectionRequestEventDetail } from "./ListItem.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
 
 /**
  * @class
@@ -73,6 +74,12 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 
 	get _accessibleName() {
 		return MultiComboBoxItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX);
+	}
+
+	get checkBoxAccInfo() {
+		return {
+			role: "presentation" as AriaRole,
+		};
 	}
 }
 

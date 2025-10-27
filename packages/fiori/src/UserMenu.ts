@@ -13,6 +13,7 @@ import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { PopupScrollEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
@@ -157,7 +158,7 @@ class UserMenu extends UI5Element {
 	 * @default undefined
 	 */
 	@property({ converter: DOMReferenceConverter })
-	opener?: HTMLElement | string;
+	opener?: HTMLElement | string | null;
 
 	/**
 	 * Defines if the User Menu shows the Manage Account option.
@@ -269,6 +270,11 @@ class UserMenu extends UI5Element {
 
 	onBeforeRendering() {
 		this._selectedAccount = this.accounts.find(account => account.selected) || this.accounts[0];
+		const siblingsWithIcon = this._menuItems.some(menuItem => !!menuItem.icon);
+
+		this._menuItems.forEach(item => {
+			item._siblingsWithIcon = siblingsWithIcon;
+		});
 	}
 
 	onAfterRendering(): void {
@@ -353,6 +359,8 @@ class UserMenu extends UI5Element {
 
 	_handleMenuItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const item = e.detail.item as UserMenuItem; // imrove: improve this ideally without "as" cating
+
+		item._updateCheckedState();
 
 		if (!item._popover) {
 			const eventPrevented = !this.fireDecoratorEvent("item-click", {
@@ -449,6 +457,10 @@ class UserMenu extends UI5Element {
 		if (ref) {
 			ref.associatedAccount = this;
 		}
+	}
+
+	get _menuItems() {
+		return this.menuItems.filter(isInstanceOfMenuItem);
 	}
 }
 

@@ -10,8 +10,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				<header
 					class="ui5-dynamic-page-title-header-wrapper"
 					id={`${this._id}-header`}
-					aria-label={this._headerLabel}
-					aria-expanded={this._headerExpanded}
+					aria-label={this.headerAriaLabel}
 					onui5-toggle-title={this.onToggleTitle}
 				>
 					<slot name="titleArea"></slot>

@@ -298,9 +298,11 @@ describe("Events", () => {
 				settings.get(0).addEventListener("before-close", cy.stub().as("beforeClosed"));
 			});
 
-		cy.get("@settings").shadow().find("[ui5-toolbar]").shadow()
-			.find("[ui5-button]")
+		cy.get("@settings").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
 			.first()
+			.shadow()
+			.find("[ui5-button]")
 			.as("closeButton");
 		cy.get("@closeButton")
 			.click();
@@ -320,9 +322,11 @@ describe("Events", () => {
 				settings.get(0).addEventListener("close", cy.stub().as("closed"));
 			});
 
-		cy.get("@settings").shadow().find("[ui5-toolbar]").shadow()
-			.find("[ui5-button]")
+		cy.get("@settings").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
 			.first()
+			.shadow()
+			.find("[ui5-button]")
 			.as("closeButton");
 		cy.get("@closeButton")
 			.click();
@@ -487,9 +491,11 @@ describe("Responsiveness", () => {
 			});
 		cy.get("@settings").shadow().find("[ui5-dialog]").should("exist");
 		cy.get("@settings").shadow().find("[ui5-toolbar]").should("exist");
-		cy.get("@settings").shadow().find("[ui5-toolbar]").shadow()
-			.find("[ui5-button]")
+		cy.get("@settings").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
 			.first()
+			.shadow()
+			.find("[ui5-button]")
 			.as("closeButton");
 		cy.get("@closeButton")
 			.click();
@@ -523,9 +529,11 @@ describe("Responsiveness", () => {
 			.find("[ui5-li]")
 			.as("item");
 		cy.get("@item").should("have.attr", "type", "Navigation");
-		cy.get("@settings").shadow().find("[ui5-toolbar]").shadow()
-			.find("[ui5-button]")
+		cy.get("@settings").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
 			.first()
+			.shadow()
+			.find("[ui5-button]")
 			.as("closeButton");
 		cy.get("@closeButton")
 			.click();

@@ -38,3 +38,14 @@
 
 import "@ui5/cypress-internal/commands.js";
 import "../../../main/cypress/support/commands.js";
+import "./commands/Button.commands.js";
+
+declare global {
+	namespace Cypress {
+		interface Chainable {
+			ui5AIButtonCheckAttributeInTextButton(attrName: string, attrValue: string): Chainable<void>
+            ui5AIButtonCheckAttributeInArrowButton(attrName: string, attrValue: string): Chainable<void>
+            ui5AIButtonCheckAttributeSplitButtonRoot(attrName: string, attrValue: string): Chainable<void>
+		}
+	}
+}

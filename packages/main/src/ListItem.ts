@@ -13,6 +13,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
+import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import Highlight from "./types/Highlight.js";
 import ListItemType from "./types/ListItemType.js";
 import ListSelectionMode from "./types/ListSelectionMode.js";
@@ -192,6 +193,14 @@ abstract class ListItem extends ListItemBase {
 	_selectionMode: `${ListSelectionMode}` = "None";
 
 	/**
+	 * Defines the current media query size.
+	 * @default "S"
+	 * @private
+	 */
+	@property()
+	mediaRange = "S";
+
+	/**
 	 * Defines the delete button, displayed in "Delete" mode.
 	 * **Note:** While the slot allows custom buttons, to match
 	 * design guidelines, please use the `ui5-button` component.
@@ -322,6 +331,7 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (e.target === this._listItem) {
+			DragRegistry.setDraggedElement(this);
 			this.setAttribute("data-moving", "");
 			e.dataTransfer.dropEffect = "move";
 			e.dataTransfer.effectAllowed = "move";
@@ -330,6 +340,7 @@ abstract class ListItem extends ListItemBase {
 
 	_ondragend(e: DragEvent) {
 		if (e.target === this._listItem) {
+			DragRegistry.clearDraggedElement();
 			this.removeAttribute("data-moving");
 		}
 	}

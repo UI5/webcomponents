@@ -1,0 +1,30 @@
+.custom-list-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 0.5rem;
+}
+
+.custom-list-item__avatar {
+	flex-shrink: 0;
+}
+
+.custom-list-item__content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.custom-list-item__title {
+	margin: 0;
+}
+
+.custom-list-item__description {
+	color: var(--sapNeutralTextColor);
+}
+
+.custom-list-item__additional {
+	font-size: 0.875rem;
+	color: var(--sapNeutralTextColor);
+}

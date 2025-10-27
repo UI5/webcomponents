@@ -17,7 +17,7 @@ export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hoo
 	return <>
 		{
 			this._href ? (
-				<a role="treeitem"
+				<a role="menuitem"
 					class="ui5-navmenu-item-link"
 					href={this.href}
 					target={this.target}
@@ -55,7 +55,7 @@ function iconEnd(this: NavigationMenuItem) {
 		/>;
 	}
 
-	if (this.href) {
+	if (this.isExternalLink) {
 		return <Icon
 			class="ui5-sn-item-external-link-icon"
 			name={arrowRightIcon}

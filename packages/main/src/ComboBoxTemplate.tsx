@@ -11,6 +11,9 @@ export default function ComboBoxTemplate(this: ComboBox) {
 				{this.hasValueState &&
 				<span id="value-state-description" class="ui5-hidden-text">{this.ariaValueStateHiddenText}</span>
 				}
+				{this.linksInAriaValueStateHiddenText.length > 0 &&
+						<span id="hiddenText-value-state-link-shortcut" class="ui5-hidden-text">{this.valueStateLinksShortcutsTextAcc}</span>
+				}
 
 				<input id="ui5-combobox-input"
 					value={this.value}
@@ -31,7 +34,7 @@ export default function ComboBoxTemplate(this: ComboBox) {
 					role="combobox"
 					aria-haspopup="dialog"
 					aria-autocomplete="both"
-					aria-describedby="value-state-description"
+					aria-describedby={this.ariaDescribedByText}
 					aria-label={this.ariaLabelText}
 					aria-required={this.required}
 					aria-controls={this.responsivePopoverId}

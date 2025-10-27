@@ -58,34 +58,36 @@ describe("Event bubbling", () => {
 
 		cy.get("@app")
 			.then(app => {
-				app.get(0).addEventListener("close", cy.stub().as("appClosed"));
-				app.get(0).addEventListener("toggle", cy.stub().as("appToggled"));
+				app.get(0).addEventListener("ui5-close", cy.stub().as("appClosed"));
+				app.get(0).addEventListener("ui5-toggle", cy.stub().as("appToggled"));
 			});
 
 		cy.get("@dialog")
 			.then(dialog => {
-				dialog.get(0).addEventListener("close", cy.stub().as("dialogClosed"));
+				dialog.get(0).addEventListener("ui5-close", cy.stub().as("dialogClosed"));
 			});
 
 		cy.get("@input")
 			.then(input => {
-				input.get(0).addEventListener("close", cy.stub().as("inpClosed"));
+				input.get(0).addEventListener("ui5-close", cy.stub().as("inpClosed"));
 			});
 
 		cy.get("@messageStrip")
 			.then(messageStrip => {
-				messageStrip.get(0).addEventListener("close", cy.stub().as("msgClosed"));
+				messageStrip.get(0).addEventListener("ui5-close", cy.stub().as("msgClosed"));
 			});
 
 		cy.get("@panel")
 			.then(panel => {
-				panel.get(0).addEventListener("toggle", cy.stub().as("panelToggled"));
+				panel.get(0).addEventListener("ui5-toggle", cy.stub().as("panelToggled"));
 			});
 
 		cy.get("@dialog").invoke("attr", "open", true);
 
 		cy.get<Dialog>("@dialog")
 			.ui5DialogOpened()
+
+		cy.wait(200);
 
 		// act - toggle Input suggestions
 		cy.get("@input")
@@ -142,7 +144,7 @@ describe("Event bubbling", () => {
 	it("test non-bubbling events", () => {
 		cy.mount(
 			<div id="app">
-				<Dialog id="myDialog" headerText="Dialog">
+				<Dialog id="myDialog" headerText="Dialog" >
 					<Select id="mySelect">
 						<Option>Hello</Option>
 						<Option>World</Option>
@@ -215,7 +217,7 @@ describe("Event bubbling", () => {
 
 		cy.get("@multiCombobox")
 			.then(multiCombobox => {
-				multiCombobox.get(0).addEventListener("open", cy.stub().as("mcbOpened"));
+				multiCombobox.get(0).addEventListener("ui5-open", cy.stub().as("mcbOpened"));
 			});
 
 		cy.get("@dialog").invoke("attr", "open", true);

@@ -2,7 +2,9 @@ import type Calendar from "./Calendar.js";
 import DayPicker from "./DayPicker.js";
 import MonthPicker from "./MonthPicker.js";
 import YearPicker from "./YearPicker.js";
+import YearRangePicker from "./YearRangePicker.js";
 import CalendarHeaderTemplate from "./CalendarHeaderTemplate.js";
+import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	return (
@@ -46,7 +48,7 @@ export default function CalendarTemplate(this: Calendar) {
 						timestamp={this._timestamp}
 						onChange={this.onSelectedMonthChange}
 						onNavigate={this.onNavigate}
-						exportparts="month-cell, month-cell-selected, month-cell-selected-between"
+						exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
 					/>
 
 					<YearPicker
@@ -61,13 +63,32 @@ export default function CalendarTemplate(this: Calendar) {
 						minDate={this.minDate}
 						maxDate={this.maxDate}
 						timestamp={this._timestamp}
+						_currentYearRange = {this._currentYearRange}
 						onChange={this.onSelectedYearChange}
 						onNavigate={this.onNavigate}
-						exportparts="year-cell, year-cell-selected, year-cell-selected-between"
+						exportparts="year-cell, year-cell-selected, year-cell-selected-between, year-picker-root"
+					/>
+
+					<YearRangePicker
+						id={`${this._id}-YRP`}
+						hidden={this._isYearRangePickerHidden}
+						formatPattern={this._formatPattern}
+						selectedDates={this._selectedDatesTimestamps}
+						_showRangeSelection={this.selectionMode === CalendarSelectionMode.Range}
+						_hidden={this._isYearRangePickerHidden}
+						primaryCalendarType={this._primaryCalendarType}
+						secondaryCalendarType={this._secondaryCalendarType}
+						minDate={this.minDate}
+						maxDate={this.maxDate}
+						timestamp={this._timestamp}
+						_currentYearRange = {this._currentYearRange}
+						onChange={this.onSelectedYearRangeChange}
+						onNavigate={this.onNavigate}
+						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
 					/>
 				</div>
 
-				<div class="ui5-calheader">
+				<div class="ui5-calheader" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
 					{ CalendarHeaderTemplate.call(this) }
 				</div>
 			</div>

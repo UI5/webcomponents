@@ -6,6 +6,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import SearchFieldTemplate from "./SearchFieldTemplate.js";
 import SearchFieldCss from "./generated/themes/SearchField.css.js";
+import type Button from "@ui5/webcomponents/dist/Button.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IOption, SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";
 
@@ -18,6 +19,7 @@ import {
 	SEARCH_FIELD_SCOPE_SELECT_LABEL,
 	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
+	SEARCH_FIELD_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -49,7 +51,7 @@ type SearchFieldScopeSelectionChangeDetails = {
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents/fiori/dist/SearchField.js";`
+ * `import "@ui5/webcomponents-fiori/dist/SearchField.js";`
  *
  * @constructor
  * @extends UI5Element
@@ -111,7 +113,7 @@ class SearchField extends UI5Element {
 	 * Defines whether the component is collapsed.
 	 *
 	 * @default false
-	 * @public
+	 * @private
 	 */
 	@property({ type: Boolean })
 	collapsed = false;
@@ -144,12 +146,12 @@ class SearchField extends UI5Element {
 	accessibleName?: string;
 
 	/**
-	 * Defines the tooltip of the search icon component.
+	 * Defines the accessible ARIA description of the field.
 	 * @public
 	 * @default undefined
 	 */
 	@property()
-	searchIconTooltip?: string;
+	accessibleDescription?: string;
 
 	/**
 	 * Defines the component scope options.
@@ -157,6 +159,17 @@ class SearchField extends UI5Element {
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, invalidateOnChildChange: true })
 	scopes!: Array<ISearchScope>;
+
+	/**
+	 * Defines the filter button slot, used to display an additional filtering button.
+	 * This slot is intended for passing a `ui5-button` with a filter icon to provide extended filtering options.
+	 *
+	 * **Note:** Scope button and Filter button are mutually exclusive.
+	 * @public
+	 * @since 2.11.0
+	 */
+	@slot()
+	filterButton!: Array<Button>;
 
 	/**
 	 * @private
@@ -248,11 +261,12 @@ class SearchField extends UI5Element {
 			scope: SearchField.i18nBundle.getText(SEARCH_FIELD_SCOPE_SELECT_LABEL),
 			searchIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_SEARCH_ICON),
 			clearIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_CLEAR_ICON),
+			searchFieldAriaLabel: SearchField.i18nBundle.getText(SEARCH_FIELD_LABEL),
 		};
 	}
 
 	get _effectiveIconTooltip() {
-		return this.searchIconTooltip || this._translations.searchIcon;
+		return this._translations.searchIcon;
 	}
 
 	captureRef(ref: HTMLElement & { scopeOption?: UI5Element} | null) {

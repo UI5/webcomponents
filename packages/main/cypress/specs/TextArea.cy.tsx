@@ -133,6 +133,82 @@ describe("TextArea general interaction", () => {
 				.find("textarea")
 				.should("have.attr", "aria-label", attributeValue);
 		});
+
+		it("Tests accessibleDescription property", () => {
+			const descriptionValue = "This is a direct description";
+
+			cy.mount(<TextArea accessibleDescription={descriptionValue}></TextArea>);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", descriptionValue);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("textarea")
+				.should("have.attr", "aria-describedby")
+				.and("include", "accessibleDescription");
+		});
+
+		it("Tests accessibleDescriptionRef property", () => {
+			const descriptionValue = "External description text";
+
+			cy.mount(
+				<>
+					<div id="external-desc">{descriptionValue}</div>
+					<TextArea accessibleDescriptionRef="external-desc"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", descriptionValue);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("textarea")
+				.should("have.attr", "aria-describedby")
+				.and("include", "accessibleDescription");
+		});
+
+		it("Tests accessibleDescriptionRef with multiple references", () => {
+			const desc1 = "First description";
+			const desc2 = "Second description";
+
+			cy.mount(
+				<>
+					<div id="desc1">{desc1}</div>
+					<div id="desc2">{desc2}</div>
+					<TextArea accessibleDescriptionRef="desc1 desc2"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", desc1)
+				.and("contain.text", desc2);
+		});
+
+		it("Tests accessibleDescriptionRef takes precedence over accessibleDescription", () => {
+			const directDesc = "Direct description";
+			const refDesc = "Referenced description";
+
+			cy.mount(
+				<>
+					<div id="ref-desc">{refDesc}</div>
+					<TextArea accessibleDescription={directDesc} accessibleDescriptionRef="ref-desc"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", refDesc)
+				.and("not.contain.text", directDesc);
+		});
 	});
 
 	describe("disabled and readonly textarea", () => {
@@ -397,7 +473,30 @@ describe("TextArea general interaction", () => {
 						.should("be.equal", initialTextareaSize);
 				});
 		});
+
+		it("should grow correctly when typing symbols (&)", () => {
+			cy.mount(<TextArea growing={true} value="&&&" style="width: 100px"></TextArea>);
+
+			cy.get("[ui5-textarea]")
+				.as("textarea");
+
+			cy.get("@textarea")
+				.realClick();
+
+			cy.get("@textarea")
+				.then(textarea => {
+					const initialTextareaSize = textarea.height();
+
+					cy.focused()
+						.realType("&");
+
+					cy.get("@textarea")
+						.invoke("height")
+						.should("be.equal", initialTextareaSize);
+				});
+		});
 	});
+
 
 	describe("When having max length set", () => {
 		it("prevents input when max is reached", () => {
@@ -508,6 +607,44 @@ describe("TextArea general interaction", () => {
 				.shadow()
 				.find("textarea")
 				.should("have.value", "");
+		});
+
+		it("Should allow preventing escape behavior by preventing the input event", () => {
+			cy.mount(<TextArea value="initial value"></TextArea>);
+
+			cy.get("[ui5-textarea]")
+				.as("textarea");
+
+			cy.get("@textarea")
+				.then(textarea => {
+					textarea.get(0).addEventListener("ui5-input", (event: CustomEvent) => {
+						if (event.detail && event.detail.escapePressed) {
+							event.preventDefault();
+						}
+					});
+				});
+
+			cy.get("@textarea")
+				.realClick();
+
+			cy.get("@textarea")
+				.should("be.focused");
+
+			cy.get("@textarea")
+				.realType(" modified");
+
+			cy.get("@textarea")
+				.shadow()
+				.find("textarea")
+				.should("have.value", "initial value modified");
+
+			cy.get("@textarea")
+				.realPress("Escape");
+
+			cy.get("@textarea")
+				.shadow()
+				.find("textarea")
+				.should("have.value", "initial value modified");
 		});
 
 		it("Value state type should be added to the screen readers default value states announcement", () => {

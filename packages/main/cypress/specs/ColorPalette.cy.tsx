@@ -1,3 +1,4 @@
+import UI5Element from "@ui5/webcomponents-base";
 import ColorPalette from "../../src/ColorPalette.js";
 import ColorPaletteItem from "../../src/ColorPaletteItem.js";
 
@@ -100,7 +101,7 @@ describe("Color Palette tests", () => {
 		cy.mount(<ColorPaletteSample/>);
 
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowRight", "pink");
-		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowLeft", "#ff6699");
+		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowLeft", "orange");
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 0, "ArrowUp", "orange");
 		cy.ui5ColorPaletteNavigateAndCheckSelectedColor("#cp1", 9, "ArrowDown", "darkblue");
 	});
@@ -209,5 +210,74 @@ describe("Color Palette tests", () => {
 			.realClick()
 			.realClick()
 			.should("have.attr", "selected");
+	});
+});
+
+describe("Color Palette - getFocusDomRef", () => {
+	it("should return undefined when the ColorPalette is empty", () => {
+		cy.mount(<ColorPalette></ColorPalette>);
+
+		cy.get<ColorPalette>("[ui5-color-palette]")
+			.then(($el) => {
+				expect($el[0].getFocusDomRef()).to.be.undefined;
+			});
+	});
+
+	it("should return first item if no item was focused before", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="darkBlue" value="darkblue"></ColorPaletteItem>
+				<ColorPaletteItem value="pink"></ColorPaletteItem>
+				<ColorPaletteItem value="#444444"></ColorPaletteItem>
+				<ColorPaletteItem value="rgb(0,200,0)"></ColorPaletteItem>
+				<ColorPaletteItem value="green"></ColorPaletteItem>
+				<ColorPaletteItem value="darkred"></ColorPaletteItem>
+				<ColorPaletteItem value="yellow"></ColorPaletteItem>
+				<ColorPaletteItem value="blue"></ColorPaletteItem>
+				<ColorPaletteItem value="cyan"></ColorPaletteItem>
+				<ColorPaletteItem value="orange"></ColorPaletteItem>
+				<ColorPaletteItem value="#5480e7"></ColorPaletteItem>
+				<ColorPaletteItem value="#ff6699"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get<UI5Element>("[ui5-color-palette], #darkBlue")
+			.then(($el) => {
+				const colorPalette = $el[0],
+					firstColor = $el[1];
+    				expect(colorPalette.getFocusDomRef()).to.equal(firstColor.getFocusDomRef());
+			});
+	});
+
+	it("should return last focused item in the ColorPalette", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem value="darkblue"></ColorPaletteItem>
+				<ColorPaletteItem value="pink"></ColorPaletteItem>
+				<ColorPaletteItem value="#444444"></ColorPaletteItem>
+				<ColorPaletteItem value="rgb(0,200,0)"></ColorPaletteItem>
+				<ColorPaletteItem id="green" value="green"></ColorPaletteItem>
+				<ColorPaletteItem value="darkred"></ColorPaletteItem>
+				<ColorPaletteItem value="yellow"></ColorPaletteItem>
+				<ColorPaletteItem value="blue"></ColorPaletteItem>
+				<ColorPaletteItem value="cyan"></ColorPaletteItem>
+				<ColorPaletteItem value="orange"></ColorPaletteItem>
+				<ColorPaletteItem value="#5480e7"></ColorPaletteItem>
+				<ColorPaletteItem value="#ff6699"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("[ui5-color-palette]")
+			.find("#green")
+			.realClick()
+			.realClick()
+			.should("be.focused")
+
+		cy.get<UI5Element>("[ui5-color-palette], #green")
+			.then(($el) => {
+				const colorPalette = $el[0],
+					lastFocusItem = $el[1];
+    				expect(colorPalette.getFocusDomRef()).to.equal(lastFocusItem.getFocusDomRef());
+			});
 	});
 });

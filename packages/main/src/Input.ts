@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -20,6 +21,7 @@ import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.
 import {
 	isPhone,
 	isAndroid,
+	isMac,
 } from "@ui5/webcomponents-base/dist/Device.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import {
@@ -35,7 +37,10 @@ import {
 	isPageDown,
 	isHome,
 	isEnd,
+	isCtrlAltF8,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
+import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
@@ -71,6 +76,10 @@ import {
 	VALUE_STATE_TYPE_INFORMATION,
 	VALUE_STATE_TYPE_ERROR,
 	VALUE_STATE_TYPE_WARNING,
+	VALUE_STATE_LINK,
+	VALUE_STATE_LINKS,
+	VALUE_STATE_LINK_MAC,
+	VALUE_STATE_LINKS_MAC,
 	INPUT_SUGGESTIONS,
 	INPUT_SUGGESTIONS_TITLE,
 	INPUT_SUGGESTIONS_ONE_HIT,
@@ -78,6 +87,8 @@ import {
 	INPUT_SUGGESTIONS_NO_HIT,
 	INPUT_CLEAR_ICON_ACC_NAME,
 	INPUT_AVALIABLE_VALUES,
+	INPUT_SUGGESTIONS_OK_BUTTON,
+	INPUT_SUGGESTIONS_CANCEL_BUTTON,
 	FORM_TEXTFIELD_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -89,6 +100,7 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
+import type InputComposition from "./features/InputComposition.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -177,6 +189,7 @@ type InputSuggestionScrollEventDetail = {
  * - [End] - If focus is in the text input, moves caret after the last character. If focus is in the list, highlights the last item and updates the input accordingly.
  * - [Page Up] - If focus is in the list, moves highlight up by page size (10 items by default). If focus is in the input, does nothing.
  * - [Page Down] - If focus is in the list, moves highlight down by page size (10 items by default). If focus is in the input, does nothing.
+ * - [Ctrl]+[Alt]+[F8] or [Command]+[Option]+[F8] - Focuses the first link in the value state message, if available. Pressing [Tab] moves the focus to the next link in the value state message, or closes the value state message if there are no more links.
  *
  * ### ES6 Module Import
  *
@@ -497,13 +510,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	@property({ type: Boolean })
 	valueStateOpen = false;
 
-	/**
-	 * Indicates whether the visual focus is on the value state header
-	 * @private
-	 */
-	@property({ type: Boolean })
-	_isValueStateFocused = false;
-
 	@property({ type: Object })
 	_inputAccInfo: InputAccInfo = {};
 
@@ -545,6 +551,20 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 */
 	@property({ type: Object })
 	Suggestions?: InputSuggestions;
+
+	/**
+	 * @private
+	 */
+	@property({ type: Array })
+	_linksListenersArray: Array<(args: any) => void> = [];
+
+	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
 
 	/**
 	 * Defines the suggestion items.
@@ -606,8 +626,19 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_performTextSelection?: boolean;
 	_isLatestValueFromSuggestions: boolean;
 	_isChangeTriggeredBySuggestion: boolean;
+	_valueStateLinks: Array<HTMLElement>;
+	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
+
+	/**
+	 * Indicates whether link navigation is being handled.
+	 * @default false
+	 * @private
+	 * @since 2.11.0
+	 */
+	_handleLinkNavigation: boolean = false;
 
 	get formValidityMessage() {
 		return Input.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
@@ -670,16 +701,20 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._handleResizeBound = this._handleResize.bind(this);
 
 		this._focusedAfterClear = false;
+		this._valueStateLinks = [];
 	}
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
+		this._enableComposition();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
 		deregisterUI5Element(this);
+		this._removeLinksEventListeners();
+		this._composition?.removeEventListeners();
 	}
 
 	_highlightSuggestionItem(item: SuggestionItem) {
@@ -739,7 +774,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this._shouldAutocomplete && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
 			const item = this._getFirstMatchingItem(value);
 			if (item) {
-				this._handleTypeAhead(item);
+				if (!this._isComposing) {
+					this._handleTypeAhead(item);
+				}
 				this._selectMatchingItem(item);
 			}
 		}
@@ -770,6 +807,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		this._performTextSelection = false;
+
+		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
+			this._removeLinksEventListeners();
+			this._addLinksEventListeners();
+			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
+		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -794,9 +837,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (isEnter(e)) {
 			const isValueUnchanged = this.previousValue === this.getInputDOMRefSync()!.value;
+			const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
+
 			this._enterKeyDown = true;
 
-			if (isValueUnchanged && this._internals.form) {
+			if (isValueUnchanged && shouldSubmit) {
 				submitForm(this);
 			}
 
@@ -821,6 +866,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (isEscape(e)) {
 			return this._handleEscape();
+		}
+
+		if (isCtrlAltF8(e)) {
+			return this._handleCtrlAltF8();
 		}
 
 		if (this.showSuggestions) {
@@ -869,6 +918,63 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this.Suggestions && (this.previousValue !== this.value)) {
 			this.Suggestions.onTab();
 		}
+	}
+
+	_handleCtrlAltF8() {
+		this._handleLinkNavigation = true;
+		const links = this.linksInAriaValueStateHiddenText;
+
+		if (links.length) {
+			links[0].focus();
+		}
+	}
+
+	_addLinksEventListeners() {
+		const links = this.linksInAriaValueStateHiddenText;
+
+		links.forEach((link, index) => {
+			this._linksListenersArray.push((e: KeyboardEvent) => {
+				attachListeners(e, links, index, {
+					closeValueState: () => {
+						if (this.Suggestions?.isOpened()) {
+							this.Suggestions?.close();
+						}
+						if (this.valueStateOpen) {
+							this.closeValueStatePopover();
+						}
+					},
+					focusInput: () => {
+						this._handleLinkNavigation = false;
+						this.getInputDOMRef()!.focus();
+					},
+					navigateToItem: () => {
+						if (this._handleLinkNavigation) {
+							this._handleLinkNavigation = false;
+							if (this.Suggestions?.isOpened()) {
+								this.innerFocusIn();
+								(this.getInputDOMRef())!.focus();
+								this.Suggestions.onDown(e, this.currentItemIndex);
+							}
+						} else {
+							this._handleDown(e);
+						}
+					},
+					isPopoverOpen: () => { return (this.Suggestions && this.Suggestions?.isOpened()) || false; },
+				});
+			});
+			link.addEventListener("keydown", this._linksListenersArray[index]);
+		});
+	 }
+
+	 _removeLinksEventListeners() {
+		const links = this.linksInAriaValueStateHiddenText;
+
+		links.forEach((link, index) => {
+			link.removeEventListener("keydown", this._linksListenersArray[index]);
+		});
+
+		this._linksListenersArray = [];
+		this._handleLinkNavigation = false;
 	}
 
 	_handleEnter(e: KeyboardEvent) {
@@ -964,10 +1070,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this.value = this.typedInValue;
 		}
 
-		if (this._isValueStateFocused) {
-			this._isValueStateFocused = false;
-			this.focused = true;
-		}
+		this.focused = true;
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -1022,7 +1125,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		this._isValueStateFocused = false;
 		this.hasSuggestionItemSelected = false;
 
 		this.Suggestions?._deselectItems();
@@ -1037,6 +1139,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_handleChange() {
+		const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
+
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
@@ -1058,7 +1162,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			} else {
 				fireChange();
 
-				if (this._enterKeyDown && this._internals.form) {
+				if (this._enterKeyDown && shouldSubmit) {
 					submitForm(this);
 				}
 			}
@@ -1074,6 +1178,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this.value = valueBeforeClear;
 			return;
 		}
+
+		this.typedInValue = "";
 
 		if (!this._isPhone) {
 			this.fireResetSelectionChange();
@@ -1140,7 +1246,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.fireEventByAction(INPUT_ACTIONS.ACTION_ENTER, e as InputEvent);
 
 		this.hasSuggestionItemSelected = false;
-		this._isValueStateFocused = false;
 
 		if (this.Suggestions) {
 			this.Suggestions.updateSelectedItemPosition(-1);
@@ -1196,10 +1301,22 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.open = false;
 	}
 
+	_confirmMobileValue() {
+		this._closePicker();
+		this._handleChange();
+	}
+
+	_cancelMobileValue() {
+		this.value = this.previousValue;
+		this._closePicker();
+	}
+
 	_afterOpenPicker() {
 		// Set initial focus to the native input
 		if (isPhone()) {
+			this.previousValue = this.value;
 			(this.getInputDOMRef())!.focus();
+			this._composition?.addEventListeners();
 		}
 
 		this._handlePickerAfterOpen();
@@ -1228,7 +1345,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this.hasSuggestionItemSelected) {
 			this.focus();
 		}
-
 		this._handlePickerAfterClose();
 	}
 
@@ -1251,6 +1367,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_handleValueStatePopoverAfterClose() {
 		this.valueStateOpen = false;
+		this._handleLinkNavigation = false;
 	}
 
 	_getValueStatePopover() {
@@ -1277,16 +1394,43 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			});
 		}
 	}
+	/**
+	 * Enables IME composition handling.
+	 * Dynamically loads the InputComposition feature and sets up event listeners.
+	 * @private
+	 */
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+		const setup = (FeatureClass: typeof InputComposition) => {
+			this._composition = new FeatureClass({
+				getInputEl: () => this.getInputDOMRefSync(),
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (Input.composition) {
+			setup(Input.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				Input.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
+		}
+	}
 
 	acceptSuggestion(item: IInputSuggestionItemSelectable, keyboardUsed: boolean) {
 		if (this._isGroupItem(item)) {
 			return;
 		}
 
-		const value = this.typedInValue || this.value;
 		const itemText = item.text || "";
 		const fireChange = keyboardUsed
-			? this.valueBeforeItemSelection !== itemText : value !== itemText;
+			? this.valueBeforeItemSelection !== itemText : this.previousValue !== itemText;
 
 		this.hasSuggestionItemSelected = true;
 		this.value = itemText;
@@ -1478,6 +1622,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	fireResetSelectionChange() {
 		if (this._isLatestValueFromSuggestions) {
 			this.fireSelectionChange(null, false);
+			this.valueBeforeItemSelection = this.value;
 		}
 	}
 
@@ -1487,6 +1632,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get _headerTitleText() {
 		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get _suggestionsOkButtonText() {
+		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
+	}
+
+	get _suggestionsCancelButtonText() {
+		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_CANCEL_BUTTON);
 	}
 
 	get clearIconAccessibleName() {
@@ -1537,6 +1690,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		return [
 			this.suggestionsTextId,
 			this.valueStateTextId,
+			this._valueStateLinksShortcutsTextAccId,
 			this._inputAccInfo.ariaDescribedBy,
 			this._accInfoAriaDescriptionId,
 			this.ariaDescriptionTextId,
@@ -1581,11 +1735,46 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return this.valueStateText ? `${valueState} ${this.valueStateText}` : valueState;
 		}
 
-		return `${valueState}`.concat(" ", this.valueStateMessage.map(el => el.textContent).join(" "));
+		return this.valueStateMessage.length ? `${valueState} ${this.valueStateMessage.map(el => el.textContent).join(" ")}` : valueState;
 	}
 
 	get itemSelectionAnnounce() {
 		return this.Suggestions ? this.Suggestions.itemSelectionAnnounce : "";
+	}
+
+	get linksInAriaValueStateHiddenText() {
+		const links: Array<HTMLElement> = [];
+		if (this.valueStateMessage) {
+			this.valueStateMessage.forEach(element => {
+				if (element.children.length)	{
+					element.querySelectorAll("ui5-link").forEach(link => {
+						links.push(link as HTMLElement);
+					});
+				}
+			});
+		}
+		return links;
+	}
+
+	get valueStateLinksShortcutsTextAcc() {
+		const links = this.linksInAriaValueStateHiddenText;
+		if (!links.length) {
+			return "";
+		}
+
+		if (isMac()) {
+			return links.length === 1
+				? Input.i18nBundle.getText(VALUE_STATE_LINK_MAC)
+				: Input.i18nBundle.getText(VALUE_STATE_LINKS_MAC);
+		}
+
+		return links.length === 1
+			? Input.i18nBundle.getText(VALUE_STATE_LINK)
+			: Input.i18nBundle.getText(VALUE_STATE_LINKS);
+	}
+
+	get _valueStateLinksShortcutsTextAccId() {
+		return this.linksInAriaValueStateHiddenText.length > 0 ? `hiddenText-value-state-link-shortcut` : "";
 	}
 
 	get iconsCount(): number {
@@ -1613,19 +1802,17 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get styles() {
-		const remSizeIxPx = parseInt(getComputedStyle(document.documentElement).fontSize);
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 
 		const stylesObject = {
-			popoverHeader: {
-				"max-width": this._inputWidth ? `${this._inputWidth}px` : "",
-			},
 			suggestionPopoverHeader: {
 				"display": this._listWidth === 0 ? "none" : "inline-block",
 				"width": this._listWidth ? `${this._listWidth}px` : "",
+				"max-width": "inherit",
 			},
 			suggestionsPopover: {
 				"min-width": this._inputWidth ? `${this._inputWidth}px` : "",
-				"max-width": this._inputWidth && (this._inputWidth / remSizeIxPx) > 40 ? `${this._inputWidth}px` : "40rem",
+				"max-width": this._inputWidth && (this._inputWidth / remSizeInPx) > 40 ? `${this._inputWidth}px` : "40rem",
 			},
 			innerInput: {
 				"padding": "",

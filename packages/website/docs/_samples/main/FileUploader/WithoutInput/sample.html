@@ -11,9 +11,11 @@
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
 
-    <ui5-file-uploader hide-input>
-        <ui5-button icon="upload" >Upload</ui5-button>
+    <ui5-label for="button-only-uploader">Choose file:</ui5-label>
+    <ui5-file-uploader id="button-only-uploader" hide-input>
+        <ui5-button icon="upload" tabindex="-1">Upload</ui5-button>
     </ui5-file-uploader>
+
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

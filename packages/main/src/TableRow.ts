@@ -1,13 +1,18 @@
 import { customElement, slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
-import { toggleAttribute } from "./TableUtils.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
+import { toggleAttribute } from "./TableUtils.js";
 import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
 import type TableCell from "./TableCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
-import "@ui5/webcomponents-icons/dist/overflow.js";
+import type Button from "./Button.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
+import {
+	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -24,7 +29,6 @@ import "@ui5/webcomponents-icons/dist/overflow.js";
  * @extends TableRowBase
  * @since 2.0.0
  * @public
- * @experimental This web component is available since 2.0 with an experimental flag and its API and behavior are subject to change.
  */
 @customElement({
 	tag: "ui5-table-row",
@@ -76,12 +80,12 @@ class TableRow extends TableRowBase {
 	rowKey?: string;
 
 	/**
-	 * Defines the position of the row related to the total number of rows within the table when the `ui5-table-virtualizer` feature is used.
+	 * Defines the 0-based position of the row related to the total number of rows within the table when the `ui5-table-virtualizer` feature is used.
 	 *
-     * @default undefined
+	 * @default undefined
 	 * @since 2.5.0
-     * @public
-     */
+	 * @public
+	 */
 	@property({ type: Number })
 	position?: number;
 
@@ -113,12 +117,18 @@ class TableRow extends TableRowBase {
 	@property({ type: Boolean })
 	movable = false;
 
+	@query("#popin-cell")
+	_popinCell?: TableCell;
+
+	@query("#actions-cell")
+	_actionsCell?: TableCell;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		toggleAttribute(this, "_interactive", this._isInteractive);
-		toggleAttribute(this, "aria-rowindex", this.position !== undefined, `${this.position! + 1}`);
 		toggleAttribute(this, "aria-current", this._renderNavigated && this.navigated, "true");
+		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "draggable", this.movable, "true");
+		this.ariaRowIndex = `${this._rowIndex + 2}`;
 	}
 
 	async focus(focusOptions?: FocusOptions | undefined): Promise<void> {
@@ -135,13 +145,17 @@ class TableRow extends TableRowBase {
 
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this.toggleAttribute("_active", true);
-			this._table?._onRowClick(this);
+			this._onclick();
 		}
 	}
 
 	_onclick() {
-		if (this._isInteractive && this === getActiveElement()) {
-			this._table?._onRowClick(this);
+		if (this === getActiveElement()) {
+			if (this._isSelectable && !this._hasSelector) {
+				this._onSelectionChange();
+			} else 	if (this.interactive || this._isNavigable) {
+				this._table?._onRowClick(this);
+			}
 		}
 	}
 
@@ -153,22 +167,39 @@ class TableRow extends TableRowBase {
 		this.removeAttribute("_active");
 	}
 
-	_onOverflowButtonClick(e: MouseEvent) {
+	_onOverflowButtonClick(e: UI5CustomEvent<Button, "click">) {
 		const ctor = this.actions[0].constructor as typeof TableRowActionBase;
 		ctor.showMenu(this._overflowActions, e.target as HTMLElement);
+		e.stopPropagation();
 	}
 
 	get _isInteractive() {
-		return this.interactive;
+		return this.interactive || (this._isSelectable && !this._hasSelector) || this._isNavigable;
+	}
+
+	get _isNavigable() {
+		return this._fixedActions.find(action => {
+			return action.hasAttribute("ui5-table-row-action-navigation") && !action._isInteractive;
+		}) !== undefined;
+	}
+
+	get _rowIndex() {
+		if (this.position !== undefined) {
+			return this.position;
+		}
+		if (this._table) {
+			return this._table.rows.indexOf(this);
+		}
+		return -1;
 	}
 
 	get _hasOverflowActions() {
-		let renderedActionsCount = 0;
+		let renderableActionsCount = 0;
 		return this.actions.some(action => {
 			if (action.isFixedAction() || !action.invisible) {
-				renderedActionsCount++;
+				renderableActionsCount++;
 			}
-			return renderedActionsCount > this._rowActionCount;
+			return renderableActionsCount > this._rowActionCount;
 		});
 	}
 
@@ -212,6 +243,24 @@ class TableRow extends TableRowBase {
 		});
 
 		return overflowActions;
+	}
+
+	get _availableActionsCount() {
+		if (this._rowActionCount < 1) {
+			return 0;
+		}
+
+		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
+			return !action.invisible && action._isInteractive;
+		}).length + (this._hasOverflowActions ? 1 : 0);
+	}
+
+	get _actionCellAccText() {
+		const availableActionsCount = this._availableActionsCount;
+		if (availableActionsCount > 0) {
+			const bundleKey = availableActionsCount === 1 ? TABLE_ROW_SINGLE_ACTION : TABLE_ROW_MULTIPLE_ACTIONS;
+			return TableRowBase.i18nBundle.getText(bundleKey, availableActionsCount);
+		}
 	}
 }
 

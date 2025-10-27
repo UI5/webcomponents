@@ -4,7 +4,6 @@
 
 .busyindicator2auto {
     width: 10rem;
-    border: 1px solid red
 }
 
 .busyindicator3auto {
@@ -45,4 +44,8 @@
 
 .busyIndicatorRadius50 {
     border-radius: 50%;
+}
+
+.redBorder {
+    border: 1px solid red;
 }

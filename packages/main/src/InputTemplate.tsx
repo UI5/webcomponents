@@ -29,7 +29,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						style={this.styles.innerInput}
 						type={this.inputNativeType}
 						inner-input
-						inner-input-with-icon={this.icon.length}
+						inner-input-with-icon={!!this.icon.length}
 						disabled={this.disabled}
 						readonly={this._readonly}
 						value={this.value}
@@ -106,6 +106,10 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 
 					{this.accInfo.accessibleDescription &&
 						<span id="accessibleDescription" class="ui5-hidden-text">{this.accInfo.accessibleDescription}</span>
+					}
+
+					{this.linksInAriaValueStateHiddenText.length > 0 &&
+						<span id="hiddenText-value-state-link-shortcut" class="ui5-hidden-text">{this.valueStateLinksShortcutsTextAcc}</span>
 					}
 
 					{this.hasValueState &&

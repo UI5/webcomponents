@@ -38,6 +38,7 @@ import css from "./generated/themes/Tab.css.js";
 import stripCss from "./generated/themes/TabInStrip.css.js";
 import draggableElementStyles from "./generated/themes/DraggableElement.css.js";
 import overflowCss from "./generated/themes/TabInOverflow.css.js";
+import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 
 const DESIGN_DESCRIPTIONS = {
 	[SemanticColor.Positive]: TAB_ARIA_DESIGN_POSITIVE,
@@ -137,7 +138,8 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	 * Defines if the tab is movable.
 	 *
 	 * @default false
-	 * @private
+	 * @public
+	 * @since 2.0.0
 	 */
 	@property({ type: Boolean })
 	movable = false;
@@ -489,12 +491,14 @@ class Tab extends UI5Element implements ITabbable, ITab {
 
 	_ondragstart(e: DragEvent) {
 		if (e.target instanceof HTMLElement) {
+			DragRegistry.setDraggedElement(this);
 			e.target.setAttribute("data-moving", "");
 		}
 	}
 
 	_ondragend(e: DragEvent) {
 		if (e.target instanceof HTMLElement) {
+			DragRegistry.clearDraggedElement();
 			e.target.removeAttribute("data-moving");
 		}
 	}

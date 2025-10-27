@@ -12,7 +12,7 @@ describe("Some settings can be set via SAP UI URL params", () => {
 	before(() => {
 		const searchParams = "sap-ui-rtl=true&sap-ui-language=ja&sap-ui-calendarType=Japanese&sap-ui-theme=sap_horizon_hcb&sap-ui-animationMode=basic";
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 
@@ -60,13 +60,13 @@ describe("Different themeRoot configurations", () => {
 		cy.window()
 			.then($el => {
 				const metaTag = document.createElement("meta");
-				metaTag.name = "sap-allowedThemeOrigins";
+				metaTag.name = "sap-allowed-theme-origins";
 				metaTag.content = "https://example.com";
 
 				$el.document.head.append(metaTag);
 			})
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 
@@ -86,7 +86,7 @@ describe("Different themeRoot configurations", () => {
 		// All allowed theme roots need to be described inside the meta tag.
 		cy.window()
 			.then($el => {
-				const metaTag = $el.document.head.querySelector("[name='sap-allowedThemeOrigins']");
+				const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
 
 				metaTag?.remove();
 			})
@@ -95,7 +95,7 @@ describe("Different themeRoot configurations", () => {
 	it("Unallowed theme root", () => {
 		const searchParams = "sap-ui-theme=sap_horizon_hcb@https://another-example.com";
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 
@@ -116,7 +116,7 @@ describe("Different themeRoot configurations", () => {
 	it("Relative theme root", () => {
 		const searchParams = "sap-ui-theme=sap_horizon_hcb@./test";
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 
@@ -142,7 +142,7 @@ describe("Some settings can be set via SAP URL params", () => {
 	before(() => {
 		const searchParams = "sap-language=bg&sap-theme=sap_fiori_3_dark";
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 
@@ -173,7 +173,7 @@ describe("Some settings can be set via SAP UI URL params", () => {
 	before(() => {
 		const searchParams = "sap-language=bg&sap-ui-language=de&sap-theme=sap_fiori_3_dark&sap-theme=sap_fiori_3_hcb";
 
-		cy.stub(internals, "search", () => {
+		cy.stub(internals, "search").callsFake(() => {
 			return searchParams;
 		});
 

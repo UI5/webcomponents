@@ -11,7 +11,9 @@ import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type TitleLevel from "./types/TitleLevel.js";
+import type Button from "./Button.js";
 import type PanelAccessibleRole from "./types/PanelAccessibleRole.js";
 import PanelTemplate from "./PanelTemplate.js";
 import { PANEL_ICON } from "./generated/i18n/i18n-defaults.js";
@@ -234,8 +236,8 @@ class Panel extends UI5Element {
 		this._toggleOpen();
 	}
 
-	_toggleButtonClick(e: MouseEvent) {
-		if (e.x === 0 && e.y === 0) {
+	_toggleButtonClick(e: UI5CustomEvent<Button, "click">) {
+		if (e.detail.originalEvent.x === 0 && e.detail.originalEvent.y === 0) {
 			e.stopImmediatePropagation();
 		}
 	}

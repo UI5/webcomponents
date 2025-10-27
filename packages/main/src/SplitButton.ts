@@ -16,7 +16,8 @@ import {
 	isTabNext,
 	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import type { AriaHasPopup } from "@ui5/webcomponents-base";
+import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { AriaHasPopup, UI5CustomEvent } from "@ui5/webcomponents-base";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -34,6 +35,10 @@ import SplitButtonTemplate from "./SplitButtonTemplate.js";
 
 // Styles
 import SplitButtonCss from "./generated/themes/SplitButton.css.js";
+
+type SplitButtonRootAccAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
+type SplitButtonArrowButtonAccAtributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
+type SplitButtonAccessibilityAttributes = {root?: SplitButtonRootAccAttributes, arrowButton?: SplitButtonArrowButtonAccAtributes}
 
 /**
  * @class
@@ -165,20 +170,12 @@ class SplitButton extends UI5Element {
 	_tabIndex = 0
 
 	/**
-	 * Indicates if there is Space key pressed
+	 * Indicates if there is Shift or Escape key pressed while Space key is down.
 	 * @default false
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
-	_spacePressed = false;
-
-	/**
-	 * Indicates if there is SHIFT or ESCAPE key pressed
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean, noAttribute: true })
-	_shiftOrEscapePressed = false;
+	_shiftOrEscapePressedDuringSpace = false;
 
 	/**
 	 * Defines the active state of the text button
@@ -219,6 +216,32 @@ class SplitButton extends UI5Element {
 	_hideArrowButton = false;
 
 	/**
+	 * Defines the additional accessibility attributes that will be applied to the component.
+	 * The `accessibilityAttributes` property accepts an object with the following optional fields:
+	 *
+	 * - **root**: Attributes that will be applied to the main (text) button.
+	 *   - **hasPopup**: Indicates the presence and type of popup triggered by the button.
+	 *     Accepts string values: `"dialog"`, `"grid"`, `"listbox"`, `"menu"`, or `"tree"`.
+	 *   - **roleDescription**: Provides a human-readable description for the role of the button.
+	 *     Accepts any string value.
+	 *   - **title**: Specifies a tooltip or description for screen readers.
+	 *     Accepts any string value.
+	 * 	- **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or give focus to the button.
+	 *
+	 * - **arrowButton**: Attributes applied specifically to the arrow (split) button.
+	 *   - **hasPopup**: Indicates the presence and type of popup triggered by the arrow button.
+	 *     Accepts string values: `"dialog"`, `"grid"`, `"listbox"`, `"menu"`, or `"tree"`.
+	 *   - **expanded**: Indicates whether the popup triggered by the arrow button is currently expanded.
+	 *     Accepts boolean values: `true` or `false`.
+	 *
+	 * @default {}
+	 * @public
+	 * @since 2.13.0
+	 */
+	@property({ type: Object })
+	accessibilityAttributes: SplitButtonAccessibilityAttributes = {};
+
+	/**
 	 * Defines the text of the component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -226,9 +249,6 @@ class SplitButton extends UI5Element {
 	 */
 	@slot({ type: Node, "default": true })
 	text!: Array<Node>;
-
-	_isDefaultActionPressed = false;
-	_isKeyDownOperation = false;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -239,7 +259,7 @@ class SplitButton extends UI5Element {
 		}
 	}
 
-	_handleMouseClick(e: MouseEvent) {
+	_handleMouseClick(e: UI5CustomEvent<Button, "click">) {
 		this._fireClick(e);
 	}
 
@@ -248,15 +268,8 @@ class SplitButton extends UI5Element {
 			return;
 		}
 
-		this._shiftOrEscapePressed = false;
+		this._resetActionButtonStates();
 		this._setTabIndexValue();
-	}
-
-	_onFocusIn() {
-		if (this.disabled || this.getFocusDomRef()!.matches(":has(:focus-within)")) {
-			return;
-		}
-		this._shiftOrEscapePressed = false;
 	}
 
 	handleTouchStart(e: TouchEvent | MouseEvent) {
@@ -273,59 +286,69 @@ class SplitButton extends UI5Element {
 	}
 
 	_onKeyDown(e: KeyboardEvent) {
-		this._isKeyDownOperation = true;
 		if (this._isArrowKeyAction(e)) {
 			this._handleArrowButtonAction(e);
 			this._activeArrowButton = true;
-		} else if (this._isDefaultAction(e)) {
+			return;
+		}
+
+		if (this._isDefaultAction(e)) {
 			this._handleDefaultAction(e);
-			this._isDefaultActionPressed = true;
+			return;
 		}
 
-		if (this._spacePressed && this._isShiftOrEscape(e)) {
-			this._handleShiftOrEscapePressed();
+		if ((isShift(e) || isEscape(e)) && this._textButtonActive) {
+			e.preventDefault();
+			this._shiftOrEscapePressedDuringSpace = true;
 		}
 
-		// Handles button freeze issue when pressing Enter/Space and navigating with Tab/Shift+Tab simultaneously.
-		if (this._isDefaultActionPressed && (isTabNext(e) || isTabPrevious(e))) {
-			this._activeArrowButton = false;
-			this._textButtonActive = false;
+		if (isEscape(e) && !this._textButtonActive) {
+			this._resetActionButtonStates();
 		}
 
 		this._tabIndex = -1;
 	}
 
 	_onKeyUp(e: KeyboardEvent) {
-		this._isKeyDownOperation = false;
+		const target = e.target as Button;
 		if (this._isArrowKeyAction(e)) {
 			e.preventDefault();
 			this._activeArrowButton = false;
+			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
+			e.stopPropagation();
 			this._textButtonActive = false;
-		} else if (this._isDefaultAction(e)) {
-			this._isDefaultActionPressed = false;
-			this._textButtonActive = false;
-			if (isSpace(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-				this._fireClick();
-				this._spacePressed = false;
-				this._textButtonActive = false;
+			if (!this._shiftOrEscapePressedDuringSpace) { // Do not fire click if Arrow button is focused by mouse and Space is pressed afterwards
+				if (target !== this.arrowButton) {
+					this._fireClick();
+				} else {
+					this._fireArrowClick();
+				}
 			}
+
+			this._shiftOrEscapePressedDuringSpace = false;
+			return;
 		}
 
-		if (this._isShiftOrEscape(e)) {
-			this._handleShiftOrEscapePressed();
-		}
+		const shouldToggleTextButtonActiveStateOff = isEnter(e) || (isShift(e) && this._textButtonActive);
 
-		this._tabIndex = -1;
+		if (shouldToggleTextButtonActiveStateOff) {
+			this._textButtonActive = false;
+		}
+	}
+
+	_resetActionButtonStates() {
+		this._activeArrowButton = false;
+		this._textButtonActive = false;
+		this._shiftOrEscapePressedDuringSpace = false;
 	}
 
 	_fireClick(e?: Event) {
 		e?.stopPropagation();
-		if (!this._shiftOrEscapePressed) {
-			this.fireDecoratorEvent("click");
-		}
-		this._shiftOrEscapePressed = false;
+		this.fireDecoratorEvent("click");
 	}
 
 	_fireArrowClick(e?: Event) {
@@ -384,27 +407,14 @@ class SplitButton extends UI5Element {
 	}
 
 	/**
-	 * Checks if the pressed key is an escape key or shift key.
-	 * @param e - keyboard event
-	 * @private
-	 */
-	_isShiftOrEscape(e: KeyboardEvent): boolean {
-		return isEscape(e) || isShift(e);
-	}
-
-	/**
 	 * Handles the click event and the focus on the arrow button.
 	 * @param e - keyboard event
 	 * @private
 	 */
-	_handleArrowButtonAction(e: KeyboardEvent | MouseEvent) {
+	_handleArrowButtonAction(e: UI5CustomEvent<Button, "click"> | KeyboardEvent) {
 		e.preventDefault();
 
 		this._fireArrowClick(e);
-
-		if (isSpace((e as KeyboardEvent))) {
-			this._spacePressed = true;
-		}
 	}
 
 	/**
@@ -414,37 +424,30 @@ class SplitButton extends UI5Element {
 	 */
 	_handleDefaultAction(e: KeyboardEvent) {
 		e.preventDefault();
-		const wasSpacePressed = isSpace(e);
 		const target = e.target as Button;
 
-		if (this.arrowButton && target === this.arrowButton) {
-			this._activeArrowButton = true;
-			this._fireArrowClick();
-			if (wasSpacePressed) {
-				this._spacePressed = true;
-				this._textButtonActive = false;
-			}
-		} else {
-			this._textButtonActive = true;
-			if (wasSpacePressed) {
-				this._spacePressed = true;
+		if (isEnter(e)) {
+			if (this.arrowButton && target === this.arrowButton) {
+				this._activeArrowButton = true;
+				this._fireArrowClick();
 				return;
 			}
-			this._fireClick();
-		}
-	}
 
-	_handleShiftOrEscapePressed() {
-		this._shiftOrEscapePressed = true;
-		this._textButtonActive = false;
-		this._isKeyDownOperation = false;
+			this._textButtonActive = true;
+			this._fireClick(e);
+			return;
+		}
+
+		if (isTabPrevious(e) || isTabNext(e)) {
+			this._resetActionButtonStates();
+		}
 	}
 
 	get effectiveActiveArrowButton() {
 		return this.activeArrowButton || this._activeArrowButton;
 	}
 
-	get textButtonAccText() {
+	get buttonTextContent() {
 		return this.textContent;
 	}
 
@@ -460,19 +463,26 @@ class SplitButton extends UI5Element {
 		return this.getDomRef()?.querySelector<Button>(".ui5-split-arrow-button");
 	}
 
-	get accInfo() {
+	get _computedAccessibilityAttributes(): SplitButtonAccessibilityAttributes {
 		return {
 			root: {
-				"description": SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION),
-				"keyboardHint": SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT),
+				hasPopup: this.accessibilityAttributes?.root?.hasPopup,
+				roleDescription: this.accessibilityAttributes?.root?.roleDescription || (this._hideArrowButton ? undefined : SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION)),
+				title: this.accessibilityAttributes?.root?.title,
+				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},
 			arrowButton: {
-				"title": this.arrowButtonTooltip,
-				"accessibilityAttributes": {
-					"hasPopup": "menu" as AriaHasPopup,
-					"expanded": this.effectiveActiveArrowButton,
-				},
+				hasPopup: this.accessibilityAttributes?.arrowButton?.hasPopup || "menu" as AriaHasPopup,
+				expanded: this.accessibilityAttributes?.arrowButton?.expanded || this.effectiveActiveArrowButton,
+				title: this.accessibilityAttributes?.arrowButton?.title || this.arrowButtonTooltip,
 			},
+		};
+	}
+
+	get accInfo() {
+		return {
+			"keyboardHint": SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT),
+			"description": SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION),
 		};
 	}
 
@@ -488,3 +498,6 @@ class SplitButton extends UI5Element {
 SplitButton.define();
 
 export default SplitButton;
+export type {
+	SplitButtonAccessibilityAttributes,
+};

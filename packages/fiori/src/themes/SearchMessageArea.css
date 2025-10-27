@@ -1,10 +1,8 @@
 :host {
-	width: calc(100% - 0.5rem);
+	width: 100%;
 	border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
 	box-sizing: border-box;
 	display: inline-block;
-	margin-left: .25rem;
-	margin-right: .25rem;
 }
 
 .ui5-search-message-area-wrapper {

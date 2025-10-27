@@ -1,0 +1,1 @@
+export type ModifierKey = "shiftKey" | "ctrlKey" | "altKey" | "metaKey";

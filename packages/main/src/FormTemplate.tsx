@@ -6,6 +6,7 @@ export default function FormTemplate(this: Form) {
 		<div
 			class="ui5-form-root"
 			role={this.effectiveAccessibleRole}
+			aria-label={this.effectiveAccessibleName}
 			aria-labelledby={this.effectiveАccessibleNameRef}
 		>
 			{this.hasHeader &&
@@ -13,7 +14,7 @@ export default function FormTemplate(this: Form) {
 					{this.hasCustomHeader ?
 						<slot name="header"></slot>
 						:
-						<Title id={`${this._id}-header-text`} level="H4">{this.headerText}</Title>
+						<Title id={`${this._id}-header-text`} level={this.headerLevel}>{this.headerText}</Title>
 					}
 				</div>
 			}
@@ -38,7 +39,7 @@ export default function FormTemplate(this: Form) {
 											<div class="ui5-form-group" role="form" aria-labelledby={groupItemInfo.accessibleNameRef}>
 												{groupItem.headerText &&
 												<div class="ui5-form-group-heading">
-													<Title id={`${groupItem._id}-group-header-text`} level="H6">{groupItem.headerText}</Title>
+													<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
 												</div>
 												}
 

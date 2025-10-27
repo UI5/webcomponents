@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Multiple Drag Demo</title>
+    <script src="%VITE_BUNDLE_PATH%" type="module"></script>
+    <style>
+        body {
+            background-color: var(--sapBackgroundColor);
+            color: var(--sapList_TextColor);
+        }
+        .demo-container {
+            padding: 2rem;
+        }
+        .demo-section {
+            max-width: 300px;
+        }
+        .info {
+            font-size: 0.875rem;
+            color: #a9a7a7;
+            margin-bottom: 1rem;
+        }
+
+        .direct-drag-image {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border: 2px solid #7c3aed;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            font-family: var(--sapFontFamily);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            white-space: nowrap;
+            position: absolute;
+            top: -1000px;
+            left: -1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- List 1: ui5-li with DragRegistry -->
+        <div class="demo-section">
+            <h3>ui5-li (DragRegistry)</h3>
+            <div class="info">
+                Selected: <span id="count1">0</span><br>
+                Multiple selection mode, drag for multiple
+            </div>
+
+            <ui5-list id="list1" header-text="Standard Items" selection-mode="Multiple">
+                <ui5-li movable data-id="1">Item 1</ui5-li>
+                <ui5-li movable data-id="2">Item 2</ui5-li>
+                <ui5-li movable data-id="3">Item 3</ui5-li>
+                <ui5-li movable data-id="4">Item 4</ui5-li>
+            </ui5-list>
+        </div>
+
+        <!-- List 3: ui5-li without DragRegistry -->
+        <div class="demo-section">
+            <h3>ui5-li (Direct)</h3>
+            <div class="info">
+                Selected: <span id="count2">0</span><br>
+                Multiple selection, purple drag image
+            </div>
+
+            <ui5-list id="list2" header-text="Direct Drag" selection-mode="Multiple">
+                <ui5-li movable data-id="9">Direct 1</ui5-li>
+                <ui5-li movable data-id="10">Direct 2</ui5-li>
+                <ui5-li movable data-id="11">Direct 3</ui5-li>
+                <ui5-li movable data-id="12">Direct 4</ui5-li>
+            </ui5-list>
+        </div>
+    </div>
+
+    <script type="module">
+        const lists = [
+            document.getElementById("list1"),
+            document.getElementById("list2"),
+        ];
+        const counters = [
+            document.getElementById("count1"),
+            document.getElementById("count2"),
+        ];
+
+        function getSelectedItems(list) {
+            return list.getItems().filter(item => item.selected);
+        }
+
+        function updateUI(listIndex) {
+            const selectedItems = getSelectedItems(lists[listIndex]);
+            counters[listIndex].textContent = selectedItems.length;
+        }
+
+        function setupSelectionChangeListener(listIndex) {
+            lists[listIndex].addEventListener("ui5-selection-change", () => {
+                updateUI(listIndex);
+            });
+        }
+
+        function createPurpleDragImage(count) {
+            const element = document.createElement("div");
+            element.innerHTML = `
+                <div class="direct-drag-image">
+                    ${count} Direct Items
+                </div>
+            `;
+            document.body.appendChild(element);
+            return element;
+        }
+
+        // Setup List 1: Standard items with DragRegistry
+        setupSelectionChangeListener(0);
+        lists[0].addEventListener("dragstart", (e) => {
+            const selectedItems = getSelectedItems(lists[0]);
+            const draggedItem = e.target;
+
+            // If dragged item is not selected, select only it
+            if (!draggedItem.selected) {
+                // Clear all selections first
+                selectedItems.forEach(item => item.selected = false);
+                draggedItem.selected = true;
+                updateUI(0);
+            }
+
+            const currentSelected = getSelectedItems(lists[0]);
+            if (currentSelected.length > 1) {
+                window["sap-ui-webcomponents-bundle"].startMultipleDrag(currentSelected.length, e);
+            }
+        });
+
+        // Setup List 2: Direct drag image (no DragRegistry)
+        setupSelectionChangeListener(1);
+        lists[1].addEventListener("dragstart", (e) => {
+            const selectedItems = getSelectedItems(lists[1]);
+            const draggedItem = e.target;
+
+            // If dragged item is not selected, select only it
+            if (!draggedItem.selected) {
+                // Clear all selections first
+                selectedItems.forEach(item => item.selected = false);
+                draggedItem.selected = true;
+                updateUI(1);
+            }
+
+            const currentSelected = getSelectedItems(lists[1]);
+            if (currentSelected.length > 1) {
+                const dragElement = createPurpleDragImage(currentSelected.length);
+                e.dataTransfer.setDragImage(dragElement, 30, 15);
+                requestAnimationFrame(() => {
+                    if (dragElement.parentNode) {
+                        dragElement.parentNode.removeChild(dragElement);
+                    }
+                });
+            }
+        });
+
+        // Initialize
+        [0, 1].forEach(updateUI);
+
+		function handleMoveOver(event) {
+			const { source, destination } = event.detail;
+
+			// Allow drops from both lists
+			const sourceList = source.element.closest('ui5-list');
+			if (lists.includes(sourceList)) {
+				// Allow reordering within lists
+				if (destination.placement === "Before" ||
+					destination.placement === "After") {
+					event.preventDefault();
+				}
+			}
+		}
+
+		function handleMove(event) {
+			const { source, destination } = event.detail;
+
+			// Get the source list to find all selected items
+			const sourceList = source.element.closest('ui5-list');
+			const selectedItems = getSelectedItems(sourceList);
+
+			// Determine which items to move: all selected items or just the dragged item
+			const itemsToMove = selectedItems.length > 1 && selectedItems.includes(source.element)
+				? selectedItems
+				: [source.element];
+
+			// Move the items using spread operator
+			switch (destination.placement) {
+				case "Before":
+					destination.element.before(...itemsToMove);
+					break;
+				case "After":
+					destination.element.after(...itemsToMove);
+					break;
+				case "On":
+					destination.element.prepend(...itemsToMove);
+					break;
+			}
+
+			// Update selection counts after move
+			setTimeout(() => {
+				[0, 1].forEach(updateUI);
+			}, 0);
+		}
+
+		lists.forEach((list, index) => {
+			// setupSelectionChangeListener(index);
+			// list.addEventListener("dragstart", handleDragStart(index));
+			list.addEventListener("ui5-move-over", handleMoveOver);
+			list.addEventListener("ui5-move", handleMove);
+		});
+    </script>
+</body>
+</html>

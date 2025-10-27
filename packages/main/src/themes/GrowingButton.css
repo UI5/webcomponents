@@ -46,7 +46,7 @@
 
 .ui5-growing-button-text {
 	text-align: center;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

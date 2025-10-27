@@ -14,6 +14,10 @@ export default function MultiComboBoxTemplate(this: MultiComboBox) {
 				<span id="ui5-multi-combobox-valueStateDesc" class="ui5-hidden-text">{this.ariaValueStateHiddenText}</span>
 			}
 
+			{this.linksInAriaValueStateHiddenText.length > 0 &&
+				<span id="hiddenText-value-state-link-shortcut" class="ui5-hidden-text">{this.getValueStateLinksShortcutsTextAcc}</span>
+			}
+
 			<Tokenizer
 				slot="_beginContent"
 				preventPopoverOpen={true}

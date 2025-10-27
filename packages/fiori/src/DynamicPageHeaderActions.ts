@@ -26,6 +26,7 @@ import {
 	DYNAMIC_PAGE_ARIA_LABEL_EXPAND_HEADER,
 	DYNAMIC_PAGE_ARIA_LABEL_SNAP_HEADER,
 	DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER,
+	DYNAMIC_PAGE_ARIA_LABEL_UNPIN_HEADER,
 } from "./generated/i18n/i18n-defaults.js";
 
 type DynamicPageHeaderActionsAccessibilityAttributes = Pick<AccessibilityAttributes, "controls">;
@@ -153,7 +154,9 @@ class DynamicPageHeaderActions extends UI5Element {
 	}
 
 	get pinLabel() {
-		return DynamicPageHeaderActions.i18nBundle.getText(DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER);
+		return this.pinned
+			? DynamicPageHeaderActions.i18nBundle.getText(DYNAMIC_PAGE_ARIA_LABEL_UNPIN_HEADER)
+			: DynamicPageHeaderActions.i18nBundle.getText(DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER);
 	}
 
 	get expandLabel() {

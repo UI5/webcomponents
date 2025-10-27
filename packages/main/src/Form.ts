@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -12,6 +13,10 @@ import FormCss from "./generated/themes/Form.css.js";
 
 import type FormItemSpacing from "./types/FormItemSpacing.js";
 import type FormGroup from "./FormGroup.js";
+import type TitleLevel from "./types/TitleLevel.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+
+import { FORM_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
 
 const additionalStylesMap = new Map<string, string>();
 
@@ -41,6 +46,7 @@ interface IFormItem extends UI5Element {
 	colsS?: number;
 	columnSpan?: number;
 	headerText?: string;
+	headerLevel?: `${TitleLevel}`;
 }
 
 type GroupItemsInfo = {
@@ -207,6 +213,15 @@ type ItemsInfo = {
 })
 class Form extends UI5Element {
 	/**
+	 * Defines the accessible ARIA name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.10.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the number of columns to distribute the form content by breakpoint.
 	 *
 	 * Supported values:
@@ -266,6 +281,16 @@ class Form extends UI5Element {
 	headerText?: string;
 
 	/**
+	 * Defines the compoennt heading level,
+	 * set by the `headerText`.
+	 * @default "H2"
+	 * @since 2.10.0
+	 * @public
+	*/
+	@property()
+	headerLevel: `${TitleLevel}` = "H2";
+
+	/**
 	 * Defines the vertical spacing between form items.
 	 *
 	 * **Note:** If the Form is meant to be switched between "non-edit" and "edit" modes,
@@ -301,6 +326,9 @@ class Form extends UI5Element {
 		invalidateOnChildChange: true,
 	})
 	items!: Array<IFormItem>;
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
 
 	/**
 	 * @private
@@ -342,6 +370,9 @@ class Form extends UI5Element {
 
 		// Define how many columns a group should take.
 		this.setGroupsColSpan();
+
+		// Set item spacing
+		this.setItemSpacing();
 	}
 
 	onAfterRendering() {
@@ -489,6 +520,12 @@ class Form extends UI5Element {
 		return index === 0 ? MIN_COL_SPAN + (delta - groups) + 1 : MIN_COL_SPAN + 1;
 	}
 
+	setItemSpacing() {
+		this.items.forEach((item: IFormItem) => {
+			item.itemSpacing = this.itemSpacing;
+		});
+	}
+
 	get hasGroupItems(): boolean {
 		return this.items.some((item: IFormItem) => item.isGroup);
 	}
@@ -503,6 +540,13 @@ class Form extends UI5Element {
 
 	get hasCustomHeader(): boolean {
 		return !!this.header.length;
+	}
+
+	get effectiveAccessibleName() {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+		return this.hasHeader ? undefined : Form.i18nBundle.getText(FORM_ACCESSIBLE_NAME);
 	}
 
 	get effectiveАccessibleNameRef(): string | undefined {

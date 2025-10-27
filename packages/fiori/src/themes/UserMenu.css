@@ -32,7 +32,7 @@
 
 .ui5-user-menu-fixed-header [ui5-button] {
     margin-inline: 0.5rem;
-    font-family: var(--sapFontSemiboldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
 }
 
 .ui5-user-menu-rp::part(content) {
@@ -48,7 +48,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-block-end: 0.5rem;
     overflow: hidden;
 }
 
@@ -58,42 +58,47 @@
 }
 
 .ui5-user-menu-selected-account-title {
+	text-align: center;
     margin-block: 0.25rem;
-    font-family: var(--sapFontBoldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
     font-size: var(--sapFontLargeSize);
-    color: var(--sapTextColor)
+    color: var(--sapTextColor);
 }
 
 .ui5-user-menu-selected-account-subtitleText {
+	text-align: center;
 	margin-bottom: 0.25rem;
     font-family: var(--sapFontFamily);
     font-size: var(--sapFontSize);
-    color: var(--sapContent_LabelColor)
+    color: var(--sapContent_LabelColor);
 }
 
 .ui5-user-menu-selected-account-description {
-    margin-bottom: 1rem;
+	text-align: center;
     font-family: var(--sapFontFamily);
     font-size: var(--sapFontSize);
-    color: var(--sapContent_LabelColor)
+    color: var(--sapContent_LabelColor);
 }
 
-.ui5-user-menu-decline-btn {
-    align-self: flex-end;
-    font-family: var(--sapFontSemiboldFamily);
+.ui5-user-menu-selected-account-additional-info {
+	margin-top: 0.25rem;
+	text-align: center;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	color: var(--sapContent_LabelColor);
 }
 
 .ui5-user-menu-manage-account-btn {
-    font-family: var(--sapFontSemiboldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
+    margin-block-start: 1rem;
 }
 
-
 .ui5-user-menu-sign-out-btn {
-    font-family: var(--sapFontSemiboldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
 }
 
 .ui5-user-menu-other-accounts {
-    margin-bottom: 1rem;
+    margin-block-end: 0.5rem;
 }
 
 .ui5-user-menu-other-accounts::part(header) {
@@ -109,9 +114,8 @@
     display: flex;
     align-items: center;
     width: 100%;
-    height: 4.5rem;
+    min-height: 4.5rem;
     gap: 12px;
-    padding-block: 8px 16px;
 }
 
 .ui5-user-menu-other-accounts-info {
@@ -129,7 +133,7 @@
     overflow: hidden;
     color: var(--sapList_TextColor);
     text-overflow: ellipsis;
-    font-family: var(--sapFontBoldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
     font-size: var(--sapFontSize);
     font-style: normal;
     line-height: normal;

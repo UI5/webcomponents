@@ -74,3 +74,4 @@ import ListItemGroupHeader from "../../dist/ListItemGroupHeader.js";
 // Features
 import "../../dist/features/ColorPaletteMoreColors.js";
 import "../../dist/features/InputSuggestions.js";
+import "../../dist/features/ListItemStandardExpandableText.js";

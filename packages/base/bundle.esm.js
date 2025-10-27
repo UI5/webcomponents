@@ -29,6 +29,7 @@ import { getFirstDayOfWeek, getLegacyDateCalendarCustomizing } from "./dist/conf
 import { _getRegisteredNames as getIconNames } from  "./dist/asset-registries/Icons.js"
 import applyDirection from "./dist/locale/applyDirection.js";
 import { getCurrentRuntimeIndex } from "./dist/Runtimes.js";
+import { startMultipleDrag } from "./dist/DragAndDrop.js";
 import LegacyDateFormats from "./dist/features/LegacyDateFormats.js";
 
 window["sap-ui-webcomponents-bundle"] = {
@@ -56,4 +57,5 @@ window["sap-ui-webcomponents-bundle"] = {
 	renderFinished,
 	applyDirection,
 	EventProvider,
+	startMultipleDrag,
 };

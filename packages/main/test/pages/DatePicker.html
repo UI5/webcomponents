@@ -30,12 +30,19 @@
 <body class="datepicker1auto">
 	<div style='width:600px;'>
 
+		<ui5-date-picker value-state="Negative">
+			<div slot="valueStateMessage">Hi</div>
+		</ui5-date-picker>
+
+		<ui5-label for="dpLabel">Deadline</ui5-label>
+		<ui5-date-picker id="dpLabel"></ui5-date-picker>
+
 		<h3> DatePicker with value-state-change event prevented </h3>
 		<ui5-date-picker id="dpVsChangePrevented" value-state="Negative"></ui5-date-picker>
 
 		<div>
 			<h3> DatePicker with no format pattern & min-max dates in ISO format</h3>
-			<ui5-date-picker id="dpMinMax-dates" min-date="2019-09-01" max-date="2019-11-01"></ui5-date-picker>
+			<ui5-date-picker id="dpMinMax-dates" min-date="2019-09-01" max-date="2019-11-01" value="Invalid"></ui5-date-picker>
 		</div>
 
 		<h3>Date picker with placeholder.</h3>
@@ -76,6 +83,9 @@
 
 		<h3>format-pattern - 'EEE, M/d/yyyy'</h3>
 		<ui5-date-picker id='dp9' format-pattern='EEE, M/d/yyyy'></ui5-date-picker>
+
+		<h3>display-fomat='medium' value-fomat='yyyy-MM-dd'</h3>
+		<ui5-date-picker id='dp12' display-format='medium' value-format='yyyy-MM-dd'></ui5-date-picker>
 
 		<h3>Try the value - 'today'</h3>
 		<ui5-date-picker id='dp10'></ui5-date-picker>

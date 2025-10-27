@@ -14,12 +14,14 @@ import Page from "../../dist/Page.js";
 import ProductSwitch from "../../dist/ProductSwitch.js";
 import ProductSwitchItem from "../../dist/ProductSwitchItem.js";
 import ShellBar from "../../dist/ShellBar.js";
+import ShellBarBranding from "../../dist/ShellBarBranding.js";
 import ShellBarSpacer from "../../dist/ShellBarSpacer.js"
 import ShellBarItem from "../../dist/ShellBarItem.js";
 import SideNavigation from "../../dist/SideNavigation.js";
 import SideNavigationItem from "../../dist/SideNavigationItem.js";
 import SideNavigationSubItem from "../../dist/SideNavigationSubItem.js";
 import SortItem from "../../dist/SortItem.js";
+import GroupItem from "../../dist/GroupItem.js";
 import Timeline from "../../dist/Timeline.js";
 import UploadCollection from "../../dist/UploadCollection.js";
 import UploadCollectionItem from "../../dist/UploadCollectionItem.js";

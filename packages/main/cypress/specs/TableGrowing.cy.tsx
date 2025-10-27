@@ -51,7 +51,8 @@ describe("TableGrowing - Button", () => {
 			cy.get("[ui5-table")
 				.shadow()
 				.find("#growing-row")
-				.should("exist");
+				.should("exist")
+				.should("have.attr", "aria-hidden", "true");
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
@@ -151,7 +152,7 @@ describe("TableGrowing - Button", () => {
 				.should("have.been.calledTwice");
 		});
 
-		it("tests focus is set to first newly added row", () => {
+		it("tests focus is set to first newly added row - click", () => {
 			cy.mount(<TableSample></TableSample>);
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
@@ -165,6 +166,30 @@ describe("TableGrowing - Button", () => {
 					});
 				})
 				.realClick();
+
+			cy.get("[ui5-table]")
+				.children("ui5-table-row")
+				.should("have.length", 2);
+
+			cy.get("#new-row")
+				.should("exist")
+				.should("have.focus");
+		});
+
+		it("tests focus is set to first newly added row - ENTER", () => {
+			cy.mount(<TableSample></TableSample>);
+
+			cy.get<TableGrowing>("[ui5-table-growing]")
+				.then(tableGrowing => {
+					tableGrowing.get(0).addEventListener("load-more", () => {
+						const table = document.getElementById("table");
+						const row = document.createElement("ui5-table-row");
+						row.id = "new-row";
+						row.innerHTML = "<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>";
+						table!.appendChild(row);
+					});
+				})
+				.trigger("keydown", { key: "Enter", code: "Enter", which: 13 });
 
 			cy.get("[ui5-table]")
 				.children("ui5-table-row")
@@ -226,16 +251,34 @@ describe("TableGrowing - Scroll", () => {
 				.should("be.visible");
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
-				.then(tableGrowing => tableGrowing.get(0).addEventListener("load-more", cy.stub().as("loadMore")));
+				.then(tableGrowing => {
+					tableGrowing.get(0).addEventListener("load-more", cy.stub().as("loadMore"));
+					tableGrowing.get(0).addEventListener("load-more", () => {
+						const table = document.getElementById("table");
+						Array.from({ length: 10 }).forEach(() => {
+							const row = document.createElement("ui5-table-row");
+							row.innerHTML = "<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>";
+							table!.appendChild(row);
+						});
+					});
+				});
 
-			cy.get("[ui5-table-row]:last-child")
+			for (let i = 0; i <= 5; i++) {
+				cy.get("[ui5-table-row]:last-child")
 				.scrollIntoView();
 
-			cy.get("[ui5-table-row]:last-child")
-				.should("be.visible");
+				cy.get("[ui5-table-row]:last-child")
+					.should("be.visible");
 
-			cy.get("@loadMore")
-				.should("have.been.calledOnce");
+				cy.get("@loadMore")
+					.should("have.been.calledOnce");
+
+				cy.get("#wrapper")
+					.then($wrapper => {
+						const wrapper = $wrapper.get(0);
+						expect(wrapper.scrollTop).to.be.greaterThan(0);
+					});
+			}
 		});
 
 		it("tests button fires load-more, button vanishes, scroll to end fires load-more", () => {
@@ -282,6 +325,12 @@ describe("TableGrowing - Scroll", () => {
 				cy.get("[ui5-table]")
 					.children("ui5-table-row")
 					.should("have.length", 1 + 10 * i);
+
+				cy.get("#wrapper")
+					.then($wrapper => {
+						const wrapper = $wrapper.get(0);
+						expect(wrapper.scrollTop).to.be.greaterThan(0);
+					});
 			}
 		});
 	});

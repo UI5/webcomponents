@@ -13,7 +13,7 @@ export default function SelectTemplate(this: Select) {
 				}}
 				id={`${this._id}-select`}
 				onClick={this._onclick}
-				title={this.tooltip}
+				title={this._effectiveTooltip}
 			>
 				{!this.icon && this.selectedOptionIcon &&
 					<Icon
@@ -29,7 +29,9 @@ export default function SelectTemplate(this: Select) {
 					role="combobox"
 					aria-haspopup="listbox"
 					aria-label={this.ariaLabelText}
-					aria-describedby={this.valueStateTextId}
+					{...this.ariaDescribedByIds && {
+						"aria-describedby": this.ariaDescribedByIds
+					}}
 					aria-disabled={this.isDisabled}
 					aria-required={this.required}
 					aria-readonly={this.readonly}
@@ -40,6 +42,7 @@ export default function SelectTemplate(this: Select) {
 					onKeyUp={this._onkeyup}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}
+					aria-controls={this.responsivePopoverId}
 				>
 					{this.hasCustomLabel
 						? <slot name="label"></slot>
@@ -48,27 +51,44 @@ export default function SelectTemplate(this: Select) {
 				</div>
 
 				{this.icon &&
-					<Icon
-						name={this.icon}
-						class={{
-							"inputIcon": true,
-							"inputIcon--pressed": this._iconPressed,
-						}} />
+					<div class={{
+						"ui5-select-icon-root": true,
+						"inputIcon": true,
+						"inputIcon--pressed": this._iconPressed,
+					}}>
+						<Icon
+							name={this.icon}
+							class={{
+								"ui5-select-icon": true,
+							}} />
+					</div>
 				}
 
 				{!this.icon && !this.readonly &&
-					<Icon
-						part="icon"
-						name={slimArrowDown}
+					<div part="icon-wrapper"
 						class={{
+							"ui5-select-icon-root": true,
 							"inputIcon": true,
 							"inputIcon--pressed": this._iconPressed,
-						}} />
+						}}>
+						<Icon
+							part="icon"
+							name={slimArrowDown}
+							class={{
+								"ui5-select-icon": true,
+							}} />
+					</div>
 				}
 
 				{this.hasValueState &&
 					<span id={`${this._id}-valueStateDesc`} class="ui5-hidden-text">
 						{this.valueStateText}
+					</span>
+				}
+
+				{this.ariaDescriptionText &&
+					<span id="accessibleDescription" class="ui5-hidden-text">
+						{this.ariaDescriptionText}
 					</span>
 				}
 			</div>

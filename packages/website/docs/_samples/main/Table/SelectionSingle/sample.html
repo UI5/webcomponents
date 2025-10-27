@@ -10,6 +10,13 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
     <div class="section">
+		<div style="display: flex; align-items: center;">
+			<ui5-label>Selection Behavior: </ui5-label>
+			<span id="selectionBehavior" role="radiogroup">
+				<ui5-radio-button name="selectionBehavior" text="RowSelector" checked></ui5-radio-button>
+				<ui5-radio-button name="selectionBehavior" text="RowOnly"></ui5-radio-button>
+			</span>
+		</div>
 <!-- playground-fold-end -->
 		<ui5-table id="table">
 			<ui5-table-selection-single id="selection" slot="features" selected="Row2"></ui5-table-selection-single>

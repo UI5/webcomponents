@@ -1,3 +1,5 @@
+@import "./InvisibleTextStyles.css";
+
 :host {
     position: fixed;
     background: var(--sapGroup_ContentBackground);
@@ -23,7 +25,6 @@
 }
 
 .ui5-popup-root .ui5-popup-header-root {
-    color: var(--sapPageHeader_TextColor);
     box-shadow: var(--_ui5_popup_header_shadow);
     border-bottom: var(--_ui5_popup_header_border);
 }
@@ -56,7 +57,9 @@
 }
 
 .ui5-popup-header-root .ui5-popup-header-text {
-	font-weight: var(--_ui5_popup_header_font_weight);
+	font-weight: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader5Size);
+	color: var(--sapPageHeader_TextColor);
 }
 
 .ui5-popup-content {
@@ -101,7 +104,7 @@
 }
 
 .ui5-popup-header-root {
-	background: var(--_ui5_popup_header_background);
+	background: var(--sapPageHeader_Background);
 }
 
 /*** Responsive paddings for the Header and Footer ***/

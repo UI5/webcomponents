@@ -53,6 +53,10 @@ class SideNavigationSubItem extends SideNavigationSelectableItemBase {
 			classes.push("ui5-sn-item-has-icon");
 		}
 
+		if (this.effectiveDisabled) {
+			classes.push("ui5-sn-item-disabled");
+		}
+
 		return classes;
 	}
 }

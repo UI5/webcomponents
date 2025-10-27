@@ -1,0 +1,29 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dynamic Date Range Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 550px;">
+	<!-- playground-fold-end -->
+
+	<ui5-dynamic-date-range id="dynamicDateRange"
+		options="TODAY, TOMORROW, YESTERDAY, DATE, DATERANGE, LASTDAYS, NEXTDAYS, LASTWEEKS, NEXTWEEKS, LASTMONTHS, NEXTMONTHS, LASTQUARTERS, NEXTQUARTERS, LASTYEARS, NEXTYEARS"></ui5-dynamic-date-range>
+
+	<div style="margin-top: 20px;">
+		<label for="selectedValue">Selected Value:</label>
+		<input id="selectedValue" type="text" readonly style="width: 300px;">
+
+		<label for="convertedDates" style="margin-left: 20px;">Converted Dates:</label>
+		<input id="convertedDates" type="text" readonly style="width: 300px;">
+	</div>
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

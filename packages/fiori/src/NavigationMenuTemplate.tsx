@@ -14,7 +14,6 @@ export default function NavigationMenuTemplate(this: NavigationMenu) {
 			opener={this.opener}
 			open={this.open}
 			preventInitialFocus={true}
-			preventFocusRestore={true}
 			accessibleNameRef={`${this._id}-navigationMenuPopoverText`}
 			onBeforeOpen={this._beforePopoverOpen}
 			onOpen={this._afterPopoverOpen}
@@ -41,7 +40,7 @@ export default function NavigationMenuTemplate(this: NavigationMenu) {
 				{this.items.length > 0 ?
 					<List
 						id={`${this._id}-menu-list`}
-						accessibleRole="Tree"
+						accessibleRole="Menu"
 						selectionMode="None"
 						loading={this.loading}
 						loadingDelay={this.loadingDelay}

@@ -6,6 +6,7 @@ import Basic from "../../_samples/main/DateTimePicker/Basic/Basic.md";
 import FormatPattern from "../../_samples/main/DateTimePicker/FormatPattern/FormatPattern.md";
 import MinMax from "../../_samples/main/DateTimePicker/MinMax/MinMax.md";
 import DateTimePickerInDifferentTimezone from "../../_samples/main/DateTimePicker/DateTimePickerInDifferentTimezone/DateTimePickerInDifferentTimezone.md";
+import CustomFormatting from "../../_samples/main/DateTimePicker/CustomFormatting/CustomFormatting.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -16,11 +17,6 @@ import DateTimePickerInDifferentTimezone from "../../_samples/main/DateTimePicke
 
 ## More Samples
 
-### Date-Time Formats
-Supported format options are pattern-based on Unicode LDML Date Format notation.
-For more information, see <a target="_blank" href="http://unicode.org/reports/tr35/#Date_Field_Symbol_Table">UTS #35: Unicode Locale Data Markup Language</a>.
-<FormatPattern />
-
 ### Min and Max Dates
 Define min and max date-time boundaries to contrain user choice.
 
@@ -28,4 +24,12 @@ Define min and max date-time boundaries to contrain user choice.
 
 ### Timezones
 You can set to the configuration the preferred time zone, such as: Asia/Tokyo, Pacific/Apia, Asia/Kolkata, Europe/Sofia and etc.
+
 <DateTimePickerInDifferentTimezone />
+
+### CustomFormatting
+You can have custom formatting for the display value and the value property.
+Supported format options are pattern-based on Unicode LDML Date Format notation.
+For more information, see <a target="_blank" href="http://unicode.org/reports/tr35/#Date_Field_Symbol_Table">UTS #35: Unicode Locale Data Markup Language</a>.
+
+<CustomFormatting />

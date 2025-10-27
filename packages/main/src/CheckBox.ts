@@ -7,10 +7,16 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type WrappingType from "./types/WrappingType.js";
+import type {
+	AriaRole,
+	AriaChecked,
+	AriaDisabled,
+	AriaReadonly,
+} from "@ui5/webcomponents-base/dist/types.js";
 import {
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
@@ -26,6 +32,15 @@ import CheckBoxTemplate from "./CheckBoxTemplate.js";
 
 let isGlobalHandlerAttached = false;
 let activeCb: CheckBox;
+
+type CheckBoxAccInfo = {
+	role?: AriaRole,
+	ariaChecked?: AriaChecked,
+	ariaReadonly?: AriaReadonly,
+	ariaDisabled?: AriaDisabled,
+	ariaRequired?: boolean,
+	tabindex?: number | undefined,
+}
 
 /**
  * @class
@@ -154,6 +169,9 @@ class CheckBox extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Defines whether the component is required.
+	 *
+	 * **Note:** We advise against using the text property of the checkbox when there is a
+	 * label associated with it to avoid having two required asterisks.
 	 * @default false
 	 * @public
 	 * @since 1.3.0
@@ -230,11 +248,33 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	name?: string;
 
 	/**
+	 * Defines the form value of the component that is submitted when the checkbox is checked.
+	 *
+	 * When a form containing `ui5-checkbox` elements is submitted, only the values of the
+	 * **checked** checkboxes are included in the form data sent to the server. Unchecked
+	 * checkboxes do not contribute any data to the form submission.
+	 *
+	 * This property is particularly useful for **checkbox groups**, where multiple checkboxes with the same `name` but different `value` properties can be used to represent a set of related options.
+	 *
+	 * @default "on"
+	 * @public
+	 */
+	@property()
+	value = "on";
+
+	/**
 	 * Defines the active state (pressed or not) of the component.
 	 * @private
 	 */
 	@property({ type: Boolean })
 	active = false;
+
+	/**
+	 * Defines custom aria implementation object.
+	 * @private
+	 */
+	@property({ type: Object })
+	_accInfo?: CheckBoxAccInfo;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -253,7 +293,7 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	}
 
 	get formFormattedValue() {
-		return this.checked ? "on" : null;
+		return this.checked ? this.value : null;
 	}
 
 	constructor() {
@@ -360,7 +400,7 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	}
 
 	get ariaLabelText() {
-		return getEffectiveAriaLabelText(this);
+		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this);
 	}
 
 	get classes() {
@@ -423,6 +463,17 @@ class CheckBox extends UI5Element implements IFormInputElement {
 
 	get isDisplayOnly() {
 		return this.displayOnly && !this.disabled;
+	}
+
+	get accInfo() {
+		return {
+			"role": this._accInfo ? this._accInfo.role : "checkbox" as AriaRole,
+			"ariaChecked": this._accInfo ? this._accInfo.ariaChecked : this.effectiveAriaChecked as AriaChecked,
+			"ariaReadonly": this._accInfo ? this._accInfo.ariaReadonly : this.ariaReadonly as AriaReadonly,
+			"ariaDisabled": this._accInfo ? this._accInfo.ariaDisabled : this.effectiveAriaDisabled as AriaDisabled,
+			"ariaRequired": this._accInfo ? this._accInfo.ariaRequired : this.required,
+			"tabindex": this._accInfo ? this._accInfo.tabindex : this.effectiveTabIndex,
+		};
 	}
 }
 

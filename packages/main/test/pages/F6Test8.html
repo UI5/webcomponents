@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Avatar</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/F6Test.css">
+</head>
+
+<body>
+	F6 navigation should be handled by OpenUI5, even if it is loaded late.
+	<div class="section">
+		<ui5-button>Before element</ui5-button>
+	</div>
+	<div class="section" data-sap-ui-fastnavgroup="true">
+		<ui5-button id="first">First focusable</ui5-button>
+	</div>
+	<div class="section">
+		<ui5-button>Something focusable</ui5-button>
+	</div>
+	<div class="section">
+		<ui5-button>Something focusable</ui5-button>
+	</div>
+	<div class="section">
+		<ui5-button>Something focusable</ui5-button>
+	</div>
+	<div class="section" data-sap-ui-fastnavgroup="true">
+		<ui5-button id="second">Second focusable</ui5-button>
+	</div>
+	<div class="section">
+		<ui5-button>Something focusable</ui5-button>
+	</div>
+	<div class="section" data-sap-ui-fastnavgroup="true">
+		<ui5-button id="third">Third focusable</ui5-button>
+	</div>
+	<div class="section">
+		<ui5-button>After Element</ui5-button>
+	</div>
+	<script>
+		setTimeout(() => {
+			const script = document.createElement('script');
+			script.src = 'https://sdk.openui5.org/resources/sap-ui-core.js';
+			script.id = 'sap-ui-bootstrap';
+			script.setAttribute('data-sap-ui-libs', 'sap.m');
+			script.setAttribute('data-sap-ui-theme', 'sap_horizon');
+
+			document.head.appendChild(script);
+		}, 2000)
+	</script>
+</body>
+
+</html>

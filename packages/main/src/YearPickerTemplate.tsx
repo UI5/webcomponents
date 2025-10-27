@@ -4,6 +4,7 @@ export default function YearPickerTemplate(this: YearPicker) {
 	return (
 		<div
 			class="ui5-yp-root"
+			part="year-picker-root"
 			role="grid"
 			aria-roledescription={this.roleDescription}
 			aria-readonly="false"
@@ -30,7 +31,7 @@ export default function YearPickerTemplate(this: YearPicker) {
 						</span>
 						{
 							year.yearInSecType &&
-							<span class="ui5-yp-year-sec-type">
+							<span class="ui5-yp-item-sec-type">
 								{year.yearInSecType}
 							</span>
 						}

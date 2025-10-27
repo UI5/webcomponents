@@ -1,7 +1,4 @@
 :root {
-	--_ui5_segmented_btn_inner_border: 0.0625rem solid var(--sapButton_BorderColor);
-	--_ui5_segmented_btn_inner_border_odd_child: 0;
-	--_ui5_segmented_btn_inner_pressed_border_odd_child: 0;
 	--_ui5_segmented_btn_item_border_left: 0px;
 	--_ui5_segmented_btn_item_border_right: 0.0625rem;
 }

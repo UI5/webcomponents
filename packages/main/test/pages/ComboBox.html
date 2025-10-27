@@ -69,7 +69,7 @@
 			<ui5-cb-item text="Bahrain"></ui5-cb-item>
 			<ui5-cb-item text="Belgium"></ui5-cb-item>
 			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
-			<div slot="valueStateMessage">Custom error value state message with a <a href="#">Link</a>.</div>
+			<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link 1</ui5-link> and <ui5-link href="#">Link 2</ui5-link></div>
 		</ui5-combobox>
 		<ui5-combobox id="vs-warning-default" class="combobox2auto" value-state="Critical">
 			<ui5-cb-item text="Algeria"></ui5-cb-item>
@@ -79,7 +79,8 @@
 			<ui5-cb-item text="Bahrain"></ui5-cb-item>
 			<ui5-cb-item text="Belgium"></ui5-cb-item>
 		</ui5-combobox>
-		<ui5-combobox id="vs-information-default" class="combobox2auto" value-state="Information"></ui5-combobox>
+		<ui5-combobox id="vs-information-default" class="combobox2auto" value-state="Information">
+		</ui5-combobox>
 		<ui5-combobox id="vs-success-default" class="combobox2auto" value-state="Positive"></ui5-combobox>
 	</div>
 
@@ -173,6 +174,22 @@
 		<br />
 		<span id="selection-change-event-result"></span>
 
+	</div>
+
+		<div class="demo-section">
+		<span>SelectionChange event testing</span>
+
+		<ui5-combobox id="selection-change-cb" show-clear-icon="">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+
+		<br>
+
+		Selected item: <span id="selection-change-placeholder"></span><br>
+		SelectionChange call count: <span id="selection-change-count">0</span><br>
 	</div>
 
 	<div class="demo-section">
@@ -290,6 +307,43 @@
 			<ui5-cb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"></ui5-cb-item>
 		</ui5-combobox>
 	</div>
+
+	<section>
+		<h3>ComboBox Composition</h3>
+
+		<div class="demo-section">
+			<span>ComboBox - Korean suggestions</span>
+
+			<ui5-combobox class="combobox" id="korean-suggestions-cb">
+				<ui5-cb-item text="안녕하세요"></ui5-cb-item>
+				<ui5-cb-item text="고맙습니다"></ui5-cb-item>
+				<ui5-cb-item text="사랑"></ui5-cb-item>
+				<ui5-cb-item text="한국"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Japanese suggestions</span>
+
+			<ui5-combobox class="combobox" id="japanese-suggestions-cb">
+				<ui5-cb-item text="こんにちは"></ui5-cb-item>
+				<ui5-cb-item text="ありがとう"></ui5-cb-item>
+				<ui5-cb-item text="日本"></ui5-cb-item>
+				<ui5-cb-item text="東京"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Chinese suggestions</span>
+
+			<ui5-combobox class="combobox" id="chinese-suggestions-cb">
+				<ui5-cb-item text="你好"></ui5-cb-item>
+				<ui5-cb-item text="謝謝"></ui5-cb-item>
+				<ui5-cb-item text="北京"></ui5-cb-item>
+				<ui5-cb-item text="上海"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+	</section>
 
 	<div class="demo-section">
 		<ui5-combobox id="value-state-error-text" value-state="Negative">
@@ -489,6 +543,11 @@
 		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {
 			document.getElementById("change-placeholder").innerHTML = event.target.value;
 			document.getElementById("change-count").innerHTML = parseInt(document.getElementById("change-count").innerHTML) + 1;
+		});
+
+		document.getElementById("selection-change-cb").addEventListener("ui5-selection-change", function (event) {
+			document.getElementById("selection-change-placeholder").innerHTML = event.detail.item?.text || "";
+			document.getElementById("selection-change-count").innerHTML = parseInt(document.getElementById("selection-change-count").innerHTML) + 1;
 		});
 
 		document.getElementById("input-cb").addEventListener("ui5-input", function (event) {

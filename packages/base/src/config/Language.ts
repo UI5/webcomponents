@@ -16,6 +16,17 @@ attachConfigurationReset(() => {
 	fetchDefaultLanguage = undefined;
 });
 
+// Flag indicating that a language change is in progress and not yet complete.
+// While this flag is true, language-aware components will not re-render.
+// These components may rely on language-specific data (e.g., CLDR, language bundles),
+// which might be unavailable during the loading phase.
+// During this phase, all re-rendering is postponed.
+// Once all necessary language data has been loaded, the language change
+// will trigger a re-render of all language-aware components.
+let languageChangePending = false;
+
+const getLanguageChangePending = () => languageChangePending;
+
 /**
  * Returns the currently configured language, or the browser language as a fallback.
  * @public
@@ -41,9 +52,13 @@ const setLanguage = async (language: string): Promise<void> => {
 		return;
 	}
 
+	languageChangePending = true;
 	curLanguage = language;
 
 	await fireLanguageChange(language);
+
+	languageChangePending = false;
+
 	if (isBooted()) {
 		await reRenderAllUI5Elements({ languageAware: true });
 	}
@@ -92,4 +107,5 @@ export {
 	getDefaultLanguage,
 	setFetchDefaultLanguage,
 	getFetchDefaultLanguage,
+	getLanguageChangePending,
 };

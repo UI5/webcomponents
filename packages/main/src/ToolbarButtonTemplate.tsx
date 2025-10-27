@@ -4,11 +4,10 @@ import Button from "./Button.js";
 export default function ToolbarButtonTemplate(this: ToolbarButton) {
 	return (
 		<Button
-			class="ui5-tb-button ui5-tb-item"
+			class={this.classes.root}
 			id={this.id}
 			style={{
-				width: this.width,
-				display: this.hidden ? "none" : "inline-block",
+				width: this.width || "100%",
 			}}
 			icon={this.icon}
 			endIcon={this.endIcon}

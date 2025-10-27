@@ -1,0 +1,76 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Drag Sample</title>
+    <style>
+        .demo-container {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+        }
+        
+        .demo-section {
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .info {
+            font-size: 0.875rem;
+            color: var(--sapNeutralTextColor);
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: var(--sapTile_Background);
+            border-radius: 0.25rem;
+        }
+        
+        .selected-count {
+            font-weight: bold;
+            color: var(--sapHighlightColor);
+        }
+    </style>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <div class="demo-container">
+        <!-- List with multiple selection -->
+        <div class="demo-section">
+            <div class="info">
+                Selected: <span id="count1" class="selected-count">0</span> items<br>
+                Select multiple items and drag to move them together
+            </div>
+            
+            <ui5-list id="list1" header-text="My Tasks" selection-mode="Multiple">
+                <ui5-li movable icon="task" data-id="1">Review design mockups</ui5-li>
+                <ui5-li movable icon="task" data-id="2">Update documentation</ui5-li>
+                <ui5-li movable icon="task" data-id="3">Fix bug #123</ui5-li>
+                <ui5-li movable icon="task" data-id="4">Prepare demo</ui5-li>
+                <ui5-li movable icon="task" data-id="5">Test new feature</ui5-li>
+            </ui5-list>
+        </div>
+
+        <!-- Second list for cross-list dragging -->
+        <div class="demo-section">
+            <div class="info">
+                Selected: <span id="count2" class="selected-count">0</span> items<br>
+                Drag items from the left list here
+            </div>
+            
+            <ui5-list id="list2" header-text="Done" selection-mode="Multiple">
+                <ui5-li movable icon="accept" data-id="6">Write unit tests</ui5-li>
+                <ui5-li movable icon="accept" data-id="7">Code review</ui5-li>
+            </ui5-list>
+        </div>
+    </div>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

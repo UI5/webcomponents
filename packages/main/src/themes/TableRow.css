@@ -54,7 +54,7 @@
 :host([navigated]) #navigated {
 	position: absolute;
 	inset: 0;
-    background-color: var(--sapList_SelectionBorderColor);
+	background-color: var(--sapList_SelectionBorderColor);
 }
 
 :host([tabindex]:focus) #navigated {
@@ -77,6 +77,10 @@
 
 :host([navigated]) #popin-cell {
 	grid-column: 1 / -2;
+}
+
+#selection-cell ~ #popin-cell {
+	grid-column-start: 2;
 }
 
 #actions-cell {

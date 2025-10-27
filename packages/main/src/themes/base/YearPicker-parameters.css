@@ -3,7 +3,6 @@
 	--_ui5_yearpicker_item_border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
 	--_ui5_yearpicker_item_border_radius: 0;
 	--_ui5_yearpicker_item_hover_border: 0.0625rem solid var(--sapButton_Lite_Hover_BorderColor);
-	--_ui5_yearpicker_item_active_border: 0.0625rem solid var(--sapButton_Lite_Active_BorderColor);
 	--_ui5_yearpicker_item_selected_border: 0.0625rem solid var(--sapButton_Selected_BorderColor);
 	--_ui5_yearpicker_item_selected_hover_border: 0.0625rem solid var(--sapButton_Selected_Hover_BorderColor);
 }

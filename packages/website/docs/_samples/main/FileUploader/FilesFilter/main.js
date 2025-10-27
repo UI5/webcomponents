@@ -4,7 +4,7 @@ import "@ui5/webcomponents/dist/Label.js";
 
 import "@ui5/webcomponents-icons/dist/upload.js";
 
-const fileUploader = document.querySelector("#fileuploader");
+const fileUploader = document.querySelector("#image-uploader");
 const resultDiv = document.querySelector("#result");
 
 fileUploader.addEventListener("change", (event) => {

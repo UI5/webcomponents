@@ -15,6 +15,7 @@ import {
 } from "./config/Icons.js";
 import { RegisteredIconCollection } from "./asset-registries/util/IconCollectionsByTheme.js";
 import getEffectiveIconCollection from "./asset-registries/util/getIconCollectionByTheme.js";
+import { startMultipleDrag } from "./DragAndDrop.js";
 import {
 	getLanguage,
 	setLanguage,
@@ -106,6 +107,9 @@ import UI5Element from "./UI5Element.js";
 
 export default UI5Element;
 export {
+	// drag and drop
+	startMultipleDrag,
+
 	// animations/
 	scroll,
 	slideDown,

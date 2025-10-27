@@ -4,6 +4,7 @@ export default function MonthPickerTemplate(this: MonthPicker) {
 	return (
 		<div
 			class="ui5-mp-root"
+			part="month-picker-root"
 			role="grid"
 			aria-roledescription={this.roleDescription}
 			aria-readonly="false"

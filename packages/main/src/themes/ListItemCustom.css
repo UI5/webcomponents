@@ -29,3 +29,15 @@
 [ui5-radio-button].ui5-li-singlesel-radiobtn {
 	min-width: var(--_ui5_custom_list_item_rb_min_width);
 }
+
+:host([_selection-mode="SingleStart"]) .ui5-li-root.ui5-custom-li-root {
+	padding-inline: 0 1rem;
+}
+
+:host([_selection-mode="Multiple"]) .ui5-li-root.ui5-custom-li-root {
+	padding-inline: 0 1rem;
+}
+
+:host([_selection-mode="SingleEnd"]) .ui5-li-root.ui5-custom-li-root {
+	padding-inline: 1rem 0;
+}

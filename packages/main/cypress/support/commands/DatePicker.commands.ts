@@ -1,3 +1,12 @@
+import type ResponsivePopover from "../../../src/ResponsivePopover.js";
+
+const isPickerOpen = (open = false) => {
+	cy.get("@datePicker")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover].ui5-date-picker-popover")
+	[open ? "ui5ResponsivePopoverOpened" : "ui5ResponsivePopoverClosed"]();
+};
+
 Cypress.Commands.add("ui5DatePickerGetInnerInput", { prevSubject: true }, subject => {
 	cy.wrap(subject)
 		.as("datePicker");
@@ -18,6 +27,8 @@ Cypress.Commands.add("ui5DatePickerGetPopoverDate", { prevSubject: true }, (subj
 
 	cy.get("@datePicker")
 		.should("have.attr", "open");
+
+	isPickerOpen(true);
 
 	cy.get("@datePicker")
 		.shadow()
@@ -40,6 +51,8 @@ Cypress.Commands.add("ui5DatePickerGetDisplayedDay", { prevSubject: true }, (sub
 	cy.get("@datePicker")
 		.should("have.attr", "open");
 
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -60,6 +73,8 @@ Cypress.Commands.add("ui5DatePickerGetFirstDisplayedDate", { prevSubject: true }
 
 	cy.get("@datePicker")
 		.should("have.attr", "open");
+
+	isPickerOpen(true);
 
 	cy.get("@datePicker")
 		.shadow()
@@ -82,6 +97,8 @@ Cypress.Commands.add("ui5DatePickerGetFirstDisplayedYear", { prevSubject: true }
 	cy.get("@datePicker")
 		.should("have.attr", "open");
 
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -101,6 +118,8 @@ Cypress.Commands.add("ui5DatePickerGetDisplayedMonth", { prevSubject: true }, (s
 
 	cy.get("@datePicker")
 		.should("have.attr", "open");
+
+	isPickerOpen(true);
 
 	cy.get("@datePicker")
 		.shadow()
@@ -123,6 +142,8 @@ Cypress.Commands.add("ui5DatePickerGetDisplayedYear", { prevSubject: true }, (su
 	cy.get("@datePicker")
 		.should("have.attr", "open");
 
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -144,6 +165,8 @@ Cypress.Commands.add("ui5DatePickerGetNextButton", { prevSubject: true }, subjec
 	cy.get("@datePicker")
 		.should("have.attr", "open");
 
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -163,6 +186,29 @@ Cypress.Commands.add("ui5DatePickerGetPreviousButton", { prevSubject: true }, su
 	cy.get("@datePicker")
 		.should("have.attr", "open");
 
+	isPickerOpen(true);
+
+	cy.get("@datePicker")
+		.shadow()
+		.find("ui5-calendar")
+		.as("calendar")
+		.should("be.visible");
+
+	return cy.get("@calendar")
+		.shadow()
+		.find(".ui5-calheader div[data-ui5-cal-header-btn-prev]")
+		.first();
+});
+
+Cypress.Commands.add("ui5DatePickerGetPreviousButton", { prevSubject: true }, subject => {
+	cy.wrap(subject)
+		.as("datePicker");
+
+	cy.get("@datePicker")
+		.should("have.attr", "open");
+
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -179,6 +225,8 @@ Cypress.Commands.add("ui5DatePickerGetMonthButton", { prevSubject: true }, subje
 	cy.wrap(subject)
 		.as("datePicker");
 
+	isPickerOpen(true);
+
 	cy.get("@datePicker")
 		.shadow()
 		.find("ui5-calendar")
@@ -194,6 +242,8 @@ Cypress.Commands.add("ui5DatePickerGetMonthButton", { prevSubject: true }, subje
 Cypress.Commands.add("ui5DatePickerGetYearButton", { prevSubject: true }, subject => {
 	cy.wrap(subject)
 		.as("datePicker");
+
+	isPickerOpen(true);
 
 	cy.get("@datePicker")
 		.shadow()
@@ -215,4 +265,18 @@ Cypress.Commands.add("ui5DatePickerValueHelpIconPress", { prevSubject: true }, s
 		.shadow()
 		.find("ui5-icon")
 		.realClick();
+});
+
+Cypress.Commands.add("ui5DatePickerTypeDate", { prevSubject: true }, (subject: string, date: string, delay: number = 0) => {
+	cy.wrap(subject)
+		.as("datePicker");
+
+	cy.get("@datePicker")
+		.ui5DatePickerGetInnerInput()
+		.realClick()
+		.clear()
+		.should("be.focused");
+
+	cy.realType(date, { delay });
+	cy.realPress("Enter");
 });

@@ -27,6 +27,7 @@
 	--_ui5_textarea_success_wrapper_padding: 0;
 	--_ui5_textarea_warning_error_wrapper_padding: 0;
 	--_ui5_textarea_information_wrapper_padding: 0;
+	--_ui5_textarea_inner_width: 100%;
 	--_ui5_textarea_padding_right_and_left: 0.5625rem;
 	--_ui5_textarea_padding_right_and_left_error_warning: 0.5rem;
 	--_ui5_textarea_padding_right_and_left_information: 0.5rem;
@@ -40,7 +41,6 @@
 	--_ui5_textarea_padding_top_information: 0.375rem;
 	--_ui5_textarea_padding_bottom_information: 0.375rem;
 	--_ui5_textarea_margin: 0.25rem 0;
-	--_ui5_textarea_exceeded_text_height: 1rem;
 	--_ui5_textarea_readonly_border_style: var(--sapField_BorderStyle);
 }
 
@@ -59,7 +59,6 @@
 	--_ui5_textarea_padding_bottom_error_warning: 0.0625rem;
 	--_ui5_textarea_padding_top_information: 0.0625rem;
 	--_ui5_textarea_padding_bottom_information: 0.0625rem;
-	--_ui5_textarea_exceeded_text_height: 0.375rem;
 	--_ui5_textarea_margin: 0.1875rem 0;
 	--_ui5_textarea_min_height: 1.625rem;
 }

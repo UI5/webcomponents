@@ -7,7 +7,7 @@
 	width: var(--_ui5_side_navigation_width);
 	max-width: 100%;
 	transition: width 0.3s, min-width 0.3s;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	background: var(--sapList_Background);
 	box-shadow: var(--_ui5_side_navigation_box_shadow);

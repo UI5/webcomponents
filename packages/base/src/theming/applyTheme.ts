@@ -8,7 +8,12 @@ import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
 
-const BASE_THEME_PACKAGE = "@ui5/webcomponents-theming";
+// eslint-disable-next-line
+export let _lib = "ui5";
+// eslint-disable-next-line
+export let _package = "webcomponents-theming";
+// eslint-disable-next-line
+const BASE_THEME_PACKAGE = "@" + _lib + "/" + _package;
 
 const isThemeBaseRegistered = () => {
 	const registeredPackages = getRegisteredPackages();

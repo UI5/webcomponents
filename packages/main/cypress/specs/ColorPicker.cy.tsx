@@ -65,6 +65,19 @@ describe("Color Picker general interaction tests", () => {
 			.ui5ColorPickerValidateInput(".ui5-color-picker-hex-input", "fafafa");
 	});
 
+	it("should correctly sanitize and parse HEX value to color", () => {
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]")
+			.as("colorPicker");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerUpdateInput(".ui5-color-picker-hex-input", "#fafafa");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput(".ui5-color-picker-hex-input", "fafafa");
+	});
+
 	it("should correctly parse short form HEX value to color", () => {
 		cy.mount(<ColorPicker value="#123"></ColorPicker>);
 
@@ -219,6 +232,43 @@ describe("Color Picker general interaction tests", () => {
 
 		cy.get<ColorPicker>("@colorPicker")
 			.should("have.value", "rgba(70, 64, 191, 0.5)");
+	});
+
+	it("should normalize RGB values above 255 to 255", () => {
+		cy.mount(<ColorPicker value="rgba(100, 100, 100, 1)"></ColorPicker>);
+
+		cy.get("[ui5-color-picker]")
+			.as("colorPicker");
+
+		// Test red input normalization
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerUpdateInput("#red", "300");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#red", "255");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.should("have.value", "rgba(255, 100, 100, 1)");
+
+		// Test green input normalization
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerUpdateInput("#green", "400");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#green", "255");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.should("have.value", "rgba(255, 255, 100, 1)");
+
+		// Test blue input normalization
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerUpdateInput("#blue", "500");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#blue", "255");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.should("have.value", "rgba(255, 255, 255, 1)");
 	});
 
 	it("should update Saturation & Light inputs when selecting color from main color grid", () => {

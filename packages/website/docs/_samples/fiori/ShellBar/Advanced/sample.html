@@ -6,42 +6,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample</title>
-    <link rel="stylesheet" href="./main.css">
 </head>
 
-<body style="background-color: var(--sapBackgroundColor);height: 400px;">
+<body style="background-color: var(--sapBackgroundColor);height: 200px;">
     <!-- playground-fold-end -->
 
-    <ui5-shellbar id="shellbar" primary-title="Corporate Portal" secondary-title="secondary title"
-        notifications-count="99+" show-notifications="">
-        <ui5-avatar slot="profile">
-            <img src="../assets/images/avatars/woman_avatar_5.png" />
-        </ui5-avatar>
-		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
-        <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
-        <ui5-button icon="nav-back" slot="startButton"></ui5-button>
+        <ui5-shellbar notifications-count="72" show-notifications show-product-switch>
+            <ui5-button icon="menu2" slot="startButton"></ui5-button>
+            <ui5-button icon="nav-back" slot="startButton"></ui5-button>
 
-        <ui5-input slot="searchField"></ui5-input>
-        <ui5-li slot="menuItems">Application 1</ui5-li>
-        <ui5-li slot="menuItems">Application 2</ui5-li>
-        <ui5-li slot="menuItems">Application 3</ui5-li>
-        <ui5-li slot="menuItems">Application 4</ui5-li>
-        <ui5-li slot="menuItems">Application 5</ui5-li>
-    </ui5-shellbar>
-    <ui5-popover id="action-popover" placement="Bottom">
-        <div class="action-popover-header">
-            <ui5-title style="padding: 0.25rem 1rem 0rem 1rem">An Kimura</ui5-title>
-        </div>
-        <div class="action-popover-content" style="margin-top: 1rem;">
-            <ui5-list separators="None">
-                <ui5-li icon="sys-find">App Finder</ui5-li>
-                <ui5-li icon="settings">Settings</ui5-li>
-                <ui5-li icon="edit">Edit Home Page</ui5-li>
-                <ui5-li icon="sys-help">Help</ui5-li>
-                <ui5-li icon="log">Sign out</ui5-li>
-            </ui5-list>
-        </div>
-    </ui5-popover>
+            <ui5-shellbar-branding slot="branding">
+                Product Identifier
+                <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+            </ui5-shellbar-branding>
+            <ui5-tag design="Set2" color-scheme="7" slot="content">Trial</ui5-tag>
+            <ui5-text slot="content">30 days remaining</ui5-text>
+            <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+            <div slot="content" style="display: flex; gap: 0 5px; align-items: center;">
+                <ui5-switch></ui5-switch>
+                <ui5-label>Try Beta Version</ui5-label>
+            </div>
+
+            <ui5-shellbar-search slot="searchField" show-clear-icon placeholder="Search Apps, Products"></ui5-shellbar-search>
+
+            <ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+            <ui5-toggle-button icon="sap-icon://da" tooltip="Joule" slot="assistant"></ui5-toggle-button>
+            <ui5-avatar slot="profile">
+                <img src="../assets/images/avatars/man_avatar_3.png"/>
+            </ui5-avatar>
+        </ui5-shellbar>
+
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

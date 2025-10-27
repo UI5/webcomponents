@@ -4,7 +4,6 @@ import path, { dirname } from "path";
 import prompts from "prompts";
 import parser from "npm-config-user-agent-parser";
 import yargs from "yargs/yargs";
-import { globby } from "globby";
 import { hideBin } from "yargs/helpers";
 import { fileURLToPath } from "url";
 import * as prettier from "prettier";
@@ -18,15 +17,23 @@ const VERSION = JSON.parse(
 
 // Constants
 const SUPPORTED_TEST_SETUPS = ["cypress", "manual"];
-const SRC_DIR = "template";
+const SRC_DIR = path.join(__dirname, "template");
+const DEST_DIR = process.cwd();
+
 const FILES_TO_RENAME = {
-	"npmrc": ".npmrc",
-	"gitignore": ".gitignore",
+	[path.normalize("eslintignore")]: path.normalize(".eslintignore"),
+	[path.normalize("eslintrc.cjs")]: path.normalize(".eslintrc.cjs"),
+	[path.normalize("gitignore")]: path.normalize(".gitignore"),
+	[path.normalize("npmignore")]: path.normalize(".npmignore"),
+	[path.normalize("npsrc.json")]: path.normalize(".npsrc.json"),
+	[path.normalize("npmrc")]: path.normalize(".npmrc"),
+	[path.normalize("env")]: path.normalize(".env"),
+	[path.normalize("tsconfig.template.json")]: path.normalize("tsconfig.json"),
+	[path.normalize("cypress/tsconfig.template.json")]: path.normalize("cypress/tsconfig.json")
 };
 const FILES_TO_COPY = ["test/pages/img/logo.png"];
 
 // Validation Patterns
-const ComponentNamePattern = /^[A-Z][A-Za-z0-9]+$/;
 const PackageNamePattern =
 	/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
 const TagPattern = /^[a-z0-9]+?-[a-zA-Z0-9\-_]+?[a-z0-9]$/;
@@ -34,11 +41,24 @@ const TagPattern = /^[a-z0-9]+?-[a-zA-Z0-9\-_]+?[a-z0-9]$/;
 // Utility Functions
 const isPackageNameValid = name =>
 	typeof name === "string" && PackageNamePattern.test(name);
-const isComponentNameValid = name =>
-	typeof name === "string" && ComponentNamePattern.test(name);
 const isTagValid = tag => typeof tag === "string" && TagPattern.test(tag);
 const isTestSetupValid = setup =>
 	typeof setup === "string" && SUPPORTED_TEST_SETUPS.includes(setup);
+
+async function collectFiles(dir, fileList = []) {
+	const entries = await fs.readdir(dir, { withFileTypes: true });
+
+	for (const entry of entries) {
+		const fullPath = path.join(dir, entry.name);
+		if (entry.isDirectory()) {
+			await collectFiles(fullPath, fileList);
+		} else if (entry.isFile()) {
+			fileList.push(fullPath);
+		}
+	}
+
+	return fileList;
+}
 
 /**
  * Hyphanates the given PascalCase string, f.e.:
@@ -73,7 +93,7 @@ const generateFilesContent = async (
 				: "",
 		INIT_PACKAGE_CYPRESS_DEV_DEPS:
 			testSetup === "cypress"
-				? `"@ui5/cypress-ct-ui5-webc": "^0.0.3",\n"cypress": "^13.11.0",`
+				? `"@ui5/cypress-ct-ui5-webc": "^0.0.4",\n"cypress": "^13.11.0",`
 				: "",
 		INIT_PACKAGE_CYPRESS_TEST_COMMANDS:
 			testSetup === "cypress"
@@ -87,13 +107,13 @@ const generateFilesContent = async (
 		? packageName.slice(packageName.lastIndexOf("/") + 1)
 		: packageName;
 	const destDir = skipSubfolder
-		? path.join("./")
-		: path.join("./", packageBaseName);
+		? path.join(DEST_DIR)
+		: path.join(DEST_DIR, packageBaseName);
 
 	await processFiles(destDir, vars, testSetup);
 
 	console.log("\nPackage successfully created!\nNext steps:\n");
-	console.log(`$ cd ${destDir}`);
+	console.log(`$ cd ${packageBaseName}`);
 
 	try {
 		const userAgent = parser(process.env.npm_config_user_agent);
@@ -108,9 +128,9 @@ const generateFilesContent = async (
 };
 
 async function processFiles(destDir, replacements, testSetup) {
-	const files = await globby(`${SRC_DIR}/**/*`, { dot: true });
+	const files = await collectFiles(SRC_DIR);
 	const FILE_PATHS_TO_SKIP = [
-		testSetup !== "cypress" ? "cypress" : undefined,
+		testSetup !== "cypress" ? path.normalize("cypress") : undefined,
 	].filter(Boolean);
 
 	for (const file of files) {
@@ -122,11 +142,11 @@ async function processFiles(destDir, replacements, testSetup) {
 			continue;
 		}
 
-		// Component related file based on the user input
-		destPath = destPath.replace(
-			"/MyFirstComponent",
-			`/${replacements.INIT_PACKAGE_VAR_CLASS_NAME}`,
-		);
+		// // Component related file based on the user input
+		// destPath = destPath.replace(
+		// 	"MyFirstComponent",
+		// 	replacements.INIT_PACKAGE_VAR_CLASS_NAME,
+		// );
 
 		// Files that need to be renamed
 		if (FILES_TO_RENAME[relativePath]) {
@@ -174,18 +194,6 @@ const createWebcomponentsPackage = async () => {
 		);
 	}
 
-	if (argv.componentName && !isComponentNameValid(argv.componentName)) {
-		throw new Error(
-			"The component name should be a string, starting with a capital letter [A-Z][a-z], for example: Button, MyButton, etc.",
-		);
-	}
-
-	if (argv.tag && !isTagValid(argv.tag)) {
-		throw new Error(
-			"The tag should be in kebab-case (f.e my-component) and it can't be a single word.",
-		);
-	}
-
 	if (argv.testSetup && !isTestSetupValid(argv.testSetup)) {
 		throw new Error(
 			`The test setup should be a string and one of the following options: ${SUPPORTED_TEST_SETUPS.join(", ")}`,
@@ -193,7 +201,7 @@ const createWebcomponentsPackage = async () => {
 	}
 
 	let packageName = argv.name || "my-package";
-	let componentName = argv.componentName || "MyComponent";
+	let componentName = "MyFirstComponent";
 	let testSetup = argv.testSetup || "manual";
 	const skipSubfolder = !!argv.skipSubfolder;
 
@@ -217,20 +225,6 @@ const createWebcomponentsPackage = async () => {
 					: "Package name should be a string, starting with a letter and containing the following symbols [a-z, A-Z ,0-9, _, -].",
 		});
 		packageName = response.name;
-	}
-
-	if (!argv.componentName) {
-		response = await prompts({
-			type: "text",
-			name: "componentName",
-			message: "Component name:",
-			initial: "MyComponent",
-			validate: value =>
-				isComponentNameValid(value)
-					? true
-					: "Component name should follow PascalCase naming convention (f.e. Button, MyButton, etc.).",
-		});
-		componentName = response.componentName;
 	}
 
 	if (!argv.testSetup) {

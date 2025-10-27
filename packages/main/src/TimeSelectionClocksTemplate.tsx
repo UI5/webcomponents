@@ -19,6 +19,7 @@ export default function TimeSelectionClocksTemplate(this: TimeSelectionClocks) {
 					<>
 						{ entity.hasSeparator && <span class="ui5-time-selection-separator">:</span> }
 						<ToggleSpinButton
+							data-sap-focus-ref
 							id={`${this._id}_button_${entity.entity}`}
 							data-ui5-clock={entity.entity}
 							valueMin={entity.attributes && entity.attributes.min}

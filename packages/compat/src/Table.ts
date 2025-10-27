@@ -17,6 +17,7 @@ import {
 	isTabPrevious,
 	isSpace,
 	isEnter,
+	isDown,
 	isCtrlA,
 	isUpAlt,
 	isDownAlt,
@@ -58,6 +59,7 @@ import TableTemplate from "./TableTemplate.js";
 
 // Styles
 import tableStyles from "./generated/themes/Table.css.js";
+import { patchScopingSuffix } from "./utils/CompatCustomElementsScope.js";
 
 /**
  * Interface for components that may be slotted inside a `ui5-table` as rows
@@ -167,6 +169,7 @@ enum TableFocusTargetElement {
  * @constructor
  * @extends UI5Element
  * @public
+ * @deprecated Deprecated as of version 2.12.0, use `@ui5/webcomponents/dist/Table.js` instead.
  */
 @customElement({
 	tag: "ui5-table",
@@ -856,6 +859,12 @@ class Table extends UI5Element {
 		this._itemNavigation.setCurrentItem(e.target as ITableRow);
 	}
 
+	onRowKeyDown(e: KeyboardEvent) {
+		if (this.growing === "Scroll" && isDown(e) && this.currentItemIdx === this.rows.length - 1) {
+			debounce(this.loadMore.bind(this), GROWING_WITH_SCROLL_DEBOUNCE_RATE);
+		}
+	}
+
 	_onColumnHeaderFocused() {
 		this._itemNavigation.setCurrentItem(this._columnHeader);
 	}
@@ -1185,6 +1194,8 @@ class Table extends UI5Element {
 		return this.columnHeader && getLastTabbableElement(this.columnHeader);
 	}
 }
+
+patchScopingSuffix(Table);
 
 Table.define();
 

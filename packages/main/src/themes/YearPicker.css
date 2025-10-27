@@ -11,7 +11,7 @@
 	padding: 2rem 0 1rem 0;
 	display: flex;
 	flex-direction: column;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	justify-content: center;
 	align-items: center;
@@ -37,7 +37,7 @@
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
-	cursor: default;
+	cursor: pointer;
 	outline: none;
 	position: relative;
 	border: var(--_ui5_yearpicker_item_border);

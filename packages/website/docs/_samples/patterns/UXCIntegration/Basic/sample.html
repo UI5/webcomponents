@@ -12,37 +12,59 @@
 <body style="background-color: var(--sapBackgroundColor); height: 50rem;">
     <!-- playground-fold-end -->
     <ui5-navigation-layout id="navigation-layout">
-        <ui5-shellbar slot="header" id="shellbar" primary-title="VEGA CRM"
+        <ui5-shellbar slot="header" id="shellbar"
             notifications-count="10" show-notifications show-product-switch >
+			<ui5-shellbar-branding slot="branding">
+				VEGA CRM
+				<img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+			</ui5-shellbar-branding>
             <ui5-button id="menu-button" icon="menu2" slot="startButton" tooltip="Toggle side navigation"></ui5-button>
-            <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
             <ui5-tag design="Set2" color-scheme="7" slot="content" data-hide-order="2">Trial</ui5-tag>
             <ui5-text slot="content" data-hide-order="1">30 days remaining</ui5-text>
 
             <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
 
             <ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
-            <ui5-input slot="searchField"></ui5-input>
+
+			<ui5-shellbar-search slot="searchField" id="search-scope" show-clear-icon placeholder="Search Apps, Products">
+				<ui5-search-scope text="All" selected slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Apps" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+			</ui5-shellbar-search>
+
             <ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
             <ui5-avatar slot="profile">
                 <img src="../assets/images/avatars/man_avatar_3.png" />
             </ui5-avatar>
         </ui5-shellbar>
 
-        <ui5-popover id="action-popover" placement="Bottom">
-            <div class="action-popover-header">
-                <ui5-title style="padding: 0.25rem 1rem 0rem 1rem">An Kimura</ui5-title>
-            </div>
-            <div class="action-popover-content" style="margin-top: 1rem;">
-                <ui5-list separators="None">
-                    <ui5-li icon="sys-find">App Finder</ui5-li>
-                    <ui5-li icon="settings">Settings</ui5-li>
-                    <ui5-li icon="edit">Edit Home Page</ui5-li>
-                    <ui5-li icon="sys-help">Help</ui5-li>
-                    <ui5-li icon="log">Sign out</ui5-li>
-                </ui5-list>
-            </div>
-        </ui5-popover>
+		<ui5-user-menu id="userMenu" show-manage-account show-other-accounts show-edit-accounts show-edit-button>
+			<ui5-user-menu-account slot="accounts"
+								   avatar-src="../assets/images/avatars/man_avatar_3.png"
+								   title-text="Alain Chevalier 1"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE"
+								   selected>
+			</ui5-user-menu-account>
+			<ui5-user-menu-account slot="accounts"
+								   avatar-initials="SD"
+								   title-text="John Walker"
+								   subtitle-text="john.walker@sap.com"
+								   description="Project Manager">
+			</ui5-user-menu-account>
+			<ui5-user-menu-account slot="accounts"
+								   avatar-initials="DS"
+								   title-text="David Wilson"
+								   subtitle-text="david.wilson@sap.com"
+								   description="Project Manager">
+			</ui5-user-menu-account>
+			<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
+			<ui5-user-menu-item icon="official-service" text="Legal Information">
+				<ui5-user-menu-item text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+				<ui5-user-menu-item text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
+			</ui5-user-menu-item>
+			<ui5-user-menu-item icon="message-information" text="About" data-id="about"></ui5-user-menu-item>
+		</ui5-user-menu>
 
         <ui5-side-navigation id="side-navigation" class="sideNavigation" slot="sideContent" accessible-name="Main">
             <ui5-side-navigation-item text="Home" icon="home" selected></ui5-side-navigation-item>
@@ -106,15 +128,10 @@
 			<ui5-bar class="notificationsPopoverBar"
 					 design="Header">
 				<ui5-title level="H5" slot="startContent">Notifications</ui5-title>
-				<ui5-button id="show-message-strip" design="Emphasized" slot="endContent">Show M. Strip</ui5-button>
 				<ui5-button id="clear-all" design="Transparent" slot="endContent">Clear All</ui5-button>
 				<ui5-button id="btn-sort" design="Transparent" icon="sort" tooltip="Sort" slot="endContent"></ui5-button>
 				<ui5-button design="Transparent" icon="action-settings" tooltip="Go to settings" slot="endContent"></ui5-button>
 			</ui5-bar>
-
-			<ui5-message-strip id="message-strip-error"
-							   class="notificationsMessageStrip"
-							   design="Negative">Something went wrong.</ui5-message-strip>
 		</div>
 
 		<ui5-notification-list class="notificationsPopoverList">
@@ -248,7 +265,152 @@
 		</ui5-bar>
 	</ui5-dialog>
 
-    <!-- playground-fold -->
+
+	<ui5-user-settings-dialog id="settings" header-text="Settings" show-search-field>
+		<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
+			<ui5-user-settings-view slot="pages">
+
+				<div class="container">
+					<ui5-avatar size="L" class="ua-info-profile">
+						<img src="../assets/images/avatars/man_avatar_3.png" />
+					</ui5-avatar>
+					<ui5-title level="H3" size="H3" class="ua-name ua-info-profile">Alain Chevalier</ui5-title>
+					<div class="ua-info-item">
+						<ui5-label for="name">Name:</ui5-label>
+						<ui5-text id="name">Alain Chevalier</ui5-text>
+					</div>
+					<div class="ua-info-item">
+						<ui5-label for="email">Email:</ui5-label>
+						<ui5-text id="email">alian.chevalier@sap.com</ui5-text>
+					</div>
+					<div class="ua-info-item">
+						<ui5-label for="server">Server:</ui5-label>
+						<ui5-text id="server">delivery-001.sap.com</ui5-text>
+					</div>
+				</div>
+				<ui5-label for="reset-all-button">Personalization</ui5-label><br/>
+				<ui5-button id="reset-all-button">Reset All Personalization</ui5-button>
+				<ui5-panel fixed class="ua-panel">
+					<ui5-text>
+						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+					</ui5-text>
+				</ui5-panel>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+
+		<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
+			<ui5-user-settings-view text="Themes">
+				<ui5-list separators="Inner" selection-mode="Single">
+					<ui5-li icon="palette" selected>SAP Morning Horizon</ui5-li>
+					<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
+					<ui5-li icon="palette">SAP High Contrast Black (SAP Horizon)</ui5-li>
+					<ui5-li icon="palette">SAP High Contrast White (SAP Horizon)</ui5-li>
+				</ui5-list>
+				<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
+				<ui5-toast id="toastThemeSave">Changes applied.</ui5-toast>
+			</ui5-user-settings-view>
+			<ui5-user-settings-view text="Display settings">
+				<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
+				<ui5-panel fixed>
+					<ui5-label>
+						Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+						This is useful for hybrid devices that combine touch and mouse events.
+					</ui5-label>
+				</ui5-panel>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+
+		<ui5-user-settings-item text="Language & Region" tooltip="Language & Region" header-text="Language & Region">
+			<ui5-user-settings-view slot="pages">
+				<div class="container">
+					<div class="lr-item">
+						<ui5-label>Language and Region:</ui5-label>
+						<ui5-combobox placeholder="Language" value="Browse Language">
+							<ui5-cb-item text="Browse Language"></ui5-cb-item>
+							<ui5-cb-item text="English"></ui5-cb-item>
+							<ui5-cb-item text="European Spanish"></ui5-cb-item>
+							<ui5-cb-item text="French (France)"></ui5-cb-item>
+							<ui5-cb-item text="Germany"></ui5-cb-item>
+						</ui5-combobox>
+					</div>
+					<div class="lr-item">
+						<ui5-label for="format">Date Format:</ui5-label>
+						<ui5-text id="format">MMM d, y</ui5-text>
+					</div>
+				</div>
+				<ui5-panel fixed>
+					<ui5-label>
+						The time zone will not be applied in UI5 apps.
+						If you don't know the type of an app, you can check it in the "About" dialog in the "ID of the Application Framework” field.
+					</ui5-label>
+				</ui5-panel>
+				<br />
+				<div class="lt-time-format">
+					<ui5-label for="timeFormat">Time Format:</ui5-label>
+					<ui5-radio-button name="timeFormat" text="12h"></ui5-radio-button>
+					<ui5-radio-button checked name="timeFormat" text="24h"></ui5-radio-button>
+				</div>
+				<ui5-panel fixed>
+					<ui5-label>
+						After you save your settings, the browser will refresh for the new settings to take effect.
+					</ui5-label>
+				</ui5-panel>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+
+		<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
+			<ui5-user-settings-view slot="pages">
+				<ui5-button id="mobile1-button">iOS</ui5-button>
+				<ui5-button id="mobile2-button">Android</ui5-button>
+			</ui5-user-settings-view>
+
+			<ui5-user-settings-view slot="pages" text="Inner Page" id="mobile-second-page" secondary>
+				<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
+				<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
+				<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
+				<ui5-icon name="qr-code" style="width: 20rem; height: 20rem;"></ui5-icon>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+
+		<ui5-user-settings-item icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
+			<ui5-user-settings-view slot="pages">
+				<ui5-checkbox checked text="Show High-Priority Notification Alerts"></ui5-checkbox>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+
+		<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
+			<ui5-user-settings-view text="Reset Personalization">
+				<ui5-button id="resetPersonalization">Reset Personalization content</ui5-button>
+				<ui5-toast id="toastReset">Changes Reset.</ui5-toast>
+			</ui5-user-settings-view>
+			<ui5-user-settings-view text="Reset All Settings">
+				<ui5-button id="resetAll">Reset All Settings content</ui5-button>
+				<ui5-toast id="toastResetAll">All changes Reset.</ui5-toast>
+			</ui5-user-settings-view>
+		</ui5-user-settings-item>
+	</ui5-user-settings-dialog>
+
+	<ui5-dialog id="additionalDialog" state="Critical" header-text="Warning">
+		<ui5-text>Clicking on reset will delete your personalization settings for the launchpad (e.g. theme, language, user activities, and home page content) and for apps using the launchpad personalization features (e.g. filter settings, table columns).
+			This action is irreversible.
+			Further changes in the dialog will not be applied.
+			Are you sure you want to proceed with the reset?</ui5-text>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				class="dialogCloser"
+				design="Emphasized"
+				text="OK">
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+				class="dialogCloser"
+				design="Transparent"
+				text="Cancel">
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+	</ui5-dialog>
+
+
+	<!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>
 

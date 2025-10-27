@@ -1,6 +1,1 @@
 @import "../base/FileUploader-parameters.css";
-
-:root {
-	--_ui5_file_uploader_hover_border: 2px solid var(--sapField_Hover_BorderColor);
-	--_ui5_file_uploader_value_state_error_hover_background_color: var(--sapField_InvalidBackground);
-}

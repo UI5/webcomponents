@@ -66,7 +66,7 @@
 	outline: none;
 }
 
-:host(:not([_disabled]):not([on-phone]):focus) .ui5-cp-item {
+:host(:not([_disabled]):not([on-phone]):focus:not(:hover)) .ui5-cp-item {
 	pointer-events: none;
 }
 
@@ -90,7 +90,7 @@
 	pointer-events: none;
 }
 
-:host(:not([_disabled]):not([on-phone]):hover:focus) .ui5-cp-item:focus:not(:hover)::before {
+:host(:not([_disabled]):not([on-phone]):focus:hover) .ui5-cp-item::before {
 	content: "";
 	box-sizing: border-box;
 	position: absolute;
@@ -100,7 +100,7 @@
 	pointer-events: none;
 }
 
-:host(:not([_disabled]):not([on-phone]):focus:not(:hover)) .ui5-cp-item:focus:not(:hover)::after {
+:host(:not([_disabled]):not([on-phone]):focus:hover) .ui5-cp-item::after {
 	content: "";
 	box-sizing: border-box;
 	position: absolute;

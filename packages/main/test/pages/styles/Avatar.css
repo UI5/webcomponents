@@ -2,6 +2,13 @@
     display: none;
 }
 
+.section {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: .5rem;
+}
+
 .avatar-image {
     object-fit: cover;
 }

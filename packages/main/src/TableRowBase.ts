@@ -101,8 +101,8 @@ abstract class TableRowBase extends UI5Element {
 		return !!this._tableSelection?.isMultiSelectable();
 	}
 
-	get _hasRowSelector() {
-		return !!this._tableSelection?.isRowSelectorRequired();
+	get _hasSelector() {
+		return this._table?._isRowSelectorRequired;
 	}
 
 	get _visibleCells() {

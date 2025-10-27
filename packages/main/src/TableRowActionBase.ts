@@ -1,6 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { customElement, property, eventStrict } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
+
 import TableRowActionBaseTemplate from "./TableRowActionBaseTemplate.js";
 import TableRowActionBaseStyles from "./generated/themes/TableRowActionBase.css.js";
 import type Menu from "./Menu.js";
@@ -8,6 +10,7 @@ import type MenuItem from "./MenuItem.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowAction from "./TableRowAction.js";
+import type Button from "./Button.js";
 
 let MenuConstructor: new () => Menu;
 let MenuItemConstructor: new () => MenuItem;
@@ -108,7 +111,7 @@ abstract class TableRowActionBase extends UI5Element {
 		table._onRowActionClick(this);
 	}
 
-	_onActionClick(e: MouseEvent) {
+	_onActionClick(e: UI5CustomEvent<Button, "click">) {
 		this._fireClickEvent();
 		e.stopPropagation();
 	}

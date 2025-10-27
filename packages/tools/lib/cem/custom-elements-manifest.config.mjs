@@ -131,23 +131,6 @@ function processClass(ts, classNode, moduleDoc) {
 	currClass.events = findAllDecorators(classNode, ["event", "eventStrict"])
 		?.map(event => processEvent(ts, event, classNode, moduleDoc));
 
-	// TODO: remove after changing Button's click to custom event.
-	// Currently, the Button emits a native click that doesn't need and doesn't have an event decorator,
-	// so we add it manually to the events array.
-	if (currClass.tagName === "ui5-button") {
-		currClass.events.push({
-			"name": "click",
-			"_ui5privacy": "public",
-			"type": {
-				"text": "Event"
-			},
-			"description": "Fired when the component is activated either with a\nmouse/tap or by using the Enter or Space key.\n\n**Note:** The event will not be fired if the `disabled`\nproperty is set to `true`.",
-			"_ui5Cancelable": false,
-			"_ui5allowPreventDefault": false,
-			"_ui5Bubbles": true
-		});
-	}
-
 	const filename = classNode.getSourceFile().fileName;
 	const sourceFile = typeProgram.getSourceFile(filename);
 	const tsProgramClassNode = sourceFile.statements.find(statement => ts.isClassDeclaration(statement) && statement.name?.text === classNode.name?.text);

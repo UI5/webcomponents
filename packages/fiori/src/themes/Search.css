@@ -81,6 +81,10 @@
 	height: 100%;
 }
 
+.search-popover-busy-wrapper [ui5-busy-indicator] {
+	z-index: 1;
+}
+
 .search-popover-busy-wrapper::after {
 	content: "";
 	position: absolute;
@@ -91,11 +95,6 @@
 	background: var(--_ui5-search-loading-overlay-background);
 	opacity: var(--_ui5-search-loading-overlay-transparency);
 	border-radius: var(--_ui5_popup_border_radius);
-}
-
-.ui5-search-list {
-	margin: .25rem;
-	width: calc(100% - 0.5rem);
 }
 
 .ui5-search-popover-phone .ui5-search-popover-content {

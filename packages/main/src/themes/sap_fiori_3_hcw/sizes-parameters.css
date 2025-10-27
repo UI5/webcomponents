@@ -19,9 +19,6 @@
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: none;
 
-	/* SplitButton */
-	--_ui5_split_button_text_button_width: 2.25rem;
-
 	/* Timeline Item */
 	--_ui5_timeline_tli_indicator_after_height: 50%;
 	--_ui5_timeline_tli_indicator_after_top: -50%;

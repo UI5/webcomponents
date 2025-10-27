@@ -6,6 +6,9 @@ import calendar from "@ui5/webcomponents-icons/dist/calendar.js";
 import messageInformation from "@ui5/webcomponents-icons/dist/message-information.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
+import UI5Element from "@ui5/webcomponents-base";
+import Button from "@ui5/webcomponents/dist/Button.js";
+import Input from "@ui5/webcomponents/dist/Input.js";
 
 function Sample() {
 	return <Timeline layout="Vertical" accessibleName="vertical" id="timelineAccName">
@@ -86,7 +89,7 @@ describe("Timeline general interaction", () => {
 		cy.mount(<Sample />);
 		cy.get("[ui5-timeline]")
 			.shadow()
-			.find("ul")
+			.find(".ui5-timeline-list")
 			.should("have.attr", "aria-label", "Timeline vertical");
 	});
 
@@ -132,7 +135,9 @@ describe("Timeline with group items interactions", () => {
 		cy.get("@currentGroupButton")
 			.realClick();
 
-		cy.realPress("Tab");
+		cy.realPress("F2");
+
+		cy.realPress("ArrowDown");
 
 		cy.get("[ui5-timeline]")
 			.find("[ui5-timeline-group-item][group-name='Meetings']")
@@ -260,6 +265,148 @@ describe("Timeline with growing mode", () => {
 			.last()
 			.should("be.focused");
 	});
+
+	it("Arrows navigation should work only on focused item", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem titleText="first item"></TimelineItem>
+				<TimelineItem titleText="second item">
+					<Input id="input" />
+				</TimelineItem>
+				<TimelineItem titleText="last item"></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("#input")
+			.realClick();
+
+		cy.realPress("ArrowDown");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.last()
+			.should("not.be.focused");
+
+		cy.get("#input")
+			.realClick();
+
+		cy.realPress("ArrowUp");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.first()
+			.should("not.be.focused");
+	});
+});
+
+describe("Keyboard interactions", () => {
+	it("F2 should move the focus to interactive items and then should revert the focus to parent timeline item", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem  titleText="first item" subtitleText="20.02.2017 11:30" >
+					<Button id="button" title="Click me"></Button>
+				</TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30"></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30" ></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.first()
+			.as("firstItem")
+			.realClick();
+
+		cy.get("@firstItem")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("#button")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("@firstItem")
+			.should("be.focused");
+	});
+
+	it("should move the focus to the next interactive item inside timeline item when Tab is pressed", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem  titleText="first item" subtitleText="20.02.2017 11:30" >
+					<Button id="button1" title="Click me"></Button>
+					<Button id="button2" title="Click me"></Button>
+				</TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30"></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30" ></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.first()
+			.as("firstItem")
+			.realClick();
+
+		cy.get("@firstItem")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("#button1")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("#button2")
+			.should("be.focused");
+	});
+
+	it("should move the focus to interactive element inside next timeline item with interactive elements when pressing Tab", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem  titleText="first item" subtitleText="20.02.2017 11:30" >
+					<Button id="button1" title="Click me"></Button>
+				</TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30"></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30">
+					<Button id="button2" title="Click me"></Button>
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("@timeline")
+			.find("ui5-timeline-item")
+			.first()
+			.as("firstItem")
+			.realClick();
+
+		cy.get("@firstItem")
+			.should("be.focused");
+
+		cy.realPress("F2");
+
+		cy.get("#button1")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("#button2")
+			.should("be.focused");
+	});
 });
 
 describe("Accessibility", () => {
@@ -311,3 +458,58 @@ describe("Accessibility", () => {
 		});
 	});
 });
+
+describe("Timeline - getFocusDomRef", () => {
+	it("should return undefined when the Timeline is empty", () => {
+		cy.mount(<Timeline></Timeline>);
+
+		cy.get<Timeline>("[ui5-timeline]")
+			.then(($el) => {
+				expect($el[0].getFocusDomRef()).to.be.undefined;
+			});
+	});
+
+	it("should return first item if no item was focused before", () => {
+		cy.mount(
+			<Timeline growing="Button">
+				<TimelineItem id="firstItem" titleText="first item" subtitleText="20.02.2017 11:30" ></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30"></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30" ></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get<UI5Element>("[ui5-timeline], #firstItem")
+			.then(($el) => {
+				const timeline = $el[0],
+					firstItem = $el[1];
+    				expect(timeline.getFocusDomRef()).to.equal(firstItem.getFocusDomRef());
+			});
+	});
+
+	it("should return last focused item in the Timeline", () => {
+		cy.mount(
+			<Timeline growing="Button">
+				<TimelineItem titleText="first item" subtitleText="20.02.2017 11:30" ></TimelineItem>
+				<TimelineItem titleText="coming up" subtitleText="20.02.2017 11:30"></TimelineItem>
+				<TimelineItem id="lastItem" titleText="coming up" subtitleText="20.02.2017 11:30" ></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("[ui5-timeline]")
+			.find("#lastItem")
+			.realClick();
+
+		cy.get<UI5Element>("[ui5-timeline], #lastItem")
+			.then(($el) => {
+				const timeline = $el[0],
+					lastItem = $el[1];
+    				expect(timeline.getFocusDomRef()).to.equal(lastItem.getFocusDomRef());
+			});
+	});
+});
+
+
+

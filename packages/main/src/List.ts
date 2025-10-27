@@ -22,12 +22,9 @@ import {
 	isDown,
 	isUp,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import handleDragOver from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDragOver.js";
-import handleDrop from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDrop.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
+import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import type { MoveEventDetail } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import { findClosestPosition, findClosestPositionsByKey } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
+import { findClosestPositionsByKey } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import {
 	getAllAccessibleDescriptionRefTexts,
@@ -38,7 +35,6 @@ import {
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
@@ -55,6 +51,7 @@ import type {
 	SelectionRequestEventDetail,
 } from "./ListItem.js";
 import ListSeparator from "./types/ListSeparator.js";
+import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 
 // Template
 import ListTemplate from "./ListTemplate.js";
@@ -110,6 +107,13 @@ type ListItemClickEventDetail = {
 }
 
 type ListMoveEventDetail = MoveEventDetail;
+
+type ListAccessibilityAttributes = {
+	growingButton?: {
+		name?: string,
+		description?: string,
+	},
+}
 
 /**
  * @class
@@ -175,7 +179,6 @@ type ListMoveEventDetail = MoveEventDetail;
 	template: ListTemplate,
 	styles: [
 		listCss,
-		getEffectiveScrollbarStyle(),
 	],
 })
 /**
@@ -401,6 +404,29 @@ class List extends UI5Element {
 	accessibleName?: string;
 
 	/**
+	* Defines additional accessibility attributes on different areas of the component.
+ 	*
+	* The accessibilityAttributes object has the following field:
+	*
+	*  - **growingButton**: `growingButton.name`, `growingButton.description`.
+	*
+ 	* The accessibility attributes support the following values:
+ 	*
+	* - **name**: Defines the accessible ARIA name of the growing button.
+	* Accepts any string.
+	*
+	* - **description**: Defines the accessible ARIA description of the growing button.
+	* Accepts any string.
+	*
+ 	* **Note:** The `accessibilityAttributes` property is in an experimental state and is a subject to change.
+	* @default {}
+ 	* @public
+ 	* @since 2.13.0
+ 	*/
+	 @property({ type: Object })
+	 accessibilityAttributes: ListAccessibilityAttributes = {};
+
+	/**
 	 * Defines the IDs of the elements that label the component.
 	 * @default undefined
 	 * @public
@@ -465,6 +491,14 @@ class List extends UI5Element {
 	_loadMoreActive = false;
 
 	/**
+	 * Defines the current media query size.
+	 * @default "S"
+	 * @private
+	 */
+	@property()
+	mediaRange = "S";
+
+	/**
 	 * Defines the items of the component.
 	 *
 	 * **Note:** Use `ui5-li`, `ui5-li-custom`, and `ui5-li-group` for the intended design.
@@ -491,22 +525,23 @@ class List extends UI5Element {
 	static i18nBundle: I18nBundle;
 	_previouslyFocusedItem: ListItemBase | null;
 	_forwardingFocus: boolean;
-	resizeListenerAttached: boolean;
-	listEndObserved: boolean;
-	_handleResize: ResizeObserverCallback;
-	initialIntersection: boolean;
 	_selectionRequested?: boolean;
 	_groupCount: number;
 	_groupItemCount: number;
-	growingIntersectionObserver?: IntersectionObserver | null;
+	_endIntersectionObserver?: IntersectionObserver | null;
+	_startIntersectionObserver?: IntersectionObserver | null;
 	_itemNavigation: ItemNavigation;
 	_beforeElement?: HTMLElement | null;
 	_afterElement?: HTMLElement | null;
+	_startMarkerOutOfView: boolean = false;
 
+	handleResizeCallback: ResizeObserverCallback;
 	onItemFocusedBound: (e: CustomEvent) => void;
 	onForwardAfterBound: (e: CustomEvent) => void;
 	onForwardBeforeBound: (e: CustomEvent) => void;
 	onItemTabIndexChangeBound: (e: CustomEvent) => void;
+
+	_dragAndDropHandler: DragAndDropHandler;
 
 	constructor() {
 		super();
@@ -516,25 +551,14 @@ class List extends UI5Element {
 		// Indicates that the List is forwarding the focus before or after the internal ul.
 		this._forwardingFocus = false;
 
-		// Indicates that the List has already subscribed for resize.
-		this.resizeListenerAttached = false;
-
-		// Indicates if the IntersectionObserver started observing the List
-		this.listEndObserved = false;
-
 		this._itemNavigation = new ItemNavigation(this, {
 			skipItemsSize: PAGE_UP_DOWN_SIZE, // PAGE_UP and PAGE_DOWN will skip trough 10 items
 			navigationMode: NavigationMode.Vertical,
 			getItemsCallback: () => this.getEnabledItems(),
 		});
 
-		this._handleResize = this.checkListInViewport.bind(this);
+		this.handleResizeCallback = this._handleResize.bind(this);
 
-		this._handleResize = this.checkListInViewport.bind(this);
-
-		// Indicates the List bottom most part has been detected by the IntersectionObserver
-		// for the first time.
-		this.initialIntersection = true;
 		this._groupCount = 0;
 		this._groupItemCount = 0;
 
@@ -542,6 +566,14 @@ class List extends UI5Element {
 		this.onForwardAfterBound = this.onForwardAfter.bind(this);
 		this.onForwardBeforeBound = this.onForwardBefore.bind(this);
 		this.onItemTabIndexChangeBound = this.onItemTabIndexChange.bind(this);
+
+		// Initialize the DragAndDropHandler with the necessary configurations
+		// The handler will manage the drag and drop operations for the list items.
+		this._dragAndDropHandler = new DragAndDropHandler(this, {
+			getItems: () => this.items,
+			getDropIndicator: () => this.dropIndicatorDOM,
+			useOriginalEvent: true,
+		});
 	}
 
 	/**
@@ -561,15 +593,14 @@ class List extends UI5Element {
 
 	onEnterDOM() {
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
-		DragRegistry.subscribe(this);
+		ResizeHandler.register(this.getDomRef()!, this.handleResizeCallback);
 	}
 
 	onExitDOM() {
 		deregisterUI5Element(this);
 		this.unobserveListEnd();
-		this.resizeListenerAttached = false;
-		ResizeHandler.deregister(this.getDomRef()!, this._handleResize);
-		DragRegistry.unsubscribe(this);
+		this.unobserveListStart();
+		ResizeHandler.deregister(this.getDomRef()!, this.handleResizeCallback);
 	}
 
 	onBeforeRendering() {
@@ -581,13 +612,14 @@ class List extends UI5Element {
 		this.attachGroupHeaderEvents();
 		if (this.growsOnScroll) {
 			this.observeListEnd();
-		} else if (this.listEndObserved) {
+			this.observeListStart();
+		} else {
 			this.unobserveListEnd();
+			this.unobserveListStart();
 		}
 
 		if (this.grows) {
 			this.checkListInViewport();
-			this.attachForResize();
 		}
 	}
 
@@ -613,11 +645,8 @@ class List extends UI5Element {
 		});
 	}
 
-	attachForResize() {
-		if (!this.resizeListenerAttached) {
-			this.resizeListenerAttached = true;
-			ResizeHandler.register(this.getDomRef()!, this._handleResize);
-		}
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
 	}
 
 	get shouldRenderH1() {
@@ -634,6 +663,10 @@ class List extends UI5Element {
 
 	get listEndDOM() {
 		return this.shadowRoot!.querySelector(".ui5-list-end-marker");
+	}
+
+	get listStartDOM() {
+		return this.shadowRoot!.querySelector(".ui5-list-start-marker");
 	}
 
 	get dropIndicatorDOM(): DropIndicator | null {
@@ -694,13 +727,21 @@ class List extends UI5Element {
 		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups();
 	}
 
-	get scrollContainer() {
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-list-scroll-container");
+	get growingButtonAriaLabel() {
+		return this.accessibilityAttributes.growingButton?.name;
+	}
+
+	get growingButtonAriaLabelledBy() {
+		return this.accessibilityAttributes.growingButton?.name ? undefined : `${this._id}-growingButton-text`;
+	}
+
+	get growingButtonAriaDescribedBy() {
+		return this.accessibilityAttributes.growingButton?.description ? `${this._id}-growingButton-description` : undefined;
 	}
 
 	hasGrowingComponent(): boolean {
-		if (this.growsOnScroll && this.scrollContainer) {
-			return this.scrollContainer.clientHeight !== this.scrollContainer.scrollHeight;
+		if (this.growsOnScroll) {
+			return this._startMarkerOutOfView;
 		}
 
 		return this.growsWithButton;
@@ -776,34 +817,46 @@ class List extends UI5Element {
 				(item as ListItem)._selectionMode = this.selectionMode;
 			}
 			item.hasBorder = showBottomBorder;
+
+			(item as ListItem).mediaRange = this.mediaRange;
 		});
 	}
 
 	async observeListEnd() {
-		if (!this.listEndObserved) {
-			await renderFinished();
-			this.getIntersectionObserver().observe(this.listEndDOM!);
-			this.listEndObserved = true;
-		}
+		await renderFinished();
+		this.getEndIntersectionObserver().observe(this.listEndDOM!);
 	}
 
 	unobserveListEnd() {
-		if (this.growingIntersectionObserver) {
-			this.growingIntersectionObserver.disconnect();
-			this.growingIntersectionObserver = null;
-			this.listEndObserved = false;
+		if (this._endIntersectionObserver) {
+			this._endIntersectionObserver.disconnect();
+			this._endIntersectionObserver = null;
 		}
 	}
 
-	onInteresection(entries: Array<IntersectionObserverEntry>) {
-		if (this.initialIntersection) {
-			this.initialIntersection = false;
-			return;
+	async observeListStart() {
+		await renderFinished();
+		this.getStartIntersectionObserver().observe(this.listStartDOM!);
+	}
+
+	unobserveListStart() {
+		if (this._startIntersectionObserver) {
+			this._startIntersectionObserver.disconnect();
+			this._startIntersectionObserver = null;
 		}
+	}
+
+	onEndIntersection(entries: Array<IntersectionObserverEntry>) {
 		entries.forEach(entry => {
 			if (entry.isIntersecting) {
 				debounce(this.loadMore.bind(this), INFINITE_SCROLL_DEBOUNCE_RATE);
 			}
+		});
+	}
+
+	onStartIntersection(entries: Array<IntersectionObserverEntry>) {
+		entries.forEach(entry => {
+			this._startMarkerOutOfView = !entry.isIntersecting;
 		});
 	}
 
@@ -1065,6 +1118,13 @@ class List extends UI5Element {
 		}
 	}
 
+	_handleResize() {
+		this.checkListInViewport();
+
+		const width = this.getBoundingClientRect().width;
+		this.mediaRange = MediaRange.getCurrentRange(MediaRange.RANGESETS.RANGE_4STEPS, width);
+	}
+
 	/*
 	* KEYBOARD SUPPORT
 	*/
@@ -1150,46 +1210,19 @@ class List extends UI5Element {
 	}
 
 	_ondragenter(e: DragEvent) {
-		e.preventDefault();
+		this._dragAndDropHandler.ondragenter(e);
 	}
 
 	_ondragleave(e: DragEvent) {
-		if (e.relatedTarget instanceof Node && this.shadowRoot!.contains(e.relatedTarget)) {
-			return;
-		}
-
-		this.dropIndicatorDOM!.targetReference = null;
+		this._dragAndDropHandler.ondragleave(e);
 	}
 
 	_ondragover(e: DragEvent) {
-		if (!(e.target instanceof HTMLElement)) {
-			return;
-		}
-
-		const closestPosition = findClosestPosition(
-			this.items,
-			e.clientY,
-			Orientation.Vertical,
-		);
-
-		if (!closestPosition) {
-			this.dropIndicatorDOM!.targetReference = null;
-			return;
-		}
-
-		const { targetReference, placement } = handleDragOver(e, this, closestPosition, closestPosition.element, { originalEvent: true });
-		this.dropIndicatorDOM!.targetReference = targetReference;
-		this.dropIndicatorDOM!.placement = placement;
+		this._dragAndDropHandler.ondragover(e);
 	}
 
 	_ondrop(e: DragEvent) {
-		if (!this.dropIndicatorDOM?.targetReference || !this.dropIndicatorDOM?.placement) {
-			e.preventDefault();
-			return;
-		}
-
-		handleDrop(e, this, this.dropIndicatorDOM.targetReference, this.dropIndicatorDOM.placement, { originalEvent: true });
-		this.dropIndicatorDOM.targetReference = null;
+		this._dragAndDropHandler.ondrop(e);
 	}
 
 	isForwardElement(element: HTMLElement) {
@@ -1266,6 +1299,10 @@ class List extends UI5Element {
 	}
 
 	onItemToggle(e: CustomEvent<ListItemToggleEventDetail>) {
+		if (!(e.target as any)?.isListItemBase) {
+			return;
+		}
+
 		this.fireDecoratorEvent("item-toggle", { item: e.detail.item });
 	}
 
@@ -1415,16 +1452,28 @@ class List extends UI5Element {
 		return this._beforeElement;
 	}
 
-	getIntersectionObserver() {
-		if (!this.growingIntersectionObserver) {
-			this.growingIntersectionObserver = new IntersectionObserver(this.onInteresection.bind(this), {
-				root: null,
+	getEndIntersectionObserver() {
+		if (!this._endIntersectionObserver) {
+			this._endIntersectionObserver = new IntersectionObserver(this.onEndIntersection.bind(this), {
+				root: null, // null means the viewport
 				rootMargin: "0px",
 				threshold: 1.0,
 			});
 		}
 
-		return this.growingIntersectionObserver;
+		return this._endIntersectionObserver;
+	}
+
+	getStartIntersectionObserver() {
+		if (!this._startIntersectionObserver) {
+			this._startIntersectionObserver = new IntersectionObserver(this.onStartIntersection.bind(this), {
+				root: null, // null means the viewport
+				rootMargin: "0px",
+				threshold: 1.0,
+			});
+		}
+
+		return this._startIntersectionObserver;
 	}
 }
 
@@ -1439,4 +1488,5 @@ export type {
 	ListItemToggleEventDetail,
 	ListSelectionChangeEventDetail,
 	ListMoveEventDetail,
+	ListAccessibilityAttributes,
 };

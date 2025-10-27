@@ -24,7 +24,6 @@
 	--_ui5_side_navigation_item_padding_start_in_overflow_popup: 1rem;
 	--_ui5_side_navigation_item_transition: background-color 0.3s ease-in-out;
 	--_ui5_side_navigation_item_padding_left: 1rem;
-	--_ui5_side_navigation_no_icons_nested_item_padding: 2rem;
 	--_ui5_side_navigation_item_focus_border_offset: calc(-1 * var(--sapContent_FocusWidth));
 	--_ui5_side_navigation_item_focus_border_radius: calc(var(--_ui5_side_navigation_item_border_radius) + var(--sapContent_FocusWidth));
 	--_ui5_side_navigation_collapsed_selected_item_background: 0 100% / 0.188rem 100%  no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_SelectionBackgroundColor);
@@ -33,9 +32,8 @@
 	--_ui5_side_navigation_selected_and_focused_border_style_color: var(--_ui5_side_navigation_selected_border_style_color);
 	--_ui5_side_navigation_group_icon_width: 2.5rem;
 	--_ui5_side_navigation_icon_padding_inline_end: 0.5rem;
-	--_ui5_side_navigation_item_font_family: "72override", var(--sapFontBoldFamily);
 	--_ui5_side_navigation_group_padding: 1rem;
-	--_ui5_side_navigation_padding-flexible: 0.5rem 0.5rem 0 0.5rem; 
+	--_ui5_side_navigation_padding-flexible: 0.5rem 0.5rem 0 0.5rem;
 	--_ui5_side_navigation_padding-fixed: 0 0.5rem 0.5rem 0.5rem;
 	--_ui5_side_navigation_popup_padding: 0.5rem;
 	--_ui5_side_navigation_popup_title_line_height: 1.5rem;
@@ -46,9 +44,8 @@
 	--_ui5_side_navigation_item_collapsed_hover_focus_width: fit-content;
 	--_ui5_side_navigation_item_collapsed_hover_focus_display: block;
 	--_ui5_side_navigation_item_collapsed_hover_focus_padding_right: 1rem;
-	--_ui5_side_navigation_item_collapsed_padding_right: 3.9375rem;
 	--_ui5_side_navigation_action_item_collapsed_padding: 1rem;
-	--_ui5_side_navigation_item_collapsed_unselectable_padding: 3rem;
+	--_ui5_side_navigation_item_collapsed_padding: 3rem;
 }
 
 [data-ui5-compact-size],

@@ -21,9 +21,7 @@ export default function FileUploaderPopoverTemplate(this: FileUploader) {
 					"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
 					"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
 				}}
-				style={{
-					"width": `${this.ui5Input ? this.ui5Input.offsetWidth : 0}px`,
-				}}
+				style={{ width: `${this._formWidth}px` }}
 			>
 				{
 					this._valueStateMessageInputIcon &&

@@ -146,6 +146,15 @@
         </ui5-multi-input>
         <ui5-button id="multi_input_btn1" submits>Submits form</ui5-button>
     </form>
+    <form id="myForm" method="get">
+        <ui5-title>ui5-tokenizer</ui5-title>
+        <ui5-tokenizer id="tokenizeraa" name="tokenizer1">
+            <ui5-token text="Token 1"></ui5-token>
+            <ui5-token text="Token 2"></ui5-token>
+            <ui5-token text="Token 3"></ui5-token>
+        </ui5-tokenizer>
+        <ui5-button id="tokenizer_submits_form" submits>Submits form</ui5-button>
+    </form>
     <form>
         <ui5-title>ui5-radio-button</ui5-title>
         <ui5-radio-button id="rb_1" required name="rb1"></ui5-radio-button>
@@ -245,6 +254,7 @@
         <ui5-switch id="switch2" text="ui5-switch without name and value" checked></ui5-switch>
         <ui5-switch id="switch3" name="switch3" text="ui5-switch with name and without value"></ui5-switch>
         <ui5-switch id="switch4" name="switch4" checked text="ui5-switch with name and value"></ui5-switch>
+        <ui5-switch id="switch4" name="switch4" checked value="test" text="ui5-switch with name and value"></ui5-switch>
         <ui5-switch id="switch5" name="switch5" required text="ui5-switch with name, value and required"></ui5-switch>
         <ui5-button id="switch_btn1" submits>Submits form</ui5-button>
     </form>

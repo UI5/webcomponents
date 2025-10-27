@@ -6,41 +6,48 @@ import SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationSubItem from "./SideNavigationSubItem.js";
 
 export default function SideNavigationTemplate(this: SideNavigation) {
-	return (<>
-		<NavigationMenu
-			id={`${this._id}-side-navigation-overflow-menu`}
-			onBeforeOpen={this._onBeforeMenuOpen}
-			onBeforeClose={this._onBeforeMenuClose}
-			onui5-item-click={this.handleOverflowItemClick} // TOFIX
-			class="ui5-side-navigation-popover ui5-side-navigation-overflow-menu"
+	const renderMenuItem = (item: SideNavigationItem | SideNavigationSubItem) => (
+		<NavigationMenuItem
+			accessibilityAttributes={item.accessibilityAttributes}
+			text={item.text}
+			icon={item.icon}
+			design={item.design}
+			disabled={item.disabled}
+			href={item.href}
+			target={item.target}
+			title={item.title}
+			tooltip={item._tooltip}
+			ref={this.captureRef.bind(item)}
 		>
-			{this._menuPopoverItems.map(item =>
-				<NavigationMenuItem
+
+			{item.children.length > 0 && !item.unselectable &&
+				(<NavigationMenuItem
+					class="ui5-navigation-menu-item-root-parent"
 					accessibilityAttributes={item.accessibilityAttributes}
 					text={item.text}
-					icon={item.icon}
 					design={item.design}
 					disabled={item.disabled}
 					href={item.href}
 					target={item.target}
 					title={item.title}
+					tooltip={item._tooltip}
 					ref={this.captureRef.bind(item)}
-				>
-					{item.items.map(subItem =>
-						<NavigationMenuItem
-							accessibilityAttributes={subItem.accessibilityAttributes}
-							text={subItem.text}
-							icon={subItem.icon}
-							design={subItem.design}
-							disabled={subItem.disabled}
-							ref={this.captureRef.bind(subItem)}
-							href={subItem.href}
-							target={subItem.target}
-							title={subItem.title}
-						/>
-					)}
-				</NavigationMenuItem>
-			)}
+				></NavigationMenuItem>)
+			}
+
+			{(item as any).items?.map(renderMenuItem)}
+		</NavigationMenuItem>
+	);
+
+	return (<>
+		<NavigationMenu
+			id={`${this._id}-side-navigation-overflow-menu`}
+			onBeforeOpen={this._onBeforeMenuOpen}
+			onBeforeClose={this._onBeforeMenuClose}
+			onClose={this._onMenuClose}
+			class="ui5-side-navigation-popover ui5-side-navigation-overflow-menu"
+		>
+			{this._menuPopoverItems.map(renderMenuItem)}
 		</NavigationMenu>
 		<ResponsivePopover
 			verticalAlign="Top"

@@ -2,7 +2,8 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base";
+import type { AccessibilityAttributes, UI5CustomEvent } from "@ui5/webcomponents-base";
+import type Button from "@ui5/webcomponents/dist/Button.js";
 
 type ShellBarItemClickEventDetail = {
 	targetRef: HTMLElement,
@@ -52,8 +53,8 @@ class ShellBarItem extends UI5Element {
 
 	/**
 	 * Defines the item text.
-     *
-     * **Note:** The text is only displayed inside the overflow popover list view.
+	 *
+	 * **Note:** The text is only displayed inside the overflow popover list view.
 	 * @default undefined
 	 * @public
 	 */
@@ -97,7 +98,7 @@ class ShellBarItem extends UI5Element {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
 
-	fireClickEvent(e: MouseEvent) {
+	fireClickEvent(e: UI5CustomEvent<Button, "click">) {
 		return this.fireDecoratorEvent("click", {
 			targetRef: (e.target as HTMLElement),
 		});

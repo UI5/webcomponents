@@ -90,9 +90,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
  * @public
  * @since 2.0.0
  */
-@event("close", {
-	bubbles: true,
-})
+@event("close")
 
 class Toast extends UI5Element {
 	eventDetails!: {

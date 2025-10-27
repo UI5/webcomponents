@@ -18,7 +18,11 @@
 		"types": [
 			"cypress",
 			"cypress-real-events",
-			"cypress-axe",
 		]
 	},
+		"references": [
+		{
+			"path": "../base"
+		}
+	]
 }

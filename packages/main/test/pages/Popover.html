@@ -99,6 +99,26 @@
 	<br>
 	<br>
 
+	<ui5-icon id="icon1" name="home" mode="Interactive"></ui5-icon>
+
+	<ui5-popover id="popoverAlignedToIcon"
+				 opener="icon1"
+				 header-text="Newsletter subscription"
+				 placement="End"
+				 vertical-align="Top">
+		<div class="popover-content">
+			<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+			<ui5-input id="emailInput" style="min-width: 150px;" placeholder="Enter Email"></ui5-input>
+			<ui5-label>Note: If you open the page in mobile, a dialog would be displayed.</ui5-label>
+		</div>
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="closePopoverButton" design="Emphasized">Subscribe</ui5-button>
+		</div>
+	</ui5-popover>
+
+	<br>
+	<br>
+
 	<ui5-select>
 		<ui5-option>Hello</ui5-option>
 		<ui5-option>World</ui5-option>
@@ -206,6 +226,28 @@ z-index: 1;
 
 		<div slot="footer">
 			<ui5-button id="focusMe">Close</ui5-button>
+		</div>
+	</ui5-popover>
+
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrRefPopover">Accessible Description Ref</ui5-button>
+	<ui5-popover id="accessibleDescrRefPopover" initial-focus="focusMe" header-text="Popover header"  accessible-description-ref="btnAccessibleDescrRefPopover">
+		<ui5-title level="H3">Hello World!</ui5-title>
+
+		<div slot="footer">
+			<ui5-button id="btnAccessibleDescrRefPopoverSubmit">Close</ui5-button>
+		</div>
+	</ui5-popover>
+
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrPopover">Accessible Description</ui5-button>
+	<ui5-popover id="accessibleDescrPopover" initial-focus="focusMe" header-text="Popover header" accessible-description="Accessible Description">
+		<ui5-title level="H3">Hello World!</ui5-title>
+
+		<div slot="footer">
+			<ui5-button id="btnAccessibleDescrPopoverSubmit">Close</ui5-button>
 		</div>
 	</ui5-popover>
 
@@ -599,7 +641,23 @@ z-index: 1;
 
 	<div style="height: 100px;"></div>
 
+	<button data-sap-ui-fastnavgroup="true" id="test"> Test button</button>
+	<ui5-popover id="groupPop" opener="test">
+		<div data-sap-ui-fastnavgroup="true">
+			<Button id="first">First group focusable</Button>
+		</div>
+		<div data-sap-ui-fastnavgroup="true">
+			<Button id="second">Second group focusable</Button>
+		</div>
+	</ui5-popover>
+	<button data-sap-ui-fastnavgroup="true">Test button 2</button>
+
 	<script>
+
+		test.addEventListener("click", function (event) {
+			groupPop.open = true;
+		});
+
 		btn.addEventListener("click", function (event) {
 			pop.opener = btn;
 			pop.open = true;
@@ -648,6 +706,24 @@ z-index: 1;
 		btnPopFocus.addEventListener("click", function (event) {
 			popFocus.opener = btnPopFocus;
 			popFocus.open = true;
+		});
+
+		btnAccessibleDescrRefPopover.addEventListener("click", function (event) {
+			accessibleDescrRefPopover.opener = btnAccessibleDescrRefPopover;
+			accessibleDescrRefPopover.open = true;
+		});
+
+		btnAccessibleDescrRefPopoverSubmit.addEventListener("click", function (event) {
+			accessibleDescrRefPopover.open = false;
+		});
+
+		btnAccessibleDescrPopover.addEventListener("click", function (event) {
+			accessibleDescrPopover.opener = btnAccessibleDescrPopover;
+			accessibleDescrPopover.open = true;
+		});
+
+		btnAccessibleDescrPopoverSubmit.addEventListener("click", function (event) {
+			accessibleDescrPopover.open = false;
 		});
 
 		document.getElementById("many-items").innerHTML = [].map.call("Ullamco ea ad fugiat enim elit dolore ullamco ad magna excepteur cupidatat.", function (item, index) {
@@ -939,6 +1015,10 @@ z-index: 1;
 
 		btn4.addEventListener("click", () => {
 			respPopover4.open = !respPopover4.open;
+		});
+
+		icon1.addEventListener("click", () => {
+			popoverAlignedToIcon.open = true;
 		});
 
 		class OpenerTestShadowRootId extends HTMLElement {

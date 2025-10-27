@@ -4,7 +4,5 @@
 	--_ui5_button_focused_border: 0.125rem dotted var(--sapContent_FocusColor);
 	--_ui5_button_focused_border_radius: 0.25rem;
 	--_ui5_button_emphasized_focused_border_before: var(--_ui5_button_focused_border);
-	--_ui5_button_focus_width: 1px;
 	--_ui5_button_text_shadow: none;
-	--_ui5_button_emphasized_outline: 0.125rem dotted var(--sapContent_FocusColor);
 }

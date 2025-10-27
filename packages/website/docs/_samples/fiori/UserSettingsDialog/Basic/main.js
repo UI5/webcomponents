@@ -3,6 +3,7 @@ import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/UserMenu.js"
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";

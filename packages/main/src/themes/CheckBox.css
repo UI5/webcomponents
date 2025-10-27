@@ -5,6 +5,10 @@
 	display: inline-block;
 }
 
+:host([required]) {
+	vertical-align: middle;
+}
+
 :host {
 	overflow: hidden;
 	max-width: 100%;

@@ -2,7 +2,7 @@
 	display: inline-block;
 	box-sizing: border-box;
 	position: relative;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 }
 
 /* The ui5_hovered class is set by FileUploader to indicate hover state of the control */
@@ -32,6 +32,7 @@
 
 :host([disabled]) {
 	opacity: var(--sapContent_DisabledOpacity);
+	pointer-events: none;
 }
 
 :host {
@@ -274,10 +275,16 @@
 	border-color: var(--sapAvatar_Lite_BorderColor);
 }
 
+:host([_color-scheme="Transparent"]),
+:host([ui5-avatar][color-scheme="Transparent"]) {
+	background-color: transparent;
+	border-color: transparent;
+}
+
 :host([_has-image]) {
 	color: var(--ui5-avatar-accent10-color);
+	border: var(--ui5-avatar-optional-border);
 	background-color: transparent;
-	vertical-align: middle;
 }
 
 .ui5-avatar-initials {
@@ -302,18 +309,20 @@
 
 /* Slotted Badge */
 ::slotted([slot="badge"]) {
-	pointer-events: initial;
 	position: absolute;
 	bottom: 0;
 	right: 0;
 	width: 1.125rem;
 	height: 1.125rem;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
 	color: var(--sapBackgroundColor);
 
 	--_ui5-tag-height: 1.125rem;
-	--_ui5-tag-border-radius: 50%;
+}
+
+:host(:not([disabled])) ::slotted([slot="badge"]) {
+	pointer-events: initial;
 }
 
 :host([_size="L"]) ::slotted([slot="badge"]),

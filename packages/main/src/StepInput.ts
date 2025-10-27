@@ -256,7 +256,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_inputFocused = false;
 
 	@property({ noAttribute: true })
-	_previousValue: number = this.value;
+	_previousValue: number | undefined;
 
 	@property({ noAttribute: true })
 	_waitTimeout: number = INITIAL_WAIT_TIMEOUT;
@@ -353,9 +353,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	onBeforeRendering() {
 		this._setButtonState();
-		if (this._previousValue === undefined) {
-			this._previousValue = this.value;
-		}
 	}
 
 	get input(): Input {
@@ -388,9 +385,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onInputFocusIn() {
 		this._inputFocused = true;
-		if (this.value !== this._previousValue) {
-			this._previousValue = this.value;
-		}
 	}
 
 	_onInputFocusOut() {
@@ -536,10 +530,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onfocusin() {
 		this.focused = true;
+		this._previousValue = this.value;
 	}
 
 	_onfocusout() {
 		this.focused = false;
+		this._previousValue = undefined;
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -561,6 +557,9 @@ class StepInput extends UI5Element implements IFormInputElement {
 			this._modifyValue(-this.step);
 		} else if (isEscape(e)) {
 			// return previous value
+			if (this._previousValue === undefined) {
+				this._previousValue = this.value;
+			}
 			this.value = this._previousValue;
 			this.input.value = this.value.toFixed(this.valuePrecision);
 		} else if (this.max !== undefined && (isPageUpShift(e) || isUpShiftCtrl(e))) {

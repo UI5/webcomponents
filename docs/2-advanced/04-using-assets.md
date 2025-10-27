@@ -16,8 +16,9 @@ These assets are important for **accessibility** and **globalization**.
 
 Import the `dist/Assets.js` file of the respective NPM package:
 
-`import "@ui5/<PACKAGE-NAME>/dist/Assets.js`
-`import "@ui5/<PACKAGE-NAME>/dist/Assets-fetch.js`
+- `import "@ui5/<PACKAGE-NAME>/dist/Assets.js`
+- `import "@ui5/<PACKAGE-NAME>/dist/Assets-fetch.js`
+- `import "@ui5/<PACKAGE-NAME>/dist/Assets-node.js`
 
 ** Note: read "Techcnocal aspects" below on how to choose which one to use**
 
@@ -76,3 +77,14 @@ When you import the `dist/Assets-fetch.js` file of a given package, assets are o
 The issue is how to get the correct URL for the fetch to work and this is solved by using `import.meta.url` to resolve a relative path from a module to a JSON file
 
 The approach can be used with a bundler and for CDN usage.
+
+### Assets-node.js
+
+This module is an alternative to `Assets.js`, with added support for the `with: { type: 'json' }` import attribute, which is required in certain environments—such as Node.js with server-side rendering (SSR) — to properly load JSON files.
+
+This approach allows you to dynamically import assets while explicitly specifying the file type.
+
+**For example:**
+```ts
+await import("../assets/i18n/messagebundle_bg.json", { with: { type: 'json' } })
+```

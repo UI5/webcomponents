@@ -1,0 +1,34 @@
+@import "./InvisibleTextStyles.css";
+
+:host(:popover-open) {
+	margin: 0;
+	display: inline-block;
+	margin-top: -28px;
+	height: 1rem;
+	background: var(--sapBackgroundColor);
+	border: none;
+	box-shadow: var(--sapContent_Shadow1);
+	border-radius: 0.0625rem;
+	padding: 0 0.5rem;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapTextColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+:host([editable]:popover-open) {
+	cursor: pointer;
+	height: fit-content;
+	border: none;
+	padding: 0;
+	margin-top: -3rem;
+	box-shadow: none;
+}
+
+:host([editable]:popover-open) [ui5-input] {
+	width: min-content;
+	text-align: center;
+}

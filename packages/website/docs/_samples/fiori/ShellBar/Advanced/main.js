@@ -1,34 +1,19 @@
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents/dist/Button.js";
-import "@ui5/webcomponents/dist/Input.js";
-import "@ui5/webcomponents/dist/ListItemStandard.js";
-import "@ui5/webcomponents/dist/Popover.js";
-import "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents/dist/Text.js";
+import "@ui5/webcomponents/dist/Tag.js";
+import "@ui5/webcomponents/dist/Switch.js";
+import "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents/dist/ToggleButton.js";
-import "@ui5/webcomponents/dist/List.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarSpacer.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 
-import "@ui5/webcomponents-icons/dist/da.js";
-import "@ui5/webcomponents-icons/dist/da-2.js";
+import "@ui5/webcomponents-icons/dist/menu2.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
-import "@ui5/webcomponents-icons/dist/sys-find.js";
-import "@ui5/webcomponents-icons/dist/settings.js";
-import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
-import "@ui5/webcomponents-icons/dist/log.js";
-
-const shellbar = document.getElementById("shellbar");
-const actionPopover = document.getElementById("action-popover");
-
-shellbar.addEventListener("ui5-profile-click", (event) => {
-    actionPopover.opener = event.detail.targetRef;
-	actionPopover.open = true;
-});
-
-[...document.querySelectorAll("ui5-toggle-button")].forEach(el => {
-	el.addEventListener("click", event => {
-		const toggleButton = event.target;
-		toggleButton.icon = toggleButton.pressed ? "sap-icon://da-2" : "sap-icon://da";
-	});
-});
+import "@ui5/webcomponents-icons/dist/customer.js";
+import "@ui5/webcomponents-icons/dist/da.js";

@@ -55,7 +55,6 @@ import { findVerticalScrollContainer } from "./TableUtils.js";
  * @extends UI5Element
  * @since 2.0.0
  * @public
- * @experimental This web component is available since 2.0 with an experimental flag and its API and behavior are subject to change.
  */
 @customElement({
 	tag: "ui5-table-growing",
@@ -176,7 +175,6 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	onBeforeRendering(): void {
 		this._observer?.disconnect();
 		this._observer = undefined;
-		this._currentLastRow = undefined;
 		this._renderContent = this.hasGrowingComponent();
 		this._invalidateTable();
 	}
@@ -197,8 +195,8 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 		// remembers the last row. only do this when the table has a growing component rendered.
 		if (this._table && this.hasGrowingComponent()) {
 			this._currentLastRow = this._table.rows[this._table.rows.length - 1];
+			this._shouldFocusRow = true;
 		}
-		this._shouldFocusRow = true;
 
 		this.fireDecoratorEvent("load-more");
 	}

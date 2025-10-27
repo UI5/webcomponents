@@ -28,4 +28,14 @@ selectionFeature.addEventListener("change", (e) => {
 		console.log("Recently deselected row-keys", recentlyDeselectedRowKeys);
 		console.log("Recently deselected rows", recentlyDeselectedRows);
 	}
-})
+});
+
+const selectionBehavior = document.getElementById("selectionBehavior");
+selectionBehavior.addEventListener("change", (e) => {
+	selectionFeature.behavior = e.target.text;
+});
+
+const headerSelector = document.getElementById("headerSelector");
+headerSelector.addEventListener("change", (e) => {
+	selectionFeature.headerSelector = e.target.text;
+});

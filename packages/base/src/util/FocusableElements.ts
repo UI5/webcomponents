@@ -53,9 +53,9 @@ const findFocusableElement = async (container: HTMLElement, forward: boolean, st
 	let currentIndex = -1;
 
 	if (container.shadowRoot) {
-		child = forward ? container.shadowRoot.firstChild as HTMLElement : container.shadowRoot.lastChild as HTMLElement;
+		child = forward ? container.shadowRoot.firstElementChild as HTMLElement : container.shadowRoot.lastElementChild as HTMLElement;
 	} else if (container instanceof HTMLSlotElement && container.assignedNodes()) {
-		assignedElements = container.assignedNodes();
+		assignedElements = container.assignedElements();
 		currentIndex = forward ? 0 : assignedElements.length - 1;
 		child = assignedElements[currentIndex] as HTMLElement;
 	} else if (startFromContainer) {
@@ -105,7 +105,7 @@ const findFocusableElement = async (container: HTMLElement, forward: boolean, st
 			}
 		}
 
-		child = forward ? originalChild.nextSibling as HTMLElement : originalChild.previousSibling as HTMLElement;
+		child = forward ? originalChild.nextElementSibling as HTMLElement : originalChild.previousElementSibling as HTMLElement;
 
 		// If the child element is not part of the currently assigned element,
 		// we have to check the next/previous element assigned to the slot or continue with the next/previous sibling of the slot,

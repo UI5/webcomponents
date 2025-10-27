@@ -1,6 +1,7 @@
 import UserMenu from "../../src/UserMenu.js";
 import UserMenuAccount from "../../src/UserMenuAccount.js";
 import UserMenuItem from "../../src/UserMenuItem.js";
+import UserMenuItemGroup from "../../src/UserMenuItemGroup.js";
 
 import actionSettings from "@ui5/webcomponents-icons/dist/action-settings.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -26,7 +27,97 @@ describe("Initial rendering", () => {
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
 	});
 
-	it("tests config show-manage-account", () => {
+    it("tests title", () => {
+    	cy.mount(
+    		<>
+    			<Button id="openUserMenuBtn">Open User Menu</Button>
+    			<UserMenu open={true} opener="openUserMenuBtn">
+    				<UserMenuAccount
+    					slot="accounts"
+    					titleText="Alain Chevalier">
+    				</UserMenuAccount>
+    			</UserMenu>
+    		</>
+    	);
+    	cy.get("[ui5-user-menu]").as("userMenu");
+    	cy.get("@userMenu").should("exist");
+    	cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+    	cy.get("@responsivePopover").should("exist");
+    	cy.get("@responsivePopover").find("[ui5-text]").as("name");
+    	cy.get("@name").should("have.length", 1);
+    	cy.get("@name").contains("Alain Chevalier");
+    	cy.get("@name").should("have.class", "ui5-user-menu-selected-account-title");
+
+    });
+
+    it("tests subtitle", () => {
+        cy.mount(
+            <>
+                <Button id="openUserMenuBtn">Open User Menu</Button>
+                <UserMenu open={true} opener="openUserMenuBtn">
+                    <UserMenuAccount
+                        slot="accounts"
+                        subtitleText="Alain.Chevalier@sap.com">
+                    </UserMenuAccount>
+                </UserMenu>
+            </>
+        );
+        cy.get("[ui5-user-menu]").as("userMenu");
+        cy.get("@userMenu").should("exist");
+        cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+        cy.get("@responsivePopover").should("exist");
+        cy.get("@responsivePopover").find("[ui5-text]").as("email");
+        cy.get("@email").should("have.length", 1);
+        cy.get("@email").contains("Alain.Chevalier@sap.com");
+        cy.get("@email").should("have.class", "ui5-user-menu-selected-account-subtitleText");
+    });
+
+    it("tests description", () => {
+        cy.mount(
+            <>
+                <Button id="openUserMenuBtn">Open User Menu</Button>
+                <UserMenu open={true} opener="openUserMenuBtn">
+                    <UserMenuAccount
+                        slot="accounts"
+                        description="Delivery Manager, SAP SE">
+                    </UserMenuAccount>
+                </UserMenu>
+            </>
+        );
+        cy.get("[ui5-user-menu]").as("userMenu");
+        cy.get("@userMenu").should("exist");
+        cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+        cy.get("@responsivePopover").should("exist");
+        cy.get("@responsivePopover").find("[ui5-text]").as("role");
+        cy.get("@role").should("have.length", 1);
+        cy.get("@role").contains("Delivery Manager, SAP SE");
+        cy.get("@role").should("have.class", "ui5-user-menu-selected-account-description");
+    });
+
+    it("tests additional info", () => {
+        cy.mount(
+            <>
+                <Button id="openUserMenuBtn">Open User Menu</Button>
+                <UserMenu open={true} opener="openUserMenuBtn">
+                    <UserMenuAccount
+                        slot="accounts"
+                        additionalInfo="Primary Employment">
+                    </UserMenuAccount>
+                </UserMenu>
+            </>
+        );
+        cy.get("[ui5-user-menu]").as("userMenu");
+        cy.get("@userMenu").should("exist");
+        cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
+        cy.get("@responsivePopover").should("exist");
+        cy.get("@responsivePopover").find("[ui5-text]").as("info");
+        cy.get("@info").should("have.length", 1);
+        cy.get("@info").contains("Primary Employment");
+        cy.get("@info").should("have.class", "ui5-user-menu-selected-account-additional-info");
+    });
+
+
+    it("tests config show-manage-account", () => {
 		cy.mount(
 			<>
 				<Button id="openUserMenuBtn">Open User Menu</Button>
@@ -727,4 +818,32 @@ describe("Responsiveness", () => {
 		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier 1");
 		cy.get("@headerBar").find("[ui5-button]").should("have.length", 1);
 	});
+
+	it("Event firing - 'ui5-check' after 'click' on user menu item", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open UserMenu</Button>
+					<UserMenu open={true} opener="btnOpen">
+						<UserMenuItemGroup checkMode="Single">
+							<UserMenuItem text="Item 1"></UserMenuItem>
+						</UserMenuItemGroup>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").as("userMenu");
+			cy.get("@userMenu")
+				.find("[ui5-user-menu-item]")
+				.as("userMenuItem");
+
+			cy.get("@userMenu")
+				.then($userMenu => {
+					$userMenu.get(0).addEventListener("ui5-check", cy.stub().as("checked"));
+				});
+
+			cy.get("@userMenuItem").first().click();
+
+			cy.get("@checked")
+				.should("have.been.calledOnce");
+		});
 });

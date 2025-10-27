@@ -5,6 +5,7 @@ import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
 import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
+import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Icon from "./Icon.js";
 import ListItemTemplate from "./ListItemTemplate.js";
@@ -30,7 +31,19 @@ function listItemContent(this: MenuItem) {
 		{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
 
 		{rightContent.call(this)}
+		{checkmarkContent.call(this)}
 	</>);
+}
+
+function checkmarkContent(this: MenuItem) {
+	return !this._markChecked ? "" : (
+		<div class="ui5-menu-item-checked">
+			<Icon
+				name={checkIcon}
+				class="ui5-menu-item-icon-checked"
+			/>
+		</div>
+	);
 }
 
 function rightContent(this: MenuItem) {
@@ -46,7 +59,7 @@ function rightContent(this: MenuItem) {
 			</div>
 		);
 	case this.hasEndContent:
-		return <slot name="endContent"></slot>;
+		return <slot name="endContent" onKeyDown={this._endContentKeyDown}></slot>;
 	case !!this.additionalText:
 		return (
 			<span
@@ -80,7 +93,7 @@ function listItemPostContent(this: MenuItem) {
 		allowTargetOverlap={true}
 		placement={this.placement}
 		verticalAlign="Top"
-		accessibleName={this.acessibleNameText}
+		accessibleName={this.accessibleNameText}
 		onBeforeOpen={this._beforePopoverOpen}
 		onOpen={this._afterPopoverOpen}
 		onBeforeClose={this._beforePopoverClose}
@@ -123,8 +136,12 @@ function listItemPostContent(this: MenuItem) {
 						accessibleRole="Menu"
 						loading={this.loading}
 						loadingDelay={this.loadingDelay}
+						onMouseOver={this._itemMouseOver}
+						onKeyDown={this._itemKeyDown}
+						onKeyUp={this._itemKeyUp}
 						// handles event from slotted children
 						onui5-close-menu={this._close}
+						onui5-exit-end-content={this._navigateOutOfEndContent}
 					>
 						<slot></slot>
 					</List>

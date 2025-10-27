@@ -12,8 +12,9 @@ import InputKeyHint from "@ui5/webcomponents/dist/types/InputKeyHint.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import ListAccessibleRole from "@ui5/webcomponents/dist/types/ListAccessibleRole.js";
+import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 
-export default function SearchPopoverTemplate(this: Search) {
+export default function SearchPopoverTemplate(this: Search, headerTemplate?: JsxTemplate) {
 	return (
 		<ResponsivePopover
 			hideArrow={true}
@@ -34,7 +35,7 @@ export default function SearchPopoverTemplate(this: Search) {
 			}}
 		>
 
-			{isPhone() ? (
+			{isPhone() ? (headerTemplate ? headerTemplate.call(this) : (
 				<>
 					<header slot="header" class="ui5-search-popup-searching-header">
 						<Input class="ui5-search-popover-search-field" onInput={this._handleMobileInput} showClearIcon={this.showClearIcon} noTypeahead={this.noTypeahead} hint={InputKeyHint.Search} onKeyDown={this._onMobileInputKeydown}>
@@ -45,7 +46,7 @@ export default function SearchPopoverTemplate(this: Search) {
 						<Button design={ButtonDesign.Transparent} onClick={this._handleCancel}>{this.cancelButtonText}</Button>
 					</header>
 				</>
-			) : null }
+			)) : null }
 
 			<main class="ui5-search-popover-content">
 				<slot name="messageArea"></slot>

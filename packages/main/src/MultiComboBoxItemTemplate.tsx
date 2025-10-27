@@ -12,8 +12,7 @@ function listItemContent(this: MultiComboBoxItem) {
 			<CheckBox
 				disabled={this._readonly}
 				checked={this.selected}
-				tabindex={-1}
-				accessibleName={this._accessibleName}
+				_accInfo = {this.checkBoxAccInfo}
 			/>
 			<div part="content" id="content" class="ui5-li-content">
 				<div class="ui5-li-text-wrapper">

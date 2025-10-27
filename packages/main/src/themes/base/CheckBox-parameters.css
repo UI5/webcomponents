@@ -1,9 +1,7 @@
 :root {
 --_ui5_checkbox_wrapper_padding: .8125rem;
 --_ui5_checkbox_width_height: 3rem;
---_ui5_checkbox_box_shadow: none;
 --_ui5_checkbox_transition: unset;
---_ui5_checkbox_focus_border: none;
 --_ui5_checkbox_disabled_opacity: .5;
 --_ui5_checkbox_border_radius: 0;
 --_ui5_checkbox_hover_background: var(--sapField_Hover_Background);
@@ -27,11 +25,6 @@
 --_ui5_checkbox_inner_error_border: 0.125rem solid var(--sapField_InvalidColor);
 --_ui5_checkbox_inner_warning_border: 0.125rem solid var(--sapField_WarningColor);
 --_ui5_checkbox_inner_information_border: 0.125rem solid var(--sapField_InformationColor);
---_ui5_checkbox_inner_information_box_shadow: none;
---_ui5_checkbox_inner_warning_box_shadow: none;
---_ui5_checkbox_inner_error_box_shadow: none;
---_ui5_checkbox_inner_success_box_shadow: none;
---_ui5_checkbox_inner_default_box_shadow: none;
 --_ui5_checkbox_inner_warning_background_hover: var(--sapField_WarningBackground);
 --_ui5_checkbox_inner_error_background_hover: var(--sapField_InvalidBackground);
 --_ui5_checkbox_inner_success_background_hover: var(--sapField_SuccessBackground);
@@ -39,7 +32,7 @@
 --_ui5_checkbox_inner_success_border: var(--sapField_BorderWidth) solid var(--sapField_SuccessColor);
 --_ui5_checkbox_inner_readonly_border: 0.125rem solid var(--sapField_ReadOnly_BorderColor);
 --_ui5_checkbox_inner_background: var(--sapField_Background);
---_ui5_checkbox_wrapped_focus_padding: .375rem;
+--_ui5_checkbox_wrapped_focus_padding: .5rem;
 --_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
 --_ui5_checkbox_compact_wrapper_padding: .5rem;
 --_ui5_checkbox_compact_width_height: 2rem;
@@ -51,4 +44,10 @@
 --_ui5_checkbox_default_focus_border: none;
 --_ui5_checkbox_focus_outline_display: block;
 --_ui5_checkbox_right_focus_distance: 0;
+}
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_checkbox_label_offset: var(--_ui5_checkbox_compact_wrapper_padding);
 }

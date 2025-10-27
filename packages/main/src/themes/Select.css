@@ -39,7 +39,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	color: var(--_ui5_select_label_color);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 }
@@ -52,4 +52,23 @@
 
 :host(:not([disabled])) {
 	cursor: pointer;
+}
+
+.ui5-select-icon-root {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	width: var(--_ui5_select_icon_width);
+	min-width: var(--_ui5_select_icon_width);
+	height: var(--_ui5_select_icon_wrapper_height);
+	padding: 0;
+}
+
+.ui5-select-icon {
+	color: inherit;
+}
+
+:host([value-state]:not([value-state="None"], [value-state="Positive"])) .ui5-select-icon-root {
+	height: var(--_ui5_select_icon_wrapper_state_height);
 }

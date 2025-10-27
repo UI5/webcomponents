@@ -9,7 +9,6 @@
 	--_ui5_switch_focus_outline: none;
 	--_ui5_switch_root_after_outline: 0.125rem solid var(--sapContent_FocusColor);
 
-	--_ui5_switch_root_after_boreder: none;
 	--_ui5_switch_root_after_boreder_radius: 1rem;
 
 	--_ui5_switch_root_outline_top: 0.5rem;
@@ -108,7 +107,6 @@
 	--_ui5_switch_text_inactive_right_alternate: 0;
 	--_ui5_switch_text_active_left: 0.1875rem;
 	--_ui5_switch_text_active_left_alternate: 0.0625rem;
-	--_ui5_switch_text_active_right: auto;
 
 	--_ui5_switch_text_active_color: var(--sapButton_Handle_Selected_TextColor);
 	--_ui5_switch_text_inactive_color: var(--sapButton_Handle_TextColor);

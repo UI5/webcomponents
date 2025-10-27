@@ -59,6 +59,10 @@
 			<img src="./img/HT-1000.jpg" slot="thumbnail">
 			File name is clickable.
 		</ui5-upload-collection-item>
+		<ui5-upload-collection-item file-name="loooongloooongloooooooooonglllloooooooloooongloooongloooooooooongllllooooooooongnamethatkeepsgoingwithoutendloooong.pdf"
+			upload-state="Complete">
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+		</ui5-upload-collection-item>
 		<ui5-upload-collection-item
 			id="secondItem"
 			file-name=".gitignore"
@@ -118,7 +122,7 @@
 
 	<button id="tabStop1">Tab stop helper</button>
 
-	<ui5-upload-collection id="uploadCollectionDnD">
+	<ui5-upload-collection id="uploadCollectionDnD" no-data-header-level="H3">
 		<div class="header" slot="header">
 			<ui5-title>Attachments (0)</ui5-title>
 			<div class="spacer"></div>
@@ -239,7 +243,7 @@
 	<ui5-upload-collection>
         <ui5-upload-collection-item file-name="LaptopHT-1000.jpg" upload-state="Complete">
             uploadState="Complete"
-            <img src="https://sap.github.io/ui5-webcomponents/nightly/images/HT-1000.jpg" slot="thumbnail">
+            <img src="https://ui5.github.io/webcomponents/nightly/images/HT-1000.jpg" slot="thumbnail">
         </ui5-upload-collection-item>
     </ui5-upload-collection>
 </body>

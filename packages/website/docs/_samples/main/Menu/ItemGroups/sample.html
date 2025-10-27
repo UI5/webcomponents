@@ -1,0 +1,47 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 350px">
+    <!-- playground-fold-end -->
+
+	<ui5-button id="btnOpenGroups">Open Menu</ui5-button>
+	<ui5-menu id="menuGroups" header-text="My ui5-menu">
+		<ui5-menu-item text="New Paragraph" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Text"></ui5-menu-item>
+
+		<ui5-menu-separator></ui5-menu-separator>
+
+		<ui5-menu-item-group check-mode="Single">
+			<ui5-menu-item text="Left Alignment" icon="text-align-left" checked></ui5-menu-item>
+			<ui5-menu-item text="Center Alignment" icon="text-align-center" checked></ui5-menu-item>
+			<ui5-menu-item text="Right Alignment" icon="text-align-right" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+
+		<ui5-menu-separator></ui5-menu-separator>
+
+		<ui5-menu-item-group check-mode="Multiple">
+			<ui5-menu-item text="Bold" icon="bold-text" checked>
+				<ui5-button id="newLock2" slot="endContent" icon="locked" design="Transparent"></ui5-button>
+			</ui5-menu-item>
+			<ui5-menu-item text="Italic" icon="italic-text" additional-text="Cursive Text" checked></ui5-menu-item>
+			<ui5-menu-item text="Underline" icon="underline-text" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+
+		<ui5-menu-separator></ui5-menu-separator>
+
+		<ui5-menu-item text="Exit"></ui5-menu-item>
+	</ui5-menu>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

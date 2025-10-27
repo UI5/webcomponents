@@ -2,7 +2,9 @@ import type Dialog from "../../../src/Dialog.js";
 import { isPopupOpen } from "./utils/popup-open.js";
 
 Cypress.Commands.add("ui5DialogOpened", { prevSubject: true }, (subject: JQuery<Dialog>) => {
-	isPopupOpen(subject);
+	isPopupOpen(() =>
+		cy.wrap(subject)
+	);
 });
 
 declare global {

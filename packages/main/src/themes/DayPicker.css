@@ -35,8 +35,13 @@
 	height: var(--_ui5_day_picker_item_height);
 	margin-block-start: var(--_ui5_daypicker_item_margin);
 	margin-inline-end: var(--_ui5_daypicker_item_margin);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	border-radius: var(--_ui5_daypicker_item_border_radius);
+}
+
+.ui5-dp-weekname,
+.ui5-dp-dayname {
+	cursor: default;
 }
 
 .ui5-dp-weekname {
@@ -51,7 +56,7 @@
 	display: flex;
 	flex-basis: 87.5%;
 	flex-direction: column;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 }
 
 .ui5-dp-days-names-container {
@@ -211,7 +216,7 @@
 }
 
 .ui5-dp-item.ui5-dp-item--selected:hover {
-	background: var( --_ui5_daypicker_item_selected_hover);
+	background: var(--_ui5_daypicker_item_selected_hover);
 	color: var(--sapContent_ContrastTextColor);
 }
 
@@ -355,7 +360,7 @@
 }
 
 .ui5-dp-item:not(:focus).ui5-dp-item--selected.ui5-dp-item--now .ui5-dp-specialday {
-	border-end-end-radius: var(--_ui5_daypicker_special_day_selected_border_radius_bottom); 
+	border-end-end-radius: var(--_ui5_daypicker_special_day_selected_border_radius_bottom);
 	border-end-start-radius: var(--_ui5_daypicker_special_day_selected_border_radius_bottom);
 }
 

@@ -1,9 +1,11 @@
+import Button from "@ui5/webcomponents/dist/Button.js";
 import SearchField from "../../src/SearchField.js";
 import SearchScope from "../../src/SearchScope.js";
 import {
 	SEARCH_FIELD_SCOPE_SELECT_LABEL,
 	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
+	SEARCH_FIELD_LABEL
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("SearchField general interaction", () => {
@@ -39,6 +41,24 @@ describe("SearchField general interaction", () => {
 				.shadow()
 				.find("input")
 				.should("have.attr", "aria-label", attributeValue);
+		});
+
+		it("accessibleName should have default value if not set", () => {
+			cy.mount(<SearchField></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("input")
+				.should("have.attr", "aria-label", SEARCH_FIELD_LABEL.defaultText);
+		});
+
+		it("accessibleDescription should propagate if set", () => {
+			cy.mount(<SearchField accessibleDescription="Test"></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("input")
+				.should("have.attr", "aria-description", "Test");
 		});
 	});
 
@@ -403,6 +423,46 @@ describe("SearchField general interaction", () => {
 
 			cy.get("@scopeChanged")
 				.should("have.been.calledOnce");
+		});
+	});
+
+	describe("SearchField - Filter button and Scope Slot Rendering", () => {
+		it("renders the filter button slot content when only advanced filtering is provided", () => {
+			cy.mount(
+				<SearchField value="test">
+					<Button slot="filterButton" icon="filter"></Button>
+				</SearchField>
+			);
+
+			cy.get("[ui5-search-field]").as("searchField");
+
+			cy.get("@searchField")
+				.shadow()
+				.find('slot[name="filterButton"]')
+				.should("exist");
+		});
+
+		it("renders the scope selector and omits advanced fliter button slot when both are provided", () => {
+			cy.mount(
+				<SearchField>
+					<Button slot="filterButton" icon="filter"></Button>
+					<SearchScope text="All" slot="scopes"></SearchScope>
+					<SearchScope text="Apps" selected slot="scopes"></SearchScope>
+				</SearchField>
+			);
+
+			cy.get("[ui5-search-field]")
+				.as("searchField");
+
+			cy.get("@searchField")
+				.shadow()
+				.find("[ui5-select]")
+				.should("exist");
+
+			cy.get("@searchField")
+				.shadow()
+				.find('slot[name="filterButton"]')
+				.should("not.exist");
 		});
 	});
 });

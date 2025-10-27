@@ -6,3 +6,4 @@ node_modules/
 used-modules.txt
 bundle.esm.js
 lib/
+cypress/

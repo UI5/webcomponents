@@ -20,6 +20,62 @@
 
 
 	<link rel="stylesheet" type="text/css" href="./styles/Calendar.css">
+
+	<style>
+		/* Shadow Parts Demo Styles */
+		.shadow-parts-demo::part(month-picker-root) {
+			background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+			border: 2px solid #2196f3;
+			border-radius: 8px;
+		}
+
+		.shadow-parts-demo::part(year-picker-root) {
+			background: linear-gradient(135deg, #fff3e0, #ffcc02);
+			border: 2px solid #ff9800;
+			border-radius: 8px;
+		}
+
+		.shadow-parts-demo::part(calendar-header-middle-button) {
+			background: #9c27b0;
+			color: white;
+			border-radius: 6px;
+			border: 2px solid #7b1fa2;
+		}
+
+		.header-parts-demo::part(calendar-header-arrow-button) {
+			color: #354a5f;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			min-width: 36px;
+			min-height: 36px;
+		}
+
+		.header-parts-demo::part(calendar-header-arrow-button):hover {
+			border-color: #9ca3af;
+		}
+
+		.header-parts-demo::part(year-range-picker-root) {
+			padding: 20px 24px;
+			background: #fafbfc;
+			border: 1px solid #e1e5e9;
+			border-radius: 8px;
+			margin: 4px;
+		}
+
+		.header-parts-demo::part(calendar-header-middle-button) {
+			background: #ffffff;
+			border: 1px solid #d1d5db;
+			color: #374151;
+			padding: 8px 16px;
+			border-radius: 6px;
+		}
+
+		.header-parts-demo::part(calendar-header-middle-button):hover {
+			background: #f9fafb;
+			border-color: #9ca3af;
+			color: #111827;
+		}
+	</style>
 </head>
 <body class="calendar1auto">
 
@@ -101,6 +157,17 @@
 		<ui5-calendar id="calendar10" calendar-week-numbering="WesternTraditional">
 			<ui5-date value="Jan 1, 2023"></ui5-date>
 		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Shadow Parts Demo - Custom Picker Styling</ui5-title>
+		<p>Use F4 (month view) or Shift+F4 (year view) to see custom picker backgrounds</p>
+		<ui5-calendar class="shadow-parts-demo"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Shadow Parts Demo - Custom Header Buttons</ui5-title>
+		<ui5-calendar class="header-parts-demo"></ui5-calendar>
 	</section>
 
 </body>

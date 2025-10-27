@@ -13,7 +13,13 @@ import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsF
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getAllAccessibleNameRefTexts,
+	getEffectiveAriaDescriptionText,
+	getAllAccessibleDescriptionRefTexts,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js"; // default calendar for bundling
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
@@ -45,6 +51,7 @@ import {
 	TIMEPICKER_CANCEL_BUTTON,
 	TIMEPICKER_INPUT_DESCRIPTION,
 	TIMEPICKER_POPOVER_ACCESSIBLE_NAME,
+	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	FORM_TEXTFIELD_REQUIRED,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_INFORMATION,
@@ -92,7 +99,7 @@ type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
  * the input field, it must fit to the used time format.
  *
  * Supported format options are pattern-based on Unicode LDML Date Format notation.
- * For more information, see [UTS #35: Unicode Locale Data Markup Language](http://unicode.org/reports/tr35/#Date_Field_Symbol_Table).
+ * For more information, see [UTS #35: Unicode Locale Data Markup Language](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
  *
  * For example, if the `format-pattern` is "HH:mm:ss",
  * a valid value string is "11:42:35" and the same is displayed in the input.
@@ -294,6 +301,24 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleNameRef?: string;
 
+	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the input.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
+
 	@property({ type: Boolean, noAttribute: true })
 	_isInputsPopoverOpen = false;
 
@@ -348,21 +373,26 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		this.tempValue = this.value && this.isValid(this.value) ? this.value : this.getFormat().format(UI5Date.getInstance());
 	}
 
-	get dateAriaDescription() {
+	get roleDescription() {
 		return TimePicker.i18nBundle.getText(TIMEPICKER_INPUT_DESCRIPTION);
 	}
 
 	get pickerAccessibleName() {
-		return TimePicker.i18nBundle.getText(TIMEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return TimePicker.i18nBundle.getText(TIMEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	get accInfo(): InputAccInfo {
 		return {
-			"ariaRoledescription": this.dateAriaDescription,
-			"ariaHasPopup": "dialog",
+			"ariaRoledescription": this.roleDescription,
+			"ariaHasPopup": "grid",
 			"ariaRequired": this.required,
-			"ariaLabel": getEffectiveAriaLabelText(this),
+			"ariaLabel": this.ariaLabelText || undefined,
+			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
 		};
+	}
+
+	get ariaLabelText() {
+		return getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || "";
 	}
 
 	/**
@@ -374,11 +404,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return this.getFormat().parse(this._effectiveValue) as Date;
 	}
 
+	get _lastAvailableTime() {
+		const date = UI5Date.getInstance();
+		date.setHours(23, 59, 59, 999);
+		return this.getFormat().format(date);
+	}
+
 	/**
 	 * @protected
 	 */
 	get _placeholder() {
-		return this.placeholder !== undefined ? this.placeholder : this._displayFormat;
+		if (this.placeholder) {
+			return this.placeholder;
+		}
+
+		// translatable placeholder – for example "e.g. 23:59:59"
+		return `${TimePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastAvailableTime}`;
 	}
 
 	/**

@@ -2,6 +2,7 @@ import whenDOMReady from "./util/whenDOMReady.js";
 import EventProvider from "./EventProvider.js";
 import insertFontFace from "./FontFace.js";
 import insertSystemCSSVars from "./SystemCSSVars.js";
+import insertScrollbarStyles from "./ScrollbarStyles.js";
 import { getTheme } from "./config/Theme.js";
 import applyTheme from "./theming/applyTheme.js";
 import { registerCurrentRuntime } from "./Runtimes.js";
@@ -67,6 +68,7 @@ const boot = async (): Promise<void> => {
 		openUI5Support && openUI5Support.attachListeners();
 		insertFontFace();
 		insertSystemCSSVars();
+		insertScrollbarStyles();
 		fixSafariActiveState();
 
 		resolve();

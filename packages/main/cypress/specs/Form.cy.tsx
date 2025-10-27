@@ -199,6 +199,27 @@ describe("General API", () => {
 			.and("have.prop", "emptySpanXl", 1);
 	});
 
+	it("tests calculated state of Form item-spacing='Large'", () => {
+		cy.mount(<Form id="addressForm" item-spacing="Large">
+			<FormGroup id="formGroup">
+				<FormItem id="formItem">
+					<Label slot="labelContent">Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+
+				<FormItem>
+					<Label slot="labelContent">Country:</Label>
+					<Text>Germany</Text>
+				</FormItem>
+			</FormGroup>
+		</Form>);
+
+		cy.get("#formGroup")
+			.should("have.prop", "itemSpacing", "Large");
+		cy.get("#formItem")
+			.should("have.prop", "itemSpacing", "Large");
+	});
+
 	it("tests calculated state of two FormGroups in layout='S1 M2 L3 XL4'", () => {
 		cy.mount(<Form headerText="WebC :: Supplier 2gr (S1 M2 L3 XL4)" layout="S1 M2 L3 XL4">
 			<FormGroup id="testFormGroup4" headerText="Address">
@@ -756,7 +777,8 @@ describe("Accessibility", () => {
 		cy.get("@form")
 			.shadow()
 			.find(".ui5-form-root")
-			.should("have.attr", "role", "form");
+			.should("have.attr", "role", "form")
+			.and("not.have.attr", "aria-label", "Form");
 
 		cy.get("@form")
 			.should("have.attr", "data-sap-ui-fastnavgroup", "true");
@@ -770,6 +792,57 @@ describe("Accessibility", () => {
 						expect(ariaLabelledBy).to.equal(id);
 					});
 			});
+	});
+
+	it("tests 'role' and 'aria-label' of form without header", () => {
+		cy.mount(<Form>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Twitter:</Label>
+				<Text>@sap</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+		</Form>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "role", "form")
+			.and("have.attr", "aria-label", "Form");
+	});
+
+	it("tests 'aria-label' via 'accessibleName'", () => {
+		cy.mount(<Form headerText="Form header text" accessibleName="basic form">
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Twitter:</Label>
+				<Text>@sap</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+		</Form>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "aria-label", "basic form");
 	});
 
 	it("tests F6 navigation", () => {
@@ -856,66 +929,4 @@ describe("Accessibility", () => {
 		cy.get("#nameInp")
 			.should("be.focused");
 	});
-});
-
-
-ui5AccDescribe("Automated accessibility tests", () => {
-	it("with header text", () => {
-		cy.mount(
-			<Form headerText="Address">
-				<FormItem>
-					<Label slot="labelContent">Name:</Label>
-					<Text>Red Point Stores</Text>
-				</FormItem>
-				
-				<FormItem>
-					<Label slot="labelContent">ZIP Code/City:</Label>
-					<Text>411 Maintown</Text>
-				</FormItem>
-				
-				<FormItem>
-					<Label slot="labelContent">Street:</Label>
-					<Text>Main St 1618</Text>
-				</FormItem>
-
-				<FormItem>
-					<Label slot="labelContent">Country:</Label>
-					<Text>Germany</Text>
-				</FormItem>
-			</Form>
-		);
-
-		cy.ui5CheckA11y();
-	})
-
-	it("with custom header", () => {
-		cy.mount(
-			<Form>
-				<div slot="header">
-					<Title>Address</Title>
-				</div>
-				<FormItem>
-					<Label slot="labelContent">Name:</Label>
-					<Text>Red Point Stores</Text>
-				</FormItem>
-				
-				<FormItem>
-					<Label slot="labelContent">ZIP Code/City:</Label>
-					<Text>411 Maintown</Text>
-				</FormItem>
-				
-				<FormItem>
-					<Label slot="labelContent">Street:</Label>
-					<Text>Main St 1618</Text>
-				</FormItem>
-
-				<FormItem>
-					<Label slot="labelContent">Country:</Label>
-					<Text>Germany</Text>
-				</FormItem>
-			</Form>
-		);
-
-		cy.ui5CheckA11y();
-	})
 });

@@ -75,11 +75,9 @@
 	height: 100%;
 	position: relative;
 	box-sizing: border-box;
-	padding-inline-end: 0;
 }
 
 :host([layout="Vertical"]) .ui5-timeline-scroll-container {
-	overflow: auto;
 	height: 100%;
 	width: 100%;
 }

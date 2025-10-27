@@ -1,6 +1,0 @@
-@import "../base/ToggleButton-parameters.css";
-
-:root {
-	--_ui5_toggle_button_pressed_focussed: transparent;
-	--_ui5_toggle_button_pressed_focussed_hovered: transparent;
-}

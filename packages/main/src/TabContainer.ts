@@ -34,7 +34,6 @@ import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
 import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import handleDragOver from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDragOver.js";
 import handleDrop from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDrop.js";
-import type { SetDraggedElementFunction } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import longDragOverHandler from "@ui5/webcomponents-base/dist/util/dragAndDrop/longDragOverHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import {
@@ -314,6 +313,8 @@ class TabContainer extends UI5Element {
 	@property({ type: Number, noAttribute: true })
 	_width?: number;
 
+	_dragging = false;
+
 	/**
 	 * Defines the tabs.
 	 *
@@ -354,7 +355,6 @@ class TabContainer extends UI5Element {
 	responsivePopover?: ResponsivePopover;
 	_hasScheduledPopoverOpen = false;
 	_handleResizeBound: () => void;
-	_setDraggedElement?: SetDraggedElementFunction;
 
 	static registerTabStyles(styles: string) {
 		tabStyles.push(styles);
@@ -433,8 +433,6 @@ class TabContainer extends UI5Element {
 
 	onEnterDOM() {
 		ResizeHandler.register(this._getHeader(), this._handleResizeBound);
-		DragRegistry.subscribe(this);
-		this._setDraggedElement = DragRegistry.addSelfManagedArea(this);
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
@@ -442,9 +440,6 @@ class TabContainer extends UI5Element {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this._getHeader(), this._handleResizeBound);
-		DragRegistry.unsubscribe(this);
-		DragRegistry.removeSelfManagedArea(this);
-		this._setDraggedElement = undefined;
 	}
 
 	_handleResize() {
@@ -503,7 +498,7 @@ class TabContainer extends UI5Element {
 		e.dataTransfer.dropEffect = "move";
 		e.dataTransfer.effectAllowed = "move";
 
-		this._setDraggedElement!((e.target as TabInStrip).realTabReference);
+		DragRegistry.setDraggedElement((e.target as TabInStrip).realTabReference);
 	}
 
 	_onHeaderDragEnter(e: DragEvent) {
@@ -563,9 +558,11 @@ class TabContainer extends UI5Element {
 	}
 
 	_moveHeaderItem(tab: Tab, e: KeyboardEvent) {
-		if (!tab.movable) {
+		if (!tab.movable || this._dragging) {
 			return;
 		}
+
+		this._dragging = true;
 
 		const headerItems = this.items.map(item => item.getDomRefInStrip())
 			.filter((item): item is TabInStrip => !item?.hasAttribute("hidden"));
@@ -611,7 +608,11 @@ class TabContainer extends UI5Element {
 				},
 			});
 
-			tab.focus();
+			tab.focus().then(() => {
+				this._dragging = false;
+			});
+		} else {
+			this._dragging = false;
 		}
 	}
 
@@ -716,7 +717,7 @@ class TabContainer extends UI5Element {
 
 	_onPopoverListKeyDown(e: KeyboardEvent) {
 		if (isCtrl(e)) {
-			this._setDraggedElement!((e.target as TabInOverflow).realTabReference);
+			DragRegistry.setDraggedElement((e.target as TabInOverflow).realTabReference);
 		}
 	}
 
@@ -991,9 +992,28 @@ class TabContainer extends UI5Element {
 
 		const itemsDomRefs = this.items.map(item => item.getDomRefInStrip()) as Array<TabInStrip | TabSeparatorInStrip>;
 
+		let allVisibleItemsWidth = 0;
+
+		const selectedTab = this._getRootTab(this._selectedTab);
+		const containerWidth = this._getTabStrip().offsetWidth;
+		const selectedTabDomRef = selectedTab?.getDomRefInStrip() as TabInStrip | undefined;
+		const visibleItemsDomRefs = itemsDomRefs.filter(item => !item.hidden);
+
+		visibleItemsDomRefs.forEach(item => {
+			allVisibleItemsWidth += this._getItemWidth(item);
+		});
+
+		const changeTabPosition = visibleItemsDomRefs.length !== itemsDomRefs.length && this.isModeStartAndEnd && selectedTabDomRef && visibleItemsDomRefs.indexOf(selectedTabDomRef) !== -1 && allVisibleItemsWidth < containerWidth && this._getItemWidth(selectedTabDomRef) < containerWidth;
+
 		// make sure the overflows are hidden
 		this._getStartOverflow().setAttribute("hidden", "");
 		this._getEndOverflow().setAttribute("hidden", "");
+
+		let firstVisibleIndex;
+
+		if (changeTabPosition) {
+			firstVisibleIndex = itemsDomRefs.indexOf(visibleItemsDomRefs[0]);
+		}
 
 		// show all tabs
 		for (let i = 0; i < itemsDomRefs.length; i++) {
@@ -1012,20 +1032,20 @@ class TabContainer extends UI5Element {
 		}
 
 		if (this.isModeStartAndEnd) {
-			this._updateStartAndEndOverflow(itemsDomRefs);
+			this._updateStartAndEndOverflow(itemsDomRefs, firstVisibleIndex);
 			this._updateOverflowCounters();
 		} else {
 			this._updateEndOverflow(itemsDomRefs);
 		}
 	}
 
-	_getRootTab(tab: Tab | undefined) {
+	_getRootTab(tab: Tab | undefined): Tab | undefined {
 		while (tab?.hasAttribute("ui5-tab")) {
-			if (tab.parentElement!.hasAttribute("ui5-tabcontainer")) {
+			if (tab.parentElement?.hasAttribute("ui5-tabcontainer")) {
 				break;
 			}
 
-			tab = tab.parentElement as Tab;
+			tab = (tab.parentElement ?? undefined) as Tab | undefined;
 		}
 
 		return tab;
@@ -1049,14 +1069,13 @@ class TabContainer extends UI5Element {
 		this._endOverflowText = this.overflowButtonText;
 	}
 
-	_updateStartAndEndOverflow(itemsDomRefs: Array<TabInStrip | TabSeparatorInStrip>) {
+	_updateStartAndEndOverflow(itemsDomRefs: Array<TabInStrip |TabSeparatorInStrip>, firstVisibleIndex?: number) {
 		let containerWidth = this._getTabStrip().offsetWidth;
 		const selectedTab = this._getRootTab(this._selectedTab);
 		const selectedTabDomRef = selectedTab?.getDomRefInStrip() as TabInStrip | undefined;
 		const selectedItemIndexAndWidth = this._getSelectedItemIndexAndWidth(itemsDomRefs, selectedTabDomRef);
 		const hasStartOverflow = this._hasStartOverflow(containerWidth, itemsDomRefs, selectedItemIndexAndWidth);
 		const hasEndOverflow = this._hasEndOverflow(containerWidth, itemsDomRefs, selectedItemIndexAndWidth);
-		let firstVisible;
 		let lastVisible;
 
 		// has "end", but no "start" overflow
@@ -1083,9 +1102,11 @@ class TabContainer extends UI5Element {
 			// width is changed
 			containerWidth = this._getTabStrip().offsetWidth;
 
-			firstVisible = this._findFirstVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width);
+			if (!firstVisibleIndex) {
+				firstVisibleIndex = this._findFirstVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width);
+			}
 
-			for (let i = firstVisible - 1; i >= 0; i--) {
+			for (let i = firstVisibleIndex - 1; i >= 0; i--) {
 				itemsDomRefs[i].setAttribute("hidden", "");
 				itemsDomRefs[i].setAttribute("start-overflow", "");
 			}
@@ -1100,10 +1121,12 @@ class TabContainer extends UI5Element {
 		// width is changed
 		containerWidth = this._getTabStrip().offsetWidth;
 
-		firstVisible = this._findFirstVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width, selectedItemIndexAndWidth.index - 1);
-		lastVisible = this._findLastVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width, firstVisible);
+		if (!firstVisibleIndex) {
+			firstVisibleIndex = this._findFirstVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width, selectedItemIndexAndWidth.index - 1);
+		}
+		lastVisible = this._findLastVisibleItem(itemsDomRefs, containerWidth, selectedItemIndexAndWidth.width, firstVisibleIndex);
 
-		for (let i = firstVisible - 1; i >= 0; i--) {
+		for (let i = firstVisibleIndex - 1; i >= 0; i--) {
 			itemsDomRefs[i].setAttribute("hidden", "");
 			itemsDomRefs[i].setAttribute("start-overflow", "");
 		}
@@ -1115,6 +1138,10 @@ class TabContainer extends UI5Element {
 	}
 
 	_hasStartOverflow(containerWidth: number, itemsDomRefs: Array<TabInStrip | TabSeparatorInStrip>, selectedItemIndexAndWidth: { width: number; index: number}) {
+		if (this._getStartOverflow().textContent !== "+0") {
+			return true;
+		}
+
 		if (selectedItemIndexAndWidth.index === 0) {
 			return false;
 		}

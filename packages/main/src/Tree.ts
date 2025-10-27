@@ -2,11 +2,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import handleDragOver from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDragOver.js";
-import handleDrop from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDrop.js";
-import { findClosestPosition } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
+import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -183,13 +179,32 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
 @event("selection-change", {
 	bubbles: true,
 })
+
+/**
+ * Fired when a movable tree item is moved over a potential drop target during a drag-and-drop operation.
+ *
+ * If the new position is valid, prevent the default action of the event using `preventDefault()`.
+ * @param {object} source Contains information about the moved element under the `element` property.
+ * @param {object} destination Contains information about the destination of the moved element. Has `element` and `placement` properties.
+ * @public
+ */
 @event("move", {
 	bubbles: true,
 })
+
+/**
+ * Fired when a movable tree item is dropped onto a drop target.
+ *
+ * **Note:** The `move` event is fired only if there was a preceding `move-over` event with prevented default action.
+ * @param {object} source Contains information about the moved element under the `element` property.
+ * @param {object} destination Contains information about the destination of the moved element. Has `element` and `placement` properties.
+ * @public
+ */
 @event("move-over", {
 	bubbles: true,
 	cancelable: true,
 })
+
 class Tree extends UI5Element {
 	eventDetails!: {
 		"item-toggle": TreeItemToggleEventDetail,
@@ -292,12 +307,20 @@ class Tree extends UI5Element {
 	@slot()
 	header!: Array<HTMLElement>;
 
-	onEnterDOM() {
-		DragRegistry.subscribe(this);
-	}
+	_dragAndDropHandler: DragAndDropHandler;
 
-	onExitDOM() {
-		DragRegistry.unsubscribe(this);
+	constructor() {
+		super();
+
+		// Initialize the DragAndDropHandler with the necessary configurations
+		// The handler will manage the drag and drop operations for the tree items.
+		this._dragAndDropHandler = new DragAndDropHandler(this, {
+			getItems: this._getItems.bind(this),
+			getDropIndicator: () => this.dropIndicatorDOM,
+			transformElement: this._transformElement.bind(this),
+			validateDraggedElement: this._validateDraggedElement.bind(this),
+			filterPlacements: this._filterPlacements.bind(this),
+		});
 	}
 
 	onBeforeRendering() {
@@ -327,56 +350,19 @@ class Tree extends UI5Element {
 	}
 
 	_ondragenter(e: DragEvent) {
-		e.preventDefault();
+		this._dragAndDropHandler.ondragenter(e);
 	}
 
 	_ondragleave(e: DragEvent) {
-		if (e.relatedTarget instanceof Node && this.shadowRoot!.contains(e.relatedTarget)) {
-			return;
-		}
-
-		this.dropIndicatorDOM!.targetReference = null;
+		this._dragAndDropHandler.ondragleave(e);
 	}
 
 	_ondragover(e: DragEvent) {
-		const draggedElement = DragRegistry.getDraggedElement();
-		const allLiNodesTraversed: Array<HTMLElement> = []; // use the only <li> nodes to determine positioning
-		if (!(e.target instanceof HTMLElement) || !draggedElement) {
-			return;
-		}
-
-		this.walk(item => {
-			allLiNodesTraversed.push(item.shadowRoot!.querySelector("li")!);
-		});
-
-		const closestPosition = findClosestPosition(
-			allLiNodesTraversed,
-			e.clientY,
-			Orientation.Vertical,
-		);
-
-		if (!closestPosition) {
-			this.dropIndicatorDOM!.targetReference = null;
-			return;
-		}
-
-		closestPosition.element = <HTMLElement>(<ShadowRoot>closestPosition.element.getRootNode()).host;
-		if (draggedElement.contains(closestPosition.element)) { return; }
-		if (closestPosition.element === draggedElement) {
-			closestPosition.placements = closestPosition.placements.filter(placement => placement !== MovePlacement.On);
-		}
-
-		const { targetReference, placement } = handleDragOver(e, this, closestPosition, closestPosition.element);
-		this.dropIndicatorDOM!.targetReference = targetReference;
-		this.dropIndicatorDOM!.placement = placement;
+		this._dragAndDropHandler.ondragover(e);
 	}
 
 	_ondrop(e: DragEvent) {
-		if (!this.dropIndicatorDOM?.targetReference || !this.dropIndicatorDOM?.placement) {
-			return;
-		}
-		handleDrop(e, this, this.dropIndicatorDOM.targetReference, this.dropIndicatorDOM.placement);
-		this.dropIndicatorDOM.targetReference = null;
+		this._dragAndDropHandler.ondrop(e);
 	}
 
 	_onListItemStepIn(e: CustomEvent<TreeItemBaseStepInEventDetail>) {
@@ -440,6 +426,10 @@ class Tree extends UI5Element {
 	}
 
 	_onListSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		if (!e.detail || !e.detail.previouslySelectedItems || !e.detail.selectedItems) {
+			return;
+		}
+
 		const previouslySelectedItems = e.detail.previouslySelectedItems as Array<TreeItemBase>;
 		const selectedItems = e.detail.selectedItems as Array<TreeItemBase>;
 		const targetItem = e.detail.targetItem as TreeItemBase;
@@ -506,6 +496,32 @@ class Tree extends UI5Element {
 	 */
 	walk(callback: WalkCallback): void {
 		walkTree(this, 1, callback);
+	}
+
+	_getItems(): Array<HTMLElement> {
+		const allLiNodesTraversed: Array<HTMLElement> = [];
+		this.walk(item => {
+			allLiNodesTraversed.push(item.shadowRoot!.querySelector("li")!);
+		});
+		return allLiNodesTraversed;
+	}
+
+	_transformElement(element: HTMLElement): HTMLElement {
+		// Get the host element from shadow DOM
+		return <HTMLElement>(<ShadowRoot>element.getRootNode()).host;
+	}
+
+	_validateDraggedElement(draggedElement: HTMLElement, targetElement: HTMLElement): boolean {
+		// Don't allow dropping on itself or its children
+		return !draggedElement.contains(targetElement);
+	}
+
+	_filterPlacements(placements: MovePlacement[], draggedElement: HTMLElement, targetElement: HTMLElement): MovePlacement[] {
+		// Filter out MovePlacement.On when dragged element is the same as target
+		if (targetElement === draggedElement) {
+			return placements.filter(placement => placement !== MovePlacement.On);
+		}
+		return placements;
 	}
 
 	_isInstanceOfTreeItemBase(object: any): object is TreeItemBase {

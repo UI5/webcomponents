@@ -21,6 +21,11 @@ export function mount(component: JSX.Element, options: Options = {}) {
 		.should($el => {
 			const shadowrootsExist = [...$el].every(el => {
 				if (el.tagName.includes("-") && el.shadowRoot) {
+					if ("getDomRef" in el) {
+						// @ts-expect-error
+						return el.getDomRef();
+					}
+
 					return el.shadowRoot.hasChildNodes();
 				}
 

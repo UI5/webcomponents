@@ -6,6 +6,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import type FormItem from "./FormItem.js";
 import type { IFormItem } from "./Form.js";
 import type FormItemSpacing from "./types/FormItemSpacing.js";
+import type TitleLevel from "./types/TitleLevel.js";
 
 /**
  * @class
@@ -46,6 +47,16 @@ class FormGroup extends UI5Element implements IFormItem {
 	 */
 	@property()
 	headerText?: string;
+
+	/**
+	 * Defines the compoennt heading level,
+	 * set by the `headerText`.
+	 * @default "H3"
+	 * @public
+	 * @since 2.10.0
+	*/
+	@property()
+	headerLevel: `${TitleLevel}` = "H3";
 
 	/**
 	 * Defines column span of the component,

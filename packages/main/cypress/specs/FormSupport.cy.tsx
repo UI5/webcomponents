@@ -19,6 +19,7 @@ import StepInput from "../../src/StepInput.js";
 import Switch from "../../src/Switch.js";
 import TextArea from "../../src/TextArea.js";
 import TimePicker from "../../src/TimePicker.js";
+import Tokenizer from "../../src/Tokenizer.js";
 
 const getFormData = ($form: HTMLFormElement) => {
 	const formData = new FormData($form);
@@ -32,10 +33,11 @@ describe("Form support", () => {
 	it("ui5-checkbox in form", () => {
 		cy.mount(<form method="get">
 			<CheckBox id="cb1" text="ui5-checkbox without name" > </CheckBox>
-			<CheckBox id="cb2" text="ui5-checkbox without name and value" checked > </CheckBox>
-			<CheckBox id="cb3" name="checkbox3" text="ui5-checkbox with name and without value" > </CheckBox>
-			<CheckBox id="cb4" name="checkbox4" checked text="ui5-checkbox with name and value" > </CheckBox>
-			<CheckBox id="cb5" name="checkbox5" required text="ui5-checkbox with name, value and required" > </CheckBox>
+			<CheckBox id="cb2" text="checked ui5-checkbox without name" checked > </CheckBox>
+			<CheckBox id="cb3" name="checkbox3" text="unchecked ui5-checkbox with name" > </CheckBox>
+			<CheckBox id="cb4" name="checkbox4" checked text="checked ui5-checkbox with name" > </CheckBox>
+			<CheckBox id="cb5" name="checkbox5" required text="unchecked ui5-checkbox with name and required" > </CheckBox>
+			<CheckBox id="cb6" name="checkbox6" checked required value="checkbox6Value" text="checked ui5-checkbox with name and value and required" > </CheckBox>
 			<button type="submit" > Submits forms </button>
 		</form>);
 
@@ -64,7 +66,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "checkbox4=on&checkbox5=on");
+			.should("be.equal", "checkbox4=on&checkbox5=on&checkbox6=checkbox6Value");
 	});
 
 	it("ui5-color-picker in form", () => {
@@ -422,6 +424,57 @@ describe("Form support", () => {
 			.should("be.equal", "multi_input5=&multi_input6=ok&multi_input7=&multi_input7=ok&multi_input8=ok&multi_input8=ok&multi_input9=ok&multi_input10=ok&multi_input11=&multi_input11=ok&multi_input12=ok&multi_input12=ok");
 	});
 
+	it("ui5-tokenizer in form", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags">
+					<Token text="Apple"></Token>
+					<Token text="Banana"></Token>
+				</Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "tags=Apple&tags=Banana");
+	});
+
+	it("ui5-tokenizer does not submit anything if no tokens", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags"></Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "");
+	});
+
 	it("ui5-radio-button in form 1", () => {
 		cy.mount(<form method="get">
 			<RadioButton id="rb_1" required name="rb1"></RadioButton>
@@ -762,6 +815,7 @@ describe("Form support", () => {
 			<Switch id="switch2" textOn="ui5-switch without name and value" checked></Switch>
 			<Switch id="switch3" name="switch3" textOn="ui5-switch with name and without value"></Switch>
 			<Switch id="switch4" name="switch4" checked textOn="ui5-switch with name and value"></Switch>
+			<Switch id="switch6" name="switch6" value="test"></Switch>
 			<Switch id="switch5" name="switch5" required textOn="ui5-switch with name, value and required"></Switch>
 			<button type="submit">Submits forms</button>
 		</form>);
@@ -778,6 +832,9 @@ describe("Form support", () => {
 		cy.get("@submit")
 			.should("have.not.been.called");
 
+		cy.get("#switch6")
+			.realClick();
+
 		cy.get("#switch5")
 			.realClick();
 
@@ -791,7 +848,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "switch4=on&switch5=on");
+			.should("be.equal", "switch4=on&switch6=test&switch5=on");
 	});
 
 	it("ui5-textarea in form", () => {
@@ -873,6 +930,39 @@ describe("Form support", () => {
 				return getFormData($el.get(0));
 			})
 			.should("be.equal", "time_picker3=ok&time_picker4=1:10:10 PM");
+	});
+
+	it("Button's click doesn't submit form on prevent default", () => {
+		cy.mount(<form method="get">
+			<Button id="b1" type="Submit">Preventable button</Button>
+		</form>);
+
+		cy.get("#b1")
+			.then($item => {
+				$item.get(0).addEventListener("ui5-click", e => e.preventDefault());
+				$item.get(0).addEventListener("ui5-click", cy.stub().as("click"));
+			});
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", e => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#b1")
+			.realClick();
+
+		cy.get("#b1")
+			.realPress("Enter");
+
+		cy.get("#b1")
+			.realPress("Space");
+
+		cy.get("@click")
+			.should("have.been.calledThrice");
+
+		cy.get("@submit")
+			.should("have.not.been.called");
 	});
 
 	it("Normal button does not submit forms", () => {

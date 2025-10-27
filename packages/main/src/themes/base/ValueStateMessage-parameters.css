@@ -16,6 +16,10 @@
 	--_ui5_value_state_header_box_shadow_success: inset 0 -0.0625rem var(--sapField_SuccessColor);
 	--_ui5_value_state_header_box_shadow_warning: inset 0 -0.0625rem var(--sapField_WarningColor);
 	--_ui5_value_state_message_line_height: 1rem;
+	--_ui5_value_state_message_popover_header_min_height: 2rem;
+	--_ui5_value_state_message_popover_header_min_width: 6rem;
+	--_ui5_value_state_message_popover_header_max_width: 22rem;
+	--_ui5_value_state_message_popover_header_width: auto;
 	--_ui5_value_state_message_icon_offset_phone: 1rem;
 	--_ui5_value_state_header_border_bottom: none;
 }

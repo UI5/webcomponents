@@ -1,3 +1,4 @@
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -6,11 +7,7 @@ import type ButtonDesign from "./types/ButtonDesign.js";
 
 import ToolbarItem from "./ToolbarItem.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
-import ToolbarPopoverButtonTemplate from "./ToolbarPopoverButtonTemplate.js";
-
-import ToolbarButtonPopoverCss from "./generated/themes/ToolbarButtonPopover.css.js";
-
-import { registerToolbarItem } from "./ToolbarRegistry.js";
+import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
 type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 
@@ -31,7 +28,9 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
  */
 @customElement({
 	tag: "ui5-toolbar-button",
-	styles: ToolbarButtonPopoverCss,
+	template: ToolbarButtonTemplate,
+	renderer: jsxRenderer,
+	styles: [ToolbarButtonCss],
 })
 
 /**
@@ -156,31 +155,11 @@ class ToolbarButton extends ToolbarItem {
 	@property()
 	width?: string;
 
-	/**
-     * Defines if the toolbar button is hidden.
-     * @private
-     * @default false
-     */
-	@property({ type: Boolean })
-	hidden = false;
-
 	get styles() {
 		return {
 			width: this.width,
 			display: this.hidden ? "none" : "inline-block",
 		};
-	}
-
-	get containsText() {
-		return true;
-	}
-
-	static get toolbarTemplate() {
-		return ToolbarButtonTemplate;
-	}
-
-	static get toolbarPopoverTemplate() {
-		return ToolbarPopoverButtonTemplate;
 	}
 
 	onClick(e: Event) {
@@ -190,9 +169,19 @@ class ToolbarButton extends ToolbarItem {
 			this.fireDecoratorEvent("close-overflow");
 		}
 	}
-}
 
-registerToolbarItem(ToolbarButton);
+	/**
+	 * @override
+	 */
+	get classes() {
+		return {
+			root: {
+				...super.classes.root,
+				"ui5-tb-button": true,
+			},
+		};
+	}
+}
 
 ToolbarButton.define();
 

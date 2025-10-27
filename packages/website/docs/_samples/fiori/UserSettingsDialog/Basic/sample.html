@@ -16,11 +16,14 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
 <!-- playground-fold-end -->
-<ui5-shellbar id="shellbar" primary-title="Corporate Portal">
+<ui5-shellbar id="shellbar">
+	<ui5-shellbar-branding slot="branding">
+		Corporate Portal
+		<img slot="logo" src="../assets/images/sap-logo-svg.svg"/>
+	</ui5-shellbar-branding>
 	<ui5-avatar slot="profile">
 		<img src="../assets/images/avatars/man_avatar_3.png"/>
 	</ui5-avatar>
-	<img slot="logo" src="../assets/images/sap-logo-svg.svg"/>
 </ui5-shellbar>
 <ui5-user-menu id="userMenuShellBar">
 	<ui5-user-menu-account slot="accounts"

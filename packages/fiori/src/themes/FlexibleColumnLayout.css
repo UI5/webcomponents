@@ -29,6 +29,10 @@
 	transition: width 560ms cubic-bezier(0.1, 0, 0.05, 1), visibility 560ms ease-in;
 }
 
+.ui5-fcl-column:not(.ui5-fcl-column-collapse-animation) {
+	min-width: 15.5rem; /* as noted in our documentation */
+}
+
 .ui5-fcl-column--hidden {
 	display: none;
 }

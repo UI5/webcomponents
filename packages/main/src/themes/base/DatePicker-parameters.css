@@ -1,7 +1,4 @@
 :root {
-	--_ui5_datepicker_icon_border: none;
 	--_ui5-datepicker_border_radius: 0;
 	--_ui5-datepicker-hover-background: var(--sapField_Hover_Background);
-	--_ui5-datepicker_icon_border_radius: 0;
-    
 }

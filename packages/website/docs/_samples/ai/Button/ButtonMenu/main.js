@@ -8,27 +8,38 @@ var generationId;
 
 function startGeneration(button) {
 	console.warn("startGeneration");
-	generationId = setTimeout(function() {
+	generationId = setTimeout(function () {
 		console.warn("Generation completed");
 		button.state = "revise";
+		button.accessibilityAttributes = {
+			root: {
+				hasPopup: "menu",
+				roleDescription: "Menu Button"
+			}
+		};
 	}, 3000);
 }
 
-function stopGeneration() {
+function stopGeneration(button) {
 	console.warn("stopGeneration");
 	clearTimeout(generationId);
+	button.accessibilityAttributes = {
+		root: {
+			hasPopup: "false"
+		}
+	};
 }
 
 function aiButtonClickHandler(evt) {
 	var button = evt.target;
-	switch(button.state) {
+	switch (button.state) {
 		case "generate":
 			button.state = "generating";
 			startGeneration(button);
 			break;
 		case "generating":
 			button.state = "generate";
-			stopGeneration();
+			stopGeneration(button);
 			break;
 		case "revise":
 			menu.opener = button;
@@ -39,7 +50,7 @@ function aiButtonClickHandler(evt) {
 
 myAiButton.addEventListener("click", aiButtonClickHandler);
 
-menu.addEventListener("item-click", function(evt) {
+menu.addEventListener("item-click", function (evt) {
 	var button = menu.opener;
 	if (evt.detail.text === "Regenerate") {
 		button.state = "generating";

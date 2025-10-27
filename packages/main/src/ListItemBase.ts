@@ -146,11 +146,11 @@ class ListItemBase extends UI5Element implements ITabbable {
 			return;
 		}
 
-		if (isSpace(e)) {
+		if (this._isSpace(e)) {
 			e.preventDefault();
 		}
 
-		if (isEnter(e)) {
+		if (this._isEnter(e)) {
 			this.fireItemPress(e);
 		}
 	}
@@ -159,7 +159,7 @@ class ListItemBase extends UI5Element implements ITabbable {
 		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
 			return;
 		}
-		if (isSpace(e)) {
+		if (this._isSpace(e)) {
 			this.fireItemPress(e);
 		}
 	}
@@ -169,6 +169,20 @@ class ListItemBase extends UI5Element implements ITabbable {
 			return;
 		}
 		this.fireItemPress(e);
+	}
+
+	/**
+	 * Override from subcomponent, if needed
+	 */
+	_isSpace(e: KeyboardEvent) {
+		return isSpace(e);
+	}
+
+	/**
+	 * Override from subcomponent, if needed
+	 */
+	_isEnter(e: KeyboardEvent) {
+		return isEnter(e);
 	}
 
 	fireItemPress(e: Event) {
@@ -247,6 +261,10 @@ class ListItemBase extends UI5Element implements ITabbable {
 			return 0;
 		}
 		return this.forcedTabIndex ? parseInt(this.forcedTabIndex) : undefined;
+	}
+
+	get isListItemBase() {
+		return true;
 	}
 }
 

@@ -1,3 +1,6 @@
+import Bar from "../../src/Bar.js";
+import Button from "../../src/Button.js";
+import Dialog from "../../src/Dialog.js";
 import Link from "../../src/Link.js";
 
 describe("General API", () => {
@@ -212,5 +215,49 @@ describe("General API", () => {
 			.shadow()
 			.find("[ui5-icon]")
 			.should("exist");
+	});
+
+	it("should open the dialog when the link is clicked", () => {
+		cy.mount(<>
+				<Link>Sign in</Link>
+				<Dialog>
+					<Button ></Button>
+				</Dialog>
+			</>
+		);
+
+		cy.get("[ui5-link]")
+			.as("signInLink");
+
+		cy.get("[ui5-dialog]")
+			.as("signInDialog");
+
+		cy.get("@signInDialog")
+			.should("not.be.visible");
+	
+		cy.get("@signInLink")
+			.then($link => {
+				$link[0].addEventListener("click", () => {
+					(document.querySelector("ui5-dialog") as Dialog).open = true;
+				});
+			});
+
+		cy.get("@signInDialog")
+			.find("[ui5-button]")
+			.then($button => {
+				$button[0].addEventListener("click", () => {
+					(document.querySelector("ui5-dialog") as Dialog).open = false;
+			});
+		});
+
+		cy.get("@signInLink")
+			.shadow()
+			.find("a")
+			.focus()
+			.should("be.focused")
+			.realPress("Enter");
+
+		cy.get("@signInDialog")
+			.should("be.visible");
 	});
 });

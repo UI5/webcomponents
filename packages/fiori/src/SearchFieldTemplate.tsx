@@ -7,9 +7,16 @@ import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 
-export default function SearchFieldTemplate(this: SearchField) {
+export type SearchFieldTemplateOptions = {
+	/**
+	 * If set to true, the search field will be expanded.
+	 */
+	forceExpanded?: boolean;
+};
+
+export default function SearchFieldTemplate(this: SearchField, options?: SearchFieldTemplateOptions) {
 	return (
-		this.collapsed ? (
+		!options?.forceExpanded && this.collapsed ? (
 			<Button
 				class="ui5-shell-search-field-button"
 				icon={search}
@@ -23,30 +30,38 @@ export default function SearchFieldTemplate(this: SearchField) {
 		) : (
 			<div class="ui5-search-field-root" role="search" onFocusOut={this._onFocusOutSearch}>
 				<div class="ui5-search-field-content">
-					{!!this.scopes.length &&
+					{this.scopes?.length ? (
 						<>
 							<Select
 								onChange={this._handleScopeChange}
 								class="sapUiSizeCompact ui5-search-field-select"
 								accessibleName={this._translations.scope}
 								tooltip={this._translations.scope}>
-								{this.scopes.map(scopeOption => {
-									return <Option
+								{this.scopes.map(scopeOption => (
+									<Option
 										selected={scopeOption.selected}
 										data-ui5-stable={scopeOption.stableDomRef}
 										ref={this.captureRef.bind(scopeOption)}
-									>{scopeOption.text}</Option>;
-								},
-								this)}
+									>{scopeOption.text}
+									</Option>
+								))}
 							</Select>
 							<div class="ui5-search-field-separator"></div>
 						</>
-					}
+					) : this.filterButton?.length ? (
+						<>
+							<div class="ui5-filter-wrapper" style="display: contents">
+								<slot name="filterButton"></slot>
+							</div>
+							<div class="ui5-search-field-separator"></div>
+						</>
+					) : null}
 
 					<input
 						class="ui5-search-field-inner-input"
 						role="searchbox"
-						aria-label={this.accessibleName}
+						aria-description={this.accessibleDescription}
+						aria-label={this.accessibleName || this._translations.searchFieldAriaLabel}
 						value={this.value}
 						placeholder={this.placeholder}
 						data-sap-focus-ref

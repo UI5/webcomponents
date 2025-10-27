@@ -1,6 +1,5 @@
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents/dist/Button.js";
-import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents/dist/Popover.js";
 import "@ui5/webcomponents/dist/Title.js";
@@ -11,9 +10,23 @@ import "@ui5/webcomponents/dist/Text.js";
 import "@ui5/webcomponents/dist/Bar.js";
 import "@ui5/webcomponents/dist/Dialog.js";
 import "@ui5/webcomponents/dist/Link.js";
+import "@ui5/webcomponents/dist/Icon.js";
+import "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents/dist/Panel.js";
+import "@ui5/webcomponents/dist/ComboBox.js";
+import "@ui5/webcomponents/dist/ComboBoxItem.js";
+import "@ui5/webcomponents/dist/RadioButton.js";
+import "@ui5/webcomponents/dist/CheckBox.js";
+import "@ui5/webcomponents/dist/Toast.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarSpacer.js";
+import "@ui5/webcomponents-fiori/dist/SearchItem.js";
+import "@ui5/webcomponents-fiori/dist/SearchScope.js";
+
 import "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
@@ -22,21 +35,31 @@ import NavigationLayoutMode from "@ui5/webcomponents-fiori/dist/types/Navigation
 
 import "@ui5/webcomponents/dist/Menu.js";
 import "@ui5/webcomponents/dist/MenuItem.js";
-import "@ui5/webcomponents/dist/MessageStrip.js";
 import "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
 import "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import "@ui5/webcomponents-fiori/dist/illustrations/NoNotifications.js";
 
+import "@ui5/webcomponents-fiori/dist/UserMenu.js";
+import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
+import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
+
+import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+
+import "@ui5/webcomponents-icons/dist/globe.js";
+import "@ui5/webcomponents-icons/dist/collaborate.js";
+import "@ui5/webcomponents-icons/dist/official-service.js";
+import "@ui5/webcomponents-icons/dist/private.js";
+import "@ui5/webcomponents-icons/dist/accelerated.js";
+
 import "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/da-2.js";
 import "@ui5/webcomponents-icons/dist/menu2.js";
-import "@ui5/webcomponents-icons/dist/sys-find.js";
 import "@ui5/webcomponents-icons/dist/settings.js";
-import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
-import "@ui5/webcomponents-icons/dist/log.js";
 import "@ui5/webcomponents-icons/dist/home.js";
 import "@ui5/webcomponents-icons/dist/favorite-list.js";
 import "@ui5/webcomponents-icons/dist/account.js";
@@ -47,15 +70,18 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/manager-insight.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js"
 import "@ui5/webcomponents-icons/dist/sort.js"
+import "@ui5/webcomponents-icons/dist/message-information.js";
 import "@ui5/webcomponents-icons/dist/expense-report.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
+import "@ui5/webcomponents-icons/dist/user-settings.js";
+import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+import "@ui5/webcomponents-icons/dist/palette.js";
+import "@ui5/webcomponents-icons/dist/iphone.js";
+import "@ui5/webcomponents-icons/dist/qr-code.js";
+import "@ui5/webcomponents-icons/dist/bell.js";
+import "@ui5/webcomponents-icons/dist/reset.js";
 
 const shellbar = document.getElementById("shellbar");
-const actionPopover = document.getElementById("action-popover");
-
-shellbar.addEventListener("ui5-profile-click", (event) => {
-    actionPopover.opener = event.detail.targetRef;
-	actionPopover.open = true;
-});
 
 [...document.querySelectorAll("ui5-toggle-button")].forEach(el => {
 	el.addEventListener("click", event => {
@@ -74,7 +100,7 @@ menuButton.addEventListener("click", () => {
 const sideNavigation = document.getElementById("side-navigation");
 sideNavigation.addEventListener("selection-change", event => {
 	const contentTitle = document.getElementById("content-title");
-	contentTitle.textContent = event.detail.item.text;
+	contentTitle.textContent = event.detail.item?.text;
 });
 /* End side navigation */
 
@@ -95,8 +121,6 @@ document.getElementById("quick-create-dialog-close").addEventListener("click", (
 /* Notifications */
 const notificationsPopover = document.querySelector(".notificationsPopover");
 const notificationList = document.querySelector(".notificationsPopoverList");
-const notificationsPopoverMessageStrip = document.querySelector(".notificationsMessageStrip");
-const btnShowMessageStrip = document.querySelector("#show-message-strip");
 const btnClearAll = document.querySelector("#clear-all");
 const clearAllDialog = document.querySelector("#clear-all-dialog");
 var dialogClosers = [...clearAllDialog.querySelectorAll(".dialogCloser")];
@@ -163,14 +187,6 @@ notificationsListGroupGrowing.addEventListener("load-more", (e) => {
 	}, 2000);
 });
 
-btnShowMessageStrip.addEventListener("click", function() {
-	notificationsPopoverMessageStrip.style.display = "inline-block";
-});
-
-notificationsPopoverMessageStrip.addEventListener("close", function() {
-	notificationsPopoverMessageStrip.style.display = "none";
-});
-
 btnClearAll.accessibilityAttributes = {
     hasPopup: "dialog",
     controls: clearAllDialog.id,
@@ -195,3 +211,178 @@ btnOpenMenuSort.addEventListener("click", () => {
 	menu.open = true;
 });
 /* End Notifications */
+
+/* User Menu */
+const userMenu = document.getElementById("userMenu");
+
+shellbar.addEventListener("ui5-profile-click", (event) => {
+	userMenu.opener = event.detail.targetRef;
+	userMenu.open = true;
+});
+
+userMenu.addEventListener("item-click", function (event) {
+	const item = event.detail.item.getAttribute("data-id");
+
+	switch (item) {
+		case "setting":
+			settingsDialog.open = true;
+			console.log("Open Setting Dialog");
+			break;
+		case "privacy-policy":
+			console.log("Privacy Policy");
+			break;
+		case "terms-of-use":
+			console.log("Terms of Use");
+			break;
+		default:
+			console.log("Default");
+	}
+});
+
+userMenu.addEventListener("avatar-click", function () {
+	console.log("Avatar clicked");
+});
+
+userMenu.addEventListener("manage-account-click", function () {
+	console.log("Manage account clicked");
+});
+
+userMenu.addEventListener("edit-accounts-click", function () {
+	console.log("Edit accounts clicked");
+});
+
+userMenu.addEventListener("change-account", function (event) {
+	console.log("Change account account", event.detail);
+	event.detail.selectedAccount.loading = true;
+	setTimeout(function(){
+		event.detail.selectedAccount.loading = false;
+	}, 1000);
+});
+
+userMenu.addEventListener("sign-out-click", function (event) {
+	console.log("Sign Out clicked");
+
+	const result = prompt("Sign Out", "Are you sure you want to sign out?");
+	if (result) {
+		userMenu.open = false;
+	}
+	event.preventDefault();
+});
+/* End User Menu */
+
+/* User Settings Dialog */
+const settingsDialog = document.getElementById("settings");
+const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+const mobileSecondPage = document.getElementById("mobile-second-page");
+const mobile1Button = document.getElementById("mobile1-button");
+const mobile2Button = document.getElementById("mobile2-button");
+const resetAllButton = document.getElementById("reset-all-button");
+const additionalDialog = document.getElementById("additionalDialog");
+const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+const resetAll = document.getElementById("resetAll");
+const resetPersonalization = document.getElementById("resetPersonalization");
+const toast = document.getElementById("toastThemeSave");
+const toastReset =  document.getElementById("toastReset");
+const toastResetAll =  document.getElementById("toastResetAll");
+const themeSave =document.getElementById("themeSave");
+
+mobile1Button.addEventListener("click", function () {
+	mobileSecondPage.selected = true;
+	mobileSecondPage.text = "iOS";
+});
+
+mobile2Button.addEventListener("click", function () {
+	mobileSecondPage.selected = true;
+	mobileSecondPage.text = "Android";
+});
+
+resetAllButton.addEventListener("click", function () {
+	additionalDialog.open = true;
+});
+
+additionalDialogClosers.forEach(btn => {
+	btn.addEventListener("click", () => {
+		additionalDialog.open = false;
+	});
+})
+
+themeSave.addEventListener("click", function () {
+	toast.open = true;
+});
+
+resetPersonalization.addEventListener("click", function () {
+	toastReset.open = true;
+});
+
+resetAll.addEventListener("click", function () {
+	toastResetAll.open = true;
+});
+
+settingsDialog.addEventListener("selection-change", function (event) {
+	console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
+	if(event.detail.item?.text ==="Language & Region"){
+		event.detail.item.loading=true;
+		event.detail.item.loadingReason="Language & Region loading data...";
+		setTimeout(function(){
+			event.detail.item.loading=false;
+		}, 1000);
+	}
+});
+
+settingsDialogItems.forEach((settingsDialogItem) => {
+	settingsDialogItem.addEventListener("selection-change", function (event) {
+		console.log(`Selection change: ${event.detail.view?.text}`, event.detail);
+	});
+});
+
+settingsDialog.addEventListener("open", function (event) {
+	console.log("Settings dialog opened", event);
+});
+
+settingsDialog.addEventListener("close", function (event) {
+	console.log("Settings dialog closed", event);
+});
+
+/* End User Settings Dialog */
+
+/* Search */
+const scopeData = [
+    { name: "Laptop", scope: "products" },
+    { name: "Leave Requests", scope: "apps" },
+    { name: "Log work", scope: "apps" },
+    { name: "Manage Products", scope: "apps" },
+    { name: "Mobile Phones", scope: "products" },
+    { name: "Tablet", scope: "products" },
+];
+
+function createScopeItems(scope) {
+    let filterData = [];
+
+    if (!scope) {
+        filterData = scopeData;
+    } else {
+        filterData = scopeData.filter(item => item.scope === scope);
+    }
+
+    filterData.forEach(item => {
+        const searchItem = document.createElement("ui5-search-item");
+        searchItem.text = item.name;
+        searchItem.scopeName = item.scope;
+        searchScope.appendChild(searchItem);
+    });
+}
+
+const searchScope = document.getElementById("search-scope");
+
+createScopeItems();
+
+searchScope.addEventListener("ui5-scope-change", (event) => {
+    const scope = event.detail.scope.text === "All" ? "" : event.detail.scope.text.toLowerCase();
+
+    searchScope.items.forEach(item => {
+        item.remove();
+    });
+
+    createScopeItems(scope);
+});
+/* End Search */

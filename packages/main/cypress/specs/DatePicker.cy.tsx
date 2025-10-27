@@ -1,14 +1,9 @@
-import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
 import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
 
 describe("Date Picker Tests", () => {
-	afterEach(() => {
-		// eslint-disable-next-line
-		cy.wait(200);
-	});
 
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
@@ -83,6 +78,28 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "value-state", "None");
 	});
 
+	it("custom formatting", () => {
+		cy.mount(<DatePicker displayFormat="yyyy, dd/MM" valueFormat="yyyy-MM-dd"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("2018, 05/05")
+			.realPress("Enter");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.should("have.attr", "value", "2018, 05/05");
+
+		cy.get("@datePicker")
+			.should("have.attr", "value", "2018-05-05");
+	});
+
 	it("value state", () => {
 		cy.mount(<DatePicker></DatePicker>);
 		cy.get("[ui5-date-picker]")
@@ -99,7 +116,7 @@ describe("Date Picker Tests", () => {
 			.shadow()
 			.find("ui5-datetime-input")
 			.should("have.attr", "value-state", "Negative");
-		
+
 		cy.get("@datePicker")
 			.shadow()
 			.find("[slot='header']")
@@ -167,7 +184,7 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "test placeholder");
 	});
 
-	
+
 
 	it("Selected date from daypicker is the same as datepicker date", () => {
 		cy.mount(<DatePicker value="Jan 29, 2019" formatPattern="MMM d, y"></DatePicker>);
@@ -753,7 +770,7 @@ describe("Date Picker Tests", () => {
 	});
 
 	it("yearpicker prev page extreme values min", () => {
-		cy.mount(<DatePicker value="Jan 1, 0012" formatPattern="MMM d, y"></DatePicker>);
+		cy.mount(<DatePicker value="Jan 1, 0026" formatPattern="MMM d, y"></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
@@ -765,7 +782,7 @@ describe("Date Picker Tests", () => {
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetFirstDisplayedYear()
-			.should("have.text", "0002");
+			.should("have.text", "0017");
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetPreviousButton()
@@ -781,7 +798,7 @@ describe("Date Picker Tests", () => {
 	});
 
 	it("yearpicker next page extreme values max", () => {
-		cy.mount(<DatePicker value="Dec 31, 9986" formatPattern="MMM d, y"></DatePicker>);
+		cy.mount(<DatePicker value="Dec 31, 9974" formatPattern="MMM d, y"></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
@@ -793,7 +810,7 @@ describe("Date Picker Tests", () => {
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetFirstDisplayedYear()
-			.should("have.text", "9976");
+			.should("have.text", "9965");
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetNextButton()
@@ -820,23 +837,15 @@ describe("Date Picker Tests", () => {
 			.realClick();
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedYear(10)
+			.ui5DatePickerGetDisplayedYear(6)
 			.should("have.text", "9986");
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedYear(10)
-			.realClick();
-
-		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetYearButton()
-			.realClick();
-
-		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetFirstDisplayedYear()
-			.should("have.text", "9976");
+			.should("have.text", "9980");
 	});
 
-	it("yearpicker click extreme values min year above 10", () => {
+	it("yearpicker click extreme values min", () => {
 		cy.mount(<DatePicker value="Jan 1, 0012" formatPattern="MMM d, y"></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
@@ -848,20 +857,8 @@ describe("Date Picker Tests", () => {
 			.realClick();
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedYear(2)
-			.should("have.text", "0004");
-	});
-
-	it("yearpicker click extreme values min year below 10", () => {
-		cy.mount(<DatePicker value="Jan 1, 0004" formatPattern="MMM d, y"></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.ui5DatePickerValueHelpIconPress();
-
-		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetYearButton()
-			.realClick();
+			.ui5DatePickerGetDisplayedYear(11)
+			.should("have.text", "0012");
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetFirstDisplayedYear()
@@ -874,7 +871,7 @@ describe("Date Picker Tests", () => {
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
 			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "MMM d, y");
+			.should("have.attr", "placeholder", "e.g. Dec 31, 2025");
 
 		cy.get<DatePicker>("@datePicker")
 			.should("not.have.attr", "placeholder");
@@ -989,12 +986,12 @@ describe("Date Picker Tests", () => {
 			.realClick();
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedYear(11)
+			.ui5DatePickerGetDisplayedYear(10)
 			.should("have.class", "ui5-yp-item--disabled")
 			.and("not.have.focus");
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedYear(10)
+			.ui5DatePickerGetDisplayedYear(9)
 			.as("year")
 			.should("have.focus");
 
@@ -1552,101 +1549,8 @@ describe("Date Picker Tests", () => {
 			.should("be.visible");
 	});
 
-	it("picker popover should have accessible name", () => {
-		cy.mount(<DatePicker></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.ui5DatePickerValueHelpIconPress();
-
-		cy.get<DatePicker>("@datePicker")
-			.shadow()
-			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", "Choose Date");
-	});
-});
-
-describe("Legacy date customization and Islamic calendar type", () => {
-	afterEach(() => {
-		// eslint-disable-next-line
-		cy.wait(200);
-	});
-
-	const configurationObject = {
-		"formatSettings": {
-			"legacyDateCalendarCustomizing": [
-				{
-					"dateFormat": "A",
-					"gregDate": "20240211",
-					"islamicMonthStart": "14450801"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240311",
-					"islamicMonthStart": "14450901"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240410",
-					"islamicMonthStart": "14451001"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240509",
-					"islamicMonthStart": "14451101"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240607",
-					"islamicMonthStart": "14451201"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240707",
-					"islamicMonthStart": "14460101"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240805",
-					"islamicMonthStart": "14460201"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20240904",
-					"islamicMonthStart": "14460301"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20241004",
-					"islamicMonthStart": "14460401"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20241103",
-					"islamicMonthStart": "14460501"
-				},
-				{
-					"dateFormat": "A",
-					"gregDate": "20241202",
-					"islamicMonthStart": "14460601"
-				}
-			]
-		}
-	};
-
-	it("Customization of legacy dates in Islamic calendar", () => {
-		cy.window()
-			.then($el => {
-				const scriptElement = document.createElement("script");
-				scriptElement.type = "application/json";
-				scriptElement.setAttribute("data-ui5-config", "true");
-				scriptElement.innerHTML = JSON.stringify(configurationObject);
-				return $el.document.head.append(scriptElement);
-			})
-
-		// According to the Islamic calendar, Rab. I 9, 1446 AH should be displayed on Thursday,
-		// but it needs to be configured using the legacyDateCalendarCustomizing setting.
-		cy.mount(<DatePicker value="Rab. I 9, 1446 AH" primaryCalendarType="Islamic"></DatePicker>);
+	it("Date picker in month mode, using valueFormat", () => {
+		cy.mount(<DatePicker valueFormat="yyyy-MM"></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
@@ -1656,44 +1560,202 @@ describe("Legacy date customization and Islamic calendar type", () => {
 			.realPress("F4");
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedDay(11)
-			.should("have.text", "9");
+			.should("have.attr", "open");
 
-		cy.window()
-			.then($el => {
-				const scriptElement = $el.document.head.querySelector("script[data-ui5-config]");
-
-				scriptElement?.remove();
-			})
-	});
-
-	it("primary calendar type", () => {
-		cy.mount(<DatePicker primaryCalendarType="Islamic"></DatePicker>);
-
-		cy.get("[ui5-date-picker]")
+		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
-			.should("have.attr", "primary-calendar-type", "Islamic");
+			.as("calendar")
+			.should("have.attr", "_current-picker", "month");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.should("be.visible");
 	});
 
-	it("Islamic calendar type input value", () => {
-		cy.mount(<DatePicker primaryCalendarType="Islamic" formatPattern="MMM d, y G"></DatePicker>);
+	it("Should not auto-format incomplete date while typing", () => {
+		cy.mount(<DatePicker formatPattern="yyyy-MM-dd" />);
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.realType("2023-0", { delay: 100 });
+
+		cy.get("ui5-date-picker")
+			.ui5DatePickerGetInnerInput()
+			.should("have.value", "2023-0");
+	});
+
+	it("Should normalize value on change", () => {
+		cy.mount(<DatePicker formatPattern="yyyy-MM-dd" />);
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerTypeDate("202-12-1");
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.value", "0202-12-01");
+	});
+});
+
+
+describe("Accessibility", () => {
+	it("picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+
+		cy.mount(
+			<>
+				<Label for="datePicker">{LABEL}</Label>
+				<DatePicker id="datePicker"></DatePicker>
+			</>
+		);
 
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
-			.ui5DatePickerGetInnerInput()
-			.as("input")
-			.realClick()
-			.should("be.focused")
-			.realType("Rab. I 6, 1440 AH")
-			.realPress("Enter");
+			.ui5DatePickerValueHelpIconPress();
 
-		cy.get("@datePicker")
-			.should("have.value", "Rab. I 6, 1440 AH");
-
-		cy.get("@datePicker")
+		cy.get<DatePicker>("@datePicker")
 			.shadow()
-			.find("ui5-datetime-input")
-			.should("have.attr", "value-state", "None");
+			.find("ui5-responsive-popover")
+			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+	});
+
+	it("picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(
+			<DatePicker id="datePicker" accessible-name={LABEL}></DatePicker>
+		);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "This is a date picker";
+		cy.mount(<DatePicker accessibleDescription={DESCRIPTION}></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "This is a date picker";
+		cy.mount(
+			<>
+				<p id="datePickerDescription">{DESCRIPTION}</p>
+				<DatePicker accessibleDescriptionRef="datePickerDescription"></DatePicker>
+			</>
+		);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	describe("Accessibility - ariaValueStateHiddenText", () => {
+		it("should correctly extract text from nested slot structure in value state messages", () => {
+			const ERROR_MESSAGE = "Invalid date format";
+			
+			cy.mount(
+				<DatePicker valueState="Negative">
+					<div slot="valueStateMessage">{ERROR_MESSAGE}</div>
+				</DatePicker>
+			);
+
+			cy.get("[ui5-date-picker]")
+				.as("datePicker");
+
+			// Get the inner datetime input
+			cy.get<DatePicker>("@datePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.as("datetimeInput");
+
+			// Verify the input has proper value state
+			cy.get("@datetimeInput")
+				.should("have.attr", "value-state", "Negative");
+
+			// Test the ariaValueStateHiddenText getter directly
+			cy.get("@datetimeInput")
+				.then(($input) => {
+					const datetimeInput = $input[0] as any;
+					const ariaText = datetimeInput.ariaValueStateHiddenText;
+					
+					// Should contain both the value state type and the custom message
+					expect(ariaText).to.include("Error");
+					expect(ariaText).to.include(ERROR_MESSAGE);
+				});
+
+			// Verify the aria-describedby points to an element with the correct text
+			cy.get("@datetimeInput")
+				.shadow()
+				.find("input")
+				.should("have.attr", "aria-describedby")
+				.then((describedBy) => {
+					cy.get("@datetimeInput")
+						.shadow()
+						.find(`#${describedBy}`)
+						.should("contain.text", "Error")
+						.and("contain.text", ERROR_MESSAGE);
+				});
+		});
+
+		it("should handle complex nested slot structure from DatePicker forwarding", () => {
+			const CUSTOM_ERROR = "Please select a valid date";
+			
+			cy.mount(
+				<DatePicker valueState="Critical">
+					<div slot="valueStateMessage">
+						<span>{CUSTOM_ERROR}</span>
+					</div>
+				</DatePicker>
+			);
+
+			cy.get("[ui5-date-picker]")
+				.as("datePicker");
+
+			cy.get<DatePicker>("@datePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.as("datetimeInput");
+
+			// Test nested slot content extraction
+			cy.get("@datetimeInput")
+				.then(($input) => {
+					const datetimeInput = $input[0] as any;
+					const ariaText = datetimeInput.ariaValueStateHiddenText;
+					
+					// Should extract text from nested structure
+					expect(ariaText).to.include("Warning");
+					expect(ariaText).to.include(CUSTOM_ERROR);
+					expect(ariaText.trim()).to.not.be.empty;
+				});
+		});
 	});
 });

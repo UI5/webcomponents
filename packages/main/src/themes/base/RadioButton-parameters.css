@@ -27,7 +27,6 @@
 	--_ui5_radio_button_color: var(--sapField_BorderColor);
 	--_ui5_radio_button_label_offset: 1px;
 	--_ui5_radio_button_label_color: var(--sapContent_LabelColor);
-	--_ui5_radio_button_items_align: unset;
 	--_ui5_radio_button_inner_ring_radius: 22%;
 	--_ui5_radio_button_read_only_border_type: none;
 	--_ui5_radio_button_inner_ring_color: var(--sapSelectedColor);

@@ -15,6 +15,7 @@ export default function PageTemplate(this: Page) {
 				class="ui5-page-content-root" style={{
 					"padding-bottom": this.footer.length && this._contentPaddingBottom,
 					"scroll-padding-bottom": this.footer.length && this._contentPaddingBottom,
+					"margin-bottom": this.footer.length && this._contentBottom,
 					"bottom": this.footer.length && this._contentBottom,
 					"top": this._contentTop,
 				}}>

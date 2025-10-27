@@ -3,6 +3,5 @@ body > div {
 }
 
 .fileuploader1auto {
-    border: 1px solid black;
-    padding: 1rem;
+    background-color: var(--sapBackgroundColor);
 }

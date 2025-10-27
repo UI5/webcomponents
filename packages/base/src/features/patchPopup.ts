@@ -1,4 +1,7 @@
 // OpenUI5's Control.js subset
+import getSharedResource from "../getSharedResource.js";
+import insertOpenUI5PopupStyles from "./insertOpenUI5PopupStyles.js";
+
 type Control = {
 	getDomRef: () => HTMLElement | null,
 }
@@ -12,6 +15,57 @@ type OpenUI5Popup = {
 		getContent: () => Control | HTMLElement | null, // this is the OpenUI5 Element/Control instance that opens the Popup (usually sap.m.Popover/sap.m.Dialog)
 		onFocusEvent: (e: FocusEvent) => void,
 	}
+};
+
+type OpenUI5PopupBasedControl = {
+	prototype: {
+		onsapescape: (e: Event) => void,
+		oPopup: OpenUI5Popup,
+	}
+};
+
+type PopupInfo = {
+	type: "OpenUI5" | "WebComponent";
+	instance: object;
+};
+
+// contains all OpenUI5 and Web Component popups that are currently opened
+const AllOpenedPopupsRegistry = getSharedResource<{ openedRegistry: Array<PopupInfo> }>("AllOpenedPopupsRegistry", { openedRegistry: [] });
+
+const addOpenedPopup = (popupInfo: PopupInfo) => {
+	AllOpenedPopupsRegistry.openedRegistry.push(popupInfo);
+};
+
+const removeOpenedPopup = (popup: object) => {
+	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
+	if (index > -1) {
+		AllOpenedPopupsRegistry.openedRegistry.splice(index, 1);
+	}
+};
+
+const getTopmostPopup = () => {
+	return AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1].instance;
+};
+
+/**
+ * Determines whether there is a Web Component popup opened above (a specified popup).
+ *
+ * @param {object} popup The popup instance to check against.
+ * @returns {boolean} `true` if a Web Component popup is opened above (the given popup instance); otherwise `false`.
+ */
+const hasWebComponentPopupAbove = (popup: object) => {
+	for (let i = AllOpenedPopupsRegistry.openedRegistry.length - 1; i >= 0; i--) {
+		const popupInfo = AllOpenedPopupsRegistry.openedRegistry[i];
+		if (popupInfo.type === "WebComponent") {
+			return true;
+		}
+
+		if (popupInfo.instance === popup) {
+			break;
+		}
+	}
+
+	return false;
 };
 
 const openNativePopover = (domRef: HTMLElement) => {
@@ -37,6 +91,17 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 	});
 };
 
+const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => {
+	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
+	PopupBasedControl.prototype.onsapescape = function onsapescape(e: Event) {
+		if (hasWebComponentPopupAbove(this.oPopup)) {
+			return;
+		}
+
+		origOnsapescape.call(this, e);
+	};
+};
+
 const patchOpen = (Popup: OpenUI5Popup) => {
 	const origOpen = Popup.prototype.open;
 	Popup.prototype.open = function open(...args: any[]) {
@@ -52,6 +117,11 @@ const patchOpen = (Popup: OpenUI5Popup) => {
 				}
 			}
 		}
+
+		addOpenedPopup({
+			type: "OpenUI5",
+			instance: this,
+		});
 	};
 };
 
@@ -64,15 +134,15 @@ const patchClosed = (Popup: OpenUI5Popup) => {
 		if (domRef) {
 			closeNativePopover(domRef); // unset the popover attribute and close the native popover, but only if still in DOM
 		}
+
+		removeOpenedPopup(this);
 	};
 };
 
 const patchFocusEvent = (Popup: OpenUI5Popup) => {
 	const origFocusEvent = Popup.prototype.onFocusEvent;
 	Popup.prototype.onFocusEvent = function onFocusEvent(e: FocusEvent) {
-		const isTypeFocus = e.type === "focus" || e.type === "activate";
-		const target = e.target as HTMLElement;
-		if (!isTypeFocus || !target.closest("[ui5-popover],[ui5-responsive-popover],[ui5-dialog]")) {
+		if (!hasWebComponentPopupAbove(this)) {
 			origFocusEvent.call(this, e);
 		}
 	};
@@ -84,12 +154,21 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Popup: OpenUI5Popup) => {
+const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl) => {
+	insertOpenUI5PopupStyles();
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
 	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
+	patchPopupBasedControl(Dialog); // Dialog.prototype.onsapescape
+	patchPopupBasedControl(Popover); // Popover.prototype.onsapescape
 };
 
-export default patchPopup;
-export type { OpenUI5Popup };
+export {
+	patchPopup,
+	addOpenedPopup,
+	removeOpenedPopup,
+	getTopmostPopup,
+};
+
+export type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo };

@@ -182,7 +182,7 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 		});
 
 		it("select row via SPACE", () => {
-			cy.get("@row0").realClick({ position: "left" });
+			cy.get("@row0").realClick();
 			cy.get("@row0").realPress("Space");
 			checkSelection(testConfigEntry.cases.SPACE.space_0);
 
@@ -270,6 +270,6 @@ describe("TableSelection - Multi", () => {
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
 		cy.get("#row2").invoke("remove");
 		cy.get("#row1").invoke("remove");
-		cy.get("@headerRowCheckBox").should("not.have.attr", "checked");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
 	});
 });
