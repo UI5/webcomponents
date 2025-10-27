@@ -48,7 +48,7 @@ function groupedItemsLayout(this: Form) {
 							<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
 						</div>
 					}
-					{ this.accessibilityMode === "Edit" ?
+					{ this.accessibleMode === "Edit" ?
 						<div class="ui5-form-group-layout">
 							<slot name={groupItem._individualSlot}></slot>
 						</div>
@@ -65,7 +65,7 @@ function groupedItemsLayout(this: Form) {
 
 function standaloneItemsLayout(this: Form) {
 	return (
-		this.accessibilityMode === "Edit" ?
+		this.accessibleMode === "Edit" ?
 			<div class="ui5-form-layout" part="layout">
 				{ standaloneItemsLayoutContent.call(this) }
 			</div>

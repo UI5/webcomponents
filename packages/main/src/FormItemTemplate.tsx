@@ -5,7 +5,7 @@ export default function FormItemTemplate(this: FormItem) {
 	return (
 		<div class="ui5-form-item-root">
 			<div class="ui5-form-item-layout" part="layout">
-				{ this.accessibilityMode === "Edit" ? content.call(this) : contentAsDefinitionList.call(this) }
+				{ this.accessibleMode === "Edit" ? content.call(this) : contentAsDefinitionList.call(this) }
 			</div>
 		</div>
 	);

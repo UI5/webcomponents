@@ -16,7 +16,7 @@ import FormTemplate from "./FormTemplate.js";
 import FormCss from "./generated/themes/Form.css.js";
 
 import type FormItemSpacing from "./types/FormItemSpacing.js";
-import type FormAccessibilityMode from "./types/FormAccessibilityMode.js";
+import type FormAccessibleMode from "./types/FormAccessibleMode.js";
 import type FormGroup from "./FormGroup.js";
 import type TitleLevel from "./types/TitleLevel.js";
 
@@ -51,7 +51,7 @@ interface IFormItem extends UI5Element {
 	columnSpan?: number;
 	headerText?: string;
 	headerLevel?: `${TitleLevel}`;
-	accessibilityMode?: `${FormAccessibilityMode}`;
+	accessibleMode?: `${FormAccessibleMode}`;
 }
 
 type GroupItemsInfo = {
@@ -240,6 +240,23 @@ class Form extends UI5Element {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
+	 *
+	 * Based on the mode, the component renders different HTML elements and ARIA attributes,
+	 * which are appropriate for the use-case.
+	 *
+	 * **Usage:**
+	 * - Set this property to "Display", when the form consists of non-editable (e.g. texts) form items.
+	 * - Set this property to "Edit", when the form consists of editable (e.g. input fields) form items.
+	 *
+	 * @default "Display"
+	 * @since 2.16.0
+	 * @public
+	 */
+	@property()
+	accessibleMode: `${FormAccessibleMode}` = "Display";
+
+	/**
 	 * Defines the number of columns to distribute the form content by breakpoint.
 	 *
 	 * Supported values:
@@ -320,23 +337,6 @@ class Form extends UI5Element {
 	 */
 	@property()
 	itemSpacing: `${FormItemSpacing}` = "Normal";
-
-	/**
-	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
-	 *
-	 * Based on the mode, the component renders different HTML elements and ARIA attributes,
-	 * which are appropriate for the use-case.
-	 *
-	 * **Usage:**
-	 * - Set this property to "Display", when the form consists of non-editable (e.g. texts) form items.
-	 * - Set this property to "Edit", when the form consists of editable (e.g. input fields) form items.
-	 *
-	 * @default "Display"
-	 * @since 2.16.0
-	 * @public
-	 */
-	@property()
-	accessibilityMode: `${FormAccessibilityMode}` = "Display";
 
 	/**
 	 * Defines the component header area.
@@ -558,7 +558,7 @@ class Form extends UI5Element {
 	setItemsState() {
 		this.items.forEach((item: IFormItem) => {
 			item.itemSpacing = this.itemSpacing;
-			item.accessibilityMode = this.accessibilityMode;
+			item.accessibleMode = this.accessibleMode;
 		});
 	}
 
@@ -626,12 +626,12 @@ class Form extends UI5Element {
 
 			return {
 				groupItem,
-				accessibleName: this.accessibilityMode === "Edit" ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
-				accessibleNameInner: this.accessibilityMode === "Edit" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
-				accessibleNameRef: this.accessibilityMode === "Edit" ? accessibleNameRef : undefined,
-				accessibleNameRefInner: this.accessibilityMode === "Edit" ? undefined : accessibleNameRef,
+				accessibleName: this.accessibleMode === "Edit" ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.accessibleMode === "Edit" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: this.accessibleMode === "Edit" ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.accessibleMode === "Edit" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
-				role: this.accessibilityMode === "Edit" ? "form" : undefined,
+				role: this.accessibleMode === "Edit" ? "form" : undefined,
 			};
 		});
 	}

@@ -11,7 +11,7 @@
  * @public
  * @since 2.16.0
  */
-enum FormAccessibilityMode {
+enum FormAccessibleMode {
 	/**
 	 * Display mode.
 	 * @public
@@ -25,4 +25,4 @@ enum FormAccessibilityMode {
 	Edit = "Edit",
 }
 
-export default FormAccessibilityMode;
+export default FormAccessibleMode;

@@ -12,7 +12,7 @@ import FormItemCss from "./generated/themes/FormItem.css.js";
 
 import type { IFormItem } from "./Form.js";
 import type FormItemSpacing from "./types/FormItemSpacing.js";
-import type FormAccessibilityMode from "./types/FormAccessibilityMode.js";
+import type FormaccessibleMode from "./types/FormaccessibleMode.js";
 
 /**
  * @class
@@ -90,7 +90,7 @@ class FormItem extends UI5Element implements IFormItem {
 	 * @private
 	 */
 	@property()
-	accessibilityMode: `${FormAccessibilityMode}` = "Display";
+	accessibleMode: `${FormaccessibleMode}` = "Display";
 
 	get isGroup() {
 		return false;
