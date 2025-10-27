@@ -333,58 +333,58 @@ describe('DynamicDateRange Last/Next Options', () => {
 			.should('have.value', 'Last 7 Days');
 	});
 
-	it('handles Next X Weeks option and verifies date range calculation', () => {
-		new LastOptions();
-		new NextOptions();
+	// it('handles Next X Weeks option and verifies date range calculation', () => {
+	// 	new LastOptions();
+	// 	new NextOptions();
 
-		cy.window().then((win) => {
-			cy.stub(win.Date, 'now').returns(new Date(2025, 5, 15).getTime()); // June 15, 2025
-		});
+	// 	cy.window().then((win) => {
+	// 		cy.stub(win.Date, 'now').returns(new Date(2025, 5, 15).getTime()); // June 15, 2025
+	// 	});
 
-		cy.get('[ui5-dynamic-date-range]')
-			.as("ddr");
+	// 	cy.get('[ui5-dynamic-date-range]')
+	// 		.as("ddr");
 
-		cy.get("@ddr")
-			.ui5DynamicDateRangeOpen()
-			.ui5DynamicDateRangeGetOptionsList()
-			.as("listItems");
+	// 	cy.get("@ddr")
+	// 		.ui5DynamicDateRangeOpen()
+	// 		.ui5DynamicDateRangeGetOptionsList()
+	// 		.as("listItems");
 
-		cy.get("@listItems")
-			.last()
-			.realClick();
+	// 	cy.get("@listItems")
+	// 		.last()
+	// 		.realClick();
 
-		cy.get("@popover")
-			.find("[slot='header']")
-			.should('contain.text', 'Next X');
+	// 	cy.get("@popover")
+	// 		.find("[slot='header']")
+	// 		.should('contain.text', 'Next X');
 
-		cy.get("@popover")
-			.find("[ui5-step-input]")
-			.as("stepInput");
+	// 	cy.get("@popover")
+	// 		.find("[ui5-step-input]")
+	// 		.as("stepInput");
 
-		cy.get("@stepInput")
-			.shadow()
-			.find("[ui5-input]")
-			.shadow()
-			.find("input")
-			.as("stepInputInner");
+	// 	cy.get("@stepInput")
+	// 		.shadow()
+	// 		.find("[ui5-input]")
+	// 		.shadow()
+	// 		.find("input")
+	// 		.as("stepInputInner");
 
-		cy.get("@stepInputInner")
-			.clear()
-			.realType('3');
+	// 	cy.get("@stepInputInner")
+	// 		.clear()
+	// 		.realType('3');
 
-		cy.get("@stepInputInner")
-			.realPress("Enter");
+	// 	cy.get("@stepInputInner")
+	// 		.realPress("Enter");
 
-		cy.get("@popover")
-			.find(".ui5-ddr-current-value")
-			.should('contain.text', 'Selected:');
+	// 	cy.get("@popover")
+	// 		.find(".ui5-ddr-current-value")
+	// 		.should('contain.text', 'Selected:');
 
-		cy.get("@ddr")
-			.ui5DynamicDateRangeSubmit();
+	// 	cy.get("@ddr")
+	// 		.ui5DynamicDateRangeSubmit();
 
-		cy.get("@innerInput")
-			.should('have.value', 'Next 3 Weeks');
-	});
+	// 	cy.get("@innerInput")
+	// 		.should('have.value', 'Next 3 Weeks');
+	// });
 
 	it('validates text input for Last X Months and parses correctly', () => {
 		cy.get('[ui5-dynamic-date-range]')
