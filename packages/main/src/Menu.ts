@@ -40,6 +40,7 @@ import {
 
 // Styles
 import menuCss from "./generated/themes/Menu.css.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 
 const MENU_OPEN_DELAY = 300;
 
@@ -199,6 +200,14 @@ class Menu extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	open = false;
+
+	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 */
+	@property()
+	placement: `${PopoverPlacement}` = "Bottom";
 
 	/**
 	 * Determines the horizontal alignment of the menu relative to its opener control.
