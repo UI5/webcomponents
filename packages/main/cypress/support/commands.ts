@@ -47,6 +47,7 @@ import "./commands/ColorPalettePopover.commands.js";
 import "./commands/ColorPicker.commands.js";
 import "./commands/DateTimePicker.commands.js";
 import "./commands/DateRangePicker.commands.js";
+import "./commands/DynamicDateRange.commands.js";
 import "./commands/Dialog.commands.ts";
 import "./commands/Popover.commands.ts";
 import "./commands/ResponsivePopover.commands.js";
@@ -69,6 +70,15 @@ declare global {
 		interface Chainable {
 			ui5SimulateDevice(device?: SimulationDevices): Chainable<void>
 			ui5DOMRef(): Chainable<void>
+			ui5AssertValidityState(
+				expected: {
+					formValidity?: Partial<ValidityState>;
+					validity?: Partial<ValidityState>;
+					valid?: boolean;
+					checkValidity?: boolean;
+					reportValidity?: boolean;
+				}
+			): Chainable<void>;
 			ui5CalendarGetDay(calendarSelector: string, timestamp: string): Chainable<JQuery<HTMLElement>>
 			ui5CalendarGetMonth(calendarSelector: string, timestamp: string): Chainable<JQuery<HTMLElement>>
 			ui5CalendarShowYearRangePicker(): Chainable<void>
@@ -126,3 +136,40 @@ Cypress.Commands.add("ui5SimulateDevice", (device: SimulationDevices = "phone") 
 		.invoke("isPhone")
 		.should("be.true");
 });
+
+Cypress.Commands.add(
+	"ui5AssertValidityState",
+	{ prevSubject: true },
+	(
+		subject,
+		expected: {
+			formValidity?: Partial<ValidityState>;
+			validity?: Partial<ValidityState>;
+			valid?: boolean;
+			checkValidity?: boolean;
+			reportValidity?: boolean;
+		}
+	) => {
+		const el = subject[0];
+
+		if (expected.formValidity) {
+			Object.entries(expected.formValidity).forEach(([key, value]) => {
+				expect(el.formValidity[key], `formValidity.${key}`).to.equal(value);
+			});
+		}
+		if (expected.validity) {
+			Object.entries(expected.validity).forEach(([key, value]) => {
+				expect(el.validity[key], `validity.${key}`).to.equal(value);
+			});
+		}
+		if (expected.valid !== undefined) {
+			expect(el.validity.valid, "validity.valid").to.equal(expected.valid);
+		}
+		if (expected.checkValidity !== undefined) {
+			expect(el.checkValidity(), "checkValidity()").to.equal(expected.checkValidity);
+		}
+		if (expected.reportValidity !== undefined) {
+			expect(el.reportValidity(), "reportValidity()").to.equal(expected.reportValidity);
+		}
+	}
+);
