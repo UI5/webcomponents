@@ -524,6 +524,7 @@ class Carousel extends UI5Element {
 					childList: false,
 					subtree: false,
 					attributes: true,
+					attributeFilter: ["hidden"],
 				});
 			}
 		});
@@ -971,6 +972,7 @@ class Carousel extends UI5Element {
  	 * Returns only visible (non-hidden) content items.
 	 * Items with the 'hidden' attribute are automatically excluded from carousel navigation.
 	 * @private
+	 * @returns {Array<HTMLElement>}
 	 */
 	get _visibleItems() {
 		return this.content.filter(x => !x.hasAttribute("hidden"));
