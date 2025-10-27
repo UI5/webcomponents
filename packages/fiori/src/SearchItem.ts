@@ -133,7 +133,7 @@ class SearchItem extends ListItemBase {
 	 * it's recommended to use `ui5-button` with `Transparent` design or `ui5-icon` elements.
 	 *
 	 * @public
-	 * @since 2.15.0
+	 * @since 2.16.0
 	 */
 	@slot()
 	actions!: Array<HTMLElement>;
