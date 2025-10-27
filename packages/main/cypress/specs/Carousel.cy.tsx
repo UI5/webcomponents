@@ -391,7 +391,7 @@ describe("Carousel general interaction", () => {
 
 	it.only("navigateTo method and visibleItemsIndices", () => {
 		cy.mount(
-			<Carousel id="carousel9" itemsPerPage="S1 M2 L2 XL2" arrowsPlacement="Navigation">
+			<Carousel id="carousel9" itemsPerPage="S2 M2 L2 XL2" arrowsPlacement="Navigation">
 				<Button>Button 1</Button>
 				<Button>Button 2</Button>
 				<Button>Button 3</Button>
