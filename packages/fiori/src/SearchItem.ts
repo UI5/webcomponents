@@ -11,7 +11,13 @@ import { SEARCH_ITEM_DELETE_BUTTON } from "./generated/i18n/i18n-defaults.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
-import { isSpace, isEnter, isF2, isTabNext, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isSpace,
+	isEnter,
+	isF2,
+	isTabNext,
+	isTabPrevious,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 // @ts-expect-error
@@ -189,7 +195,7 @@ class SearchItem extends ListItemBase {
 	}
 
 	/**
-	 * Handles manual tab navigation between action items and delete button
+	 * Handles manual tab navigation between action items and delete button with focus looping
 	 */
 	_handleTabNavigation(e: KeyboardEvent): boolean {
 		const focusDomRef = this.getFocusDomRef();
@@ -215,13 +221,15 @@ class SearchItem extends ListItemBase {
 			if (currentIndex < tabbableElements.length - 1) {
 				nextElement = tabbableElements[currentIndex + 1];
 			} else {
-				return false;
+				// Loop to first element when at the last element
+				nextElement = tabbableElements[0];
 			}
 		} else if (isTabPrevious(e)) {
 			if (currentIndex > 0) {
 				nextElement = tabbableElements[currentIndex - 1];
 			} else {
-				return false;
+				// Loop to last element when at the first element
+				nextElement = tabbableElements[tabbableElements.length - 1];
 			}
 		}
 
