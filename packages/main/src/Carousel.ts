@@ -292,8 +292,8 @@ class Carousel extends UI5Element {
 	 * Internal trigger flag that forces component re-rendering when content items change.
 	 * @private
 	 */
-	@property({ type: Boolean, noAttribute: true })
-	_contentUpdateTrigger = false;
+	@property({ type: Number, noAttribute: true })
+	_visibleItemsCount = 0;
 
 	_scrollEnablement: ScrollEnablement;
 	_onResizeBound: ResizeObserverCallback;
@@ -325,9 +325,16 @@ class Carousel extends UI5Element {
 		super();
 
 		this._contentItemsObserver = new MutationObserver(() => {
+			const visibleItemsCount = this._visibleItems.length;
+
+			if (this._visibleItemsCount === visibleItemsCount) {
+				return;
+			}
+
+			this._visibleItemsCount = visibleItemsCount;
+
 			this._currentSlideIndex = clamp(this._currentSlideIndex, 0, Math.max(0, this.items.length - this.effectiveItemsPerPage));
 			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - 1);
-			this._contentUpdateTrigger = !this._contentUpdateTrigger;
 			this._moveToItem(this._currentSlideIndex);
 		});
 
@@ -934,10 +941,6 @@ class Carousel extends UI5Element {
 
 	get ofText() {
 		return Carousel.i18nBundle.getText(CAROUSEL_OF_TEXT);
-	}
-
-	get ariaActiveDescendant() {
-		return this._visibleItems.length ? `${this._id}-carousel-item-${this._focusedItemIndex + 1}` : undefined;
 	}
 
 	get ariaLabelTxt() {
