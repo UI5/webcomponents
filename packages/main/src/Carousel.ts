@@ -185,17 +185,6 @@ class Carousel extends UI5Element {
 	hideNavigationArrows = false;
 
 	/**
-	 * Defines the current first visible item in the viewport.
-	 * Default value is 0, which means the first item in the viewport.
-	 *
-	 * @since 1.0.0-rc.15
-	 * @default 0
-	 * @public
-	 */
-	@property({ type: Number, noAttribute: true })
-	_currentSlideIndex: number = 0;
-
-	/**
 	 * Defines the visibility of the page indicator.
 	 * If set to true the page indicator will be hidden.
 	 * @since 1.0.0-rc.15
@@ -294,6 +283,12 @@ class Carousel extends UI5Element {
 	 */
 	@property({ type: Number, noAttribute: true })
 	_visibleItemsCount = 0;
+	 * Defines the current slide index, which contains the visible item in the viewport.
+	 * @private
+	 * @since 2.16.0-r.c1
+	 */
+	@property({ type: Number, noAttribute: true })
+	_currentSlideIndex: number = 0;
 
 	_scrollEnablement: ScrollEnablement;
 	_onResizeBound: ResizeObserverCallback;
@@ -756,6 +751,16 @@ class Carousel extends UI5Element {
 		await renderFinished();
 
 		this.focusItem();
+	}
+
+	/**
+	 * The indices of the currently visible items of the component.
+	 * @public
+	 * @since 1.0.0-rc.15
+	 * @default []
+	 */
+	get visibleItemsIndices() : Array<number> {
+		return this._visibleItemsIndexes;
 	}
 
 	/**
