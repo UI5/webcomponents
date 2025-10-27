@@ -24,7 +24,6 @@ import {
 
 // Styles
 import rangeSliderStyles from "./generated/themes/RangeSlider.css.js";
-import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 
 type AriaHandlesText = {
 	startHandleText?: string,
