@@ -118,6 +118,9 @@ Cypress.Commands.add("ui5DynamicDateRangeSubmit", { prevSubject: true }, (prevSu
 		.as("submitButton");
 
 	cy.get("@submitButton")
+		.should("have.text", "Submit")
+		.should("be.visible")
+		.should("not.be.disabled")
 		.realClick();
 });
 
