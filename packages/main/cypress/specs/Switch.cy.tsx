@@ -120,4 +120,49 @@ describe("General interactions in form", () => {
 			expect($form[0].checkValidity()).to.be.true;
 		});
 	});
+
+	it("Should fire 'invalid' event on form submit when 'required' switch is not checked", () => {
+		cy.mount(
+			<form id="switchForm">
+				<Switch checked></Switch>
+				<Switch id="requiredTestSwitch" required></Switch>
+				<Button id="switchSubmit" type="Submit">Submit</Button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#switchSubmit")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#requiredTestSwitch")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#requiredTestSwitch:invalid")
+			.should("exist", "Unchecked required Switch should have :invalid CSS class");
+
+		cy.get("#requiredTestSwitch")
+			.realClick();
+
+		cy.get("#requiredTestSwitch")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#requiredTestSwitch:invalid").should("not.exist", "Checked required Switch should not have :invalid CSS class");
+	});
 });

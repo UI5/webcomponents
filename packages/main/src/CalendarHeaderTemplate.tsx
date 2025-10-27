@@ -32,7 +32,7 @@ export default function CalendarTemplate(this: Calendar) {
 					aria-description={this.accInfo.ariaLabelMonthButton}
 					title={this.accInfo.tooltipMonthButton}
 					aria-keyshortcuts={this.accInfo.keyShortcutMonthButton}
-					onClick={this.onHeaderShowMonthPress}
+					onClick={this.onHeaderMonthButtonPress}
 					onKeyDown={this.onMonthButtonKeyDown}
 					onKeyUp={this.onMonthButtonKeyUp}
 				>
@@ -51,7 +51,7 @@ export default function CalendarTemplate(this: Calendar) {
 					role="button"
 					aria-label={this.accInfo.ariaLabelYearButton}
 					aria-description={this.accInfo.ariaLabelYearButton}
-					onClick={this.onHeaderShowYearPress}
+					onClick={this.onHeaderYearButtonPress}
 					onKeyDown={this.onYearButtonKeyDown}
 					onKeyUp={this.onYearButtonKeyUp}
 					title={this.accInfo.tooltipYearButton}
@@ -73,7 +73,7 @@ export default function CalendarTemplate(this: Calendar) {
 					aria-description={this.accInfo.ariaLabelYearRangeButton}
 					title={this.accInfo.tooltipYearRangeButton}
 					aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
-					onClick={this.onHeaderShowYearRangePress}
+					onClick={this.onHeaderYearRangeButtonPress}
 					onKeyDown={this.onYearRangeButtonKeyDown}
 					onKeyUp={this.onYearRangeButtonKeyUp}
 				>

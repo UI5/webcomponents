@@ -451,3 +451,96 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", "Pick a time");
 	});
 });
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(<form method="get">
+			<TimePicker id="timePicker" required={true}></TimePicker>
+			<button type="submit" id="submitBtn">Submits forms</button>
+		</form>);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#timePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("exist", "Required timepicker without value should have :invalid CSS class");
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.ui5TimePickerTypeTime("now")
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#timePicker:invalid").should("not.exist", "Required TimePicker with value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form>
+				<TimePicker id="timePicker" required format-pattern="HH:mm:ss"></TimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("#timePicker").as("timePicker");
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerTypeTime("invalid");
+
+		cy.get("#submitBtn").click();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("exist", "Timepicker without correct formatted value should have :invalid CSS class");
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerTypeTime("14:00:00");
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("not.exist", "Timepicker with correct formatted value should not have :invalid CSS class");
+	});
+});
