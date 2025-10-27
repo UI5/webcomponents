@@ -15,7 +15,9 @@ async function processThemingPackageFile(f) {
 
     result.root.walkRules(selector, rule => {
         for (const decl of rule.nodes) {
-            if (decl.type !== 'decl' || !decl.prop.startsWith('--sapFontUrl')) {
+            if (decl.type !== 'decl' ) {
+                continue;
+            } else if (decl.prop.startsWith('--sapFontUrl')) {
                 continue;
             } else if (!decl.prop.startsWith('--sap')) {
                 newRule.append(decl.clone());
