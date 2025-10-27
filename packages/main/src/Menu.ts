@@ -205,6 +205,7 @@ class Menu extends UI5Element {
 	 * Determines on which side the component is placed at.
 	 * @default "Bottom"
 	 * @public
+	 * @since 2.16.0
 	 */
 	@property()
 	placement: `${PopoverPlacement}` = "Bottom";
