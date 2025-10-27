@@ -280,9 +280,12 @@ class Carousel extends UI5Element {
 	/**
 	 * Internal trigger flag that forces component re-rendering when content items change.
 	 * @private
+	 * * @since 2.16.0
 	 */
 	@property({ type: Number, noAttribute: true })
 	_visibleItemsCount = 0;
+
+	/**
 	 * Defines the current slide index, which contains the visible item in the viewport.
 	 * @private
 	 * @since 2.16.0-r.c1
