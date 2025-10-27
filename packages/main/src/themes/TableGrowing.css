@@ -1,23 +1,16 @@
 @import "./InvisibleTextStyles.css";
 
-:host {
-	/** Growing Control spans the whole row **/
-	flex-grow: 1;
+#button {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	cursor: pointer;
+	border-bottom: 1px solid var(--sapList_BorderColor);
 }
 
 #button:focus {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
-}
-
-#button {
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	cursor: pointer;
 }
 
 @media (hover: hover) {
@@ -32,7 +25,7 @@
 }
 
 #text {
-	padding: 1rem 0 1rem 0;
+	padding: 1rem 0;
 	font-size: var(--sapFontSize);
 	color: var(--sapButton_TextColor);
 	font-weight: bold;

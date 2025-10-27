@@ -406,6 +406,18 @@
 			<ui5-li >Option 3</ui5-li>
 	</ui5-list>
 
+	<h3>Growing Button with Custom ARIA Name and Description</h3>
+	<ui5-list 
+		id="growingButtonAccessibility" 
+		growing="Button" 
+		growing-button-text="Load More Items"
+		header-text="Accessibility Demo">
+		<ui5-li>Product A</ui5-li>
+		<ui5-li>Product B</ui5-li>
+		<ui5-li>Product C</ui5-li>
+	</ui5-list>
+	<br/><br/>
+
 	<ui5-list
 		id="keyboardTestList"
 		selection-mode="Multiple"
@@ -698,6 +710,7 @@
 		var visualizationList = document.getElementById('myList6');
 		var select = document.getElementById('select');
 		var selectWrapping = document.getElementById('selectWrapping');
+		var growingButtonTest = document.getElementById('growingButtonAccessibility');
 
 		var selectionModes = {
 			"None": undefined,
@@ -710,6 +723,13 @@
 		var items = ["<ui5-li id='arg'>Argentina</ui5-li>", "<ui5-li id='bg'>Bulgaria</ui5-li>", "<ui5-li id='ch'>China</ui5-li>"];
 		var info = {
 			0: "0/3", 1: "1/3", 2: "2/3", 3: "3/3"
+		};
+
+		growingButtonTest.accessibilityAttributes = {
+			growingButton: {
+				name: "Load more products",
+				description: "This button will load additional products to the list. Click or press Enter to see more items."
+			}
 		};
 
 		select.addEventListener("ui5-change", function (event) {

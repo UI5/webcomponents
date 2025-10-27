@@ -977,7 +977,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (isEscape(e)) {
 			this.focused = true;
-			this.value = !this.open ? this._lastValue : this.value;
+			const shouldResetValueAndStopPropagation = !this.open && this.value !== this._lastValue;
+			if (shouldResetValueAndStopPropagation) {
+				this.value = this._lastValue;
+				// stop propagation to prevent closing the popup when using the combobox inside it
+				e.stopPropagation();
+			}
 		}
 
 		if ((isTabNext(e) || isTabPrevious(e)) && this.open) {
@@ -1285,7 +1290,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (isGroupItem) {
 			announce(`${groupHeaderText} ${currentItem.headerText}`, InvisibleMessageMode.Polite);
 		} else {
-			announce(`${currentItemAdditionalText} ${itemPositionText}`.trim(), InvisibleMessageMode.Polite);
+			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), InvisibleMessageMode.Polite);
 		}
 	}
 

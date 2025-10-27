@@ -34,3 +34,7 @@ h3 {
     text-align: center;
     width: 250px
 }
+
+form ui5-step-input:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}
