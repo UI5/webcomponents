@@ -21,7 +21,7 @@ import {
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
 	VALUE_STATE_SUCCESS,
-	FORM_CHECKABLE_REQUIRED
+	FORM_CHECKABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
