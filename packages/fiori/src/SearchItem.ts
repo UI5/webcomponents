@@ -258,17 +258,6 @@ class SearchItem extends ListItemBase {
 		this._markupText = this.highlightText ? generateHighlightedMarkup((this.text || ""), this.highlightText) : encodeXML(this.text || "");
 	}
 
-	/**
-	 * Determines if the current search item either has no tabbable content or
-	 * [Tab] is performed on the last tabbable content item.
-	 * This method is crucial for proper tab navigation between action items.
-	 */
-	shouldForwardTabAfter() {
-		const aContent = getTabbableElements(this.getFocusDomRef()!);
-
-		return aContent.length === 0 || (aContent[aContent.length - 1] === getActiveElement());
-	}
-
 	get _deleteButtonTooltip() {
 		return SearchItem.i18nBundle.getText(SEARCH_ITEM_DELETE_BUTTON);
 	}
