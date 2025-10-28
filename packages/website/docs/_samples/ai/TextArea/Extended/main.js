@@ -362,7 +362,6 @@ function initDemo() {
 		resetGenerationState();
 	});
 	
-	resetBtn.addEventListener('click', resetDemo);
 	readonlyToggle.addEventListener('click', toggleReadonly);
 	disabledToggle.addEventListener('click', toggleDisabled);
 }
