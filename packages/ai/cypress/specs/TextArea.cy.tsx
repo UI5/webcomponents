@@ -11,9 +11,9 @@ describe("Basic", () => {
 				.as("textarea")
 				.should("exist")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "")
-				.should("have.prop", "currentVersionIndex", 1)
-				.should("have.prop", "totalVersions", 1);
+				.should("have.prop", "promptDescription", "")
+				.should("have.prop", "currentVersion", 0)
+				.should("have.prop", "totalVersions", 0);
 
 			cy.get("@textarea")
 				.shadow()
@@ -43,7 +43,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={true}
-					actionText="Generating content..."
+					promptDescription="Generating content..."
 				/>
 			);
 
@@ -51,15 +51,15 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", true)
-				.should("have.prop", "actionText", "Generating content...");
+				.should("have.prop", "promptDescription", "Generating content...");
 		});
 
 		it("should display single result correctly", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={1}
+					promptDescription="Generated text"
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -68,8 +68,8 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 1)
+				.should("have.prop", "promptDescription", "Generated text")
+				.should("have.prop", "currentVersion", 0)
 				.should("have.prop", "totalVersions", 1);
 		});
 
@@ -77,8 +77,8 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={2}
+					promptDescription="Generated text"
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -87,8 +87,8 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 2)
+				.should("have.prop", "promptDescription", "Generated text")
+				.should("have.prop", "currentVersion", 1)
 				.should("have.prop", "totalVersions", 3);
 		});
 	});
@@ -100,7 +100,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -130,7 +130,6 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -158,7 +157,6 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 				/>
 			);
@@ -179,7 +177,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={3}
+					currentVersion={2}
 					totalVersions={3}
 				/>
 			);
@@ -204,7 +202,7 @@ describe("Basic", () => {
 				<TextArea
 					value={initialValue}
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={2}
 				/>
 			);
@@ -316,7 +314,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -342,7 +340,6 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -494,7 +491,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={true}
-					actionText="Generating content..."
+					promptDescription="Generating content..."
 				/>
 			);
 
@@ -509,7 +506,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -520,15 +517,15 @@ describe("Basic", () => {
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("ui5-toolbar")
-				.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+				.should("have.attr", "accessible-name", "Writing Assistant Toolbar");
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "accessible-name", "AI Writing Assistant")
-				.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+				.should("have.attr", "accessible-name", "Writing Assistant")
+				.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)");
 
 			// Verify versioning tooltips are translatable
 			cy.get("[ui5-ai-textarea]")
@@ -568,7 +565,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={-1}
+					currentVersion={-1}
 					totalVersions={3}
 				/>
 			);
@@ -586,8 +583,6 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersionIndex={1}
-					totalVersions={0}
 				/>
 			);
 

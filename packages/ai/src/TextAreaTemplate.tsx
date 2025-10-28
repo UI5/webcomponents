@@ -55,9 +55,9 @@ export default function TextAreaTemplate(this: TextArea) {
 						<slot name="footer">
 							<WritingAssistant
 								loading={this.loading}
-								currentVersionIndex={this.currentVersionIndex}
+								currentVersion={this.currentVersion}
 								totalVersions={this.totalVersions}
-								actionText={this.actionText}
+								promptDescription={this.promptDescription}
 								onButtonClick={this._handleAIButtonClick}
 								onStopGeneration={this.handleStopGeneration}
 								onVersionChange={this._handleVersionChange}
@@ -79,7 +79,7 @@ export default function TextAreaTemplate(this: TextArea) {
 
 			{/* ARIA live region for screen readers */}
 			<div aria-live="polite" aria-atomic="true" class="ui5-hidden-text">
-				{this.loading ? this.actionText : ""}
+				{this.loading ? this.promptDescription : ""}
 			</div>
 
 			<div id="ai-menu-wrapper">

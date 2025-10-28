@@ -18,8 +18,6 @@ const SAMPLE_TEXTS = {
 	summarized: "Innovation managers blend creativity and business skills to foster innovation, simplify idea implementation, and create value for organizations and customers."
 };
 
-const ANALYZING_REQUEST_HTML = "Analyzing request...";
-
 const TIMING_CONFIG = {
 	processingDelay: 3000,      // Milliseconds to simulate AI processing time
 	typingSpeed: 10             // Milliseconds between each character in typing animation
@@ -97,13 +95,13 @@ function updateComponentState(versionIndex = null) {
 		textarea.value = versionHistory[versionIndex].value;
 	}
 
-	textarea.currentVersionIndex = currentIndexHistory + 1;
+	textarea.currentVersion = currentIndexHistory;
 	textarea.totalVersions = versionHistory.length;
 
 	if (versionHistory[currentIndexHistory]) {
-		textarea.actionText = versionHistory[currentIndexHistory].endAction;
+		textarea.promptDescription = versionHistory[currentIndexHistory].endAction;
 	} else {
-		textarea.actionText = "";
+		textarea.promptDescription = "";
 	}
 }
 
@@ -214,8 +212,8 @@ function animateTextGeneration(text, action, menuItem) {
 
 function setLoadingState(promptDescription) {
 	textarea.loading = true;
-	textarea.value = ANALYZING_REQUEST_HTML;
-	textarea.actionText = promptDescription || '';
+	textarea.value = "Analyzing request...";
+	textarea.promptDescription = promptDescription || '';
 }
 
 function resetGenerationState() {
@@ -321,34 +319,8 @@ function handleKeydown(event) {
 	}
 }
 
-function resetDemo() {
-	stopGeneration();
-	
-	versionHistory = [];
-	currentIndexHistory = 0;
-	currentGenerationIndex = 0;
-	currentActionInProgress = null;
-	
-	textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
-	textarea.loading = false;
-	textarea.actionText = '';
-	textarea.currentVersionIndex = 1;
-	textarea.totalVersions = 1;
 
-	buildMenuFromConfig();
-}
-
-function toggleReadonly() {
-	textarea.readonly = !textarea.readonly;
-	readonlyToggle.textContent = textarea.readonly ? 'Enable Editing' : 'Toggle Readonly';
-}
-
-function toggleDisabled() {
-	textarea.disabled = !textarea.disabled;
-	disabledToggle.textContent = textarea.disabled ? 'Enable Component' : 'Toggle Disabled';
-}
-
-function initDemo() {
+function init() {
 	buildMenuFromConfig();
 
 	menu.addEventListener('item-click', handleMenuItemClick);
@@ -361,9 +333,6 @@ function initDemo() {
 		stopTypingAnimation();
 		resetGenerationState();
 	});
-	
-	readonlyToggle.addEventListener('click', toggleReadonly);
-	disabledToggle.addEventListener('click', toggleDisabled);
 }
 
-document.addEventListener('DOMContentLoaded', initDemo);
+document.addEventListener('DOMContentLoaded', init);

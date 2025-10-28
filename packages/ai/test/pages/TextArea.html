@@ -65,9 +65,6 @@
 		<ui5-ai-textarea
 			id="ai-textarea"
 			value="Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
-			action-text=""
-			current-version-index="1"
-			total-versions="1"
 			rows="8"
 			placeholder="Write your content here...">
 
@@ -117,8 +114,6 @@
 			simplified: "Innovation managers use creativity and business skills to promote innovation, simplify the development of new ideas, and deliver value to the organization and its customers.",
 			summarized: "Innovation managers blend creativity and business skills to foster innovation, simplify idea implementation, and create value for organizations and customers."
 		};
-
-		const ANALYZING_REQUEST_HTML = "Analyzing request...";
 
 		const TIMING_CONFIG = {
 			processingDelay: 3000,      // Milliseconds to simulate AI processing time
@@ -197,13 +192,13 @@
 				textarea.value = versionHistory[versionIndex].value;
 			}
 
-			textarea.currentVersionIndex = currentIndexHistory + 1;
+			textarea.currentVersion = currentIndexHistory;
 			textarea.totalVersions = versionHistory.length;
 
 			if (versionHistory[currentIndexHistory]) {
-				textarea.actionText = versionHistory[currentIndexHistory].endAction;
+				textarea.promptDescription = versionHistory[currentIndexHistory].endAction;
 			} else {
-				textarea.actionText = "";
+				textarea.promptDescription = "";
 			}
 		}
 
@@ -314,8 +309,8 @@
 
 		function setLoadingState(promptDescription) {
 			textarea.loading = true;
-			textarea.value = ANALYZING_REQUEST_HTML;
-			textarea.actionText = promptDescription || '';
+			textarea.value = "Analyzing request...";
+			textarea.promptDescription = promptDescription || '';
 		}
 
 		function resetGenerationState() {
@@ -431,9 +426,9 @@
 			
 			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
 			textarea.loading = false;
-			textarea.actionText = '';
-			textarea.currentVersionIndex = 1;
-			textarea.totalVersions = 1;
+			textarea.promptDescription = '';
+			textarea.currentVersion = 0;
+			textarea.totalVersions = 0;
 
 			buildMenuFromConfig();
 		}

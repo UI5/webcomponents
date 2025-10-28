@@ -25,21 +25,19 @@ import WritingAssistant from "./WritingAssistant.js";
  *
  * ### Overview
  *
- * The `ui5-ai-textarea` component extends the standard TextArea with AI Writing Assistant capabilities.
+ * The `ui5-ai-textarea` component extends the standard TextArea with Writing Assistant capabilities.
  * It provides AI-powered text generation, editing suggestions, and version management functionality.
  *
  * ### Structure
  * The `ui5-ai-textarea` consists of the following elements:
  * - TextArea: The main text input area with all standard textarea functionality
- * - AI Toolbar: Specialized toolbar with AI generation controls
- * - Version Navigation: Controls for navigating between AI-generated versions
- * - Menu Integration: Support for AI action menu
- *
- * Single vs multiple result display is determined internally based on totalVersions count.
+ * - WritingAssistant: Dedicated toolbar containing:
+ *   - Versioning: A component with left/right navigation buttons and a label for browsing AI-generated versions
+ *   - AI Button: Opens a menu that can be extended with custom AI generation options through slotting
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/TextArea.js";`
+ * `import "@ui5/webcomponents-ai/dist/TextArea.js";`
  *
  * @constructor
  * @extends BaseTextArea
@@ -99,33 +97,35 @@ class TextArea extends BaseTextArea {
 	loading = false;
 
 	/**
-	 * Defines the action text of the AI Writing Assistant.
+	 * Defines the prompt description of the current action.
 	 *
 	 * @default ""
 	 * @public
 	 */
 	@property()
-	actionText = "";
+	promptDescription = "";
 
 	/**
-	 * Indicates the index of the currently displayed result version.
+	 * Indicates the index of the currently displayed version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	currentVersionIndex = 1;
+	currentVersion = 0;
 
 	/**
 	 * Indicates the total number of result versions available.
 	 *
-	 * @default 1
+	 * Notes:
+	 * Versioning is hidden if the value is `0`
+	 *
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	totalVersions = 1;
+	totalVersions = 0;
 
 	@slot({ type: HTMLElement })
 	menu!: Array<HTMLElement>;
