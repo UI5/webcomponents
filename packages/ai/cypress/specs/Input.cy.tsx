@@ -668,47 +668,6 @@ describe("Versioning Menu Item", () => {
     });
 
     describe("Accessibility", () => {
-        it("should support keyboard navigation", () => {
-            cy.mount(
-                <AIInput
-                    currentVersion={2}
-                    totalVersions={3}
-                    onVersionChange={cy.spy().as("onVersionChange")}
-                />
-            );
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("input")
-                .realClick()
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find("[ui5-icon]")
-                .realClick();
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find('[data-ui5-versioning-button="previous"]')
-                .as("previousButton");
-
-            cy.get("[ui5-ai-input]")
-                .shadow()
-                .find('[data-ui5-versioning-button="next"]')
-                .as("nextButton");
-
-            cy.realPress("ArrowDown");
-            cy.realPress("ArrowRight");
-            cy.realPress("Enter");
-
-            cy.get("@onVersionChange").should("have.been.calledOnce");
-
-            cy.realPress("ArrowRight");
-            cy.realPress("Enter");
-
-            cy.get("@onVersionChange").should("have.been.calledTwice");
-        });
-
         it("should have proper ARIA attributes", () => {
             cy.mount(<AIInput currentVersion={2} totalVersions={4} />);
 

@@ -1,5 +1,7 @@
 import "@ui5/webcomponents-ai/dist/Input.js";
 import "@ui5/webcomponents/dist/MenuItem.js";
+import "@ui5/webcomponents-icons/dist/ai.js";
+import "@ui5/webcomponents-icons/dist/stop.js";
 
 const SAMPLE_TEXTS = {
     en: "AI can help you write faster.",
@@ -57,7 +59,6 @@ let isGenerating = false;
 let currentGenerationId = 0;  // used to cancel stale runs
 
 const aiInput = document.getElementById("ai-input");
-menu = document.getElementById('ai-wa-menu');
 
 aiInput.addEventListener('version-change', handleVersionChange);
 aiInput.addEventListener('stop-generation', stopGeneration);
@@ -69,7 +70,6 @@ function delay(ms) {
 }
 
 function addToHistory(entry) {
-    versionHistory.push(entry);
     if (versionHistory.length > 50) {
         versionHistory.shift();
         if (currentIndexHistory > 0) currentIndexHistory--;
