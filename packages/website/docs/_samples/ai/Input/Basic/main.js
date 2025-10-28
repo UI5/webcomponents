@@ -70,6 +70,7 @@ function delay(ms) {
 }
 
 function addToHistory(entry) {
+    versionHistory.push(entry);
     if (versionHistory.length > 50) {
         versionHistory.shift();
         if (currentIndexHistory > 0) currentIndexHistory--;
@@ -165,9 +166,6 @@ function completeGeneration(action, menuItem) {
 
     updateComponentState();
     aiInput.loading = false;
-    setTimeout(() => {
-        aiInput.focus();
-    }, 0);
 }
 
 function animateTextGeneration(text, action, menuItem) {
@@ -199,9 +197,6 @@ function resetGenerationState() {
     isGenerating = false;
     currentActionInProgress = null;
     aiInput.loading = false;
-    setTimeout(() => {
-        aiInput.focus();
-    }, 0);
 }
 
 function findMenuItemByAction(action) {
@@ -260,9 +255,6 @@ function stopGeneration() {
 
     updateComponentState();
     aiInput.loading = false;
-    setTimeout(() => {
-        aiInput.focus();
-    }, 0);
 }
 
 function handleVersionChange(event) {

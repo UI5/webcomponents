@@ -104,6 +104,9 @@
 		}
 
 		function addToHistory(entry) {
+			if (!entry.value || entry.value.trim() === "") {
+				return;
+			}
 			versionHistory.push(entry);
 			if (versionHistory.length > 50) {
 				versionHistory.shift();
@@ -200,9 +203,9 @@
 
 			updateComponentState();
 			aiInput.loading = false;
-			setTimeout(() => {
-				aiInput.focus();
-			}, 0);
+			// setTimeout(() => {
+			// 	aiInput.focus();
+			// }, 0);
 		}
 
 		function animateTextGeneration(text, action, menuItem) {
@@ -234,9 +237,9 @@
 			isGenerating = false;
 			currentActionInProgress = null;
 			aiInput.loading = false;
-			setTimeout(() => {
-				aiInput.focus();
-			}, 0);
+			// setTimeout(() => {
+			// 	aiInput.focus();
+			// }, 0);
 		}
 
 		function findMenuItemByAction(action) {
@@ -295,9 +298,9 @@
 
 			updateComponentState();
 			aiInput.loading = false;
-			setTimeout(() => {
-				aiInput.focus();
-			}, 0);
+			// setTimeout(() => {
+			// 	aiInput.focus();
+			// }, 0);
 		}
 
 		function handleVersionChange(event) {

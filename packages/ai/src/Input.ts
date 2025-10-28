@@ -12,7 +12,6 @@ import AIInputCss from "./generated/themes/Input.css.js";
 import InputCss from "@ui5/webcomponents/dist/generated/themes/Input.css.js";
 import ResponsivePopoverCommonCss from "@ui5/webcomponents/dist/generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
-import SuggestionsCss from "@ui5/webcomponents/dist/generated/themes/Suggestions.css.js";
 
 // templates
 import InputTemplate from "./InputTemplate.js";
@@ -66,7 +65,6 @@ import {
 		InputCss,
 		ResponsivePopoverCommonCss,
 		ValueStateMessageCss,
-		SuggestionsCss,
 	],
 })
 
@@ -105,6 +103,7 @@ class Input extends BaseInput {
 	 * Indicates the index of the currently displayed version.
 	 *
 	 * @default 0
+	 * @public
 	 */
 	@property({ type: Number })
 	currentVersion = 0;
@@ -126,6 +125,7 @@ class Input extends BaseInput {
 	 * When `true`, indicates that an AI action is in progress.
 	 *
 	 * @default false
+	 * @public
 	 */
 	@property({ type: Boolean })
 	loading: boolean = false;

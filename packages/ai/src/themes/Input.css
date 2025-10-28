@@ -31,7 +31,7 @@
 /* ai icon */
 .ui5-ai-input-icon {
     cursor: pointer;
-    color: var(--sapButton_Selected_TextColor);
+    color: var(--sapButton_Lite_TextColor);
     border: none;
 }
 
@@ -60,6 +60,11 @@
 .ui5-ai-input-icon-wrapper:active {
 	background-color: var(--sapButton_Selected_Background);
 	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+.ui5-ai-input-icon-wrapper:active .ui5-ai-input-icon,
+.ui5-ai-input-icon-wrapper.ui5-input-icon-menu-open .ui5-ai-input-icon {
+	color: var(--sapButton_Selected_TextColor);
 }
 
 /* Hover state */
