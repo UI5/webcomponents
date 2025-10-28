@@ -21,6 +21,39 @@ import {
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
+/**
+ * @class
+ *
+ * ### Overview
+ *
+ * The `ui5-ai-input` component extends the standard `ui5-input` with **AI Writing Assistant** capabilities.
+ *
+ * ### Structure
+ *
+ * The `ui5-ai-input` consists of the following main parts:
+ *
+ * - **Input Field** – Inherits all standard Input behaviors.
+ * - **AI Action Icon** – Appears when focused or loading, providing access to AI-related actions or stopping generation.
+ *
+ * The component automatically determines which UI elements to render based on its internal state:
+ * - The AI icon is only shown when there are available `actions`.
+ * - The version navigation UI appears only when `totalVersions > 1`.
+ *
+ * ### Keyboard Support
+ *
+ * - **Shift + F4** — Opens the AI menu.
+ * - **Ctrl + Shift + Z / Y** — Navigates backward/forward between AI-generated versions.
+ *
+ * ### ES6 Module Import
+ *
+ * `import "@ui5/webcomponents-ai/dist/Input.js";`
+ *
+ * @constructor
+ * @extends BaseInput
+ * @since 2.16.0
+ * @experimental The **@ui5/webcomponents-ai** package is under active development and considered experimental. Component APIs are subject to change.
+ * @public
+ */
 @customElement({
 	tag: "ui5-ai-input",
 	languageAware: true,
@@ -231,6 +264,15 @@ class Input extends BaseInput {
 			e.preventDefault();
 			this._handleNextButtonClick();
 		}
+	}
+
+	/**
+	 * Handles visibility of the WA Icon.
+	 * If there are no items, the WA Icon would not be rendered.
+	 */
+	get hasActions() {
+		const actions = !!this?.menu?.getSlottedNodes("items").length;
+		return actions;
 	}
 
 	get ariaLabel() {

@@ -270,7 +270,9 @@ describe("Basic", () => {
                 <AIInput
                     loading={true}
                     onStopGeneration={onStopGeneration}
-                />
+                >
+                    <MenuItem slot={"actions"} text="Generate text" />
+                </AIInput>
             );
 
             cy.get("[ui5-ai-input]")
@@ -685,7 +687,6 @@ describe("Versioning Menu Item", () => {
                 .find("[ui5-icon]")
                 .realClick();
 
-            // Test that buttons are clickable (simulating keyboard activation)
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="previous"]')
@@ -696,9 +697,9 @@ describe("Versioning Menu Item", () => {
                 .find('[data-ui5-versioning-button="next"]')
                 .as("nextButton");
 
-            cy.realPress("ArrowDown")
-              .realPress("ArrowRight")
-              .realPress("Enter");
+            cy.realPress("ArrowDown");
+            cy.realPress("ArrowRight");
+            cy.realPress("Enter");
 
             cy.get("@onVersionChange").should("have.been.calledOnce");
 
@@ -753,7 +754,11 @@ describe("Writing Assistant Input Icon", () => {
             .should("not.be.visible");
     })
     it("should render AI Icon on focus", () => {
-        cy.mount(<AIInput />);
+        cy.mount(
+            <AIInput>
+                <MenuItem slot={"actions"} text="Generate text" />
+            </AIInput>
+        );
 
         cy.get("[ui5-ai-input]")
             .shadow()
@@ -779,7 +784,9 @@ describe("Writing Assistant Input Icon", () => {
             <AIInput
                 loading={false}
                 onButtonClick={cy.stub().as("onButtonClick")}
-            />
+            >
+                <MenuItem slot={"actions"} text="Generate text" />
+            </AIInput>
         );
 
 
@@ -802,13 +809,15 @@ describe("Writing Assistant Input Icon", () => {
             <AIInput
                 loading={true}
                 onStopGeneration={cy.spy().as("onStopGeneration")}
-            />
+            >
+                <MenuItem slot={"actions"} text="Generate text" />
+            </AIInput>
         );
 
         cy.get("[ui5-ai-input]")
             .shadow()
             .find("input")
-            .focus();
+            .realClick();
 
         cy.get("[ui5-ai-input]")
             .shadow()

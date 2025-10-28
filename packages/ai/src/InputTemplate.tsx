@@ -6,13 +6,11 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
-import InputPopoverTemplate from "@ui5/webcomponents/dist/InputPopoverTemplate.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base";
 
 type TemplateHook = () => JsxTemplateResult;
 
-export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook }) {
-	const suggestionsList = hooks?.suggestionsList;
+export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook }) {
 	const preContent = hooks?.preContent || defaultPreContent;
 	const postContent = hooks?.postContent || defaultPostContent;
 	return (
@@ -104,13 +102,6 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 									{this._valueStateInputIcon}
 								</div>
 								{ postContent.call(this) }
-								{this._effectiveShowSuggestions &&
-									<>
-										<span id="suggestionsText" class="ui5-hidden-text">{this.suggestionsText}</span>
-										<span id="selectionText" class="ui5-hidden-text" aria-live="polite" role="status"></span>
-										<span id="suggestionsCount" class="ui5-hidden-text" aria-live="polite">{this.availableSuggestionsCount}</span>
-									</>
-								}
 
 								{this.accInfo.ariaDescription &&
 									<span id="descr" class="ui5-hidden-text">{this.accInfo.ariaDescription}</span>
@@ -132,7 +123,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 
 					</BusyIndicator>
 					<div
-						 hidden={!this.isFocused || this.readonly}
+						 hidden={(!this.isFocused && !this.loading) || !this.hasActions || this.readonly}
 						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen && "ui5-input-icon-menu-open"} ${this.loading && "ui5-ai-input-loading"}`}
 						 tabIndex={-1}
 						 title={ this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
@@ -157,7 +148,6 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 					</Menu>
 				</div>
 			</div>
-			{InputPopoverTemplate.call(this, { suggestionsList })}
 		</>
 	);
 }

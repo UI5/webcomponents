@@ -201,6 +201,9 @@
 
 			updateComponentState();
 			aiInput.loading = false;
+			setTimeout(() => {
+				aiInput.focus();
+			}, 0);
 		}
 
 		function animateTextGeneration(text, action, menuItem) {
@@ -232,6 +235,9 @@
 			isGenerating = false;
 			currentActionInProgress = null;
 			aiInput.loading = false;
+			setTimeout(() => {
+				aiInput.focus();
+			}, 0);
 		}
 
 		function findMenuItemByAction(action) {
@@ -290,6 +296,9 @@
 
 			updateComponentState();
 			aiInput.loading = false;
+			setTimeout(() => {
+				aiInput.focus();
+			}, 0);
 		}
 
 		function handleVersionChange(event) {
