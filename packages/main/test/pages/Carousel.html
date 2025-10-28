@@ -792,6 +792,124 @@
 		</ui5-card>
 	</ui5-carousel>
 
+	<h3> Testing hidden items </h3>
+	<ui5-carousel items-per-page="S1 M2 L3 XL3" background-design="Solid" page-indicator-background-design="Transparent"
+		page-indicator-border-design="None">
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 1" title-text="Visible Card 1"
+				subtitle-text="This card is visible">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Sales Performance</ui5-li>
+				<ui5-li icon="line-charts">Quarterly Reports</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard" hidden>
+			<ui5-card-header slot="header" status="Item 2" title-text="Hidden Card 2"
+				subtitle-text="This card is hidden via attribute">
+				<ui5-icon name="hide" slot="avatar"></ui5-icon>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="cancel">Hidden Analytics</ui5-li>
+				<ui5-li icon="delete">Hidden Data Cleanup</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 3" title-text="Visible Card 3"
+				subtitle-text="Visible card after hidden one">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Customer Insights</ui5-li>
+				<ui5-li icon="opportunity">Campaign Performance</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 4" title-text="Visible Card 4"
+				subtitle-text="Visible item example">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="line-charts">Trend Analysis</ui5-li>
+				<ui5-li icon="customer">Customer Segments</ui5-li>
+				<ui5-li icon="workflow-tasks">Action Items</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard" hidden>
+			<ui5-card-header slot="header" status="Item 5" title-text="Hidden Card 5"
+				subtitle-text="Another hidden example">
+				<ui5-icon name="hide" slot="avatar"></ui5-icon>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="cancel">Hidden Task</ui5-li>
+				<ui5-li icon="delete">Hidden Entry</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 6" title-text="Visible Card 6"
+				subtitle-text="End of visible sequence">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Final Overview</ui5-li>
+				<ui5-li icon="opportunity">Closing Metrics</ui5-li>
+			</ui5-list>
+		</ui5-card>
+	</ui5-carousel>
+
+	<ui5-button id="hideLastCarouselBtn" design="Negative">Hide Last Item</ui5-button>
+	<ui5-button id="addItem" >Аdd Item</ui5-button>
+	
+	<ui5-carousel id="lastCarousel" arrows-placement="Navigation" page-indicator-type="Numeric">
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="1 of 4" title-text="Visible Card 1"
+				subtitle-text="This card is visible" interactive>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Segmentation Models</ui5-li>
+				<ui5-li icon="line-charts">Marketing Plans</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard" hidden>
+			<ui5-card-header slot="header" status="2 of 4" title-text="Visible Card 2"
+				subtitle-text="This card is visible" interactive>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Segmentation Models</ui5-li>
+				<ui5-li icon="line-charts">Marketing Plans</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="3 of 4" title-text="Visible Card 3"
+				subtitle-text="This card is visible" interactive>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Segmentation Models</ui5-li>
+				<ui5-li icon="line-charts">Marketing Plans</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="4 of 4" title-text="Visible Card 4"
+				subtitle-text="This card is visible" interactive>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Segmentation Models</ui5-li>
+				<ui5-li icon="line-charts">Marketing Plans</ui5-li>
+			</ui5-list>
+		</ui5-card>
+	</ui5-carousel>
+
 </body>
 
 <script>
@@ -805,6 +923,36 @@
 
 	carousel9.addEventListener("ui5-navigate", function (event) {
 		visibleItems.value = carousel9.visibleItemsIndices;
+	});
+
+	var hideLastCarouselBtn = document.getElementById("hideLastCarouselBtn");
+	var lastCarousel = document.getElementById("lastCarousel");
+
+	hideLastCarouselBtn.addEventListener("click", function() {
+		var cards = lastCarousel.querySelectorAll("ui5-card");
+		var lastCard = cards[cards.length - 1]; 
+		
+		if (lastCard.hasAttribute("hidden")) {
+			lastCard.removeAttribute("hidden");
+			hideLastCarouselBtn.textContent = "Hide Item";
+		} else {
+			lastCard.setAttribute("hidden", "");
+			hideLastCarouselBtn.textContent = "Show Item";
+		}
+	});
+
+	var addItemBtn = document.getElementById("addItem");
+	addItemBtn.addEventListener("click", function() {
+		var newCard = document.createElement("ui5-card");
+		newCard.className = "myCard";
+		var header = document.createElement("ui5-card-header");
+		header.setAttribute("slot", "header");
+		header.setAttribute("status", (lastCarousel.content.length + 1) + " of 5");
+		header.setAttribute("title-text", "New Card " + (lastCarousel.content.length + 1));
+		header.setAttribute("subtitle-text", "This is a new card");
+		header.setAttribute("interactive", "");
+		newCard.appendChild(header);	
+		lastCarousel.appendChild(newCard);
 	});
 
 </script>

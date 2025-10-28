@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import { createServer } from 'vite';
 import yargs from 'yargs';
-import { hideBin }  from 'yargs/helpers';
+import { hideBin } from 'yargs/helpers';
 
 const argv = yargs(hideBin(process.argv))
 	.alias("c", "config")
@@ -28,7 +28,7 @@ const rmPortFile = async () => {
 	// exit handler must be sync
 	try {
 		await fs.rm(".dev-server-port");
-	} catch (e) {}
+	} catch (e) { }
 	process.exit();
 }
 
@@ -36,7 +36,7 @@ const rmPortFile = async () => {
 	process.on(eventType, rmPortFile);
 });
 
-(async () => {
+async function start() {
 	let retries = 10;
 	let port = 8080;
 	while (retries--) {
@@ -63,4 +63,12 @@ const rmPortFile = async () => {
 		// no error normal exit
 		// process.exit();
 	}
-})();
+};
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+	start(process.argv)
+}
+
+export default {
+	_ui5mainFn: start
+}
