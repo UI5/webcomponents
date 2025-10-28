@@ -315,7 +315,7 @@ class Carousel extends UI5Element {
 	 * Defines the content of the component.
 	 *
 	 * **Note:** Items with the `hidden` attribute will be automatically excluded from carousel navigation,
-	 * page calculations, and will not be displayed or accessible via keyboard navigation.
+	 * page calculations, and will not be displayed or accessible via keyboard navigation. See [sample](./#carousel-with-hidden-items).
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
