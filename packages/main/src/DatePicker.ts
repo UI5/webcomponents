@@ -172,6 +172,7 @@ type Picker = "day" | "month" | "year";
  * @constructor
  * @extends DateComponentBase
  * @public
+ * @csspart input - Used to style the native input element
  */
 
 @customElement({

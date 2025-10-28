@@ -5,3 +5,7 @@
 .datepicker1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+#dp6::part(input) {
+    text-align: right;
+}

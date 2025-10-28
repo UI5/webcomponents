@@ -22,3 +22,7 @@ html,body {
 .timepicker2auto {
     width: 100%
 }
+
+#tpLabel::part(input) {
+    text-align: right;
+}

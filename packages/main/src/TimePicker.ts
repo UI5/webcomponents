@@ -136,6 +136,7 @@ type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
  * @extends UI5Element
  * @public
  * @since 1.0.0-rc.6
+ * @csspart input - Used to style the native input element
  */
 @customElement({
 	tag: "ui5-time-picker",
