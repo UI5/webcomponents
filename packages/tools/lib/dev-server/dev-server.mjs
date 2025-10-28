@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import { createServer } from 'vite';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { pathToFileURL } from "url";
 
 const argv = yargs(hideBin(process.argv))
 	.alias("c", "config")
@@ -65,7 +66,10 @@ async function start() {
 	}
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(windowsPath).href;
+
+if (import.meta.url === fileUrl) {
 	start(process.argv)
 }
 
