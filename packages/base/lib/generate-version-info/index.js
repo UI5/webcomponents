@@ -31,7 +31,7 @@ export default VersionInfo;`;
 }
 
 const filePath = process.argv[1];
-const fileUrl = pathToFileURL(windowsPath).href;
+const fileUrl = pathToFileURL(filePath).href;
 
 if (import.meta.url === fileUrl) {
 	generate()
