@@ -4,7 +4,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
-import TextArea from "@ui5/webcomponents/dist/TextArea.js";
+import { BaseTextArea } from "@ui5/webcomponents/dist/TextArea.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -12,7 +12,7 @@ import {
 	WRITING_ASSISTANT_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 // Styles
-import AITextAreaCss from "./generated/themes/AITextArea.css.js";
+import TextAreaCss from "./generated/themes/TextArea.css.js";
 import textareaStyles from "@ui5/webcomponents/dist/generated/themes/TextArea.css.js";
 import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
 
@@ -42,7 +42,8 @@ import WritingAssistant from "./WritingAssistant.js";
  * `import "@sap-webcomponents/ai/dist/TextArea.js";`
  *
  * @constructor
- * @extends TextArea
+ * @extends BaseTextArea
+ * @experimental The **@ui5/webcomponents-ai** package is under development and considered experimental - components' APIs are subject to change.
  * @since 2.16.0
  * @public
  * @slot {HTMLElement} menu Defines a slot for `ui5-menu` integration. This slot allows you to pass a `ui5-menu` instance that will be associated with the assistant.
@@ -55,7 +56,7 @@ import WritingAssistant from "./WritingAssistant.js";
 	styles: [
 		textareaStyles,
 		valueStateMessageStyles,
-		AITextAreaCss,
+		TextAreaCss,
 	],
 	dependencies: [
 		WritingAssistant,
@@ -77,8 +78,8 @@ import WritingAssistant from "./WritingAssistant.js";
  */
 @event("stop-generation")
 
-class AITextArea extends TextArea {
-	eventDetails!: TextArea["eventDetails"] & {
+class TextArea extends BaseTextArea {
+	eventDetails!: BaseTextArea["eventDetails"] & {
 		"version-change": {
 			backwards: boolean;
 		};
@@ -132,7 +133,7 @@ class AITextArea extends TextArea {
 	static i18nBundle: I18nBundle;
 
 	static async onDefine() {
-		AITextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+		TextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
 	}
 
 	/**
@@ -231,7 +232,7 @@ class AITextArea extends TextArea {
 		}
 	}
 	get _ariaLabel() {
-		return this.accessibleName || AITextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return this.accessibleName || TextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	/**
@@ -245,6 +246,6 @@ class AITextArea extends TextArea {
 	}
 }
 
-AITextArea.define();
+TextArea.define();
 
-export default AITextArea;
+export default TextArea;

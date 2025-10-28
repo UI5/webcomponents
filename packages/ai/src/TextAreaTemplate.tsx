@@ -1,9 +1,9 @@
-import type AITextArea from "./TextArea.js";
+import type TextArea from "./TextArea.js";
 import WritingAssistant from "./WritingAssistant.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
 
-export default function TextAreaTemplate(this: AITextArea) {
+export default function TextAreaTemplate(this: TextArea) {
 	return (
 		<div class="ui5-ai-textarea-root">
 			<div
