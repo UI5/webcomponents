@@ -389,6 +389,32 @@ describe("Carousel general interaction", () => {
 
 	});
 
+	it("navigateTo method and visibleItemsIndices", () => {
+		cy.mount(
+			<Carousel id="carousel9" itemsPerPage="S2 M2 L2 XL2" arrowsPlacement="Navigation">
+				<Button>Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+				<Button>Button 4</Button>
+				<Button>Button 5</Button>
+				<Button>Button 6</Button>
+				<Button>Button 7</Button>
+				<Button>Button 8</Button>
+				<Button>Button 9</Button>
+				<Button>Button 10</Button>
+			</Carousel>);
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [0, 1]);
+
+		cy.get("#carousel9").shadow().find('[data-ui5-arrow-forward="true"]').realClick();
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [1, 2]);
+	});
+
 	it("F7 keyboard navigation", () => {
 		cy.mount(
 			<Carousel id="carouselF7" itemsPerPage="S3 M3 L3 XL3">
