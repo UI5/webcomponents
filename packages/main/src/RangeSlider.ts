@@ -104,6 +104,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	startValue = 0;
 
+	@property()
+	startValueTemp?: string;
+
 	/**
 	 * Defines end point of a selection - position of a second handle on the slider.
 	 * @default 100
@@ -113,6 +116,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 */
 	@property({ type: Number })
 	endValue = 100;
+
+	@property()
+	endValueTemp?: string;
 
 	@property({ type: Boolean })
 	rangePressed = false;
