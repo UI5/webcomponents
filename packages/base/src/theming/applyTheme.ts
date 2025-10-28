@@ -49,37 +49,33 @@ const loadComponentPackages = async (theme: string, externalThemeName?: string) 
 };
 
 const detectExternalTheme = async (theme: string) => {
+	if (getThemeRoot()) {
+		await attachCustomThemeStylesToHead(theme);
+	}
+
 	// If theme designer theme is detected, use this
 	const extTheme = getThemeDesignerTheme();
 	if (extTheme) {
 		return extTheme;
 	}
-
-	// If OpenUI5Support is enabled, try to find out if it loaded variables
-	const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
-	if (openUI5Support && openUI5Support.isOpenUI5Detected()) {
-		const varsLoaded = openUI5Support.cssVariablesLoaded();
-		if (varsLoaded) {
-			return {
-				themeName: openUI5Support.getConfigurationSettingsObject()?.theme, // just themeName
-				baseThemeName: "", // baseThemeName is only relevant for custom themes
-			};
-		}
-	} else if (getThemeRoot()) {
-		await attachCustomThemeStylesToHead(theme);
-
-		return getThemeDesignerTheme();
-	}
 };
 
 const applyTheme = async (theme: string) => {
+	// Detect external theme if available (e.g., from theme designer or custom theme root)
 	const extTheme = await detectExternalTheme(theme);
 
-	// Always load component packages properties. For non-registered themes, try with the base theme, if any
+	// Determine which theme to use for component packages:
+	// 1. If the requested theme is registered, use it directly
+	// 2. If external theme exists, use its base theme (e.g., "my_custom_theme" extends "sap_fiori_3")
+	// 3. Otherwise, fallback to the default theme
 	const packagesTheme = isThemeRegistered(theme) ? theme : extTheme && extTheme.baseThemeName;
 	const effectiveTheme = packagesTheme || DEFAULT_THEME;
 
+	// Load base theme properties
 	await loadThemeBase(effectiveTheme);
+
+	// Load component-specific theme properties
+	// Pass external theme name only if it matches the requested theme to avoid conflicts
 	await loadComponentPackages(effectiveTheme, extTheme && extTheme.themeName === theme ? theme : undefined);
 
 	fireThemeLoaded(theme);
