@@ -67,6 +67,9 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
-	pointer-events: none;
 	padding-inline: 0.25rem;
+}
+
+::slotted([slot="logo"]):active {
+	pointer-events: none;
 }
