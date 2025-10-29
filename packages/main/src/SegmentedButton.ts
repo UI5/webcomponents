@@ -128,10 +128,10 @@ class SegmentedButton extends UI5Element {
 	selectionMode: `${SegmentedButtonSelectionMode}` = "Single";
 
 	/**
-	 * Defines whether the segmented button items should fit their content size.
+	 * Determines whether the segmented button items should be sized to fit their content.
 	 *
-	 * When set to `true`, each item is sized to fit its content, with any extra space placed after the last item.
-	 * When set to `false` (default), all items are sized equally to fill the available space.
+	 * If set to `true`, each item will be sized to fit its content, with any extra space distributed after the last item.
+	 * If set to `false` (the default), all items will be equally sized to fill the available space.
 	 *
 	 * @default false
 	 * @public
