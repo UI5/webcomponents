@@ -379,7 +379,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	onEnterDOM() {
 		ResizeHandler.register(this, this._fnOnResize);
 		if (this.hasAttribute("autofocus")) {
-			requestAnimationFrame(() => this.focus());
+			this.focus();
 		}
 	}
 

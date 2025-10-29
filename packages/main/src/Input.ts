@@ -722,7 +722,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
 		this._enableComposition();
 		if (this.hasAttribute("autofocus")) {
-			requestAnimationFrame(() => this.focus());
+			this.focus();
 		}
 	}
 
