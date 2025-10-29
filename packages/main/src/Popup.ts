@@ -504,12 +504,17 @@ abstract class Popup extends UI5Element {
 	 * @returns Promise that resolves when the focus is applied
 	 */
 	async applyFocus(): Promise<void> {
-		// do nothing if the standard HTML autofocus is used
-		if (this.querySelector("[autofocus]")) {
+		await this._waitForDomRef();
+		
+		const elementWithAutoFocus = this.querySelector("[autofocus]");
+		if (elementWithAutoFocus) {
+			// If the "autofocus" is set on UI5Element, focus it manually.
+			if ("isUI5Element" in elementWithAutoFocus) {
+				(elementWithAutoFocus as UI5Element).focus();
+			}
+			// Otherwise, the browser will focus it automatically.
 			return;
 		}
-
-		await this._waitForDomRef();
 
 		if (this.getRootNode() === this) {
 			return;
@@ -707,6 +712,10 @@ abstract class Popup extends UI5Element {
 			},
 		};
 	}
+}
+
+function instanceOfUI5Element(object: any): object is UI5Element {
+	return "isUI5Element" in object;
 }
 
 export default Popup;
