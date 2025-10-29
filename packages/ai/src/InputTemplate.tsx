@@ -122,22 +122,20 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						</div>
 
 					</BusyIndicator>
-					<div
-						 hidden={(!this.isFocused && !this.loading) || !this.hasActions || this.readonly}
-						 class={`ui5-input-ai-icon ui5-ai-input-icon-wrapper ${this._isMenuOpen && "ui5-input-icon-menu-open"} ${this.loading && "ui5-ai-input-loading"}`}
-						 tabIndex={-1}
-						 title={ this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
-						 aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
-						 aria-haspopup={this.loading ? "false" : "menu"}
-						 onClick={this._handleAIIconClick}
-						 aria-label={this.ariaLabel}
-						 >
-						<Icon
-							id="ai-menu-icon"
-							class={"ui5-ai-input-icon"}
-							name={this.loading ? "stop" : "ai"}
-						/>
-					</div>
+					<Button
+						id="ai-menu-btn"
+						hidden={(!this.isFocused && !this.loading) || !this.hasActions || this.readonly}
+						tabIndex={-1}
+						class={`ui5-input-ai-button ui5-ai-input-button-wrapper ${this._isMenuOpen && "ui5-input-button-menu-open"} ${this.loading && "ui5-ai-input-loading"}`}
+						design="Transparent"
+						icon={this.loading ? "stop" : "ai"}
+						onClick={this._handleAIButtonClick}
+						aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
+						tooltip={this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
+						accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
+						aria-label={this.ariaLabel}
+						accessibleName={this.accessibleName}
+					/>
 					<Menu
 						onItemClick={this._onMenuIconClick}
 						onBeforeOpen={() => { this._isMenuOpen = true; }}

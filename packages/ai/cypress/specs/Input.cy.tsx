@@ -1,14 +1,13 @@
-import AIInput from "../../src/Input.js";
+import Input from "../../src/Input.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import { VERSIONING_NEXT_BUTTON_TOOLTIP, VERSIONING_PREVIOUS_BUTTON_TOOLTIP, INPUT_WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
-import Input from "../../src/Input.js";
 
 describe("Basic", () => {
     describe("Initialization", () => {
         it("should render with default properties", () => {
-            cy.mount(<AIInput />);
+            cy.mount(<Input />);
 
             cy.get("[ui5-ai-input]")
                 .as("input")
@@ -19,7 +18,7 @@ describe("Basic", () => {
         });
 
         it("should set initial value as a property", () => {
-            cy.mount(<AIInput value="AI initial value" />);
+            cy.mount(<Input value="AI initial value" />);
 
             cy.get("[ui5-ai-input]")
                 .should("have.prop", "value", "AI initial value");
@@ -28,7 +27,7 @@ describe("Basic", () => {
 
     describe("Loading States", () => {
         it("should display non-loading state correctly", () => {
-            cy.mount(<AIInput loading={false} />);
+            cy.mount(<Input loading={false} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -38,7 +37,7 @@ describe("Basic", () => {
 
         it("should display loading state correctly", () => {
             cy.mount(
-                <AIInput
+                <Input
                     loading={true}
                     value="Generating content..."
                 />
@@ -52,7 +51,7 @@ describe("Basic", () => {
 
         it("should display single result correctly", () => {
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     value="Generated text"
                     currentVersion={1}
@@ -69,7 +68,7 @@ describe("Basic", () => {
 
         it("should display multiple results correctly", () => {
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     value="Generated text"
                     currentVersion={2}
@@ -90,12 +89,12 @@ describe("Basic", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={2}
                     totalVersions={3}
                     onVersionChange={onVersionChange}>
-                </AIInput>
+                </Input>
             );
 
             cy.get("[ui5-ai-input]")
@@ -128,12 +127,12 @@ describe("Basic", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={2}
                     totalVersions={3}
                     onVersionChange={onVersionChange}>
-                </AIInput>
+                </Input>
             );
 
             cy.get("[ui5-ai-input]")
@@ -164,7 +163,7 @@ describe("Basic", () => {
 
         it("should disable previous button when at first version", () => {
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={1}
                     totalVersions={3}
@@ -179,7 +178,7 @@ describe("Basic", () => {
 
         it("should disable next button when at last version", () => {
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={3}
                     totalVersions={3}
@@ -198,7 +197,7 @@ describe("Basic", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     value={initialValue}
                     loading={false}
                     currentVersion={1}
@@ -242,9 +241,9 @@ describe("Basic", () => {
     describe("Menu Integration", () => {
         it("should open menu when AI Icon is clicked", () => {
             cy.mount(
-                <AIInput>
-                    <MenuItem slot={"actions"} text="Generate text" />
-                </AIInput>
+                <Input>
+                    <MenuItem slot="actions" text="Generate text" />
+                </Input>
             );
 
             cy.get("[ui5-ai-input]")
@@ -252,7 +251,8 @@ describe("Basic", () => {
 
             cy.get("[ui5-ai-input]")
                 .shadow()
-                .find("[ui5-icon]")
+                .find("[ui5-button]")
+                .eq(0)
                 .realClick();
 
             cy.get("[ui5-ai-input")
@@ -267,12 +267,12 @@ describe("Basic", () => {
             const onStopGeneration = cy.spy().as("onStopGeneration");
 
             cy.mount(
-                <AIInput
+                <Input
                     loading={true}
                     onStopGeneration={onStopGeneration}
                 >
-                    <MenuItem slot={"actions"} text="Generate text" />
-                </AIInput>
+                    <MenuItem slot="actions" text="Generate text" />
+                </Input>
             );
 
             cy.get("[ui5-ai-input]")
@@ -282,7 +282,8 @@ describe("Basic", () => {
 
             cy.get("[ui5-ai-input]")
                 .shadow()
-                .find("[ui5-icon]")
+                .find("[ui5-button]")
+                .eq(0)
                 .realClick();
 
             cy.get("@onStopGeneration").should("have.been.calledOnce");
@@ -292,9 +293,9 @@ describe("Basic", () => {
     describe("Keyboard Shortcuts", () => {
         it("should handle Shift+F4 to open menu", () => {
             cy.mount(
-                <AIInput>
+                <Input>
                     <MenuItem slot="actions" text="Generate"></MenuItem>
-                </AIInput>
+                </Input>
             );
 
             cy.get("[ui5-ai-input]")
@@ -313,7 +314,7 @@ describe("Basic", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={2}
                     totalVersions={3}
@@ -339,7 +340,7 @@ describe("Basic", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     loading={false}
                     currentVersion={2}
                     totalVersions={3}
@@ -364,7 +365,7 @@ describe("Basic", () => {
 
     describe("Busy State", () => {
         it("should show busy indicator when loading", () => {
-            cy.mount(<AIInput loading={true} />);
+            cy.mount(<Input loading={true} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -373,7 +374,7 @@ describe("Basic", () => {
         });
 
         it("should hide busy indicator when not loading", () => {
-            cy.mount(<AIInput loading={false} />);
+            cy.mount(<Input loading={false} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -387,7 +388,7 @@ describe("Versioning Menu Item", () => {
     describe("Initialization", () => {
         it("should render with current step and total steps as text", () => {
             cy.mount(
-                <AIInput
+                <Input
                     currentVersion={2}
                     totalVersions={3} />
             );
@@ -409,7 +410,7 @@ describe("Versioning Menu Item", () => {
 
     describe("Navigation Buttons", () => {
         it("should enable both buttons when in middle steps", () => {
-            cy.mount(<AIInput currentVersion={2} totalVersions={4} />);
+            cy.mount(<Input currentVersion={2} totalVersions={4} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -431,7 +432,7 @@ describe("Versioning Menu Item", () => {
         });
 
         it("should have proper icons", () => {
-            cy.mount(<AIInput currentVersion={2} totalVersions={4} />);
+            cy.mount(<Input currentVersion={2} totalVersions={4} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -456,7 +457,7 @@ describe("Versioning Menu Item", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     currentVersion={1}
                     totalVersions={2}
                     onVersionChange={onVersionChange}
@@ -485,7 +486,7 @@ describe("Versioning Menu Item", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     currentVersion={2}
                     totalVersions={5}
                     onVersionChange={onVersionChange}
@@ -518,7 +519,7 @@ describe("Versioning Menu Item", () => {
             const onVersionChange = cy.spy().as("onVersionChange");
 
             cy.mount(
-                <AIInput
+                <Input
                     currentVersion={2}
                     totalVersions={3}
                     onVersionChange={onVersionChange}
@@ -577,7 +578,7 @@ describe("Versioning Menu Item", () => {
         });
 
         it("should not change focus when buttons remain enabled", () => {
-            cy.mount(<AIInput currentVersion={3} totalVersions={5} />);
+            cy.mount(<Input currentVersion={3} totalVersions={5} />);
 
             cy.get("[ui5-ai-input]")
                 .as("input");
@@ -605,7 +606,7 @@ describe("Versioning Menu Item", () => {
 
     describe("Step Display", () => {
         it("should update display when properties change", () => {
-            cy.mount(<AIInput currentVersion={1} totalVersions={2} />);
+            cy.mount(<Input currentVersion={1} totalVersions={2} />);
 
             cy.get("[ui5-ai-input]")
                 .as("input")
@@ -624,7 +625,7 @@ describe("Versioning Menu Item", () => {
         });
 
         it("should handle large numbers correctly", () => {
-            cy.mount(<AIInput currentVersion={999} totalVersions={1000} />);
+            cy.mount(<Input currentVersion={999} totalVersions={1000} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -640,7 +641,7 @@ describe("Versioning Menu Item", () => {
 
     describe("Button State Transitions", () => {
         it("should handle rapid property changes", () => {
-            cy.mount(<AIInput currentVersion={1} totalVersions={5} />);
+            cy.mount(<Input currentVersion={1} totalVersions={5} />);
 
             cy.get("[ui5-ai-input]")
                 .as("input");
@@ -669,7 +670,7 @@ describe("Versioning Menu Item", () => {
 
     describe("Accessibility", () => {
         it("should have proper ARIA attributes", () => {
-            cy.mount(<AIInput currentVersion={2} totalVersions={4} />);
+            cy.mount(<Input currentVersion={2} totalVersions={4} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -684,7 +685,7 @@ describe("Versioning Menu Item", () => {
 
 
         it("should have translatable previous button tooltip", () => {
-            cy.mount(<AIInput currentVersion={2} totalVersions={3} />);
+            cy.mount(<Input currentVersion={2} totalVersions={3} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -693,7 +694,7 @@ describe("Versioning Menu Item", () => {
         });
 
         it("should have translatable next button tooltip", () => {
-            cy.mount(<AIInput currentVersion={2} totalVersions={3} />);
+            cy.mount(<Input currentVersion={2} totalVersions={3} />);
 
             cy.get("[ui5-ai-input]")
                 .shadow()
@@ -705,18 +706,19 @@ describe("Versioning Menu Item", () => {
 
 describe("Writing Assistant Input Icon", () => {
     it("should not be visible when input is not focused", () => {
-        cy.mount(<AIInput />);
+        cy.mount(<Input />);
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find("[ui5-icon]")
+            .find("[ui5-button]")
+            .eq(0)
             .should("not.be.visible");
     })
     it("should render AI Icon on focus", () => {
         cy.mount(
-            <AIInput>
-                <MenuItem slot={"actions"} text="Generate text" />
-            </AIInput>
+            <Input>
+                <MenuItem slot="actions" text="Generate text" />
+            </Input>
         );
 
         cy.get("[ui5-ai-input]")
@@ -726,26 +728,28 @@ describe("Writing Assistant Input Icon", () => {
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find("[ui5-icon]")
+            .find("[ui5-button]")
+            .eq(0)
             .should("be.visible")
-            .and("have.prop", "name", "ai");
+            .and("have.prop", "icon", "ai");
     });
     it("should show generating state when loading", () => {
-        cy.mount(<AIInput loading={true} />);
+        cy.mount(<Input loading={true} />);
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find("[ui5-icon]")
-            .should("have.prop", "name", "stop");
+            .find("[ui5-button]")
+            .eq(0)
+            .should("have.prop", "icon", "stop");
     });
     it("should fire icon-click event when clicked in non-loading state", () => {
         cy.mount(
-            <AIInput
+            <Input
                 loading={false}
                 onButtonClick={cy.stub().as("onButtonClick")}
             >
-                <MenuItem slot={"actions"} text="Generate text" />
-            </AIInput>
+                <MenuItem slot="actions" text="Generate text" />
+            </Input>
         );
 
 
@@ -756,7 +760,8 @@ describe("Writing Assistant Input Icon", () => {
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find("[ui5-icon]")
+            .find("[ui5-button]")
+            .eq(0)
             .realClick();
 
         cy.get("@onButtonClick")
@@ -765,12 +770,12 @@ describe("Writing Assistant Input Icon", () => {
 
     it("should fire stop-generation event when clicked in loading state", () => {
         cy.mount(
-            <AIInput
+            <Input
                 loading={true}
                 onStopGeneration={cy.spy().as("onStopGeneration")}
             >
-                <MenuItem slot={"actions"} text="Generate text" />
-            </AIInput>
+                <MenuItem slot="actions" text="Generate text" />
+            </Input>
         );
 
         cy.get("[ui5-ai-input]")
@@ -780,27 +785,28 @@ describe("Writing Assistant Input Icon", () => {
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find("[ui5-icon]")
+            .find("[ui5-button]")
+            .eq(0)
             .realClick();
 
         cy.get("@onStopGeneration").should("have.been.calledOnce");
     });
 
     it("should have proper ariaKeyShortcuts accessibility attribute", () => {
-        cy.mount(<AIInput />);
+        cy.mount(<Input />);
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find(".ui5-input-ai-icon")
+            .find(".ui5-input-ai-button")
             .should("have.attr", "aria-keyshortcuts", "Shift + F4");
     });
 
     it("should have correct aria-label attribute", () => {
-        cy.mount(<AIInput />);
+        cy.mount(<Input />);
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find(".ui5-input-ai-icon")
+            .find(".ui5-input-ai-button")
             .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_LABEL.defaultText);
     });
 })

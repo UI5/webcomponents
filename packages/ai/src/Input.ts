@@ -3,6 +3,9 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import {
+	isF4Shift,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import BaseInput from "@ui5/webcomponents/dist/Input.js";
 import type Menu from "@ui5/webcomponents/dist/Menu.js";
 import type Button from "./Button.js";
@@ -34,11 +37,11 @@ import {
  * The `ui5-ai-input` consists of the following main parts:
  *
  * - **Input Field** – Inherits all standard Input behaviors.
- * - **AI Action Icon** – Appears when focused or loading, providing access to AI-related actions or stopping generation.
+ * - **AI Action Button** – Appears when focused or loading, providing access to AI-related actions or stopping generation.
  *
- * The component automatically determines which UI elements to render based on its internal state:
- * - The AI icon is only shown when there are available `actions`.
- * - The version navigation UI appears only when `totalVersions > 1`.
+ * The component automatically determines which elements to render based on its internal state:
+ * - The AI Button is only shown when there are available `actions`.
+ * - The version navigation appears only when `totalVersions > 1`.
  *
  * ### Keyboard Support
  *
@@ -111,7 +114,7 @@ class Input extends BaseInput {
 	/**
 	 * Indicates the total number of result versions available.
 	 *
-	 * When not set or set to 0, the versioning UI will be hidden.
+	 * When not set or set to 0, the versioning will be hidden.
 	 *
 	 * @default 0
 	 * @public
@@ -168,8 +171,8 @@ class Input extends BaseInput {
 	 * @private
 	 */
 	_manageVersionButtonsFocus() {
-		const previousButton = this.shadowRoot?.querySelectorAll("ui5-button")[0] as Button;
-		const nextButton = this.shadowRoot?.querySelectorAll("ui5-button")[1] as Button;
+		const previousButton = this.shadowRoot?.getElementById("arrow-left") as Button;
+		const nextButton = this.shadowRoot?.getElementById("arrow-right") as Button;
 		const isPreviousDisabled = this.currentVersion <= 1;
 		const isNextDisabled = this.currentVersion >= this.totalVersions;
 
@@ -185,16 +188,16 @@ class Input extends BaseInput {
 	}
 
 	/**
-	 * Handles the click event for the AI generate icon.
-	 * Fires the appropriate event based on the AI icon state.
+	 * Handles the click event for the AI generate Button.
+	 * Fires the appropriate event based on the AI Button state.
 	 * @private
 	 */
-	_handleAIIconClick(e: Event) {
-		const target = e.target as HTMLElement & { name?: string };
-		if (target?.name === "stop") {
+	_handleAIButtonClick(e: Event) {
+		const target = e.target as HTMLElement & { icon?: string };
+		if (target?.icon === "stop") {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
-			const opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
+			const opener = this.shadowRoot?.querySelector(".ui5-input-ai-button") as HTMLElement;
 			this.fireDecoratorEvent("button-click");
 			this.menu.opener = opener;
 			this.menu.open = true;
@@ -249,9 +252,9 @@ class Input extends BaseInput {
 	 */
 	_onkeydown(e: KeyboardEvent): void {
 		super._onkeydown(e);
-		this.menu.opener = this.shadowRoot?.querySelector(".ui5-input-ai-icon") as HTMLElement;
+		this.menu.opener = this.shadowRoot?.querySelector(".ui5-input-ai-button") as HTMLElement;
 
-		if (e.key === "F4" && e.shiftKey) {
+		if (isF4Shift(e)) {
 			e.preventDefault();
 			this.menu.open = true;
 			this.menu.horizontalAlign = "End";
@@ -269,12 +272,11 @@ class Input extends BaseInput {
 	}
 
 	/**
-	 * Handles visibility of the Writing Assistant Icon.
-	 * If there are no items, the Writing Assistant Icon would not be rendered.
+	 * Handles visibility of the Writing Assistant Button.
+	 * If there are no items, the Writing Assistant Button would not be rendered.
 	 */
 	get hasActions() {
-		const actions = !!this?.menu?.getSlottedNodes("items").length;
-		return actions;
+		return !!this?.menu?.getSlottedNodes("items").length;
 	}
 
 	get ariaLabel() {
