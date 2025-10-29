@@ -29,6 +29,7 @@ import { isInstanceOfMenuItem } from "./MenuItem.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {
 	ListItemClickEventDetail,
 } from "./List.js";
@@ -40,7 +41,6 @@ import {
 
 // Styles
 import menuCss from "./generated/themes/Menu.css.js";
-import type PopoverPlacement from "./types/PopoverPlacement.js";
 
 const MENU_OPEN_DELAY = 300;
 
