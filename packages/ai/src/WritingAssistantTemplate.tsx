@@ -8,7 +8,7 @@ import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 
 export default function WritingAssistantTemplate(this: WritingAssistant) {
 	const isMultiResults = this.totalVersions > 1;
-	const hasResults = (this.totalVersions > 0 && this.actionText) || this.loading;
+	const hasResults = (this.totalVersions > 0 && this.promptDescription) || this.loading;
 
 	return (
 		<Toolbar
@@ -18,15 +18,15 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 		>
 			{isMultiResults && !this.loading && (
 				<Versioning
-					currentStep={this.currentVersionIndex}
+					currentStep={this.currentVersion + 1}
 					totalSteps={this.totalVersions}
 					onVersion-change={this.handleVersionChange}
 				/>
 			)}
 
-			{hasResults && this.actionText && (
+			{hasResults && this.promptDescription && (
 				<ToolbarLabel
-					text={this.actionText}
+					text={this.promptDescription}
 					class="ui5-ai-writing-assistant-action-label"
 				/>
 			)}
