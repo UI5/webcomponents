@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.6](https://github.com/UI5/webcomponents/compare/v2.13.5...v2.13.6) (2025-10-29)
+
+
+### Bug Fixes
+
+* **ui5-input,ui5-combobox:** fix Japanese and Korean typing in inp fields ([87ff752](https://github.com/UI5/webcomponents/commit/87ff7523adb857063dde577822f6e978d9f52f08))
+* **ui5-multi-combobox:** handle composition with validation ([#12501](https://github.com/UI5/webcomponents/issues/12501)) ([fd426fe](https://github.com/UI5/webcomponents/commit/fd426fe8a603f13cbf437fb85bb8b5f1888b25cb))
+
+
+
+
+
 ## [2.13.5](https://github.com/UI5/webcomponents/compare/v2.13.4...v2.13.5) (2025-10-21)
 
 
