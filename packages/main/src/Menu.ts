@@ -40,6 +40,7 @@ import {
 
 // Styles
 import menuCss from "./generated/themes/Menu.css.js";
+import type PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
 
 const MENU_OPEN_DELAY = 300;
 
@@ -207,6 +208,14 @@ class Menu extends UI5Element {
 	 */
 	@property()
 	horizontalAlign: `${PopoverHorizontalAlign}` = "Start";
+
+	/**
+	 * Determines the vertical alignment of the menu relative to its opener control.
+	 * @default "Start"
+	 * @public
+	 */
+	@property()
+	verticalAlign: `${PopoverVerticalAlign}` = "Bottom";
 
 	/**
 	 * Defines if a loading indicator would be displayed inside the corresponding ui5-menu popover.
