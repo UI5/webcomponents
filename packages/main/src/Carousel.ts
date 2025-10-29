@@ -87,8 +87,8 @@ type ItemsInfo = {
  * ### Hidden Items
  *
  * Carousel items can be conditionally hidden by adding the `hidden` attribute to any child element.
- * Hidden items are automatically excluded from the carousel navigation and will not be displayed or counted in pagination.
- * This allows for dynamic showing/hiding of carousel items without affecting the overall carousel behavior.
+ * Hidden items are automatically excluded from carousel navigation and will not be displayed or counted in pagination.
+ * This allows for dynamic showing or hiding of carousel items without affecting the overall carousel behavior.
  *
  * ### Keyboard Handling
  *
@@ -314,8 +314,8 @@ class Carousel extends UI5Element {
 	/**
 	 * Defines the content of the component.
 	 *
-	 * **Note:** Items with the `hidden` attribute will be automatically excluded from carousel navigation,
-	 * page calculations, and will not be displayed or accessible via keyboard navigation. See [sample](./#carousel-with-hidden-items).
+	 * **Note:** Items with the `hidden` attribute will be automatically excluded from carousel navigation and page calculations.
+	 * They will not be displayed or accessible via keyboard navigation. See [sample](./#carousel-with-hidden-items).
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
