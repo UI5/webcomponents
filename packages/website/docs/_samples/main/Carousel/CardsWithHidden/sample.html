@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <ui5-carousel items-per-page="S1 M2 L3 XL3" background-design="Solid" page-indicator-background-design="Transparent"
+		page-indicator-border-design="None">
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 1" title-text="Visible Card 1"
+				subtitle-text="This card is visible">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Marketing Overview</ui5-li>
+				<ui5-li icon="opportunity">Sales Performance</ui5-li>
+				<ui5-li icon="line-charts">Quarterly Reports</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard" hidden>
+			<ui5-card-header slot="header" status="Item 2" title-text="Hidden Card 2"
+				subtitle-text="This card is hidden via attribute">
+				<ui5-icon name="hide" slot="avatar"></ui5-icon>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="cancel">Hidden Analytics</ui5-li>
+				<ui5-li icon="delete">Hidden Data Cleanup</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 3" title-text="Visible Card 3"
+				subtitle-text="Visible card after hidden one">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Customer Insights</ui5-li>
+				<ui5-li icon="opportunity">Campaign Performance</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 4" title-text="Visible Card 4"
+				subtitle-text="Visible item example">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="line-charts">Trend Analysis</ui5-li>
+				<ui5-li icon="customer">Customer Segments</ui5-li>
+				<ui5-li icon="workflow-tasks">Action Items</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard" hidden>
+			<ui5-card-header slot="header" status="Item 5" title-text="Hidden Card 5"
+				subtitle-text="Another hidden example">
+				<ui5-icon name="hide" slot="avatar"></ui5-icon>
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="cancel">Hidden Task</ui5-li>
+				<ui5-li icon="delete">Hidden Entry</ui5-li>
+			</ui5-list>
+		</ui5-card>
+
+		<ui5-card class="myCard">
+			<ui5-card-header slot="header" status="Item 6" title-text="Visible Card 6"
+				subtitle-text="End of visible sequence">
+			</ui5-card-header>
+			<ui5-list separators="Inner">
+				<ui5-li icon="horizontal-bullet-chart">Final Overview</ui5-li>
+				<ui5-li icon="opportunity">Closing Metrics</ui5-li>
+			</ui5-list>
+		</ui5-card>
+	</ui5-carousel>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
