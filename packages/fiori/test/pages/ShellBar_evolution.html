@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<title>Shell Bar</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	<script data-ui5-config type="application/json">
 		{
@@ -20,9 +21,9 @@
 
 <body class="shellbar1auto">
 
-<ui5-navigation-layout mode="Collapsed">
+	<ui5-navigation-layout mode="Collapsed">
 
-			<ui5-shellbar slot="header" show-notifications>
+		<ui5-shellbar slot="header" show-notifications>
 			<ui5-shellbar-branding slot="branding">
 				S/4HANA Cloud
 				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
@@ -78,30 +79,94 @@
 			</ui5-avatar>
 		</ui5-shellbar>
 
-	<ui5-side-navigation slot="sideContent">
-		<ui5-side-navigation-item text="Home" icon="home"></ui5-side-navigation-item>
-		<ui5-side-navigation-item text="People" expanded icon="group">
-			<ui5-side-navigation-sub-item text="From My Team"></ui5-side-navigation-sub-item>
-			<ui5-side-navigation-sub-item text="From Other Team"></ui5-side-navigation-sub-item>
-		</ui5-side-navigation-item>
-		<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
-		<ui5-side-navigation-item text="Events" icon="calendar">
-			<ui5-side-navigation-sub-item text="Local"></ui5-side-navigation-sub-item>
-			<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
-			<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
-			</ui5-side-navigation-sub-item>
-		</ui5-side-navigation-item>
-		<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link">
-			<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
-			</ui5-side-navigation-sub-item>
-		</ui5-side-navigation-item>
-		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history">
-		</ui5-side-navigation-item>
-	</ui5-side-navigation>
-</ui5-navigation-layout>
+		<h4>ShellBar in 320px with container padding-inline of 0.5rem </h4>
+		<div style="width: 320px; border: 1px solid red; margin: 1rem; box-sizing: border-box;">
+			<ui5-shellbar style="padding-inline: 0.5rem" slot="header" show-notifications primary-title="S/4HANA Cloud">
+				<!-- <ui5-shellbar-branding slot="branding"> -->
+				<!-- S/4HANA Cloud -->
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				<!-- </ui5-shellbar-branding> -->
+
+				<ui5-button icon="menu2" slot="startButton"></ui5-button>
+				<ui5-button icon="nav-back" slot="startButton"></ui5-button>
+
+				<ui5-button icon="slim-arrow-down" slot="content" data-hide-order="9"></ui5-button>
+
+				<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+				<div slot="content" style="display: flex; align-items: center;">
+					<ui5-label>New Version</ui5-label>
+					<ui5-switch checked></ui5-switch>
+				</div>
+
+				<ui5-input placeholder="Instructions" slot="searchField" show-suggestions value-state="Information">
+					<div slot="valueStateMessage">Instructions</div>
+				</ui5-input>
+
+				<ui5-toggle-button icon="sap-icon://da" slot="assistant" text="Assitant"
+					title="Assitant"></ui5-toggle-button>
+				<ui5-avatar slot="profile" initials="JM"></ui5-avatar>
+				</ui5-avatar>
+			</ui5-shellbar>
+		</div>
+
+		<h4>ShellBar in 320px with container padding-inline of 0.875rem 1rem</h4>
+		<div style="width: 320px; border: 1px solid red; margin: 1rem; box-sizing: border-box;">
+			<ui5-shellbar style="padding-inline: 0.875rem 1rem" slot="header" show-notifications primary-title="S/4HANA Cloud">
+				<!-- <ui5-shellbar-branding slot="branding"> -->
+				<!-- S/4HANA Cloud -->
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				<!-- </ui5-shellbar-branding> -->
+
+				<ui5-button icon="menu2" slot="startButton"></ui5-button>
+				<ui5-button icon="nav-back" slot="startButton"></ui5-button>
+
+				<ui5-button icon="slim-arrow-down" slot="content" data-hide-order="9"></ui5-button>
+
+				<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+				<div slot="content" style="display: flex; align-items: center;">
+					<ui5-label>New Version</ui5-label>
+					<ui5-switch checked></ui5-switch>
+				</div>
+
+				<ui5-input placeholder="Instructions" slot="searchField" show-suggestions value-state="Information">
+					<div slot="valueStateMessage">Instructions</div>
+				</ui5-input>
+
+				<ui5-toggle-button icon="sap-icon://da" slot="assistant" text="Assitant"
+					title="Assitant"></ui5-toggle-button>
+				<ui5-avatar slot="profile" initials="JM"></ui5-avatar>
+				</ui5-avatar>
+			</ui5-shellbar>
+		</div>
+
+		<ui5-side-navigation slot="sideContent">
+			<ui5-side-navigation-item text="Home" icon="home"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" expanded icon="group">
+				<ui5-side-navigation-sub-item text="From My Team"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Team"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Events" icon="calendar">
+				<ui5-side-navigation-sub-item text="Local"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
+				</ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link">
+				<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
+				</ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems" text="History" icon="history">
+			</ui5-side-navigation-item>
+		</ui5-side-navigation>
+	</ui5-navigation-layout>
 
 	<div class="content"></div>
 
 
+
 </body>
+
 </html>
