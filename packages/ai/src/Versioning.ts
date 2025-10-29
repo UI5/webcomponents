@@ -151,9 +151,9 @@ class Versioning extends ToolbarItem {
 		}
 
 		const isPreviousDisabled = this.currentStep <= 1;
-		const isNextDisabled = this.currentStep === this.totalSteps;
+		const isNextDisabled = this.currentStep >= this.totalSteps;
 		const wasPreviousDisabled = this._previousCurrentStep <= 1;
-		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps;
+		const wasNextDisabled = this._previousCurrentStep >= this._previousTotalSteps;
 
 		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === LastClickedButton.Previous && nextButton instanceof HTMLElement) {
 			nextButton.focus();

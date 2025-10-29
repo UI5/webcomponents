@@ -114,7 +114,7 @@ class WritingAssistant extends UI5Element {
 	loading = false;
 
 	/**
-	 * Defines the action text of the AI Writing Assistant.
+	 * Defines the prompt description of the Writing Assistant.
 	 *
 	 * This text is displayed in the toolbar to indicate the current or last
 	 * performed AI action (e.g., "Generated text", "Simplified text").
@@ -123,32 +123,32 @@ class WritingAssistant extends UI5Element {
 	 * @public
 	 */
 	@property()
-	actionText = "";
+	promptDescription = "";
 
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
+	 * The index is **0-based** (i.e. `0` represents the first result).
 	 * This property is synchronized with the parent AI TextArea component.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 * @since 2.16.0
 	 */
 	@property({ type: Number })
-	currentVersionIndex = 1;
+	currentVersion = 0;
 
 	/**
 	 * Indicates the total number of result versions available.
 	 *
 	 * This property determines whether version navigation controls are displayed.
-	 * When totalVersions > 1, previous/next buttons become available.
+	 * When totalVersions > 0, previous/next buttons become available.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	totalVersions = 1;
+	totalVersions = 0;
 
 	@i18n("@ui5/webcomponents-ai")
 	static i18nBundleAi: I18nBundle;
