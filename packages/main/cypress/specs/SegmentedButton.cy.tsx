@@ -279,7 +279,7 @@ describe("SegmentedButtonItems appearance", () => {
 });
 
 describe("SegmentedButton: fitContent", () => {
-    it("should have items with width which fits item content when fitContent is true", () => {
+    it("should have items with width which fits item content when itemsFitContent is true", () => {
         cy.mount(
             <SegmentedButton itemsFitContent={true}>
                 <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
@@ -300,7 +300,7 @@ describe("SegmentedButton: fitContent", () => {
         });
     });
 
-    it("should have items with equal width when fitContent is false", () => {
+    it("should have items with equal width when itemsFitContent is false (default)", () => {
         cy.mount(
             <SegmentedButton>
                 <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
