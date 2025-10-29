@@ -44,14 +44,22 @@ export default function SearchFieldTemplate(this: SearchItem) {
 						<span part="subtitle" class="ui5-search-item-description">{this.description}</span>
 					</div>
 
-					{this.deletable &&
-						<Button class="ui5-search-item-selected-delete"
-							design={ButtonDesign.Transparent}
-							icon={decline}
-							onClick={this._onDeleteButtonClick}
-							tooltip={this._deleteButtonTooltip}
-							onKeyDown={this._onDeleteButtonKeyDown}></Button>
-					}
+					<div class="ui5-search-item-actions-container">
+						{this.hasActions &&
+							<div class="ui5-search-item-actions">
+								<slot name="actions"></slot>
+							</div>
+						}
+
+						{this.deletable &&
+							<Button class="ui5-search-item-selected-delete"
+								design={ButtonDesign.Transparent}
+								icon={decline}
+								onClick={this._onDeleteButtonClick}
+								tooltip={this._deleteButtonTooltip}
+								onKeyDown={this._onDeleteButtonKeyDown}></Button>
+						}
+					</div>
 				</div>
 			</div>
 		</li >
