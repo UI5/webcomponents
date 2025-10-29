@@ -112,7 +112,7 @@ UI5 Web Components are supported by all major modern browsers.
 |                                   | Google Chrome     | Apple Safari   |
 |-----------------------------------|-------------------|----------------|
 | **Android** (Latest 3 versions)   | Latest 2 Stable   | n/a            |
-| **iOS & iPadOS** (Latest version) | -                 | Latest Version |
+| **iOS & iPadOS** (Latest version) | -                 | Latest 2 Stable|
 
 
 ## Project Structure, Development and Build
