@@ -37,22 +37,12 @@ export default function TableTemplate(this: Table) {
 					</TableRow>
 				}
 
-				{ this.rows.length > 0 && this._getGrowing()?.hasGrowingComponent() &&
-					<div id="footer" role="rowgroup">
-						{ growingRow.call(this) }
-					</div>
-				}
-
 				<DropIndicator
 					orientation="Horizontal"
 					ownerReference={this}
 				></DropIndicator>
 
-				<div aria-hidden="true" id="table-end-row">
-					<div id="table-end-cell">
-						<div id="table-end" aria-hidden="true" tabindex={-1}></div>
-					</div>
-				</div>
+				<div aria-hidden="true" id="table-end-row"></div>
 
 				{ this.loading &&
 					<BusyIndicator id="loading"
@@ -64,16 +54,10 @@ export default function TableTemplate(this: Table) {
 			</div>
 
 			<div id="after" role="none" tabindex={0} ui5-table-dummy-focus-area></div>
-		</>
-	);
-}
 
-function growingRow(this: Table) {
-	return (
-		<TableRow id="growing-row" ui5-growing-row aria-hidden={true}>
-			<TableCell id="growing-cell">
+			{ this.rows.length > 0 && this._getGrowing()?.hasGrowingComponent() &&
 				<slot name={this._getGrowing()?._individualSlot}></slot>
-			</TableCell>
-		</TableRow>
+			}
+		</>
 	);
 }

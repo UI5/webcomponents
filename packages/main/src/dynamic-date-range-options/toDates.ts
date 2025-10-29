@@ -2,6 +2,10 @@ import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicD
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 
 const dateOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 1) {
+		return [];
+	}
+
 	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
 	const endDate = UI5Date.getInstance(startDate.getTime());
 
@@ -12,11 +16,26 @@ const dateOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 };
 
 const dateRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 2) {
+		return [];
+	}
+
 	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
 	const endDate = value.values ? value.values[1] as Date : UI5Date.getInstance();
 
 	startDate?.setHours(0, 0, 0, 0);
 	endDate?.setHours(23, 59, 59, 999);
+
+	return [startDate, endDate];
+};
+
+const dateTimeRangeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length !== 2) {
+		return [];
+	}
+
+	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
+	const endDate = value.values ? value.values[1] as Date : UI5Date.getInstance();
 
 	return [startDate, endDate];
 };
@@ -177,12 +196,28 @@ const toDatesLastNext = (value: DynamicDateRangeValue, option: IDynamicDateRange
 	return lastNextToDates(value, unit, direction);
 };
 
+const dateTimeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
+	if (!value || !value.values || value.values.length === 0) {
+		return [];
+	}
+
+	const startDate = value.values ? value.values[0] as Date : UI5Date.getInstance();
+	const endDate = UI5Date.getInstance(startDate.getTime());
+
+	startDate.setMilliseconds(0);
+	endDate.setMilliseconds(999);
+
+	return [startDate, endDate];
+};
+
 export {
 	dateOptionToDates,
 	dateRangeOptionToDates,
+	dateTimeRangeOptionToDates,
 	todayToDates,
 	tomorrowToDates,
 	yesterdayToDates,
 	lastNextToDates,
 	toDatesLastNext,
+	dateTimeOptionToDates,
 };

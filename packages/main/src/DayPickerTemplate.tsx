@@ -15,8 +15,6 @@ export default function DayPickerTemplate(this: DayPicker) {
 			onKeyUp={this._onkeyup}
 			onClick={this._onclick}
 			onMouseOver={this._onmouseover}
-			onFocusIn={this._onfocusin}
-			onFocusOut={this._onfocusout}
 		>
 			<div id={`${this._id}-content`} class="ui5-dp-content" role="grid" aria-roledescription={this.ariaRoledescription}>
 				<div role="row" class="ui5-dp-days-names-container">

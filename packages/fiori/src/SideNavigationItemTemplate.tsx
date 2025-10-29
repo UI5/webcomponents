@@ -44,6 +44,7 @@ function ItemTemplate(this: SideNavigationItem) {
 						  aria-owns={this._groupId}
 						  aria-label={this._ariaLabel}
 						  aria-expanded={this._expanded}
+						  aria-describedby={this._describedBy}
 			>
 				{this.sideNavCollapsed ?
 					<Icon class="ui5-sn-item-icon" name={this.icon}/>
