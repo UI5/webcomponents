@@ -505,7 +505,7 @@ describe("FromDateTime Option", () => {
 			.should("have.attr", "selected");
 	});
 
-	it.only("should select a date and time, then submit the value", () => {
+	it("should select a date and time, then submit the value", () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
@@ -536,8 +536,8 @@ describe("FromDateTime Option", () => {
 			.ui5DynamicDateRangeSubmit();
 
 		 cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
+			.shadow()
+			.find("[ui5-input]")
 			.as("input");
 
 		cy.get("@input")
@@ -648,8 +648,8 @@ describe("ToDateTime Option", () => {
 			.ui5DynamicDateRangeSubmit();
 
 		cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
+			.shadow()
+			.find("[ui5-input]")
 			.as("input");
 
 		cy.get("@input")
@@ -669,13 +669,13 @@ describe("DynamicDateRange DateTimeRange Option", () => {
 			.as("ddr")
 			.ui5DynamicDateRangeOpen()
 			.ui5DynamicDateRangeSelectOption()
-            .ui5DynamicDateRangeSetDateTime("from-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("from-picker", "Dec 25, 2023, 2:30:00 PM")
 			.ui5DynamicDateRangeSetDateTime("to-picker", "Dec 26, 2023, 4:45:00 AM")
-            .ui5DynamicDateRangeSubmit();
+			.ui5DynamicDateRangeSubmit();
 
-        cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
 			.as("input");
 
 		cy.get("@input")
@@ -687,13 +687,13 @@ describe("DynamicDateRange DateTimeRange Option", () => {
 			.as("ddr")
 			.ui5DynamicDateRangeOpen()
 			.ui5DynamicDateRangeSelectOption()
-            .ui5DynamicDateRangeSetDateTime("to-picker", "Dec 25, 2023, 2:30:00 PM")
+			.ui5DynamicDateRangeSetDateTime("to-picker", "Dec 25, 2023, 2:30:00 PM")
 			.ui5DynamicDateRangeSetDateTime("from-picker", "Dec 26, 2023, 4:45:00 AM")
-            .ui5DynamicDateRangeSubmit();
+			.ui5DynamicDateRangeSubmit();
 
-        cy.get("@ddr")
-            .shadow()
-            .find("[ui5-input]")
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
 			.as("input");
 
 		cy.get("@input")
