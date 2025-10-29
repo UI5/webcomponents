@@ -4,13 +4,13 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
 const SAMPLE_TEXTS = {
-    en: "AI can help you write faster.",
-    bg: "ИИ може да ви помогне да пишете по-бързо.",
-    de: "KI kann Ihnen beim schnelleren Schreiben helfen.",
-    expanded: "AI assists in generating detailed content quickly.",
-    rephrased: "AI helps reword sentences clearly.",
-    simplified: "AI makes text simpler.",
-    summarized: "AI shortens long content."
+    en: "Innovation managers lead with creativity.",
+    bg: "Мениджърите по иновации водят с креативност.",
+    de: "Innovationsmanager führen mit Kreativität.",
+    expanded: "They combine creative ideas with strategic action.",
+    rephrased: "Managers use creativity to guide innovation.",
+    simplified: "They lead using creativity.",
+    summarized: "Driving innovation creatively."
 };
 
 const MENU_CONFIG = [

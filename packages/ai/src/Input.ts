@@ -69,7 +69,7 @@ import {
 })
 
 /**
- * Fired when the user clicks on the AI button.
+ * Fired when the user selects the AI button.
  * @public
  */
 @event("button-click", {
@@ -77,13 +77,13 @@ import {
 })
 
 /**
- * Fired when the user clicks on the "Stop" button to stop ongoing AI text generation.
+ * Fired when the user selects the "Stop" button to stop ongoing AI text generation.
  * @public
  */
 @event("stop-generation")
 
 /**
- * Fired when the user clicks on version navigation buttons.
+ * Fired when the user selects the version navigation buttons.
  *
  * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default)
  * @public
@@ -111,7 +111,7 @@ class Input extends BaseInput {
 	/**
 	 * Indicates the total number of result versions available.
 	 *
-	 * When not set or `0`, versioning UI will be hidden.
+	 * When not set or set to 0, the versioning UI will be hidden.
 	 *
 	 * @default 0
 	 * @public
@@ -163,8 +163,8 @@ class Input extends BaseInput {
 	}
 
 	/**
-	 * Manages focus when navigation buttons become disabled/enabled.
-	 * Automatically moves focus to available button when user reaches boundaries.
+	 * Manages the focus when the navigation buttons become disabled/enabled.
+	 * Automatically moves the focus to the available button when the user reaches the boundaries.
 	 * @private
 	 */
 	_manageVersionButtonsFocus() {
@@ -269,8 +269,8 @@ class Input extends BaseInput {
 	}
 
 	/**
-	 * Handles visibility of the WA Icon.
-	 * If there are no items, the WA Icon would not be rendered.
+	 * Handles visibility of the Writing Assistant Icon.
+	 * If there are no items, the Writing Assistant Icon would not be rendered.
 	 */
 	get hasActions() {
 		const actions = !!this?.menu?.getSlottedNodes("items").length;
