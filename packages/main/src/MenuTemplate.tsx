@@ -10,7 +10,7 @@ export default function MenuTemplate(this: Menu) {
 		<ResponsivePopover
 			id={`${this._id}-menu-rp`}
 			class="ui5-menu-rp"
-			placement="Bottom"
+			placement={this.placement}
 			verticalAlign="Bottom"
 			horizontalAlign={this.horizontalAlign}
 			opener={this.opener}
