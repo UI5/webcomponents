@@ -4,6 +4,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
+	isEscape,
 	isF4Shift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import BaseInput from "@ui5/webcomponents/dist/Input.js";
@@ -206,6 +207,16 @@ class Input extends BaseInput {
 	}
 
 	/**
+	 * Handles the escape event for the AI generate Button.
+	 * @private
+	 */
+	_handleAIButtonKeydown = (e: KeyboardEvent) => {
+		if (isEscape(e) && this.loading) {
+			this.fireDecoratorEvent("stop-generation");
+		}
+	}
+
+	/**
 	 * Handles the version change event from the versioning component.
 	 *
 	 * @param {CustomEvent} e - The version change event
@@ -252,10 +263,12 @@ class Input extends BaseInput {
 	 */
 	_onkeydown(e: KeyboardEvent): void {
 		super._onkeydown(e);
-		this.menu.opener = this.shadowRoot?.querySelector(".ui5-input-ai-button") as HTMLElement;
+		const menuButton = this.shadowRoot?.getElementById("ai-menu-btn") as HTMLElement;
 
 		if (isF4Shift(e)) {
-			e.preventDefault();
+			menuButton?.focus();
+
+			this.menu.opener = menuButton;
 			this.menu.open = true;
 			this.menu.horizontalAlign = "End";
 		}

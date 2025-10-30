@@ -51,12 +51,17 @@ const MENU_CONFIG = [
     }
 ];
 
+const TIMING_CONFIG = {
+    processingDelay: 3000,      // Milliseconds to simulate AI processing time
+    typingSpeed: 10             // Milliseconds between each character in typing animation
+};
+
 let versionHistory = [];
 let currentIndexHistory = 0;
 let currentActionInProgress = null;
 let typingInterval = null;
-let isGenerating = false;
-let currentGenerationId = 0;  // used to cancel stale runs
+let currentGenerationIndex = 0;
+let animationHasStarted = false;
 
 const aiInput = document.getElementById("ai-input");
 
@@ -67,14 +72,6 @@ aiInput.addEventListener('item-click', handleMenuItemClick);
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function addToHistory(entry) {
-    versionHistory.push(entry);
-    if (versionHistory.length > 50) {
-        versionHistory.shift();
-        if (currentIndexHistory > 0) currentIndexHistory--;
-    }
 }
 
 function saveCurrentVersion() {
@@ -99,22 +96,22 @@ function updateComponentState(versionIndex = null) {
     }
 }
 
-function createMenuItem(cfg) {
+function createMenuItem(configItem) {
     const item = document.createElement('ui5-menu-item');
-    item.setAttribute('text', cfg.text || '');
+    item.setAttribute('text', configItem.text || '');
 
-    if (!cfg.isChild) {
+    if (!configItem.isChild) {
         item.setAttribute('slot', 'actions');
     }
 
-    if (cfg.action) {
-        item.dataset.action = cfg.action;
-        if (cfg.processingLabel) item.dataset.processingLabel = cfg.processingLabel;
-        if (cfg.completedLabel) item.dataset.completedLabel = cfg.completedLabel;
-        if (cfg.textKey) item.dataset.textKey = cfg.textKey;
+    if (configItem.action) {
+        item.dataset.action = configItem.action;
+        if (configItem.processingLabel) item.dataset.processingLabel = configItem.processingLabel;
+        if (configItem.completedLabel) item.dataset.completedLabel = configItem.completedLabel;
+        if (configItem.textKey) item.dataset.textKey = configItem.textKey;
     }
-    if (cfg.shortcut) item.setAttribute('additional-text', cfg.shortcut);
-    if (cfg.startsSection) item.setAttribute('starts-section', '');
+    if (configItem.shortcut) item.setAttribute('additional-text', configItem.shortcut);
+    if (configItem.startsSection) item.setAttribute('starts-section', '');
     return item;
 }
 
@@ -123,18 +120,18 @@ function buildMenuFromConfig() {
 
     if (hasHistory) {
         aiInput.querySelectorAll("ui5-menu-item").forEach(item => item.remove());
-        MENU_CONFIG.forEach(cfg => {
-            if (cfg.replaces && !hasHistory) return;
+        MENU_CONFIG.forEach(configItem => {
+            if (configItem.replaces && !hasHistory) return;
 
-            if (cfg.isGroup && Array.isArray(cfg.children)) {
-                const group = createMenuItem(cfg);
-                cfg.children.forEach(child => {
+            if (configItem.isGroup && Array.isArray(configItem.children)) {
+                const group = createMenuItem(configItem);
+                configItem.children.forEach(child => {
                     const childItem = createMenuItem(child);
                     group.appendChild(childItem);
                 });
                 aiInput.appendChild(group);
             } else {
-                aiInput.appendChild(createMenuItem(cfg));
+                aiInput.appendChild(createMenuItem(configItem));
             }
         });
     }
@@ -151,7 +148,7 @@ function completeGeneration(action, menuItem) {
     stopTypingAnimation();
     const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
 
-    addToHistory({
+    versionHistory.push({
         value: aiInput.value,
         action,
         endAction: completedLabel,
@@ -166,6 +163,7 @@ function completeGeneration(action, menuItem) {
 
     updateComponentState();
     aiInput.loading = false;
+    aiInput.focus();
 }
 
 function animateTextGeneration(text, action, menuItem) {
@@ -174,6 +172,7 @@ function animateTextGeneration(text, action, menuItem) {
         let i = 0;
         aiInput.value = "";
         aiInput.loading = true;
+        animationHasStarted = true;
 
         typingInterval = setInterval(() => {
             if (i < chars.length) {
@@ -182,7 +181,7 @@ function animateTextGeneration(text, action, menuItem) {
                 completeGeneration(action, menuItem);
                 resolve();
             }
-        }, 10);
+        }, TIMING_CONFIG.typingSpeed);
     });
 }
 
@@ -194,7 +193,6 @@ function setLoadingState(promptDescription) {
 
 function resetGenerationState() {
     stopTypingAnimation();
-    isGenerating = false;
     currentActionInProgress = null;
     aiInput.loading = false;
 }
@@ -204,7 +202,7 @@ function findMenuItemByAction(action) {
 }
 
 async function executeAction(action) {
-    if (isGenerating) return;
+    if (aiInput.loading) return;
 
     const menuItem = findMenuItemByAction(action);
     if (!menuItem) return;
@@ -214,15 +212,14 @@ async function executeAction(action) {
 
     saveCurrentVersion();
     currentActionInProgress = action;
-    isGenerating = true;
-    currentGenerationId += 1;
-    const generationIdForThisRun = currentGenerationId;
+    const generationIdForThisRun = currentGenerationIndex;
+    animationHasStarted = false;
 
     setLoadingState(processingLabel);
 
-    await delay(3000);
+    await delay(TIMING_CONFIG.processingDelay);
 
-    if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
+    if (!aiInput.loading || generationIdForThisRun !== currentGenerationIndex) {
         resetGenerationState();
         return;
     }
@@ -232,29 +229,34 @@ async function executeAction(action) {
 }
 
 function stopGeneration() {
-    if (!isGenerating) return;
+    if (!aiInput.loading) return;
 
     stopTypingAnimation();
-    currentGenerationId += 1;
+    currentGenerationIndex += 1;
     const action = currentActionInProgress || 'generate';
     const menuItem = findMenuItemByAction(action);
     const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
 
-    addToHistory({
-        value: aiInput.value,
-        action,
-        endAction: completedLabel + " (stopped)",
-        timestamp: new Date().toISOString()
-    });
+    if (animationHasStarted) {
+        versionHistory.push({
+            value: aiInput.value,
+            action,
+            endAction: completedLabel + " (stopped)",
+            timestamp: new Date().toISOString()
+        });
 
-    currentIndexHistory = versionHistory.length - 1;
+        currentIndexHistory = versionHistory.length - 1;
+        versionHistory.length && buildMenuFromConfig();
+        updateComponentState();
+    } else {
+        // If animation hasn't started, restore the previous value
+        if (versionHistory.length > 0 && versionHistory[currentIndexHistory]) {
+            aiInput.value = versionHistory[currentIndexHistory].value;
+        }
+    }
     currentActionInProgress = null;
-    isGenerating = false;
-
-    if (versionHistory.length === 1) buildMenuFromConfig();
-
-    updateComponentState();
     aiInput.loading = false;
+    aiInput.focus();
 }
 
 function handleVersionChange(event) {

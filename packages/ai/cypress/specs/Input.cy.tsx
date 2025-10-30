@@ -806,7 +806,7 @@ describe("Writing Assistant Input Icon", () => {
 
         cy.get("[ui5-ai-input]")
             .shadow()
-            .find(".ui5-input-ai-button")
+            .find("input")
             .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_LABEL.defaultText);
     });
 })

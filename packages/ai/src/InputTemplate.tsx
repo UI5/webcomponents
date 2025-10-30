@@ -130,16 +130,16 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						design="Transparent"
 						icon={this.loading ? "stop" : "ai"}
 						onClick={this._handleAIButtonClick}
+						onKeyDown={this._handleAIButtonKeydown}
 						aria-keyshortcuts={ this.loading ? "Esc" : "Shift + F4" }
 						tooltip={this.loading ? this.stopGeneratingTooltip : this.ariaLabel}
 						accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
-						aria-label={this.ariaLabel}
-						accessibleName={this.accessibleName}
 					/>
 					<Menu
 						onItemClick={this._onMenuIconClick}
 						onBeforeOpen={() => { this._isMenuOpen = true; }}
 						onBeforeClose={() => { this._isMenuOpen = false; }}
+						onClose={() => { if (!this.loading) { this.focus(); } }}
 					>
 						<slot name="actions"></slot>
 						{this.totalVersions > 1 && Versioning.call(this)}
