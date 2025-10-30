@@ -96,24 +96,16 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	onBeforeRendering() {
 		this._disabled = !this.value;
 		this.onPhone = isPhone();
-		this.setAttribute("style", `background-color: ${this.value}`);
 
 		// since height is dynamically determined by padding-block-start
 		const itemHeight = this.offsetHeight + 4; // adding 4px for the offsets on top and bottom
 		this.style.setProperty(getScopedVarName("--_ui5_color_palette_item_height"), `${itemHeight}px`);
+
+		this.style.setProperty(getScopedVarName("--_ui5-color-palette-item-background-color"), `${this.value}`);
 	}
 
 	get colorLabel() {
 		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
-	}
-
-	get styles() {
-		// Remove after deleting the hbs template, it's added in the jsx template
-		return {
-			root: {
-				"background-color": this.value,
-			},
-		};
 	}
 
 	get classes() {
