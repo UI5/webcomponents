@@ -56,10 +56,6 @@ import WritingAssistant from "./WritingAssistant.js";
 		valueStateMessageStyles,
 		TextAreaCss,
 	],
-	dependencies: [
-		WritingAssistant,
-		BusyIndicator,
-	],
 })
 
 /**
