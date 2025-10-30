@@ -6,9 +6,10 @@ export default function SliderTooltipTemplate(this: SliderTooltip) {
 		<div class="ui5-slider-tooltip-root">
 			{this.editable ?
 				<Input
-					value={this.value}
+					value={this._innerValue ?? this.value}
 					type="Number"
 					accessibleNameRef="ui5-slider-InputLabel"
+					onInput={ e => { this._innerValue = e.currentTarget.value } }
 					onKeyDown={this._keydown}
 					onFocusIn={this._onInputFocusin}
 					onFocusOut={this._onInputFocusOut}
