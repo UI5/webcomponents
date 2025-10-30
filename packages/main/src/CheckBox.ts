@@ -465,6 +465,16 @@ class CheckBox extends UI5Element implements IFormInputElement {
 		return this.displayOnly && !this.disabled;
 	}
 
+	get accessibilityInfo() {
+		return {
+			role: this.accInfo.role,
+			description: this.ariaLabelText || this.text || "",
+			disabled: !!this.accInfo.ariaDisabled,
+			readonly: !!this.accInfo.ariaReadonly,
+			required: this.accInfo.ariaRequired,
+		};
+	}
+
 	get accInfo() {
 		return {
 			"role": this._accInfo ? this._accInfo.role : "checkbox" as AriaRole,
