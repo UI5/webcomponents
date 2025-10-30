@@ -129,9 +129,9 @@ class SideNavigation extends UI5Element {
 	 * Defines whether the `ui5-side-navigation` is expanded or collapsed.
 	 *
 	 * **Note:** The collapsed mode is not supported on phones.
-	 * The `ui5-side-navigation` component is designed to be used within a `ui5-navigation-layout`
+	 * The `ui5-side-navigation` component is intended to be used within a `ui5-navigation-layout`
 	 * component to ensure proper responsive behavior. If you choose not to use the
-	 * `ui5-navigation-layout`, you must implement the appropriate responsive patterns yourself,
+	 * `ui5-navigation-layout`, you will need to implement the appropriate responsive patterns yourself,
 	 * particularly for phones where the collapsed mode should not be used.
 	 *
 	 * @public
