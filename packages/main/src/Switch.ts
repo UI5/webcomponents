@@ -4,7 +4,9 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { isSpace, isEnter, isShift, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isSpace, isEnter, isShift, isEscape,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
@@ -77,6 +79,7 @@ class Switch extends UI5Element implements IFormInputElement {
 		change: void
 		"value-changed": void
 	}
+
 	/**
 	 * Defines the component design.
 	 *
