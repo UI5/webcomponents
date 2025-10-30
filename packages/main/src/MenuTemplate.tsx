@@ -10,7 +10,7 @@ export default function MenuTemplate(this: Menu) {
 		<ResponsivePopover
 			id={`${this._id}-menu-rp`}
 			class="ui5-menu-rp"
-			placement="Bottom"
+			placement={this.placement}
 			verticalAlign="Bottom"
 			horizontalAlign={this.horizontalAlign}
 			opener={this.opener}
@@ -18,7 +18,7 @@ export default function MenuTemplate(this: Menu) {
 			preventInitialFocus={true}
 			hideArrow={true}
 			allowTargetOverlap={true}
-			accessibleName={this.acessibleNameText}
+			accessibleName={this.accessibleNameText}
 			onBeforeOpen={this._beforePopoverOpen}
 			onOpen={this._afterPopoverOpen}
 			onBeforeClose={this._beforePopoverClose}

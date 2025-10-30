@@ -3,6 +3,7 @@ import TableHeaderRow from "../../src/TableHeaderRow.js";
 import TableCell from "../../src/TableCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
+import TableSelectionSingle from "../../src/TableSelectionSingle.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
@@ -248,6 +249,47 @@ describe("Table - Rendering", () => {
 		checkWidth("#colC", 200);
 		// 2fr is being ignored
 		checkWidth("#colD", 48);
+	});
+
+	it("should alternate rows", () => {
+		cy.mount(
+			<Table id="table1" alternateRowColors={true}>
+				<TableSelectionSingle id="selection" slot="features"></TableSelectionSingle>
+				<TableHeaderRow id="hr" slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="r1" rowKey="r1" interactive>
+					<TableCell>R1C1</TableCell>
+				</TableRow>
+				<TableRow id="r2" rowKey="r2" interactive>
+					<TableCell>R2C1</TableCell>
+				</TableRow>
+				<TableRow id="r3" rowKey="r3" interactive>
+					<TableCell>R3C1</TableCell>
+				</TableRow>
+				<TableRow id="r4" rowKey="r4" interactive>
+					<TableCell>R4C1</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[0]).to.not.equal(rowBackgrounds[1]);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[2]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[1]).to.equal(rowBackgrounds[3]);
+		});
+
+		cy.get("#selection").invoke("prop", "selected", "r2"); cy.wait(50);
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+		});
 	});
 });
 
@@ -994,7 +1036,6 @@ describe("Table - HeaderCell", () => {
 		cy.get("@headerCell2").should("not.have.attr", "aria-sort");
 
 		cy.get("@table").invoke("css", "width", "250px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
 		cy.get("@row1").find("ui5-table-cell[_popin]").as("row1popins");

@@ -128,6 +128,18 @@ class SegmentedButton extends UI5Element {
 	selectionMode: `${SegmentedButtonSelectionMode}` = "Single";
 
 	/**
+	 * Determines whether the segmented button items should be sized to fit their content.
+	 *
+	 * If set to `true`, each item will be sized to fit its content, with any extra space distributed after the last item.
+	 * If set to `false` (the default), all items will be equally sized to fill the available space.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.16.0
+	*/
+	@property({ type: Boolean })
+	itemsFitContent: boolean = false;
+	/**
 	 * Defines the items of `ui5-segmented-button`.
 	 *
 	 * **Note:** Multiple items are allowed.
@@ -171,7 +183,9 @@ class SegmentedButton extends UI5Element {
 
 		this.normalizeSelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		if (!this.itemsFitContent) {
+			this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+		}
 	}
 
 	normalizeSelection() {

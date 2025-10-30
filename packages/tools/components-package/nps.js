@@ -80,7 +80,6 @@ const getScripts = (options) => {
 			UI5_CEM_MODE: options.dev,
 			UI5_TS: `${tsOption}`,
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
-			CYPRESS_UI5_ACC: !!(options.internal?.cypress_acc_tests),
 		},
 		clean: {
 			"default": "ui5nps clean.generated clean.dist scope.testPages.clean",
