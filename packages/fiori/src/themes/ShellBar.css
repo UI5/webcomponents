@@ -300,6 +300,10 @@ slot[name="profile"] {
 	border-radius: var(--_ui5_shellbar_image_button_border_radius);
 }
 
+:host([breakpoint-size="S"]) .ui5-shellbar-image-button {
+	margin-inline-start: 6px;
+}
+
 .ui5-shellbar-overflow-container-left {
 	padding: 0;
 	justify-content: flex-start;
@@ -307,7 +311,7 @@ slot[name="profile"] {
 	flex-shrink: 0;
 }
 
-.ui5-shellbar-overflow-container-left > :nth-child(n) {
+.ui5-shellbar-overflow-container-left > :nth-child(n):not(.ui5-shellbar-logo) {
 	margin-inline-end: 0.5rem;
 }
 
