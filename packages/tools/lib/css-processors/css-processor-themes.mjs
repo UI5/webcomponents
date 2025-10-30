@@ -7,6 +7,7 @@ import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import { scopeUi5Variables, scopeThemingVariables } from "./scope-variables.mjs";
+import { pathToFileURL } from "url";
 
 async function processThemingPackageFile(f) {
     const selector = ':root';
@@ -101,7 +102,10 @@ async function generate(argv) {
     }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
     generate(process.argv)
 }
 

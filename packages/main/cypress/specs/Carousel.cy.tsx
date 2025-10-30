@@ -389,7 +389,7 @@ describe("Carousel general interaction", () => {
 
 	});
 
-	it.only("navigateTo method and visibleItemsIndices", () => {
+	it("navigateTo method and visibleItemsIndices", () => {
 		cy.mount(
 			<Carousel id="carousel9" itemsPerPage="S2 M2 L2 XL2" arrowsPlacement="Navigation">
 				<Button>Button 1</Button>
@@ -613,5 +613,88 @@ describe("Carousel general interaction", () => {
 			.shadow()
 			.find(".ui5-carousel-item:nth-child(5)")
 			.should("have.class", "ui5-carousel-item--hidden");
+	});
+
+	it("should render only visible items", () => {
+		cy.mount(
+			<Carousel>
+				<Button />
+				<Button hidden/>
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 2);
+	});
+
+	it("should update navigation when items become hidden dynamically", () => {
+		cy.mount(
+			<Carousel>
+				<Button />
+				<Button id="btn2" />
+				<Button id="btn3" />
+				<Button id="btn4" />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 4);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 4);
+
+		cy.get("#btn2").invoke("attr", "hidden", "");
+		cy.get("#btn3").invoke("attr", "hidden", "");
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 2);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 2);
+	});
+
+	it("should handle filtering with multiple items per page", () => {
+		cy.mount(
+			<Carousel itemsPerPage="S2 M2 L2 XL2">
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-item")
+			.should("have.length", 4);
+	});
+
+	it("should update page count correctly with filtered content", () => {
+		cy.mount(
+			<Carousel itemsPerPage="S1 M2 L2 XL2">
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button hidden />
+				<Button />
+				<Button />
+			</Carousel>);
+
+		cy.get("ui5-carousel").should("have.prop", "pagesCount", 3);
+
+		cy.get("ui5-carousel")
+			.shadow()
+			.find(".ui5-carousel-navigation-dot")
+			.should("have.length", 3);
 	});
 });

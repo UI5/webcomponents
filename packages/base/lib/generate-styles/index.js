@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from "path";
 import CleanCSS from "clean-css";
 import { processComponentPackageFile } from '@ui5/webcomponents-tools/lib/css-processors/css-processor-themes.mjs';
-
+import { pathToFileURL } from "url";
 
 const generate = async () => {
 	const packageJSON = JSON.parse(await fs.readFile("./package.json"))
@@ -28,7 +28,10 @@ const generate = async () => {
 		});
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate()
 }
 
