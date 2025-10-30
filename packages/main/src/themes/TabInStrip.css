@@ -137,7 +137,7 @@
 .ui5-tab-strip-item--selected .ui5-tab-strip-item-icon-outer::after {
 	content: "";
 	position: absolute;
-	bottom: 0;
+	bottom: 1px;
 	left: 0;
 	right: 0;
 	border-bottom: var(--sapTab_Selected_Indicator_Dimension) solid var(--sapTab_ForegroundColor);
