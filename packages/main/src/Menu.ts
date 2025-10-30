@@ -29,6 +29,7 @@ import { isInstanceOfMenuItem } from "./MenuItem.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {
 	ListItemClickEventDetail,
 } from "./List.js";
@@ -199,6 +200,15 @@ class Menu extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	open = false;
+
+	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	placement: `${PopoverPlacement}` = "Bottom";
 
 	/**
 	 * Determines the horizontal alignment of the menu relative to its opener control.
