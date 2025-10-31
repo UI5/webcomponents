@@ -422,6 +422,22 @@ class StepInput extends UI5Element implements IFormInputElement {
 		this._onInputChange();
 	}
 
+	_onMouseWheel(e: WheelEvent) {
+		if (this.disabled || this.readonly) {
+			return;
+		}
+
+		// Prevent page scroll when component is focused
+		if (!this._isFocused) {
+			e.preventDefault();
+		}
+
+		// Determine scroll direction and modify value accordingly
+		const isScrollUp = e.deltaY < 0;
+		const modifier = isScrollUp ? this.step : -this.step;
+		this._modifyValue(modifier, true);
+	}
+
 	_setButtonState() {
 		this._decIconDisabled = this.min !== undefined && this.value <= this.min;
 		this._incIconDisabled = this.max !== undefined && this.value >= this.max;
