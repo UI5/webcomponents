@@ -845,6 +845,35 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", "basic form");
 	});
 
+	it("tests 'aria-label' via 'accessibleNameRef'", () => {
+		cy.mount(
+		<>
+			<span id="lbl">basic form</span>
+			<Form headerText="Form header text" accessibleNameRef="lbl">
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Twitter:</Label>
+					<Text>@sap</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+			</Form>
+		</>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "aria-label", "basic form");
+	});
+
 	describe("FormGroup accessibility", () => {
 		it("tests 'aria-label' default", () => {
 			cy.mount(<Form>
