@@ -92,7 +92,7 @@
 			
 			<strong>Generation Behavior:</strong><br>
 			• Selecting a new action while generating will stop current generation<br>
-			• Stopped generations are saved as versions with "(stopped)" suffix<br>
+			• Cancelled generations restore previous content and are not saved to history<br>
 			• History is limited to 50 versions to prevent memory issues
 		</div>
 	</div>
@@ -169,6 +169,7 @@
 		let currentActionInProgress = null;
 		let typingInterval = null;
 		let currentGenerationIndex = 0;
+		let contentBeforeGeneration = "";
 
 		const textarea = document.getElementById('ai-textarea');
 		const menu = document.getElementById('ai-menu');
@@ -234,14 +235,13 @@
 
 			menu.innerHTML = '';
 			
-			// Add initial "Generate text" option if no history
 			if (!hasHistory) {
 				const generateItem = document.createElement('ui5-menu-item');
 				generateItem.setAttribute('text', 'Generate text');
 				generateItem.dataset.action = 'generate';
-				generateItem.dataset.processingLabel = 'Generating text...';
+				generateItem.dataset.processingLabel = 'Generating...';
 				generateItem.dataset.completedLabel = 'Generated text';
-				generateItem.dataset.textKey = 'en';
+				generateItem.dataset.textKey = 'generateText';
 				menu.appendChild(generateItem);
 			}
 
@@ -339,6 +339,7 @@
 			const textKey = menuItem.dataset.textKey || 'en';
 
 			saveCurrentVersion();
+			contentBeforeGeneration = textarea.value;
 			currentActionInProgress = action;
 			currentGenerationIndex += 1;
 			const generationIdForThisRun = currentGenerationIndex;
@@ -364,23 +365,14 @@
 
 			stopTypingAnimation();
 			currentGenerationIndex += 1;
-			const action = currentActionInProgress || 'generate';
-			const menuItem = findMenuItemByAction(action);
-			const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
-
-			versionHistory.push({
-				value: textarea.value,
-				action,
-				endAction: completedLabel + " (stopped)",
-				timestamp: new Date().toISOString()
-			});
-
-			currentIndexHistory = versionHistory.length - 1;
+			
+			// Restore the previous content instead of saving the cancelled action
+			textarea.value = contentBeforeGeneration;
 			currentActionInProgress = null;
-
-			buildMenuFromConfig();
-			updateComponentState();
 			textarea.loading = false;
+			textarea.promptDescription = "";
+
+			updateComponentState();
 		}
 
 		function handleVersionChange(event) {
@@ -423,6 +415,7 @@
 			currentIndexHistory = 0;
 			currentGenerationIndex = 0;
 			currentActionInProgress = null;
+			contentBeforeGeneration = "";
 			
 			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
 			textarea.loading = false;
