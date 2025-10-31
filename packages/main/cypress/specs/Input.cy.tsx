@@ -2208,7 +2208,7 @@ describe("Input general interaction", () => {
 
 	it("Should open suggestions popover if open is set on focusin", () => {
 		cy.mount(
-			<Input id="openPickerInput" showSuggestions={true} onFocus={(e) => (e.target as Input).open = true}>
+			<Input id="openPickerInput" showSuggestions={true} startSuggestion={0} onFocus={(e) => (e.target as Input).open = true}>
 				<SuggestionItem text="China" />
 				<SuggestionItem text="Chile" />
 			</Input>
@@ -2280,7 +2280,7 @@ describe("Input general interaction", () => {
 
 	it("Changes text if cleared in change event handler", () => {
 		cy.mount(
-			<Input id="change-event-value" showSuggestions={true} open={true} onChange={e => (e.target as Input).value = ""}>
+			<Input id="change-event-value" showSuggestions={true} startSuggestion={0} open={true} onChange={e => (e.target as Input).value = ""}>
 				<SuggestionItem text="China" />
 				<SuggestionItem text="Chile" />
 			</Input>
@@ -2601,7 +2601,7 @@ describe("Selection-change event", () => {
 describe("Property open", () => {
 	it("Suggestions picker is open when attribute open is set to true", () => {
 		cy.mount(
-			<Input id="input-suggestions-open" showSuggestions open>
+			<Input id="input-suggestions-open" showSuggestions startSuggestion={0} open>
 				<SuggestionItem text="Item 1" />
 				<SuggestionItem text="Item 2" />
 				<SuggestionItem text="Item 3" />
@@ -2795,5 +2795,92 @@ describe("Input Composition", () => {
 
 		cy.get("@input")
 			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("startSuggestion threshold behavior", () => {
+	it("suggestions popover opens when startSuggestion threshold is met", () => {
+		cy.mount(
+			<Input showSuggestions startSuggestion={3}>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Apricot"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput").realClick();
+
+		cy.get("@innerInput").realType("App");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@innerInput").realPress("Backspace");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.be.visible");
+	});
+
+	it("suggestions popover remains closed when typing below startSuggestion threshold", () => {
+		cy.mount(
+			<Input showSuggestions startSuggestion={4}>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Application"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput").realClick();
+
+		cy.get("@innerInput").realType("A");
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.be.visible");
+
+		cy.get("@innerInput").realType("p");
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.be.visible");
+	});
+
+	it("suggestions popover is opened when startSuggestion is not set", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.as("innerInput");
+
+		cy.get("@innerInput").realClick();
+
+		cy.get("@innerInput").realType("A");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 	});
 });
