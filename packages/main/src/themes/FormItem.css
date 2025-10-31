@@ -98,5 +98,5 @@
 }
 
 dd {
-	margin-inline-start: 0;
+	all: unset;
 }
