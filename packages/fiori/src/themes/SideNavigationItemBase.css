@@ -15,8 +15,6 @@
 	box-sizing: border-box;
 	text-decoration: none;
 	position: relative;
-
-	height: var(--_ui5_side_navigation_item_height);
 	min-height: var(--_ui5_side_navigation_item_height);
 	cursor: pointer;
 	color: inherit;
@@ -338,9 +336,23 @@ and there is an additional border that appears on hover. */
 .ui5-sn-item-text {
 	flex: 1;
 	min-width: 0;
+}
+
+:host([side-nav-collapsed]) .ui5-sn-item-text,
+:host([design="Action"]) .ui5-sn-item-text {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+:host([in-popover]) .ui5-sn-item-text {
+	overflow: visible;
+	text-overflow: unset;
+	white-space: nowrap;
+}
+
+:host(:not([side-nav-collapsed]):not([in-popover])) .ui5-sn-item-text {
+	margin: var(--_ui5_side_navigation_item_margin) 0;
 }
 
 :host(:not([side-nav-collapsed])) .ui5-sn-item:not(.ui5-sn-item-group):not(.ui5-sn-item-with-expander) .ui5-sn-item-text {

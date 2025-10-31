@@ -14,13 +14,19 @@
 
 	<ui5-side-navigation>
 		<ui5-side-navigation-item text="Home" icon="home"></ui5-side-navigation-item>
-		<ui5-side-navigation-group text="Group" expanded>
-			<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
-			<ui5-side-navigation-item text="Events" icon="calendar">
-				<ui5-side-navigation-sub-item text="Local"></ui5-side-navigation-sub-item>
-				<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+		<ui5-side-navigation-item text="Resource Planning and Business Management Solutions" icon="bbyd-dashboard"></ui5-side-navigation-item>
+		<ui5-side-navigation-group text="System & Administration Management" expanded>
+			<ui5-side-navigation-item text="Analytics and Data Visualization Tools" icon="bar-chart"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="System Administration and Configuration Management" icon="wrench">
+				<ui5-side-navigation-sub-item text="Environment Settings"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Audit Log and Security Monitoring Dashboard"></ui5-side-navigation-sub-item>
 			</ui5-side-navigation-item>
 		</ui5-side-navigation-group>
+		<ui5-side-navigation-group text="Business Operations">
+			<ui5-side-navigation-item text="Business Partners" icon="address-book" selected></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Sales Management and Revenue Operations" icon="area-chart"></ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item text="SAP Support Portal and Technical Assistance" href="https://openui5.hana.ondemand.com/demoapps" target="_blank" icon="message-information"></ui5-side-navigation-item>
 		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history"></ui5-side-navigation-item>
 	</ui5-side-navigation>
 	<!-- playground-fold -->
