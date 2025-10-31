@@ -13,7 +13,7 @@
     "generate": "yarn workspaces foreach --all --parallel run generate",
     "generateAPI": "yarn workspaces foreach --all --parallel run generateAPI",
     "generateProd": "yarn workspaces foreach --all --parallel run generateProd",
-    "ts": "tsc -b packages/compat/tsconfig.json packages/fiori/tsconfig.json packages/ai/tsconfig.json",
+    "ts": "tsc -b",
     "bundle": "yarn workspaces foreach --all --parallel run bundle",
     "clean": "yarn workspaces foreach --all --parallel run clean",
     "scopePrepare:main": "yarn workspace @ui5/webcomponents ui5nps scope.prepare",

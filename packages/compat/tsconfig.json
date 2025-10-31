@@ -7,9 +7,12 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"experimentalDecorators": true,
-		"verbatimModuleSyntax": true,
+		"composite": true,
+		"rootDir": "src",
+		"tsBuildInfoFile": "dist/.tsbuildinfo",
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
+		"verbatimModuleSyntax": true,
 		"paths": {
 			"@ui5/webcomponents-base/dist/*": [
 				"../base/src/*"
@@ -17,10 +20,22 @@
 			"@ui5/webcomponents/dist/*": [
 				"../main/src/*"
 			],
+			"@ui5/webcomponents-localization/dist/*": [
+				"../localization/src/*"
+			],
 			"@ui5/webcomponents-theming/dist/*": [
 				"../theming/src/*"
 			],
-		},
+			"@ui5/webcomponents-icons/dist/*": [
+				"../icons/src/*"
+			],
+			"@ui5/webcomponents-icons-business-suite/dist/*": [
+				"../icons-business-suite/src/*"
+			],
+			"@ui5/webcomponents-icons-tnt/dist/*": [
+				"../icons-tnt/src/*"
+			]
+		}
 	},
 	"references": [
 		{
@@ -30,7 +45,19 @@
 			"path": "../main"
 		},
 		{
+			"path": "../localization"
+		},
+		{
 			"path": "../theming"
 		},
+		{
+			"path": "../icons"
+		},
+		{
+			"path": "../icons-business-suite"
+		},
+		{
+			"path": "../icons-tnt"
+		}
 	]
 }
