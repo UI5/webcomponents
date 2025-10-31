@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* **ui5-button, ui5-split-button:** align menu button items on the left ([8cd3208](https://github.com/UI5/webcomponents/commit/8cd320870ae1eef0ada828fe05cb1fb1ffa79c63))
+* **ui5-carousel:** exclude hidden items from rendering and navigation ([#12498](https://github.com/UI5/webcomponents/issues/12498)) ([8ddfab2](https://github.com/UI5/webcomponents/commit/8ddfab215e0aa24b02fa69ad361247fb35fce1fa))
+* **ui5-multi-combobox:** handle composition with validation ([#12501](https://github.com/UI5/webcomponents/issues/12501)) ([20838ab](https://github.com/UI5/webcomponents/commit/20838ab7b5bfa9635ca6a87a58b12a530ed8ef76))
+
+
+### Features
+
+* **ui5-ai-textarea:** add samples and docs ([#12561](https://github.com/UI5/webcomponents/issues/12561)) ([00e89ff](https://github.com/UI5/webcomponents/commit/00e89ff7976bd2b0357afaeed960207bacd42c11))
+* **ui5-menu:** add placement api ([#12554](https://github.com/UI5/webcomponents/issues/12554)) ([bf7ed56](https://github.com/UI5/webcomponents/commit/bf7ed569cb5aa44d28dec4babe1922b87a4cc81f))
+
+
+
+
+
 # [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
 
 

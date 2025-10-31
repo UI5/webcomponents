@@ -13,6 +13,10 @@ import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarSize from "@ui5/webcomponents/dist/types/AvatarSize.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "../../src/generated/i18n/i18n-defaults.js";
+import favorite from "@ui5/webcomponents-icons/dist/favorite.js";
+import edit from "@ui5/webcomponents-icons/dist/edit.js";
+import share from "@ui5/webcomponents-icons/dist/share.js";
+import copy from "@ui5/webcomponents-icons/dist/copy.js";
 
 describe("Properties", () => {
 	it("items slot with groups", () => {
@@ -508,6 +512,297 @@ describe("Properties", () => {
 			.shadow()
 			.find(".ui5-search-item-selected-delete")
 			.should("not.exist");
+	});
+
+	it("tab navigation between action buttons works correctly", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable>
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
+	});
+
+	it("shift+tab navigation between action buttons works correctly", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable>
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.realClick();
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+	});
+
+	it("action button clicks work correctly", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1">
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions" onClick={cy.spy().as("favoriteClick")}/>
+					<Button design={ButtonDesign.Transparent} icon={share} slot="actions" onClick={cy.spy().as("shareClick")}/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.realClick();
+
+		cy.get("@favoriteClick").should("have.been.calledOnce");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='share']")
+			.realClick();
+
+		cy.get("@shareClick").should("have.been.calledOnce");
+	});
+
+	it("tab navigation loops back to first action when at last action button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1">
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+	});
+
+	it("tab navigation loops with actions and delete button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable>
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+	});
+
+	it("shift+tab navigation loops with actions and delete button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable>
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.focused");
+	});
+
+	it("focus looping works with only delete button (no actions)", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+		cy.realPress("ArrowDown");
+
+		cy.realPress("F2");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("be.focused");
 	});
 });
 
