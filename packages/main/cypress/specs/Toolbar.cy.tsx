@@ -544,7 +544,7 @@ describe("ToolbarButton", () => {
 		cy.get("[ui5-toolbar-button][accessible-name]").shadow().find(".ui5-tb-button")
 			.should("have.prop", "accessibilityAttributes")
 			.should("deep.include", { expanded: "true", controls: "btn", hasPopup: "dialog" });
-		 });
+	});
 
 	it("Should not recalculate overflow when button state changes without affecting width", () => {
 		cy.mount(
@@ -588,5 +588,47 @@ describe("ToolbarButton", () => {
 				expect(toolbarAfter.itemsWidth).to.equal(initialItemsWidth);
 			});
 		});
+	});
+
+	it("Should display tooltip as text for icon-only buttons in overflow popover", () => {
+		cy.viewport(150, 600);
+
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton icon="add" tooltip="Add Item"></ToolbarButton>
+				<ToolbarButton icon="employee" tooltip="Hire Employee"></ToolbarButton>
+				<ToolbarButton icon="decline" tooltip="Decline Request"></ToolbarButton>
+				<ToolbarButton icon="save" tooltip="Save Document"></ToolbarButton>
+				<ToolbarButton icon="edit" tooltip="Edit Content"></ToolbarButton>
+				<ToolbarButton text="Regular Button" icon="settings"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-overflow-popover")
+			.should("have.attr", "open", "open");
+
+		cy.get("[ui5-toolbar-button][icon='decline']")
+			.should("have.prop", "isOverflowed", true)
+			.shadow()
+			.find("ui5-button")
+			.should("contain.text", "Decline Request");
+
+		cy.get("[ui5-toolbar-button][icon='save']")
+			.should("have.prop", "isOverflowed", true)
+			.shadow()
+			.find("ui5-button")
+			.should("contain.text", "Save Document");
 	});
 });
