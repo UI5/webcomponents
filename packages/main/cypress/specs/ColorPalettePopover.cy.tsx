@@ -372,10 +372,22 @@ describe("Color Popover Palette arrow keys navigation", () => {
         cy.get("[ui5-color-palette-popover]")
             .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
-            cy.focused()
+        cy.get("[ui5-color-palette-popover]")
+            .should("have.focus");
+
+        cy.get("[ui5-color-palette-popover]")
             .realPress("ArrowRight");
 
-        cy.focused()
+        cy.get("[ui5-color-palette-popover]")
+            .find("ui5-color-palette-item")
+            .shadow()
+            .find("[tabindex='0']")
+            .should("have.focus");
+        
+        cy.get("[ui5-color-palette-popover]")
+            .find("ui5-color-palette-item")
+            .shadow()
+            .find("[tabindex='0']")
             .should("have.attr", "aria-label")
             .and("include", "cyan");
 
@@ -509,7 +521,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
 });
 
 describe("Color Popover Palette Home and End keyboard navigation", () => {
-    it.skip("should navigate with Home/End when showDefaultColor is set", () => {
+    it("should navigate with Home/End when showDefaultColor is set", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} />
         );
@@ -517,10 +529,29 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
         cy.get("[ui5-color-palette-popover]")
             .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
-        cy.focused()
+        cy.get("[ui5-color-palette-popover]")
+            .ui5GetColorPaletteInPopover()
+            .as("colorPalette");
+
+        cy.get("@colorPalette")
+            .ui5GetColorPaletteDefaultButton()
+            .shadow()
+            .find("[tabindex='0']")
+            .should("have.focus");
+
+        cy.get("[ui5-color-palette-popover]")
             .realPress("End");
 
-        cy.focused()
+        cy.get("[ui5-color-palette-popover]")
+            .ui5GetColorPaletteItem(3)
+            .shadow()
+            .find("[tabindex='0']")
+            .should("have.focus");
+    
+        cy.get("[ui5-color-palette-popover]")
+            .ui5GetColorPaletteItem(3)
+            .shadow()
+            .find("[tabindex='0']")
             .should("have.attr", "aria-label")
             .and("include", "red");
 
@@ -564,28 +595,39 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
             .should("have.attr", "aria-label", "More Colors...");
     });
 
-    it.skip("should navigate with Home/End when showDefaultColor & showMoreColors are set", () => {
+    it("should navigate with Home/End when showDefaultColor & showMoreColors are set", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} showMoreColors={true} />
         );
 
-        cy.get("[ui5-color-palette-popover]")
+        cy.get<ColorPalettePopover>("[ui5-color-palette-popover]")
+            .as("colorPalettePopover")
             .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
-        cy.focused()
-            .should("have.attr", "aria-label", "Default Color");
+        cy.get<ColorPalette>("@colorPalettePopover")
+            .ui5GetColorPaletteInPopover()
+            .as("colorPalette");
 
-        cy.focused()
+        cy.get("@colorPalette")
+            .ui5GetColorPaletteDefaultButton()
+            .as("defaultColorButton");
+
+        cy.get("@defaultColorButton")
+            .should("have.focus")
             .realPress("End");
 
-        cy.focused()
-            .should("have.attr", "aria-label", "More Colors...");
+        cy.get("@colorPalette")
+            .ui5GetColorPaletteMoreColorsButton()
+            .as("moreColorsButton");
+            
+        cy.get("@moreColorsButton")
+            .should("have.focus");
 
-        cy.focused()
+        cy.get("@moreColorsButton")
             .realPress("Home");
 
-        cy.focused()
-            .should("have.attr", "aria-label", "Default Color");
+        cy.get("@defaultColorButton")
+            .should("have.focus");
     });
 
     it("should navigate with End key", () => {
