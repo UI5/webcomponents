@@ -183,7 +183,7 @@ describe("Eventing", () => {
 
 		cy.mount(
 			<>
-				<Input id="input-custom-flat" showSuggestions onSelectionChange={onSelectionChange}>
+				<Input id="input-custom-flat" showSuggestions startSuggestion={0} onSelectionChange={onSelectionChange}>
 					<SuggestionItem text="Albania" />
 					<SuggestionItem text="Argentina" />
 				</Input>
@@ -389,5 +389,115 @@ describe("Property open", () => {
 		.shadow()
 		.find<ResponsivePopover>("[ui5-responsive-popover]")
 		.ui5ResponsivePopoverClosed();
+	});
+});
+
+describe("startSuggestion threshold behavior on mobile", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("suggestions list should not display when startSuggestion threshold is not met", () => {
+		cy.mount(
+			<Input id="input-suggestions" showSuggestions startSuggestion={3}>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Apricot"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-suggestions")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find(".ui5-input-inner-phone")
+			.as("innerInput")
+			.should("be.focused");
+
+		cy.get("@innerInput").realType("Ap");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("not.be.visible");
+
+		cy.get<ResponsivePopover>("@popover").ui5ResponsivePopoverOpened();
+	});
+
+	it("suggestion list should display when startSuggestion threshold is met", () => {
+		cy.mount(
+			<Input id="input-suggestions" showSuggestions startSuggestion={2}>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Apricot"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-suggestions")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find(".ui5-input-inner-phone")
+			.as("innerInput")
+			.should("be.focused");
+
+		cy.get("@innerInput").realType("Ap");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("have.length", 3);
+
+		cy.get<ResponsivePopover>("@popover").ui5ResponsivePopoverOpened();
+	});
+
+	it("startSuggestion=0 shows suggestion list immediately on mobile", () => {
+		cy.mount(
+			<Input id="input-suggestions" showSuggestions startSuggestion={0}>
+				<SuggestionItem text="Apple"></SuggestionItem>
+				<SuggestionItem text="Apricot"></SuggestionItem>
+				<SuggestionItem text="Banana"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-suggestions")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find(".ui5-input-inner-phone")
+			.should("be.focused");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("have.length", 3);
 	});
 });
