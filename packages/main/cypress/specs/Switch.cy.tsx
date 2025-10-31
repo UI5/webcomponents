@@ -38,6 +38,63 @@ describe("General events interactions", () => {
 		cy.get("@switch")
 			.should("not.have.attr", "checked");
 	});
+
+	it("Should toggle checked state when SPACE is pressed", () => {
+		cy.mount(<Switch onChange={cy.stub().as("changed")}>Click me</Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.shadow()
+			.find(".ui5-switch-root")
+			.focus()
+			.realPress("Space");
+
+    cy.get("@changed")
+        .should("have.been.calledOnce");
+
+    cy.get("@switch")
+        .should("have.attr", "checked");
+	});
+
+	it("Should not toggle checked state on SPACE + Shift are pressed", () => {
+		cy.mount(<Switch onChange={cy.stub().as("changed")}>Click me</Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.shadow()
+			.find(".ui5-switch-root")
+			.focus()
+			.realPress(["Space", "Shift"]);
+
+    cy.get("@changed")
+        .should("not.have.been.called");
+
+    cy.get("@switch")
+        .should("not.have.attr", "checked");
+	});
+
+	it("Should not toggle checked state on SPACE + Escape are pressed", () => {
+		cy.mount(<Switch onChange={cy.stub().as("changed")}>Click me</Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.shadow()
+			.find(".ui5-switch-root")
+			.focus()
+			.realPress(["Space", "Escape"]);
+
+    cy.get("@changed")
+        .should("not.have.been.called");
+
+    cy.get("@switch")
+        .should("not.have.attr", "checked");
+	});
 });
 
 describe("General accesibility attributes", () => {
