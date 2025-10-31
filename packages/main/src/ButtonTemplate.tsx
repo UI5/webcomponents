@@ -1,7 +1,17 @@
 import type Button from "./Button.js";
-import { useState } from "@ui5/webcomponents-base/dist/thirdparty/preact/hooks.module.js";
-import { jsx } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
+import { jsx, useState } from "@ui5/webcomponents-base";
 import type UI5Element from "@ui5/webcomponents-base";
+
+function lazy1<T extends typeof UI5Element>(fn: () => Promise<{ default: T }>): T {
+	return function Component(props: { [key: string]: unknown }) {
+		const [Comp, setComp] = useState<T | null>(null);
+		const p = fn();
+		p.then(module => {
+			setComp(() => module.default);
+		});
+		return Comp ? <Comp {...props}></Comp> : <></>;
+	} as unknown as T;
+}
 
 function lazy<T extends typeof UI5Element>(tag: string, fn: () => Promise<{ default: T }>): T {
 	return function Component(props: { [key: string]: unknown }) {
@@ -17,8 +27,10 @@ function lazy<T extends typeof UI5Element>(tag: string, fn: () => Promise<{ defa
 	} as unknown as T;
 }
 
-const LazyIcon = lazy("ui5-icon", () => import("./Icon.js"));
-const LazyBusyIndicator = lazy("ui5-busy-indicator", () => import("./BusyIndicator.js"));
+const LazyIcon = lazy1(() => import("./Icon.js"));
+const LazyBusyIndicator = lazy1(() => import("./BusyIndicator.js"));
+// const LazyIcon = lazy("ui5-icon", () => import("./Icon.js"));
+// const LazyBusyIndicator = lazy("ui5-busy-indicator", () => import("./BusyIndicator.js"));
 
 export default function ButtonTemplate(this: Button, injectedProps?: {
 		ariaPressed?: boolean,

@@ -109,6 +109,9 @@ import { addCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
 
+export { jsx } from "./jsx-runtime.js";
+export { useState } from "./thirdparty/preact/hooks.module.js";
+
 export { default as jsxRenderer } from "./renderer/JsxRenderer.js";
 export * as AccessibilityTextsHelper from "./util/AccessibilityTextsHelper.js";
 export * as Keys from "./Keys.js";

@@ -13,6 +13,7 @@ export default defineConfig({
 			external: [
 				"@ui5/webcomponents-base",
 				"@ui5/webcomponents-base/dist/thirdparty/preact/hooks.module.js",
+				"@ui5/webcomponents-base/dist/jsx-runtime.js",
 			],
 		},
 	},
