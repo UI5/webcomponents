@@ -176,7 +176,7 @@
 	--_ui5_bar_base_height: 2.5rem;
 	--_ui5_bar_subheader_height: 2.25rem;
 
-	--_ui5_button_base_height: var(--sapElement_Compact_Height);
+	/* --_ui5_button_base_height: var(--sapElement_Compact_Height); */
 	--_ui5_button_base_padding: 0.4375rem;
 	--_ui5_button_base_min_width: 2rem;
 	--_ui5-button-badge-diameter: 0.625rem;

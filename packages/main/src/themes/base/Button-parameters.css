@@ -3,7 +3,8 @@
 	--_ui5_button_focused_border_radius: 0.25rem;
 	--_ui5_button_focused_inner_border_radius: 0;
 	--_ui5_button_base_min_width: 2.5rem;
-	--_ui5_button_base_height: var(--sapElement_Height);
+	/* --_ui5_button_base_height: if(style(--_cozy_size): var(--sapElement_Height); else: var(--sapElement_Compact_Height)); */
+	--_ui5_button_base_height: calc(var(--_cozy_size) * var(--sapElement_Height) + var(--_compact_size) * var(--sapElement_Compact_Height));
 	--_ui5_button_border_radius: var(--sapButton_BorderCornerRadius);
 	--_ui5_button_base_padding: 0.6875rem;
 	--_ui5_button_base_icon_margin: 0.563rem;

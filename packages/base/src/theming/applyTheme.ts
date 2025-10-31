@@ -45,7 +45,8 @@ const loadComponentPackages = async (theme: string, externalThemeName?: string) 
 
 		const cssData = await getThemeProperties(packageName, theme, externalThemeName);
 		if (cssData) {
-			createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
+			//
+			// createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
 		}
 	});
 

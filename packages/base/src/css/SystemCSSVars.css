@@ -1,9 +1,13 @@
 :root {
     --_ui5_content_density:cozy;
+    --_compact_size: 0;
+    --_cozy_size: 1;
 }
 
 [data-ui5-compact-size],
 .ui5-content-density-compact,
 .sapUiSizeCompact {
     --_ui5_content_density:compact;
+    --_compact_size: 1;
+    --_cozy_size: 0;
 }

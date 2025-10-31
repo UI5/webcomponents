@@ -15,11 +15,18 @@
 
 
 	<link rel="stylesheet" type="text/css" href="./styles/Button.css">
-
+	<style>
+		ui5-button.my-class {
+			--sapButton_BorderCornerRadius: 100px;
+		}
+		:dir(rtl) {
+			background-color: greenyellow;
+		}
+	</style>
 </head>
 
 <body class="button1auto">
-	<ui5-button design="Negative" icon="decline">Reject</ui5-button>
+	<ui5-button class="my-class" design="Negative" icon="decline">Reject</ui5-button>
 	<ui5-button design="Positive" icon="add">Add</ui5-button>
 	<ui5-button icon="home" id="icon-only-comment"><!----><!----></ui5-button>
 	<ui5-button icon="text" id="icon-only-blank-text"> </ui5-button>
@@ -148,6 +155,7 @@
 	</div>
 
 	<div dir="rtl">
+		<span>text</span>
 		<ui5-title>Cozy</ui5-title>
 
 		<ui5-button icon="employee">Emphasized

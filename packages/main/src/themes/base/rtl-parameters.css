@@ -42,3 +42,9 @@
 	--_ui5_segmented_btn_item_border_right: 0px;
 	--_ui5-shellbar-notification-btn-count-offset: auto;
 }
+
+:host(:dir(rtl)),
+:dir(rtl) {
+	background-color: rgb(239, 185, 185);
+	--my-height: 200px;
+}

@@ -44,6 +44,8 @@ import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
+import { getThemeProperties } from "./asset-registries/Themes.js";
+import { getTheme } from "./config/Theme.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -1327,6 +1329,8 @@ abstract class UI5Element extends HTMLElement {
 		return this.i18nBundleStorage;
 	}
 
+	static themeProperties?: string;
+
 	/**
 	 * Registers a UI5 Web Component in the browser window object
 	 * @public
@@ -1344,6 +1348,7 @@ abstract class UI5Element extends HTMLElement {
 				const bundleName = pair[1].bundleName;
 				this.i18nBundleStorage[bundleName] = i18nBundles[index];
 			});
+			this.themeProperties = await getThemeProperties("@ui5/webcomponents", getTheme());
 			this.asyncFinished = true;
 		};
 		this.definePromise = defineSequence();

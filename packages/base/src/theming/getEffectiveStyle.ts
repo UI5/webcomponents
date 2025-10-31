@@ -3,6 +3,7 @@ import getStylesString from "./getStylesString.js";
 import { getFeature } from "../FeaturesRegistry.js";
 import type UI5Element from "../UI5Element.js";
 import type OpenUI5Enablement from "../features/OpenUI5Enablement.js";
+import { getThemeProperties } from "../asset-registries/Themes.js";
 
 const effectiveStyleMap = new Map<string, string>();
 
@@ -24,8 +25,9 @@ const getEffectiveStyle = (ElementClass: typeof UI5Element) => {
 
 		const customStyle = getCustomCSS(tag) || "";
 		const builtInStyles = getStylesString(ElementClass.styles);
+		const properties = ElementClass.themeProperties?.replaceAll(":root", ":host") || "";
 
-		const effectiveStyle = `${builtInStyles} ${customStyle} ${busyIndicatorStyles}`;
+		const effectiveStyle = `${builtInStyles} ${customStyle} ${busyIndicatorStyles} ${properties}`;
 		effectiveStyleMap.set(key, effectiveStyle);
 	}
 
