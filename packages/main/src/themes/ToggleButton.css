@@ -38,6 +38,15 @@
 	color: var(--sapButton_Selected_TextColor);
 }
 
+:host([pressed][active]:not([disabled])),
+:host([design="Default"][pressed][active]:not([disabled])),
+:host([design="Transparent"][pressed][active]:not([disabled])),
+:host([design="Emphasized"][pressed][active]:not([disabled])) {
+	background: var(--sapButton_Selected_Hover_Background);
+	border-color: var(--sapButton_Selected_Hover_BorderColor);
+	color: var(--sapButton_Selected_TextColor);
+}
+
 :host([pressed]:not([active]):not([non-interactive]):not([_is-touch])),
 :host([design="Default"][pressed]:not([active]):not([non-interactive]):not([_is-touch])),
 :host([design="Transparent"][pressed]:not([active]):not([non-interactive]):not([_is-touch])),
@@ -57,6 +66,12 @@
 	background: var(--sapButton_Reject_Active_Background);
 	border-color: var(--sapButton_Reject_Active_BorderColor);
 	color: var(--sapButton_Reject_Active_TextColor);
+}
+
+:host([design="Negative"][pressed][active]:not([disabled])) {
+	background: var(--sapButton_Reject_Selected_Hover_Background);
+	border-color: var(--sapButton_Reject_Selected_Hover_BorderColor);
+	color: var(--sapButton_Reject_Selected_TextColor);
 }
 
 :host([design="Negative"][pressed][active]:hover),
@@ -84,6 +99,12 @@
 	color: var(--sapButton_Accept_Selected_TextColor);
 }
 
+:host([design="Positive"][pressed][active]:not([disabled])) {
+	background: var(--sapButton_Accept_Selected_Hover_Background);
+	border-color: var(--sapButton_Accept_Selected_Hover_BorderColor);
+	color: var(--sapButton_Accept_Selected_TextColor);
+}
+
 :host([design="Positive"][pressed][active]:hover),
 :host([design="Positive"][pressed]:not([active]):not([non-interactive]):not([_is-touch]):hover) {
 	background: var(--sapButton_Accept_Selected_Hover_Background);
@@ -107,6 +128,12 @@
 	background: var(--sapButton_Attention_Active_Background);
 	border-color: var(--sapButton_Attention_Active_BorderColor);
 	color: var(--sapButton_Attention_Active_TextColor);
+}
+
+:host([design="Attention"][pressed][active]:not([disabled])) {
+	background: var(--sapButton_Attention_Selected_Hover_Background);
+	border-color: var(--sapButton_Attention_Selected_Hover_BorderColor);
+	color: var(--sapButton_Attention_Selected_TextColor);
 }
 
 :host([design="Attention"][pressed][active]:hover),
