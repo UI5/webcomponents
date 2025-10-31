@@ -1284,6 +1284,13 @@ describe("Change event behavior when selecting the same suggestion item", () => 
 });
 
 describe("Accessibility", () => {
+	it("tests autofocus attribute", () => {
+		cy.mount(<Input autofocus />);
+
+		cy.get("[ui5-input]")
+			.should("be.focused");
+	});
+
 	it("tests accessibleDescription property", () => {
 		cy.mount(<Input accessibleDescription="This is an input" />);
 
