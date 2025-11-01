@@ -1,0 +1,1 @@
+const T="[[[{0} ċĥąŗąċţēŗş ŗēɱąįŋįŋğ]]]",_="[[[{0} ċĥąŗąċţēŗş ŏʋēŗ ĺįɱįţ]]]",E="[[[{0} ŵįţĥ Āŗţįƒįċįąĺ Ĭŋţēĺĺįğēŋċē]]]",P={PROMPT_INPUT_CHARACTERS_LEFT:T,PROMPT_INPUT_CHARACTERS_EXCEEDED:_,BUTTON_TOOLTIP_TEXT:E};export{E as BUTTON_TOOLTIP_TEXT,_ as PROMPT_INPUT_CHARACTERS_EXCEEDED,T as PROMPT_INPUT_CHARACTERS_LEFT,P as default};

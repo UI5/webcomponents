@@ -1,0 +1,2 @@
+"use strict";import r from"../types/CalendarType.js";import{getCalendarType as a,getSecondaryCalendarType as d}from"../InitialConfiguration.js";import{attachConfigurationReset as t}from"./ConfigurationReset.js";let n,e;t(()=>{n=void 0,e=void 0});const i=()=>(n===void 0&&(n=a()),n&&n in r?n:r.Gregorian),o=()=>(e===void 0&&(e=d()),e&&e in r,e);export{i as getCalendarType,o as getSecondaryCalendarType};
+//# sourceMappingURL=CalendarType.js.map

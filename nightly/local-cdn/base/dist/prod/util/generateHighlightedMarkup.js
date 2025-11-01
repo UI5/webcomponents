@@ -1,0 +1,2 @@
+"use strict";import c from"./escapeRegex.js";import u from"../sap/base/security/encodeXML.js";function a(r,e,s,i){return r.replaceAll(new RegExp(c(e),`${i?"i":""}g`),s)}function f(r,e){if(!r||!e)return r;const s=n=>{const[g,l]=n.split("");for(;r.indexOf(n)>=0||e.indexOf(n)>=0;)n=`${g}${n}${l}`;return n},i=s("12"),t=s("34");let o=u(a(r,e,n=>`${i}${n}${t}`,!0));return[[i,"<b>"],[t,"</b>"]].forEach(([n,g])=>{o=a(o,n,g,!1)}),o}export default f;
+//# sourceMappingURL=generateHighlightedMarkup.js.map

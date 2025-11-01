@@ -1,0 +1,1 @@
+const E="Осталось символов: {0}",T="Символов свыше лимита: {0}",_={PROMPT_INPUT_CHARACTERS_LEFT:E,PROMPT_INPUT_CHARACTERS_EXCEEDED:T};export{T as PROMPT_INPUT_CHARACTERS_EXCEEDED,E as PROMPT_INPUT_CHARACTERS_LEFT,_ as default};
