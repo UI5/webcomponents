@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar - Busy Search POC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			padding: 1rem;
+		}
+
+		.demo-section {
+			margin-bottom: 2rem;
+		}
+
+		h2 {
+			margin-bottom: 1rem;
+		}
+
+		.controls {
+			margin-bottom: 1rem;
+		}
+
+		code {
+			background: #f5f5f5;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-family: monospace;
+		}
+
+		p {
+			margin: 0.5rem 0;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>ShellBar Search with Busy State - POC</h1>
+	<p><strong>Pattern:</strong> Data provider component pattern with <code>ui5-busy-state</code></p>
+	<p><strong>Implementation:</strong> Abstract ui5-busy-state component provides configuration, BusyIndicator rendered internally</p>
+
+	<div class="demo-section">
+		<h2>ShellBar with Busy Search (Size: Auto → M)</h2>
+		<p>Using <code>size="Auto"</code> lets ShellBarSearch decide the default size (M).</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyShellBar">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar
+			id="shellbar"
+			primary-title="Corporate Portal"
+			secondary-title="secondary title"
+			show-notifications
+			notifications-count="22">
+			
+			<ui5-shellbar-search 
+				id="shellbarSearch"
+				slot="searchField"
+				placeholder="Search...">
+				<ui5-busy-state slot="busyState" size="Auto"></ui5-busy-state>
+			</ui5-shellbar-search>
+
+			<ui5-avatar slot="profile" initials="JD"></ui5-avatar>
+		</ui5-shellbar>
+	</div>
+
+	<div class="demo-section">
+		<h2>Standalone with Size M</h2>
+		<p>Explicitly setting <code>size="M"</code>.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyStandalone">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar-search 
+			id="standaloneSearch"
+			placeholder="Search items...">
+			<ui5-busy-state id="standaloneBusyState" slot="busyState" size="M"></ui5-busy-state>
+		</ui5-shellbar-search>
+	</div>
+
+	<div class="demo-section">
+		<h2>Collapsed with Size S</h2>
+		<p>Using <code>size="S"</code> for small busy indicator.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyCollapsed">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar-search 
+			id="collapsedSearch"
+			collapsed
+			placeholder="Search...">
+			<ui5-busy-state id="collapsedBusyState" slot="busyState" size="S"></ui5-busy-state>
+		</ui5-shellbar-search>
+	</div>
+
+	<div class="demo-section">
+		<h2>With Size L</h2>
+		<p>Using <code>size="L"</code> for large busy indicator.</p>
+
+		<div class="controls">
+			<ui5-button id="toggleBusyLarge">Toggle Busy State</ui5-button>
+		</div>
+
+		<ui5-shellbar-search 
+			id="largeSearch"
+			placeholder="Search...">
+			<ui5-busy-state id="largeBusyState" slot="busyState" size="L"></ui5-busy-state>
+		</ui5-shellbar-search>
+	</div>
+
+	<script>
+		// ShellBar example
+		const shellbarBusyState = document.getElementById("shellbarBusyState");
+		const toggleShellBar = document.getElementById("toggleBusyShellBar");
+
+		toggleShellBar.addEventListener("click", () => {
+			console.log("toggleShellBar clicked");
+			debugger;
+			shellbarBusyState.active = !shellbarBusyState.active;
+		});
+
+		// Standalone example
+		const standaloneBusyState = document.getElementById("standaloneBusyState");
+		const toggleStandalone = document.getElementById("toggleBusyStandalone");
+
+		toggleStandalone.addEventListener("click", () => {
+			standaloneBusyState.active = !standaloneBusyState.active;
+		});
+
+		// Collapsed example
+		const collapsedBusyState = document.getElementById("collapsedBusyState");
+		const toggleCollapsed = document.getElementById("toggleBusyCollapsed");
+
+		toggleCollapsed.addEventListener("click", () => {
+			collapsedBusyState.active = !collapsedBusyState.active;
+		});
+
+		// Large example
+		const largeBusyState = document.getElementById("largeBusyState");
+		const toggleLarge = document.getElementById("toggleBusyLarge");
+
+		toggleLarge.addEventListener("click", () => {
+			largeBusyState.active = !largeBusyState.active;
+		});
+	</script>
+</body>
+</html>
+

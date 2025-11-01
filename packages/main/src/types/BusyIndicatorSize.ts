@@ -4,6 +4,13 @@
  */
 enum BusyIndicatorSize {
 	/**
+	 * automatic size (component decides)
+	 * @public
+	 * @since 2.17.0
+	 */
+	Auto = "Auto",
+
+	/**
 	 * small size
 	 * @public
 	 */
