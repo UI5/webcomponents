@@ -157,7 +157,6 @@ function completeGeneration(action, menuItem) {
 
     currentIndexHistory = versionHistory.length - 1;
     currentActionInProgress = null;
-    isGenerating = false;
 
     if (versionHistory.length === 1) buildMenuFromConfig();
 
