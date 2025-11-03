@@ -2,7 +2,7 @@ import Input from "../../src/Input.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
-import { INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP, INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP, WRITING_ASSISTANT_BUTTON_TOOLTIP } from "../../src/generated/i18n/i18n-defaults.js";
+import { INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP, INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP, INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic", () => {
     describe("Initialization", () => {
@@ -807,7 +807,7 @@ describe("Writing Assistant Input Icon", () => {
         cy.get("[ui5-ai-input]")
             .shadow()
             .find("input")
-            .should("have.attr", "aria-label", WRITING_ASSISTANT_BUTTON_TOOLTIP.defaultText);
+            .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP.defaultText);
     });
 })
 
