@@ -254,6 +254,11 @@ describe("Carousel general interaction", () => {
 
 		cy.get("#carousel5")
 			.shadow()
+			.find(".ui5-carousel-content")
+			.should("have.attr", "aria-label", "Item Container");
+
+		cy.get("#carousel5")
+			.shadow()
 			.find(".ui5-carousel-item")
 			.should("have.attr", "role", "listitem");
 
