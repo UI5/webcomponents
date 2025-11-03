@@ -6843,19 +6843,19 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
-    "@ui5/webcomponents": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-theming": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-theming": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-base@npm:2.16.0-rc.1, @ui5/webcomponents-base@workspace:packages/base":
+"@ui5/webcomponents-base@npm:2.16.0-rc.3, @ui5/webcomponents-base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-base@workspace:packages/base"
   dependencies:
@@ -6864,7 +6864,7 @@ __metadata:
     "@openui5/sap.ui.core": "npm:1.120.17"
     "@sap-theming/theming-base-content": "npm:11.29.3"
     "@ui5/cypress-internal": "npm:0.1.0"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     chokidar-cli: "npm:^3.0.0"
     clean-css: "npm:^5.2.2"
     cypress: "npm:^15.3.0"
@@ -6876,7 +6876,7 @@ __metadata:
     resolve: "npm:^1.20.0"
     touch: "npm:^3.1.0"
     typescript: "npm:^5.6.2"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
@@ -6886,15 +6886,15 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
-    "@ui5/webcomponents": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-theming": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-theming": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
 
@@ -6904,49 +6904,49 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
-    "@ui5/webcomponents": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-theming": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-theming": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     "@zxing/library": "npm:^0.21.3"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
     lit: "npm:^2.0.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
     yarn: "npm:^1.22.22"
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-icons-business-suite@npm:2.16.0-rc.1, @ui5/webcomponents-icons-business-suite@workspace:packages/icons-business-suite":
+"@ui5/webcomponents-icons-business-suite@npm:2.16.0-rc.3, @ui5/webcomponents-icons-business-suite@workspace:packages/icons-business-suite":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-icons-business-suite@workspace:packages/icons-business-suite"
   dependencies:
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-icons-tnt@npm:2.16.0-rc.1, @ui5/webcomponents-icons-tnt@workspace:packages/icons-tnt":
+"@ui5/webcomponents-icons-tnt@npm:2.16.0-rc.3, @ui5/webcomponents-icons-tnt@workspace:packages/icons-tnt":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-icons-tnt@workspace:packages/icons-tnt"
   dependencies:
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-icons@npm:2.16.0-rc.1, @ui5/webcomponents-icons@workspace:packages/icons":
+"@ui5/webcomponents-icons@npm:2.16.0-rc.3, @ui5/webcomponents-icons@workspace:packages/icons":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-icons@workspace:packages/icons"
   dependencies:
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-localization@npm:2.16.0-rc.1, @ui5/webcomponents-localization@workspace:packages/localization":
+"@ui5/webcomponents-localization@npm:2.16.0-rc.3, @ui5/webcomponents-localization@workspace:packages/localization":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-localization@workspace:packages/localization"
   dependencies:
@@ -6955,8 +6955,8 @@ __metadata:
     "@babel/parser": "npm:^7.23.6"
     "@openui5/sap.ui.core": "npm:1.120.17"
     "@types/openui5": "npm:^1.113.0"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     babel-plugin-amd-to-esm: "npm:^2.0.3"
     eslint: "npm:^7.22.0"
     estree-walk: "npm:^2.2.0"
@@ -6965,13 +6965,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-theming@npm:2.16.0-rc.1, @ui5/webcomponents-theming@workspace:packages/theming":
+"@ui5/webcomponents-theming@npm:2.16.0-rc.3, @ui5/webcomponents-theming@workspace:packages/theming":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-theming@workspace:packages/theming"
   dependencies:
     "@sap-theming/theming-base-content": "npm:11.29.3"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     globby: "npm:^13.1.1"
     json-beautify: "npm:^1.1.1"
     postcss: "npm:^8.4.5"
@@ -6979,7 +6979,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents-tools@npm:2.16.0-rc.1, @ui5/webcomponents-tools@workspace:packages/tools":
+"@ui5/webcomponents-tools@npm:2.16.0-rc.3, @ui5/webcomponents-tools@workspace:packages/tools":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-tools@workspace:packages/tools"
   dependencies:
@@ -7072,25 +7072,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ui5/webcomponents@npm:2.16.0-rc.1, @ui5/webcomponents@workspace:packages/main":
+"@ui5/webcomponents@npm:2.16.0-rc.3, @ui5/webcomponents@workspace:packages/main":
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents@workspace:packages/main"
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@ui5/cypress-internal": "npm:0.1.0"
-    "@ui5/webcomponents-base": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons-business-suite": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-icons-tnt": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-localization": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-theming": "npm:2.16.0-rc.1"
-    "@ui5/webcomponents-tools": "npm:2.16.0-rc.1"
+    "@ui5/webcomponents-base": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons-business-suite": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-icons-tnt": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-localization": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-theming": "npm:2.16.0-rc.3"
+    "@ui5/webcomponents-tools": "npm:2.16.0-rc.3"
     chokidar-cli: "npm:^3.0.0"
     cypress: "npm:^15.3.0"
     eslint: "npm:^7.22.0"
     jsdom: "npm:^26.0.0"
     lit: "npm:^2.0.0"
-    vite: "npm:5.4.8"
+    vite: "npm:5.4.21"
     vitest: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
@@ -20628,7 +20628,7 @@ __metadata:
 
 "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch":
   version: 0.18.1
-  resolution: "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch::version=0.18.1&hash=14946a"
+  resolution: "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch::version=0.18.1&hash=d2f81e"
   dependencies:
     "@material/mwc-button": "npm:^0.27.0"
     "@material/mwc-icon-button": "npm:^0.27.0"
@@ -20642,7 +20642,7 @@ __metadata:
     lit: "npm:^2.0.0"
     tslib: "npm:^2.0.3"
     vscode-languageserver-protocol: "npm:^3.17.2"
-  checksum: 10c0/5f45e0c6be484a4232a9bfacf446b3c658f1a128d8717374f75d29b9018c620a43fbc4ce1250e951f2e07063b87cc10938b39a25bf701ac81d79e776fa3f5ace
+  checksum: 10c0/89e23e4858bd23205d494ae6d6615fbdcc4409a821da9dbdbe0c4f5ec8f880471167843b7be18bc39e401cd97a411495eb18f48429a136b1a9dbd458b3ec3fb1
   languageName: node
   linkType: hard
 
@@ -25833,9 +25833,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.8":
-  version: 5.4.8
-  resolution: "vite@npm:5.4.8"
+"vite@npm:5.4.21":
+  version: 5.4.21
+  resolution: "vite@npm:5.4.21"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -25872,7 +25872,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/af70af6d6316a3af71f44ebe3ab343bd66450d4157af73af3b32239e1b6ec43ff6f651d7cc4193b21ed3bff2e9356a3de9e96aee53857f39922e4a2d9fad75a1
+  checksum: 10c0/468336a1409f728b464160cbf02672e72271fb688d0e605e776b74a89d27e1029509eef3a3a6c755928d8011e474dbf234824d054d07960be5f23cd176bc72de
   languageName: node
   linkType: hard
 

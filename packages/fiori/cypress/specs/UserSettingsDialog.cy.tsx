@@ -131,6 +131,34 @@ describe("Initial rendering", () => {
 		cy.get("@settingItem").should("have.attr", "icon", "accessibility");
 	});
 
+	it('tests setting no icon', () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem icon="" text="Setting with no icon">
+			</UserSettingsItem>
+			<UserSettingsItem icon="bell" text="Setting with bell icon">
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").should("exist");
+		cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+		cy.get("@settingItem").should("exist");
+		cy.get("@settingItem").should("have.attr", "icon", "");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("exist");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.have.attr", "icon");
+	});
+
+	it('tests when all settings does not have icon we do not add css class', () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem icon="" text="Setting with no icon">
+			</UserSettingsItem>
+			<UserSettingsItem icon="" text="Second Setting with no icon">
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").should("exist");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.exist");
+	});
+
 	it("tests setting header-text", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem headerText="Header title | Setting 3">

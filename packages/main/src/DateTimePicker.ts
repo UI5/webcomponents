@@ -28,6 +28,10 @@ import {
 	DATETIME_PICKER_DATE_BUTTON,
 	DATETIME_PICKER_TIME_BUTTON,
 	DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME,
+	DATETIME_VALUE_MISSING,
+	DATETIME_PATTERN_MISMATCH,
+	DATETIME_RANGEUNDERFLOW,
+	DATETIME_RANGEOVERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -208,6 +212,36 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 				timeSelectionValue,
 			};
 		}
+	}
+
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateTimePicker.i18nBundle.getText(DATETIME_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateTimePicker.i18nBundle.getText(DATETIME_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEUNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEOVERFLOW, this.maxDate);
+		}
+
+		return "";
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !this.isValidValue(this.value),
+			rangeUnderflow: !this.isValidMin(this.value),
+			rangeOverflow: !this.isValidMax(this.value),
+		};
 	}
 
 	get _formatPattern() {

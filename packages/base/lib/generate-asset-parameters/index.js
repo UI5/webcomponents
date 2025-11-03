@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import assets from "@ui5/webcomponents-tools/assets-meta.js";
+import { pathToFileURL } from "url";
 
 const fileContent = `const assetParameters = ${JSON.stringify(assets)};
 
@@ -24,7 +25,10 @@ const generate = async () => {
 	console.log("Assets parameters generated.");
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate()
 }
 

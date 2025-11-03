@@ -9,3 +9,6 @@
 #drpLabel::part(input) {
     text-align: right;
 }
+form ui5-daterange-picker:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}

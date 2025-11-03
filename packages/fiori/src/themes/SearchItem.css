@@ -24,7 +24,17 @@
 	flex: 1;
 }
 
+.ui5-search-item-actions-container {
+	display: flex;
+	align-items: center;
+	gap: 0.125rem;
+}
+
 :host([desktop]) .ui5-search-item-selected-delete {
+	display: none;
+}
+
+:host([desktop]) .ui5-search-item-actions {
 	display: none;
 }
 
@@ -33,6 +43,16 @@
 	.ui5-search-item-selected-delete {
 		display: inline-block;
 	}
+	
+	.ui5-search-item-actions {
+		display: flex;
+	}
+}
+
+.ui5-search-item-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
 }
 
 .ui5-search-item-text {

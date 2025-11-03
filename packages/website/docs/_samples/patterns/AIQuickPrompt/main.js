@@ -25,6 +25,7 @@ var currentTextKey;
 var translationKey = "en";
 const sendButton = document.getElementById("footerBtnSend");
 const toast = document.getElementById("quickPromptToast");
+const quickPromptBusyIndicator = document.getElementById("quickPromptBusyIndicator");
 const predefinedTexts = texts.predefinedTexts;
 const predefinedTextsBulleted = texts.predefinedTextsBulleted;
 const predefinedTextsExpanded = texts.predefinedTextsExpanded;
@@ -38,12 +39,12 @@ function aiQuickPromptButtonClickHandler(e) {
 		case "":
 		case "generate":
 			button.state = "generating";
+			quickPromptBusyIndicator.active = true;
 			sendButton.disabled = true;
-			startQuickPromptGeneration(button);
 			const keys = Object.keys(predefinedTexts[translationKey]);
 			const randomKey = keys[Math.floor(Math.random() * keys.length)];
 			currentTextKey = randomKey;
-			generateText(predefinedTexts[translationKey][randomKey], button);
+			stopBusyIndicatorAndGenerateText(button, predefinedTexts);
 			break;
 		case "generating":
 			button.state = "revise";
@@ -75,6 +76,7 @@ function stopQuickPromptGeneration() {
 	generationStopped = true;
 	sendButton.disabled = false;
 	output.disabled = false;
+	quickPromptBusyIndicator.active = false;
 }
 
 sendButton.addEventListener("click", function() {
@@ -147,16 +149,25 @@ menu1.addEventListener("item-click", function (e) {
 });
 
 function setStateAndGenerate(button, state, textKey, predefinedTexts) {
+	quickPromptBusyIndicator.active = true;
 	button.state = state;
-	startQuickPromptGeneration(button);
-	generateText(predefinedTexts[translationKey][textKey], button);
+	stopBusyIndicatorAndGenerateText(button, predefinedTexts, textKey);
+
 }
 
 function startTextGeneration(button, state, predefinedTexts) {
+	quickPromptBusyIndicator.active = true;
 	button.state = state;
-	startQuickPromptGeneration(button);
-	generateText(predefinedTexts[translationKey][currentTextKey], button);
+	stopBusyIndicatorAndGenerateText(button, predefinedTexts);
 }
+
+function stopBusyIndicatorAndGenerateText(button, predefinedTexts, textKey) {
+	setTimeout(() => {
+		quickPromptBusyIndicator.active = false;
+		generateText(predefinedTexts[translationKey][textKey || currentTextKey], button);
+	}, 2000);
+	startQuickPromptGeneration(button);
+ }
 
 function clearValueState(output) {
 	output.valueState = "None";
@@ -206,7 +217,14 @@ function generateText(text, button) {
 		} else {
 			if (!generationStopped) {
 				button.state = "revise";
+				button.accessibilityAttributes = {
+					root: {
+						hasPopup: "menu",
+						roleDescription: "Menu Button"
+					}
+				};
 				output.valueState = "None";
+				quickPromptBusyIndicator.active = false;
 			}
 			clearInterval(generationId);
 			sendButton.disabled = false;

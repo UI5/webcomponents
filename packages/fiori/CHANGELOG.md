@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Features
+
+* **ui5-flexible-column-layout:** public layoutsConfiguration property ([#9290](https://github.com/UI5/webcomponents/issues/9290)) ([a92742c](https://github.com/UI5/webcomponents/commit/a92742cf13cbbfae3a9d07801339477b4b781720))
+* **ui5-user-settings-item:** introduce option to hide icon ([#12512](https://github.com/UI5/webcomponents/issues/12512)) ([33b962f](https://github.com/UI5/webcomponents/commit/33b962f98f3d3427681abdd05c1c50c21debd415))
+
+
+
+
+
+# [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
 # [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
 
 
