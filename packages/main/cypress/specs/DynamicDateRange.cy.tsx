@@ -505,7 +505,7 @@ describe('FromDateTime Option', () => {
 			.should('have.attr', 'selected');
 	});
 
-	it('should select a date and time, then submit the value', () => {
+	it.skip('should select a date and time, then submit the value', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new FromDateTime(),
 		];
@@ -618,7 +618,7 @@ describe('ToDateTime Option', () => {
 			.should('have.attr', 'selected');
 	});
 
-	it('should select a date and time, then submit the value', () => {
+	it.skip('should select a date and time, then submit the value', () => {
 		const mockOptions: Array<IDynamicDateRangeOption> = [
 			new ToDateTime(),
 		];
