@@ -404,12 +404,6 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
         [mainFile]: {
           content: `/* playground-hide */
 import "./playground-support.js";
-import "@ui5/webcomponents-base/dist/Assets-fetch.js";
-import "@ui5/webcomponents/dist/Assets-fetch.js";
-import "@ui5/webcomponents-fiori/dist/Assets-fetch.js";
-import "@ui5/webcomponents-compat/dist/Assets-fetch.js";
-import "@ui5/webcomponents-ai/dist/Assets-fetch.js";
-import "@ui5/webcomponents-icons/dist/Assets-fetch.js";
 /* playground-hide-end */
 ${fixAssetPaths(_js)}`,
           selected: mainFileSelected,
