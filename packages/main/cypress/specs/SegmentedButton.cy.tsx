@@ -278,10 +278,10 @@ describe("SegmentedButtonItems appearance", () => {
 	});
 });
 
-describe("SegmentedButton: contentMode", () => {
-    it("should have items with width which fits item content in content mode: ContentFit", () => {
+describe("SegmentedButton: fitContent", () => {
+    it("should have items with width which fits item content when itemsFitContent is true", () => {
         cy.mount(
-            <SegmentedButton contentMode="ContentFit">
+            <SegmentedButton itemsFitContent={true}>
                 <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
                 <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
                 <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
@@ -300,9 +300,9 @@ describe("SegmentedButton: contentMode", () => {
         });
     });
 
-    it("should have items with equal width in content mode:EqualSized", () => {
+    it("should have items with equal width when itemsFitContent is false (default)", () => {
         cy.mount(
-            <SegmentedButton contentMode="EqualSized">
+            <SegmentedButton>
                 <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
                 <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
                 <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
