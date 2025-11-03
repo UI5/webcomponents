@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.7](https://github.com/SAP/ui5-webcomponents/compare/v2.13.6...v2.13.7) (2025-11-03)
+
+
+### Bug Fixes
+
+* **ui5-timeline:** implement arrows navigation for inner elements ([#12033](https://github.com/SAP/ui5-webcomponents/issues/12033)) ([f79d2f2](https://github.com/SAP/ui5-webcomponents/commit/f79d2f23334399fde7b01175ead93c1e58d9e946)), closes [#11785](https://github.com/SAP/ui5-webcomponents/issues/11785)
+
+
+### Features
+
+* **ui5-timeline:** improve keyboard handling ([#12021](https://github.com/SAP/ui5-webcomponents/issues/12021)) ([55ad4ae](https://github.com/SAP/ui5-webcomponents/commit/55ad4ae25e60462367e6f97909227441dd1d52d7))
+
+
+
+
+
 ## [2.13.6](https://github.com/SAP/ui5-webcomponents/compare/v2.13.5...v2.13.6) (2025-10-29)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori
