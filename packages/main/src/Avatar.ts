@@ -5,7 +5,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -492,6 +492,18 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 			return;
 		}
 		this._imageLoadError = true;
+	}
+
+	get accessibilityInfo() {
+		if (this._interactive) {
+			return {
+				role: this._role as AriaRole,
+				type: this._ariaHasPopup,
+				description: this.accessibleNameText,
+			};
+		}
+
+		return undefined;
 	}
 }
 
