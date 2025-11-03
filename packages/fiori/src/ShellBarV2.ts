@@ -324,12 +324,7 @@ class ShellBarV2 extends UI5Element {
 		getOverflowed: () => this.overflowSupport.isOverflowing(this.overflowOuter!, this.overflowInner!),
 	});
 
-	overflowSupport = new ShellBarV2OverflowSupport({
-		getActions: () => this.actions.slice(),
-		getContent: () => this.content.slice(),
-		getCustomItems: () => this.items.slice(),
-		querySelector: <T extends Element>(selector: string) => this.shadowRoot!.querySelector<T>(selector),
-	});
+	overflowSupport = new ShellBarV2OverflowSupport();
 
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
@@ -449,12 +444,20 @@ class ShellBarV2 extends UI5Element {
 			return;
 		}
 
-		// Delegate to controller - it reads state, measures DOM, applies hiding
+		// Delegate to controller - pass all data explicitly
 		const result = this.overflowSupport.updateOverflow({
-			getAction: (actionId: string) => this.getAction(actionId),
+			actions: this.actions,
+			content: this.content,
+			customItems: this.items,
 			showSearchField: this.showSearchField,
 			overflowOuter: this.overflowOuter!,
 			overflowInner: this.overflowInner!,
+			setVisible: (selector: string, visible: boolean) => {
+				const element = this.shadowRoot!.querySelector(selector);
+				if (element) {
+					element.classList[visible ? "remove" : "add"]("ui5-shellbar-hidden");
+				}
+			},
 		});
 
 		this.handleOverflowChanged(result);
@@ -468,6 +471,7 @@ class ShellBarV2 extends UI5Element {
 		this.items.forEach(item => {
 			item.inOverflow = hiddenItems.includes(item._id);
 			if (item.inOverflow) {
+				// clear the hidden class to ensure the item is visible in the overflow popover
 				item.classList.remove("ui5-shellbar-hidden");
 			}
 		});
@@ -627,7 +631,10 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	get overflowItems() {
-		return this.overflowSupport.overflowItems;
+		return this.overflowSupport.getOverflowItems({
+			actions: this.actions,
+			customItems: this.items,
+		});
 	}
 
 	get search() {

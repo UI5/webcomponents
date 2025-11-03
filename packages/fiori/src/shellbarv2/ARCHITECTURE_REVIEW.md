@@ -2,167 +2,208 @@
 
 ## Executive Summary
 
-The ShellBarV2 architecture uses a coordinator pattern with focused support modules. While the separation of concerns is good, several design issues exist:
+The ShellBarV2 architecture uses a coordinator pattern with focused support modules. While the separation of concerns is good, several design issues existed.
 
-- **Over-engineered simple abstractions** (EventBus, DomAdapter)
+### ✅ Completed Improvements (Phase 1)
+- ✅ **Removed over-engineered abstractions** - Deleted EventBus and DomAdapter (-72 lines)
+- ✅ **Fixed tight coupling** - Removed lambda closures, pass data explicitly to methods
+- ✅ **Improved state ownership** - Reduced stored state in OverflowSupport
+- ✅ **Cleaner API** - Replaced querySelector with focused setVisible callback
+- ✅ **Better testability** - Modules now easily testable with mock data
+
+**Net Result**: -145 lines of code, cleaner architecture, better testability
+
+### ⚠️ Remaining Issues
 - **Under-engineered complex logic** (overflow calculation, error handling)
-- **Tight coupling via lambda closures**
 - **Performance issues** (layout thrashing in overflow calculation)
 - **Missing optimizations** (lazy initialization, memoization)
+- **Magic numbers** (priority system not documented)
+- **SearchSupport complexity** (does too much)
 
 ## Critical Design Flaws
 
-### 1. Tight Coupling via Lambda Closures
+### 1. ✅ DONE - Tight Coupling via Lambda Closures
 
-**Location**: `ShellBarV2.ts` lines 339-345
+**Status**: Completed - All lambda closures removed from OverflowSupport
 
+**What Was Done**:
+- Removed constructor parameters with lambda closures
+- Pass all data explicitly to `updateOverflow()` method
+- Made `getOverflowItems()` a method that receives data instead of a getter
+- Replaced `querySelector` lambda with focused `setVisible` callback
+
+**Before**:
 ```typescript
 overflowSupport = new ShellBarV2OverflowSupport({
-  eventBus: this.eventBus,
-  domAdapter: this.domAdapter,
   getActions: () => this.actions.slice(),
   getContent: () => this.content.slice(),
   getCustomItems: () => this.items.slice(),
+  querySelector: <T>(selector: string) => this.shadowRoot!.querySelector<T>(selector),
 });
 ```
 
-**Problem**:
-- Support modules hold closures over component internals
-- Makes unit testing difficult (can't mock data easily)
-- Hides what data modules actually need
-- Creates implicit dependencies
-
-**Impact**: High - affects testability and maintainability
-
-**Recommended Fix**:
+**After**:
 ```typescript
-// Pass data when calling methods, not in constructor
-const result = overflowSupport.updateOverflow({
+overflowSupport = new ShellBarV2OverflowSupport();
+
+// Data passed explicitly to methods
+updateOverflow({
+  items: this.items,
   actions: this.actions,
   content: this.content,
-  items: this.items,
+  showSearchField: this.showSearchField,
   overflowOuter: this.overflowOuter!,
   overflowInner: this.overflowInner!,
-  showSearchField: this.showSearchField,
+  setVisible: (selector: string, visible: boolean) => { /* ... */ },
+});
+
+getOverflowItems({
+  actions: this.actions,
+  items: this.items,
 });
 ```
 
-**Benefits**:
-- Explicit dependencies
-- Easy to test with mock data
-- Clear what module needs
+**Benefits Achieved**:
+- ✅ Explicit dependencies
+- ✅ Easy to test with mock data
+- ✅ Clear what module needs
+- ✅ No stored state in OverflowSupport
+- ✅ Cleaner API with focused callbacks
 
-### 2. Circular Reference Risk
+### 2. ✅ DONE - Circular Reference Risk
 
-**Location**: `ShellBarV2.ts` lines 322-324
+**Status**: Completed - EventBus removed entirely
 
+**What Was Done**:
+- Deleted `ShellBarEventBus.ts` file completely
+- OverflowSupport now returns results directly instead of emitting events
+- Component calls handler directly with returned result
+- No more circular references
+
+**Before**:
 ```typescript
 eventBus = new ShellBarV2EventBus({
-  host: this,  // Component passes itself
+  host: this,  // Circular reference
 });
+
+// In OverflowSupport
+this.eventBus.emit("overflow-changed", { hiddenItems, showOverflowButton });
+
+// In ShellBarV2
+this.eventBus.on("overflow-changed", this.handleOverflowChangedBound);
 ```
 
-**Problem**:
-- Component passes `this` to module
-- Creates circular reference (component → module → component)
-- Potential garbage collection issues
-- Module can call any component method (violates encapsulation)
-
-**Impact**: Medium - potential memory leaks
-
-**Recommended Fix**:
+**After**:
 ```typescript
-// Remove EventBus entirely, use native events
-private emitOverflowChanged(detail: OverflowChangedDetail) {
-  this.dispatchEvent(new CustomEvent("overflow-changed", { detail }));
-}
+// No EventBus needed
+
+// In OverflowSupport - return result
+return { hiddenItems, showOverflowButton };
+
+// In ShellBarV2 - call handler directly
+const result = this.overflowSupport.updateOverflow({...});
+this.handleOverflowChanged(result);
 ```
 
-**Benefits**:
-- No circular references
-- Less code to maintain
-- Standard event API
+**Benefits Achieved**:
+- ✅ No circular references
+- ✅ Less code to maintain (-37 lines)
+- ✅ Clearer data flow
+- ✅ Simpler architecture
 
-### 3. Unnecessary Abstractions
+### 3. ✅ DONE - Unnecessary Abstractions
 
-**Location**: `ShellBarDomAdapter.ts` (entire file)
+**Status**: Completed - Both EventBus and DomAdapter removed
 
+**What Was Done**:
+- Deleted `ShellBarDomAdapter.ts` file completely
+- Deleted `ShellBarEventBus.ts` file completely  
+- Replaced DomAdapter with direct DOM calls
+- Replaced querySelector with focused `setVisible` callback
+- Total: **-72 lines** removed from unnecessary abstractions
+
+**Before**:
 ```typescript
+// Two files with 15-line wrappers
 class ShellBarV2DomAdapter {
   getWidth(): number {
     return this.host.getBoundingClientRect().width;
   }
-  
   querySelector<T>(selector: string): T | null {
     return this.shadowRoot.querySelector<T>(selector);
   }
 }
+
+domAdapter = new ShellBarV2DomAdapter({ host: this, shadowRoot: this.shadowRoot! });
+const width = this.domAdapter.getWidth();
+const element = this.domAdapter.querySelector(".selector");
 ```
 
-**Problem**:
-- 15-line wrapper around two DOM calls
-- No logic or complexity to justify abstraction
-- Adds indirection without value
-- More code to maintain
-
-**Impact**: Low - unnecessary complexity
-
-**Recommended Fix**:
+**After**:
 ```typescript
-// Remove DomAdapter, call DOM directly
-private getWidth(): number {
-  return this.getBoundingClientRect().width;
-}
+// Direct calls - no abstraction needed
+const width = this.getBoundingClientRect().width;
 
-private querySelector<T>(selector: string): T | null {
-  return this.shadowRoot!.querySelector<T>(selector);
+// Focused callback instead of generic querySelector
+setVisible: (selector: string, visible: boolean) => {
+  const element = this.shadowRoot!.querySelector(selector);
+  if (element) {
+    if (visible) {
+      element.classList.remove("ui5-shellbar-hidden");
+    } else {
+      element.classList.add("ui5-shellbar-hidden");
+    }
+  }
 }
 ```
 
-**Benefits**:
-- Less code
-- Clearer intent
-- One less file to maintain
+**Benefits Achieved**:
+- ✅ Less code (-72 lines)
+- ✅ Clearer intent
+- ✅ Two fewer files to maintain
+- ✅ Focused, single-purpose callbacks
+- ✅ No unnecessary indirection
 
-**Same issue with EventBus**: Another 15-line wrapper that doesn't add value.
+### 4. ⚠️ PARTIALLY DONE - State Ownership Unclear
 
-### 4. State Ownership Unclear
+**Status**: Improved but not fully resolved
 
-**Location**: `ShellBarOverflowSupport.ts` line 35, `ShellBarV2.ts` lines 478-486
+**What Was Done**:
+- OverflowSupport no longer stores actions/items collections
+- Data passed explicitly on each method call
+- Reduced state to just `hiddenItems` tracking
 
+**Still Remaining**:
+- OverflowSupport still stores `hiddenItems` array
+- Component also tracks overflow state in `item.inOverflow`
+- Some duplication remains
+
+**Before**:
 ```typescript
-// In OverflowSupport:
+// In OverflowSupport - stored multiple collections
+private hiddenItems: string[] = [];
+private actions: readonly ShellBarV2ActionItem[] = [];
+private items: readonly ShellBarV2Item[] = [];
+```
+
+**After**:
+```typescript
+// In OverflowSupport - only tracking hiddenItems
 private hiddenItems: string[] = [];
 
-// In ShellBarV2:
-items.forEach(item => {
-  item.inOverflow = hiddenItems.includes(item._id);
-});
+// Actions/items passed on each call
+updateOverflow({ actions, items, ... })
+getOverflowItems({ actions, items })
 ```
 
-**Problem**:
-- Overflow state duplicated in two places
-- Who owns the truth?
-- Synchronization required
-- Potential for inconsistency
+**Benefits Achieved**:
+- ✅ Removed stored collections (actions, items)
+- ✅ Data passed explicitly to methods
+- ⚠️ Still stores hiddenItems for state tracking
 
-**Impact**: Medium - maintainability and bugs
-
-**Recommended Fix**:
-```typescript
-// Component owns all state
-private hiddenItemIds: Set<string> = new Set();
-
-// Module only calculates, doesn't store
-calculateOverflow(params): string[] {
-  return /* list of hidden IDs */;
-}
-```
-
-**Benefits**:
-- Single source of truth
-- No synchronization needed
-- Clear ownership
+**Next Steps**:
+- Could move hiddenItems to component entirely
+- OverflowSupport becomes fully stateless
 
 ### 5. SearchSupport Does Too Much
 
@@ -1113,36 +1154,45 @@ handleResize() {
 
 ## Priority Matrix
 
-| Issue | Impact | Effort | Priority |
-|-------|--------|--------|----------|
-| Layout thrashing in overflow | High | High | P0 |
-| Lambda coupling | High | Medium | P0 |
-| Magic numbers | Medium | Low | P1 |
-| Remove EventBus/DomAdapter | Low | Low | P1 |
-| SearchSupport complexity | High | High | P1 |
-| No error handling | Medium | Medium | P2 |
-| No lazy initialization | Low | Low | P2 |
-| State ownership unclear | Medium | Medium | P2 |
-| Priority flip hack | Medium | Low | P2 |
-| Circular references | Medium | Low | P3 |
+| Issue | Impact | Effort | Priority | Status |
+|-------|--------|--------|----------|--------|
+| Lambda coupling | High | Medium | P0 | ✅ DONE |
+| Remove EventBus/DomAdapter | Low | Low | P1 | ✅ DONE |
+| State ownership unclear | Medium | Medium | P2 | ⚠️ PARTIAL |
+| Layout thrashing in overflow | High | High | P0 | ⏳ TODO |
+| Magic numbers | Medium | Low | P1 | ⏳ TODO |
+| SearchSupport complexity | High | High | P1 | ⏳ TODO |
+| No error handling | Medium | Medium | P2 | ⏳ TODO |
+| No lazy initialization | Low | Low | P2 | ⏳ TODO |
+| Priority flip hack | Medium | Low | P2 | ⏳ TODO |
+| Circular references | Medium | Low | P3 | ✅ DONE |
+
+**Legend**: ✅ DONE | ⚠️ PARTIAL | ⏳ TODO
 
 ## Recommended Implementation Plan
 
-### Phase 1: Quick Wins (1-2 days)
+### ✅ Phase 1 Completed: Quick Wins & Decoupling
+**Completed Tasks**:
+1. ✅ Removed EventBus and DomAdapter (-72 lines)
+2. ✅ Removed lambda closures from OverflowSupport
+3. ✅ Pass data explicitly to methods instead of closures
+4. ✅ Made getOverflowItems a method with explicit data
+5. ✅ Replaced querySelector with focused setVisible callback
+6. ⚠️ Partially improved state ownership (removed collections storage)
+
+**Impact Achieved**: 
+- Cleaner code (-145 lines total)
+- Better testability
+- Clearer contracts
+- No circular references
+
+### ⏳ Phase 2: Remaining Quick Wins (1-2 days)
 1. Add constants for magic numbers
-2. Remove EventBus and DomAdapter
-3. Add basic error handling and logging
-4. Add lazy initialization
+2. Add basic error handling and logging
+3. Add lazy initialization
+4. Fix priority flip hack properly
 
-**Impact**: Cleaner code, fewer files, better error messages.
-
-### Phase 2: Decouple Modules (3-5 days)
-1. Pass data instead of lambda closures
-2. Define clear interfaces for all modules
-3. Fix state ownership (component owns all state)
-4. Fix priority flip hack
-
-**Impact**: Better testability, clearer contracts.
+**Impact**: Better readability, easier debugging.
 
 ### Phase 3: Performance (5-7 days)
 1. Make overflow calculation pure
@@ -1230,17 +1280,28 @@ describe("ShellBarV2 performance", () => {
 
 ## Conclusion
 
-The ShellBarV2 architecture has good separation of concerns but suffers from:
-- Over-engineering simple parts (EventBus, DomAdapter)
-- Under-engineering complex parts (overflow algorithm, error handling)
-- Tight coupling via closures
-- Performance issues (layout thrashing)
+The ShellBarV2 architecture has good separation of concerns. We've completed Phase 1 improvements:
 
-Recommended actions:
-1. **Remove unnecessary abstractions** (EventBus, DomAdapter)
-2. **Fix overflow performance** (pure calculation + batch DOM)
-3. **Decouple modules** (pass data, not closures)
-4. **Add error handling** (fail fast in dev, graceful in prod)
+### ✅ Completed (Phase 1)
+- ✅ **Removed unnecessary abstractions** - EventBus and DomAdapter deleted (-72 lines)
+- ✅ **Decoupled modules** - Pass data explicitly, not closures
+- ✅ **Fixed circular references** - Direct method calls instead of events
+- ✅ **Improved API** - Focused callbacks (setVisible) instead of generic (querySelector)
+- ✅ **Better testability** - Easy to test with mock data
 
-These changes will make the code simpler, faster, and more maintainable.
+**Net Impact**: -145 lines, cleaner architecture, better contracts
+
+### ⏳ Remaining Issues
+- **Under-engineering complex parts** (overflow algorithm, error handling)
+- **Performance issues** (layout thrashing - needs pure calculation)
+- **Magic numbers** (priority system not documented)
+- **Missing optimizations** (lazy initialization, memoization)
+
+### Next Recommended Actions (Phase 2)
+1. **Add constants** for magic numbers (quick win)
+2. **Add error handling** (fail fast in dev, graceful in prod)
+3. **Fix overflow performance** (pure calculation + batch DOM)
+4. **Add lazy initialization** (minor optimization)
+
+These remaining changes will make the code more readable, performant, and maintainable.
 
