@@ -24,8 +24,6 @@ import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
 
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
-import ShellBarV2EventBus from "./shellbarv2/ShellBarEventBus.js";
-import ShellBarV2DomAdapter from "./shellbarv2/ShellBarDomAdapter.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2SearchSupport from "./shellbarv2/ShellBarSearchSupport.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
@@ -317,16 +315,6 @@ class ShellBarV2 extends UI5Element {
 	overflowInner?: HTMLElement;
 
 	private handleResizeBound: ResizeObserverCallback = this.handleResize.bind(this);
-	private handleOverflowChangedBound = this.handleOverflowChanged.bind(this);
-
-	eventBus = new ShellBarV2EventBus({
-		host: this,
-	});
-
-	domAdapter = new ShellBarV2DomAdapter({
-		host: this,
-		shadowRoot: this.shadowRoot!,
-	});
 
 	searchSupport = new ShellBarV2SearchSupport({
 		getSearchField: () => this.search,
@@ -337,11 +325,10 @@ class ShellBarV2 extends UI5Element {
 	});
 
 	overflowSupport = new ShellBarV2OverflowSupport({
-		eventBus: this.eventBus,
-		domAdapter: this.domAdapter,
 		getActions: () => this.actions.slice(),
 		getContent: () => this.content.slice(),
 		getCustomItems: () => this.items.slice(),
+		querySelector: <T extends Element>(selector: string) => this.shadowRoot!.querySelector<T>(selector),
 	});
 
 	itemNavigation = new ShellBarV2ItemNavigation({
@@ -356,13 +343,11 @@ class ShellBarV2 extends UI5Element {
 	onEnterDOM() {
 		ResizeHandler.register(this, this.handleResizeBound);
 		this.searchSupport.subscribe();
-		this.eventBus.on("overflow-changed", this.handleOverflowChangedBound);
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
 		this.searchSupport.unsubscribe();
-		this.eventBus.off("overflow-changed", this.handleOverflowChangedBound);
 	}
 
 	onBeforeRendering() {
@@ -413,7 +398,7 @@ class ShellBarV2 extends UI5Element {
 	 * This is the coordination logic - gather data, delegate, apply result.
 	 */
 	private updateBreakpoint() {
-		const width = this.domAdapter.getWidth();
+		const width = this.getBoundingClientRect().width;
 		const breakpoint = this.breakpoint.calculate({ width });
 
 		if (this.breakpointSize !== breakpoint) {
@@ -426,7 +411,7 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Notifications Management -------------- */
 
 	_handleNotificationsClick() {
-		const notificationsBtn = this.domAdapter.querySelector<Button>(".ui5-shellbar-notifications-button");
+		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-notifications-button");
 		if (notificationsBtn) {
 			this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
 		}
@@ -436,7 +421,7 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Profile Management -------------- */
 
 	_handleProfileClick() {
-		const profileBtn = this.domAdapter.querySelector<HTMLElement>(".ui5-shellbar-profile-button");
+		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-profile-button");
 		if (profileBtn) {
 			this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
 		}
@@ -446,7 +431,7 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Product Switch Management -------------- */
 
 	_handleProductSwitchClick() {
-		const productSwitchBtn = this.domAdapter.querySelector<HTMLElement>(".ui5-shellbar-product-switch-button");
+		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-product-switch-button");
 		if (productSwitchBtn) {
 			this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
 		}
@@ -472,11 +457,13 @@ class ShellBarV2 extends UI5Element {
 			overflowInner: this.overflowInner!,
 		});
 
+		this.handleOverflowChanged(result);
+
 		return result.hiddenItems;
 	}
 
-	private handleOverflowChanged(e: CustomEvent<{ hiddenItems: string[], showOverflowButton: boolean }>) {
-		const { hiddenItems, showOverflowButton } = e.detail;
+	private handleOverflowChanged(result: { hiddenItems: string[], showOverflowButton: boolean }) {
+		const { hiddenItems, showOverflowButton } = result;
 		// Update items overflow state
 		this.items.forEach(item => {
 			item.inOverflow = hiddenItems.includes(item._id);
@@ -524,7 +511,7 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Search Management -------------- */
 
 	_handleSearchButtonClick() {
-		const searchButton = this.domAdapter.querySelector<Button>(".ui5-shellbar-search-button");
+		const searchButton = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-search-button");
 		const defaultPrevented = !this.fireDecoratorEvent("search-button-click", {
 			targetRef: searchButton!,
 			searchFieldVisible: this.showSearchField,
@@ -565,7 +552,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	_handleCancelButtonClick() {
-		const cancelBtn = this.domAdapter.querySelector<Button>(".ui5-shellbar-cancel-button");
+		const cancelBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-cancel-button");
 		if (!cancelBtn) {
 			return;
 		}

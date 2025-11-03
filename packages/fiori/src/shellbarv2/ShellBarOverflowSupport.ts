@@ -1,7 +1,5 @@
 import type ShellBarV2Item from "../ShellBarV2Item.js";
 import type { ShellBarV2ActionItem } from "./ShellBarActions.js";
-import type { ShellBarV2EventBusInterface } from "./ShellBarEventBus.js";
-import type { ShellBarV2DomAdapterInterface } from "./ShellBarDomAdapter.js";
 
 interface ShellBarV2OverflowSupportItem {
 	id: string;
@@ -24,35 +22,30 @@ interface ShellBarV2OverflowSupportResult {
 }
 
 interface ShellBarV2OverflowSupportConstructorParams {
-	eventBus: ShellBarV2EventBusInterface;
-	domAdapter: ShellBarV2DomAdapterInterface;
 	getActions: () => ShellBarV2ActionItem[];
 	getContent: () => HTMLElement[];
 	getCustomItems: () => ShellBarV2Item[];
+	querySelector: <T extends Element>(selector: string) => T | null;
 }
 
 class ShellBarV2OverflowSupport {
 	private hiddenItems: string[] = [];
 
-	private eventBus: ShellBarV2EventBusInterface;
-	private domAdapter: ShellBarV2DomAdapterInterface;
-
 	private getActions: () => ShellBarV2ActionItem[];
 	private getContent: () => HTMLElement[];
 	private getCustomItems: () => ShellBarV2Item[];
+	private querySelector: <T extends Element>(selector: string) => T | null;
 
 	constructor({
-		eventBus,
-		domAdapter,
 		getActions,
 		getContent,
 		getCustomItems,
+		querySelector,
 	}: ShellBarV2OverflowSupportConstructorParams) {
-		this.eventBus = eventBus;
-		this.domAdapter = domAdapter;
 		this.getActions = getActions;
 		this.getContent = getContent;
 		this.getCustomItems = getCustomItems;
+		this.querySelector = querySelector;
 	}
 
 	/**
@@ -63,7 +56,6 @@ class ShellBarV2OverflowSupport {
 		const { overflowOuter, overflowInner } = params;
 
 		if (!overflowOuter || !overflowInner) {
-			this.eventBus.emit("overflow-changed", { hiddenItems: [], showOverflowButton: false });
 			return { hiddenItems: [], showOverflowButton: false };
 		}
 
@@ -88,7 +80,7 @@ class ShellBarV2OverflowSupport {
 			}
 
 			// Hide this item
-			const element = this.domAdapter.querySelector(item.selector);
+			const element = this.querySelector(item.selector);
 			if (element) {
 				element.classList.add("ui5-shellbar-hidden");
 				hiddenItems.push(item.id);
@@ -99,8 +91,6 @@ class ShellBarV2OverflowSupport {
 				}
 			}
 		});
-
-		this.eventBus.emit("overflow-changed", { hiddenItems, showOverflowButton });
 
 		this.hiddenItems = hiddenItems;
 
@@ -254,7 +244,7 @@ class ShellBarV2OverflowSupport {
 	 * Checks if an element is currently hidden.
 	 */
 	private isCurrentlyHidden(selector: string): boolean {
-		const element = this.domAdapter.querySelector(selector);
+		const element = this.querySelector(selector);
 		return element?.classList.contains("ui5-shellbar-hidden") || false;
 	}
 
@@ -263,7 +253,7 @@ class ShellBarV2OverflowSupport {
 	 */
 	private resetVisibility(items: ShellBarV2OverflowSupportItem[]) {
 		items.forEach(item => {
-			const element = this.domAdapter.querySelector<HTMLElement>(item.selector);
+			const element = this.querySelector<HTMLElement>(item.selector);
 			if (element) {
 				element.classList.remove("ui5-shellbar-hidden");
 			}
