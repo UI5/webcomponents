@@ -31,9 +31,10 @@ swEditable.addEventListener("selection-change", function () {
 
 	// set itemSpacing Normal/Large to avoid jumping when switching from texts to inputs.
 	editableForm.itemSpacing =  editable ? "Normal" : "Large";
+
+	// set accessibleMode Edit/Display for best screen reader experience
+	editableForm.accessibleMode =  editable ? "Edit" : "Display";
 });
-
-
 
 const displayTemplate = `
 	<ui5-form-item>
@@ -67,40 +68,40 @@ const displayTemplate = `
 	</ui5-form-item>
 `;
 
-	const editTemplate = `
-		<ui5-form-item>
-			<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
-			<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
-		</ui5-form-item>
-		
-		<ui5-form-item>
-			<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
-			<ui5-select id="countrySel" accessible-name-ref="countryLbl">
-				<ui5-option>Australia</ui5-option>
-				<ui5-option selected>Germany</ui5-option>
-				<ui5-option>England</ui5-option>
-			</ui5-select>
-		</ui5-form-item>
-
-		<ui5-form-item>
-			<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
-			<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
-			<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
-		</ui5-form-item>
+const editTemplate = `
+	<ui5-form-item>
+		<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+		<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+	</ui5-form-item>
 	
-		<ui5-form-item>
-			<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
-			<ui5-input value="sap.com" id="wsInp"></ui5-input>
-		</ui5-form-item>
+	<ui5-form-item>
+		<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+		<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+			<ui5-option>Australia</ui5-option>
+			<ui5-option selected>Germany</ui5-option>
+			<ui5-option>England</ui5-option>
+		</ui5-select>
+	</ui5-form-item>
 
-		<ui5-form-item>
-			<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
-			<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
-			<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
-		</ui5-form-item>
+	<ui5-form-item>
+		<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+		<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+		<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+	</ui5-form-item>
 
-		<ui5-form-item>
-			<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
-			<ui5-input value="Newtown" id="delInp"></ui5-input>
-		</ui5-form-item>
-	`;
+	<ui5-form-item>
+		<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+		<ui5-input value="sap.com" id="wsInp"></ui5-input>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+		<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+		<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+		<ui5-input value="Newtown" id="delInp"></ui5-input>
+	</ui5-form-item>
+`;

@@ -49,3 +49,7 @@
 ::slotted([ui5-form-group]) {
 	display: contents;
 }
+
+dl {
+	all: unset;
+}
