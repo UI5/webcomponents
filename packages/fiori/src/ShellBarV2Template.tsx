@@ -25,7 +25,7 @@ function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
 			</div>
 			<Button
 				class="ui5-shellbar-cancel-button"
-				onClick={this._handleCancelButtonClick}
+				onClick={this.handleCancelButtonClick}
 			>
 				Cancel
 			</Button>
@@ -58,21 +58,59 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<div class="ui5-shellbar-overflow-container-inner">
 
 							{this.hasContent && (
-								<div class="ui5-shellbar-content-area">
-									{this.content.map(content => (
-										<div
-											id={(content as any)._individualSlot}
-											class="ui5-shellbar-content-item"
-											data-hide-order={(content as any).getAttribute?.("data-hide-order") || "0"}
-										>
-											<slot name={(content as any)._individualSlot}></slot>
-										</div>
-									))}
+								<div
+									class="ui5-shellbar-content-area"
+									role={this.contentRole}
+									aria-label={this.contentRole ? "Additional Context" : undefined}
+								>
+									{/* Start separator */}
+									{this.separatorConfig.showStartSeparator && (
+										<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
+									)}
+
+									{/* Start content items */}
+									{this.startContent.map(item => {
+										const packedSep = this.getPackedSeparatorInfo(item, true);
+										return (
+											<div
+												key={(item as any)._individualSlot}
+												id={(item as any)._individualSlot}
+												class="ui5-shellbar-content-item"
+											>
+												{packedSep.shouldPack && (
+													<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
+												)}
+												<slot name={(item as any)._individualSlot}></slot>
+											</div>
+										);
+									})}
+
+									{/* Spacer: Grows to fill available space, used to measure if space is tight */}
+									<div class="ui5-shellbar-spacer"></div>
+
+									{/* End content items */}
+									{this.endContent.map(item => {
+										const packedSep = this.getPackedSeparatorInfo(item, false);
+										return (
+											<div
+												key={(item as any)._individualSlot}
+												id={(item as any)._individualSlot}
+												class="ui5-shellbar-content-item"
+											>
+												<slot name={(item as any)._individualSlot}></slot>
+												{packedSep.shouldPack && (
+													<div class="ui5-shellbar-separator ui5-shellbar-separator-end"></div>
+												)}
+											</div>
+										);
+									})}
+
+									{/* End separator */}
+									{this.separatorConfig.showEndSeparator && (
+										<div class="ui5-shellbar-separator ui5-shellbar-separator-end"></div>
+									)}
 								</div>
 							)}
-
-							{/* Spacer: Grows to fill available space, used to measure if space is tight */}
-							<div class="ui5-shellbar-spacer"></div>
 
 							{this.hasSearchField && ShellBarV2SearchField.call(this)}
 
@@ -83,7 +121,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										class="ui5-shellbar-search-button"
 										icon="search"
 										design="Transparent"
-										onClick={this._handleSearchButtonClick}
+										onClick={this.handleSearchButtonClick}
 										accessibleName="Search"
 									/>
 								)}
@@ -127,7 +165,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							class="ui5-shellbar-overflow-button"
 							icon="overflow"
 							design="Transparent"
-							onClick={this._handleOverflowClick}
+							onClick={this.handleOverflowClick}
 							accessibleName="More"
 						/>
 					)}
@@ -176,9 +214,9 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									icon={item.data.icon ? `sap-icon://${item.data.icon}` : ""}
 									data-action-id={item.id}
 									type="Active"
-									onClick={this._handleOverflowItemClick}
+									onClick={this.handleOverflowItemClick}
 								>
-									{this._getActionText(item.id)}
+									{this.getActionText(item.id)}
 								</ListItemStandard>
 							);
 						}

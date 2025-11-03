@@ -8,6 +8,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
+import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -26,13 +27,16 @@ import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2SearchSupport from "./shellbarv2/ShellBarSearchSupport.js";
+import ShellBarV2ContentSupport from "./shellbarv2/ShellBarContentSupport.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2OverflowSupport from "./shellbarv2/ShellBarOverflowSupport.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
+import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 import type { ShellBarV2BreakpointType } from "./shellbarv2/ShellBarBreakpoint.js";
+import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflowSupport.js";
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -63,6 +67,10 @@ type ShellBarV2SearchFieldClearEventDetail = {
 	targetRef: HTMLElement;
 };
 
+type ShellBarV2ContentItemVisibilityChangeEventDetail = {
+	items: Array<HTMLElement>;
+};
+
 interface IShellBarSearchField extends HTMLElement {
 	focused: boolean;
 	value: string;
@@ -91,7 +99,15 @@ interface IShellBarSearchField extends HTMLElement {
 	renderer: jsxRenderer,
 	template: ShellBarV2Template,
 	fastNavigation: true,
-	dependencies: [Button, Icon, Popover, List, ListItemStandard, ShellBarV2Item],
+	dependencies: [
+		Icon,
+		List,
+		Button,
+		Popover,
+		ShellBarSpacer,
+		ShellBarV2Item,
+		ListItemStandard,
+	],
 })
 /**
  * Fired when the menu button is clicked.
@@ -152,6 +168,14 @@ interface IShellBarSearchField extends HTMLElement {
 	cancelable: true,
 	bubbles: true,
 })
+/**
+ * Fired when content items are hidden or shown due to overflow.
+ * @param {Array<HTMLElement>} items array of hidden content items
+ * @public
+ */
+@event("content-item-visibility-change", {
+	bubbles: true,
+})
 class ShellBarV2 extends UI5Element {
 	eventDetails!: {
 		"menu-button-click": ShellBarV2MenuButtonClickEventDetail;
@@ -161,6 +185,7 @@ class ShellBarV2 extends UI5Element {
 		"search-button-click": ShellBarV2SearchButtonClickEventDetail;
 		"search-field-toggle": ShellBarV2SearchFieldToggleEventDetail;
 		"search-field-clear": ShellBarV2SearchFieldClearEventDetail;
+		"content-item-visibility-change": ShellBarV2ContentItemVisibilityChangeEventDetail;
 	};
 
 	/**
@@ -287,6 +312,14 @@ class ShellBarV2 extends UI5Element {
 	overflowPopoverOpen = false;
 
 	/**
+	 * IDs of items currently hidden due to overflow.
+	 * Used to trigger rerender for conditional rendering.
+	 * @private
+	 */
+	@property({ type: Object })
+	hiddenItemsIds: string[] = [];
+
+	/**
 	 * Show full-screen search overlay.
 	 * @private
 	 */
@@ -325,6 +358,7 @@ class ShellBarV2 extends UI5Element {
 	});
 
 	overflowSupport = new ShellBarV2OverflowSupport();
+	contentSupport = new ShellBarV2ContentSupport();
 
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
@@ -354,9 +388,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateActions();
 
 		if (this.isSelfCollapsibleSearch) {
-			this.searchSupport.syncCollapsedState();
-			this.searchSupport.unsubscribe();
-			this.searchSupport.subscribe();
+			this.searchSupport.syncShowSearchFieldState();
 		}
 	}
 
@@ -438,6 +470,7 @@ class ShellBarV2 extends UI5Element {
 	/**
 	 * Updates overflow by delegating to controller.
 	 * Controller measures DOM, hides items iteratively, returns result.
+	 * Triggers rerender via property update to enable conditional rendering.
 	 */
 	private updateOverflow() {
 		if (!this.overflowSupport) {
@@ -449,6 +482,7 @@ class ShellBarV2 extends UI5Element {
 			actions: this.actions,
 			content: this.content,
 			customItems: this.items,
+			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.showSearchField,
 			overflowOuter: this.overflowOuter!,
 			overflowInner: this.overflowInner!,
@@ -462,33 +496,54 @@ class ShellBarV2 extends UI5Element {
 
 		this.handleOverflowChanged(result);
 
-		return result.hiddenItems;
+		return result.hiddenItemsIds;
 	}
 
-	private handleOverflowChanged(result: { hiddenItems: string[], showOverflowButton: boolean }) {
-		const { hiddenItems, showOverflowButton } = result;
+	private handleOverflowChanged(result: ShellBarV2OverflowResult) {
+		const { hiddenItemsIds, showOverflowButton } = result;
+
 		// Update items overflow state
 		this.items.forEach(item => {
-			item.inOverflow = hiddenItems.includes(item._id);
+			item.inOverflow = hiddenItemsIds.includes(item._id);
 			if (item.inOverflow) {
 				// clear the hidden class to ensure the item is visible in the overflow popover
 				item.classList.remove("ui5-shellbar-hidden");
 			}
 		});
 
-		this.showOverflowButton = showOverflowButton;
+		if (!arraysAreEqual(this.hiddenItemsIds, hiddenItemsIds)) {
+			this.handleContentVisibilityChanged(this.hiddenItemsIds, hiddenItemsIds);
+			this.hiddenItemsIds = hiddenItemsIds;
+			this.showOverflowButton = showOverflowButton;
+		}
 		this.showFullWidthSearch = this.searchSupport.shouldShowFullScreen();
+	}
+
+	private handleContentVisibilityChanged(oldHiddenItemsIds: string[], newHiddenItemsIds: string[]) {
+		// Compare with previous state
+		const oldHiddenContentIds = oldHiddenItemsIds
+			.filter(id => this.content
+				.some(item => (item as any)._individualSlot as string === id));
+		const newHiddenContentIds = newHiddenItemsIds
+			.filter(id => this.content
+				.some(item => (item as any)._individualSlot as string === id));
+
+		if (!arraysAreEqual(oldHiddenContentIds, newHiddenContentIds)) {
+			this.fireDecoratorEvent("content-item-visibility-change", {
+				items: newHiddenContentIds.map(id => this.content.find(item => (item as any)._individualSlot as string === id)!),
+			});
+		}
 	}
 
 	private handleResize() {
 		this.overflowPopoverOpen = false;
 		this.updateBreakpoint();
-		const hiddenItems = this.updateOverflow() ?? [];
+		const hiddenItemsIds = this.updateOverflow() ?? [];
 		const spacerWidth = this.spacer?.getBoundingClientRect().width || 0;
-		this.searchSupport.autoManageSearchState(hiddenItems.length, spacerWidth);
+		this.searchSupport.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
 	}
 
-	_handleOverflowClick() {
+	handleOverflowClick() {
 		this.overflowPopoverOpen = !this.overflowPopoverOpen;
 	}
 
@@ -496,7 +551,7 @@ class ShellBarV2 extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
-	_handleOverflowItemClick(e: Event) {
+	handleOverflowItemClick(e: Event) {
 		const target = e.currentTarget as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
 
@@ -504,7 +559,7 @@ class ShellBarV2 extends UI5Element {
 		if (actionId === "notifications") {
 			this._handleNotificationsClick();
 		} else if (actionId === "search-button") {
-			this._handleSearchButtonClick();
+			this.handleSearchButtonClick();
 		}
 
 		this.overflowPopoverOpen = false;
@@ -514,7 +569,7 @@ class ShellBarV2 extends UI5Element {
 
 	/* ------------- Search Management -------------- */
 
-	_handleSearchButtonClick() {
+	handleSearchButtonClick() {
 		const searchButton = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-search-button");
 		const defaultPrevented = !this.fireDecoratorEvent("search-button-click", {
 			targetRef: searchButton!,
@@ -555,7 +610,7 @@ class ShellBarV2 extends UI5Element {
 		this.fireDecoratorEvent("search-field-toggle", { expanded });
 	}
 
-	_handleCancelButtonClick() {
+	handleCancelButtonClick() {
 		const cancelBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-cancel-button");
 		if (!cancelBtn) {
 			return;
@@ -594,7 +649,7 @@ class ShellBarV2 extends UI5Element {
 		return this.actions.find(action => action.id === actionId);
 	}
 
-	_getActionText(actionId: string): string {
+	getActionText(actionId: string): string {
 		const texts: Record<string, string> = {
 			"notifications": "Notifications",
 			"assistant": "Assistant",
@@ -634,6 +689,7 @@ class ShellBarV2 extends UI5Element {
 		return this.overflowSupport.getOverflowItems({
 			actions: this.actions,
 			customItems: this.items,
+			hiddenItemsIds: this.hiddenItemsIds,
 		});
 	}
 
@@ -648,8 +704,44 @@ class ShellBarV2 extends UI5Element {
 		}
 		return false;
 	}
-
 	/* ------------- End of Common Methods -------------- */
+
+	/* ------------- Content Management -------------- */
+
+	get startContent(): HTMLElement[] {
+		return this.contentSupport.splitContent(this.content).start;
+	}
+
+	get endContent(): HTMLElement[] {
+		return this.contentSupport.splitContent(this.content).end;
+	}
+
+	get separatorConfig() {
+		return this.contentSupport.getSeparatorConfig({
+			content: this.content,
+			isSBreakPoint: this.isSBreakPoint,
+			hiddenItemIds: this.hiddenItemsIds,
+		});
+	}
+
+	get contentRole() {
+		return this.contentSupport.getContentRole(this.content);
+	}
+
+	/**
+	 * Returns packed separator info for a content item.
+	 */
+	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
+		const group = isStartGroup ? this.startContent : this.endContent;
+		return this.contentSupport.shouldPackSeparator(
+			item,
+			group,
+			this.hiddenItemsIds,
+			this.isSBreakPoint,
+		);
+	}
+
+	/* ------------- End of Content Management -------------- */
 }
 
 ShellBarV2.define();
@@ -661,6 +753,7 @@ export type {
 	ShellBarV2ProfileClickEventDetail,
 	ShellBarV2SearchButtonClickEventDetail,
 	ShellBarV2SearchFieldToggleEventDetail,
+	ShellBarV2ContentItemVisibilityChangeEventDetail,
 	IShellBarSearchField,
 	ShellBarV2Breakpoint,
 };

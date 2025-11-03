@@ -2,11 +2,11 @@ import { isPhone } from "@ui5/webcomponents-base";
 import type { IShellBarSearchField } from "../ShellBarV2.js";
 
 interface ShellBarV2SearchSupportConstructorParams {
+	getOverflowed: () => boolean;
 	getSearchState: () => boolean;
 	setSearchState: (expanded: boolean) => void;
 	getSearchField: () => IShellBarSearchField | null;
 	getCSSVariable: (variable: string) => string;
-	getOverflowed: () => boolean;
 }
 
 class ShellBarV2SearchSupport {
@@ -17,24 +17,24 @@ class ShellBarV2SearchSupport {
 	private onSearchOpenBound = this.onSearchOpen.bind(this);
 	private onSearchCloseBound = this.onSearchClose.bind(this);
 
+	private getOverflowed: () => boolean;
 	private getSearchField: () => IShellBarSearchField | null;
 	private getSearchState: () => boolean;
 	private setSearchState: (expanded: boolean) => void;
 	private getCSSVariable: (variable: string) => string;
-	private getOverflowed: () => boolean;
 
 	constructor({
+		getOverflowed,
 		setSearchState,
 		getSearchField,
 		getSearchState,
 		getCSSVariable,
-		getOverflowed,
 	}: ShellBarV2SearchSupportConstructorParams) {
+		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
 		this.getSearchField = getSearchField;
 		this.getSearchState = getSearchState;
 		this.setSearchState = setSearchState;
-		this.getOverflowed = getOverflowed;
 	}
 
 	subscribe(searchField: HTMLElement | null = this.getSearchField()) {
@@ -55,40 +55,6 @@ class ShellBarV2SearchSupport {
 		searchField.removeEventListener("ui5-search", this.onSearchBound);
 	}
 
-	onSearchOpen(e: Event) {
-		if (e.target !== this.getSearchField()) {
-			this.unsubscribe(e.target as HTMLElement);
-			return;
-		}
-		if (isPhone()) {
-			this.setSearchState(true);
-		}
-	}
-
-	onSearchClose(e: Event) {
-		if (e.target !== this.getSearchField()) {
-			this.unsubscribe(e.target as HTMLElement);
-			return;
-		}
-		if (isPhone()) {
-			this.setSearchState(false);
-		}
-	}
-
-	onSearch(e: Event) {
-		if (e.target !== this.getSearchField()) {
-			this.unsubscribe(e.target as HTMLElement);
-			return;
-		}
-
-		// On mobile or if has value, don't toggle
-		if (isPhone() || (this.getSearchField()?.value && this.getSearchState())) {
-			return;
-		}
-
-		this.setSearchState(!this.getSearchState());
-	}
-
 	/**
 	 * Auto-collapse/restore search field based on available space.
 	 * Delegates decision logic to SearchController.
@@ -107,15 +73,64 @@ class ShellBarV2SearchSupport {
 
 		if (hiddenItems > 0 && !preventCollapse) {
 			this.setSearchState(false);
-		} else if (availableSpace > searchFieldWidth) {
+		} else if (availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
 			this.setSearchState(true);
 		}
 	}
 
 	/**
+	 * Applies the show-search-field state to the search field.
+	 */
+	syncShowSearchFieldState() {
+		const search = this.getSearchField();
+		if (!search) {
+			return;
+		}
+		if (isPhone()) {
+			search.open = this.getSearchState();
+		} else {
+			search.collapsed = !this.getSearchState();
+		}
+	}
+
+	private onSearchOpen(e: Event) {
+		if (e.target !== this.getSearchField()) {
+			this.unsubscribe(e.target as HTMLElement);
+			return;
+		}
+		if (isPhone()) {
+			this.setSearchState(true);
+		}
+	}
+
+	private onSearchClose(e: Event) {
+		if (e.target !== this.getSearchField()) {
+			this.unsubscribe(e.target as HTMLElement);
+			return;
+		}
+		if (isPhone()) {
+			this.setSearchState(false);
+		}
+	}
+
+	private onSearch(e: Event) {
+		if (e.target !== this.getSearchField()) {
+			this.unsubscribe(e.target as HTMLElement);
+			return;
+		}
+
+		// On mobile or if has value, don't toggle
+		if (isPhone() || (this.getSearchField()?.value && this.getSearchState())) {
+			return;
+		}
+
+		this.setSearchState(!this.getSearchState());
+	}
+
+	/**
 	 * Gets the minimum width needed for search field from CSS variable.
 	 */
-	getSearchFieldWidth(): number {
+	private getSearchFieldWidth(): number {
 		const width = this.getCSSVariable(ShellBarV2SearchSupport.CSS_VARIABLE);
 		if (!width) {
 			return ShellBarV2SearchSupport.FALLBACK_WIDTH;
@@ -128,20 +143,17 @@ class ShellBarV2SearchSupport {
 		return parseFloat(width);
 	}
 
-	syncCollapsedState() {
-		const search = this.getSearchField();
-		if (!search) {
-			return;
-		}
-		if (isPhone()) {
-			search.open = this.getSearchState();
-		} else {
-			search.collapsed = !this.getSearchState();
-		}
-	}
-
 	get hasSearchField() {
 		return !!this.getSearchField();
+	}
+
+	/**
+	 * Gets the size of the search button.
+	 * If the search field is visible, the size is 0.
+	 * Otherwise, it is the width of the search field (just a button in collapsed state).
+	 */
+	getSearchButtonSize(): number {
+		return this.getSearchState() ? 0 : this.getSearchField()?.getBoundingClientRect().width || 0;
 	}
 
 	/**

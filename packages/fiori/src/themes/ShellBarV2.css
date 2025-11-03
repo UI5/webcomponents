@@ -3,6 +3,8 @@
 	width: 100%;
 	font-family: var(--sapFontFamily);
 	--_ui5_shellbar_search_field_width: 25rem; /* Min width for search field */
+	--_ui5-shellbar-separator-height: 2rem;
+	--_ui5-shellbar_separator-color: var(--sapGroup_ContentBorderColor);
 }
 
 .ui5-shellbar-root {
@@ -72,12 +74,14 @@
 }
 
 .ui5-shellbar-content-area {
+	flex-grow: 1;
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 }
 
 .ui5-shellbar-content-item {
+	gap: 0.5rem;
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -88,6 +92,14 @@
 	height: 1px;
 	flex-basis: 1rem;
 	flex-shrink: 1;
+}
+
+.ui5-shellbar-separator {
+	flex-grow: 0;
+	flex-shrink: 0;
+	height: var(--_ui5-shellbar-separator-height);
+	width: 1px;
+	background-color: var(--_ui5-shellbar_separator-color);
 }
 
 .ui5-shellbar-actions-area {
@@ -153,6 +165,11 @@
 /* Overflow */
 .ui5-shellbar-hidden {
 	display: none !important;
+}
+
+.ui5-shellbar-hidden-button {
+	visibility: hidden;
+	order: -1;
 }
 
 .ui5-shellbar-overflow-button {

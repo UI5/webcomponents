@@ -1,16 +1,16 @@
 interface ShellBarV2ActionItem {
 	id: string;
-	visible: boolean;
-	count?: string;
 	icon?: string;
+	count?: string;
+	visible: boolean;
 }
 
 interface ShellBarV2ActionsParams {
+	showProfile: boolean;
+	hasAssistant: boolean;
+	showProductSwitch: boolean;
 	showNotifications: boolean;
 	notificationsCount?: string;
-	showProductSwitch: boolean;
-	hasAssistant: boolean;
-	showProfile: boolean;
 }
 
 class ShellBarV2Actions {
