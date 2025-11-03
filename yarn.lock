@@ -20628,7 +20628,7 @@ __metadata:
 
 "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch":
   version: 0.18.1
-  resolution: "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch::version=0.18.1&hash=14946a"
+  resolution: "playground-elements@patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch::version=0.18.1&hash=d2f81e"
   dependencies:
     "@material/mwc-button": "npm:^0.27.0"
     "@material/mwc-icon-button": "npm:^0.27.0"
@@ -20642,7 +20642,7 @@ __metadata:
     lit: "npm:^2.0.0"
     tslib: "npm:^2.0.3"
     vscode-languageserver-protocol: "npm:^3.17.2"
-  checksum: 10c0/5f45e0c6be484a4232a9bfacf446b3c658f1a128d8717374f75d29b9018c620a43fbc4ce1250e951f2e07063b87cc10938b39a25bf701ac81d79e776fa3f5ace
+  checksum: 10c0/89e23e4858bd23205d494ae6d6615fbdcc4409a821da9dbdbe0c4f5ec8f880471167843b7be18bc39e401cd97a411495eb18f48429a136b1a9dbd458b3ec3fb1
   languageName: node
   linkType: hard
 
