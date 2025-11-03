@@ -869,6 +869,46 @@ describe("WritingAssistant Component", () => {
 					.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)");
 			});
 
+			it("should have stop tooltip when loading", () => {
+				cy.mount(<WritingAssistant loading={true} />);
+
+				cy.get("[ui5-ai-writing-assistant]")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", "Stop Generating (Esc)");
+			});
+
+			it("should change tooltip based on loading state", () => {
+				cy.mount(<WritingAssistant loading={false} />);
+
+				cy.get("[ui5-ai-writing-assistant]")
+					.as("writingAssistant");
+
+				// Verify initial button tooltip
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)");
+
+				// Change to loading state
+				cy.get("@writingAssistant").invoke("prop", "loading", true);
+
+				// Verify stop tooltip
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", "Stop Generating (Esc)");
+
+				// Change back to non-loading state
+				cy.get("@writingAssistant").invoke("prop", "loading", false);
+
+				// Verify button tooltip is restored
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)");
+			});
+
 			it("should maintain accessibility attributes when loading state changes", () => {
 				cy.mount(<WritingAssistant loading={false} />);
 
@@ -923,7 +963,7 @@ describe("WritingAssistant Component", () => {
 					.find("#ai-menu-btn")
 					.should("have.attr", "data-state", "generating")
 					.should("have.attr", "accessible-name", "Writing Assistant")
-					.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)")
+					.should("have.attr", "tooltip", "Stop Generating (Esc)")
 					.should("have.attr", "icon", "stop");
 			});
 
