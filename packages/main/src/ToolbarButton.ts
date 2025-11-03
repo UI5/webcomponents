@@ -146,6 +146,20 @@ class ToolbarButton extends ToolbarItem {
 	text?: string;
 
 	/**
+	 * Defines whether the button text should only be displayed in the overflow popover.
+	 *
+	 * When set to `true`, the button appears as icon-only in the main toolbar,
+	 * but shows both icon and text when moved to the overflow popover.
+	 *
+	 * **Note:** This property only takes effect when the `text` property is also set.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	overflowTextOnly = false;
+
+	/**
 	 * Defines the width of the button.
 	 *
 	 * **Note:** all CSS sizes are supported - 'percentage', 'px', 'rem', 'auto', etc.
@@ -163,12 +177,20 @@ class ToolbarButton extends ToolbarItem {
 	}
 
 	/**
-	 * Returns the effective text to display based on overflow state.
-	 * When not overflowed, returns the original text.
-	 * When overflowed, returns text if available, otherwise tooltip as fallback.
+	 * Returns the effective text to display based on overflow state and overflowTextOnly property.
+	 *
+	 * When overflowTextOnly is true:
+	 * - Normal state: returns empty string (icon-only)
+	 * - Overflow state: returns text
+	 *
+	 * When overflowTextOnly is false:
+	 * - Returns text in both states (normal behavior)
 	 */
 	get effectiveText(): string | undefined {
-		return this.isOverflowed ? (this.text || this.tooltip) : this.text;
+		if (this.overflowTextOnly) {
+			return this.isOverflowed ? this.text : "";
+		}
+		return this.text;
 	}
 
 	onClick(e: Event) {
