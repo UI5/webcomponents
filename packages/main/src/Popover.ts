@@ -710,11 +710,19 @@ class Popover extends Popup {
 	}
 
 	getActualPlacement(targetRect: DOMRect): `${PopoverPlacement}` {
-		const placement = this.placement;
-		let actualPlacement = placement;
-		const isVertical = placement === PopoverPlacement.Top
-			|| placement === PopoverPlacement.Bottom;
+		let placement = this.placement;
+		const isVertical = placement === PopoverPlacement.Top || placement === PopoverPlacement.Bottom;
 		const popoverSize = this.getPopoverSize(!this.allowTargetOverlap);
+
+		if (this.isRtl) {
+			if (placement === PopoverPlacement.Start) {
+				placement = PopoverPlacement.End;
+			} else if (placement === PopoverPlacement.End) {
+				placement = PopoverPlacement.Start;
+			}
+		}
+
+		let actualPlacement = placement;
 
 		const clientWidth = document.documentElement.clientWidth;
 		let clientHeight = document.documentElement.clientHeight;
@@ -838,8 +846,12 @@ class Popover extends Popup {
 		return true;
 	}
 
+	get isRtl() {
+		return this.effectiveDir === "rtl";
+	}
+
 	get _actualHorizontalAlign() {
-		if (this.effectiveDir === "rtl") {
+		if (this.isRtl) {
 			if (this.horizontalAlign === PopoverHorizontalAlign.Start) {
 				return PopoverHorizontalAlign.End;
 			}
