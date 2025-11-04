@@ -68,6 +68,7 @@ describe("General events interactions", () => {
 			.shadow()
 			.find(".ui5-switch-root")
 			.focus()
+			.should("be.focused")
 			.realPress(["Space", "Shift"]);
 
     cy.get("@changed")
@@ -87,6 +88,7 @@ describe("General events interactions", () => {
 			.shadow()
 			.find(".ui5-switch-root")
 			.focus()
+			.should("be.focused")
 			.realPress(["Space", "Escape"]);
 
     cy.get("@changed")
