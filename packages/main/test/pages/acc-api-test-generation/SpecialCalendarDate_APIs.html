@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 SpecialCalendarDate API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+        <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/Calendar.js";
+        import "@ui5/webcomponents/dist/CalendarDate.js";
+        import "@ui5/webcomponents/dist/SpecialCalendarDate.js";
+        import "@ui5/webcomponents/dist/CalendarLegend.js";
+        import "@ui5/webcomponents/dist/CalendarLegendItem.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="SpecialCalendarDate API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 SpecialCalendarDate Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to define which date should be visually distinguished in the calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sd1a2v3a4l5u6e7p8r9o0p1e2r3t4y5">
+                            <div>
+                                <ui5-label>Calendar with Special Dates (Nov 2025)</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-special-date slot="specialDates" value="05/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="15/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="25/11/2025" type="Type03"></ui5-special-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Type Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using type property to define the visual style of special dates: Type01-Type20, NonWorkingDay</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sd2a3t4y5p6e7p8r9o0p1e2r3t4y5a6">
+                            <div>
+                                <ui5-label>Different Type Colors</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-special-date slot="specialDates" value="01/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="06/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="11/11/2025" type="Type03"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="16/11/2025" type="Type04"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="21/11/2025" type="Type05"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="27/11/2025" type="NonWorkingDay"></ui5-special-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Usage with SpecialDates Slot</h2>
+                    <div class="text-muted fst-italic mb-3">SpecialCalendarDate must be placed in the specialDates slot of ui5-calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sd3a4u5s6a7g8e9s0p1e2c3i4a5l6s7">
+                            <div>
+                                <ui5-label>Holidays and Events</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-special-date slot="specialDates" value="08/11/2025" type="Type06"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="17/11/2025" type="Type07"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="26/11/2025" type="Type08"></ui5-special-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Integration with CalendarLegend</h2>
+                    <div class="text-muted fst-italic mb-3">Special dates can be explained using a CalendarLegend with matching types</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="sd4a5i6n7t8e9g0r1a2t3i4o5n6l7e8">
+                            <div>
+                                <ui5-label>Calendar with Legend</ui5-label>
+                                <ui5-calendar id="legend-cal" format-pattern="dd/MM/yyyy">
+                                    <ui5-special-date slot="specialDates" value="03/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="12/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="22/11/2025" type="Type03"></ui5-special-date>
+                                    <ui5-calendar-legend slot="calendarLegend">
+                                        <ui5-calendar-legend-item type="Type01" text="Public Holiday"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type02" text="Company Event"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type03" text="Important Deadline"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click legend items to filter special dates by type</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Multiple Special Dates</h2>
+                    <div class="text-muted fst-italic mb-3">Multiple SpecialCalendarDate elements can be used to mark various dates with different types</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sd6a7m8u9l0t1i2p3l4e5s6p7e8c9i0">
+                            <div>
+                                <ui5-label>Mixed Special Dates</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-special-date slot="specialDates" value="1730505600" type="Type11"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="1730937600" type="Type11"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="1731456000" type="Type12"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="1731888000" type="Type12"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="1732320000" type="Type13"></ui5-special-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

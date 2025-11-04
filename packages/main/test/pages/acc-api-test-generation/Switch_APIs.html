@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 Switch API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Switch.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="Switch API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 Switch Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Checked Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using checked property to set the switch state</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw1a2c3h4e5c6k7e8d9p0r1o2p3e4r5">
+                            <div>
+                                <ui5-label>Unchecked Switch</ui5-label>
+                                <ui5-switch></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Checked Switch</ui5-label>
+                                <ui5-switch checked></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to prevent user interaction</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw2a3d4i5s6a7b8l9e0d1p2r3o4p5e6">
+                            <div>
+                                <ui5-label>Enabled Switch</ui5-label>
+                                <ui5-switch></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Disabled Switch</ui5-label>
+                                <ui5-switch disabled></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Disabled Checked Switch</ui5-label>
+                                <ui5-switch checked disabled></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Design Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using design property to set visual style: Textual or Graphical</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw3a4d5e6s7i8g9n0p1r2o3p4e5r6t7">
+                            <div>
+                                <ui5-label>Textual Design</ui5-label>
+                                <ui5-switch design="Textual" text-on="ON" text-off="OFF"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Graphical Design</ui5-label>
+                                <ui5-switch design="Graphical"></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">TextOn and TextOff Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using textOn and textOff properties to display custom text in Textual design</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw4a5t6e7x8t9o0n1o2f3f4p5r6o7p8">
+                            <div>
+                                <ui5-label>Default Texts</ui5-label>
+                                <ui5-switch design="Textual"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Custom Texts</ui5-label>
+                                <ui5-switch design="Textual" text-on="YES" text-off="NO" checked></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Short Texts</ui5-label>
+                                <ui5-switch design="Textual" text-on="ON" text-off="OFF"></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when switch checked state changes</div>
+                    <p class="test-instruction">Test instruction: Toggle the switch to trigger the event</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sw5a6c7h8a9n0g1e2e3v4e5n6t7a8p9">
+                            <div>
+                                <ui5-label>Toggle to trigger event</ui5-label>
+                                <ui5-switch id="event-switch"></ui5-switch>
+                            </div>
+                            <div class="mt-2">
+                                <strong>Current state: </strong>
+                                <span id="event-result">unchecked</span>
+                            </div>
+                            <div>
+                                <strong>Change count: </strong>
+                                <span id="change-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName to provide ARIA label for screen readers</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify the accessible name</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw6a7c8c9e0s1s2i3b4l5e6n7a8m9e0">
+                            <div>
+                                <ui5-switch accessible-name="Enable notifications"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-switch accessible-name="Toggle dark mode" checked></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleNameRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleNameRef to reference external label element</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify label association</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sw7a8c9c0e1s2s3i4b5l6e7r8e9f0a1">
+                            <div>
+                                <ui5-label id="label1">Enable Feature A</ui5-label>
+                                <ui5-switch accessible-name-ref="label1"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label id="label2">Enable Feature B</ui5-label>
+                                <ui5-switch accessible-name-ref="label2" checked></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Tooltip Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using tooltip property to provide additional information on hover</div>
+                    <p class="test-instruction">Test instruction: Hover over switches to see tooltips</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw8a9t0o1o2l3t4i5p6p7r8o9p0e1r2">
+                            <div>
+                                <ui5-switch tooltip="Enable notifications"></ui5-switch>
+                                <ui5-label>With tooltip</ui5-label>
+                            </div>
+                            <div>
+                                <ui5-switch tooltip="Toggle dark mode" checked></ui5-switch>
+                                <ui5-label>Checked with tooltip</ui5-label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property for form validation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sw9a0r1e2q3u4i5r6e7d8p9r0o1p2e3">
+                            <div>
+                                <ui5-label>Required Switch</ui5-label>
+                                <ui5-switch required accessible-name="Accept terms"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Optional Switch</ui5-label>
+                                <ui5-switch accessible-name="Enable extras"></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name and Value Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name and value properties for HTML form submission</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sw0a1n2a3m4e5v6a7l8u9e0p1r2o3p4">
+                            <div>
+                                <ui5-label>Newsletter Subscription</ui5-label>
+                                <ui5-switch name="newsletter" value="subscribe" accessible-name="Subscribe to newsletter"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Email Notifications</ui5-label>
+                                <ui5-switch name="notifications" value="enabled" checked accessible-name="Enable email notifications"></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">Switch can be toggled using Space and Enter keys</div>
+                    <p class="test-instruction">Test instruction: Tab to focus, press Space or Enter to toggle</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="sw1a2k3e4y5b6o7a8r9d0n1a2v3i4g5">
+                            <div>
+                                <ui5-label>Keyboard Accessible Switch</ui5-label>
+                                <ui5-switch id="keyboard-switch"></ui5-switch>
+                            </div>
+                            <div class="mt-2">
+                                <strong>State: </strong>
+                                <span id="keyboard-result">unchecked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">CSS Parts API</h2>
+                    <div class="text-muted fst-italic mb-3">Switch exposes CSS parts for custom styling: slider, text-on, text-off, handle</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw9a0c1s2s3p4a5r6t7s8a9p0i1s2t3">
+                            <div>
+                                <ui5-label>Standard Switch</ui5-label>
+                                <ui5-switch design="Textual" text-on="YES" text-off="NO"></ui5-switch>
+                            </div>
+                            <div>
+                                <ui5-label>Graphical Switch</ui5-label>
+                                <ui5-switch design="Graphical" checked></ui5-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ARIA Switch Role</h2>
+                    <div class="text-muted fst-italic mb-3">Switch has role="switch" and aria-checked state for accessibility</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify switch role and state</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="sw0a1r2i3a4s5w6i7t8c9h0r1o2l3e4">
+                            <ui5-switch accessible-name="Accept terms"></ui5-switch>
+                            <ui5-switch accessible-name="Enable auto-save" checked></ui5-switch>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Change event demonstration
+        const eventSwitch = document.getElementById('event-switch');
+        const eventResult = document.getElementById('event-result');
+        const changeCount = document.getElementById('change-count');
+        let count = 0;
+        
+        if (eventSwitch && eventResult && changeCount) {
+            eventSwitch.addEventListener('change', () => {
+                count++;
+                eventResult.textContent = eventSwitch.checked ? 'checked' : 'unchecked';
+                changeCount.textContent = count;
+            });
+        }
+
+        // Keyboard navigation demonstration
+        const keyboardSwitch = document.getElementById('keyboard-switch');
+        const keyboardResult = document.getElementById('keyboard-result');
+        
+        if (keyboardSwitch && keyboardResult) {
+            keyboardSwitch.addEventListener('change', () => {
+                keyboardResult.textContent = keyboardSwitch.checked ? 'checked' : 'unchecked';
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

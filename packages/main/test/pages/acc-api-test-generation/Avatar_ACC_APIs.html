@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 Avatar API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    <script type="module">
+        import "@ui5/webcomponents/dist/Avatar.js";
+        import "@ui5/webcomponents-icons/dist/employee.js";
+        import "@ui5/webcomponents-icons/dist/customer.js";
+        import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+        import "@ui5/webcomponents-icons/dist/warning.js";
+        import "@ui5/webcomponents-icons/dist/filter.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="Avatar API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 Avatar Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Image Slot API</h2>
+                <div class="text-muted fst-italic mb-3">Using the default image slot to provide &lt;img&gt; elements with src and alt attributes</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="9a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a1">
+                        <ui5-avatar>
+                            <img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" alt="John Miller portrait">
+                        </ui5-avatar>
+                        <ui5-avatar>
+                            <img src="https://ui5.github.io/webcomponents/nightly/images/avatars/Lamp_avatar_01.jpg" alt="Lamp">
+                        </ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Icon Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using the icon property to specify UI5 icons by name</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="8a4d9f2e1b7c3e5a6d8f9c2b4e7a1d3c5f8b9e2a">
+                        <ui5-avatar icon="employee"></ui5-avatar>
+                        <ui5-avatar icon="customer"></ui5-avatar>
+                        <ui5-avatar icon="person-placeholder"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">FallbackIcon Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using fallbackIcon property for cases when initials don't fit or are invalid</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b3e7f4a9c2d5e8f1a4b7c9e2f5a8b1d4c7e9f2b5">
+                        <ui5-avatar initials="WWWW" fallback-icon="filter"></ui5-avatar>
+                        <ui5-avatar initials="123" fallback-icon="warning"></ui5-avatar>
+                        <ui5-avatar initials="" fallback-icon="employee"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Initials Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using initials property to display up to 3 Latin letters</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c5f8d2b4e7a9c1f4b7d9e2a5c8f1b4d7e9a2c5f8">
+                        <ui5-avatar initials="A"></ui5-avatar>
+                        <ui5-avatar initials="AB"></ui5-avatar>
+                        <ui5-avatar initials="ABC"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">ColorScheme Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using colorScheme property to set background colors</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d7e9a3c6f8b1d4e7a9c2f5b8d1e4a7c9f2b5d8e1">
+                        <ui5-avatar color-scheme="Accent1" initials="A1"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent2" initials="A2"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent3" initials="A3"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent4" initials="A4"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent5" initials="A5"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent6" initials="A6"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Size Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using size property to control avatar dimensions (XS, S, M, L, XL)</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e8f1b4d7a9c2e5f8b1d4a7c9e2f5b8d1a4c7e9f2">
+                        <ui5-avatar size="XS" initials="XS"></ui5-avatar>
+                        <ui5-avatar size="S" initials="S"></ui5-avatar>
+                        <ui5-avatar size="M" initials="M"></ui5-avatar>
+                        <ui5-avatar size="L" initials="L"></ui5-avatar>
+                        <ui5-avatar size="XL" initials="XL"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Shape Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using shape property to control avatar appearance (Circle or Square)</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f9a2c5d8e1b4f7a9c2d5e8b1f4a7c9d2e5f8b1a4">
+                        <ui5-avatar shape="Circle" initials="C"></ui5-avatar>
+                        <ui5-avatar shape="Square" initials="S"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Interactive Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using interactive property to make avatars focusable and clickable</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="a1b3c5d7e9f2a4b6c8d9e1f3a5b7c9d1e3f5a7b9">
+                        <ui5-avatar id="interactive-avatar" interactive initials="INT"></ui5-avatar>
+                        <ui5-avatar initials="REG"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Click interactive avatar vs regular avatar</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using disabled property to prevent interaction</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="b2c4d6e8f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9">
+                        <ui5-avatar interactive initials="ACT"></ui5-avatar>
+                        <ui5-avatar interactive disabled initials="DIS"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Try clicking both avatars - disabled one won't respond</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using accessibleName property to provide custom accessible labels</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d5e7f9a1b2c4d6e8f9a1b3c5d7e9f1a3b5c7d9">
+                        <ui5-avatar initials="JD" accessible-name="John Doe - Project Manager"></ui5-avatar>
+                        <ui5-avatar initials="SW" accessible-name="Sarah Wilson - Team Lead"></ui5-avatar>
+                        <ui5-avatar icon="employee" accessible-name="Generic Employee Avatar"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">AccessibilityAttributes Property API</h2>
+                <div class="text-muted fst-italic mb-3">Using accessibilityAttributes property to set ARIA attributes like hasPopup</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e6f8a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1">
+                        <ui5-avatar id="popup-avatar" interactive initials="PM"></ui5-avatar>
+                        <ui5-avatar id="dialog-avatar" interactive initials="DM"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Click Event API</h2>
+                <div class="text-muted fst-italic mb-3">Using ui5-click event handler for interactive avatars</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="e5f7a9b1c2d4e6f8a9b1c3d5e7f9a1b3c5d7e9f1">
+                        <ui5-avatar id="event-test" interactive initials="CLK" accessible-name="Click test avatar"></ui5-avatar>
+                        <input type="text" id="click-log" placeholder="Click counter" readonly class="form-control form-control-sm" style="max-width: 150px;">
+                    </div>
+                    <div class="test-instruction">Test instructions: Click avatar to increment counter</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Badge Slot API</h2>
+                <div class="text-muted fst-italic mb-3">Using badge slot to add status indicators or additional visual elements</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a8b9c1d3e5f7a8b9c1d3e5f7a9b1c3d5e7f9a1">
+                        <div class="position-relative">
+                            <ui5-avatar initials="BD"></ui5-avatar>
+                            <span slot="badge" class="position-absolute bg-success text-white rounded-circle d-flex align-items-center justify-content-center border border-white border-2" style="bottom: -5px; right: -5px; width: 20px; height: 20px; font-size: 10px;">•</span>
+                        </div>
+                        <div class="position-relative">
+                            <ui5-avatar initials="ST"></ui5-avatar>
+                            <span slot="badge" class="position-absolute bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center border border-white border-2" style="bottom: -5px; right: -5px; width: 20px; height: 20px; font-size: 10px;">!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Tabindex Management</h2>
+                <div class="text-muted fst-italic mb-3">How the component manages tabindex based on interactive and disabled properties</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="a7b9c1d2e4f6a8b9c1d2e4f6a8b9c1d2e4f6a8b9">
+                        <ui5-avatar interactive initials="T1" accessible-name="First tab"></ui5-avatar>
+                        <ui5-avatar interactive initials="T2" accessible-name="Second tab"></ui5-avatar>
+                        <ui5-avatar initials="T3" accessible-name="Third tab (non-interactive)"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Use Tab key to navigate through interactive elements</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Role Assignment</h2>
+                <div class="text-muted fst-italic mb-3">How the component automatically assigns ARIA roles based on interactivity</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d1e2f3a5b7c8d9e1f2a4b6c7d8e9f1a2b4c6">
+                        <ui5-avatar initials="IMG"></ui5-avatar>
+                        <ui5-avatar interactive initials="BTN"></ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Image Error Handling</h2>
+                <div class="text-muted fst-italic mb-3">Component's built-in image error handling and fallback behavior</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9d1e2f3a4b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1">
+                        <ui5-avatar>
+                            <img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" alt="Valid image">
+                        </ui5-avatar>
+                        <ui5-avatar>
+                            <img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.pngj" alt="Broken image - will show fallback">
+                        </ui5-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Text Resizing Support</h2>
+                <div class="text-muted fst-italic mb-3">Avatar initials remain readable when browser zoom is increased to 200%</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="d1e2f3a4b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2">
+                        <ui5-avatar initials="TZ" size="XS"></ui5-avatar>
+                        <ui5-avatar initials="TZ" size="S"></ui5-avatar>
+                        <ui5-avatar initials="TZ" size="M"></ui5-avatar>
+                        <ui5-avatar initials="TZ" size="L"></ui5-avatar>
+                        <ui5-avatar initials="TZ" size="XL"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Use browser zoom (Ctrl/Cmd + Plus) to test at 200%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Theme Integration</h2>
+                <div class="text-muted fst-italic mb-3">Avatar automatically adapts to different UI5 themes including high contrast</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="e2f3a4b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3">
+                        <ui5-avatar color-scheme="Accent1" initials="TH"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent2" initials="EM"></ui5-avatar>
+                        <ui5-avatar color-scheme="Accent3" initials="ES"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Switch themes to see automatic adaptation</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Focus Management</h2>
+                <div class="text-muted fst-italic mb-3">Interactive avatars show visible focus indicators for keyboard navigation</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="f3a4b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4">
+                        <ui5-avatar interactive initials="F1"></ui5-avatar>
+                        <ui5-avatar interactive initials="F2"></ui5-avatar>
+                        <ui5-avatar interactive initials="F3"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Tab through avatars to see focus indicators</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Keyboard Event Handling</h2>
+                <div class="text-muted fst-italic mb-3">Interactive avatars respond to keyboard events (Space/Enter keys)</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="a4b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4b5">
+                        <ui5-avatar id="keyboard-test" interactive initials="KB" accessible-name="Keyboard test avatar"></ui5-avatar>
+                        <input type="text" id="keyboard-log" placeholder="Key press counter" readonly class="form-control form-control-sm" style="max-width: 150px;">
+                    </div>
+                    <div class="test-instruction">Test instructions: Tab to avatar, then press Space or Enter keys</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-start api-section blue-accent mb-4">
+            <div class="card-body">
+                <h2 class="h6 fw-bold mb-3">Responsive Design</h2>
+                <div class="text-muted fst-italic mb-3">Avatars maintain proper proportions across different screen sizes and orientations</div>
+                <div class="bg-light rounded p-3">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3" data-cy-acc-container-id="b5c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6">
+                        <ui5-avatar size="XS" initials="RD"></ui5-avatar>
+                        <ui5-avatar size="S" initials="RD"></ui5-avatar>
+                        <ui5-avatar size="M" initials="RD"></ui5-avatar>
+                        <ui5-avatar size="L" initials="RD"></ui5-avatar>
+                        <ui5-avatar size="XL" initials="RD"></ui5-avatar>
+                    </div>
+                    <div class="test-instruction">Test instructions: Resize browser window or rotate device</div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <script>
+        // Event handling demonstration
+        const eventTest = document.getElementById('event-test');
+        const clickLog = document.getElementById('click-log');
+        const keyboardTest = document.getElementById('keyboard-test');
+        const keyboardLog = document.getElementById('keyboard-log');
+        const popupAvatar = document.getElementById('popup-avatar');
+        const dialogAvatar = document.getElementById('dialog-avatar');
+        const interactiveAvatar = document.getElementById('interactive-avatar');
+
+        let clickCount = 0;
+        let keyCount = 0;
+
+        // AccessibilityAttributes API usage
+        popupAvatar.accessibilityAttributes = { hasPopup: "menu" };
+        dialogAvatar.accessibilityAttributes = { hasPopup: "dialog" };
+
+        // Event listeners for ui5-click events
+        if (eventTest) {
+            eventTest.addEventListener('ui5-click', () => {
+                clickCount++;
+                clickLog.value = `Clicked ${clickCount} times`;
+            });
+        }
+
+        if (keyboardTest) {
+            keyboardTest.addEventListener('ui5-click', () => {
+                keyCount++;
+                keyboardLog.value = `Key pressed ${keyCount} times`;
+            });
+        }
+
+        if (interactiveAvatar) {
+            interactiveAvatar.addEventListener('ui5-click', () => {
+                console.log('Interactive avatar clicked');
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 Link API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Link.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-icons/dist/action.js";
+        import "@ui5/webcomponents-icons/dist/arrow-right.js";
+        import "@ui5/webcomponents-icons/dist/download.js";
+        import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
+        import "@ui5/webcomponents-icons/dist/employee.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="Link API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 Link Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to prevent user interaction and click events</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk1a2d3i4s5a6b7l8e9d0p1r2o3p4e">
+                            <ui5-link href="#">Enabled Link</ui5-link>
+                            <ui5-link href="#" disabled>Disabled Link</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Href and Target Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using href and target properties for standard hyperlink behavior</div>
+                    <p class="test-instruction">Test instruction: Click links to test navigation behavior</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="lnk2a3h4r5e6f7t8a9r0g1e2t3p4r5o">
+                            <ui5-link href="https://www.example.com">Link with href</ui5-link>
+                            <ui5-link href="https://www.example.com" target="_blank">Link opens in new tab</ui5-link>
+                            <ui5-link href="https://www.example.com" target="_self">Link opens in same window</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Design Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using design property to set visual style: Default, Subtle, Emphasized</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk3a4d5e6s7i8g9n0p1r2o3p4e5r6t">
+                            <ui5-link href="#" design="Default">Default Link</ui5-link>
+                            <ui5-link href="#" design="Subtle">Subtle Link</ui5-link>
+                            <ui5-link href="#" design="Emphasized">Emphasized Link</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">WrappingType Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using wrappingType property to control text wrapping: None or Normal</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="lnk4a5w6r7a8p9p0i1n2g3t4y5p6e7p">
+                            <div style="width: 200px;">
+                                <ui5-label>Wrapping None (truncated)</ui5-label>
+                                <ui5-link href="#" wrapping-type="None">This is a very long link text that will be truncated when space is limited</ui5-link>
+                            </div>
+                            <div style="width: 200px;">
+                                <ui5-label>Wrapping Normal (multi-line)</ui5-label>
+                                <ui5-link href="#" wrapping-type="Normal">This is a very long link text that will wrap to multiple lines when space is limited</ui5-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using icon property to display an icon before the link text</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk5a6i7c8o9n0p1r2o3p4e5r6t7y8a">
+                            <ui5-link href="#" icon="action">Link with action icon</ui5-link>
+                            <ui5-link href="#" icon="download">Download link</ui5-link>
+                            <ui5-link href="#" icon="employee" design="Emphasized">Profile link</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">EndIcon Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using endIcon property to display an icon after the link text</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk6a7e8n9d0i1c2o3n4p5r6o7p8e9r">
+                            <ui5-link href="#" end-icon="arrow-right">Next page</ui5-link>
+                            <ui5-link href="#" end-icon="navigation-right-arrow">Navigate</ui5-link>
+                            <ui5-link href="https://example.com" target="_blank" end-icon="arrow-right" design="Subtle">External link</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon and EndIcon Combined API</h2>
+                    <div class="text-muted fst-italic mb-3">Using both icon and endIcon properties together (not recommended, but supported)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk7a8b9o0t1h2i3c4o5n6s7c8o9m0b">
+                            <ui5-link href="#" icon="download" end-icon="arrow-right">Download now</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleRole Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleRole property to set ARIA role: Link or Button</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify the role announcement</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk8a9c0c1e2s3s4i5b6l7e8r9o0l1e">
+                            <ui5-link accessible-role="Link">Link role</ui5-link>
+                            <ui5-link accessible-role="Button">Button role</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when link is clicked or activated with Enter key</div>
+                    <p class="test-instruction">Test instruction: Click the link or use Enter key while focused</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="lnk9a0c1l2i3c4k5e6v7e8n9t0a1p2i">
+                            <ui5-link id="click-link">Click me to trigger event</ui5-link>
+                            <div class="mt-2">
+                                <strong>Event triggered: </strong>
+                                <span id="click-result">0 times</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibilityAttributes API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibilityAttributes to set ARIA expanded, hasPopup, and current states</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify ARIA attributes</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="lnk0a1c2c3e4s5s6i7b8i9l0i1t2y3a">
+                            <ui5-link id="popup-link">Link with hasPopup</ui5-link>
+                            <ui5-link id="expanded-link">Link with expanded state</ui5-link>
+                            <ui5-link id="current-link">Link with current page indicator</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Tooltip Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using tooltip property to provide additional information on hover</div>
+                    <p class="test-instruction">Test instruction: Hover over links to see tooltips</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk1a2t3o4o5l6t7i8p9p0r1o2p3e4r">
+                            <ui5-link href="#" tooltip="This is a helpful tooltip">Link with tooltip</ui5-link>
+                            <ui5-link href="#" tooltip="Navigate to external website">External link tooltip</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Default Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default slot to define link text content</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="lnk2a3d4e5f6a7u8l9t0s1l2o3t4a5p">
+                            <ui5-link href="#">Simple text link</ui5-link>
+                            <ui5-link href="#">Link with <strong>formatted</strong> text</ui5-link>
+                            <ui5-link href="#">Multi word link text</ui5-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">Link is keyboard focusable and can be activated with Enter or Space keys</div>
+                    <p class="test-instruction">Test instruction: Tab to focus, press Enter or Space to activate</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="lnk3a4k5e6y7b8o9a0r1d2n3a4v5i6g">
+                            <ui5-link id="keyboard-link1">First keyboard link</ui5-link>
+                            <ui5-link id="keyboard-link2">Second keyboard link</ui5-link>
+                            <ui5-link id="keyboard-link3">Third keyboard link</ui5-link>
+                            <div class="mt-2">
+                                <strong>Last activated: </strong>
+                                <span id="keyboard-result">None</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Click event demonstration
+        const clickLink = document.getElementById('click-link');
+        const clickResult = document.getElementById('click-result');
+        let clickCount = 0;
+        
+        if (clickLink && clickResult) {
+            clickLink.addEventListener('click', (e) => {
+                clickCount++;
+                clickResult.textContent = `${clickCount} times`;
+            });
+        }
+
+        // AccessibilityAttributes setup
+        document.addEventListener('DOMContentLoaded', function() {
+            const popupLink = document.getElementById('popup-link');
+            if (popupLink) {
+                popupLink.accessibilityAttributes = { hasPopup: "menu" };
+            }
+
+            const expandedLink = document.getElementById('expanded-link');
+            if (expandedLink) {
+                expandedLink.accessibilityAttributes = { expanded: "true" };
+            }
+
+            const currentLink = document.getElementById('current-link');
+            if (currentLink) {
+                currentLink.accessibilityAttributes = { current: "page" };
+            }
+        });
+
+        // Keyboard navigation demonstration
+        const keyboardResult = document.getElementById('keyboard-result');
+        ['keyboard-link1', 'keyboard-link2', 'keyboard-link3'].forEach(id => {
+            const link = document.getElementById(id);
+            if (link && keyboardResult) {
+                link.addEventListener('click', () => {
+                    keyboardResult.textContent = link.textContent;
+                });
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

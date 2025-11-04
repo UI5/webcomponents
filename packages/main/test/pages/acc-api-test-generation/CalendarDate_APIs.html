@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 CalendarDate API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+        <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/Calendar.js";
+        import "@ui5/webcomponents/dist/CalendarDate.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="CalendarDate API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 CalendarDate Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to define a selected date within ui5-calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cd1a2t3e4v5a6l7u8e9p0r1o2p3e4r5">
+                            <div>
+                                <ui5-label>Single Date: 2024-01-15</ui5-label>
+                                <ui5-calendar selection-mode="Single">
+                                    <ui5-date value="2024-01-15"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Multiple Dates</ui5-label>
+                                <ui5-calendar selection-mode="Multiple">
+                                    <ui5-date value="2024-02-05"></ui5-date>
+                                    <ui5-date value="2024-02-10"></ui5-date>
+                                    <ui5-date value="2024-02-15"></ui5-date>
+                                    <ui5-date value="2024-02-20"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Usage with Calendar API</h2>
+                    <div class="text-muted fst-italic mb-3">CalendarDate is used inside ui5-calendar to mark selected dates in Single and Multiple selection modes</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cd2a3t4e5u6s7a8g9e0w1i2t3h4c5a6">
+                            <div>
+                                <ui5-label>Dynamic Date Selection</ui5-label>
+                                <ui5-calendar id="date-cal" selection-mode="Multiple">
+                                    <ui5-date value="2024-03-01"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

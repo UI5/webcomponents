@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 ToggleButton API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/ToggleButton.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-icons/dist/accept.js";
+        import "@ui5/webcomponents-icons/dist/decline.js";
+        import "@ui5/webcomponents-icons/dist/favorite.js";
+        import "@ui5/webcomponents-icons/dist/unfavorite.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="ToggleButton API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 ToggleButton Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Pressed Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using pressed property to set the toggle state</div>
+                    <p class="test-instruction">Test instruction: Click buttons to toggle their state</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="tb1a2p3r4e5s6s7e8d9p0r1o2p3e4r5">
+                            <ui5-toggle-button>Not Pressed</ui5-toggle-button>
+                            <ui5-toggle-button pressed>Pressed</ui5-toggle-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Inherited Button Properties</h2>
+                    <div class="text-muted fst-italic mb-3">ToggleButton inherits all Button properties: design, icon, disabled, etc.</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="tb2a3i4n5h6e7r8i9t0e1d2p3r4o5p6">
+                            <ui5-toggle-button design="Emphasized">Emphasized</ui5-toggle-button>
+                            <ui5-toggle-button design="Positive" icon="accept">Positive</ui5-toggle-button>
+                            <ui5-toggle-button design="Negative" icon="decline">Negative</ui5-toggle-button>
+                            <ui5-toggle-button design="Transparent">Transparent</ui5-toggle-button>
+                            <ui5-toggle-button disabled>Disabled</ui5-toggle-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when toggle button is clicked, toggles pressed state automatically</div>
+                    <p class="test-instruction">Test instruction: Click the button to toggle and see state changes</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="tb3a4c5l6i7c8k9e0v1e2n3t4a5p6i7">
+                            <ui5-toggle-button id="event-btn">Toggle Me</ui5-toggle-button>
+                            <div class="mt-2">
+                                <strong>State: </strong>
+                                <span id="event-result">not pressed</span>
+                            </div>
+                            <div>
+                                <strong>Click count: </strong>
+                                <span id="click-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon Toggle Usage</h2>
+                    <div class="text-muted fst-italic mb-3">Common use case: toggle button with icon to indicate state</div>
+                    <p class="test-instruction">Test instruction: Click to toggle favorite state</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="tb4a5i6c7o8n9t0o1g2g3l4e5u6s7a8">
+                            <ui5-toggle-button id="fav-btn" icon="unfavorite">Add to Favorites</ui5-toggle-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">ToggleButton can be toggled using Space and Enter keys</div>
+                    <p class="test-instruction">Test instruction: Tab to focus, press Space or Enter to toggle</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="tb5a6k7e8y9b0o1a2r3d4n5a6v7i8g9">
+                            <ui5-toggle-button id="keyboard-btn">Keyboard Toggle</ui5-toggle-button>
+                            <div class="mt-2">
+                                <strong>State: </strong>
+                                <span id="keyboard-result">not pressed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ARIA Pressed State</h2>
+                    <div class="text-muted fst-italic mb-3">ToggleButton has aria-pressed attribute that reflects the pressed state</div>
+                    <p class="test-instruction">Test instruction: Use screen reader to verify aria-pressed state changes</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="tb6a7r8i9a0p1r2e3s4s5e6d7s8t9a0">
+                            <ui5-toggle-button>Not Pressed (aria-pressed=false)</ui5-toggle-button>
+                            <ui5-toggle-button pressed>Pressed (aria-pressed=true)</ui5-toggle-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Toggle Group Usage</h2>
+                    <div class="text-muted fst-italic mb-3">Multiple toggle buttons can be used together as independent choices</div>
+                    <p class="test-instruction">Test instruction: Click buttons to select multiple options</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="tb7a8t9o0g1g2l3e4g5r6o7u8p9u0s1">
+                            <ui5-label>Select Text Formatting:</ui5-label>
+                            <div class="d-flex gap-2">
+                                <ui5-toggle-button id="bold-btn">Bold</ui5-toggle-button>
+                                <ui5-toggle-button id="italic-btn">Italic</ui5-toggle-button>
+                                <ui5-toggle-button id="underline-btn">Underline</ui5-toggle-button>
+                            </div>
+                            <div class="mt-2">
+                                <strong>Selected: </strong>
+                                <span id="format-result">None</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Preventable Click Event</h2>
+                    <div class="text-muted fst-italic mb-3">Click event can be prevented to keep current state</div>
+                    <p class="test-instruction">Test instruction: Click button - toggle is prevented, state doesn't change</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="tb8a9p0r1e2v3e4n5t6a7b8l9e0c1l2">
+                            <ui5-toggle-button id="prevent-btn">Click me (prevented)</ui5-toggle-button>
+                            <div class="mt-2">
+                                <strong>State: </strong>
+                                <span id="prevent-result">Always not pressed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Click event demonstration
+        const eventBtn = document.getElementById('event-btn');
+        const eventResult = document.getElementById('event-result');
+        const clickCount = document.getElementById('click-count');
+        let count = 0;
+        
+        if (eventBtn && eventResult && clickCount) {
+            eventBtn.addEventListener('click', () => {
+                count++;
+                eventResult.textContent = eventBtn.pressed ? 'pressed' : 'not pressed';
+                clickCount.textContent = count;
+            });
+        }
+
+        // Favorite button toggle
+        const favBtn = document.getElementById('fav-btn');
+        if (favBtn) {
+            favBtn.addEventListener('click', () => {
+                if (favBtn.pressed) {
+                    favBtn.icon = 'favorite';
+                    favBtn.textContent = 'Remove from Favorites';
+                } else {
+                    favBtn.icon = 'unfavorite';
+                    favBtn.textContent = 'Add to Favorites';
+                }
+            });
+        }
+
+        // Keyboard navigation demonstration
+        const keyboardBtn = document.getElementById('keyboard-btn');
+        const keyboardResult = document.getElementById('keyboard-result');
+        
+        if (keyboardBtn && keyboardResult) {
+            keyboardBtn.addEventListener('click', () => {
+                keyboardResult.textContent = keyboardBtn.pressed ? 'pressed' : 'not pressed';
+            });
+        }
+
+        // Toggle group demonstration
+        const formatResult = document.getElementById('format-result');
+        const boldBtn = document.getElementById('bold-btn');
+        const italicBtn = document.getElementById('italic-btn');
+        const underlineBtn = document.getElementById('underline-btn');
+        
+        function updateFormatResult() {
+            const selected = [];
+            if (boldBtn?.pressed) selected.push('Bold');
+            if (italicBtn?.pressed) selected.push('Italic');
+            if (underlineBtn?.pressed) selected.push('Underline');
+            if (formatResult) {
+                formatResult.textContent = selected.length ? selected.join(', ') : 'None';
+            }
+        }
+        
+        [boldBtn, italicBtn, underlineBtn].forEach(btn => {
+            btn?.addEventListener('click', updateFormatResult);
+        });
+
+        // Preventable click demonstration
+        const preventBtn = document.getElementById('prevent-btn');
+        if (preventBtn) {
+            preventBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // State will not change because event is prevented
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

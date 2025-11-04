@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 ColorPalette API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/ColorPalette.js";
+        import "@ui5/webcomponents/dist/ColorPaletteItem.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="ColorPalette API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 ColorPalette Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Colors Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default colors slot to define ColorPaletteItem elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp1a2c3o4l5o6r7s8s9l0o1t2a3p4i5">
+                            <div>
+                                <ui5-label>Basic Color Palette</ui5-label>
+                                <ui5-color-palette>
+                                    <ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="pink"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="green"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="blue"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="orange"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="purple"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Item-click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when user selects a color from the palette</div>
+                    <p class="test-instruction">Test instruction: Click on any color to see the event details</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp2a3i4t5e6m7c8l9i0c1k2e3v4e5n6">
+                            <div>
+                                <ui5-label>Select a Color</ui5-label>
+                                <ui5-color-palette id="event-palette">
+                                    <ui5-color-palette-item value="red"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="green"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="blue"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="magenta"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="orange"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="purple"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                                <div class="mt-2">
+                                    <strong>Selected Color: </strong>
+                                    <span id="event-result">None</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">Navigate through colors using arrow keys, select with Enter or Space</div>
+                    <p class="test-instruction">Test instruction: Use Tab to focus, arrow keys to navigate, Enter or Space to select</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp3a4k5e6y7b8o9a0r1d2n3a4v5i6g7">
+                            <div>
+                                <ui5-label>Keyboard Accessible Palette</ui5-label>
+                                <ui5-color-palette id="keyboard-palette">
+                                    <ui5-color-palette-item value="#FF0000"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#00FF00"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#0000FF"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FFFF00"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FF00FF"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#00FFFF"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FFA500"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#800080"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FFC0CB"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#A52A2A"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#808080"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#000000"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                                <div class="mt-2">
+                                    <strong>Selected: </strong>
+                                    <span id="keyboard-result">None</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Selected ColorPaletteItem</h2>
+                    <div class="text-muted fst-italic mb-3">One ColorPaletteItem can be marked as selected to show the current choice</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp4a5s6e7l8e9c0t1e2d3i4t5e6m7s8">
+                            <div>
+                                <ui5-label>Palette with Pre-selected Color</ui5-label>
+                                <ui5-color-palette>
+                                    <ui5-color-palette-item value="red"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="green"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="blue" selected></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="magenta"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Various Color Formats</h2>
+                    <div class="text-muted fst-italic mb-3">ColorPalette accepts multiple CSS color formats: named colors, hex, rgb, rgba</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp5a6c7o8l9o0r1f2o3r4m5a6t7s8v9">
+                            <div>
+                                <ui5-label>Mixed Color Formats</ui5-label>
+                                <ui5-color-palette>
+                                    <ui5-color-palette-item value="red"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#00FF00"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="rgb(0, 0, 255)"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="rgba(255, 255, 0, 0.8)"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FF00FF"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="hsl(180, 100%, 50%)"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FFA500"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="rgb(128, 0, 128)"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ARIA Region Label</h2>
+                    <div class="text-muted fst-italic mb-3">The color container has an ARIA label for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cp6a7r8i9a0l1a2b3e4l5a6c7c8e9s0">
+                            <div>
+                                <ui5-label>Accessible Color Palette</ui5-label>
+                                <ui5-color-palette>
+                                    <ui5-color-palette-item value="#E3342F"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#F6993F"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#FFED4E"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#38C172"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#4DC0B5"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#3490DC"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#6574CD"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#9561E2"></ui5-color-palette-item>
+                                    <ui5-color-palette-item value="#F66D9B"></ui5-color-palette-item>
+                                </ui5-color-palette>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Item-click event demonstration
+        const eventPalette = document.getElementById('event-palette');
+        const eventResult = document.getElementById('event-result');
+        
+        if (eventPalette && eventResult) {
+            eventPalette.addEventListener('item-click', (e) => {
+                eventResult.textContent = e.detail.color;
+                eventResult.style.color = e.detail.color;
+            });
+        }
+
+        // Keyboard navigation demonstration
+        const keyboardPalette = document.getElementById('keyboard-palette');
+        const keyboardResult = document.getElementById('keyboard-result');
+        
+        if (keyboardPalette && keyboardResult) {
+            keyboardPalette.addEventListener('item-click', (e) => {
+                keyboardResult.textContent = e.detail.color;
+                keyboardResult.style.color = e.detail.color;
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

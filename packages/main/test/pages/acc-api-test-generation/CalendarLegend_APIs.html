@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 CalendarLegend API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+        <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/Calendar.js";
+        import "@ui5/webcomponents/dist/CalendarLegend.js";
+        import "@ui5/webcomponents/dist/CalendarLegendItem.js";
+        import "@ui5/webcomponents/dist/SpecialCalendarDate.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="CalendarLegend API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 CalendarLegend Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Items Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default items slot to add CalendarLegendItem elements that explain special date types</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="cl1a2i3t4e5m6s7s8l9o0t1a2p3i4s5">
+                            <div>
+                                <ui5-label>Calendar with Legend Items (Nov 2025)</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-special-date slot="specialDates" value="05/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="10/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="15/11/2025" type="Type03"></ui5-special-date>
+                                    <ui5-calendar-legend slot="calendarLegend">
+                                        <ui5-calendar-legend-item type="Type01" text="Public Holiday"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type02" text="Team Meeting"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type03" text="Deadline"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideToday Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideToday property to control visibility of the Today legend item</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="cl2a3h4i5d6e7t8o9d0a1y2p3r4o5p6">
+                            <div>
+                                <ui5-label>Legend with Today</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-today="false">
+                                        <ui5-calendar-legend-item type="Type01" text="Holiday"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Legend without Today</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-today="true">
+                                        <ui5-calendar-legend-item type="Type01" text="Holiday"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideSelectedDay Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideSelectedDay property to control visibility of the Selected Day legend item</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="cl3a4h5i6d7e8s9e0l1e2c3t4e5d6d7">
+                            <div>
+                                <ui5-label>Legend with Selected Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-selected-day="false">
+                                        <ui5-calendar-legend-item type="Type02" text="Event"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Legend without Selected Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-selected-day="true">
+                                        <ui5-calendar-legend-item type="Type02" text="Event"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideNonWorkingDay Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideNonWorkingDay property to control visibility of the Non-Working Day legend item</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="cl4a5h6i7d8e9n0o1n2w3o4r5k6i7n8">
+                            <div>
+                                <ui5-label>Legend with Non-Working Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-non-working-day="false">
+                                        <ui5-calendar-legend-item type="Type03" text="Meeting"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Legend without Non-Working Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-non-working-day="true">
+                                        <ui5-calendar-legend-item type="Type03" text="Meeting"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideWorkingDay Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideWorkingDay property to control visibility of the Working Day legend item</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="cl5a6h7i8d9e0w1o2r3k4i5n6g7d8a9">
+                            <div>
+                                <ui5-label>Legend with Working Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-working-day="false">
+                                        <ui5-calendar-legend-item type="Type04" text="Appointment"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Legend without Working Day</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-calendar-legend slot="calendarLegend" hide-working-day="true">
+                                        <ui5-calendar-legend-item type="Type04" text="Appointment"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Calendar-Legend-Selection-Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using calendar-legend-selection-change event to respond when user clicks legend items to filter dates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="cl6a7e8v9e0n1t2s3e4l5e6c7t8i9o0">
+                            <ui5-calendar id="event-cal">
+                                <ui5-special-date slot="specialDates" value="2024-02-05" type="Type01"></ui5-special-date>
+                                <ui5-special-date slot="specialDates" value="2024-02-10" type="Type02"></ui5-special-date>
+                                <ui5-special-date slot="specialDates" value="2024-02-15" type="Type03"></ui5-special-date>
+                                <ui5-calendar-legend slot="calendarLegend" id="event-legend">
+                                    <ui5-calendar-legend-item type="Type01" text="Category A"></ui5-calendar-legend-item>
+                                    <ui5-calendar-legend-item type="Type02" text="Category B"></ui5-calendar-legend-item>
+                                    <ui5-calendar-legend-item type="Type03" text="Category C"></ui5-calendar-legend-item>
+                                </ui5-calendar-legend>
+                            </ui5-calendar>
+                            <ui5-label id="event-result">No legend item selected</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click legend items to filter calendar dates by type</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">CalendarLegend supports keyboard navigation with arrow keys between legend items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="cl7a8k9e0y1b2o3a4r5d6n7a8v9i0">
+                            <ui5-calendar>
+                                <ui5-calendar-legend slot="calendarLegend">
+                                    <ui5-calendar-legend-item type="Type05" text="First Item"></ui5-calendar-legend-item>
+                                    <ui5-calendar-legend-item type="Type06" text="Second Item"></ui5-calendar-legend-item>
+                                    <ui5-calendar-legend-item type="Type07" text="Third Item"></ui5-calendar-legend-item>
+                                    <ui5-calendar-legend-item type="Type08" text="Fourth Item"></ui5-calendar-legend-item>
+                                </ui5-calendar-legend>
+                            </ui5-calendar>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus legend and use Up/Down arrow keys to navigate between items</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Calendar-Legend-Focus-Out Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the focus leaves the calendar legend</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="cl8a9f0o1c2u3s4o5u6t7e8v9e0n1t2">
+                            <ui5-calendar id="focus-legend-cal">
+                                <ui5-special-date slot="specialDates" value="2024-03-01" type="Type01"></ui5-special-date>
+                                <ui5-calendar-legend id="focus-legend" slot="calendarLegend">
+                                    <ui5-calendar-legend-item type="Type01" text="Event"></ui5-calendar-legend-item>
+                                </ui5-calendar-legend>
+                            </ui5-calendar>
+                            <ui5-label id="focus-result">Focus out count: 0</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click legend items then focus elsewhere to trigger calendar-legend-focus-out event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Usage with Calendar</h2>
+                    <div class="text-muted fst-italic mb-3">CalendarLegend must be placed in the calendarLegend slot of ui5-calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="cl9a0u1s2a3g4e5w6i7t8h9c0a1l2e3">
+                            <div>
+                                <ui5-label>Complete Example</ui5-label>
+                                <ui5-calendar>
+                                    <ui5-special-date slot="specialDates" value="2024-03-01" type="Type09"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="2024-03-15" type="Type10"></ui5-special-date>
+                                    <ui5-calendar-legend slot="calendarLegend">
+                                        <ui5-calendar-legend-item type="Type09" text="Conference"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type10" text="Workshop"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Calendar-legend-selection-change event demonstration
+        const eventLegend = document.getElementById('event-legend');
+        const eventResult = document.getElementById('event-result');
+        
+        if (eventLegend && eventResult) {
+            eventLegend.addEventListener('calendar-legend-selection-change', (e) => {
+                const itemText = e.detail.item.text;
+                const itemType = e.detail.item.type;
+                eventResult.textContent = `Selected: ${itemText} (${itemType})`;
+            });
+        }
+
+        // Calendar-legend-focus-out event demonstration
+        const focusLegend = document.getElementById('focus-legend');
+        const focusResult = document.getElementById('focus-result');
+        let focusOutCount = 0;
+        
+        if (focusLegend && focusResult) {
+            focusLegend.addEventListener('calendar-legend-focus-out', () => {
+                focusOutCount++;
+                focusResult.textContent = `Focus out count: ${focusOutCount}`;
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

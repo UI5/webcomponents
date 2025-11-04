@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 Bar API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Bar.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Title.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-icons/dist/action-settings.js";
+        import "@ui5/webcomponents-icons/dist/add.js";
+        import "@ui5/webcomponents-icons/dist/home.js";
+        import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="Bar API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 Bar Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Design Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using design property to set visual appearance: Header, Subheader, Footer, FloatingFooter</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-bar design="Header">
+                                <ui5-title slot="startContent">Header Bar</ui5-title>
+                                <ui5-label>Content</ui5-label>
+                                <ui5-button icon="action-settings" slot="endContent"></ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="Subheader">
+                                <ui5-title slot="startContent">Subheader Bar</ui5-title>
+                                <ui5-label>Content</ui5-label>
+                                <ui5-button icon="action-settings" slot="endContent"></ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="Footer">
+                                <ui5-button slot="endContent" design="Emphasized">Save</ui5-button>
+                                <ui5-button slot="endContent">Cancel</ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="FloatingFooter">
+                                <ui5-button slot="endContent" design="Emphasized">Submit</ui5-button>
+                                <ui5-button slot="endContent">Reset</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleRole Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleRole property to specify ARIA role: Toolbar or None</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-bar design="Header" accessible-role="Toolbar">
+                                <ui5-button slot="startContent" icon="home" accessible-name="Navigate to home">Home</ui5-button>
+                                <ui5-button slot="startContent" icon="add" accessible-name="Add new item">Add</ui5-button>
+                                <ui5-label>Toolbar Role with multiple interactive elements</ui5-label>
+                            </ui5-bar>
+                            <ui5-bar design="Header" accessible-role="None">
+                                <ui5-title slot="startContent">No Role</ui5-title>
+                                <ui5-label>Single non-interactive element</ui5-label>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">StartContent Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using startContent slot to place elements at the start of the bar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-bar design="Header">
+                                <ui5-title slot="startContent">Page Title</ui5-title>
+                                <ui5-label>Middle Content</ui5-label>
+                            </ui5-bar>
+                            <ui5-bar design="Subheader">
+                                <ui5-button slot="startContent" icon="home">Home</ui5-button>
+                                <ui5-button slot="startContent">Back</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">MiddleContent Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default slot for middle content that gets centered between start and end content</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-bar design="Header">
+                                <ui5-button slot="startContent" icon="home"></ui5-button>
+                                <ui5-title>Centered Title</ui5-title>
+                                <ui5-button slot="endContent" icon="action-settings"></ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="Subheader">
+                                <ui5-label>Centered Label Content</ui5-label>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">EndContent Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using endContent slot to place elements at the end of the bar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-bar design="Header">
+                                <ui5-title slot="startContent">Application</ui5-title>
+                                <ui5-button slot="endContent" icon="action-settings" accessible-name="Settings"></ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="Footer">
+                                <ui5-button slot="endContent" design="Emphasized">OK</ui5-button>
+                                <ui5-button slot="endContent">Cancel</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">CSS Parts API</h2>
+                    <div class="text-muted fst-italic mb-3">Bar exposes CSS parts for styling: bar, startContent, midContent, endContent</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <style>
+                                #styled-bar::part(bar) {
+                                    background-color: #f0f8ff;
+                                    border: 2px solid #0d6efd;
+                                }
+                                #styled-bar::part(startContent) {
+                                    padding: 0.5rem;
+                                }
+                            </style>
+                            <ui5-bar id="styled-bar" design="Header">
+                                <ui5-title slot="startContent">Styled Bar</ui5-title>
+                                <ui5-label>Content with custom styling</ui5-label>
+                                <ui5-button slot="endContent">Action</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">F6 Fast Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">Bar supports F6 fast navigation for keyboard users to quickly navigate between groups</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 1: Header Bar</ui5-label>
+                                <ui5-bar design="Header">
+                                    <ui5-button slot="startContent">Button 1</ui5-button>
+                                    <ui5-title>Fast Navigation Test</ui5-title>
+                                    <ui5-button slot="endContent">Button 2</ui5-button>
+                                </ui5-bar>
+                            </div>
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 2: Footer Bar</ui5-label>
+                                <ui5-bar design="Footer">
+                                    <ui5-button slot="endContent">Button 3</ui5-button>
+                                </ui5-bar>
+                            </div>
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 3: Another Header</ui5-label>
+                                <ui5-bar design="Header">
+                                    <ui5-title slot="startContent">Another Bar</ui5-title>
+                                    <ui5-button slot="endContent">Button 4</ui5-button>
+                                </ui5-bar>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus any button, then press F6 or Shift+F6 (Windows/Linux) or Control+Option+Down or Control+Option+Up (Mac) to navigate between groups</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Responsive Behavior</h2>
+                    <div class="text-muted fst-italic mb-3">Bar automatically adjusts layout when content exceeds one third of available space</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-bar design="Header">
+                                <ui5-title slot="startContent">Very Long Title That Takes Up Space</ui5-title>
+                                <ui5-label>Centered Content</ui5-label>
+                                <ui5-button slot="endContent">Action</ui5-button>
+                            </ui5-bar>
+                            <ui5-bar design="Subheader" style="width: 300px;">
+                                <ui5-button slot="startContent">Start</ui5-button>
+                                <ui5-label>Narrow Container</ui5-label>
+                                <ui5-button slot="endContent">End</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ARIA Label and Role</h2>
+                    <div class="text-muted fst-italic mb-3">Bar automatically sets ARIA label based on design property and role based on accessibleRole</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <ui5-bar design="Header" accessible-role="Toolbar">
+                                <ui5-button slot="startContent">Button 1</ui5-button>
+                                <ui5-button slot="startContent">Button 2</ui5-button>
+                                <ui5-label>Toolbar with role and aria-label Header</ui5-label>
+                            </ui5-bar>
+                            <ui5-bar design="Footer" accessible-role="None">
+                                <ui5-button slot="endContent" design="Emphasized">Submit</ui5-button>
+                            </ui5-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

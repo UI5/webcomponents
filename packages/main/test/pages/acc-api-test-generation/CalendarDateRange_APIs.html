@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 CalendarDateRange API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/Calendar.js";
+        import "@ui5/webcomponents/dist/CalendarDate.js";
+        import "@ui5/webcomponents/dist/CalendarDateRange.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="CalendarDateRange API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 CalendarDateRange Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">StartValue Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using startValue property to define the beginning of a date range within ui5-calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr1a2s3t4a5r6t7v8a9l0u1e2p3r4o5">
+                            <div>
+                                <ui5-label>Date Range: 2024-01-10 to 2024-01-20</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-01-10" end-value="2024-01-20"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Date Range: 2024-03-01 to 2024-03-15</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-03-01" end-value="2024-03-15"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">EndValue Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using endValue property to define the end of a date range within ui5-calendar</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr2a3e4n5d6v7a8l9u0e1p2r3o4p5e6">
+                            <div>
+                                <ui5-label>Week Range</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-02-05" end-value="2024-02-11"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Month Range</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-01-01" end-value="2024-01-31"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Usage with Range Selection Mode</h2>
+                    <div class="text-muted fst-italic mb-3">CalendarDateRange must be used with ui5-calendar in Range selection mode</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr3a4u5s6a7g8e9w0i1t2h3r4a5n6g7">
+                            <div>
+                                <ui5-label>Interactive Range Selection</ui5-label>
+                                <ui5-calendar id="range-cal" selection-mode="Range">
+                                    <ui5-date-range start-value="2024-04-10" end-value="2024-04-20"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Visual Representation</h2>
+                    <div class="text-muted fst-italic mb-3">The calendar visually highlights all dates within the range, including start and end dates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dr5a6v7i8s9u0a1l2r3e4p5r6e7s8e9">
+                            <div>
+                                <ui5-label>Two Week Range</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-05-01" end-value="2024-05-14"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

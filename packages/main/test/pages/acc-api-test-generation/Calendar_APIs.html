@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 Calendar API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/Calendar.js";
+        import "@ui5/webcomponents/dist/CalendarDate.js";
+        import "@ui5/webcomponents/dist/CalendarDateRange.js";
+        import "@ui5/webcomponents/dist/SpecialCalendarDate.js";
+        import "@ui5/webcomponents/dist/CalendarLegend.js";
+        import "@ui5/webcomponents/dist/CalendarLegendItem.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
+        import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="Calendar API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 Calendar Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SelectionMode Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using selectionMode property to control date selection: Single, Multiple, Range</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c1a2l3e4n5d6a7r8s9i0n1g2l3e4d5a6">
+                            <div>
+                                <ui5-label>Single Selection</ui5-label>
+                                <ui5-calendar id="single-cal" selection-mode="Single">
+                                    <ui5-date value="2024-01-15"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Multiple Selection</ui5-label>
+                                <ui5-calendar id="multiple-cal" selection-mode="Multiple">
+                                    <ui5-date value="2024-01-10"></ui5-date>
+                                    <ui5-date value="2024-01-15"></ui5-date>
+                                    <ui5-date value="2024-01-20"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Range Selection</ui5-label>
+                                <ui5-calendar id="range-cal" selection-mode="Range">
+                                    <ui5-date-range start-value="2024-01-10" end-value="2024-01-20"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideWeekNumbers Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideWeekNumbers property to control visibility of week numbers column</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c2a3l4e5n6d7a8r9w0e1e2k3n4u5m6b7">
+                            <div>
+                                <ui5-label>Week Numbers Visible</ui5-label>
+                                <ui5-calendar hide-week-numbers="false"></ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Week Numbers Hidden</ui5-label>
+                                <ui5-calendar hide-week-numbers="true"></ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">PrimaryCalendarType Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using primaryCalendarType property to set calendar system: Gregorian, Buddhist, Islamic, Japanese, Persian</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c3a4l5e6n7d8a9r0p1r2i3m4a5r6y7t8">
+                            <div>
+                                <ui5-label>Gregorian Calendar</ui5-label>
+                                <ui5-calendar primary-calendar-type="Gregorian"></ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SecondaryCalendarType Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using secondaryCalendarType property to display a secondary calendar type alongside primary</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c4a5l6e7n8d9a0r1s2e3c4o5n6d7a8r9">
+                            <div>
+                                <ui5-label>With Secondary Calendar Type</ui5-label>
+                                <ui5-calendar primary-calendar-type="Gregorian" secondary-calendar-type="Islamic"></ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">MinDate and MaxDate Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using minDate and maxDate properties to restrict selectable date range</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c5a6l7e8n9d0a1r2m3i4n5m6a7x8d9a0">
+                            <div>
+                                <ui5-label>Date Range: 2024-01-01 to 2024-12-31</ui5-label>
+                                <ui5-calendar min-date="2024-01-01" max-date="2024-12-31"></ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Dates Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default dates slot to define selected dates with ui5-date or ui5-date-range elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c6a7l8e9n0d1a2r3d4a5t6e7s8s9l0o1">
+                            <div>
+                                <ui5-label>Single Date Selection</ui5-label>
+                                <ui5-calendar selection-mode="Single">
+                                    <ui5-date value="2024-03-15"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                            <div>
+                                <ui5-label>Date Range Selection</ui5-label>
+                                <ui5-calendar selection-mode="Range">
+                                    <ui5-date-range start-value="2024-03-10" end-value="2024-03-20"></ui5-date-range>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SpecialDates Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using specialDates slot to visually emphasize certain dates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c7a8l9e0n1d2a3r4s5p6e7c8i9a0l1d2">
+                            <div>
+                                <ui5-label>Calendar with Special Dates (Nov 2025)</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-date value="05/11/2025"></ui5-date>
+                                    <ui5-special-date slot="specialDates" value="05/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="15/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="25/11/2025" type="Type03"></ui5-special-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">CalendarLegend Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using calendarLegend slot to add a legend for special date types</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="c8a9l0e1n2d3a4r5l6e7g8e9n0d1s2l3">
+                            <div>
+                                <ui5-label>Calendar with Legend (Nov 2025)</ui5-label>
+                                <ui5-calendar format-pattern="dd/MM/yyyy">
+                                    <ui5-date value="10/11/2025"></ui5-date>
+                                    <ui5-special-date slot="specialDates" value="08/11/2025" type="Type01"></ui5-special-date>
+                                    <ui5-special-date slot="specialDates" value="10/11/2025" type="Type02"></ui5-special-date>
+                                    <ui5-calendar-legend slot="calendarLegend">
+                                        <ui5-calendar-legend-item type="Type01" text="Holiday"></ui5-calendar-legend-item>
+                                        <ui5-calendar-legend-item type="Type02" text="Important"></ui5-calendar-legend-item>
+                                    </ui5-calendar-legend>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Selection-Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using selection-change event to respond when user selects dates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="c9a0l1e2n3d4a5r6s7e8l9e0c1t2i3o4">
+                            <ui5-calendar id="event-cal"></ui5-calendar>
+                            <ui5-label id="event-result">Selected: None</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click on dates to see selection-change event fired</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Show-Month-View Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when navigating to the month view from year or year-range picker</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="c0a1s2h3o4w5m6o7n8t9h0v1i2e3w4e5">
+                            <ui5-calendar id="month-view-cal"></ui5-calendar>
+                            <ui5-label id="month-view-result">Event count: 0</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Navigate to year view, then click a month to trigger show-month-view event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Show-Year-View Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when navigating to the year view from year-range picker</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="c1a2s3h4o5w6y7e8a9r0v1i2e3w4e5v6">
+                            <ui5-calendar id="year-view-cal"></ui5-calendar>
+                            <ui5-label id="year-view-result">Event count: 0</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Navigate to year-range view, then click a year to trigger show-year-view event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Show-Year-Range-View Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when navigating to the year-range view</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="c2a3s4h5o6w7y8e9a0r1r2a3n4g5e6v7">
+                            <ui5-calendar id="year-range-view-cal"></ui5-calendar>
+                            <ui5-label id="year-range-view-result">Event count: 0</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Navigate through header buttons to reach year-range view to trigger event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation API</h2>
+                    <div class="text-muted fst-italic mb-3">Calendar supports extensive keyboard navigation: F4 for month picker, Shift+F4 for year picker, Arrow keys, Page Up/Down</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 mb-3" data-cy-acc-container-id="d0a1l2e3n4d5a6r7k8e9y0b1o2a3r4d5">
+                            <ui5-calendar id="keyboard-cal"></ui5-calendar>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus calendar and use F4 for month picker, Shift+F4 for year picker, Arrow keys to navigate dates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">CSS Parts API</h2>
+                    <div class="text-muted fst-italic mb-3">Calendar exposes multiple CSS parts for styling: day-cell, month-cell, year-cell, etc.</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="d1a2l3e4n5d6a7r8c9s0s1p2a3r4t5s6">
+                            <style>
+                                #styled-cal::part(day-cell-selected) {
+                                    background-color: #0a8a42;
+                                    color: white;
+                                }
+                            </style>
+                            <div>
+                                <ui5-label>Custom Styled Calendar</ui5-label>
+                                <ui5-calendar id="styled-cal">
+                                    <ui5-date value="2024-01-15"></ui5-date>
+                                </ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">F6 Fast Navigation</h2>
+                    <div class="text-muted fst-italic mb-3">Calendar supports F6 fast navigation for keyboard users</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3 mb-3" data-cy-acc-container-id="d2a3l4e5n6d7a8r9f0s1i2x3n4a5v6i7">
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 1: First Calendar</ui5-label>
+                                <ui5-calendar></ui5-calendar>
+                            </div>
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 2: Second Calendar</ui5-label>
+                                <ui5-calendar></ui5-calendar>
+                            </div>
+                            <div data-sap-ui-fastnavgroup="true">
+                                <ui5-label>Group 3: Third Calendar</ui5-label>
+                                <ui5-calendar></ui5-calendar>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus a calendar, then press F6 or Shift+F6 (Windows/Linux) or Control+Option+Down or Control+Option+Up (Mac) to navigate between calendar groups</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">CalendarWeekNumbering Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using calendarWeekNumbering property to control how calendar weeks are calculated</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="d3a4l5e6n7d8a9r0w1e2e3k4n5u6m7b8">
+                            <div>
+                                <ui5-label>Default Week Numbering</ui5-label>
+                                <ui5-calendar hide-week-numbers="false" calendar-week-numbering="Default"></ui5-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Selection-change event demonstration
+        const eventCal = document.getElementById('event-cal');
+        const eventResult = document.getElementById('event-result');
+        
+        if (eventCal && eventResult) {
+            eventCal.addEventListener('selection-change', (e) => {
+                const selectedValues = e.detail.selectedValues;
+                eventResult.textContent = `Selected: ${selectedValues.join(', ')}`;
+            });
+        }
+
+        // Show-month-view event demonstration
+        const monthViewCal = document.getElementById('month-view-cal');
+        const monthViewResult = document.getElementById('month-view-result');
+        let monthViewCount = 0;
+        
+        if (monthViewCal && monthViewResult) {
+            monthViewCal.addEventListener('show-month-view', () => {
+                monthViewCount++;
+                monthViewResult.textContent = `Event count: ${monthViewCount}`;
+            });
+        }
+
+        // Show-year-view event demonstration
+        const yearViewCal = document.getElementById('year-view-cal');
+        const yearViewResult = document.getElementById('year-view-result');
+        let yearViewCount = 0;
+        
+        if (yearViewCal && yearViewResult) {
+            yearViewCal.addEventListener('show-year-view', () => {
+                yearViewCount++;
+                yearViewResult.textContent = `Event count: ${yearViewCount}`;
+            });
+        }
+
+        // Show-year-range-view event demonstration
+        const yearRangeViewCal = document.getElementById('year-range-view-cal');
+        const yearRangeViewResult = document.getElementById('year-range-view-result');
+        let yearRangeViewCount = 0;
+        
+        if (yearRangeViewCal && yearRangeViewResult) {
+            yearRangeViewCal.addEventListener('show-year-range-view', () => {
+                yearRangeViewCount++;
+                yearRangeViewResult.textContent = `Event count: ${yearRangeViewCount}`;
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
