@@ -49,6 +49,7 @@ describe("General events interactions", () => {
 			.shadow()
 			.find(".ui5-switch-root")
 			.focus()
+			.should("be.focused")
 			.realPress("Space");
 
     cy.get("@changed")
@@ -224,4 +225,5 @@ describe("General interactions in form", () => {
 
 		cy.get("#requiredTestSwitch:invalid").should("not.exist", "Checked required Switch should not have :invalid CSS class");
 	});
+
 });
