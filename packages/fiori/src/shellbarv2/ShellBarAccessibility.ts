@@ -1,4 +1,12 @@
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base";
+import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
+
+/**
+ * Accessibility attributes for logo area (legacy)
+ */
+type ShellBarV2LogoAccessibilityAttributes = {
+	role?: Extract<AriaRole, "button" | "link">;
+	name?: string;
+};
 
 /**
  * Accessibility attributes for profile area
@@ -14,6 +22,7 @@ type ShellBarV2AreaAccessibilityAttributes = Pick<AccessibilityAttributes, "hasP
  * Top-level accessibility configuration for ShellBarV2
  */
 type ShellBarV2AccessibilityAttributes = {
+	logo?: ShellBarV2LogoAccessibilityAttributes;
 	notifications?: ShellBarV2AreaAccessibilityAttributes;
 	profile?: ShellBarV2ProfileAccessibilityAttributes;
 	product?: ShellBarV2AreaAccessibilityAttributes;
@@ -147,6 +156,7 @@ export type {
 	ShellBarV2AccessibilityParams,
 	ShellBarV2AreaAccessibilityInfo,
 	ShellBarV2AccessibilityAttributes,
+	ShellBarV2LogoAccessibilityAttributes,
 	ShellBarV2AreaAccessibilityAttributes,
 	ShellBarV2ProfileAccessibilityAttributes,
 };

@@ -22,9 +22,11 @@ import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/grid.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
+import Menu from "@ui5/webcomponents/dist/Menu.js";
 
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
+import shellBarV2LegacyStyles from "./generated/themes/ShellBarV2Legacy.css.js";
 
 import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchController.js";
 
@@ -36,6 +38,7 @@ import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
+import ShellBarV2Legacy from "./shellbarv2/ShellBarLegacy.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
@@ -46,6 +49,7 @@ import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflow.js"
 import type {
 	ShellBarV2AccessibilityAttributes,
 	ShellBarV2AccessibilityInfo,
+	ShellBarV2LogoAccessibilityAttributes,
 	ShellBarV2ProfileAccessibilityAttributes,
 	ShellBarV2AreaAccessibilityAttributes,
 } from "./shellbarv2/ShellBarAccessibility.js";
@@ -94,6 +98,18 @@ type ShellBarV2ContentItemVisibilityChangeEventDetail = {
 	items: Array<HTMLElement>;
 };
 
+/* =============================================================================
+Legacy Event Types (DELETE WHEN REMOVING LEGACY)
+================================================================================ */
+
+type ShellBarV2LogoClickEventDetail = {
+	targetRef: HTMLElement;
+};
+
+type ShellBarV2MenuItemClickEventDetail = {
+	item: HTMLElement;
+};
+
 interface IShellBarSearchField extends HTMLElement {
 	focused: boolean;
 	value: string;
@@ -118,7 +134,7 @@ interface IShellBarSearchField extends HTMLElement {
  */
 @customElement({
 	tag: "ui5-shellbar-v2",
-	styles: shellBarV2Styles,
+	styles: [shellBarV2Styles, shellBarV2LegacyStyles],
 	renderer: jsxRenderer,
 	template: ShellBarV2Template,
 	fastNavigation: true,
@@ -131,6 +147,7 @@ interface IShellBarSearchField extends HTMLElement {
 		ShellBarSpacer,
 		ShellBarV2Item,
 		ListItemStandard,
+		Menu,
 	],
 })
 /**
@@ -147,6 +164,7 @@ interface IShellBarSearchField extends HTMLElement {
  * @public
  */
 @event("notifications-click", {
+	cancelable: true,
 	bubbles: true,
 })
 /**
@@ -163,6 +181,7 @@ interface IShellBarSearchField extends HTMLElement {
  * @public
  */
 @event("product-switch-click", {
+	cancelable: true,
 	bubbles: true,
 })
 /**
@@ -200,6 +219,26 @@ interface IShellBarSearchField extends HTMLElement {
 @event("content-item-visibility-change", {
 	bubbles: true,
 })
+/* =============================================================================
+Legacy Events (DELETE WHEN REMOVING LEGACY)
+================================================================================ */
+/**
+ * Fired when the logo is clicked.
+ * @param {HTMLElement} targetRef dom ref of the logo element
+ * @public
+ */
+@event("logo-click", {
+	bubbles: true,
+})
+/**
+ * Fired when a menu item is clicked.
+ * @param {HTMLElement} item DOM ref of the activated list item
+ * @public
+ */
+@event("menu-item-click", {
+	cancelable: true,
+	bubbles: true,
+})
 class ShellBarV2 extends UI5Element {
 	eventDetails!: {
 		"menu-button-click": ShellBarV2MenuButtonClickEventDetail;
@@ -210,6 +249,9 @@ class ShellBarV2 extends UI5Element {
 		"search-field-toggle": ShellBarV2SearchFieldToggleEventDetail;
 		"search-field-clear": ShellBarV2SearchFieldClearEventDetail;
 		"content-item-visibility-change": ShellBarV2ContentItemVisibilityChangeEventDetail;
+		/* Legacy Events (DELETE WHEN REMOVING LEGACY) */
+		"logo-click": ShellBarV2LogoClickEventDetail;
+		"menu-item-click": ShellBarV2MenuItemClickEventDetail;
 	};
 
 	/**
@@ -306,26 +348,6 @@ class ShellBarV2 extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	showSearchField = false;
-
-	/**
-	 * Hides the search button.
-	 * Only applies to legacy search fields (ui5-input, custom div).
-	 * For self-collapsible search (ui5-shellbar-search), use the search field's own collapsed state.
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	hideSearchButton = false;
-
-	/**
-	 * Disables automatic search field collapse when space is limited.
-	 * Only applies to legacy search fields (ui5-input, custom div).
-	 * Self-collapsible search (ui5-shellbar-search) manages its own state.
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	disableSearchCollapse = false;
 
 	/**
 	 * Defines accessibility attributes for different areas of the component.
@@ -437,10 +459,79 @@ class ShellBarV2 extends UI5Element {
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
 
-	/* ------------- Lifecycle Methods -------------- */
+	/* =========================================================================
+    Legacy Members
+	============================================================================ */
+
+	/**
+	 * Defines the logo slot (legacy).
+	 * For new implementations, use the branding slot.
+	 * @public
+	 */
+	@slot()
+	logo!: Array<HTMLElement>;
+
+	/**
+	 * Defines the menu items slot (legacy).
+	 * @public
+	 */
+	@slot()
+	menuItems!: Array<HTMLElement>;
+
+	/**
+	 * Hides the search button.
+	 * Only applies to legacy search fields (ui5-input, custom div).
+	 * For self-collapsible search (ui5-shellbar-search), use the search field's own collapsed state.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideSearchButton = false;
+
+	/**
+	 * Disables automatic search field collapse when space is limited.
+	 * Only applies to legacy search fields (ui5-input, custom div).
+	 * Self-collapsible search (ui5-shellbar-search) manages its own state.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	disableSearchCollapse = false;
+
+	/**
+	 * Defines the primary title (legacy).
+	 * For new implementations, use the branding slot.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	primaryTitle?: string;
+
+	/**
+	 * Defines the secondary title (legacy).
+	 * For new implementations, use the branding slot.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	secondaryTitle?: string;
+
+	/**
+	 * Open state of the menu popover (legacy).
+	 * @private
+	 */
+	@property({ type: Boolean })
+	menuPopoverOpen = false;
+
+	legacyAdaptor?: ShellBarV2Legacy;
+
+	/* =========================================================================
+    Lifecycle Methods
+	============================================================================ */
 
 	onEnterDOM() {
 		this.initSearchController();
+		this.initLegacyController();
 		ResizeHandler.register(this, this.handleResizeBound);
 		this.searchAdaptor?.subscribe();
 	}
@@ -448,6 +539,7 @@ class ShellBarV2 extends UI5Element {
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
 		this.searchAdaptor?.unsubscribe();
+		this.legacyAdaptor?.unsubscribe();
 	}
 
 	onBeforeRendering() {
@@ -468,9 +560,9 @@ class ShellBarV2 extends UI5Element {
 		this.updateOverflow();
 	}
 
-	/* ------------- End of Lifecycle Methods -------------- */
-
-	/* ------------- Actions Management -------------- */
+	/* =========================================================================
+    Actions Management
+	============================================================================ */
 
 	/**
 	 * Updates actions by delegating to controller.
@@ -488,9 +580,9 @@ class ShellBarV2 extends UI5Element {
 		this.actions = this.actionsAdaptor.getActions(params);
 	}
 
-	/* ------------- End of Actions Management -------------- */
-
-	/* ------------- Breakpoint Management -------------- */
+	/* =========================================================================
+    Breakpoint Management
+	============================================================================ */
 	/**
 	 * Updates the breakpoint by delegating calculation to controller.
 	 * This is the coordination logic - gather data, delegate, apply result.
@@ -504,9 +596,9 @@ class ShellBarV2 extends UI5Element {
 		}
 	}
 
-	/* ------------- End of Breakpoint Management -------------- */
-
-	/* ------------- Notifications Management -------------- */
+	/* =========================================================================
+    Notifications Management
+	============================================================================ */
 
 	_handleNotificationsClick() {
 		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-notifications-button");
@@ -514,9 +606,10 @@ class ShellBarV2 extends UI5Element {
 			this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
 		}
 	}
-	/* ------------- End of Notifications Management -------------- */
 
-	/* ------------- Profile Management -------------- */
+	/* =========================================================================
+    Profile Management
+	============================================================================ */
 
 	_handleProfileClick() {
 		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-profile-button");
@@ -524,9 +617,10 @@ class ShellBarV2 extends UI5Element {
 			this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
 		}
 	}
-	/* ------------- End of Profile Management -------------- */
 
-	/* ------------- Product Switch Management -------------- */
+	/* =========================================================================
+    Product Switch Management
+	============================================================================ */
 
 	_handleProductSwitchClick() {
 		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-product-switch-button");
@@ -534,9 +628,10 @@ class ShellBarV2 extends UI5Element {
 			this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
 		}
 	}
-	/* ------------- End of Product Switch Management -------------- */
 
-	/* ------------- Overflow Management -------------- */
+	/* =========================================================================
+    Overflow Management
+	============================================================================ */
 
 	/**
 	 * Updates overflow by delegating to controller.
@@ -622,6 +717,14 @@ class ShellBarV2 extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
+	/**
+	 * Closes the overflow popover.
+	 * @public
+	 */
+	closeOverflow(): void {
+		this.overflowPopoverOpen = false;
+	}
+
 	handleOverflowItemClick(e: Event) {
 		const target = e.currentTarget as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
@@ -636,9 +739,9 @@ class ShellBarV2 extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
-	/* ------------- End of Overflow Management -------------- */
-
-	/* ------------- Search Management -------------- */
+	/* =========================================================================
+    Search Management
+	============================================================================ */
 
 	/**
 	 * Initialize the appropriate search controller based on search field type.
@@ -722,17 +825,41 @@ class ShellBarV2 extends UI5Element {
 		}
 	}
 
-	/* ------------- End of Search Management -------------- */
+	/* =========================================================================
+    Legacy Features Management
+	============================================================================ */
 
-	/* ------------- Keyboard Navigation -------------- */
+	/**
+	 * Initialize the legacy controller if legacy features are used.
+	 */
+	private initLegacyController() {
+		if (this.hasLegacyFeatures) {
+			this.legacyAdaptor = new ShellBarV2Legacy({
+				component: this,
+				getShadowRoot: () => this.shadowRoot,
+			});
+			this.legacyAdaptor.subscribe();
+		}
+	}
+
+	get hasLegacyFeatures(): boolean {
+		return this.logo.length > 0
+			|| !!this.primaryTitle
+			|| !!this.secondaryTitle
+			|| this.menuItems.length > 0;
+	}
+
+	/* =========================================================================
+    Keyboard Navigation
+	============================================================================ */
 
 	_onKeyDown(e: KeyboardEvent) {
 		this.itemNavigation.handleKeyDown(e);
 	}
 
-	/* ------------- End of Keyboard Navigation -------------- */
-
-	/* ------------- Common Methods -------------- */
+	/* =========================================================================
+    Common Methods
+	============================================================================ */
 
 	getCSSVariable(cssVar: string): string {
 		const styleSet = getComputedStyle(this.getDomRef()!);
@@ -808,9 +935,9 @@ class ShellBarV2 extends UI5Element {
 		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-search-button");
 	}
 
-	/* ------------- End of Common Methods -------------- */
-
-	/* ------------- Content Management -------------- */
+	/* =========================================================================
+    Content Management
+	============================================================================ */
 
 	get startContent(): HTMLElement[] {
 		return this.contentAdaptor.splitContent(this.content).start;
@@ -841,9 +968,9 @@ class ShellBarV2 extends UI5Element {
 		);
 	}
 
-	/* ------------- End of Content Management -------------- */
-
-	/* ------------- Accessibility -------------- */
+	/* =========================================================================
+    Accessibility
+	============================================================================ */
 
 	/**
 	 * Returns accessibility info for all interactive areas.
@@ -869,7 +996,7 @@ class ShellBarV2 extends UI5Element {
 		return this.accessibilityAdaptor.getActionsRole(visibleCount);
 	}
 
-	get contentRole() {
+	get contentRole(): "group" | undefined {
 		const visibleItemsCount = this.content.filter(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)).length;
 		return this.accessibilityAdaptor.getContentRole(visibleItemsCount);
 	}
@@ -904,7 +1031,12 @@ class ShellBarV2 extends UI5Element {
 		return this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined;
 	}
 
-	/* ------------- End of Accessibility -------------- */
+	/**
+	 * Used by overflow popover and legacy menu popover.
+	 */
+	get popoverHorizontalAlign(): "Start" | "End" {
+		return this.effectiveDir === "rtl" ? "Start" : "End";
+	}
 }
 
 ShellBarV2.define();
@@ -914,8 +1046,10 @@ export type {
 	ShellBarV2MenuButtonClickEventDetail,
 	ShellBarV2NotificationsClickEventDetail,
 	ShellBarV2ProfileClickEventDetail,
+	ShellBarV2ProductSwitchClickEventDetail,
 	ShellBarV2SearchButtonClickEventDetail,
 	ShellBarV2SearchFieldToggleEventDetail,
+	ShellBarV2SearchFieldClearEventDetail,
 	ShellBarV2ContentItemVisibilityChangeEventDetail,
 	IShellBarSearchField,
 	ShellBarV2Breakpoint,
@@ -923,4 +1057,8 @@ export type {
 	ShellBarV2AccessibilityInfo,
 	ShellBarV2ProfileAccessibilityAttributes,
 	ShellBarV2AreaAccessibilityAttributes,
+	/* Legacy Types (DELETE WHEN REMOVING LEGACY) */
+	ShellBarV2LogoClickEventDetail,
+	ShellBarV2MenuItemClickEventDetail,
+	ShellBarV2LogoAccessibilityAttributes,
 };

@@ -46,7 +46,7 @@
 	<p style="color: var(--sapTextColor);"><strong>Keyboard navigation:</strong> Use Arrow Left/Right to navigate between items. Home/End to jump to first/last item.</p>
 	<p style="color: var(--sapTextColor);"><strong>Full-screen search:</strong> When overflow happens and search is visible, full-screen search overlay appears. Click Cancel to close.</p>
 
-	<!-- <h2 style="color: var(--sapTextColor);">Search Collapsed by Default</h2>
+	<h2 style="color: var(--sapTextColor);">Search Collapsed by Default</h2>
 	<ui5-shellbar-v2 id="shellbar-2">
 		<ui5-button slot="startButton" icon="menu"></ui5-button>
 		<ui5-shellbar-branding slot="branding">
@@ -86,6 +86,26 @@
 		<ui5-button slot="content" icon="add"></ui5-button>
 		<ui5-button slot="content" icon="edit"></ui5-button>
 	</ui5-shellbar-v2>
+
+	<h2 style="color: var(--sapTextColor);">Legacy Features - Logo + Titles</h2>
+	<ui5-shellbar-v2 id="shellbar-legacy-1" primary-title="Legacy Application" secondary-title="Version 1.0">
+		<ui5-button slot="startButton" icon="menu"></ui5-button>
+		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" style="height: 2rem;" />
+		<ui5-button slot="content" design="Transparent">Home</ui5-button>
+		<ui5-avatar slot="profile" initials="AB" size="XS"></ui5-avatar>
+	</ui5-shellbar-v2>
+	<p style="color: var(--sapTextColor);"><em>Using legacy primaryTitle/secondaryTitle properties and logo slot instead of branding component.</em></p>
+
+	<h2 style="color: var(--sapTextColor);">Legacy Features - Menu Items</h2>
+	<ui5-shellbar-v2 id="shellbar-legacy-2" primary-title="With Menu">
+		<ui5-button slot="startButton" icon="menu"></ui5-button>
+		<ui5-li slot="menuItems">Dashboard</ui5-li>
+		<ui5-li slot="menuItems">Reports</ui5-li>
+		<ui5-li slot="menuItems">Settings</ui5-li>
+		<ui5-button slot="content" design="Transparent">Action 1</ui5-button>
+		<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+	</ui5-shellbar-v2>
+	<p style="color: var(--sapTextColor);"><em>Using legacy menuItems slot. Click menu button on S breakpoint to see menu popover.</em></p>
 
 	<div id="log" style="margin-top: 2rem; padding: 1rem; border-radius: 0.25rem;">
 		<h3 style="color: var(--sapTextColor);">Event Log</h3>
@@ -138,6 +158,17 @@
 			log('Search field cleared (full-screen cancel clicked)');
 			console.log('Search field clear:', e.detail);
 		});
+
+		shellbar.addEventListener('logo-click', (e) => {
+			log('Logo clicked (legacy feature)');
+			console.log('Logo clicked:', e.detail);
+		});
+
+		shellbar.addEventListener('menu-item-click', (e) => {
+			const itemText = e.detail.item.textContent;
+			log(`Menu item clicked: ${itemText} (legacy feature)`);
+			console.log('Menu item clicked:', e.detail);
+		});
 	});
 
 	// Listen for custom item clicks
@@ -148,7 +179,7 @@
 			console.log('Custom item clicked:', e.detail);
 		});
 	});
-	</script> -->
+	</script>
 </body>
 
 </html>

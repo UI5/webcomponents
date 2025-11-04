@@ -16,6 +16,12 @@ import {
 	ShellBarV2SearchFieldFullWidth as ShellBarV2SearchFieldFullWidthLegacy,
 } from "./shellbarv2/ShellBarSearchLegacyTemplate.js";
 
+import {
+	ShellBarV2LegacyBrandingArea,
+	ShellBarV2MenuButton,
+	ShellBarV2MenuPopover,
+} from "./shellbarv2/ShellBarLegacyTemplate.js";
+
 export default function ShellBarV2Template(this: ShellBarV2) {
 	const isLegacySearch = !this.isSelfCollapsibleSearch;
 
@@ -30,6 +36,9 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 				<div class="ui5-shellbar-wrapper">
 
+					{/* Menu button (legacy, S breakpoint only) */}
+					{ShellBarV2MenuButton.call(this)}
+
 					{this.hasStartButton && (
 						<div class="ui5-shellbar-start-button">
 							<slot name="startButton"></slot>
@@ -41,6 +50,9 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							<slot name="branding"></slot>
 						</div>
 					)}
+
+					{/* Legacy branding (logo + titles) */}
+					{ShellBarV2LegacyBrandingArea.call(this)}
 
 					<div class="ui5-shellbar-overflow-container">
 						<div class="ui5-shellbar-overflow-container-inner">
@@ -178,6 +190,9 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 				</div>
 			</header>
+
+			{/* Menu Popover (legacy) */}
+			{ShellBarV2MenuPopover.call(this)}
 
 			{/* Overflow Popover */}
 			<Popover
