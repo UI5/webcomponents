@@ -5,6 +5,7 @@ import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	WRITING_ASSISTANT_LABEL,
@@ -14,6 +15,7 @@ import {
 	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
 	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
 	WRITING_ASSISTANT_BUTTON_TOOLTIP,
+	WRITING_ASSISTANT_STOP_TOOLTIP,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -114,7 +116,7 @@ class WritingAssistant extends UI5Element {
 	loading = false;
 
 	/**
-	 * Defines the action text of the AI Writing Assistant.
+	 * Defines the prompt description of the Writing Assistant.
 	 *
 	 * This text is displayed in the toolbar to indicate the current or last
 	 * performed AI action (e.g., "Generated text", "Simplified text").
@@ -123,35 +125,39 @@ class WritingAssistant extends UI5Element {
 	 * @public
 	 */
 	@property()
-	actionText = "";
+	promptDescription = "";
 
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
+	 * The index is **0-based** (i.e. `0` represents the first result).
 	 * This property is synchronized with the parent AI TextArea component.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 * @since 2.16.0
 	 */
 	@property({ type: Number })
-	currentVersionIndex = 1;
+	currentVersion = 0;
 
 	/**
 	 * Indicates the total number of result versions available.
 	 *
 	 * This property determines whether version navigation controls are displayed.
-	 * When totalVersions > 1, previous/next buttons become available.
+	 * When totalVersions > 0, previous/next buttons become available.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	totalVersions = 1;
+	totalVersions = 0;
 
 	@i18n("@ui5/webcomponents-ai")
 	static i18nBundleAi: I18nBundle;
+
+	static async onDefine() {
+		WritingAssistant.i18nBundleAi = await getI18nBundle("@ui5/webcomponents-ai");
+	}
 
 	/**
 	 * Handles the version change event from the versioning component.
@@ -197,6 +203,10 @@ class WritingAssistant extends UI5Element {
 
 	get _buttonTooltip() {
 		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP);
+	}
+
+	get _stopTooltip() {
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_STOP_TOOLTIP);
 	}
 }
 

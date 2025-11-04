@@ -65,21 +65,10 @@
 		<ui5-ai-textarea
 			id="ai-textarea"
 			value="Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
-			action-text=""
-			current-version-index="1"
-			total-versions="1"
 			rows="8"
 			placeholder="Write your content here...">
 
-			<ui5-menu slot="menu" id="ai-menu" data-completed-label="Generation complete">
-				<ui5-menu-item text="Generate text" data-action="generate"></ui5-menu-item>
-				<ui5-menu-item text="Simplify" data-action="simplify" starts-section></ui5-menu-item>
-				<ui5-menu-item text="Expand" data-action="expand"></ui5-menu-item>
-				<ui5-menu-item text="Rephrase" data-action="rephrase"></ui5-menu-item>
-				<ui5-menu-item text="Summarize" data-action="summarize"></ui5-menu-item>
-				<ui5-menu-item text="Make bullet list" data-action="bullets" starts-section></ui5-menu-item>
-				<ui5-menu-item text="Translate to German" data-action="translate-de"></ui5-menu-item>
-			</ui5-menu>
+			<ui5-menu slot="menu" id="ai-menu"></ui5-menu>
 		</ui5-ai-textarea>
 
 		<div class="demo-controls">
@@ -103,7 +92,7 @@
 			
 			<strong>Generation Behavior:</strong><br>
 			• Selecting a new action while generating will stop current generation<br>
-			• Stopped generations are saved as versions with "(stopped)" suffix<br>
+			• Cancelled generations restore previous content and are not saved to history<br>
 			• History is limited to 50 versions to prevent memory issues
 		</div>
 	</div>
@@ -111,30 +100,76 @@
 	<script>
 		'use strict';
 
-		// Sample texts for different actions
+		// Sample AI responses for different actions (replace with actual API responses)
 		const SAMPLE_TEXTS = {
-			generate: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
-			simplify: "Innovation managers use creativity and business skills to promote innovation and create value for organizations and customers.",
-			expand: "Innovation managers play a pivotal role in modern organizations by seamlessly blending creative thinking with strategic business acumen. They are responsible not only for generating innovative ideas but also for fostering a comprehensive culture that encourages experimentation, collaboration, and out-of-the-box thinking among all team members. These professionals work diligently to identify opportunities for improvement, anticipate emerging market trends, and develop solutions that align perfectly with both organizational goals and evolving customer needs.",
-			rephrase: "Innovation managers leverage creativity and business expertise to foster a culture of innovation, simplify the process of implementing new ideas, and create value for both the organization and its customers.",
-			summarize: "Innovation managers blend creativity and business skills to foster innovation and create value.",
-			bullets: "Innovation managers:\n• Operate with creativity and business acumen\n• Drive innovation-friendly culture initiatives\n• Streamline new idea execution\n• Unlock organizational and customer value",
-			"translate-de": "Innovationsmanager arbeiten sowohl mit Kreativität als auch mit Geschäftssinn und treiben Initiativen voran, die eine innovationsfreundliche Kultur fördern."
+			en: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
+			bg: "Мениджърите по иновации действат с креативност и бизнес усет, като насърчават инициативи, които изграждат култура, благоприятстваща иновациите, улесняват реализирането на нови идеи и в крайна сметка създават стойност за организацията и нейните клиенти.",
+			de: "Innovationsmanager agieren mit sowohl Kreativität als auch unternehmerischem Geschick. Sie treiben Initiativen voran, die eine innovationsfreundliche Unternehmenskultur fördern, die Umsetzung neuer Ideen optimieren und letztlich Mehrwert für das Unternehmen und seine Kunden schaffen.",
+			bulleted: `Innovation managers:
+• Operate with creativity and business acumen
+• Drive initiatives that cultivate an innovation-friendly culture
+• Streamline the execution of new ideas
+• Unlock value for the organization and its customers`,
+			expanded: "Innovation managers play a pivotal role in organizations by blending creativity with strategic business acumen. They are not just responsible for generating innovative ideas but also for fostering a culture that encourages experimentation, collaboration, and out-of-the-box thinking among teams. These professionals work tirelessly to identify opportunities for improvement, anticipate market trends, and develop solutions that align with the organization's goals and customer needs. In their efforts to promote an innovation-friendly environment, they implement frameworks and processes that remove barriers to creativity, making it easier for teams to brainstorm, prototype, and refine new concepts. Beyond idea generation, innovation managers ensure that these ideas are systematically evaluated and effectively executed, transforming them into tangible value propositions. This requires them to bridge the gap between visionary thinking and practical implementation, often by collaborating with cross-functional teams, securing resources, and navigating organizational dynamics. Ultimately, the work of innovation managers unlocks significant value, driving growth, enhancing customer satisfaction, and ensuring the organization remains competitive in a rapidly evolving landscape. Their dual focus on creativity and business results positions them as key drivers of sustainable innovation and long-term success.",
+			simplified: "Innovation managers use creativity and business skills to promote innovation, simplify the development of new ideas, and deliver value to the organization and its customers.",
+			summarized: "Innovation managers blend creativity and business skills to foster innovation, simplify idea implementation, and create value for organizations and customers."
 		};
 
-		const CONFIG = {
-			GENERATION_DELAY: 2000, // Milliseconds to simulate AI processing time
-			TYPING_SPEED: 25, // Milliseconds between each character during typing animation
-			VERSION_INDEX_BASE: 1, // 1-based indexing for version numbers
-			MAX_HISTORY: 50 // Maximum number of versions to keep in history
+		const TIMING_CONFIG = {
+			processingDelay: 3000,      // Milliseconds to simulate AI processing time
+			typingSpeed: 10             // Milliseconds between each character in typing animation
 		};
 
-		let currentVersions = [];
-		let currentVersionIndex = 0;
-		let isGenerating = false;
-		let currentGenerationId = 0; // Used to cancel stale generation runs
+		// Configuration for AI action menu - customize this to add/remove AI capabilities
+		const MENU_CONFIG = [
+			{
+				text: "Regenerate",
+				action: "regenerate",
+				processingLabel: "Regenerating text...",
+				completedLabel: "Regenerated text",
+				textKey: "en",
+				replaces: "generate"
+			},
+			{
+				text: "Fix spelling and grammar",
+				action: "fixSpelling",
+				processingLabel: "Fixing spelling and grammar...",
+				completedLabel: "Fixed spelling and grammar",
+				textKey: "en",
+				startsSection: true
+			},
+			{
+				text: "Rewrite text",
+				children: [
+					{ text: "Simplify", action: "simplify", processingLabel: "Simplifying text...", completedLabel: "Simplified text", textKey: "simplified" },
+					{ text: "Expand", action: "expand", processingLabel: "Expanding text...", completedLabel: "Expanded text", textKey: "expanded" },
+					{ text: "Summarize", action: "summarize", processingLabel: "Summarizing text...", completedLabel: "Summarized text", textKey: "summarized" }
+				]
+			},
+			{
+				text: "Make bulleted list",
+				action: "bullets",
+				processingLabel: "Making bulleted list...",
+				completedLabel: "Made bulleted list",
+				textKey: "bulleted"
+			},
+			{
+				text: "Translate",
+				children: [
+					{ text: "English", action: "translateEN", processingLabel: "Translating to English...", completedLabel: "Translated to English", textKey: "en" },
+					{ text: "German", action: "translateDE", processingLabel: "Translating to German...", completedLabel: "Translated to German", textKey: "de" },
+					{ text: "Bulgarian", action: "translateBG", processingLabel: "Translating to Bulgarian...", completedLabel: "Translated to Bulgarian", textKey: "bg" }
+				]
+			}
+		];
+
+		// State management for version control and operations
+		let versionHistory = [];
+		let currentIndexHistory = 0;
 		let currentActionInProgress = null;
 		let typingInterval = null;
+		let currentGenerationIndex = 0;
+		let contentBeforeGeneration = "";
 
 		const textarea = document.getElementById('ai-textarea');
 		const menu = document.getElementById('ai-menu');
@@ -146,182 +181,220 @@
 			return new Promise(resolve => setTimeout(resolve, ms));
 		}
 
-		function typeText(text, callback) {
-			let index = 0;
-			textarea.value = '';
-			
-			typingInterval = setInterval(() => {
-				if (index < text.length) {
-					textarea.value += text[index];
-					index++;
-				} else {
-					clearInterval(typingInterval);
-					typingInterval = null;
-					callback();
-				}
-			}, CONFIG.TYPING_SPEED);
+		function saveCurrentVersion() {
+			if (versionHistory.length > 0 && versionHistory[currentIndexHistory]) {
+				versionHistory[currentIndexHistory].value = textarea.value;
+			}
 		}
 
-		function stopTyping() {
+		function updateComponentState(versionIndex = null) {
+			if (versionIndex !== null && versionHistory[versionIndex]) {
+				currentIndexHistory = versionIndex;
+				textarea.value = versionHistory[versionIndex].value;
+			}
+
+			textarea.currentVersion = currentIndexHistory;
+			textarea.totalVersions = versionHistory.length;
+
+			if (versionHistory[currentIndexHistory]) {
+				textarea.promptDescription = versionHistory[currentIndexHistory].endAction;
+			} else {
+				textarea.promptDescription = "";
+			}
+		}
+
+		function createMenuItem(configItem) {
+			const item = document.createElement('ui5-menu-item');
+			item.setAttribute('text', configItem.text || '');
+
+			if (configItem.action) {
+				item.dataset.action = configItem.action;
+
+				if (configItem.processingLabel) {
+					item.dataset.processingLabel = configItem.processingLabel;
+				}
+
+				if (configItem.completedLabel) {
+					item.dataset.completedLabel = configItem.completedLabel;
+				}
+
+				if (configItem.textKey) {
+					item.dataset.textKey = configItem.textKey;
+				}
+			}
+
+			if (configItem.startsSection) {
+				item.setAttribute('starts-section', '');
+			}
+
+			return item;
+		}
+
+		function buildMenuFromConfig() {
+			const hasHistory = versionHistory.length > 0;
+
+			menu.innerHTML = '';
+			
+			if (!hasHistory) {
+				const generateItem = document.createElement('ui5-menu-item');
+				generateItem.setAttribute('text', 'Generate text');
+				generateItem.dataset.action = 'generate';
+				generateItem.dataset.processingLabel = 'Generating...';
+				generateItem.dataset.completedLabel = 'Generated text';
+				generateItem.dataset.textKey = 'generateText';
+				menu.appendChild(generateItem);
+			}
+
+			MENU_CONFIG.forEach(configItem => {
+				if (configItem.replaces && !hasHistory) {
+					return;
+				}
+
+				if (configItem.children && Array.isArray(configItem.children)) {
+					const group = createMenuItem(configItem);
+					configItem.children.forEach(child => {
+						const childItem = createMenuItem(child);
+						group.appendChild(childItem);
+					});
+					menu.appendChild(group);
+				} else {
+					menu.appendChild(createMenuItem(configItem));
+				}
+			});
+		}
+
+		function stopTypingAnimation() {
 			if (typingInterval) {
 				clearInterval(typingInterval);
 				typingInterval = null;
 			}
 		}
 
-		function updateVersionState() {
-			textarea.currentVersionIndex = currentVersionIndex + 1;
-			textarea.totalVersions = currentVersions.length;
-			
-			if (currentVersions.length > 0) {
-				textarea.actionText = currentVersions[currentVersionIndex].actionText;
-			}
+		function completeGeneration(action, menuItem) {
+			stopTypingAnimation();
+			const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
+
+			versionHistory.push({
+				value: textarea.value,
+				action,
+				endAction: completedLabel,
+				timestamp: new Date().toISOString()
+			});
+
+			currentIndexHistory = versionHistory.length - 1;
+			currentActionInProgress = null;
+
+			buildMenuFromConfig();
+			updateComponentState();
+			textarea.loading = false;
 		}
 
-		async function simulateAIGeneration(action) {
-			if (isGenerating) {
-				// If already generating, stop the current generation
-				stopGeneration();
-				return;
-			}
-			
-			if (!action || !SAMPLE_TEXTS.hasOwnProperty(action)) {
-				console.warn('Invalid action provided:', action);
-				return;
-			}
+		function animateTextGeneration(text, action, menuItem) {
+			return new Promise(resolve => {
+				const chars = text.split('');
+				let i = 0;
+				textarea.value = "";
+				textarea.loading = true;
 
-			isGenerating = true;
-			currentActionInProgress = action;
-			currentGenerationId++;
-			const generationIdForThisRun = currentGenerationId;
-			
-			const actionText = getActionText(action);
-			
-			textarea.loading = true;
-			textarea.actionText = `${actionText}...`;
-
-			try {
-				await delay(CONFIG.GENERATION_DELAY);
-				
-				// Check if generation was cancelled while waiting
-				if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
-					resetGenerationState();
-					return;
-				}
-				
-				const resultText = SAMPLE_TEXTS[action] || SAMPLE_TEXTS.generate;
-				
-				await new Promise(resolve => {
-					typeText(resultText, () => {
-						// Check again if generation was cancelled during typing
-						if (isGenerating && generationIdForThisRun === currentGenerationId) {
-							completeGeneration(action, actionText);
-						}
+				typingInterval = setInterval(() => {
+					if (i < chars.length) {
+						textarea.value += chars[i++];
+					} else {
+						completeGeneration(action, menuItem);
 						resolve();
-					});
-				});
-
-			} catch (error) {
-				resetGenerationState();
-				textarea.actionText = 'Generation failed';
-			}
+					}
+				}, TIMING_CONFIG.typingSpeed);
+			});
 		}
 
-		function getActionText(action) {
-			const actionTexts = {
-				generate: 'Generated text',
-				simplify: 'Simplified text',
-				expand: 'Expanded text', 
-				rephrase: 'Rephrased text',
-				summarize: 'Summarized text',
-				bullets: 'Created bullet list',
-				'translate-de': 'Translated to German'
-			};
-			return actionTexts[action] || 'Generated text';
+		function setLoadingState(promptDescription) {
+			textarea.loading = true;
+			textarea.value = "Analyzing request...";
+			textarea.promptDescription = promptDescription || '';
 		}
 
 		function resetGenerationState() {
-			stopTyping();
-			isGenerating = false;
+			stopTypingAnimation();
 			currentActionInProgress = null;
 			textarea.loading = false;
 		}
 
-		function completeGeneration(action, actionText) {
-			currentVersions.push({
-				text: textarea.value,
-				action: action,
-				actionText: actionText,
-				timestamp: new Date().toISOString()
-			});
-			
-			// Limit history size
-			if (currentVersions.length > CONFIG.MAX_HISTORY) {
-				currentVersions.shift();
-				if (currentVersionIndex > 0) currentVersionIndex--;
+		function findMenuItemByAction(action) {
+			return menu.querySelector(`ui5-menu-item[data-action="${action}"]`);
+		}
+
+		// Main function to execute AI actions - replace the delay/sample logic with actual API calls
+		async function executeAction(action) {
+			if (textarea.loading) {
+				return;
 			}
-			
-			currentVersionIndex = currentVersions.length - 1;
-			resetGenerationState();
-			updateVersionState();
+
+			const menuItem = findMenuItemByAction(action);
+
+			if (!menuItem) {
+				return;
+			}
+
+			const processingLabel = menuItem.dataset.processingLabel || 'Processing...';
+			const textKey = menuItem.dataset.textKey || 'en';
+
+			saveCurrentVersion();
+			contentBeforeGeneration = textarea.value;
+			currentActionInProgress = action;
+			currentGenerationIndex += 1;
+			const generationIdForThisRun = currentGenerationIndex;
+
+			setLoadingState(processingLabel);
+
+			// Replace this delay with actual API call
+			await delay(TIMING_CONFIG.processingDelay);
+
+			if (!textarea.loading || generationIdForThisRun !== currentGenerationIndex) {
+				resetGenerationState();
+				return;
+			}
+
+			const text = SAMPLE_TEXTS[textKey] || SAMPLE_TEXTS.en;
+			await animateTextGeneration(text, action, menuItem);
 		}
 
 		function stopGeneration() {
-			if (!isGenerating) return;
-
-			currentGenerationId++; // Cancel any ongoing generation
-			stopTyping();
-			
-			const action = currentActionInProgress || 'generate';
-			const actionText = getActionText(action);
-			
-			if (textarea.value.trim()) {
-				currentVersions.push({
-					text: textarea.value,
-					action: action,
-					actionText: actionText + ' (stopped)',
-					timestamp: new Date().toISOString()
-				});
-				currentVersionIndex = currentVersions.length - 1;
-				updateVersionState();
+			if (!textarea.loading) {
+				return;
 			}
+
+			stopTypingAnimation();
+			currentGenerationIndex += 1;
 			
-			resetGenerationState();
-		}
+			// Restore the previous content instead of saving the cancelled action
+			textarea.value = contentBeforeGeneration;
+			currentActionInProgress = null;
+			textarea.loading = false;
+			textarea.promptDescription = "";
 
-		function handleMenuItemClick(event) {
-			const action = event.detail.item.dataset.action;
-			if (action) {
-				simulateAIGeneration(action);
-			}
-		}
-
-		// Handle AI button clicks from the WritingAssistant toolbar
-		function handleAIButtonClick() {
-			if (isGenerating) {
-				stopGeneration();
-			} else {
-				// If not generating, focus the menu to allow action selection
-				// This will be handled by the component's built-in functionality
-			}
+			updateComponentState();
 		}
 
 		function handleVersionChange(event) {
-			const { backwards } = event.detail;
-			
-			if (backwards && currentVersionIndex > 0) {
-				currentVersionIndex--;
-				if (currentVersions[currentVersionIndex]) {
-					textarea.value = currentVersions[currentVersionIndex].text;
-					updateVersionState();
-				}
-			} else if (!backwards && currentVersionIndex < currentVersions.length - 1) {
-				currentVersionIndex++;
-				if (currentVersions[currentVersionIndex]) {
-					textarea.value = currentVersions[currentVersionIndex].text;
-					updateVersionState();
-				}
+			const { backwards } = event.detail || {};
+
+			if (backwards && currentIndexHistory > 0) {
+				saveCurrentVersion();
+				updateComponentState(currentIndexHistory - 1);
+			} else if (!backwards && currentIndexHistory < versionHistory.length - 1) {
+				saveCurrentVersion();
+				updateComponentState(currentIndexHistory + 1);
 			}
+		}
+
+		async function handleMenuItemClick(event) {
+			const action = event?.detail?.item?.dataset?.action;
+
+			if (!action) {
+				return;
+			}
+
+			await executeAction(action);
 		}
 
 		function handleStopGeneration() {
@@ -329,28 +402,28 @@
 		}
 
 		function handleKeydown(event) {
-			if (event.key === 'Escape' && isGenerating) {
+			if (event.key === 'Escape' && textarea.loading) {
 				event.preventDefault();
 				stopGeneration();
 			}
 		}
 
 		function resetDemo() {
-			// Stop any ongoing generation
 			stopGeneration();
 			
-			// Reset all state
-			currentVersions = [];
-			currentVersionIndex = 0;
-			currentGenerationId = 0;
+			versionHistory = [];
+			currentIndexHistory = 0;
+			currentGenerationIndex = 0;
 			currentActionInProgress = null;
+			contentBeforeGeneration = "";
 			
-			// Reset component state
 			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
 			textarea.loading = false;
-			textarea.actionText = '';
-			textarea.currentVersionIndex = 1;
-			textarea.totalVersions = 1;
+			textarea.promptDescription = '';
+			textarea.currentVersion = 0;
+			textarea.totalVersions = 0;
+
+			buildMenuFromConfig();
 		}
 
 		function toggleReadonly() {
@@ -363,31 +436,25 @@
 			disabledToggle.textContent = textarea.disabled ? 'Enable Component' : 'Toggle Disabled';
 		}
 
-		// Initialize demo
 		function initDemo() {
-			// Event listeners for menu actions
+			buildMenuFromConfig();
+
 			menu.addEventListener('item-click', handleMenuItemClick);
-			
-			// Event listeners for textarea component
 			textarea.addEventListener('version-change', handleVersionChange);
-			textarea.addEventListener('stop-generation', handleStopGeneration);
-			
-			// Global keyboard shortcuts
+			textarea.addEventListener('stop-generation', handleStopGeneration);			
 			document.addEventListener('keydown', handleKeydown);
 			
 			// Prevent memory leaks on page unload
 			window.addEventListener('beforeunload', () => {
-				stopTyping();
+				stopTypingAnimation();
 				resetGenerationState();
 			});
 			
-			// Demo control buttons
 			resetBtn.addEventListener('click', resetDemo);
 			readonlyToggle.addEventListener('click', toggleReadonly);
 			disabledToggle.addEventListener('click', toggleDisabled);
 		}
 
-		// Start demo when DOM is loaded
 		document.addEventListener('DOMContentLoaded', initDemo);
 	</script>
 </body>
