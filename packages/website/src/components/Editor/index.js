@@ -85,7 +85,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     try {
       const { token, user } = await auth();
 
-      // store authentication data 
+      // store authentication data
       setGithubToken(token);
       setGithubUser(user);
       saveAuthToStorage(token, user);
@@ -94,7 +94,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
       console.error("github authentication failed:", error.message);
       setGithubToken("");
       setGithubUser(null);
- 
+
     } finally {
       setIsAuthenticating(false);
     }
@@ -120,13 +120,13 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
       const files = getSampleFiles();
       const gist = await createGist(githubToken, files);
 
-      // create playground url with gist id 
+      // create playground url with gist id
       const playgroundUrl = `${window.location.origin}${playUrl}/#gist=${gist.id}`;
       setGistUrl(playgroundUrl);
 
       await copyToClipboard(playgroundUrl);
       setCopied(true);
-      
+
       console.log("gist created successfully:", playgroundUrl);
     } catch (error) {
       console.error("failed to create gist:", error.message);
@@ -265,7 +265,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     const files = getSampleFiles();
     const hash = encodeURL(JSON.stringify(files));
     const longURL = new URL(`#${hash}`, window.location.href).href;
-    
+
     setShareBtnToggled(!shareBtnToggled);
     setLongURL(longURL);
   }
@@ -322,7 +322,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
       }
     };
 
-    // process each gist file 
+    // process each gist file
     Object.keys(gistFiles).forEach(filename => {
       const gistFile = gistFiles[filename];
 
@@ -341,7 +341,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
       }
     });
 
-    //  ensure playground support exists 
+    //  ensure playground support exists
     if (!gistConfig.files["playground-support.js"]) {
       gistConfig.files["playground-support.js"] = {
         name: "playground-support.js",
@@ -367,10 +367,10 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
           console.error("No files found in gist.");
           return;
         }
-        
+
         const gistConfig = createGistProjectConfig(gistFiles);
         projectRef.current.config = gistConfig;
-        
+
         if (!projectContainerRef.current.contains(projectRef.current)) {
           projectContainerRef.current.appendChild(projectRef.current);
         }
@@ -378,7 +378,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
       .catch(error => {
         console.log(`Failed fetching gist by id: ${error}. Falling back to default config.`);
         projectRef.current.config = newConfig;
-        
+
         if (!projectContainerRef.current.contains(projectRef.current)) {
           projectContainerRef.current.appendChild(projectRef.current);
         }
@@ -526,7 +526,7 @@ ${fixAssetPaths(_js)}`,
         setCopied(false);
       }, 3000);
     }
-    
+
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -557,7 +557,7 @@ ${fixAssetPaths(_js)}`,
 
   useEffect(() => {
     const authData = validateStoredAuth();
-    
+
     if (authData) {
       setGithubToken(authData.token);
       setGithubUser(authData.user);
@@ -660,8 +660,8 @@ ${fixAssetPaths(_js)}`,
                 Share
               </button>
 
-              <ui5-popover 
-                  header-text="Share Sample" 
+              <ui5-popover
+                  header-text="Share Sample"
                   open={shareBtnToggled ? true : undefined}
                   opener="btnSharePopupOpen"
                   placement="Bottom"
@@ -676,7 +676,7 @@ ${fixAssetPaths(_js)}`,
                       <ui5-input readonly value={longURL}></ui5-input>
                       <ui5-button
                         icon={CopyIcon}
-                        design="Transparent" 
+                        design="Transparent"
                         onClick={() => {
                           navigator.clipboard.writeText(longURL);
                           setCopied(true);
