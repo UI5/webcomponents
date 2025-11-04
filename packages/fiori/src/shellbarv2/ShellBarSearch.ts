@@ -98,6 +98,14 @@ class ShellBarV2Search implements IShellBarSearchController {
 		}
 	}
 
+	/**
+	 * Determines if full-screen search should be shown.
+	 * Full-screen search activates when overflow happens AND search is visible.
+	 */
+	shouldShowFullScreen(): boolean {
+		return this.getOverflowed() && this.getSearchState();
+	}
+
 	private onSearchOpen(e: Event) {
 		if (e.target !== this.getSearchField()) {
 			this.unsubscribe(e.target as HTMLElement);
@@ -157,24 +165,8 @@ class ShellBarV2Search implements IShellBarSearchController {
 	 * If the search field is visible, the size is 0.
 	 * Otherwise, it is the width of the search field (just a button in collapsed state).
 	 */
-	getSearchButtonSize(): number {
+	private getSearchButtonSize(): number {
 		return this.getSearchState() ? 0 : this.getSearchField()?.getBoundingClientRect().width || 0;
-	}
-
-	/**
-	 * Determines if full-screen search should be shown.
-	 * Full-screen search activates when overflow happens AND search is visible.
-	 */
-	shouldShowFullScreen(): boolean {
-		return this.getOverflowed() && this.getSearchState();
-	}
-
-	/**
-	 * Determines if search field should be rendered.
-	 * Returns true if search field exists and should be rendered in the bar (not in full-screen mode).
-	 */
-	shouldRenderSearchField(): boolean {
-		return this.hasSearchField && !this.shouldShowFullScreen();
 	}
 }
 

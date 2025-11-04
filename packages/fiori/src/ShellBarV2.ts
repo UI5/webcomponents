@@ -26,14 +26,15 @@ import "@ui5/webcomponents-icons/dist/overflow.js";
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
 
-import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
-import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
-import ShellBarLegacySearch from "./shellbarv2/ShellBarSearchLegacy.js";
 import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchController.js";
+
+import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
+import ShellBarV2SearchLegacy from "./shellbarv2/ShellBarSearchLegacy.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Content from "./shellbarv2/ShellBarContent.js";
-import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
+import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
+import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
@@ -639,10 +640,6 @@ class ShellBarV2 extends UI5Element {
 
 	/* ------------- Search Management -------------- */
 
-	get renderSearchField() {
-		return this.searchAdaptor?.shouldRenderSearchField() || false;
-	}
-
 	/**
 	 * Initialize the appropriate search controller based on search field type.
 	 * Self-collapsible search (ui5-shellbar-search) → ShellBarV2Search
@@ -659,7 +656,7 @@ class ShellBarV2 extends UI5Element {
 		if (this.isSelfCollapsibleSearch) {
 			this.searchAdaptor = new ShellBarV2Search(deps);
 		} else {
-			this.searchAdaptor = new ShellBarLegacySearch({
+			this.searchAdaptor = new ShellBarV2SearchLegacy({
 				...deps,
 				getDisableSearchCollapse: () => this.disableSearchCollapse,
 			});

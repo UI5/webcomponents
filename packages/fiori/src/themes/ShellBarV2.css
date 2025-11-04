@@ -1,33 +1,97 @@
 @import "./ShellBarV2SearchLegacy.css";
 
-:host {
-	display: block;
+/* ============================================================================
+   HOST & CSS VARIABLES
+   ============================================================================ */
+
+:host(:not([hidden])) {
+	display: inline-block;
 	width: 100%;
-	font-family: var(--sapFontFamily);
-	--_ui5_shellbar_search_field_width: 25rem; /* Min width for search field */
-	--_ui5-shellbar-separator-height: 2rem;
+	max-width: 100%;
+	background: var(--sapShellColor);
+	box-sizing: border-box;
+
+	/* CSS variable overrides for ui5-button */
+	--_ui5_button_base_height: var(--sapElement_Height);
+	--_ui5_button_base_padding: 0.5625rem;
+	--_ui5_button_base_min_width: 2.25rem;
+	--_ui5-button-badge-diameter: 0.75rem;
+
+	/* ShellBar-specific variables */
 	--_ui5-shellbar_separator-color: var(--sapGroup_ContentBorderColor);
+	--_ui5-shellbar-separator-height: 2rem;
+	--_ui5_shellbar_search_field_width: 25rem;
 }
+
+/* ============================================================================
+   ROOT CONTAINER
+   ============================================================================ */
 
 .ui5-shellbar-root {
 	display: flex;
 	align-items: center;
 	height: 2.75rem;
-	background: var(--sapShellColor);
 	box-shadow: inset 0 -0.0625rem var(--sapShell_BorderColor);
 	position: relative;
+	font-size: var(--sapFontSize);
+	font-weight: normal;
 }
 
+/* ============================================================================
+   WRAPPER & MAIN LAYOUT
+   ============================================================================ */
+
 .ui5-shellbar-wrapper {
-	/* prevents flickering when items layout */
-	box-sizing: border-box; 
+	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	padding: 0 1rem;
 	gap: 0.5rem;
 }
+
+/* ============================================================================
+   SLOTTED BUTTONS (General Styles)
+   ============================================================================ */
+
+::slotted([ui5-button]:not([slot^="content"])),
+::slotted([ui5-toggle-button]:not([slot^="content"])) {
+	height: 2.25rem;
+	padding: 0;
+	border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
+	background: var(--sapButton_Lite_Background);
+	color: var(--sapShell_TextColor);
+	box-sizing: border-box;
+	cursor: pointer;
+	border-radius: var(--_ui5_shellbar_button_border_radius);
+	font-weight: bold;
+}
+
+/* Button States - Hover */
+::slotted([ui5-button]:not([slot^="content"]):hover),
+::slotted([ui5-toggle-button]:not([slot^="content"]):hover) {
+	background: var(--sapShell_Hover_Background);
+	border-color: var(--sapButton_Lite_Hover_BorderColor);
+	color: var(--sapShell_TextColor);
+}
+
+/* Button States - Active */
+::slotted([ui5-button]:not([slot^="content"])[active]),
+::slotted([ui5-toggle-button]:not([slot^="content"])[active]) {
+	background: var(--sapShell_Active_Background);
+	border-color: var(--sapButton_Lite_Active_BorderColor);
+	color: var(--_ui5_shellbar_button_active_color);
+}
+
+/* Button States - Focus */
+::slotted([ui5-button]:not([slot^="content"])),
+::slotted([ui5-toggle-button]:not([slot^="content"])) {
+	--_ui5_button_focused_border: var(--_ui5_shellbar_button_focused_border);
+}
+
+/* ============================================================================
+   START AREA (Start Button, Branding)
+   ============================================================================ */
 
 .ui5-shellbar-start-button {
 	flex-shrink: 0;
@@ -40,6 +104,10 @@
 	display: flex;
 	align-items: center;
 }
+
+/* ============================================================================
+   OVERFLOW CONTAINER
+   ============================================================================ */
 
 .ui5-shellbar-overflow-container {
 	/* makes the container grow on the left side thus preventing search from flickering */
@@ -60,6 +128,10 @@
 	min-width: 100%;
 }
 
+/* ============================================================================
+   SEARCH AREA
+   ============================================================================ */
+
 .ui5-shellbar-search-field-area {
 	flex: 0 1 auto;
 	min-width: 0;
@@ -73,6 +145,10 @@
 :host([show-full-width-search]) .ui5-shellbar-search-field-area {
 	min-width: var(--_ui5_shellbar_search_field_width);
 }
+
+/* ============================================================================
+   CONTENT AREA (Items, Spacer, Separator)
+   ============================================================================ */
 
 .ui5-shellbar-content-area {
 	flex-grow: 1;
@@ -103,6 +179,10 @@
 	background-color: var(--_ui5-shellbar_separator-color);
 }
 
+/* ============================================================================
+   ACTIONS AREA
+   ============================================================================ */
+
 .ui5-shellbar-actions-area {
 	flex-shrink: 0;
 	display: flex;
@@ -114,6 +194,10 @@
 	margin-left: auto;
 }
 
+/* ============================================================================
+   CUSTOM ITEMS
+   ============================================================================ */
+
 .ui5-shellbar-custom-item {
 	flex-shrink: 0;
 	display: flex;
@@ -123,6 +207,11 @@
 .ui5-shellbar-custom-item.ui5-shellbar-hidden {
 	display: none;
 }
+
+
+/* ============================================================================
+   ACTION BUTTONS (Notifications, Assistant, Profile)
+   ============================================================================ */
 
 .ui5-shellbar-notifications-button {
 	position: relative;
@@ -148,6 +237,16 @@
 .ui5-shellbar-assistant-button {
 	display: flex;
 	align-items: center;
+	margin-inline-start: var(--_ui5-shellbar-overflow-button-margin);
+}
+
+::slotted([ui5-toggle-button][slot="assistant"]) {
+	margin-inline-start: 0;
+}
+
+::slotted([ui5-toggle-button][slot="assistant"][pressed]),
+::slotted([ui5-toggle-button][slot="assistant"][pressed]:hover:not([active])) {
+	color: var(--sapShell_Assistant_ForegroundColor);
 }
 
 .ui5-shellbar-profile-button {
@@ -163,25 +262,42 @@
 	border-radius: 0.25rem;
 }
 
-/* Overflow */
+slot[name="profile"] {
+	min-width: 0;
+}
+
+::slotted([ui5-avatar][slot="profile"]) {
+	display: block;
+	width: 2rem;
+	height: 2rem;
+	min-width: 0;
+	min-height: 2rem;
+	font-size: var(--_ui5_avatar_fontsize_XS);
+	font-weight: normal;
+}
+
+/* ============================================================================
+   OVERFLOW UTILITIES
+   ============================================================================ */
+
 .ui5-shellbar-hidden {
 	display: none !important;
-}
-
-.ui5-shellbar-hidden-button {
-	visibility: hidden;
-	order: -1;
-}
-
-.ui5-shellbar-overflow-button {
-	flex-shrink: 0;
 }
 
 .ui5-shellbar-no-overflow {
 	flex-shrink: 0;
 }
 
-/* Full-screen search overlay (shared by both self-collapsible and legacy search) */
+::slotted([hidden]) {
+	visibility: hidden;
+	order: -1;
+	position: absolute;
+}
+
+/* ============================================================================
+   FULL-SCREEN SEARCH OVERLAY
+   ============================================================================ */
+
 .ui5-shellbar-search-full-width-wrapper {
 	position: absolute;
 	bottom: 0.0625rem;
@@ -206,6 +322,11 @@
 .ui5-shellbar-search-full-width-wrapper .ui5-shellbar-cancel-button {
 	width: auto;
 	flex-shrink: 0;
+	color: var(--_ui5-shellbar_cancel-button-color);
+}
+
+.ui5-shellbar-search-full-width-wrapper .ui5-shellbar-cancel-button:hover {
+	color: var(--_ui5-shellbar_cancel-button-color);
 }
 
 .ui5-shellbar-search-full-width-wrapper ::slotted([ui5-shellbar-search]) {
@@ -213,7 +334,32 @@
 	width: 100%;
 }
 
-/* Breakpoint-specific padding for full-screen search */
+/* ============================================================================
+   BREAKPOINTS
+   ============================================================================ */
+
+/* Responsive padding per breakpoint */
+:host([breakpoint-size="S"]) {
+	padding: 0 1rem;
+}
+
+:host([breakpoint-size="M"]) {
+	padding: 0 2rem;
+}
+
+:host([breakpoint-size="L"]) {
+	padding: 0 2rem;
+}
+
+:host([breakpoint-size="XL"]) {
+	padding: 0 3rem;
+}
+
+:host([breakpoint-size="XXL"]) {
+	padding: 0 3rem;
+}
+
+/* Search overlay padding per breakpoint */
 :host([breakpoint-size="S"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 1rem;
 }
@@ -221,4 +367,3 @@
 :host([breakpoint-size="M"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 2rem;
 }
-

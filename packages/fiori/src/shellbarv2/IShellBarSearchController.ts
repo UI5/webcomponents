@@ -29,10 +29,4 @@ export interface IShellBarSearchController {
 	 * Returns true when shellbar is overflowing AND search is visible.
 	 */
 	shouldShowFullScreen(): boolean;
-
-	/**
-	 * Check if search field should be rendered.
-	 * Returns true if search field exists and should be rendered in the bar.
-	 */
-	shouldRenderSearchField(): boolean;
 }

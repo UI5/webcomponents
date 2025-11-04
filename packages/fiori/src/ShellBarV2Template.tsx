@@ -5,40 +5,28 @@ import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBarV2 from "./ShellBarV2.js";
 import type ShellBarV2Item from "./ShellBarV2Item.js";
 
-function ShellBarV2SearchField(this: ShellBarV2) {
-	return (
-		// .ui5-shellbar-search-field-area is used to measure the width of
-		// the search field. It must be present even if the search is in full-width mode.
-		<div class="ui5-shellbar-search-field-area">
-			{this.renderSearchField && (
-				<slot name="searchField"></slot>
-			)}
-		</div>
-	);
-}
+import {
+	ShellBarV2SearchField,
+	ShellBarV2SearchFieldFullWidth
+} from "./shellbarv2/ShellBarSearchTemplate.js";
 
-function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
-	return (
-		<div class="ui5-shellbar-search-full-width-wrapper">
-			<div class="ui5-shellbar-search-full-field">
-				<slot name="searchField"></slot>
-			</div>
-			<Button
-				class="ui5-shellbar-cancel-button"
-				onClick={this.handleCancelButtonClick}
-			>
-				Cancel
-			</Button>
-		</div>
-	);
-}
+import {
+	ShellBarV2SearchField as ShellBarV2SearchFieldLegacy,
+	ShellBarV2SearchButton as ShellBarV2SearchButtonLegacy,
+	ShellBarV2SearchFieldFullWidth as ShellBarV2SearchFieldFullWidthLegacy,
+} from "./shellbarv2/ShellBarSearchLegacyTemplate.js";
 
 export default function ShellBarV2Template(this: ShellBarV2) {
+	const isLegacySearch = !this.isSelfCollapsibleSearch;
+
+	const SearchInBarTemplate = isLegacySearch ? ShellBarV2SearchFieldLegacy : ShellBarV2SearchField;
+	const SearchFullWidthTemplate = isLegacySearch ? ShellBarV2SearchFieldFullWidthLegacy : ShellBarV2SearchFieldFullWidth;
+
 	return (
 		<>
 			<header class="ui5-shellbar-root" part="root" onKeyDown={this._onKeyDown}>
 				{/* Full-width search overlay */}
-				{this.showFullWidthSearch && ShellBarV2SearchFieldFullWidth.call(this)}
+				{this.showFullWidthSearch && SearchFullWidthTemplate.call(this)}
 
 				<div class="ui5-shellbar-wrapper">
 
@@ -112,21 +100,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								</div>
 							)}
 
-							{this.hasSearchField && ShellBarV2SearchField.call(this)}
-
-							{/* Search button for legacy search (ui5-input, custom div) */}
-							{this.hasSearchField && !this.isSelfCollapsibleSearch && !this.hideSearchButton && (
-								<Button
-									class="ui5-shellbar-search-button"
-									icon="sap-icon://search"
-									design="Transparent"
-									onClick={this.handleSearchButtonClick}
-									tooltip={this._searchText}
-									aria-label={this._searchText}
-									aria-expanded={this.showSearchField}
-									accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
-								/>
-							)}
+							{this.hasSearchField && SearchInBarTemplate.call(this)}
+							{this.hasSearchField && isLegacySearch && ShellBarV2SearchButtonLegacy.call(this)}
 
 							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
@@ -176,17 +151,6 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						/>
 					)}
 
-					{this.getAction("product-switch") && (
-						<Button
-							class="ui5-shellbar-product-switch-button ui5-shellbar-no-overflow"
-							icon="grid"
-							design="Transparent"
-							onClick={this._handleProductSwitchClick}
-							tooltip={this._productsText}
-							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
-						/>
-					)}
-
 					{this.getAction("profile") && (
 						<div
 							class="ui5-shellbar-profile-button ui5-shellbar-no-overflow"
@@ -199,6 +163,17 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						>
 							<slot name="profile"></slot>
 						</div>
+					)}
+
+					{this.getAction("product-switch") && (
+						<Button
+							class="ui5-shellbar-product-switch-button ui5-shellbar-no-overflow"
+							icon="grid"
+							design="Transparent"
+							onClick={this._handleProductSwitchClick}
+							tooltip={this._productsText}
+							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
+						/>
 					)}
 
 				</div>

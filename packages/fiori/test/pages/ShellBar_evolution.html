@@ -161,6 +161,67 @@
 		<ui5-toggle-button id="assistant" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
 
 	</ui5-shellbar>
+	
+	<ui5-shellbar-v2
+		id="shellbar_v2"
+		class="shellbar-example"
+		data-ui5-static-stable="shellbarWithLogoClickStatic"
+		show-notifications
+		notifications-count="777"
+		show-product-switch
+		show-search-field
+		slot="header"
+	>
+		<ui5-shellbar-branding slot="branding">
+			SAP Labs Bulgaria
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
+		<ui5-button icon="menu2" slot="startButton" id="btnOpenStart_v2"></ui5-button>
+		<ui5-button id="btnOpenBasic_v2" end-icon="slim-arrow-down" slot="content" data-hide-order="10">PR10</ui5-button>
+
+		<ui5-tag color-scheme="7" slot="content" data-hide-order="4">PR 4</ui5-tag>
+		<ui5-text slot="content" data-hide-order="3">PR3</ui5-text>
+
+		<ui5-switch design="Textual" text-on="PR0" text-off="PR0" slot="content"></ui5-switch>
+
+		<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+		<ui5-toggle-button  slot="content" text="PR2" data-hide-order="2">PR2</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR1" data-hide-order="1">PR1</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR6" data-hide-order="6">PR6</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR7" data-hide-order="7">PR7</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR8" data-hide-order="8">PR8</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
+
+		<ui5-shellbar-search slot="searchField">
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+
+			<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" selected slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+		</ui5-shellbar-search>
+
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+		<ui5-shellbar-v2-item icon="activities" text="Button4"></ui5-shellbar-v2-item>
+		<ui5-shellbar-v2-item icon="feedback" text="Button5"></ui5-shellbar-v2-item>
+		<ui5-shellbar-v2-item count="12" icon="action-settings" text="Button8"></ui5-shellbar-v2-item>
+		<ui5-shellbar-v2-item icon="sys-help" text="Button9"></ui5-shellbar-v2-item>
+		<ui5-toggle-button id="assistant_v2" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
+
+	</ui5-shellbar-v2>
+
 	<ui5-shellbar
 		id="shellbar_hide_search"
 		class="shellbar-example"

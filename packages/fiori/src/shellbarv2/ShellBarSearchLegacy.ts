@@ -1,6 +1,6 @@
 import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 
-interface ShellBarSearchLegacyConstructorParams {
+interface ShellBarV2SearchLegacyConstructorParams {
 	getOverflowed: () => boolean;
 	getSearchState: () => boolean;
 	setSearchState: (expanded: boolean) => void;
@@ -14,7 +14,7 @@ interface ShellBarSearchLegacyConstructorParams {
  * Handles search fields that don't have collapsed/open properties.
  * Supports disableSearchCollapse for preventing auto-collapse.
  */
-class ShellBarSearchLegacy implements IShellBarSearchController {
+class ShellBarV2SearchLegacy implements IShellBarSearchController {
 	static CSS_VARIABLE = "--_ui5_shellbar_search_field_width";
 	static FALLBACK_WIDTH = 400;
 
@@ -32,7 +32,7 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 		getSearchState,
 		getCSSVariable,
 		getDisableSearchCollapse,
-	}: ShellBarSearchLegacyConstructorParams) {
+	}: ShellBarV2SearchLegacyConstructorParams) {
 		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
 		this.getSearchField = getSearchField;
@@ -92,6 +92,14 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 	}
 
 	/**
+	 * Determines if full-screen search should be shown.
+	 * Full-screen search activates when overflow happens AND search is visible.
+	 */
+	shouldShowFullScreen(): boolean {
+		return this.getOverflowed() && this.getSearchState();
+	}
+
+	/**
 	 * Get value from various field types.
 	 * Supports ui5-input (value property) and custom div (nested input element).
 	 */
@@ -114,9 +122,9 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 	 * Get minimum width needed for search field from CSS variable.
 	 */
 	private getSearchFieldWidth(): number {
-		const width = this.getCSSVariable(ShellBarSearchLegacy.CSS_VARIABLE);
+		const width = this.getCSSVariable(ShellBarV2SearchLegacy.CSS_VARIABLE);
 		if (!width) {
-			return ShellBarSearchLegacy.FALLBACK_WIDTH;
+			return ShellBarV2SearchLegacy.FALLBACK_WIDTH;
 		}
 
 		// Convert rem to px
@@ -128,7 +136,7 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 		return parseFloat(width);
 	}
 
-	get hasSearchField(): boolean {
+	private get hasSearchField(): boolean {
 		return !!this.getSearchField();
 	}
 
@@ -136,28 +144,12 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 	 * Get search button size for overflow calculation.
 	 * Returns 0 if search is expanded, otherwise returns button width.
 	 */
-	getSearchButtonSize(): number {
+	private getSearchButtonSize(): number {
 		return this.getSearchState() ? 0 : this.getSearchField()?.getBoundingClientRect().width || 0;
-	}
-
-	/**
-	 * Determines if full-screen search should be shown.
-	 * Full-screen search activates when overflow happens AND search is visible.
-	 */
-	shouldShowFullScreen(): boolean {
-		return this.getOverflowed() && this.getSearchState();
-	}
-
-	/**
-	 * Check if search field should be rendered.
-	 * Returns true if search field exists and should be rendered in the bar (not in full-screen mode).
-	 */
-	shouldRenderSearchField(): boolean {
-		return this.hasSearchField && this.getSearchState() && !this.shouldShowFullScreen();
 	}
 }
 
-export default ShellBarSearchLegacy;
+export default ShellBarV2SearchLegacy;
 export type {
-	ShellBarSearchLegacyConstructorParams,
+	ShellBarV2SearchLegacyConstructorParams,
 };
