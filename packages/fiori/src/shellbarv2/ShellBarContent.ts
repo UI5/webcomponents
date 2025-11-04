@@ -88,16 +88,6 @@ class ShellBarContent {
 
 		return { shouldPack: isHidden && isLastItem };
 	}
-
-	/**
-	 * Returns accessibility role for content area.
-	 * Only group if multiple items exist.
-	 */
-	getContentRole(content: readonly HTMLElement[]): "group" | undefined {
-		const { start, end } = this.splitContent(content);
-		const totalItems = start.length + end.length;
-		return totalItems > 1 ? "group" : undefined;
-	}
 }
 
 export default ShellBarContent;

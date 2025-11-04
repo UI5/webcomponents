@@ -1,3 +1,5 @@
+@import "./ShellBarV2SearchLegacy.css";
+
 :host {
 	display: block;
 	width: 100%;
@@ -66,7 +68,6 @@
 	margin: 0 0.5rem;
 	margin-left: auto;
 }
-
 
 :host([show-search-field]) ::slotted([slot="searchField"]),
 :host([show-full-width-search]) .ui5-shellbar-search-field-area {
@@ -180,7 +181,7 @@
 	flex-shrink: 0;
 }
 
-/* Full-screen search overlay */
+/* Full-screen search overlay (shared by both self-collapsible and legacy search) */
 .ui5-shellbar-search-full-width-wrapper {
 	position: absolute;
 	bottom: 0.0625rem;
@@ -220,3 +221,4 @@
 :host([breakpoint-size="M"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 2rem;
 }
+

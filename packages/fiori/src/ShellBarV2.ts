@@ -831,10 +831,6 @@ class ShellBarV2 extends UI5Element {
 		});
 	}
 
-	get contentRole() {
-		return this.contentAdaptor.getContentRole(this.content);
-	}
-
 	/**
 	 * Returns packed separator info for a content item.
 	 */
@@ -874,6 +870,11 @@ class ShellBarV2 extends UI5Element {
 	get actionsRole(): "toolbar" | undefined {
 		const visibleCount = this.actions.filter(a => !this.hiddenItemsIds.includes(a.id)).length;
 		return this.accessibilityAdaptor.getActionsRole(visibleCount);
+	}
+
+	get contentRole() {
+		const visibleItemsCount = this.content.filter(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)).length;
+		return this.accessibilityAdaptor.getContentRole(visibleItemsCount);
 	}
 
 	// i18n text getters

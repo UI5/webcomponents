@@ -127,6 +127,17 @@ class ShellBarV2Accessibility {
 		}
 		return "toolbar";
 	}
+
+	/**
+	 * Returns accessibility role for content area.
+	 * Only group if multiple items exist.
+	 */
+	getContentRole(visibleItemsCount: number): "group" | undefined {
+		if (visibleItemsCount <= 1) {
+			return undefined;
+		}
+		return "group";
+	}
 }
 
 export default ShellBarV2Accessibility;
