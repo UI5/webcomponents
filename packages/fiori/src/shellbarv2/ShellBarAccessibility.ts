@@ -67,13 +67,13 @@ class ShellBarV2Accessibility {
 	 */
 	getAccessibilityInfo(params: ShellBarV2AccessibilityParams): ShellBarV2AccessibilityInfo {
 		const {
-			accessibilityAttributes,
-			overflowPopoverOpen,
-			notificationsText,
-			profileText,
-			productsText,
 			searchText,
+			profileText,
 			overflowText,
+			productsText,
+			notificationsText,
+			overflowPopoverOpen,
+			accessibilityAttributes,
 		} = params;
 
 		const overflowExpanded = accessibilityAttributes.overflow?.expanded;

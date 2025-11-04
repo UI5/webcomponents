@@ -1,5 +1,6 @@
 import { isPhone } from "@ui5/webcomponents-base";
 import type { IShellBarSearchField } from "../ShellBarV2.js";
+import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 
 interface ShellBarV2SearchConstructorParams {
 	getOverflowed: () => boolean;
@@ -9,7 +10,11 @@ interface ShellBarV2SearchConstructorParams {
 	getCSSVariable: (variable: string) => string;
 }
 
-class ShellBarV2Search {
+/**
+ * Search controller for self-collapsible search (ui5-shellbar-search).
+ * Handles search fields with collapsed/open properties and ui5-open/close/search events.
+ */
+class ShellBarV2Search implements IShellBarSearchController {
 	static CSS_VARIABLE = "--_ui5_shellbar_search_field_width";
 	static FALLBACK_WIDTH = 400;
 
@@ -162,6 +167,14 @@ class ShellBarV2Search {
 	 */
 	shouldShowFullScreen(): boolean {
 		return this.getOverflowed() && this.getSearchState();
+	}
+
+	/**
+	 * Determines if search field should be rendered.
+	 * Returns true if search field exists and should be rendered in the bar (not in full-screen mode).
+	 */
+	shouldRenderSearchField(): boolean {
+		return this.hasSearchField && !this.shouldShowFullScreen();
 	}
 }
 

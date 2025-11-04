@@ -68,7 +68,7 @@
 }
 
 
-:host([show-search-field]) ::slotted([ui5-shellbar-search]),
+:host([show-search-field]) ::slotted([slot="searchField"]),
 :host([show-full-width-search]) .ui5-shellbar-search-field-area {
 	min-width: var(--_ui5_shellbar_search_field_width);
 }

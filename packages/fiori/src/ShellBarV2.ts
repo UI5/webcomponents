@@ -28,6 +28,8 @@ import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
 
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
+import ShellBarLegacySearch from "./shellbarv2/ShellBarSearchLegacy.js";
+import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchController.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Content from "./shellbarv2/ShellBarContent.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
@@ -56,6 +58,7 @@ import {
 	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
 } from "./generated/i18n/i18n-defaults.js";
+import { renderFinished } from "@ui5/webcomponents-base";
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -304,6 +307,26 @@ class ShellBarV2 extends UI5Element {
 	showSearchField = false;
 
 	/**
+	 * Hides the search button.
+	 * Only applies to legacy search fields (ui5-input, custom div).
+	 * For self-collapsible search (ui5-shellbar-search), use the search field's own collapsed state.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideSearchButton = false;
+
+	/**
+	 * Disables automatic search field collapse when space is limited.
+	 * Only applies to legacy search fields (ui5-input, custom div).
+	 * Self-collapsible search (ui5-shellbar-search) manages its own state.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	disableSearchCollapse = false;
+
+	/**
 	 * Defines accessibility attributes for different areas of the component.
 	 *
 	 * The accessibilityAttributes object has the following fields:
@@ -402,13 +425,7 @@ class ShellBarV2 extends UI5Element {
 
 	private handleResizeBound: ResizeObserverCallback = this.handleResize.bind(this);
 
-	searchAdaptor = new ShellBarV2Search({
-		getSearchField: () => this.search,
-		getSearchState: () => this.showSearchField,
-		getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
-		setSearchState: (expanded: boolean) => this.setSearchState(expanded),
-		getOverflowed: () => this.overflowAdaptor.isOverflowing(this.overflowOuter!, this.overflowInner!),
-	});
+	searchAdaptor?: IShellBarSearchController;
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
 	});
@@ -422,13 +439,14 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Lifecycle Methods -------------- */
 
 	onEnterDOM() {
+		this.initSearchController();
 		ResizeHandler.register(this, this.handleResizeBound);
-		this.searchAdaptor.subscribe();
+		this.searchAdaptor?.subscribe();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
-		this.searchAdaptor.unsubscribe();
+		this.searchAdaptor?.unsubscribe();
 	}
 
 	onBeforeRendering() {
@@ -440,7 +458,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateActions();
 
 		if (this.isSelfCollapsibleSearch) {
-			this.searchAdaptor.syncShowSearchFieldState();
+			this.searchAdaptor?.syncShowSearchFieldState();
 		}
 	}
 
@@ -568,7 +586,7 @@ class ShellBarV2 extends UI5Element {
 			this.hiddenItemsIds = hiddenItemsIds;
 			this.showOverflowButton = showOverflowButton;
 		}
-		this.showFullWidthSearch = this.searchAdaptor.shouldShowFullScreen();
+		this.showFullWidthSearch = this.searchAdaptor?.shouldShowFullScreen() || false;
 	}
 
 	private handleContentVisibilityChanged(oldHiddenItemsIds: string[], newHiddenItemsIds: string[]) {
@@ -592,7 +610,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateBreakpoint();
 		const hiddenItemsIds = this.updateOverflow() ?? [];
 		const spacerWidth = this.spacer?.getBoundingClientRect().width || 0;
-		this.searchAdaptor.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
+		this.searchAdaptor?.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
 	}
 
 	handleOverflowClick() {
@@ -620,6 +638,33 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- End of Overflow Management -------------- */
 
 	/* ------------- Search Management -------------- */
+
+	get renderSearchField() {
+		return this.searchAdaptor?.shouldRenderSearchField() || false;
+	}
+
+	/**
+	 * Initialize the appropriate search controller based on search field type.
+	 * Self-collapsible search (ui5-shellbar-search) → ShellBarV2Search
+	 * Legacy search (ui5-input, custom div) → ShellBarLegacySearch
+	 */
+	private initSearchController() {
+		const deps = {
+			getSearchField: () => this.search,
+			getSearchState: () => this.showSearchField,
+			getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
+			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
+			getOverflowed: () => this.overflowAdaptor.isOverflowing(this.overflowOuter!, this.overflowInner!),
+		};
+		if (this.isSelfCollapsibleSearch) {
+			this.searchAdaptor = new ShellBarV2Search(deps);
+		} else {
+			this.searchAdaptor = new ShellBarLegacySearch({
+				...deps,
+				getDisableSearchCollapse: () => this.disableSearchCollapse,
+			});
+		}
+	}
 
 	handleSearchButtonClick() {
 		const searchButton = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-search-button");
@@ -756,6 +801,16 @@ class ShellBarV2 extends UI5Element {
 		}
 		return false;
 	}
+
+	/**
+	 * Returns the search button DOM reference.
+	 * @public
+	 */
+	async getSearchButtonDomRef(): Promise<HTMLElement | null> {
+		await renderFinished();
+		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-search-button");
+	}
+
 	/* ------------- End of Common Methods -------------- */
 
 	/* ------------- Content Management -------------- */

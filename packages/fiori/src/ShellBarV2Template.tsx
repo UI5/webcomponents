@@ -10,7 +10,7 @@ function ShellBarV2SearchField(this: ShellBarV2) {
 		// .ui5-shellbar-search-field-area is used to measure the width of
 		// the search field. It must be present even if the search is in full-width mode.
 		<div class="ui5-shellbar-search-field-area">
-			{!this.showFullWidthSearch && (
+			{this.renderSearchField && (
 				<slot name="searchField"></slot>
 			)}
 		</div>
@@ -113,6 +113,20 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							)}
 
 							{this.hasSearchField && ShellBarV2SearchField.call(this)}
+
+							{/* Search button for legacy search (ui5-input, custom div) */}
+							{this.hasSearchField && !this.isSelfCollapsibleSearch && !this.hideSearchButton && (
+								<Button
+									class="ui5-shellbar-search-button"
+									icon="sap-icon://search"
+									design="Transparent"
+									onClick={this.handleSearchButtonClick}
+									tooltip={this._searchText}
+									aria-label={this._searchText}
+									aria-expanded={this.showSearchField}
+									accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
+								/>
+							)}
 
 							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
