@@ -17,6 +17,7 @@ import {
 	isPageDownShift,
 	isEscape,
 	isEnter,
+	isMinus,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -101,6 +102,8 @@ type StepInputValueStateChangeEventDetail = {
 	renderer: jsxRenderer,
 	styles: StepInputCss,
 	template: StepInputTemplate,
+	languageAware: true,
+	cldr: true,
 })
 /**
  * Fired when the input operation has finished by pressing Enter or on focusout.
@@ -540,16 +543,7 @@ class StepInput extends UI5Element implements IFormInputElement {
  	 * @private
  	 */
 	_formatNumber(value: number): string {
-		if (!this.showThousandsSeparator) {
-			return value.toFixed(this.valuePrecision);
-		}
-
-		// Use Intl.NumberFormat for locale-aware formatting
-		return new Intl.NumberFormat(undefined, {
-			minimumFractionDigits: this.valuePrecision,
-			maximumFractionDigits: this.valuePrecision,
-			useGrouping: true,
-		}).format(value);
+		return this.formatter.format(value);
 	}
 
 	/**
@@ -557,13 +551,7 @@ class StepInput extends UI5Element implements IFormInputElement {
  	 * @private
  	*/
 	_parseNumber(formattedValue: string): number {
-		if (!this.showThousandsSeparator) {
-			return Number(formattedValue);
-		}
-
-		// Remove thousands separators and parse
-		const cleanValue = formattedValue.replace(/[,\s]/g, "");
-		return Number(cleanValue);
+		return this.formatter.parse(formattedValue) as number;
 	}
 
 	_incValue() {
@@ -594,11 +582,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
-
 		const inputValue = this._parseNumber(this.input.value);
 		if (this._isValueChanged(inputValue)) {
-			this._updateValueAndValidate(inputValue);
+			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
 		}
+
+		this.innerInput.value = this._formatNumber(this._parseNumber(this.innerInput.value));
 	}
 
 	_setDefaultInputValueIfNeeded() {
@@ -619,7 +608,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 			|| this.value !== inputValue
 			|| inputValue === 0
 			|| !isValueWithCorrectPrecision
-			|| isPrecisionCorrectButValueStateError;
+			|| isPrecisionCorrectButValueStateError
+			|| Number.isNaN(inputValue);
 	}
 
 	_updateValueAndValidate(inputValue: number) {
@@ -672,9 +662,38 @@ class StepInput extends UI5Element implements IFormInputElement {
 		} else if (!isUpCtrl(e) && !isDownCtrl(e) && !isUpShift(e) && !isDownShift(e)) {
 			preventDefault = false;
 		}
+
+		const cursorPosition = this.input.getDomRef()!.querySelector("input")!.selectionStart;
+		const inputValue = this.innerInput.value;
+		const typedValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+
+		if (!this._isNavigationKey(e.key)) {
+			const parsedValue = this._parseNumber(typedValue);
+
+			if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
+				preventDefault = true;
+			}
+		}
+
 		if (preventDefault) {
 			e.preventDefault();
 		}
+
+		if (cursorPosition === 0 && isMinus(e)) {
+			this._updateValueAndValidate(this._parseNumber(typedValue));
+		}
+	}
+
+	_isNavigationKey(key: string) {
+		const navigationKeys = [
+			"ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+			"Home", "End", "Tab", "Escape", "Enter",
+			"Backspace", "Delete", "Control", "Alt", "Shift",
+			"Meta", "CapsLock", "NumLock", "ScrollLock",
+			"PageUp", "PageDown", "Insert",
+		];
+
+		return navigationKeys.includes(key) || key.startsWith("F");
 	}
 
 	_decSpin() {
