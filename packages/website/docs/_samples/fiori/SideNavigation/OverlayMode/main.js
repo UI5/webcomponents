@@ -1,6 +1,3 @@
-/* playground-hide */
-import "./playground-support.js";
-/* playground-hide-end */
 import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
@@ -21,7 +18,7 @@ import "@ui5/webcomponents-icons/dist/group.js";
 import "@ui5/webcomponents-icons/dist/locate-me.js";
 import "@ui5/webcomponents-icons/dist/calendar.js";
 import "@ui5/webcomponents-icons/dist/history.js";
-import "@ui5/webcomponents-icons/dist/customer.js"; 
+import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/menu2.js";
 import "@ui5/webcomponents-icons/dist/write-new.js";
 import "@ui5/webcomponents-icons/dist/widgets.js";

@@ -1,3 +1,4 @@
+import "@ui5/webcomponents/dist/Assets-fetch.js";
 import "@ui5/webcomponents/dist/DynamicDateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Yesterday.js";
