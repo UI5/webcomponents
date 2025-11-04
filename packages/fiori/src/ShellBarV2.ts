@@ -30,6 +30,7 @@ import shellBarV2LegacyStyles from "./generated/themes/ShellBarV2Legacy.css.js";
 
 import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchController.js";
 
+import ShellBarV2Legacy from "./shellbarv2/ShellBarLegacy.js";
 import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
 import ShellBarV2SearchLegacy from "./shellbarv2/ShellBarSearchLegacy.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
@@ -38,7 +39,6 @@ import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
-import ShellBarV2Legacy from "./shellbarv2/ShellBarLegacy.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
@@ -580,6 +580,19 @@ class ShellBarV2 extends UI5Element {
 		this.actions = this.actionsAdaptor.getActions(params);
 	}
 
+	getAction(actionId: string) {
+		return this.actions.find(action => action.id === actionId);
+	}
+
+	getActionText(actionId: string): string {
+		const texts: Record<string, string> = {
+			"notifications": "Notifications",
+			"assistant": "Assistant",
+			"search-button": "Search",
+		};
+		return texts[actionId] || actionId;
+	}
+
 	/* =========================================================================
     Breakpoint Management
 	============================================================================ */
@@ -864,19 +877,6 @@ class ShellBarV2 extends UI5Element {
 	getCSSVariable(cssVar: string): string {
 		const styleSet = getComputedStyle(this.getDomRef()!);
 		return styleSet.getPropertyValue(getScopedVarName(cssVar));
-	}
-
-	getAction(actionId: string) {
-		return this.actions.find(action => action.id === actionId);
-	}
-
-	getActionText(actionId: string): string {
-		const texts: Record<string, string> = {
-			"notifications": "Notifications",
-			"assistant": "Assistant",
-			"search-button": "Search",
-		};
-		return texts[actionId] || actionId;
 	}
 
 	get hasStartButton() {
