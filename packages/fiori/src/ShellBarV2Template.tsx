@@ -61,7 +61,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								<div
 									class="ui5-shellbar-content-area"
 									role={this.contentRole}
-									aria-label={this.contentRole ? "Additional Context" : undefined}
+									aria-label={this._contentItemsText}
 								>
 									{/* Start separator */}
 									{this.separatorConfig.showStartSeparator && (
@@ -114,17 +114,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 							{this.hasSearchField && ShellBarV2SearchField.call(this)}
 
-							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`}>
-
-								{this.hasSearchField && (
-									<Button
-										class="ui5-shellbar-search-button"
-										icon="search"
-										design="Transparent"
-										onClick={this.handleSearchButtonClick}
-										accessibleName="Search"
-									/>
-								)}
+							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
 								{this.items.map(item => (
 									<div
@@ -142,7 +132,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										icon="bell"
 										design="Transparent"
 										onClick={this._handleNotificationsClick}
-										accessibleName="Notifications"
+										tooltip={this._notificationsText}
+										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
 									>
 										{this.getAction("notifications")?.count && (
 											<span class="ui5-shellbar-badge">{this.getAction("notifications")?.count}</span>
@@ -166,7 +157,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							icon="overflow"
 							design="Transparent"
 							onClick={this.handleOverflowClick}
-							accessibleName="More"
+							tooltip={this._overflowText}
+							accessibilityAttributes={this.accInfo.overflow.accessibilityAttributes}
 						/>
 					)}
 
@@ -176,7 +168,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}
-							accessibleName="Product Switch"
+							tooltip={this._productsText}
+							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
 						/>
 					)}
 
@@ -186,7 +179,9 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							onClick={this._handleProfileClick}
 							role="button"
 							tabIndex={0}
-							aria-label="Profile"
+							aria-label={this._profileText}
+							aria-haspopup={this.accInfo.profile.accessibilityAttributes.hasPopup}
+							aria-expanded={this.accInfo.profile.accessibilityAttributes.expanded}
 						>
 							<slot name="profile"></slot>
 						</div>

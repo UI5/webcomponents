@@ -1,7 +1,7 @@
 import { isPhone } from "@ui5/webcomponents-base";
 import type { IShellBarSearchField } from "../ShellBarV2.js";
 
-interface ShellBarV2SearchSupportConstructorParams {
+interface ShellBarV2SearchConstructorParams {
 	getOverflowed: () => boolean;
 	getSearchState: () => boolean;
 	setSearchState: (expanded: boolean) => void;
@@ -9,7 +9,7 @@ interface ShellBarV2SearchSupportConstructorParams {
 	getCSSVariable: (variable: string) => string;
 }
 
-class ShellBarV2SearchSupport {
+class ShellBarV2Search {
 	static CSS_VARIABLE = "--_ui5_shellbar_search_field_width";
 	static FALLBACK_WIDTH = 400;
 
@@ -29,7 +29,7 @@ class ShellBarV2SearchSupport {
 		getSearchField,
 		getSearchState,
 		getCSSVariable,
-	}: ShellBarV2SearchSupportConstructorParams) {
+	}: ShellBarV2SearchConstructorParams) {
 		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
 		this.getSearchField = getSearchField;
@@ -131,9 +131,9 @@ class ShellBarV2SearchSupport {
 	 * Gets the minimum width needed for search field from CSS variable.
 	 */
 	private getSearchFieldWidth(): number {
-		const width = this.getCSSVariable(ShellBarV2SearchSupport.CSS_VARIABLE);
+		const width = this.getCSSVariable(ShellBarV2Search.CSS_VARIABLE);
 		if (!width) {
-			return ShellBarV2SearchSupport.FALLBACK_WIDTH;
+			return ShellBarV2Search.FALLBACK_WIDTH;
 		}
 		// Convert rem to px
 		if (width.endsWith("rem")) {
@@ -165,7 +165,7 @@ class ShellBarV2SearchSupport {
 	}
 }
 
-export default ShellBarV2SearchSupport;
+export default ShellBarV2Search;
 export type {
-	ShellBarV2SearchSupportConstructorParams,
+	ShellBarV2SearchConstructorParams,
 };

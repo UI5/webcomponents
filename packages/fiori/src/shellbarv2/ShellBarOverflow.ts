@@ -3,9 +3,9 @@ import type { ShellBarV2ActionItem } from "./ShellBarActions.js";
 
 interface ShellBarV2HidableItem {
 	id: string;
+	selector: string; // CSS selector to find the element
 	hideOrder: number;
 	protected: boolean;
-	selector: string; // CSS selector to find the element
 	showInOverflow?: boolean; // If true, hiding this item triggers overflow button
 }
 
@@ -32,7 +32,7 @@ interface ShellBarV2OverflowItem {
 	order: number;
 }
 
-class ShellBarV2OverflowSupport {
+class ShellBarV2Overflow {
 	/**
 	 * Performs overflow calculation by iteratively hiding items until no overflow.
 	 * Measures DOM after each hide to determine if more hiding is needed.
@@ -58,25 +58,20 @@ class ShellBarV2OverflowSupport {
 		let showOverflowButton = false;
 
 		// Iteratively hide items until no overflow
-		sortedItems.forEach(item => {
-			if (item.protected) {
-				return; // Skip protected items
-			}
+		for (let i = 0; i < sortedItems.length; i++) {
+			const item = sortedItems[i];
 
-			// Check if still overflowing
 			if (!this.isOverflowing(overflowOuter, overflowInner)) {
-				return; // No more overflow, stop hiding
+				break; // No more overflow, stop hiding
 			}
 
-			// Hide this item
 			setVisible(item.selector, false);
 			hiddenItemsIds.push(item.id);
 
-			// Only count items that should appear in overflow popover
 			if (item.showInOverflow) {
 				showOverflowButton = true;
 			}
-		});
+		}
 
 		return {
 			hiddenItemsIds,
@@ -88,8 +83,8 @@ class ShellBarV2OverflowSupport {
 	 * Checks if inner is overflowing wrapper.
 	 */
 	isOverflowing(overflowOuter: HTMLElement, overflowInner: HTMLElement): boolean {
-		const overflowOuterWidth = overflowOuter.getBoundingClientRect().width;
-		const overflowInnerWidth = overflowInner.getBoundingClientRect().width;
+		const overflowOuterWidth = overflowOuter.offsetWidth;
+		const overflowInnerWidth = overflowInner.offsetWidth;
 		return overflowInnerWidth > overflowOuterWidth;
 	}
 
@@ -228,7 +223,8 @@ class ShellBarV2OverflowSupport {
 			return a.hideOrder - b.hideOrder;
 		});
 
-		return sortedItems;
+		const filteredItems = sortedItems.filter(item => !item.protected);
+		return filteredItems;
 	}
 
 	/**
@@ -273,7 +269,7 @@ class ShellBarV2OverflowSupport {
 	}
 }
 
-export default ShellBarV2OverflowSupport;
+export default ShellBarV2Overflow;
 export type {
 	ShellBarV2HidableItem,
 	ShellBarV2OverflowParams,

@@ -4,11 +4,13 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -24,19 +26,36 @@ import "@ui5/webcomponents-icons/dist/overflow.js";
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
 
-import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
-import ShellBarV2SearchSupport from "./shellbarv2/ShellBarSearchSupport.js";
-import ShellBarV2ContentSupport from "./shellbarv2/ShellBarContentSupport.js";
+import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
+import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
+import ShellBarV2Content from "./shellbarv2/ShellBarContent.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
-import ShellBarV2OverflowSupport from "./shellbarv2/ShellBarOverflowSupport.js";
+import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
+import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 import type { ShellBarV2BreakpointType } from "./shellbarv2/ShellBarBreakpoint.js";
-import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflowSupport.js";
+import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflow.js";
+import type {
+	ShellBarV2AccessibilityAttributes,
+	ShellBarV2AccessibilityInfo,
+	ShellBarV2ProfileAccessibilityAttributes,
+	ShellBarV2AreaAccessibilityAttributes,
+} from "./shellbarv2/ShellBarAccessibility.js";
+
+import {
+	SHELLBAR_LABEL,
+	SHELLBAR_NOTIFICATIONS,
+	SHELLBAR_PROFILE,
+	SHELLBAR_PRODUCTS,
+	SHELLBAR_SEARCH,
+	SHELLBAR_OVERFLOW,
+	SHELLBAR_ADDITIONAL_CONTEXT,
+} from "./generated/i18n/i18n-defaults.js";
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -99,6 +118,7 @@ interface IShellBarSearchField extends HTMLElement {
 	renderer: jsxRenderer,
 	template: ShellBarV2Template,
 	fastNavigation: true,
+	languageAware: true,
 	dependencies: [
 		Icon,
 		List,
@@ -284,6 +304,36 @@ class ShellBarV2 extends UI5Element {
 	showSearchField = false;
 
 	/**
+	 * Defines accessibility attributes for different areas of the component.
+	 *
+	 * The accessibilityAttributes object has the following fields:
+	 *
+	 * - **notifications** - `notifications.expanded` and `notifications.hasPopup`.
+	 * - **profile** - `profile.expanded`, `profile.hasPopup` and `profile.name`.
+	 * - **product** - `product.expanded` and `product.hasPopup`.
+	 * - **search** - `search.hasPopup`.
+	 * - **overflow** - `overflow.expanded` and `overflow.hasPopup`.
+	 *
+	 * The accessibility attributes support the following values:
+	 *
+	 * - **expanded**: Indicates whether the button, or another grouping element it controls,
+	 * is currently expanded or collapsed. Accepts the following string values: `true` or `false`.
+	 *
+	 * - **hasPopup**: Indicates the availability and type of interactive popup element,
+	 * such as menu or dialog, that can be triggered by the button.
+	 * Accepts the following string values: `dialog`, `grid`, `listbox`, `menu` or `tree`.
+	 *
+	 * - **name**: Defines the accessible ARIA name of the area.
+	 * Accepts any string.
+	 *
+	 * @default {}
+	 * @public
+	 * @since 2.0.0
+	 */
+	@property({ type: Object })
+	accessibilityAttributes: ShellBarV2AccessibilityAttributes = {};
+
+	/**
 	 * Current breakpoint size.
 	 * @private
 	 */
@@ -347,36 +397,38 @@ class ShellBarV2 extends UI5Element {
 	@query(".ui5-shellbar-overflow-container-inner")
 	overflowInner?: HTMLElement;
 
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
 	private handleResizeBound: ResizeObserverCallback = this.handleResize.bind(this);
 
-	searchSupport = new ShellBarV2SearchSupport({
+	searchAdaptor = new ShellBarV2Search({
 		getSearchField: () => this.search,
 		getSearchState: () => this.showSearchField,
 		getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
 		setSearchState: (expanded: boolean) => this.setSearchState(expanded),
-		getOverflowed: () => this.overflowSupport.isOverflowing(this.overflowOuter!, this.overflowInner!),
+		getOverflowed: () => this.overflowAdaptor.isOverflowing(this.overflowOuter!, this.overflowInner!),
 	});
-
-	overflowSupport = new ShellBarV2OverflowSupport();
-	contentSupport = new ShellBarV2ContentSupport();
-
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
 	});
 
 	breakpoint = new ShellBarV2Breakpoint();
-	actionsSupport = new ShellBarV2Actions();
+	contentAdaptor = new ShellBarV2Content();
+	actionsAdaptor = new ShellBarV2Actions();
+	overflowAdaptor = new ShellBarV2Overflow();
+	accessibilityAdaptor = new ShellBarV2Accessibility();
 
 	/* ------------- Lifecycle Methods -------------- */
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this.handleResizeBound);
-		this.searchSupport.subscribe();
+		this.searchAdaptor.subscribe();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
-		this.searchSupport.unsubscribe();
+		this.searchAdaptor.unsubscribe();
 	}
 
 	onBeforeRendering() {
@@ -388,7 +440,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateActions();
 
 		if (this.isSelfCollapsibleSearch) {
-			this.searchSupport.syncShowSearchFieldState();
+			this.searchAdaptor.syncShowSearchFieldState();
 		}
 	}
 
@@ -414,7 +466,7 @@ class ShellBarV2 extends UI5Element {
 			showProfile: this.hasProfile,
 		};
 
-		this.actions = this.actionsSupport.getActions(params);
+		this.actions = this.actionsAdaptor.getActions(params);
 	}
 
 	/* ------------- End of Actions Management -------------- */
@@ -473,12 +525,12 @@ class ShellBarV2 extends UI5Element {
 	 * Triggers rerender via property update to enable conditional rendering.
 	 */
 	private updateOverflow() {
-		if (!this.overflowSupport) {
+		if (!this.overflowAdaptor) {
 			return;
 		}
 
 		// Delegate to controller - pass all data explicitly
-		const result = this.overflowSupport.updateOverflow({
+		const result = this.overflowAdaptor.updateOverflow({
 			actions: this.actions,
 			content: this.content,
 			customItems: this.items,
@@ -516,7 +568,7 @@ class ShellBarV2 extends UI5Element {
 			this.hiddenItemsIds = hiddenItemsIds;
 			this.showOverflowButton = showOverflowButton;
 		}
-		this.showFullWidthSearch = this.searchSupport.shouldShowFullScreen();
+		this.showFullWidthSearch = this.searchAdaptor.shouldShowFullScreen();
 	}
 
 	private handleContentVisibilityChanged(oldHiddenItemsIds: string[], newHiddenItemsIds: string[]) {
@@ -540,7 +592,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateBreakpoint();
 		const hiddenItemsIds = this.updateOverflow() ?? [];
 		const spacerWidth = this.spacer?.getBoundingClientRect().width || 0;
-		this.searchSupport.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
+		this.searchAdaptor.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
 	}
 
 	handleOverflowClick() {
@@ -686,7 +738,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	get overflowItems() {
-		return this.overflowSupport.getOverflowItems({
+		return this.overflowAdaptor.getOverflowItems({
 			actions: this.actions,
 			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
@@ -709,15 +761,15 @@ class ShellBarV2 extends UI5Element {
 	/* ------------- Content Management -------------- */
 
 	get startContent(): HTMLElement[] {
-		return this.contentSupport.splitContent(this.content).start;
+		return this.contentAdaptor.splitContent(this.content).start;
 	}
 
 	get endContent(): HTMLElement[] {
-		return this.contentSupport.splitContent(this.content).end;
+		return this.contentAdaptor.splitContent(this.content).end;
 	}
 
 	get separatorConfig() {
-		return this.contentSupport.getSeparatorConfig({
+		return this.contentAdaptor.getSeparatorConfig({
 			content: this.content,
 			isSBreakPoint: this.isSBreakPoint,
 			hiddenItemIds: this.hiddenItemsIds,
@@ -725,7 +777,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	get contentRole() {
-		return this.contentSupport.getContentRole(this.content);
+		return this.contentAdaptor.getContentRole(this.content);
 	}
 
 	/**
@@ -733,7 +785,7 @@ class ShellBarV2 extends UI5Element {
 	 */
 	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
 		const group = isStartGroup ? this.startContent : this.endContent;
-		return this.contentSupport.shouldPackSeparator(
+		return this.contentAdaptor.shouldPackSeparator(
 			item,
 			group,
 			this.hiddenItemsIds,
@@ -742,6 +794,64 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* ------------- End of Content Management -------------- */
+
+	/* ------------- Accessibility -------------- */
+
+	/**
+	 * Returns accessibility info for all interactive areas.
+	 * Used by template for aria attributes.
+	 */
+	get accInfo(): ShellBarV2AccessibilityInfo {
+		return this.accessibilityAdaptor.getAccessibilityInfo({
+			accessibilityAttributes: this.accessibilityAttributes,
+			overflowPopoverOpen: this.overflowPopoverOpen,
+			notificationsText: this._notificationsText,
+			profileText: this._profileText,
+			productsText: this._productsText,
+			searchText: this._searchText,
+			overflowText: this._overflowText,
+		});
+	}
+
+	/**
+	 * Returns toolbar role for actions area based on visible items count.
+	 */
+	get actionsRole(): "toolbar" | undefined {
+		const visibleCount = this.actions.filter(a => !this.hiddenItemsIds.includes(a.id)).length;
+		return this.accessibilityAdaptor.getActionsRole(visibleCount);
+	}
+
+	// i18n text getters
+
+	get _shellbarText() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_LABEL);
+	}
+
+	get _notificationsText() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0);
+	}
+
+	get _profileText() {
+		return this.accessibilityAttributes.profile?.name || ShellBarV2.i18nBundle.getText(SHELLBAR_PROFILE);
+	}
+
+	get _productsText() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_PRODUCTS);
+	}
+
+	get _searchText() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_SEARCH);
+	}
+
+	get _overflowText() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_OVERFLOW);
+	}
+
+	get _contentItemsText() {
+		return this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined;
+	}
+
+	/* ------------- End of Accessibility -------------- */
 }
 
 ShellBarV2.define();
@@ -756,4 +866,8 @@ export type {
 	ShellBarV2ContentItemVisibilityChangeEventDetail,
 	IShellBarSearchField,
 	ShellBarV2Breakpoint,
+	ShellBarV2AccessibilityAttributes,
+	ShellBarV2AccessibilityInfo,
+	ShellBarV2ProfileAccessibilityAttributes,
+	ShellBarV2AreaAccessibilityAttributes,
 };

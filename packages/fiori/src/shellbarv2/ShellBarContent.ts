@@ -1,4 +1,4 @@
-interface ShellBarContentSupportParams {
+interface ShellBarContentParams {
 	content: readonly HTMLElement[];
 	isSBreakPoint: boolean;
 	hiddenItemIds: readonly string[];
@@ -22,7 +22,7 @@ interface PackedSeparatorInfo {
  * Handles content area logic: splitting into start/end groups and separator visibility.
  * Pure logic - no side effects.
  */
-class ShellBarContentSupport {
+class ShellBarContent {
 	/**
 	 * Splits content into start and end groups based on spacer element.
 	 * Items before spacer = start (left-aligned)
@@ -53,7 +53,7 @@ class ShellBarContentSupport {
 	 * Separators appear between content groups when at least one item is visible.
 	 * Hidden on S breakpoint (mobile).
 	 */
-	getSeparatorConfig(params: ShellBarContentSupportParams): SeparatorConfig {
+	getSeparatorConfig(params: ShellBarContentParams): SeparatorConfig {
 		if (params.isSBreakPoint) {
 			return { showStartSeparator: false, showEndSeparator: false };
 		}
@@ -100,9 +100,9 @@ class ShellBarContentSupport {
 	}
 }
 
-export default ShellBarContentSupport;
+export default ShellBarContent;
 export type {
-	ShellBarContentSupportParams,
+	ShellBarContentParams,
 	ContentGroup,
 	SeparatorConfig,
 	PackedSeparatorInfo,
