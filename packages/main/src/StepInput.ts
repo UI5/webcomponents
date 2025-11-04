@@ -38,6 +38,7 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import type Input from "./Input.js";
 import type { InputAccInfo, InputEventDetail } from "./Input.js";
 import InputType from "./types/InputType.js";
+import NumberFormat from "@ui5/webcomponents-localization/dist/NumberFormat.js";
 
 // Styles
 import StepInputCss from "./generated/themes/StepInput.css.js";
@@ -249,6 +250,15 @@ class StepInput extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleNameRef?: string;
 
+	/**
+ 	 * Defines whether to display thousands separator.
+ 	 * @default false
+ 	 * @public
+ 	 * @since 2.16.0
+ 	*/
+	@property({ type: Boolean })
+	showThousandsSeparator = false;
+
 	@property({ noAttribute: true })
 	_decIconDisabled = false;
 
@@ -293,6 +303,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_initialValueState?: `${ValueState}`;
 
+	_formatter?: NumberFormat;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -329,7 +341,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get type() {
-		return InputType.Number;
+		return this.showThousandsSeparator ? InputType.Text : InputType.Number;
 	}
 
 	// icons-related
@@ -356,14 +368,14 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	get _displayValue() {
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
-			return this.value.toFixed(this.valuePrecision);
+			return this._formatNumber(this.value);
 		}
 
 		if (this.input && this.value === Number(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
 			return this.input.value;
 		}
 
-		return this.value.toString();
+		return this._formatNumber(this.value);
 	}
 
 	get accInfo(): InputAccInfo {
@@ -383,6 +395,17 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	onBeforeRendering() {
 		this._setButtonState();
+	}
+
+	get formatter(): NumberFormat {
+		if (!this._formatter) {
+			this._formatter = NumberFormat.getFloatInstance({
+				decimals: this.valuePrecision,
+				groupingEnabled: this.showThousandsSeparator,
+			});
+		}
+
+		return this._formatter;
 	}
 
 	get input(): Input {
@@ -427,12 +450,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		// Prevent page scroll when component is focused
 		if (!this._isFocused) {
 			e.preventDefault();
 		}
 
-		// Determine scroll direction and modify value accordingly
 		const isScrollUp = e.deltaY < 0;
 		const modifier = isScrollUp ? this.step : -this.step;
 		this._modifyValue(modifier, true);
@@ -501,7 +522,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		value = this._preciseValue(value);
 		if (value !== this.value) {
 			this.value = value;
-			this.input.value = value.toFixed(this.valuePrecision);
+			this.input.value = this._formatNumber(value);
 			this._validate();
 			this._setButtonState();
 			this.focused = true;
@@ -512,6 +533,37 @@ class StepInput extends UI5Element implements IFormInputElement {
 				this.input.focus();
 			}
 		}
+	}
+
+	/**
+ 	 * Formats a number with thousands separator based on current locale
+ 	 * @private
+ 	 */
+	_formatNumber(value: number): string {
+		if (!this.showThousandsSeparator) {
+			return value.toFixed(this.valuePrecision);
+		}
+
+		// Use Intl.NumberFormat for locale-aware formatting
+		return new Intl.NumberFormat(undefined, {
+			minimumFractionDigits: this.valuePrecision,
+			maximumFractionDigits: this.valuePrecision,
+			useGrouping: true,
+		}).format(value);
+	}
+
+	/**
+ 	 * Parses formatted number string back to numeric value
+ 	 * @private
+ 	*/
+	_parseNumber(formattedValue: string): number {
+		if (!this.showThousandsSeparator) {
+			return Number(formattedValue);
+		}
+
+		// Remove thousands separators and parse
+		const cleanValue = formattedValue.replace(/[,\s]/g, "");
+		return Number(cleanValue);
 	}
 
 	_incValue() {
@@ -529,6 +581,9 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
+		if (this.showThousandsSeparator) {
+			return true;
+		}
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
 		const delimiter = this.input?.value?.includes(".") ? "." : ",";
 		const numberParts = this.input?.value?.split(delimiter);
@@ -540,7 +595,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
 
-		const inputValue = Number(this.input.value);
+		const inputValue = this._parseNumber(this.input.value);
 		if (this._isValueChanged(inputValue)) {
 			this._updateValueAndValidate(inputValue);
 		}
@@ -548,7 +603,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_setDefaultInputValueIfNeeded() {
 		if (this.input.value === "") {
-			const defaultValue = (this.min || 0).toFixed(this.valuePrecision);
+			const defaultValue = this._formatNumber(this.min || 0);
 			this.input.value = defaultValue;
 			this.innerInput.value = defaultValue; // we need to update inner input value as well, to avoid empty input scenario
 		}

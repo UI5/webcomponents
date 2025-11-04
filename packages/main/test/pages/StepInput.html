@@ -25,11 +25,15 @@
 	<link rel="stylesheet" type="text/css" href="./styles/StepInput.css">
 </head>
 <body class="stepinput1auto">
+	<ui5-step-input
+    	value="10000"
+		value-precision="2"
+    	show-thousands-separator>
+	</ui5-step-input>
+	<!-- <h3> StepInput</h3>
+	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/> -->
 
-	<h3> StepInput</h3>
-	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
-
-	<div>
+	 <div>
 		<h3>StepInput in Cozy</h3>
 		<ui5-step-input id="stepInputCozy"
 			placeholder="Enter number"
@@ -37,7 +41,7 @@
 		></ui5-step-input>
 	</div>
 
-	<div class="sapUiSizeCompact">
+	<!--<div class="sapUiSizeCompact">
 		<h3>StepInput in Compact</h3>
 		<ui5-step-input id="stepInputCompact"
 			placeholder="Enter number"
@@ -183,9 +187,9 @@
 					id="formStepInput"></ui5-step-input>
 				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 			</form>
-		</section>
+		</section> -->
 
-	<script>
+	<!-- <script>
 		const labelChange = document.getElementById('myLabelChange');
 		const siCozy = document.getElementById('stepInputCozy');
 		const siCompact = document.getElementById('stepInputCompact');
@@ -245,7 +249,7 @@
 			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
 			formValidationMessage.design = isValid ? "Positive" : "Negative";
 		}
-	</script>
+	</script> -->
 
 </body>
 </html>
