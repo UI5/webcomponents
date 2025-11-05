@@ -209,6 +209,7 @@
 	<div class="shellbar-container">
 		<ui5-shellbar
 			id="shellbarV1"
+			secondary-title="Secondary Title"
 		>
 			<ui5-shellbar-branding slot="branding">
 				Product Title
@@ -236,6 +237,7 @@
 	<div class="shellbar-container">
 		<ui5-shellbar-v2
 			id="shellbarV2"
+			secondary-title="Secondary Title"
 		>
 			<ui5-shellbar-branding slot="branding">
 				Product Title
@@ -639,6 +641,10 @@
 			console.log('Notifications Count:', value);
 		});
 
+		// Cache for branding elements
+		let cachedBrandingV1 = null;
+		let cachedBrandingV2 = null;
+
 		// Branding mode selector
 		brandingMode.addEventListener('ui5-change', (e) => {
 			const value = e.detail.selectedOption.value;
@@ -658,14 +664,22 @@
 				}
 			}
 			
-			// Switch branding mode
-			const brandingV1 = shellbarV1.querySelector('[slot="branding"]');
-			const brandingV2 = shellbarV2.querySelector('[slot="branding"]');
-			
 			if (isLegacy) {
 				// Switch to logo + primaryTitle mode
-				if (brandingV1) brandingV1.remove();
-				if (brandingV2) brandingV2.remove();
+				// Cache and remove branding slots
+				const brandingV1 = shellbarV1.querySelector('[slot="branding"]');
+				const brandingV2 = shellbarV2.querySelector('[slot="branding"]');
+				
+				console.log('Switching to legacy mode - brandingV1:', brandingV1, 'brandingV2:', brandingV2);
+				
+				if (brandingV1) {
+					cachedBrandingV1 = brandingV1;
+					brandingV1.remove();
+				}
+				if (brandingV2) {
+					cachedBrandingV2 = brandingV2;
+					brandingV2.remove();
+				}
 				
 				// Add logos
 				toggleElement('logoV1', true);
@@ -674,13 +688,18 @@
 				// Ensure primaryTitle is set
 				shellbarV1.primaryTitle = 'Product Title';
 				shellbarV2.primaryTitle = 'Product Title';
+				
+				console.log('Legacy mode set - V1 logo:', shellbarV1.logo, 'V2 logo:', shellbarV2.logo);
+				console.log('Legacy mode set - V1 title:', shellbarV1.primaryTitle, 'V2 title:', shellbarV2.primaryTitle);
 			} else {
 				// Switch to branding slot mode
 				toggleElement('logoV1', false);
 				toggleElement('logoV2', false);
 				
-				// Add branding slots if they don't exist
-				if (!brandingV1) {
+				// Restore cached branding or create new ones
+				if (cachedBrandingV1) {
+					shellbarV1.insertBefore(cachedBrandingV1, shellbarV1.firstChild);
+				} else {
 					const newBrandingV1 = document.createElement('ui5-shellbar-branding');
 					newBrandingV1.slot = 'branding';
 					newBrandingV1.textContent = 'Product Title';
@@ -689,9 +708,12 @@
 					logoImg.slot = 'logo';
 					newBrandingV1.appendChild(logoImg);
 					shellbarV1.insertBefore(newBrandingV1, shellbarV1.firstChild);
+					cachedBrandingV1 = newBrandingV1;
 				}
 				
-				if (!brandingV2) {
+				if (cachedBrandingV2) {
+					shellbarV2.insertBefore(cachedBrandingV2, shellbarV2.firstChild);
+				} else {
 					const newBrandingV2 = document.createElement('ui5-shellbar-branding');
 					newBrandingV2.slot = 'branding';
 					newBrandingV2.textContent = 'Product Title';
@@ -700,6 +722,7 @@
 					logoImg.slot = 'logo';
 					newBrandingV2.appendChild(logoImg);
 					shellbarV2.insertBefore(newBrandingV2, shellbarV2.firstChild);
+					cachedBrandingV2 = newBrandingV2;
 				}
 				
 				// Clear primaryTitle

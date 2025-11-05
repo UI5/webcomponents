@@ -19,6 +19,10 @@ import {
 
 import {
 	ShellBarV2LegacyBrandingArea,
+	ShellBarV2LegacySecondaryTitle,
+	ShellBarV2SeparateLogo,
+	ShellBarV2InteractiveMenuButton,
+	ShellBarV2SingleLogo,
 	ShellBarV2MenuButton,
 	ShellBarV2MenuPopover,
 } from "./shellbarv2/templates/ShellBarLegacyTemplate.js";
@@ -37,9 +41,6 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 				<div class="ui5-shellbar-wrapper">
 
-					{/* Menu button (legacy, S breakpoint only) */}
-					{ShellBarV2MenuButton.call(this)}
-
 					{this.hasStartButton && (
 						<div class="ui5-shellbar-start-button">
 							<slot name="startButton"></slot>
@@ -52,8 +53,28 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						</div>
 					)}
 
-					{/* Legacy branding (logo + titles) */}
+					{/* Legacy menu button (S breakpoint only) - contains logo or title */}
+					{ShellBarV2MenuButton.call(this)}
+
+					{/* Legacy: Single logo on S breakpoint when no menu items */}
+					{ShellBarV2SingleLogo.call(this)}
+
+					{/* Legacy: Separate logo when menu items exist (non-S breakpoint) */}
+					{ShellBarV2SeparateLogo.call(this)}
+
+					{/* Legacy: Hidden h1 for accessibility when title is in menu button */}
+					{this.legacyAdaptor?.showInteractiveMenuButton && (
+						<h1 class="ui5-hidden-text">{this.primaryTitle}</h1>
+					)}
+
+					{/* Legacy: Interactive menu button (non-S breakpoint) */}
+					{ShellBarV2InteractiveMenuButton.call(this)}
+
+					{/* Legacy branding (logo + primaryTitle) when no menu items */}
 					{ShellBarV2LegacyBrandingArea.call(this)}
+
+					{/* Legacy secondaryTitle - rendered separately to match old shellbar */}
+					{ShellBarV2LegacySecondaryTitle.call(this)}
 
 					<div class="ui5-shellbar-overflow-container">
 						<div class="ui5-shellbar-overflow-container-inner">
@@ -86,7 +107,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										);
 									})}
 
-									{/* Spacer: Grows to fill available space, used to measure if space is tight */}
+									{/* Spacer: Grows to fill available space, used to measure if space is tight, should be in DOM always */}
 									<div class="ui5-shellbar-spacer"></div>
 
 									{/* End content items */}

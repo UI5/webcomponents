@@ -48,7 +48,6 @@
 }
 
 /* Title Area */
-.ui5-shellbar-title-area,
 .ui5-shellbar-headings {
 	display: flex;
 	flex-direction: column;

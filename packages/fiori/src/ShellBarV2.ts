@@ -535,7 +535,6 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	onEnterDOM() {
-		this.initLegacyController();
 		ResizeHandler.register(this, this.handleResizeBound);
 		this.searchAdaptor?.subscribe();
 	}
@@ -543,10 +542,12 @@ class ShellBarV2 extends UI5Element {
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
 		this.searchAdaptor?.unsubscribe();
-		this.legacyAdaptor?.unsubscribe();
 	}
 
 	onBeforeRendering() {
+		if (!this.legacyAdaptor && this.hasLegacyFeatures) {
+			this.initLegacyController();
+		}
 		// Sync branding breakpoint state
 		this.branding.forEach(brandingEl => {
 			brandingEl._isSBreakPoint = this.isSBreakPoint;
@@ -560,9 +561,8 @@ class ShellBarV2 extends UI5Element {
 		this.searchAdaptor?.subscribe();
 	}
 
-	async onAfterRendering() {
+	onAfterRendering() {
 		this.updateBreakpoint();
-		await renderFinished();
 		this.updateOverflow();
 	}
 
@@ -854,7 +854,6 @@ class ShellBarV2 extends UI5Element {
 				component: this,
 				getShadowRoot: () => this.shadowRoot,
 			});
-			this.legacyAdaptor.subscribe();
 		}
 	}
 

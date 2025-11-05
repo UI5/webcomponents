@@ -4,6 +4,8 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ShellBarV2 from "../ShellBarV2.js";
+import List from "@ui5/webcomponents/dist/List.js";
+import type Popover from "@ui5/webcomponents/dist/Popover.js";
 
 type ShellBarV2LegacyDeps = {
 	component: ShellBarV2;
@@ -32,20 +34,6 @@ class ShellBarV2Legacy {
 		this.getShadowRoot = deps.getShadowRoot;
 	}
 
-	/**
-	 * Subscribe to events (if needed in the future).
-	 */
-	subscribe() {
-		// No subscription needed for now
-	}
-
-	/**
-	 * Unsubscribe from events.
-	 */
-	unsubscribe() {
-		// No unsubscription needed for now
-	}
-
 	/* ------------- Menu Management -------------- */
 
 	handleMenuButtonClick() {
@@ -58,7 +46,7 @@ class ShellBarV2Legacy {
 		const menuPopover = this.getMenuPopover();
 
 		if (menuPopover && menuButton) {
-			menuPopover.opener = menuButton;
+			menuPopover.opener = menuButton as HTMLElement;
 			menuPopover.open = true;
 		}
 	}
@@ -80,8 +68,8 @@ class ShellBarV2Legacy {
 		this.component.menuPopoverOpen = true;
 		const menuPopover = this.getMenuPopover();
 		if (menuPopover?.content && menuPopover.content.length) {
-			const list = menuPopover.content[0] as any;
-			if (list.focusFirstItem) {
+			const list = menuPopover.content[0];
+			if (list instanceof List) {
 				list.focusFirstItem();
 			}
 		}
@@ -93,7 +81,7 @@ class ShellBarV2Legacy {
 
 	private getMenuPopover() {
 		const shadowRoot = this.getShadowRoot();
-		return shadowRoot?.querySelector(".ui5-shellbar-menu-popover") as any;
+		return shadowRoot?.querySelector<Popover>(".ui5-shellbar-menu-popover");
 	}
 
 	get hasMenuItems(): boolean {
@@ -159,6 +147,21 @@ class ShellBarV2Legacy {
 		return !!this.component.secondaryTitle;
 	}
 
+	get showSecondaryTitle(): boolean {
+		// Secondary title only shown on non-S breakpoints (and when other conditions met)
+		if (this.component.isSBreakPoint) {
+			return false;
+		}
+
+		// With menu items: show if secondary title exists
+		if (this.hasMenuItems) {
+			return this.hasSecondaryTitle;
+		}
+
+		// Without menu items: show if secondary title exists and (primaryTitle or branding)
+		return this.hasSecondaryTitle && (this.hasPrimaryTitle || this.component.hasBranding);
+	}
+
 	get primaryTitle(): string {
 		return this.component.primaryTitle || "";
 	}
@@ -167,11 +170,21 @@ class ShellBarV2Legacy {
 		return this.component.secondaryTitle || "";
 	}
 
-	/* ------------- Menu Button (Mobile) -------------- */
+	/* ------------- Menu Button -------------- */
 
 	get showMenuButton(): boolean {
 		// Show menu button on S breakpoint if we have menu items or logo/title
 		return this.component.isSBreakPoint && (this.hasMenuItems || this.hasLogo || this.hasPrimaryTitle);
+	}
+
+	get showInteractiveMenuButton(): boolean {
+		// Show interactive menu button (with primaryTitle) on non-S breakpoints when menu items exist
+		return this.hasMenuItems && this.hasPrimaryTitle && !this.component.isSBreakPoint;
+	}
+
+	get showSeparateLogo(): boolean {
+		// Show logo separately when menu items exist and not on S breakpoint
+		return this.hasMenuItems && this.hasLogo && !this.showLogoInMenuButton;
 	}
 
 	get showLogoInMenuButton(): boolean {
@@ -192,10 +205,15 @@ class ShellBarV2Legacy {
 	/* ------------- Common -------------- */
 
 	get shouldRenderLegacyBranding(): boolean {
-		// Only render legacy branding if no modern branding slot is used
-		return !this.component.hasBranding && (this.hasLogo || this.hasPrimaryTitle || this.hasSecondaryTitle);
+		// Only render legacy branding if:
+		// - no modern branding slot is used
+		// - no menu items (when menu items exist, logo and title are rendered separately)
+		// - not on S breakpoint (on S, logo/title go inside menu button)
+		return !this.component.hasBranding
+			&& !this.hasMenuItems
+			&& !this.component.isSBreakPoint
+			&& (this.hasLogo || this.hasPrimaryTitle || this.hasSecondaryTitle);
 	}
 }
 
 export default ShellBarV2Legacy;
-
