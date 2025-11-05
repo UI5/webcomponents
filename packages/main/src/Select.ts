@@ -1174,10 +1174,10 @@ class Select extends UI5Element implements IFormInputElement {
 		return ids.length ? ids.join(" ") : undefined;
 	}
 
-	get accessibilityInfo() {	
-		const description = this.ariaLabelText 
-				? `${this.ariaLabelText}${this.text ? ` ${this.text}` : ""}`
-				: this.text || "";
+	get accessibilityInfo() {
+		const description = this.ariaLabelText
+			? `${this.ariaLabelText}${this.text ? ` ${this.text}` : ""}`
+			: this.text || "";
 
 		return {
 			role: "combobox" as AriaRole,
