@@ -36,6 +36,7 @@ function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 				<div class="ui5-vsd-header-end">
 					<Button
 						design="Transparent"
+						part="reset-button"
 						onClick={this._resetSettings}
 						disabled={this._disableResetButton}
 					>{this._resetButtonLabel}</Button>
