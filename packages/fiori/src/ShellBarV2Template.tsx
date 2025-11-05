@@ -1,4 +1,5 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
+import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
@@ -137,7 +138,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
 									>
 										{this.getAction("notifications")?.count && (
-											<span class="ui5-shellbar-badge">{this.getAction("notifications")?.count}</span>
+											<ButtonBadge slot="badge" design="OverlayText" text={this.getAction("notifications")?.count} />
 										)}
 									</Button>
 								)}
