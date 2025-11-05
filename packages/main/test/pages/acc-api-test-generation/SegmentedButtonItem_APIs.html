@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 SegmentedButtonItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/SegmentedButton.js";
+        import "@ui5/webcomponents/dist/SegmentedButtonItem.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-icons/dist/home.js";
+        import "@ui5/webcomponents-icons/dist/search.js";
+        import "@ui5/webcomponents-icons/dist/settings.js";
+        import "@ui5/webcomponents-icons/dist/favorite.js";
+        import "@ui5/webcomponents-icons/dist/bell.js";
+        import "@ui5/webcomponents-icons/dist/edit.js";
+        import "@ui5/webcomponents-icons/dist/save.js";
+        import "@ui5/webcomponents-icons/dist/print.js";
+        import "@ui5/webcomponents-icons/dist/copy.js";
+        import "@ui5/webcomponents-icons/dist/add.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="SegmentedButtonItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 SegmentedButtonItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to make individual items noninteractive</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Mixed enabled/disabled:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>Enabled</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item disabled>Disabled</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Enabled</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item disabled>Disabled</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Navigation with disabled items:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="home">Home</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="search" disabled>Search</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="favorite">Favorites</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="settings" disabled>Settings</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Multiple selection mode:</ui5-label>
+                                <ui5-segmented-button selection-mode="Multiple">
+                                    <ui5-segmented-button-item>Feature A</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item disabled>Feature B (Disabled)</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Feature C</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Feature D</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try clicking disabled items - they should not respond or change selection</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Selected Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using selected property to control selection state programmatically</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Pre-selected items:</ui5-label>
+                                <ui5-segmented-button id="preselectedButton">
+                                    <ui5-segmented-button-item>Option 1</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item selected>Pre-selected</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Option 3</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Multiple pre-selected:</ui5-label>
+                                <ui5-segmented-button selection-mode="Multiple">
+                                    <ui5-segmented-button-item selected>Bold</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Italic</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item selected>Underline</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Strikethrough</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Programmatic control:</ui5-label>
+                                <ui5-segmented-button id="programmticButton">
+                                    <ui5-segmented-button-item id="item1">Item 1</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item id="item2">Item 2</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item id="item3">Item 3</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                                <button onclick="selectSecondItem()">Select Item 2</button>
+                                <button onclick="clearSelection()">Clear All</button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use buttons to programmatically control selection state</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Tooltip Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using tooltip property to provide additional information on hover</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Icon-only with tooltips:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="home" tooltip="Navigate to home page"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="search" tooltip="Search for content"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="favorite" tooltip="View favorite items"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="settings" tooltip="Open application settings"></ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Text with tooltips:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item tooltip="Create a new document">New</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item tooltip="Save current document">Save</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item tooltip="Print current document">Print</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item tooltip="Copy selected content">Copy</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Mixed tooltips:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="edit" tooltip="Edit mode">Edit</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>View</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="print" tooltip="Print preview mode">Print Preview</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Hover over items to see custom tooltips</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName property to provide ARIA labels for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Icon-only with accessible names:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="home" accessible-name="Navigate to homepage"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="search" accessible-name="Search through content"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="bell" accessible-name="View notifications"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="settings" accessible-name="Open configuration settings"></ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Symbols with accessible names:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-name="Bold text formatting">B</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name="Italic text formatting">I</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name="Underline text formatting">U</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name="Strikethrough text formatting">S</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to hear descriptive accessible names</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleNameRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleNameRef property to reference labeling elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label id="viewLabel1">Display Mode</ui5-label>
+                                <ui5-label id="viewLabel2">Layout Options</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-name-ref="viewLabel1 viewLabel2">List</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name-ref="viewLabel1 viewLabel2">Grid</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name-ref="viewLabel1 viewLabel2">Table</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label id="timeLabel">Time Period</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-name-ref="timeLabel">Daily</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name-ref="timeLabel">Weekly</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-name-ref="timeLabel">Monthly</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Screen reader should announce referenced label text</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescription Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescription property to provide additional context</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Priority levels with descriptions:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-description="Low priority tasks that can be done later">Low</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-description="Medium priority tasks that should be completed soon">Medium</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-description="High priority tasks requiring immediate attention">High</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>File operations with descriptions:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="add" accessible-description="Create a new document from scratch">New</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="save" accessible-description="Save current document to storage">Save</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="copy" accessible-description="Copy selected content to clipboard">Copy</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Screen reader should announce additional descriptive information</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescriptionRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescriptionRef property to reference describing elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label id="sortDesc1">Sort items in ascending order</ui5-label>
+                                <ui5-label id="sortDesc2">Sort items in descending order</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-description-ref="sortDesc1">A-Z</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-description-ref="sortDesc2">Z-A</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label id="modeDesc">Choose between different display densities</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item accessible-description-ref="modeDesc">Compact</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-description-ref="modeDesc">Cozy</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item accessible-description-ref="modeDesc">Condensed</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Screen reader should read referenced description elements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using icon property to display SAP icons within items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Icon-only navigation:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="home"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="search"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="favorite"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="bell"></ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="settings"></ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Icon with text:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="add">New</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="edit">Edit</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="save">Save</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="print">Print</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Mixed icons and text:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item icon="home">Home</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>About</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item icon="bell">Notifications</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Contact</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Observe different icon types and combinations with text</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Text Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using text slot to define the content of segmented button items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Simple text content:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>First</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Second</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Third</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Different text lengths:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>A</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Medium</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Very Long Text Content</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Numbers and symbols:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>1</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>2</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>3</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>+</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Formatted content:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>Jan 2024</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Feb 2024</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Mar 2024</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Different text content formats and lengths are displayed properly</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Interactive Behavior API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing keyboard and mouse interaction behavior of individual items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Keyboard navigation test:</ui5-label>
+                                <ui5-segmented-button>
+                                    <ui5-segmented-button-item>Tab Here</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Arrow Keys</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Space/Enter</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Mouse interaction test:</ui5-label>
+                                <ui5-segmented-button id="mouseTestButton">
+                                    <ui5-segmented-button-item>Click Me</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item>Or Me</ui5-segmented-button-item>
+                                    <ui5-segmented-button-item disabled>Not Me</ui5-segmented-button-item>
+                                </ui5-segmented-button>
+                            </div>
+                            
+                            <ui5-label id="interactionOutput">No interactions yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use Tab to focus, arrow keys to navigate, Space/Enter to select, or click with mouse</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Programmatic selection control
+        function selectSecondItem() {
+            const items = document.getElementById('programmticButton').items;
+            items.forEach(item => item.selected = false);
+            document.getElementById('item2').selected = true;
+        }
+
+        function clearSelection() {
+            const items = document.getElementById('programmticButton').items;
+            items.forEach(item => item.selected = false);
+        }
+
+        // Mouse interaction logging
+        const mouseTestButton = document.getElementById('mouseTestButton');
+        const interactionOutput = document.getElementById('interactionOutput');
+
+        mouseTestButton.addEventListener('selection-change', (event) => {
+            const selectedItems = event.detail.selectedItems.map(item => item.textContent);
+            interactionOutput.textContent = `Mouse interaction: Selected ${selectedItems.join(', ')}`;
+            console.log('SegmentedButtonItem interaction:', event.detail);
+        });
+
+        // Additional event logging for demonstration
+        const allSegmentedButtons = document.querySelectorAll('ui5-segmented-button');
+        allSegmentedButtons.forEach((button, index) => {
+            button.addEventListener('selection-change', (event) => {
+                console.log(`SegmentedButton ${index} selection change:`, event.detail);
+            });
+        });
+
+        // Initialize some selections for demonstration
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set first item selected in some examples for demonstration
+            const preselectedButton = document.getElementById('preselectedButton');
+            if (preselectedButton && preselectedButton.items.length > 0) {
+                // Already has pre-selected item via HTML attribute
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
