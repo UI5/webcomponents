@@ -1,0 +1,24 @@
+.pageContainer {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+h1 {
+	color: var(--sapGroup_TitleTextColor);
+	font-size: var(--sapFontHeader5Size);
+	font-family: var(--sapFontHeaderFamily);
+}
+
+.popoverSettings div {
+	display: flex;
+	align-items: center;
+}
+
+.popoverOpenerContainer {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
