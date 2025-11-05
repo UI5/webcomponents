@@ -33,7 +33,12 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 
 				{!this.actionsInTitle && headerActions.call(this)}
 
-				<div class="ui5-dynamic-page-content" part="content">
+				<div
+					part="content"
+					class="ui5-dynamic-page-content"
+					onFocusIn={this.onContentFocusIn}
+					onFocusOut={this.onContentFocusOut}
+				>
 					<div class="ui5-dynamic-page-fit-content" part="fit-content">
 						<slot></slot>
 						{this.showFooter &&
