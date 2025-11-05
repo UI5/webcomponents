@@ -167,7 +167,6 @@
 	min-width: 0;
 	display: flex;
 	align-items: center;
-	margin: 0 0.5rem;
 	margin-left: auto;
 }
 
@@ -269,7 +268,6 @@
 .ui5-shellbar-assistant-button {
 	display: flex;
 	align-items: center;
-	margin-inline-start: var(--_ui5-shellbar-overflow-button-margin);
 }
 
 ::slotted([ui5-toggle-button][slot="assistant"]) {

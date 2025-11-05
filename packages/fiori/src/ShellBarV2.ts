@@ -448,7 +448,6 @@ class ShellBarV2 extends UI5Element {
 
 	private handleResizeBound: ResizeObserverCallback = this.handleResize.bind(this);
 
-	searchAdaptor?: IShellBarSearchController;
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
 	});
@@ -458,6 +457,12 @@ class ShellBarV2 extends UI5Element {
 	actionsAdaptor = new ShellBarV2Actions();
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
+
+	_searchAdaptor = new ShellBarV2Search(this.getSearchDeps());
+	_searchAdaptorLegacy = new ShellBarV2SearchLegacy({
+		...this.getSearchDeps(),
+		getDisableSearchCollapse: () => this.disableSearchCollapse,
+	});
 
 	/* =========================================================================
     Legacy Members
@@ -530,7 +535,6 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	onEnterDOM() {
-		this.initSearchController();
 		this.initLegacyController();
 		ResizeHandler.register(this, this.handleResizeBound);
 		this.searchAdaptor?.subscribe();
@@ -553,11 +557,12 @@ class ShellBarV2 extends UI5Element {
 		this.searchAdaptor?.syncShowSearchFieldState();
 		// subscribe to search adaptor for cases when search is added dynamically
 		this.searchAdaptor?.unsubscribe();
-		this.legacyAdaptor?.subscribe();
+		this.searchAdaptor?.subscribe();
 	}
 
-	onAfterRendering() {
+	async onAfterRendering() {
 		this.updateBreakpoint();
+		await renderFinished();
 		this.updateOverflow();
 	}
 
@@ -762,22 +767,21 @@ class ShellBarV2 extends UI5Element {
 	 * Self-collapsible search (ui5-shellbar-search) → ShellBarV2Search
 	 * Legacy search (ui5-input, custom div) → ShellBarLegacySearch
 	 */
-	private initSearchController() {
-		const deps = {
+	private getSearchDeps() {
+		return {
 			getSearchField: () => this.search,
 			getSearchState: () => this.showSearchField,
 			getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
 			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
 			getOverflowed: () => this.overflowAdaptor.isOverflowing(this.overflowOuter!, this.overflowInner!),
 		};
+	}
+
+	get searchAdaptor(): IShellBarSearchController {
 		if (this.isSelfCollapsibleSearch) {
-			this.searchAdaptor = new ShellBarV2Search(deps);
-		} else {
-			this.searchAdaptor = new ShellBarV2SearchLegacy({
-				...deps,
-				getDisableSearchCollapse: () => this.disableSearchCollapse,
-			});
+			return this._searchAdaptor;
 		}
+		return this._searchAdaptorLegacy;
 	}
 
 	handleSearchButtonClick() {
@@ -810,14 +814,12 @@ class ShellBarV2 extends UI5Element {
 	 * Sets search field state and fires toggle event.
 	 * Component coordination: delegates to controller for logic, fires event for external listeners.
 	 */
-	setSearchState(expanded: boolean) {
+	async setSearchState(expanded: boolean) {
 		if (expanded === this.showSearchField) {
 			return;
 		}
 		this.showSearchField = expanded;
-		requestAnimationFrame(() => {
-			this.updateOverflow();
-		});
+		await renderFinished();
 		this.fireDecoratorEvent("search-field-toggle", { expanded });
 	}
 
