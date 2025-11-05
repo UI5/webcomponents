@@ -34,7 +34,7 @@ function ShellBarV2SearchButton(this: ShellBarV2) {
 		<>
 			{!this.hideSearchButton && (
 				<Button
-					class="ui5-shellbar-search-button"
+					class="ui5-shellbar-search-button ui5-shellbar-action-button"
 					icon="sap-icon://search"
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}

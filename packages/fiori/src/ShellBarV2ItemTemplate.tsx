@@ -18,6 +18,7 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 
 	return (
 		<Button
+			class="ui5-shellbar-action-button"
 			icon={this.icon}
 			design="Transparent"
 			onClick={this._handleClick}

@@ -89,6 +89,34 @@
 }
 
 /* ============================================================================
+   ACTION BUTTONS (Items & Internal Actions)
+   ============================================================================ */
+
+.ui5-shellbar-action-button {
+	color: var(--sapShell_TextColor);
+}
+
+.ui5-shellbar-action-button:hover {
+	color: var(--sapShell_TextColor);
+}
+
+.ui5-shellbar-action-button[active] {
+	color: var(--_ui5_shellbar_button_active_color);
+}
+
+::slotted([ui5-toggle-button][slot="assistant"]) {
+	color: var(--sapShell_TextColor);
+}
+
+::slotted([ui5-toggle-button][slot="assistant"]:hover) {
+	color: var(--sapShell_TextColor);
+}
+
+::slotted([ui5-toggle-button][slot="assistant"][active]) {
+	color: var(--_ui5_shellbar_button_active_color);
+}
+
+/* ============================================================================
    START AREA (Start Button, Branding)
    ============================================================================ */
 

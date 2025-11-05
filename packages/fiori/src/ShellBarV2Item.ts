@@ -7,6 +7,7 @@ import type { AccessibilityAttributes } from "@ui5/webcomponents-base";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import ShellBarV2ItemTemplate from "./ShellBarV2ItemTemplate.js";
+import shellBarV2ItemStyles from "./generated/themes/ShellBarV2Item.css.js";
 
 type ShellBarV2ItemClickEventDetail = {
 	targetRef: HTMLElement,
@@ -29,6 +30,7 @@ type ShellBarV2ItemAccessibilityAttributes = Pick<AccessibilityAttributes, "expa
 	tag: "ui5-shellbar-v2-item",
 	renderer: jsxRenderer,
 	template: ShellBarV2ItemTemplate,
+	styles: shellBarV2ItemStyles,
 	dependencies: [Button, ListItemStandard],
 })
 /**

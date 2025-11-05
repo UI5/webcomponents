@@ -127,20 +127,20 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									</div>
 								))}
 
-							{this.getAction("notifications") && (
-								<Button
-									class="ui5-shellbar-bell-button"
-									icon="bell"
-									design="Transparent"
-									onClick={this._handleNotificationsClick}
-									tooltip={this._notificationsText}
-									accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
-								>
-									{this.getAction("notifications")?.count && (
-										<span class="ui5-shellbar-badge">{this.getAction("notifications")?.count}</span>
-									)}
-								</Button>
-							)}
+								{this.getAction("notifications") && (
+									<Button
+										class="ui5-shellbar-bell-button ui5-shellbar-action-button"
+										icon="bell"
+										design="Transparent"
+										onClick={this._handleNotificationsClick}
+										tooltip={this._notificationsText}
+										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
+									>
+										{this.getAction("notifications")?.count && (
+											<span class="ui5-shellbar-badge">{this.getAction("notifications")?.count}</span>
+										)}
+									</Button>
+								)}
 
 								{this.getAction("assistant") && (
 									<div class="ui5-shellbar-assistant-button">
@@ -154,7 +154,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					{this.showOverflowButton && (
 						<Button
 							id="ui5-shellbar-overflow-button"
-							class="ui5-shellbar-overflow-button"
+							class="ui5-shellbar-overflow-button ui5-shellbar-action-button"
 							icon="overflow"
 							design="Transparent"
 							onClick={this.handleOverflowClick}
@@ -163,30 +163,30 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						/>
 					)}
 
-				{this.getAction("profile") && (
-					<div
-						class="ui5-shellbar-image-button ui5-shellbar-no-overflow"
-						onClick={this._handleProfileClick}
-						role="button"
-						tabIndex={0}
-						aria-label={this._profileText}
-						aria-haspopup={this.accInfo.profile.accessibilityAttributes.hasPopup}
-						aria-expanded={this.accInfo.profile.accessibilityAttributes.expanded}
-					>
-						<slot name="profile"></slot>
-					</div>
-				)}
+					{this.getAction("profile") && (
+						<div
+							class="ui5-shellbar-image-button ui5-shellbar-no-overflow"
+							onClick={this._handleProfileClick}
+							role="button"
+							tabIndex={0}
+							aria-label={this._profileText}
+							aria-haspopup={this.accInfo.profile.accessibilityAttributes.hasPopup}
+							aria-expanded={this.accInfo.profile.accessibilityAttributes.expanded}
+						>
+							<slot name="profile"></slot>
+						</div>
+					)}
 
-				{this.getAction("product-switch") && (
-					<Button
-						class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow"
-						icon="grid"
-						design="Transparent"
-						onClick={this._handleProductSwitchClick}
-						tooltip={this._productsText}
-						accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
-					/>
-				)}
+					{this.getAction("product-switch") && (
+						<Button
+							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow"
+							icon="grid"
+							design="Transparent"
+							onClick={this._handleProductSwitchClick}
+							tooltip={this._productsText}
+							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
+						/>
+					)}
 
 				</div>
 			</header>
