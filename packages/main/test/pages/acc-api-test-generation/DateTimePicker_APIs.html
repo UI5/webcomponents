@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 DateTimePicker API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/DateTimePicker.js";
+        import "@ui5/webcomponents/dist/TimePicker.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Text.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Buddhist.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="DateTimePicker API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 DateTimePicker Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to define a formatted date and time value</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt1a2v3a4l5u6e7p8r9o0p1e2r3t4y5">
+                            <div>
+                                <ui5-label>Preset DateTime</ui5-label>
+                                <ui5-datetime-picker value="2024-01-15, 14:30:00"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Empty DateTime Picker</ui5-label>
+                                <ui5-datetime-picker placeholder="Select date and time"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Current DateTime</ui5-label>
+                                <ui5-datetime-picker id="current-datetime-picker"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the input operation has finished by pressing Enter or on focusout</div>
+                    <p class="test-instruction">Test instruction: Select a date and time to see the event details</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt2a3c4h5a6n7g8e9e0v1e2n3t4a5p6i">
+                            <div>
+                                <ui5-label>Interactive DateTime Picker</ui5-label>
+                                <ui5-datetime-picker id="event-picker" value="2024-06-15, 10:30:00"></ui5-datetime-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <strong>Selected DateTime:</strong> <span id="event-result">2024-06-15, 10:30:00</span><br>
+                                    <strong>Valid:</strong> <span id="event-valid">true</span><br>
+                                    <strong>JS Date Object:</strong> <span id="event-jsdate">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Format Pattern API</h2>
+                    <div class="text-muted fst-italic mb-3">Using format-pattern property to customize date and time display format</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dt3a4f5o6r7m8a9t0p1a2t3t4e5r6n7">
+                            <div>
+                                <ui5-label>Default Format</ui5-label>
+                                <ui5-datetime-picker value="2024-03-15, 14:30:00"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>US Format (MM/dd/yyyy, hh:mm:ss aa)</ui5-label>
+                                <ui5-datetime-picker format-pattern="MM/dd/yyyy, hh:mm:ss aa" value="03/15/2024, 02:30:00 PM"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>European Format (dd.MM.yyyy HH:mm)</ui5-label>
+                                <ui5-datetime-picker format-pattern="dd.MM.yyyy HH:mm" value="15.03.2024 14:30"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Long Format (EEEE, MMMM d, yyyy 'at' HH:mm)</ui5-label>
+                                <ui5-datetime-picker format-pattern="EEEE, MMMM d, yyyy 'at' HH:mm" value="Friday, March 15, 2024 at 14:30"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueState Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueState property to indicate validation status</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dt4a5v6a7l8u9e0s1t2a3t4e5p6r7o8">
+                            <div>
+                                <ui5-label>None (Default)</ui5-label>
+                                <ui5-datetime-picker value="2024-04-01, 12:00:00" value-state="None"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Positive</ui5-label>
+                                <ui5-datetime-picker value="2024-04-01, 12:00:00" value-state="Positive"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Critical</ui5-label>
+                                <ui5-datetime-picker value="2024-04-01, 12:00:00" value-state="Critical"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Negative</ui5-label>
+                                <ui5-datetime-picker value-state="Negative"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Information</ui5-label>
+                                <ui5-datetime-picker value="2024-04-01, 12:00:00" value-state="Information"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled and Readonly Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled and readonly properties to control component interaction</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dt5a6d7i8s9a0b1l2e3r4e5a6d7o8n9">
+                            <div>
+                                <ui5-label>Normal</ui5-label>
+                                <ui5-datetime-picker value="2024-05-01, 09:00:00"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Disabled</ui5-label>
+                                <ui5-datetime-picker value="2024-05-01, 09:00:00" disabled></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Readonly</ui5-label>
+                                <ui5-datetime-picker value="2024-05-01, 09:00:00" readonly></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property to mark the component as mandatory</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt6a7r8e9q0u1i2r3e4d5p6r7o8p9e0">
+                            <div>
+                                <ui5-label>Required DateTime Field</ui5-label>
+                                <ui5-datetime-picker required placeholder="Required date and time field"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Optional DateTime Field</ui5-label>
+                                <ui5-datetime-picker placeholder="Optional date and time field"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">MinDate and MaxDate Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using minDate and maxDate properties to restrict selectable dates</div>
+                    <p class="test-instruction">Test instruction: Try selecting dates outside the allowed range</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt7a8m9i0n1m2a3x4d5a6t7e8p9r0o1">
+                            <div>
+                                <ui5-label>Current Year Only (Min: 2024-01-01, Max: 2024-12-31)</ui5-label>
+                                <ui5-datetime-picker min-date="2024-01-01" max-date="2024-12-31" value="2024-06-15, 12:00:00"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Next 30 Days Only</ui5-label>
+                                <ui5-datetime-picker id="next30-datetime-picker"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideWeekNumbers Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideWeekNumbers property to control week numbers visibility in calendar</div>
+                    <p class="test-instruction">Test instruction: Click to open calendar and compare week numbers visibility</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dt8a9h0i1d2e3w4e5e6k7n8u9m0b1e2">
+                            <div>
+                                <ui5-label>With Week Numbers</ui5-label>
+                                <ui5-datetime-picker value="2024-07-15, 16:45:00"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Without Week Numbers</ui5-label>
+                                <ui5-datetime-picker value="2024-07-15, 16:45:00" hide-week-numbers></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Open and Close Events API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the component's picker is opened or closed</div>
+                    <p class="test-instruction">Test instruction: Click to open/close the picker and see event logging</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt9a0o1p2e3n4c5l6o7s8e9e0v1e2n3">
+                            <div>
+                                <ui5-label>Event Tracking DateTime Picker</ui5-label>
+                                <ui5-datetime-picker id="open-close-picker" value="2024-08-10, 11:20:00"></ui5-datetime-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <strong>Events Log:</strong>
+                                    <div id="events-log" style="max-height: 100px; overflow-y: auto;">No events yet</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Accessibility Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibility properties for screen readers and assistive technologies</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt0a1c2c3e4s5s6i7b8i9l0i1t2y3p4">
+                            <div>
+                                <ui5-label>Accessible Name</ui5-label>
+                                <ui5-datetime-picker accessible-name="Appointment DateTime" placeholder="Enter appointment date and time"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label id="meeting-label">Meeting DateTime</ui5-label>
+                                <ui5-datetime-picker accessible-name-ref="meeting-label" placeholder="Select meeting date and time"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Event DateTime</ui5-label>
+                                <ui5-datetime-picker accessible-description="Please select both date and time for the event" placeholder="Event date and time"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Responsive Behavior API</h2>
+                    <div class="text-muted fst-italic mb-3">DateTimePicker adapts to device type - popover on desktop, full screen on mobile</div>
+                    <p class="test-instruction">Test instruction: Resize browser window to see responsive behavior or test on mobile device</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt1a2r3e4s5p6o7n8s9i0v1e2b3e4h5">
+                            <div>
+                                <ui5-label>Responsive DateTime Picker</ui5-label>
+                                <ui5-datetime-picker value="2024-09-20, 13:15:00"></ui5-datetime-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <small>
+                                        <strong>Responsive behavior:</strong><br>
+                                        Desktop/Tablet: Opens as popover with date and time side by side<br>
+                                        Mobile: Opens full screen with toggle between date and time views
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Form Integration API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property for HTML form identification and submission</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dt2a3f4o5r6m7i8n9t0e1g2r3a4t5i6">
+                            <div>
+                                <form id="datetime-form">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div>
+                                            <ui5-label>Meeting Start:</ui5-label>
+                                            <ui5-datetime-picker name="meetingStart" required value="2024-01-15, 09:00:00"></ui5-datetime-picker>
+                                        </div>
+                                        <div>
+                                            <ui5-label>Meeting End:</ui5-label>
+                                            <ui5-datetime-picker name="meetingEnd" required value="2024-01-15, 10:00:00"></ui5-datetime-picker>
+                                        </div>
+                                        <div>
+                                            <ui5-label>Reminder Time:</ui5-label>
+                                            <ui5-datetime-picker name="reminderTime" value="2024-01-15, 08:45:00"></ui5-datetime-picker>
+                                        </div>
+                                        <ui5-button type="Submit" class="mt-2">Schedule Meeting</ui5-button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Time Format Variants API</h2>
+                    <div class="text-muted fst-italic mb-3">DateTimePicker supports both 12-hour (with AM/PM) and 24-hour time formats</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dt3a4t5i6m7e8f9o0r1m2a3t4v5a6r7">
+                            <div>
+                                <ui5-label>24-Hour Format (HH:mm:ss)</ui5-label>
+                                <ui5-datetime-picker format-pattern="dd/MM/yyyy HH:mm:ss" value="15/03/2024 14:30:45"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>12-Hour Format (hh:mm:ss aa)</ui5-label>
+                                <ui5-datetime-picker format-pattern="dd/MM/yyyy hh:mm:ss aa" value="15/03/2024 02:30:45 PM"></ui5-datetime-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Minutes Only (HH:mm)</ui5-label>
+                                <ui5-datetime-picker format-pattern="dd/MM/yyyy HH:mm" value="15/03/2024 14:30"></ui5-datetime-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Set current datetime
+        const currentDateTimePicker = document.getElementById('current-datetime-picker');
+        if (currentDateTimePicker) {
+            const now = new Date();
+            const formatDateTime = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${year}-${month}-${day}, ${hours}:${minutes}:${seconds}`;
+            };
+            currentDateTimePicker.value = formatDateTime(now);
+        }
+
+        // Set next 30 days range
+        const next30DateTimePicker = document.getElementById('next30-datetime-picker');
+        if (next30DateTimePicker) {
+            const today = new Date();
+            const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const formatDate = (date) => date.toISOString().split('T')[0];
+            next30DateTimePicker.minDate = formatDate(today);
+            next30DateTimePicker.maxDate = formatDate(next30Days);
+            
+            const formatDateTime = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}, 12:00:00`;
+            };
+            next30DateTimePicker.value = formatDateTime(today);
+        }
+
+        // Change event demonstration
+        const eventPicker = document.getElementById('event-picker');
+        const eventResult = document.getElementById('event-result');
+        const eventValid = document.getElementById('event-valid');
+        const eventJsDate = document.getElementById('event-jsdate');
+        
+        function updateEventDetails() {
+            if (eventPicker && eventResult && eventValid && eventJsDate) {
+                eventResult.textContent = eventPicker.value || '""';
+                
+                // Access the valid property - it should be available on the component
+                try {
+                    eventValid.textContent = eventPicker.valid !== undefined ? eventPicker.valid.toString() : 'true';
+                } catch (e) {
+                    eventValid.textContent = 'true';
+                }
+                
+                // Access the dateValue property
+                try {
+                    if (eventPicker.dateValue) {
+                        eventJsDate.textContent = eventPicker.dateValue.toString();
+                    } else {
+                        eventJsDate.textContent = 'null';
+                    }
+                } catch (e) {
+                    eventJsDate.textContent = 'null';
+                }
+            }
+        }
+        
+        // Wait for the DateTimePicker component to be defined before accessing its properties
+        customElements.whenDefined('ui5-datetime-picker').then(() => {
+            if (eventPicker) {
+                eventPicker.addEventListener('change', (e) => {
+                    // Update the event details after the change
+                    updateEventDetails();
+                });
+                
+                // Initial update after component is ready
+                setTimeout(updateEventDetails, 100);
+            }
+        });
+
+        // Open/Close events demonstration
+        const openClosePicker = document.getElementById('open-close-picker');
+        const eventsLog = document.getElementById('events-log');
+        
+        if (openClosePicker && eventsLog) {
+            let eventCount = 0;
+            
+            openClosePicker.addEventListener('open', () => {
+                eventCount++;
+                const timestamp = new Date().toLocaleTimeString();
+                eventsLog.innerHTML += `<div>${eventCount}. Opened at ${timestamp}</div>`;
+                eventsLog.scrollTop = eventsLog.scrollHeight;
+            });
+            
+            openClosePicker.addEventListener('close', () => {
+                eventCount++;
+                const timestamp = new Date().toLocaleTimeString();
+                eventsLog.innerHTML += `<div>${eventCount}. Closed at ${timestamp}</div>`;
+                eventsLog.scrollTop = eventsLog.scrollHeight;
+            });
+        }
+
+        // Form integration demonstration
+        const datetimeForm = document.getElementById('datetime-form');
+        if (datetimeForm) {
+            datetimeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(datetimeForm);
+                console.log('Form data:', Object.fromEntries(formData));
+                alert('Form submitted! Check console for data.');
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
