@@ -30,7 +30,7 @@
 .ui5-shellbar-root {
 	display: flex;
 	align-items: center;
-	height: 2.75rem;
+	height: var(--_ui5_shellbar_root_height);
 	box-shadow: inset 0 -0.0625rem var(--sapShell_BorderColor);
 	position: relative;
 	font-size: var(--sapFontSize);

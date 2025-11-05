@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar vs ShellBarV2 Comparison</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			margin: 0;
+			padding: 0;
+			background: #f7f7f7;
+		}
+
+		.controls {
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			background: white;
+			padding: 1rem;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+			align-items: center;
+		}
+
+		.control-group {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.control-section {
+			width: 100%;
+			padding: 0.5rem;
+			border-top: 2px solid #e0e0e0;
+		}
+
+		.control-section h3 {
+			margin: 0.5rem 0;
+			font-size: 0.9rem;
+			color: #354a5f;
+			text-transform: uppercase;
+		}
+
+		.shellbar-container {
+			margin: 2rem 0;
+			background: white;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.shellbar-label {
+			padding: 1rem;
+			background: #0a6ed1;
+			color: white;
+			font-size: 1.2rem;
+			font-weight: bold;
+		}
+
+		.shellbar-label.v1 {
+			background: #0a6ed1;
+		}
+
+		.shellbar-label.v2 {
+			background: #107e3e;
+		}
+
+		h1 {
+			text-align: center;
+			padding: 2rem;
+			margin: 0;
+			background: #354a5f;
+			color: white;
+		}
+
+		.info {
+			padding: 1rem;
+			background: #fef7e4;
+			border-left: 4px solid #e9730c;
+			margin: 1rem;
+		}
+
+		.spacer {
+			height: 2rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>ShellBar v1 vs ShellBarV2 Comparison</h1>
+
+	<div class="controls">
+		<!-- Basic Features -->
+		<div class="control-group">
+			<ui5-label>Notifications:</ui5-label>
+			<ui5-switch id="toggleNotifications"></ui5-switch>
+		</div>
+		
+		<div class="control-group">
+			<ui5-label>Product Switch:</ui5-label>
+			<ui5-switch id="toggleProductSwitch"></ui5-switch>
+		</div>
+		
+		<div class="control-group">
+			<ui5-label>Profile:</ui5-label>
+			<ui5-switch id="toggleProfile" checked></ui5-switch>
+		</div>
+		
+		<div class="control-group">
+			<ui5-label>Assistant:</ui5-label>
+			<ui5-switch id="toggleAssistant"></ui5-switch>
+		</div>
+		
+		<div class="control-group">
+			<ui5-label>Start Button:</ui5-label>
+			<ui5-switch id="toggleStartButton"></ui5-switch>
+		</div>
+		
+		<div class="control-group">
+			<ui5-label>Notifications Count:</ui5-label>
+			<ui5-input id="notificationsCount" value="" placeholder="e.g. 5, 99+"></ui5-input>
+		</div>
+
+		<!-- Search Features -->
+		<div class="control-section">
+			<h3>Search</h3>
+			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+				<div class="control-group">
+					<ui5-label>Search Field:</ui5-label>
+					<ui5-switch id="toggleSearchField"></ui5-switch>
+				</div>
+				<div class="control-group">
+					<ui5-label>Search Type:</ui5-label>
+					<ui5-select id="searchType" style="width: 200px;">
+						<ui5-option value="input" selected>ui5-input</ui5-option>
+						<ui5-option value="shellbar-search">ui5-shellbar-search</ui5-option>
+					</ui5-select>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content Features -->
+		<div class="control-section">
+			<h3>Content Items (Overflow Test)</h3>
+			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+				<div class="control-group">
+					<ui5-label>Content Items:</ui5-label>
+					<ui5-switch id="toggleContent" checked></ui5-switch>
+				</div>
+				<div class="control-group">
+					<ui5-label>Show Spacer:</ui5-label>
+					<ui5-switch id="toggleSpacer"></ui5-switch>
+				</div>
+			</div>
+		</div>
+
+		<!-- Custom Items Features -->
+		<div class="control-section">
+			<h3>Custom Items</h3>
+			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+				<div class="control-group">
+					<ui5-label>Custom Items:</ui5-label>
+					<ui5-switch id="toggleItems" checked></ui5-switch>
+				</div>
+				<div class="control-group">
+					<ui5-label>More Items:</ui5-label>
+					<ui5-switch id="toggleMoreItems"></ui5-switch>
+				</div>
+			</div>
+		</div>
+
+		<!-- Legacy Features -->
+		<div class="control-section">
+			<h3>Legacy Features (V1 Only)</h3>
+			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+				<div class="control-group">
+					<ui5-label>Show Secondary Title:</ui5-label>
+					<ui5-switch id="toggleSecondaryTitle" checked></ui5-switch>
+				</div>
+				<div class="control-group">
+					<ui5-label>Menu Items:</ui5-label>
+					<ui5-switch id="toggleMenuItems"></ui5-switch>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="info">
+		<strong>How to use:</strong> Toggle switches to enable/disable features. Both ShellBars update simultaneously for easy comparison.
+		<br><strong>Tip:</strong> Resize window to test overflow behavior with content items. Check console for event logs.
+	</div>
+
+	<!-- ShellBar V1 (Old) -->
+	<div class="shellbar-container">
+		<ui5-shellbar
+			id="shellbarV1"
+			primary-title="Product Title"
+			secondary-title="Secondary Title"
+		>
+			<ui5-shellbar-branding slot="branding">
+				Product Title
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+			</ui5-shellbar-branding>
+
+			<ui5-button icon="nav-back" slot="startButton" id="startButtonV1" style="display: none;"></ui5-button>
+			
+			<ui5-toggle-button icon="sap-icon://da" slot="assistant" id="assistantV1" style="display: none;"></ui5-toggle-button>
+			
+			<ui5-input placeholder="Search" slot="searchField" id="searchFieldV1"></ui5-input>
+			
+			<!-- Content Items -->
+			<ui5-button slot="content" data-hide-order="1" id="contentV1-1" style="display: none;">Action 1</ui5-button>
+			<ui5-tag slot="content" data-hide-order="2" color-scheme="7" id="contentV1-2" style="display: none;">Tag</ui5-tag>
+			<ui5-button slot="content" data-hide-order="3" id="contentV1-3" style="display: none;">Action 3</ui5-button>
+			<ui5-shellbar-spacer slot="content" id="spacerV1" style="display: none;"></ui5-shellbar-spacer>
+			<ui5-button slot="content" data-hide-order="4" id="contentV1-4" style="display: none;">End 1</ui5-button>
+			<ui5-button slot="content" data-hide-order="5" id="contentV1-5" style="display: none;">End 2</ui5-button>
+			
+			<ui5-avatar slot="profile" id="profileV1">
+				<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+			</ui5-avatar>
+
+			<!-- Custom Items -->
+			<ui5-shellbar-item icon="activities" text="Tasks" id="itemV1-1"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="sys-help" text="Help" id="itemV1-2"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="action-settings" text="Settings" count="3" id="itemV1-3" style="display: none;"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="feedback" text="Feedback" id="itemV1-4" style="display: none;"></ui5-shellbar-item>
+
+			<!-- Menu Items (Legacy) -->
+			<ui5-li slot="menuItems" id="menuItemV1-1" style="display: none;">Dashboard</ui5-li>
+			<ui5-li slot="menuItems" id="menuItemV1-2" style="display: none;">Reports</ui5-li>
+			<ui5-li slot="menuItems" id="menuItemV1-3" style="display: none;">Settings</ui5-li>
+		</ui5-shellbar>
+	</div>
+
+	<!-- ShellBar V2 (New) -->
+	<div class="shellbar-container">
+		<ui5-shellbar-v2
+			id="shellbarV2"
+			primary-title="Product Title"
+			secondary-title="Secondary Title"
+		>
+			<ui5-shellbar-branding slot="branding">
+				Product Title
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+			</ui5-shellbar-branding>
+
+			<ui5-button icon="nav-back" slot="startButton" id="startButtonV2" style="display: none;"></ui5-button>
+			
+			<ui5-toggle-button icon="sap-icon://da" slot="assistant" id="assistantV2" style="display: none;"></ui5-toggle-button>
+			
+			<ui5-input placeholder="Search" slot="searchField" id="searchFieldV2"></ui5-input>
+			
+			<!-- Content Items -->
+			<ui5-button slot="content" data-hide-order="1" id="contentV2-1" style="display: none;">Action 1</ui5-button>
+			<ui5-tag slot="content" data-hide-order="2" color-scheme="7" id="contentV2-2" style="display: none;">Tag</ui5-tag>
+			<ui5-button slot="content" data-hide-order="3" id="contentV2-3" style="display: none;">Action 3</ui5-button>
+			<ui5-shellbar-spacer slot="content" id="spacerV2" style="display: none;"></ui5-shellbar-spacer>
+			<ui5-button slot="content" data-hide-order="4" id="contentV2-4" style="display: none;">End 1</ui5-button>
+			<ui5-button slot="content" data-hide-order="5" id="contentV2-5" style="display: none;">End 2</ui5-button>
+			
+			<ui5-avatar slot="profile" id="profileV2">
+				<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+			</ui5-avatar>
+
+			<!-- Custom Items -->
+			<ui5-shellbar-v2-item icon="activities" text="Tasks" id="itemV2-1"></ui5-shellbar-v2-item>
+			<ui5-shellbar-v2-item icon="sys-help" text="Help" id="itemV2-2"></ui5-shellbar-v2-item>
+			<ui5-shellbar-v2-item icon="action-settings" text="Settings" count="3" id="itemV2-3" style="display: none;"></ui5-shellbar-v2-item>
+			<ui5-shellbar-v2-item icon="feedback" text="Feedback" id="itemV2-4" style="display: none;"></ui5-shellbar-v2-item>
+
+			<!-- Menu Items (Legacy) -->
+			<ui5-li slot="menuItems" id="menuItemV2-1" style="display: none;">Dashboard</ui5-li>
+			<ui5-li slot="menuItems" id="menuItemV2-2" style="display: none;">Reports</ui5-li>
+			<ui5-li slot="menuItems" id="menuItemV2-3" style="display: none;">Settings</ui5-li>
+		</ui5-shellbar-v2>
+	</div>
+
+	<div class="spacer"></div>
+
+	<script>
+		const shellbarV1 = document.getElementById('shellbarV1');
+		const shellbarV2 = document.getElementById('shellbarV2');
+		
+		const toggleNotifications = document.getElementById('toggleNotifications');
+		const toggleProductSwitch = document.getElementById('toggleProductSwitch');
+		const toggleSearchField = document.getElementById('toggleSearchField');
+		const toggleProfile = document.getElementById('toggleProfile');
+		const toggleAssistant = document.getElementById('toggleAssistant');
+		const toggleItems = document.getElementById('toggleItems');
+		const toggleMoreItems = document.getElementById('toggleMoreItems');
+		const toggleStartButton = document.getElementById('toggleStartButton');
+		const toggleContent = document.getElementById('toggleContent');
+		const toggleSpacer = document.getElementById('toggleSpacer');
+		const toggleSecondaryTitle = document.getElementById('toggleSecondaryTitle');
+		const toggleMenuItems = document.getElementById('toggleMenuItems');
+		const searchType = document.getElementById('searchType');
+		const notificationsCount = document.getElementById('notificationsCount');
+
+		// Notifications toggle
+		toggleNotifications.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			shellbarV1.showNotifications = checked;
+			shellbarV2.showNotifications = checked;
+			console.log('Notifications:', checked);
+		});
+
+		// Product Switch toggle
+		toggleProductSwitch.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			shellbarV1.showProductSwitch = checked;
+			shellbarV2.showProductSwitch = checked;
+			console.log('Product Switch:', checked);
+		});
+
+		// Search Field toggle
+		toggleSearchField.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			shellbarV1.showSearchField = checked;
+			shellbarV2.showSearchField = checked;
+			console.log('Search Field:', checked);
+		});
+
+		// Profile toggle
+		toggleProfile.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('profileV1').style.display = checked ? '' : 'none';
+			document.getElementById('profileV2').style.display = checked ? '' : 'none';
+			console.log('Profile:', checked);
+		});
+
+		// Assistant toggle
+		toggleAssistant.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('assistantV1').style.display = checked ? '' : 'none';
+			document.getElementById('assistantV2').style.display = checked ? '' : 'none';
+			console.log('Assistant:', checked);
+		});
+
+		// Custom Items toggle
+		toggleItems.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('itemV1-1').style.display = checked ? '' : 'none';
+			document.getElementById('itemV1-2').style.display = checked ? '' : 'none';
+			document.getElementById('itemV2-1').style.display = checked ? '' : 'none';
+			document.getElementById('itemV2-2').style.display = checked ? '' : 'none';
+			console.log('Custom Items:', checked);
+		});
+
+		// More Items toggle
+		toggleMoreItems.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('itemV1-3').style.display = checked ? '' : 'none';
+			document.getElementById('itemV1-4').style.display = checked ? '' : 'none';
+			document.getElementById('itemV2-3').style.display = checked ? '' : 'none';
+			document.getElementById('itemV2-4').style.display = checked ? '' : 'none';
+			console.log('More Items:', checked);
+		});
+
+		// Start Button toggle
+		toggleStartButton.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('startButtonV1').style.display = checked ? '' : 'none';
+			document.getElementById('startButtonV2').style.display = checked ? '' : 'none';
+			console.log('Start Button:', checked);
+		});
+
+		// Content Items toggle
+		toggleContent.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			for (let i = 1; i <= 5; i++) {
+				document.getElementById(`contentV1-${i}`).style.display = checked ? '' : 'none';
+				document.getElementById(`contentV2-${i}`).style.display = checked ? '' : 'none';
+			}
+			console.log('Content Items:', checked);
+		});
+
+		// Spacer toggle
+		toggleSpacer.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			document.getElementById('spacerV1').style.display = checked ? '' : 'none';
+			document.getElementById('spacerV2').style.display = checked ? '' : 'none';
+			console.log('Spacer:', checked);
+		});
+
+		// Secondary Title toggle
+		toggleSecondaryTitle.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			shellbarV1.secondaryTitle = checked ? 'Secondary Title' : '';
+			shellbarV2.secondaryTitle = checked ? 'Secondary Title' : '';
+			console.log('Secondary Title:', checked);
+		});
+
+		// Menu Items toggle
+		toggleMenuItems.addEventListener('ui5-change', (e) => {
+			const checked = e.target.checked;
+			for (let i = 1; i <= 3; i++) {
+				document.getElementById(`menuItemV1-${i}`).style.display = checked ? '' : 'none';
+				document.getElementById(`menuItemV2-${i}`).style.display = checked ? '' : 'none';
+			}
+			console.log('Menu Items:', checked);
+		});
+
+		// Search Type selector
+		searchType.addEventListener('ui5-change', (e) => {
+			const value = e.detail.selectedOption.value;
+			console.log('Search Type changed to:', value);
+			
+			// Remove old search fields
+			const oldV1 = document.getElementById('searchFieldV1');
+			const oldV2 = document.getElementById('searchFieldV2');
+			
+			if (value === 'shellbar-search') {
+				// Create ui5-shellbar-search elements
+				const newV1 = document.createElement('ui5-shellbar-search');
+				newV1.id = 'searchFieldV1';
+				newV1.setAttribute('slot', 'searchField');
+				newV1.setAttribute('placeholder', 'Search...');
+				newV1.setAttribute('collapsed', '');
+				
+				const newV2 = document.createElement('ui5-shellbar-search');
+				newV2.id = 'searchFieldV2';
+				newV2.setAttribute('slot', 'searchField');
+				newV2.setAttribute('placeholder', 'Search...');
+				newV2.setAttribute('collapsed', '');
+				
+				oldV1.replaceWith(newV1);
+				oldV2.replaceWith(newV2);
+			} else {
+				// Create ui5-input elements
+				const newV1 = document.createElement('ui5-input');
+				newV1.id = 'searchFieldV1';
+				newV1.setAttribute('slot', 'searchField');
+				newV1.setAttribute('placeholder', 'Search');
+				
+				const newV2 = document.createElement('ui5-input');
+				newV2.id = 'searchFieldV2';
+				newV2.setAttribute('slot', 'searchField');
+				newV2.setAttribute('placeholder', 'Search');
+				
+				oldV1.replaceWith(newV1);
+				oldV2.replaceWith(newV2);
+			}
+		});
+
+		// Notifications count input
+		notificationsCount.addEventListener('ui5-input', (e) => {
+			const value = e.target.value;
+			shellbarV1.notificationsCount = value || undefined;
+			shellbarV2.notificationsCount = value || undefined;
+			console.log('Notifications Count:', value);
+		});
+
+		// Event listeners for V1
+		shellbarV1.addEventListener('ui5-notifications-click', (e) => {
+			console.log('V1 Notifications clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-profile-click', (e) => {
+			console.log('V1 Profile clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-product-switch-click', (e) => {
+			console.log('V1 Product Switch clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-search-button-click', (e) => {
+			console.log('V1 Search button clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-logo-click', (e) => {
+			console.log('V1 Logo clicked', e.detail);
+		});
+
+		// Event listeners for V2
+		shellbarV2.addEventListener('ui5-notifications-click', (e) => {
+			console.log('V2 Notifications clicked', e.detail);
+		});
+
+		shellbarV2.addEventListener('ui5-profile-click', (e) => {
+			console.log('V2 Profile clicked', e.detail);
+		});
+
+		shellbarV2.addEventListener('ui5-product-switch-click', (e) => {
+			console.log('V2 Product Switch clicked', e.detail);
+		});
+
+		shellbarV2.addEventListener('ui5-search-button-click', (e) => {
+			console.log('V2 Search button clicked', e.detail);
+		});
+
+		shellbarV2.addEventListener('ui5-logo-click', (e) => {
+			console.log('V2 Logo clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-menu-item-click', (e) => {
+			console.log('V1 Menu item clicked', e.detail);
+		});
+
+		shellbarV2.addEventListener('ui5-menu-item-click', (e) => {
+			console.log('V2 Menu item clicked', e.detail);
+		});
+
+		shellbarV1.addEventListener('ui5-content-item-visibility-change', (e) => {
+			console.log('V1 Content visibility changed:', e.detail.items.length, 'items hidden');
+		});
+
+		shellbarV2.addEventListener('ui5-content-item-visibility-change', (e) => {
+			console.log('V2 Content visibility changed:', e.detail.items.length, 'items hidden');
+		});
+
+		shellbarV1.addEventListener('ui5-search-field-toggle', (e) => {
+			console.log('V1 Search field toggled:', e.detail.expanded);
+		});
+
+		shellbarV2.addEventListener('ui5-search-field-toggle', (e) => {
+			console.log('V2 Search field toggled:', e.detail.expanded);
+		});
+
+		// Toggle assistant icon on click
+		document.querySelectorAll('ui5-toggle-button').forEach(el => {
+			el.addEventListener('click', (event) => {
+				const toggleButton = event.target;
+				toggleButton.icon = toggleButton.pressed ? 'sap-icon://da-2' : 'sap-icon://da';
+			});
+		});
+
+		console.log('ShellBar Comparison Page loaded');
+		console.log('Open browser console to see event logs');
+		console.log('Resize window to test overflow behavior!');
+	</script>
+</body>
+</html>
+

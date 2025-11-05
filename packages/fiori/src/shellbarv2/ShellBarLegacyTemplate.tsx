@@ -41,7 +41,7 @@ function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
 	return (
 		<div class="ui5-shellbar-title-area">
 			{legacy.hasPrimaryTitle && (
-				<div class="ui5-shellbar-primary-title">{legacy.primaryTitle}</div>
+				<div class="ui5-shellbar-title ui5-shellbar-primary-title">{legacy.primaryTitle}</div>
 			)}
 			{legacy.hasSecondaryTitle && (
 				<div class="ui5-shellbar-secondary-title">{legacy.secondaryTitle}</div>
@@ -61,7 +61,7 @@ function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
 	}
 
 	return (
-		<div class="ui5-shellbar-legacy-branding">
+		<div class="ui5-shellbar-legacy-branding ui5-shellbar-logo-area">
 			{ShellBarV2LegacyLogoArea.call(this)}
 			{ShellBarV2LegacyTitleArea.call(this)}
 		</div>

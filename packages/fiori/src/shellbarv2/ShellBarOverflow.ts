@@ -138,7 +138,7 @@ class ShellBarV2Overflow {
 
 		const notificationsAction = actions.find(a => a.id === "notifications");
 		if (notificationsAction) {
-			const selector = ".ui5-shellbar-notifications-button";
+			const selector = ".ui5-shellbar-bell-button";
 			let hideOrder = 1 + (showSearchField ? 100 : 0);
 
 			if (hiddenItemsIds.includes("notifications")) {
@@ -201,7 +201,7 @@ class ShellBarV2Overflow {
 				id: "product-switch",
 				hideOrder: 999,
 				"protected": true,
-				selector: ".ui5-shellbar-product-switch-button",
+				selector: ".ui5-shellbar-button-product-switch",
 			});
 		}
 
@@ -211,7 +211,7 @@ class ShellBarV2Overflow {
 				id: "profile",
 				hideOrder: 1000,
 				"protected": true,
-				selector: ".ui5-shellbar-profile-button",
+				selector: ".ui5-shellbar-image-button",
 			});
 		}
 

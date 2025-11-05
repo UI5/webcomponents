@@ -550,9 +550,7 @@ class ShellBarV2 extends UI5Element {
 
 		this.updateActions();
 
-		if (this.isSelfCollapsibleSearch) {
-			this.searchAdaptor?.syncShowSearchFieldState();
-		}
+		this.searchAdaptor?.syncShowSearchFieldState();
 	}
 
 	onAfterRendering() {
@@ -614,7 +612,7 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	_handleNotificationsClick() {
-		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-notifications-button");
+		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-bell-button");
 		if (notificationsBtn) {
 			this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
 		}
@@ -625,7 +623,7 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	_handleProfileClick() {
-		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-profile-button");
+		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
 		if (profileBtn) {
 			this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
 		}
@@ -636,7 +634,7 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	_handleProductSwitchClick() {
-		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-product-switch-button");
+		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
 		if (productSwitchBtn) {
 			this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
 		}
