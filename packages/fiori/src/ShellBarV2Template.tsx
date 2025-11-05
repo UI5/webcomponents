@@ -118,15 +118,11 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
-								{this.items.map(item => (
-									<div
-										key={item._id}
-										class="ui5-shellbar-custom-item"
-										data-ui5-stable={(item as any)._individualSlot}
-									>
-										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
+								{this.getAction("assistant") && (
+									<div class="ui5-shellbar-assistant-button">
+										<slot name="assistant"></slot>
 									</div>
-								))}
+								)}
 
 								{this.getAction("notifications") && (
 									<Button
@@ -143,11 +139,15 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									</Button>
 								)}
 
-								{this.getAction("assistant") && (
-									<div class="ui5-shellbar-assistant-button">
-										<slot name="assistant"></slot>
+								{this.items.map(item => (
+									<div
+										key={item._id}
+										class="ui5-shellbar-custom-item"
+										data-ui5-stable={(item as any)._individualSlot}
+									>
+										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
 									</div>
-								)}
+								))}
 							</div>
 						</div>
 					</div>
