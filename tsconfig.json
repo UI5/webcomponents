@@ -1,0 +1,35 @@
+{
+	"files": [],
+	"references": [
+		{
+			"path": "./packages/base"
+		},
+		{
+			"path": "./packages/main"
+		},
+		{
+			"path": "./packages/fiori"
+		},
+		{
+			"path": "./packages/ai"
+		},
+		{
+			"path": "./packages/compat"
+		},
+		{
+			"path": "./packages/localization"
+		},
+		{
+			"path": "./packages/theming"
+		},
+		{
+			"path": "./packages/icons"
+		},
+		{
+			"path": "./packages/icons-business-suite"
+		},
+		{
+			"path": "./packages/icons-tnt"
+		},
+	]
+}

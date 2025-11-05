@@ -292,8 +292,9 @@ class Menu extends UI5Element {
 	/** Returns all menu items (including those in groups */
 	get _allMenuItems() {
 		const items: MenuItem[] = [];
+		const slottedItems = this.getSlottedNodes<IMenuItem>("items");
 
-		this.items.forEach(item => {
+		slottedItems.forEach(item => {
 			if (isInstanceOfMenuItemGroup(item)) {
 				items.push(...item._menuItems);
 			} else if (!isInstanceOfMenuSeparator(item)) {

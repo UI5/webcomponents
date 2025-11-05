@@ -387,4 +387,90 @@ describe("Accessibility", () => {
 					.should("have.attr", "aria-label", labelText);
 			});
 	});
+
+	it("should provide correct accessibilityInfo properties", () => {
+		cy.mount(
+			<>
+				<CheckBox 
+					id="accessibilityTestCb" 
+					text="Accessibility Test" 
+					required 
+					readonly 
+					accessibleName="Custom Aria Label"
+				></CheckBox>
+			</>
+		);
+
+		cy.get("#accessibilityTestCb").then($checkbox => {
+			const checkbox = $checkbox[0] as CheckBox;
+			const accInfo = checkbox.accessibilityInfo;
+			
+            // Description should come from accessibleName property
+			expect(accInfo.description).to.equal("Custom Aria Label");
+			
+			expect(accInfo.readonly).to.be.true;
+			expect(accInfo.required).to.be.true;
+			expect(accInfo.disabled).to.be.false;
+			
+			expect(accInfo.role).to.equal("checkbox");
+		});    
+	});
+
+    it("should provide correct accessibilityInfo description from accessibleNameRef", () => {
+        cy.mount(
+            <>
+                <label id="cb-label">Label For Accessibility Test</label>
+                <CheckBox 
+                    id="accessibilityTestCb1" 
+                    accessibleNameRef="cb-label"
+                ></CheckBox>
+            </>
+        );
+
+        cy.get("#accessibilityTestCb1").then($checkbox => {
+            const checkbox = $checkbox[0] as CheckBox;
+            const accInfo = checkbox.accessibilityInfo;
+            
+            // Description should come from associated label
+            expect(accInfo.description).to.equal("Label For Accessibility Test");
+        });    
+    });
+
+    it("should provide correct accessibilityInfo description from text", () => {
+        cy.mount(
+            <>
+                <CheckBox 
+                    id="accessibilityTestCb2" 
+                    text="Accessibility Test Text" 
+                ></CheckBox>
+            </>
+        );
+
+        cy.get("#accessibilityTestCb2").then($checkbox => {
+            const checkbox = $checkbox[0] as CheckBox;
+            const accInfo = checkbox.accessibilityInfo;
+            
+            // Description should come from text property
+            expect(accInfo.description).to.equal("Accessibility Test Text");
+        });    
+    });
+
+    it("should provide correct accessibilityInfo description from associated label", () => {
+        cy.mount(
+            <>
+                <label for="accessibilityTestCb3">Label For Accessibility Test</label>
+                <CheckBox 
+                    id="accessibilityTestCb3" 
+                ></CheckBox>
+            </>
+        );
+
+        cy.get("#accessibilityTestCb3").then($checkbox => {
+            const checkbox = $checkbox[0] as CheckBox;
+            const accInfo = checkbox.accessibilityInfo;
+            
+            // Description should come from associated label
+            expect(accInfo.description).to.equal("Label For Accessibility Test");
+        });    
+    });
 });

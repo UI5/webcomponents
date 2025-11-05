@@ -3,7 +3,7 @@
  * @public
  * @since 2.16.0
  */
-enum SelectTwoColumnSeparator {
+enum SelectTextSeparator {
 	/**
 	 * Will show bullet(·) as separator on two columns layout when Select is in read-only mode.
 	 * @public
@@ -23,4 +23,4 @@ enum SelectTwoColumnSeparator {
 	VerticalLine = "VerticalLine",
 }
 
-export default SelectTwoColumnSeparator;
+export default SelectTextSeparator;
