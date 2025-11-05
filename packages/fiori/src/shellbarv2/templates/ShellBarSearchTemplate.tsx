@@ -1,5 +1,5 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
-import type ShellBarV2 from "../ShellBarV2.js";
+import type ShellBarV2 from "../../ShellBarV2.js";
 
 function ShellBarV2SearchField(this: ShellBarV2) {
 	return (

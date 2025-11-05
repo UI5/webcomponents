@@ -9,19 +9,19 @@ import type ShellBarV2Item from "./ShellBarV2Item.js";
 import {
 	ShellBarV2SearchField,
 	ShellBarV2SearchFieldFullWidth
-} from "./shellbarv2/ShellBarSearchTemplate.js";
+} from "./shellbarv2/templates/ShellBarSearchTemplate.js";
 
 import {
 	ShellBarV2SearchField as ShellBarV2SearchFieldLegacy,
 	ShellBarV2SearchButton as ShellBarV2SearchButtonLegacy,
 	ShellBarV2SearchFieldFullWidth as ShellBarV2SearchFieldFullWidthLegacy,
-} from "./shellbarv2/ShellBarSearchLegacyTemplate.js";
+} from "./shellbarv2/templates/ShellBarSearchLegacyTemplate.js";
 
 import {
 	ShellBarV2LegacyBrandingArea,
 	ShellBarV2MenuButton,
 	ShellBarV2MenuPopover,
-} from "./shellbarv2/ShellBarLegacyTemplate.js";
+} from "./shellbarv2/templates/ShellBarLegacyTemplate.js";
 
 export default function ShellBarV2Template(this: ShellBarV2) {
 	const isLegacySearch = !this.isSelfCollapsibleSearch;
@@ -165,22 +165,21 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					)}
 
 					{this.getAction("profile") && (
-						<div
-							class="ui5-shellbar-image-button ui5-shellbar-no-overflow"
+						<Button
+							data-profile-btn
+							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button"
+							design="Transparent"
 							onClick={this._handleProfileClick}
-							role="button"
-							tabIndex={0}
-							aria-label={this._profileText}
-							aria-haspopup={this.accInfo.profile.accessibilityAttributes.hasPopup}
-							aria-expanded={this.accInfo.profile.accessibilityAttributes.expanded}
+							tooltip={this._profileText}
+							accessibilityAttributes={this.accInfo.profile.accessibilityAttributes}
 						>
 							<slot name="profile"></slot>
-						</div>
+						</Button>
 					)}
 
 					{this.getAction("product-switch") && (
 						<Button
-							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow"
+							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button"
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}

@@ -5,6 +5,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import ShellBarV2ItemTemplate from "./ShellBarV2ItemTemplate.js";
 import shellBarV2ItemStyles from "./generated/themes/ShellBarV2Item.css.js";
@@ -31,7 +32,7 @@ type ShellBarV2ItemAccessibilityAttributes = Pick<AccessibilityAttributes, "expa
 	renderer: jsxRenderer,
 	template: ShellBarV2ItemTemplate,
 	styles: shellBarV2ItemStyles,
-	dependencies: [Button, ListItemStandard],
+	dependencies: [Button, ButtonBadge, ListItemStandard],
 })
 /**
  * Fired when the item is clicked.

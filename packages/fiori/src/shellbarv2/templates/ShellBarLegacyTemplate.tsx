@@ -1,7 +1,7 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
-import type ShellBarV2 from "../ShellBarV2.js";
+import type ShellBarV2 from "../../ShellBarV2.js";
 
 /**
  * Renders the legacy logo area.

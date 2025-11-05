@@ -1,4 +1,5 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
+import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBarV2Item from "./ShellBarV2Item.js";
 
@@ -26,7 +27,7 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 			accessibilityAttributes={this.accessibilityAttributes}
 		>
 			{this.count && (
-				<span class="ui5-shellbar-badge">{this.count}</span>
+				<ButtonBadge slot="badge" design="OverlayText" text={this.count} />
 			)}
 		</Button>
 	);

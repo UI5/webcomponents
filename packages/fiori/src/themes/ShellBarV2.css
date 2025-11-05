@@ -57,6 +57,7 @@
 ::slotted([ui5-button]:not([slot^="content"])),
 ::slotted([ui5-toggle-button]:not([slot^="content"])) {
 	height: 2.25rem;
+	width: 2.5rem;
 	padding: 0;
 	border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
 	background: var(--sapButton_Lite_Background);
@@ -216,7 +217,7 @@
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	gap: 0.25rem;
+	gap: 0.5rem;
 }
 
 .ui5-shellbar-actions-area--no-search {
@@ -242,6 +243,29 @@
    ACTION BUTTONS (Notifications, Assistant, Profile)
    ============================================================================ */
 
+.ui5-shellbar-action-button {
+	white-space: initial;
+	overflow: initial;
+	text-overflow: initial;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+	width: 2.5rem;
+	box-sizing: border-box;
+}
+
+.ui5-shellbar-image-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	min-width: auto;
+	box-sizing: border-box;
+	--_ui5_button_focused_border_radius: var(--_ui5_shellbar_image_button_border_radius);
+	border-radius: var(--_ui5_shellbar_image_button_border_radius);
+}
+
 .ui5-shellbar-assistant-button {
 	display: flex;
 	align-items: center;
@@ -255,19 +279,6 @@
 ::slotted([ui5-toggle-button][slot="assistant"][pressed]),
 ::slotted([ui5-toggle-button][slot="assistant"][pressed]:hover:not([active])) {
 	color: var(--sapShell_Assistant_ForegroundColor);
-}
-
-.ui5-shellbar-profile-button {
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	outline: none;
-}
-
-.ui5-shellbar-profile-button:focus {
-	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	outline-offset: 0.0625rem;
-	border-radius: 0.25rem;
 }
 
 slot[name="profile"] {
