@@ -669,7 +669,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 		if (!this._isNavigationKey(e.key)) {
 			const parsedValue = this._parseNumber(typedValue);
-
 			if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
 				preventDefault = true;
 			}
@@ -681,6 +680,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 		if (cursorPosition === 0 && isMinus(e)) {
 			this._updateValueAndValidate(this._parseNumber(typedValue));
+		}
+
+		if (this.type === InputType.Number) {
+			this.innerInput.value = this._formatNumber(this._parseNumber(this.innerInput.value));
 		}
 	}
 
