@@ -551,6 +551,9 @@ class ShellBarV2 extends UI5Element {
 		this.updateActions();
 
 		this.searchAdaptor?.syncShowSearchFieldState();
+		// subscribe to search adaptor for cases when search is added dynamically
+		this.searchAdaptor?.unsubscribe();
+		this.legacyAdaptor?.subscribe();
 	}
 
 	onAfterRendering() {

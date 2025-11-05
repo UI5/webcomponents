@@ -175,17 +175,25 @@
 			</div>
 		</div>
 
-		<!-- Legacy Features -->
+		<!-- Branding Mode -->
 		<div class="control-section">
-			<h3>Legacy Features (V1 Only)</h3>
+			<h3>Branding</h3>
 			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+				<div class="control-group">
+					<ui5-label>Branding Mode:</ui5-label>
+					<ui5-select id="brandingMode" style="width: 250px;">
+						<ui5-option value="branding" selected>Branding Slot (New)</ui5-option>
+						<ui5-option value="legacy">Logo + Primary Title (Legacy)</ui5-option>
+					</ui5-select>
+				</div>
 				<div class="control-group">
 					<ui5-label>Show Secondary Title:</ui5-label>
 					<ui5-switch id="toggleSecondaryTitle" checked></ui5-switch>
 				</div>
 				<div class="control-group">
 					<ui5-label>Menu Items:</ui5-label>
-					<ui5-switch id="toggleMenuItems"></ui5-switch>
+					<ui5-switch id="toggleMenuItems" disabled></ui5-switch>
+					<span style="font-size: 0.8rem; color: #666;">(requires Legacy mode)</span>
 				</div>
 			</div>
 		</div>
@@ -194,14 +202,13 @@
 	<div class="info">
 		<strong>How to use:</strong> Toggle switches to enable/disable features. Both ShellBars update simultaneously for easy comparison.
 		<br><strong>Tip:</strong> Resize window to test overflow behavior with content items. Check console for event logs.
+		<br><strong>Branding Mode:</strong> Switch between new Branding Slot and legacy Logo + Primary Title modes. Menu items only available in legacy mode.
 	</div>
 
 	<!-- ShellBar V1 (Old) -->
 	<div class="shellbar-container">
 		<ui5-shellbar
 			id="shellbarV1"
-			primary-title="Product Title"
-			secondary-title="Secondary Title"
 		>
 			<ui5-shellbar-branding slot="branding">
 				Product Title
@@ -229,8 +236,6 @@
 	<div class="shellbar-container">
 		<ui5-shellbar-v2
 			id="shellbarV2"
-			primary-title="Product Title"
-			secondary-title="Secondary Title"
 		>
 			<ui5-shellbar-branding slot="branding">
 				Product Title
@@ -274,6 +279,7 @@
 		const toggleMenuItems = document.getElementById('toggleMenuItems');
 		const searchType = document.getElementById('searchType');
 		const notificationsCount = document.getElementById('notificationsCount');
+		const brandingMode = document.getElementById('brandingMode');
 
 		// Element templates for dynamic creation
 		const elementTemplates = {
@@ -401,6 +407,20 @@
 				el.id = 'menuItemV2-3';
 				el.slot = 'menuItems';
 				el.textContent = 'Settings';
+				return el;
+			},
+			logoV1: () => {
+				const el = document.createElement('img');
+				el.id = 'logoV1';
+				el.src = 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg';
+				el.slot = 'logo';
+				return el;
+			},
+			logoV2: () => {
+				const el = document.createElement('img');
+				el.id = 'logoV2';
+				el.src = 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg';
+				el.slot = 'logo';
 				return el;
 			}
 		};
@@ -617,6 +637,75 @@
 			shellbarV1.notificationsCount = value || undefined;
 			shellbarV2.notificationsCount = value || undefined;
 			console.log('Notifications Count:', value);
+		});
+
+		// Branding mode selector
+		brandingMode.addEventListener('ui5-change', (e) => {
+			const value = e.detail.selectedOption.value;
+			console.log('Branding Mode changed to:', value);
+			
+			const isLegacy = value === 'legacy';
+			
+			// Enable/disable menu items toggle
+			toggleMenuItems.disabled = !isLegacy;
+			
+			// If switching to branding mode, clear menu items
+			if (!isLegacy && toggleMenuItems.checked) {
+				toggleMenuItems.checked = false;
+				for (let i = 1; i <= 3; i++) {
+					toggleElement(`menuItemV1-${i}`, false);
+					toggleElement(`menuItemV2-${i}`, false);
+				}
+			}
+			
+			// Switch branding mode
+			const brandingV1 = shellbarV1.querySelector('[slot="branding"]');
+			const brandingV2 = shellbarV2.querySelector('[slot="branding"]');
+			
+			if (isLegacy) {
+				// Switch to logo + primaryTitle mode
+				if (brandingV1) brandingV1.remove();
+				if (brandingV2) brandingV2.remove();
+				
+				// Add logos
+				toggleElement('logoV1', true);
+				toggleElement('logoV2', true);
+				
+				// Ensure primaryTitle is set
+				shellbarV1.primaryTitle = 'Product Title';
+				shellbarV2.primaryTitle = 'Product Title';
+			} else {
+				// Switch to branding slot mode
+				toggleElement('logoV1', false);
+				toggleElement('logoV2', false);
+				
+				// Add branding slots if they don't exist
+				if (!brandingV1) {
+					const newBrandingV1 = document.createElement('ui5-shellbar-branding');
+					newBrandingV1.slot = 'branding';
+					newBrandingV1.textContent = 'Product Title';
+					const logoImg = document.createElement('img');
+					logoImg.src = 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg';
+					logoImg.slot = 'logo';
+					newBrandingV1.appendChild(logoImg);
+					shellbarV1.insertBefore(newBrandingV1, shellbarV1.firstChild);
+				}
+				
+				if (!brandingV2) {
+					const newBrandingV2 = document.createElement('ui5-shellbar-branding');
+					newBrandingV2.slot = 'branding';
+					newBrandingV2.textContent = 'Product Title';
+					const logoImg = document.createElement('img');
+					logoImg.src = 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg';
+					logoImg.slot = 'logo';
+					newBrandingV2.appendChild(logoImg);
+					shellbarV2.insertBefore(newBrandingV2, shellbarV2.firstChild);
+				}
+				
+				// Clear primaryTitle
+				shellbarV1.primaryTitle = '';
+				shellbarV2.primaryTitle = '';
+			}
 		});
 
 		// Event listeners for V1
