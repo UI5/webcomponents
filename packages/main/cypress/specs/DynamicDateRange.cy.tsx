@@ -698,7 +698,7 @@ describe("DynamicDateRange DateTimeRange Option", () => {
 
 		cy.get("@input")
 			.should("have.value", "Dec 25, 2023, 2:30:00 PM - Dec 26, 2023, 4:45:00 AM");
-    });
+	});
 
 	it("should parse input value correctly when option is reopened", () => {
 		cy.get("[ui5-dynamic-date-range]")
