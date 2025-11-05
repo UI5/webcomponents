@@ -19,7 +19,7 @@ export default function DynamicDateRangePopoverTemplate(this: DynamicDateRange) 
 			hideArrow={true}
 			_hideHeader={true}
 			onClose={this.onPopoverClose}
-			onOpen={this.onPopoverOpen}
+			onBeforeOpen={this.onPopoverBeforeOpen}
 			onKeyDown={this.onKeyDownPopover}
 		>
 			{this._hasCurrentOptionTemplate &&

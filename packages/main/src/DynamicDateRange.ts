@@ -408,7 +408,7 @@ class DynamicDateRange extends UI5Element {
 		this.open = false;
 	}
 
-	onPopoverOpen() {
+	onPopoverBeforeOpen() {
 		if (this.currentValue !== this.value) {
 			this.currentValue = this.value;
 		}
