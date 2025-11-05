@@ -19,6 +19,11 @@ type ShellBarV2ProfileAccessibilityAttributes = Pick<AccessibilityAttributes, "n
 type ShellBarV2AreaAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded">;
 
 /**
+ * Accessibility attributes for branding area
+ */
+type ShellBarV2BrandingAccessibilityAttributes = Pick<AccessibilityAttributes, "name">;
+
+/**
  * Top-level accessibility configuration for ShellBarV2
  */
 type ShellBarV2AccessibilityAttributes = {
@@ -28,6 +33,7 @@ type ShellBarV2AccessibilityAttributes = {
 	product?: ShellBarV2AreaAccessibilityAttributes;
 	search?: ShellBarV2AreaAccessibilityAttributes;
 	overflow?: ShellBarV2AreaAccessibilityAttributes;
+	branding?: ShellBarV2BrandingAccessibilityAttributes;
 };
 
 /**

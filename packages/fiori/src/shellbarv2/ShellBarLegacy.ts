@@ -21,13 +21,13 @@ class ShellBarV2Legacy {
 	private getShadowRoot: () => ShadowRoot | null;
 
 	// Bound handlers for event listeners
-	private handleMenuButtonClickBound = this.handleMenuButtonClick.bind(this);
-	private handleLogoClickBound = this.handleLogoClick.bind(this);
-	private handleLogoKeydownBound = this.handleLogoKeydown.bind(this);
-	private handleLogoKeyupBound = this.handleLogoKeyup.bind(this);
-	private handleMenuItemClickBound = this.handleMenuItemClick.bind(this);
-	private handleMenuPopoverBeforeOpenBound = this.handleMenuPopoverBeforeOpen.bind(this);
-	private handleMenuPopoverAfterCloseBound = this.handleMenuPopoverAfterClose.bind(this);
+	handleLogoClickBound = this.handleLogoClick.bind(this);
+	handleLogoKeyupBound = this.handleLogoKeyup.bind(this);
+	handleLogoKeydownBound = this.handleLogoKeydown.bind(this);
+	handleMenuItemClickBound = this.handleMenuItemClick.bind(this);
+	handleMenuButtonClickBound = this.handleMenuButtonClick.bind(this);
+	handleMenuPopoverBeforeOpenBound = this.handleMenuPopoverBeforeOpen.bind(this);
+	handleMenuPopoverAfterCloseBound = this.handleMenuPopoverAfterClose.bind(this);
 
 	constructor(deps: ShellBarV2LegacyDeps) {
 		this.component = deps.component;
@@ -137,6 +137,10 @@ class ShellBarV2Legacy {
 		return this.component.accessibilityAttributes.logo?.name || "Logo";
 	}
 
+	get brandingText(): string {
+		return this.component.accessibilityAttributes.branding?.name || this.primaryTitle;
+	}
+
 	/* ------------- Title Management -------------- */
 
 	get hasPrimaryTitle(): boolean {
@@ -148,18 +152,7 @@ class ShellBarV2Legacy {
 	}
 
 	get showSecondaryTitle(): boolean {
-		// Secondary title only shown on non-S breakpoints (and when other conditions met)
-		if (this.component.isSBreakPoint) {
-			return false;
-		}
-
-		// With menu items: show if secondary title exists
-		if (this.hasMenuItems) {
-			return this.hasSecondaryTitle;
-		}
-
-		// Without menu items: show if secondary title exists and (primaryTitle or branding)
-		return this.hasSecondaryTitle && (this.hasPrimaryTitle || this.component.hasBranding);
+		return this.hasSecondaryTitle && !this.component.isSBreakPoint;
 	}
 
 	get primaryTitle(): string {
@@ -173,46 +166,21 @@ class ShellBarV2Legacy {
 	/* ------------- Menu Button -------------- */
 
 	get showMenuButton(): boolean {
-		// Show menu button on S breakpoint if we have menu items or logo/title
-		return this.component.isSBreakPoint && (this.hasMenuItems || this.hasLogo || this.hasPrimaryTitle);
-	}
-
-	get showInteractiveMenuButton(): boolean {
-		// Show interactive menu button (with primaryTitle) on non-S breakpoints when menu items exist
-		return this.hasMenuItems && this.hasPrimaryTitle && !this.component.isSBreakPoint;
-	}
-
-	get showSeparateLogo(): boolean {
-		// Show logo separately when menu items exist and not on S breakpoint
-		return this.hasMenuItems && this.hasLogo && !this.showLogoInMenuButton;
+		return this.hasPrimaryTitle || this.showLogoInMenuButton;
 	}
 
 	get showLogoInMenuButton(): boolean {
-		return this.hasLogo && this.component.isSBreakPoint;
+		return this.hasLogo && this.isSBreakPoint;
 	}
 
 	get showTitleInMenuButton(): boolean {
 		return this.hasPrimaryTitle && !this.showLogoInMenuButton;
 	}
 
-	get menuButtonAccessibilityAttributes() {
-		return {
-			hasPopup: this.hasMenuItems ? "menu" as const : undefined,
-			expanded: this.hasMenuItems ? this.menuPopoverExpanded : undefined,
-		};
-	}
-
 	/* ------------- Common -------------- */
 
-	get shouldRenderLegacyBranding(): boolean {
-		// Only render legacy branding if:
-		// - no modern branding slot is used
-		// - no menu items (when menu items exist, logo and title are rendered separately)
-		// - not on S breakpoint (on S, logo/title go inside menu button)
-		return !this.component.hasBranding
-			&& !this.hasMenuItems
-			&& !this.component.isSBreakPoint
-			&& (this.hasLogo || this.hasPrimaryTitle || this.hasSecondaryTitle);
+	get isSBreakPoint(): boolean {
+		return this.component.isSBreakPoint;
 	}
 }
 

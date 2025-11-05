@@ -1,57 +1,47 @@
-import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import type ShellBarV2 from "../../ShellBarV2.js";
 
-/**
- * Renders the legacy logo area.
- * Used when logo slot is provided but no branding slot.
- */
-function ShellBarV2LegacyLogoArea(this: ShellBarV2) {
+function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
 	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.hasLogo) {
+	if (!legacy) {
 		return null;
 	}
 
 	return (
-		<div
-			class="ui5-shellbar-logo"
-			role={legacy.logoRole}
-			aria-label={legacy.logoAriaLabel}
-			tabIndex={0}
-			onClick={legacy.handleLogoClick}
-			onKeyDown={legacy.handleLogoKeydown}
-			onKeyUp={legacy.handleLogoKeyup}
-		>
-			<slot name="logo"></slot>
-		</div>
+		<>
+			{legacy.hasMenuItems && ShellBarV2InteractiveMenuButton.call(this)}
+			{legacy.hasMenuItems && ShellBarV2LegacySecondaryTitle.call(this)}
+			{!legacy.hasMenuItems && ShellBarV2LegacyTitleArea.call(this)}
+
+			{/* Menu Popover (legacy) */}
+			{ShellBarV2MenuPopover.call(this)}
+		</>
 	);
 }
 
-/**
- * Renders separate logo when menu items exist.
- * Used on non-S breakpoints when menu items are present.
- */
-function ShellBarV2SeparateLogo(this: ShellBarV2) {
+function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
 	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.showSeparateLogo) {
+	if (!legacy) {
 		return null;
 	}
 
 	return (
-		<span
-			class="ui5-shellbar-logo"
-			role={legacy.logoRole}
-			aria-label={legacy.logoAriaLabel}
-			tabIndex={0}
-			onClick={legacy.handleLogoClick}
-			onKeyDown={legacy.handleLogoKeydown}
-			onKeyUp={legacy.handleLogoKeyup}
-		>
-			<slot name="logo"></slot>
-		</span>
+		<>
+			{!!(legacy.isSBreakPoint && legacy.hasLogo) && ShellBarV2SingleLogo.call(this)}
+			{!legacy.isSBreakPoint && (legacy.hasLogo || legacy.primaryTitle) && (
+				<>
+					{ShellBarV2CombinedLogo.call(this)}
+					{legacy.hasSecondaryTitle && legacy.hasPrimaryTitle && (
+						<h2 class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
+							{legacy.secondaryTitle}
+						</h2>
+					)}
+				</>
+			)}
+		</>
 	);
 }
 
@@ -61,58 +51,38 @@ function ShellBarV2SeparateLogo(this: ShellBarV2) {
  */
 function ShellBarV2InteractiveMenuButton(this: ShellBarV2) {
 	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.showInteractiveMenuButton) {
+	if (!legacy) {
 		return null;
 	}
 
 	return (
-		<button
-			class="ui5-shellbar-menu-button ui5-shellbar-menu-button--interactive"
-			onClick={legacy.handleMenuButtonClick}
-			aria-haspopup="menu"
-			aria-expanded={legacy.menuPopoverExpanded}
-			tabIndex={0}
-		>
-			<div class="ui5-shellbar-menu-button-title">{legacy.primaryTitle}</div>
-			<Icon class="ui5-shellbar-menu-button-arrow" name={slimArrowDown} />
-		</button>
-	);
-}
-
-/**
- * Renders legacy title area (primaryTitle only).
- * Used when primaryTitle property is set but no branding slot.
- */
-function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
-	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.hasPrimaryTitle) {
-		return null;
-	}
-
-	return (
-		<div class="ui5-shellbar-headings">
-			<h1 class="ui5-shellbar-title">
-				<bdi>{legacy.primaryTitle}</bdi>
-			</h1>
-		</div>
-	);
-}
-
-/**
- * Renders the legacy branding area (logo + titles).
- * Only renders if no modern branding slot is used.
- */
-function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
-	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.shouldRenderLegacyBranding) {
-		return null;
-	}
-
-	return (
-		<div class="ui5-shellbar-legacy-branding ui5-shellbar-logo-area">
-			{ShellBarV2LegacyLogoArea.call(this)}
-			{ShellBarV2LegacyTitleArea.call(this)}
-		</div>
+		<>
+			{!legacy.showLogoInMenuButton && legacy.hasLogo && ShellBarV2SingleLogo.call(this)}
+			{legacy.showTitleInMenuButton && <h1 class="ui5-hidden-text">{legacy.primaryTitle}</h1>}
+			{legacy.showMenuButton && (
+				<button
+					class={{
+						"ui5-shellbar-menu-button": true,
+						"ui5-shellbar-menu-button--interactive": legacy.hasMenuItems,
+					}}
+					onClick={legacy.handleMenuButtonClickBound}
+					aria-haspopup="menu"
+					aria-expanded={legacy.menuPopoverExpanded}
+					aria-label={legacy.brandingText}
+					data-ui5-stable="menu"
+					tabIndex={0}>
+					{legacy.showLogoInMenuButton && (
+						<span class="ui5-shellbar-logo" aria-label={legacy.logoAriaLabel} title={legacy.logoAriaLabel}>
+							<slot name="logo"></slot>
+						</span>
+					)}
+					{legacy.showTitleInMenuButton && (
+						<div class="ui5-shellbar-menu-button-title">{legacy.primaryTitle}</div>
+					)}
+					<Icon class="ui5-shellbar-menu-button-arrow" name={slimArrowDown} />
+				</button>
+			)}
+		</>
 	);
 }
 
@@ -122,30 +92,60 @@ function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
  */
 function ShellBarV2SingleLogo(this: ShellBarV2) {
 	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.hasLogo || !this.isSBreakPoint || legacy.hasMenuItems || this.hasBranding) {
+	if (!legacy) {
 		return null;
 	}
 
 	return (
 		<span
-			class="ui5-shellbar-logo"
 			role={legacy.logoRole}
+			class="ui5-shellbar-logo"
 			aria-label={legacy.logoAriaLabel}
+			title={legacy.logoAriaLabel}
+			onClick={legacy.handleLogoClickBound}
+			onKeyDown={legacy.handleLogoKeydownBound}
+			onKeyUp={legacy.handleLogoKeyupBound}
 			tabIndex={0}
-			onClick={legacy.handleLogoClick}
-			onKeyDown={legacy.handleLogoKeydown}
-			onKeyUp={legacy.handleLogoKeyup}
-		>
+			data-ui5-stable="logo">
 			<slot name="logo"></slot>
 		</span>
 	);
 }
 
-/**
- * Renders legacy secondaryTitle.
- * Rendered separately from the logo area to match old shellbar structure.
- * Hidden on S breakpoint when menu items exist.
- */
+function ShellBarV2CombinedLogo(this: ShellBarV2) {
+	const legacy = this.legacyAdaptor;
+	if (!legacy) {
+		return null;
+	}
+
+	return (
+		<div
+			role={legacy.logoRole}
+			class="ui5-shellbar-logo-area"
+			onClick={legacy.handleLogoClickBound}
+			tabIndex={0}
+			onKeyDown={legacy.handleLogoKeydownBound}
+			onKeyUp={legacy.handleLogoKeyupBound}
+			aria-label={legacy.logoAriaLabel}>
+			{legacy.hasLogo && (
+				<span
+					class="ui5-shellbar-logo"
+					title={legacy.logoAriaLabel}
+					data-ui5-stable="logo">
+					<slot name="logo"></slot>
+				</span>
+			)}
+			<div class="ui5-shellbar-headings">
+				{legacy.primaryTitle && (
+					<h1 class="ui5-shellbar-title">
+						<bdi>{legacy.primaryTitle}</bdi>
+					</h1>
+				)}
+			</div>
+		</div>
+	);
+}
+
 function ShellBarV2LegacySecondaryTitle(this: ShellBarV2) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy || !legacy.showSecondaryTitle) {
@@ -153,36 +153,9 @@ function ShellBarV2LegacySecondaryTitle(this: ShellBarV2) {
 	}
 
 	return (
-		<h2 class="ui5-shellbar-secondary-title">
-			{legacy.secondaryTitle}
-		</h2>
-	);
-}
-
-/**
- * Renders the menu button for S breakpoint.
- * Shows logo or title and opens menu popover.
- */
-function ShellBarV2MenuButton(this: ShellBarV2) {
-	const legacy = this.legacyAdaptor;
-	if (!legacy || !legacy.showMenuButton) {
-		return null;
-	}
-
-	return (
-		<Button
-			class="ui5-shellbar-menu-button"
-			design="Transparent"
-			onClick={legacy.handleMenuButtonClick}
-			accessibilityAttributes={legacy.menuButtonAccessibilityAttributes}
-		>
-			{legacy.showLogoInMenuButton && (
-				<slot name="logo"></slot>
-			)}
-			{legacy.showTitleInMenuButton && (
-				<span>{legacy.primaryTitle}</span>
-			)}
-		</Button>
+		<div style={{ display: "block" }} class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
+			{this.secondaryTitle}
+		</div>
 	);
 }
 
@@ -197,14 +170,14 @@ function ShellBarV2MenuPopover(this: ShellBarV2) {
 	}
 
 	return (
-		<Popover
-			class="ui5-shellbar-menu-popover"
+		<Popover class="ui5-shellbar-menu-popover"
+			hideArrow={true}
 			placement="Bottom"
-			horizontalAlign={this.popoverHorizontalAlign}
-			onBeforeOpen={legacy.handleMenuPopoverBeforeOpen}
-			onClose={legacy.handleMenuPopoverAfterClose}
+			preventInitialFocus={true}
+			onBeforeOpen={legacy.handleMenuPopoverBeforeOpenBound}
+			onClose={legacy.handleMenuPopoverAfterCloseBound}
 		>
-			<List onItemClick={legacy.handleMenuItemClick}>
+			<List separators="None" selectionMode="Single" onItemClick={legacy.handleMenuItemClickBound}>
 				<slot name="menuItems"></slot>
 			</List>
 		</Popover>
@@ -212,13 +185,10 @@ function ShellBarV2MenuPopover(this: ShellBarV2) {
 }
 
 export {
-	ShellBarV2LegacyLogoArea,
-	ShellBarV2SeparateLogo,
-	ShellBarV2InteractiveMenuButton,
 	ShellBarV2SingleLogo,
+	ShellBarV2MenuPopover,
 	ShellBarV2LegacyTitleArea,
 	ShellBarV2LegacyBrandingArea,
 	ShellBarV2LegacySecondaryTitle,
-	ShellBarV2MenuButton,
-	ShellBarV2MenuPopover,
+	ShellBarV2InteractiveMenuButton,
 };

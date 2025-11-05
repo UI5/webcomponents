@@ -26,6 +26,7 @@ import Menu from "@ui5/webcomponents/dist/Menu.js";
 
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
+import ShellBarPopoverCss from "./generated/themes/ShellBarPopover.css.js";
 import shellBarV2LegacyStyles from "./generated/themes/ShellBarV2Legacy.css.js";
 
 import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchController.js";
@@ -134,7 +135,7 @@ interface IShellBarSearchField extends HTMLElement {
  */
 @customElement({
 	tag: "ui5-shellbar-v2",
-	styles: [shellBarV2Styles, shellBarV2LegacyStyles],
+	styles: [shellBarV2Styles, shellBarV2LegacyStyles, ShellBarPopoverCss],
 	renderer: jsxRenderer,
 	template: ShellBarV2Template,
 	fastNavigation: true,
