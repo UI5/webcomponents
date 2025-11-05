@@ -590,19 +590,19 @@ describe("ToolbarButton", () => {
 		});
 	});
 
-	it("Should display text only in overflow when overflowTextOnly is true", () => {
+	it("Should display text only in overflow when showOverflowText is true", () => {
 		cy.mount(
 			<Toolbar>
 				<ToolbarButton
 					icon={add}
 					text="Add Document"
-					overflowTextOnly={true}
+					showOverflowText={true}
 				></ToolbarButton>
 
 				<ToolbarButton
 					icon={employee}
 					text="Employee"
-					overflowTextOnly={false}
+					showOverflowText={false}
 				></ToolbarButton>
 
 				<ToolbarButton

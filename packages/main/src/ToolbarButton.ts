@@ -157,7 +157,7 @@ class ToolbarButton extends ToolbarItem {
 	 * @public
 	 */
 	@property({ type: Boolean })
-	overflowTextOnly = false;
+	showOverflowText = false;
 
 	/**
 	 * Defines the width of the button.
@@ -177,17 +177,17 @@ class ToolbarButton extends ToolbarItem {
 	}
 
 	/**
-	 * Returns the effective text to display based on overflow state and overflowTextOnly property.
+	 * Returns the effective text to display based on overflow state and showOverflowText property.
 	 *
-	 * When overflowTextOnly is true:
+	 * When showOverflowText is true:
 	 * - Normal state: returns empty string (icon-only)
 	 * - Overflow state: returns text
 	 *
-	 * When overflowTextOnly is false:
+	 * When showOverflowText is false:
 	 * - Returns text in both states (normal behavior)
 	 */
 	get effectiveText(): string | undefined {
-		if (this.overflowTextOnly) {
+		if (this.showOverflowText) {
 			return this.isOverflowed ? this.text : "";
 		}
 		return this.text;
