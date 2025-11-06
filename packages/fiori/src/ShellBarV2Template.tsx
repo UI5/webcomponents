@@ -55,7 +55,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 							{this.hasContent && (
 								<div
-									class="ui5-shellbar-content-area"
+									class="ui5-shellbar-content-area ui5-shellbar-content-items"
 									role={this.contentRole}
 									aria-label={this._contentItemsText}
 								>
@@ -125,7 +125,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										icon="bell"
 										design="Transparent"
 										onClick={this._handleNotificationsClick}
-										tooltip={this._notificationsText}
+										tooltip={this.getActionText("notifications")}
 										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
 									>
 										{this.getAction("notifications")?.count && (
@@ -138,7 +138,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									<div
 										key={item._id}
 										class="ui5-shellbar-custom-item"
-										data-ui5-stable={(item as any)._individualSlot}
+										data-ui5-stable={item.stableDomRef}
 									>
 										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
 									</div>
@@ -149,23 +149,33 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 					{this.showOverflowButton && (
 						<Button
+							data-ui5-stable="overflow"
 							id="ui5-shellbar-overflow-button"
 							class="ui5-shellbar-overflow-button ui5-shellbar-action-button"
 							icon="overflow"
 							design="Transparent"
 							onClick={this.handleOverflowClick}
-							tooltip={this._overflowText}
+							tooltip={this.getActionText("overflow")}
 							accessibilityAttributes={this.accInfo.overflow.accessibilityAttributes}
-						/>
+						>
+							{this.overflowBadge && (
+								<ButtonBadge
+									slot="badge"
+									design={this.overflowBadge === " " ? "AttentionDot" : "OverlayText"}
+									text={this.overflowBadge === " " ? "" : this.overflowBadge}
+								/>
+							)}
+						</Button>
 					)}
 
 					{this.getAction("profile") && (
 						<Button
 							data-profile-btn
+							data-ui5-stable="profile"
 							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button"
 							design="Transparent"
 							onClick={this._handleProfileClick}
-							tooltip={this._profileText}
+							tooltip={this.getActionText("profile")}
 							accessibilityAttributes={this.accInfo.profile.accessibilityAttributes}
 						>
 							<slot name="profile"></slot>
@@ -174,11 +184,12 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 					{this.getAction("product-switch") && (
 						<Button
+							data-ui5-stable="product-switch"
 							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button"
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}
-							tooltip={this._productsText}
+							tooltip={this.getActionText("product-switch")}
 							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
 						/>
 					)}

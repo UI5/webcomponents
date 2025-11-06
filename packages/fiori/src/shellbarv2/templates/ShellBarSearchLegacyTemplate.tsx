@@ -7,7 +7,9 @@ function ShellBarV2SearchField(this: ShellBarV2) {
 		// the search field. It must be present even if the search is in full-width mode.
 		<div class="ui5-shellbar-search-field-area">
 			{this.showSearchField && !this.showFullWidthSearch && (
-				<slot name="searchField"></slot>
+				<div class="ui5-shellbar-search-field">
+					<slot name="searchField"></slot>
+				</div>
 			)}
 		</div>
 	);
@@ -34,12 +36,13 @@ function ShellBarV2SearchButton(this: ShellBarV2) {
 		<>
 			{!this.hideSearchButton && (
 				<Button
+					data-ui5-stable="toggle-search"
 					class="ui5-shellbar-search-button ui5-shellbar-action-button"
 					icon="sap-icon://search"
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}
-					tooltip={this._searchText}
-					aria-label={this._searchText}
+					tooltip={this.getActionText("search-button")}
+					aria-label={this.getActionText("search-button")}
 					aria-expanded={this.showSearchField}
 					accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
 				/>

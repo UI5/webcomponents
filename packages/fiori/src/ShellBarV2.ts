@@ -11,6 +11,8 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { renderFinished } from "@ui5/webcomponents-base";
+import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -38,8 +40,8 @@ import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Content from "./shellbarv2/ShellBarContent.js";
 import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
-import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
+import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 
 import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
@@ -47,12 +49,13 @@ import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 import type { ShellBarV2BreakpointType } from "./shellbarv2/ShellBarBreakpoint.js";
 import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflow.js";
+
 import type {
-	ShellBarV2AccessibilityAttributes,
 	ShellBarV2AccessibilityInfo,
+	ShellBarV2AccessibilityAttributes,
+	ShellBarV2AreaAccessibilityAttributes,
 	ShellBarV2LogoAccessibilityAttributes,
 	ShellBarV2ProfileAccessibilityAttributes,
-	ShellBarV2AreaAccessibilityAttributes,
 } from "./shellbarv2/ShellBarAccessibility.js";
 
 import {
@@ -64,7 +67,6 @@ import {
 	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
 } from "./generated/i18n/i18n-defaults.js";
-import { renderFinished } from "@ui5/webcomponents-base";
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -447,7 +449,8 @@ class ShellBarV2 extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
-	private handleResizeBound: ResizeObserverCallback = this.handleResize.bind(this);
+	private readonly RESIZE_THROTTLE_RATE = 200; // ms
+	private handleResizeBound: ResizeObserverCallback = throttle(this.handleResize.bind(this), this.RESIZE_THROTTLE_RATE);
 
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
@@ -459,8 +462,8 @@ class ShellBarV2 extends UI5Element {
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
 
-	_searchAdaptor = new ShellBarV2Search(this.getSearchDeps());
-	_searchAdaptorLegacy = new ShellBarV2SearchLegacy({
+	private _searchAdaptor = new ShellBarV2Search(this.getSearchDeps());
+	private _searchAdaptorLegacy = new ShellBarV2SearchLegacy({
 		...this.getSearchDeps(),
 		getDisableSearchCollapse: () => this.disableSearchCollapse,
 	});
@@ -593,9 +596,12 @@ class ShellBarV2 extends UI5Element {
 
 	getActionText(actionId: string): string {
 		const texts: Record<string, string> = {
-			"notifications": "Notifications",
+			"profile": this._profileText,
+			"overflow": this._overflowText,
 			"assistant": "Assistant",
-			"search-button": "Search",
+			"search-button": this._searchText,
+			"notifications": this._notificationsText,
+			"product-switch": this._productsText,
 		};
 		return texts[actionId] || actionId;
 	}
@@ -759,6 +765,47 @@ class ShellBarV2 extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
+	get overflowItems() {
+		return this.overflowAdaptor.getOverflowItems({
+			actions: this.actions,
+			customItems: this.items,
+			hiddenItemsIds: this.hiddenItemsIds,
+		});
+	}
+
+	/**
+	 * Returns badge text for overflow button.
+	 * Shows count if only one item with count is overflowed, otherwise shows attention dot.
+	 */
+	get overflowBadge(): string | undefined {
+		const overflowItems = this.overflowAdaptor.getOverflowItems({
+			actions: this.actions,
+			customItems: this.items,
+			hiddenItemsIds: this.hiddenItemsIds,
+		});
+
+		const itemsWithCount = overflowItems.filter(item => {
+			if (item.type === "action") {
+				return item.data.count;
+			}
+			return (item.data as ShellBarV2Item).count;
+		});
+
+		if (itemsWithCount.length === 1) {
+			const item = itemsWithCount[0];
+			if (item.type === "action") {
+				return item.data.count;
+			}
+			return (item.data as ShellBarV2Item).count;
+		}
+
+		if (itemsWithCount.length > 1) {
+			return " "; // Attention dot
+		}
+
+		return undefined;
+	}
+
 	/* =========================================================================
     Search Management
 	============================================================================ */
@@ -909,14 +956,6 @@ class ShellBarV2 extends UI5Element {
 		return this.searchField.length > 0;
 	}
 
-	get overflowItems() {
-		return this.overflowAdaptor.getOverflowItems({
-			actions: this.actions,
-			customItems: this.items,
-			hiddenItemsIds: this.hiddenItemsIds,
-		});
-	}
-
 	get search() {
 		return this.searchField.length ? this.searchField[0] : null;
 	}
@@ -930,12 +969,62 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/**
+	 * Returns the `logo` DOM ref.
+	 * @public
+	 * @default null
+	 * @since 1.0.0-rc.16
+	 */
+	get logoDomRef(): HTMLElement | null {
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="logo"]`);
+	}
+
+	/**
+	 * Returns the `notifications` icon DOM ref.
+	 * @public
+	 * @default null
+	 * @since 1.0.0-rc.16
+	 */
+	get notificationsDomRef(): HTMLElement | null {
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="notifications"]`);
+	}
+
+	/**
+	 * Returns the `overflow` icon DOM ref.
+	 * @public
+	 * @default null
+	 * @since 1.0.0-rc.16
+	 */
+	get overflowDomRef(): HTMLElement | null {
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="overflow"]`);
+	}
+
+	/**
+	 * Returns the `profile` icon DOM ref.
+	 * @public
+	 * @default null
+	 * @since 1.0.0-rc.16
+	 */
+	get profileDomRef(): HTMLElement | null {
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="profile"]`);
+	}
+
+	/**
+	 * Returns the `product-switch` icon DOM ref.
+	 * @public
+	 * @default null
+	 * @since 1.0.0-rc.16
+	 */
+	get productSwitchDomRef(): HTMLElement | null {
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="product-switch"]`);
+	}
+
+	/**
 	 * Returns the search button DOM reference.
 	 * @public
 	 */
 	async getSearchButtonDomRef(): Promise<HTMLElement | null> {
 		await renderFinished();
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-search-button");
+		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="toggle-search"]`);
 	}
 
 	/* =========================================================================
