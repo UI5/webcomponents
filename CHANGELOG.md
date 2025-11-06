@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package webcomponents
+
+
+
+
+
 # [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
 
 
