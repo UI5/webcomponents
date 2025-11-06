@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -38,7 +39,6 @@ const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
 const mobile2Button = document.getElementById("mobile2-button");
-const resetAllButton = document.getElementById("reset-all-button");
 const additionalDialog = document.getElementById("additionalDialog");
 const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 const resetAll = document.getElementById("resetAll");
@@ -52,7 +52,7 @@ shellbar.addEventListener("ui5-profile-click", (event) => {
 	console.log(" menuShellBar ui5-profile-click")
 
 	menuShellBar.opener = event.detail.targetRef;
-	if(menuShellBar.open){
+	if (menuShellBar.open) {
 		menuShellBar.open = false;
 	} else {
 		menuShellBar.open = true;
@@ -77,10 +77,6 @@ mobile1Button.addEventListener("click", function () {
 mobile2Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
 	mobileSecondPage.text = "Android";
-});
-
-resetAllButton.addEventListener("click", function () {
-	additionalDialog.open = true;
 });
 
 additionalDialogClosers.forEach(btn => {

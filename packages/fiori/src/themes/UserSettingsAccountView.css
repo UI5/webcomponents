@@ -1,0 +1,77 @@
+.ui5-user-settings-account-view {
+	padding: 1rem;
+}
+
+.ui5-user-settings-account {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	/*padding: 40px 8px 8px 8px;*/
+	/*gap: 8px;*/
+}
+
+.ui5-user-settings-account-avatar {
+	display: flex;
+	max-width: 112px;
+	max-height: 112px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.ui5-user-settings-account-title {
+	text-align: center;
+	margin-top: 0.25rem;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontLargeSize, 160rem);
+	color: var(--sapTextColor);
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	align-self: stretch;
+}
+
+.ui5-user-settings-account-subtitleText {
+	text-align: center;
+	margin-bottom: 0.25rem;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize, 140rem);
+	color: var(--sapContent_LabelColor);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	align-self: stretch;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.ui5-user-settings-account-description {
+	text-align: center;
+	margin-bottom: 0.25rem;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize, 140rem);
+	color: var(--sapContent_LabelColor);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	align-self: stretch;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.ui5-user-settings-account-btn {
+	display: flex;
+	padding: 6px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: var(--sapButton_BorderCornerRadius);
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
+	background: var(--sapButton_Background);
+}
