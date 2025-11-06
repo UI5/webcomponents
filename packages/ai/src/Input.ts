@@ -20,9 +20,9 @@ import ValueStateMessageCss from "@ui5/webcomponents/dist/generated/themes/Value
 // templates
 import InputTemplate from "./InputTemplate.js";
 import {
-	VERSIONING_NEXT_BUTTON_TEXT,
-	VERSIONING_PREVIOUS_BUTTON_TEXT,
-	INPUT_WRITING_ASSISTANT_LABEL,
+	INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP,
+	INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP,
+	INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -293,7 +293,7 @@ class Input extends BaseInput {
 	}
 
 	get ariaLabel() {
-		return this.accessibleName || !this.loading ? Input.i18nBundle.getText(INPUT_WRITING_ASSISTANT_LABEL) : Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
+		return this.accessibleName || !this.loading ? Input.i18nBundle.getText(INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP) : Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
 	}
 
 	get stopGeneratingTooltip() {
@@ -301,11 +301,11 @@ class Input extends BaseInput {
 	}
 
 	get nextButtonAccessibleName() {
-		return Input.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+		return Input.i18nBundle.getText(INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP);
 	}
 
 	get previousButtonAccessibleName() {
-		return Input.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+		return Input.i18nBundle.getText(INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP);
 	}
 
 	get menu() {

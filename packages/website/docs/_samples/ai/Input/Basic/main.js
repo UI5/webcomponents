@@ -8,7 +8,6 @@ const SAMPLE_TEXTS = {
     bg: "Мениджърите по иновации водят с креативност.",
     de: "Innovationsmanager führen mit Kreativität.",
     expanded: "They combine creative ideas with strategic action.",
-    rephrased: "Managers use creativity to guide innovation.",
     simplified: "They lead using creativity.",
     summarized: "Driving innovation creatively."
 };
@@ -36,7 +35,6 @@ const MENU_CONFIG = [
         children: [
             { text: "Simplify", action: "simplify", processingLabel: "Simplifying text", completedLabel: "Simplified text", textKey: "simplified", isChild: true },
             { text: "Expand", action: "expand", processingLabel: "Expanding text", completedLabel: "Expanded text", textKey: "expanded", isChild: true },
-            { text: "Rephrase", action: "rephrase", processingLabel: "Rephrasing text", completedLabel: "Rephrased text", textKey: "rephrased", isChild: true },
             { text: "Summarize", action: "summarize", processingLabel: "Summarizing text", completedLabel: "Summarized text", textKey: "summarized", isChild: true }
         ]
     },
@@ -162,6 +160,7 @@ function completeGeneration(action, menuItem) {
 
     updateComponentState();
     aiInput.loading = false;
+    aiInput.placeholder = "Write your title";
     aiInput.focus();
 }
 
@@ -187,6 +186,7 @@ function animateTextGeneration(text, action, menuItem) {
 function setLoadingState(promptDescription) {
     aiInput.value = ""
     aiInput.loading = true;
+    aiInput.placeholder = "";
     aiInput.promptDescription = promptDescription || '';
 }
 
@@ -255,6 +255,7 @@ function stopGeneration() {
     }
     currentActionInProgress = null;
     aiInput.loading = false;
+    aiInput.placeholder = "Write your title";
     aiInput.focus();
 }
 
