@@ -105,7 +105,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersion={1}
+					currentVersion={2}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>

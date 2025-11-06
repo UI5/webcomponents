@@ -240,7 +240,7 @@ describe("WritingAssistant Component", () => {
 				.shadow()
 				.find("[ui5-ai-versioning]")
 				.should("exist")
-				.should("have.prop", "currentStep", 2)
+				.should("have.prop", "currentStep", 1)
 				.should("have.prop", "totalSteps", 3);
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -255,7 +255,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersion={1}
+					currentVersion={2}
 					totalVersions={4}
 				/>
 			);
@@ -587,7 +587,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersion={1}
+					currentVersion={2}
 					totalVersions={4}
 					onVersionChange={onVersionChange}
 				/>
@@ -662,7 +662,7 @@ describe("WritingAssistant Component", () => {
 				<WritingAssistant
 					loading={false}
 					promptDescription="Generated text"
-					currentVersion={0}
+					currentVersion={1}
 					totalVersions={1}
 				/>
 			);
@@ -671,12 +671,12 @@ describe("WritingAssistant Component", () => {
 				.as("toolbar")
 				.invoke("prop", "loading", false)
 				.invoke("prop", "promptDescription", "Multiple results")
-				.invoke("prop", "currentVersion", 1)
+				.invoke("prop", "currentVersion", 2)
 				.invoke("prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "currentVersion", 1)
+				.should("have.prop", "currentVersion", 2)
 				.should("have.prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
@@ -796,7 +796,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersion={1}
+					currentVersion={2}
 					totalVersions={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
 					onButtonClick={cy.stub().as("onButtonClick")}
@@ -1073,7 +1073,7 @@ describe("WritingAssistant Component", () => {
 				.shadow()
 				.find("[ui5-ai-versioning]")
 				.should("exist")
-				.should("have.prop", "currentStep", 3)
+				.should("have.prop", "currentStep", 2)
 				.should("have.prop", "totalSteps", 5);
 
 			cy.get("[ui5-ai-writing-assistant]")
@@ -1083,7 +1083,7 @@ describe("WritingAssistant Component", () => {
 				.find("ui5-ai-toolbar-label")
 				.shadow()
 				.find("span")
-				.should("contain.text", "3 / 5");
+				.should("contain.text", "2 / 5");
 		});
 
 		it("should maintain proper layout with all elements", () => {
