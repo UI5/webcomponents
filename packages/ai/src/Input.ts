@@ -9,6 +9,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import BaseInput from "@ui5/webcomponents/dist/Input.js";
 import type Menu from "@ui5/webcomponents/dist/Menu.js";
+import type { MenuItemClickEventDetail } from "@ui5/webcomponents/dist/Menu.js";
 import type Button from "./Button.js";
 
 // styles
@@ -25,6 +26,10 @@ import {
 	INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
+
+type VersionChangeEventDetail = {
+	backwards: boolean,
+};
 
 /**
  * @class
@@ -80,6 +85,11 @@ import {
 	cancelable: true,
 })
 
+/** Fired when an item from the AI actions menu is clicked.
+ * @public
+ */
+@event("item-click")
+
 /**
  * Fired when the user selects the "Stop" button to stop ongoing AI text generation.
  * @public
@@ -96,11 +106,10 @@ import {
 
 class Input extends BaseInput {
 	eventDetails!: BaseInput["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
-		"button-click": object;
+		"version-change": VersionChangeEventDetail;
+		"stop-generation": void;
+		"button-click": void;
+		"item-click": MenuItemClickEventDetail;
 	};
 
 	/**
@@ -246,15 +255,8 @@ class Input extends BaseInput {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: false } }));
 	}
 
-	_onMenuIconClick(): void {
-		this.menu?.addEventListener("item-click", (e: Event) => {
-			const customEvent = e as CustomEvent;
-			this.dispatchEvent(new CustomEvent("item-click", {
-				detail: customEvent.detail,
-				bubbles: true,
-				composed: true,
-			}));
-		});
+	_onMenuIconClick(e: CustomEvent<MenuItemClickEventDetail>): void {
+		this.fireDecoratorEvent("item-click", e.detail);
 	}
 
 	/**
@@ -309,7 +311,7 @@ class Input extends BaseInput {
 	}
 
 	get menu() {
-		return this.shadowRoot?.querySelector("ui5-menu") as Menu;
+		return this.shadowRoot?.querySelector("[ui5-menu]") as Menu;
 	}
 }
 

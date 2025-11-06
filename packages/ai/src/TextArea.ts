@@ -18,6 +18,10 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
+type VersionChangeEventDetail = {
+	backwards: boolean,
+};
+
 /**
  * @class
  *
@@ -72,10 +76,8 @@ import TextAreaTemplate from "./TextAreaTemplate.js";
 
 class TextArea extends BaseTextArea {
 	eventDetails!: BaseTextArea["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
+		"version-change": VersionChangeEventDetail;
+		"stop-generation": void;
 	};
 
 	// Store bound handler for proper cleanup
