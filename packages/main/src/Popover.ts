@@ -831,6 +831,8 @@ class Popover extends Popup {
 		const allClasses = super.classes;
 		allClasses.root["ui5-popover-root"] = true;
 
+		allClasses.root["ui5-popover-resize-handle-bottom-right"] = this.resizable;
+
 		return allClasses;
 	}
 

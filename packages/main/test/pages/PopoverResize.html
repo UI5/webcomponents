@@ -39,12 +39,12 @@
 	</script>
 </head>
 
-<body style="background-color: var(--sapBackgroundColor);">
+<body class="sapUiSizeCompact" style="background-color: var(--sapBackgroundColor);">
 	<div class="pageContainer">
-		<h1>Popover Resize</h1>
+		<ui5-title level="H1">Popover Resize</ui5-title>
 		<div class="popoverSettings">
 			<div>
-				Placement:
+				<ui5-label for="placementSwitch" show-colon>Placement</ui5-label>
 				<ui5-segmented-button id="placementSwitch">
 					<ui5-segmented-button-item data-ui5-value="Start">Start</ui5-segmented-button-item>
 					<ui5-segmented-button-item data-ui5-value="End" selected>End</ui5-segmented-button-item>
@@ -53,7 +53,7 @@
 				</ui5-segmented-button>
 			</div>
 			<div>
-				Horizontal Align:
+				<ui5-label for="hAlignSwitch" show-colon>Horizontal Align</ui5-label>
 				<ui5-segmented-button id="hAlignSwitch">
 					<ui5-segmented-button-item data-ui5-value="Center" selected>Center</ui5-segmented-button-item>
 					<ui5-segmented-button-item data-ui5-value="Start">Start</ui5-segmented-button-item>
@@ -62,7 +62,7 @@
 				</ui5-segmented-button>
 			</div>
 			<div>
-				Vertical Align:
+				<ui5-label for="vAlignSwitch" show-colon>Vertical Align</ui5-label>
 				<ui5-segmented-button id="vAlignSwitch">
 					<ui5-segmented-button-item data-ui5-value="Center" selected>Center</ui5-segmented-button-item>
 					<ui5-segmented-button-item data-ui5-value="Top">Top</ui5-segmented-button-item>
@@ -71,17 +71,23 @@
 				</ui5-segmented-button>
 			</div>
 			<div>
-				Hide Arrow: <ui5-switch id="hideArrowSwitch"></ui5-switch>
+				<ui5-label for="hideArrowSwitch" show-colon>Hide Arrow</ui5-label>
+				<ui5-switch id="hideArrowSwitch"></ui5-switch>
 			</div>
 		</div>
 		<div class="popoverOpenerContainer">
 			<ui5-button id="buttonId">Open Popover</ui5-button>
 			<ui5-popover id="popoverId"
+						 resizable
 						 opener="buttonId"
 						 header-text="Popover">
 				<div>
 					This is a Popover control.
 				</div>
+				<ui5-bar slot="footer" design="Footer">
+					<ui5-button design="Emphasized" id="closeDialogStateButton" slot="endContent"
+								style="min-width: 4rem;">OK</ui5-button>
+				</ui5-bar>
 			</ui5-popover>
 		</div>
 	</div>

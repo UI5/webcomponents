@@ -90,3 +90,72 @@
 :host([modal]) .ui5-block-layer {
 	display: block;
 }
+
+/* resize handle */
+
+.ui5-popover-resize-handle {
+	position: absolute;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	z-index: 10;
+}
+
+.ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	cursor: inherit;
+}
+
+.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle {
+	top: -0.5rem;
+	right: -0.5rem;
+	cursor: ne-resize;
+}
+
+.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+	bottom: 0;
+	left: 0;
+	transform: rotate(270deg);
+}
+
+.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle {
+	top: -0.5rem;
+	left: -0.5rem;
+	cursor: nw-resize;
+}
+
+.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+	bottom: 0;
+	right: 0;
+	transform: rotate(180deg);
+}
+
+.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle {
+	bottom: -0.5rem;
+	left: -0.5rem;
+	cursor: ne-resize;
+}
+
+.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+	top: 0;
+	right: 0;
+	transform: rotate(90deg);
+}
+
+.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle {
+	bottom: -0.5rem;
+	right: -0.5rem;
+	cursor: nw-resize;
+}
+
+.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+	top: 0;
+	left: 0;
+}
+
+.ui5-popover-resizing,
+.ui5-popover-resizing * {
+	user-select: none !important;
+}
