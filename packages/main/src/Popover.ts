@@ -121,7 +121,7 @@ class Popover extends Popup {
 
 	/**
 	 * Defines whether the component should close when
-	 * clicking/tapping outside of the popover.
+	 * clicking/tapping outside the popover.
 	 * If enabled, it blocks any interaction with the background.
 	 * @default false
 	 * @public
@@ -146,6 +146,16 @@ class Popover extends Popup {
 	 */
 	@property({ type: Boolean })
 	allowTargetOverlap = false;
+
+	/**
+	 * Determines whether the component is resizable.
+	 * **Note:** This property is effective only on Desktop
+	 * @default false
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property({ type: Boolean })
+	resizable = false;
 
 	/**
 	 * Sets the X translation of the arrow

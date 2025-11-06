@@ -31,6 +31,10 @@
 			vAlignSwitch.addEventListener("ui5-selection-change", event => {
 				popoverId.verticalAlign = event.detail.selectedItems[0].getAttribute("data-ui5-value");
 			});
+
+			hideArrowSwitch.addEventListener("ui5-change", event => {
+				popoverId.hideArrow = hideArrowSwitch.checked;
+			})
 		});
 	</script>
 </head>
@@ -67,7 +71,7 @@
 				</ui5-segmented-button>
 			</div>
 			<div>
-				Show Arrow: <ui5-switch id="showArrowSwitch" checked></ui5-switch>
+				Hide Arrow: <ui5-switch id="hideArrowSwitch"></ui5-switch>
 			</div>
 		</div>
 		<div class="popoverOpenerContainer">
