@@ -54,7 +54,7 @@ import {
  * `import "@ui5/webcomponents-ai/dist/Input.js";`
  *
  * @constructor
- * @extends BaseInput
+ * @extends Input
  * @since 2.16.0
  * @experimental The **@ui5/webcomponents-ai** package is under active development and considered experimental. Component APIs are subject to change.
  * @public

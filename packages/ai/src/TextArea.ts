@@ -38,7 +38,7 @@ import TextAreaTemplate from "./TextAreaTemplate.js";
  * `import "@ui5/webcomponents-ai/dist/TextArea.js";`
  *
  * @constructor
- * @extends BaseTextArea
+ * @extends TextArea
  * @experimental The **@ui5/webcomponents-ai** package is under development and considered experimental - components' APIs are subject to change.
  * @since 2.16.0
  * @public
