@@ -80,6 +80,6 @@
 }
 
 ::slotted([ui5-segmented-button-item]:active) {
-	background-color: var(--sapButton_Selected_Background);
+	background-color: var(--sapButton_Active_Background);
 }
 

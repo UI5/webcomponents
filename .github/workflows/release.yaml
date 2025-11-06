@@ -1,0 +1,21 @@
+name: Release Stable Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        fetch-depth: 0
+    - uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 22
+        cache: 'yarn'

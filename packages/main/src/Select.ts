@@ -26,7 +26,7 @@ import {
 	getEffectiveAriaDescriptionText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import SelectTwoColumnSeparator from "./types/SelectTwoColumnSeparator.js";
+import SelectTextSeparator from "./types/SelectTextSeparator.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -346,7 +346,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @since 2.16.0
 	 */
 	@property()
-	twoColumnSeparator: `${SelectTwoColumnSeparator}` = "Dash";
+	textSeparator: `${SelectTextSeparator}` = "Dash";
 
 	/**
 	 * Constantly updated value of texts collected from the associated description texts
@@ -647,12 +647,12 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _separatorSymbol(): string {
-		switch (this.twoColumnSeparator) {
-		case SelectTwoColumnSeparator.Bullet:
+		switch (this.textSeparator) {
+		case SelectTextSeparator.Bullet:
 			return "·"; // Middle dot (U+00B7)
-		case SelectTwoColumnSeparator.VerticalLine:
+		case SelectTextSeparator.VerticalLine:
 			return "|"; // Vertical line (U+007C)
-		case SelectTwoColumnSeparator.Dash:
+		case SelectTextSeparator.Dash:
 		default:
 			return "–"; // En dash (U+2013)
 		}
