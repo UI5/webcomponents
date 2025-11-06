@@ -140,7 +140,11 @@ class Parser {
 			process.exit(1);
 		}
 
-		envs = scripts.__ui5envs;
+		envs = JSON.parse(JSON.stringify(scripts.__ui5envs || {}));
+
+		Object.entries(envs).forEach(([key, value]) => {
+			envs[key] = String(value);
+		});
 
 		// Package-script should provide default export with scripts object
 		if (envs && typeof envs !== "object") {
