@@ -1,6 +1,6 @@
 {
   "name": "@ui5/create-webcomponents-package",
-  "version": "2.16.0-rc.2",
+  "version": "2.16.1-rc.0",
   "description": "UI5 Web Components: create package",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",

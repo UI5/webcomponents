@@ -1,6 +1,7 @@
 import { globby } from "globby";
 import * as esbuild from 'esbuild'
 import * as fs from "fs";
+import { pathToFileURL } from "url";
 
 const generate = async () => {
   let customPlugin = {
@@ -38,7 +39,10 @@ const generate = async () => {
   const result = await esbuild.build(config);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
   generate()
 }
 

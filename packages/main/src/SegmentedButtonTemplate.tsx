@@ -1,5 +1,4 @@
 import type SegmentedButton from "./SegmentedButton.js";
-import SegmentedButtonContentMode from "./types/SegmentedButtonContentMode.js";
 
 export default function SegmentedButtonTemplate(this: SegmentedButton) {
 	return (
@@ -7,8 +6,8 @@ export default function SegmentedButtonTemplate(this: SegmentedButton) {
 			role="listbox"
 			class={{
 				"ui5-segmented-button-root": true,
-				"ui5-segmented-button-root-equal-sized-items": this.contentMode === SegmentedButtonContentMode.EqualSized,
-				"ui5-segmented-button-root-content-fit-items": this.contentMode === SegmentedButtonContentMode.ContentFit,
+				"ui5-segmented-button-root-equal-sized-items": !this.itemsFitContent,
+				"ui5-segmented-button-root-content-fit-items": this.itemsFitContent,
 			}}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}

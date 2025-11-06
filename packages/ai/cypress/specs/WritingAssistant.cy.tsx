@@ -1,5 +1,12 @@
 import WritingAssistant from "../../src/WritingAssistant.js";
 
+import { 
+	WRITING_ASSISTANT_BUTTON_TOOLTIP,
+	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_STOP_TOOLTIP,
+ } from "../../src/generated/i18n/i18n-defaults.js";
+
 describe("WritingAssistant Component", () => {
 	describe("Initialization", () => {
 		it("should render with default properties", () => {
@@ -8,20 +15,20 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("exist")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "");
+				.should("have.prop", "promptDescription", "");
 		});
 
 		it("should render with custom properties", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Processing..."
+					promptDescription="Processing..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", true)
-				.should("have.prop", "actionText", "Processing...");
+				.should("have.prop", "promptDescription", "Processing...");
 		});
 
 		it("should have proper toolbar structure", () => {
@@ -154,7 +161,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Generating content..."
+					promptDescription="Generating content..."
 				/>
 			);
 
@@ -186,8 +193,8 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={1}
+					promptDescription="Generated text"
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -215,8 +222,8 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={2}
+					promptDescription="Generated text"
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -248,7 +255,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={4}
 				/>
 			);
@@ -265,7 +272,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={0}
 				/>
 			);
@@ -280,7 +287,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={3}
 				/>
 			);
@@ -295,7 +302,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -311,7 +318,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -325,7 +332,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={3}
 				/>
 			);
@@ -340,7 +347,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={3}
+					currentVersion={2}
 					totalVersions={5}
 					onVersionChange={cy.stub().as("onVersionChange")}
 				/>
@@ -360,7 +367,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
 				/>
@@ -382,7 +389,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Generated content"
+					promptDescription="Generated content"
 					totalVersions={1}
 				/>
 			);
@@ -404,7 +411,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Generating..."
+					promptDescription="Generating..."
 				/>
 			);
 
@@ -420,8 +427,8 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Multiple results generated"
-					currentVersionIndex={2}
+					promptDescription="Multiple results generated"
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -434,11 +441,11 @@ describe("WritingAssistant Component", () => {
 				.should("contain.text", "Multiple results generated");
 		});
 
-		it("should not display action text when not loading and no actionText", () => {
+		it("should not display action text when not loading and no promptDescription", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText=""
+					promptDescription=""
 				/>
 			);
 
@@ -452,15 +459,15 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Generating..."
+					promptDescription="Generating..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
 				.invoke("prop", "loading", false)
-				.invoke("prop", "actionText", "Generated text")
-				.invoke("prop", "currentVersionIndex", 1)
+				.invoke("prop", "promptDescription", "Generated text")
+				.invoke("prop", "currentVersion", 0)
 				.invoke("prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
@@ -475,7 +482,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText=""
+					promptDescription=""
 				/>
 			);
 
@@ -491,7 +498,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText={longText}
+					promptDescription={longText}
 				/>
 			);
 
@@ -525,7 +532,7 @@ describe("WritingAssistant Component", () => {
 		});
 
 		it("should have border class when results exist", () => {
-			cy.mount(<WritingAssistant loading={false} totalVersions={1} actionText="Generated" />);
+			cy.mount(<WritingAssistant loading={false} totalVersions={1} promptDescription="Generated" />);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.shadow()
@@ -580,7 +587,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={4}
 					onVersionChange={onVersionChange}
 				/>
@@ -616,32 +623,32 @@ describe("WritingAssistant Component", () => {
 
 			cy.get("@toolbar")
 				.invoke("prop", "loading", true)
-				.invoke("prop", "actionText", "Generating...");
+				.invoke("prop", "promptDescription", "Generating...");
 
 			cy.get("@toolbar")
 				.should("have.prop", "loading", true)
-				.should("have.prop", "actionText", "Generating...");
+				.should("have.prop", "promptDescription", "Generating...");
 		});
 
 		it("should handle state transition from loading to single result", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Generating..."
+					promptDescription="Generating..."
 				/>
 			);
 
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
 				.invoke("prop", "loading", false)
-				.invoke("prop", "actionText", "Generated text")
-				.invoke("prop", "currentVersionIndex", 1)
+				.invoke("prop", "promptDescription", "Generated text")
+				.invoke("prop", "currentVersion", 0)
 				.invoke("prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 1)
+				.should("have.prop", "promptDescription", "Generated text")
+				.should("have.prop", "currentVersion", 0)
 				.should("have.prop", "totalVersions", 1);
 
 			cy.get("@toolbar")
@@ -654,8 +661,8 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={1}
+					promptDescription="Generated text"
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -663,13 +670,13 @@ describe("WritingAssistant Component", () => {
 			cy.get("[ui5-ai-writing-assistant]")
 				.as("toolbar")
 				.invoke("prop", "loading", false)
-				.invoke("prop", "actionText", "Multiple results")
-				.invoke("prop", "currentVersionIndex", 2)
+				.invoke("prop", "promptDescription", "Multiple results")
+				.invoke("prop", "currentVersion", 1)
 				.invoke("prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "currentVersionIndex", 2)
+				.should("have.prop", "currentVersion", 1)
 				.should("have.prop", "totalVersions", 3);
 
 			cy.get("@toolbar")
@@ -686,7 +693,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={0}
 				/>
 			);
@@ -704,7 +711,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -731,7 +738,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={-1}
+					currentVersion={-1}
 					totalVersions={3}
 				/>
 			);
@@ -761,7 +768,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={5}
 				/>
 			);
@@ -789,7 +796,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 					onVersionChange={cy.stub().as("onVersionChange")}
 					onButtonClick={cy.stub().as("onButtonClick")}
@@ -821,7 +828,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={true}
-					actionText="Processing..."
+					promptDescription="Processing..."
 				/>
 			);
 
@@ -848,7 +855,7 @@ describe("WritingAssistant Component", () => {
 				cy.get("[ui5-ai-writing-assistant]")
 					.shadow()
 					.find("ui5-toolbar")
-					.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME));
 			});
 
 			it("should have translatable button accessible name", () => {
@@ -857,7 +864,7 @@ describe("WritingAssistant Component", () => {
 				cy.get("[ui5-ai-writing-assistant]")
 					.shadow()
 					.find("#ai-menu-btn")
-					.should("have.attr", "accessible-name", "AI Writing Assistant");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME));
 			});
 
 			it("should have translatable button tooltip", () => {
@@ -866,7 +873,47 @@ describe("WritingAssistant Component", () => {
 				cy.get("[ui5-ai-writing-assistant]")
 					.shadow()
 					.find("#ai-menu-btn")
-					.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
+			});
+
+			it("should have stop tooltip when loading", () => {
+				cy.mount(<WritingAssistant loading={true} />);
+
+				cy.get("[ui5-ai-writing-assistant]")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_STOP_TOOLTIP));
+			});
+
+			it("should change tooltip based on loading state", () => {
+				cy.mount(<WritingAssistant loading={false} />);
+
+				cy.get("[ui5-ai-writing-assistant]")
+					.as("writingAssistant");
+
+				// Verify initial button tooltip
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
+
+				// Change to loading state
+				cy.get("@writingAssistant").invoke("prop", "loading", true);
+
+				// Verify stop tooltip
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_STOP_TOOLTIP));
+
+				// Change back to non-loading state
+				cy.get("@writingAssistant").invoke("prop", "loading", false);
+
+				// Verify button tooltip is restored
+				cy.get("@writingAssistant")
+					.shadow()
+					.find("#ai-menu-btn")
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 			});
 
 			it("should maintain accessibility attributes when loading state changes", () => {
@@ -879,13 +926,13 @@ describe("WritingAssistant Component", () => {
 				cy.get("@writingAssistant")
 					.shadow()
 					.find("ui5-toolbar")
-					.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME));
 
 				cy.get("@writingAssistant")
 					.shadow()
 					.find("#ai-menu-btn")
-					.should("have.attr", "accessible-name", "AI Writing Assistant")
-					.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 
 				// Change to loading state
 				cy.get("@writingAssistant").invoke("prop", "loading", true);
@@ -894,13 +941,13 @@ describe("WritingAssistant Component", () => {
 				cy.get("@writingAssistant")
 					.shadow()
 					.find("ui5-toolbar")
-					.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME));
 
 				cy.get("@writingAssistant")
 					.shadow()
 					.find("#ai-menu-btn")
-					.should("have.attr", "accessible-name", "AI Writing Assistant")
-					.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 			});
 
 			it("should have proper accessibility attributes for different button states", () => {
@@ -911,8 +958,8 @@ describe("WritingAssistant Component", () => {
 					.shadow()
 					.find("#ai-menu-btn")
 					.should("have.attr", "data-state", "generate")
-					.should("have.attr", "accessible-name", "AI Writing Assistant")
-					.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)")
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP))
 					.should("have.attr", "icon", "ai");
 
 				// Generating state
@@ -922,8 +969,8 @@ describe("WritingAssistant Component", () => {
 					.shadow()
 					.find("#ai-menu-btn")
 					.should("have.attr", "data-state", "generating")
-					.should("have.attr", "accessible-name", "AI Writing Assistant")
-					.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)")
+					.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+					.should("have.attr", "tooltip", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_STOP_TOOLTIP))
 					.should("have.attr", "icon", "stop");
 			});
 
@@ -978,37 +1025,37 @@ describe("WritingAssistant Component", () => {
 					.should("have.attr", "aria-roledescription", "toolbar");
 			});
 
-			it("should provide screen reader friendly structure", () => {
-				cy.mount(
-					<WritingAssistant
-						loading={true}
-						actionText="Generating content..."
-					/>
-				);
+		it("should provide screen reader friendly structure", () => {
+			cy.mount(
+				<WritingAssistant
+					loading={true}
+					promptDescription="Generating content..."
+				/>
+			);
 
-				// Verify semantic structure for screen readers
-				cy.get("[ui5-ai-writing-assistant]")
-					.shadow()
-					.find("ui5-toolbar")
-					.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar")
-					.should("have.attr", "aria-roledescription", "toolbar");
+			// Verify semantic structure for screen readers
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("ui5-toolbar")
+				.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME))
+				.should("have.attr", "aria-roledescription", "toolbar");
 
-				// Action text should be available for screen readers
-				cy.get("[ui5-ai-writing-assistant]")
-					.shadow()
-					.find("ui5-ai-toolbar-label")
-					.shadow()
-					.find("span")
-					.should("contain.text", "Generating content...");
+			// Action text should be available for screen readers
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("ui5-ai-toolbar-label")
+				.shadow()
+				.find("span")
+				.should("contain.text", "Generating content...");
 
-				// Button should have proper accessible name and state indication
-				cy.get("[ui5-ai-writing-assistant]")
-					.shadow()
-					.find("#ai-menu-btn")
-					.should("have.attr", "accessible-name", "AI Writing Assistant")
-					.should("have.attr", "data-state", "generating")
-					.should("have.attr", "icon", "stop");
-			});
+			// Button should have proper accessible name and state indication
+			cy.get("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("have.attr", "accessible-name", WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+				.should("have.attr", "data-state", "generating")
+				.should("have.attr", "icon", "stop");
+		});
 		});
 	});
 
@@ -1017,7 +1064,7 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					currentVersionIndex={3}
+					currentVersion={2}
 					totalVersions={5}
 				/>
 			);
@@ -1043,8 +1090,8 @@ describe("WritingAssistant Component", () => {
 			cy.mount(
 				<WritingAssistant
 					loading={false}
-					actionText="Generated multiple results"
-					currentVersionIndex={2}
+					promptDescription="Generated multiple results"
+					currentVersion={1}
 					totalVersions={4}
 				/>
 			);
@@ -1090,7 +1137,7 @@ describe("WritingAssistant Component", () => {
 			// Rapidly change states
 			loadingStates.forEach((loading, index) => {
 				cy.get("@toolbar").invoke("prop", "loading", loading);
-				cy.get("@toolbar").invoke("prop", "actionText", `State ${index}`);
+				cy.get("@toolbar").invoke("prop", "promptDescription", `State ${index}`);
 			});
 
 			cy.get("@toolbar")

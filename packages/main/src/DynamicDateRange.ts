@@ -132,6 +132,7 @@ interface IDynamicDateRangeOption {
 @customElement({
 	tag: "ui5-dynamic-date-range",
 	languageAware: true,
+	cldr: true,
 	template: DynamicDateRangeTemplate,
 	renderer: jsxRenderer,
 	styles: [

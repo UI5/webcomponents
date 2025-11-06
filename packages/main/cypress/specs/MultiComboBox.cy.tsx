@@ -4153,180 +4153,141 @@ describe("Keyboard Handling", () => {
 });
 
 describe("MultiComboBox Composition", () => {
-	it("should handle Korean composition correctly", () => {
+	const mountMultiComboBox = (children: any, id: string, placeholder: string = "") => {
 		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-korean"
-				placeholder="Type in Korean ..."
-			>
-				<MultiComboBoxItem text="안녕하세요" />
-				<MultiComboBoxItem text="고맙습니다" />
-				<MultiComboBoxItem text="사랑" />
-				<MultiComboBoxItem text="한국" />
+			<MultiComboBox id={id} placeholder={placeholder}>
+				{children}
 			</MultiComboBox>
 		);
+		cy.get("[ui5-multi-combobox]").as("mcb").realClick();
+		cy.get("@mcb").shadow().find("input").as("input").focus();
+	};
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
-			.realClick();
+	const simulateCompositionStages = (stages: string[], final: string) => {
+		cy.get("@input").trigger("compositionstart", { data: "" });
+		stages.forEach(stage => {
+			cy.get("@input")
+				.invoke("val", stage)
+				.trigger("input", { inputType: "insertCompositionText" })
+				.trigger("compositionupdate", { data: stage });
 
-		cy.get("@multicombobox")
-			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
-
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-
-		cy.get("@nativeInput")
-			.invoke("val", "사랑")
+			cy.get("@mcb").should("have.prop", "_isComposing", true);
+			cy.get("@input").should("have.value", stage);
+			cy.get("@mcb").should("have.attr", "value", stage);
+			cy.get("@mcb").should("have.attr", "value-state", "None");
+		});
+		cy.get("@input")
+			.trigger("compositionend", { data: final })
+			.invoke("val", final)
 			.trigger("input", { inputType: "insertCompositionText" });
+		cy.get("@mcb").should("have.prop", "_isComposing", false);
+	};
 
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
+	it("IME Korean matching suggestion", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="사랑" />,
+			<MultiComboBoxItem key="2" text="사랑해요" />,
+			<MultiComboBoxItem key="3" text="한국" />,
+		], "mcb-korean", "Type in Korean ...");
 
-		cy.get("@multicombobox").should("have.attr", "value", "사랑");
+		simulateCompositionStages(["ㅅ", "사", "사랑"], "사랑");
 
-		cy.get("@multicombobox")
+		cy.get("@mcb")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
+			.find<ResponsivePopover>("ui5-responsive-popover")
 			.ui5ResponsivePopoverOpened();
 
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
 			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
+			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 1);
-
-		cy.get("@multicombobox").should("have.attr", "value", "");
+		cy.get("@mcb").should("have.attr", "value", "");
 	});
 
-	it("should handle Japanese composition correctly", () => {
-		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-japanese"
-				placeholder="Type in Japanese ..."
-			>
-				<MultiComboBoxItem text="こんにちは" />
-				<MultiComboBoxItem text="ありがとう" />
-				<MultiComboBoxItem text="東京" />
-				<MultiComboBoxItem text="日本" />
-			</MultiComboBox>
-		);
+	it("IME Korean non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="사랑" />,
+			<MultiComboBoxItem key="2" text="한국" />,
+		], "mcb-ko-non", "Type in Korean ...");
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
-			.realClick();
+		simulateCompositionStages(["ㄲ", "ㄲㅏ"], "까");
 
-		cy.get("@multicombobox")
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@input").should("have.value", "");
+		cy.get("@mcb")
 			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
-
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-
-		cy.get("@nativeInput")
-			.invoke("val", "ありがとう")
-			.trigger("input", { inputType: "insertCompositionText" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
-
-		cy.get("@multicombobox").should("have.attr", "value", "ありがとう");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
-			.should("have.length", 1);
-
-		cy.get("@multicombobox").should("have.attr", "value", "");
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
 	});
 
-	it("should handle Chinese composition correctly", () => {
-		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-chinese"
-				placeholder="Type in Chinese ..."
-			>
-				<MultiComboBoxItem text="你好" />
-				<MultiComboBoxItem text="谢谢" />
-				<MultiComboBoxItem text="北京" />
-				<MultiComboBoxItem text="中国" />
-			</MultiComboBox>
-		);
+	it("IME Japanese matching – multi-stage selection", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="ありがとう" />,
+			<MultiComboBoxItem key="2" text="こんにちは" />,
+			<MultiComboBoxItem key="3" text="東京" />,
+		], "mcb-ja", "Type in Japanese ...");
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
-			.realClick();
-
-		cy.get("@multicombobox")
+		simulateCompositionStages(["あ", "あり", "ありが", "ありがとう"], "ありがとう");
+		cy.get("@mcb")
 			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
-
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
-
-		cy.get("@nativeInput")
-			.invoke("val", "谢谢")
-			.trigger("input", { inputType: "insertCompositionText" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
-
-		cy.get("@multicombobox").should("have.attr", "value", "谢谢");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
+			.find<ResponsivePopover>("ui5-responsive-popover")
 			.ui5ResponsivePopoverOpened();
-
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
 			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
+			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 1);
+	});
 
-		cy.get("@multicombobox").should("have.attr", "value", "");
+	it("IME Japanese non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="ありがとう" />,
+			<MultiComboBoxItem key="2" text="こんにちは" />,
+		], "mcb-ja-non", "Type in Japanese ...");
+
+		simulateCompositionStages(["ず", "ずx"], "ずx");
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@input").should("have.value", "");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
+	});
+
+	it("IME Chinese matching – preserves pinyin stages & selects", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="你好" />,
+			<MultiComboBoxItem key="2" text="谢谢" />,
+			<MultiComboBoxItem key="3" text="谢谢你" />,
+			<MultiComboBoxItem key="4" text="北京" />,
+		], "mcb-zh", "Type in Chinese ...");
+
+		simulateCompositionStages(["x", "xi", "xie", "xiex", "xiexie"], "谢谢");
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 1);
+		cy.get("@mcb").should("have.attr", "value", "");
+	});
+
+	it("IME Chinese non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="你好" />,
+			<MultiComboBoxItem key="2" text="谢谢" />,
+		], "mcb-zh-non", "Type in Chinese ...");
+
+		simulateCompositionStages(["p", "pi", "pin"], "品味");
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@input").should("have.value", "");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
 	});
 });

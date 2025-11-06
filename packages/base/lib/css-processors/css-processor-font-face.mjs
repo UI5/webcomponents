@@ -1,7 +1,7 @@
 import * as esbuild from 'esbuild'
 import * as path from "path";
 import { readFile, writeFile } from "fs/promises";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const generate = async () => {
     const themeBasePackage = JSON.parse(await readFile(fileURLToPath(import.meta.resolve("@sap-theming/theming-base-content/package.json", "utf-8"))));
@@ -65,7 +65,10 @@ const generate = async () => {
     const result = await esbuild.build(config);
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
     generate()
 }
 

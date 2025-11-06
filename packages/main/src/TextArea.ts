@@ -684,4 +684,5 @@ class TextArea extends UI5Element implements IFormInputElement {
 TextArea.define();
 
 export default TextArea;
+export { TextArea as BaseTextArea };
 export type { TextAreaInputEventDetail };
