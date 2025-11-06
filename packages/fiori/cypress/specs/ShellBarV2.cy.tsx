@@ -659,7 +659,7 @@ describe("Events", () => {
 			.should("have.been.calledOnce");
 	});
 
-	it.only("Test search field clear event default behavior", () => {
+	it("Test search field clear event default behavior", () => {
 		cy.mount(
 			<ShellBar showSearchField={true}>
 				<ShellBarSearch id="search" slot="searchField" value="test search text"></ShellBarSearch>

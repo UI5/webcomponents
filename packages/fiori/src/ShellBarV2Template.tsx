@@ -134,6 +134,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									</Button>
 								)}
 
+								{/* Custom Items */}
 								{this.items.map(item => (
 									<div
 										key={item._id}

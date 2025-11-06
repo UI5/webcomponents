@@ -448,7 +448,19 @@
 						// Create element from template
 						el = elementTemplates[id.replace(/-/g, '')]();
 						const shellbarId = id.includes('V1') ? 'shellbarV1' : 'shellbarV2';
-						document.getElementById(shellbarId).appendChild(el);
+						const shellbar = document.getElementById(shellbarId);
+						
+						// Special handling for spacer: insert after content-3 to split start/end groups
+						if (id.includes('spacer')) {
+							const insertAfter = document.getElementById(id.includes('V1') ? 'contentV1-3' : 'contentV2-3');
+							if (insertAfter && insertAfter.nextSibling) {
+								shellbar.insertBefore(el, insertAfter.nextSibling);
+							} else {
+								shellbar.appendChild(el);
+							}
+						} else {
+							shellbar.appendChild(el);
+						}
 					}
 				}
 			} else {

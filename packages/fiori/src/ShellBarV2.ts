@@ -18,13 +18,13 @@ import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
+import Menu from "@ui5/webcomponents/dist/Menu.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/grid.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
-import Menu from "@ui5/webcomponents/dist/Menu.js";
 
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
@@ -101,6 +101,13 @@ type ShellBarV2ContentItemVisibilityChangeEventDetail = {
 	items: Array<HTMLElement>;
 };
 
+interface IShellBarSearchField extends HTMLElement {
+	focused: boolean;
+	value: string;
+	collapsed?: boolean;
+	open?: boolean;
+}
+
 /* =============================================================================
 Legacy Event Types (DELETE WHEN REMOVING LEGACY)
 ================================================================================ */
@@ -112,13 +119,6 @@ type ShellBarV2LogoClickEventDetail = {
 type ShellBarV2MenuItemClickEventDetail = {
 	item: HTMLElement;
 };
-
-interface IShellBarSearchField extends HTMLElement {
-	focused: boolean;
-	value: string;
-	collapsed?: boolean;
-	open?: boolean;
-}
 
 /**
  * @class
