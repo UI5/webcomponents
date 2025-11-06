@@ -131,7 +131,7 @@ const processName = (name: string) => {
  * @param data - The illustration data (see {@link IllustrationData})
  *
  * @public
- * @since 2.16.0
+ * @since 2.17.0
  * @example
  * ```js
  * import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
@@ -171,7 +171,7 @@ const registerIllustration = (name: string, data: IllustrationData) => {
  * @param data - The illustration data (see {@link UnsafeIllustrationData})
  *
  * @public
- * @since 2.16.0
+ * @since 2.17.0
  * @example
  * ```js
  * import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
