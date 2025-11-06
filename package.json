@@ -62,7 +62,6 @@
     "release": "node ./.github/actions/release.cjs",
     "prepare": "husky install",
     "husky:commit-msg": "commitlint -e",
-    "repair": "lerna repair",
     "husky:pre-push": "npm-run-all --sequential husky:commit-msg"
   },
   "devDependencies": {
