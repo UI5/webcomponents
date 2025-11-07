@@ -23,19 +23,25 @@ on:
           required: false
           default: 'sf'
 
-  # ✅ Scheduled automatic RC releases
+  # Scheduled automatic RC releases
   schedule:
     - cron: "00 08 * * THU"  # Thursdays at 8 AM UTC
 
 
 jobs:
-  # ✅ Job 1: Version and Build
+  # Job : Version and Build
   build-and-release:
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+      pages: write
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version-output.outputs.version }}
     steps:
-       # ✅ Checkout and Prepare
+       # Checkout and Prepare
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -51,7 +57,7 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
-      # ✅ Conditional Version Bump
+      # Conditional Version Bump
       
       - name: Version Bump - Stable
         if: ${{ github.event.inputs.release_type == 'stable' }}
@@ -86,14 +92,14 @@ jobs:
       - name: Build
         run: yarn ci:releasebuild
 
-      # ✅ Output new version 
+      # Output new version 
       - name: Output Version
         id: version-output
         run: |
           VERSION=$(node -p "require('./lerna.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      # ✅ Conditional NPM Publish
+      # Conditional NPM Publish
       - name: Publish Stable
         if: ${{ github.event.inputs.release_type == 'stable'}}
         env:
@@ -131,7 +137,7 @@ jobs:
         run: yarn lerna publish from-git --yes --dist-tag ${{ github.event.inputs.npm_tag }}
 
 
-      # ✅ Conditional Deploy
+      # Conditional Deploy
       # Deploy RC
       - name: Pre-Deploy RC
         if: ${{ github.event.inputs.release_type == 'rc'}}
