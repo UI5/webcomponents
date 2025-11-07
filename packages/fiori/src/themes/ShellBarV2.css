@@ -53,7 +53,7 @@
 }
 
 /* ============================================================================
-   SLOTTED BUTTONS (General Styles)
+   SLOTTED BUTTONS (General Styles) Assistant and Start Button slots
    ============================================================================ */
 
 ::slotted([ui5-button]:not([slot^="content"])),
@@ -155,6 +155,7 @@
 .ui5-shellbar-overflow-container-inner {
 	display: flex;
 	align-items: center;
+	justify-content: end;
 	flex-shrink: 0;
 	min-width: 100%;
 }
@@ -381,14 +382,4 @@ slot[name="profile"] {
 
 .ui5-shellbar-hidden {
 	display: none !important;
-}
-
-.ui5-shellbar-no-overflow {
-	flex-shrink: 0;
-}
-
-::slotted([hidden]) {
-	visibility: hidden;
-	order: -1;
-	position: absolute;
 }

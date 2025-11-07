@@ -6,6 +6,7 @@ interface ShellBarV2ActionItem {
 }
 
 interface ShellBarV2ActionsParams {
+	hasSearch: boolean;
 	showProfile: boolean;
 	hasAssistant: boolean;
 	showProductSwitch: boolean;
@@ -16,10 +17,29 @@ interface ShellBarV2ActionsParams {
 class ShellBarV2Actions {
 	getActions(params: ShellBarV2ActionsParams): ShellBarV2ActionItem[] {
 		const {
-			showNotifications, notificationsCount, showProductSwitch, hasAssistant, showProfile,
+			hasSearch,
+			showProfile,
+			hasAssistant,
+			showProductSwitch,
+			showNotifications,
+			notificationsCount,
 		} = params;
 
 		return [
+			{
+				id: "search",
+				visible: hasSearch,
+				icon: "search",
+			},
+			{
+				id: "profile",
+				visible: showProfile,
+			},
+			{
+				id: "assistant",
+				visible: hasAssistant,
+				icon: "da",
+			},
 			{
 				id: "notifications",
 				visible: showNotifications,
@@ -30,15 +50,6 @@ class ShellBarV2Actions {
 				id: "product-switch",
 				visible: showProductSwitch,
 				icon: "grid",
-			},
-			{
-				id: "assistant",
-				visible: hasAssistant,
-				icon: "da",
-			},
-			{
-				id: "profile",
-				visible: showProfile,
 			},
 		].filter(action => action.visible);
 	}

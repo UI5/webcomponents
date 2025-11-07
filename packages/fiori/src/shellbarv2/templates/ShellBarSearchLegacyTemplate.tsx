@@ -37,12 +37,12 @@ function ShellBarV2SearchButton(this: ShellBarV2) {
 			{!this.hideSearchButton && (
 				<Button
 					data-ui5-stable="toggle-search"
-					class="ui5-shellbar-search-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+					class="ui5-shellbar-search-button ui5-shellbar-action-button ui5-shellbar-gap-start ui5-shellbar-search-toggle"
 					icon="sap-icon://search"
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}
-					tooltip={this.getActionText("search-button")}
-					aria-label={this.getActionText("search-button")}
+					tooltip={this.getActionText("search")}
+					aria-label={this.getActionText("search")}
 					aria-expanded={this.showSearchField}
 					accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
 				/>

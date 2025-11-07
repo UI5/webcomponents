@@ -176,7 +176,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<Button
 							data-profile-btn
 							data-ui5-stable="profile"
-							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap-start"
+							class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 							design="Transparent"
 							onClick={this._handleProfileClick}
 							tooltip={this.getActionText("profile")}
@@ -189,7 +189,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					{this.getAction("product-switch") && (
 						<Button
 							data-ui5-stable="product-switch"
-							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap-start"
+							class="ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start"
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}

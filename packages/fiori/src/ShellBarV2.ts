@@ -19,7 +19,7 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
-import List, { type ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import List from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/grid.js";
@@ -583,6 +583,7 @@ class ShellBarV2 extends UI5Element {
 	 */
 	private updateActions() {
 		const params = {
+			hasSearch: this.hasSearchField,
 			showNotifications: this.showNotifications,
 			notificationsCount: this.notificationsCount,
 			showProductSwitch: this.showProductSwitch,
@@ -599,10 +600,10 @@ class ShellBarV2 extends UI5Element {
 
 	getActionText(actionId: string): string {
 		const texts: Record<string, string> = {
+			"search": this._searchText,
 			"profile": this._profileText,
 			"overflow": this._overflowText,
 			"assistant": "Assistant",
-			"search-button": this._searchText,
 			"notifications": this._notificationsTextNoCount,
 			"product-switch": this._productsText,
 		};
@@ -777,7 +778,7 @@ class ShellBarV2 extends UI5Element {
 		// Trigger the appropriate action handler
 		if (actionId === "notifications") {
 			prevented = this.handleNotificationsClick();
-		} else if (actionId === "search-button") {
+		} else if (actionId === "search") {
 			prevented = this.handleSearchButtonClick();
 		}
 

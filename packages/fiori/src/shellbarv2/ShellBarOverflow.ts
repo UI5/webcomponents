@@ -5,7 +5,8 @@ interface ShellBarV2HidableItem {
 	id: string;
 	selector: string; // CSS selector to find the element
 	hideOrder: number;
-	protected: boolean;
+	keepHidden: boolean;
+	isProtected: boolean;
 	showInOverflow?: boolean; // If true, hiding this item triggers overflow button
 }
 
@@ -33,6 +34,26 @@ interface ShellBarV2OverflowItem {
 }
 
 class ShellBarV2Overflow {
+	private readonly OPEN_SEARCH_STRATEGY = {
+		CONTENT: 0, 		// All content first
+		ACTIONS: 100,		// All actions next
+		SEARCH: 100,		// Search included in actions
+		LAST_CONTENT: 0,	// Last content same as other content
+	};
+
+	private readonly CLOSED_SEARCH_STRATEGY = {
+		ACTIONS: 0,			// All actions first
+		CONTENT: 100,		// Then content (except last)
+		SEARCH: 200,		// Then search button
+		LAST_CONTENT: 300,	// Last content item protected
+	};
+
+	private readonly SELECTORS = {
+		search: ".ui5-shellbar-search-toggle",
+		assistant: ".ui5-shellbar-assistant-button",
+		notifications: ".ui5-shellbar-bell-button",
+	};
+
 	/**
 	 * Performs overflow calculation by iteratively hiding items until no overflow.
 	 * Measures DOM after each hide to determine if more hiding is needed.
@@ -57,22 +78,25 @@ class ShellBarV2Overflow {
 			setVisible(item.selector, true);
 		});
 
-		const hiddenItemsIds: string[] = [];
+		let nextItemToHide = null;
 		let showOverflowButton = false;
-		let itemToHide = null;
+		const hiddenItemsIds: string[] = [];
 
 		// Iteratively hide items until no overflow
 		for (let indexToHide = 0; indexToHide < sortedItems.length; indexToHide++) {
-			itemToHide = sortedItems[indexToHide];
+			nextItemToHide = sortedItems[indexToHide];
 
 			if (!this.isOverflowing(overflowOuter, overflowInner)) {
 				break; // No more overflow, stop hiding
 			}
 
-			setVisible(itemToHide.selector, false);
-			hiddenItemsIds.push(itemToHide.id);
+			setVisible(nextItemToHide.selector, false);
+			hiddenItemsIds.push(nextItemToHide.id);
 
-			if (itemToHide.showInOverflow) {
+			// // Wait until next frame for layout to stabilize
+			// await new Promise(requestAnimationFrame);
+
+			if (nextItemToHide.showInOverflow) {
 				// show overflow button to account in isOverflowing calculation
 				setVisible(".ui5-shellbar-overflow-button", true);
 				showOverflowButton = true;
@@ -80,8 +104,8 @@ class ShellBarV2Overflow {
 		}
 
 		// never hide just one item as overflow button also accounts for one item
-		if (hiddenItemsIds.length === 1 && itemToHide) {
-			hiddenItemsIds.push(itemToHide.id);
+		if (hiddenItemsIds.length === 1 && nextItemToHide) {
+			hiddenItemsIds.push(nextItemToHide.id);
 		}
 
 		return {
@@ -94,147 +118,105 @@ class ShellBarV2Overflow {
 	 * Checks if inner is overflowing wrapper.
 	 */
 	isOverflowing(overflowOuter: HTMLElement, overflowInner: HTMLElement): boolean {
-		const overflowOuterWidth = overflowOuter.offsetWidth;
-		const overflowInnerWidth = overflowInner.offsetWidth;
-		return overflowInnerWidth > overflowOuterWidth;
+		return overflowInner.offsetWidth > overflowOuter.offsetWidth;
 	}
 
 	/**
 	 * Builds list of hidable items from state.
+	 *
+	 * Priority when search closed:
+	 * 1. Action items
+	 * 2. Content items (except last)
+	 * 3. Search button
+	 * 4. Last content item (protected)
+	 *
+	 * Priority when search open:
+	 * 1. All content items
+	 * 2. Action items (including search)
 	 */
 	private buildHidableItems(params: ShellBarV2OverflowParams): ShellBarV2HidableItem[] {
 		const {
 			content, actions, customItems, showSearchField, hiddenItemsIds,
 		} = params;
-		const items: ShellBarV2HidableItem[] = [];
 
-		// Content items hide FIRST (range: 10-99)
-		// Respect data-hide-order attribute
-		// Content items just disappear, no overflow popover
+		const items: ShellBarV2HidableItem[] = [];
+		const priorityStrategy = showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
+
+		const addItem = (itemData: Omit<ShellBarV2HidableItem, "keepHidden">) => {
+			items.push({
+				keepHidden: hiddenItemsIds.includes(itemData.id),
+				...itemData,
+			});
+		};
+
+		// Build content items
 		content.forEach((item, index) => {
 			const slotName = (item as any)._individualSlot as string;
 			const dataHideOrder = parseInt(item.getAttribute("data-hide-order") || String(index));
-			const selector = `#${slotName}`;
-			const hideOrder = 10 + dataHideOrder;
+			const isLast = index === content.length - 1;
 
-			items.push({
+			const priority = isLast ? priorityStrategy.LAST_CONTENT : priorityStrategy.CONTENT;
+
+			addItem({
 				id: slotName,
-				hideOrder,
-				"protected": false,
-				selector,
+				selector: `#${slotName}`,
+				hideOrder: priority + dataHideOrder,
+				isProtected: false,
 				showInOverflow: false,
 			});
 		});
 
-		// Action items hide SECOND (range: 100-199)
-		// Actions show in overflow popover when hidden
-		// Search button hides first among actions
-		if (showSearchField) {
-			const selector = ".ui5-shellbar-search-button";
-			let hideOrder = 0 + (showSearchField ? 100 : 0);
+		// Build action items
+		let actionIndex = 0;
 
-			if (hiddenItemsIds.includes("search-button")) {
-				// flip priority to ensure currently hidden items remain hidden
-				hideOrder *= -1;
-			}
-
-			items.push({
-				id: "search-button",
-				hideOrder,
-				"protected": false,
-				selector,
-				showInOverflow: true,
-			});
-		}
-
+		// Notifications
 		const notificationsAction = actions.find(a => a.id === "notifications");
 		if (notificationsAction) {
-			const selector = ".ui5-shellbar-bell-button";
-			let hideOrder = 1 + (showSearchField ? 100 : 0);
-
-			if (hiddenItemsIds.includes("notifications")) {
-				// flip priority to ensure currently hidden items remain hidden
-				hideOrder *= -1;
-			}
-
-			items.push({
+			addItem({
 				id: "notifications",
-				hideOrder,
-				"protected": false,
-				selector,
+				selector: this.SELECTORS.notifications,
+				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+				isProtected: false,
 				showInOverflow: true,
 			});
 		}
 
+		// Assistant
 		const assistantAction = actions.find(a => a.id === "assistant");
 		if (assistantAction) {
-			const selector = ".ui5-shellbar-assistant-button";
-			let hideOrder = 2 + (showSearchField ? 100 : 0);
-
-			if (hiddenItemsIds.includes("assistant")) {
-				// flip priority to ensure currently hidden items remain hidden
-				hideOrder *= -1;
-			}
-
-			items.push({
+			addItem({
 				id: "assistant",
-				hideOrder,
-				"protected": false,
-				selector,
+				selector: this.SELECTORS.assistant,
+				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+				isProtected: false,
 				showInOverflow: true,
 			});
 		}
 
-		// Custom items hide with actions (range: 100-199)
-		// Custom items show in overflow popover when hidden
-		customItems.forEach((item, index) => {
-			const selector = `[data-ui5-stable="${item.stableDomRef}"]`;
-			let hideOrder = 3 + index + (showSearchField ? 100 : 0);
-
-			if (hiddenItemsIds.includes(item._id)) {
-				hideOrder *= -1;
-			}
-
-			items.push({
+		// Build custom items
+		customItems.forEach(item => {
+			addItem({
 				id: item._id,
-				hideOrder,
-				"protected": false,
-				selector,
+				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
+				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+				isProtected: false,
 				showInOverflow: true,
 			});
 		});
 
-		// Protected items NEVER hide (range: 900+)
-		const productSwitchAction = actions.find(a => a.id === "product-switch");
-		if (productSwitchAction) {
-			items.push({
-				id: "product-switch",
-				hideOrder: 999,
-				"protected": true,
-				selector: ".ui5-shellbar-button-product-switch",
+		// Build search button
+		if (!showSearchField) {
+			// only when search is closed
+			addItem({
+				id: "search",
+				selector: this.SELECTORS.search,
+				hideOrder: priorityStrategy.SEARCH + actionIndex++,
+				isProtected: false,
+				showInOverflow: true,
 			});
 		}
 
-		const profileAction = actions.find(a => a.id === "profile");
-		if (profileAction) {
-			items.push({
-				id: "profile",
-				hideOrder: 1000,
-				"protected": true,
-				selector: ".ui5-shellbar-image-button",
-			});
-		}
-
-		// Sort items by hide order (lower = hide first), protected items last
-		const sortedItems = [...items].sort((a, b) => {
-			if (a.protected !== b.protected) {
-				return a.protected ? 1 : -1;
-			}
-			return a.hideOrder - b.hideOrder;
-		});
-
-		const filteredItems = sortedItems.filter(item => !item.protected);
-		return filteredItems;
+		return items.sort((a, b) => a.hideOrder - b.hideOrder);
 	}
 
 	/**
@@ -252,7 +234,7 @@ class ShellBarV2Overflow {
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));
 		hiddenActions.forEach(action => {
 			let order = 0;
-			if (action.id === "search-button") {
+			if (action.id === "search") {
 				order = 0;
 			} else if (action.id === "notifications") {
 				order = 1;
