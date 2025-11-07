@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** update header action button tooltip text ([#12634](https://github.com/UI5/webcomponents/issues/12634)) ([4cf0976](https://github.com/UI5/webcomponents/commit/4cf097658638c61e5e3bc4b8d196f74b4764c003)), closes [#12617](https://github.com/UI5/webcomponents/issues/12617)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
 ## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
 
 **Note:** Version bump only for package webcomponents
