@@ -71,6 +71,7 @@ import {
 	SHELLBAR_SEARCHFIELD_DESCRIPTION,
 	SHELLBAR_SEARCH_BTN_OPEN,
 	SHELLBAR_PRODUCT_SWITCH_BTN,
+	SHELLBAR_IMAGE_BTN,
 } from "./generated/i18n/i18n-defaults.js";
 
 type ShellBarLogoAccessibilityAttributes = {
@@ -1547,7 +1548,7 @@ class ShellBar extends UI5Element {
 	}
 
 	get imageBtnText() {
-		return getEffectiveAriaLabelText(this);
+		return getEffectiveAriaLabelText(this) || ShellBar.i18nBundle.getText(SHELLBAR_IMAGE_BTN);
 	}
 
 	get _shellbarText() {
