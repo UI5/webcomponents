@@ -5,7 +5,6 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
 import { BaseTextArea } from "@ui5/webcomponents/dist/TextArea.js";
-import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
@@ -18,7 +17,6 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
-import WritingAssistant from "./WritingAssistant.js";
 
 /**
  * @class
@@ -55,10 +53,6 @@ import WritingAssistant from "./WritingAssistant.js";
 		textareaStyles,
 		valueStateMessageStyles,
 		TextAreaCss,
-	],
-	dependencies: [
-		WritingAssistant,
-		BusyIndicator,
 	],
 })
 
