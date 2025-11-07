@@ -101,11 +101,12 @@
 	z-index: 10;
 }
 
-.ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+.ui5-popover-resize-handle [ui5-icon] {
 	position: absolute;
 	width: 1rem;
 	height: 1rem;
 	cursor: inherit;
+	color: var(--sapButton_Lite_TextColor);
 }
 
 .ui5-popover-resize-handle-top-right .ui5-popover-resize-handle {
@@ -114,7 +115,7 @@
 	cursor: ne-resize;
 }
 
-.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle [ui5-icon] {
 	bottom: 0;
 	left: 0;
 	transform: rotate(270deg);
@@ -126,7 +127,7 @@
 	cursor: nw-resize;
 }
 
-.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle [ui5-icon] {
 	bottom: 0;
 	right: 0;
 	transform: rotate(180deg);
@@ -138,7 +139,7 @@
 	cursor: ne-resize;
 }
 
-.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle [ui5-icon] {
 	top: 0;
 	right: 0;
 	transform: rotate(90deg);
@@ -150,7 +151,7 @@
 	cursor: nw-resize;
 }
 
-.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle .ui5-popover-resize-handle-icon {
+.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle [ui5-icon] {
 	top: 0;
 	left: 0;
 }

@@ -35,9 +35,11 @@ function afterContent(this: Popover) {
 			</footer>
 		}
 
-		{this.resizable &&
-			<div class="ui5-popover-resize-handle">
-				<Icon name={resizeCorner} class="ui5-popover-resize-handle-icon" mode="Decorative" />
+		{this._showResizeHandle &&
+			<div class="ui5-popover-resize-handle"
+				 onMouseDown={this._onResizeMouseDown}
+			>
+				<Icon name={resizeCorner} />
 			</div>
 		}
 	</>);
