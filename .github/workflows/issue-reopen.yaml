@@ -1,4 +1,4 @@
-name: Reopen Issue on Comment
+name: Issue - Reopen on Comment
 
 on:
   issue_comment:
