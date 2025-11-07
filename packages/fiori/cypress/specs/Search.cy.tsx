@@ -1060,9 +1060,7 @@ describe("Events", () => {
 		);
 
 		cy.get("[ui5-search]")
-			.then(search => {
-				search.get(0).addEventListener("ui5-open", cy.stub().as("opened"));
-			});
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
 
 		cy.get("[ui5-search]")
 			.shadow()
@@ -1081,7 +1079,7 @@ describe("Events", () => {
 		cy.get("[ui5-search]")
 			.realPress("t");
 
-		cy.get("@opened")
+		cy.get("@openSpy")
 			.should("not.have.been.called");
 
 		cy.get("[ui5-search]")
@@ -1095,9 +1093,7 @@ describe("Events", () => {
 		);
 
 		cy.get("[ui5-search]")
-			.then(search => {
-				search.get(0).addEventListener("ui5-open", cy.stub().as("opened"));
-			});
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
 
 		cy.get("[ui5-search]")
 			.shadow()
@@ -1107,7 +1103,7 @@ describe("Events", () => {
 		cy.get("[ui5-search]")
 			.realPress("t");
 
-		cy.get("@opened")
+		cy.get("@openSpy")
 			.should("have.been.calledOnce");
 
 		cy.get("[ui5-search]")
