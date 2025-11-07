@@ -66,7 +66,7 @@ jobs:
       - name: Build
         run: yarn ci:releasebuild
 
-      - name: Publish to NPM
+      - name: Publish
         run: |
           yarn lerna publish from-git --yes
 
@@ -90,6 +90,23 @@ jobs:
             script: |
               const commentOnFixedIssues = (await import('${{ github.workspace }}/.github/actions/commentOnFixedIssues.mjs')).default;
               await commentOnFixedIssues({ github, context });
+
+      - name: Pre-Deploy
+        env:
+          DEPLOYMENT_TYPE: "latest"
+        run: |
+          yarn ci:deploy
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: packages/website/build # The folder the action should deploy.
+          clean: true
+          clean-exclude: |
+              nightly
+              v1
+              googlea519d963aa8f580f.html
 
   # ✅ Job 2: RC Release Flow
   rc-release:
@@ -128,7 +145,7 @@ jobs:
       - name: Build
         run: yarn ci:releasebuild
 
-      - name: Publish to NPM
+      - name: Publish
         run: |
           yarn lerna publish from-git --yes
 
@@ -154,6 +171,7 @@ jobs:
             script: |
               const commentOnFixedIssues = (await import('${{ github.workspace }}/.github/actions/commentOnFixedIssues.mjs')).default;
               await commentOnFixedIssues({ github, context });
+
 
   # ✅ Job 3: Hotfix Release Flow
   hotfix-release:
@@ -191,8 +209,9 @@ jobs:
       - name: Build
         run: yarn ci:releasebuild
 
-      - name: Publish to NPM
+      - name: Publish
         run: yarn lerna publish from-git --yes --dist-tag ${{ github.event.inputs.npm_tag || 'sf' }}
+
 
   # ✅ Job 4: Experimental Release Flow
   experimental-release:
@@ -236,6 +255,6 @@ jobs:
       - name: Build
         run: yarn ci:releasebuild
 
-      - name: Publish to NPM
+      - name: Publish
         run: |
           yarn lerna publish from-git --yes --dist-tag experimental
