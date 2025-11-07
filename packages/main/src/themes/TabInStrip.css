@@ -132,27 +132,28 @@
 
 
 /* selection indicator */
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon .ui5-tab-strip-item-icon-outer::after{
+.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemContent::after,
+.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode .ui5-tab-strip-itemContent::after,
+.ui5-tab-strip-item--selected .ui5-tab-strip-item-icon-outer::after {
 	content: "";
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
+	border-bottom: var(--sapTab_Selected_Indicator_Dimension) solid var(--sapTab_ForegroundColor);
 	border-radius: var(--_ui5_tc_headerItemContent_border_radius);
-	background-color: var(--sapTab_ForegroundColor);
-	height: var(--sapTab_Selected_Indicator_Dimension);
+	background-color: var(--_ui5_tc_headerItemContent_border_bg);
+	height: var(--_ui5_tc_headerItemContent_border_height);
 }
 
 /* selection indicator offset in text only and mixed modes */
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode::after {
+.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemContent::after,
+.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode .ui5-tab-strip-itemContent::after {
 	left: var(--_ui5_tc_headeritem_padding);
 	right: var(--_ui5_tc_headeritem_padding);
 }
 
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon .ui5-tab-strip-item-icon-outer::after{
+.ui5-tab-strip-item--selected .ui5-tab-strip-item-icon-outer::after {
 	bottom: -1rem;
 }
 
@@ -306,12 +307,6 @@
 	border-color: var(--sapTab_Positive_ForegroundColor);
 }
 
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly.ui5-tab-strip-item--positive::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode.ui5-tab-strip-item--positive::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon.ui5-tab-strip-item--positive .ui5-tab-strip-item-icon-outer::after{
-	background-color: var(--sapTab_Positive_ForegroundColor);
-}
-
 .ui5-tab-strip-item--selected.ui5-tab-strip-item--positive.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemText {
 	color: var(--sapTab_Positive_Selected_TextColor);
 }
@@ -351,11 +346,6 @@
 	border-color: var(--sapTab_Negative_ForegroundColor);
 }
 
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly.ui5-tab-strip-item--negative::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode.ui5-tab-strip-item--negative::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon.ui5-tab-strip-item--negative .ui5-tab-strip-item-icon-outer::after{
-	background-color: var(--sapTab_Negative_ForegroundColor);
-}
 
 .ui5-tab-strip-item--selected.ui5-tab-strip-item--negative.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemText {
 	color: var(--sapTab_Negative_Selected_TextColor);
@@ -385,12 +375,6 @@
 	border-color: var(--sapTab_Critical_ForegroundColor);
 }
 
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly.ui5-tab-strip-item--critical::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode.ui5-tab-strip-item--critical::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon.ui5-tab-strip-item--critical .ui5-tab-strip-item-icon-outer::after{
-	background-color: var(--sapTab_Critical_ForegroundColor);
-}
-
 .ui5-tab-strip-item--selected.ui5-tab-strip-item--critical.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemText {
 	color: var(--sapTab_Critical_Selected_TextColor);
 }
@@ -417,12 +401,6 @@
 .ui5-tab-strip-item--neutral .ui5-tab-strip-item-icon-outer {
 	color: var(--sapTab_Neutral_TextColor);
 	border-color: var(--sapTab_Neutral_ForegroundColor);
-}
-
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--textOnly.ui5-tab-strip-item--neutral::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--mixedMode.ui5-tab-strip-item--neutral::after,
-.ui5-tab-strip-item--selected.ui5-tab-strip-item--withIcon.ui5-tab-strip-item--neutral .ui5-tab-strip-item-icon-outer::after{
-	background-color: var(--sapTab_Neutral_ForegroundColor);
 }
 
 .ui5-tab-strip-item--neutral .ui5-tab-strip-item-icon {
