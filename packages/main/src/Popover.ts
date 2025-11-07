@@ -39,6 +39,13 @@ type CalculatedPlacement = {
 	placement: `${PopoverPlacement}`,
 }
 
+enum ResizeHandlePlacement {
+	TopLeft = "TopLeft",
+	TopRight = "TopRight",
+	BottomLeft = "BottomLeft",
+	BottomRight = "BottomRight",
+}
+
 /**
  * @class
  *
@@ -177,6 +184,9 @@ class Popover extends Popup {
 	 */
 	@property()
 	actualPlacement: `${PopoverPlacement}` = "End";
+
+	@property()
+	_resizeHandlePlacement: `${ResizeHandlePlacement}` = "BottomRight";
 
 	@property({ type: Number, noAttribute: true })
 	_maxHeight?: number;
