@@ -1,10 +1,11 @@
 name: Deploy
 
 on:
+  # Manual deployment trigger
   workflow_dispatch:
     inputs:
       deploy_type:
-        description: 'deploy type'
+        description: 'type'
         required: true
         type: choice
         options:
@@ -12,9 +13,13 @@ on:
             - 'latest'
         default: 'nightly'
 
+  # Scheduled nightly deployments
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
 jobs:
   deploy-nightly:
-    if: ${{ github.event.inputs.deploy_type == 'nightly' }}
+    if: ${{ github.event.inputs.deploy_type == 'nightly' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
