@@ -346,7 +346,6 @@
 	border-color: var(--sapTab_Negative_ForegroundColor);
 }
 
-
 .ui5-tab-strip-item--selected.ui5-tab-strip-item--negative.ui5-tab-strip-item--textOnly .ui5-tab-strip-itemText {
 	color: var(--sapTab_Negative_Selected_TextColor);
 }
