@@ -42,7 +42,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					)}
 
 					{this.hasBranding && (
-						<div class="ui5-shellbar-branding-area">
+						<div class={{
+							"ui5-shellbar-branding-area": true,
+							"ui5-shellbar-gap": this.hasStartButton,
+						}}>
 							<slot name="branding"></slot>
 						</div>
 					)}
@@ -71,7 +74,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 											<div
 												key={(item as any)._individualSlot}
 												id={(item as any)._individualSlot}
-												class="ui5-shellbar-content-item"
+												class="ui5-shellbar-content-item ui5-shellbar-gap"
 											>
 												{packedSep.shouldPack && (
 													<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
@@ -91,11 +94,11 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 											<div
 												key={(item as any)._individualSlot}
 												id={(item as any)._individualSlot}
-												class="ui5-shellbar-content-item"
+												class="ui5-shellbar-content-item ui5-shellbar-gap"
 											>
 												<slot name={(item as any)._individualSlot}></slot>
 												{packedSep.shouldPack && (
-													<div class="ui5-shellbar-separator ui5-shellbar-separator-end"></div>
+													<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap"></div>
 												)}
 											</div>
 										);
@@ -103,7 +106,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 									{/* End separator */}
 									{this.separatorConfig.showEndSeparator && (
-										<div class="ui5-shellbar-separator ui5-shellbar-separator-end"></div>
+										<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap"></div>
 									)}
 								</div>
 							)}
@@ -114,17 +117,17 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
 								{this.getAction("assistant") && (
-									<div class="ui5-shellbar-assistant-button">
+									<div class="ui5-shellbar-assistant-button ui5-shellbar-gap">
 										<slot name="assistant"></slot>
 									</div>
 								)}
 
 								{this.getAction("notifications") && (
 									<Button
-										class="ui5-shellbar-bell-button ui5-shellbar-action-button"
+										class="ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap"
 										icon="bell"
 										design="Transparent"
-										onClick={this._handleNotificationsClick}
+										onClick={this.handleNotificationsClick}
 										tooltip={this.getActionText("notifications")}
 										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
 									>
@@ -138,7 +141,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								{this.items.map(item => (
 									<div
 										key={item._id}
-										class="ui5-shellbar-custom-item"
+										class="ui5-shellbar-custom-item ui5-shellbar-gap"
 										data-ui5-stable={item.stableDomRef}
 									>
 										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
@@ -152,7 +155,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<Button
 							data-ui5-stable="overflow"
 							id="ui5-shellbar-overflow-button"
-							class="ui5-shellbar-overflow-button ui5-shellbar-action-button"
+							class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap"
 							icon="overflow"
 							design="Transparent"
 							onClick={this.handleOverflowClick}
@@ -173,7 +176,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<Button
 							data-profile-btn
 							data-ui5-stable="profile"
-							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button"
+							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap"
 							design="Transparent"
 							onClick={this._handleProfileClick}
 							tooltip={this.getActionText("profile")}
@@ -186,13 +189,13 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					{this.getAction("product-switch") && (
 						<Button
 							data-ui5-stable="product-switch"
-							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button"
+							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap"
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}
 							tooltip={this.getActionText("product-switch")}
 							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
-						/>
+						></Button>
 					)}
 
 				</div>
@@ -208,7 +211,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 				hideArrow={true}
 				horizontalAlign="End"
 			>
-				<List separators="None">
+				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
 						if (item.type === "action") {
 							return (
@@ -217,7 +220,6 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									icon={item.data.icon ? `sap-icon://${item.data.icon}` : ""}
 									data-action-id={item.id}
 									type="Active"
-									onClick={this.handleOverflowItemClick}
 								>
 									{this.getActionText(item.id)}
 								</ListItemStandard>

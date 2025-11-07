@@ -15,14 +15,13 @@
 			font-family: "72", "72full", Arial, Helvetica, sans-serif;
 			margin: 0;
 			padding: 0;
-			background: #f7f7f7;
+			background: var(--sapBackgroundColor);
 		}
 
 		.controls {
 			position: sticky;
 			top: 0;
 			z-index: 1000;
-			background: white;
 			padding: 1rem;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 			display: flex;
@@ -129,7 +128,7 @@
 
 		<!-- Search Features -->
 		<div class="control-section">
-			<h3>Search</h3>
+			<ui5-title>Search</ui5-title>
 			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 				<div class="control-group">
 					<ui5-label>Search Field:</ui5-label>
@@ -147,7 +146,7 @@
 
 		<!-- Content Features -->
 		<div class="control-section">
-			<h3>Content Items (Overflow Test)</h3>
+			<ui5-title>Content Items (Overflow Test)</ui5-title>
 			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 				<div class="control-group">
 					<ui5-label>Content Items:</ui5-label>
@@ -162,7 +161,7 @@
 
 		<!-- Custom Items Features -->
 		<div class="control-section">
-			<h3>Custom Items</h3>
+			<ui5-title>Custom Items</ui5-title>
 			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 				<div class="control-group">
 					<ui5-label>Custom Items:</ui5-label>
@@ -177,7 +176,7 @@
 
 		<!-- Branding Mode -->
 		<div class="control-section">
-			<h3>Branding</h3>
+			<ui5-title>Branding</ui5-title>
 			<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 				<div class="control-group">
 					<ui5-label>Branding Mode:</ui5-label>
@@ -745,6 +744,7 @@
 
 		// Event listeners for V1
 		shellbarV1.addEventListener('ui5-notifications-click', (e) => {
+			e.preventDefault();
 			console.log('V1 Notifications clicked', e.detail);
 		});
 
@@ -766,6 +766,7 @@
 
 		// Event listeners for V2
 		shellbarV2.addEventListener('ui5-notifications-click', (e) => {
+			e.preventDefault();
 			console.log('V2 Notifications clicked', e.detail);
 		});
 

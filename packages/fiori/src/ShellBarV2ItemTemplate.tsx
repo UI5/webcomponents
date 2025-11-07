@@ -9,7 +9,6 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 			<ListItemStandard
 				icon={this.icon ? `sap-icon://${this.icon}` : ""}
 				type="Active"
-				onClick={this._handleClick}
 				accessibilityAttributes={this.accessibilityAttributes}
 			>
 				{this.text}
@@ -22,7 +21,6 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 			class="ui5-shellbar-action-button"
 			icon={this.icon}
 			design="Transparent"
-			onClick={this._handleClick}
 			accessibleName={this.text}
 			accessibilityAttributes={this.accessibilityAttributes}
 		>

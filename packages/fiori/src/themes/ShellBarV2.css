@@ -23,7 +23,7 @@
 	--_ui5-shellbar-separator-height: 2rem;
 	--_ui5_shellbar_search_field_width: 25rem;
 
-	--ui5_shellbar_gap: .5rem;
+	--ui5_shellbar_gap: 0.5rem;
 }
 
 /* ============================================================================
@@ -50,7 +50,6 @@
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	gap: var(--ui5_shellbar_gap);
 }
 
 /* ============================================================================
@@ -60,7 +59,7 @@
 ::slotted([ui5-button]:not([slot^="content"])),
 ::slotted([ui5-toggle-button]:not([slot^="content"])) {
 	height: 2.25rem;
-	width: 2.5rem;
+	width: 2.25rem;
 	padding: 0;
 	border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
 	background: var(--sapButton_Lite_Background);
@@ -156,7 +155,6 @@
 .ui5-shellbar-overflow-container-inner {
 	display: flex;
 	align-items: center;
-	gap: var(--ui5_shellbar_gap);
 	flex-shrink: 0;
 	min-width: 100%;
 }
@@ -171,6 +169,7 @@
 	display: flex;
 	align-items: center;
 	margin-left: auto;
+	/* goes to the most right when no content is present */
 }
 
 :host([show-search-field]) ::slotted([slot="searchField"]),
@@ -186,11 +185,9 @@
 	flex-grow: 1;
 	display: flex;
 	align-items: center;
-	gap: var(--ui5_shellbar_gap);
 }
 
 .ui5-shellbar-content-item {
-	gap: var(--ui5_shellbar_gap);
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -219,7 +216,6 @@
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	gap: var(--ui5_shellbar_gap);
 }
 
 .ui5-shellbar-actions-area--no-search {
@@ -231,6 +227,8 @@
    ============================================================================ */
 
 .ui5-shellbar-custom-item {
+	/* having width here is important to ensure item can be measured even when it is in overflow */
+	width: 2.25rem;
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -252,7 +250,7 @@
 	line-height: inherit;
 	letter-spacing: inherit;
 	word-spacing: inherit;
-	width: 2.5rem;
+	width: 2.25rem;
 	box-sizing: border-box;
 }
 
@@ -260,8 +258,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 2.5rem;
-	height: 2.5rem;
+	width: 2.25rem;
+	height: 2.25rem;
 	min-width: auto;
 	box-sizing: border-box;
 	--_ui5_button_focused_border_radius: var(--_ui5_shellbar_image_button_border_radius);
@@ -297,24 +295,6 @@ slot[name="profile"] {
 }
 
 /* ============================================================================
-   OVERFLOW UTILITIES
-   ============================================================================ */
-
-.ui5-shellbar-hidden {
-	display: none !important;
-}
-
-.ui5-shellbar-no-overflow {
-	flex-shrink: 0;
-}
-
-::slotted([hidden]) {
-	visibility: hidden;
-	order: -1;
-	position: absolute;
-}
-
-/* ============================================================================
    FULL-SCREEN SEARCH OVERLAY
    ============================================================================ */
 
@@ -330,7 +310,6 @@ slot[name="profile"] {
 	align-items: center;
 	box-sizing: border-box;
 	padding: 0 1rem;
-	gap: var(--ui5_shellbar_gap);
 }
 
 .ui5-shellbar-search-full-width-wrapper .ui5-shellbar-search-full-field {
@@ -386,4 +365,28 @@ slot[name="profile"] {
 
 :host([breakpoint-size="M"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 2rem;
+}
+
+/* ============================================================================
+   Utilities (Keep these at the end of the file to avoid specificity issues)
+   ============================================================================ */
+
+.ui5-shellbar-gap {
+	/* border: 1px solid red; */
+	/* box-sizing: border-box; */
+	margin-inline-start: var(--ui5_shellbar_gap);
+}
+
+.ui5-shellbar-hidden {
+	display: none !important;
+}
+
+.ui5-shellbar-no-overflow {
+	flex-shrink: 0;
+}
+
+::slotted([hidden]) {
+	visibility: hidden;
+	order: -1;
+	position: absolute;
 }

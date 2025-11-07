@@ -19,7 +19,7 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
-import List from "@ui5/webcomponents/dist/List.js";
+import List, { type ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/grid.js";
@@ -468,8 +468,10 @@ class ShellBarV2 extends UI5Element {
 		getDisableSearchCollapse: () => this.disableSearchCollapse,
 	});
 
+	private skipNextUpdateOverflow = false;
+
 	/* =========================================================================
-    Legacy Members
+	Legacy Members
 	============================================================================ */
 
 	/**
@@ -535,7 +537,7 @@ class ShellBarV2 extends UI5Element {
 	legacyAdaptor?: ShellBarV2Legacy;
 
 	/* =========================================================================
-    Lifecycle Methods
+	Lifecycle Methods
 	============================================================================ */
 
 	onEnterDOM() {
@@ -571,7 +573,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Actions Management
+	Actions Management
 	============================================================================ */
 
 	/**
@@ -607,7 +609,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Breakpoint Management
+	Breakpoint Management
 	============================================================================ */
 	/**
 	 * Updates the breakpoint by delegating calculation to controller.
@@ -623,40 +625,43 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Notifications Management
+	Notifications Management
 	============================================================================ */
 
-	_handleNotificationsClick() {
+	handleNotificationsClick() {
 		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-bell-button");
 		if (notificationsBtn) {
-			this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
+			return !this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
 		}
+		return false;
 	}
 
 	/* =========================================================================
-    Profile Management
+	Profile Management
 	============================================================================ */
 
 	_handleProfileClick() {
 		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
 		if (profileBtn) {
-			this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
+			return !this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
 		}
+		return false;
 	}
 
 	/* =========================================================================
-    Product Switch Management
+	Product Switch Management
 	============================================================================ */
 
 	_handleProductSwitchClick() {
 		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
 		if (productSwitchBtn) {
-			this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
+			return !this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
 		}
+		return false;
 	}
 
 	/* =========================================================================
-    Overflow Management
+	Overflow Management
 	============================================================================ */
 
 	/**
@@ -665,9 +670,20 @@ class ShellBarV2 extends UI5Element {
 	 * Triggers rerender via property update to enable conditional rendering.
 	 */
 	private updateOverflow() {
+		if (this.skipNextUpdateOverflow) {
+			this.skipNextUpdateOverflow = false;
+			return;
+		}
 		if (!this.overflowAdaptor) {
 			return;
 		}
+
+		// Update items overflow state
+		this.items.forEach(item => {
+			item.inOverflow = false;
+			// clear the hidden class to ensure the item is visible in the overflow popover
+			item.classList.remove("ui5-shellbar-hidden");
+		});
 
 		// Delegate to controller - pass all data explicitly
 		const result = this.overflowAdaptor.updateOverflow({
@@ -751,18 +767,22 @@ class ShellBarV2 extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
-	handleOverflowItemClick(e: Event) {
-		const target = e.currentTarget as HTMLElement;
+	handleOverflowItemClick(e: MouseEvent) {
+		const target = e.target as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
+
+		let prevented = false;
 
 		// Trigger the appropriate action handler
 		if (actionId === "notifications") {
-			this._handleNotificationsClick();
+			prevented = this.handleNotificationsClick();
 		} else if (actionId === "search-button") {
-			this.handleSearchButtonClick();
+			prevented = this.handleSearchButtonClick();
 		}
 
-		this.overflowPopoverOpen = false;
+		if (!prevented) {
+			this.overflowPopoverOpen = false;
+		}
 	}
 
 	get overflowItems() {
@@ -807,7 +827,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Search Management
+	Search Management
 	============================================================================ */
 
 	/**
@@ -840,13 +860,13 @@ class ShellBarV2 extends UI5Element {
 		});
 
 		if (defaultPrevented) {
-			return;
+			return defaultPrevented;
 		}
 
 		this.setSearchState(!this.showSearchField);
 
 		if (!this.showSearchField) {
-			return;
+			return defaultPrevented;
 		}
 
 		const input = this.searchField[0];
@@ -856,6 +876,7 @@ class ShellBarV2 extends UI5Element {
 				input.focus();
 			}, 100);
 		}
+		return defaultPrevented;
 	}
 
 	/**
@@ -890,7 +911,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Legacy Features Management
+	Legacy Features Management
 	============================================================================ */
 
 	/**
@@ -913,7 +934,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Keyboard Navigation
+	Keyboard Navigation
 	============================================================================ */
 
 	_onKeyDown(e: KeyboardEvent) {
@@ -921,7 +942,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Common Methods
+	Common Methods
 	============================================================================ */
 
 	getCSSVariable(cssVar: string): string {
@@ -1028,7 +1049,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Content Management
+	Content Management
 	============================================================================ */
 
 	get startContent(): HTMLElement[] {
@@ -1061,7 +1082,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-    Accessibility
+	Accessibility
 	============================================================================ */
 
 	/**

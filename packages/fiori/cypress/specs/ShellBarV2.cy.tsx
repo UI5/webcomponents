@@ -678,12 +678,10 @@ describe("Events", () => {
 		// Trigger full width search mode by reducing viewport
 		cy.viewport(400, 800);
 
-		// Manually call the cancel button handler
-		cy.get<ShellBar>("@shellbar").then(shellbar => {
-			const shellbarInstance = shellbar.get(0);
-			// Call the private method directly to simulate cancel button press
-			shellbarInstance.handleCancelButtonClick();
-		});
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-cancel-button")
+			.click();
 
 		// Verify the event was fired
 		cy.get("@searchFieldClear")
@@ -720,12 +718,10 @@ describe("Events", () => {
 		// Trigger full width search mode by reducing viewport
 		cy.viewport(400, 800);
 
-		// Manually call the cancel button handler
-		cy.get<ShellBar>("@shellbar").then(shellbar => {
-			const shellbarInstance = shellbar.get(0);
-			// Call the private method directly to simulate cancel button press
-			shellbarInstance.handleCancelButtonClick();
-		});
+		cy.get("@shellbar")
+			.shadow()
+			.find(".ui5-shellbar-cancel-button")
+			.click();
 
 		// Verify the event was fired
 		cy.get("@searchFieldClear")
@@ -810,7 +806,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find("[data-profile-btn]")
-    			.click({ force: true });
+				.click({ force: true });
 
 			cy.get("@profileClick")
 				.should("have.been.calledOnce");
@@ -1032,7 +1028,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find("[data-profile-btn]")
-   				.click({ force: true });
+				.click({ force: true });
 
 			cy.get("@profileClick")
 				.should("have.been.calledOnce");
@@ -1101,7 +1097,7 @@ describe("Events", () => {
 
 			cy.get("[ui5-shellbar-v2]")
 				.shadow()
-				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-li]:nth-child(3)")
+				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-li]:nth-child(1)")
 				.realClick();
 
 			cy.get("[ui5-shellbar-v2]")

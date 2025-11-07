@@ -91,12 +91,6 @@ class ShellBarV2Item extends UI5Element {
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
-
-	_handleClick(e: Event) {
-		this.fireDecoratorEvent("click", {
-			targetRef: e.currentTarget as HTMLElement,
-		});
-	}
 }
 
 ShellBarV2Item.define();

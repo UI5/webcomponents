@@ -49,28 +49,39 @@ class ShellBarV2Overflow {
 		// Build hidable items from state
 		const sortedItems = this.buildHidableItems(params);
 
-		// First, show all items
+		// First, hide overflow button
+		setVisible(".ui5-shellbar-overflow-button", false);
+
+		// show all items
 		sortedItems.forEach(item => {
 			setVisible(item.selector, true);
 		});
 
 		const hiddenItemsIds: string[] = [];
 		let showOverflowButton = false;
+		let itemToHide = null;
 
 		// Iteratively hide items until no overflow
-		for (let i = 0; i < sortedItems.length; i++) {
-			const item = sortedItems[i];
+		for (let indexToHide = 0; indexToHide < sortedItems.length; indexToHide++) {
+			itemToHide = sortedItems[indexToHide];
 
 			if (!this.isOverflowing(overflowOuter, overflowInner)) {
 				break; // No more overflow, stop hiding
 			}
 
-			setVisible(item.selector, false);
-			hiddenItemsIds.push(item.id);
+			setVisible(itemToHide.selector, false);
+			hiddenItemsIds.push(itemToHide.id);
 
-			if (item.showInOverflow) {
+			if (itemToHide.showInOverflow) {
+				// show overflow button to account in isOverflowing calculation
+				setVisible(".ui5-shellbar-overflow-button", true);
 				showOverflowButton = true;
 			}
+		}
+
+		// never hide just one item as overflow button also accounts for one item
+		if (hiddenItemsIds.length === 1 && itemToHide) {
+			hiddenItemsIds.push(itemToHide.id);
 		}
 
 		return {
@@ -177,8 +188,7 @@ class ShellBarV2Overflow {
 		// Custom items hide with actions (range: 100-199)
 		// Custom items show in overflow popover when hidden
 		customItems.forEach((item, index) => {
-			const slotName = (item as any)._individualSlot as string;
-			const selector = `[data-ui5-stable="${slotName}"]`;
+			const selector = `[data-ui5-stable="${item.stableDomRef}"]`;
 			let hideOrder = 3 + index + (showSearchField ? 100 : 0);
 
 			if (hiddenItemsIds.includes(item._id)) {
