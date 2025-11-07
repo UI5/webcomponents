@@ -27,7 +27,7 @@ import {
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
 
-type VersionChangeEventDetail = {
+type InputVersionChangeEventDetail = {
 	backwards: boolean,
 };
 
@@ -106,7 +106,7 @@ type VersionChangeEventDetail = {
 
 class Input extends BaseInput {
 	eventDetails!: BaseInput["eventDetails"] & {
-		"version-change": VersionChangeEventDetail;
+		"version-change": InputVersionChangeEventDetail;
 		"stop-generation": void;
 		"button-click": void;
 		"item-click": MenuItemClickEventDetail;
@@ -317,4 +317,5 @@ class Input extends BaseInput {
 
 Input.define();
 
+export type { InputVersionChangeEventDetail, MenuItemClickEventDetail as InputItemClickEventDetail };
 export default Input;

@@ -182,7 +182,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersion={2}
+					currentVersion={3}
 					totalVersions={3}
 				/>
 			);
