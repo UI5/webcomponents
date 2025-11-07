@@ -32,11 +32,11 @@ type ArrowPosition = {
 	y: number;
 }
 
-type CalculatedPlacement = {
-	arrow: ArrowPosition,
-	top: number,
-	left: number,
-	actualPlacement: `${PopoverActualPlacement}`,
+enum PopoverActualHorizontalAlign {
+	Center = "Center",
+	Left = "Left",
+	Right = "Right",
+	Stretch = "Stretch",
 }
 
 enum PopoverActualPlacement {
@@ -44,6 +44,13 @@ enum PopoverActualPlacement {
 	Right = "Right",
 	Top = "Top",
 	Bottom = "Bottom",
+}
+
+type CalculatedPlacement = {
+	arrow: ArrowPosition,
+	top: number,
+	left: number,
+	actualPlacement: `${PopoverActualPlacement}`,
 }
 
 /**
@@ -651,14 +658,14 @@ class Popover extends Popup {
 	 * @returns  Arrow's coordinates
 	 */
 	getArrowPosition(targetRect: DOMRect, popoverSize: PopoverSize, left: number, top: number, isVertical: boolean, borderRadius: number): ArrowPosition {
-		const horizontalAlign = this._actualHorizontalAlign;
-		let arrowXCentered = horizontalAlign === PopoverHorizontalAlign.Center || horizontalAlign === PopoverHorizontalAlign.Stretch;
+		const actualHorizontalAlign = this._actualHorizontalAlign;
+		let arrowXCentered = actualHorizontalAlign === PopoverActualHorizontalAlign.Center || actualHorizontalAlign === PopoverActualHorizontalAlign.Stretch;
 
-		if (horizontalAlign === PopoverHorizontalAlign.End && left <= targetRect.left) {
+		if (actualHorizontalAlign === PopoverActualHorizontalAlign.Right && left <= targetRect.left) {
 			arrowXCentered = true;
 		}
 
-		if (horizontalAlign === PopoverHorizontalAlign.Start && left + popoverSize.width >= targetRect.left + targetRect.width) {
+		if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left && left + popoverSize.width >= targetRect.left + targetRect.width) {
 			arrowXCentered = true;
 		}
 
@@ -776,18 +783,18 @@ class Popover extends Popup {
 	}
 
 	getVerticalLeft(targetRect: DOMRect, popoverSize: PopoverSize): number {
-		const horizontalAlign = this._actualHorizontalAlign;
+		const actualHorizontalAlign = this._actualHorizontalAlign;
 		let left = Popover.VIEWPORT_MARGIN;
 
-		switch (horizontalAlign) {
-		case PopoverHorizontalAlign.Center:
-		case PopoverHorizontalAlign.Stretch:
+		switch (actualHorizontalAlign) {
+		case PopoverActualHorizontalAlign.Center:
+		case PopoverActualHorizontalAlign.Stretch:
 			left = targetRect.left - (popoverSize.width - targetRect.width) / 2;
 			break;
-		case PopoverHorizontalAlign.Start:
+		case PopoverActualHorizontalAlign.Left:
 			left = targetRect.left;
 			break;
-		case PopoverHorizontalAlign.End:
+		case PopoverActualHorizontalAlign.Right:
 			left = targetRect.right - popoverSize.width;
 			break;
 		}
@@ -864,18 +871,18 @@ class Popover extends Popup {
 		return this.effectiveDir === "rtl";
 	}
 
-	get _actualHorizontalAlign() {
-		if (this.isRtl) {
-			if (this.horizontalAlign === PopoverHorizontalAlign.Start) {
-				return PopoverHorizontalAlign.End;
-			}
-
-			if (this.horizontalAlign === PopoverHorizontalAlign.End) {
-				return PopoverHorizontalAlign.Start;
-			}
+	get _actualHorizontalAlign() : PopoverActualHorizontalAlign {
+		switch (this.horizontalAlign) {
+		case PopoverHorizontalAlign.Start:
+			return this.isRtl ? PopoverActualHorizontalAlign.Right : PopoverActualHorizontalAlign.Left;
+		case PopoverHorizontalAlign.End:
+			return this.isRtl ? PopoverActualHorizontalAlign.Left : PopoverActualHorizontalAlign.Right;
+		case PopoverHorizontalAlign.Stretch:
+			return PopoverActualHorizontalAlign.Stretch;
+		case PopoverHorizontalAlign.Center:
+		default:
+			return PopoverActualHorizontalAlign.Center;
 		}
-
-		return this.horizontalAlign;
 	}
 }
 
