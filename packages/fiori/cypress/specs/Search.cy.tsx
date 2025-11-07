@@ -1053,6 +1053,63 @@ describe("Events", () => {
 			.should("not.have.been.called");
 	});
 
+	it("should not open popover when typing with no items", () => {
+		cy.mount(
+			<Search>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("[ui5-search]")
+			.realPress("e");
+
+		cy.get("[ui5-search]")
+			.realPress("s");
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("@openSpy")
+			.should("not.have.been.called");
+
+		cy.get("[ui5-search]")
+			.should("not.have.attr", "open");
+	});
+
+	it("should open popover when loading is true even with no items", () => {
+		cy.mount(
+			<Search loading={true}>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("@openSpy")
+			.should("have.been.calledOnce");
+
+		cy.get("[ui5-search]")
+			.should("have.attr", "open");
+	});
+
 	it("open event - typing, pressing Escape, then typing again should reopen suggestions", () => {
 		cy.mount(
 			<Search>

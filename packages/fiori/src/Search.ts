@@ -425,7 +425,7 @@ class Search extends SearchField {
 		}
 
 		this._isTyping = true;
-		this.open = this.value.length > 0;
+		this.open = this.value.length > 0 && this._popoupHasAnyContent();
 	}
 
 	_handleClear(): void {
