@@ -91,6 +91,18 @@ class ShellBarV2Item extends UI5Element {
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
+
+	hasListItems() {
+		return this.inOverflow;
+	}
+
+	get listItems() {
+		const domRef = this.getDomRef();
+		if (!domRef || !this.inOverflow) {
+			return [];
+		}
+		return [domRef];
+	}
 }
 
 ShellBarV2Item.define();

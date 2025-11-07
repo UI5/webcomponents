@@ -66,6 +66,7 @@ import {
 	SHELLBAR_SEARCH,
 	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
+	SHELLBAR_NOTIFICATIONS_NO_COUNT,
 } from "./generated/i18n/i18n-defaults.js";
 
 type ShellBarV2MenuButtonClickEventDetail = {
@@ -602,7 +603,7 @@ class ShellBarV2 extends UI5Element {
 			"overflow": this._overflowText,
 			"assistant": "Assistant",
 			"search-button": this._searchText,
-			"notifications": this._notificationsText,
+			"notifications": this._notificationsTextNoCount,
 			"product-switch": this._productsText,
 		};
 		return texts[actionId] || actionId;
@@ -1122,6 +1123,10 @@ class ShellBarV2 extends UI5Element {
 
 	get _notificationsText() {
 		return ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0);
+	}
+
+	get _notificationsTextNoCount() {
+		return ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT);
 	}
 
 	get _profileText() {

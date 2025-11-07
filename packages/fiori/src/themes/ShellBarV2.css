@@ -371,10 +371,12 @@ slot[name="profile"] {
    Utilities (Keep these at the end of the file to avoid specificity issues)
    ============================================================================ */
 
-.ui5-shellbar-gap {
-	/* border: 1px solid red; */
-	/* box-sizing: border-box; */
+.ui5-shellbar-gap-start {
 	margin-inline-start: var(--ui5_shellbar_gap);
+}
+
+.ui5-shellbar-gap-end {
+	margin-inline-end: var(--ui5_shellbar_gap);
 }
 
 .ui5-shellbar-hidden {

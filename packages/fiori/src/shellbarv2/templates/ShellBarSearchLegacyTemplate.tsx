@@ -5,7 +5,7 @@ function ShellBarV2SearchField(this: ShellBarV2) {
 	return (
 		// .ui5-shellbar-search-field-area is used to measure the width of
 		// the search field. It must be present even if the search is in full-width mode.
-		<div class="ui5-shellbar-search-field-area ui5-shellbar-gap">
+		<div class="ui5-shellbar-search-field-area ui5-shellbar-gap-start">
 			{this.showSearchField && !this.showFullWidthSearch && (
 				<div class="ui5-shellbar-search-field">
 					<slot name="searchField"></slot>
@@ -22,7 +22,7 @@ function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
 				<slot name="searchField"></slot>
 			</div>
 			<Button
-				class="ui5-shellbar-cancel-button ui5-shellbar-gap"
+				class="ui5-shellbar-cancel-button ui5-shellbar-gap-start"
 				onClick={this.handleCancelButtonClick}
 			>
 				Cancel
@@ -37,7 +37,7 @@ function ShellBarV2SearchButton(this: ShellBarV2) {
 			{!this.hideSearchButton && (
 				<Button
 					data-ui5-stable="toggle-search"
-					class="ui5-shellbar-search-button ui5-shellbar-action-button ui5-shellbar-gap"
+					class="ui5-shellbar-search-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 					icon="sap-icon://search"
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}

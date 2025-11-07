@@ -2,9 +2,9 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
-import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBarV2 from "./ShellBarV2.js";
-import type ShellBarV2Item from "./ShellBarV2Item.js";
+import ShellBarV2Item from "./ShellBarV2Item.js";
+import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 
 import {
 	ShellBarV2SearchField,
@@ -44,7 +44,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					{this.hasBranding && (
 						<div class={{
 							"ui5-shellbar-branding-area": true,
-							"ui5-shellbar-gap": this.hasStartButton,
+							"ui5-shellbar-gap-start": this.hasStartButton,
 						}}>
 							<slot name="branding"></slot>
 						</div>
@@ -74,7 +74,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 											<div
 												key={(item as any)._individualSlot}
 												id={(item as any)._individualSlot}
-												class="ui5-shellbar-content-item ui5-shellbar-gap"
+												class="ui5-shellbar-content-item ui5-shellbar-gap-start"
 											>
 												{packedSep.shouldPack && (
 													<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
@@ -94,11 +94,11 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 											<div
 												key={(item as any)._individualSlot}
 												id={(item as any)._individualSlot}
-												class="ui5-shellbar-content-item ui5-shellbar-gap"
+												class="ui5-shellbar-content-item ui5-shellbar-gap-start"
 											>
 												<slot name={(item as any)._individualSlot}></slot>
 												{packedSep.shouldPack && (
-													<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap"></div>
+													<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap-start"></div>
 												)}
 											</div>
 										);
@@ -106,7 +106,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 									{/* End separator */}
 									{this.separatorConfig.showEndSeparator && (
-										<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap"></div>
+										<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap-start"></div>
 									)}
 								</div>
 							)}
@@ -117,14 +117,14 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
 								{this.getAction("assistant") && (
-									<div class="ui5-shellbar-assistant-button ui5-shellbar-gap">
+									<div class="ui5-shellbar-assistant-button ui5-shellbar-gap-start">
 										<slot name="assistant"></slot>
 									</div>
 								)}
 
 								{this.getAction("notifications") && (
 									<Button
-										class="ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap"
+										class="ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 										icon="bell"
 										design="Transparent"
 										onClick={this.handleNotificationsClick}
@@ -141,7 +141,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								{this.items.map(item => (
 									<div
 										key={item._id}
-										class="ui5-shellbar-custom-item ui5-shellbar-gap"
+										class="ui5-shellbar-custom-item ui5-shellbar-gap-start"
 										data-ui5-stable={item.stableDomRef}
 									>
 										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
@@ -155,7 +155,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<Button
 							data-ui5-stable="overflow"
 							id="ui5-shellbar-overflow-button"
-							class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap"
+							class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 							icon="overflow"
 							design="Transparent"
 							onClick={this.handleOverflowClick}
@@ -176,7 +176,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						<Button
 							data-profile-btn
 							data-ui5-stable="profile"
-							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap"
+							class="ui5-shellbar-image-button ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap-start"
 							design="Transparent"
 							onClick={this._handleProfileClick}
 							tooltip={this.getActionText("profile")}
@@ -189,7 +189,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 					{this.getAction("product-switch") && (
 						<Button
 							data-ui5-stable="product-switch"
-							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap"
+							class="ui5-shellbar-button-product-switch ui5-shellbar-no-overflow ui5-shellbar-action-button ui5-shellbar-gap-start"
 							icon="grid"
 							design="Transparent"
 							onClick={this._handleProductSwitchClick}
@@ -214,15 +214,16 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
 						if (item.type === "action") {
+							const actionData = item.data as ShellBarV2ActionItem;
 							return (
-								<ListItemStandard
+								<ShellBarV2Item
 									key={item.id}
-									icon={item.data.icon ? `sap-icon://${item.data.icon}` : ""}
+									icon={actionData.icon ? `sap-icon://${actionData.icon}` : ""}
 									data-action-id={item.id}
-									type="Active"
-								>
-									{this.getActionText(item.id)}
-								</ListItemStandard>
+									count={actionData.count}
+									inOverflow={true}
+									text={this.getActionText(item.id)}
+								/>
 							);
 						}
 						return <slot key={item.id} name={(item.data as ShellBarV2Item)._individualSlot}></slot>;

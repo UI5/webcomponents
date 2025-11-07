@@ -9,6 +9,7 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 			<ListItemStandard
 				icon={this.icon ? `sap-icon://${this.icon}` : ""}
 				type="Active"
+				data-count={this.count}
 				accessibilityAttributes={this.accessibilityAttributes}
 			>
 				{this.text}

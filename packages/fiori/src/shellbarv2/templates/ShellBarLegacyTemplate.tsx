@@ -34,11 +34,7 @@ function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
 			{!legacy.isSBreakPoint && (legacy.hasLogo || legacy.primaryTitle) && (
 				<>
 					{ShellBarV2CombinedLogo.call(this)}
-					{legacy.hasSecondaryTitle && legacy.hasPrimaryTitle && (
-						<h2 class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
-							{legacy.secondaryTitle}
-						</h2>
-					)}
+					{legacy.hasSecondaryTitle && legacy.hasPrimaryTitle && ShellBarV2LegacySecondaryTitle.call(this)}
 				</>
 			)}
 		</>
@@ -153,7 +149,7 @@ function ShellBarV2LegacySecondaryTitle(this: ShellBarV2) {
 	}
 
 	return (
-		<div style={{ display: "block" }} class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
+		<div style={{ display: "block" }} class="ui5-shellbar-secondary-title ui5-shellbar-gap-start ui5-shellbar-gap-end" data-ui5-stable="secondary-title">
 			{this.secondaryTitle}
 		</div>
 	);
