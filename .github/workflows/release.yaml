@@ -137,6 +137,8 @@ jobs:
         
       - name: Publish - Experimental
         if: ${{ github.event.inputs.release_type == 'experimental' }}
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           yarn lerna publish from-git --yes --dist-tag experimental
 
