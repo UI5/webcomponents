@@ -59,7 +59,6 @@
     "lint:scope": "yarn workspaces foreach --all --parallel run lint:scope",
     "link-all": "yarn workspaces foreach --all --parallel run link",
     "unlink-all": "yarn workspaces foreach --all --parallel run unlink",
-    "release": "node ./.github/actions/release.cjs",
     "prepare": "husky install",
     "husky:commit-msg": "commitlint -e",
     "husky:pre-push": "npm-run-all --sequential husky:commit-msg"

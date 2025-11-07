@@ -1,4 +1,4 @@
-name: Deploy Website
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -81,7 +81,5 @@ jobs:
         clean: true
         clean-exclude: |
             nightly
-            storybook
-            playground
             v1
             googlea519d963aa8f580f.html
