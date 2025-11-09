@@ -598,12 +598,12 @@ class ShellBarV2 extends UI5Element {
 
 	getActionText(actionId: string): string {
 		const texts: Record<string, string> = {
-			"search": this._searchText,
-			"profile": this._profileText,
-			"overflow": this._overflowText,
+			"search": this.texts.search,
+			"profile": this.texts.profile,
+			"overflow": this.texts.overflow,
 			"assistant": "Assistant",
-			"notifications": this._notificationsTextNoCount,
-			"product-switch": this._productsText,
+			"notifications": this.texts.notificationsNoCount,
+			"product-switch": this.texts.products,
 		};
 		return texts[actionId] || actionId;
 	}
@@ -1077,11 +1077,11 @@ class ShellBarV2 extends UI5Element {
 		return this.accessibilityAdaptor.getAccessibilityInfo({
 			accessibilityAttributes: this.accessibilityAttributes,
 			overflowPopoverOpen: this.overflowPopoverOpen,
-			notificationsText: this._notificationsText,
-			profileText: this._profileText,
-			productsText: this._productsText,
-			searchText: this._searchText,
-			overflowText: this._overflowText,
+			notificationsText: this.texts.notificationsNoCount,
+			profileText: this.texts.profile,
+			productsText: this.texts.products,
+			searchText: this.texts.search,
+			overflowText: this.texts.overflow,
 		});
 	}
 
@@ -1100,36 +1100,17 @@ class ShellBarV2 extends UI5Element {
 
 	// i18n text getters
 
-	get _shellbarText() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_LABEL);
-	}
-
-	get _notificationsText() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0);
-	}
-
-	get _notificationsTextNoCount() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT);
-	}
-
-	get _profileText() {
-		return this.accessibilityAttributes.profile?.name || ShellBarV2.i18nBundle.getText(SHELLBAR_PROFILE);
-	}
-
-	get _productsText() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_PRODUCTS);
-	}
-
-	get _searchText() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_SEARCH);
-	}
-
-	get _overflowText() {
-		return ShellBarV2.i18nBundle.getText(SHELLBAR_OVERFLOW);
-	}
-
-	get _contentItemsText() {
-		return this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined;
+	get texts() {
+		return {
+			search: ShellBarV2.i18nBundle.getText(SHELLBAR_SEARCH),
+			profile: ShellBarV2.i18nBundle.getText(SHELLBAR_PROFILE),
+			shellbar: ShellBarV2.i18nBundle.getText(SHELLBAR_LABEL),
+			products: ShellBarV2.i18nBundle.getText(SHELLBAR_PRODUCTS),
+			overflow: ShellBarV2.i18nBundle.getText(SHELLBAR_OVERFLOW),
+			notifications: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0),
+			notificationsNoCount: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT),
+			contentItems: this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined,
+		};
 	}
 
 	/**

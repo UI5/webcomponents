@@ -59,7 +59,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								<div
 									class="ui5-shellbar-content-area ui5-shellbar-content-items"
 									role={this.contentRole}
-									aria-label={this._contentItemsText}
+									aria-label={this.texts.contentItems}
 								>
 									{/* Start separator */}
 									{this.separatorConfig.showStartSeparator && (
