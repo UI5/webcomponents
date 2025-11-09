@@ -625,42 +625,6 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	/* =========================================================================
-	Notifications Management
-	============================================================================ */
-
-	handleNotificationsClick() {
-		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-bell-button");
-		if (notificationsBtn) {
-			return !this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
-		}
-		return false;
-	}
-
-	/* =========================================================================
-	Profile Management
-	============================================================================ */
-
-	_handleProfileClick() {
-		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
-		if (profileBtn) {
-			return !this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
-		}
-		return false;
-	}
-
-	/* =========================================================================
-	Product Switch Management
-	============================================================================ */
-
-	_handleProductSwitchClick() {
-		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
-		if (productSwitchBtn) {
-			return !this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
-		}
-		return false;
-	}
-
-	/* =========================================================================
 	Overflow Management
 	============================================================================ */
 
@@ -940,6 +904,30 @@ class ShellBarV2 extends UI5Element {
 	/* =========================================================================
 	Common Methods
 	============================================================================ */
+
+	handleNotificationsClick() {
+		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-bell-button");
+		if (notificationsBtn) {
+			return !this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
+		}
+		return false;
+	}
+
+	_handleProfileClick() {
+		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
+		if (profileBtn) {
+			return !this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
+		}
+		return false;
+	}
+
+	_handleProductSwitchClick() {
+		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
+		if (productSwitchBtn) {
+			return !this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
+		}
+		return false;
+	}
 
 	getCSSVariable(cssVar: string): string {
 		const styleSet = getComputedStyle(this.getDomRef()!);
