@@ -4,7 +4,6 @@ import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import type ShellBarV2 from "./ShellBarV2.js";
 import ShellBarV2Item from "./ShellBarV2Item.js";
-import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 
 import {
 	ShellBarV2SearchField,
@@ -214,7 +213,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
 						if (item.type === "action") {
-							const actionData = item.data as ShellBarV2ActionItem;
+							const actionData = item.data;
 							return (
 								<ShellBarV2Item
 									key={item.id}
@@ -226,7 +225,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								/>
 							);
 						}
-						return <slot key={item.id} name={(item.data as ShellBarV2Item)._individualSlot}></slot>;
+						return <slot key={item.id} name={item.data._individualSlot}></slot>;
 					})}
 				</List>
 			</Popover>

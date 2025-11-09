@@ -810,7 +810,7 @@ class ShellBarV2 extends UI5Element {
 			if (item.type === "action") {
 				return item.data.count;
 			}
-			return (item.data as ShellBarV2Item).count;
+			return item.data.count;
 		});
 
 		if (itemsWithCount.length === 1) {
@@ -818,7 +818,7 @@ class ShellBarV2 extends UI5Element {
 			if (item.type === "action") {
 				return item.data.count;
 			}
-			return (item.data as ShellBarV2Item).count;
+			return item.data.count;
 		}
 
 		if (itemsWithCount.length > 1) {

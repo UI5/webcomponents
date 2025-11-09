@@ -6,7 +6,6 @@ interface ShellBarV2HidableItem {
 	selector: string; // CSS selector to find the element
 	hideOrder: number;
 	keepHidden: boolean;
-	isProtected: boolean;
 	showInOverflow?: boolean; // If true, hiding this item triggers overflow button
 }
 
@@ -26,10 +25,15 @@ interface ShellBarV2OverflowResult {
 	showOverflowButton: boolean;
 }
 
-interface ShellBarV2OverflowItem {
-	type: "action" | "item";
+type ShellBarV2OverflowItem = {
+	type: "action";
 	id: string;
-	data: ShellBarV2ActionItem | ShellBarV2Item;
+	data: ShellBarV2ActionItem
+	order: number;
+} | {
+	type: "item";
+	id: string;
+	data: ShellBarV2Item;
 	order: number;
 }
 
@@ -93,9 +97,6 @@ class ShellBarV2Overflow {
 			setVisible(nextItemToHide.selector, false);
 			hiddenItemsIds.push(nextItemToHide.id);
 
-			// // Wait until next frame for layout to stabilize
-			// await new Promise(requestAnimationFrame);
-
 			if (nextItemToHide.showInOverflow) {
 				// show overflow button to account in isOverflowing calculation
 				setVisible(".ui5-shellbar-overflow-button", true);
@@ -136,7 +137,7 @@ class ShellBarV2Overflow {
 	 */
 	private buildHidableItems(params: ShellBarV2OverflowParams): ShellBarV2HidableItem[] {
 		const {
-			content, actions, customItems, showSearchField, hiddenItemsIds,
+			content, customItems, actions, showSearchField, hiddenItemsIds,
 		} = params;
 
 		const items: ShellBarV2HidableItem[] = [];
@@ -161,7 +162,6 @@ class ShellBarV2Overflow {
 				id: slotName,
 				selector: `#${slotName}`,
 				hideOrder: priority + dataHideOrder,
-				isProtected: false,
 				showInOverflow: false,
 			});
 		});
@@ -169,53 +169,45 @@ class ShellBarV2Overflow {
 		// Build action items
 		let actionIndex = 0;
 
-		// Notifications
-		const notificationsAction = actions.find(a => a.id === "notifications");
-		if (notificationsAction) {
-			addItem({
-				id: "notifications",
-				selector: this.SELECTORS.notifications,
-				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				isProtected: false,
-				showInOverflow: true,
-			});
-		}
-
-		// Assistant
-		const assistantAction = actions.find(a => a.id === "assistant");
-		if (assistantAction) {
-			addItem({
-				id: "assistant",
-				selector: this.SELECTORS.assistant,
-				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				isProtected: false,
-				showInOverflow: true,
-			});
-		}
-
 		// Build custom items
 		customItems.forEach(item => {
 			addItem({
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				isProtected: false,
 				showInOverflow: true,
 			});
 		});
 
-		// Build search button
-		if (!showSearchField) {
-			// only when search is closed
+		const notificationAction = actions.find(action => action.id === "notifications");
+		if (notificationAction) {
 			addItem({
-				id: "search",
-				selector: this.SELECTORS.search,
-				hideOrder: priorityStrategy.SEARCH + actionIndex++,
-				isProtected: false,
+				id: notificationAction.id,
+				selector: this.SELECTORS.notifications,
+				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
 				showInOverflow: true,
 			});
 		}
 
+		const assistantAction = actions.find(action => action.id === "assistant");
+		if (assistantAction) {
+			addItem({
+				id: assistantAction.id,
+				selector: this.SELECTORS.assistant,
+				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+				showInOverflow: true,
+			});
+		}
+
+		// only when search is closed
+		if (!showSearchField) {
+			addItem({
+				id: "search",
+				selector: this.SELECTORS.search,
+				hideOrder: priorityStrategy.SEARCH + actionIndex++,
+				showInOverflow: true,
+			});
+		}
 		return items.sort((a, b) => a.hideOrder - b.hideOrder);
 	}
 
