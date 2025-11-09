@@ -698,12 +698,12 @@ class ShellBarV2 extends UI5Element {
 			},
 		});
 
-		this.handleOverflowChanged(result);
+		this.handleUpdateOverflowResult(result);
 
 		return result.hiddenItemsIds;
 	}
 
-	private handleOverflowChanged(result: ShellBarV2OverflowResult) {
+	private handleUpdateOverflowResult(result: ShellBarV2OverflowResult) {
 		const { hiddenItemsIds, showOverflowButton } = result;
 
 		// Update items overflow state
