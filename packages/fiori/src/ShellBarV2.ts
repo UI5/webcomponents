@@ -469,8 +469,6 @@ class ShellBarV2 extends UI5Element {
 		getDisableSearchCollapse: () => this.disableSearchCollapse,
 	});
 
-	private skipNextUpdateOverflow = false;
-
 	/* =========================================================================
 	Legacy Members
 	============================================================================ */
@@ -672,10 +670,6 @@ class ShellBarV2 extends UI5Element {
 	 * Triggers rerender via property update to enable conditional rendering.
 	 */
 	private updateOverflow() {
-		if (this.skipNextUpdateOverflow) {
-			this.skipNextUpdateOverflow = false;
-			return;
-		}
 		if (!this.overflowAdaptor) {
 			return;
 		}
