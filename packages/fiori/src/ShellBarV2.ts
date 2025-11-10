@@ -36,7 +36,6 @@ import type { IShellBarSearchController } from "./shellbarv2/IShellBarSearchCont
 import ShellBarV2Legacy from "./shellbarv2/ShellBarLegacy.js";
 import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
 import ShellBarV2SearchLegacy from "./shellbarv2/ShellBarSearchLegacy.js";
-import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
@@ -44,7 +43,6 @@ import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
-import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
 import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflow.js";
 
 import type {
@@ -67,6 +65,24 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 type ShellBarV2Breakpoint = "S" | "M" | "L" | "XL" | "XXL";
+
+const ACTION_IDS = {
+	SEARCH: "search",
+	PROFILE: "profile",
+	ASSISTANT: "assistant",
+	NOTIFICATIONS: "notifications",
+	PRODUCT_SWITCH: "product-switch",
+	OVERFLOW: "overflow",
+} as const;
+
+type ActionId = typeof ACTION_IDS[keyof typeof ACTION_IDS];
+
+type ShellBarV2ActionItem = {
+	id: ActionId;
+	icon?: string;
+	count?: string;
+	visible: boolean;
+};
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -466,7 +482,6 @@ class ShellBarV2 extends UI5Element {
 		getDomRef: () => this.getDomRef() || null,
 	});
 
-	actionsAdaptor = new ShellBarV2Actions();
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
 
@@ -583,34 +598,50 @@ class ShellBarV2 extends UI5Element {
 	============================================================================ */
 
 	/**
-	 * Updates actions by delegating to controller.
-	 * Demonstrates: Component gathers params, controller returns data, component applies.
+	 * Updates actions array based on current state.
 	 */
 	private updateActions() {
-		const params = {
-			hasSearch: this.hasSearchField,
-			showNotifications: this.showNotifications,
-			notificationsCount: this.notificationsCount,
-			showProductSwitch: this.showProductSwitch,
-			hasAssistant: this.hasAssistant,
-			showProfile: this.hasProfile,
-		};
-
-		this.actions = this.actionsAdaptor.getActions(params);
+		this.actions = [
+			{
+				id: ACTION_IDS.SEARCH,
+				visible: this.hasSearchField,
+				icon: "search",
+			},
+			{
+				id: ACTION_IDS.PROFILE,
+				visible: this.hasProfile,
+			},
+			{
+				id: ACTION_IDS.ASSISTANT,
+				visible: this.hasAssistant,
+				icon: "da",
+			},
+			{
+				id: ACTION_IDS.NOTIFICATIONS,
+				visible: this.showNotifications,
+				count: this.notificationsCount,
+				icon: "bell",
+			},
+			{
+				id: ACTION_IDS.PRODUCT_SWITCH,
+				visible: this.showProductSwitch,
+				icon: "grid",
+			},
+		].filter(action => action.visible);
 	}
 
-	getAction(actionId: string) {
+	getAction(actionId: ActionId) {
 		return this.actions.find(action => action.id === actionId);
 	}
 
-	getActionText(actionId: string): string {
+	getActionText(actionId: ActionId): string {
 		const texts: Record<string, string> = {
-			"search": this.texts.search,
-			"profile": this.texts.profile,
-			"overflow": this.texts.overflow,
-			"assistant": "Assistant",
-			"notifications": this.texts.notificationsNoCount,
-			"product-switch": this.texts.products,
+			[ACTION_IDS.SEARCH]: this.texts.search,
+			[ACTION_IDS.PROFILE]: this.texts.profile,
+			[ACTION_IDS.OVERFLOW]: this.texts.overflow,
+			[ACTION_IDS.ASSISTANT]: "Assistant",
+			[ACTION_IDS.NOTIFICATIONS]: this.texts.notificationsNoCount,
+			[ACTION_IDS.PRODUCT_SWITCH]: this.texts.products,
 		};
 		return texts[actionId] || actionId;
 	}
@@ -749,9 +780,9 @@ class ShellBarV2 extends UI5Element {
 		let prevented = false;
 
 		// Trigger the appropriate action handler
-		if (actionId === "notifications") {
+		if (actionId === ACTION_IDS.NOTIFICATIONS) {
 			prevented = this.handleNotificationsClick();
-		} else if (actionId === "search") {
+		} else if (actionId === ACTION_IDS.SEARCH) {
 			prevented = this.handleSearchButtonClick();
 		}
 
@@ -1174,7 +1205,12 @@ class ShellBarV2 extends UI5Element {
 ShellBarV2.define();
 
 export default ShellBarV2;
+export {
+	ACTION_IDS,
+};
 export type {
+	ActionId,
+	ShellBarV2ActionItem,
 	ShellBarV2MenuButtonClickEventDetail,
 	ShellBarV2NotificationsClickEventDetail,
 	ShellBarV2ProfileClickEventDetail,

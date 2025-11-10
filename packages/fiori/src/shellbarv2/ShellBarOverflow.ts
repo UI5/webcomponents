@@ -1,5 +1,6 @@
 import type ShellBarV2Item from "../ShellBarV2Item.js";
-import type { ShellBarV2ActionItem } from "./ShellBarActions.js";
+import { ACTION_IDS } from "../ShellBarV2.js";
+import type { ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js";
 
 interface ShellBarV2HidableItem {
 	id: string;
@@ -27,7 +28,7 @@ interface ShellBarV2OverflowResult {
 
 type ShellBarV2OverflowItem = {
 	type: "action";
-	id: string;
+	id: ActionId;
 	data: ShellBarV2ActionItem
 	order: number;
 } | {
@@ -179,7 +180,7 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		const notificationAction = actions.find(action => action.id === "notifications");
+		const notificationAction = actions.find(action => action.id === ACTION_IDS.NOTIFICATIONS);
 		if (notificationAction) {
 			addItem({
 				id: notificationAction.id,
@@ -189,7 +190,7 @@ class ShellBarV2Overflow {
 			});
 		}
 
-		const assistantAction = actions.find(action => action.id === "assistant");
+		const assistantAction = actions.find(action => action.id === ACTION_IDS.ASSISTANT);
 		if (assistantAction) {
 			addItem({
 				id: assistantAction.id,
@@ -202,7 +203,7 @@ class ShellBarV2Overflow {
 		// only when search is closed
 		if (!showSearchField) {
 			addItem({
-				id: "search",
+				id: ACTION_IDS.SEARCH,
 				selector: this.SELECTORS.search,
 				hideOrder: priorityStrategy.SEARCH + actionIndex++,
 				showInOverflow: true,
@@ -226,11 +227,11 @@ class ShellBarV2Overflow {
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));
 		hiddenActions.forEach(action => {
 			let order = 0;
-			if (action.id === "search") {
+			if (action.id === ACTION_IDS.SEARCH) {
 				order = 0;
-			} else if (action.id === "notifications") {
+			} else if (action.id === ACTION_IDS.NOTIFICATIONS) {
 				order = 1;
-			} else if (action.id === "assistant") {
+			} else if (action.id === ACTION_IDS.ASSISTANT) {
 				order = 2;
 			}
 
