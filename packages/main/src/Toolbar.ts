@@ -298,13 +298,30 @@ class Toolbar extends UI5Element {
 		}
 	}
 
-	async onAfterRendering() {
-		await renderFinished();
+	onAfterRendering() {
+		if (!this.items.some((item: ToolbarItem) => item.selfOverflowed)) {
+			this.onAfterRenderingAsync();
+		}
+		this.afterRenderingOps();
+	}
 
+	async onAfterRenderingAsync()	{
+		await renderFinished();
+	}
+
+	afterRenderingOps() {
 		this.storeItemsWidth();
-		setTimeout(() => this.processOverflowLayout(), 0);
+		this.processOverflowLayout();
 		this.items.forEach(item => {
 			item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
+			const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
+			if (item.selfOverflowed && !item.isOverflowed && itemWrapper) {
+				itemWrapper.style.maxWidth = `none`;
+				itemWrapper?.classList.add("ui5-tb-self-overflow-grow");
+				item._maxWidth = Math.max(this.getItemWidth(item), item._maxWidth);
+				itemWrapper.style.maxWidth = `${item._maxWidth}px`;
+				itemWrapper?.classList.remove("ui5-tb-self-overflow-grow");
+			}
 		});
 	}
 
@@ -470,7 +487,7 @@ class Toolbar extends UI5Element {
 
 	onResize() {
 		this.closeOverflow();
-		setTimeout(() => this.processOverflowLayout(), 0);
+		setTimeout(() => this.onAfterRendering(), 0);
 	}
 
 	/**
@@ -511,6 +528,11 @@ class Toolbar extends UI5Element {
 		}
 
 		return Math.ceil(itemWidth);
+	}
+
+	getItemWidthCss(item: ToolbarItem) {
+		const itemMinWidth = item.selfOverflowed && Number(this.getItemWidth(item)) ? `${this.getItemWidth(item)}px` : "auto";
+		return `${itemMinWidth}`;
 	}
 
 	getCachedItemWidth(id: string) {

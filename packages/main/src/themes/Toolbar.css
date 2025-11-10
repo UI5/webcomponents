@@ -33,7 +33,14 @@
 }
 
 .ui5-tb-self-overflow {
+	min-width:  2.5rem;
 	flex-shrink: 1;
+	flex-grow: 1;
+
+}
+
+.ui5-tb-self-overflow-grow {
+	position: absolute
 }
 
 /* Last visible element should not have margins.

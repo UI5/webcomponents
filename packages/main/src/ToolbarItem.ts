@@ -96,6 +96,7 @@ class ToolbarItem extends UI5Element {
 	expandInOverflow: boolean = false;
 
 	_isRendering = true;
+	_maxWidth = 0;
 
 	onAfterRendering(): void {
 		this._isRendering = false;
@@ -155,17 +156,6 @@ class ToolbarItem extends UI5Element {
 
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
-	}
-
-	get flexBasis(): string {
-		const item = this.querySelector(":first-child") as ISelfOverflowedItem | null;
-
-		if (this.selfOverflowed && item && typeof item.totalContentWidth !== "undefined") {
-			const width = item.totalContentWidth;
-			return `flex-basis: ${width ? `${width + 1}px` : "auto"}`;
-		}
-
-		return "flex-basis: auto";
 	}
 
 	get classes() {
