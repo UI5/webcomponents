@@ -48,12 +48,6 @@ describe("TableGrowing - Button", () => {
 				.should("have.attr", "role", "button")
 				.should("have.attr", "aria-labelledby", "text subtext");
 
-			cy.get("[ui5-table")
-				.shadow()
-				.find("#growing-row")
-				.should("exist")
-				.should("have.attr", "aria-hidden", "true");
-
 			cy.get("[ui5-table-growing]")
 				.shadow()
 				.find("#text")
@@ -104,10 +98,10 @@ describe("TableGrowing - Button", () => {
 				</Table>
 			);
 
-			cy.get("[ui5-table]")
+			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
+				.find("#button")
+				.should("not.be.visible");
 		});
 	});
 
@@ -221,11 +215,6 @@ describe("TableGrowing - Scroll", () => {
 				.shadow()
 				.find("#button")
 				.should("not.be.visible");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
 		});
 
 		it("tests button shown when not scrollable", () => {
@@ -234,12 +223,7 @@ describe("TableGrowing - Scroll", () => {
 			cy.get("[ui5-table-growing]")
 				.shadow()
 				.find("#button")
-				.should("exist");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("exist");
+				.should("be.visible");
 		});
 	});
 
@@ -309,11 +293,6 @@ describe("TableGrowing - Scroll", () => {
 				.shadow()
 				.find("#button")
 				.should("not.be.visible");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
 
 			for (let i = 2; i <= 6; i++) {
 				cy.get("#wrapper")

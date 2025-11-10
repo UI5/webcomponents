@@ -1,19 +1,24 @@
-import AITextArea from "../../src/TextArea.js";
+import TextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
+import { 
+	WRITING_ASSISTANT_BUTTON_TOOLTIP,
+	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
+ } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic", () => {
 	describe("Initialization", () => {
 		it("should render with default properties", () => {
-			cy.mount(<AITextArea />);
+			cy.mount(<TextArea />);
 
 			cy.get("[ui5-ai-textarea]")
 				.as("textarea")
 				.should("exist")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "")
-				.should("have.prop", "currentVersionIndex", 1)
-				.should("have.prop", "totalVersions", 1);
+				.should("have.prop", "promptDescription", "")
+				.should("have.prop", "currentVersion", 0)
+				.should("have.prop", "totalVersions", 0);
 
 			cy.get("@textarea")
 				.shadow()
@@ -22,7 +27,7 @@ describe("Basic", () => {
 		});
 
 		it("should set initial value as a property", () => {
-			cy.mount(<AITextArea value="AI initial value" />);
+			cy.mount(<TextArea value="AI initial value" />);
 
 			cy.get("[ui5-ai-textarea]")
 				.should("have.prop", "value", "AI initial value");
@@ -31,7 +36,7 @@ describe("Basic", () => {
 
 	describe("Loading States", () => {
 		it("should display non-loading state correctly", () => {
-			cy.mount(<AITextArea loading={false} />);
+			cy.mount(<TextArea loading={false} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -41,9 +46,9 @@ describe("Basic", () => {
 
 		it("should display loading state correctly", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={true}
-					actionText="Generating content..."
+					promptDescription="Generating content..."
 				/>
 			);
 
@@ -51,15 +56,15 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", true)
-				.should("have.prop", "actionText", "Generating content...");
+				.should("have.prop", "promptDescription", "Generating content...");
 		});
 
 		it("should display single result correctly", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={1}
+					promptDescription="Generated text"
+					currentVersion={0}
 					totalVersions={1}
 				/>
 			);
@@ -68,17 +73,17 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 1)
+				.should("have.prop", "promptDescription", "Generated text")
+				.should("have.prop", "currentVersion", 0)
 				.should("have.prop", "totalVersions", 1);
 		});
 
 		it("should display multiple results correctly", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					actionText="Generated text"
-					currentVersionIndex={2}
+					promptDescription="Generated text"
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -87,8 +92,8 @@ describe("Basic", () => {
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.should("have.prop", "loading", false)
-				.should("have.prop", "actionText", "Generated text")
-				.should("have.prop", "currentVersionIndex", 2)
+				.should("have.prop", "promptDescription", "Generated text")
+				.should("have.prop", "currentVersion", 1)
 				.should("have.prop", "totalVersions", 3);
 		});
 	});
@@ -98,9 +103,9 @@ describe("Basic", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={2}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -128,9 +133,8 @@ describe("Basic", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -156,9 +160,8 @@ describe("Basic", () => {
 
 		it("should disable previous button when at first version", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 				/>
 			);
@@ -177,9 +180,9 @@ describe("Basic", () => {
 
 		it("should disable next button when at last version", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={3}
+					currentVersion={3}
 					totalVersions={3}
 				/>
 			);
@@ -201,10 +204,10 @@ describe("Basic", () => {
 			const newValue = "Version 2 content";
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					value={initialValue}
 					loading={false}
-					currentVersionIndex={1}
+					currentVersion={0}
 					totalVersions={2}
 				/>
 			);
@@ -232,11 +235,11 @@ describe("Basic", () => {
 	describe("Menu Integration", () => {
 		it("should handle menu slot correctly", () => {
 			cy.mount(
-				<AITextArea>
+				<TextArea>
 					<Menu slot="menu" id="test-menu">
 						<MenuItem text="Generate text" />
 					</Menu>
-				</AITextArea>
+				</TextArea>
 			);
 
 			cy.get("[ui5-ai-textarea]")
@@ -248,7 +251,7 @@ describe("Basic", () => {
 			const onOpen = cy.spy().as("onOpen");
 
 			cy.mount(
-				<AITextArea>
+				<TextArea>
 					<Menu
 						slot="menu"
 						id="test-menu"
@@ -256,7 +259,7 @@ describe("Basic", () => {
 					>
 						<MenuItem text="Generate text" />
 					</Menu>
-				</AITextArea>
+				</TextArea>
 			);
 
 			cy.get("[ui5-ai-textarea]")
@@ -275,7 +278,7 @@ describe("Basic", () => {
 			const onStopGeneration = cy.spy().as("onStopGeneration");
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={true}
 					onStopGeneration={onStopGeneration}
 				/>
@@ -294,7 +297,7 @@ describe("Basic", () => {
 
 	describe("Keyboard Shortcuts", () => {
 		it("should handle Shift+F4 to focus AI button", () => {
-			cy.mount(<AITextArea />);
+			cy.mount(<TextArea />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -314,9 +317,9 @@ describe("Basic", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -340,9 +343,8 @@ describe("Basic", () => {
 			const onVersionChange = cy.spy().as("onVersionChange");
 
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={1}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -365,7 +367,7 @@ describe("Basic", () => {
 
 	describe("TextArea Integration", () => {
 		it("should inherit TextArea functionality", () => {
-			cy.mount(<AITextArea value="Test content" />);
+			cy.mount(<TextArea value="Test content" />);
 
 			cy.get("[ui5-ai-textarea]")
 				.as("textarea")
@@ -381,7 +383,7 @@ describe("Basic", () => {
 		});
 
 		it("should support readonly mode", () => {
-			cy.mount(<AITextArea value="Readonly content" readonly />);
+			cy.mount(<TextArea value="Readonly content" readonly />);
 
 			cy.get("[ui5-ai-textarea]")
 				.should("have.attr", "readonly");
@@ -398,7 +400,7 @@ describe("Basic", () => {
 		});
 
 		it("should support disabled mode", () => {
-			cy.mount(<AITextArea value="Disabled content" disabled />);
+			cy.mount(<TextArea value="Disabled content" disabled />);
 
 			cy.get("[ui5-ai-textarea]")
 				.should("have.attr", "disabled");
@@ -419,7 +421,7 @@ describe("Basic", () => {
 		it("should handle input events", () => {
 			const onInput = cy.spy().as("onInput");
 
-			cy.mount(<AITextArea onInput={onInput} />);
+			cy.mount(<TextArea onInput={onInput} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -432,7 +434,7 @@ describe("Basic", () => {
 		it("should handle change events", () => {
 			const onChange = cy.spy().as("onChange");
 
-			cy.mount(<AITextArea onChange={onChange} />);
+			cy.mount(<TextArea onChange={onChange} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -452,7 +454,7 @@ describe("Basic", () => {
 
 	describe("Busy State", () => {
 		it("should show busy indicator when loading", () => {
-			cy.mount(<AITextArea loading={true} />);
+			cy.mount(<TextArea loading={true} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -461,7 +463,7 @@ describe("Basic", () => {
 		});
 
 		it("should hide busy indicator when not loading", () => {
-			cy.mount(<AITextArea loading={false} />);
+			cy.mount(<TextArea loading={false} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -472,7 +474,7 @@ describe("Basic", () => {
 
 	describe("Accessibility", () => {
 		it("should have proper ARIA attributes", () => {
-			cy.mount(<AITextArea value="Test content" />);
+			cy.mount(<TextArea value="Test content" />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -482,7 +484,7 @@ describe("Basic", () => {
 		});
 
 		it("should support custom accessible name", () => {
-			cy.mount(<AITextArea accessibleName="Custom AI TextArea" />);
+			cy.mount(<TextArea accessibleName="Custom AI TextArea" />);
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -492,9 +494,9 @@ describe("Basic", () => {
 
 		it("should announce AI actions to screen readers", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={true}
-					actionText="Generating content..."
+					promptDescription="Generating content..."
 				/>
 			);
 
@@ -507,9 +509,9 @@ describe("Basic", () => {
 
 		it("should have translatable accessibility attributes from WritingAssistant", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={2}
+					currentVersion={1}
 					totalVersions={3}
 				/>
 			);
@@ -520,15 +522,15 @@ describe("Basic", () => {
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("ui5-toolbar")
-				.should("have.attr", "accessible-name", "AI Writing Assistant Toolbar");
+				.should("have.attr", "accessible-name", TextArea.i18nBundle.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME));
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "accessible-name", "AI Writing Assistant")
-				.should("have.attr", "tooltip", "AI Writing Assistant (Shift + F4)");
+				.should("have.attr", "accessible-name", TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+				.should("have.attr", "tooltip",  TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 
 			// Verify versioning tooltips are translatable
 			cy.get("[ui5-ai-textarea]")
@@ -553,7 +555,7 @@ describe("Basic", () => {
 
 	describe("Error Handling", () => {
 		it("should handle invalid loading state gracefully", () => {
-			cy.mount(<AITextArea loading={"invalid" as any} />);
+			cy.mount(<TextArea loading={"invalid" as any} />);
 
 			cy.get("[ui5-ai-textarea]")
 				.should("exist");
@@ -566,9 +568,9 @@ describe("Basic", () => {
 
 		it("should handle invalid version indices gracefully", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={-1}
+					currentVersion={-1}
 					totalVersions={3}
 				/>
 			);
@@ -584,10 +586,8 @@ describe("Basic", () => {
 
 		it("should handle zero total versions", () => {
 			cy.mount(
-				<AITextArea
+				<TextArea
 					loading={false}
-					currentVersionIndex={1}
-					totalVersions={0}
 				/>
 			);
 

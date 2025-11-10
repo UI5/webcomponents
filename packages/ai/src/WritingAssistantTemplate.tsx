@@ -8,7 +8,7 @@ import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
 
 export default function WritingAssistantTemplate(this: WritingAssistant) {
 	const isMultiResults = this.totalVersions > 1;
-	const hasResults = (this.totalVersions > 0 && this.actionText) || this.loading;
+	const hasResults = (this.totalVersions > 0 && this.promptDescription) || this.loading;
 
 	return (
 		<Toolbar
@@ -18,15 +18,15 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 		>
 			{isMultiResults && !this.loading && (
 				<Versioning
-					currentStep={this.currentVersionIndex}
+					currentStep={this.currentVersion}
 					totalSteps={this.totalVersions}
 					onVersion-change={this.handleVersionChange}
 				/>
 			)}
 
-			{hasResults && this.actionText && (
+			{hasResults && this.promptDescription && (
 				<ToolbarLabel
-					text={this.actionText}
+					text={this.promptDescription}
 					class="ui5-ai-writing-assistant-action-label"
 				/>
 			)}
@@ -39,7 +39,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				icon={this.loading ? "stop" : "ai"}
 				data-state={this.loading ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
-				tooltip={this._buttonTooltip}
+				tooltip={this.loading ? this._stopTooltip : this._buttonTooltip}
 				accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
 				accessibleName={this._buttonAccessibleName}
 				overflowPriority="NeverOverflow"

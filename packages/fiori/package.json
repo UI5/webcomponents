@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-fiori",
-  "version": "2.16.0-rc.0",
+  "version": "2.17.0-rc.1",
   "description": "UI5 Web Components: webcomponents.fiori",
   "ui5": {
     "webComponentsPackage": true
@@ -52,21 +52,21 @@
     "directory": "packages/fiori"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.16.0-rc.0",
-    "@ui5/webcomponents-base": "2.16.0-rc.0",
-    "@ui5/webcomponents-icons": "2.16.0-rc.0",
-    "@ui5/webcomponents-theming": "2.16.0-rc.0",
+    "@ui5/webcomponents": "2.17.0-rc.1",
+    "@ui5/webcomponents-base": "2.17.0-rc.1",
+    "@ui5/webcomponents-icons": "2.17.0-rc.1",
+    "@ui5/webcomponents-theming": "2.17.0-rc.1",
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch",
+    "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.16.0-rc.0",
+    "@ui5/webcomponents-tools": "2.17.0-rc.1",
     "chokidar-cli": "^3.0.0",
     "cypress": "^15.3.0",
     "eslint": "^7.22.0",
     "lit": "^2.0.0",
-    "vite": "5.4.8",
+    "vite": "5.4.21",
     "yarn": "^1.22.22"
   }
 }

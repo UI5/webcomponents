@@ -115,6 +115,9 @@ function headerContent(this: UserMenu) {
 				{this._selectedAccount.description &&
 					<Text class="ui5-user-menu-selected-account-description">{this._selectedAccount.description}</Text>
 				}
+				{this._selectedAccount.additionalInfo &&
+					<Text class="ui5-user-menu-selected-account-additional-info">{this._selectedAccount.additionalInfo}</Text>
+				}
 
 				{this.showManageAccount &&
 					<Button id="selected-account-manage-btn" icon={userSettings} class="ui5-user-menu-manage-account-btn" onClick={this._handleManageAccountClick}>{this._manageAccountButtonText}</Button>

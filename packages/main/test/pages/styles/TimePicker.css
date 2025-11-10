@@ -22,3 +22,7 @@ html,body {
 .timepicker2auto {
     width: 100%
 }
+
+form ui5-time-picker:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}

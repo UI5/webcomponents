@@ -1,0 +1,43 @@
+name: Issue - reopen on comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  reopen-issue:
+    if: github.event.issue.state == 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check and Compare Timestamps
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number
+            });
+
+            const closedAt = new Date(issue.data.closed_at).getTime();
+            const commentAt = new Date(context.payload.comment.created_at).getTime();
+            const commenter = context.payload.comment.user.login;
+
+            // Allowed bots
+            const isSystemUser = ['ui5-webcomponents-bot', 'github-actions[bot]'].includes(commenter);
+
+            core.setOutput('shouldReopen', !isSystemUser && commentAt > closedAt);
+
+      - name: Reopen Issue
+        if: steps.check.outputs.shouldReopen == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              state: 'open'
+            })

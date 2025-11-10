@@ -40,7 +40,7 @@ export default function NavigationMenuTemplate(this: NavigationMenu) {
 				{this.items.length > 0 ?
 					<List
 						id={`${this._id}-menu-list`}
-						accessibleRole="Tree"
+						accessibleRole="Menu"
 						selectionMode="None"
 						loading={this.loading}
 						loadingDelay={this.loadingDelay}

@@ -7,13 +7,16 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getEffectiveAriaDescriptionText,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -272,6 +275,24 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	accessibleNameRef?: string;
+
+	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the textarea.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
 
 	/**
 	 * @private
@@ -575,8 +596,21 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return effectiveAriaLabelText;
 	}
 
+	get ariaDescriptionText() {
+		return getEffectiveAriaDescriptionText(this);
+	}
+
+	get ariaDescriptionTextId() {
+		return this.ariaDescriptionText ? "accessibleDescription" : "";
+	}
+
 	get ariaDescribedBy() {
-		return this.hasValueState ? `${this._id}-valueStateDesc` : undefined;
+		const ids = [
+			this.hasValueState ? `${this._id}-valueStateDesc` : "",
+			this.ariaDescriptionTextId,
+		].filter(Boolean).join(" ");
+
+		return ids || undefined;
 	}
 
 	get ariaValueStateHiddenText() {
@@ -623,10 +657,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return this.valueState === ValueState.Negative || this.valueState === ValueState.Critical || this.valueState === ValueState.Information;
 	}
 
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
-	}
-
 	get valueStateTextMappings() {
 		return {
 			"Positive": TextArea.i18nBundle.getText(VALUE_STATE_SUCCESS),
@@ -649,4 +679,5 @@ class TextArea extends UI5Element implements IFormInputElement {
 TextArea.define();
 
 export default TextArea;
+export { TextArea as BaseTextArea };
 export type { TextAreaInputEventDetail };

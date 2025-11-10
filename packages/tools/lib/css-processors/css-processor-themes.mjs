@@ -7,6 +7,7 @@ import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import scopeVariables from "./scope-variables.mjs";
+import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
     const tsMode = process.env.UI5_TS === "true";
@@ -89,7 +90,10 @@ const generate = async (argv) => {
     }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
     generate(process.argv)
 }
 

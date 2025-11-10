@@ -131,6 +131,34 @@ describe("Initial rendering", () => {
 		cy.get("@settingItem").should("have.attr", "icon", "accessibility");
 	});
 
+	it('tests setting no icon', () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem icon="" text="Setting with no icon">
+			</UserSettingsItem>
+			<UserSettingsItem icon="bell" text="Setting with bell icon">
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").should("exist");
+		cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+		cy.get("@settingItem").should("exist");
+		cy.get("@settingItem").should("have.attr", "icon", "");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("exist");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.have.attr", "icon");
+	});
+
+	it('tests when all settings does not have icon we do not add css class', () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem icon="" text="Setting with no icon">
+			</UserSettingsItem>
+			<UserSettingsItem icon="" text="Second Setting with no icon">
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").should("exist");
+		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.exist");
+	});
+
 	it("tests setting header-text", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem headerText="Header title | Setting 3">
@@ -150,9 +178,9 @@ describe("Initial rendering", () => {
 	it("tests setting tabs", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="Setting1">
+				<UserSettingsView text="Setting1" slot="tabs">
 						 </UserSettingsView>
-				<UserSettingsView text="Setting2">
+				<UserSettingsView text="Setting2" slot="tabs">
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -336,11 +364,11 @@ describe("Events", () => {
 	it("tests back-click event on secondary page", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView slot="pages">
+				<UserSettingsView>
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView slot="pages" text="Inner Page" id="notification-second-page" secondary selected>second page content
+				<UserSettingsView text="Inner Page" id="notification-second-page" secondary selected>second page content
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -366,11 +394,11 @@ describe("Events", () => {
 		cy.ui5SimulateDevice("phone");
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView slot="pages">
+				<UserSettingsView>
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView slot="pages" text="Inner Page" id="notification-second-page" secondary>second page content
+				<UserSettingsView text="Inner Page" id="notification-second-page" secondary>second page content
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -405,11 +433,11 @@ describe("Events", () => {
 	it("tests selection-change event", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="First tab">
+				<UserSettingsView text="First tab" slot="tabs">
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView text="Second tab" id="notification-second-page">second tab
+				<UserSettingsView text="Second tab" id="notification-second-page" slot="tabs">second tab
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -431,11 +459,11 @@ describe("Events", () => {
 	it("tests selection-change event prevented", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="First tab">
+				<UserSettingsView text="First tab" slot="tabs">
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView text="Second tab" id="notification-second-page">second tab
+				<UserSettingsView text="Second tab" id="notification-second-page" slot="tabs">second tab
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -546,9 +574,9 @@ describe("Responsiveness", () => {
 		cy.ui5SimulateDevice("phone");
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="Setting1">
+				<UserSettingsView text="Setting1" slot="tabs">
 						 </UserSettingsView>
-				<UserSettingsView text="Setting2">
+				<UserSettingsView text="Setting2" slot="tabs">
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
