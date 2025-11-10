@@ -1590,7 +1590,7 @@ class ShellBar extends UI5Element {
 	}
 
 	get imageBtnText() {
-		return getEffectiveAriaLabelText(this);
+		return getEffectiveAriaLabelText(this); // TODO
 	}
 
 	get _profileText() {

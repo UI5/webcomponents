@@ -177,7 +177,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							data-ui5-stable="profile"
 							class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 							design="Transparent"
-							onClick={this._handleProfileClick}
+							onClick={this.handleProfileClick}
 							tooltip={this.getActionText("profile")}
 							accessibilityAttributes={this.accInfo.profile.accessibilityAttributes}
 						>
@@ -191,7 +191,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							class="ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start"
 							icon="grid"
 							design="Transparent"
-							onClick={this._handleProductSwitchClick}
+							onClick={this.handleProductSwitchClick}
 							tooltip={this.getActionText("product-switch")}
 							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
 						></Button>

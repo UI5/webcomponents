@@ -37,7 +37,6 @@ import ShellBarV2Legacy from "./shellbarv2/ShellBarLegacy.js";
 import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
 import ShellBarV2SearchLegacy from "./shellbarv2/ShellBarSearchLegacy.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
-import ShellBarV2Content from "./shellbarv2/ShellBarContent.js";
 import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
 import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
@@ -458,7 +457,6 @@ class ShellBarV2 extends UI5Element {
 	});
 
 	breakpoint = new ShellBarV2Breakpoint();
-	contentAdaptor = new ShellBarV2Content();
 	actionsAdaptor = new ShellBarV2Actions();
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
@@ -913,7 +911,7 @@ class ShellBarV2 extends UI5Element {
 		return false;
 	}
 
-	_handleProfileClick() {
+	handleProfileClick() {
 		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
 		if (profileBtn) {
 			return !this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
@@ -921,7 +919,7 @@ class ShellBarV2 extends UI5Element {
 		return false;
 	}
 
-	_handleProductSwitchClick() {
+	handleProductSwitchClick() {
 		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
 		if (productSwitchBtn) {
 			return !this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
@@ -1036,20 +1034,50 @@ class ShellBarV2 extends UI5Element {
 	Content Management
 	============================================================================ */
 
+	/**
+	 * Splits content into start and end groups based on spacer element.
+	 * Items before spacer = start (left-aligned)
+	 * Items after spacer = end (right-aligned)
+	 * Without spacer, all items are start content.
+	 *
+	 * Spacer can be detected by:
+	 * - Component: <ui5-shellbar-spacer slot="content">
+	 * - Attribute: <div slot="content" ui5-shellbar-spacer>
+	 */
+	splitContent(content: readonly HTMLElement[]) {
+		const spacerIndex = content.findIndex(
+			child => child.hasAttribute("ui5-shellbar-spacer"),
+		);
+
+		if (spacerIndex === -1) {
+			return { start: [...content], end: [] };
+		}
+
+		return {
+			start: content.slice(0, spacerIndex),
+			end: content.slice(spacerIndex + 1),
+		};
+	}
+
 	get startContent(): HTMLElement[] {
-		return this.contentAdaptor.splitContent(this.content).start;
+		return this.splitContent(this.content).start;
 	}
 
 	get endContent(): HTMLElement[] {
-		return this.contentAdaptor.splitContent(this.content).end;
+		return this.splitContent(this.content).end;
 	}
 
 	get separatorConfig() {
-		return this.contentAdaptor.getSeparatorConfig({
-			content: this.content,
-			isSBreakPoint: this.isSBreakPoint,
-			hiddenItemIds: this.hiddenItemsIds,
-		});
+		if (this.isSBreakPoint) {
+			return { showStartSeparator: false, showEndSeparator: false };
+		}
+
+		const { start, end } = this.splitContent(this.content);
+
+		return {
+			showStartSeparator: start.some(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)),
+			showEndSeparator: end.some(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)),
+		};
 	}
 
 	/**
@@ -1057,12 +1085,14 @@ class ShellBarV2 extends UI5Element {
 	 */
 	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
 		const group = isStartGroup ? this.startContent : this.endContent;
-		return this.contentAdaptor.shouldPackSeparator(
-			item,
-			group,
-			this.hiddenItemsIds,
-			this.isSBreakPoint,
-		);
+		if (this.isSBreakPoint) {
+			return { shouldPack: false };
+		}
+
+		const isHidden = this.hiddenItemsIds.includes((item as any)._individualSlot as string);
+		const isLastItem = group.at(-1) === item;
+
+		return { shouldPack: isHidden && isLastItem };
 	}
 
 	/* =========================================================================
@@ -1093,6 +1123,9 @@ class ShellBarV2 extends UI5Element {
 		return this.accessibilityAdaptor.getActionsRole(visibleCount);
 	}
 
+	/**
+	 * Returns group role for content area based on visible items count.
+	 */
 	get contentRole(): "group" | undefined {
 		const visibleItemsCount = this.content.filter(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)).length;
 		return this.accessibilityAdaptor.getContentRole(visibleItemsCount);
