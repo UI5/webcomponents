@@ -661,10 +661,13 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
 
         cy.get("@colorPalette")
             .ui5GetColorPaletteMoreColorsButton()
-            .as("moreColorsButton");
-            
+            .as("moreColorsButton")
+            .should("be.visible");
+
         cy.get("@moreColorsButton")
-            .should("have.focus");
+            .should("exist")
+            .and("be.visible")
+            .and("have.focus");
 
         cy.get("@moreColorsButton")
             .realPress("Home");
