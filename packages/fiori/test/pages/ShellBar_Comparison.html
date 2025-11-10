@@ -818,6 +818,45 @@
 			});
 		});
 
+		// V1 item click listeners
+		const itemV11 = document.getElementById('itemV1-1');
+		const itemV12 = document.getElementById('itemV1-2');
+		if (itemV11) itemV11.addEventListener('click', (e) => console.log('V1 Item 1 clicked', e.detail));
+		if (itemV12) itemV12.addEventListener('click', (e) => console.log('V1 Item 2 clicked', e.detail));
+
+		// V2 item click listeners
+		const itemV21 = document.getElementById('itemV2-1');
+		const itemV22 = document.getElementById('itemV2-2');
+		if (itemV21) itemV21.addEventListener('click', (e) => {
+			e.preventDefault();
+			console.log('V2 Item 1 clicked', e.detail)
+		});
+		if (itemV22) itemV22.addEventListener('click', (e) => {
+			e.preventDefault();
+			console.log('V2 Item 2 clicked', e.detail)
+		});
+
+		// Attach listeners to dynamic items when they are added
+		const observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				mutation.addedNodes.forEach((node) => {
+					if (node.id === 'itemV1-3') node.addEventListener('click', (e) => console.log('V1 Item 3 clicked', e.detail));
+					if (node.id === 'itemV1-4') node.addEventListener('click', (e) => console.log('V1 Item 4 clicked', e.detail));
+					if (node.id === 'itemV2-3') node.addEventListener('click', (e) => {
+						e.preventDefault();
+						console.log('V2 Item 3 clicked', e.detail)
+					});
+					if (node.id === 'itemV2-4') node.addEventListener('click', (e) => {
+						e.preventDefault();
+						console.log('V2 Item 4 clicked', e.detail)
+					});
+				});
+			});
+		});
+
+		observer.observe(shellbarV1, { childList: true });
+		observer.observe(shellbarV2, { childList: true });
+
 		console.log('ShellBar Comparison Page loaded');
 		console.log('Open browser console to see event logs');
 		console.log('Resize window to test overflow behavior!');

@@ -3,7 +3,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base";
+import type { AccessibilityAttributes, UI5CustomEvent } from "@ui5/webcomponents-base";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
@@ -102,6 +102,12 @@ class ShellBarV2Item extends UI5Element {
 			return [];
 		}
 		return [domRef];
+	}
+
+	fireClickEvent(e: UI5CustomEvent<Button, "click">) {
+		return this.fireDecoratorEvent("click", {
+			targetRef: (e.target as HTMLElement),
+		});
 	}
 }
 

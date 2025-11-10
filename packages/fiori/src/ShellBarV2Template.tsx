@@ -30,11 +30,13 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 	const overflowAction = this.getAction("overflow");
 	const assistantAction = this.getAction("assistant");
 	const notificationsAction = this.getAction("notifications");
-	const productSwitchAction = this.getAction("product-switch");
+	const productSwitchAction = this.getAction("products");
+
+	const actionsAccInfo = this.actionsAccessibilityInfo;
 
 	return (
 		<>
-			<header class="ui5-shellbar-root" part="root" onKeyDown={this._onKeyDown}>
+			<header class="ui5-shellbar-root" part="root" onKeyDown={this._onKeyDown} aria-label={this.texts.shellbar}>
 				{/* Full-width search overlay */}
 				{this.showFullWidthSearch && SearchFullWidthTemplate.call(this)}
 
@@ -134,8 +136,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										icon={notificationsAction.icon}
 										design="Transparent"
 										onClick={this.handleNotificationsClick}
-										tooltip={this.getActionText("notifications")}
-										accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
+										tooltip={actionsAccInfo.notifications.title}
+										accessibilityAttributes={actionsAccInfo.notifications.accessibilityAttributes}
 									>
 										{notificationsAction?.count && (
 											<ButtonBadge slot="badge" design="OverlayText" text={notificationsAction?.count} />
@@ -165,8 +167,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							icon={overflowAction.icon}
 							design="Transparent"
 							onClick={this.handleOverflowClick}
-							tooltip={this.getActionText("overflow")}
-							accessibilityAttributes={this.accInfo.overflow.accessibilityAttributes}
+							tooltip={actionsAccInfo.overflow.title}
+							accessibilityAttributes={actionsAccInfo.overflow.accessibilityAttributes}
 						>
 							{this.overflowBadge && (
 								<ButtonBadge
@@ -185,8 +187,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
 							design="Transparent"
 							onClick={this.handleProfileClick}
-							tooltip={this.getActionText("profile")}
-							accessibilityAttributes={this.accInfo.profile.accessibilityAttributes}
+							tooltip={actionsAccInfo.profile.title}
+							accessibilityAttributes={actionsAccInfo.profile.accessibilityAttributes}
 						>
 							<slot name="profile"></slot>
 						</Button>
@@ -199,8 +201,8 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							icon={productSwitchAction.icon}
 							design="Transparent"
 							onClick={this.handleProductSwitchClick}
-							tooltip={this.getActionText("product-switch")}
-							accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
+							tooltip={actionsAccInfo.products.title}
+							accessibilityAttributes={actionsAccInfo.products.accessibilityAttributes}
 						></Button>
 					)}
 
@@ -228,7 +230,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 									data-action-id={item.id}
 									count={actionData.count}
 									inOverflow={true}
-									text={this.getActionText(item.id)}
+									text={this.getActionOverflowText(item.id)}
 								/>
 							);
 						}

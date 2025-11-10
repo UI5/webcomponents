@@ -1,4 +1,6 @@
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
+import { ShellBarV2Actions } from "../ShellBarV2.js";
+import type { ShellBarV2ActionId } from "../ShellBarV2.js";
 
 /**
  * Accessibility attributes for logo area (legacy)
@@ -64,12 +66,9 @@ interface ShellBarV2AccessibilityInfo {
 interface ShellBarV2AccessibilityParams {
 	accessibilityAttributes: ShellBarV2AccessibilityAttributes;
 	overflowPopoverOpen: boolean;
-	notificationsText: string;
-	profileText: string;
-	productsText: string;
-	searchText: string;
-	overflowText: string;
 }
+
+type ShellBarV2AccessibilityDefaultTexts = Record<ShellBarV2ActionId, string>;
 
 /**
  * Controller for ShellBarV2 accessibility features.
@@ -80,13 +79,8 @@ class ShellBarV2Accessibility {
 	 * Computes accessibility info for all interactive areas.
 	 * Merges user-provided attributes with defaults and dynamic state.
 	 */
-	getAccessibilityInfo(params: ShellBarV2AccessibilityParams): ShellBarV2AccessibilityInfo {
+	getActionsAccessibilityInfo(defaultTexts: ShellBarV2AccessibilityDefaultTexts, params: ShellBarV2AccessibilityParams): ShellBarV2AccessibilityInfo {
 		const {
-			searchText,
-			profileText,
-			overflowText,
-			productsText,
-			notificationsText,
 			overflowPopoverOpen,
 			accessibilityAttributes,
 		} = params;
@@ -94,36 +88,36 @@ class ShellBarV2Accessibility {
 		const overflowExpanded = accessibilityAttributes.overflow?.expanded;
 
 		return {
-			notifications: {
-				title: notificationsText,
+			[ShellBarV2Actions.Notifications]: {
+				title: defaultTexts[ShellBarV2Actions.Notifications],
 				accessibilityAttributes: {
 					expanded: accessibilityAttributes.notifications?.expanded,
 					hasPopup: accessibilityAttributes.notifications?.hasPopup,
 				},
 			},
-			profile: {
-				title: profileText,
+			[ShellBarV2Actions.Profile]: {
+				title: defaultTexts[ShellBarV2Actions.Profile],
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.profile?.hasPopup,
 					expanded: accessibilityAttributes.profile?.expanded,
 					...(accessibilityAttributes.profile?.name ? { name: accessibilityAttributes.profile.name } : {}),
 				},
 			},
-			products: {
-				title: productsText,
+			[ShellBarV2Actions.ProductSwitch]: {
+				title: defaultTexts[ShellBarV2Actions.ProductSwitch],
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.product?.hasPopup,
 					expanded: accessibilityAttributes.product?.expanded,
 				},
 			},
-			search: {
-				title: searchText,
+			[ShellBarV2Actions.Search]: {
+				title: defaultTexts[ShellBarV2Actions.Search],
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.search?.hasPopup,
 				},
 			},
-			overflow: {
-				title: overflowText,
+			[ShellBarV2Actions.Overflow]: {
+				title: defaultTexts[ShellBarV2Actions.Overflow],
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.overflow?.hasPopup || "menu",
 					expanded: overflowExpanded === undefined ? overflowPopoverOpen : overflowExpanded,

@@ -60,10 +60,6 @@ class ShellBarV2Overflow {
 		notifications: ".ui5-shellbar-bell-button",
 	};
 
-	/**
-	 * Performs overflow calculation by iteratively hiding items until no overflow.
-	 * Measures DOM after each hide to determine if more hiding is needed.
-	 */
 	updateOverflow(params: ShellBarV2OverflowParams): ShellBarV2OverflowResult {
 		const {
 			overflowOuter, overflowInner, setVisible,
@@ -73,14 +69,12 @@ class ShellBarV2Overflow {
 			return { hiddenItemsIds: [], showOverflowButton: false };
 		}
 
-		// Build hidable items from state
 		const sortedItems = this.buildHidableItems(params);
 
-		// First, hide overflow button
+		// set initial state, to account for isOverflowing calculation
 		setVisible(this.SELECTORS.overflow, false);
-
-		// show all items
 		sortedItems.forEach(item => {
+			// show all items to account for isOverflowing calculation
 			setVisible(item.selector, true);
 		});
 
@@ -117,26 +111,10 @@ class ShellBarV2Overflow {
 		};
 	}
 
-	/**
-	 * Checks if inner is overflowing wrapper.
-	 */
 	isOverflowing(overflowOuter: HTMLElement, overflowInner: HTMLElement): boolean {
 		return overflowInner.offsetWidth > overflowOuter.offsetWidth;
 	}
 
-	/**
-	 * Builds list of hidable items from state.
-	 *
-	 * Priority when search closed:
-	 * 1. Action items
-	 * 2. Content items (except last)
-	 * 3. Search button
-	 * 4. Last content item (protected)
-	 *
-	 * Priority when search open:
-	 * 1. All content items
-	 * 2. Action items (including search)
-	 */
 	private buildHidableItems(params: ShellBarV2OverflowParams): ShellBarV2HidableItem[] {
 		const {
 			content, customItems, actions, showSearchField, hiddenItemsIds,
@@ -168,10 +146,8 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		// Build action items
 		let actionIndex = 0;
 
-		// Build custom items
 		customItems.forEach(item => {
 			addItem({
 				id: item._id,
@@ -181,28 +157,24 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		const notificationAction = actions.find(action => action.id === ShellBarV2Actions.Notifications);
-		if (notificationAction) {
-			addItem({
-				id: notificationAction.id,
-				selector: this.SELECTORS.notifications,
-				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				showInOverflow: true,
-			});
-		}
+		const actionConfigs = [
+			{ id: ShellBarV2Actions.Notifications, selector: this.SELECTORS.notifications },
+			{ id: ShellBarV2Actions.Assistant, selector: this.SELECTORS.assistant },
+		];
 
-		const assistantAction = actions.find(action => action.id === ShellBarV2Actions.Assistant);
-		if (assistantAction) {
-			addItem({
-				id: assistantAction.id,
-				selector: this.SELECTORS.assistant,
-				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				showInOverflow: true,
-			});
-		}
+		actionConfigs.forEach(config => {
+			if (actions.find(action => action.id === config.id)) {
+				addItem({
+					id: config.id,
+					selector: config.selector,
+					hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+					showInOverflow: true,
+				});
+			}
+		});
 
-		// only when search is closed
 		if (!showSearchField) {
+			// Only move search to overflow if it's closed
 			addItem({
 				id: ShellBarV2Actions.Search,
 				selector: this.SELECTORS.search,
@@ -213,9 +185,6 @@ class ShellBarV2Overflow {
 		return items.sort((a, b) => a.hideOrder - b.hideOrder);
 	}
 
-	/**
-	 * Returns list of items to be shown in overflow popover.
-	 */
 	getOverflowItems(params: {
 		actions: readonly ShellBarV2ActionItem[];
 		customItems: readonly ShellBarV2Item[];
@@ -224,20 +193,19 @@ class ShellBarV2Overflow {
 		const { actions, customItems, hiddenItemsIds } = params;
 		const result: ShellBarV2OverflowItem[] = [];
 
-		// Add hidden actions
+		const actionOrder: Record<string, number> = {
+			[ShellBarV2Actions.Search]: 0,
+			[ShellBarV2Actions.Notifications]: 1,
+			[ShellBarV2Actions.Assistant]: 2,
+		};
+
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));
 		hiddenActions.forEach(action => {
-			let order = 0;
-			if (action.id === ShellBarV2Actions.Search) {
-				order = 0;
-			} else if (action.id === ShellBarV2Actions.Notifications) {
-				order = 1;
-			} else if (action.id === ShellBarV2Actions.Assistant) {
-				order = 2;
-			}
-
 			result.push({
-				type: "action", id: action.id, data: action, order,
+				type: "action",
+				id: action.id,
+				data: action,
+				order: actionOrder[action.id] ?? 0,
 			});
 		});
 
@@ -249,9 +217,7 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		// Sort by order
-		result.sort((a, b) => a.order - b.order);
-		return result;
+		return result.sort((a, b) => a.order - b.order);
 	}
 }
 

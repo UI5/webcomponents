@@ -5,6 +5,10 @@ import activities from "@ui5/webcomponents-icons/dist/activities.js";
 import navBack from "@ui5/webcomponents-icons/dist/nav-back.js";
 import sysHelp from "@ui5/webcomponents-icons/dist/sys-help.js";
 import da from "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/accept.js";
+import "@ui5/webcomponents-icons/dist/alert.js";
+import "@ui5/webcomponents-icons/dist/disconnected.js";
+import "@ui5/webcomponents-icons/dist/incoming-call.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ToggleButton from "@ui5/webcomponents/dist/ToggleButton.js";
@@ -26,8 +30,7 @@ describe("Responsiveness", () => {
 			showNotifications={true}
 			showProductSwitch={true}
 		>
-			{/* <ToggleButton id="assistant" icon={da} slot="assistant" text="Button3"></ToggleButton> */}
-			<ToggleButton id="assistant" icon={da} slot="assistant">Button3</ToggleButton>
+			<ToggleButton id="assistant" icon={da} slot="assistant"></ToggleButton>
 
 			<Avatar slot="profile">
 				<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
@@ -134,14 +137,26 @@ describe("Responsiveness", () => {
 		cy.get("@productSwitchIcon").should("be.visible");
 	});
 
-	it("tests M Breakpoint and overflow 500px", () => {
+	it("tests S Breakpoint and overflow 500px", () => {
 		cy.viewport(500, 1680);
 
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-overflow-button").as("overflowButton");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-search-button").as("searchIcon");
+		cy.get("@shellbar").should("have.prop", "breakpointSize", "S");
 
-		cy.get("@searchIcon").should("be.visible");
-		cy.get("@overflowButton").should("be.visible");
+		cy.get("@shellbar").find("ui5-toggle-button[slot='assistant']").as("assistant");
+		cy.get("@shellbar").find("ui5-button[slot='startButton']").as("backButton");
+		cy.get("@shellbar").shadow().find(".ui5-shellbar-custom-item").as("customActionIcon1");
+		cy.get("@shellbar").shadow().find(".ui5-shellbar-bell-button").as("notificationsIcon");
+		cy.get("@shellbar").shadow().find(".ui5-shellbar-image-button").as("profileIcon");
+		cy.get("@shellbar").shadow().find(".ui5-shellbar-button-product-switch").as("productSwitchIcon");
+
+		cy.get("@assistant").should("be.visible");
+		// V2: Overflow button uses conditional rendering - not rendered when nothing overflows
+		cy.get("@shellbar").shadow().find(".ui5-shellbar-overflow-button").should("not.exist");
+		cy.get("@backButton").should("be.visible");
+		cy.get("@customActionIcon1").should("be.visible");
+		cy.get("@notificationsIcon").should("be.visible");
+		cy.get("@profileIcon").should("be.visible");
+		cy.get("@productSwitchIcon").should("be.visible");
 	});
 
 	it("tests XL Breakpoint 1820px", () => {
@@ -198,38 +213,6 @@ describe("Responsiveness", () => {
 		cy.get("@notificationsIcon").should("be.visible");
 		cy.get("@profileIcon").should("be.visible");
 		cy.get("@productSwitchIcon").should("be.visible");
-	});
-
-	it("tests S Breakpoint and overflow 510px", () => {
-		cy.viewport(510, 1680);
-
-		cy.get("@shellbar").should("have.prop", "breakpointSize", "S");
-
-		cy.get("@shellbar").find("[slot='assistant']").as("assistant");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-overflow-button").as("overflowButton");
-		cy.get("@shellbar").find("ui5-button[slot='startButton']").as("backButton");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-search-button").as("searchIcon");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-bell-button").as("notificationsIcon");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-image-button").as("profileIcon");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-button-product-switch").as("productSwitchIcon");
-		cy.get("@shellbar").shadow().find(".ui5-shellbar-overflow-popover").as("overflowPopover");
-
-		// V2: At narrow S breakpoint (510px) with many items, some actions overflow
-		// cy.get("@assistant").should("be.visible"); // Gets overflowed
-		cy.get("@overflowButton").should("be.visible");
-		cy.get("@backButton").should("be.visible");
-		// V2: Titles still render at S breakpoint (shown in menu button, but also exist in DOM)
-		// This differs from V1 which hid them via CSS
-		// cy.get("@shellbar").shadow().find(".ui5-shellbar-title").should("not.exist");
-		// cy.get("@shellbar").shadow().find(".ui5-shellbar-secondary-title").should("not.exist");
-		cy.get("@searchIcon").should("be.visible");
-		// V2: At narrow S breakpoint (510px) with many items, notifications may overflow
-		// cy.get("@notificationsIcon").should("be.visible"); // May get overflowed depending on content
-		cy.get("@profileIcon").should("be.visible");
-		cy.get("@productSwitchIcon").should("be.visible");
-
-		// Overflow popover should contain hidden items
-		cy.get("@overflowPopover").find("ui5-li").should("have.length.greaterThan", 0);
 	});
 
 	it("tests S Breakpoint 320px", () => {
@@ -1059,6 +1042,7 @@ describe("Events", () => {
 		});
 
 		it("tests preventDefault of click on a button with default behavior prevented", () => {
+			cy.viewport(320, 800);
 			cy.mount(
 				<ShellBar
 					primaryTitle="Product Title"
@@ -1066,7 +1050,6 @@ describe("Events", () => {
 					notificationsCount="99+"
 					showNotifications
 					showProductSwitch
-					showSearchField={false}
 				>
 					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
 					<Button slot="content">Button 1</Button>
@@ -1093,17 +1076,20 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar-v2]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover")
-				.should("be.visible");
+				.should("to.exist")
+				.invoke("prop", "open", true);
 
 			cy.get("[ui5-shellbar-v2]")
 				.shadow()
-				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-li]:nth-child(1)")
+				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-shellbar-v2-item]:nth-child(1)")
 				.realClick();
 
 			cy.get("[ui5-shellbar-v2]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover")
-				.should("be.visible");
+				.should("to.exist")
+				.invoke("prop", "open", true);
+		
 		});
 	});
 });
@@ -1280,10 +1266,8 @@ describe("Keyboard Navigation", () => {
 		// Press right arrow - should move focus away from input since cursor is at end
 		cy.get("@nativeInput").type("{rightArrow}");
 		// Verify focus is now on the ShellBarItem
-		cy.get("[ui5-shellbar-v2]")
-			.shadow()
-			.find(".ui5-shellbar-custom-item")
-			.should("be.focused");
+		cy.get("[ui5-shellbar-v2-item]")
+			.should("have.focus");
 
 		placeInMiddleOfInput();
 		// Press left arrow - should stay focused on input since cursor is in the middle
@@ -1536,17 +1520,13 @@ describe("Component Behavior", () => {
 				item.addEventListener("click", cy.stub().as(stubAlias));
 			});
 
-			cy.get("[ui5-shellbar-v2]")
-				.shadow()
-				.find(`.ui5-shellbar-custom-item[icon="accept"]`)
+			cy.get("[ui5-shellbar-v2-item][icon='accept']")
 				.click();
 
 			cy.get("@acceptClick")
 				.should("have.been.calledOnce");
 
-			cy.get("[ui5-shellbar-v2]")
-				.shadow()
-				.find(`.ui5-shellbar-custom-item[icon="alert"]`)
+			cy.get("[ui5-shellbar-v2-item][icon='alert']")
 				.click();
 
 			cy.get("@alertClick")

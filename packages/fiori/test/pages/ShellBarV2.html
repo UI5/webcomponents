@@ -15,20 +15,35 @@
 </head>
 
 <body style="background-color: var(--sapBackgroundColor);">
-	<ui5-shellbar-v2 id="shellbar-1">
-		<!-- <ui5-shellbar-branding slot="branding">
-			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" style="height: 2rem;" />
-			My Application
-		</ui5-shellbar-branding> -->
-		<ui5-shellbar-search slot="searchField" placeholder="Search..." collapsed></ui5-shellbar-search>
-		<!-- <ui5-button slot="content" data-hide-order="1">Action 1</ui5-button>
-		<ui5-button slot="content" data-hide-order="2">Action 2</ui5-button>
-		<ui5-button slot="content" data-hide-order="3">Action 3</ui5-button>
-		<ui5-button slot="content" data-hide-order="4">Action 4</ui5-button>
-		<ui5-button slot="content" data-hide-order="5">Action 5</ui5-button>
-		<ui5-shellbar-v2-item icon="favorite" text="Favorites"></ui5-shellbar-v2-item>
-		<ui5-shellbar-v2-item icon="activities" text="Activities"></ui5-shellbar-v2-item>
-		<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar> -->
+	<!-- <ShellBar
+	primaryTitle="Product Title"
+	secondaryTitle="Second title"
+	notificationsCount="99+"
+	showNotifications
+	showProductSwitch
+	showSearchField={false}
+>
+	<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+	<Button slot="content">Button 1</Button>
+	<Button slot="content">Button 2</Button>
+	<ToggleButton icon="sap-icon://da" slot="assistant" />
+	<Button icon="nav-back" slot="startButton" />
+	<ShellBarItem icon="disconnected" text="Disconnect" />
+	<ShellBarItem icon="incoming-call" text="Incoming Calls" />
+</ShellBar> -->
+
+
+
+
+	<ui5-shellbar-v2 id="shellbar-1" primary-title="Product Title" secondary-title="Second title"
+		notifications-count="99+" show-notifications show-product-switch show-search-field={false}>
+		<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+		<ui5-button slot="content">ui5-button 1</ui5-button>
+		<ui5-button slot="content">ui5-button 2</ui5-button>
+		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
+		<ui5-button icon="nav-back" slot="startButton"></ui5-button>
+		<ui5-shellbar-v2-item icon="disconnected" text="Disconnect"></ui5-shellbar-v2-item>
+		<ui5-shellbar-v2-item icon="incoming-call" text="Incoming Calls"></ui5-shellbar-v2-item>
 	</ui5-shellbar-v2>
 </body>
 

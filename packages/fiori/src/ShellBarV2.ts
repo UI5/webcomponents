@@ -61,6 +61,7 @@ import {
 	SHELLBAR_PRODUCTS,
 	SHELLBAR_SEARCH,
 	SHELLBAR_OVERFLOW,
+	SHELLBAR_ASSISTANT,
 	SHELLBAR_ADDITIONAL_CONTEXT,
 	SHELLBAR_NOTIFICATIONS_NO_COUNT,
 } from "./generated/i18n/i18n-defaults.js";
@@ -73,7 +74,7 @@ const ShellBarV2Actions = {
 	Overflow: "overflow",
 	Assistant: "assistant",
 	Notifications: "notifications",
-	ProductSwitch: "product-switch",
+	ProductSwitch: "products",
 } as const;
 
 type ShellBarV2ActionId = typeof ShellBarV2Actions[keyof typeof ShellBarV2Actions];
@@ -93,9 +94,7 @@ interface IShellBarSearchField extends HTMLElement {
 	open?: boolean;
 }
 
-/* =============================================================================
-Event Types
-================================================================================ */
+// Event Types
 
 type ShellBarV2NotificationsClickEventDetail = {
 	targetRef: HTMLElement;
@@ -126,9 +125,7 @@ type ShellBarV2ContentItemVisibilityChangeEventDetail = {
 	items: Array<HTMLElement>;
 };
 
-/* =============================================================================
-Legacy Event Types (DELETE WHEN REMOVING LEGACY)
-================================================================================ */
+// Legacy Event Types (DELETE WHEN REMOVING LEGACY)
 
 type ShellBarV2LogoClickEventDetail = {
 	targetRef: HTMLElement;
@@ -233,9 +230,7 @@ type ShellBarV2MenuItemClickEventDetail = {
 @event("content-item-visibility-change", {
 	bubbles: true,
 })
-/* =============================================================================
-Legacy Events (DELETE WHEN REMOVING LEGACY)
-================================================================================ */
+// Legacy Events (DELETE WHEN REMOVING LEGACY)
 /**
  * Fired when the logo is clicked.
  * @param {HTMLElement} targetRef dom ref of the logo element
@@ -475,8 +470,8 @@ class ShellBarV2 extends UI5Element {
 		getDomRef: () => this.getDomRef() || null,
 	});
 
-	overflowAdaptor = new ShellBarV2Overflow();
-	accessibilityAdaptor = new ShellBarV2Accessibility();
+	overflow = new ShellBarV2Overflow();
+	accessibility = new ShellBarV2Accessibility();
 
 	private _searchAdaptor = new ShellBarV2Search(this.getSearchDeps());
 	private _searchAdaptorLegacy = new ShellBarV2SearchLegacy({
@@ -484,9 +479,7 @@ class ShellBarV2 extends UI5Element {
 		getDisableSearchCollapse: () => this.disableSearchCollapse,
 	});
 
-	/* =========================================================================
-	Legacy Members
-	============================================================================ */
+	// Legacy Members
 
 	/**
 	 * Defines the logo slot (legacy).
@@ -550,9 +543,7 @@ class ShellBarV2 extends UI5Element {
 
 	legacyAdaptor?: ShellBarV2Legacy;
 
-	/* =========================================================================
-	Lifecycle Methods
-	============================================================================ */
+	// Lifecycle Methods
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this.handleResizeBound);
@@ -586,13 +577,8 @@ class ShellBarV2 extends UI5Element {
 		this.updateOverflow();
 	}
 
-	/* =========================================================================
-	Actions Management
-	============================================================================ */
+	// Actions Management
 
-	/**
-	 * Updates actions array based on current state.
-	 */
 	private buildActions() {
 		this.actions = [
 			{
@@ -637,60 +623,47 @@ class ShellBarV2 extends UI5Element {
 		return this.actions.find(action => action.id === actionId);
 	}
 
-	getActionText(actionId: ShellBarV2ActionId): string {
+	getActionOverflowText(actionId: ShellBarV2ActionId): string {
 		const texts: Record<string, string> = {
 			[ShellBarV2Actions.Search]: this.texts.search,
 			[ShellBarV2Actions.Profile]: this.texts.profile,
 			[ShellBarV2Actions.Overflow]: this.texts.overflow,
-			[ShellBarV2Actions.Assistant]: "Assistant",
+			[ShellBarV2Actions.Assistant]: this.texts.assistant,
 			[ShellBarV2Actions.Notifications]: this.texts.notificationsNoCount,
 			[ShellBarV2Actions.ProductSwitch]: this.texts.products,
 		};
 		return texts[actionId] || actionId;
 	}
 
-	/* =========================================================================
-	Breakpoint Management
-	============================================================================ */
+	// Breakpoint Management
 
 	get isSBreakPoint() {
 		return this.breakpointSize === "S";
 	}
 
-	private calculateBreakpoint(width: number): ShellBarV2Breakpoint {
-		const bp = this.breakpoints.find(b => width <= b) || 10000;
-		return this.breakpointMap[bp];
-	}
-
 	private updateBreakpoint() {
 		const width = this.getBoundingClientRect().width;
-		const breakpoint = this.calculateBreakpoint(width);
+		const bp = this.breakpoints.find(b => width <= b) || 10000;
+		const breakpoint = this.breakpointMap[bp];
 
 		if (this.breakpointSize !== breakpoint) {
 			this.breakpointSize = breakpoint;
 		}
 	}
 
-	/* =========================================================================
-	Overflow Management
-	============================================================================ */
+	// Overflow Management
 
-	/**
-	 * Updates overflow by delegating to controller.
-	 * Controller measures DOM, hides items iteratively, returns result.
-	 * Triggers rerender via property update to enable conditional rendering.
-	 */
 	private updateOverflow() {
-		if (!this.overflowAdaptor) {
+		if (!this.overflow) {
 			return;
 		}
 
-		const result = this.overflowAdaptor.updateOverflow({
+		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.content,
 			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
-			showSearchField: this.showSearchField,
+			showSearchField: this.enabledFeatures.search && this.showSearchField,
 			overflowOuter: this.overflowOuter!,
 			overflowInner: this.overflowInner!,
 			setVisible: (selector: string, visible: boolean) => {
@@ -727,13 +700,9 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	private handleContentVisibilityChanged(oldHiddenItemsIds: string[], newHiddenItemsIds: string[]) {
-		// Compare with previous state
-		const oldHiddenContentIds = oldHiddenItemsIds
-			.filter(id => this.content
-				.some(item => (item as any)._individualSlot as string === id));
-		const newHiddenContentIds = newHiddenItemsIds
-			.filter(id => this.content
-				.some(item => (item as any)._individualSlot as string === id));
+		const filterContentIds = (ids: string[]) => ids.filter(id => this.content.some(item => (item as any)._individualSlot as string === id));
+		const oldHiddenContentIds = filterContentIds(oldHiddenItemsIds);
+		const newHiddenContentIds = filterContentIds(newHiddenItemsIds);
 
 		if (!arraysAreEqual(oldHiddenContentIds, newHiddenContentIds)) {
 			this.fireDecoratorEvent("content-item-visibility-change", {
@@ -770,7 +739,7 @@ class ShellBarV2 extends UI5Element {
 		const target = e.target as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
 
-		let prevented = false;
+		let prevented = e.defaultPrevented; // for custom actions
 
 		if (actionId === ShellBarV2Actions.Notifications) {
 			prevented = this.handleNotificationsClick();
@@ -784,7 +753,7 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	get overflowItems() {
-		return this.overflowAdaptor.getOverflowItems({
+		return this.overflow.getOverflowItems({
 			actions: this.actions,
 			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
@@ -796,37 +765,17 @@ class ShellBarV2 extends UI5Element {
 	 * Shows count if only one item with count is overflowed, otherwise shows attention dot.
 	 */
 	get overflowBadge(): string | undefined {
-		const overflowItems = this.overflowAdaptor.getOverflowItems({
-			actions: this.actions,
-			customItems: this.items,
-			hiddenItemsIds: this.hiddenItemsIds,
-		});
-
-		const itemsWithCount = overflowItems.filter(item => {
-			if (item.type === "action") {
-				return item.data.count;
-			}
-			return item.data.count;
-		});
-
+		const itemsWithCount = this.overflowItems.filter(item => item.data.count);
 		if (itemsWithCount.length === 1) {
-			const item = itemsWithCount[0];
-			if (item.type === "action") {
-				return item.data.count;
-			}
-			return item.data.count;
+			return itemsWithCount[0].data.count;
 		}
-
 		if (itemsWithCount.length > 1) {
 			return " "; // Attention dot
 		}
-
 		return undefined;
 	}
 
-	/* =========================================================================
-	Search Management
-	============================================================================ */
+	// Search Management
 
 	get search() {
 		return this.searchField.length ? this.searchField[0] : null;
@@ -843,10 +792,10 @@ class ShellBarV2 extends UI5Element {
 	private getSearchDeps() {
 		return {
 			getSearchField: () => this.search,
-			getSearchState: () => this.showSearchField,
+			getSearchState: () => this.enabledFeatures.search && this.showSearchField,
 			getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
 			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
-			getOverflowed: () => this.overflowAdaptor.isOverflowing(this.overflowOuter!, this.overflowInner!),
+			getOverflowed: () => this.overflow.isOverflowing(this.overflowOuter!, this.overflowInner!),
 		};
 	}
 
@@ -884,10 +833,6 @@ class ShellBarV2 extends UI5Element {
 		return defaultPrevented;
 	}
 
-	/**
-	 * Use this method to change the state of the search filed according to internal logic.
-	 * An event is fired to notify the change.
-	 */
 	async setSearchState(expanded: boolean) {
 		if (expanded === this.showSearchField) {
 			return;
@@ -915,13 +860,8 @@ class ShellBarV2 extends UI5Element {
 		}
 	}
 
-	/* =========================================================================
-	Legacy Features Management
-	============================================================================ */
+	// Legacy Features Management
 
-	/**
-	 * Initialize the legacy controller if legacy features are used.
-	 */
 	private initLegacyController() {
 		if (this.hasLegacyFeatures) {
 			this.legacyAdaptor = new ShellBarV2Legacy({
@@ -938,17 +878,13 @@ class ShellBarV2 extends UI5Element {
 			|| this.menuItems.length > 0;
 	}
 
-	/* =========================================================================
-	Keyboard Navigation
-	============================================================================ */
+	// Keyboard Navigation
 
 	_onKeyDown(e: KeyboardEvent) {
 		this.itemNavigation.handleKeyDown(e);
 	}
 
-	/* =========================================================================
-	Content Management
-	============================================================================ */
+	// Content Management
 
 	get startContent(): HTMLElement[] {
 		return this.splitContent(this.content).start;
@@ -971,16 +907,6 @@ class ShellBarV2 extends UI5Element {
 		};
 	}
 
-	/**
-	 * Splits content into start and end groups based on spacer element.
-	 * Items before spacer = start (left-aligned)
-	 * Items after spacer = end (right-aligned)
-	 * Without spacer, all items are start content.
-	 *
-	 * Spacer can be detected by:
-	 * - Component: <ui5-shellbar-spacer slot="content">
-	 * - Attribute: <div slot="content" ui5-shellbar-spacer>
-	 */
 	splitContent(content: readonly HTMLElement[]) {
 		const spacerIndex = content.findIndex(
 			child => child.hasAttribute("ui5-shellbar-spacer"),
@@ -996,11 +922,6 @@ class ShellBarV2 extends UI5Element {
 		};
 	}
 
-	/**
-	 * Returns packed separator info for a content item.
-	 * If the item is hidden and it is the last item in the group, the separator should be packed with the item.
-	 * This is to ensure that the separator size is going to be accounted for in the overflow measurement.
-	 */
 	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
 		const group = isStartGroup ? this.startContent : this.endContent;
 		if (this.isSBreakPoint) {
@@ -1013,67 +934,26 @@ class ShellBarV2 extends UI5Element {
 		return { shouldPack: isHidden && isLastItem };
 	}
 
-	/* =========================================================================
-	Accessibility
-	============================================================================ */
+	// Accessibility
 
-	/**
-	 * Returns accessibility info for all interactive areas.
-	 * Used by template for aria attributes.
-	 */
-	get accInfo(): ShellBarV2AccessibilityInfo {
-		return this.accessibilityAdaptor.getAccessibilityInfo({
-			searchText: this.texts.search,
-			profileText: this.texts.profile,
-			productsText: this.texts.products,
-			overflowText: this.texts.overflow,
-			notificationsText: this.texts.notificationsNoCount,
+	get actionsAccessibilityInfo(): ShellBarV2AccessibilityInfo {
+		return this.accessibility.getActionsAccessibilityInfo(this.texts, {
 			overflowPopoverOpen: this.overflowPopoverOpen,
 			accessibilityAttributes: this.accessibilityAttributes,
 		});
 	}
 
-	/**
-	 * Returns toolbar role for actions area based on visible items count.
-	 */
 	get actionsRole(): "toolbar" | undefined {
 		const visibleCount = this.actions.filter(a => !this.hiddenItemsIds.includes(a.id)).length;
-		return this.accessibilityAdaptor.getActionsRole(visibleCount);
+		return this.accessibility.getActionsRole(visibleCount);
 	}
 
-	/**
-	 * Returns group role for content area based on visible items count.
-	 */
 	get contentRole(): "group" | undefined {
 		const visibleItemsCount = this.content.filter(item => !this.hiddenItemsIds.includes((item as any)._individualSlot as string)).length;
-		return this.accessibilityAdaptor.getContentRole(visibleItemsCount);
+		return this.accessibility.getContentRole(visibleItemsCount);
 	}
 
-	// i18n text getters
-
-	get texts() {
-		return {
-			search: ShellBarV2.i18nBundle.getText(SHELLBAR_SEARCH),
-			profile: ShellBarV2.i18nBundle.getText(SHELLBAR_PROFILE),
-			shellbar: ShellBarV2.i18nBundle.getText(SHELLBAR_LABEL),
-			products: ShellBarV2.i18nBundle.getText(SHELLBAR_PRODUCTS),
-			overflow: ShellBarV2.i18nBundle.getText(SHELLBAR_OVERFLOW),
-			notifications: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0),
-			notificationsNoCount: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT),
-			contentItems: this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined,
-		};
-	}
-
-	/**
-	 * Used by overflow popover and legacy menu popover.
-	 */
-	get popoverHorizontalAlign(): "Start" | "End" {
-		return this.effectiveDir === "rtl" ? "Start" : "End";
-	}
-
-	/* =========================================================================
-	Common Methods
-	============================================================================ */
+	// Common Members
 
 	get enabledFeatures() {
 		return {
@@ -1087,6 +967,24 @@ class ShellBarV2 extends UI5Element {
 			notifications: this.showNotifications,
 			productSwitch: this.showProductSwitch,
 		};
+	}
+
+	get texts() {
+		return {
+			search: ShellBarV2.i18nBundle.getText(SHELLBAR_SEARCH),
+			profile: ShellBarV2.i18nBundle.getText(SHELLBAR_PROFILE),
+			shellbar: ShellBarV2.i18nBundle.getText(SHELLBAR_LABEL),
+			products: ShellBarV2.i18nBundle.getText(SHELLBAR_PRODUCTS),
+			overflow: ShellBarV2.i18nBundle.getText(SHELLBAR_OVERFLOW),
+			assistant: ShellBarV2.i18nBundle.getText(SHELLBAR_ASSISTANT),
+			notifications: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS, this.notificationsCount || 0),
+			notificationsNoCount: ShellBarV2.i18nBundle.getText(SHELLBAR_NOTIFICATIONS_NO_COUNT),
+			contentItems: this.content.length > 1 ? ShellBarV2.i18nBundle.getText(SHELLBAR_ADDITIONAL_CONTEXT) : undefined,
+		};
+	}
+
+	get popoverHorizontalAlign(): "Start" | "End" {
+		return this.effectiveDir === "rtl" ? "Start" : "End";
 	}
 
 	/**
@@ -1148,28 +1046,20 @@ class ShellBarV2 extends UI5Element {
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="toggle-search"]`);
 	}
 
+	private _fireClickEvent(eventName: string, domRef: HTMLElement | null): boolean {
+		return domRef ? !this.fireDecoratorEvent(eventName as any, { targetRef: domRef }) : false;
+	}
+
 	handleNotificationsClick() {
-		const notificationsBtn = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-bell-button");
-		if (notificationsBtn) {
-			return !this.fireDecoratorEvent("notifications-click", { targetRef: notificationsBtn });
-		}
-		return false;
+		return this._fireClickEvent("notifications-click", this.notificationsDomRef);
 	}
 
 	handleProfileClick() {
-		const profileBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-image-button");
-		if (profileBtn) {
-			return !this.fireDecoratorEvent("profile-click", { targetRef: profileBtn });
-		}
-		return false;
+		return this._fireClickEvent("profile-click", this.profileDomRef);
 	}
 
 	handleProductSwitchClick() {
-		const productSwitchBtn = this.shadowRoot!.querySelector<HTMLElement>(".ui5-shellbar-button-product-switch");
-		if (productSwitchBtn) {
-			return !this.fireDecoratorEvent("product-switch-click", { targetRef: productSwitchBtn });
-		}
-		return false;
+		return this._fireClickEvent("product-switch-click", this.productSwitchDomRef);
 	}
 
 	getCSSVariable(cssVar: string): string {

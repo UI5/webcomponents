@@ -42,10 +42,9 @@ function ShellBarV2SearchButton(this: ShellBarV2) {
 					icon={searchAction?.icon}
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}
-					tooltip={this.getActionText("search")}
-					aria-label={this.getActionText("search")}
+					tooltip={this.actionsAccessibilityInfo.search.title}
 					aria-expanded={this.showSearchField}
-					accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
+					accessibilityAttributes={this.actionsAccessibilityInfo.search.accessibilityAttributes}
 				/>
 			)}
 		</>

@@ -24,6 +24,7 @@ export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
 			design="Transparent"
 			accessibleName={this.text}
 			accessibilityAttributes={this.accessibilityAttributes}
+			onClick={this.fireClickEvent}
 		>
 			{this.count && (
 				<ButtonBadge slot="badge" design="OverlayText" text={this.count} />
