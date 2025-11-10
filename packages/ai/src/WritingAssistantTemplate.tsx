@@ -18,7 +18,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 		>
 			{isMultiResults && !this.loading && (
 				<Versioning
-					currentStep={this.currentVersion + 1}
+					currentStep={this.currentVersion}
 					totalSteps={this.totalVersions}
 					onVersion-change={this.handleVersionChange}
 				/>

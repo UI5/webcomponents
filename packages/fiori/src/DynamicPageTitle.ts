@@ -276,6 +276,10 @@ class DynamicPageTitle extends UI5Element {
 	}
 
 	get _ariaLabelledBy() {
+		if (!this.interactive) {
+			return undefined;
+		}
+
 		const hasAnyHeading = this[this.headingSlotName].length;
 		if (hasAnyHeading) {
 			return `${this._id}-heading`;
