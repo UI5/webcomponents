@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>AI TextArea - Demo</title>
+	<meta name="description" content="AI-powered textarea component demonstration">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		:root {
+			--demo-spacing: 1rem;
+			--demo-max-width: 800px;
+		}
+
+		body {
+			font-family: var(--sapFontFamily, 'Helvetica Neue', Arial, sans-serif);
+			background-color: var(--sapBackgroundColor, #ffffff);
+			margin: 0;
+			padding: var(--demo-spacing);
+		}
+
+		.demo-container {
+			max-width: var(--demo-max-width);
+			margin: 0 auto;
+		}
+
+		.demo-title {
+			font-size: 1.5rem;
+			margin-bottom: var(--demo-spacing);
+			color: var(--sapTextColor);
+		}
+
+		ui5-ai-textarea {
+			width: 100%;
+			margin-bottom: var(--demo-spacing);
+		}
+
+		.demo-controls {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: var(--demo-spacing);
+			flex-wrap: wrap;
+		}
+
+		.demo-info {
+			background: var(--sapInfoBackground);
+			border: 1px solid var(--sapInfoBorderColor);
+			border-radius: 0.25rem;
+			padding: 0.75rem;
+			margin-top: var(--demo-spacing);
+			font-size: 0.875rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="demo-container">
+		<h1 class="demo-title">AI TextArea Component</h1>
+
+		<ui5-ai-textarea
+			id="ai-textarea"
+			value="Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
+			action-text=""
+			current-version-index="1"
+			total-versions="1"
+			rows="8"
+			placeholder="Write your content here...">
+
+			<ui5-menu slot="menu" id="ai-menu" data-completed-label="Generation complete">
+				<ui5-menu-item text="Generate text" data-action="generate"></ui5-menu-item>
+				<ui5-menu-item text="Simplify" data-action="simplify" starts-section></ui5-menu-item>
+				<ui5-menu-item text="Expand" data-action="expand"></ui5-menu-item>
+				<ui5-menu-item text="Rephrase" data-action="rephrase"></ui5-menu-item>
+				<ui5-menu-item text="Summarize" data-action="summarize"></ui5-menu-item>
+				<ui5-menu-item text="Make bullet list" data-action="bullets" starts-section></ui5-menu-item>
+				<ui5-menu-item text="Translate to German" data-action="translate-de"></ui5-menu-item>
+			</ui5-menu>
+		</ui5-ai-textarea>
+
+		<div class="demo-controls">
+			<ui5-button id="reset-btn" design="Outlined">Reset</ui5-button>
+			<ui5-button id="readonly-toggle" design="Outlined">Toggle Readonly</ui5-button>
+			<ui5-button id="disabled-toggle" design="Outlined">Toggle Disabled</ui5-button>
+		</div>
+
+		<div class="demo-info">
+			<strong>AI TextArea Features:</strong><br>
+			• Click the AI button (⚡) to open the action menu<br>
+			• During generation, the AI button becomes a stop button (⏹)<br>
+			• Click stop button or press Escape to cancel generation<br>
+			• Version navigation appears when multiple versions exist<br><br>
+			
+			<strong>Keyboard Shortcuts:</strong><br>
+			• Shift + F4: Focus AI button<br>
+			• Ctrl + Shift + Z: Previous version (when multiple versions exist)<br>
+			• Ctrl + Shift + Y: Next version (when multiple versions exist)<br>
+			• Escape: Stop generation (during loading)<br><br>
+			
+			<strong>Generation Behavior:</strong><br>
+			• Selecting a new action while generating will stop current generation<br>
+			• Stopped generations are saved as versions with "(stopped)" suffix<br>
+			• History is limited to 50 versions to prevent memory issues
+		</div>
+	</div>
+
+	<script>
+		'use strict';
+
+		// Sample texts for different actions
+		const SAMPLE_TEXTS = {
+			generate: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
+			simplify: "Innovation managers use creativity and business skills to promote innovation and create value for organizations and customers.",
+			expand: "Innovation managers play a pivotal role in modern organizations by seamlessly blending creative thinking with strategic business acumen. They are responsible not only for generating innovative ideas but also for fostering a comprehensive culture that encourages experimentation, collaboration, and out-of-the-box thinking among all team members. These professionals work diligently to identify opportunities for improvement, anticipate emerging market trends, and develop solutions that align perfectly with both organizational goals and evolving customer needs.",
+			rephrase: "Innovation managers leverage creativity and business expertise to foster a culture of innovation, simplify the process of implementing new ideas, and create value for both the organization and its customers.",
+			summarize: "Innovation managers blend creativity and business skills to foster innovation and create value.",
+			bullets: "Innovation managers:\n• Operate with creativity and business acumen\n• Drive innovation-friendly culture initiatives\n• Streamline new idea execution\n• Unlock organizational and customer value",
+			"translate-de": "Innovationsmanager arbeiten sowohl mit Kreativität als auch mit Geschäftssinn und treiben Initiativen voran, die eine innovationsfreundliche Kultur fördern."
+		};
+
+		const CONFIG = {
+			GENERATION_DELAY: 2000, // Milliseconds to simulate AI processing time
+			TYPING_SPEED: 25, // Milliseconds between each character during typing animation
+			VERSION_INDEX_BASE: 1, // 1-based indexing for version numbers
+			MAX_HISTORY: 50 // Maximum number of versions to keep in history
+		};
+
+		let currentVersions = [];
+		let currentVersionIndex = 0;
+		let isGenerating = false;
+		let currentGenerationId = 0; // Used to cancel stale generation runs
+		let currentActionInProgress = null;
+		let typingInterval = null;
+
+		const textarea = document.getElementById('ai-textarea');
+		const menu = document.getElementById('ai-menu');
+		const resetBtn = document.getElementById('reset-btn');
+		const readonlyToggle = document.getElementById('readonly-toggle');
+		const disabledToggle = document.getElementById('disabled-toggle');
+
+		function delay(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		function typeText(text, callback) {
+			let index = 0;
+			textarea.value = '';
+			
+			typingInterval = setInterval(() => {
+				if (index < text.length) {
+					textarea.value += text[index];
+					index++;
+				} else {
+					clearInterval(typingInterval);
+					typingInterval = null;
+					callback();
+				}
+			}, CONFIG.TYPING_SPEED);
+		}
+
+		function stopTyping() {
+			if (typingInterval) {
+				clearInterval(typingInterval);
+				typingInterval = null;
+			}
+		}
+
+		function updateVersionState() {
+			textarea.currentVersionIndex = currentVersionIndex + 1;
+			textarea.totalVersions = currentVersions.length;
+			
+			if (currentVersions.length > 0) {
+				textarea.actionText = currentVersions[currentVersionIndex].actionText;
+			}
+		}
+
+		async function simulateAIGeneration(action) {
+			if (isGenerating) {
+				// If already generating, stop the current generation
+				stopGeneration();
+				return;
+			}
+			
+			if (!action || !SAMPLE_TEXTS.hasOwnProperty(action)) {
+				console.warn('Invalid action provided:', action);
+				return;
+			}
+
+			isGenerating = true;
+			currentActionInProgress = action;
+			currentGenerationId++;
+			const generationIdForThisRun = currentGenerationId;
+			
+			const actionText = getActionText(action);
+			
+			textarea.loading = true;
+			textarea.actionText = `${actionText}...`;
+
+			try {
+				await delay(CONFIG.GENERATION_DELAY);
+				
+				// Check if generation was cancelled while waiting
+				if (!isGenerating || generationIdForThisRun !== currentGenerationId) {
+					resetGenerationState();
+					return;
+				}
+				
+				const resultText = SAMPLE_TEXTS[action] || SAMPLE_TEXTS.generate;
+				
+				await new Promise(resolve => {
+					typeText(resultText, () => {
+						// Check again if generation was cancelled during typing
+						if (isGenerating && generationIdForThisRun === currentGenerationId) {
+							completeGeneration(action, actionText);
+						}
+						resolve();
+					});
+				});
+
+			} catch (error) {
+				resetGenerationState();
+				textarea.actionText = 'Generation failed';
+			}
+		}
+
+		function getActionText(action) {
+			const actionTexts = {
+				generate: 'Generated text',
+				simplify: 'Simplified text',
+				expand: 'Expanded text', 
+				rephrase: 'Rephrased text',
+				summarize: 'Summarized text',
+				bullets: 'Created bullet list',
+				'translate-de': 'Translated to German'
+			};
+			return actionTexts[action] || 'Generated text';
+		}
+
+		function resetGenerationState() {
+			stopTyping();
+			isGenerating = false;
+			currentActionInProgress = null;
+			textarea.loading = false;
+		}
+
+		function completeGeneration(action, actionText) {
+			currentVersions.push({
+				text: textarea.value,
+				action: action,
+				actionText: actionText,
+				timestamp: new Date().toISOString()
+			});
+			
+			// Limit history size
+			if (currentVersions.length > CONFIG.MAX_HISTORY) {
+				currentVersions.shift();
+				if (currentVersionIndex > 0) currentVersionIndex--;
+			}
+			
+			currentVersionIndex = currentVersions.length - 1;
+			resetGenerationState();
+			updateVersionState();
+		}
+
+		function stopGeneration() {
+			if (!isGenerating) return;
+
+			currentGenerationId++; // Cancel any ongoing generation
+			stopTyping();
+			
+			const action = currentActionInProgress || 'generate';
+			const actionText = getActionText(action);
+			
+			if (textarea.value.trim()) {
+				currentVersions.push({
+					text: textarea.value,
+					action: action,
+					actionText: actionText + ' (stopped)',
+					timestamp: new Date().toISOString()
+				});
+				currentVersionIndex = currentVersions.length - 1;
+				updateVersionState();
+			}
+			
+			resetGenerationState();
+		}
+
+		function handleMenuItemClick(event) {
+			const action = event.detail.item.dataset.action;
+			if (action) {
+				simulateAIGeneration(action);
+			}
+		}
+
+		// Handle AI button clicks from the WritingAssistant toolbar
+		function handleAIButtonClick() {
+			if (isGenerating) {
+				stopGeneration();
+			} else {
+				// If not generating, focus the menu to allow action selection
+				// This will be handled by the component's built-in functionality
+			}
+		}
+
+		function handleVersionChange(event) {
+			const { backwards } = event.detail;
+			
+			if (backwards && currentVersionIndex > 0) {
+				currentVersionIndex--;
+				if (currentVersions[currentVersionIndex]) {
+					textarea.value = currentVersions[currentVersionIndex].text;
+					updateVersionState();
+				}
+			} else if (!backwards && currentVersionIndex < currentVersions.length - 1) {
+				currentVersionIndex++;
+				if (currentVersions[currentVersionIndex]) {
+					textarea.value = currentVersions[currentVersionIndex].text;
+					updateVersionState();
+				}
+			}
+		}
+
+		function handleStopGeneration() {
+			stopGeneration();
+		}
+
+		function handleKeydown(event) {
+			if (event.key === 'Escape' && isGenerating) {
+				event.preventDefault();
+				stopGeneration();
+			}
+		}
+
+		function resetDemo() {
+			// Stop any ongoing generation
+			stopGeneration();
+			
+			// Reset all state
+			currentVersions = [];
+			currentVersionIndex = 0;
+			currentGenerationId = 0;
+			currentActionInProgress = null;
+			
+			// Reset component state
+			textarea.value = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.";
+			textarea.loading = false;
+			textarea.actionText = '';
+			textarea.currentVersionIndex = 1;
+			textarea.totalVersions = 1;
+		}
+
+		function toggleReadonly() {
+			textarea.readonly = !textarea.readonly;
+			readonlyToggle.textContent = textarea.readonly ? 'Enable Editing' : 'Toggle Readonly';
+		}
+
+		function toggleDisabled() {
+			textarea.disabled = !textarea.disabled;
+			disabledToggle.textContent = textarea.disabled ? 'Enable Component' : 'Toggle Disabled';
+		}
+
+		// Initialize demo
+		function initDemo() {
+			// Event listeners for menu actions
+			menu.addEventListener('item-click', handleMenuItemClick);
+			
+			// Event listeners for textarea component
+			textarea.addEventListener('version-change', handleVersionChange);
+			textarea.addEventListener('stop-generation', handleStopGeneration);
+			
+			// Global keyboard shortcuts
+			document.addEventListener('keydown', handleKeydown);
+			
+			// Prevent memory leaks on page unload
+			window.addEventListener('beforeunload', () => {
+				stopTyping();
+				resetGenerationState();
+			});
+			
+			// Demo control buttons
+			resetBtn.addEventListener('click', resetDemo);
+			readonlyToggle.addEventListener('click', toggleReadonly);
+			disabledToggle.addEventListener('click', toggleDisabled);
+		}
+
+		// Start demo when DOM is loaded
+		document.addEventListener('DOMContentLoaded', initDemo);
+	</script>
+</body>
+
+</html>

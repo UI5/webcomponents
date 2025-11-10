@@ -215,7 +215,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 									tooltip={item.tooltip}
 									data-ui5-notifications-count={this.notificationsCount}
 									data-ui5-external-action-item-id={item.refItemid}
-									data-ui5-stable={item.stableDomRef}
+									data-ui5-stable={item.icon && !this.isIconHidden(item.icon) ? item.stableDomRef : undefined}
 									onClick={item.press}
 									accessibilityAttributes={item.accessibilityAttributes}
 								>

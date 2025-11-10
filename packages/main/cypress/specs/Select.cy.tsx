@@ -443,6 +443,76 @@ describe("Select - Accessibility", () => {
 			.find("#accessibleDescription")
 			.should("have.text", "First description Updated second description Third description");
 	});
+
+	it("should not display tooltip when Select is not readonly", () => {
+		cy.mount(
+			<Select style="width: 50px">
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("should display user tooltip with precedence over the default tooltip", () => {
+		cy.mount(
+			<Select style="width: 50px" tooltip="Custom tooltip" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "Custom tooltip");
+	});
+
+	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option additionalText="AdditionalInfo" selected>VeryLongOptionText</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+	});
+
+	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+	});
+
+	it("should show the text and additionalText, separated by '-' when select is read-only", () => {
+		cy.mount(
+			<Select readonly>
+				<Option additionalText="ExtraInfo" selected>SelectedOption</Option>
+				<Option additionalText="OtherInfo">OtherOption</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "SelectedOption – ExtraInfo");
+	});
 });
 
 describe("Select - Popover", () => {
@@ -461,6 +531,63 @@ describe("Select - Popover", () => {
 			.should("be.visible")
 			.should("have.text", "Custom message");
 	});
+
+	it("ResponsivePopover should not have accessible name on desktop", () => {
+		cy.mount(
+			<Select id="desktopSelect">
+				<Option value="option1">Option 1</Option>
+				<Option value="option2">Option 2</Option>
+				<Option value="option3">Option 3</Option>
+			</Select>
+		);
+
+		// Open the popover
+		cy.get("#desktopSelect").realClick();
+
+		// Check that the ResponsivePopover does not have an accessible name on desktop
+		cy.get("#desktopSelect")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.have.attr", "accessible-name");
+	});
+
+	it("Value state message popover can extend beyond select width", () => {
+		cy.mount(
+			<Select valueState="Critical">
+				<Option>Short</Option>
+				<Option>Long</Option>
+				<div slot="valueStateMessage">
+					This is a very long value state message that should extend beyond the narrow select component width and not be constrained by it.
+				</div>
+			</Select>
+		);
+
+		// Trigger the value state popover by clicking and then pressing Escape
+		cy.get("[ui5-select]")
+			.realClick()
+			.realPress("Escape");
+
+		// Get the select width for comparison
+		cy.get("[ui5-select]")
+			.invoke("outerWidth")
+			.as("selectWidth");
+
+		// Find the standalone value state popover
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-valuestatemessage-popover")
+			.should("exist")
+			.as("valueStatePopover");
+
+		// Verify the popover width is greater than the select width
+		cy.get("@valueStatePopover")
+			.invoke("outerWidth")
+			.then((popoverWidth) => {
+				cy.get("@selectWidth").then((selectWidth) => {
+					expect(popoverWidth).to.be.greaterThan(Number(selectWidth));
+				});
+			});
+		});
 });
 
 describe("Select - Properties", () => {
@@ -488,6 +615,20 @@ describe("Select - Properties", () => {
 			</Select>);
 
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
+	});
+
+	it("Should show the selected two-column-separator when select is read-only", () => {
+		cy.mount(
+			<Select readonly two-column-separator="VerticalLine">
+				<Option additionalText="Additional1" selected>First</Option>
+				<Option additionalText="Additional2">Second</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", " | ");
 	});
 });
 

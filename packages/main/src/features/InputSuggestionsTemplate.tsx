@@ -1,7 +1,6 @@
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 import Input from "../Input.js";
 import Icon from "../Icon.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 
 import List from "../List.js";
 import ResponsivePopover from "../ResponsivePopover.js";
@@ -35,13 +34,6 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
 							<span>{this._headerTitleText}</span>
-							<Button
-								class="ui5-responsive-popover-close-btn"
-								icon={decline}
-								design="Transparent"
-								onClick={this._closePicker}
-							>
-							</Button>
 						</div>
 						<div class="row">
 							<div class="input-root-phone native-input-wrapper">
@@ -86,10 +78,17 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
 					<Button
-						design="Transparent"
+						design="Emphasized"
 						onClick={this._closePicker}
 					>
 						{this._suggestionsOkButtonText}
+					</Button>
+					<Button
+						class="ui5-responsive-popover-close-btn"
+						design="Transparent"
+						onClick={this._closePicker}
+					>
+						{this._suggestionsCancelButtonText}
 					</Button>
 				</div>
 			}

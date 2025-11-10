@@ -28,7 +28,6 @@ class TableNavigation extends TableExtension {
 		super();
 		this._table = table;
 		this._gridWalker = new GridWalker();
-		this._gridWalker.setGrid(this._getNavigationItemsOfGrid());
 		this._onKeyDownCaptureBound = this._onKeyDownCapture.bind(this);
 
 		// we register the keydown handler on the table element at the capturing phase since the

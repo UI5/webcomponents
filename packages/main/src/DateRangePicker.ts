@@ -311,6 +311,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const firstDateTimestamp = this._exctractDisplayTimestamp(values[0]);
 		const lastDateTimestamp = this._exctractDisplayTimestamp(values[1]);
 
+		if (!firstDateTimestamp || !lastDateTimestamp) {
+			return value;
+		}
+
 		if (firstDateTimestamp && lastDateTimestamp && firstDateTimestamp > lastDateTimestamp) { // if both are timestamps (not undefined), flip if necessary
 			return this._buildDisplayValue(lastDateTimestamp, firstDateTimestamp);
 		}
@@ -329,7 +333,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		firstDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[0]) as number) * 1000);
 		lastDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[1]) as number) * 1000);
 
-		if (!firstDateString && !lastDateString) {
+		if (!firstDateString || !lastDateString) {
 			return value;
 		}
 
@@ -518,6 +522,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	getDisplayValueFromValue(value: string): string {
+		if (this.isLiveUpdate) {
+			return value;
+		}
+
 		let firstDateString = "";
 		let lastDateString = "";
 

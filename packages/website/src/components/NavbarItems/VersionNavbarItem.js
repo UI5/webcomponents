@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import NavbarNavLink from "@theme/NavbarItem/NavbarNavLink";
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import NavbarItem from "@theme/NavbarItem";
 import packageJson from "../../../package.json";
 
@@ -23,6 +24,10 @@ function getVersion() {
             return "Nightly";
         }
 
+        if (location.pathname.includes("pr") ) {
+            return "Preview";
+        }
+
         return "v2";
     }
 }
@@ -41,6 +46,8 @@ function getLabel(version) {
 function VersionNavbarItemDesktop() {
     const [version, setVersion] = useState(getVersion());
     const [showDropdown, setShowDropdown] = useState(false);
+    const { siteConfig, siteMetadata } = useDocusaurusContext();
+    const showPreviewItem = siteConfig.customFields.ui5DeploymentType === "preview";
 
     return <div
         className={clsx('navbar__item', 'dropdown', 'dropdown--hoverable', 'dropdown--right', {
@@ -63,16 +70,24 @@ function VersionNavbarItemDesktop() {
             }}>
         </NavbarNavLink>
         <ul className="dropdown__menu">
+            { showPreviewItem && <NavbarItem
+                label="Preview 🔍"
+                isDropdownItem
+                target="_self"
+                href={`https://ui5.github.io/${siteConfig.customFields.ui5PreviewPath}`}
+                onClick={() => { setVersion("Preview") }}
+                className={clsx({ 'menu__link--active': version === "Preview" })}
+            />}
             <NavbarItem
-                label="Nightly 🚧"
+                label="Nightly 🌙"
                 isDropdownItem
                 target="_self"
                 href="https://ui5.github.io/webcomponents/nightly"
                 onClick={() => { setVersion("Nightly") }}
                 className={clsx({ 'menu__link--active': version === "Nightly" })}
             />
-             <NavbarItem
-                label="Version 2"
+            <NavbarItem
+                label="Version 2 💎"
                 isDropdownItem
                 target="_self"
                 href="https://ui5.github.io/webcomponents"
@@ -80,7 +95,7 @@ function VersionNavbarItemDesktop() {
                 className={clsx({ 'menu__link--active': version === "v2" })}
             />
             <NavbarItem
-                label="Version 1"
+                label="Version 1 (Legacy) ⚠️"
                 isDropdownItem
                 target="_self"
                 href="https://ui5.github.io/webcomponents/v1"

@@ -19,6 +19,7 @@ import StepInput from "../../src/StepInput.js";
 import Switch from "../../src/Switch.js";
 import TextArea from "../../src/TextArea.js";
 import TimePicker from "../../src/TimePicker.js";
+import Tokenizer from "../../src/Tokenizer.js";
 
 const getFormData = ($form: HTMLFormElement) => {
 	const formData = new FormData($form);
@@ -421,6 +422,57 @@ describe("Form support", () => {
 				return getFormData($el.get(0));
 			})
 			.should("be.equal", "multi_input5=&multi_input6=ok&multi_input7=&multi_input7=ok&multi_input8=ok&multi_input8=ok&multi_input9=ok&multi_input10=ok&multi_input11=&multi_input11=ok&multi_input12=ok&multi_input12=ok");
+	});
+
+	it("ui5-tokenizer in form", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags">
+					<Token text="Apple"></Token>
+					<Token text="Banana"></Token>
+				</Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "tags=Apple&tags=Banana");
+	});
+
+	it("ui5-tokenizer does not submit anything if no tokens", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags"></Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "");
 	});
 
 	it("ui5-radio-button in form 1", () => {

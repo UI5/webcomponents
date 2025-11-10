@@ -10,6 +10,7 @@ import TableExtension from "./TableExtension.js";
 import TableNavigation from "./TableNavigation.js";
 import TableOverflowMode from "./types/TableOverflowMode.js";
 import TableDragAndDrop from "./TableDragAndDrop.js";
+import TableCustomAnnouncement from "./TableCustomAnnouncement.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import {
 	findVerticalScrollContainer, scrollElementIntoView, isFeature, isValidColumnWidth,
@@ -409,6 +410,7 @@ class Table extends UI5Element {
 	_onResizeBound: ResizeObserverCallback;
 	_tableNavigation?: TableNavigation;
 	_tableDragAndDrop?: TableDragAndDrop;
+	_tableCustomAnnouncement?: TableCustomAnnouncement;
 	_poppedIn: Array<{col: TableHeaderCell, width: number}> = [];
 	_containerWidth = 0;
 
@@ -423,6 +425,7 @@ class Table extends UI5Element {
 		this.features.forEach(feature => feature.onTableActivate?.(this));
 		this._tableNavigation = new TableNavigation(this);
 		this._tableDragAndDrop = new TableDragAndDrop(this);
+		this._tableCustomAnnouncement = new TableCustomAnnouncement(this);
 	}
 
 	onExitDOM() {
@@ -473,7 +476,7 @@ class Table extends UI5Element {
 	_onEvent(e: Event) {
 		const composedPath = e.composedPath();
 		const eventOrigin = composedPath[0] as HTMLElement;
-		const elements = [this._tableNavigation, this._tableDragAndDrop, ...composedPath, ...this.features];
+		const elements = [this._tableCustomAnnouncement, this._tableNavigation, this._tableDragAndDrop, ...composedPath, ...this.features].filter(Boolean) as Array<ITableFeature | TableExtension | UI5Element>;
 		elements.forEach(element => {
 			if (element instanceof TableExtension || (element instanceof HTMLElement && element.localName.includes("ui5-table"))) {
 				const eventHandlerName = `_on${e.type}` as keyof typeof element;
@@ -680,6 +683,9 @@ class Table extends UI5Element {
 			ariaColCount++;
 		}
 		if (this.rowActionCount > 0) {
+			ariaColCount++;
+		}
+		if (this.headerRow[0]._popinCells.length > 0) {
 			ariaColCount++;
 		}
 

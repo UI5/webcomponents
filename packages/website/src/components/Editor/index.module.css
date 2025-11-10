@@ -64,9 +64,9 @@
 }
 
 .copy-status {
-	position: relative;
-	top: 2rem;
-	left: 100%;
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
 	font-size: 0.813rem;
 	font-weight: 700;
 	font-family: Arial;

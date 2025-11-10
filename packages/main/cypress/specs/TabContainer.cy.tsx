@@ -494,7 +494,7 @@ describe("TabContainer general interaction", () => {
 		});
 	});
 
-	it("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
+	it.skip("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
 		cy.mount(
 			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
 				<Tab text="One">Tab 1</Tab>

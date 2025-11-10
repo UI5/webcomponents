@@ -882,7 +882,8 @@ describe("ARIA attributes", () => {
 		cy.get("[ui5-dynamic-page-header]")
 			.shadow()
 			.find(".ui5-dynamic-page-header-root")
-			.should("have.attr", "role", "region");
+			.should("have.attr", "role", "region")
+			.should("have.attr", "aria-label", "Header Expanded");
 
 		cy.get("[ui5-dynamic-page-title]")
 			.shadow()
@@ -937,6 +938,11 @@ describe("ARIA attributes", () => {
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
 			.find(".ui5-dynamic-page-title-header-wrapper")
+			.should("have.attr", "aria-label", "Header Snapped");
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
 			.should("have.attr", "aria-label", "Header Snapped");
 
 		cy.get("[ui5-dynamic-page-title]")
@@ -1012,5 +1018,26 @@ describe("ARIA attributes", () => {
 			.shadow()
 			.find(".ui5-dynamic-page-header-action-pin")
 			.should("have.attr", "tooltip", "Pin Header");
+	});
+
+	it("should use default aria-label based on header state", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					Page content with enough height to enable scrolling
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
+			.should("have.attr", "aria-label", "Header Expanded");
 	});
 });

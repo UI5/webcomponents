@@ -6,6 +6,5 @@
 	--_ui5_card_header_border: none;
 	--_ui5_card_header_hover_bg: var(--sapTile_Hover_Background);
 	--_ui5_card_header_active_bg: var(--sapTile_Active_Background);
-	--_ui5_card_border-radius: var(--sapTile_BorderCornerRadius);
 	--_ui5_card_header_padding: 1rem 1rem 0.75rem 1rem;
 }

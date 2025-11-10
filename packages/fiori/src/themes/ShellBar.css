@@ -114,7 +114,6 @@ slot[name="profile"] {
 	height: 2rem;
 	min-width: 0;
 	min-height: 2rem;
-	pointer-events: none;
 	font-size: var(--_ui5_avatar_fontsize_XS);
 	font-weight: normal;
 }
@@ -221,7 +220,6 @@ slot[name="profile"] {
 .ui5-shellbar-logo {
 	overflow: hidden;
 	cursor: pointer;
-	max-height: 2rem;
 }
 
 .ui5-shellbar-logo-area {
@@ -241,6 +239,7 @@ slot[name="profile"] {
 .ui5-shellbar-logo:focus,
 .ui5-shellbar-logo-area:focus {
 	outline: var(--_ui5_shellbar_logo_outline);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
 	border-radius: var(--_ui5_shellbar_logo_border_radius);
 }
 

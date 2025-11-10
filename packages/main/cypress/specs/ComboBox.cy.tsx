@@ -2513,6 +2513,40 @@ describe("Event firing", () => {
 		}));
 	});
 
+	it("should NOT fire selection-change event when ComboBox items are set asynchronously after initial render", () => {
+		cy.mount(
+			<ComboBox id="async-combo" value="Bulgaria" loading>
+				{/* Items will be added asynchronously */}
+			</ComboBox>
+		);
+
+		cy.get("#async-combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.window().then(win => {
+			const combo = win.document.getElementById("async-combo");
+			const item1 = win.document.createElement("ui5-cb-item");
+			item1.setAttribute("text", "Argentina");
+			const item2 = win.document.createElement("ui5-cb-item");
+			item2.setAttribute("text", "Bulgaria");
+			combo?.appendChild(item1);
+			combo?.appendChild(item2);
+			(combo as any).loading = false;
+		});
+
+		cy.get("#async-combo").should("not.have.prop", "loading", true);
+
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+
+		cy.get("#async-combo").shadow().find("input").realClick();
+		cy.get("#async-combo").shadow().find("input").clear().realType("Argentina");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item.text === "Argentina";
+		}));
+	});
+
 	it("should check clear icon events", () => {
 		cy.mount(
 			<>

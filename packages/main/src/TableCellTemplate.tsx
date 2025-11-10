@@ -3,13 +3,15 @@ import type TableCell from "./TableCell.js";
 export default function TableCellTemplate(this: TableCell) {
 	return (
 		<>
-			{ this._popin &&
+			{ this._popin ?
 				<>
-					<div class="popin-header" ref={this.injectHeaderNodes.bind(this)}></div>
-					<span class="popin-colon">{this._i18nPopinColon}</span>
+					<div id="popin-header" ref={this._injectHeaderNodes.bind(this)}></div>
+					<span id="popin-colon" aria-hidden="true">{this._i18nPopinColon}</span>
+					<slot id="popin-content"></slot>
 				</>
+				:
+				<slot></slot>
 			}
-			<slot></slot>
 		</>
 	);
 }

@@ -49,19 +49,19 @@
 						   description="Account Manager">
 	</ui5-user-menu-account>
 	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="official-service" text="Legal Information">
+	<ui5-user-menu-item icon="globe" text="Account action" data-id="account-action1"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2">
 		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
 	</ui5-user-menu-item>
-	<ui5-user-menu-item icon="select" text="Multiple Select" data-id="multiple-select">
+	<ui5-user-menu-item icon="official-service" text="Legal Information"></ui5-user-menu-item>
+	<ui5-user-menu-item text="Multiple Select" data-id="multiple-select">
 		<ui5-user-menu-item-group check-mode="Multiple">
-			<ui5-user-menu-item icon="private" text="Item 1" data-id="multi-select-item1"></ui5-user-menu-item>
+			<ui5-user-menu-item text="Item 1" data-id="multi-select-item1"></ui5-user-menu-item>
 			<ui5-user-menu-item icon="accelerated" text="Item 2" data-id="multi-select-item2"></ui5-user-menu-item>
 		</ui5-user-menu-item-group>
 	</ui5-user-menu-item>
-	<ui5-user-menu-item icon="select" text="Single Select" data-id="single-select">
+	<ui5-user-menu-item text="Single Select" data-id="single-select">
 		<ui5-user-menu-item-group check-mode="Single">
 			<ui5-user-menu-item icon="private" text="Item 1" data-id="single-select"></ui5-user-menu-item>
 			<ui5-user-menu-item icon="accelerated" text="Item 2" data-id="single-select-item2"></ui5-user-menu-item>
@@ -82,10 +82,11 @@
 	</ui5-user-menu-account>
 	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
 	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="official-service" text="Legal Information">
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2">
 		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="official-service" text="Legal Information">
 	</ui5-user-menu-item>
 </ui5-user-menu>
 <ui5-title level="H5" class="header-title">Text Direction</ui5-title>
@@ -200,7 +201,7 @@
 	menuShellBar.addEventListener("ui5-check", function (event) {
 		console.log("Check event fired for item: " + event.target.text);
 		console.log("Checked state: " + event.target.checked);
-		console.log(event.target);	
+		console.log(event.target);
 	});
 
 	menuShellBar.addEventListener("avatar-click", function () {

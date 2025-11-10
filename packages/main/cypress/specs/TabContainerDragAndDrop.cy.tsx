@@ -151,7 +151,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 
 		cy.get("#tabContainer")
 			.should("have.attr", "media-range", "M");
-		
+
 		cy.get("#tabContainer")
 			.find(".ui5-tab-strip-item:not([start-overflow]):not([end-overflow])")
 			.should(($elements) => {
@@ -248,7 +248,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 				.then(($el) => {
 					const firstPopoverItem = $el[0];
 					const thirdPopoverItem = $el[2];
-			
+
 					cy.ui5TabContainerDragAndDrop(firstPopoverItem, "After", thirdPopoverItem, "Vertical");
 
 					verifyMoveOverEvent(firstPopoverItem.realTabReference.id, "After", thirdPopoverItem.realTabReference.id);
@@ -314,7 +314,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 				cy.get("#tabContainer")
 					.children().eq(0)
 					.should("have.id", "tabTwo")
-		
+
 				cy.get("#tabContainer")
 					.children().eq(1)
 					.should("have.id", "tabOne");
@@ -385,13 +385,57 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 					.should("have.id", "tabTwo");
 			});
 
+			it("Moving strip items by fast pressing arrow keys", () => {
+				cy.get("#tabContainer")
+					.shadow()
+					.find(".ui5-tab-strip-item")
+					.first()
+					.realClick()
+					.type('{ctrl}{rightarrow}{ctrl}{rightarrow}');
+
+				cy.get("#tabContainer")
+					.children().eq(0)
+					.should("have.id", "tabTwo")
+
+				cy.get("#tabContainer")
+					.children().eq(1)
+					.should("have.id", "tabOne");
+
+				tabShouldBeFocusedInStrip("tabOne", "tabContainer");
+				cy.realPress(["ControlLeft", "ArrowRight"]);
+
+				cy.get("#tabContainer")
+					.children().eq(1)
+					.should("have.id", "tabThree")
+
+				cy.get("#tabContainer")
+					.children().eq(2)
+					.should("have.id", "tabOne");
+
+				tabShouldBeFocusedInStrip("tabOne", "tabContainer");
+
+				cy.get("#tabContainer")
+					.shadow()
+					.find(".ui5-tab-strip-item")
+					.eq(2)
+					.type('{ctrl}{leftarrow}{ctrl}{leftarrow}');
+
+				cy.get("#tabContainer")
+					.children().eq(1)
+					.should("have.id", "tabOne");
+
+				cy.get("#tabContainer")
+					.children().eq(2)
+					.should("have.id", "tabThree");
+			});
+
 			it("Moving strip item beyond the end using 'Arrow Right'", () => {
 				cy.get("#tabContainer")
 					.shadow()
 					.find(".ui5-tab-strip-item")
 					.first()
 					.realClick()
-	
+
 				for (let i = 0; i < 20; i++) {
 					tabShouldBeFocusedInStrip("tabOne", "tabContainer");
 					cy.realPress(["ControlLeft", "ArrowRight"]);
@@ -419,12 +463,12 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 				cy.get<TabInStrip>("@lastTabInStrip")
 					.then(($lastTab) => {
 						const lastTabId = $lastTab[0].realTabReference.id;
-	
+
 						for (let i = 0; i < 20; i++) {
 							tabShouldBeFocusedInStrip(lastTabId, "tabContainer");
 							cy.realPress(["ControlLeft", "ArrowLeft"]);
 						}
-	
+
 						cy.get("#tabContainer")
 							.shadow()
 							.find<TabInStrip>(".ui5-tab-strip-item:not([start-overflow]):not([end-overflow])")
@@ -445,7 +489,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 				tabShouldBeFocusedInStrip("tabOne", "tabContainer");
 
 				cy.realPress(["ControlLeft", "End"]);
-	
+
 				cy.get("#tabContainer")
 					.shadow()
 					.find(".ui5-tab-strip-item:not([start-overflow]):not([end-overflow])")
@@ -561,7 +605,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 
 						tabShouldBeFocusedInPopover(firstItemId);
 						cy.realPress(["ControlLeft", "ArrowUp"]);
-							
+
 						cy.get(`#${firstItemId}`)
 							.next()
 							.should("have.id", secondItemId);
@@ -571,7 +615,7 @@ describe("TabContainer Drag and Drop Generic Tests", () => {
 			it("Moving overflow item with 'End'", () => {
 				cy.get("#tabContainer")
 					.ui5TabContainerOpenEndOverflow();
-	
+
 				cy.get("#tabContainer")
 					.shadow()
 					.find<TabInOverflow>(".ui5-tab-container-responsive-popover [ui5-li-custom]")
@@ -676,7 +720,7 @@ describe("TabContainer Drag and Drop when There are Fixed Tabs", () => {
 
 		cy.get("#tabContainer")
 			.should("have.attr", "media-range", "M");
-		
+
 		cy.get("#tabContainer")
 			.find(".ui5-tab-strip-item:not([start-overflow]):not([end-overflow])")
 			.should(($elements) => {

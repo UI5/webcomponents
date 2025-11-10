@@ -30,116 +30,124 @@ const globParent = require('glob-parent');
 
 /* CODE */
 
-const args = process.argv.slice(2);
-const options = {};
+const copyAndWatchFn = async (argv) => {
+	const args = argv.slice(2);
+	const options = {};
 
-['watch', 'clean', 'skip-initial-copy', 'safe',  'silent'].forEach(key => {
-	const index = args.indexOf(`--${key}`);
-	if (index >= 0) {
-		options[key] = true;
-		args.splice(index, 1);
-	}
-});
-
-if (args.length < 2) {
-	console.error('Not enough arguments: copy-and-watch [options] <sources> <target>'.red);
-	process.exit(1);
-}
-
-if (options['skip-initial-copy'] && !options['watch']) {
-	console.error('--skip-initial-copy argument is meant to be used with --watch, otherwise no files will be copied'.red);
-	process.exit(1);
-}
-
-const target = args.pop();
-const sources = args;
-const parents = [...new Set(sources.map(globParent))];
-
-const findTarget = from => {
-	const parent = parents
-		.filter(p => from.indexOf(p) >= 0)
-		.sort()
-		.reverse()[0];
-	return path.join(target, path.relative(parent, from));
-};
-const createDirIfNotExist = to => {
-	'use strict';
-
-	const dirs = [];
-	let dir = path.dirname(to);
-
-	while (dir !== path.dirname(dir)) {
-		dirs.unshift(dir);
-		dir = path.dirname(dir);
-	}
-
-	dirs.forEach(dir => {
-		if (!fs.existsSync(dir)) {
-			fs.mkdirSync(dir);
+	['watch', 'clean', 'skip-initial-copy', 'safe', 'silent'].forEach(key => {
+		const index = args.indexOf(`--${key}`);
+		if (index >= 0) {
+			options[key] = true;
+			args.splice(index, 1);
 		}
 	});
-};
-const copy = from => {
-	const to = findTarget(from);
-	createDirIfNotExist(to);
-	const stats = fs.statSync(from);
-	if (stats.isDirectory()) {
-		return;
+
+	if (args.length < 2) {
+		console.error('Not enough arguments: copy-and-watch [options] <sources> <target>');
+		process.exit(1);
 	}
-	fs.writeFileSync(to, fs.readFileSync(from));
-	options.silent || console.log('[COPY]'.yellow, from, 'to'.yellow, to);
-};
-const remove = from => {
-	const to = findTarget(from);
-	fs.unlinkSync(to);
-	options.silent || console.log('[DELETE]'.yellow, to);
-};
-const rimraf = dir => {
-	if (fs.existsSync(dir)) {
-		fs.readdirSync(dir).forEach(entry => {
-			const entryPath = path.join(dir, entry);
-			if (fs.lstatSync(entryPath).isDirectory()) {
-				rimraf(entryPath);
-			} else {
-				fs.unlinkSync(entryPath);
+
+	if (options['skip-initial-copy'] && !options['watch']) {
+		console.error('--skip-initial-copy argument is meant to be used with --watch, otherwise no files will be copied');
+		process.exit(1);
+	}
+
+	const target = args.pop();
+	const sources = args;
+	const parents = [...new Set(sources.map(globParent))];
+
+	const findTarget = from => {
+		const parent = parents
+			.filter(p => from.indexOf(p) >= 0)
+			.sort()
+			.reverse()[0];
+		return path.join(target, path.relative(parent, from));
+	};
+	const createDirIfNotExist = to => {
+		'use strict';
+
+		const dirs = [];
+		let dir = path.dirname(to);
+
+		while (dir !== path.dirname(dir)) {
+			dirs.unshift(dir);
+			dir = path.dirname(dir);
+		}
+
+		dirs.forEach(dir => {
+			if (!fs.existsSync(dir)) {
+				fs.mkdirSync(dir);
 			}
 		});
-		fs.rmdirSync(dir);
-	}
-};
-
-// clean
-if (options.clean) {
-	rimraf(target);
-}
-
-// initial copy
-if (!options['skip-initial-copy']) {
-	sources.forEach(s => glob.sync(s).forEach(copy));
-}
-
-// watch
-if (options.watch) {
-	const chokidarOptions = {
-		ignoreInitial: true
+	};
+	const copy = from => {
+		const to = findTarget(from);
+		createDirIfNotExist(to);
+		const stats = fs.statSync(from);
+		if (stats.isDirectory()) {
+			return;
+		}
+		fs.writeFileSync(to, fs.readFileSync(from));
+		options.silent || console.log('[COPY]', from, 'to', to);
+	};
+	const remove = from => {
+		const to = findTarget(from);
+		fs.unlinkSync(to);
+		options.silent || console.log('[DELETE]', to);
+	};
+	const rimraf = dir => {
+		if (fs.existsSync(dir)) {
+			fs.readdirSync(dir).forEach(entry => {
+				const entryPath = path.join(dir, entry);
+				if (fs.lstatSync(entryPath).isDirectory()) {
+					rimraf(entryPath);
+				} else {
+					fs.unlinkSync(entryPath);
+				}
+			});
+			fs.rmdirSync(dir);
+		}
 	};
 
-	if (options.safe) {
-		chokidarOptions.awaitWriteFinish = {
-			stabilityThreshold: 500,
-			pollInterval: 100
-		};
+	// clean
+	if (options.clean) {
+		rimraf(target);
 	}
 
-	chokidar
-		.watch(sources, chokidarOptions)
-		.on('ready', () => sources.forEach(s => {
-			options.silent || console.log('[WATCH]'.yellow, s);
-		}))
-		.on('add', copy)
-		.on('addDir', copy)
-		.on('change', copy)
-		.on('unlink', remove)
-		.on('unlinkDir', remove)
-		.on('error', e => console.log('[ERROR]'.red, e));
+	// initial copy
+	if (!options['skip-initial-copy']) {
+		sources.forEach(s => glob.sync(s).forEach(copy));
+	}
+
+	// watch
+	if (options.watch) {
+		const chokidarOptions = {
+			ignoreInitial: true
+		};
+
+		if (options.safe) {
+			chokidarOptions.awaitWriteFinish = {
+				stabilityThreshold: 500,
+				pollInterval: 100
+			};
+		}
+
+		chokidar
+			.watch(sources, chokidarOptions)
+			.on('ready', () => sources.forEach(s => {
+				options.silent || console.log('[WATCH]', s);
+			}))
+			.on('add', copy)
+			.on('addDir', copy)
+			.on('change', copy)
+			.on('unlink', remove)
+			.on('unlinkDir', remove)
+			.on('error', e => console.log('[ERROR]', e));
+	}
 }
+
+if (require.main === module) {
+	copyAndWatchFn(process.argv)
+}
+
+exports._ui5mainFn = copyAndWatchFn;

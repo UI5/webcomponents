@@ -1,7 +1,7 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { isSelectionCheckbox, isHeaderSelector, findRowInPath } from "./TableUtils.js";
+import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import { isUpShift } from "@ui5/webcomponents-base/dist/Keys.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
@@ -12,7 +12,7 @@ import {
 	TABLE_COLUMNHEADER_SELECTALL_CHECKED,
 	TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED,
 	TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION,
-	TABLE_COLUMNHEADER_CLEARALL_DISABLED,
+	TABLE_ACC_STATE_DISABLED,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -66,7 +66,6 @@ class TableSelectionMulti extends TableSelectionBase {
 	@property()
 	headerSelector: `${TableSelectionMultiHeaderSelector}` = "SelectAll";
 
-	private _rowsLength = 0;
 	private _rangeSelection?: {
 		selected: boolean,
 		isUp: boolean | null,
@@ -83,11 +82,7 @@ class TableSelectionMulti extends TableSelectionBase {
 	}
 
 	onTableBeforeRendering() {
-		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
-			this._rowsLength = this._table.rows.length;
-			this._table.headerRow[0]._invalidate++;
-		}
-
+		super.onTableBeforeRendering();
 		this._table?.removeEventListener("click", this._onClickCaptureBound);
 	}
 
@@ -186,14 +181,14 @@ class TableSelectionMulti extends TableSelectionBase {
 		}
 
 		let description = "";
-		const seperator = " . ";
+		const seperator = " ";
 		const i18nBundle = (this._table.constructor as typeof Table).i18nBundle;
 		if (this.headerSelector === "SelectAll") {
 			description = i18nBundle.getText(TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION);
 			description += seperator + i18nBundle.getText(this.areAllRowsSelected() ? TABLE_COLUMNHEADER_SELECTALL_CHECKED : TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED);
 		} else {
 			description = i18nBundle.getText(TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION);
-			description += this.getSelectedRows().length === 0 ? seperator + i18nBundle.getText(TABLE_COLUMNHEADER_CLEARALL_DISABLED) : "";
+			description += this.getSelectedRows().length === 0 ? seperator + i18nBundle.getText(TABLE_ACC_STATE_DISABLED) : "";
 		}
 		return description;
 	}
@@ -244,12 +239,12 @@ class TableSelectionMulti extends TableSelectionBase {
 			return;
 		}
 
-		if (isHeaderSelector(e)) {
+		if (isHeaderSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}
 
-		if (!isSelectionCheckbox(e)) {
+		if (!isSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}

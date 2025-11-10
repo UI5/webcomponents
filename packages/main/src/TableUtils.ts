@@ -5,12 +5,12 @@ const isInstanceOfTable = (obj: any): obj is Table => {
 	return !!obj && "isTable" in obj && !!obj.isTable;
 };
 
-const isSelectionCheckbox = (e: Event) => {
-	return e.composedPath().some((el: EventTarget) => (el as HTMLElement).hasAttribute?.("data-ui5-table-selection-component"));
+const isSelectionCell = (e: Event) => {
+	return e.composedPath().some((el: EventTarget) => (el as HTMLElement).hasAttribute?.("data-ui5-table-selection-cell"));
 };
 
-const isHeaderSelector = (e: Event) => {
-	return isSelectionCheckbox(e) && e.composedPath().some((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-header-row"));
+const isHeaderSelectionCell = (e: Event) => {
+	return isSelectionCell(e) && e.composedPath().some((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-header-row"));
 };
 
 const findRowInPath = (composedPath: Array<EventTarget>) => {
@@ -113,8 +113,8 @@ const isValidColumnWidth = (width: string | undefined): width is string => {
 
 export {
 	isInstanceOfTable,
-	isSelectionCheckbox,
-	isHeaderSelector,
+	isSelectionCell,
+	isHeaderSelectionCell,
 	findRowInPath,
 	findVerticalScrollContainer,
 	scrollElementIntoView,

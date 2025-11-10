@@ -58,23 +58,26 @@
 }
 
 .ui5-user-menu-selected-account-title {
+	text-align: center;
     margin-block: 0.25rem;
-    font-family: var(--sapFontBoldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
     font-size: var(--sapFontLargeSize);
-    color: var(--sapTextColor)
+    color: var(--sapTextColor);
 }
 
 .ui5-user-menu-selected-account-subtitleText {
+	text-align: center;
 	margin-bottom: 0.25rem;
     font-family: var(--sapFontFamily);
     font-size: var(--sapFontSize);
-    color: var(--sapContent_LabelColor)
+    color: var(--sapContent_LabelColor);
 }
 
 .ui5-user-menu-selected-account-description {
+	text-align: center;
     font-family: var(--sapFontFamily);
     font-size: var(--sapFontSize);
-    color: var(--sapContent_LabelColor)
+    color: var(--sapContent_LabelColor);
 }
 
 .ui5-user-menu-manage-account-btn {
@@ -103,7 +106,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    height: 4.5rem;
+    min-height: 4.5rem;
     gap: 12px;
 }
 
@@ -122,7 +125,7 @@
     overflow: hidden;
     color: var(--sapList_TextColor);
     text-overflow: ellipsis;
-    font-family: var(--sapFontBoldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
     font-size: var(--sapFontSize);
     font-style: normal;
     line-height: normal;

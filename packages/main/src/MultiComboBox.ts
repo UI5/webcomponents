@@ -91,6 +91,7 @@ import {
 	SELECT_OPTIONS,
 	SHOW_SELECTED_BUTTON,
 	MULTICOMBOBOX_DIALOG_OK_BUTTON,
+	MULTICOMBOBOX_DIALOG_CANCEL_BUTTON,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	VALUE_STATE_ERROR_ALREADY_SELECTED,
 	MCB_SELECTED_ITEMS,
@@ -678,6 +679,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_showFilteredItems() {
 		this.filterSelected = true;
 		this._showMorePressed = true;
+		this._tokenizer._scrollToEndOnExpand = true;
 
 		this._toggleTokenizerPopover();
 	}
@@ -929,12 +931,22 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	_handlePaste(e: ClipboardEvent) {
-		if (this.readonly || !e.clipboardData) {
+	async _handlePaste(e: ClipboardEvent) {
+		if (this.readonly) {
 			return;
 		}
 
-		const pastedText = (e.clipboardData).getData("text/plain");
+		e.preventDefault();
+
+		const pastedText = await navigator.clipboard.readText();
+		document.execCommand("insertText", true, pastedText ?? "");
+		const inputEvent = new Event("input", {
+			bubbles: true,
+			cancelable: true,
+		});
+
+		// Dispatch it
+		this._innerInput.dispatchEvent(inputEvent);
 
 		if (!pastedText) {
 			return;
@@ -957,8 +969,17 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this.readonly || isFirefox()) {
 			return;
 		}
+		e.preventDefault();
 
 		const pastedText = await navigator.clipboard.readText();
+		document.execCommand("insertText", true, pastedText ?? "");
+		const inputEvent = new Event("input", {
+			bubbles: true,
+			cancelable: true,
+		});
+
+		// Dispatch it
+		this._innerInput.dispatchEvent(inputEvent);
 
 		if (!pastedText) {
 			return;
@@ -1778,11 +1799,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._tokenizer.preventInitialFocus = true;
 
 		if (this.open && !isPhone()) {
+			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;
-		}
-
-		if (this._tokenizer.expanded && this.hasAttribute("focused")) {
-			this._tokenizer.scrollToEnd();
 		}
 
 		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
@@ -1882,8 +1900,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	inputFocusIn(e: FocusEvent) {
 		if (!isPhone()) {
 			this.focused = true;
+			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;
-			this._tokenizer.scrollToEnd();
 		} else {
 			this._innerInput.blur();
 		}
@@ -2058,7 +2076,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const links: Array<HTMLElement> = [];
 		if (this.valueStateMessage) {
 			this.valueStateMessage.forEach(element => {
-				if (element.children.length)	{
+				if (element.children.length) {
 					element.querySelectorAll("ui5-link").forEach(link => {
 						links.push(link as HTMLElement);
 					});
@@ -2159,6 +2177,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	get _dialogOkButton() {
 		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_OK_BUTTON);
+	}
+
+	get _dialogCancelButton() {
+		return MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _tokenizerExpanded() {

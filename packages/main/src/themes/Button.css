@@ -117,6 +117,7 @@
 	content: "";
 	position: absolute;
 	box-sizing: border-box;
+	pointer-events: none;
 	left: 0.0625rem;
 	top: 0.0625rem;
 	right: 0.0625rem;

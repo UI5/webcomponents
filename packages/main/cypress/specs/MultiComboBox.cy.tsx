@@ -1387,7 +1387,7 @@ describe("Selection and filtering", () => {
 });
 
 describe("Validation & Value State", () => {
-	const handleInput = (e:Event) => {
+	const handleInput = (e: Event) => {
 		(e.target as MultiComboBox).valueState = (e.target as MultiComboBox).value.length ? "Negative" : "Information";
 	}
 
@@ -1537,7 +1537,7 @@ describe("Validation & Value State", () => {
 	});
 
 	it("Should remove value state header when value state is reset", () => {
-		const onSelectionChange = (e:Event) => {
+		const onSelectionChange = (e: Event) => {
 			(e.target as MultiComboBox).valueState = "None";
 		}
 
@@ -1750,7 +1750,7 @@ describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", ()
 
 describe("Event firing", () => {
 	it("tests if open and close events are fired correctly", () => {
-		const onFocusIn = (e:Event) => {
+		const onFocusIn = (e: Event) => {
 			(e.target as MultiComboBox).setAttribute("open", "true");
 		}
 
@@ -1804,7 +1804,7 @@ describe("Event firing", () => {
 	});
 
 	it("Should prevent selection-change when clicking an item", () => {
-		const onSelectionChange = (e:Event) => {
+		const onSelectionChange = (e: Event) => {
 			e.preventDefault();
 		}
 
@@ -1853,7 +1853,7 @@ describe("Event firing", () => {
 	});
 
 	it("Should prevent selection-change when deleting a token", () => {
-		const onSelectionChange = (e:Event) => {
+		const onSelectionChange = (e: Event) => {
 			e.preventDefault();
 		}
 
@@ -1896,7 +1896,7 @@ describe("Event firing", () => {
 	});
 
 	it("Should prevent selection-change on CTRL+A", () => {
-		const onSelectionChange = (e:Event) => {
+		const onSelectionChange = (e: Event) => {
 			e.preventDefault();
 		}
 
@@ -1990,7 +1990,7 @@ describe("Event firing", () => {
 	});
 
 	it("Should not fire submit, when an item is tokenized", () => {
-		const onSubmit = cy.spy((e:Event) => e.preventDefault()).as("submitEvent");
+		const onSubmit = cy.spy((e: Event) => e.preventDefault()).as("submitEvent");
 
 		cy.mount(
 			<>
@@ -2228,13 +2228,13 @@ describe("MultiComboBox RTL/LTR Arrow Navigation", () => {
 			.realClick()
 			.should("have.focus")
 
-			cy.get("@input")
+		cy.get("@input")
 			.should("have.value", "")
 			.should(($input) => {
 				expect(($input[0] as HTMLInputElement).selectionStart).to.equal(0);
 			});
 
-		cy.get("@mcb").realPress("ArrowRight");		;
+		cy.get("@mcb").realPress("ArrowRight");;
 		cy.focused().should("have.class", "ui5-token--wrapper");
 	});
 });
@@ -2307,9 +2307,9 @@ describe("Accessibility", () => {
 				const resourceBundle = (el.constructor as any).i18nBundle;
 
 				cy.get("[ui5-multi-combobox]")
-				.shadow()
-				.find(".ui5-hidden-text")
-				.should("have.text", resourceBundle.getText(TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS.defaultText, 2));
+					.shadow()
+					.find(".ui5-hidden-text")
+					.should("have.text", resourceBundle.getText(TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS.defaultText, 2));
 			})
 
 		cy.get("[ui5-multi-combobox]")
@@ -2493,7 +2493,7 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-checkbox-root")
 			.should("not.have.attr", "tabindex");
-});
+	});
 });
 
 describe("Grouping", () => {
@@ -2537,7 +2537,7 @@ describe("Grouping", () => {
 				const itemArray = Array.from(items);
 				expect(itemArray.filter(item => (item as MultiComboBoxItem)._isVisible).length).to.equal(2);
 			}
-		);
+			);
 
 		cy.get("@mcb")
 			.get("[ui5-mcb-item-group]")
@@ -2545,7 +2545,7 @@ describe("Grouping", () => {
 				const itemArray = Array.from(items);
 				expect(itemArray.filter(item => (item as MultiComboBoxItem).assignedSlot).length).to.equal(2);
 			}
-		);
+			);
 	});
 
 	it("Tests group item focusability", () => {
@@ -3905,6 +3905,214 @@ describe("Keyboard Handling", () => {
 			.find<ResponsivePopover>("ui5-responsive-popover")
 			.should("not.have.attr", "open")
 	});
+
+	describe("Copy/Cut/Paste keyboard shortcuts", () => {
+		const dispatchPasteEvent = () => {
+			cy.get("@input").then($input => {
+				const input = $input.get(0) as HTMLInputElement;
+
+				const pasteEvent = new ClipboardEvent("paste", {
+					bubbles: true,
+					cancelable: true,
+				});
+
+				input.dispatchEvent(pasteEvent);
+			});
+		};
+
+		it("copy a token with CTRL+C", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem selected text="11111" />
+					<MultiComboBoxItem text="Compact" />
+					<MultiComboBoxItem selected text="Condensed" />
+					<MultiComboBoxItem selected text="Longest word in the world" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.spy(win.navigator.clipboard, 'writeText').as('writeTextSpy');
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb");
+			cy.get("@mcb").shadow().find(".ui5-multi-combobox-token").as("tokens");
+
+			cy.get("@tokens").eq(0).realClick();
+			cy.get("@tokens").eq(0).should("be.focused");
+
+			cy.realPress(["Control", "c"]);
+
+			cy.get("@writeTextSpy").should("have.been.calledOnceWith", "11111");
+		});
+
+		it("paste a token with CTRL+V", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem text="22222" />
+					<MultiComboBoxItem text="Compact" />
+					<MultiComboBoxItem text="Condensed" />
+					<MultiComboBoxItem text="Longest word in the world" />
+					<MultiComboBoxItem text="Longest word in the world 1" />
+					<MultiComboBoxItem text="Longest word in the world 2" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.stub(win.navigator.clipboard, "readText")
+					.as("clipboardRead")
+					.returns("22222");
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb2");
+			cy.get("@mcb2").shadow().find("input").as("input");
+
+			cy.get("@input").realClick();
+			cy.get("@input").should("be.focused");
+
+			dispatchPasteEvent();
+
+			cy.get("@clipboardRead").should("have.been.calledOnce");
+
+			cy.get("@input").should("have.value", "22222");
+			cy.get("@mcb2").should("have.prop", "open", true);
+
+			dispatchPasteEvent();
+
+			cy.get("@clipboardRead").should("have.been.calledTwice");
+
+			cy.get("@input").should("have.value", "2222222222");
+		});
+
+		it("not be able to paste token with CTRL+V in read only", async () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true} readonly={true} />
+			</>)
+
+			cy.get("[ui5-multi-combobox]").as("mcb2");
+			cy.get("@mcb2").shadow().find("input").as("input");
+			cy.get("@mcb2").shadow().find(".ui5-multi-combobox-token").as("tokens");
+
+			cy.get("@input").realClick();
+			cy.get("@input").should("be.focused");
+
+			dispatchPasteEvent();
+
+			cy.get("@clipboardRead").should("have.been.calledOnce");
+
+			cy.get("@input").should("have.value", "");
+			cy.get("@tokenes").should("not.exist");
+		});
+
+		it("should cut a token with CTRL+X", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem selected text="33333" />
+					<MultiComboBoxItem text="Compact" />
+					<MultiComboBoxItem selected text="Condensed" />
+					<MultiComboBoxItem selected text="Longest word in the world" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.spy(win.navigator.clipboard, 'writeText').as('writeTextSpy');
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb");
+			cy.get("@mcb").shadow().find(".ui5-multi-combobox-token").as("tokens");
+
+			cy.get("@tokens").should("have.length", 3);
+
+			cy.get("@tokens").eq(0).realClick();
+			cy.get("@tokens").eq(0).should("be.focused");
+
+			cy.realPress(["Control", "x"]);
+
+			cy.get("@writeTextSpy").should("have.been.calledOnceWith", "33333");
+			cy.get("@tokens").should("have.length", 2);
+		});
+
+		it("cut a token with SHIFT+DELETE", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem selected text="44444" />
+					<MultiComboBoxItem text="Compact" />
+					<MultiComboBoxItem selected text="Condensed" />
+					<MultiComboBoxItem selected text="Longest word in the world" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.spy(win.navigator.clipboard, 'writeText').as('writeTextSpy');
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb");
+			cy.get("@mcb").shadow().find(".ui5-multi-combobox-token").as("tokens");
+
+			cy.get("@tokens").eq(0).realClick();
+			cy.get("@tokens").eq(0).should("be.focused");
+
+			cy.realPress(["Shift", "Delete"]);
+
+			cy.get("@writeTextSpy").should("have.been.calledOnceWith", "44444");
+		});
+
+		it("copy a token with CTRL+INSERT ", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem selected text="55555" />
+					<MultiComboBoxItem text="Compact" />
+					<MultiComboBoxItem selected text="Condensed" />
+					<MultiComboBoxItem selected text="Longest word in the world" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.spy(win.navigator.clipboard, 'writeText').as('writeTextSpy');
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb");
+			cy.get("@mcb").shadow().find(".ui5-multi-combobox-token").as("tokens");
+
+			cy.get("@tokens").eq(0).realClick();
+			cy.get("@tokens").eq(0).should("be.focused");
+
+			cy.realPress(["Control", "Insert"]);
+
+			cy.get("@writeTextSpy").should("have.been.calledOnceWith", "55555");
+		});
+
+		it("paste a token with SHIFT+INSERT", () => {
+			cy.mount(<>
+				<MultiComboBox style={{ width: "500px" }} noValidation={true}>
+					<MultiComboBoxItem text="Cosy" />
+					<MultiComboBoxItem text="66666" />
+					<MultiComboBoxItem text="Condensed" />
+					<MultiComboBoxItem text="Longest word in the world" />
+					<MultiComboBoxItem text="Longest word in the world 1" />
+					<MultiComboBoxItem text="Longest word in the world 2" />
+				</MultiComboBox>
+			</>)
+
+			cy.window().then(win => {
+				cy.stub(win.navigator.clipboard, "readText")
+					.as("clipboardRead")
+					.returns("66666");
+			});
+
+			cy.get("[ui5-multi-combobox]").as("mcb2");
+			cy.get("@mcb2").shadow().find("input").as("input");
+
+			cy.get("@input").realClick();
+			cy.get("@input").should("be.focused");
+
+			cy.realPress(["Shift", "Insert"]);
+
+			cy.get("@clipboardRead").should("have.been.called");
+
+			cy.get("@input").should("have.value", "66666");
+			cy.get("@mcb2").should("have.prop", "open", true);
+		});
+	});
 });
 
 describe("MultiComboBox Composition", () => {
@@ -3940,7 +4148,7 @@ describe("MultiComboBox Composition", () => {
 		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "사랑")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -3999,7 +4207,7 @@ describe("MultiComboBox Composition", () => {
 		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "ありがとう")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -4058,7 +4266,7 @@ describe("MultiComboBox Composition", () => {
 		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "谢谢")
 			.trigger("input", { inputType: "insertCompositionText" });

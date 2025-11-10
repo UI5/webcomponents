@@ -1,30 +1,39 @@
-import React from 'react';
-import { useRef, useEffect, useState, useId, useContext } from 'react';
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import React from "react";
+import clsx from "clsx";
+import { useRef, useEffect, useState, useId, useContext } from "react";
+import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
 import playgroundSupport from "./playground-support.js";
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import styles from "./index.module.css";
 import { ThemeContext, ContentDensityContext, TextDirectionContext } from "@site/src/theme/Root";
-import { encodeToBase64, decodeFromBase64 } from "./share.js";
-import clsx from "clsx";
+import { encodeURL, decodeURL } from "./encodeURL.js";
+import downloadSample from "./download.js";
+
+// UI5 Web Components resources
+import "@ui5/webcomponents/dist/Popover.js";
+import GitHubGist from "./GitHubGist.js";
 import ShareIcon from "@ui5/webcomponents-icons/dist/v5/share-2.svg";
-import Splitter from './Splitter.js';
 import DownloadIcon from "@ui5/webcomponents-icons/dist/v5/download-from-cloud.svg";
+import CopyIcon from "@ui5/webcomponents-icons/dist/v5/copy.js";
 import EditIcon from "@ui5/webcomponents-icons/dist/v5/edit.svg";
 import ActionIcon from "@ui5/webcomponents-icons/dist/v5/action.svg";
 import HideIcon from "@ui5/webcomponents-icons/dist/v5/hide.svg";
-import downloadSample from './download.js';
-import ExamplesMenu from '../ExamplesMenu/index.tsx';
 
+import Splitter from "./Splitter.js";
+import ExamplesMenu from "../ExamplesMenu/index.tsx";
 import hellowWorldHTML from "./examples/hello-world/html";
 import hellowWorldTS from "./examples/hello-world/main";
 import counterHTML from "./examples/counter/html";
 import counterTS from "./examples/counter/main";
 
+import { auth, saveAuthToStorage, validateStoredAuth, clearAuthFromStorage } from "./githubAuth.js";
+import { createGist, loadGist } from "./githubAPI.js";
+import { getGistIdFromURL, copyToClipboard } from "./githubUtils.js";
+
 if (ExecutionEnvironment.canUseDOM) {
-  require('playground-elements');
-  require('./html-autocomplete.js');
+  require("playground-elements");
+  require("./html-autocomplete.js");
 }
 
 const projectPool = [];
@@ -48,6 +57,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   const projectRef = useRef(null);
   const previewRef = useRef(null);
   const tabBarRef = useRef(null);
+  const popoverRef = useRef(null);
   const fileEditorRef = useRef(null);
 
   const [firstRender, setFirstRender] = useState(true);
@@ -60,9 +70,82 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   const { textDirection, setTextDirection } = useContext(TextDirectionContext);
   const [copied, setCopied] = useState(false);
   const [activeExample, setActiveExample] = useState("");
+  const [longURL, setLongURL] = useState("");
+  const [shareBtnToggled, setShareBtnToggled] = useState(false);
+
+  const [githubToken, setGithubToken] = useState("");
+  const [githubUser, setGithubUser] = useState(null);
+  const [gistUrl, setGistUrl] = useState("");
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isCreatingGist, setIsCreatingGist] = useState(false);
+
+  const signInWithGitHub = async () => {
+    setIsAuthenticating(true);
+
+    try {
+      const { token, user } = await auth();
+
+      // store authentication data 
+      setGithubToken(token);
+      setGithubUser(user);
+      saveAuthToStorage(token, user);
+
+    } catch (error) {
+      console.error("github authentication failed:", error.message);
+      setGithubToken("");
+      setGithubUser(null);
+ 
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
+  const signOutFromGitHub = () => {
+    setGithubToken("");
+    setGithubUser(null);
+    setGistUrl("");
+    clearAuthFromStorage();
+    console.log("signed out from github");
+  };
+
+  const createGitHubGist = async () => {
+    if (!githubToken) {
+      console.error("no github token available");
+      return;
+    }
+
+    setIsCreatingGist(true);
+
+    try {
+      const files = getSampleFiles();
+      const gist = await createGist(githubToken, files);
+
+      // create playground url with gist id 
+      const playgroundUrl = `${window.location.origin}${playUrl}/#gist=${gist.id}`;
+      setGistUrl(playgroundUrl);
+
+      await copyToClipboard(playgroundUrl);
+      setCopied(true);
+      
+      console.log("gist created successfully:", playgroundUrl);
+    } catch (error) {
+      console.error("failed to create gist:", error.message);
+      setGistUrl("");
+    } finally {
+      setIsCreatingGist(false);
+    }
+  };
 
   function calcImports() {
-    if (process.env.NODE_ENV === 'development' || siteConfig.customFields.ui5DeploymentType === "nightly") {
+    const deployment = siteConfig.customFields.ui5DeploymentType;
+    // temporary keep "preview" (GitHub Pages) and "netlify_preview" (Netlify) - later only "preview" which will deploy on Netlify
+    const isNetlifyPreview = deployment === "netlify_preview";
+    const isPreview = deployment === "preview";
+    const isNightly = deployment === "nightly";
+    // use local CDN for development, nightly, preview and netlify_preview - all others (release, beta) use jsdelivr
+    const useLocalCDN = process.env.NODE_ENV === "development" || isNightly || isPreview || isNetlifyPreview;
+
+    if (useLocalCDN) {
       return {
         "@ui5/webcomponents/": `${getHostBaseUrl()}local-cdn/main/`,
         "@ui5/webcomponents-ai/": `${getHostBaseUrl()}local-cdn/ai/`,
@@ -117,7 +200,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
 
   function getHostBaseUrl() {
     let origin = siteConfig.url;
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       origin = location.origin;
     }
     return new URL(baseUrl, origin).toString();
@@ -140,7 +223,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   // and served from /static
   function fixAssetPaths(html) {
     let origin = siteConfig.url;
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       origin = location.origin;
     }
     return html.replaceAll("../assets/", getHostBaseUrl())
@@ -173,19 +256,18 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     return files;
   }
 
-
   const download = () => {
     const files = getSampleFiles();
     downloadSample(files);
   }
 
-  const share = () => {
+  const share = async () => {
     const files = getSampleFiles();
-
-    // encode and put in url
-    const hash = encodeToBase64(JSON.stringify(files));
-    navigator.clipboard.writeText(new URL(`#${hash}`, window.location.href).href);
-    setCopied(true);
+    const hash = encodeURL(JSON.stringify(files));
+    const longURL = new URL(`#${hash}`, window.location.href).href;
+    
+    setShareBtnToggled(!shareBtnToggled);
+    setLongURL(longURL);
   }
 
   const saveProject = () => {
@@ -194,7 +276,12 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
   }
 
   const resetProject = () => {
-    localStorage.clear("project");
+    localStorage.removeItem("project");
+    localStorage.removeItem("github_token");
+    localStorage.removeItem("activeExample");
+    localStorage.removeItem("github_oauth_state");
+    localStorage.removeItem("github_user");
+    setGistUrl("");
     location.hash = "";
   }
 
@@ -209,7 +296,7 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     const files = getSampleFiles();
 
     // encode and put in url
-    const hash = encodeToBase64(JSON.stringify(files));
+    const hash = encodeURL(JSON.stringify(files));
     const url = new URL(`${playUrl}#${hash}`, location.origin);
     window.open(url, "_blank");
     resetExampleMenuSelection();
@@ -225,6 +312,77 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
     resetProject();
     setActiveExample("counter");
     localStorage.setItem("activeExample", "counter");
+  }
+
+  const createGistProjectConfig = (gistFiles) => {
+    const gistConfig = {
+      files: {},
+      importMap: {
+        "imports": calcImports(),
+      }
+    };
+
+    // process each gist file 
+    Object.keys(gistFiles).forEach(filename => {
+      const gistFile = gistFiles[filename];
+
+      if (filename === "index.html") {
+        //  add required head content to html file
+        gistConfig.files[filename] = {
+          ...gistFile,
+          content: addHeadContent(fixAssetPaths(gistFile.content))
+        };
+      } else {
+        //  keep other files as-is but fix asset paths
+        gistConfig.files[filename] = {
+          ...gistFile,
+          content: fixAssetPaths(gistFile.content)
+        };
+      }
+    });
+
+    //  ensure playground support exists 
+    if (!gistConfig.files["playground-support.js"]) {
+      gistConfig.files["playground-support.js"] = {
+        name: "playground-support.js",
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        hidden: true
+      };
+    } else {
+      //  update existing playground support with current settings
+      gistConfig.files["playground-support.js"] = {
+        ...gistConfig.files["playground-support.js"],
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        hidden: true
+      };
+    }
+
+    return gistConfig;
+  };
+
+  const loadGistProject = (projectRef, projectContainerRef, gistId) => {
+    loadGist(gistId)
+      .then(gistFiles => {
+        if (!gistFiles || Object.keys(gistFiles).length === 0) {
+          console.error("No files found in gist.");
+          return;
+        }
+        
+        const gistConfig = createGistProjectConfig(gistFiles);
+        projectRef.current.config = gistConfig;
+        
+        if (!projectContainerRef.current.contains(projectRef.current)) {
+          projectContainerRef.current.appendChild(projectRef.current);
+        }
+      })
+      .catch(error => {
+        console.log(`Failed fetching gist by id: ${error}. Falling back to default config.`);
+        projectRef.current.config = newConfig;
+        
+        if (!projectContainerRef.current.contains(projectRef.current)) {
+          projectContainerRef.current.appendChild(projectRef.current);
+        }
+      });
   }
 
   useEffect(() => {
@@ -263,43 +421,49 @@ ${fixAssetPaths(_js)}`,
       delete newConfig.files["main.css"];
     }
 
-    // restore project if saved
-    if (location.pathname.endsWith("/play") || location.pathname.endsWith("/play/")) {
-      const savedProject = localStorage.getItem("project");
-      if (savedProject) {
+    const gistId = getGistIdFromURL();
+
+    if (gistId) {
+      loadGistProject(projectRef, projectContainerRef, gistId);
+    } else {
+      // restore project if saved
+      if (location.pathname.endsWith("/play") || location.pathname.endsWith("/play/")) {
+        const savedProject = localStorage.getItem("project");
+        if (savedProject) {
+          try {
+            const savedConfig = JSON.parse(savedProject);
+            savedConfig["index.html"].content = addHeadContent(fixAssetPaths(savedConfig["index.html"].content));
+            const oldMainFile = savedConfig["main.js"] || savedConfig["main.ts"];
+            if (oldMainFile && newConfig.files["main.tsx"]) {
+              // if the saved project has a main from an old default, and the default project has a main.tsx file, restore the saved one
+              delete newConfig.files["main.tsx"];
+            }
+            newConfig.files = { ...newConfig.files, ...savedConfig };
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+
+      // shared content - should be after restore from localstorage
+      if (!gistId && location.pathname.includes("/play") && location.hash) {
         try {
-          const savedConfig = JSON.parse(savedProject);
-          savedConfig["index.html"].content = addHeadContent(fixAssetPaths(savedConfig["index.html"].content));
-          const oldMainFile = savedConfig["main.js"] || savedConfig["main.ts"];
+          const sharedConfig = JSON.parse(decodeURL(location.hash.replace("#", "")));
+          sharedConfig["index.html"].content = addHeadContent(fixAssetPaths(sharedConfig["index.html"].content));
+          const oldMainFile = sharedConfig["main.js"] || sharedConfig["main.ts"];
           if (oldMainFile && newConfig.files["main.tsx"]) {
-            // if the saved project has a main from an old default, and the default project has a main.tsx file, restore the saved one
+            // if the shared project has a main from an old default, and the default project has a main.tsx file, restore the saved one
             delete newConfig.files["main.tsx"];
           }
-          newConfig.files = { ...newConfig.files, ...savedConfig };
+          newConfig.files = { ...newConfig.files, ...sharedConfig };
         } catch (e) {
           console.log(e);
         }
       }
-    }
 
-    // shared content - should be after restore from localstorage
-    if (location.pathname.includes("/play") && location.hash) {
-      try {
-        const sharedConfig = JSON.parse(decodeFromBase64(location.hash.replace("#", "")));
-        sharedConfig["index.html"].content = addHeadContent(fixAssetPaths(sharedConfig["index.html"].content));
-        const oldMainFile = sharedConfig["main.js"] || sharedConfig["main.ts"];
-        if (oldMainFile && newConfig.files["main.tsx"]) {
-          // if the shared project has a main from an old default, and the default project has a main.tsx file, restore the saved one
-          delete newConfig.files["main.tsx"];
-        }
-        newConfig.files = { ...newConfig.files, ...sharedConfig };
-      } catch (e) {
-        console.log(e);
-      }
+      projectRef.current.config = newConfig;
+      projectContainerRef.current.appendChild(projectRef.current)
     }
-
-    projectRef.current.config = newConfig;
-    projectContainerRef.current.appendChild(projectRef.current)
 
     const messageHandler = async (event) => {
       if (event.data.height && event.data.iframeId === iframeId) {
@@ -329,6 +493,10 @@ ${fixAssetPaths(_js)}`,
       projectRef.current.addEventListener("compileStart", saveProject);
     }
 
+    popoverRef.current?.addEventListener("close", () => {
+      setShareBtnToggled(false);
+    })
+
     return function () {
       if (!standalone) {
         // component cleanup
@@ -352,12 +520,50 @@ ${fixAssetPaths(_js)}`,
   }, [theme, contentDensity, textDirection]);
 
   useEffect(() => {
+    let timeoutId;
     if (copied) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setCopied(false);
-      }, 5000)
+      }, 3000);
     }
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [copied]);
+
+  // automatic sign-out on token expiration
+  useEffect(() => {
+    const checkTokenValidity = () => {
+      if (githubToken) {
+        const authData = validateStoredAuth();
+        if (!authData) {
+          setGithubToken("");
+          setGithubUser(null);
+          setGistUrl("");
+          console.log("github token expired, signed out automatically");
+        }
+      }
+    };
+
+    // check immediately and then every 10 minutes
+    checkTokenValidity();
+    const intervalId = setInterval(checkTokenValidity, 10 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [githubToken]);
+
+  useEffect(() => {
+    const authData = validateStoredAuth();
+    
+    if (authData) {
+      setGithubToken(authData.token);
+      setGithubUser(authData.user);
+      console.log("restored github authentication from storage");
+    }
+  }, []);
 
   function optionalSplitter(editor, preview) {
     return (
@@ -381,8 +587,8 @@ ${fixAssetPaths(_js)}`,
     return (
       <>
         <playground-preview class={clsx(styles.previewResultHidden, {
-          [styles['preview-standalone']]: standalone,
-          [styles['preview-sample']]: !standalone,
+          [styles["preview-standalone"]]: standalone,
+          [styles["preview-sample"]]: !standalone,
         })}
           style={standalone ? undefined : { height: "unset", minHeight: "7rem" }} ref={previewRef}
         ></playground-preview>
@@ -395,8 +601,8 @@ ${fixAssetPaths(_js)}`,
       <>
         <div
           className={clsx({
-            [styles['editor-standalone']]: standalone,
-            [styles['editor-sample']]: !standalone,
+            [styles["editor-standalone"]]: standalone,
+            [styles["editor-sample"]]: !standalone,
           })}
           style={{ display: editorVisible | standalone ? "block" : "none" }}>
           <playground-tab-bar editable-file-system ref={tabBarRef}></playground-tab-bar>
@@ -443,15 +649,10 @@ ${fixAssetPaths(_js)}`,
               >
                 <DownloadIcon className={`${styles.btn__icon}`} />
                 Download
-                {copied
-                  ? <div style={{ position: "absolute" }}>
-                    <span className={styles["copy-status"]}>&#x2714; Link copied</span>
-                  </div>
-                  : <></>
-                }
               </button>
 
               <button
+                id="btnSharePopupOpen"
                 className={`button button--secondary ${styles.previewResult__share}`}
                 onClick={share}
               >
@@ -459,6 +660,43 @@ ${fixAssetPaths(_js)}`,
                 Share
               </button>
 
+              <ui5-popover 
+                  header-text="Share Sample" 
+                  open={shareBtnToggled ? true : undefined}
+                  opener="btnSharePopupOpen"
+                  placement="Bottom"
+                  ref={popoverRef}
+                >
+                <section>
+                    { copied ? <span className={styles["copy-status"]}>&#x2714; Link copied</span> : <></> }
+
+                    {/*  Long URL  */}
+                    <ui5-label>Long URL</ui5-label>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                      <ui5-input readonly value={longURL}></ui5-input>
+                      <ui5-button
+                        icon={CopyIcon}
+                        design="Transparent" 
+                        onClick={() => {
+                          navigator.clipboard.writeText(longURL);
+                          setCopied(true);
+                      }}></ui5-button>
+                    </div>
+
+                    {/*  github gist section  */}
+                    <GitHubGist
+                      githubUser={githubUser}
+                      isAuthenticating={isAuthenticating}
+                      isCreatingGist={isCreatingGist}
+                      gistUrl={gistUrl}
+                      onSignIn={signInWithGitHub}
+                      onSignOut={signOutFromGitHub}
+                      onCreateGist={createGitHubGist}
+                      onCopyGistUrl={copyToClipboard}
+                      setCopied={setCopied}
+                    />
+                </section>
+              </ui5-popover>
             </div>
           </div>
         </>
@@ -468,8 +706,8 @@ ${fixAssetPaths(_js)}`,
 
       <div
         className={clsx({
-          [styles['container-standalone']]: standalone,
-          [styles['container-sample']]: !standalone,
+          [styles["container-standalone"]]: standalone,
+          [styles["container-sample"]]: !standalone,
         })}
         style={{ border: "1px solid hsla(203, 50%, 30%, 0.15)", boxShadow: "var(--ifm-color-secondary) 0 0 3px 0", borderRadius: "0.5rem", overflow: "hidden" }}
       >

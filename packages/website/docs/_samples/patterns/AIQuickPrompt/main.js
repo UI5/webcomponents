@@ -87,11 +87,11 @@ sendButton.addEventListener("click", function() {
 });
 
 function isTextWrong() {
-		return output.value.trim(" ") !== predefinedTexts[translationKey][currentTextKey]
-			&& output.value.trim(" ") !== predefinedTextsExpanded[translationKey][currentTextKey]
-			&& output.value.trim(" ") !== predefinedTextsBulleted[translationKey][currentTextKey]
-			&& output.value.trim(" ") !== predefinedTextsRephrased[translationKey][currentTextKey]
-			&& output.value.trim(" ") !== predefinedTextsSimplified[translationKey][currentTextKey];
+		return output.value.trim() !== predefinedTexts[translationKey][currentTextKey]
+			&& output.value.trim() !== predefinedTextsExpanded[translationKey][currentTextKey]
+			&& output.value.trim() !== predefinedTextsBulleted[translationKey][currentTextKey]
+			&& output.value.trim() !== predefinedTextsRephrased[translationKey][currentTextKey]
+			&& output.value.trim() !== predefinedTextsSimplified[translationKey][currentTextKey];
 	}
 
 menu1.addEventListener("item-click", function (e) {
