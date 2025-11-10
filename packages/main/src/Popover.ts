@@ -241,7 +241,7 @@ class Popover extends Popup {
 	_initialLeft?: number;
 	_minWidth?: number;
 	_cachedMinHeight?: number;
-	_draggedOrResized = false;
+	_resized = false;
 
 	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
 
@@ -1010,6 +1010,7 @@ class Popover extends Popup {
 			width,
 			height,
 			minWidth,
+			minHeight,
 		} = window.getComputedStyle(this);
 
 		this._initialX = e.clientX;
@@ -1019,7 +1020,7 @@ class Popover extends Popup {
 		this._initialTop = top;
 		this._initialLeft = left;
 		this._minWidth = Number.parseFloat(minWidth);
-		// this._cachedMinHeight = this._minHeight;
+		this._cachedMinHeight = Number.parseFloat(minHeight);
 
 		this._resizeHandlePlacement = this._getResizeHandlePlacement();
 
@@ -1028,54 +1029,97 @@ class Popover extends Popup {
 			left: `${left}px`,
 		});
 
-		this._draggedOrResized = true;
+		this._resized = true;
 		this._attachMouseResizeHandlers();
 	}
 
 	_onResizeMouseMove(e: MouseEvent) {
 		const { clientX, clientY } = e;
+		const placement = this._resizeHandlePlacement;
+		const margin = Popover.VIEWPORT_MARGIN;
 
 		let newWidth,
-			newLeft;
+			newHeight,
+			newLeft,
+			newTop;
 
-		if (this._isRTL) {
+		// Determine if we're resizing from left or right edge
+		const isResizingFromLeft = placement === ResizeHandlePlacement.TopLeft
+			|| placement === ResizeHandlePlacement.BottomLeft;
+		const isResizingFromTop = placement === ResizeHandlePlacement.TopLeft
+			|| placement === ResizeHandlePlacement.TopRight;
+
+		// Calculate width changes
+		if (isResizingFromLeft) {
+			// Resizing from left edge - width increases when moving left (negative delta)
+			const deltaX = clientX - this._initialX!;
+			const maxWidthFromLeft = this._initialLeft! + this._initialWidth! - margin;
+
 			newWidth = clamp(
-				this._initialWidth! - (clientX - this._initialX!),
+				this._initialWidth! - deltaX,
 				this._minWidth!,
-				this._initialLeft! + this._initialWidth!,
+				maxWidthFromLeft,
 			);
 
-			// check if width is changed to avoid "left" jumping when max width is reached
-			Object.assign(this.style, {
-				width: `${newWidth}px`,
-			});
-
-			const deltaWidth = newWidth - this.getBoundingClientRect().width;
-			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
-
+			// Adjust left position when resizing from left
+			// Ensure the left edge respects the viewport margin and the right edge position
 			newLeft = clamp(
-				rightEdge - newWidth,
-				0,
-				rightEdge - this._minWidth!,
+				this._initialLeft! + deltaX,
+				margin,
+				this._initialLeft! + this._initialWidth! - this._minWidth!,
 			);
+
+			// Recalculate width based on actual left position to stay within viewport with margin
+			newWidth = Math.min(newWidth, this._initialLeft! + this._initialWidth! - newLeft);
 		} else {
+			// Resizing from right edge - width increases when moving right (positive delta)
+			const maxWidthFromRight = window.innerWidth - this._initialLeft! - margin;
+
 			newWidth = clamp(
 				this._initialWidth! + (clientX - this._initialX!),
 				this._minWidth!,
-				window.innerWidth - this._initialLeft!,
+				maxWidthFromRight,
 			);
 		}
 
-		const newHeight = clamp(
-			this._initialHeight! + (clientY - this._initialY!),
-			this._cachedMinHeight!,
-			window.innerHeight - this._initialTop!,
-		);
+		// Calculate height changes
+		if (isResizingFromTop) {
+			// Resizing from top edge - height increases when moving up (negative delta)
+			const deltaY = clientY - this._initialY!;
+			const maxHeightFromTop = this._initialTop! + this._initialHeight! - margin;
+
+			newHeight = clamp(
+				this._initialHeight! - deltaY,
+				this._cachedMinHeight!,
+				maxHeightFromTop,
+			);
+
+			// Adjust top position when resizing from top
+			// Ensure the top edge respects the viewport margin and the bottom edge position
+			newTop = clamp(
+				this._initialTop! + deltaY,
+				margin,
+				this._initialTop! + this._initialHeight! - this._cachedMinHeight!,
+			);
+
+			// Recalculate height based on actual top position to stay within viewport with margin
+			newHeight = Math.min(newHeight, this._initialTop! + this._initialHeight! - newTop);
+		} else {
+			// Resizing from bottom edge - height increases when moving down (positive delta)
+			const maxHeightFromBottom = window.innerHeight - this._initialTop! - margin;
+
+			newHeight = clamp(
+				this._initialHeight! + (clientY - this._initialY!),
+				this._cachedMinHeight!,
+				maxHeightFromBottom,
+			);
+		}
 
 		Object.assign(this.style, {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
-			left: this._isRTL ? `${newLeft}px` : undefined,
+			left: newLeft !== undefined ? `${newLeft}px` : undefined,
+			top: newTop !== undefined ? `${newTop}px` : undefined,
 		});
 	}
 
