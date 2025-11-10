@@ -32,13 +32,14 @@ function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
 }
 
 function ShellBarV2SearchButton(this: ShellBarV2) {
+	const searchAction = this.getAction("search");
 	return (
 		<>
 			{!this.hideSearchButton && (
 				<Button
-					data-ui5-stable="toggle-search"
+					data-ui5-stable={searchAction?.stableDomRef}
 					class="ui5-shellbar-search-button ui5-shellbar-action-button ui5-shellbar-gap-start ui5-shellbar-search-toggle"
-					icon="sap-icon://search"
+					icon={searchAction?.icon}
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}
 					tooltip={this.getActionText("search")}

@@ -21,10 +21,11 @@ import Popover from "@ui5/webcomponents/dist/Popover.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
-import "@ui5/webcomponents-icons/dist/bell.js";
-import "@ui5/webcomponents-icons/dist/grid.js";
-import "@ui5/webcomponents-icons/dist/da.js";
-import "@ui5/webcomponents-icons/dist/overflow.js";
+import searchIcon from "@ui5/webcomponents-icons/dist/search.js";
+import bellIcon from "@ui5/webcomponents-icons/dist/bell.js";
+import gridIcon from "@ui5/webcomponents-icons/dist/grid.js";
+import daIcon from "@ui5/webcomponents-icons/dist/da.js";
+import overflowIcon from "@ui5/webcomponents-icons/dist/overflow.js";
 
 import ShellBarV2Template from "./ShellBarV2Template.js";
 import shellBarV2Styles from "./generated/themes/ShellBarV2.css.js";
@@ -82,6 +83,7 @@ type ShellBarV2ActionItem = {
 	icon?: string;
 	count?: string;
 	visible: boolean;
+	stableDomRef?: string;
 };
 
 type ShellBarV2MenuButtonClickEventDetail = {
@@ -605,27 +607,37 @@ class ShellBarV2 extends UI5Element {
 			{
 				id: ACTION_IDS.SEARCH,
 				visible: this.hasSearchField,
-				icon: "search",
+				icon: searchIcon,
+				stableDomRef: "toggle-search",
 			},
 			{
 				id: ACTION_IDS.PROFILE,
 				visible: this.hasProfile,
+				stableDomRef: "profile",
 			},
 			{
 				id: ACTION_IDS.ASSISTANT,
 				visible: this.hasAssistant,
-				icon: "da",
+				icon: daIcon,
 			},
 			{
 				id: ACTION_IDS.NOTIFICATIONS,
 				visible: this.showNotifications,
 				count: this.notificationsCount,
-				icon: "bell",
+				icon: bellIcon,
+				stableDomRef: "notifications",
 			},
 			{
 				id: ACTION_IDS.PRODUCT_SWITCH,
 				visible: this.showProductSwitch,
-				icon: "grid",
+				icon: gridIcon,
+				stableDomRef: "product-switch",
+			},
+			{
+				id: ACTION_IDS.OVERFLOW,
+				visible: this.showOverflowButton,
+				icon: overflowIcon,
+				stableDomRef: "overflow",
 			},
 		].filter(action => action.visible);
 	}
