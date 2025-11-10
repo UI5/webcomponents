@@ -487,7 +487,8 @@ class Toolbar extends UI5Element {
 
 	onResize() {
 		this.closeOverflow();
-		setTimeout(() => this.onAfterRendering(), 0);
+		this.storeItemsWidth();
+		this.processOverflowLayout();
 	}
 
 	/**
@@ -528,11 +529,6 @@ class Toolbar extends UI5Element {
 		}
 
 		return Math.ceil(itemWidth);
-	}
-
-	getItemWidthCss(item: ToolbarItem) {
-		const itemMinWidth = item.selfOverflowed && Number(this.getItemWidth(item)) ? `${this.getItemWidth(item)}px` : "auto";
-		return `${itemMinWidth}`;
 	}
 
 	getCachedItemWidth(id: string) {

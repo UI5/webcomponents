@@ -13,11 +13,6 @@ type IEventOptions = {
 	preventClosing: boolean;
 }
 
-type ISelfOverflowedItem = {
-	totalContentWidth: () => number;
-	selfOverflowed: boolean;
-}
-
 type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
@@ -76,12 +71,6 @@ class ToolbarItem extends UI5Element {
 
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
-
-	/**
-	 * @default false
-	 * @public
-	 * @since 2.16.0
-	 */
 
 	@property({ type: Boolean })
 	selfOverflowed: boolean = false;
@@ -167,10 +156,6 @@ class ToolbarItem extends UI5Element {
 		};
 	}
 
-	constructor() {
-		super();
-	}
-
 	/**
 	 * Handles the click event on the toolbar item.
 	 * If `preventOverflowClosing` is false, it will fire a "close-overflow" event.
@@ -185,7 +170,6 @@ class ToolbarItem extends UI5Element {
 export type {
 	IEventOptions,
 	ToolbarItemEventDetail,
-	ISelfOverflowedItem,
 };
 ToolbarItem.define();
 
