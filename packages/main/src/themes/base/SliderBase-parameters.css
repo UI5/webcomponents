@@ -3,7 +3,7 @@
 	--_ui5_slider_progress_container_background: var(--sapField_BorderColor);
 	--_ui5_slider_progress_container_dot_display: none;
 	--_ui5_slider_progress_container_dot_background: var(--sapField_BorderColor);
-	--_ui5_slider_progress_border: none;
+	--_ui5_slider_progress_border: solid 0.0625rem var(--sapSlider_BorderColor);
 	--_ui5_slider_padding: 1.406rem 1.0625rem;
 	--_ui5_slider_inner_height: 0.25rem;
 	--_ui5_slider_outer_height: 1.6875rem;
@@ -71,7 +71,7 @@
 
 	--_ui5_slider_progress_container_top: 0;
 	--_ui5_slider_progress_height: 100%;
-	--_ui5_slider_active_progress_border: none;
+	--_ui5_slider_active_progress_border: solid 0.0625rem var(--sapSlider_Selected_BorderColor);
 	--_ui5_slider_active_progress_left: 0;
 	--_ui5_slider_active_progress_top: 0;
 
