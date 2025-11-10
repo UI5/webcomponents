@@ -32,9 +32,3 @@
 .ui5-tb-separator-in-overflow[visible]{
 	display: block;
 }
-
-.ui5-tb-popover-self-overflow{
-	/* max-width: min-content;
-	flex-grow: 0;
-	flex-basis: 0; */
-}

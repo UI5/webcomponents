@@ -601,12 +601,12 @@ describe("Toolbar Button", () => {
 		cy.get("@toolbar").then($toolbar => {
 			const toolbar = $toolbar[0] as Toolbar;
 			const addButton = document.getElementById("add-btn") as ToolbarButton;
-			
+
 			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
-			
+
 			const initialOverflowCount = toolbar.itemsToOverflow.length;
 			const initialItemsWidth = toolbar.itemsWidth;
-			
+
 			addButton.disabled = !addButton.disabled;
 
 			cy.get("@toolbar").then($toolbarAfter => {
@@ -642,14 +642,28 @@ describe("Toolbar Item", () => {
 				expect(button).to.contain.text("User Menu");
 			  });
 
+
         // Attach a click event to the inner button
         cy.get("ui5-button#innerButton")
             .then(button => {
                 button.get(0).addEventListener("click", cy.stub().as("buttonClicked"));
             });
 
+		cy.get('ui5-toolbar') // Select the toolbar
+			.shadow() // Access the shadow DOM of the toolbar
+			.find('.ui5-tb-overflow-btn') // Find the overflow button inside the shadow DOM
+			.realClick();
+
+		cy.get("ui5-toolbar")
+			.shadow()
+			.find("[ui5-popover]")
+			.as("popover")
+
+		cy.get("@popover")
+			.should("have.prop", "open", true);
+
         // Trigger a click event on the inner button
-        cy.get("ui5-button#innerButton").click();
+        cy.get("ui5-button#innerButton").realClick();
 
         // Verify the click event was triggered
         cy.get("@buttonClicked").should("have.been.calledOnce");
