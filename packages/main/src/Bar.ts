@@ -95,7 +95,7 @@ class Bar extends UI5Element {
 	accessibleName?: string;
 
 	/**
-	 * Receives id(or many ids) of the elements that label the input.
+	 * Receives id(or many ids) of the elements that label the bar.
 	 * @default undefined
 	 * @since 2.16.0
 	 * @public
@@ -134,7 +134,11 @@ class Bar extends UI5Element {
 	}
 
 	get ariaLabelText(): string | undefined {
-		return this.accessibleName ? getEffectiveAriaLabelText(this) : this.design;
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
+		}
+
+		return this.design;
 	}
 
 	constructor() {
