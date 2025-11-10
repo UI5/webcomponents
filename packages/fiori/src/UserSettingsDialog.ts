@@ -198,7 +198,7 @@ class UserSettingsDialog extends UI5Element {
 		const searchValue = this._searchValue.toLowerCase();
 		this._filteredItems = [];
 		this._filteredFixedItems = [];
-
+		const siblingsWithIcon = this.items.some(item => !!item.icon);
 		this.items.forEach(item => {
 			if (item.text.toLowerCase().includes(searchValue)) {
 				this._filteredItems.push(item);
@@ -207,6 +207,7 @@ class UserSettingsDialog extends UI5Element {
 			if (item.selected) {
 				this._selectedSetting = item;
 			}
+			item._siblingsWithIcon = siblingsWithIcon;
 		});
 
 		this.fixedItems.forEach(item => {

@@ -5,3 +5,7 @@
 .daterangepicker1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+form ui5-daterange-picker:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}

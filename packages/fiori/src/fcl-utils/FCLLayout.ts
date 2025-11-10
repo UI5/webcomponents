@@ -1,7 +1,7 @@
 import type { MEDIA } from "../FlexibleColumnLayout.js";
 import type FCLLayout from "../types/FCLLayout.js";
 
-type LayoutConfiguration = {
+type DefaultLayoutConfiguration = {
 	[device in MEDIA]: {
 		[layoutName in FCLLayout]: {
 			layout: Array<string>;
@@ -15,7 +15,7 @@ type LayoutConfiguration = {
 	};
 };
 
-const getLayoutsByMedia = (): LayoutConfiguration => {
+const getDefaultLayoutsByMedia = (): DefaultLayoutConfiguration => {
 	return {
 		desktop: {
 			"OneColumn": {
@@ -287,11 +287,10 @@ const getNextLayoutByArrowPress = () => {
 };
 
 export {
-	getLayoutsByMedia,
+	getDefaultLayoutsByMedia,
 	getNextLayoutByArrowPress,
 };
 
 export type {
-	LayoutConfiguration,
 	FCLLayout,
 };

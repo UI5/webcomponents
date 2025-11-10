@@ -408,9 +408,19 @@ describe("Calendar general interaction", () => {
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find("[tabindex='0']")
-			.realClick();
+			.realClick()
+			.should("have.focus");
 
 		cy.focused().realPress(["Shift", "F4"]);
+		
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearpicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+		
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -418,6 +428,14 @@ describe("Calendar general interaction", () => {
 			.then(_timestamp => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1980, 9, 1, 0, 0, 0)));
 			});
+
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearpicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
 
 		cy.focused().realPress("PageDown");
 
@@ -441,6 +459,14 @@ describe("Calendar general interaction", () => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1998, 9, 16, 0, 0, 0)));
 			});
 
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearrangepicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -462,6 +488,14 @@ describe("Calendar general interaction", () => {
 			.then(_timestamp => {
 				expect(new Date(_timestamp * 1000)).to.deep.equal(new Date(Date.UTC(1998, 9, 16, 0, 0, 0)));
 			});
+
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-yearrangepicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
 
 		cy.focused().realPress("PageDown");
 
@@ -503,7 +537,8 @@ describe("Calendar general interaction", () => {
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
 
 		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
-			.focus();
+			.focus()
+			.should("have.focus");
 
 		// Select the focused date
 		cy.focused().realPress("Space");
@@ -1252,5 +1287,150 @@ describe("Calendar accessibility", () => {
 					.and("contain", "Last date of range");
 			}
 		});
+	});
+});
+
+describe("Day Picker Tests", () => {
+	it.skip("Select day with Space", () => {	
+		cy.mount(<Calendar id="calendar1"></Calendar>);
+		
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--now")
+			.as("today");
+		
+		cy.get("@today")
+			.realClick()
+			.should("be.focused")
+			.realPress("ArrowRight")
+			.realPress("Space");
+		
+		cy.focused()
+			.invoke("attr", "data-sap-timestamp")
+			.then(timestampAttr => {
+				const timestamp = parseInt(timestampAttr!);
+				const selectedDate = new Date(timestamp * 1000).getDate();
+				const expectedDate = new Date(Date.now() + 24 * 3600 * 1000).getDate();
+				expect(selectedDate).to.eq(expectedDate);
+			});
+		
+		cy.get<Calendar>("#calendar1")
+			.should(($calendar) => {
+				const selectedDates = $calendar.prop("selectedDates");
+				expect(selectedDates).to.have.length.greaterThan(0);
+			});
+	});
+
+	it("Select day with Enter", () => {
+		const today = new Date();
+		const tomorrow = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0, 0) / 1000);
+
+		cy.mount(<Calendar id="calendar1"></Calendar>);
+		
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--now")
+			.realClick();
+
+		// Wait for focus to settle before proceeding
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.get<Calendar>("#calendar1")
+			.realPress("ArrowRight");
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(`[data-sap-timestamp='${tomorrow}']`)
+			.should("have.focus");
+
+		cy.get<Calendar>("#calendar1")
+			.realPress("Enter");
+
+		// assert the date after today is selected
+		cy.get<Calendar>("#calendar1")
+			.should(($calendar) => {
+				const selectedDates = $calendar.prop("selectedDates");
+				expect(selectedDates).to.include(tomorrow);
+			});
+	});
+
+	it("Day names are correctly displayed", () => {
+		cy.mount(<Calendar id="calendar1"></Calendar>);
+		
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-firstday")
+			.first()
+			.should("have.text", "Sun"); // English default
+	});
+
+	it("Day names container has proper structure", () => {
+		cy.mount(<Calendar id="calendar1"></Calendar>);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-days-names-container")
+			.should("exist")
+			.find("[role='columnheader']")
+			.should("have.length", 8);
+	});
+
+	it("Arrow navigation works in day picker", () => {
+		const date = new Date(Date.UTC(2000, 10, 15, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		const timestamp = new Date(Date.UTC(2000, 10, 15, 0, 0, 0)).valueOf() / 1000;
+		const nextDayTimestamp = new Date(Date.UTC(2000, 10, 16, 0, 0, 0)).valueOf() / 1000;
+
+		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
+			.realClick()
+			.should("have.focus");
+
+		cy.focused().realPress("ArrowRight");
+
+		cy.ui5CalendarGetDay("#calendar1", nextDayTimestamp.toString())
+			.should("have.focus");
+
+		cy.focused().realPress("ArrowLeft");
+
+		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
+			.should("have.focus");
+	});
+
+	it("Today's date is highlighted correctly", () => {
+		cy.mount(<Calendar id="calendar1"></Calendar>);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--now")
+			.should("exist")
+			.and("be.visible")
+			.invoke("attr", "data-sap-timestamp")
+			.then(timestampAttr => {
+				const timestamp = parseInt(timestampAttr!);
+				const todayFromTimestamp = new Date(timestamp * 1000);
+				const actualToday = new Date();
+				
+				expect(todayFromTimestamp.getDate()).to.equal(actualToday.getDate());
+				expect(todayFromTimestamp.getMonth()).to.equal(actualToday.getMonth());
+				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
+			});
 	});
 });

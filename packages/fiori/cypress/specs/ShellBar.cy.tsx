@@ -617,7 +617,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logoArea")
-			.click();
+			.realClick();
 
 		cy.get("@logoClick")
 			.should("have.been.calledOnce");
@@ -637,7 +637,7 @@ describe("Events", () => {
 			.should("exist");
 
 		cy.get("@logo")
-			.click();
+			.realClick();
 
 		cy.get("@logoClickSmall")
 			.should("have.been.calledOnce");
@@ -741,7 +741,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
@@ -842,7 +842,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -969,7 +969,7 @@ describe("Events", () => {
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-logo")
-				.click();
+				.realClick();
 
 			cy.get("@logoClick")
 				.should("have.been.calledOnce");
@@ -987,7 +987,7 @@ describe("Events", () => {
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
-				.click();
+				.realClick();
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
@@ -1395,6 +1395,38 @@ describe("Component Behavior", () => {
 				.shadow()
 				.find("button")
 				.should("have.attr", "aria-haspopup", NOTIFICATIONS_BTN_ARIA_HASPOPUP);
+		});
+
+		it("tests imageBtnText logical OR fallback - uses default i18n text when no custom text provided", () => {
+			cy.mount(
+				<ShellBar>
+					<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="profile" />
+				</ShellBar>
+			);
+
+			// When no aria-label is provided, imageBtnText should fallback to SHELLBAR_IMAGE_BTN i18n text
+			cy.get("[ui5-shellbar]").should("have.prop", "imageBtnText", "User Menu");
+		});
+
+		it("tests SHELLBAR_IMAGE_BTN i18n key is properly used as fallback", () => {
+			cy.mount(
+				<ShellBar>
+					<Avatar slot="profile" icon="customer" />
+				</ShellBar>
+			);
+
+			// Verify that the exact i18n text from SHELLBAR_IMAGE_BTN is used
+			cy.get("[ui5-shellbar]").then(($shellbar) => {
+				const imageBtnText = $shellbar.prop("imageBtnText");
+				// This should be exactly "User Menu" from messagebundle.properties SHELLBAR_IMAGE_BTN
+				expect(imageBtnText).to.equal("User Menu");
+			});
+
+			// Verify the profile button actually uses this text in its aria-label
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-image-button")
+				.should("have.attr", "aria-label", "User Menu");
 		});
 	});
 

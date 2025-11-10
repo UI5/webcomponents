@@ -65,7 +65,7 @@ enum LastClickedButton {
  *
  * @constructor
  * @extends ToolbarItem
- * @since 1.0.0-rc.1
+ * @since 2.16.0
  * @private
  */
 @customElement({
@@ -112,7 +112,6 @@ class Versioning extends ToolbarItem {
 	 *
 	 * @default 0
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
 	totalSteps = 0;
@@ -152,9 +151,9 @@ class Versioning extends ToolbarItem {
 		}
 
 		const isPreviousDisabled = this.currentStep <= 1;
-		const isNextDisabled = this.currentStep === this.totalSteps;
+		const isNextDisabled = this.currentStep >= this.totalSteps;
 		const wasPreviousDisabled = this._previousCurrentStep <= 1;
-		const wasNextDisabled = this._previousCurrentStep === this._previousTotalSteps;
+		const wasNextDisabled = this._previousCurrentStep >= this._previousTotalSteps;
 
 		if (isPreviousDisabled && !wasPreviousDisabled && !isNextDisabled && this._lastClickedButton === LastClickedButton.Previous && nextButton instanceof HTMLElement) {
 			nextButton.focus();

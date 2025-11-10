@@ -95,5 +95,8 @@
 	:host {
 		order: var(--ui5-form-item-order-Xl, unset);
 	}
+}
 
+dd {
+	all: unset;
 }

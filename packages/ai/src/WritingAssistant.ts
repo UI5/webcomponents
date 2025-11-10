@@ -1,6 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
@@ -14,6 +15,7 @@ import {
 	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
 	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
 	WRITING_ASSISTANT_BUTTON_TOOLTIP,
+	WRITING_ASSISTANT_STOP_TOOLTIP,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -53,7 +55,7 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  *
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.1
+ * @since 2.16.0
  * @private
  */
 @customElement({
@@ -113,50 +115,49 @@ class WritingAssistant extends UI5Element {
 	@property({ type: Boolean })
 	loading = false;
 
-	static i18nBundle: I18nBundle;
-
-	static async onDefine() {
-		WritingAssistant.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
-	}
-
 	/**
-	 * Defines the action text of the AI Writing Assistant.
+	 * Defines the prompt description of the Writing Assistant.
 	 *
 	 * This text is displayed in the toolbar to indicate the current or last
 	 * performed AI action (e.g., "Generated text", "Simplified text").
 	 *
 	 * @default ""
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property()
-	actionText = "";
+	promptDescription = "";
 
 	/**
 	 * Indicates the index of the currently displayed result version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
+	 * The index is **0-based** (i.e. `0` represents the first result).
 	 * This property is synchronized with the parent AI TextArea component.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
-	 * @since 1.0.0-rc.1
+	 * @since 2.16.0
 	 */
 	@property({ type: Number })
-	currentVersionIndex = 1;
+	currentVersion = 0;
 
 	/**
 	 * Indicates the total number of result versions available.
 	 *
 	 * This property determines whether version navigation controls are displayed.
-	 * When totalVersions > 1, previous/next buttons become available.
+	 * When totalVersions > 0, previous/next buttons become available.
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
-	 * @since 1.0.0-rc.1
 	 */
 	@property({ type: Number })
-	totalVersions = 1;
+	totalVersions = 0;
+
+	@i18n("@ui5/webcomponents-ai")
+	static i18nBundleAi: I18nBundle;
+
+	static async onDefine() {
+		WritingAssistant.i18nBundleAi = await getI18nBundle("@ui5/webcomponents-ai");
+	}
 
 	/**
 	 * Handles the version change event from the versioning component.
@@ -177,31 +178,35 @@ class WritingAssistant extends UI5Element {
 			this.fireDecoratorEvent("stop-generation");
 		} else {
 			this.fireDecoratorEvent("button-click", { clickTarget: target });
-			announce(WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT), "Polite");
+			announce(WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT), "Polite");
 		}
 	}
 	get _ariaLabel() {
-		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	get _previousButtonAccessibleName() {
-		return WritingAssistant.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+		return WritingAssistant.i18nBundleAi.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
 	}
 
 	get _nextButtonAccessibleName() {
-		return WritingAssistant.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+		return WritingAssistant.i18nBundleAi.getText(VERSIONING_NEXT_BUTTON_TEXT);
 	}
 
 	get _toolbarAccessibleName() {
-		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME);
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME);
 	}
 
 	get _buttonAccessibleName() {
-		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME);
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME);
 	}
 
 	get _buttonTooltip() {
-		return WritingAssistant.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP);
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP);
+	}
+
+	get _stopTooltip() {
+		return WritingAssistant.i18nBundleAi.getText(WRITING_ASSISTANT_STOP_TOOLTIP);
 	}
 }
 

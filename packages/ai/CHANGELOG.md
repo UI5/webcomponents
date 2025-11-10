@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **ui5-ai-input:** add docs and correct samples ([#12643](https://github.com/UI5/webcomponents/issues/12643)) ([90ca4a9](https://github.com/UI5/webcomponents/commit/90ca4a92d924999be3202569d02c409d6dd8256a))
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+
+### Bug Fixes
+
+* **ui5-ai-textarea:** apply feedback and suggestions ([6ed3731](https://github.com/UI5/webcomponents/commit/6ed3731008f432eb5cf102a5a82234b0c1e6cb82))
+
+
+### Features
+
+* **ui5-ai-input:** introduce new component ([#12407](https://github.com/UI5/webcomponents/issues/12407)) ([6344333](https://github.com/UI5/webcomponents/commit/6344333eb7259c180c309ab18a3a21b6272e5a10))
+
+
+
+
+
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Features
+
+* **ui5-ai-textarea:** add samples and docs ([#12561](https://github.com/UI5/webcomponents/issues/12561)) ([00e89ff](https://github.com/UI5/webcomponents/commit/00e89ff7976bd2b0357afaeed960207bacd42c11))
+
+
+
+
+
+# [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* apply @custom-elements-manifest/analyzer patch ([#12441](https://github.com/UI5/webcomponents/issues/12441)) ([a9ec6e2](https://github.com/UI5/webcomponents/commit/a9ec6e217bb59dbffb0db79c6008cecf77bc0649))
+* missing translations warning ([#12459](https://github.com/UI5/webcomponents/issues/12459)) ([dcd7693](https://github.com/UI5/webcomponents/commit/dcd7693d7a33145fc97898f6ef6efb1beaf0d817))
+* **ui5-ai-prompt-input:** remove fixed size ([#12419](https://github.com/UI5/webcomponents/issues/12419)) ([51862a8](https://github.com/UI5/webcomponents/commit/51862a832456543148d2d8b2056745db3d00e7fb))
+* **ui5-ai-textarea:** update [@since](https://github.com/since) tags in documentation ([#12480](https://github.com/UI5/webcomponents/issues/12480)) ([0964053](https://github.com/UI5/webcomponents/commit/0964053850e45ef504674a6eb9ab5af7975285eb))
+
+
+
+
+
 # [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
 
 

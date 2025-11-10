@@ -9,6 +9,9 @@ export default function SearchItemShowMoreTemplate(this: SearchItemShowMore) {
 			aria-selected={this.selected}
 			onFocusIn={this._onfocusin}
 			onFocusOut={this._onfocusout}
+			onClick={this._onclick}
+			onKeyDown={this._onkeydown}
+			onKeyUp={this._onkeyup}
 		>
 			<span class="ui5-search-item-show-more-text">{this.showMoreTextCount}</span>
 		</li>

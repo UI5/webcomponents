@@ -58,6 +58,10 @@
 	height: 0.875rem;
 }
 
+:host(.ui5-navigation-menu-item-root-parent)::part(content) {
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
+}
+
 :host([design="Action"]) .ui5-sn-item-external-link-icon {
 	color: var(--sapButton_TextColor);
 }

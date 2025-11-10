@@ -388,3 +388,8 @@
 :host([design="Attention"]) .ui5-split-text-button[active] + .ui5-split-arrow-button::before {
 	background-color: var(--_ui5_split_button_attention_separator_color);
 }
+
+.ui5-split-text-button::part(button) {
+    justify-content: flex-start;
+	padding: 0 var(--_ui5_button_base_padding);
+}

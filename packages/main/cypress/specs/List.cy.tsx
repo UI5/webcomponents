@@ -172,6 +172,37 @@ describe("List Tests", () => {
 			.find("[id$='growing-btn']")
 			.should("not.have.attr", "aria-labelledby");
 	});
+
+	it("tests growing button accessible description property", () => {
+		cy.mount(
+			<List growing="Button">
+				<ListItemStandard>Product 1</ListItemStandard>
+				<ListItemStandard>Product 2</ListItemStandard>
+				<ListItemStandard>Product 3</ListItemStandard>
+			</List>
+		);
+	
+		cy.get("[ui5-list]")
+			.as("list");
+
+		cy.get("@list").invoke('prop', 'accessibilityAttributes', {
+			growingButton: {
+				description: "This button will load additional products to the list. Click or press Enter to see more items."
+			}
+		});
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growing-btn']")
+			.should("have.attr", "aria-describedby");
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growingButton-description']")
+			.should("exist")
+			.should("have.class", "ui5-hidden-text")
+			.should("contain.text", "This button will load additional products to the list. Click or press Enter to see more items.");
+	});
 });
 
 describe("List - Growing with scroll", () => {

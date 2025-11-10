@@ -200,7 +200,7 @@ class TableSelectionMulti extends TableSelectionBase {
 
 		const focusedElement = getActiveElement(); // Assumption: The focused element is always the "next" row after navigation.
 
-		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse || focusedElement?.hasAttribute("ui5-growing-row"))) {
+		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse)) {
 			this._stopRangeSelection();
 			return;
 		}

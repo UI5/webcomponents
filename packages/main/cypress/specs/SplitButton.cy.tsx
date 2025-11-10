@@ -123,6 +123,50 @@ describe("Split Button general interaction", () => {
 			.should("have.not.been.called");
 	});
 
+	it("tests arrow button 'arrow-click' event (Space up)", () => {
+		cy.mount(<SplitButton onArrowClick={cy.stub().as("arrowClicked")}>Default</SplitButton>);
+
+		cy.get("[ui5-split-button]")
+			.shadow()
+			.find(".ui5-split-arrow-button")
+			.focus()
+			.should("be.focused")
+			.then(($btn) => {
+				const el = $btn[0] as Element;
+				const kd = new KeyboardEvent("keydown", {
+					key: " ",
+					code: "Space",
+					keyCode: 32,
+					which: 32,
+					bubbles: true,
+					cancelable: true,
+				});
+				el.dispatchEvent(kd);
+			});
+
+		cy.get("@arrowClicked")
+			.should("not.have.been.called");
+
+		cy.get("[ui5-split-button]")
+			.shadow()
+			.find(".ui5-split-arrow-button")
+			.then(($btn) => {
+				const el = $btn[0] as Element;
+				const ku = new KeyboardEvent("keyup", {
+					key: " ",
+					code: "Space",
+					keyCode: 32,
+					which: 32,
+					bubbles: true,
+					cancelable: true,
+				});
+				el.dispatchEvent(ku);
+			});
+
+		cy.get("@arrowClicked")
+			.should("have.been.calledOnce");
+	});
+
  	it("tests arrow button aria attributes", () => {
 		cy.mount(
 			<>

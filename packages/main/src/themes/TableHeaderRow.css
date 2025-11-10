@@ -26,6 +26,7 @@
 	height: var(--_ui5_checkbox_inner_width_height);
 }
 
+#popin-cell-content,
 #actions-cell-content {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
