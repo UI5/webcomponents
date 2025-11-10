@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page-title:** correct ARIA attribute handling for non-interactive titles ([#12598](https://github.com/UI5/webcomponents/issues/12598)) ([ddbb8d4](https://github.com/UI5/webcomponents/commit/ddbb8d4bed6a75d661a994c8d5737654a7a62e9c)), closes [#12466](https://github.com/UI5/webcomponents/issues/12466)
+* **ui5-search:** fix popup opening when there are no suggestions ([#12640](https://github.com/UI5/webcomponents/issues/12640)) ([2e760c6](https://github.com/UI5/webcomponents/commit/2e760c6760f79de3337977cf51dc3ed62c594b6e)), closes [#12519](https://github.com/UI5/webcomponents/issues/12519)
+* **ui5-shellbar:** image button is now properly read ([#12611](https://github.com/UI5/webcomponents/issues/12611)) ([873abf8](https://github.com/UI5/webcomponents/commit/873abf816101c3f1ca77b35167dd2e94cf18762b))
+
+
+
+
+
 # [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
 
 

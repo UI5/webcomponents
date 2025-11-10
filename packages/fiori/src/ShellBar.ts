@@ -41,7 +41,6 @@ import type {
 	UI5CustomEvent,
 } from "@ui5/webcomponents-base";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
-import type PopoverHorizontalAlign from "@ui5/webcomponents/dist/types/PopoverHorizontalAlign.js";
 import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
@@ -1522,10 +1521,6 @@ class ShellBar extends UI5Element {
 
 	get showMenuButton() {
 		return this.primaryTitle || this.showLogoInMenuButton;
-	}
-
-	get popoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir === "rtl" ? "Start" : "End";
 	}
 
 	get hasAssistant() {
