@@ -199,9 +199,6 @@ class Popover extends Popup {
 	@property()
 	actualPlacement: `${PopoverActualPlacement}` = "Right";
 
-	@property()
-	_resizeHandlePlacement: `${ResizeHandlePlacement}` = "BottomRight";
-
 	@property({ type: Number, noAttribute: true })
 	_maxHeight?: number;
 
@@ -245,6 +242,8 @@ class Popover extends Popup {
 	_minWidth?: number;
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
+
+	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
 
 	static get VIEWPORT_MARGIN() {
 		return 10; // px
@@ -888,7 +887,22 @@ class Popover extends Popup {
 		const allClasses = super.classes;
 		allClasses.root["ui5-popover-root"] = true;
 
-		allClasses.root["ui5-popover-resize-handle-bottom-right"] = this.resizable;
+		if (this.resizable) {
+			switch (this._getResizeHandlePlacement()) {
+			case ResizeHandlePlacement.BottomLeft:
+				allClasses.root["ui5-popover-resize-handle-bottom-left"] = true;
+				break;
+			case ResizeHandlePlacement.BottomRight:
+				allClasses.root["ui5-popover-resize-handle-bottom-right"] = true;
+				break;
+			case ResizeHandlePlacement.TopLeft:
+				allClasses.root["ui5-popover-resize-handle-top-left"] = true;
+				break;
+			case ResizeHandlePlacement.TopRight:
+				allClasses.root["ui5-popover-resize-handle-top-right"] = true;
+				break;
+			}
+		}
 
 		return allClasses;
 	}
@@ -929,6 +943,57 @@ class Popover extends Popup {
 		return this.resizable && this.onDesktop;
 	}
 
+	_getResizeHandlePlacement() {
+		if (this._resizeHandlePlacement) {
+			return this._resizeHandlePlacement;
+		}
+
+		const offset = 2;
+
+		const opener = this.getOpenerHTMLElement(this.opener);
+		const openerRect = opener!.getBoundingClientRect();
+		const popoverWrapperRect = this.getBoundingClientRect();
+
+		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
+		const openerCY = Math.floor(openerRect.y + openerRect.height / 2);
+
+		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
+		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
+
+		if (this.isRtl) {
+			openerCX = -openerCX;
+			popoverCX = -popoverCX;
+		}
+
+		switch (this.getActualPlacement(openerRect)) {
+		case PopoverActualPlacement.Left:
+			if (popoverCY > openerCY + offset) {
+				return ResizeHandlePlacement.BottomLeft;
+			}
+
+			return ResizeHandlePlacement.TopLeft;
+		case PopoverActualPlacement.Right:
+			if (popoverCY + offset < openerCY) {
+				return ResizeHandlePlacement.TopRight;
+			}
+
+			return ResizeHandlePlacement.BottomRight;
+		case PopoverActualPlacement.Bottom:
+			if (popoverCX + offset < openerCX) {
+				return ResizeHandlePlacement.BottomLeft;
+			}
+
+			return ResizeHandlePlacement.BottomRight;
+		case PopoverActualPlacement.Top:
+		default:
+			if (popoverCX + offset < openerCX) {
+				return ResizeHandlePlacement.TopLeft;
+			}
+
+			return ResizeHandlePlacement.TopRight;
+		}
+	}
+
 	_onResizeMouseDown(e: MouseEvent) {
 		if (!this.resizable) {
 			return;
@@ -940,6 +1005,7 @@ class Popover extends Popup {
 			top,
 			left,
 		} = this.getBoundingClientRect();
+
 		const {
 			width,
 			height,
@@ -954,6 +1020,8 @@ class Popover extends Popup {
 		this._initialLeft = left;
 		this._minWidth = Number.parseFloat(minWidth);
 		// this._cachedMinHeight = this._minHeight;
+
+		this._resizeHandlePlacement = this._getResizeHandlePlacement();
 
 		Object.assign(this.style, {
 			top: `${top}px`,
@@ -1021,13 +1089,9 @@ class Popover extends Popup {
 		delete this._minWidth;
 		delete this._cachedMinHeight;
 
-		this._detachMouseResizeHandlers();
-	}
+		delete this._resizeHandlePlacement;
 
-	_handleDragStart(e: DragEvent) {
-		if (this.draggable) {
-			e.preventDefault();
-		}
+		this._detachMouseResizeHandlers();
 	}
 
 	_attachMouseResizeHandlers() {
