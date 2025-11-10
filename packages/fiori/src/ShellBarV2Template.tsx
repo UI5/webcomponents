@@ -40,28 +40,28 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 				<div class="ui5-shellbar-wrapper">
 
-					{this.hasStartButton && (
+					{this.enabledFeatures.startButton && (
 						<div class="ui5-shellbar-start-button">
 							<slot name="startButton"></slot>
 						</div>
 					)}
 
-					{this.hasBranding && (
+					{this.enabledFeatures.branding && (
 						<div class={{
 							"ui5-shellbar-branding-area": true,
-							"ui5-shellbar-gap-start": this.hasStartButton,
+							"ui5-shellbar-gap-start": this.enabledFeatures.startButton,
 						}}>
 							<slot name="branding"></slot>
 						</div>
 					)}
 
 					{/* Legacy branding (logo + primaryTitle) when no menu items */}
-					{!this.hasBranding && ShellBarV2LegacyBrandingArea.call(this)}
+					{!this.enabledFeatures.branding && ShellBarV2LegacyBrandingArea.call(this)}
 
 					<div class="ui5-shellbar-overflow-container">
 						<div class="ui5-shellbar-overflow-container-inner">
 
-							{this.hasContent && (
+							{this.enabledFeatures.content && (
 								<div
 									class="ui5-shellbar-content-area ui5-shellbar-content-items"
 									role={this.contentRole}
@@ -116,10 +116,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 								</div>
 							)}
 
-							{this.hasSearchField && SearchInBarTemplate.call(this)}
-							{this.hasSearchField && isLegacySearch && ShellBarV2SearchButtonLegacy.call(this)}
+							{this.enabledFeatures.search && SearchInBarTemplate.call(this)}
+							{this.enabledFeatures.search && isLegacySearch && ShellBarV2SearchButtonLegacy.call(this)}
 
-							<div class={`ui5-shellbar-actions-area ${!this.hasSearchField ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
+							<div class={`ui5-shellbar-actions-area ${!this.enabledFeatures.search ? "ui5-shellbar-actions-area--no-search" : ""}`} role={this.actionsRole}>
 
 								{assistantAction && (
 									<div class="ui5-shellbar-assistant-button ui5-shellbar-gap-start">
@@ -215,7 +215,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 				opener="ui5-shellbar-overflow-button"
 				placement="Bottom"
 				hideArrow={true}
-				horizontalAlign="End"
+				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
 			>
 				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {

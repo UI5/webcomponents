@@ -1,6 +1,6 @@
 import type ShellBarV2Item from "../ShellBarV2Item.js";
-import { ACTION_IDS } from "../ShellBarV2.js";
-import type { ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js";
+import { ShellBarV2Actions } from "../ShellBarV2.js";
+import type { ShellBarV2ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js";
 
 interface ShellBarV2HidableItem {
 	id: string;
@@ -28,7 +28,7 @@ interface ShellBarV2OverflowResult {
 
 type ShellBarV2OverflowItem = {
 	type: "action";
-	id: ActionId;
+	id: ShellBarV2ActionId;
 	data: ShellBarV2ActionItem
 	order: number;
 } | {
@@ -41,20 +41,21 @@ type ShellBarV2OverflowItem = {
 class ShellBarV2Overflow {
 	private readonly OPEN_SEARCH_STRATEGY = {
 		CONTENT: 0, 		// All content first
-		ACTIONS: 100,		// All actions next
-		SEARCH: 100,		// Search included in actions
+		ACTIONS: 1000,		// All actions next
+		SEARCH: 1000,		// Search included in actions
 		LAST_CONTENT: 0,	// Last content same as other content
 	};
 
 	private readonly CLOSED_SEARCH_STRATEGY = {
 		ACTIONS: 0,			// All actions first
-		CONTENT: 100,		// Then content (except last)
-		SEARCH: 200,		// Then search button
-		LAST_CONTENT: 300,	// Last content item protected
+		CONTENT: 1000,		// Then content (except last)
+		SEARCH: 2000,		// Then search button
+		LAST_CONTENT: 3000,	// Last content item protected
 	};
 
 	private readonly SELECTORS = {
 		search: ".ui5-shellbar-search-toggle",
+		overflow: ".ui5-shellbar-overflow-button",
 		assistant: ".ui5-shellbar-assistant-button",
 		notifications: ".ui5-shellbar-bell-button",
 	};
@@ -76,7 +77,7 @@ class ShellBarV2Overflow {
 		const sortedItems = this.buildHidableItems(params);
 
 		// First, hide overflow button
-		setVisible(".ui5-shellbar-overflow-button", false);
+		setVisible(this.SELECTORS.overflow, false);
 
 		// show all items
 		sortedItems.forEach(item => {
@@ -100,7 +101,7 @@ class ShellBarV2Overflow {
 
 			if (nextItemToHide.showInOverflow) {
 				// show overflow button to account in isOverflowing calculation
-				setVisible(".ui5-shellbar-overflow-button", true);
+				setVisible(this.SELECTORS.overflow, true);
 				showOverflowButton = true;
 			}
 		}
@@ -180,7 +181,7 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		const notificationAction = actions.find(action => action.id === ACTION_IDS.NOTIFICATIONS);
+		const notificationAction = actions.find(action => action.id === ShellBarV2Actions.Notifications);
 		if (notificationAction) {
 			addItem({
 				id: notificationAction.id,
@@ -190,7 +191,7 @@ class ShellBarV2Overflow {
 			});
 		}
 
-		const assistantAction = actions.find(action => action.id === ACTION_IDS.ASSISTANT);
+		const assistantAction = actions.find(action => action.id === ShellBarV2Actions.Assistant);
 		if (assistantAction) {
 			addItem({
 				id: assistantAction.id,
@@ -203,7 +204,7 @@ class ShellBarV2Overflow {
 		// only when search is closed
 		if (!showSearchField) {
 			addItem({
-				id: ACTION_IDS.SEARCH,
+				id: ShellBarV2Actions.Search,
 				selector: this.SELECTORS.search,
 				hideOrder: priorityStrategy.SEARCH + actionIndex++,
 				showInOverflow: true,
@@ -227,11 +228,11 @@ class ShellBarV2Overflow {
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));
 		hiddenActions.forEach(action => {
 			let order = 0;
-			if (action.id === ACTION_IDS.SEARCH) {
+			if (action.id === ShellBarV2Actions.Search) {
 				order = 0;
-			} else if (action.id === ACTION_IDS.NOTIFICATIONS) {
+			} else if (action.id === ShellBarV2Actions.Notifications) {
 				order = 1;
-			} else if (action.id === ACTION_IDS.ASSISTANT) {
+			} else if (action.id === ShellBarV2Actions.Assistant) {
 				order = 2;
 			}
 
