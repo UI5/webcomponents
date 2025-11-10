@@ -172,9 +172,11 @@ const getScripts = (options) => {
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {
-			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM" : "",
+			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM generateAPI.resolveCEM generateAPI.resolveCEMinternal" : "",
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
+			resolveCEM: `ui5nps-script "${LIB}cem/resolver/resolver.mjs"`,
+			resolveCEMinternal: `ui5nps-script "${LIB}cem/resolver/resolver.mjs" --internal`,
 		},
 	};
 

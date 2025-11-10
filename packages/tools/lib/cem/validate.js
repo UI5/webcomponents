@@ -18,6 +18,8 @@ const validateFn = async () => {
 			filter(e => moduleDoc.declarations.find(d => d.name === e.declaration.name && ["class", "function", "variable", "enum"].includes(d.kind)) || e.name === "default");
 	})
 
+	inputDataInternal.modules = inputDataInternal.modules.filter(moduleDoc => moduleDoc.declarations.length > 0).filter(moduleDoc => moduleDoc.exports.length > 0);
+
 	const clearProps = (data) => {
 		if (Array.isArray(data)) {
 			for (let i = 0; i < data.length; i++) {
