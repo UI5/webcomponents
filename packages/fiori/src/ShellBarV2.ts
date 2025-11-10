@@ -38,7 +38,6 @@ import ShellBarV2Search from "./shellbarv2/ShellBarSearch.js";
 import ShellBarV2SearchLegacy from "./shellbarv2/ShellBarSearchLegacy.js";
 import ShellBarV2Actions from "./shellbarv2/ShellBarActions.js";
 import ShellBarV2Overflow from "./shellbarv2/ShellBarOverflow.js";
-import ShellBarV2Breakpoint from "./shellbarv2/ShellBarBreakpoint.js";
 import ShellBarV2Accessibility from "./shellbarv2/ShellBarAccessibility.js";
 import ShellBarV2ItemNavigation from "./shellbarv2/ShellBarItemNavigation.js";
 
@@ -46,7 +45,6 @@ import ShellBarV2Item from "./ShellBarV2Item.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarV2ActionItem } from "./shellbarv2/ShellBarActions.js";
-import type { ShellBarV2BreakpointType } from "./shellbarv2/ShellBarBreakpoint.js";
 import type { ShellBarV2OverflowResult } from "./shellbarv2/ShellBarOverflow.js";
 
 import type {
@@ -67,6 +65,8 @@ import {
 	SHELLBAR_ADDITIONAL_CONTEXT,
 	SHELLBAR_NOTIFICATIONS_NO_COUNT,
 } from "./generated/i18n/i18n-defaults.js";
+
+type ShellBarV2Breakpoint = "S" | "M" | "L" | "XL" | "XXL";
 
 type ShellBarV2MenuButtonClickEventDetail = {
 	menuButton: HTMLElement;
@@ -387,7 +387,7 @@ class ShellBarV2 extends UI5Element {
 	 * @private
 	 */
 	@property()
-	breakpointSize: ShellBarV2BreakpointType = "M";
+	breakpointSize: ShellBarV2Breakpoint = "M";
 
 	/**
 	 * Actions computed from controllers.
@@ -452,11 +452,20 @@ class ShellBarV2 extends UI5Element {
 	private readonly RESIZE_THROTTLE_RATE = 200; // ms
 	private handleResizeBound: ResizeObserverCallback = throttle(this.handleResize.bind(this), this.RESIZE_THROTTLE_RATE);
 
+	// Breakpoint constants
+	private readonly breakpoints = [599, 1023, 1439, 1919, 10000];
+	private readonly breakpointMap: Record<number, ShellBarV2Breakpoint> = {
+		599: "S",
+		1023: "M",
+		1439: "L",
+		1919: "XL",
+		10000: "XXL",
+	};
+
 	itemNavigation = new ShellBarV2ItemNavigation({
 		getDomRef: () => this.getDomRef() || null,
 	});
 
-	breakpoint = new ShellBarV2Breakpoint();
 	actionsAdaptor = new ShellBarV2Actions();
 	overflowAdaptor = new ShellBarV2Overflow();
 	accessibilityAdaptor = new ShellBarV2Accessibility();
@@ -610,12 +619,20 @@ class ShellBarV2 extends UI5Element {
 	Breakpoint Management
 	============================================================================ */
 	/**
+	 * Calculate breakpoint based on width
+	 */
+	private calculateBreakpoint(width: number): ShellBarV2Breakpoint {
+		const bp = this.breakpoints.find(b => width <= b) || 10000;
+		return this.breakpointMap[bp];
+	}
+
+	/**
 	 * Updates the breakpoint by delegating calculation to controller.
 	 * This is the coordination logic - gather data, delegate, apply result.
 	 */
 	private updateBreakpoint() {
 		const width = this.getBoundingClientRect().width;
-		const breakpoint = this.breakpoint.calculate({ width });
+		const breakpoint = this.calculateBreakpoint(width);
 
 		if (this.breakpointSize !== breakpoint) {
 			this.breakpointSize = breakpoint;
