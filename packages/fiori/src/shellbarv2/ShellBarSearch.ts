@@ -27,6 +27,7 @@ class ShellBarV2Search implements IShellBarSearchController {
 	private getSearchState: () => boolean;
 	private setSearchState: (expanded: boolean) => void;
 	private getCSSVariable: (variable: string) => string;
+	private initialRender = true;
 
 	constructor({
 		getOverflowed,
@@ -74,13 +75,20 @@ class ShellBarV2Search implements IShellBarSearchController {
 
 		const searchHasFocus = document.activeElement === this.getSearchField();
 		const searchHasValue = !!this.getSearchField()?.value;
-		const preventCollapse = searchHasFocus || searchHasValue;
+
+		// On initial load, allow search to collapse even if it would trigger full-screen mode.
+		// This prevents search from showing in full-screen when page loads on small screens.
+		// After initial render, prevent collapse in full-screen mode during resize.
+		const inFullScreen = !this.initialRender && this.shouldShowFullScreen();
+		const preventCollapse = searchHasFocus || searchHasValue || inFullScreen;
 
 		if (hiddenItems > 0 && !preventCollapse) {
 			this.setSearchState(false);
 		} else if (availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
 			this.setSearchState(true);
 		}
+
+		this.initialRender = false;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
+import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import type ShellBarV2 from "../../ShellBarV2.js";
 
 function ShellBarV2SearchField(this: ShellBarV2) {
@@ -21,6 +22,7 @@ function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
 			</div>
 			<Button
 				class="ui5-shellbar-cancel-button ui5-shellbar-gap-start"
+				design={ButtonDesign.Transparent}
 				onClick={this.handleCancelButtonClick}
 			>
 				Cancel

@@ -319,16 +319,6 @@ slot[name="profile"] {
 	flex: 1;
 }
 
-.ui5-shellbar-search-full-width-wrapper .ui5-shellbar-cancel-button {
-	width: auto;
-	flex-shrink: 0;
-	color: var(--_ui5-shellbar_cancel-button-color);
-}
-
-.ui5-shellbar-search-full-width-wrapper .ui5-shellbar-cancel-button:hover {
-	color: var(--_ui5-shellbar_cancel-button-color);
-}
-
 .ui5-shellbar-search-full-width-wrapper ::slotted([ui5-shellbar-search]) {
 	max-width: unset;
 	width: 100%;

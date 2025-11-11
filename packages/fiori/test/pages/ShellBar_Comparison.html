@@ -95,6 +95,21 @@
 	<h1>ShellBar v1 vs ShellBarV2 Comparison</h1>
 
 	<div class="controls">
+		<!-- Theme Selection -->
+		<div class="control-group">
+			<ui5-label>Theme:</ui5-label>
+			<ui5-select id="themeSelect" style="width: 250px;">
+				<ui5-option value="sap_horizon" selected>Horizon (Morning)</ui5-option>
+				<ui5-option value="sap_horizon_dark">Horizon Dark (Evening)</ui5-option>
+				<ui5-option value="sap_horizon_hcb">Horizon High Contrast Black</ui5-option>
+				<ui5-option value="sap_horizon_hcw">Horizon High Contrast White</ui5-option>
+				<ui5-option value="sap_fiori_3">Fiori 3 (Quartz Light)</ui5-option>
+				<ui5-option value="sap_fiori_3_dark">Fiori 3 Dark (Quartz Dark)</ui5-option>
+				<ui5-option value="sap_fiori_3_hcb">Fiori 3 High Contrast Black</ui5-option>
+				<ui5-option value="sap_fiori_3_hcw">Fiori 3 High Contrast White</ui5-option>
+			</ui5-select>
+		</div>
+
 		<!-- Basic Features -->
 		<div class="control-group">
 			<ui5-label>Notifications:</ui5-label>
@@ -201,6 +216,7 @@
 	<div class="info">
 		<strong>How to use:</strong> Toggle switches to enable/disable features. Both ShellBars update simultaneously for easy comparison.
 		<br><strong>Tip:</strong> Resize window to test overflow behavior with content items. Check console for event logs.
+		<br><strong>Themes:</strong> Switch between all 8 available themes (Horizon and Fiori 3 families, including dark and high contrast variants).
 		<br><strong>Branding Mode:</strong> Switch between new Branding Slot and legacy Logo + Primary Title modes. Menu items only available in legacy mode.
 	</div>
 
@@ -266,6 +282,7 @@
 		const shellbarV1 = document.getElementById('shellbarV1');
 		const shellbarV2 = document.getElementById('shellbarV2');
 		
+		const themeSelect = document.getElementById('themeSelect');
 		const toggleNotifications = document.getElementById('toggleNotifications');
 		const toggleProductSwitch = document.getElementById('toggleProductSwitch');
 		const toggleSearchField = document.getElementById('toggleSearchField');
@@ -281,6 +298,14 @@
 		const searchType = document.getElementById('searchType');
 		const notificationsCount = document.getElementById('notificationsCount');
 		const brandingMode = document.getElementById('brandingMode');
+
+		// Theme selector
+		themeSelect.addEventListener('ui5-change', (e) => {
+			const theme = e.detail.selectedOption.value;
+			console.log('Theme changed to:', theme);
+			const Conf = window["sap-ui-webcomponents-bundle"].configuration;
+			Conf.setTheme(theme);
+		});
 
 		// Element templates for dynamic creation
 		const elementTemplates = {

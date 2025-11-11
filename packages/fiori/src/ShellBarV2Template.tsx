@@ -43,16 +43,13 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 				<div class="ui5-shellbar-wrapper">
 
 					{this.enabledFeatures.startButton && (
-						<div class="ui5-shellbar-start-button">
+						<div class="ui5-shellbar-start-button ui5-shellbar-gap-end">
 							<slot name="startButton"></slot>
 						</div>
 					)}
 
 					{this.enabledFeatures.branding && (
-						<div class={{
-							"ui5-shellbar-branding-area": true,
-							"ui5-shellbar-gap-start": this.enabledFeatures.startButton,
-						}}>
+						<div class="ui5-shellbar-branding-area">
 							<slot name="branding"></slot>
 						</div>
 					)}

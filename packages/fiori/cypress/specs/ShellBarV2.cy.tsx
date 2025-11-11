@@ -1089,7 +1089,7 @@ describe("Events", () => {
 				.find(".ui5-shellbar-overflow-popover")
 				.should("to.exist")
 				.invoke("prop", "open", true);
-		
+
 		});
 	});
 });
@@ -1196,6 +1196,60 @@ describe("ButtonBadge in ShellBar", () => {
 			.find(".ui5-shellbar-overflow-button ui5-button-badge[slot='badge']")
 			.should("exist")
 			.should("have.attr", "text", "42");
+	});
+});
+
+describe("Search Controllers", () => {
+	it("Test search doesn't collapse in full-screen mode during resize", () => {
+		cy.mount(
+			<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				<ShellBarItem icon={activities} text="Action"></ShellBarItem>
+				<Button slot="content">Button</Button>
+			</ShellBar>
+		);
+
+		// search not focused
+		cy.get("#search").should("not.be.focused");
+		// search field is empty
+		cy.get("#search").should("have.value", "");
+
+		cy.viewport(400, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+
+		cy.viewport(360, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+	});
+
+	it("Test legacy search doesn't collapse in full-screen mode during resize", () => {
+		cy.mount(
+			<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Input id="search" slot="searchField"></Input>
+				<ShellBarItem icon={activities} text="Action"></ShellBarItem>
+				<Button slot="content">Button</Button>
+			</ShellBar>
+		);
+
+		// search not focused
+		cy.get("#search").should("not.be.focused");
+		// search field is empty
+		cy.get("#search").should("have.value", "");
+
+		cy.viewport(400, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+
+		cy.viewport(360, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
 	});
 });
 
