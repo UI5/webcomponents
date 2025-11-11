@@ -27,6 +27,7 @@
 					press: function () {
 						new Dialog("openUI5Dialog", {
 							title: "OpenUI5 Dialog",
+							draggable: true,
 							content: [
 								new HTML({
 									content:
@@ -112,7 +113,6 @@
 						}
 					}).placeAt("dialog1content");
 
-
 					ShortcutHintsMixin.addConfig(button, {
 						event: "press",
 						position: "0 0",
@@ -128,20 +128,31 @@
 			document.getElementById("popoverButtonNoFocus").addEventListener("click", function (event) {
 				openUI5Popover(event.target);
 			});
+
+			document.getElementById("someButton2").addEventListener("click", function () {
+				openUI5Dialog2();
+			});
+			document.getElementById("someButton3").addEventListener("click", function () {
+				openUI5Dialog3();
+			});
+			document.getElementById("someButton4").addEventListener("click", function () {
+				document.getElementById("newDialog4").open = true;
+			});
 		}
 
 		function openUI5Dialog() {
 			sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
 				new Dialog("openUI5DialogWithButtons", {
-					title: "OpenUI5 Dialog",
+					title: "UI5 Dialog 1",
+					draggable: true,
 					content: [
 						new Button({
 							text: "Focus stop"
 						}),
 						new Button("openUI5DialogButton", {
-							text: "Open WebC Dialog",
+							text: "Open UI5 Dialog 2",
 							press: function () {
-								document.getElementById("newDialog1").open = true;
+								openUI5Dialog2();
 							}
 						})
 					],
@@ -151,6 +162,52 @@
 				}).open();
 			});
 		}
+
+		function openUI5Dialog2() {
+				sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
+					new Dialog("openUI5DialogWithButtons2", {
+						title: "UI5 Dialog 2",
+						draggable: true,
+						content: [
+							new Button({
+								text: "Focus stop"
+							}),
+							new Button("openUI5DialogButton2", {
+								text: "Open WebC Dialog 2",
+								press: function () {
+									document.getElementById("newDialog2").open = true;
+								}
+							})
+						],
+						afterClose: function () {
+							this.destroy();
+						}
+					}).open();
+				});
+			}
+
+			function openUI5Dialog3() {
+					sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
+						new Dialog("openUI5DialogWithButtons3", {
+							title: "UI5 Dialog 3",
+							draggable: true,
+							content: [
+								new Button({
+									text: "Focus stop"
+								}),
+								new Button("openUI5DialogButton22", {
+									text: "Open WebC Dialog 3",
+									press: function () {
+										document.getElementById("newDialog3").open = true;
+									}
+								})
+							],
+							afterClose: function () {
+								this.destroy();
+							}
+						}).open();
+					});
+				}
 
 		function openUI5Popover(opener) {
 			sap.ui.require(["sap/m/Popover", "sap/m/Button"], (Popover, Button) => {
@@ -189,7 +246,7 @@
 	<div id="buttonP">
 		<ui5-button id="myButton">Open WebC Dialog</ui5-button>
 	</div>
-	<ui5-dialog id="dialog1" header-text="This is an WebC Dialog 1">
+	<ui5-dialog id="dialog1" draggable header-text="This is an WebC Dialog 1">
 		<div id="dialog1content"></div>
 		<br >
 		Web Components:
@@ -211,8 +268,18 @@
 		<ui5-button id="dialogButton">Open UI5 dialog</ui5-button>
 		<ui5-button id="popoverButtonNoFocus">Open UI5 Popover No Initial Focus</ui5-button>
 	</ui5-dialog>
-	<ui5-dialog id="newDialog1" header-text="This is an WebC Dialog 2">
-		<ui5-button id="someButton">Some button</ui5-button>
+	<ui5-dialog id="newDialog1" draggable header-text="This is an WebC Dialog 2">
+		<ui5-button id="someButton2">Some button 1</ui5-button>
+	</ui5-dialog>
+	<ui5-dialog id="newDialog2" draggable header-text="This is an WebC Dialog 3">
+		<ui5-button id="someButton3">Open UI5 Dialog</ui5-button>
+	</ui5-dialog>
+	<ui5-dialog id="newDialog3" draggable header-text="This is an WebC Dialog 3">
+		<ui5-button id="someButton4">Some button 3</ui5-button>
+	</ui5-dialog>
+
+	<ui5-dialog id="newDialog4" draggable header-text="This is an WebC Dialog 4">
+		<ui5-button id="someButton5">Some button 3</ui5-button>
 	</ui5-dialog>
 	<div id="content"></div>
 	<ui5-responsive-popover id="respPopover"
