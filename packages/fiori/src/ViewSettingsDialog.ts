@@ -575,7 +575,7 @@ class ViewSettingsDialog extends UI5Element {
 
 	/**
 	 * Sets the selected property of the clicked item.
-	 * @param e
+	 * @param itemText
 	 * @private
 	 */
 	_setSelectedProp(itemText: string) {
