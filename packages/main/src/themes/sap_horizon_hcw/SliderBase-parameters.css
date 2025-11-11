@@ -18,7 +18,7 @@
 	--_ui5_range_slider_handle_background: var(--sapSlider_RangeHandleBackground);
 	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
 	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
-	--_ui5_slider_inner_height: 0.25rem;
+	--_ui5_slider_inner_height: 0.375rem;
 	--_ui5_slider_progress_border_radius: 0.25rem;
 	--_ui5_slider_progress_background: var(--sapSlider_Selected_Background);
 	--_ui5_slider_progress_container_background: var(--sapSlider_Background);
@@ -39,9 +39,8 @@
 	--_ui5_slider_progress_box_sizing: border-box;
 
 	--_ui5_slider_progress_container_top: .0625rem;
-	--_ui5_slider_progress_height: .375rem;
+	--_ui5_slider_progress_height: .25rem;
 	--_ui5_slider_active_progress_left: -.0625rem;
-	--_ui5_slider_active_progress_top: -.15625rem;
 
 	--_ui5_slider_no_tickmarks_progress_container_top: 0;
 	--_ui5_slider_no_tickmarks_progress_height: 100%;
