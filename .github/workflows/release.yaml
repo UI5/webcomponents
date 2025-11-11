@@ -1,0 +1,260 @@
+name: Release
+
+on:
+  # Manual releases
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'type'
+        required: true
+        type: choice
+        options:
+          - 'rc'
+          - 'stable'
+          - 'hotfix'
+          - 'experimental'
+        default: 'rc'
+      new_version:
+        description: 'version (stable and hotfix only)'
+        required: false
+        default: ''
+        type: string
+      npm_tag:
+          description: 'tag (hotfix only)'
+          required: false
+          default: ''
+          type: string
+
+  # Scheduled automatic RC releases
+  schedule:
+    - cron: "00 08 * * THU"  # Thursdays at 8 AM UTC
+
+jobs:
+  # ✅ Job 1: Stable Release Flow
+  stable-release:
+    if: ${{ github.event.inputs.release_type == 'stable' }}
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Version Bump
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
+          git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} --conventional-graduate --force-conventional-graduate --yes --exact --create-release github
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Publish
+        run: |
+          yarn lerna publish from-git --yes
+
+      - name: Merge Release Changelog
+        uses: actions/github-script@v7
+        env:
+            GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+            github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+            script: |
+              const mergeReleaseChangelog = (await import('${{ github.workspace }}/.github/actions/mergeReleaseChangelog.mjs')).default;
+              await mergeReleaseChangelog({ github , context });
+
+      - name: Publish Release Comments
+        uses: actions/github-script@v7
+        env:
+            NODE_OPTIONS: '--max-old-space-size=12096'
+            GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+            github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+            script: |
+              const commentOnFixedIssues = (await import('${{ github.workspace }}/.github/actions/commentOnFixedIssues.mjs')).default;
+              await commentOnFixedIssues({ github, context });
+
+      - name: Pre-Deploy
+        env:
+          DEPLOYMENT_TYPE: "latest"
+        run: |
+          yarn ci:deploy
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: packages/website/build # The folder the action should deploy.
+          clean: true
+          clean-exclude: |
+              nightly
+              v1
+              googlea519d963aa8f580f.html
+
+  # ✅ Job 2: RC Release Flow
+  rc-release:
+    if: ${{ github.event.inputs.release_type == 'rc' || github.event_name == 'schedule' }}
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Version Bump
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
+          git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
+          yarn lerna version --conventional-prerelease --force-publish --yes --exact --create-release github
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Publish
+        run: |
+          yarn lerna publish from-git --yes
+
+      - name: Pre-Deploy
+        run: |
+          yarn ci:deploy:nightly
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages
+          folder: packages/website/build
+          target-folder: nightly
+          clean: true
+
+      - name: Publish Release Comments
+        uses: actions/github-script@v7
+        env:
+            NODE_OPTIONS: '--max-old-space-size=12096'
+            GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+            github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+            script: |
+              const commentOnFixedIssues = (await import('${{ github.workspace }}/.github/actions/commentOnFixedIssues.mjs')).default;
+              await commentOnFixedIssues({ github, context });
+
+
+  # ✅ Job 3: Hotfix Release Flow
+  hotfix-release:
+    if: ${{ github.event.inputs.release_type == 'hotfix' }}
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Version Bump
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
+          git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} --conventional-graduate --force-conventional-graduate --yes --exact --create-release github
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Publish
+        run: yarn lerna publish from-git --yes --dist-tag ${{ github.event.inputs.npm_tag || 'sf' }}
+
+
+  # ✅ Job 4: Experimental Release Flow
+  experimental-release:
+    if: ${{ github.event.inputs.release_type == 'experimental' }}
+    permissions:
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Version Bump
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
+          git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
+          git_hash=$(git rev-parse --short "${{ github.sha }}")
+          yarn lerna version "0.0.0-${git_hash}" \
+            --exact \
+            --no-push \
+            --yes \
+            --allow-branch ${{ github.ref_name }} \
+            --ignore-changes @ui5/webcomponents-website \
+            --ignore-changes @ui5/webcomponents-cypress-internal \
+            --ignore-changes @ui5/webcomponents-cypress-ct
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Publish
+        run: |
+          yarn lerna publish from-git --yes --dist-tag experimental

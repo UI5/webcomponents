@@ -7,6 +7,7 @@ import ToggleButton from "./ToggleButton.js";
 import SuggestionItem from "./SuggestionItem.js";
 import Icon from "./Icon.js";
 import List from "./List.js";
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import CheckBox from "./CheckBox.js";
 
@@ -114,7 +115,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 				hideArrow={true}
 				class="ui5-valuestatemessage-popover"
 				placement="Bottom"
-				horizontalAlign={this._valueStatePopoverHorizontalAlign}
+				horizontalAlign={PopoverHorizontalAlign.Start}
 				tabIndex={-1}
 				open={this.valueStateOpen}
 				opener={this}

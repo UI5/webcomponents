@@ -18,6 +18,10 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
+type TextAreaVersionChangeEventDetail = {
+	backwards: boolean,
+};
+
 /**
  * @class
  *
@@ -59,6 +63,7 @@ import TextAreaTemplate from "./TextAreaTemplate.js";
 /**
  * Fired when the user clicks on version navigation buttons.
  *
+ * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default).
  * @public
  */
 @event("version-change")
@@ -72,10 +77,8 @@ import TextAreaTemplate from "./TextAreaTemplate.js";
 
 class TextArea extends BaseTextArea {
 	eventDetails!: BaseTextArea["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
+		"version-change": TextAreaVersionChangeEventDetail;
+		"stop-generation": void;
 	};
 
 	// Store bound handler for proper cleanup
@@ -242,4 +245,5 @@ class TextArea extends BaseTextArea {
 
 TextArea.define();
 
+export type { TextAreaVersionChangeEventDetail };
 export default TextArea;

@@ -957,8 +957,8 @@ describe("ARIA attributes", () => {
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find("[ui5-button].ui5-dynamic-page-header-action-expand")
-			.should("have.prop", "accessibleName", "Snap Header")
-			.should("have.prop", "tooltip", "Snap Header");
+			.should("have.prop", "accessibleName", "Collapse Header")
+			.should("have.prop", "tooltip", "Collapse Header");
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
