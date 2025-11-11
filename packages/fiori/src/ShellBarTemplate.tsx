@@ -172,7 +172,9 @@ export default function ShellBarTemplate(this: ShellBar) {
 											data-ui5-notifications-count={this.notificationsCount}
 											data-ui5-stable="toggle-search"
 											onClick={this._handleSearchIconPress}
-											tooltip={this.accInfo.search.title}
+											tooltip={this._searchBtnOpen}
+											aria-label={this._searchBtnOpen}
+											aria-expanded={this.showSearchField}
 											accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
 										/>
 									)}
@@ -195,7 +197,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 									icon="sap-icon://bell"
 									data-ui5-text="Notifications"
 									onClick={this._handleNotificationsPress}
-									tooltip={this.accInfo.notifications.title}
+									tooltip={this._notificationsText}
 									accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
 									data-ui5-stable="notifications"
 								>
