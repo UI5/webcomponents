@@ -16,18 +16,6 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 
-/**
- * @class
- * ### Overview
- *
- * The `ui5-user-settings-account-view` represents a view displayed in the `ui5-user-settings-item`.
- *
- * @constructor
- * @extends UI5Element
- * @experimental
- * @public
- * @since 2.17.0
- */
 @customElement({
 	tag: "ui5-user-settings-account-view",
 	renderer: jsxRenderer,
@@ -46,6 +34,18 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
  */
 @event("manage-account-click")
 
+/**
+ * @class
+ * ### Overview
+ *
+ * The `ui5-user-settings-account-view` represents a view displayed in the `ui5-user-settings-item`.
+ *
+ * @constructor
+ * @extends UserSettingsView
+ * @experimental
+ * @public
+ * @since 2.17.0
+ */
 class UserSettingsAccountView extends UserSettingsView {
 	eventDetails!: {
 		"edit-accounts-click": void;

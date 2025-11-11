@@ -6,8 +6,6 @@
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	/*padding: 40px 8px 8px 8px;*/
-	/*gap: 8px;*/
 }
 
 .ui5-user-settings-account-avatar {
@@ -67,7 +65,7 @@
 
 .ui5-user-settings-account-btn {
 	display: flex;
-	padding: 6px;
+
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
@@ -75,3 +73,8 @@
 	border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
 	background: var(--sapButton_Background);
 }
+
+.ui5-user-settings-account-btn::part(button) {
+	padding: 6px;
+}
+

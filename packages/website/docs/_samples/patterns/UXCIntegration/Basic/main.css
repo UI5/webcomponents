@@ -55,17 +55,6 @@
 	margin: 3rem;
 }
 
-.ua-info-profile{
-	align-self: center;
-}
-
-.ua-info-item{
-	display: grid;
-	grid-template-columns: 50px 1fr;
-	align-items: center;
-	gap: 16px;
-}
-
 .ua-panel{
 	border-top: 2px solid lightgrey;
 	margin: 1rem;

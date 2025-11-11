@@ -36,6 +36,8 @@ const shellbar = document.getElementById("shellbar");
 const menuShellBar = document.getElementById("userMenuShellBar");
 const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+const account = document.getElementById("account");
+const resetAllButton = document.getElementById("reset-all-button");
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
 const mobile2Button = document.getElementById("mobile2-button");
@@ -67,6 +69,18 @@ menuShellBar.addEventListener("item-click", function (event) {
 		case "setting":
 			settingsDialog.open = true;
 	}
+});
+
+account.addEventListener("edit-accounts-click", function () {
+	console.log("Avatar clicked");
+});
+
+account.addEventListener("manage-account-click", function () {
+	console.log("Manage account clicked");
+});
+
+resetAllButton.addEventListener("click", function () {
+	additionalDialog.open = true;
 });
 
 mobile1Button.addEventListener("click", function () {

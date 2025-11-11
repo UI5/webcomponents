@@ -1,12 +1,12 @@
 import type UserSettingsAccountView from "./UserSettingsAccountView.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
-import personPlaceholder from "@ui5/webcomponents-icons/person-placeholder.js";
 import Tag from "@ui5/webcomponents/dist/Tag.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
-import edit from "@ui5/webcomponents-icons/edit.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
-import userSettings from "@ui5/webcomponents-icons/user-settings.js";
+import personPlaceholder from "@ui5/webcomponents-icons/dist/person-placeholder.js";
+import edit from "@ui5/webcomponents-icons/dist/edit.js";
+import userSettings from "@ui5/webcomponents-icons/dist/user-settings.js";
 
 export default function UserSettingsAccountViewTemplate(this: UserSettingsAccountView) {
 	return (
