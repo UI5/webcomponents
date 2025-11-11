@@ -52,13 +52,12 @@ class UserSettingsAccountView extends UserSettingsView {
 		"manage-account-click": void;
 	}
 	/**
-	 * Defines the user accounts
+	 * Defines the user account
 	 *
 	 * @public
 	 */
 	@slot({
 		type: HTMLElement,
-		individualSlots: true,
 		invalidateOnChildChange: {
 			properties: true,
 			slots: false,
