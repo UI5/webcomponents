@@ -114,7 +114,7 @@ type VSDInternalSettings = {
  * @extends UI5Element
  * @since 1.0.0-rc.16
  * @public
- * @csspart reset-button - Used to style the reset button in the header.
+ * @csspart header - Used to style the header.
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",

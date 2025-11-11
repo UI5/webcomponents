@@ -16,7 +16,7 @@ import type ViewSettingsDialog from "./ViewSettingsDialog.js";
 function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 	return (
 		<div slot="header" class="ui5-vsd-header">
-			<div class="ui5-vsd-header-container">
+			<div class="ui5-vsd-header-container" part="header">
 				<div class="ui5-vsd-header-start">
 					{this.showBackButton && (
 						<Button
@@ -36,7 +36,6 @@ function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 				<div class="ui5-vsd-header-end">
 					<Button
 						design="Transparent"
-						part="reset-button"
 						onClick={this._resetSettings}
 						disabled={this._disableResetButton}
 					>{this._resetButtonLabel}</Button>
