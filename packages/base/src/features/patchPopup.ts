@@ -37,6 +37,19 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 };
 
 const removeOpenedPopup = (popup: object) => {
+	if (isNativePopoverOpen()) {
+		const prevPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 2];
+		if (prevPopup && prevPopup.type === "OpenUI5") {
+			const content = (prevPopup.instance as any).getContent().getDomRef() as HTMLElement;
+			const block = document.getElementById("sap-ui-blocklayer-popup");
+
+			content.hidePopover();
+
+			block?.showPopover();
+			content.showPopover();
+		}
+	}
+
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
 	if (index > -1) {
 		AllOpenedPopupsRegistry.openedRegistry.splice(index, 1);
@@ -68,85 +81,29 @@ const hasWebComponentPopupAbove = (popup: object) => {
 	return false;
 };
 
-const blocks: any[] = [];
-const popovers: any[] = [];
-
 const openNativePopover = (domRef: HTMLElement) => {
 	const block = document.getElementById("sap-ui-blocklayer-popup");
-	popovers.push(domRef);
-
-	if (block?.hasAttribute("popover")) {
-		const newBlock = block?.cloneNode(true);
-		if (newBlock) {
-			(newBlock as HTMLElement).setAttribute("id", `sap-ui-blocklayer-popup${blocks.length}`);
-			const staticArea = document.getElementById("sap-ui-static");
-
-			staticArea?.appendChild(newBlock);
-			block?.hidePopover();
-			block?.removeAttribute("popover");
-			blocks.push(newBlock);
-		}
-
-		block?.removeAttribute("popover");
-	}
 
 	block?.setAttribute("popover", "manual");
-	// blocks.push(block);
+	block?.hidePopover();
 	block?.showPopover();
 
 	domRef.setAttribute("popover", "manual");
 	domRef.showPopover();
 };
 
-const closeNativePopover = () => {
-	const allPopupsIndex = AllOpenedPopupsRegistry.openedRegistry.findIndex(element => {
-		const instance = element.instance as { _sInitialFocusId?: string };
-		return instance._sInitialFocusId === popovers[popovers.length - 1].id;
-	});
-	if (AllOpenedPopupsRegistry.openedRegistry[allPopupsIndex - 1]?.type === "WebComponent") {
-		popovers.pop();
-		if (popovers.length > 0 && blocks.length > 0) {
-			popovers[popovers.length - 1].hidePopover();
-			blocks[blocks.length - 1].hidePopover();
-			document.getElementById("sap-ui-blocklayer-popup")?.hidePopover();
+const closeNativePopover = (domRef: HTMLElement) => {
+	if (domRef.hasAttribute("popover")) {
+		domRef.hidePopover();
+		domRef.removeAttribute("popover");
+	}
 
-			(AllOpenedPopupsRegistry.openedRegistry[allPopupsIndex - 1].instance as HTMLElement).addEventListener("ui5-close", () => {
-				if ((AllOpenedPopupsRegistry.openedRegistry[allPopupsIndex - 2]?.type === "OpenUI5")) {
-					popovers[1].hidePopover();
-					const lastBlock = blocks[blocks.length - 1];
-					const lastPopover = popovers[popovers.length - 1];
-
-					arrangeBlocksAndPopovers(lastBlock as HTMLElement, lastPopover as HTMLElement);
-				}
-			});
-			return;
+	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
+	if (lastPopup.type === "OpenUI5") {
+		const block = document.getElementById("sap-ui-blocklayer-popup");
+		if (block && block.hasAttribute("popover")) {
+			block.hidePopover();
 		}
-	}
-
-	popovers.pop();
-	if (popovers.length > 0 && blocks.length > 0) {
-		const lastBlock = blocks[blocks.length - 1];
-		const lastPopover = popovers[popovers.length - 1];
-		arrangeBlocksAndPopovers(lastBlock as HTMLElement, lastPopover as HTMLElement);
-	}
-	if (popovers.length === 0 && blocks.length > 0) {
-		blocks[blocks.length - 1]?.hidePopover();
-	}
-};
-
-const arrangeBlocksAndPopovers = (block: HTMLElement, popover: HTMLElement) => {
-	block?.hidePopover();
-	popover.hidePopover();
-	block?.showPopover();
-
-	const ui5block = document.getElementById("sap-ui-blocklayer-popup");
-	if (ui5block) {
-		ui5block.style.visibility = "hidden";
-	}
-	if (popover.isConnected) {
-		popover?.showPopover();
-	} else if (popovers.length === 1 && AllOpenedPopupsRegistry.openedRegistry[0]?.type === "WebComponent") {
-		blocks.forEach(b => { b.hidePopover(); });
 	}
 };
 
@@ -202,7 +159,7 @@ const patchClosed = (Popup: OpenUI5Popup) => {
 		const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 		_origClosed.apply(this, args); // only then call _close
 		if (domRef) {
-			closeNativePopover(); // unset the popover attribute and close the native popover, but only if still in DOM
+			closeNativePopover(domRef); // unset the popover attribute and close the native popover, but only if still in DOM
 		}
 
 		removeOpenedPopup(this);
