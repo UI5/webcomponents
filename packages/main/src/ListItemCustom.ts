@@ -56,7 +56,7 @@ class ListItemCustom extends ListItem {
 	@property()
 	declare accessibleName?: string;
 
-	async _onkeydown(e: KeyboardEvent) {
+	_onkeydown(e: KeyboardEvent) {
 		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
 
@@ -64,7 +64,7 @@ class ListItemCustom extends ListItem {
 			return;
 		}
 
-		await super._onkeydown(e);
+		super._onkeydown(e);
 	}
 
 	_onkeyup(e: KeyboardEvent) {
