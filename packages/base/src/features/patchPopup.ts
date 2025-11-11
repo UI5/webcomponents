@@ -143,7 +143,11 @@ const arrangeBlocksAndPopovers = (block: HTMLElement, popover: HTMLElement) => {
 	if (ui5block) {
 		ui5block.style.visibility = "hidden";
 	}
-	popover.showPopover();
+	if (popover.isConnected) {
+		popover?.showPopover();
+	} else if (popovers.length === 1 && AllOpenedPopupsRegistry.openedRegistry[0]?.type === "WebComponent") {
+		blocks.forEach(b => { b.hidePopover(); });
+	}
 };
 
 const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean => {
