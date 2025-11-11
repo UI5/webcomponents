@@ -1253,6 +1253,47 @@ describe("Search Controllers", () => {
 	});
 });
 
+describe("Overflow", () => {
+	it("Test hidden actions stay hidden when search expands", () => {
+		cy.mount(
+			<ShellBar id="shellbar" showNotifications={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<Button slot="content">Content 1</Button>
+				<Button slot="content">Content 2</Button>
+				<Button slot="content">Content 3</Button>
+				<Button slot="content">Content 4</Button>
+				<Button slot="content">Content 5</Button>
+				<Button slot="content">Content 6</Button>
+				<Button slot="content">Content 7</Button>
+				<Button slot="content">Content 8</Button>
+				<ShellBarSearch slot="searchField"></ShellBarSearch>
+				<ShellBarItem id="item1" icon={activities} text="Action 1"></ShellBarItem>
+				<ShellBarItem id="item2" icon={activities} text="Action 2"></ShellBarItem>
+				<ShellBarItem id="item3" icon={sysHelp} text="Action 3"></ShellBarItem>
+				<ShellBarItem id="item4" icon={sysHelp} text="Action 4"></ShellBarItem>
+				<ShellBarItem id="item5" icon={activities} text="Action 5"></ShellBarItem>
+				<ShellBarItem id="item6" icon={activities} text="Action 6"></ShellBarItem>
+				<ShellBarItem id="item7" icon={sysHelp} text="Action 7"></ShellBarItem>
+				<ShellBarItem id="item8" icon={sysHelp} text="Action 8"></ShellBarItem>
+			</ShellBar>
+		);
+
+		cy.viewport(1000, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Verify actions are hidden in overflow
+		cy.get("#shellbar").shadow().find(".ui5-shellbar-overflow-button").should("exist");
+		cy.get("#item1").should("not.be.visible");
+
+		// Expand search
+		cy.get("#shellbar").invoke("prop", "showSearchField", true);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Hidden actions should stay hidden (no flicker)
+		cy.get("#item1").should("not.be.visible");
+	});
+});
+
 describe("Keyboard Navigation", () => {
 	it("Test logo area elements are not rendered when no logo and primaryTitle are provided", () => {
 		cy.mount(<ShellBar></ShellBar>);

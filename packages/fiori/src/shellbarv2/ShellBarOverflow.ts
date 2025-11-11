@@ -123,12 +123,7 @@ class ShellBarV2Overflow {
 		const items: ShellBarV2HidableItem[] = [];
 		const priorityStrategy = showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
 
-		const addItem = (itemData: Omit<ShellBarV2HidableItem, "keepHidden">) => {
-			items.push({
-				keepHidden: hiddenItemsIds.includes(itemData.id),
-				...itemData,
-			});
-		};
+		const addItem = (itemData: ShellBarV2HidableItem) => items.push(itemData);
 
 		// Build content items
 		content.forEach((item, index) => {
@@ -142,6 +137,7 @@ class ShellBarV2Overflow {
 				id: slotName,
 				selector: `#${slotName}`,
 				hideOrder: priority + dataHideOrder,
+				keepHidden: false,
 				showInOverflow: false,
 			});
 		});
@@ -153,6 +149,7 @@ class ShellBarV2Overflow {
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+				keepHidden: hiddenItemsIds.includes(item._id),
 				showInOverflow: true,
 			});
 		});
@@ -168,6 +165,7 @@ class ShellBarV2Overflow {
 					id: config.id,
 					selector: config.selector,
 					hideOrder: priorityStrategy.ACTIONS + actionIndex++,
+					keepHidden: hiddenItemsIds.includes(config.id),
 					showInOverflow: true,
 				});
 			}
@@ -179,10 +177,20 @@ class ShellBarV2Overflow {
 				id: ShellBarV2Actions.Search,
 				selector: this.SELECTORS.search,
 				hideOrder: priorityStrategy.SEARCH + actionIndex++,
+				keepHidden: false,
 				showInOverflow: true,
 			});
 		}
-		return items.sort((a, b) => a.hideOrder - b.hideOrder);
+		// sort by hideOrder first then by keepHidden keepHidden items are at the start
+		return items.sort((a, b) => {
+			if (a.keepHidden && !b.keepHidden) {
+				return -1;
+			}
+			if (!a.keepHidden && b.keepHidden) {
+				return 1;
+			}
+			return a.hideOrder - b.hideOrder;
+		});
 	}
 
 	getOverflowItems(params: {
