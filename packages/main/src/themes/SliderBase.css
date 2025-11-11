@@ -72,7 +72,7 @@
 	height: var(--_ui5_slider_progress_height);
 	position: relative;
 	outline: none;
-	box-sizing: border-box;
+	box-sizing: var(--_ui5_slider_active_progress_box_sizing);
 	border: var(--_ui5_slider_active_progress_border);
 	left: var(--_ui5_slider_active_progress_left);
 	top: var(--_ui5_slider_active_progress_top);
@@ -84,7 +84,7 @@
 	margin: 0;
 	top: var(--_ui5_slider_tickmark_top);
 	display: flex;
-	box-sizing: content-box;
+	box-sizing: border-box;
 	width: 100%;
 	justify-content: space-between;
 	position: absolute;
