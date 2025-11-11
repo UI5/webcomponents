@@ -20,13 +20,13 @@
 }
 
 /* pointing right arrow */
-:host([actual-placement="Start"]) .ui5-popover-arrow {
+:host([actual-placement="Left"]) .ui5-popover-arrow {
 	top: calc(50% - 0.5625rem);
 	right: -0.5625rem;
 	width: 0.5625rem;
 }
 
-:host([actual-placement="Start"]) .ui5-popover-arrow:after {
+:host([actual-placement="Left"]) .ui5-popover-arrow:after {
 	margin: var(--_ui5_popover_right_arrow_margin);
 }
 
@@ -43,7 +43,7 @@
 
 /* pointing left arrow */
 :host(:not([actual-placement])) .ui5-popover-arrow,
-:host([actual-placement="End"]) .ui5-popover-arrow {
+:host([actual-placement="Right"]) .ui5-popover-arrow {
 	left: -0.5625rem;
 	top: calc(50% - 0.5625rem);
 	width: 0.5625rem;
@@ -51,7 +51,7 @@
 }
 
 :host(:not([actual-placement])) .ui5-popover-arrow:after,
-:host([actual-placement="End"]) .ui5-popover-arrow:after {
+:host([actual-placement="Right"]) .ui5-popover-arrow:after {
 	margin: var(--_ui5_popover_left_arrow_margin);
 }
 

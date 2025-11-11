@@ -178,9 +178,9 @@ describe("Initial rendering", () => {
 	it("tests setting tabs", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="Setting1">
+				<UserSettingsView text="Setting1" slot="tabs">
 						 </UserSettingsView>
-				<UserSettingsView text="Setting2">
+				<UserSettingsView text="Setting2" slot="tabs">
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -364,11 +364,11 @@ describe("Events", () => {
 	it("tests back-click event on secondary page", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView slot="pages">
+				<UserSettingsView>
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView slot="pages" text="Inner Page" id="notification-second-page" secondary selected>second page content
+				<UserSettingsView text="Inner Page" id="notification-second-page" secondary selected>second page content
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -394,11 +394,11 @@ describe("Events", () => {
 		cy.ui5SimulateDevice("phone");
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView slot="pages">
+				<UserSettingsView>
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView slot="pages" text="Inner Page" id="notification-second-page" secondary>second page content
+				<UserSettingsView text="Inner Page" id="notification-second-page" secondary>second page content
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -433,11 +433,11 @@ describe("Events", () => {
 	it("tests selection-change event", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="First tab">
+				<UserSettingsView text="First tab" slot="tabs">
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView text="Second tab" id="notification-second-page">second tab
+				<UserSettingsView text="Second tab" id="notification-second-page" slot="tabs">second tab
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -459,11 +459,11 @@ describe("Events", () => {
 	it("tests selection-change event prevented", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="First tab">
+				<UserSettingsView text="First tab" slot="tabs">
 					<Button id="product1-button">Product 1</Button>
 					<Button id="product2-button">Product 2</Button>
 				</UserSettingsView>
-				<UserSettingsView text="Second tab" id="notification-second-page">second tab
+				<UserSettingsView text="Second tab" id="notification-second-page" slot="tabs">second tab
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);
@@ -574,9 +574,9 @@ describe("Responsiveness", () => {
 		cy.ui5SimulateDevice("phone");
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
-				<UserSettingsView text="Setting1">
+				<UserSettingsView text="Setting1" slot="tabs">
 						 </UserSettingsView>
-				<UserSettingsView text="Setting2">
+				<UserSettingsView text="Setting2" slot="tabs">
 				</UserSettingsView>
 			</UserSettingsItem>
 		</UserSettingsDialog>);

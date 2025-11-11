@@ -40,7 +40,7 @@
 <ui5-button id="btnOpenSettings">User settings</ui5-button>
 <ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
 	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<ui5-icon name="person-placeholder"></ui5-icon><ui5-title level="H3" size="H3" class="ua-name">Alain Chevalier</ui5-title>
 			<div class="container">
 				<div class="ua-info-item">
@@ -67,7 +67,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-		<ui5-user-settings-view text="Themes">
+		<ui5-user-settings-view text="Themes" slot="tabs">
 			<ui5-list separators="Inner">
 				<ui5-li icon="palette">SAP Morning Horizon</ui5-li>
 				<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
@@ -77,7 +77,7 @@
 			<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
 			<ui5-toast design="Emphasized">Changes applied.</ui5-toast>
 		</ui5-user-settings-view>
-		<ui5-user-settings-view text="Display settings">
+		<ui5-user-settings-view text="Display settings" slot="tabs">
 			<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
 			<ui5-panel fixed>
 				<ui5-label>
@@ -89,7 +89,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item text="Language & Region" tooltip="Language & Region" header-text="Language & Region">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<div class="container">
 			<div class="lr-item">
 			<ui5-label>Language and Region:</ui5-label>
@@ -127,12 +127,12 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view >
 			<ui5-button id="mobile1-button">iOS</ui5-button>
 			<ui5-button id="mobile2-button">Android</ui5-button>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" text="Inner Page" id="mobile-second-page" secondary>
+		<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
 			<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
 			<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
 			<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
@@ -141,7 +141,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<ui5-list class="custom-list-main">
 
 				<ui5-li-custom>
@@ -192,7 +192,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="notification-second-page" secondary>
+		<ui5-user-settings-view id="notification-second-page" secondary>
 			<ui5-li-custom class="ui5-list-secondary">
 				<div class="list-item">
 					<div class="item-left">
@@ -294,7 +294,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="sales-order-second-page" secondary>
+		<ui5-user-settings-view id="sales-order-second-page" secondary>
 			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
 
 			<ui5-list class="ui5-list-secondary" separators="None">
@@ -402,6 +402,7 @@
 
 <ui5-dialog id="additionalDialog" state="Critical" header-text="Warning">
 	<ui5-text>Clicking on reset will delete your personalization settings for the launchpad (e.g. theme, language, user activities, and home page content) and for apps using the launchpad personalization features (e.g. filter settings, table columns).
+	<ui5-text>Clicking on reset will delete your personalization settslotings for the launchpad (e.g. theme, language, user activities, and home page content) and for apps using the launchpad personalization features (e.g. filter settings, table columns).
 		This action is irreversible.
 		Further changes in the dialog will not be applied.
 		Are you sure you want to proceed with the reset?</ui5-text>

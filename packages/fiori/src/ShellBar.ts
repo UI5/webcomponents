@@ -41,7 +41,6 @@ import type {
 	UI5CustomEvent,
 } from "@ui5/webcomponents-base";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
-import type PopoverHorizontalAlign from "@ui5/webcomponents/dist/types/PopoverHorizontalAlign.js";
 import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
@@ -72,6 +71,7 @@ import {
 	SHELLBAR_SEARCHFIELD_DESCRIPTION,
 	SHELLBAR_SEARCH_BTN_OPEN,
 	SHELLBAR_PRODUCT_SWITCH_BTN,
+	SHELLBAR_IMAGE_BTN,
 } from "./generated/i18n/i18n-defaults.js";
 
 type ShellBarLogoAccessibilityAttributes = {
@@ -1523,10 +1523,6 @@ class ShellBar extends UI5Element {
 		return this.primaryTitle || this.showLogoInMenuButton;
 	}
 
-	get popoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir === "rtl" ? "Start" : "End";
-	}
-
 	get hasAssistant() {
 		return !!this.assistant.length;
 	}
@@ -1552,7 +1548,7 @@ class ShellBar extends UI5Element {
 	}
 
 	get imageBtnText() {
-		return getEffectiveAriaLabelText(this);
+		return getEffectiveAriaLabelText(this) || ShellBar.i18nBundle.getText(SHELLBAR_IMAGE_BTN);
 	}
 
 	get _shellbarText() {

@@ -266,40 +266,40 @@ describe("Accessibility", () => {
 				<div slot="header" />
 			</Popover>
 		);
-	
+
 		cy.get("[ui5-popover]").invoke("removeAttr", "accessible-name");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-labelledby");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("not.have.attr", "aria-label");
 	});
-	
+
 	it("should use aria-label when accessible-name attribute is set dynamically", () => {
 		cy.mount(
 			<Popover accessibleName="This popover is important">
 				<div slot="header" />
 			</Popover>
 		);
-	
+
 		cy.get("[ui5-popover]").invoke("attr", "accessible-name", "text");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("not.have.attr", "aria-labelledby");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-label");
 	});
-	
+
 
 	it("tests accessible-name-ref", () => {
 		cy.mount(
@@ -652,25 +652,25 @@ describe("Popover opener", () => {
 		  </Popover>
 		 </>
 		);
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Tab");
 		cy.wait(500);
 		cy.get("#li1").should("be.focused");
 		cy.get("#first-focusable").should("not.be.focused");
-	 
+
 		cy.realPress("Tab");
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Tab");
 		cy.realPress("Tab");
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Escape");
-	 
+
 		cy.get("[ui5-popover]").should("not.be.visible");
 	   });
 
@@ -967,7 +967,7 @@ describe("Popover opener", () => {
 
 				pop.addEventListener("ui5-before-open", async () => {
 					const applyFocusResult = pop.applyFocus();
-					pop.remove(); 
+					pop.remove();
 
 					try {
 						await applyFocusResult;
@@ -1020,31 +1020,31 @@ describe("Popover opener", () => {
 			const container = document.createElement("div");
 			container.id = "container";
 			root[0].appendChild(container);
-	
+
 			const shadowRoot = container.attachShadow({ mode: "open" });
-	
+
 			const opener = document.createElement("ui5-button");
 			opener.setAttribute("id", "lnk");
 			opener.textContent = "Open Popover";
 			shadowRoot.appendChild(opener);
-	
+
 			const popover = document.createElement("ui5-popover");
 			popover.setAttribute("id", "pop");
 			popover.setAttribute("header-text", "Popover in Shadow Root");
 			popover.setAttribute("opener", "lnk");
-	
+
 			const content = document.createElement("div");
 			content.textContent = "Popover content";
 			popover.appendChild(content);
-	
+
 			shadowRoot.appendChild(popover);
 		});
-	
+
 		cy.get("#container")
 			.shadow()
 			.find("#lnk")
 			.realClick();
-	
+
 		cy.get("#container")
 			.shadow()
 			.find("#pop")
@@ -1053,7 +1053,7 @@ describe("Popover opener", () => {
 		cy.get("#container").then(container => {
 			container.remove();
 		});
-	});	
+	});
 
 	it("tests opener set as ID in window.document, while popover is in a shadow root", () => {
 		cy.mount(
@@ -1420,6 +1420,82 @@ describe("Placement", () => {
 			.then(top => {
 				expect(top).to.be.lt(100)
 			});
+	});
+
+	it("placement=Start in RTL", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Button id="btnStart" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Open</Button>
+				<Popover id="popoverStart"
+					headerText="Start Placement"
+					opener="btnStart"
+					placement="Start">
+					<div style="width: 150px; padding: 10px;">
+						Popover with Start placement in RTL mode
+					</div>
+				</Popover>
+			</div>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+		// wait for the popover to be positioned
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		let popover;
+		cy.get('[ui5-popover]')
+			.then($popover => {
+				popover = $popover;
+			});
+
+		cy.get('#btnStart').should($opener => {
+			const popoverRect = popover[0].getBoundingClientRect();
+			const openerRect = $opener[0].getBoundingClientRect();
+
+			// In RTL mode, Start placement should position popover to the right of the opener
+			expect(popoverRect.left).to.be.greaterThan(openerRect.right - 5);
+		});
+	});
+
+	it("placement=End in RTL", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Button id="btnEnd" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Open</Button>
+				<Popover id="popoverEndg"
+					headerText="End Placement"
+					opener="btnEnd"
+					placement="End">
+					<div style="width: 150px; padding: 10px;">
+						Popover with End placement in RTL mode
+					</div>
+				</Popover>
+			</div>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+		// wait for the popover to be positioned
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		let popover;
+		cy.get('[ui5-popover]')
+			.then($popover => {
+				popover = $popover;
+			});
+
+		cy.get('#btnEnd').should($opener => {
+			const popoverRect = popover[0].getBoundingClientRect();
+			const openerRect = $opener[0].getBoundingClientRect();
+
+			// In RTL mode, End placement should position popover to the left of the opener
+			expect(popoverRect.right).to.be.lessThan(openerRect.left + 5);
+		});
 	});
 });
 

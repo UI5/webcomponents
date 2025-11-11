@@ -2,7 +2,7 @@ import Input from "../../src/Input.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
-import { VERSIONING_NEXT_BUTTON_TOOLTIP, VERSIONING_PREVIOUS_BUTTON_TOOLTIP, INPUT_WRITING_ASSISTANT_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
+import { INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP, INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP, INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic", () => {
     describe("Initialization", () => {
@@ -690,7 +690,7 @@ describe("Versioning Menu Item", () => {
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="previous"]')
-                .should("have.attr", "tooltip", VERSIONING_PREVIOUS_BUTTON_TOOLTIP.defaultText);
+                .should("have.attr", "tooltip", INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP.defaultText);
         });
 
         it("should have translatable next button tooltip", () => {
@@ -699,7 +699,7 @@ describe("Versioning Menu Item", () => {
             cy.get("[ui5-ai-input]")
                 .shadow()
                 .find('[data-ui5-versioning-button="next"]')
-                .should("have.attr", "tooltip", VERSIONING_NEXT_BUTTON_TOOLTIP.defaultText);
+                .should("have.attr", "tooltip", INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP.defaultText);
         });
     });
 });
@@ -807,7 +807,7 @@ describe("Writing Assistant Input Icon", () => {
         cy.get("[ui5-ai-input]")
             .shadow()
             .find("input")
-            .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_LABEL.defaultText);
+            .should("have.attr", "aria-label", INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP.defaultText);
     });
 })
 

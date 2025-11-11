@@ -18,7 +18,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 		>
 			{isMultiResults && !this.loading && (
 				<Versioning
-					currentStep={this.currentVersion + 1}
+					currentStep={this.currentVersion}
 					totalSteps={this.totalVersions}
 					onVersion-change={this.handleVersionChange}
 				/>
@@ -39,7 +39,7 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 				icon={this.loading ? "stop" : "ai"}
 				data-state={this.loading ? "generating" : "generate"}
 				onClick={this.handleButtonClick}
-				tooltip={this._buttonTooltip}
+				tooltip={this.loading ? this._stopTooltip : this._buttonTooltip}
 				accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
 				accessibleName={this._buttonAccessibleName}
 				overflowPriority="NeverOverflow"

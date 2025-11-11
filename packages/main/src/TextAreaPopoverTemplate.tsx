@@ -1,4 +1,5 @@
 import Icon from "./Icon.js";
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import type TextArea from "./TextArea.js";
 import error from "@ui5/webcomponents-icons/dist/error.js";
@@ -25,7 +26,7 @@ export default function TextAreaPopoverTemplate(this: TextArea) {
 				class="ui5-valuestatemessage-popover"
 				style={{ "max-width": `${this._width!}px` }}
 				placement="Bottom"
-				horizontalAlign={this._valueStatePopoverHorizontalAlign}
+				horizontalAlign={PopoverHorizontalAlign.Start}
 			>
 				<div slot="header" class={{
 					"ui5-valuestatemessage-root": true,

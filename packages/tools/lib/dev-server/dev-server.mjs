@@ -4,13 +4,9 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { pathToFileURL } from "url";
 
-const argv = yargs(hideBin(process.argv))
-	.alias("c", "config")
-	.argv;
-
-const startVite = async (port) => {
+const startVite = async (config, port) => {
 	const server = await createServer({
-		configFile: argv.config,
+		configFile: config,
 		server: {
 			port: port,
 			strictPort: true,
@@ -37,7 +33,11 @@ const rmPortFile = async () => {
 	process.on(eventType, rmPortFile);
 });
 
-async function start() {
+async function start(outArgv) {
+	const argv = yargs(hideBin(outArgv))
+		.alias("c", "config")
+		.argv;
+
 	let retries = 10;
 	let port = 8080;
 	while (retries--) {
@@ -45,7 +45,7 @@ async function start() {
 		await fs.writeFile(".dev-server-port", `${port}`);
 		try {
 			// execSync(command, {stdio: 'pipe'});
-			const server = await startVite(port);
+			const server = await startVite(argv.config ?? "", port);
 			if (server) {
 				// server started, don't try other ports
 				break;

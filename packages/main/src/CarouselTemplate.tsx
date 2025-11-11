@@ -21,7 +21,7 @@ export default function CarouselTemplate(this: Carousel) {
 			onMouseDown={this._onmousedown}
 		>
 			<div class={this.classes.viewport} part="content">
-				<div role="list" class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
+				<div role="list" aria-label={this._ariaListLabel} class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
 					{this.items.map(itemInfo =>
 						<div
 							data-sap-focus-ref

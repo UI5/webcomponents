@@ -7,6 +7,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 // Template
 import FormTemplate from "./FormTemplate.js";
@@ -228,6 +229,15 @@ class Form extends UI5Element {
 	 */
 	@property()
 	accessibleName?: string;
+
+	/**
+	 * Defines id (or many ids) of the element (or elements) that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
@@ -569,15 +579,15 @@ class Form extends UI5Element {
 	}
 
 	get effectiveAccessibleName() {
-		if (this.accessibleName) {
-			return this.accessibleName;
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
 		}
 
 		return this.hasHeader ? undefined : Form.i18nBundle.getText(FORM_ACCESSIBLE_NAME);
 	}
 
 	get effectiveАccessibleNameRef(): string | undefined {
-		if (this.accessibleName) {
+		if (this.accessibleName || this.accessibleNameRef) {
 			return;
 		}
 

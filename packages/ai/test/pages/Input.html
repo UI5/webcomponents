@@ -31,9 +31,9 @@
 
   <ui5-ai-input
     id="ai-input"
-    placeholder="Ask me something..."
+    placeholder="Write your title"
 	>
-    <ui5-menu-item text="Generate text" slot="actions" data-menu-action="generate"></ui5-menu-item>
+    <ui5-menu-item text="Generate" slot="actions" data-menu-action="generate"></ui5-menu-item>
   </ui5-ai-input>
 
   	<script>
@@ -42,7 +42,6 @@
 		bg: "Мениджърите по иновации водят с креативност.",
 		de: "Innovationsmanager führen mit Kreativität.",
 		expanded: "They combine creative ideas with strategic action.",
-		rephrased: "Managers use creativity to guide innovation.",
 		simplified: "They lead using creativity.",
 		summarized: "Driving innovation creatively."
 	};
@@ -70,7 +69,6 @@
 				children: [
 					{ text: "Simplify", action: "simplify", processingLabel: "Simplifying text", completedLabel: "Simplified text", textKey: "simplified", isChild: true },
 					{ text: "Expand", action: "expand", processingLabel: "Expanding text", completedLabel: "Expanded text", textKey: "expanded", isChild: true },
-					{ text: "Rephrase", action: "rephrase", processingLabel: "Rephrasing text", completedLabel: "Rephrased text", textKey: "rephrased", isChild: true },
 					{ text: "Summarize", action: "summarize", processingLabel: "Summarizing text", completedLabel: "Summarized text", textKey: "summarized", isChild: true }
 				]
 			},
@@ -196,6 +194,7 @@
 
 			updateComponentState();
 			aiInput.loading = false;
+			aiInput.placeholder = "Write your title";
 			aiInput.focus();
 		}
 
@@ -221,6 +220,7 @@
 		function setLoadingState(promptDescription) {
 			aiInput.value = ""
 			aiInput.loading = true;
+			aiInput.placeholder = "";
 			aiInput.promptDescription = promptDescription || '';
 		}
 
@@ -289,6 +289,7 @@
 				}
 				currentActionInProgress = null;
 				aiInput.loading = false;
+				aiInput.placeholder = "Write your title";
 				aiInput.focus();
 			}
 

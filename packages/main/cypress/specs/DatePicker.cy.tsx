@@ -1442,6 +1442,33 @@ describe("Date Picker Tests", () => {
 			});
 	});
 
+	it("change event fires with value in correct valueFormat", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" valueFormat="yyyy-MM-dd"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.then($datePicker => {
+				$datePicker.on("change", cy.stub().as("changeHandler"));
+			});
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 2024")
+			.realPress("Enter");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "2024-03-31");
+
+		cy.get("@changeHandler")
+			.should("have.been.calledOnce")
+			.its("firstCall.args.0.detail")
+			.should("deep.include", {
+				value: "2024-03-31"
+			});
+	});
+
 	it("DatePicker's formatter has strict parsing enabled", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 

@@ -1,4 +1,4 @@
-name: Comment on Closing Issue
+name: Issue - comment on close
 
 on:
   issues:

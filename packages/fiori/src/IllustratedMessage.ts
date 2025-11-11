@@ -9,6 +9,7 @@ import { getIllustrationDataSync, getIllustrationData } from "@ui5/webcomponents
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import IllustrationMessageDesign from "./types/IllustrationMessageDesign.js";
 import IllustrationMessageType from "./types/IllustrationMessageType.js";
@@ -190,6 +191,38 @@ class IllustratedMessage extends UI5Element {
 	dialogSvg?: string;
 
 	/**
+	* Template function for the Dot design (safe variant).
+	* @private
+	* @since 2.16.0
+	*/
+	@property({ noAttribute: true })
+	dotTemplate?: object;
+
+	/**
+	* Template function for the Spot design (safe variant).
+	* @private
+	* @since 2.16.0
+	*/
+	@property({ noAttribute: true })
+	spotTemplate?: object;
+
+	/**
+	* Template function for the Scene design (safe variant).
+	* @private
+	* @since 2.16.0
+	*/
+	@property({ noAttribute: true })
+	sceneTemplate?: object;
+
+	/**
+	* Template function for the Dialog design (safe variant).
+	* @private
+	* @since 2.16.0
+	*/
+	@property({ noAttribute: true })
+	dialogTemplate?: object;
+
+	/**
 	* Determinates what is the current media of the component based on its width.
 	* @private
 	*/
@@ -300,10 +333,33 @@ class IllustratedMessage extends UI5Element {
 			illustrationData = await getIllustrationData(effectiveName);
 		}
 
-		this.dotSvg = illustrationData!.dotSvg;
-		this.spotSvg = illustrationData!.spotSvg;
-		this.dialogSvg = illustrationData!.dialogSvg;
-		this.sceneSvg = illustrationData!.sceneSvg;
+		// Check if illustration uses templates (safe variant)
+		if (illustrationData && "dotTemplate" in illustrationData && illustrationData.dotTemplate) {
+			this.dotTemplate = executeTemplate(illustrationData.dotTemplate, this);
+		}
+		if (illustrationData && "spotTemplate" in illustrationData && illustrationData.spotTemplate) {
+			this.spotTemplate = executeTemplate(illustrationData.spotTemplate, this);
+		}
+		if (illustrationData && "dialogTemplate" in illustrationData && illustrationData.dialogTemplate) {
+			this.dialogTemplate = executeTemplate(illustrationData.dialogTemplate, this);
+		}
+		if (illustrationData && "sceneTemplate" in illustrationData && illustrationData.sceneTemplate) {
+			this.sceneTemplate = executeTemplate(illustrationData.sceneTemplate, this);
+		}
+
+		// Check if illustration uses SVG strings (unsafe variant)
+		if (illustrationData && "dotSvg" in illustrationData) {
+			this.dotSvg = illustrationData.dotSvg;
+		}
+		if (illustrationData && "spotSvg" in illustrationData) {
+			this.spotSvg = illustrationData.spotSvg;
+		}
+		if (illustrationData && "dialogSvg" in illustrationData) {
+			this.dialogSvg = illustrationData.dialogSvg;
+		}
+		if (illustrationData && "sceneSvg" in illustrationData) {
+			this.sceneSvg = illustrationData.sceneSvg;
+		}
 
 		this.illustrationTitle = IllustratedMessage.i18nBundle.getText(illustrationData!.title);
 		this.illustrationSubtitle = IllustratedMessage.i18nBundle.getText(illustrationData!.subtitle);
@@ -444,16 +500,16 @@ class IllustratedMessage extends UI5Element {
 		return getEffectiveAriaLabelText(this);
 	}
 
-	get effectiveIllustration(): string | undefined {
+	get effectiveIllustration(): string | object | undefined {
 		switch (this.media) {
 		case IllustratedMessage.MEDIA.DOT:
-			return this.dotSvg;
+			return this.dotTemplate || this.dotSvg;
 		case IllustratedMessage.MEDIA.SPOT:
-			return this.spotSvg;
+			return this.spotTemplate || this.spotSvg;
 		case IllustratedMessage.MEDIA.DIALOG:
-			return this.dialogSvg;
+			return this.dialogTemplate || this.dialogSvg;
 		case IllustratedMessage.MEDIA.SCENE:
-			return this.sceneSvg;
+			return this.sceneTemplate || this.sceneSvg;
 		default:
 			return "";
 		}

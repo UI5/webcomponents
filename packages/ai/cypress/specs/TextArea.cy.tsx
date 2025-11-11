@@ -1,6 +1,11 @@
 import TextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
+import { 
+	WRITING_ASSISTANT_BUTTON_TOOLTIP,
+	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
+	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
+ } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic", () => {
 	describe("Initialization", () => {
@@ -100,7 +105,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersion={1}
+					currentVersion={2}
 					totalVersions={3}
 					onVersionChange={onVersionChange}
 				/>
@@ -177,7 +182,7 @@ describe("Basic", () => {
 			cy.mount(
 				<TextArea
 					loading={false}
-					currentVersion={2}
+					currentVersion={3}
 					totalVersions={3}
 				/>
 			);
@@ -517,15 +522,15 @@ describe("Basic", () => {
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("ui5-toolbar")
-				.should("have.attr", "accessible-name", "Writing Assistant Toolbar");
+				.should("have.attr", "accessible-name", TextArea.i18nBundle.getText(WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME));
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
 				.find("[ui5-ai-writing-assistant]")
 				.shadow()
 				.find("#ai-menu-btn")
-				.should("have.attr", "accessible-name", "Writing Assistant")
-				.should("have.attr", "tooltip", "Writing Assistant (Shift + F4)");
+				.should("have.attr", "accessible-name", TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
+				.should("have.attr", "tooltip",  TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 
 			// Verify versioning tooltips are translatable
 			cy.get("[ui5-ai-textarea]")

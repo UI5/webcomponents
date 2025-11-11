@@ -845,6 +845,35 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", "basic form");
 	});
 
+	it("tests 'aria-label' via 'accessibleNameRef'", () => {
+		cy.mount(
+		<>
+			<span id="lbl">basic form</span>
+			<Form headerText="Form header text" accessibleNameRef="lbl">
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Twitter:</Label>
+					<Text>@sap</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+			</Form>
+		</>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "aria-label", "basic form");
+	});
+
 	describe("FormGroup accessibility", () => {
 		it("tests 'aria-label' default", () => {
 			cy.mount(<Form>
@@ -866,7 +895,7 @@ describe("Accessibility", () => {
 				.should("have.attr", "aria-label", Form.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, "1"));
 		});
 
-		it("tests 'aria-label' via accessible-name", () => {
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleName'", () => {
 			const EXPECTED_LABEL = "Custom group label";
 			cy.mount(<Form>
 				<FormGroup accessibleName={EXPECTED_LABEL}>
@@ -884,10 +913,38 @@ describe("Accessibility", () => {
 				.shadow()
 				.find(".ui5-form-group-layout")
 				.eq(0)
-				.should("have.attr", "aria-label", EXPECTED_LABEL);
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
 		});
 
-		it("tests 'aria-labelledby' via header-text", () => {
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleNameRef'", () => {
+			const EXPECTED_LABEL = "Custom group label";
+			cy.mount(<>
+				<span id="lbl">{EXPECTED_LABEL}</span>
+				<Form>
+					<FormGroup accessibleNameRef="lbl">
+						<FormItem>
+							<Label>Name:</Label>
+							<Text>Red Point Stores</Text>
+						</FormItem>
+					</FormGroup>
+				</Form>
+			</>);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' when 'headerText' present", () => {
 			cy.mount(<Form>
 				<FormGroup headerText="Custom header text">
 					<FormItem>
@@ -914,48 +971,70 @@ describe("Accessibility", () => {
 						.find(".ui5-form-group-heading [ui5-title]")
 						.invoke("attr", "id")
 						.should(id => {
+							// aria-labelledby is used pointing to the header title ID
 							expect(ariaLabelledBy).to.equal(id);
 						});
 				});
 
+			// no 'aria-label' when headerText is present, aria-labelledby is used instead
 			cy.get("@group")
 				.should("not.have.attr", "aria-label");
 		});
 
-		it("tests 'aria-label' via accessible-name and header-text", () => {
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleName' when 'headerText' present", () => {
 			const EXPECTED_LABEL = "Custom group header";
-			cy.mount(<Form>
-				<FormGroup headerText="Custom header text" accessibleName={EXPECTED_LABEL}>
-					<FormItem>
-						<Label>Name:</Label>
-						<Text>Red Point Stores</Text>
-					</FormItem>
-				</FormGroup>
-			</Form>);
+			cy.mount(
+				<Form>
+					<FormGroup headerText="Custom header text" accessibleName={EXPECTED_LABEL}>
+						<FormItem>
+							<Label>Name:</Label>
+							<Text>Red Point Stores</Text>
+						</FormItem>
+					</FormGroup>
+				</Form>
+			);
 
 			cy.get("[ui5-form]")
 				.as("form");
 
+			// accessibleName has higher priority than headerText
 			cy.get("@form")
 				.shadow()
 				.find(".ui5-form-group-layout")
 				.eq(0)
-				.as("group")
-				.invoke("attr", "aria-labelledby")
-				.then(ariaLabelledBy => {
-					cy.get("@form")
-						.shadow()
-						.find(".ui5-form-group")
-						.eq(0)
-						.find(".ui5-form-group-heading [ui5-title]")
-						.invoke("attr", "id")
-						.should(id => {
-							expect(ariaLabelledBy).to.equal(id);
-						});
-				});
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
 
-			cy.get("@group")
-				.should("have.attr", "aria-label", EXPECTED_LABEL);
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleNameRef' when 'headerText' present", () => {
+			const EXPECTED_LABEL = "Custom group header";
+			cy.mount(
+				<>
+					<span id="lbl">{EXPECTED_LABEL}</span>
+					<Form>
+						<FormGroup headerText="Custom header text" accessibleNameRef="lbl">
+							
+							<FormItem>
+								<Label>Name:</Label>
+								<Text>Red Point Stores</Text>
+							</FormItem>
+						</FormGroup>
+					</Form>
+				</>
+			);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			// accessibleNameReg has higher priority than headerText
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
 		});
 	});
 

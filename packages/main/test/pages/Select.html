@@ -304,7 +304,7 @@
 	<section>
 		<h3>Separator configuration</h3>
 		<div>
-			<span>Two column separator:</span>
+			<span>Text separator:</span>
 			<ui5-select id="selectSeparators">
 				<ui5-option selected>Dash</ui5-option>
 				<ui5-option>Bullet</ui5-option>
@@ -317,7 +317,7 @@
 			<ui5-switch id="editableSwitch" checked text-on="Yes" text-off="No"></ui5-switch>
 		</div>
 
-		<ui5-select id="selectWithSeparator" readonly="false" two-column-separator="VerticalLine">
+		<ui5-select id="selectWithSeparator" readonly="false" text-separator="VerticalLine">
 			<ui5-option additional-text="DZ">Algeria</ui5-option>
 			<ui5-option selected additional-text="AR">Argentina</ui5-option>
 			<ui5-option additional-text="AU">Australia</ui5-option>
@@ -478,7 +478,7 @@
 
 		selectSeparators.addEventListener('ui5-change', function(e) {
 			const selectedSeparator = e.detail.selectedOption.textContent;
-			selectWithSeparator.setAttribute('two-column-separator', selectedSeparator);
+			selectWithSeparator.setAttribute('text-separator', selectedSeparator);
 		});
 
 		editableSwitch.addEventListener('ui5-change', function(e) {

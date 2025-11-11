@@ -30,7 +30,6 @@ import type { ListItemAccessibilityAttributes } from "./ListItem.js";
 import type List from "./List.js";
 import ListItem from "./ListItem.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import type PopoverPlacement from "./types/PopoverPlacement.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
@@ -355,10 +354,6 @@ class MenuItem extends ListItem implements IMenuItem {
 			this._itemNavigation.setCurrentItem(item);
 			this._itemNavigation._focusCurrentItem();
 		}
-	}
-
-	get placement(): `${PopoverPlacement}` {
-		return this.isRtl ? "Start" : "End";
 	}
 
 	get isRtl() {

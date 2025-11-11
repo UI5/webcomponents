@@ -444,6 +444,10 @@ class Button extends UI5Element implements IButton {
 			this.removeEventListener("click", this._onclickBound);
 			this._clickHandlerAttached = false;
 		}
+
+		if (activeButton === this) {
+			activeButton = null;
+		}
 	}
 
 	async onBeforeRendering() {
