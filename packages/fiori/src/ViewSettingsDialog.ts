@@ -13,7 +13,7 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import ListItemGroup from "@ui5/webcomponents/dist/ListItemGroup.js";
 import List from "@ui5/webcomponents/dist/List.js";
-import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 import SegmentedButton from "@ui5/webcomponents/dist/SegmentedButton.js";
@@ -553,12 +553,14 @@ class ViewSettingsDialog extends UI5Element {
 		this._currentMode = ViewSettingsDialogMode[mode];
 	}
 
-	_handleFilterValueItemClick(e: CustomEvent<ListItemClickEventDetail>) {
+	_handleFilterValueItemClick(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		const itemText = e.detail.targetItem.innerText;
+
 		// Update the component state
 		this._currentSettings.filters = this._currentSettings.filters.map(filter => {
 			if (filter.selected) {
 				filter.filterOptions.forEach(option => {
-					if (option.text === e.detail.item.innerText) {
+					if (option.text === itemText) {
 						option.selected = !option.selected;
 					}
 				});
@@ -566,7 +568,7 @@ class ViewSettingsDialog extends UI5Element {
 			return filter;
 		});
 
-		this._setSelectedProp(e);
+		this._setSelectedProp(itemText);
 
 		this._currentSettings = JSON.parse(JSON.stringify(this._currentSettings));
 	}
@@ -576,10 +578,10 @@ class ViewSettingsDialog extends UI5Element {
 	 * @param e
 	 * @private
 	 */
-	_setSelectedProp(e: CustomEvent<ListItemClickEventDetail>) {
+	_setSelectedProp(itemText: string) {
 		this.filterItems.forEach(filterItem => {
 			filterItem.values.forEach(option => {
-				if (option.text === e.detail.item.innerText) {
+				if (option.text === itemText) {
 					option.selected = !option.selected;
 				}
 			});
@@ -706,10 +708,10 @@ class ViewSettingsDialog extends UI5Element {
 	/**
 	 * Stores `Sort Order` list as recently used control and its selected item in current state.
 	 */
-	_onSortOrderChange(e: CustomEvent<ListItemClickEventDetail>) {
+	_onSortOrderChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
 		this._recentlyFocused = this._sortOrder!;
 		this._currentSettings.sortOrder = this.initSortOrderItems.map(item => {
-			item.selected = item.text === e.detail.item.innerText;
+			item.selected = item.text === e.detail.targetItem.innerText;
 			return item;
 		});
 
@@ -720,8 +722,8 @@ class ViewSettingsDialog extends UI5Element {
 	/**
 	 * Stores `Sort By` list as recently used control and its selected item in current state.
 	 */
-	 _onSortByChange(e: CustomEvent<ListItemClickEventDetail>) {
-		const selectedItemIndex = Number(e.detail.item.getAttribute("data-ui5-external-action-item-index"));
+	 _onSortByChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		const selectedItemIndex = Number(e.detail.targetItem.getAttribute("data-ui5-external-action-item-index"));
 		this._recentlyFocused = this._sortBy!;
 		this._currentSettings.sortBy = this.initSortByItems.map((item, index) => {
 			item.selected = index === selectedItemIndex;
