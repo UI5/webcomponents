@@ -4,6 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type BarDesign from "./types/BarDesign.js";
 import type BarAccessibleRole from "./types/BarAccessibleRole.js";
 
@@ -85,6 +86,24 @@ class Bar extends UI5Element {
 	accessibleRole: `${BarAccessibleRole}` = "Toolbar";
 
 	/**
+	 * Defines the accessible ARIA name of the component.
+	 * @default undefined
+	 * @since 2.16.0
+	 * @public
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the bar.
+	 * @default undefined
+	 * @since 2.16.0
+	 * @public
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
 	* Defines the content at the start of the bar.
 	* @public
 	*/
@@ -109,9 +128,17 @@ class Bar extends UI5Element {
 
 	get accInfo() {
 		return {
-			"label": this.design,
+			"label": this.ariaLabelText,
 			"role": this.effectiveRole,
 		};
+	}
+
+	get ariaLabelText(): string | undefined {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
+		}
+
+		return this.design;
 	}
 
 	constructor() {
