@@ -1,4 +1,6 @@
-import { isTabNext, isTabPrevious, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isTabNext, isTabPrevious, isF2, isF7,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -58,7 +60,7 @@ class ListItemCustom extends ListItem {
 		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
 
-		if (!isTab && !isFocused && !isF2(e)) {
+		if (!isTab && !isFocused && !isF2(e) && !isF7(e)) {
 			return;
 		}
 
@@ -69,7 +71,7 @@ class ListItemCustom extends ListItem {
 		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
 
-		if (!isTab && !isFocused && !isF2(e)) {
+		if (!isTab && !isFocused && !isF2(e) && !isF7(e)) {
 			return;
 		}
 
