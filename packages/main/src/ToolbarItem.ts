@@ -72,13 +72,20 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
 
+	/**
+	 * Defines if the component, wrapped in the toolbar item, has his own overflow mechanism.
+	 * @default false
+	 * @public
+	 * @since 2.16.2
+	 */
 	@property({ type: Boolean })
 	selfOverflowed: boolean = false;
 
 	/**
+	 * Defines if the component, wrapped in the toolbar item, should be expanded in the overflow popover.
 	 * @default false
 	 * @public
-	 * @since 2.16.0
+	 * @since 2.16.2
 	 */
 
 	@property({ type: Boolean })
@@ -93,7 +100,7 @@ class ToolbarItem extends UI5Element {
 	/**
 	 * Wrapped component slot.
 	 * @public
-	 * @since 2.15.0
+	 * @since 2.16.2
 	 */
 
 	@slot({
@@ -137,6 +144,7 @@ class ToolbarItem extends UI5Element {
 	}
 
 	/**
+	 * Returns if the item is default wrapper for certain component.
 	 * @protected
 	 */
 	get isDefaultWrapper() {
