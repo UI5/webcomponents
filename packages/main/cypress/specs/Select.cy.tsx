@@ -617,9 +617,9 @@ describe("Select - Properties", () => {
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
 	});
 
-	it("Should show the selected two-column-separator when select is read-only", () => {
+	it("Should show the selected text-separator when select is read-only", () => {
 		cy.mount(
-			<Select readonly two-column-separator="VerticalLine">
+			<Select readonly text-separator="VerticalLine">
 				<Option additionalText="Additional1" selected>First</Option>
 				<Option additionalText="Additional2">Second</Option>
 			</Select>

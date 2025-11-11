@@ -15,7 +15,6 @@
 	--_ui5_progress_indicator_bar_border_radius: 0.5rem 0 0 0.5rem;
 	--_ui5_progress_indicator_remaining_bar_border_radius: 0 0.5rem 0.5rem 0;
 	--_ui5_menu_submenu_margin_offset: -0.25rem 0;
-	--_ui5_menu_submenu_placement_type_left_margin_offset: 0.25rem 0;
 
 	--_ui5-shellbar-notification-btn-count-offset: 0.125rem;
 }
@@ -36,7 +35,6 @@
 	--_ui5_progress_indicator_remaining_bar_border_radius: 0.5rem 0 0 0.5rem;
 
 	--_ui5_menu_submenu_margin_offset: 0 -0.25rem;
-	--_ui5_menu_submenu_placement_type_left_margin_offset: 0 0.25rem;
 
 	--_ui5_segmented_btn_item_border_left: 0.0625rem;
 	--_ui5_segmented_btn_item_border_right: 0px;

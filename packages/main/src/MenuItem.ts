@@ -30,7 +30,6 @@ import type { ListItemAccessibilityAttributes } from "./ListItem.js";
 import type List from "./List.js";
 import ListItem from "./ListItem.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import type PopoverPlacement from "./types/PopoverPlacement.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
@@ -357,10 +356,6 @@ class MenuItem extends ListItem implements IMenuItem {
 		}
 	}
 
-	get placement(): `${PopoverPlacement}` {
-		return this.isRtl ? "Start" : "End";
-	}
-
 	get isRtl() {
 		return this.effectiveDir === "rtl";
 	}
@@ -480,8 +475,9 @@ class MenuItem extends ListItem implements IMenuItem {
 	/** Returns all menu items (including those in groups */
 	get _allMenuItems() {
 		const items: MenuItem[] = [];
+		const slottedItems = this.getSlottedNodes<IMenuItem>("items");
 
-		this.items.forEach(item => {
+		slottedItems.forEach(item => {
 			if (isInstanceOfMenuItemGroup(item)) {
 				items.push(...item._menuItems);
 			} else if (!isInstanceOfMenuSeparator(item)) {

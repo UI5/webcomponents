@@ -1,0 +1,83 @@
+/* root*/
+.ui5-ai-input-root {
+	width: 100%;
+	height: 100%;
+	border-right: none;
+}
+
+:host([focused]:not([opened])[_is-menu-open]) .ui5-ai-input-root:hover {
+	border-radius: var(--_ui5_input_border_radius);
+	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+:host([focused]:not([opened])[_is-menu-open]) .ui5-input-focusable-element::after {
+	border: var(--_ui5-input-border);
+}
+
+.ui5-input-busy-indicator {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	box-sizing: border-box;
+	display: block;
+}
+
+.ui5-ai-input-busy .ui5-ai-input-button-wrapper {
+	background-color: inherit;
+	border: none;
+}
+
+.ui5-ai-input-button-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: var(--_ui5_input_icon_width);
+	min-width: var(--_ui5_input_icon_width);
+	height: var(--_ui5_input_icon_wrapper_height);
+	padding: 0;
+	box-sizing: border-box;
+	border-radius: var(--_ui5_input_border_radius);
+	cursor: pointer;
+	border: none;
+}
+
+/* Hidden state */
+.ui5-input-ai-button[hidden] {
+	display: none;
+}
+
+/* Active / Open / Loading states */
+.ui5-ai-input-button-wrapper.ui5-input-button-menu-open,
+.ui5-ai-input-button-wrapper:active {
+	background-color: var(--sapButton_Selected_Background);
+	box-shadow: var(--sapField_Hover_Shadow);
+	color: var(--sapButton_Selected_TextColor);
+}
+
+/* Hover state */
+.ui5-ai-input-button-wrapper:not(.ui5-input-button-menu-open):not(.ui5-ai-input-loading):not(:active):hover,
+.ui5-ai-input-button-wrapper.ui5-ai-input-loading:hover {
+	background-color: var(--sapButton_Hover_Background);
+	border: 1px solid var(--sapButton_Hover_BorderColor);
+	box-shadow: inset 0 0 0 0.0625rem var(--sapContent_Neutral_Shadow);
+}
+
+/* menu & versioning */
+
+.ui5-input-button-menu-open {
+	background-color: var(--sapButton_Selected_Background);
+	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+[ui5-menu-item].ui5-ai-versioning-menu-footer:hover {
+	background-color: inherit;
+}
+
+.ui5-ai-versioning-menu-footer::part(native-li) {
+  padding-right: 0.25rem;
+}
+
+#ai-menu-btn {
+  --_ui5_button_focused_border: none;
+}

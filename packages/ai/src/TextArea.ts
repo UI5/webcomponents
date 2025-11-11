@@ -5,7 +5,6 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
 import { BaseTextArea } from "@ui5/webcomponents/dist/TextArea.js";
-import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
@@ -18,7 +17,10 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
-import WritingAssistant from "./WritingAssistant.js";
+
+type TextAreaVersionChangeEventDetail = {
+	backwards: boolean,
+};
 
 /**
  * @class
@@ -56,15 +58,12 @@ import WritingAssistant from "./WritingAssistant.js";
 		valueStateMessageStyles,
 		TextAreaCss,
 	],
-	dependencies: [
-		WritingAssistant,
-		BusyIndicator,
-	],
 })
 
 /**
  * Fired when the user clicks on version navigation buttons.
  *
+ * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default).
  * @public
  */
 @event("version-change")
@@ -78,10 +77,8 @@ import WritingAssistant from "./WritingAssistant.js";
 
 class TextArea extends BaseTextArea {
 	eventDetails!: BaseTextArea["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
+		"version-change": TextAreaVersionChangeEventDetail;
+		"stop-generation": void;
 	};
 
 	// Store bound handler for proper cleanup
@@ -248,4 +245,5 @@ class TextArea extends BaseTextArea {
 
 TextArea.define();
 
+export type { TextAreaVersionChangeEventDetail };
 export default TextArea;
