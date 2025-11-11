@@ -1,6 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import {
-	isSpace, isEnter, isDelete, isF2,
+	isSpace, isEnter, isDelete, isF2, isF7,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -201,6 +201,12 @@ abstract class ListItem extends ListItemBase {
 	mediaRange = "S";
 
 	/**
+	 * Stores the last focused element within the list item when navigating with F7.
+	 * @private
+	 */
+	_lastInnerFocusedElement?: HTMLElement;
+
+	/**
 	 * Defines the delete button, displayed in "Delete" mode.
 	 * **Note:** While the slot allows custom buttons, to match
 	 * design guidelines, please use the `ui5-button` component.
@@ -255,7 +261,7 @@ abstract class ListItem extends ListItemBase {
 		document.removeEventListener("touchend", this.deactivate);
 	}
 
-	async _onkeydown(e: KeyboardEvent) {
+	_onkeydown(e: KeyboardEvent) {
 		if ((isSpace(e) || isEnter(e)) && this._isTargetSelfFocusDomRef(e)) {
 			return;
 		}
@@ -270,15 +276,11 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (isF2(e)) {
-			const activeElement = getActiveElement();
-			const focusDomRef = this.getFocusDomRef()!;
+			this._handleF2();
+		}
 
-			if (activeElement === focusDomRef) {
-				const firstFocusable = await getFirstFocusableElement(focusDomRef);
-				firstFocusable?.focus();
-			} else {
-				focusDomRef.focus();
-			}
+		if (isF7(e)) {
+			this._handleF7(e);
 		}
 	}
 
@@ -517,6 +519,42 @@ abstract class ListItem extends ListItemBase {
 
 	get _listItem() {
 		return this.shadowRoot!.querySelector("li");
+	}
+
+	async _handleF7(e: KeyboardEvent) {
+		e.preventDefault(); // Prevent browser default behavior (F7 = Caret Browsing toggle)
+
+		const focusDomRef = this.getFocusDomRef()!;
+		const activeElement = getActiveElement();
+
+		if (activeElement === focusDomRef) {
+			// On list item - restore to stored element or go to first focusable
+			if (this._lastInnerFocusedElement) {
+				this._lastInnerFocusedElement.focus();
+			} else {
+				const firstFocusable = await getFirstFocusableElement(focusDomRef);
+				firstFocusable?.focus();
+				this._lastInnerFocusedElement = firstFocusable || undefined;
+			}
+		} else {
+			// On internal element - store it and go back to list item
+			this._lastInnerFocusedElement = activeElement as HTMLElement;
+			focusDomRef.focus();
+		}
+	}
+
+	async _handleF2() {
+		const focusDomRef = this.getFocusDomRef()!;
+		const activeElement = getActiveElement();
+
+		if (activeElement === focusDomRef) {
+			// On list item - always go to first focusable (no memory)
+			const firstFocusable = await getFirstFocusableElement(focusDomRef);
+			firstFocusable?.focus();
+		} else {
+			// On internal element - go back to list item
+			focusDomRef.focus();
+		}
 	}
 }
 

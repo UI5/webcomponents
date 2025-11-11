@@ -1286,6 +1286,73 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 	});
 
+	it("keyboard handling on F7", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>First</Button>
+					<Button>Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-li-custom]").click();
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 goes to first focusable element
+		cy.realPress("F7");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 returns to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 remembers last focused element (second button)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
+	it("keyboard handling on F7 after TAB navigation", () => {
+		cy.mount(
+			<div>
+				<button>Before</button>
+				<List>
+					<ListItemCustom>
+						<Button>First</Button>
+						<Button>Second</Button>
+					</ListItemCustom>
+				</List>
+			</div>
+		);
+
+		cy.get("button").click();
+		cy.get("button").should("be.focused");
+
+		// Tab into list item
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// Tab into internal elements (goes to first button)
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 should store current element and return to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 should remember the second button (not go to first)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
 	it("keyboard handling on TAB when 2 level nested UI5Element is focused", () => {
 		cy.mount(
 			<div>
