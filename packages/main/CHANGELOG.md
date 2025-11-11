@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/UI5/webcomponents/compare/v2.4.1...v2.4.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* **ui5-select:** add support for Vue.js v-model ([#10149](https://github.com/UI5/webcomponents/issues/10149)) ([bac6c00](https://github.com/UI5/webcomponents/commit/bac6c0008aa599e66dc4e0ce4e9de4489295560b)), closes [#9971](https://github.com/UI5/webcomponents/issues/9971)
+
+
+
+
+
 ## [2.4.1](https://github.com/UI5/webcomponents/compare/v2.4.0...v2.4.1) (2025-11-11)
 
 **Note:** Version bump only for package @ui5/webcomponents
