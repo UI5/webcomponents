@@ -25,6 +25,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [2.4.1](https://github.com/UI5/webcomponents/compare/v2.4.0...v2.4.1) (2025-11-11)
+
+
+### Bug Fixes
+
+* **ui5-view-settings-dialog:** fix selection ([3f2ca72](https://github.com/UI5/webcomponents/commit/3f2ca72b3fbcab2911e9062dd01b1dd481159642))
+
+
+
+
+
 # [2.4.0](https://github.com/SAP/ui5-webcomponents/compare/v2.4.0-rc.4...v2.4.0) (2024-11-03)
 
 
