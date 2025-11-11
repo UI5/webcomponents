@@ -1,8 +1,8 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
-import type ShellBarV2 from "../../ShellBarV2.js";
+import type ShellBar from "../../ShellBar.js";
 
-function ShellBarV2SearchField(this: ShellBarV2) {
+function ShellBarSearchField(this: ShellBar) {
 	return (
 		// .ui5-shellbar-search-field-area is used to measure the width of
 		// the search field. It must be present even if the search is in full-width mode.
@@ -14,7 +14,7 @@ function ShellBarV2SearchField(this: ShellBarV2) {
 	);
 }
 
-function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
+function ShellBarSearchFieldFullWidth(this: ShellBar) {
 	return (
 		<div class="ui5-shellbar-search-full-width-wrapper">
 			<div class="ui5-shellbar-search-full-field">
@@ -32,6 +32,6 @@ function ShellBarV2SearchFieldFullWidth(this: ShellBarV2) {
 }
 
 export {
-	ShellBarV2SearchField,
-	ShellBarV2SearchFieldFullWidth,
+	ShellBarSearchField,
+	ShellBarSearchFieldFullWidth,
 };
