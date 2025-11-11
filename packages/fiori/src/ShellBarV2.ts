@@ -471,7 +471,7 @@ class ShellBarV2 extends UI5Element {
 	});
 
 	overflow = new ShellBarV2Overflow();
-	accessibility = new ShellBarV2Accessibility();
+	accessibility: ShellBarV2Accessibility = new ShellBarV2Accessibility();
 
 	private _searchAdaptor = new ShellBarV2Search(this.getSearchDeps());
 	private _searchAdaptorLegacy = new ShellBarV2SearchLegacy({
@@ -937,7 +937,7 @@ class ShellBarV2 extends UI5Element {
 	// Accessibility
 
 	get actionsAccessibilityInfo(): ShellBarV2AccessibilityInfo {
-		return this.accessibility.getActionsAccessibilityInfo(this.texts, {
+		return this.accessibility.getActionsAccessibilityAttributes(this.texts, {
 			overflowPopoverOpen: this.overflowPopoverOpen,
 			accessibilityAttributes: this.accessibilityAttributes,
 		});

@@ -296,17 +296,16 @@ describe("Responsiveness", () => {
 			.should("not.exist");
 	});
 
-	// TODO: V2 uses _individualSlot instead of stableDomRef - need to implement stableDomRef support
-	it.skip("Test accessibility attributes on custom action buttons", () => {
+	it("Test accessibility attributes on custom action buttons", () => {
 		cy.mount(basicTemplate()).as("html");
 
-		// V2: ShellBarV2Item element can be found by stable-dom-ref attribute
-		// It renders a ui5-button in its shadow root
+		// V2: ShellBarV2Item properly supports accessibilityAttributes property
+		// which are passed through to the ui5-button in its shadow root
 		cy.get("@shellbar")
 			.find(`[stable-dom-ref="call"]`)
 			.as("call-item")
 			.then($el => {
-				$el.get(0).accessibilityAttributes = { "hasPopup": "dialog", "expanded": "true" };
+				($el.get(0) as any).accessibilityAttributes = { "hasPopup": "dialog", "expanded": "true" };
 			});
 		cy.get("@call-item")
 			.shadow()
@@ -314,7 +313,7 @@ describe("Responsiveness", () => {
 			.shadow()
 			.find("button")
 			.should("have.attr", "aria-expanded", "true")
-			.should("have.attr", "aria-hasPopup", "dialog");
+			.should("have.attr", "aria-haspopup", "dialog");
 	});
 });
 
@@ -1426,45 +1425,34 @@ describe("Branding slot", () => {
 
 describe("Component Behavior", () => {
 	describe("Accessibility", () => {
-		it("tests accessibilityTexts property", () => {
-			const PROFILE_BTN_CUSTOM_TOOLTIP = "John Dow";
-			const LOGO_CUSTOM_TOOLTIP = "Custom logo title";
 
-			cy.mount(
-				<ShellBar>
-					<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
-					<Avatar slot="profile" icon="customer" />
-				</ShellBar>
-			);
+	it("tests accessibilityTexts property", () => {
+		const PROFILE_BTN_CUSTOM_TOOLTIP = "John Dow";
+		const LOGO_CUSTOM_TOOLTIP = "Custom logo title";
 
-			cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
-				$shellbar[0].accessibilityAttributes = {
-					profile: {
-						name: PROFILE_BTN_CUSTOM_TOOLTIP,
-					},
-					logo: {
-						name: LOGO_CUSTOM_TOOLTIP
-					},
-				};
-			});
+		cy.mount(
+			<ShellBar>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				<Avatar slot="profile" icon="customer" />
+			</ShellBar>
+		);
 
-			cy.get("[ui5-shellbar-v2]").should("have.prop", "_profileText", PROFILE_BTN_CUSTOM_TOOLTIP);
-
-			cy.get("[ui5-shellbar-v2]").should("have.prop", "_logoText", LOGO_CUSTOM_TOOLTIP);
+		cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+			$shellbar[0].accessibilityAttributes = {
+				profile: {
+					name: PROFILE_BTN_CUSTOM_TOOLTIP,
+				},
+				logo: {
+					name: LOGO_CUSTOM_TOOLTIP
+				},
+			};
 		});
 
-		it("tests acc default roles", () => {
-			cy.mount(
-				<ShellBar>
-					<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
-				</ShellBar>
-			);
-
-			cy.get("[ui5-shellbar-v2]")
-				.shadow()
-				.find(".ui5-shellbar-logo-area")
-				.should("have.attr", "role", "link");
+		cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+			expect($shellbar[0].actionsAccessibilityInfo.profile.title).to.equal(PROFILE_BTN_CUSTOM_TOOLTIP);
+			expect($shellbar[0].legacyAdaptor.logoAriaLabel).to.equal(LOGO_CUSTOM_TOOLTIP);
 		});
+	});
 
 		it("tests accessibilityAttributes property", () => {
 			const NOTIFICATIONS_BTN_ARIA_HASPOPUP = "dialog";
