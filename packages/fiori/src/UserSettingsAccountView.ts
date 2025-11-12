@@ -23,13 +23,13 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 	styles: [UserSettingViewCss, UserSettingsAccountViewCss],
 })
 /**
- * Fired when the "Edit Accounts" button is selected.
+ * Fired when the `Edit Accounts` button is selected.
  * @public
  */
 @event("edit-accounts-click")
 
 /**
- * Fired when the "Manage Account" button is selected.
+ * Fired when the `Manage Account` button is selected.
  * @public
  */
 @event("manage-account-click")
@@ -66,7 +66,7 @@ class UserSettingsAccountView extends UserSettingsView {
 	account?: Array<UserMenuAccount>;
 
 	/**
-	 * Defines if the User Menu shows the Manage Account option.
+	 * Defines if the User Menu shows the `Manage Account` option.
 	 *
 	 * @default false
 	 * @public
