@@ -55,16 +55,32 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Dry Run
+        run: |
+          yarn lerna version ${{ github.event.inputs.new_version || '' }}  \
+            --conventional-graduate \
+            --force-conventional-graduate \
+            --yes \
+            --exact \
+            --dry-run
+
+          yarn lerna publish --dry-run
+
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
-          yarn lerna version ${{ github.event.inputs.new_version || '' }} --conventional-graduate --force-conventional-graduate --yes --exact --create-release github
-
-      - name: Build
-        run: yarn ci:releasebuild
+          yarn lerna version ${{ github.event.inputs.new_version || '' }}  \
+            --conventional-graduate \
+            --force-conventional-graduate \
+            --yes \
+            --exact \
+            --create-release github
 
       - name: Publish
         run: |
@@ -134,16 +150,32 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Dry Run
+        run: |
+          yarn lerna version \
+            --conventional-prerelease \
+            --force-publish \
+            --yes \
+            --exact \
+            --dry-run
+          
+          yarn lerna publish --dry-run
+
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
-          yarn lerna version --conventional-prerelease --force-publish --yes --exact --create-release github
-
-      - name: Build
-        run: yarn ci:releasebuild
+          yarn lerna version \
+            --conventional-prerelease \
+            --force-publish \
+            --yes \
+            --exact \
+            --create-release github
 
       - name: Publish
         run: |
@@ -172,7 +204,6 @@ jobs:
               const commentOnFixedIssues = (await import('${{ github.workspace }}/.github/actions/commentOnFixedIssues.mjs')).default;
               await commentOnFixedIssues({ github, context });
 
-
   # ✅ Job 3: Hotfix Release Flow
   hotfix-release:
     if: ${{ github.event.inputs.release_type == 'hotfix' }}
@@ -198,20 +229,35 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Dry Run
+        run: |
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} \
+            --conventional-graduate \
+            --force-conventional-graduate \
+            --yes \
+            --exact \
+            --dry-run
+
+          yarn lerna publish --dry-run
+          
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
-          yarn lerna version ${{ github.event.inputs.new_version || '' }} --conventional-graduate --force-conventional-graduate --yes --exact --create-release github
-
-      - name: Build
-        run: yarn ci:releasebuild
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} \
+            --conventional-graduate \
+            --force-conventional-graduate \
+            --yes \
+            --exact \
+            --create-release github
 
       - name: Publish
         run: yarn lerna publish from-git --yes --dist-tag ${{ github.event.inputs.npm_tag || 'sf' }}
-
 
   # ✅ Job 4: Experimental Release Flow
   experimental-release:
@@ -236,6 +282,9 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
+      - name: Build
+        run: yarn ci:releasebuild
+
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -251,9 +300,6 @@ jobs:
             --ignore-changes @ui5/webcomponents-website \
             --ignore-changes @ui5/webcomponents-cypress-internal \
             --ignore-changes @ui5/webcomponents-cypress-ct
-
-      - name: Build
-        run: yarn ci:releasebuild
 
       - name: Publish
         run: |
