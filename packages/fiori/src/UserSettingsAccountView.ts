@@ -52,7 +52,7 @@ class UserSettingsAccountView extends UserSettingsView {
 		"manage-account-click": void;
 	}
 	/**
-	 * Defines the user account
+	 * Defines the user account.
 	 *
 	 * @public
 	 */
