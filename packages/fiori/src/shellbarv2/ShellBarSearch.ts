@@ -1,8 +1,8 @@
 import { isPhone } from "@ui5/webcomponents-base";
-import type { IShellBarSearchField } from "../ShellBarV2.js";
+import type { IShellBarSearchField } from "../ShellBar.js";
 import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 
-interface ShellBarV2SearchConstructorParams {
+interface ShellBarSearchConstructorParams {
 	getOverflowed: () => boolean;
 	getSearchState: () => boolean;
 	setSearchState: (expanded: boolean) => void;
@@ -14,7 +14,7 @@ interface ShellBarV2SearchConstructorParams {
  * Search controller for self-collapsible search (ui5-shellbar-search).
  * Handles search fields with collapsed/open properties and ui5-open/close/search events.
  */
-class ShellBarV2Search implements IShellBarSearchController {
+class ShellBarSearch implements IShellBarSearchController {
 	static CSS_VARIABLE = "--_ui5_shellbar_search_field_width";
 	static FALLBACK_WIDTH = 400;
 
@@ -35,7 +35,7 @@ class ShellBarV2Search implements IShellBarSearchController {
 		getSearchField,
 		getSearchState,
 		getCSSVariable,
-	}: ShellBarV2SearchConstructorParams) {
+	}: ShellBarSearchConstructorParams) {
 		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
 		this.getSearchField = getSearchField;
@@ -152,9 +152,9 @@ class ShellBarV2Search implements IShellBarSearchController {
 	 * Gets the minimum width needed for search field from CSS variable.
 	 */
 	private getSearchFieldWidth(): number {
-		const width = this.getCSSVariable(ShellBarV2Search.CSS_VARIABLE);
+		const width = this.getCSSVariable(ShellBarSearch.CSS_VARIABLE);
 		if (!width) {
-			return ShellBarV2Search.FALLBACK_WIDTH;
+			return ShellBarSearch.FALLBACK_WIDTH;
 		}
 		// Convert rem to px
 		if (width.endsWith("rem")) {
@@ -178,7 +178,7 @@ class ShellBarV2Search implements IShellBarSearchController {
 	}
 }
 
-export default ShellBarV2Search;
+export default ShellBarSearch;
 export type {
-	ShellBarV2SearchConstructorParams,
+	ShellBarSearchConstructorParams,
 };

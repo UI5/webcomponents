@@ -60,6 +60,6 @@
 }
 
 :host([has-side-navigation]) ::slotted([ui5-shellbar][slot="header"]),
-:host([has-side-navigation]) ::slotted([ui5-shellbar-v2][slot="header"]) {
+:host([has-side-navigation]) ::slotted([ui5-shellbar][slot="header"]) {
 	padding-inline: 0.875rem;
 }

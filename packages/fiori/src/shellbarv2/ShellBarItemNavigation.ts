@@ -7,14 +7,14 @@ import {
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
-interface ShellBarV2ItemNavigationConstructorParams {
+interface ShellBarItemNavigationConstructorParams {
 	getDomRef: () => HTMLElement | null;
 }
 
-class ShellBarV2ItemNavigation {
-	private params: ShellBarV2ItemNavigationConstructorParams;
+class ShellBarItemNavigation {
+	private params: ShellBarItemNavigationConstructorParams;
 
-	constructor(params: ShellBarV2ItemNavigationConstructorParams) {
+	constructor(params: ShellBarItemNavigationConstructorParams) {
 		this.params = params;
 	}
 
@@ -109,7 +109,7 @@ class ShellBarV2ItemNavigation {
 	}
 }
 
-export default ShellBarV2ItemNavigation;
+export default ShellBarItemNavigation;
 export type {
-	ShellBarV2ItemNavigationConstructorParams,
+	ShellBarItemNavigationConstructorParams,
 };
