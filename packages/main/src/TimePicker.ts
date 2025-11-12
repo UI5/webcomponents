@@ -59,6 +59,8 @@ import {
 	VALUE_STATE_WARNING,
 	TIMEPICKER_VALUE_MISSING,
 	TIMEPICKER_PATTERN_MISSMATCH,
+	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
+	TIMEPICKER_OPEN_ICON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -484,6 +486,14 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onTimeSelectionChange(e: CustomEvent<TimeSelectionChangeEventDetail>) {
 		this.tempValue = e.detail.value; // every time the user changes the time selection -> update tempValue
+	}
+
+	get openIconTitle() {
+		if (this.open) {
+			return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE_OPENED);
+		}
+
+		return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE);
 	}
 
 	_togglePicker() {
