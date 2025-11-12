@@ -1,4 +1,4 @@
-# Step-by-step framework on Team Balkan Components
+# Step-by-step framework for Team Balkan Components – API Pages
 
 Below is the exact framework that we used, to generate API Test Pages of Team Balkan's web components.
 
@@ -16,7 +16,7 @@ Below is the exact framework that we used, to generate API Test Pages of Team Ba
 ```prompt
 I need you to create a comprehensive API test page for ALL of the components listed in #file:components-list.instructions.md file.
 
-Follow the instructions strictly. Let’s start with the first 2 components. Proceed step-by-step, following the instruction and be concise, DO NOT overengineer.
+Follow the instructions strictly. Let’s start with the first 2 components. Proceed step-by-step, following the instruction file, be concise and DO NOT overengineer.
 Use #file:Avatar_ACC_APIs.html and #file:Avatar_ACC_Standards.html files as examples/refferences on how the pages are expected to be. You can also refer to the template provided in the #file:acc-test-page-generation.instructions.md .
 
 Before implementing anything always double-consult with the instruction files. If uncertain for anything, better ask, instead of blindly making decisions. Proceed with the first two components.
