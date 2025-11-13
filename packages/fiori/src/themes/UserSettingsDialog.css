@@ -65,6 +65,10 @@
 	border-radius: 0;
 }
 
+.ui5-user-settings-item-no-icon::part(title) {
+	padding-left: 1.875rem; /* width of icon */
+}
+
 @media screen and (width >= 37.5rem) and (width < 64rem) {
 	.ui5-user-settings-dialog:not([on-phone]) {
 		max-width: min(40rem, 80%);

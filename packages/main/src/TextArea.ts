@@ -17,7 +17,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -658,10 +657,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return this.valueState === ValueState.Negative || this.valueState === ValueState.Critical || this.valueState === ValueState.Information;
 	}
 
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
-	}
-
 	get valueStateTextMappings() {
 		return {
 			"Positive": TextArea.i18nBundle.getText(VALUE_STATE_SUCCESS),
@@ -684,4 +679,5 @@ class TextArea extends UI5Element implements IFormInputElement {
 TextArea.define();
 
 export default TextArea;
+export { TextArea as BaseTextArea };
 export type { TextAreaInputEventDetail };

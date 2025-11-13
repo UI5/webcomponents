@@ -76,9 +76,10 @@ interface IDynamicDateRangeOption {
 	format: (value: DynamicDateRangeValue) => string;
 	parse: (value: string) => DynamicDateRangeValue | undefined;
 	toDates: (value: DynamicDateRangeValue) => Array<Date>;
-	handleSelectionChange?: (event: CustomEvent) => DynamicDateRangeValue | undefined;
+	handleSelectionChange?: (event: CustomEvent, value: DynamicDateRangeValue | undefined) => DynamicDateRangeValue | undefined;
 	template?: JsxTemplate;
 	isValidString: (value: string) => boolean;
+	resetState?: () => void;
 }
 
 /**
@@ -105,6 +106,9 @@ interface IDynamicDateRangeOption {
  * - "TOMORROW" - Represents the next date. An example value is `{ operator: "TOMORROW"}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/Tomorrow.js";`
  * - "DATE" - Represents a single date. An example value is `{ operator: "DATE", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/SingleDate.js";`
  * - "DATERANGE" - Represents a range of dates. An example value is `{ operator: "DATERANGE", values: [new Date(), new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";`
+ * - "DATETIMERANGE" - Represents a range of dates with times. An example value is `{ operator: "DATETIMERANGE", values: [new Date(), new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/DateTimeRange.js";`
+ * - "FROMDATETIME" - Represents a range from date and time. An example value is `{ operator: "FROMDATETIME", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/FromDateTime.js";`
+ * - "TODATETIME" - Represents a range to date and time. An example value is `{ operator: "TODATETIME", values: [new Date()]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/ToDateTime.js";`
  * - "LASTDAYS" - Represents Last X Days from today. An example value is `{ operator: "LASTDAYS", values: [2]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
  * - "LASTWEEKS" - Represents Last X Weeks from today. An example value is `{ operator: "LASTWEEKS", values: [3]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
  * - "LASTMONTHS" - Represents Last X Months from today. An example value is `{ operator: "LASTMONTHS", values: [6]}`. Import: `import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";`
@@ -128,6 +132,7 @@ interface IDynamicDateRangeOption {
 @customElement({
 	tag: "ui5-dynamic-date-range",
 	languageAware: true,
+	cldr: true,
 	template: DynamicDateRangeTemplate,
 	renderer: jsxRenderer,
 	styles: [
@@ -285,7 +290,7 @@ class DynamicDateRange extends UI5Element {
 
 	_togglePicker(): void {
 		if (this.open) {
-			this.open = false;
+			this._close();
 		} else {
 			this.open = true;
 		}
@@ -390,11 +395,15 @@ class DynamicDateRange extends UI5Element {
 			this.value = undefined;
 		}
 
+		this._currentOption?.resetState?.();
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
 
 	_close() {
+		this._currentOption?.resetState?.();
+
 		this._currentOption = undefined;
 		this.open = false;
 	}
@@ -432,7 +441,12 @@ class DynamicDateRange extends UI5Element {
 	}
 
 	handleSelectionChange(e: CustomEvent) {
-		this.currentValue = this._currentOption?.handleSelectionChange && this._currentOption?.handleSelectionChange(e) as DynamicDateRangeValue;
+		const value = this._currentOption?.handleSelectionChange?.(e, this.currentValue) as DynamicDateRangeValue;
+
+		this.currentValue = JSON.parse(JSON.stringify(value)); // deep clone
+		if (this.currentValue) {
+			this.currentValue.values = value?.values;
+		}
 
 		// Update _currentOption if the operator changed
 		if (this.currentValue && this.currentValue.operator !== this._currentOption?.operator) {

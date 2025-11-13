@@ -511,12 +511,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress(["Shift", "F4"])
-			.realPress("F4");
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
+
+		// Wait for year picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
 
 		cy.get("@calendar")
 			.shadow()
@@ -531,12 +554,35 @@ describe("Date Picker Tests", () => {
 			.as("datePicker")
 			.ui5DatePickerValueHelpIconPress();
 
+		// Focus the day picker's focusable element first
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-calendar")
 			.as("calendar")
-			.realPress("F4")
-			.realPress(["Shift", "F4"]);
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("be.visible")
+			.focus()
+			.should("have.focus");
+
+		cy.focused().realPress("F4");
+
+		// Wait for month picker to be visible and focused
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.should("be.visible");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-monthpicker")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.focused().realPress(["Shift", "F4"]);
 
 		cy.get("@calendar")
 			.shadow()
@@ -1396,6 +1442,33 @@ describe("Date Picker Tests", () => {
 			});
 	});
 
+	it("change event fires with value in correct valueFormat", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" valueFormat="yyyy-MM-dd"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.then($datePicker => {
+				$datePicker.on("change", cy.stub().as("changeHandler"));
+			});
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 2024")
+			.realPress("Enter");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "2024-03-31");
+
+		cy.get("@changeHandler")
+			.should("have.been.calledOnce")
+			.its("firstCall.args.0.detail")
+			.should("deep.include", {
+				value: "2024-03-31"
+			});
+	});
+
 	it("DatePicker's formatter has strict parsing enabled", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 
@@ -1598,6 +1671,192 @@ describe("Date Picker Tests", () => {
 });
 
 
+describe("Validation inside a form ", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<DatePicker id="datePicker1" required={true}></DatePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#datePicker1:invalid")
+			.should("exist", "Required DatePicker without value should have :invalid CSS class");
+
+		cy.get("@datePicker")
+			.ui5DatePickerTypeDate("Apr 12, 2024");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#datePicker1:invalid").should("not.exist", "Required DatePicker with value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form>
+				<DatePicker id="datePicker2" required={true} valueFormat="MMM d, y"></DatePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#datePicker2")
+			.as("datePicker")
+			.ui5DatePickerTypeDate("Test 33, 2024");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#datePicker2:invalid")
+			.should("exist", "DatePicker without correct formatted value should have :invalid CSS class");
+
+		cy.get("@datePicker")
+			.ui5DatePickerTypeDate("Apr 12, 2024");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#datePicker2:invalid")
+			.should("not.exist", "DatePicker with correct formatted value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for rangeUnderflow", () => {
+		cy.mount(
+			<form method="get">
+				<DatePicker id="datePicker3" minDate="Jan 10, 2024" valueFormat="MMM d, y"></DatePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#datePicker3")
+			.as("datePicker")
+			.ui5DatePickerTypeDate("Apr 10, 2020");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: true },
+				validity: { rangeUnderflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#datePicker3:invalid")
+			.should("exist", "DatePicker with value below minDate should have :invalid CSS class");
+
+		cy.get("@datePicker")
+			.ui5DatePickerTypeDate("Jan 20, 2024");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: false },
+				validity: { rangeUnderflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#datePicker3:invalid")
+			.should("not.exist", "DatePicker with value above minDate should not have :invalid CSS class");
+	});
+
+
+	it("has correct validity for rangeOverflow", () => {
+		cy.mount(
+			<form>
+				<DatePicker id="datePicker3" maxDate="Jan 10, 2024" valueFormat="MMM d, y"></DatePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#datePicker3")
+			.ui5DatePickerTypeDate("Jan 14, 2024");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: true },
+				validity: { rangeOverflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#datePicker3:invalid")
+			.should("exist", "DatePicker with value above maxDate should have :invalid CSS class");
+
+		cy.get("@datePicker")
+			.ui5DatePickerTypeDate("Jan 5, 2024");
+
+		cy.get("@datePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: false },
+				validity: { rangeOverflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#datePicker3:invalid")
+			.should("not.exist", "DatePicker with value below maxDate should not have :invalid CSS class");
+	});
+});
+
 describe("Accessibility", () => {
 	it("picker popover accessible name with external label", () => {
 		const LABEL = "Deadline";
@@ -1676,86 +1935,5 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("span#descr")
 			.should("have.text", DESCRIPTION);
-	});
-
-	describe("Accessibility - ariaValueStateHiddenText", () => {
-		it("should correctly extract text from nested slot structure in value state messages", () => {
-			const ERROR_MESSAGE = "Invalid date format";
-			
-			cy.mount(
-				<DatePicker valueState="Negative">
-					<div slot="valueStateMessage">{ERROR_MESSAGE}</div>
-				</DatePicker>
-			);
-
-			cy.get("[ui5-date-picker]")
-				.as("datePicker");
-
-			// Get the inner datetime input
-			cy.get<DatePicker>("@datePicker")
-				.shadow()
-				.find("[ui5-datetime-input]")
-				.as("datetimeInput");
-
-			// Verify the input has proper value state
-			cy.get("@datetimeInput")
-				.should("have.attr", "value-state", "Negative");
-
-			// Test the ariaValueStateHiddenText getter directly
-			cy.get("@datetimeInput")
-				.then(($input) => {
-					const datetimeInput = $input[0] as any;
-					const ariaText = datetimeInput.ariaValueStateHiddenText;
-					
-					// Should contain both the value state type and the custom message
-					expect(ariaText).to.include("Error");
-					expect(ariaText).to.include(ERROR_MESSAGE);
-				});
-
-			// Verify the aria-describedby points to an element with the correct text
-			cy.get("@datetimeInput")
-				.shadow()
-				.find("input")
-				.should("have.attr", "aria-describedby")
-				.then((describedBy) => {
-					cy.get("@datetimeInput")
-						.shadow()
-						.find(`#${describedBy}`)
-						.should("contain.text", "Error")
-						.and("contain.text", ERROR_MESSAGE);
-				});
-		});
-
-		it("should handle complex nested slot structure from DatePicker forwarding", () => {
-			const CUSTOM_ERROR = "Please select a valid date";
-			
-			cy.mount(
-				<DatePicker valueState="Critical">
-					<div slot="valueStateMessage">
-						<span>{CUSTOM_ERROR}</span>
-					</div>
-				</DatePicker>
-			);
-
-			cy.get("[ui5-date-picker]")
-				.as("datePicker");
-
-			cy.get<DatePicker>("@datePicker")
-				.shadow()
-				.find("[ui5-datetime-input]")
-				.as("datetimeInput");
-
-			// Test nested slot content extraction
-			cy.get("@datetimeInput")
-				.then(($input) => {
-					const datetimeInput = $input[0] as any;
-					const ariaText = datetimeInput.ariaValueStateHiddenText;
-					
-					// Should extract text from nested structure
-					expect(ariaText).to.include("Warning");
-					expect(ariaText).to.include(CUSTOM_ERROR);
-					expect(ariaText.trim()).to.not.be.empty;
-				});
-		});
 	});
 });

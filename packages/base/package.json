@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-base",
-  "version": "2.16.0-rc.1",
+  "version": "2.17.0-rc.1",
   "description": "UI5 Web Components: webcomponents.base",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -57,7 +57,6 @@
   },
   "dependencies": {
     "@lit-labs/ssr-dom-shim": "^1.1.2",
-    "chokidar-cli": "^3.0.0",
     "lit-html": "^2.0.1"
   },
   "devDependencies": {
@@ -65,7 +64,8 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@sap-theming/theming-base-content": "11.29.3",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.16.0-rc.1",
+    "@ui5/webcomponents-tools": "2.17.0-rc.1",
+    "chokidar-cli": "^3.0.0",
     "clean-css": "^5.2.2",
     "cypress": "^15.3.0",
     "eslint": "^7.22.0",
@@ -75,7 +75,7 @@
     "resolve": "^1.20.0",
     "touch": "^3.1.0",
     "typescript": "^5.6.2",
-    "vite": "5.4.8"
+    "vite": "5.4.21"
   },
   "customElements": "dist/custom-elements.json"
 }
