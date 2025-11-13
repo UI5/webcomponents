@@ -392,17 +392,16 @@ describe("Slots", () => {
 			assertStartSeparatorVisibility(false);
 			assertEndSeparatorVisibility(false);
 
-			// TODO: V2: separators are not rendered on S breakpoint at all
-			// // once items are hidden, both separators should be rendered with the last visible item
-			// cy.get("#shellbar")
-			// 	.shadow()
-			// 	.find("div[id='content-2'] > .ui5-shellbar-separator-start")
-			// 	.should("exist");
+			// once items are hidden, both separators should be rendered with the last visible item
+			cy.get("#shellbar")
+				.shadow()
+				.find("div[id='content-2'] > .ui5-shellbar-separator-start")
+				.should("exist");
 
-			// cy.get("#shellbar")
-			// 	.shadow()
-			// 	.find("div[id='content-6'] > .ui5-shellbar-separator-end")
-			// 	.should("exist");
+			cy.get("#shellbar")
+				.shadow()
+				.find("div[id='content-6'] > .ui5-shellbar-separator-end")
+				.should("exist");
 
 			cy.viewport(1920, 1080);
 			// both separators should be visible

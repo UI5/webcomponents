@@ -16,6 +16,7 @@ import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
@@ -57,14 +58,15 @@ import type {
 import {
 	SHELLBAR_LABEL,
 	SHELLBAR_NOTIFICATIONS,
+	SHELLBAR_NOTIFICATIONS_NO_COUNT,
 	SHELLBAR_PROFILE,
 	SHELLBAR_PRODUCTS,
 	SHELLBAR_SEARCH,
-	SHELLBAR_OVERFLOW,
 	SHELLBAR_ASSISTANT,
+	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
-	SHELLBAR_NOTIFICATIONS_NO_COUNT,
 } from "./generated/i18n/i18n-defaults.js";
+import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 type ShellBarV2Breakpoint = "S" | "M" | "L" | "XL" | "XXL";
 
@@ -75,7 +77,16 @@ const ShellBarV2Actions = {
 	Assistant: "assistant",
 	Notifications: "notifications",
 	ProductSwitch: "products",
-} as const;
+};
+
+const ShellBarV2ActionsSelectors = {
+	Search: ".ui5-shellbar-search-toggle",
+	Profile: ".ui5-shellbar-image-button",
+	Overflow: ".ui5-shellbar-overflow-button",
+	Assistant: ".ui5-shellbar-assistant-button",
+	Notifications: ".ui5-shellbar-bell-button",
+	ProductSwitch: ".ui5-shellbar-button-product-switch",
+};
 
 type ShellBarV2ActionId = typeof ShellBarV2Actions[keyof typeof ShellBarV2Actions];
 
@@ -83,7 +94,9 @@ type ShellBarV2ActionItem = {
 	id: ShellBarV2ActionId;
 	icon?: string;
 	count?: string;
-	enabled: boolean; // Whether the action is enabled and should be displayed
+	enabled: boolean; 		// Whether the action is enabled and should be displayed
+	selector: string; 		// The selector by which we can target the action
+	isProtected: boolean 	// Whether the action can go into the overflow
 	stableDomRef?: string;
 };
 
@@ -108,7 +121,19 @@ type ShellBarV2ProductSwitchClickEventDetail = {
 	targetRef: HTMLElement;
 };
 
-type ShellBarV2SearchButtonClickEventDetail = {
+type ShellBarV2LogoClickEventDetail = {
+	targetRef: HTMLElement;
+};
+
+type ShellBarV2MenuItemClickEventDetail = {
+	item: HTMLElement;
+};
+
+type ShellBarV2ContentItemVisibilityChangeEventDetail = {
+	items: Array<HTMLElement>
+};
+
+type ShellBarV2SearchButtonEventDetail = {
 	targetRef: HTMLElement;
 	searchFieldVisible: boolean;
 };
@@ -121,35 +146,39 @@ type ShellBarV2SearchFieldClearEventDetail = {
 	targetRef: HTMLElement;
 };
 
-type ShellBarV2ContentItemVisibilityChangeEventDetail = {
-	items: Array<HTMLElement>;
-};
-
-// Legacy Event Types (DELETE WHEN REMOVING LEGACY)
-
-type ShellBarV2LogoClickEventDetail = {
-	targetRef: HTMLElement;
-};
-
-type ShellBarV2MenuItemClickEventDetail = {
-	item: HTMLElement;
-};
-
 /**
  * @class
  * ### Overview
  *
- * The `ui5-shellbar-v2` is a modular application header with built-in features.
- * This is an experimental MVP implementation.
+ * The `ui5-shellbar` is meant to serve as an application header
+ * and includes numerous built-in features, such as: logo, profile image/icon, title, search field, notifications and so on.
+ *
+ * ### Stable DOM Refs
+ *
+ * You can use the following stable DOM refs for the `ui5-shellbar`:
+ *
+ * - logo
+ * - notifications
+ * - overflow
+ * - profile
+ * - product-switch
+ *
+ * ### Keyboard Handling
+ *
+ * #### Fast Navigation
+ * This component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].
+ * In order to use this functionality, you need to import the following module:
+ * `import "@ui5/webcomponents-base/dist/features/F6Navigation.js"`
  *
  * ### ES6 Module Import
- * `import "@ui5/webcomponents-fiori/dist/shellbarv2/ShellBarV2.js";`
- * @csspart root - Used to style the outermost wrapper of the `ui5-shellbar-v2`
+ * `import "@ui5/webcomponents-fiori/dist/ShellBar.js";`
+ * @csspart root - Used to style the outermost wrapper of the `ui5-shellbar`
  * @constructor
  * @extends UI5Element
  * @public
- * @experimental
+ * @since 0.8.0
  */
+
 @customElement({
 	tag: "ui5-shellbar-v2",
 	styles: [shellBarV2Styles, shellBarV2LegacyStyles, ShellBarPopoverCss],
@@ -161,6 +190,7 @@ type ShellBarV2MenuItemClickEventDetail = {
 		Icon,
 		List,
 		Button,
+		ButtonBadge,
 		Popover,
 		ShellBarSpacer,
 		ShellBarV2Item,
@@ -170,163 +200,240 @@ type ShellBarV2MenuItemClickEventDetail = {
 	],
 })
 /**
- * Fired when the notification icon is clicked.
- * @param {HTMLElement} targetRef dom ref of the notifications button
+ *
+ * Fired, when the notification icon is activated.
+ * @param {HTMLElement} targetRef dom ref of the activated element
  * @public
  */
 @event("notifications-click", {
 	cancelable: true,
 	bubbles: true,
 })
+
 /**
- * Fired when the profile is clicked.
- * @param {HTMLElement} targetRef dom ref of the profile element
+ * Fired, when the profile slot is present.
+ * @param {HTMLElement} targetRef dom ref of the activated element
  * @public
  */
 @event("profile-click", {
 	bubbles: true,
 })
+
 /**
- * Fired when the product switch icon is clicked.
- * @param {HTMLElement} targetRef dom ref of the product switch button
+ * Fired, when the product switch icon is activated.
+ *
+ * **Note:** You can prevent closing of overflow popover by calling `event.preventDefault()`.
+ * @param {HTMLElement} targetRef dom ref of the activated element
  * @public
  */
 @event("product-switch-click", {
 	cancelable: true,
 	bubbles: true,
 })
+
 /**
- * Fired when the search button is clicked.
- * @param {HTMLElement} targetRef dom ref of the search button
+ * Fired, when the logo is activated.
+ * @param {HTMLElement} targetRef dom ref of the activated element
+ * @since 0.10
+ * @public
+ */
+@event("logo-click", {
+	bubbles: true,
+})
+
+/**
+ * Fired, when a menu item is activated
+ *
+ * **Note:** You can prevent closing of overflow popover by calling `event.preventDefault()`.
+ * @param {HTMLElement} item DOM ref of the activated list item
+ * @since 0.10
+ * @public
+ */
+@event("menu-item-click", {
+	bubbles: true,
+	cancelable: true,
+})
+
+/**
+ * Fired, when the search button is activated.
+ *
+ * **Note:** You can prevent expanding/collapsing of the search field by calling `event.preventDefault()`.
+ * @param {HTMLElement} targetRef dom ref of the activated element
  * @param {Boolean} searchFieldVisible whether the search field is visible
  * @public
  */
+
 @event("search-button-click", {
 	cancelable: true,
 	bubbles: true,
 })
+
 /**
- * Fired when the search field is expanded or collapsed.
+ * Fired, when the search field is expanded or collapsed.
+ * @since 2.10.0
  * @param {Boolean} expanded whether the search field is expanded
  * @public
  */
 @event("search-field-toggle", {
 	bubbles: true,
 })
+
 /**
- * Fired when the search cancel button is clicked in full-screen mode.
- * @param {HTMLElement} targetRef dom ref of the cancel button
+ * Fired, when the search cancel button is activated.
+ *
+ * **Note:** You can prevent the default behavior (clearing the search field value) by calling `event.preventDefault()`. The search will still be closed.
+ * **Note:** The `search-field-clear` event is in an experimental state and is a subject to change.
+ * @param {HTMLElement} targetRef dom ref of the cancel button element
+ * @since 2.14.0
  * @public
  */
 @event("search-field-clear", {
 	cancelable: true,
 	bubbles: true,
 })
+
 /**
- * Fired when content items are hidden or shown due to overflow.
- * @param {Array<HTMLElement>} items array of hidden content items
+ * Fired, when an item from the content slot is hidden or shown.
+ * **Note:** The `content-item-visibility-change` event is in an experimental state and is a subject to change.
+ *
+ * @param {Array<HTMLElement>} array of all the items that are hidden
  * @public
+ * @since 2.7.0
  */
 @event("content-item-visibility-change", {
 	bubbles: true,
 })
-// Legacy Events (DELETE WHEN REMOVING LEGACY)
-/**
- * Fired when the logo is clicked.
- * @param {HTMLElement} targetRef dom ref of the logo element
- * @public
- */
-@event("logo-click", {
-	bubbles: true,
-})
-/**
- * Fired when a menu item is clicked.
- * @param {HTMLElement} item DOM ref of the activated list item
- * @public
- */
-@event("menu-item-click", {
-	cancelable: true,
-	bubbles: true,
-})
+
 class ShellBarV2 extends UI5Element {
 	eventDetails!: {
-		"notifications-click": ShellBarV2NotificationsClickEventDetail;
-		"profile-click": ShellBarV2ProfileClickEventDetail;
-		"product-switch-click": ShellBarV2ProductSwitchClickEventDetail;
-		"search-button-click": ShellBarV2SearchButtonClickEventDetail;
-		"search-field-toggle": ShellBarV2SearchFieldToggleEventDetail;
-		"search-field-clear": ShellBarV2SearchFieldClearEventDetail;
-		"content-item-visibility-change": ShellBarV2ContentItemVisibilityChangeEventDetail;
-		/* Legacy Events (DELETE WHEN REMOVING LEGACY) */
-		"logo-click": ShellBarV2LogoClickEventDetail;
-		"menu-item-click": ShellBarV2MenuItemClickEventDetail;
-	};
+		"notifications-click": ShellBarV2NotificationsClickEventDetail,
+		"profile-click": ShellBarV2ProfileClickEventDetail,
+		"product-switch-click": ShellBarV2ProductSwitchClickEventDetail,
+		"logo-click": ShellBarV2LogoClickEventDetail,
+		"menu-item-click": ShellBarV2MenuItemClickEventDetail,
+		"search-button-click": ShellBarV2SearchButtonEventDetail,
+		"search-field-toggle": ShellBarV2SearchFieldToggleEventDetail,
+		"search-field-clear": ShellBarV2SearchFieldClearEventDetail,
+		"content-item-visibility-change": ShellBarV2ContentItemVisibilityChangeEventDetail
+	}
 
 	/**
-	 * Defines the branding slot (logo + title).
-	 * The `ui5-shellbar-branding` component is intended to be placed inside this slot.
-	 * @public
-	 */
-	@slot()
-	branding!: Array<ShellBarBranding>;
-
-	/**
-	 * Defines a start button (menu button).
-	 * Use `ui5-button` in this slot.
+	 * Defines a `ui5-button` in the bar that will be placed in the beginning.
+	 * We encourage this slot to be used for a menu button.
+	 * It gets overstyled to match ShellBar's styling.
 	 * @public
 	 */
 	@slot()
 	startButton!: Array<IButton>;
 
 	/**
-	 * Defines content items displayed in the center area.
+	 * Defines the branding slot.
+	 * The `ui5-shellbar-branding` component is intended to be placed inside this slot.
+	 * Content placed here takes precedence over the `primaryTitle` property and the `logo` content slot.
+	 *
+	 * **Note:** The `branding` slot is in an experimental state and is a subject to change.
+	 *
+	 * @since 2.12.0
 	 * @public
+	 */
+	@slot()
+	branding!: Array<ShellBarBranding>;
+
+	/**
+	 * Define the items displayed in the content area.
+	 *
+	 * Use the `data-hide-order` attribute with numeric value to specify the order of the items to be hidden when the space is not enough.
+	 * Lower values will be hidden first.
+	 *
+	 * **Note:** The `content` slot is in an experimental state and is a subject to change.
+	 *
+	 * @public
+	 * @since 2.7.0
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
 	content!: Array<HTMLElement>;
 
 	/**
-	 * Defines additional custom items.
-	 * Use `ui5-shellbar-v2-item` components.
+	 * Defines the `ui5-input`, that will be used as a search field.
 	 * @public
 	 */
-	@slot({
-		type: ShellBarV2Item,
-		"default": true,
-		// invalidateOnChildChange: true,
-		individualSlots: true,
-	})
-	items!: Array<ShellBarV2Item>;
-
-	/**
-	 * Defines the profile slot.
-	 * You can pass `ui5-avatar` to set the profile image/icon.
-	 * @public
-	 */
-	@slot()
-	profile!: Array<HTMLElement>;
+	@slot({ type: HTMLElement })
+	searchField!: Array<IShellBarSearchField>;
 
 	/**
 	 * Defines the assistant slot.
-	 * Add a button for AI assistant or copilot.
+	 *
+	 * @since 2.0.0
 	 * @public
 	 */
 	@slot()
 	assistant!: Array<IButton>;
 
 	/**
-	 * Defines the search field slot.
-	 * Use a self-collapsible search field component.
+	 * Defines the `ui5-shellbar` additional items.
+	 *
+	 * **Note:**
+	 * You can use the `<ui5-shellbar-item></ui5-shellbar-item>`.
 	 * @public
 	 */
-	@slot({
-		type: HTMLElement,
-		// invalidateOnChildChange: true,
-	})
-	searchField!: Array<IShellBarSearchField>;
+	@slot({ type: HTMLElement, "default": true })
+	items!: Array<ShellBarV2Item>;
 
 	/**
-	 * Defines the notifications count displayed in the notification icon badge.
+	 * You can pass `ui5-avatar` to set the profile image/icon.
+	 * If no profile slot is set - profile will be excluded from actions.
+	 *
+	 * **Note:** We recommend not using the `size` attribute of `ui5-avatar` because
+	 * it should have specific size by design in the context of `ui5-shellbar` profile.
+	 * @since 1.0.0-rc.6
+	 * @public
+	 */
+	@slot()
+	profile!: Array<HTMLElement>;
+
+	/**
+	 * Defines the visibility state of the search button.
+	 *
+	 * **Note:** The `hideSearchButton` property is in an experimental state and is a subject to change.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideSearchButton = false;
+
+	/**
+	 * Disables the automatic search field expansion/collapse when the available space is not enough.
+	 *
+	 * **Note:** The `disableSearchCollapse` property is in an experimental state and is a subject to change.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	disableSearchCollapse = false;
+
+	/**
+	 * Defines the `primaryTitle`.
+	 *
+	 * **Note:** The `primaryTitle` would be hidden on S screen size (less than approx. 700px).
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	primaryTitle?: string;
+
+	/**
+	 * Defines the `secondaryTitle`.
+	 *
+	 * **Note:** The `secondaryTitle` would be hidden on S and M screen sizes (less than approx. 1300px).
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	secondaryTitle?: string;
+
+	/**
+	 * Defines the `notificationsCount`,
+	 * displayed in the notification icon top-right corner.
 	 * @default undefined
 	 * @public
 	 */
@@ -334,7 +441,7 @@ class ShellBarV2 extends UI5Element {
 	notificationsCount?: string;
 
 	/**
-	 * Defines if the notification icon is displayed.
+	 * Defines, if the notification icon would be displayed.
 	 * @default false
 	 * @public
 	 */
@@ -342,7 +449,7 @@ class ShellBarV2 extends UI5Element {
 	showNotifications = false;
 
 	/**
-	 * Defines if the product switch icon is displayed.
+	 * Defines, if the product switch icon would be displayed.
 	 * @default false
 	 * @public
 	 */
@@ -350,7 +457,9 @@ class ShellBarV2 extends UI5Element {
 	showProductSwitch = false;
 
 	/**
-	 * Defines if the search field is displayed.
+	 * Defines, if the Search Field would be displayed when there is a valid `searchField` slot.
+	 *
+	 * **Note:** By default the Search Field is not displayed.
 	 * @default false
 	 * @public
 	 */
@@ -358,41 +467,47 @@ class ShellBarV2 extends UI5Element {
 	showSearchField = false;
 
 	/**
-	 * Defines accessibility attributes for different areas of the component.
+	 * Defines additional accessibility attributes on different areas of the component.
 	 *
-	 * The accessibilityAttributes object has the following fields:
+	 * The accessibilityAttributes object has the following fields,
+	 * where each field is an object supporting one or more accessibility attributes:
 	 *
+	 * - **logo** - `logo.role` and `logo.name`.
 	 * - **notifications** - `notifications.expanded` and `notifications.hasPopup`.
 	 * - **profile** - `profile.expanded`, `profile.hasPopup` and `profile.name`.
 	 * - **product** - `product.expanded` and `product.hasPopup`.
 	 * - **search** - `search.hasPopup`.
 	 * - **overflow** - `overflow.expanded` and `overflow.hasPopup`.
+	 * - **branding** - `branding.name`.
 	 *
 	 * The accessibility attributes support the following values:
 	 *
+	 * - **role**: Defines the accessible ARIA role of the logo area.
+	 * Accepts the following string values: `button` or `link`.
+	 *
 	 * - **expanded**: Indicates whether the button, or another grouping element it controls,
-	 * is currently expanded or collapsed. Accepts the following string values: `true` or `false`.
+	 * is currently expanded or collapsed.
+	 * Accepts the following string values: `true` or `false`.
 	 *
 	 * - **hasPopup**: Indicates the availability and type of interactive popup element,
 	 * such as menu or dialog, that can be triggered by the button.
-	 * Accepts the following string values: `dialog`, `grid`, `listbox`, `menu` or `tree`.
 	 *
+	 * Accepts the following string values: `dialog`, `grid`, `listbox`, `menu` or `tree`.
 	 * - **name**: Defines the accessible ARIA name of the area.
 	 * Accepts any string.
 	 *
 	 * @default {}
 	 * @public
-	 * @since 2.0.0
+	 * @since 1.10.0
 	 */
 	@property({ type: Object })
 	accessibilityAttributes: ShellBarV2AccessibilityAttributes = {};
 
 	/**
-	 * Current breakpoint size.
 	 * @private
 	 */
 	@property()
-	breakpointSize: ShellBarV2Breakpoint = "M";
+	breakpointSize = "S";
 
 	/**
 	 * Actions computed from controllers.
@@ -479,60 +594,26 @@ class ShellBarV2 extends UI5Element {
 		getDisableSearchCollapse: () => this.disableSearchCollapse,
 	});
 
-	// Legacy Members
+	/* =================== Legacy Members =================== */
 
 	/**
-	 * Defines the logo slot (legacy).
-	 * For new implementations, use the branding slot.
+	 * Defines the logo of the `ui5-shellbar`.
+	 * For example, you can use `ui5-avatar` or `img` elements as logo.
+	 * @since 1.0.0-rc.8
 	 * @public
 	 */
 	@slot()
 	logo!: Array<HTMLElement>;
 
 	/**
-	 * Defines the menu items slot (legacy).
+	 * Defines the items displayed in menu after a click on a start button.
+	 *
+	 * **Note:** You can use the  `<ui5-li></ui5-li>` and its ancestors.
+	 * @since 0.10
 	 * @public
 	 */
 	@slot()
-	menuItems!: Array<HTMLElement>;
-
-	/**
-	 * Hides the search button.
-	 * Only applies to legacy search fields (ui5-input, custom div).
-	 * For self-collapsible search (ui5-shellbar-search), use the search field's own collapsed state.
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	hideSearchButton = false;
-
-	/**
-	 * Disables automatic search field collapse when space is limited.
-	 * Only applies to legacy search fields (ui5-input, custom div).
-	 * Self-collapsible search (ui5-shellbar-search) manages its own state.
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	disableSearchCollapse = false;
-
-	/**
-	 * Defines the primary title (legacy).
-	 * For new implementations, use the branding slot.
-	 * @default undefined
-	 * @public
-	 */
-	@property()
-	primaryTitle?: string;
-
-	/**
-	 * Defines the secondary title (legacy).
-	 * For new implementations, use the branding slot.
-	 * @default undefined
-	 * @public
-	 */
-	@property()
-	secondaryTitle?: string;
+	menuItems!: Array<ListItemBase>;
 
 	/**
 	 * Open state of the menu popover (legacy).
@@ -541,9 +622,18 @@ class ShellBarV2 extends UI5Element {
 	@property({ type: Boolean })
 	menuPopoverOpen = false;
 
+	/**
+	 * The container is positioned in the center of the `ui5-shellbar` and occupies one-third of the total length of the `ui5-shellbar`.
+	 *
+	 * **Note:** If set, the `searchField` slot is not rendered.
+	 * @private
+	 */
+	@slot()
+	midContent!: Array<HTMLElement>;
+
 	legacyAdaptor?: ShellBarV2Legacy;
 
-	// Lifecycle Methods
+	/* =================== Lifecycle Methods =================== */
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this.handleResizeBound);
@@ -577,7 +667,7 @@ class ShellBarV2 extends UI5Element {
 		this.updateOverflow();
 	}
 
-	// Actions Management
+	/* =================== Actions Management =================== */
 
 	private buildActions() {
 		this.actions = [
@@ -585,36 +675,48 @@ class ShellBarV2 extends UI5Element {
 				id: ShellBarV2Actions.Search,
 				icon: searchIcon,
 				enabled: this.enabledFeatures.search,
+				selector: ShellBarV2ActionsSelectors.Search,
+				isProtected: false,
 				stableDomRef: "toggle-search",
-			},
-			{
-				id: ShellBarV2Actions.Profile,
-				enabled: this.enabledFeatures.profile,
-				stableDomRef: "profile",
 			},
 			{
 				id: ShellBarV2Actions.Assistant,
 				icon: daIcon,
 				enabled: this.enabledFeatures.assistant,
+				selector: ShellBarV2ActionsSelectors.Assistant,
+				isProtected: false,
 			},
 			{
 				id: ShellBarV2Actions.Notifications,
 				icon: bellIcon,
 				count: this.notificationsCount,
 				enabled: this.enabledFeatures.notifications,
+				selector: ShellBarV2ActionsSelectors.Notifications,
+				isProtected: false,
 				stableDomRef: "notifications",
-			},
-			{
-				id: ShellBarV2Actions.ProductSwitch,
-				icon: gridIcon,
-				enabled: this.enabledFeatures.productSwitch,
-				stableDomRef: "product-switch",
 			},
 			{
 				id: ShellBarV2Actions.Overflow,
 				icon: overflowIcon,
 				enabled: this.enabledFeatures.overflow,
+				selector: ShellBarV2ActionsSelectors.Overflow,
+				isProtected: true,
 				stableDomRef: "overflow",
+			},
+			{
+				id: ShellBarV2Actions.Profile,
+				enabled: this.enabledFeatures.profile,
+				selector: ShellBarV2ActionsSelectors.Profile,
+				isProtected: true,
+				stableDomRef: "profile",
+			},
+			{
+				id: ShellBarV2Actions.ProductSwitch,
+				icon: gridIcon,
+				enabled: this.enabledFeatures.productSwitch,
+				selector: ShellBarV2ActionsSelectors.ProductSwitch,
+				isProtected: true,
+				stableDomRef: "product-switch",
 			},
 		].filter(action => action.enabled);
 	}
@@ -635,7 +737,7 @@ class ShellBarV2 extends UI5Element {
 		return texts[actionId] || actionId;
 	}
 
-	// Breakpoint Management
+	/* =================== Breakpoint Management =================== */
 
 	get isSBreakPoint() {
 		return this.breakpointSize === "S";
@@ -651,7 +753,7 @@ class ShellBarV2 extends UI5Element {
 		}
 	}
 
-	// Overflow Management
+	/* =================== Overflow Management =================== */
 
 	private updateOverflow() {
 		if (!this.overflow) {
@@ -660,7 +762,7 @@ class ShellBarV2 extends UI5Element {
 
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
-			content: this.content,
+			content: this.sortContent(this.content),
 			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
@@ -775,7 +877,7 @@ class ShellBarV2 extends UI5Element {
 		return undefined;
 	}
 
-	// Search Management
+	/* =================== Search Management =================== */
 
 	get search() {
 		return this.searchField.length ? this.searchField[0] : null;
@@ -860,7 +962,7 @@ class ShellBarV2 extends UI5Element {
 		}
 	}
 
-	// Legacy Features Management
+	/* =================== Legacy Features Management =================== */
 
 	private initLegacyController() {
 		if (this.hasLegacyFeatures) {
@@ -878,13 +980,13 @@ class ShellBarV2 extends UI5Element {
 			|| this.menuItems.length > 0;
 	}
 
-	// Keyboard Navigation
+	/* =================== Keyboard Navigation =================== */
 
 	_onKeyDown(e: KeyboardEvent) {
 		this.itemNavigation.handleKeyDown(e);
 	}
 
-	// Content Management
+	/* =================== Content Management =================== */
 
 	get startContent(): HTMLElement[] {
 		return this.splitContent(this.content).start;
@@ -920,17 +1022,24 @@ class ShellBarV2 extends UI5Element {
 
 	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
 		const group = isStartGroup ? this.startContent : this.endContent;
-		if (this.isSBreakPoint) {
-			return { shouldPack: false };
-		}
-
+		const sorted = this.sortContent(group);
 		const isHidden = this.hiddenItemsIds.includes((item as any)._individualSlot as string);
-		const isLastItem = group.at(-1) === item;
+		const isLastItem = sorted.at(-1) === item;
 
 		return { shouldPack: isHidden && isLastItem };
 	}
 
-	// Accessibility
+	sortContent(content: HTMLElement[]) {
+		// reverse so items on the right are hidden first
+		// then sort by hide order to apply custom preferences
+		return content.toReversed().toSorted((a, b) => {
+			const aOrder = parseInt(a.getAttribute("data-hide-order") || "0");
+			const bOrder = parseInt(b.getAttribute("data-hide-order") || "0");
+			return aOrder - bOrder;
+		});
+	}
+
+	/* =================== Accessibility =================== */
 
 	get actionsAccessibilityInfo(): ShellBarV2AccessibilityInfo {
 		return this.accessibility.getActionsAccessibilityAttributes(this.texts, {
@@ -949,7 +1058,7 @@ class ShellBarV2 extends UI5Element {
 		return this.accessibility.getContentRole(visibleItemsCount);
 	}
 
-	// Common Members
+	/* =================== Common Members =================== */
 
 	get enabledFeatures() {
 		return {
@@ -1069,12 +1178,12 @@ ShellBarV2.define();
 export default ShellBarV2;
 export {
 	ShellBarV2Actions,
+	ShellBarV2ActionsSelectors,
 };
 export type {
 	/* Event Types */
 	ShellBarV2ProfileClickEventDetail,
 	ShellBarV2SearchFieldClearEventDetail,
-	ShellBarV2SearchButtonClickEventDetail,
 	ShellBarV2SearchFieldToggleEventDetail,
 	ShellBarV2ProductSwitchClickEventDetail,
 	ShellBarV2NotificationsClickEventDetail,

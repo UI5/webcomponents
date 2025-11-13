@@ -152,57 +152,57 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 										{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
 									</div>
 								))}
+
+								{overflowAction && (
+									<Button
+										data-ui5-stable={overflowAction.stableDomRef}
+										id="ui5-shellbar-overflow-button"
+										class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+										icon={overflowAction.icon}
+										design="Transparent"
+										onClick={this.handleOverflowClick}
+										tooltip={actionsAccInfo.overflow.title}
+										accessibilityAttributes={actionsAccInfo.overflow.accessibilityAttributes}
+									>
+										{this.overflowBadge && (
+											<ButtonBadge
+												slot="badge"
+												design={this.overflowBadge === " " ? "AttentionDot" : "OverlayText"}
+												text={this.overflowBadge === " " ? "" : this.overflowBadge}
+											/>
+										)}
+									</Button>
+								)}
+
+								{profileAction && (
+									<Button
+										data-profile-btn
+										data-ui5-stable={profileAction.stableDomRef}
+										class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+										design="Transparent"
+										onClick={this.handleProfileClick}
+										tooltip={actionsAccInfo.profile.title}
+										accessibilityAttributes={actionsAccInfo.profile.accessibilityAttributes}
+									>
+										<slot name="profile"></slot>
+									</Button>
+								)}
+
+								{productSwitchAction && (
+									<Button
+										data-ui5-stable={productSwitchAction.stableDomRef}
+										class="ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start"
+										icon={productSwitchAction.icon}
+										design="Transparent"
+										onClick={this.handleProductSwitchClick}
+										tooltip={actionsAccInfo.products.title}
+										accessibilityAttributes={actionsAccInfo.products.accessibilityAttributes}
+									></Button>
+								)}
+
 							</div>
 						</div>
 					</div>
-
-					{overflowAction && (
-						<Button
-							data-ui5-stable={overflowAction.stableDomRef}
-							id="ui5-shellbar-overflow-button"
-							class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start"
-							icon={overflowAction.icon}
-							design="Transparent"
-							onClick={this.handleOverflowClick}
-							tooltip={actionsAccInfo.overflow.title}
-							accessibilityAttributes={actionsAccInfo.overflow.accessibilityAttributes}
-						>
-							{this.overflowBadge && (
-								<ButtonBadge
-									slot="badge"
-									design={this.overflowBadge === " " ? "AttentionDot" : "OverlayText"}
-									text={this.overflowBadge === " " ? "" : this.overflowBadge}
-								/>
-							)}
-						</Button>
-					)}
-
-					{profileAction && (
-						<Button
-							data-profile-btn
-							data-ui5-stable={profileAction.stableDomRef}
-							class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
-							design="Transparent"
-							onClick={this.handleProfileClick}
-							tooltip={actionsAccInfo.profile.title}
-							accessibilityAttributes={actionsAccInfo.profile.accessibilityAttributes}
-						>
-							<slot name="profile"></slot>
-						</Button>
-					)}
-
-					{productSwitchAction && (
-						<Button
-							data-ui5-stable={productSwitchAction.stableDomRef}
-							class="ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start"
-							icon={productSwitchAction.icon}
-							design="Transparent"
-							onClick={this.handleProductSwitchClick}
-							tooltip={actionsAccInfo.products.title}
-							accessibilityAttributes={actionsAccInfo.products.accessibilityAttributes}
-						></Button>
-					)}
-
 				</div>
 			</header>
 

@@ -1,5 +1,5 @@
 import type ShellBarV2Item from "../ShellBarV2Item.js";
-import { ShellBarV2Actions } from "../ShellBarV2.js";
+import { ShellBarV2Actions, ShellBarV2ActionsSelectors } from "../ShellBarV2.js";
 import type { ShellBarV2ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js";
 
 interface ShellBarV2HidableItem {
@@ -53,13 +53,6 @@ class ShellBarV2Overflow {
 		LAST_CONTENT: 3000,	// Last content item protected
 	};
 
-	private readonly SELECTORS = {
-		search: ".ui5-shellbar-search-toggle",
-		overflow: ".ui5-shellbar-overflow-button",
-		assistant: ".ui5-shellbar-assistant-button",
-		notifications: ".ui5-shellbar-bell-button",
-	};
-
 	updateOverflow(params: ShellBarV2OverflowParams): ShellBarV2OverflowResult {
 		const {
 			overflowOuter, overflowInner, setVisible,
@@ -72,7 +65,7 @@ class ShellBarV2Overflow {
 		const sortedItems = this.buildHidableItems(params);
 
 		// set initial state, to account for isOverflowing calculation
-		setVisible(this.SELECTORS.overflow, false);
+		setVisible(ShellBarV2ActionsSelectors.Overflow, false);
 		sortedItems.forEach(item => {
 			// show all items to account for isOverflowing calculation
 			setVisible(item.selector, true);
@@ -95,7 +88,7 @@ class ShellBarV2Overflow {
 
 			if (nextItemToHide.showInOverflow) {
 				// show overflow button to account in isOverflowing calculation
-				setVisible(this.SELECTORS.overflow, true);
+				setVisible(ShellBarV2ActionsSelectors.Overflow, true);
 				showOverflowButton = true;
 			}
 		}
@@ -123,8 +116,6 @@ class ShellBarV2Overflow {
 		const items: ShellBarV2HidableItem[] = [];
 		const priorityStrategy = showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
 
-		const addItem = (itemData: ShellBarV2HidableItem) => items.push(itemData);
-
 		// Build content items
 		content.forEach((item, index) => {
 			const slotName = (item as any)._individualSlot as string;
@@ -133,7 +124,7 @@ class ShellBarV2Overflow {
 
 			const priority = isLast ? priorityStrategy.LAST_CONTENT : priorityStrategy.CONTENT;
 
-			addItem({
+			items.push({
 				id: slotName,
 				selector: `#${slotName}`,
 				hideOrder: priority + dataHideOrder,
@@ -145,7 +136,7 @@ class ShellBarV2Overflow {
 		let actionIndex = 0;
 
 		customItems.forEach(item => {
-			addItem({
+			items.push({
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
@@ -154,28 +145,23 @@ class ShellBarV2Overflow {
 			});
 		});
 
-		const actionConfigs = [
-			{ id: ShellBarV2Actions.Notifications, selector: this.SELECTORS.notifications },
-			{ id: ShellBarV2Actions.Assistant, selector: this.SELECTORS.assistant },
-		];
-
-		actionConfigs.forEach(config => {
-			if (actions.find(action => action.id === config.id)) {
-				addItem({
+		actions
+			.filter(a => !a.isProtected && a.id !== ShellBarV2Actions.Search)
+			.forEach(config => {
+				items.push({
 					id: config.id,
 					selector: config.selector,
 					hideOrder: priorityStrategy.ACTIONS + actionIndex++,
 					keepHidden: hiddenItemsIds.includes(config.id),
 					showInOverflow: true,
 				});
-			}
-		});
+			});
 
 		if (!showSearchField) {
 			// Only move search to overflow if it's closed
-			addItem({
+			items.push({
 				id: ShellBarV2Actions.Search,
-				selector: this.SELECTORS.search,
+				selector: ShellBarV2ActionsSelectors.Search,
 				hideOrder: priorityStrategy.SEARCH + actionIndex++,
 				keepHidden: false,
 				showInOverflow: true,
