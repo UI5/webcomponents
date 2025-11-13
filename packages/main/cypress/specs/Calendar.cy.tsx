@@ -1438,33 +1438,6 @@ describe("Day Picker Tests", () => {
 });
 
 describe("Calendar Global Configuration", () => {
-	beforeEach(() => {
-		// Reload the page to ensure completely clean state
-		cy.reload();
-		
-		// Clean up any existing configuration scripts first
-		cy.window().then($el => {
-			const existingScripts = $el.document.head.querySelectorAll("script[data-ui5-config]");
-			existingScripts.forEach(script => script.remove());
-		});
-
-		// Reset configuration to ensure clean state
-		cy.wrap({ resetConfiguration })
-			.invoke("resetConfiguration", true);
-	});
-
-	afterEach(() => {
-		// Clean up configuration scripts
-		cy.window().then($el => {
-			const scriptElements = $el.document.head.querySelectorAll("script[data-ui5-config]");
-			scriptElements.forEach(script => script.remove());
-		});
-
-		// Reset configuration to default state
-		cy.wrap({ resetConfiguration })
-			.invoke("resetConfiguration", true);
-	});
-
 	it("Should respect firstDayOfWeek from global formatSettings configuration", () => {
 		const configurationObject = {
 			"formatSettings": {
@@ -1472,7 +1445,6 @@ describe("Calendar Global Configuration", () => {
 			}
 		};
 
-		// Set up configuration script
 		cy.window()
 			.then($el => {
 				const scriptElement = $el.document.createElement("script");
@@ -1482,21 +1454,16 @@ describe("Calendar Global Configuration", () => {
 				$el.document.head.appendChild(scriptElement);
 			});
 
-		// Reset configuration to trigger parsing of the new script
 		cy.wrap({ resetConfiguration })
 			.invoke("resetConfiguration", true);
 
-		// Verify configuration is applied
 		cy.wrap({ getFirstDayOfWeek })
 			.invoke("getFirstDayOfWeek")
 			.should("equal", 6);
 
-		// Mount a calendar with calendarWeekNumbering="Default" 
-		// so it uses the global configuration
 		const date = new Date(Date.UTC(2023, 0, 1, 0, 0, 0)); // January 1, 2023
 		cy.mount(<Calendar id="calendar1" timestamp={date.valueOf() / 1000} calendarWeekNumbering="Default" />);
 
-		// Verify that Saturday (Sat) is now the first day of the week
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
