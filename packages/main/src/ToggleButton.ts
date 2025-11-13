@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 
-import { isEscape, isShift, isSpaceShift } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEscape, isShift, isSpace, isSpaceShift } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isSafari } from "@ui5/webcomponents-base/dist/Device.js";
 import Button from "./Button.js";
 import ToggleButtonTemplate from "./ToggleButtonTemplate.js";
@@ -85,13 +85,22 @@ class ToggleButton extends Button {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._cancelAction = isShift(e) || isEscape(e);
+		// Set cancel flag when Shift or Escape is pressed
+		if (isShift(e) || isEscape(e)) {
+			this._cancelAction = true;
+		}
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (isSpaceShift(e) || this._cancelAction) {
+		if (isSpaceShift(e) || (isSpace(e) && this._cancelAction)) {
 			e.preventDefault();
+			this._cancelAction = false;
 			return;
+		}
+
+		// Reset cancel flag on successful Space release
+		if (isSpace(e)) {
+			this._cancelAction = false;
 		}
 
 		super._onkeyup(e);
