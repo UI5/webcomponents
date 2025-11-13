@@ -107,6 +107,13 @@
 	height: 1rem;
 	cursor: inherit;
 	color: var(--sapButton_Lite_TextColor);
+	--rotAngle: 0;
+	--scaleX: 1;
+	transform: rotate(var(--rotAngle)) scaleX(var(--scaleX));
+}
+
+.ui5-popover-rtl .ui5-popover-resize-handle [ui5-icon] {
+	--scaleX: -1;
 }
 
 .ui5-popover-resize-handle-top-right .ui5-popover-resize-handle {
@@ -118,7 +125,7 @@
 .ui5-popover-resize-handle-top-right .ui5-popover-resize-handle [ui5-icon] {
 	bottom: 0;
 	left: 0;
-	transform: rotate(270deg);
+	--rotAngle: 270deg;
 }
 
 .ui5-popover-resize-handle-top-left .ui5-popover-resize-handle {
@@ -130,7 +137,7 @@
 .ui5-popover-resize-handle-top-left .ui5-popover-resize-handle [ui5-icon] {
 	bottom: 0;
 	right: 0;
-	transform: rotate(180deg);
+	--rotAngle: 180deg;
 }
 
 .ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle {
@@ -142,7 +149,7 @@
 .ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle [ui5-icon] {
 	top: 0;
 	right: 0;
-	transform: rotate(90deg);
+	--rotAngle: 90deg;
 }
 
 .ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle {

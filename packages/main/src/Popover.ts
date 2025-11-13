@@ -815,6 +815,10 @@ class Popover extends Popup {
 	}
 
 	getVerticalLeft(targetRect: DOMRect, popoverSize: PopoverSize): number {
+		if (this._resized) {
+			return this._left!;
+		}
+
 		const actualHorizontalAlign = this._actualHorizontalAlign;
 		let left = Popover.VIEWPORT_MARGIN;
 
@@ -835,6 +839,10 @@ class Popover extends Popup {
 	}
 
 	getHorizontalTop(targetRect: DOMRect, popoverSize: PopoverSize): number {
+		if (this._resized) {
+			return this._top!;
+		}
+
 		let top = 0;
 
 		switch (this.verticalAlign) {
@@ -881,6 +889,7 @@ class Popover extends Popup {
 	get classes() {
 		const allClasses = super.classes;
 		allClasses.root["ui5-popover-root"] = true;
+		allClasses.root["ui5-popover-rtl"] = this.isRtl;
 
 		if (this.resizable) {
 			switch (this._getResizeHandlePlacement()) {
@@ -944,6 +953,7 @@ class Popover extends Popup {
 		}
 
 		const offset = 2;
+		const isRtl = this.isRtl;
 
 		const opener = this.getOpenerHTMLElement(this.opener);
 		const openerRect = opener!.getBoundingClientRect();
@@ -975,17 +985,17 @@ class Popover extends Popup {
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Bottom:
 			if (popoverCX + offset < openerCX) {
-				return ResizeHandlePlacement.BottomLeft;
+				return isRtl ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
 			}
 
-			return ResizeHandlePlacement.BottomRight;
+			return isRtl ? ResizeHandlePlacement.BottomLeft : ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
 		default:
 			if (popoverCX + offset < openerCX) {
-				return ResizeHandlePlacement.TopLeft;
+				return isRtl ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
 			}
 
-			return ResizeHandlePlacement.TopRight;
+			return isRtl ? ResizeHandlePlacement.TopLeft : ResizeHandlePlacement.TopRight;
 		}
 	}
 
