@@ -202,20 +202,6 @@ of the search field container in the bar even when the search is in full mode. *
 }
 
 /* ============================================================================
-   ACTIONS AREA
-   ============================================================================ */
-
-.ui5-shellbar-actions-area {
-	flex-shrink: 0;
-	display: flex;
-	align-items: center;
-}
-
-.ui5-shellbar-actions-area--no-search {
-	margin-left: auto;
-}
-
-/* ============================================================================
    CUSTOM ITEMS
    ============================================================================ */
 
