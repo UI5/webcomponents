@@ -895,10 +895,6 @@ class ShellBarV2 extends UI5Element {
 	}
 
 	get separatorConfig() {
-		if (this.isSBreakPoint) {
-			return { showStartSeparator: false, showEndSeparator: false };
-		}
-
 		const { start, end } = this.splitContent(this.content);
 
 		return {

@@ -10,17 +10,16 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
+	padding-block: 0.25rem;
+	padding-inline: 0.25rem 0.5rem;
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--sapButton_Lite_Background);
 	border: 1px solid var(--sapButton_Lite_BorderColor);
 	color: var(--sapShell_TextColor);
-}
-
-:host(:not([_is-sbreak-point])) .ui5-shellbar-branding-root {
-	padding-block: 0.25rem;
-	padding-inline: 0.25rem 0.5rem;
-	margin-inline-end: .25rem;
+	/* fix cutting of the focus outline */
+	margin-inline-start: 0.125rem;
+	margin-inline-end: .5rem;
 }
 
 .ui5-shellbar-branding-root:focus {
@@ -68,9 +67,6 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
-}
-
-:host(:not([_is-sbreak-point])) ::slotted([slot="logo"]) {
 	padding-inline: 0.25rem;
 }
 

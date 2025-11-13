@@ -1446,23 +1446,14 @@ class ShellBar extends UI5Element {
 	}
 
 	get showStartSeparator(): boolean {
-		if (this.isSBreakPoint) {
-			return false;
-		}
 		return this.startContentInfoSorted.some(item => !item.classes.includes("ui5-shellbar-hidden-button"));
 	}
 
 	get showEndSeparator(): boolean {
-		if (this.isSBreakPoint) {
-			return false;
-		}
 		return this.endContentInfoSorted.some(item => !item.classes.includes("ui5-shellbar-hidden-button"));
 	}
 
 	shouldIncludeSeparator(itemInfo: IShellBarContentItem | undefined, contentInfo: IShellBarContentItem[]) {
-		if (this.isSBreakPoint) {
-			return false;
-		}
 		// once the last item from the start/end content was hidden, the
 		// separator is "packed" with it in order to account for any next measurements
 		if (!itemInfo) {
