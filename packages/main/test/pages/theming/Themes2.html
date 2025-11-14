@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Theming</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<script src="../%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body>
+	<p><strong>Test Page 6:</strong> Theme change without external styles - Tests programmatic theme switching
+		behavior without any external CSS interference to verify pure theme transition functionality.</p>
+	<p>Expected theme <strong>sap_horizon_hcb</strong></p>
+	<ui5-button>Some button</ui5-button>
+
+	<script type="module">
+		setTimeout(() => {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme("sap_horizon_hcb");
+		}, 1000);
+	</script>
+</body>
+
+</html>
