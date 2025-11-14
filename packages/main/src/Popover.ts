@@ -53,6 +53,13 @@ type CalculatedPlacement = {
 	actualPlacement: `${PopoverActualPlacement}`,
 }
 
+enum ResizeHandlePlacement {
+	TopLeft = "TopLeft",
+	TopRight = "TopRight",
+	BottomLeft = "BottomLeft",
+	BottomRight = "BottomRight",
+}
+
 /**
  * @class
  *
@@ -135,7 +142,7 @@ class Popover extends Popup {
 
 	/**
 	 * Defines whether the component should close when
-	 * clicking/tapping outside of the popover.
+	 * clicking/tapping outside the popover.
 	 * If enabled, it blocks any interaction with the background.
 	 * @default false
 	 * @public
@@ -160,6 +167,16 @@ class Popover extends Popup {
 	 */
 	@property({ type: Boolean })
 	allowTargetOverlap = false;
+
+	/**
+	 * Determines whether the component is resizable.
+	 * **Note:** This property is effective only on Desktop
+	 * @default false
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property({ type: Boolean })
+	resizable = false;
 
 	/**
 	 * Sets the X translation of the arrow
@@ -211,12 +228,33 @@ class Popover extends Popup {
 	_width?: string;
 	_height?: string;
 
+	_resizeMouseMoveHandler: (e: MouseEvent) => void;
+	_resizeMouseUpHandler: (e: MouseEvent) => void;
+
+	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
+
+	_initialClientX?: number;
+	_initialClientY?: number;
+	_initialBoundingRect?: DOMRect;
+	_minWidth?: number;
+	_minHeight?: number;
+	_resized = false;
+
+	_resizingDeltaX?: number;
+	_resizingDeltaY?: number;
+
+	_resizedDeltaX?: number;
+	_resizedDeltaY?: number;
+
 	static get VIEWPORT_MARGIN() {
 		return 10; // px
 	}
 
 	constructor() {
 		super();
+
+		this._resizeMouseMoveHandler = this._onResizeMouseMove.bind(this);
+		this._resizeMouseUpHandler = this._onResizeMouseUp.bind(this);
 	}
 
 	/**
@@ -462,6 +500,10 @@ class Popover extends Popup {
 			left: `${left}px`,
 		});
 
+		if (this._resized) {
+			return;
+		}
+
 		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && this._width) {
 			this.style.width = this._width;
 		}
@@ -553,12 +595,14 @@ class Popover extends Popup {
 		const isVertical = actualPlacement === PopoverActualPlacement.Top
 			|| actualPlacement === PopoverActualPlacement.Bottom;
 
-		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
-			popoverSize.width = targetRect.width;
-			this._width = `${targetRect.width}px`;
-		} else if (this.verticalAlign === PopoverVerticalAlign.Stretch && !isVertical) {
-			popoverSize.height = targetRect.height;
-			this._height = `${targetRect.height}px`;
+		if (!this._resized) {
+			if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
+				popoverSize.width = targetRect.width;
+				this._width = `${targetRect.width}px`;
+			} else if (this.verticalAlign === PopoverVerticalAlign.Stretch && !isVertical) {
+				popoverSize.height = targetRect.height;
+				this._height = `${targetRect.height}px`;
+			}
 		}
 
 		const arrowOffset = this.hideArrow ? 0 : ARROW_SIZE;
@@ -790,6 +834,9 @@ class Popover extends Popup {
 		case PopoverActualHorizontalAlign.Center:
 		case PopoverActualHorizontalAlign.Stretch:
 			left = targetRect.left - (popoverSize.width - targetRect.width) / 2;
+			if (this._resized) {
+				left -= this._resizingDeltaX || 0;
+			}
 			break;
 		case PopoverActualHorizontalAlign.Left:
 			left = targetRect.left;
@@ -809,6 +856,9 @@ class Popover extends Popup {
 		case PopoverVerticalAlign.Center:
 		case PopoverVerticalAlign.Stretch:
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
+			if (this._resized) {
+				top -= this._resizingDeltaY || 0;
+			}
 			break;
 		case PopoverVerticalAlign.Top:
 			top = targetRect.top;
@@ -849,6 +899,24 @@ class Popover extends Popup {
 	get classes() {
 		const allClasses = super.classes;
 		allClasses.root["ui5-popover-root"] = true;
+		allClasses.root["ui5-popover-rtl"] = this.isRtl;
+
+		if (this.resizable) {
+			switch (this._getResizeHandlePlacement()) {
+			case ResizeHandlePlacement.BottomLeft:
+				allClasses.root["ui5-popover-resize-handle-bottom-left"] = true;
+				break;
+			case ResizeHandlePlacement.BottomRight:
+				allClasses.root["ui5-popover-resize-handle-bottom-right"] = true;
+				break;
+			case ResizeHandlePlacement.TopLeft:
+				allClasses.root["ui5-popover-resize-handle-top-left"] = true;
+				break;
+			case ResizeHandlePlacement.TopRight:
+				allClasses.root["ui5-popover-resize-handle-top-right"] = true;
+				break;
+			}
+		}
 
 		return allClasses;
 	}
@@ -883,6 +951,230 @@ class Popover extends Popup {
 		default:
 			return PopoverActualHorizontalAlign.Center;
 		}
+	}
+
+	get _showResizeHandle() {
+		return this.resizable && this.onDesktop;
+	}
+
+	_getResizeHandlePlacement() {
+		if (this._resizeHandlePlacement) {
+			return this._resizeHandlePlacement;
+		}
+
+		const offset = 2;
+		const isRtl = this.isRtl;
+
+		const opener = this.getOpenerHTMLElement(this.opener);
+		const openerRect = opener!.getBoundingClientRect();
+		const popoverWrapperRect = this.getBoundingClientRect();
+
+		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
+		const openerCY = Math.floor(openerRect.y + openerRect.height / 2);
+
+		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
+		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
+
+		if (this.isRtl) {
+			openerCX = -openerCX;
+			popoverCX = -popoverCX;
+		}
+
+		switch (this.getActualPlacement(openerRect)) {
+		case PopoverActualPlacement.Left:
+			if (popoverCY > openerCY + offset) {
+				return ResizeHandlePlacement.BottomLeft;
+			}
+
+			return ResizeHandlePlacement.TopLeft;
+		case PopoverActualPlacement.Right:
+			if (popoverCY + offset < openerCY) {
+				return ResizeHandlePlacement.TopRight;
+			}
+
+			return ResizeHandlePlacement.BottomRight;
+		case PopoverActualPlacement.Bottom:
+			if (popoverCX + offset < openerCX) {
+				return isRtl ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
+			}
+
+			return isRtl ? ResizeHandlePlacement.BottomLeft : ResizeHandlePlacement.BottomRight;
+		case PopoverActualPlacement.Top:
+		default:
+			if (popoverCX + offset < openerCX) {
+				return isRtl ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
+			}
+
+			return isRtl ? ResizeHandlePlacement.TopLeft : ResizeHandlePlacement.TopRight;
+		}
+	}
+
+	_onResizeMouseDown(e: MouseEvent) {
+		if (!this.resizable) {
+			return;
+		}
+
+		e.preventDefault();
+
+		this._resized = true;
+		this._initialBoundingRect = this.getBoundingClientRect();
+
+		this._resizedDeltaX = this._resizingDeltaX;
+		this._resizedDeltaY = this._resizingDeltaY;
+
+		const {
+			minWidth,
+			minHeight,
+		} = window.getComputedStyle(this);
+
+		const domRefComputedStyle = window.getComputedStyle(this._getRealDomRef!());
+
+		this._initialClientX = e.clientX;
+		this._initialClientY = e.clientY;
+
+		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
+		this._minHeight = Number.parseFloat(minHeight);
+
+		this._resizeHandlePlacement = this._getResizeHandlePlacement();
+
+		this._attachMouseResizeHandlers();
+	}
+
+	_onResizeMouseMove(e: MouseEvent) {
+		const margin = Popover.VIEWPORT_MARGIN;
+		const { clientX, clientY } = e;
+		const placement = this._resizeHandlePlacement;
+		const initialBoundingRect = this._initialBoundingRect!;
+		const deltaX = clientX - this._initialClientX!;
+		const deltaY = clientY - this._initialClientY!;
+
+		let newWidth,
+			newHeight;
+
+		// Determine if we're resizing from left or right edge
+		const isResizingFromLeft = placement === ResizeHandlePlacement.TopLeft
+			|| placement === ResizeHandlePlacement.BottomLeft;
+
+		const isResizingFromTop = placement === ResizeHandlePlacement.TopLeft
+			|| placement === ResizeHandlePlacement.TopRight;
+
+		// Calculate width changes
+		if (isResizingFromLeft) {
+			// Resizing from left edge - width increases when moving left (negative delta)
+			const maxWidthFromLeft = initialBoundingRect.x + initialBoundingRect.width - margin;
+
+			newWidth = clamp(
+				initialBoundingRect.width - deltaX,
+				this._minWidth!,
+				maxWidthFromLeft,
+			);
+
+			// Adjust left position when resizing from left
+			// Ensure the left edge respects the viewport margin and the right edge position
+			const newLeft = clamp(
+				initialBoundingRect.x + deltaX,
+				margin,
+				initialBoundingRect.x + initialBoundingRect.width - this._minWidth!,
+			);
+
+			// Recalculate width based on actual left position to stay within viewport with margin
+			newWidth = Math.min(newWidth, initialBoundingRect.x + initialBoundingRect.width - newLeft);
+
+			this._resizingDeltaX = (initialBoundingRect.x - newLeft) / 2;
+		} else {
+			// Resizing from right edge - width increases when moving right (positive delta)
+			const maxWidthFromRight = window.innerWidth - initialBoundingRect.x - margin;
+
+			newWidth = clamp(
+				initialBoundingRect.width + deltaX,
+				this._minWidth!,
+				maxWidthFromRight,
+			);
+
+			this._resizingDeltaX = (initialBoundingRect.width - newWidth) / 2;
+		}
+
+		// Calculate height changes
+		if (isResizingFromTop) {
+			// Resizing from top edge - height increases when moving up (negative delta)
+			const maxHeightFromTop = initialBoundingRect.y + initialBoundingRect.height - margin;
+
+			newHeight = clamp(
+				initialBoundingRect.height - deltaY,
+				this._minHeight!,
+				maxHeightFromTop,
+			);
+
+			// Adjust top position when resizing from top
+			// Ensure the top edge respects the viewport margin and the bottom edge position
+			const newTop = clamp(
+				initialBoundingRect.y + deltaY,
+				margin,
+				initialBoundingRect.y + initialBoundingRect.height - this._minHeight!,
+			);
+
+			// Recalculate height based on actual top position to stay within viewport with margin
+			newHeight = Math.min(newHeight, initialBoundingRect.y + initialBoundingRect.height - newTop);
+
+			this._resizingDeltaY = (initialBoundingRect.y - newTop) / 2;
+		} else {
+			// Resizing from bottom edge - height increases when moving down (positive delta)
+			const maxHeightFromBottom = window.innerHeight - initialBoundingRect.y - margin;
+
+			newHeight = clamp(
+				initialBoundingRect.height + deltaY,
+				this._minHeight!,
+				maxHeightFromBottom,
+			);
+
+			this._resizingDeltaY = (initialBoundingRect.height - newHeight) / 2;
+		}
+
+		this._resizingDeltaX += this._resizedDeltaX || 0;
+		this._resizingDeltaY += this._resizedDeltaY || 0;
+
+		Object.assign(this.style, {
+			height: `${newHeight}px`,
+			width: `${newWidth}px`,
+		});
+	}
+
+	_onResizeMouseUp() {
+		delete this._initialClientX;
+		delete this._initialClientY;
+		delete this._initialBoundingRect;
+		delete this._minWidth;
+		delete this._minHeight;
+
+		delete this._resizeHandlePlacement;
+
+		this._detachMouseResizeHandlers();
+	}
+
+	_attachMouseResizeHandlers() {
+		window.addEventListener("mousemove", this._resizeMouseMoveHandler);
+		window.addEventListener("mouseup", this._resizeMouseUpHandler);
+		this.addEventListener("ui5-before-close", this._revertResizeSettings, { once: true });
+	}
+
+	_detachMouseResizeHandlers() {
+		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
+		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+	}
+
+	_revertResizeSettings = () => {
+		this._resized = false;
+
+		delete this._resizingDeltaX;
+		delete this._resizingDeltaY;
+
+		delete this._resizedDeltaX;
+		delete this._resizedDeltaY;
+
+		Object.assign(this.style, {
+			width: "",
+			height: "",
+		});
 	}
 }
 
