@@ -1,0 +1,37 @@
+#block-layer,
+#panel {
+	all: unset;
+}
+
+#block-layer {
+	position: fixed;
+	inset: 0;
+	pointer-events: all;
+}
+
+#panel {
+	position: fixed;
+	height: 100vh;
+	border: none;
+	min-width: 70%;
+	margin: 0;
+	padding: 0;
+	inset: unset;
+	right: 0;
+	border-start-start-radius: var(--sapElement_BorderCornerRadius);
+	border-end-start-radius: var(--sapElement_BorderCornerRadius);
+	box-shadow: var(--sapContent_Shadow2);
+}
+
+#panel::backdrop {
+	background-color: var(--sapBlockLayer_Background);
+	opacity: 0.2;
+}
+
+@media (max-width: 768px) {
+	#panel {
+		width: 100%;
+		min-width: 100%;
+		border-radius: 0;
+	}
+}
