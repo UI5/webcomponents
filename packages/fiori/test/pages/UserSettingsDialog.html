@@ -405,7 +405,6 @@
 	const mobile2Button = document.getElementById("mobile2-button");
 
 	const additionalDialog = document.getElementById("additionalDialog");
-	const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 	const resetAll = document.getElementById("resetAll");
 	const resetPersonalization = document.getElementById("resetPersonalization");
 	const toast = [...document.getElementsByTagName("ui5-toast")][0];
@@ -465,14 +464,7 @@
 		mobileSecondPage.selected = true;
 		mobileSecondPage.text = "Android";
 	});
-
-
-	additionalDialogClosers.forEach(btn => {
-		btn.addEventListener("click", () => {
-			additionalDialog.open = false;
-		});
-	})
-
+	
 	themeSave.addEventListener("click", function () {
 		toast.open = true;
 	});
