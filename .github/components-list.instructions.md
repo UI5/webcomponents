@@ -1,0 +1,29 @@
+## Component List For Accessibility Test Page Generation
+
+ - Bar
+ - Button
+ - Calendar
+ - CalendarDate
+ - CalendarDateRange
+ - SpecialCalendarDate
+ - CalendarLegend
+ - CalendarLegendItem
+ - ColorPalette
+ - ColorPaletteItem
+ - ColorPalettePopover
+ - ColorPicker
+ - DatePicker
+ - DateRangePicker
+ - DateTimePicker
+ - FileUploader
+ - Link
+ - Menu
+ - MenuItem
+ - MenuSeparator
+ - SegmentedButton
+ - SegmentedButtonItem
+ - SplitButton
+ - StepInput
+ - Switch
+ - TimePicker
+ - ToggleButton

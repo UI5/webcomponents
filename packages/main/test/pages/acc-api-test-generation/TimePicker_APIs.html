@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 TimePicker API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/TimePicker.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
+        import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="TimePicker API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 TimePicker Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to set the time value</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-time-picker></ui5-time-picker>
+                            <ui5-time-picker value="09:30:00"></ui5-time-picker>
+                            <ui5-time-picker value="14:45:30"></ui5-time-picker>
+                            <ui5-time-picker value="23:59:59"></ui5-time-picker>
+                            <ui5-time-picker value="00:00:00"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click on inputs to open time picker and select times</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property for form identification</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-time-picker name="startTime" value="09:00:00" placeholder="Start time"></ui5-time-picker>
+                            <ui5-time-picker name="endTime" value="17:00:00" placeholder="End time"></ui5-time-picker>
+                            <ui5-time-picker name="meetingTime" value="14:30:00" placeholder="Meeting time"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Names are used for form data identification</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueState Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueState property to indicate validation state</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-time-picker value="09:00:00" value-state="None"></ui5-time-picker>
+                            <ui5-time-picker value="10:30:00" value-state="Positive"></ui5-time-picker>
+                            <ui5-time-picker value="12:00:00" value-state="Critical"></ui5-time-picker>
+                            <ui5-time-picker value="15:45:00" value-state="Negative"></ui5-time-picker>
+                            <ui5-time-picker value="18:20:00" value-state="Information"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Different value states provide visual validation feedback</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to make component non-interactive</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-label>Enabled:</ui5-label>
+                            <ui5-time-picker value="09:30:00"></ui5-time-picker>
+                            <ui5-label>Disabled:</ui5-label>
+                            <ui5-time-picker value="14:45:00" disabled></ui5-time-picker>
+                            <ui5-label>Disabled empty:</ui5-label>
+                            <ui5-time-picker disabled placeholder="Time selection disabled"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Disabled components should not respond to any interaction</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Readonly Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using readonly property to prevent value changes while maintaining accessibility</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-label>Editable:</ui5-label>
+                            <ui5-time-picker value="11:30:00"></ui5-time-picker>
+                            <ui5-label>Read-only:</ui5-label>
+                            <ui5-time-picker value="16:45:00" readonly></ui5-time-picker>
+                            <ui5-label>Read-only display:</ui5-label>
+                            <ui5-time-picker value="20:15:30" readonly></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Read-only inputs should not allow changes but remain focusable</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Placeholder Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using placeholder property to provide user guidance</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <ui5-time-picker placeholder="Select start time"></ui5-time-picker>
+                            <ui5-time-picker placeholder="Meeting time"></ui5-time-picker>
+                            <ui5-time-picker placeholder="Delivery time"></ui5-time-picker>
+                            <ui5-time-picker placeholder=""></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Empty inputs should show placeholder text or format pattern</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">FormatPattern Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using formatPattern property to control time display format</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <ui5-label>HH:mm:ss:</ui5-label>
+                            <ui5-time-picker value="14:30:45" format-pattern="HH:mm:ss"></ui5-time-picker>
+                            <ui5-label>hh:mm:ss a:</ui5-label>
+                            <ui5-time-picker value="14:30:45" format-pattern="hh:mm:ss a"></ui5-time-picker>
+                            <ui5-label>HH:mm:</ui5-label>
+                            <ui5-time-picker value="14:30:45" format-pattern="HH:mm"></ui5-time-picker>
+                            <ui5-label>mm:ss:</ui5-label>
+                            <ui5-time-picker value="14:30:45" format-pattern="mm:ss"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Different format patterns control display and input validation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Open Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using open property to control popover state programmatically</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-time-picker id="programmaticOpen" value="12:00:00"></ui5-time-picker>
+                            <ui5-button id="openBtn">Open Picker</ui5-button>
+                            <ui5-button id="closeBtn">Close Picker</ui5-button>
+                            <ui5-label id="openStatus">Status: Closed</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use buttons to programmatically open/close the time picker</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property to mark time input as required for validation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <ui5-label>Optional:</ui5-label>
+                            <ui5-time-picker value="09:00:00" placeholder="Optional time"></ui5-time-picker>
+                            <ui5-label>Required:</ui5-label>
+                            <ui5-time-picker value="17:00:00" required placeholder="Required time"></ui5-time-picker>
+                            <ui5-label>Required (empty):</ui5-label>
+                            <ui5-time-picker required placeholder="Required time field"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Required fields should be visually indicated for form validation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName property to provide ARIA label for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5">
+                            <ui5-time-picker value="09:00:00" accessible-name="Meeting start time"></ui5-time-picker>
+                            <ui5-time-picker value="17:30:00" accessible-name="Work end time"></ui5-time-picker>
+                            <ui5-time-picker value="12:00:00" accessible-name="Lunch break time"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to hear accessible names</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleNameRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleNameRef property to reference labeling elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6">
+                            <ui5-label id="startLabel">Start Time</ui5-label>
+                            <ui5-time-picker value="08:30:00" accessible-name-ref="startLabel"></ui5-time-picker>
+                            <ui5-label id="endLabel">End Time</ui5-label>
+                            <ui5-time-picker value="16:45:00" accessible-name-ref="endLabel"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Labels should be announced by screen readers</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescription Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescription property to provide additional context</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7">
+                            <ui5-time-picker value="09:00:00" accessible-description="Select the meeting start time in 24-hour format"></ui5-time-picker>
+                            <ui5-time-picker value="18:30:00" accessible-description="Choose your preferred dinner time"></ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Screen readers should announce additional descriptions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescriptionRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescriptionRef property to reference descriptive elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8">
+                            <ui5-time-picker value="14:00:00" accessible-description-ref="timeHelp"></ui5-time-picker>
+                            <div id="timeHelp" class="text-muted small">Use arrow keys to adjust time or click to open picker</div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Referenced descriptions should be available to screen readers</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueStateMessage Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueStateMessage slot to provide custom validation messages</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9">
+                            <ui5-time-picker value="25:00:00" value-state="Negative">
+                                <div slot="valueStateMessage">Invalid time format. Please use HH:mm:ss format.</div>
+                            </ui5-time-picker>
+                            <ui5-time-picker value="09:30:00" value-state="Positive">
+                                <div slot="valueStateMessage">Perfect time selection!</div>
+                            </ui5-time-picker>
+                            <ui5-time-picker value="23:59:00" value-state="Critical">
+                                <div slot="valueStateMessage">Very late time - consider earlier hours.</div>
+                            </ui5-time-picker>
+                            <ui5-time-picker value="12:00:00" value-state="Information">
+                                <div slot="valueStateMessage">Recommended lunch time.</div>
+                            </ui5-time-picker>
+                        </div>
+                        <div class="test-instruction">Test instructions: Value state messages provide validation and guidance feedback</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using change event to handle time value changes</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0">
+                            <ui5-time-picker id="changeEventPicker" value="10:30:00" placeholder="Change event test"></ui5-time-picker>
+                            <ui5-label id="changeOutput">No change events yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Select a new time to trigger change event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Input Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using input event to handle real-time input changes</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1">
+                            <ui5-time-picker id="inputEventPicker" value="15:45:00" placeholder="Input event test"></ui5-time-picker>
+                            <ui5-label id="inputOutput">No input events yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Type directly in the field to see input events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Open Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using open event to handle picker opening</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2">
+                            <ui5-time-picker id="openEventPicker" value="13:15:00" placeholder="Open event test"></ui5-time-picker>
+                            <ui5-label id="openEventOutput">Picker not opened yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click on the picker to open it and trigger open event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Close Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using close event to handle picker closing</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3">
+                            <ui5-time-picker id="closeEventPicker" value="16:20:00" placeholder="Close event test"></ui5-time-picker>
+                            <ui5-label id="closeEventOutput">Picker not closed yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Open picker and then close it to trigger close event</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing keyboard shortcuts for time manipulation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4">
+                            <ui5-time-picker id="keyboardPicker" value="12:30:45" format-pattern="HH:mm:ss"></ui5-time-picker>
+                            <ui5-label id="keyboardOutput">Use keyboard shortcuts</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus and use Page Up/Down (hours), Shift+Page Up/Down (minutes), Shift+Ctrl+Page Up/Down (seconds), F4/Alt+Up/Down (open/close)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Time Format Variations API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing various time format patterns and localization</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>24h full:</ui5-label>
+                                <ui5-time-picker value="23:45:30" format-pattern="HH:mm:ss"></ui5-time-picker>
+                                <ui5-label>12h AM/PM:</ui5-label>
+                                <ui5-time-picker value="11:45:30" format-pattern="hh:mm:ss a"></ui5-time-picker>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <ui5-label>Hours only:</ui5-label>
+                                <ui5-time-picker value="14:00:00" format-pattern="HH"></ui5-time-picker>
+                                <ui5-label>Minutes only:</ui5-label>
+                                <ui5-time-picker value="00:30:00" format-pattern="mm"></ui5-time-picker>
+                                <ui5-label>Min:Sec:</ui5-label>
+                                <ui5-time-picker value="00:45:15" format-pattern="mm:ss"></ui5-time-picker>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Different format patterns control input parsing and display</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Open/Close programmatic control
+        const programmaticPicker = document.getElementById('programmaticOpen');
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const openStatus = document.getElementById('openStatus');
+
+        openBtn.addEventListener('click', () => {
+            programmaticPicker.open = true;
+            openStatus.textContent = 'Status: Open';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            programmaticPicker.open = false;
+            openStatus.textContent = 'Status: Closed';
+        });
+
+        // Change event handling
+        document.getElementById('changeEventPicker').addEventListener('change', (event) => {
+            const output = document.getElementById('changeOutput');
+            output.textContent = `Change event: value changed to ${event.detail.value} (valid: ${event.detail.valid})`;
+            console.log('TimePicker change event:', event.detail);
+        });
+
+        // Input event handling
+        document.getElementById('inputEventPicker').addEventListener('input', (event) => {
+            const output = document.getElementById('inputOutput');
+            output.textContent = `Input event: current value ${event.detail.value} (valid: ${event.detail.valid})`;
+            console.log('TimePicker input event:', event.detail);
+        });
+
+        // Open event handling
+        document.getElementById('openEventPicker').addEventListener('open', (event) => {
+            const output = document.getElementById('openEventOutput');
+            output.textContent = `Open event: picker opened at ${new Date().toLocaleTimeString()}`;
+            console.log('TimePicker open event:', event);
+        });
+
+        // Close event handling
+        document.getElementById('closeEventPicker').addEventListener('close', (event) => {
+            const output = document.getElementById('closeEventOutput');
+            output.textContent = `Close event: picker closed at ${new Date().toLocaleTimeString()}`;
+            console.log('TimePicker close event:', event);
+        });
+
+        // Keyboard navigation logging
+        const keyboardPicker = document.getElementById('keyboardPicker');
+        const keyboardOutput = document.getElementById('keyboardOutput');
+
+        keyboardPicker.addEventListener('change', (event) => {
+            keyboardOutput.textContent = `Keyboard change: new value ${event.detail.value}`;
+        });
+
+        keyboardPicker.addEventListener('input', (event) => {
+            keyboardOutput.textContent = `Keyboard input: ${event.detail.value}`;
+        });
+
+        // General event logging for all time pickers
+        document.querySelectorAll('ui5-time-picker').forEach((picker, index) => {
+            picker.addEventListener('change', (event) => {
+                console.log(`TimePicker ${index} change:`, event.detail);
+            });
+
+            picker.addEventListener('input', (event) => {
+                console.log(`TimePicker ${index} input:`, event.detail);
+            });
+
+            picker.addEventListener('open', (event) => {
+                console.log(`TimePicker ${index} open:`, event);
+            });
+
+            picker.addEventListener('close', (event) => {
+                console.log(`TimePicker ${index} close:`, event);
+            });
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

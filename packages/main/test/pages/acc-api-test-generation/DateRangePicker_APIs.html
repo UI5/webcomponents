@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 DateRangePicker API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/DateRangePicker.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Text.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
+        import "@ui5/webcomponents-localization/dist/features/calendar/Buddhist.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="DateRangePicker API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 DateRangePicker Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to define a date range using delimiter</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr1a2v3a4l5u6e7p8r9o0p1e2r3t4y5">
+                            <div>
+                                <ui5-label>Preset Date Range</ui5-label>
+                                <ui5-daterange-picker value="2024-01-15 - 2024-01-25"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Empty Date Range</ui5-label>
+                                <ui5-daterange-picker placeholder="Select date range"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Current Month Range</ui5-label>
+                                <ui5-daterange-picker id="current-month-picker"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Delimiter Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using delimiter property to customize the date range separator</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dr2a3d4e5l6i7m8i9t0e1r2p3r4o5p6">
+                            <div>
+                                <ui5-label>Default Delimiter (-)</ui5-label>
+                                <ui5-daterange-picker value="2024-03-01 - 2024-03-15"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Custom Delimiter (to)</ui5-label>
+                                <ui5-daterange-picker delimiter=" to " value="2024-03-01 to 2024-03-15"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Custom Delimiter (..)</ui5-label>
+                                <ui5-daterange-picker delimiter=".." value="2024-03-01..2024-03-15"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the input operation has finished</div>
+                    <p class="test-instruction">Test instruction: Select a date range to see the event details</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr3a4c5h6a7n8g9e0e1v2e3n4t5a6p7">
+                            <div>
+                                <ui5-label>Interactive Date Range Picker</ui5-label>
+                                <ui5-daterange-picker id="event-picker" value="2024-06-01 - 2024-06-07"></ui5-daterange-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <strong>Selected Range:</strong> <span id="event-result">2024-06-01 - 2024-06-07</span><br>
+                                    <strong>Valid:</strong> <span id="event-valid">true</span><br>
+                                    <strong>Start Date:</strong> <span id="start-date">2024-06-01</span><br>
+                                    <strong>End Date:</strong> <span id="end-date">2024-06-07</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">StartDateValue and EndDateValue Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using startDateValue and endDateValue getters to access JavaScript Date instances</div>
+                    <p class="test-instruction">Test instruction: Select different date ranges to see the JavaScript Date objects</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr4a5s6t7a8r9t0e1n2d3d4a5t6e7v8">
+                            <div>
+                                <ui5-label>Date Range with JS Objects</ui5-label>
+                                <ui5-daterange-picker id="jsdate-picker" value="2024-07-15 - 2024-07-20"></ui5-daterange-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <strong>Start Date JS Object:</strong> <span id="js-start-date">Loading...</span><br>
+                                    <strong>End Date JS Object:</strong> <span id="js-end-date">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueState Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueState property to indicate validation status</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dr5a6v7a8l9u0e1s2t3a4t5e6p7r8o9">
+                            <div>
+                                <ui5-label>None (Default)</ui5-label>
+                                <ui5-daterange-picker value="2024-04-01 - 2024-04-07" value-state="None"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Positive</ui5-label>
+                                <ui5-daterange-picker value="2024-04-01 - 2024-04-07" value-state="Positive"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Critical</ui5-label>
+                                <ui5-daterange-picker value="2024-04-01 - 2024-04-07" value-state="Critical"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Negative</ui5-label>
+                                <ui5-daterange-picker value-state="Negative"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Information</ui5-label>
+                                <ui5-daterange-picker value="2024-04-01 - 2024-04-07" value-state="Information"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled and Readonly Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled and readonly properties to control component interaction</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dr6a7d8i9s0a1b2l3e4r5e6a7d8o9n0">
+                            <div>
+                                <ui5-label>Normal</ui5-label>
+                                <ui5-daterange-picker value="2024-05-01 - 2024-05-15"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Disabled</ui5-label>
+                                <ui5-daterange-picker value="2024-05-01 - 2024-05-15" disabled></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Readonly</ui5-label>
+                                <ui5-daterange-picker value="2024-05-01 - 2024-05-15" readonly></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property to mark the component as mandatory</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr7a8r9e0q1u2i3r4e5d6p7r8o9p0e1">
+                            <div>
+                                <ui5-label>Required Date Range</ui5-label>
+                                <ui5-daterange-picker required placeholder="Required date range field"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Optional Date Range</ui5-label>
+                                <ui5-daterange-picker placeholder="Optional date range field"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Format Pattern API</h2>
+                    <div class="text-muted fst-italic mb-3">Using format-pattern property to customize date display format</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3" data-cy-acc-container-id="dr8a9f0o1r2m3a4t5p6a7t8t9e0r1n2">
+                            <div>
+                                <ui5-label>Default Pattern (yyyy-MM-dd)</ui5-label>
+                                <ui5-daterange-picker value="2024-08-01 - 2024-08-15"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>US Format (MM/dd/yyyy)</ui5-label>
+                                <ui5-daterange-picker format-pattern="MM/dd/yyyy" value="08/01/2024 - 08/15/2024"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>European Format (dd.MM.yyyy)</ui5-label>
+                                <ui5-daterange-picker format-pattern="dd.MM.yyyy" value="01.08.2024 - 15.08.2024"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">MinDate and MaxDate Properties API</h2>
+                    <div class="text-muted fst-italic mb-3">Using minDate and maxDate properties to restrict selectable date ranges</div>
+                    <p class="test-instruction">Test instruction: Try selecting dates outside the allowed range</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr9a0m1i2n3m4a5x6d7a8t9e0p1r2o3">
+                            <div>
+                                <ui5-label>Current Year Only (Min: 2024-01-01, Max: 2024-12-31)</ui5-label>
+                                <ui5-daterange-picker min-date="2024-01-01" max-date="2024-12-31" value="2024-06-01 - 2024-06-15"></ui5-daterange-picker>
+                            </div>
+                            <div>
+                                <ui5-label>Next 30 Days Only</ui5-label>
+                                <ui5-daterange-picker id="next30-picker"></ui5-daterange-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Form Integration API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property for HTML form identification and submission</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr0a1f2o3r4m5i6n7t8e9g0r1a2t3i4">
+                            <div>
+                                <form id="daterange-form">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div>
+                                            <ui5-label>Project Duration:</ui5-label>
+                                            <ui5-daterange-picker name="projectDuration" required value="2024-01-01 - 2024-12-31"></ui5-daterange-picker>
+                                        </div>
+                                        <div>
+                                            <ui5-label>Vacation Period:</ui5-label>
+                                            <ui5-daterange-picker name="vacationPeriod" value="2024-07-01 - 2024-07-14"></ui5-daterange-picker>
+                                        </div>
+                                        <ui5-button type="Submit" class="mt-2">Submit Date Ranges</ui5-button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation API</h2>
+                    <div class="text-muted fst-italic mb-3">DateRangePicker supports advanced keyboard shortcuts for date navigation</div>
+                    <p class="test-instruction">Test instruction: Focus the input and use Page Up/Down, Shift+Page Up/Down, Ctrl+Shift+Page Up/Down</p>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dr1a2k3e4y5b6o7a8r9d0n1a2v3i4g5">
+                            <div>
+                                <ui5-label>Keyboard Navigation Test</ui5-label>
+                                <ui5-daterange-picker id="keyboard-picker" value="2024-09-15 - 2024-09-20"></ui5-daterange-picker>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    <small>
+                                        <strong>Keyboard shortcuts:</strong><br>
+                                        Page Down: Decrease day | Shift+Page Down: Decrease month | Ctrl+Shift+Page Down: Decrease year<br>
+                                        Page Up: Increase day | Shift+Page Up: Increase month | Ctrl+Shift+Page Up: Increase year
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Set current month range
+        const currentMonthPicker = document.getElementById('current-month-picker');
+        if (currentMonthPicker) {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            const formatDate = (date) => date.toISOString().split('T')[0];
+            currentMonthPicker.value = `${formatDate(firstDay)} - ${formatDate(lastDay)}`;
+        }
+
+        // Set next 30 days range
+        const next30Picker = document.getElementById('next30-picker');
+        if (next30Picker) {
+            const today = new Date();
+            const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const formatDate = (date) => date.toISOString().split('T')[0];
+            next30Picker.minDate = formatDate(today);
+            next30Picker.maxDate = formatDate(next30Days);
+            next30Picker.value = `${formatDate(today)} - ${formatDate(next30Days)}`;
+        }
+
+        // Change event demonstration
+        const eventPicker = document.getElementById('event-picker');
+        const eventResult = document.getElementById('event-result');
+        const eventValid = document.getElementById('event-valid');
+        const startDate = document.getElementById('start-date');
+        const endDate = document.getElementById('end-date');
+        
+        if (eventPicker && eventResult && eventValid && startDate && endDate) {
+            eventPicker.addEventListener('change', (e) => {
+                eventResult.textContent = e.detail.value;
+                eventValid.textContent = e.detail.valid;
+                
+                // Update start and end dates
+                if (eventPicker.startDateValue) {
+                    startDate.textContent = eventPicker.startDateValue.toISOString().split('T')[0];
+                }
+                if (eventPicker.endDateValue) {
+                    endDate.textContent = eventPicker.endDateValue.toISOString().split('T')[0];
+                }
+            });
+        }
+
+        // JavaScript Date objects demonstration
+        const jsdatePicker = document.getElementById('jsdate-picker');
+        const jsStartDate = document.getElementById('js-start-date');
+        const jsEndDate = document.getElementById('js-end-date');
+        
+        function updateJSDates() {
+            if (jsdatePicker && jsStartDate && jsEndDate) {
+                if (jsdatePicker.startDateValue) {
+                    jsStartDate.textContent = jsdatePicker.startDateValue.toString();
+                } else {
+                    jsStartDate.textContent = 'null';
+                }
+                
+                if (jsdatePicker.endDateValue) {
+                    jsEndDate.textContent = jsdatePicker.endDateValue.toString();
+                } else {
+                    jsEndDate.textContent = 'null';
+                }
+            }
+        }
+        
+        // Initial update
+        setTimeout(updateJSDates, 100);
+        
+        if (jsdatePicker) {
+            jsdatePicker.addEventListener('change', updateJSDates);
+        }
+
+        // Form integration demonstration
+        const daterangeForm = document.getElementById('daterange-form');
+        if (daterangeForm) {
+            daterangeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(daterangeForm);
+                
+                // DateRangePicker returns FormData with multiple values for the same name
+                const data = {};
+                for (const [key, value] of formData.entries()) {
+                    if (data[key]) {
+                        if (Array.isArray(data[key])) {
+                            data[key].push(value);
+                        } else {
+                            data[key] = [data[key], value];
+                        }
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                
+                console.log('Form data:', data);
+                alert('Form submitted! Check console for data.');
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

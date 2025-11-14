@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 FileUploader API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/FileUploader.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents-icons/dist/upload.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="FileUploader API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 FileUploader Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Accept Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accept property to restrict file types users can select</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-file-uploader accept=".png,.jpg,.jpeg" placeholder="Only image files"></ui5-file-uploader>
+                            <ui5-file-uploader accept=".pdf,.doc,.docx" placeholder="Only document files"></ui5-file-uploader>
+                            <ui5-file-uploader accept=".txt,.csv" placeholder="Only text files"></ui5-file-uploader>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to select files and verify file type restrictions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideInput Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideInput property to hide the input field and show only custom content</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-file-uploader hide-input>
+                                <ui5-button icon="upload">Upload Files</ui5-button>
+                            </ui5-file-uploader>
+                            <ui5-file-uploader hide-input multiple>
+                                <ui5-button design="Emphasized">Select Multiple Files</ui5-button>
+                            </ui5-file-uploader>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click buttons to trigger file selection dialog</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to make component noninteractive</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-file-uploader disabled placeholder="Disabled file uploader"></ui5-file-uploader>
+                            <ui5-file-uploader disabled hide-input>
+                                <ui5-button disabled>Disabled Upload</ui5-button>
+                            </ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Multiple Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using multiple property to allow selection of multiple files</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-file-uploader multiple placeholder="Select multiple files"></ui5-file-uploader>
+                            <ui5-file-uploader multiple accept=".png,.jpg" placeholder="Multiple images only"></ui5-file-uploader>
+                        </div>
+                        <div class="test-instruction">Test instructions: Select multiple files to verify multi-selection functionality</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property for form submission identification</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-file-uploader name="avatar" placeholder="Avatar upload"></ui5-file-uploader>
+                            <ui5-file-uploader name="documents" multiple placeholder="Documents upload"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Placeholder Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using placeholder property to provide user guidance</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <ui5-file-uploader placeholder="Choose a file to upload"></ui5-file-uploader>
+                            <ui5-file-uploader placeholder="Upload your resume"></ui5-file-uploader>
+                            <ui5-file-uploader placeholder="Select profile picture"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to display selected file names</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <ui5-file-uploader id="fileUploader1" placeholder="Select file to see value"></ui5-file-uploader>
+                            <ui5-label id="valueDisplay1">No file selected</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Select a file to see the value property update</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">MaxFileSize Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using maxFileSize property to prevent upload of large files (in megabytes)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-file-uploader id="fileUploader2" max-file-size="1" placeholder="Max 1MB file"></ui5-file-uploader>
+                            <ui5-file-uploader id="fileUploader3" max-file-size="5" placeholder="Max 5MB file"></ui5-file-uploader>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try uploading files larger than specified limits to trigger size-exceed events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueState Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueState property to indicate component validation state</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <ui5-file-uploader value-state="None" placeholder="None state"></ui5-file-uploader>
+                            <ui5-file-uploader value-state="Positive" placeholder="Success state"></ui5-file-uploader>
+                            <ui5-file-uploader value-state="Critical" placeholder="Warning state"></ui5-file-uploader>
+                            <ui5-file-uploader value-state="Negative" placeholder="Error state"></ui5-file-uploader>
+                            <ui5-file-uploader value-state="Information" placeholder="Info state"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property to mark component as required for form validation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5">
+                            <ui5-file-uploader required placeholder="Required file upload"></ui5-file-uploader>
+                            <ui5-file-uploader required multiple placeholder="Required multiple files"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName property to provide ARIA label for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6">
+                            <ui5-file-uploader accessible-name="Upload profile picture" placeholder="Profile picture"></ui5-file-uploader>
+                            <ui5-file-uploader accessible-name="Upload resume document" placeholder="Resume"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleNameRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleNameRef property to reference labeling elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7">
+                            <ui5-label id="fileLabel1">Document Upload</ui5-label>
+                            <ui5-file-uploader accessible-name-ref="fileLabel1" placeholder="Select document"></ui5-file-uploader>
+                            <ui5-label id="fileLabel2">Image Upload</ui5-label>
+                            <ui5-file-uploader accessible-name-ref="fileLabel2" accept=".png,.jpg" placeholder="Select image"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescription Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescription property to provide additional context for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8">
+                            <ui5-file-uploader accessible-description="Upload files up to 5MB in size" max-file-size="5" placeholder="File upload"></ui5-file-uploader>
+                            <ui5-file-uploader accessible-description="Multiple image files can be selected" multiple accept=".png,.jpg" placeholder="Images"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleDescriptionRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleDescriptionRef property to reference describing elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9">
+                            <ui5-label id="fileDesc1">Upload your CV in PDF format only</ui5-label>
+                            <ui5-file-uploader accessible-description-ref="fileDesc1" accept=".pdf" placeholder="CV Upload"></ui5-file-uploader>
+                            <ui5-label id="fileDesc2">Profile picture should be square and under 2MB</ui5-label>
+                            <ui5-file-uploader accessible-description-ref="fileDesc2" max-file-size="2" accept=".png,.jpg" placeholder="Profile Picture"></ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Default Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using default slot to provide custom trigger content</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0">
+                            <ui5-file-uploader>
+                                <ui5-button design="Transparent">Browse Files</ui5-button>
+                            </ui5-file-uploader>
+                            <ui5-file-uploader multiple>
+                                <ui5-button icon="upload" design="Emphasized">Upload Multiple</ui5-button>
+                            </ui5-file-uploader>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click custom buttons to trigger file selection</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueStateMessage Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueStateMessage slot to provide custom value state messages</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1">
+                            <ui5-file-uploader value-state="Critical" placeholder="Warning file upload">
+                                <div slot="valueStateMessage">File size should not exceed 10MB</div>
+                            </ui5-file-uploader>
+                            <ui5-file-uploader value-state="Negative" placeholder="Error file upload">
+                                <div slot="valueStateMessage">Only PDF files are allowed for this upload</div>
+                            </ui5-file-uploader>
+                            <ui5-file-uploader value-state="Information" placeholder="Info file upload">
+                                <div slot="valueStateMessage">Supported formats: PNG, JPG, PDF up to 5MB</div>
+                            </ui5-file-uploader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using change event to handle file selection changes</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2">
+                            <ui5-file-uploader id="eventUploader1" placeholder="Select file to trigger event"></ui5-file-uploader>
+                            <ui5-label id="eventOutput1">No files selected</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Select files to see change events logged</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">File-Size-Exceed Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using file-size-exceed event to handle oversized file uploads</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3">
+                            <ui5-file-uploader id="sizeUploader" max-file-size="1" placeholder="Max 1MB - try larger file"></ui5-file-uploader>
+                            <ui5-label id="sizeOutput">No size violations</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try uploading a file larger than 1MB to trigger size exceed event</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Change event handling
+        document.getElementById('fileUploader1').addEventListener('change', (event) => {
+            const files = event.detail.files;
+            const output = document.getElementById('valueDisplay1');
+            if (files && files.length > 0) {
+                const fileNames = Array.from(files).map(file => file.name).join(', ');
+                output.textContent = `Selected: ${fileNames}`;
+                event.target.value = fileNames;
+            } else {
+                output.textContent = 'No file selected';
+            }
+        });
+
+        // Change event logging
+        document.getElementById('eventUploader1').addEventListener('change', (event) => {
+            const files = event.detail.files;
+            const output = document.getElementById('eventOutput1');
+            if (files && files.length > 0) {
+                output.textContent = `Change event: ${files.length} file(s) selected`;
+                console.log('FileUploader change event:', event.detail);
+            } else {
+                output.textContent = 'Change event: No files selected';
+            }
+        });
+
+        // File size exceed event handling
+        document.getElementById('sizeUploader').addEventListener('file-size-exceed', (event) => {
+            const output = document.getElementById('sizeOutput');
+            const filesData = event.detail.filesData;
+            output.textContent = `Size exceed: ${filesData.length} file(s) too large`;
+            console.log('File size exceed event:', event.detail);
+        });
+
+        // Max file size change events for demonstration
+        document.getElementById('fileUploader2').addEventListener('file-size-exceed', (event) => {
+            console.log('1MB limit exceeded:', event.detail);
+        });
+
+        document.getElementById('fileUploader3').addEventListener('file-size-exceed', (event) => {
+            console.log('5MB limit exceeded:', event.detail);
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

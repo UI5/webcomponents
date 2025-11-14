@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 MenuItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Menu.js";
+        import "@ui5/webcomponents/dist/MenuItem.js";
+        import "@ui5/webcomponents/dist/MenuSeparator.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Link.js";
+        import "@ui5/webcomponents/dist/Icon.js";
+        import "@ui5/webcomponents-icons/dist/save.js";
+        import "@ui5/webcomponents-icons/dist/print.js";
+        import "@ui5/webcomponents-icons/dist/copy.js";
+        import "@ui5/webcomponents-icons/dist/paste.js";
+        import "@ui5/webcomponents-icons/dist/add.js";
+        import "@ui5/webcomponents-icons/dist/edit.js";
+        import "@ui5/webcomponents-icons/dist/delete.js";
+        import "@ui5/webcomponents-icons/dist/settings.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="MenuItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 MenuItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Text Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using text property to define the displayed text of menu items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-button id="textBtn">Text Menu</ui5-button>
+                            <ui5-menu id="textMenu" opener="textBtn">
+                                <ui5-menu-item text="New Document"></ui5-menu-item>
+                                <ui5-menu-item text="Open File"></ui5-menu-item>
+                                <ui5-menu-item text="Save Document"></ui5-menu-item>
+                                <ui5-menu-item text="Save As..."></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Exit Application"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to open menu and observe different text values</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AdditionalText Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using additionalText property to display additional text at the end of menu items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-button id="additionalTextBtn">Additional Text Menu</ui5-button>
+                            <ui5-menu id="additionalTextMenu" opener="additionalTextBtn">
+                                <ui5-menu-item text="New" additional-text="Ctrl+N"></ui5-menu-item>
+                                <ui5-menu-item text="Open" additional-text="Ctrl+O"></ui5-menu-item>
+                                <ui5-menu-item text="Save" additional-text="Ctrl+S"></ui5-menu-item>
+                                <ui5-menu-item text="Print" additional-text="Ctrl+P"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Recent Files" additional-text="5 items"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see additional text displayed on the right side of menu items</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using icon property to display icons in menu items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-button id="iconBtn">Icon Menu</ui5-button>
+                            <ui5-menu id="iconMenu" opener="iconBtn">
+                                <ui5-menu-item text="New Document" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="Print" icon="print"></ui5-menu-item>
+                                <ui5-menu-item text="Copy" icon="copy"></ui5-menu-item>
+                                <ui5-menu-item text="Paste" icon="paste"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Settings" icon="settings"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see menu items with various SAP icons</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to make menu items noninteractive</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-button id="disabledBtn">Disabled Menu</ui5-button>
+                            <ui5-menu id="disabledMenu" opener="disabledBtn">
+                                <ui5-menu-item text="Available Action" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="Disabled Action" icon="print" disabled></ui5-menu-item>
+                                <ui5-menu-item text="Another Available" icon="copy"></ui5-menu-item>
+                                <ui5-menu-item text="Also Disabled" disabled></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Enabled Item" icon="settings"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see disabled menu items (grayed out and non-clickable)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Loading Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using loading property to display loading indicator in sub-menu popover</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-button id="loadingBtn">Loading Menu</ui5-button>
+                            <ui5-menu id="loadingMenu" opener="loadingBtn">
+                                <ui5-menu-item text="Regular Item" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="Loading Submenu" icon="settings" loading>
+                                    <ui5-menu-item text="Sub Item 1"></ui5-menu-item>
+                                    <ui5-menu-item text="Sub Item 2"></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-item text="Another Item" icon="print"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to open menu, then hover over "Loading Submenu" to see loading indicator</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">LoadingDelay Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using loadingDelay property to control delay before loading indicator appears</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <ui5-button id="loadingDelayBtn">Loading Delay Menu</ui5-button>
+                            <ui5-menu id="loadingDelayMenu" opener="loadingDelayBtn">
+                                <ui5-menu-item text="Fast Loading (500ms)" loading loading-delay="500">
+                                    <ui5-menu-item text="Fast Sub Item 1"></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-item text="Slow Loading (2000ms)" loading loading-delay="2000">
+                                    <ui5-menu-item text="Slow Sub Item 1"></ui5-menu-item>
+                                </ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Hover over items to see loading indicators with different delays</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName property to provide ARIA label for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <ui5-button id="accessibleNameBtn">Accessible Menu</ui5-button>
+                            <ui5-menu id="accessibleNameMenu" opener="accessibleNameBtn">
+                                <ui5-menu-item text="⚙" accessible-name="Settings and preferences" icon="settings"></ui5-menu-item>
+                                <ui5-menu-item text="📁" accessible-name="Open file from computer"></ui5-menu-item>
+                                <ui5-menu-item text="💾" accessible-name="Save current document" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="🖨" accessible-name="Print current document" icon="print"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to hear accessible names for menu items</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Tooltip Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using tooltip property to provide additional information on hover</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-button id="tooltipBtn">Tooltip Menu</ui5-button>
+                            <ui5-menu id="tooltipMenu" opener="tooltipBtn">
+                                <ui5-menu-item text="New" tooltip="Create a new document" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="Save" tooltip="Save the current document to disk" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="Print" tooltip="Send document to printer" icon="print"></ui5-menu-item>
+                                <ui5-menu-item text="Settings" tooltip="Configure application settings" icon="settings"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Hover over menu items to see tooltips</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Checked Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using checked property to display checkmarks for selected items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <ui5-button id="checkedBtn">Checked Menu</ui5-button>
+                            <ui5-menu id="checkedMenu" opener="checkedBtn">
+                                <ui5-menu-item text="Option 1" checked></ui5-menu-item>
+                                <ui5-menu-item text="Option 2"></ui5-menu-item>
+                                <ui5-menu-item text="Option 3" checked></ui5-menu-item>
+                                <ui5-menu-item text="Option 4"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Select All"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see checked items with checkmarks</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibilityAttributes Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibilityAttributes property to define ARIA attributes and roles</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5">
+                            <ui5-button id="ariaBtn">ARIA Menu</ui5-button>
+                            <ui5-menu id="ariaMenu" opener="ariaBtn">
+                                <ui5-menu-item text="Copy" id="copyItem" icon="copy"></ui5-menu-item>
+                                <ui5-menu-item text="Paste" id="pasteItem" icon="paste"></ui5-menu-item>
+                                <ui5-menu-item text="Cut" id="cutItem"></ui5-menu-item>
+                                <ui5-menu-item text="Select All" id="selectAllItem"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to experience enhanced accessibility attributes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Items Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using items slot to create nested menu hierarchies</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6">
+                            <ui5-button id="nestedBtn">Nested Menu</ui5-button>
+                            <ui5-menu id="nestedMenu" opener="nestedBtn">
+                                <ui5-menu-item text="File" icon="save">
+                                    <ui5-menu-item text="New Document" icon="add"></ui5-menu-item>
+                                    <ui5-menu-item text="Open" additional-text="Ctrl+O"></ui5-menu-item>
+                                    <ui5-menu-item text="Recent Files">
+                                        <ui5-menu-item text="Document1.txt"></ui5-menu-item>
+                                        <ui5-menu-item text="Document2.pdf"></ui5-menu-item>
+                                        <ui5-menu-item text="Presentation.pptx"></ui5-menu-item>
+                                    </ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+                                    <ui5-menu-item text="Save As..."></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-item text="Edit" icon="edit">
+                                    <ui5-menu-item text="Copy" icon="copy"></ui5-menu-item>
+                                    <ui5-menu-item text="Paste" icon="paste"></ui5-menu-item>
+                                    <ui5-menu-item text="Cut"></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Exit"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to open menu and navigate through nested sub-menus</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">EndContent Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using endContent slot to display interactive elements at the end of menu items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7">
+                            <ui5-button id="endContentBtn">End Content Menu</ui5-button>
+                            <ui5-menu id="endContentMenu" opener="endContentBtn">
+                                <ui5-menu-item text="Document Actions" icon="save">
+                                    <ui5-button slot="endContent" design="Transparent" icon="edit"></ui5-button>
+                                    <ui5-button slot="endContent" design="Transparent" icon="delete"></ui5-button>
+                                </ui5-menu-item>
+                                <ui5-menu-item text="Settings" icon="settings">
+                                    <ui5-link slot="endContent">Configure</ui5-link>
+                                </ui5-menu-item>
+                                <ui5-menu-item text="Interactive Item">
+                                    <ui5-icon slot="endContent" name="settings" mode="Interactive"></ui5-icon>
+                                    <ui5-button slot="endContent" design="Transparent">Action</ui5-button>
+                                </ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="External Link">
+                                    <ui5-link slot="endContent" href="#">Visit</ui5-link>
+                                </ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see menu items with interactive elements at the end</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Check Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using check event to handle item checking and unchecking</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8">
+                            <ui5-button id="checkEventBtn">Check Event Menu</ui5-button>
+                            <ui5-menu id="checkEventMenu" opener="checkEventBtn">
+                                <ui5-menu-item text="Toggle Item 1" id="checkItem1"></ui5-menu-item>
+                                <ui5-menu-item text="Toggle Item 2" id="checkItem2" checked></ui5-menu-item>
+                                <ui5-menu-item text="Toggle Item 3" id="checkItem3"></ui5-menu-item>
+                            </ui5-menu>
+                            <ui5-label id="checkOutput">No check events yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click menu items to trigger check events</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Menu button handlers
+        document.getElementById('textBtn').addEventListener('click', () => {
+            document.getElementById('textMenu').open = true;
+        });
+
+        document.getElementById('additionalTextBtn').addEventListener('click', () => {
+            document.getElementById('additionalTextMenu').open = true;
+        });
+
+        document.getElementById('iconBtn').addEventListener('click', () => {
+            document.getElementById('iconMenu').open = true;
+        });
+
+        document.getElementById('disabledBtn').addEventListener('click', () => {
+            document.getElementById('disabledMenu').open = true;
+        });
+
+        document.getElementById('loadingBtn').addEventListener('click', () => {
+            document.getElementById('loadingMenu').open = true;
+        });
+
+        document.getElementById('loadingDelayBtn').addEventListener('click', () => {
+            document.getElementById('loadingDelayMenu').open = true;
+        });
+
+        document.getElementById('accessibleNameBtn').addEventListener('click', () => {
+            document.getElementById('accessibleNameMenu').open = true;
+        });
+
+        document.getElementById('tooltipBtn').addEventListener('click', () => {
+            document.getElementById('tooltipMenu').open = true;
+        });
+
+        document.getElementById('checkedBtn').addEventListener('click', () => {
+            document.getElementById('checkedMenu').open = true;
+        });
+
+        document.getElementById('ariaBtn').addEventListener('click', () => {
+            document.getElementById('ariaMenu').open = true;
+        });
+
+        document.getElementById('nestedBtn').addEventListener('click', () => {
+            document.getElementById('nestedMenu').open = true;
+        });
+
+        document.getElementById('endContentBtn').addEventListener('click', () => {
+            document.getElementById('endContentMenu').open = true;
+        });
+
+        document.getElementById('checkEventBtn').addEventListener('click', () => {
+            document.getElementById('checkEventMenu').open = true;
+        });
+
+        // Set up accessibility attributes
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyItem = document.getElementById('copyItem');
+            const pasteItem = document.getElementById('pasteItem');
+            const cutItem = document.getElementById('cutItem');
+            const selectAllItem = document.getElementById('selectAllItem');
+
+            if (copyItem) {
+                copyItem.accessibilityAttributes = {
+                    ariaKeyShortcuts: "Ctrl+C",
+                    role: "menuitem"
+                };
+            }
+
+            if (pasteItem) {
+                pasteItem.accessibilityAttributes = {
+                    ariaKeyShortcuts: "Ctrl+V",
+                    role: "menuitem"
+                };
+            }
+
+            if (cutItem) {
+                cutItem.accessibilityAttributes = {
+                    ariaKeyShortcuts: "Ctrl+X",
+                    role: "menuitem"
+                };
+            }
+
+            if (selectAllItem) {
+                selectAllItem.accessibilityAttributes = {
+                    ariaKeyShortcuts: "Ctrl+A",
+                    role: "menuitem"
+                };
+            }
+        });
+
+        // Check event handling
+        const checkItems = ['checkItem1', 'checkItem2', 'checkItem3'];
+        checkItems.forEach(itemId => {
+            const item = document.getElementById(itemId);
+            if (item) {
+                item.addEventListener('check', (event) => {
+                    const output = document.getElementById('checkOutput');
+                    const isChecked = item.checked;
+                    output.textContent = `Check event: ${item.text} is now ${isChecked ? 'checked' : 'unchecked'}`;
+                    console.log(`MenuItem check event: ${item.text} checked=${isChecked}`);
+                });
+
+                // Toggle checked state on click for demonstration
+                item.addEventListener('click', () => {
+                    item.checked = !item.checked;
+                });
+            }
+        });
+
+        // End content event handlers
+        const endContentMenu = document.getElementById('endContentMenu');
+        if (endContentMenu) {
+            endContentMenu.addEventListener('item-click', (event) => {
+                console.log('End content menu item clicked:', event.detail);
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
