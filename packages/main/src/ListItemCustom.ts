@@ -1,4 +1,6 @@
-import { isTabNext, isTabPrevious, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isTabNext, isTabPrevious, isF2, isF7,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -54,22 +56,22 @@ class ListItemCustom extends ListItem {
 	@property()
 	declare accessibleName?: string;
 
-	async _onkeydown(e: KeyboardEvent) {
+	_onkeydown(e: KeyboardEvent) {
 		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
 
-		if (!isTab && !isFocused && !isF2(e)) {
+		if (!isTab && !isFocused && !isF2(e) && !isF7(e)) {
 			return;
 		}
 
-		await super._onkeydown(e);
+		super._onkeydown(e);
 	}
 
 	_onkeyup(e: KeyboardEvent) {
 		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
 
-		if (!isTab && !isFocused && !isF2(e)) {
+		if (!isTab && !isFocused && !isF2(e) && !isF7(e)) {
 			return;
 		}
 
