@@ -274,4 +274,64 @@ describe("Icon general interaction", () => {
             .find(".ui5-icon-root")
             .should("have.attr", "role", "img");
     });
+
+    it("Tests accessibilityInfo getter", () => {
+        const interactiveMode = "Interactive";
+        const imageMode = "Image";
+        const decorativeMode = "Decorative";
+        const accessibleName = "Test Icon";
+
+        // Test with Interactive mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={interactiveMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Interactive']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+            
+            // For Interactive mode, accessibilityInfo should have role and description
+            expect(accessibilityInfo).to.not.be.undefined;
+            expect(accessibilityInfo.role).to.equal("button");
+            expect(accessibilityInfo.description).to.equal(accessibleName);
+        });
+
+        // Test with Decorative mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={decorativeMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Decorative']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+            
+            // For Decorative mode, accessibilityInfo should be undefined
+            expect(accessibilityInfo).to.be.undefined;
+        });
+
+        // Test with Image mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={imageMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Image']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+            
+            // For Image mode, accessibilityInfo should be undefined
+            expect(accessibilityInfo).to.be.undefined;
+        });
+    });
 });
