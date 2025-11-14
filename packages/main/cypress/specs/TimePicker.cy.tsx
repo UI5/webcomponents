@@ -544,3 +544,103 @@ describe("Validation inside a form", () => {
 			.should("not.exist", "Timepicker with correct formatted value should not have :invalid CSS class");
 	});
 });
+
+describe("Icon Tooltip Tests", () => {
+	it("TimePicker icon shows correct tooltip when closed", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("ui5-icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("TimePicker icon shows correct tooltip when opened", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "open");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("ui5-icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+	});
+
+	it("TimePicker icon tooltip changes when toggling picker", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("TimePicker icon tooltip changes when using keyboard shortcuts", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerGetInnerInput()
+			.as("input")
+			.realClick()
+			.should("be.focused");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@input")
+			.realPress("F4");
+
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@input")
+			.realPress(["Alt", "ArrowUp"]);
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+});
