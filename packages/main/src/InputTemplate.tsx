@@ -32,7 +32,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						inner-input-with-icon={!!this.icon.length}
 						disabled={this.disabled}
 						readonly={this._readonly}
-						value={this._innerValue}
+						value={this.value}
 						placeholder={this._placeholder}
 						maxlength={this.maxlength}
 						role={this.accInfo.role}
