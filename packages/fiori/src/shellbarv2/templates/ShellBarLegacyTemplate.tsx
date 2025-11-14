@@ -95,7 +95,7 @@ function ShellBarV2SingleLogo(this: ShellBarV2) {
 	return (
 		<span
 			role={legacy.logoRole}
-			class="ui5-shellbar-logo"
+			class="ui5-shellbar-logo ui5-shellbar-gap-end"
 			aria-label={legacy.logoAriaLabel}
 			title={legacy.logoAriaLabel}
 			onClick={legacy.handleLogoClickBound}

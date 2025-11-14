@@ -70,13 +70,16 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 type ShellBarV2Breakpoint = "S" | "M" | "L" | "XL" | "XXL";
 
+// actions always visible in lean mode, order is important
+const PREDEFINED_PLACE_ITEMS = ["feedback", "sys-help"];
+
 const ShellBarV2Actions = {
 	Search: "search",
 	Profile: "profile",
 	Overflow: "overflow",
 	Assistant: "assistant",
-	Notifications: "notifications",
 	ProductSwitch: "products",
+	Notifications: "notifications",
 };
 
 const ShellBarV2ActionsSelectors = {
@@ -84,8 +87,8 @@ const ShellBarV2ActionsSelectors = {
 	Profile: ".ui5-shellbar-image-button",
 	Overflow: ".ui5-shellbar-overflow-button",
 	Assistant: ".ui5-shellbar-assistant-button",
-	Notifications: ".ui5-shellbar-bell-button",
 	ProductSwitch: ".ui5-shellbar-button-product-switch",
+	Notifications: ".ui5-shellbar-bell-button",
 };
 
 type ShellBarV2ActionId = typeof ShellBarV2Actions[keyof typeof ShellBarV2Actions];
@@ -376,7 +379,7 @@ class ShellBarV2 extends UI5Element {
 	 * You can use the `<ui5-shellbar-item></ui5-shellbar-item>`.
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true })
+	@slot({ type: HTMLElement, "default": true, individualSlots: true })
 	items!: Array<ShellBarV2Item>;
 
 	/**
@@ -731,8 +734,8 @@ class ShellBarV2 extends UI5Element {
 			[ShellBarV2Actions.Profile]: this.texts.profile,
 			[ShellBarV2Actions.Overflow]: this.texts.overflow,
 			[ShellBarV2Actions.Assistant]: this.texts.assistant,
-			[ShellBarV2Actions.Notifications]: this.texts.notificationsNoCount,
 			[ShellBarV2Actions.ProductSwitch]: this.texts.products,
+			[ShellBarV2Actions.Notifications]: this.texts.notificationsNoCount,
 		};
 		return texts[actionId] || actionId;
 	}
@@ -763,7 +766,7 @@ class ShellBarV2 extends UI5Element {
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.sortContent(this.content),
-			customItems: this.items,
+			customItems: this.sortItems(this.items),
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
 			overflowOuter: this.overflowOuter!,
@@ -857,7 +860,7 @@ class ShellBarV2 extends UI5Element {
 	get overflowItems() {
 		return this.overflow.getOverflowItems({
 			actions: this.actions,
-			customItems: this.items,
+			customItems: this.sortItems(this.items),
 			hiddenItemsIds: this.hiddenItemsIds,
 		});
 	}
@@ -1020,6 +1023,21 @@ class ShellBarV2 extends UI5Element {
 		};
 	}
 
+	sortContent(content: readonly HTMLElement[]) {
+		// reverse so items on the right are hidden first
+		// then sort by hide order to apply custom preferences
+		return content.toReversed().toSorted((a, b) => {
+			const aOrder = parseInt(a.getAttribute("data-hide-order") || "0");
+			const bOrder = parseInt(b.getAttribute("data-hide-order") || "0");
+			return aOrder - bOrder;
+		});
+	}
+
+	/*
+	 * Determines whether a separator should be packed with an item.
+	 * Separators are packed with the last item that is hidden to account for
+	 * the space they occupy when next overflow calculation occurs.
+	 */
 	getPackedSeparatorInfo(item: HTMLElement, isStartGroup: boolean) {
 		const group = isStartGroup ? this.startContent : this.endContent;
 		const sorted = this.sortContent(group);
@@ -1029,13 +1047,13 @@ class ShellBarV2 extends UI5Element {
 		return { shouldPack: isHidden && isLastItem };
 	}
 
-	sortContent(content: HTMLElement[]) {
-		// reverse so items on the right are hidden first
-		// then sort by hide order to apply custom preferences
-		return content.toReversed().toSorted((a, b) => {
-			const aOrder = parseInt(a.getAttribute("data-hide-order") || "0");
-			const bOrder = parseInt(b.getAttribute("data-hide-order") || "0");
-			return aOrder - bOrder;
+	/* =================== Items Management =================== */
+
+	sortItems(items: readonly ShellBarV2Item[]) {
+		return items.toSorted((a, b) => {
+			const aIndex = PREDEFINED_PLACE_ITEMS.indexOf(a.icon || "");
+			const bIndex = PREDEFINED_PLACE_ITEMS.indexOf(b.icon || "");
+			return aIndex - bIndex;
 		});
 	}
 

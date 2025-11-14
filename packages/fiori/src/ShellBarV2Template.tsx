@@ -139,7 +139,7 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						)}
 
 						{/* Custom Items */}
-						{this.items.map(item => (
+						{this.sortItems(this.items).map(item => (
 							<div
 								key={item._id}
 								class="ui5-shellbar-custom-item ui5-shellbar-gap-start"

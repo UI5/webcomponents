@@ -6,9 +6,9 @@ function ShellBarV2SearchField(this: ShellBarV2) {
 	return (
 		// .ui5-shellbar-search-field-area is used to measure the width of
 		// the search field. It must be present even if the search is in full-width mode.
-		<div class="ui5-shellbar-search-field-area ui5-shellbar-gap-start">
+		<div class="ui5-shellbar-search-field-area">
 			{this.showSearchField && !this.showFullWidthSearch && (
-				<div class="ui5-shellbar-search-field">
+				<div class="ui5-shellbar-search-field ui5-shellbar-gap-start">
 					<slot name="searchField"></slot>
 				</div>
 			)}

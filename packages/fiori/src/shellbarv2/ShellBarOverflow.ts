@@ -187,6 +187,14 @@ class ShellBarV2Overflow {
 		const { actions, customItems, hiddenItemsIds } = params;
 		const result: ShellBarV2OverflowItem[] = [];
 
+		// Add hidden custom items
+		const hiddenCustomItems = customItems.filter((item: ShellBarV2Item) => hiddenItemsIds.includes(item._id));
+		hiddenCustomItems.forEach((item: ShellBarV2Item, index: number) => {
+			result.push({
+				type: "item", id: item._id, data: item, order: 3 + index,
+			});
+		});
+
 		const actionOrder: Record<string, number> = {
 			[ShellBarV2Actions.Search]: 0,
 			[ShellBarV2Actions.Notifications]: 1,
@@ -200,14 +208,6 @@ class ShellBarV2Overflow {
 				id: action.id,
 				data: action,
 				order: actionOrder[action.id] ?? 0,
-			});
-		});
-
-		// Add hidden custom items
-		const hiddenCustomItems = customItems.filter((item: ShellBarV2Item) => hiddenItemsIds.includes(item._id));
-		hiddenCustomItems.forEach((item: ShellBarV2Item, index: number) => {
-			result.push({
-				type: "item", id: item._id, data: item, order: 3 + index,
 			});
 		});
 
