@@ -1,0 +1,3 @@
+:host([expand-in-overflow]) ::slotted(*) {
+	width: 100%;
+}
