@@ -427,6 +427,16 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	showSuggestions = false;
 
 	/**
+	 * Defines the minimum number of typed characters required before suggestions become active
+	 *
+	 * @default 1
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property({ type: Number })
+	startSuggestion: number = 1;
+
+	/**
 	 * Sets the maximum number of characters available in the input field.
 	 *
 	 * **Note:** This property is not compatible with the ui5-input type InputType.Number. If the ui5-input type is set to Number, the maxlength value is ignored.
@@ -773,7 +783,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (preventOpenPicker) {
 			this.open = false;
 		} else if (!this._isPhone) {
-			this.open = hasItems && (this.open || (hasValue && isFocused && this.isTyping));
+			this.open = this._shouldTriggerSuggest && hasItems && (this.open || (hasValue && isFocused && this.isTyping));
 		}
 
 		const value = this.value;
@@ -787,7 +797,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		// Typehead causes issues on Android devices, so we disable it for now
 		// If there is already a selection the autocomplete has already been performed
-		if (this._shouldAutocomplete && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
+		if (this._shouldAutocomplete && this._shouldTriggerSuggest && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
 			const item = this._getFirstMatchingItem(value);
 			if (item) {
 				if (!this._isComposing) {
@@ -801,14 +811,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	onAfterRendering() {
 		const innerInput = this.getInputDOMRefSync()!;
 
-		if (this.showSuggestions && this.Suggestions?._getPicker()) {
+		if (this._shouldTriggerSuggest && this.showSuggestions && this.Suggestions?._getPicker()) {
 			this._listWidth = this.Suggestions._getListWidth();
 
 			// disabled ItemNavigation from the list since we are not using it
 			this.Suggestions._getList()._itemNavigation._getItems = () => [];
 		}
 
-		if (this._performTextSelection) {
+		if (this._shouldTriggerSuggest && this._performTextSelection) {
 			// this is required to syncronize lit-html input's value and user's input
 			// lit-html does not sync its stored value for the value property when the user is typing
 			if (innerInput.value !== this._innerValue) {
@@ -1138,7 +1148,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_clearPopoverFocusAndSelection() {
-		if (!this.showSuggestions || !this.Suggestions) {
+		if (!this.showSuggestions || !this.Suggestions || !this._shouldTriggerSuggest) {
 			return;
 		}
 
@@ -1937,6 +1947,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get _isSuggestionsFocused() {
 		return !this.focused && this.Suggestions?.isOpened();
+	}
+
+	get _shouldTriggerSuggest() {
+		return this.typedInValue.length >= this.startSuggestion;
 	}
 
 	/**

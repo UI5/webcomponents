@@ -446,7 +446,7 @@ describe("MultiInput tokens", () => {
 
 	it("should empty the field when value is cleared in the change handler", () => {
 		cy.mount(
-			<MultiInput showSuggestions id="token-unique" showValueHelpIcon>
+			<MultiInput showSuggestions startSuggestion={0} id="token-unique" showValueHelpIcon>
 				<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
 				<SuggestionItem text="Argentina"></SuggestionItem>
 			</MultiInput>

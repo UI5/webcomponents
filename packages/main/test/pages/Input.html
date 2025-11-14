@@ -34,6 +34,12 @@
 		<div id="myInput-open-picker"></div>
 	</div>
 
+	<div>
+		<h3>Input with <i>startSuggestion</i> trigger = 3</h3>
+		<ui5-input id="myInputSuggestionTrigger" class="input2auto" show-suggestions start-suggestion="3" placeholder="Search for a country ...">
+		</ui5-input>
+	</div>
+
 	<div class="sapUiSizeCompact">
 		<h3>Input in Compact</h3>
 		<ui5-input id="inputCompact" class="input2auto" show-suggestions placeholder="Search for a country ...">
@@ -674,6 +680,7 @@
 		];
 
 		var input = document.getElementById('myInput');
+		var inputSuggestionTrigger = document.getElementById('myInputSuggestionTrigger');
 		var inputChangeWithSuggestions = document.getElementById('inputChange-Suggestions');
 		var inputGrouping = document.getElementById('myInputGrouping');
 		var myInput2 = document.getElementById('myInput2');
@@ -831,6 +838,7 @@
 		var selectionChangeCounter = 0;
 
 		input.addEventListener("ui5-input", suggest);
+		myInputSuggestionTrigger.addEventListener("ui5-input", suggest);
 		inputCompact.addEventListener("ui5-input", suggest);
 		inputError.addEventListener("ui5-input", suggest);
 		customSuggestionsInput.addEventListener("ui5-input", suggestCustom);

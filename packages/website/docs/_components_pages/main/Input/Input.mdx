@@ -6,6 +6,7 @@ import Basic from "../../../_samples/main/Input/Basic/Basic.md";
 import Suggestions from "../../../_samples/main/Input/Suggestions/Suggestions.md";
 import ClearIcon from "../../../_samples/main/Input/ClearIcon/ClearIcon.md";
 import SuggestionsWrapping from "../../../_samples/main/Input/SuggestionsWrapping/SuggestionsWrapping.md";
+import SuggestionsTrigger from "../../../_samples/main/Input/SuggestionsTrigger/SuggestionsTrigger.md";
 import ValueStateMessage from "../../../_samples/main/Input/ValueStateMessage/ValueStateMessage.md";
 import Label from "../../../_samples/main/Input/Label/Label.md";
 import ValueHelpDialog from "../../../_samples/main/Input/ValueHelpDialog/ValueHelpDialog.md";
@@ -36,6 +37,13 @@ The Input can show dropdown with suggestions upon user input - see the <b>showSu
 The sample demonstrates how the text of the suggestions wrap when too long.
 
 <SuggestionsWrapping />
+
+### Suggestions Trigger
+When <b>startSuggestion</b> property is set to a custom threshold number,
+the suggestions list, auto completion and typeahead will not be triggered unless the threshold number is met.
+See the <b>startSuggestion</b> property for more information.
+
+<SuggestionsTrigger />
 
 ### Input and Label
 <Label />
