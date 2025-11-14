@@ -114,6 +114,7 @@ type VSDInternalSettings = {
  * @extends UI5Element
  * @since 1.0.0-rc.16
  * @public
+ * @csspart header - Used to style the header.
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",

@@ -16,7 +16,7 @@ import type ViewSettingsDialog from "./ViewSettingsDialog.js";
 function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 	return (
 		<div slot="header" class="ui5-vsd-header">
-			<div class="ui5-vsd-header-container">
+			<div class="ui5-vsd-header-container" part="header">
 				<div class="ui5-vsd-header-start">
 					{this.showBackButton && (
 						<Button
