@@ -192,6 +192,50 @@ const normalizeTagType = (type) => {
 
 const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
 
+const findImportName = (ts, sourceFile, typeName) => {
+    const localStatements = [
+        ts.SyntaxKind.EnumDeclaration,
+        ts.SyntaxKind.InterfaceDeclaration,
+        ts.SyntaxKind.ClassDeclaration,
+        ts.SyntaxKind.TypeAliasDeclaration,
+    ];
+
+    const isLocalDeclared = sourceFile.statements.some(
+        (statement) =>
+            localStatements.includes(statement.kind) && statement?.name?.text === typeName
+    );
+
+    if (isLocalDeclared) {
+        return typeName
+    } else {
+        const importStatements = sourceFile.statements?.filter(
+            (statement) => statement.kind === ts.SyntaxKind.ImportDeclaration
+        );
+
+        const importDelcaration = importStatements.find((statement) => {
+            if (statement.importClause?.name?.text === typeName) {
+                return true;
+            }
+
+            return statement.importClause?.namedBindings?.elements?.find(
+                (element) => element.name?.text === typeName
+            );
+        });
+
+        if (importDelcaration?.importClause?.name?.text === typeName) {
+            return "default";
+        }
+
+        const importSpecifier = importDelcaration?.importClause?.namedBindings?.elements?.find(
+            (element) => element.name?.text === typeName
+        );
+
+        if (importSpecifier) {
+            return importSpecifier.propertyName === "default" ? "default" : importSpecifier.propertyName?.text || importSpecifier.name?.text;
+        }
+    }
+};
+
 const getReference = (ts, type, classNode, modulePath) => {
     let sourceFile = classNode.parent;
 
@@ -214,7 +258,7 @@ const getReference = (ts, type, classNode, modulePath) => {
     )?.replace(`${packageName}/`, "");
 
     return packageName && {
-        name: typeName,
+        name: findImportName(ts, sourceFile, typeName, modulePath),
         package: packageName,
         module: importPath,
     };
