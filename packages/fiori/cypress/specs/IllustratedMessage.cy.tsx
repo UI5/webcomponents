@@ -12,12 +12,12 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-illustrated-message]")
 			.shadow()
-			.find("svg")
+			.find(".ui5-illustrated-message-illustration")
 			.should("have.attr", "role", "presentation");
 
 		cy.get("[ui5-illustrated-message]")
 			.shadow()
-			.find("svg")
+			.find(".ui5-illustrated-message-illustration")
 			.should("have.attr", "aria-hidden", "true");
 	});
 
@@ -30,9 +30,132 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-illustrated-message]")
 			.shadow()
-			.find("svg")
+			.find(".ui5-illustrated-message-illustration")
 			.should("not.have.attr", "aria-label");
 
+	});
+
+	it("should have role=img and aria-label with illustration name when decorative is false", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload" decorative={false}>
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "role", "img");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "aria-label", "UnableToUpload");
+	});
+
+	it("should have role=img and aria-label with illustration name by default (when decorative is not set)", () => {
+		cy.mount(
+			<IllustratedMessage name="NoData">
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "role", "img");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "aria-label", "NoData");
+	});
+
+	it("should have proper role and aria-label on the root container", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload">
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.should("have.attr", "role", "region");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.should("have.attr", "aria-label", "Illustrated Message");
+	});
+
+	it("should have aria-describedby pointing to the title element", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload">
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.should("have.attr", "aria-describedby")
+			.and("match", /-im-title$/);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-title")
+			.should("have.attr", "id")
+			.and("match", /-im-title$/);
+
+		// Verify that aria-describedby points to the correct title element
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.invoke("attr", "aria-describedby")
+			.then((ariaDescribedBy) => {
+				cy.get("[ui5-illustrated-message]")
+					.shadow()
+					.find(".ui5-illustrated-message-title")
+					.should("have.attr", "id", ariaDescribedBy);
+			});
+	});
+
+	it("should maintain accessibility attributes when title is present", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload" titleText="Custom Title">
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Illustrated Message")
+			.and("have.attr", "aria-describedby");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-title")
+			.should("exist")
+			.and("have.attr", "id");
+	});
+
+	it("should maintain accessibility attributes when title is slotted", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload">
+				<div slot="title">Slotted Title</div>
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Illustrated Message")
+			.and("have.attr", "aria-describedby");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-title")
+			.should("exist")
+			.and("have.attr", "id");
 	});
 });
 
