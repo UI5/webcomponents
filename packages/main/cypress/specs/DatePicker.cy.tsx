@@ -1668,6 +1668,106 @@ describe("Date Picker Tests", () => {
 			.ui5DatePickerGetInnerInput()
 			.should("have.value", "0202-12-01");
 	});
+
+	it("DatePicker icon shows correct tooltip when closed", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("DatePicker icon shows correct tooltip when opened", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get("@datePicker")
+			.should("have.attr", "open");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+	});
+
+	it("DatePicker icon tooltip changes when toggling picker", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get("@datePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("DatePicker icon tooltip changes when using keyboard shortcuts", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerGetInnerInput()
+			.as("input")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@input")
+			.realPress("F4");
+
+		cy.get("@datePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-calendar")
+			.realPress("Escape");
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
 });
 
 
