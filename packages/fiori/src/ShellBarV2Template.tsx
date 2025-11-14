@@ -71,12 +71,16 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 								{/* Start content items */}
 								{this.startContent.map(item => {
+									const itemId = (item as any)._individualSlot as string;
 									const packedSep = this.getPackedSeparatorInfo(item, true);
 									return (
 										<div
-											key={(item as any)._individualSlot}
-											id={(item as any)._individualSlot}
-											class="ui5-shellbar-content-item ui5-shellbar-gap-start"
+											key={itemId}
+											id={itemId}
+											class={{
+												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
+												"ui5-shellbar-hidden": this.isHidden(itemId),
+											}}
 										>
 											{packedSep.shouldPack && (
 												<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
@@ -91,14 +95,18 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 
 								{/* End content items */}
 								{this.endContent.map(item => {
+									const itemId = (item as any)._individualSlot as string;
 									const packedSep = this.getPackedSeparatorInfo(item, false);
 									return (
 										<div
-											key={(item as any)._individualSlot}
-											id={(item as any)._individualSlot}
-											class="ui5-shellbar-content-item ui5-shellbar-gap-start"
+											key={itemId}
+											id={itemId}
+											class={{
+												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
+												"ui5-shellbar-hidden": this.isHidden(itemId),
+											}}
 										>
-											<slot name={(item as any)._individualSlot}></slot>
+											<slot name={itemId}></slot>
 											{packedSep.shouldPack && (
 												<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap-start"></div>
 											)}
@@ -117,7 +125,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						{this.enabledFeatures.search && isLegacySearch && ShellBarV2SearchButtonLegacy.call(this)}
 
 						{assistantAction && (
-							<div class="ui5-shellbar-assistant-button ui5-shellbar-gap-start">
+							<div class={{
+								"ui5-shellbar-assistant-button ui5-shellbar-gap-start": true,
+								"ui5-shellbar-hidden": this.isHidden("assistant")
+							}}>
 								<slot name="assistant"></slot>
 							</div>
 						)}
@@ -125,7 +136,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						{notificationsAction && (
 							<Button
 								data-ui5-stable={notificationsAction.stableDomRef}
-								class="ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+								class={{
+									"ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("notifications")
+								}}
 								icon={notificationsAction.icon}
 								design="Transparent"
 								onClick={this.handleNotificationsClick}
@@ -142,7 +156,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						{this.sortItems(this.items).map(item => (
 							<div
 								key={item._id}
-								class="ui5-shellbar-custom-item ui5-shellbar-gap-start"
+								class={{
+									"ui5-shellbar-custom-item ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden(item._id),
+								}}
 								data-ui5-stable={item.stableDomRef}
 							>
 								{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
@@ -153,7 +170,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							<Button
 								data-ui5-stable={overflowAction.stableDomRef}
 								id="ui5-shellbar-overflow-button"
-								class="ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+								class={{
+									"ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("overflow")
+								}}
 								icon={overflowAction.icon}
 								design="Transparent"
 								onClick={this.handleOverflowClick}
@@ -174,7 +194,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 							<Button
 								data-profile-btn
 								data-ui5-stable={profileAction.stableDomRef}
-								class="ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start"
+								class={{
+									"ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("profile")
+								}}
 								design="Transparent"
 								onClick={this.handleProfileClick}
 								tooltip={actionsAccInfo.profile.title}
@@ -187,7 +210,10 @@ export default function ShellBarV2Template(this: ShellBarV2) {
 						{productSwitchAction && (
 							<Button
 								data-ui5-stable={productSwitchAction.stableDomRef}
-								class="ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start"
+								class={{
+									"ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("products")
+								}}
 								icon={productSwitchAction.icon}
 								design="Transparent"
 								onClick={this.handleProductSwitchClick}

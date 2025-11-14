@@ -824,6 +824,10 @@ class ShellBarV2 extends UI5Element {
 		this.searchAdaptor?.autoManageSearchState(hiddenItemsIds.length, spacerWidth);
 	}
 
+	isHidden(itemId: string) {
+		return this.hiddenItemsIds.includes(itemId);
+	}
+
 	handleOverflowClick() {
 		this.overflowPopoverOpen = !this.overflowPopoverOpen;
 	}

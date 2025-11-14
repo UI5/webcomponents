@@ -560,6 +560,56 @@ describe("Slots", () => {
 			// check shellbar's showSearchField property is also updated
 			cy.get("@shellbar").invoke("prop", "showSearchField").should("equal", true);
 		});
+
+		it.only("Test search toggle in overflow expands search when clicked", () => {
+			cy.mount(
+				<ShellBar 
+					id="shellbar" 
+					primaryTitle="Product Title"
+					showNotifications={true}
+					showProductSwitch={true}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Start Button 1</Button>
+					<ShellBarSearch slot="searchField" placeholder="Search"></ShellBarSearch>
+					<ShellBarItem icon={activities} text="Action 1"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 2"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 3"></ShellBarItem>
+					<Avatar slot="profile">
+						<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+					</Avatar>
+				</ShellBar>
+			);
+
+			// Use narrow viewport to force items into overflow
+			cy.viewport(320, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			cy.get("#shellbar").as("shellbar");
+
+			// Verify overflow button exists (search should be in overflow when closed)
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("exist")
+				.click();
+
+			// Click search toggle in overflow popover
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover ui5-shellbar-v2-item[data-action-id='search']")
+				.should("exist")
+				.click();
+
+			// Verify search is expanded
+			cy.get("@shellbar")
+				.should("have.prop", "showSearchField", true);
+
+			// Verify search field is visible
+			cy.get("@shellbar")
+				.find("[slot='searchField']")
+				.should("be.visible");
+		});
 	});
 });
 
