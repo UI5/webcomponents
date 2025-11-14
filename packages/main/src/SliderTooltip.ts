@@ -44,8 +44,20 @@ class SliderTooltip extends UI5Element {
 		"forward-focus": void
 	};
 
+	// _innerValue is set when the user types in the input field, but if an API value is set, it should be ignored
+	@property({ noAttribute: true })
+	_innerValue?: string;
+
+	private _value?: string;
+
 	@property()
-	value?: string;
+	set value(val: string | undefined) {
+		this._innerValue = undefined;
+		this._value = val;
+	}
+	get value() {
+		return this._value;
+	}
 
 	@property()
 	inputValue?: string;
@@ -93,6 +105,7 @@ class SliderTooltip extends UI5Element {
 				this.repositionTooltip();
 				this.attachGlobalScrollHandler();
 			} else {
+				this._innerValue = undefined;
 				this.hidePopover();
 				this.detachGlobalScrollHandler();
 			}
@@ -136,19 +149,18 @@ class SliderTooltip extends UI5Element {
 		if (isF2(e) || isTabNext(e)) {
 			e.preventDefault();
 
-			if (!this.isValueValid(this.inputRef.value)) {
-				const value = this.value;
-				this.inputRef.value = value || "";
+			if (!this.isValueValid(this._innerValue ?? "")) {
+				this._innerValue = undefined;
 			}
 
 			this.valueState = ValueState.None;
 
-			this.fireDecoratorEvent("change", { value: this.inputRef.value });
+			this.fireDecoratorEvent("change", { value: this._innerValue ?? "" });
 			this.fireDecoratorEvent("forward-focus");
 		}
 
 		if (isEnter(e)) {
-			if (!this.isValueValid(this.inputRef.value)) {
+			if (!this.isValueValid(this._innerValue ?? "")) {
 				this.valueState = ValueState.Negative;
 
 				return;
@@ -156,7 +168,7 @@ class SliderTooltip extends UI5Element {
 
 			this.valueState = ValueState.None;
 
-			this.fireDecoratorEvent("change", { value: this.inputRef.value });
+			this.fireDecoratorEvent("change", { value: this._innerValue ?? "" });
 		}
 	}
 
@@ -168,9 +180,8 @@ class SliderTooltip extends UI5Element {
 	}
 
 	_onInputFocusOut(e: FocusEvent) {
-		if (!this.isValueValid(this.inputRef.value)) {
-			const value = this.value;
-			this.inputRef.value = value || "";
+		if (!this.isValueValid(this._innerValue ?? "")) {
+			this._innerValue = undefined;
 		}
 
 		const relatedTarget = e.relatedTarget as HTMLElement;
@@ -178,10 +189,6 @@ class SliderTooltip extends UI5Element {
 		if (!this.parentElement?.contains(relatedTarget)) {
 			this.hidePopover();
 		}
-	}
-
-	get inputRef() {
-		return this.shadowRoot?.querySelector("ui5-input") as Input;
 	}
 
 	get _ariaLabelledByInputText() {
