@@ -39,18 +39,18 @@ type ShellBarV2OverflowItem = {
 }
 
 class ShellBarV2Overflow {
-	private readonly OPEN_SEARCH_STRATEGY = {
-		CONTENT: 0, 		// All content first
-		ACTIONS: 1000,		// All actions next
-		SEARCH: 1000,		// Search included in actions
-		LAST_CONTENT: 0,	// Last content same as other content
-	};
-
 	private readonly CLOSED_SEARCH_STRATEGY = {
 		ACTIONS: 0,			// All actions first
 		CONTENT: 1000,		// Then content (except last)
 		SEARCH: 2000,		// Then search button
 		LAST_CONTENT: 3000,	// Last content item protected
+	};
+
+	private readonly OPEN_SEARCH_STRATEGY = {
+		CONTENT: 0, 		// All content first
+		ACTIONS: 1000,		// All actions next
+		SEARCH: 2000,		// Search after all actions
+		LAST_CONTENT: 0,	// Last content same as other content
 	};
 
 	updateOverflow(params: ShellBarV2OverflowParams): ShellBarV2OverflowResult {
@@ -108,65 +108,16 @@ class ShellBarV2Overflow {
 		return overflowInner.offsetWidth > overflowOuter.offsetWidth;
 	}
 
+	private getOverflowStrategy(showSearchField: boolean) {
+		return showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
+	}
+
 	private buildHidableItems(params: ShellBarV2OverflowParams): ShellBarV2HidableItem[] {
-		const {
-			content, customItems, actions, showSearchField, hiddenItemsIds,
-		} = params;
+		const items: ShellBarV2HidableItem[] = [
+			...this.buildContent(params),
+			...this.buildActions(params),
+		];
 
-		const items: ShellBarV2HidableItem[] = [];
-		const priorityStrategy = showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
-
-		// Build content items
-		content.forEach((item, index) => {
-			const slotName = (item as any)._individualSlot as string;
-			const dataHideOrder = parseInt(item.getAttribute("data-hide-order") || String(index));
-			const isLast = index === content.length - 1;
-
-			const priority = isLast ? priorityStrategy.LAST_CONTENT : priorityStrategy.CONTENT;
-
-			items.push({
-				id: slotName,
-				selector: `#${slotName}`,
-				hideOrder: priority + dataHideOrder,
-				keepHidden: false,
-				showInOverflow: false,
-			});
-		});
-
-		let actionIndex = 0;
-
-		customItems.forEach(item => {
-			items.push({
-				id: item._id,
-				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
-				hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-				keepHidden: hiddenItemsIds.includes(item._id),
-				showInOverflow: true,
-			});
-		});
-
-		actions
-			.filter(a => !a.isProtected && a.id !== ShellBarV2Actions.Search)
-			.forEach(config => {
-				items.push({
-					id: config.id,
-					selector: config.selector,
-					hideOrder: priorityStrategy.ACTIONS + actionIndex++,
-					keepHidden: hiddenItemsIds.includes(config.id),
-					showInOverflow: true,
-				});
-			});
-
-		if (!showSearchField) {
-			// Only move search to overflow if it's closed
-			items.push({
-				id: ShellBarV2Actions.Search,
-				selector: ShellBarV2ActionsSelectors.Search,
-				hideOrder: priorityStrategy.SEARCH + actionIndex++,
-				keepHidden: false,
-				showInOverflow: true,
-			});
-		}
 		// sort by hideOrder first then by keepHidden keepHidden items are at the start
 		return items.sort((a, b) => {
 			if (a.keepHidden && !b.keepHidden) {
@@ -177,6 +128,79 @@ class ShellBarV2Overflow {
 			}
 			return a.hideOrder - b.hideOrder;
 		});
+	}
+
+	private buildContent(params: ShellBarV2OverflowParams): readonly ShellBarV2HidableItem[] {
+		const {
+			content, showSearchField,
+		} = params;
+
+		const items: ShellBarV2HidableItem[] = [];
+		const overflowStrategy = this.getOverflowStrategy(showSearchField);
+
+		// Build content items
+		content.forEach((item, index) => {
+			const slotName = (item as any)._individualSlot as string;
+			const dataHideOrder = parseInt(item.getAttribute("data-hide-order") || String(index));
+			const isLast = index === content.length - 1;
+
+			const priority = isLast ? overflowStrategy.LAST_CONTENT : overflowStrategy.CONTENT;
+
+			items.push({
+				id: slotName,
+				selector: `#${slotName}`,
+				hideOrder: priority + dataHideOrder,
+				keepHidden: false,
+				showInOverflow: false,
+			});
+		});
+
+		return items;
+	}
+
+	private buildActions(params: ShellBarV2OverflowParams): readonly ShellBarV2HidableItem[] {
+		const {
+			customItems, actions, showSearchField, hiddenItemsIds,
+		} = params;
+
+		const items: ShellBarV2HidableItem[] = [];
+		const overflowStrategy = this.getOverflowStrategy(showSearchField);
+		let actionIndex = 0;
+
+		customItems.forEach(item => {
+			items.push({
+				id: item._id,
+				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
+				hideOrder: overflowStrategy.ACTIONS + actionIndex++,
+				keepHidden: hiddenItemsIds.includes(item._id),
+				showInOverflow: true,
+			});
+		});
+
+		actions
+			// skip protected actions and search (handled separately)
+			.filter(a => !a.isProtected && a.id !== ShellBarV2Actions.Search)
+			.forEach(config => {
+				items.push({
+					id: config.id,
+					selector: config.selector,
+					hideOrder: overflowStrategy.ACTIONS + actionIndex++,
+					keepHidden: hiddenItemsIds.includes(config.id),
+					showInOverflow: true,
+				});
+			});
+
+		if (!showSearchField) {
+			// Only move search to overflow if it's closed
+			items.push({
+				id: ShellBarV2Actions.Search,
+				selector: ShellBarV2ActionsSelectors.Search,
+				hideOrder: overflowStrategy.SEARCH + actionIndex++,
+				keepHidden: hiddenItemsIds.includes(ShellBarV2Actions.Search),
+				showInOverflow: true,
+			});
+		}
+		return items;
 	}
 
 	getOverflowItems(params: {
