@@ -1,0 +1,48 @@
+.illustration-collection-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.illustration-collection-header--title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+	white-space: nowrap;
+}
+
+.illustration-collection-header--filter {
+	flex-shrink: 0;
+}
+
+.illustration-collection-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 1rem;
+}
+
+.illustration-collection-list-item {
+	padding: 1rem;
+	box-shadow: var(--sapContent_Shadow0);
+	background-color: var(--sapList_Background);
+	border-radius: var(--sapTile_BorderCornerRadius);
+	display: flex;
+	box-sizing: border-box;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	gap: 0.5rem;
+}
+.illustration-collection-list-item:hover {
+	background-color: var(--sapList_Hover_Background);
+	box-shadow: var(--sapContent_Shadow2);
+}
+
+.illustration-collection-list-item:active {
+	background-color: var(--sapList_Active_Background);
+}
+
+.illustration-collection-list-item--title {
+	font-size: 1rem;
+}

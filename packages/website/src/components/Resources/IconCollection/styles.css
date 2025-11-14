@@ -1,0 +1,55 @@
+.icon-collection-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.icon-collection-header--title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+	white-space: nowrap;
+}
+
+.icon-collection-header--filter {
+	flex-shrink: 0;
+}
+
+.icon-collection-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 1rem;
+}
+
+.icon-collection-list-item {
+	padding: 1rem;
+	box-shadow: var(--sapContent_Shadow0);
+	background-color: var(--sapList_Background);
+	border-radius: var(--sapTile_BorderCornerRadius);
+	display: flex;
+	box-sizing: border-box;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	gap: 0.5rem;
+}
+
+.icon-collection-list-item--icon {
+	width: 2rem;
+	height: 2rem;
+}
+
+.icon-collection-list-item--title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	;
+	width: 100%;
+	display: block;
+}
+
+.icon-collection-list-item--actions {
+	display: flex;
+	gap: 0.5rem;
+}
