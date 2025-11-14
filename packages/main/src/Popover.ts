@@ -240,8 +240,11 @@ class Popover extends Popup {
 	_minHeight?: number;
 	_resized = false;
 
-	_resizeDeltaX?: number;
-	_resizeDeltaY?: number;
+	_resizingDeltaX?: number;
+	_resizingDeltaY?: number;
+
+	_resizedDeltaX?: number;
+	_resizedDeltaY?: number;
 
 	static get VIEWPORT_MARGIN() {
 		return 10; // px
@@ -832,7 +835,7 @@ class Popover extends Popup {
 		case PopoverActualHorizontalAlign.Stretch:
 			left = targetRect.left - (popoverSize.width - targetRect.width) / 2;
 			if (this._resized) {
-				left -= this._resizeDeltaX || 0;
+				left -= this._resizingDeltaX || 0;
 			}
 			break;
 		case PopoverActualHorizontalAlign.Left:
@@ -854,7 +857,7 @@ class Popover extends Popup {
 		case PopoverVerticalAlign.Stretch:
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
 			if (this._resized) {
-				top -= this._resizeDeltaY || 0;
+				top -= this._resizingDeltaY || 0;
 			}
 			break;
 		case PopoverVerticalAlign.Top:
@@ -1016,6 +1019,9 @@ class Popover extends Popup {
 		this._resized = true;
 		this._initialBoundingRect = this.getBoundingClientRect();
 
+		this._resizedDeltaX = this._resizingDeltaX;
+		this._resizedDeltaY = this._resizingDeltaY;
+
 		const {
 			minWidth,
 			minHeight,
@@ -1074,7 +1080,7 @@ class Popover extends Popup {
 			// Recalculate width based on actual left position to stay within viewport with margin
 			newWidth = Math.min(newWidth, initialBoundingRect.x + initialBoundingRect.width - newLeft);
 
-			this._resizeDeltaX = (initialBoundingRect.x - newLeft) / 2;
+			this._resizingDeltaX = (initialBoundingRect.x - newLeft) / 2;
 		} else {
 			// Resizing from right edge - width increases when moving right (positive delta)
 			const maxWidthFromRight = window.innerWidth - initialBoundingRect.x - margin;
@@ -1085,7 +1091,7 @@ class Popover extends Popup {
 				maxWidthFromRight,
 			);
 
-			this._resizeDeltaX = (initialBoundingRect.width - newWidth) / 2;
+			this._resizingDeltaX = (initialBoundingRect.width - newWidth) / 2;
 		}
 
 		// Calculate height changes
@@ -1110,7 +1116,7 @@ class Popover extends Popup {
 			// Recalculate height based on actual top position to stay within viewport with margin
 			newHeight = Math.min(newHeight, initialBoundingRect.y + initialBoundingRect.height - newTop);
 
-			this._resizeDeltaY = (initialBoundingRect.y - newTop) / 2;
+			this._resizingDeltaY = (initialBoundingRect.y - newTop) / 2;
 		} else {
 			// Resizing from bottom edge - height increases when moving down (positive delta)
 			const maxHeightFromBottom = window.innerHeight - initialBoundingRect.y - margin;
@@ -1121,8 +1127,11 @@ class Popover extends Popup {
 				maxHeightFromBottom,
 			);
 
-			this._resizeDeltaY = (initialBoundingRect.height - newHeight) / 2;
+			this._resizingDeltaY = (initialBoundingRect.height - newHeight) / 2;
 		}
+
+		this._resizingDeltaX += this._resizedDeltaX || 0;
+		this._resizingDeltaY += this._resizedDeltaY || 0;
 
 		Object.assign(this.style, {
 			height: `${newHeight}px`,
@@ -1145,7 +1154,7 @@ class Popover extends Popup {
 	_attachMouseResizeHandlers() {
 		window.addEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.addEventListener("mouseup", this._resizeMouseUpHandler);
-		this.addEventListener("ui5-before-close", this._revertSize, { once: true });
+		this.addEventListener("ui5-before-close", this._revertResizeSettings, { once: true });
 	}
 
 	_detachMouseResizeHandlers() {
@@ -1153,15 +1162,16 @@ class Popover extends Popup {
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
 	}
 
-	_revertSize = () => {
+	_revertResizeSettings = () => {
 		this._resized = false;
 
-		delete this._resizeDeltaX;
-		delete this._resizeDeltaY;
+		delete this._resizingDeltaX;
+		delete this._resizingDeltaY;
+
+		delete this._resizedDeltaX;
+		delete this._resizedDeltaY;
 
 		Object.assign(this.style, {
-			top: "",
-			left: "",
 			width: "",
 			height: "",
 		});
