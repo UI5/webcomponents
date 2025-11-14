@@ -37,6 +37,19 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 };
 
 const removeOpenedPopup = (popup: object) => {
+	if (isNativePopoverOpen()) {
+		const prevPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 2];
+		if (prevPopup && prevPopup.type === "OpenUI5") {
+			const content = (prevPopup.instance as any).getContent().getDomRef() as HTMLElement;
+			const block = document.getElementById("sap-ui-blocklayer-popup");
+
+			content.hidePopover();
+
+			block?.showPopover();
+			content.showPopover();
+		}
+	}
+
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
 	if (index > -1) {
 		AllOpenedPopupsRegistry.openedRegistry.splice(index, 1);
@@ -69,6 +82,12 @@ const hasWebComponentPopupAbove = (popup: object) => {
 };
 
 const openNativePopover = (domRef: HTMLElement) => {
+	const block = document.getElementById("sap-ui-blocklayer-popup");
+
+	block?.setAttribute("popover", "manual");
+	block?.hidePopover();
+	block?.showPopover();
+
 	domRef.setAttribute("popover", "manual");
 	domRef.showPopover();
 };
@@ -77,6 +96,14 @@ const closeNativePopover = (domRef: HTMLElement) => {
 	if (domRef.hasAttribute("popover")) {
 		domRef.hidePopover();
 		domRef.removeAttribute("popover");
+	}
+
+	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
+	if (lastPopup.type === "OpenUI5") {
+		const block = document.getElementById("sap-ui-blocklayer-popup");
+		if (block && block.hasAttribute("popover")) {
+			block.hidePopover();
+		}
 	}
 };
 
