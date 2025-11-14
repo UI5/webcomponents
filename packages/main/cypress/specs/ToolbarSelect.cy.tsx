@@ -1,6 +1,7 @@
 import Toolbar from "../../src/Toolbar.js";
 import ToolbarSelect from "../../src/ToolbarSelect.js";
 import ToolbarSelectOption from "../../src/ToolbarSelectOption.js";
+import Button from "../../src/Button.js";
 
 describe("Toolbar general interaction", () => {
 	it("Should render the select with the correct attributes", () => {
@@ -264,10 +265,10 @@ describe("Toolbar general interaction", () => {
 		cy.mount(
 			<Toolbar id="otb_d">
 				<ToolbarSelect style="width: 201px;" id="toolbar-select">
-						<ToolbarSelectOption>1</ToolbarSelectOption>
-						<ToolbarSelectOption selected>2</ToolbarSelectOption>
-						<ToolbarSelectOption>3</ToolbarSelectOption>
-					</ToolbarSelect>
+					<ToolbarSelectOption>1</ToolbarSelectOption>
+					<ToolbarSelectOption selected>2</ToolbarSelectOption>
+					<ToolbarSelectOption>3</ToolbarSelectOption>
+				</ToolbarSelect>
 			</Toolbar>
 		);
 		cy.viewport(220, 1080); // Set a small viewport width to trigger overflow
@@ -281,5 +282,48 @@ describe("Toolbar general interaction", () => {
 
 		// Verify the toolbar-select is rendered inside the popover
 		cy.get("ui5-toolbar-select").should("be.visible");
+	});
+
+	it("Should update ToolbarSelect value when option selected property changes via button click", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarSelect id="testSelect">
+						<ToolbarSelectOption id="opt1" selected>Option 1</ToolbarSelectOption>
+						<ToolbarSelectOption id="opt2">Option 2</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+				<Button id="btnNext">Next Step</Button>
+			</>
+		);
+
+		// Wait for component to render
+		cy.wait(500);
+
+		// Initial check - Option 1 should be selected
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.should("have.prop", "value", "Option 1");
+
+		// Set up button click handler
+		cy.get("[ui5-button]").then($btn => {
+			$btn.get(0).addEventListener("click", () => {
+				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
+				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
+				opt1.selected = false;
+				opt2.selected = true;
+			});
+		});
+
+		// Click the button
+		cy.get("[ui5-button]").realClick();
+
+		// Wait for update
+		cy.wait(200);
+
+		// Verify the ToolbarSelect value property updated
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.should("have.prop", "value", "Option 2");
 	});
 });
