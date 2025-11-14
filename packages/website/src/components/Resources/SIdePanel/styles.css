@@ -10,6 +10,7 @@
 }
 
 #panel {
+	overflow: hidden;
 	position: fixed;
 	height: 100vh;
 	border: none;

@@ -15,6 +15,7 @@ export default function ResourceLayout({ children }: { children: React.ReactNode
                 </ui5-shellbar-branding>
             </ui5-shellbar>
             <ui5-side-navigation slot="sideContent">
+                <ui5-side-navigation-item text="Home" href="/resources"></ui5-side-navigation-item>
                 <ui5-side-navigation-group text="Icons" expanded={true}>
                     <ui5-side-navigation-item text="SAP Icons" href="/resources/icons/SAP-icons"></ui5-side-navigation-item>
                     <ui5-side-navigation-item text="SAP TNT Icons" href="/resources/icons/tnt"></ui5-side-navigation-item>
@@ -26,7 +27,7 @@ export default function ResourceLayout({ children }: { children: React.ReactNode
                 </ui5-side-navigation-group>
             </ui5-side-navigation>
             <ui5-page>
-                    {children}
+                {children}
             </ui5-page>
         </ui5-navigation-layout>
     )
