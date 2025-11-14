@@ -561,7 +561,7 @@ describe("Slots", () => {
 			cy.get("@shellbar").invoke("prop", "showSearchField").should("equal", true);
 		});
 
-		it.only("Test search toggle in overflow expands search when clicked", () => {
+		it("Test search toggle in overflow expands search when clicked", () => {
 			cy.mount(
 				<ShellBar 
 					id="shellbar" 
@@ -588,16 +588,22 @@ describe("Slots", () => {
 			cy.get("#shellbar").as("shellbar");
 
 			// Verify overflow button exists (search should be in overflow when closed)
+			cy.get("@shellbar").should("have.prop", "breakpointSize", "S");
+
+			// Open overflow popover
+			cy.get("@shellbar").invoke("prop", "overflowPopoverOpen", true);
+
+			// verify popover is open
 			cy.get("@shellbar")
 				.shadow()
-				.find(".ui5-shellbar-overflow-button")
+				.find(".ui5-shellbar-overflow-popover")
 				.should("exist")
-				.click();
+				.and("have.attr", "open");
 
 			// Click search toggle in overflow popover
 			cy.get("@shellbar")
 				.shadow()
-				.find(".ui5-shellbar-overflow-popover ui5-shellbar-v2-item[data-action-id='search']")
+				.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
 				.should("exist")
 				.click();
 
