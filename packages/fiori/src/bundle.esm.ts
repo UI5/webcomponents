@@ -50,6 +50,7 @@ import SortItem from "./SortItem.js";
 import UserSettingsItem from "./UserSettingsItem.js";
 import SettingsDialog from "./UserSettingsDialog.js";
 import UserSettingsView from "./UserSettingsView.js";
+import UserSettingsAccountView from "./UserSettingsAccountView.js";
 import Timeline from "./Timeline.js";
 import TimelineGroupItem from "./TimelineGroupItem.js";
 import NavigationLayout from "./NavigationLayout.js";
