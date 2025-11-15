@@ -1,0 +1,136 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "ui5-table",
+      "description": "### Overview\n\nThe `ui5-table` component provides a set of sophisticated and convenient functions for responsive table design.\nIt provides a comprehensive set of features for displaying and dealing with vast amounts of data.\n\nTo render the `Table` properly, the order of the `columns` should match with the\norder of the item `cells` in the `rows`.\n\nDesktop and tablet devices are supported.\nOn tablets, special consideration should be given to the number of visible columns\nand rows due to the limited performance of some devices.\n\n### Selection\nTo benefit from the selection mechanism of `ui5-table` component, you can use the available selection modes:\n`SingleSelect` and `MultiSelect`.\n\nIn additition to the used mode, you can also specify the `ui5-table-row` type choosing between\n`Active` or `Inactive`.\n\nIn `SingleSelect` mode, you can select both an `Active` and `Inactive` row via mouse or\nby pressing the `Space` or `Enter` keys.\n\nIn `MultiSelect` mode, you can select both an `Active` and `Inactive` row by pressing the\n`Space` key when a row is on focus or via mouse click over the selection checkbox of the row.\nIn order to select all the available rows at once, you can use the selection checkbox presented in the table's header.\n\n**Note:** Currently, when a column is shown as a pop-in, the visual indication for selection is not presented over it.\n\n### Keyboard Handling\n\n#### Fast Navigation\nThis component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].\nIn order to use this functionality, you need to import the following module:\n`import \"@ui5/webcomponents-base/dist/features/F6Navigation.js\"`\n\nFurthermore, you can interact with `ui5-table` via the following keys.\n\n- [F7] - If focus is on an interactive control inside an item, moves focus to the corresponding item.\n- [Ctrl]+[A] - Selects all items, if MultiSelect mode is enabled.\n- [Home]/[End] - Focuses the first/last item.\n- [Page Up]/[Page Down] - Moves focus up/down by page size (20 items by default).\n- [Alt]+[Down]/[Up] - Switches focus between header, last focused item, and More button (if applies) in either direction.\n- [Shift]+[Down]/[Up] - Selects the next/previous item in a MultiSelect table, if the current item is selected (Range selection). Otherwise, deselects them (Range deselection).\n- [Shift]+[Home]/[End] - Range selection to the first/last item of the List.\n- [Ctrl]+[Home]/[End] - Same behavior as HOME & END.\n\n### ES6 Module Import\n\n- `import \"@ui5/webcomponents-compat/dist/Table.js\";`\n- `import \"@ui5/webcomponents-compat/dist/TableColumn.js\";` (`ui5-table-column`)\n- `import \"@ui5/webcomponents-compat/dist/TableRow.js\";` (`ui5-table-row`)\n- `import \"@ui5/webcomponents-compat/dist/TableGroupRow.js\";` (`ui5-table-group-row`)\n- `import \"@ui5/webcomponents-compat/dist/TableCell.js\";` (`ui5-table-cell`)\n\n\n---\n\n\n\n\n### **Events:**\n - **row-click** - Fired when a row in `Active` mode is clicked or `Enter` key is pressed.\n- **popin-change** - Fired when `ui5-table-column` is shown as a pop-in instead of hiding it.\n- **load-more** - Fired when the user presses the `More` button or scrolls to the table's end.\n\n**Note:** The event will be fired if `growing` is set to `Button` or `Scroll`.\n- **selection-change** - Fired when selection is changed by user interaction\nin `SingleSelect` and `MultiSelect` modes.\n\n### **Slots:**\n - **default** - Defines the component rows.\n\n**Note:** Use `ui5-table-row` for the intended design.\n- **columns** - Defines the configuration for the columns of the component.\n\n**Note:** Use `ui5-table-column` for the intended design.",
+      "attributes": [
+        {
+          "name": "no-data-text",
+          "description": "Defines the text that will be displayed when there is no data and `hideNoData` is not present.",
+          "values": []
+        },
+        {
+          "name": "growing-button-text",
+          "description": "Defines the text that will be displayed inside the growing button at the bottom of the table,\nmeant for loading more rows upon press.\n\n**Note:** If not specified a built-in text will be displayed.\n\n**Note:** This property takes effect if `growing` is set to `Button`.",
+          "values": []
+        },
+        {
+          "name": "growing-button-subtext",
+          "description": "Defines the subtext that will be displayed under the `growingButtonText`.\n\n**Note:** This property takes effect if `growing` is set to `Button`.",
+          "values": []
+        },
+        {
+          "name": "hide-no-data",
+          "description": "Defines if the value of `noDataText` will be diplayed when there is no rows present in the table.",
+          "values": []
+        },
+        {
+          "name": "growing",
+          "description": "Defines whether the table will have growing capability either by pressing a `More` button,\nor via user scroll. In both cases `load-more` event is fired.\n\nAvailable options:\n\n`Button` - Shows a `More` button at the bottom of the table, pressing of which triggers the `load-more` event.\n\n`Scroll` - The `load-more` event is triggered when the user scrolls to the bottom of the table;\n\n`None` (default) - The growing is off.\n\n**Restrictions:** `growing=\"Scroll\"` is not supported for Internet Explorer,\nand the component will fallback to `growing=\"Button\"`.",
+          "values": [
+            { "name": "Button" },
+            { "name": "Scroll" },
+            { "name": "None" }
+          ]
+        },
+        {
+          "name": "busy",
+          "description": "Defines if the table is in busy state.\n\nIn this state the component's opacity is reduced\nand busy indicator is displayed at the bottom of the table.",
+          "values": []
+        },
+        {
+          "name": "busy-delay",
+          "description": "Defines the delay in milliseconds, after which the busy indicator will show up for this component.",
+          "values": []
+        },
+        {
+          "name": "sticky-column-header",
+          "description": "Determines whether the column headers remain fixed at the top of the page during\nvertical scrolling as long as the Web Component is in the viewport.\n\n**Restrictions:**\n\n- Browsers that do not support this feature:\n\n- Internet Explorer\n- Microsoft Edge lower than version 41 (EdgeHTML 16)\n- Mozilla Firefox lower than version 59\n\n- Scrolling behavior:\n\n- If the Web Component is placed in layout containers that have the `overflow: hidden`\nor `overflow: auto` style definition, this can\nprevent the sticky elements of the Web Component from becoming fixed at the top of the viewport.",
+          "values": []
+        },
+        {
+          "name": "mode",
+          "description": "Defines the mode of the component.",
+          "values": [
+            { "name": "None" },
+            { "name": "SingleSelect" },
+            { "name": "MultiSelect" }
+          ]
+        },
+        {
+          "name": "accessible-name",
+          "description": "Defines the accessible ARIA name of the component.",
+          "values": []
+        },
+        {
+          "name": "accessible-name-ref",
+          "description": "Receives id(or many ids) of the elements that label the component.",
+          "values": []
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "ui5-table-cell",
+      "description": "### Overview\n\nThe `ui5-table-cell` component defines the structure of the data in a single `ui5-table` cell.\n\n\n---\n\n\n\n\n### **Slots:**\n - **default** - Specifies the content of the component.\n\n### **CSS Parts:**\n - **cell** - Used to style the native `td` element",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "ui5-table-column",
+      "description": "### Overview\n\nThe `ui5-table-column` component allows to define column specific properties that are applied\nwhen rendering the `ui5-table` component.\n\n\n---\n\n\n\n\n### **Slots:**\n - **default** - Defines the content of the column header\n\n### **CSS Parts:**\n - **column** - Used to style the native `th` element",
+      "attributes": [
+        {
+          "name": "min-width",
+          "description": "Defines the minimum table width required to display this column. By default it is always displayed.\n\nThe responsive behavior of the `ui5-table` is determined by this property. As an example, by setting\n`minWidth` property to `400` sets the minimum width to 400 pixels, and\tshows this column on tablet (and desktop) but hides it on mobile.\n\nFor further responsive design options, see `demandPopin` property.",
+          "values": []
+        },
+        {
+          "name": "popin-text",
+          "description": "The text for the column when it pops in.",
+          "values": []
+        },
+        {
+          "name": "demand-popin",
+          "description": "According to your `minWidth` settings, the component can be hidden\nin different screen sizes.\n\nSetting this property to `true`, shows this column as pop-in instead of hiding it.",
+          "values": []
+        },
+        {
+          "name": "popin-display",
+          "description": "Defines how the popin row is displayed.\n\n**The available values are:**\n\n- `Block`\n- `Inline`",
+          "values": [{ "name": "Block" }, { "name": "Inline" }]
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "ui5-table-group-row",
+      "description": "### Overview\n\nThe `ui5-table-group-row` component represents a group row in the `ui5-table`.\n\n\n---\n\n\n\n\n### **Slots:**\n - **default** - Defines the text of the component.\n\n**Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.\n\n### **CSS Parts:**\n - **group-row** - Used to style the native `tr` element",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "ui5-table-row",
+      "description": "### Overview\n\nThe `ui5-table-row` component represents a row in the `ui5-table`.\n\n\n---\n\n\n\n\n### **Slots:**\n - **default** - Defines the cells of the component.\n\n**Note:** Use `ui5-table-cell` for the intended design.\n\n### **CSS Parts:**\n - **row** - Used to style the native `tr` element\n- **popin-row** - Used to style the `tr` element when a row pops in",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Defines the visual indication and behavior of the component.\n\n**Note:** When set to `Active`, the item will provide visual response upon press,\nwhile with type `Inactive`-will not.",
+          "values": [{ "name": "Inactive" }, { "name": "Active" }]
+        },
+        {
+          "name": "selected",
+          "description": "Defines the row's selected state.",
+          "values": []
+        },
+        {
+          "name": "navigated",
+          "description": "Indicates if the table row is navigated.",
+          "values": []
+        }
+      ],
+      "references": []
+    }
+  ]
+}
