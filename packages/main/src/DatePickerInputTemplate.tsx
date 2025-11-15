@@ -27,6 +27,7 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				onInput={this._onInputInput}
 				onSubmit={this._onInputSubmit}
 				onKeyDown={this._onkeydown}
+				showClearIcon={true}
 			>
 
 				{!this.open && this.valueStateMessage.length > 0 &&
