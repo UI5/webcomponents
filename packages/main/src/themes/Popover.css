@@ -98,7 +98,7 @@
 	width: 1.5rem;
 	height: 1.5rem;
 	border-radius: 50%;
-	z-index: 10;
+	z-index: 1;
 }
 
 .ui5-popover-resize-handle [ui5-icon] {

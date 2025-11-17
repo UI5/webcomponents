@@ -4,7 +4,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
-import { getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
+import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -246,6 +246,9 @@ class Popover extends Popup {
 	_resizedDeltaX?: number;
 	_resizedDeltaY?: number;
 
+	_initialWidth?: string;
+	_initialHeight?: string;
+
 	static get VIEWPORT_MARGIN() {
 		return 10; // px
 	}
@@ -300,9 +303,31 @@ class Popover extends Popup {
 			return;
 		}
 
+		this._initialWidth = this.style.width;
+		this._initialHeight = this.style.height;
+
 		this._openerRect = opener.getBoundingClientRect();
 
 		await super.openPopup();
+	}
+
+	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false) : void {
+		Object.assign(this.style, {
+			width: this._initialWidth,
+			height: this._initialHeight,
+		});
+
+		if (this._resized) {
+			this._resized = false;
+
+			delete this._resizingDeltaX;
+			delete this._resizingDeltaY;
+
+			delete this._resizedDeltaX;
+			delete this._resizedDeltaY;
+		}
+
+		super.closePopup(escPressed, preventRegistryUpdate, preventFocusRestore);
 	}
 
 	isOpenerClicked(e: MouseEvent) {
@@ -322,6 +347,17 @@ class Popover extends Popup {
 		}
 
 		return e.composedPath().indexOf(opener) > -1;
+	}
+
+	isClicked(e: MouseEvent) {
+		if (this._showResizeHandle) {
+			const resizeHandle = this.shadowRoot!.querySelector(".ui5-popover-resize-handle");
+			if (resizeHandle === e.composedPath()[0]) {
+				return true;
+			}
+		}
+
+		return isClickInRect(e, this.getBoundingClientRect());
 	}
 
 	/**
@@ -1154,27 +1190,11 @@ class Popover extends Popup {
 	_attachMouseResizeHandlers() {
 		window.addEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.addEventListener("mouseup", this._resizeMouseUpHandler);
-		this.addEventListener("ui5-before-close", this._revertResizeSettings, { once: true });
 	}
 
 	_detachMouseResizeHandlers() {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
-	}
-
-	_revertResizeSettings = () => {
-		this._resized = false;
-
-		delete this._resizingDeltaX;
-		delete this._resizingDeltaY;
-
-		delete this._resizedDeltaX;
-		delete this._resizedDeltaY;
-
-		Object.assign(this.style, {
-			width: "",
-			height: "",
-		});
 	}
 }
 

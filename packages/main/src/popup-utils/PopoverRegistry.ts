@@ -100,7 +100,7 @@ const clickHandler = (event: MouseEvent) => {
 			return;
 		}
 
-		if (isClickInRect(event, popup.getBoundingClientRect())) {
+		if ((popup as Popover).isClicked(event)) {
 			break;
 		}
 
