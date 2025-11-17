@@ -1,4 +1,3 @@
-import { isClickInRect } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import type { Interval } from "@ui5/webcomponents-base/dist/types.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import getParentElement from "@ui5/webcomponents-base/dist/util/getParentElement.js";
