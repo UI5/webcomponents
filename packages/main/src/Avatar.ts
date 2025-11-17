@@ -17,7 +17,13 @@ import type { IAvatarGroupItem } from "./AvatarGroup.js";
 // Template
 import AvatarTemplate from "./AvatarTemplate.js";
 
-import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
+import { AVATAR_TOOLTIP,
+	ARIA_HASPOPUP_DIALOG,
+	ARIA_HASPOPUP_GRID,
+	ARIA_HASPOPUP_LISTBOX,
+	ARIA_HASPOPUP_MENU,
+	ARIA_HASPOPUP_TREE
+ } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import AvatarCss from "./generated/themes/Avatar.css.js";
@@ -494,16 +500,30 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		this._imageLoadError = true;
 	}
 
-	get accessibilityInfo() {
-		if (this._interactive) {
-			return {
-				role: this._role as AriaRole,
-				type: this._ariaHasPopup,
-				description: this.accessibleNameText,
-			};
+	_getAriaTypeDescription() {
+		switch (this._ariaHasPopup) {
+			case "dialog":
+				return Avatar.i18nBundle.getText(ARIA_HASPOPUP_DIALOG);
+			case "grid":
+				return Avatar.i18nBundle.getText(ARIA_HASPOPUP_GRID);
+			case "listbox":
+				return Avatar.i18nBundle.getText(ARIA_HASPOPUP_LISTBOX);
+			case "menu":
+				return Avatar.i18nBundle.getText(ARIA_HASPOPUP_MENU);
+			case "tree":
+				return Avatar.i18nBundle.getText(ARIA_HASPOPUP_TREE);
+				default:
+					return "";
 		}
+	}
 
-		return undefined;
+	get accessibilityInfo() {
+		return {
+			role: this._role as AriaRole,
+			type: this._getAriaTypeDescription(),
+			description: this.accessibleNameText,
+			disabled: this.disabled
+		};
 	}
 }
 

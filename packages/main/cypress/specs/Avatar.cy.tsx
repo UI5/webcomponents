@@ -21,7 +21,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", expectedLabel);
 	});
 
-	it("should return accessibilityInfo object when avatar is interactive", () => {
+	it("should return correct accessibilityInfo object when avatar is interactive", () => {
 		const INITIALS = "JD";
 		const hasPopup = "menu";
 		const customLabel = "John Doe Avatar";
@@ -42,12 +42,13 @@ describe("Accessibility", () => {
 			// Check accessibilityInfo properties
 			expect(avatar.accessibilityInfo).to.exist;
 			expect(avatar.accessibilityInfo.role).to.equal("button");
-			expect(avatar.accessibilityInfo.type).to.equal(hasPopup);
+			// Type contains the i18n text
+			expect(avatar.accessibilityInfo.type).to.equal("Menu");
 			expect(avatar.accessibilityInfo.description).to.equal(customLabel);
 		});
 	});
 
-	it("should return undefined for accessibilityInfo when avatar is not interactive", () => {
+	it("should return correct accessibilityInfo object when avatar is not interactive", () => {
 		cy.mount(
 			<Avatar 
 				id="non-interactive-info" 
@@ -59,25 +60,10 @@ describe("Accessibility", () => {
 			const avatar = $avatar[0] as any;
 			
 			// Check that accessibilityInfo is undefined
-			expect(avatar.accessibilityInfo).to.be.undefined;
-		});
-	});
-
-	it("should return undefined for accessibilityInfo when avatar is interactive but disabled", () => {
-		cy.mount(
-			<Avatar 
-				id="disabled-interactive-info" 
-				initials="JD"
-				interactive
-				disabled
-			></Avatar>
-		);
-
-		cy.get("#disabled-interactive-info").then($avatar => {
-			const avatar = $avatar[0] as any;
-			
-			// Check that accessibilityInfo is undefined because disabled overrides interactive
-			expect(avatar.accessibilityInfo).to.be.undefined;
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.role).to.equal("img");
+			expect(avatar.accessibilityInfo.type).to.equal("");
+			expect(avatar.accessibilityInfo.description).to.equal("Avatar JD");
 		});
 	});
 
