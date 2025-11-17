@@ -59,7 +59,6 @@
     "lint:scope": "yarn workspaces foreach --all --parallel run lint:scope",
     "link-all": "yarn workspaces foreach --all --parallel run link",
     "unlink-all": "yarn workspaces foreach --all --parallel run unlink",
-    "release": "node ./.github/actions/release.cjs",
     "prepare": "husky install",
     "husky:commit-msg": "commitlint -e",
     "husky:pre-push": "npm-run-all --sequential husky:commit-msg"
@@ -71,7 +70,7 @@
     "command-line-args": "^5.1.1",
     "globby": "^13.1.1",
     "husky": "^7.0.4",
-    "lerna": "^7.4.1",
+    "lerna": "^9.0.0",
     "npm-run-all": "^4.1.3",
     "typescript": "^5.6.2",
     "vite-plugin-checker": "patch:vite-plugin-checker@npm%3A0.11.0#~/.yarn/patches/vite-plugin-checker-npm-0.11.0-8b4c9e71ff.patch",
