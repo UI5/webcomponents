@@ -535,7 +535,7 @@ describe("Select - Accessibility", () => {
 				</Select>
 				
 				{/* Select with readonly and required attributes */}
-				<Select id="propsSelect" readonly required>
+				<Select id="propsSelect" readonly required disabled>
 					<Option value="Option1" selected>Option 1</Option>
 				</Select>
 			</>
@@ -547,7 +547,7 @@ describe("Select - Accessibility", () => {
 			const accessInfo = select.accessibilityInfo;
 			
 			expect(accessInfo.role).to.equal("combobox");
-			expect(accessInfo.type).to.equal("listbox");
+			expect(accessInfo.type).to.equal("Listbox");
 			expect(accessInfo.readonly).to.be.false;
 			expect(accessInfo.required).to.be.false;
 			expect(accessInfo.description).to.equal("Option 1"); // Just text since no aria-label
@@ -576,6 +576,7 @@ describe("Select - Accessibility", () => {
 			
 			expect(accessInfo.readonly).to.be.true;
 			expect(accessInfo.required).to.be.true;
+			expect(accessInfo.disabled).to.be.true;
 		});
 
 		// Update the referenced label and check if the description updates
