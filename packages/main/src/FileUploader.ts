@@ -37,6 +37,7 @@ import {
 	FILEUPLOADER_DEFAULT_PLACEHOLDER,
 	FILEUPLOADER_DEFAULT_MULTIPLE_PLACEHOLDER,
 	FILEUPLOADER_ROLE_DESCRIPTION,
+	FILEUPLOAER_VALUE_MISSING,
 } from "./generated/i18n/i18n-defaults.js";
 
 import type { InputAccInfo } from "./Input.js";
@@ -307,6 +308,22 @@ class FileUploader extends UI5Element implements IFormInputElement {
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			return FileUploader.i18nBundle.getText(FILEUPLOAER_VALUE_MISSING);
+		}
+
+		return "";
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && (!this.files || this.files.length === 0),
+		};
+	}
 
 	async formElementAnchor() {
 		return this.getFocusDomRefAsync();

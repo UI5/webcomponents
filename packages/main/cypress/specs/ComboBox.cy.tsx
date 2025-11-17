@@ -894,6 +894,37 @@ describe("Accessibility", () => {
 		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header Donut");
 	});
 
+	it("should announce only the item text when accessed via keyboard and popover is not opened", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+				<ComboBoxItem text="Belgium" />
+				<ComboBoxItem text="Brazil" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("have.text", "");
+
+		// open the popover
+		cy.get("@combo").shadow().find("input").realPress("F4");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+		
+		cy.get("@invisibleMessageSpan").should("have.text", "List item 2 of 6");
+	});
+
 	it("tests setting value programmatically", () => {
 		cy.mount(
 			<>

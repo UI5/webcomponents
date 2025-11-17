@@ -12,6 +12,7 @@ import {
 	TABLE_ROW_SELECTED,
 	TABLE_ROW_ACTIVE,
 	TABLE_ROW_NAVIGABLE,
+	TABLE_ROW_NAVIGATED,
 	TABLE_COLUMN_HEADER_ROW,
 	TABLE_CELL_SINGLE_CONTROL,
 	TABLE_CELL_MULTIPLE_CONTROLS,
@@ -216,6 +217,10 @@ class TableCustomAnnouncement extends TableExtension {
 
 		if (row._availableActionsCount > 0) {
 			descriptions.push(row._actionCellAccText!);
+		}
+
+		if (row._renderNavigated && row.navigated) {
+			descriptions.push(i18nBundle.getText(TABLE_ROW_NAVIGATED));
 		}
 
 		updateInvisibleText(row, descriptions);

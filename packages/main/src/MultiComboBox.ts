@@ -112,7 +112,6 @@ import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import CheckBox from "./CheckBox.js";
 import Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type InputComposition from "./features/InputComposition.js";
 
@@ -729,7 +728,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		this._effectiveValueState = this.valueState;
 
-		if (!filteredItems.length && value && !this.noValidation) {
+		if (!this._isComposing && !filteredItems.length && value && !this.noValidation) {
 			const newValue = this.valueBeforeAutoComplete || this._inputLastValue;
 
 			input.value = newValue;
@@ -742,7 +741,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this._inputLastValue = input.value;
+		if (!this._isComposing) {
+			this._inputLastValue = input.value;
+		}
+
 		this.value = input.value;
 		this._filteredItems = filteredItems;
 
@@ -1749,8 +1751,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
 
-		this._inputLastValue = value;
-
 		if (input && !input.value) {
 			this.valueBeforeAutoComplete = "";
 			this._filteredItems = this._getItems();
@@ -1773,10 +1773,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this._shouldAutocomplete && !isAndroid()) {
 			const item = this._getFirstMatchingItem(value);
 
-			// Keep the original typed in text intact
-			this.valueBeforeAutoComplete = value;
 			// Prevent typeahead during composition to avoid interfering with the composition process
 			if (!this._isComposing && item) {
+				// Keep the original typed in text intact
+				this.valueBeforeAutoComplete = value;
 				this._handleTypeAhead(item, value);
 			}
 		}
@@ -2196,10 +2196,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const shouldBeExpanded = this.focused || this.open || isCurrentlyExpanded;
 
 		return shouldBeExpanded;
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
 	}
 
 	get iconsCount() {

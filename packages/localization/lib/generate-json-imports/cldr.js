@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import assets from "@ui5/webcomponents-tools/assets-meta.js";
+import { pathToFileURL } from "url";
 
 const allLocales = assets.locales.all;
 
@@ -45,7 +46,10 @@ const generate = async () => {
 		});
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate()
 }
 

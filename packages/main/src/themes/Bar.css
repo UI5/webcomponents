@@ -26,7 +26,10 @@
 	align-items: center;
 }
 
-.ui5-bar-root .ui5-bar-startcontent-container,
+.ui5-bar-root .ui5-bar-startcontent-container {
+	flex: 0 1 auto;
+}
+
 .ui5-bar-root .ui5-bar-endcontent-container {
 	flex: 0 0 auto;
 }
@@ -79,4 +82,10 @@
 
 ::slotted(*) {
 	margin: 0 0.25rem;
+	display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
 }

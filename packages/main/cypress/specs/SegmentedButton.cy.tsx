@@ -278,6 +278,50 @@ describe("SegmentedButtonItems appearance", () => {
 	});
 });
 
+describe("SegmentedButton: fitContent", () => {
+    it("should have items with width which fits item content when itemsFitContent is true", () => {
+        cy.mount(
+            <SegmentedButton itemsFitContent={true}>
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(shortWidth => {
+				cy.get("#item2")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+				cy.get("#item3")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+        });
+    });
+
+    it("should have items with equal width when itemsFitContent is false (default)", () => {
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(width1 => {
+            	cy.get("#item2")
+					.invoke("outerWidth")
+					.should("eq", width1);
+            	cy.get("#item3")
+					.invoke("outerWidth")
+					.should("eq", width1);
+        });
+    });
+});
+
 describe("SegmentedButton Accessibility", () => {
 	it("segmented button should have correct aria label when accessibleName is set", () => {
 		const LABEL = "Label";
@@ -485,4 +529,17 @@ describe("SebmentedButtonItem Accessibility", () => {
 			.find("li")
 			.should("have.attr", "aria-description", REF_DESCRIPTION);
 	});
+
+	it("should set title attribute to slot text when tooltip is not provided", () => {
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="item1">Segmented Item Text</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+            .shadow()
+            .find("li")
+            .should("have.attr", "title", "Segmented Item Text");
+    });
 });

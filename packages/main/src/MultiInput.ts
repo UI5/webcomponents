@@ -233,7 +233,7 @@ class MultiInput extends Input implements IFormInputElement {
 			return this._focusFirstToken(e);
 		}
 
-		if (isEnter(e)) {
+		if (isEnter(e) && !!this._internals.form) {
 			e.preventDefault();
 		}
 

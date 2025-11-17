@@ -62,7 +62,7 @@ import InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+
 // Templates
 import InputTemplate from "./InputTemplate.js";
 import { StartsWith } from "./Filters.js";
@@ -1357,9 +1357,20 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.open = false;
 	}
 
+	_confirmMobileValue() {
+		this._closePicker();
+		this._handleChange();
+	}
+
+	_cancelMobileValue() {
+		this.value = this.previousValue;
+		this._closePicker();
+	}
+
 	_afterOpenPicker() {
 		// Set initial focus to the native input
 		if (isPhone()) {
+			this.previousValue = this.value;
 			(this.getInputDOMRef())!.focus();
 			this._composition?.addEventListeners();
 		}
@@ -1956,10 +1967,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		return "";
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
 	}
 
 	/**

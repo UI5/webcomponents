@@ -4,8 +4,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import chokidar from "chokidar";
-import scopeVariables from "./scope-variables.mjs";
+import {scopeUi5Variables} from "./scope-variables.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
+import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
     const tsMode = process.env.UI5_TS === "true";
@@ -23,7 +24,7 @@ const generate = async (argv) => {
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
                     // scoping
-                    let newText = scopeVariables(f.text, packageJSON);
+                    let newText = scopeUi5Variables(f.text, packageJSON);
                     newText = newText.replaceAll(/\\/g, "\\\\"); // Escape backslashes as they might appear in css rules
                     await mkdir(path.dirname(f.path), { recursive: true });
                     writeFile(f.path, newText);
@@ -79,7 +80,10 @@ const generate = async (argv) => {
     }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
     generate(process.argv)
 }
 

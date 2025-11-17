@@ -1,4 +1,5 @@
 import type MenuItem from "./MenuItem.js";
+import PopoverPlacement from "./types/PopoverPlacement.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import Button from "./Button.js";
 import List from "./List.js";
@@ -91,9 +92,9 @@ function listItemPostContent(this: MenuItem) {
 		preventFocusRestore={true}
 		hideArrow={true}
 		allowTargetOverlap={true}
-		placement={this.placement}
+		placement={PopoverPlacement.End}
 		verticalAlign="Top"
-		accessibleName={this.acessibleNameText}
+		accessibleName={this.accessibleNameText}
 		onBeforeOpen={this._beforePopoverOpen}
 		onOpen={this._afterPopoverOpen}
 		onBeforeClose={this._beforePopoverClose}

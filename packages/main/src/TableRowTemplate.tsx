@@ -38,10 +38,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 
 			{ this.cells.flatMap(cell => {
 				if (cell._popin) {
+					cell.role = null;
 					cell.ariaColIndex = null;
 					return [];
 				}
-				cell.ariaColIndex = `${ariaColIndex++}`;
+
+				cell.role ??= cell.ariaRole;
+				cell.ariaColIndex = (cell.role === cell.ariaRole) ? `${ariaColIndex++}` : null;
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
@@ -72,6 +75,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				<TableCell id="navigated-cell"
 					data-excluded-from-navigation
 					aria-hidden={true}
+					role="none"
 				>
 					<div id="navigated"></div>
 				</TableCell>
