@@ -121,6 +121,7 @@ class ToolbarItem extends UI5Element {
 		if (this.tagName === "UI5-TOOLBAR-ITEM"
 			&& this.getSlottedNodes<IOverflowToolbarItem>("item").length
 			&& this.getSlottedNodes<IOverflowToolbarItem>("item")[0]!.hasToolbarWrapper) {
+			// eslint-disable-next-line no-console
 			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.getSlottedNodes<IOverflowToolbarItem>("item")[0]!.hasToolbarWrapper}.`);
 		}
 	}
