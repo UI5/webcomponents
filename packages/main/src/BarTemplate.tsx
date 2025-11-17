@@ -4,7 +4,7 @@ export default function BarTemplate(this: Bar) {
 	return (
 		<div
 			class="ui5-bar-root"
-			aria-label={this.accInfo.role && this.accInfo.label}
+			aria-label={this.accInfo.label}
 			role={this.accInfo.role}
 			part="bar"
 		>
