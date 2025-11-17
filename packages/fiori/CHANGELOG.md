@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.2](https://github.com/UI5/webcomponents/compare/v2.15.1...v2.15.2) (2025-11-17)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** remove internal logo size restrictions ([#12683](https://github.com/UI5/webcomponents/issues/12683)) ([eec87b5](https://github.com/UI5/webcomponents/commit/eec87b5cb1e6d32237cb8e8d5cd6dfb09b249805))
+
+
+
+
+
 ## [2.15.1](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.15.1) (2025-10-21)
 
 
