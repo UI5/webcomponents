@@ -155,6 +155,7 @@ class ToolbarButton extends ToolbarItem {
 	 *
 	 * @default false
 	 * @public
+	 * @since 2.17.0
 	 */
 	@property({ type: Boolean })
 	showOverflowText = false;
