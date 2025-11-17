@@ -298,31 +298,30 @@ class Toolbar extends UI5Element {
 		}
 	}
 
-	onAfterRendering() {
-		if (!this.items.some((item: ToolbarItem) => item.selfOverflowed)) {
-			this.onAfterRenderingAsync();
-		}
-		this.afterRenderingOps();
-	}
-
-	async onAfterRenderingAsync()	{
+	async onAfterRendering() {
 		await renderFinished();
-	}
-
-	afterRenderingOps() {
 		this.storeItemsWidth();
 		this.processOverflowLayout();
 		this.items.forEach(item => {
-			item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
-			const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
-			if (item.selfOverflowed && !item.isOverflowed && itemWrapper) {
-				itemWrapper.style.maxWidth = `none`;
-				itemWrapper?.classList.add("ui5-tb-self-overflow-grow");
-				item._maxWidth = Math.max(this.getItemWidth(item), item._maxWidth);
-				itemWrapper.style.maxWidth = `${item._maxWidth}px`;
-				itemWrapper?.classList.remove("ui5-tb-self-overflow-grow");
-			}
+			this.addItemsAdditionalProperties(item);
 		});
+	}
+
+	addItemsAdditionalProperties(item: ToolbarItem) {
+		item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
+		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
+		if (item.selfOverflowed && !item.isOverflowed && itemWrapper) {
+			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
+			// since, unlike the other items, it is allowed to grow and shrink
+			// We need to set the max-width to none and its position to absolute to allow the item to grow and measure its width,
+			// then when set, the max-width will be cached and we will set its highest value to not cut it when the Toolbar shrinks it
+			// on rendering and then we resize it manually.
+			itemWrapper.style.maxWidth = `none`;
+			itemWrapper?.classList.add("ui5-tb-self-overflow-grow");
+			item._maxWidth = Math.max(this.getItemWidth(item), item._maxWidth);
+			itemWrapper.style.maxWidth = `${item._maxWidth}px`;
+			itemWrapper?.classList.remove("ui5-tb-self-overflow-grow");
+		}
 	}
 
 	/**

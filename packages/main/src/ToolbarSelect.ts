@@ -163,14 +163,6 @@ class ToolbarSelect extends ToolbarItem {
 	// Internal value storage, in case the composite select is not rendered on the the assignment happens
 	_value: string = "";
 
-	onClick(e: Event): void {
-		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
-		if (prevented && !this.preventOverflowClosing) {
-			this.fireDecoratorEvent("close-overflow");
-		}
-	}
-
 	onOpen(e: Event): void {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("open", { targetRef: e.target as HTMLElement });

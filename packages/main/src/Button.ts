@@ -689,6 +689,11 @@ class Button extends UI5Element implements IButton {
 	get shouldRenderBadge() {
 		return !!this.badge.length && (!!this.badge[0].text.length || this.badge[0].design === ButtonBadgeDesign.AttentionDot);
 	}
+
+	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
+	get hasToolbarWrapper() {
+		return "ToolbarSelect";
+	}
 }
 
 Button.define();

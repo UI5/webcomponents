@@ -40,7 +40,7 @@
 }
 
 .ui5-tb-self-overflow-grow {
-	position: absolute
+	position: absolute;
 }
 
 /* Last visible element should not have margins.

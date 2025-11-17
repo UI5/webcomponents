@@ -33,6 +33,7 @@
 				<ui5-toolbar-separator></ui5-toolbar-separator>
 				<ui5-toolbar-separator></ui5-toolbar-separator>
 				<ui5-toolbar-button overflow-priority="AlwaysOverflow" icon="employee" prevent-overflow-closing text="Call me later" ></ui5-toolbar-button>
+				<ui5-toolbar-item><ui5-select><ui5-option>1</ui5-option><ui5-option selected>2</ui5-option><ui5-option>3</ui5-option></ui5-select></ui5-toolbar-item>
 			</ui5-toolbar>
 		</section>
 		<ui5-title level="H3">Toolbar with ui5-select and ui5-button wrapped in ui5-toolbar-item</ui5-title>
@@ -59,7 +60,7 @@
 				<ui5-toolbar-item>
 					<ui5-text style="max-width:50px; text-overflow: ellipsis;white-space: nowrap;display: inline-block;">Simple text</ui5-text>
 				</ui5-toolbar-item>
-				<ui5-toolbar-item>
+				<ui5-toolbar-item prevent-overflow-closing>
 					<ui5-combobox id="combo" class="combobox2auto" value="ComboBox" accessible-name-ref="countryLabel">
 						<ui5-cb-item text="Algeria"></ui5-cb-item>
 						<ui5-cb-item text="Argentina"></ui5-cb-item>
@@ -137,6 +138,9 @@
 			</ui5-toolbar>
 		</section>
 	</div>
+	<script>
+
+	</script>
 </body>
 
 </html>
