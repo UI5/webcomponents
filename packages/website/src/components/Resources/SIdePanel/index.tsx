@@ -16,7 +16,7 @@ import './styles.css';
 
 
 // @ts-ignore
-export default function FriendsComponent({ children, open }) {
+export default function SidePanel({ children, open }) {
     const blockRef = useRef(null);
     const panelRef = useRef(null);
 
