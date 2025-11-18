@@ -1353,6 +1353,47 @@ describe("List Tests", () => {
 		cy.get("[ui5-button]").last().should("be.focused");
 	});
 
+	it("keyboard handling on F7 maintains focus position across list items", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+					<Button>Item 1 - Third</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+					<Button>Item 2 - Third</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first list item
+		cy.get("[ui5-li-custom]").first().click();
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// F7 to enter (should go to first button)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(0).should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").eq(1).should("be.focused");
+
+		// F7 to exit back to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// Navigate to second list item with ArrowDown
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li-custom]").last().should("be.focused");
+
+		// F7 should focus the second button (same index as previous item)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(4).should("be.focused").and("contain", "Item 2 - Second");
+	});
+
 	it("keyboard handling on TAB when 2 level nested UI5Element is focused", () => {
 		cy.mount(
 			<div>
