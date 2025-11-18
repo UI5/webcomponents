@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **ui5-popover:** fix horizontal placement (Start and End) in rtl mode ([#12606](https://github.com/UI5/webcomponents/issues/12606)) ([8135904](https://github.com/UI5/webcomponents/commit/813590444b04dda4fa089499720d6e2fc4a1f63e))
+
+
+### Features
+
+* **ui5-view-settings-dialog:** provide part for header ([#12627](https://github.com/UI5/webcomponents/issues/12627)) ([3206b90](https://github.com/UI5/webcomponents/commit/3206b906785424cac46ceeb6f7d9d61131635316)), closes [#12479](https://github.com/UI5/webcomponents/issues/12479)
+
+
+
+
+
 # [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
 
 
