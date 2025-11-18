@@ -22,6 +22,12 @@ type IOverflowToolbarItem = {
 
 @event("close-overflow", {
 	bubbles: true,
+	cancelable: true,
+})
+
+@event("click", {
+	bubbles: true,
+	cancelable: true,
 })
 
 @customElement({
@@ -185,10 +191,10 @@ class ToolbarItem extends UI5Element {
 	 * Handles the click event on the toolbar item.
 	 * If `preventOverflowClosing` is false, it will fire a "close-overflow" event.
 	 */
-	onClick(e: Event): void {
+	onClick(e: Event) {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
-		if (prevented && !this.preventOverflowClosing) {
+		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
 	}
