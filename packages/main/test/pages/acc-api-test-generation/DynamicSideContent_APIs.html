@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 DynamicSideContent API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/DynamicSideContent.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Card.js";
+        import "@ui5/webcomponents/dist/CardHeader.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+        
+        .side-content-demo {
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+        
+        .main-content-area {
+            background: #f8f9fa;
+            padding: 1rem;
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .side-content-area {
+            background: #e9ecef;
+            padding: 1rem;
+            height: 100%;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="DynamicSideContent API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 DynamicSideContent Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Default Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using the default slot to define the main content area</div>
+                    <div class="bg-light rounded p-3">
+                        <div data-cy-acc-container-id="dsc1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0">
+                            <ui5-dynamic-side-content class="side-content-demo">
+                                <div class="main-content-area">
+                                    <h3>Main Content Area</h3>
+                                    <p>This is the main content area that adapts based on screen size and side content visibility.</p>
+                                    <p>Main content takes precedence and remains accessible across all breakpoints.</p>
+                                </div>
+                                <div slot="sideContent" class="side-content-area">
+                                    <h4>Side Content</h4>
+                                    <p>Additional information and controls</p>
+                                </div>
+                            </ui5-dynamic-side-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SideContent Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using the sideContent slot to define the side content area</div>
+                    <div class="bg-light rounded p-3">
+                        <div data-cy-acc-container-id="dsc2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1">
+                            <ui5-dynamic-side-content class="side-content-demo">
+                                <div class="main-content-area">
+                                    <h3>Main Content</h3>
+                                    <p>Main content with side panel</p>
+                                </div>
+                                <div slot="sideContent" class="side-content-area">
+                                    <h4>Side Panel</h4>
+                                    <ui5-button>Action 1</ui5-button>
+                                    <ui5-button>Action 2</ui5-button>
+                                </div>
+                            </ui5-dynamic-side-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideMainContent Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideMainContent property to control main content visibility</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2">
+                            <div>
+                                <ui5-label>Main Content Visible (default)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Visible Main Content</h3>
+                                        <p>Main content is visible</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Side Content</h4>
+                                        <p>Always visible</p>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Main Content Hidden</ui5-label>
+                                <ui5-dynamic-side-content hide-main-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Hidden Main Content</h3>
+                                        <p>This main content is hidden</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Only Side Content</h4>
+                                        <p>Main content is hidden, only side content visible</p>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">HideSideContent Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using hideSideContent property to control side content visibility</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3">
+                            <div>
+                                <ui5-label>Side Content Visible (default)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>With visible side content</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Visible Side Content</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Interactive Hide/Show Demo</ui5-label>
+                                <ui5-dynamic-side-content id="hide-demo" class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Interactive Main Content</h3>
+                                        <p>Use the button below to toggle side content visibility</p>
+                                        <ui5-button id="toggle-hide-btn">Toggle Side Content</ui5-button>
+                                        <div id="hide-status" class="mt-2 small text-muted">Side content is currently visible</div>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Toggleable Side Content</h4>
+                                        <p>This content can be hidden/shown dynamically</p>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click "Toggle Side Content" to dynamically show/hide the side panel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SideContentPosition Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using sideContentPosition property to control side content placement (Start or End)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4">
+                            <div>
+                                <ui5-label>Side Content Position: End (default)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Side content on the right (End)</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>End Position</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Side Content Position: Start</ui5-label>
+                                <ui5-dynamic-side-content side-content-position="Start" class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Side content on the left (Start)</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Start Position</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SideContentVisibility Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using sideContentVisibility property to control when side content is visible (ShowAboveS, ShowAboveM, ShowAboveL, AlwaysShow, NeverShow)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5">
+                            <div>
+                                <ui5-label>Visibility: ShowAboveS (default - shows on M, L, XL)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Side content shows above S breakpoint</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>ShowAboveS</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Visibility: ShowAboveM (shows on L, XL only)</ui5-label>
+                                <ui5-dynamic-side-content side-content-visibility="ShowAboveM" class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Side content shows above M breakpoint</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>ShowAboveM</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Visibility: AlwaysShow</ui5-label>
+                                <ui5-dynamic-side-content side-content-visibility="AlwaysShow" class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Side content always visible</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>AlwaysShow</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SideContentFallDown Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using sideContentFallDown property to control when side content falls below main content (OnMinimumWidth, BelowM, BelowL, BelowXL)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6">
+                            <div>
+                                <ui5-label>Fall Down: OnMinimumWidth (default)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Falls down when width is too narrow</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>OnMinimumWidth</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Fall Down: BelowL</ui5-label>
+                                <ui5-dynamic-side-content side-content-fall-down="BelowL" class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content</h3>
+                                        <p>Falls down below L breakpoint</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>BelowL</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">EqualSplit Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using equalSplit property to make main and side content take 50:50 ratio</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="dsc8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7">
+                            <div>
+                                <ui5-label>Equal Split: false (default)</ui5-label>
+                                <ui5-dynamic-side-content class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content (larger)</h3>
+                                        <p>Standard ratio - main content takes more space</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Side (smaller)</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                            <div>
+                                <ui5-label>Equal Split: true</ui5-label>
+                                <ui5-dynamic-side-content equal-split class="side-content-demo">
+                                    <div class="main-content-area">
+                                        <h3>Main Content (50%)</h3>
+                                        <p>Equal split - both contents get 50% width</p>
+                                    </div>
+                                    <div slot="sideContent" class="side-content-area">
+                                        <h4>Side Content (50%)</h4>
+                                    </div>
+                                </ui5-dynamic-side-content>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibilityAttributes Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibilityAttributes property to provide custom ARIA labels for main and side content areas</div>
+                    <div class="bg-light rounded p-3">
+                        <div data-cy-acc-container-id="dsc9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8">
+                            <ui5-label>Custom Accessibility Labels</ui5-label>
+                            <ui5-dynamic-side-content id="accessibility-demo" class="side-content-demo">
+                                <div class="main-content-area">
+                                    <h3>Main Content</h3>
+                                    <p>This area has custom aria-label: "Primary content area with main information"</p>
+                                </div>
+                                <div slot="sideContent" class="side-content-area">
+                                    <h4>Side Content</h4>
+                                    <p>This area has custom aria-label: "Secondary content area with additional tools"</p>
+                                </div>
+                            </ui5-dynamic-side-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Layout-Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the current breakpoint changes, providing current and previous breakpoint info</div>
+                    <div class="bg-light rounded p-3">
+                        <div data-cy-acc-container-id="dsca0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9">
+                            <ui5-label>Layout Change Event Demonstration</ui5-label>
+                            <ui5-dynamic-side-content id="layout-change-demo" class="side-content-demo">
+                                <div class="main-content-area">
+                                    <h3>Main Content</h3>
+                                    <p>Resize browser window to trigger layout-change events</p>
+                                    <div id="layout-result" class="fw-bold text-primary">Event details will appear here</div>
+                                </div>
+                                <div slot="sideContent" class="side-content-area">
+                                    <h4>Side Content</h4>
+                                    <p>Event monitoring active</p>
+                                </div>
+                            </ui5-dynamic-side-content>
+                        </div>
+                        <div class="test-instruction">Test instruction: Resize browser window to see layout-change events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ToggleContents Method API</h2>
+                    <div class="text-muted fst-italic mb-3">Using toggleContents method to switch between main and side content visibility on mobile (S breakpoint)</div>
+                    <div class="bg-light rounded p-3">
+                        <div data-cy-acc-container-id="dscb1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0">
+                            <ui5-label>Toggle Contents Method</ui5-label>
+                            <ui5-dynamic-side-content id="toggle-demo" class="side-content-demo">
+                                <div class="main-content-area">
+                                    <h3>Main Content</h3>
+                                    <p>Toggle functionality works on mobile screens (S breakpoint)</p>
+                                    <ui5-button id="toggle-btn">Toggle Contents</ui5-button>
+                                </div>
+                                <div slot="sideContent" class="side-content-area">
+                                    <h4>Side Content</h4>
+                                    <p>Can be toggled with main content on mobile</p>
+                                </div>
+                            </ui5-dynamic-side-content>
+                        </div>
+                        <div class="test-instruction">Test instruction: Resize to mobile width and click Toggle Contents button</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Set accessibility attributes
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessibilityDemo = document.getElementById('accessibility-demo');
+            if (accessibilityDemo) {
+                accessibilityDemo.accessibilityAttributes = {
+                    mainContent: {
+                        ariaLabel: "Primary content area with main information"
+                    },
+                    sideContent: {
+                        ariaLabel: "Secondary content area with additional tools"
+                    }
+                };
+            }
+        });
+
+        // Layout-change event demonstration
+        const layoutChangeDemo = document.getElementById('layout-change-demo');
+        const layoutResult = document.getElementById('layout-result');
+        
+        if (layoutChangeDemo && layoutResult) {
+            layoutChangeDemo.addEventListener('layout-change', (e) => {
+                const detail = e.detail;
+                layoutResult.innerHTML = `
+                    Breakpoint changed: ${detail.previousBreakpoint || 'initial'} → ${detail.currentBreakpoint}<br>
+                    Main visible: ${detail.mainContentVisible}, Side visible: ${detail.sideContentVisible}
+                `;
+            });
+        }
+
+        // Toggle contents method demonstration
+        const toggleDemo = document.getElementById('toggle-demo');
+        const toggleBtn = document.getElementById('toggle-btn');
+        
+        if (toggleBtn && toggleDemo) {
+            toggleBtn.addEventListener('click', () => {
+                toggleDemo.toggleContents();
+            });
+        }
+
+        // Interactive hideSideContent property demo
+        const hideDemo = document.getElementById('hide-demo');
+        const toggleHideBtn = document.getElementById('toggle-hide-btn');
+        const hideStatus = document.getElementById('hide-status');
+        
+        if (toggleHideBtn && hideDemo && hideStatus) {
+            toggleHideBtn.addEventListener('click', () => {
+                hideDemo.hideSideContent = !hideDemo.hideSideContent;
+                hideStatus.textContent = hideDemo.hideSideContent ? 
+                    'Side content is currently hidden' : 
+                    'Side content is currently visible';
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

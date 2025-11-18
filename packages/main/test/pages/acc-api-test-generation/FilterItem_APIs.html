@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 FilterItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- DO NOT change, use as it is-->
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/FilterItem.js";
+        import "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
+        import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="FilterItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 FilterItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Text Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using text property to define the filter category name</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6789012345678901234ab">
+                            <ui5-view-settings-dialog id="text-demo">
+                                <ui5-filter-item slot="filterItems" text="Category">
+                                    <ui5-filter-item-option slot="values" text="Option 1"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Option 2"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Status">
+                                    <ui5-filter-item-option slot="values" text="Active"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Inactive"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Priority Level">
+                                    <ui5-filter-item-option slot="values" text="High"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Medium"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Low"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="text-btn">Show Filter Dialog</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click the button to open the dialog and see filter items with different text values</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AdditionalText Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using additionalText property to show number of selected options or additional information</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6789012345678901234abcd">
+                            <ui5-view-settings-dialog id="additional-text-demo">
+                                <ui5-filter-item slot="filterItems" id="dept-filter" text="Department" additional-text="3 of 5 selected">
+                                    <ui5-filter-item-option slot="values" id="dept-sales" text="Sales" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="dept-marketing" text="Marketing" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="dept-eng" text="Engineering" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="dept-hr" text="HR"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="dept-finance" text="Finance"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" id="region-filter" text="Region" additional-text="All regions">
+                                    <ui5-filter-item-option slot="values" id="region-na" text="North America" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="region-eu" text="Europe" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="region-ap" text="Asia Pacific" selected></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" id="year-filter" text="Year" additional-text="Current year">
+                                    <ui5-filter-item-option slot="values" id="year-2024" text="2024" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="year-2023" text="2023"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" id="year-2022" text="2022"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="additional-text-btn">Show Filter with Additional Text</ui5-button>
+                            <div class="mt-2 w-100">
+                                <div id="filter-summary" class="small text-muted">Filter summary will appear here...</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click button to open dialog, make filter selections to see dynamic additional text updates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Values Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using values slot to define filter options within the filter category</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6789012345678901234abcdef">
+                            <ui5-view-settings-dialog id="values-demo">
+                                <ui5-filter-item slot="filterItems" text="Product Type">
+                                    <ui5-filter-item-option slot="values" text="Laptop"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Desktop"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Tablet"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Mobile Phone"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Accessories"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Operating System">
+                                    <ui5-filter-item-option slot="values" text="Windows"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="macOS"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Linux"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Android"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="iOS"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Price Range">
+                                    <ui5-filter-item-option slot="values" text="Under $500"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="$500 - $1000"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="$1000 - $2000"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Over $2000"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="values-btn">Show Filter with Multiple Options</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to open dialog and explore different filter categories with multiple options</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Complex Filter Structure API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating complex filter hierarchies with multiple categories and pre-selected options</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6789012345678901234abcdef01">
+                            <ui5-view-settings-dialog id="complex-demo">
+                                <ui5-filter-item slot="filterItems" text="Location" additional-text="2 selected">
+                                    <ui5-filter-item-option slot="values" text="New York" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="London" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Tokyo"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Sydney"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Berlin"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Experience Level" additional-text="All levels">
+                                    <ui5-filter-item-option slot="values" text="Entry Level" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Mid Level" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Senior Level" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Executive Level" selected></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Employment Type" additional-text="1 selected">
+                                    <ui5-filter-item-option slot="values" text="Full-time" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Part-time"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Contract"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Remote"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Skills">
+                                    <ui5-filter-item-option slot="values" text="JavaScript"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="TypeScript"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="React"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Angular"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Vue.js"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Node.js"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="complex-btn">Show Complex Filter Structure</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see a comprehensive filter dialog with multiple categories and selected states</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Event handlers for opening dialogs
+        document.getElementById('text-btn').addEventListener('click', () => {
+            document.getElementById('text-demo').open = true;
+        });
+
+        document.getElementById('additional-text-btn').addEventListener('click', () => {
+            document.getElementById('additional-text-demo').open = true;
+        });
+
+        document.getElementById('values-btn').addEventListener('click', () => {
+            document.getElementById('values-demo').open = true;
+        });
+
+        document.getElementById('complex-btn').addEventListener('click', () => {
+            document.getElementById('complex-demo').open = true;
+        });
+
+        // Interactive filter monitoring for additional text demo
+        const filterSummary = document.getElementById('filter-summary');
+        const additionalTextDialog = document.getElementById('additional-text-demo');
+
+        function updateFilterSummary() {
+            if (!filterSummary || !additionalTextDialog) return;
+            
+            // Count selected options in each filter category
+            const deptSelected = ['dept-sales', 'dept-marketing', 'dept-eng', 'dept-hr', 'dept-finance']
+                .filter(id => document.getElementById(id)?.selected).length;
+            const regionSelected = ['region-na', 'region-eu', 'region-ap']
+                .filter(id => document.getElementById(id)?.selected).length;
+            const yearSelected = ['year-2024', 'year-2023', 'year-2022']
+                .filter(id => document.getElementById(id)?.selected).length;
+
+            // Update additional text properties
+            const deptFilter = document.getElementById('dept-filter');
+            const regionFilter = document.getElementById('region-filter');
+            const yearFilter = document.getElementById('year-filter');
+
+            if (deptFilter) {
+                deptFilter.additionalText = `${deptSelected} of 5 selected`;
+            }
+            if (regionFilter) {
+                regionFilter.additionalText = regionSelected === 3 ? 'All regions' : `${regionSelected} of 3 regions`;
+            }
+            if (yearFilter) {
+                yearFilter.additionalText = yearSelected === 0 ? 'No year selected' : 
+                    yearSelected === 1 ? 'Single year' : `${yearSelected} years selected`;
+            }
+
+            // Update summary display
+            const totalSelected = deptSelected + regionSelected + yearSelected;
+            const totalCategories = [deptSelected, regionSelected, yearSelected].filter(count => count > 0).length;
+            
+            filterSummary.textContent = `Active filters: ${totalCategories} categories, ${totalSelected} total selections`;
+        }
+
+        // Monitor filter changes via dialog confirm event
+        if (additionalTextDialog) {
+            additionalTextDialog.addEventListener('confirm', (e) => {
+                updateFilterSummary();
+            });
+            
+            additionalTextDialog.addEventListener('cancel', () => {
+                filterSummary.textContent = 'Filter operation cancelled';
+            });
+        }
+
+        // Initial status update
+        document.addEventListener('DOMContentLoaded', () => {
+            filterSummary.textContent = 'Open Additional Text demo to see dynamic filter count updates';
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

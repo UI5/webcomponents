@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 AI Button API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- DO NOT change, use as it is-->
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-ai/dist/Button.js";
+        import "@ui5/webcomponents-ai/dist/ButtonState.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Menu.js";
+        import "@ui5/webcomponents/dist/MenuItem.js";
+        import "@ui5/webcomponents-icons/dist/add.js";
+        import "@ui5/webcomponents-icons/dist/edit.js";
+        import "@ui5/webcomponents-icons/dist/save.js";
+        import "@ui5/webcomponents-icons/dist/delete.js";
+        import "@ui5/webcomponents-icons/dist/accept.js";
+        import "@ui5/webcomponents-icons/dist/decline.js";
+        import "@ui5/webcomponents-icons/dist/generate-shortcut.js";
+        import "@ui5/webcomponents-icons/dist/refresh.js";
+        import "@ui5/webcomponents-icons/dist/arrow-down.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="AI Button API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 AI Button Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Design Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using design property to set button appearance with various designs</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a90123456789012345678901234567890123456789012">
+                            <ui5-ai-button design="Default">
+                                <ui5-ai-button-state name="default" text="Default Design" icon="add"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button design="Emphasized">
+                                <ui5-ai-button-state name="emphasized" text="Emphasized" icon="accept"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button design="Positive">
+                                <ui5-ai-button-state name="positive" text="Positive" icon="accept"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button design="Negative">
+                                <ui5-ai-button-state name="negative" text="Negative" icon="decline"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button design="Transparent">
+                                <ui5-ai-button-state name="transparent" text="Transparent" icon="edit"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to control button interactivity</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b901234567890123456789012345678901234567890123">
+                            <ui5-ai-button>
+                                <ui5-ai-button-state name="enabled" text="Enabled Button" icon="edit"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button disabled>
+                                <ui5-ai-button-state name="disabled" text="Disabled Button" icon="edit"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button id="toggle-disabled-btn">
+                                <ui5-ai-button-state name="toggle" text="Toggle Disabled" icon="refresh"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click Toggle button to enable/disable the middle button</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">State Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using state property to control which button state is currently active</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9012345678901234567890123456789012345678901234">
+                            <ui5-ai-button id="multi-state-btn" state="idle">
+                                <ui5-ai-button-state name="idle" text="Generate Content" icon="generate-shortcut"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="processing" text="Generating..." icon="refresh"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="success" text="Generated Successfully" icon="accept"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="error" text="Generation Failed" icon="decline"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <div class="d-flex flex-column gap-2">
+                                <ui5-button id="idle-state-btn" design="Transparent">Set Idle</ui5-button>
+                                <ui5-button id="processing-state-btn" design="Transparent">Set Processing</ui5-button>
+                                <ui5-button id="success-state-btn" design="Transparent">Set Success</ui5-button>
+                                <ui5-button id="error-state-btn" design="Transparent">Set Error</ui5-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use state control buttons to see AI button transition between different states</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ArrowButtonPressed Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using arrowButtonPressed property to control active state of split button arrow</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d90123456789012345678901234567890123456789012345">
+                            <ui5-ai-button id="split-arrow-btn">
+                                <ui5-ai-button-state name="split" text="AI Actions" icon="generate-shortcut" show-arrow-button></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-button id="toggle-arrow-pressed">Toggle Arrow Pressed</ui5-button>
+                            <ui5-menu id="ai-menu" opener="split-arrow-btn">
+                                <ui5-menu-item text="Generate Text"></ui5-menu-item>
+                                <ui5-menu-item text="Summarize Content"></ui5-menu-item>
+                                <ui5-menu-item text="Translate"></ui5-menu-item>
+                                <ui5-menu-item text="Check Grammar"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click arrow button to open menu or use toggle button to control arrow pressed state</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibilityAttributes Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibilityAttributes property to enhance accessibility support</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e901234567890123456789012345678901234567890123456">
+                            <ui5-ai-button id="accessible-btn">
+                                <ui5-ai-button-state name="accessible" text="Accessible AI" icon="generate-shortcut"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button id="popup-btn">
+                                <ui5-ai-button-state name="popup" text="Open Dialog" icon="generate-shortcut" show-arrow-button></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button id="shortcut-btn">
+                                <ui5-ai-button-state name="shortcut" text="Quick Action" icon="generate-shortcut"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <div class="mt-2 w-100">
+                                <div id="accessibility-info" class="small text-muted">Accessibility attributes are active on the buttons above</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to hear enhanced accessibility descriptions and keyboard shortcuts (Ctrl+G)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">States Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using states slot to define multiple button states with different configurations</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f9012345678901234567890123456789012345678901234567">
+                            <ui5-ai-button id="workflow-btn" state="start">
+                                <ui5-ai-button-state name="start" text="Start Workflow" icon="add"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="inprogress" text="Processing..." icon="refresh"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="review" text="Review Results" icon="edit"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="approve" text="Approve" icon="accept" end-icon="arrow-down"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="complete" text="Completed" icon="accept"></ui5-ai-button-state>
+                                <ui5-ai-button-state name="split-mode" text="AI Tools" icon="generate-shortcut" show-arrow-button></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <div class="d-flex flex-column gap-1">
+                                <ui5-button id="start-workflow" design="Transparent">Start</ui5-button>
+                                <ui5-button id="progress-workflow" design="Transparent">Progress</ui5-button>
+                                <ui5-button id="review-workflow" design="Transparent">Review</ui5-button>
+                                <ui5-button id="approve-workflow" design="Transparent">Approve</ui5-button>
+                                <ui5-button id="complete-workflow" design="Transparent">Complete</ui5-button>
+                                <ui5-button id="split-workflow" design="Transparent">Split Mode</ui5-button>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use workflow buttons to cycle through different states with varying icons and configurations</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using click event to handle main button activation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="g90123456789012345678901234567890123456789012345678">
+                            <ui5-ai-button id="click-demo-btn">
+                                <ui5-ai-button-state name="click" text="Click Me" icon="generate-shortcut"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-ai-button id="counter-btn">
+                                <ui5-ai-button-state name="counter" text="Click Count: 0" icon="add"></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <div class="mt-2 w-100">
+                                <div id="click-log" class="small text-muted bg-white rounded p-2" style="height: 80px; overflow-y: auto; border: 1px solid #dee2e6;">
+                                    Click events will be logged here...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click buttons to see click events logged and counter updated</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Arrow-Button-Click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using arrow-button-click event to handle split button arrow activation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="h901234567890123456789012345678901234567890123456789">
+                            <ui5-ai-button id="arrow-demo-btn">
+                                <ui5-ai-button-state name="arrow-demo" text="AI Assistant" icon="generate-shortcut" show-arrow-button></ui5-ai-button-state>
+                            </ui5-ai-button>
+                            <ui5-menu id="arrow-menu" opener="arrow-demo-btn">
+                                <ui5-menu-item text="Generate Code"></ui5-menu-item>
+                                <ui5-menu-item text="Explain Code"></ui5-menu-item>
+                                <ui5-menu-item text="Optimize Code"></ui5-menu-item>
+                                <ui5-menu-item text="Find Bugs"></ui5-menu-item>
+                            </ui5-menu>
+                            <div class="mt-2 w-100">
+                                <div id="arrow-log" class="small text-muted bg-white rounded p-2" style="height: 80px; overflow-y: auto; border: 1px solid #dee2e6;">
+                                    Arrow button events will be logged here...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click main button vs arrow button to see different events fired</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Disabled property demo
+        const toggleDisabledBtn = document.getElementById('toggle-disabled-btn');
+        const disabledButtons = document.querySelectorAll('ui5-ai-button[disabled]');
+        
+        toggleDisabledBtn?.addEventListener('click', () => {
+            disabledButtons.forEach(btn => {
+                btn.disabled = !btn.disabled;
+            });
+        });
+
+        // State property demos
+        const multiStateBtn = document.getElementById('multi-state-btn');
+        document.getElementById('idle-state-btn')?.addEventListener('click', () => {
+            multiStateBtn.state = 'idle';
+        });
+        document.getElementById('processing-state-btn')?.addEventListener('click', () => {
+            multiStateBtn.state = 'processing';
+        });
+        document.getElementById('success-state-btn')?.addEventListener('click', () => {
+            multiStateBtn.state = 'success';
+        });
+        document.getElementById('error-state-btn')?.addEventListener('click', () => {
+            multiStateBtn.state = 'error';
+        });
+
+        // Arrow button pressed demo
+        const splitArrowBtn = document.getElementById('split-arrow-btn');
+        const toggleArrowPressed = document.getElementById('toggle-arrow-pressed');
+        const aiMenu = document.getElementById('ai-menu');
+        
+        toggleArrowPressed?.addEventListener('click', () => {
+            splitArrowBtn.arrowButtonPressed = !splitArrowBtn.arrowButtonPressed;
+        });
+
+        splitArrowBtn?.addEventListener('arrow-button-click', () => {
+            aiMenu.open = !aiMenu.open;
+            splitArrowBtn.arrowButtonPressed = aiMenu.open;
+        });
+
+        aiMenu?.addEventListener('close', () => {
+            splitArrowBtn.arrowButtonPressed = false;
+        });
+
+        // Accessibility attributes setup
+        const accessibleBtn = document.getElementById('accessible-btn');
+        const popupBtn = document.getElementById('popup-btn');
+        const shortcutBtn = document.getElementById('shortcut-btn');
+
+        if (accessibleBtn) {
+            accessibleBtn.accessibilityAttributes = {
+                root: {
+                    roleDescription: "AI-powered button for content generation",
+                    title: "Click to generate AI content using advanced algorithms"
+                }
+            };
+        }
+
+        if (popupBtn) {
+            popupBtn.accessibilityAttributes = {
+                root: {
+                    hasPopup: "menu"
+                },
+                arrowButton: {
+                    hasPopup: "menu",
+                    expanded: false,
+                    title: "Open AI tools menu"
+                }
+            };
+        }
+
+        if (shortcutBtn) {
+            shortcutBtn.accessibilityAttributes = {
+                root: {
+                    ariaKeyShortcuts: "Control+G",
+                    title: "Generate AI content (Ctrl+G)"
+                }
+            };
+        }
+
+        // Update accessibility info display
+        const accessibilityInfo = document.getElementById('accessibility-info');
+        if (accessibilityInfo) {
+            accessibilityInfo.textContent = 'Accessibility attributes set: roleDescription, hasPopup, keyboard shortcuts (Ctrl+G)';
+        }
+
+        // Workflow state demo
+        const workflowBtn = document.getElementById('workflow-btn');
+        document.getElementById('start-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'start';
+        });
+        document.getElementById('progress-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'inprogress';
+        });
+        document.getElementById('review-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'review';
+        });
+        document.getElementById('approve-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'approve';
+        });
+        document.getElementById('complete-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'complete';
+        });
+        document.getElementById('split-workflow')?.addEventListener('click', () => {
+            workflowBtn.state = 'split-mode';
+        });
+
+        // Click event demo
+        const clickLog = document.getElementById('click-log');
+        const clickDemoBtn = document.getElementById('click-demo-btn');
+        const counterBtn = document.getElementById('counter-btn');
+        let clickCount = 0;
+
+        function logClick(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            clickLog.innerHTML += `[${timestamp}] ${message}<br>`;
+            clickLog.scrollTop = clickLog.scrollHeight;
+        }
+
+        clickDemoBtn?.addEventListener('click', () => {
+            logClick('Click event fired on demo button');
+        });
+
+        counterBtn?.addEventListener('click', () => {
+            clickCount++;
+            const state = counterBtn.querySelector('ui5-ai-button-state');
+            if (state) {
+                state.text = `Click Count: ${clickCount}`;
+            }
+            logClick(`Counter button clicked - Count: ${clickCount}`);
+        });
+
+        // Arrow button click demo
+        const arrowLog = document.getElementById('arrow-log');
+        const arrowDemoBtn = document.getElementById('arrow-demo-btn');
+        const arrowMenu = document.getElementById('arrow-menu');
+
+        function logArrowEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            arrowLog.innerHTML += `[${timestamp}] ${message}<br>`;
+            arrowLog.scrollTop = arrowLog.scrollHeight;
+        }
+
+        arrowDemoBtn?.addEventListener('click', () => {
+            logArrowEvent('Main button click event fired');
+        });
+
+        arrowDemoBtn?.addEventListener('arrow-button-click', () => {
+            logArrowEvent('Arrow button click event fired');
+            arrowMenu.open = !arrowMenu.open;
+            arrowDemoBtn.arrowButtonPressed = arrowMenu.open;
+        });
+
+        arrowMenu?.addEventListener('close', () => {
+            arrowDemoBtn.arrowButtonPressed = false;
+            logArrowEvent('Menu closed - arrow button released');
+        });
+
+        // Initialize logs
+        document.addEventListener('DOMContentLoaded', () => {
+            clickLog.innerHTML = 'Click events will be logged here...<br>';
+            arrowLog.innerHTML = 'Arrow button events will be logged here...<br>';
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

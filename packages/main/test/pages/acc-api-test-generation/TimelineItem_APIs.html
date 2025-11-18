@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 TimelineItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/Timeline.js";
+        import "@ui5/webcomponents-fiori/dist/TimelineItem.js";
+        import "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Link.js";
+        import "@ui5/webcomponents/dist/Card.js";
+        import "@ui5/webcomponents/dist/CardHeader.js";
+        import "@ui5/webcomponents/dist/Avatar.js";
+        import "@ui5/webcomponents/dist/Tag.js";
+        import "@ui5/webcomponents-icons/dist/employee.js";
+        import "@ui5/webcomponents-icons/dist/task.js";
+        import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+        import "@ui5/webcomponents-icons/dist/customer.js";
+        import "@ui5/webcomponents-icons/dist/phone.js";
+        import "@ui5/webcomponents-icons/dist/email.js";
+        import "@ui5/webcomponents-icons/dist/attachment.js";
+        import "@ui5/webcomponents-icons/dist/calendar.js";
+        import "@ui5/webcomponents-icons/dist/meeting-room.js";
+        import "@ui5/webcomponents-icons/dist/activities.js";
+        import "@ui5/webcomponents-icons/dist/sys-monitor.js";
+        import "@ui5/webcomponents-icons/dist/process.js";
+        import "@ui5/webcomponents-icons/dist/warning.js";
+        import "@ui5/webcomponents-icons/dist/error.js";
+        import "@ui5/webcomponents-icons/dist/message-success.js";
+        import "@ui5/webcomponents-icons/dist/message-information.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+        
+        .timeline-container {
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            overflow: auto;
+        }
+
+        .timeline-container-short {
+            height: 250px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="TimelineItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 TimelineItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Content Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using the default content slot to define rich HTML content within timeline items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="ti1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Text Content" subtitle-text="Simple content">
+                                    <p>This timeline item contains simple text content in the default slot.</p>
+                                    <p>Multiple paragraphs are supported for detailed descriptions.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Rich HTML Content" subtitle-text="Complex content">
+                                    <div>
+                                        <h6>Project Update</h6>
+                                        <p><strong>Status:</strong> In Progress</p>
+                                        <ul>
+                                            <li>Backend development: 80% complete</li>
+                                            <li>Frontend development: 60% complete</li>
+                                            <li>Testing: 40% complete</li>
+                                        </ul>
+                                        <p><em>Next milestone: Alpha release by end of month</em></p>
+                                    </div>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Interactive Content" subtitle-text="Buttons and links">
+                                    <div>
+                                        <p>Timeline items can contain interactive elements:</p>
+                                        <div class="d-flex gap-2 mb-2">
+                                            <ui5-button>Primary Action</ui5-button>
+                                            <ui5-button design="Transparent">Secondary</ui5-button>
+                                        </div>
+                                        <p>External links: <ui5-link href="#">Documentation</ui5-link> | <ui5-link href="#">Support</ui5-link></p>
+                                    </div>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Scroll through timeline to see different content types and interact with elements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Icon Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using icon property to display different UI5 icons for timeline items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="User Action" subtitle-text="Person icon" icon="employee">
+                                    <p>Timeline item with employee/person icon representing user actions</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Task Completed" subtitle-text="Task icon" icon="task">
+                                    <p>Timeline item with task icon representing completed work</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Customer Contact" subtitle-text="Customer icon" icon="customer">
+                                    <p>Timeline item with customer icon representing client interactions</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Phone Call" subtitle-text="Phone icon" icon="phone">
+                                    <p>Timeline item with phone icon representing communication</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Email Sent" subtitle-text="Email icon" icon="email">
+                                    <p>Timeline item with email icon representing messages</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="File Attached" subtitle-text="Attachment icon" icon="attachment">
+                                    <p>Timeline item with attachment icon representing documents</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Notice how different icons visually categorize timeline events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property to display user names or entity names associated with timeline items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Project Initiated" subtitle-text="January 15, 2024" icon="activities" name="John Smith">
+                                    <p>Project kickoff meeting scheduled and initial requirements gathered.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Design Review" subtitle-text="January 22, 2024" icon="customer" name="Sarah Johnson">
+                                    <p>UI/UX designs reviewed and approved by stakeholders.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Development Started" subtitle-text="January 29, 2024" icon="employee" name="Mike Davis">
+                                    <p>Backend development phase initiated with team assignments.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="System Integration" subtitle-text="February 12, 2024" icon="sys-monitor" name="Tech Team">
+                                    <p>Integration testing completed with external systems.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Quality Assurance" subtitle-text="February 19, 2024" icon="task" name="QA Department">
+                                    <p>Comprehensive testing phase including functional and performance tests.</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Observe how names appear next to timeline items for attribution</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">NameClickable Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using nameClickable property to make names interactive and fire name-click events</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3">
+                            <ui5-timeline >
+                                <ui5-timeline-item id="clickable-1" title-text="Non-clickable Name" subtitle-text="Static name" icon="employee" name="Static User">
+                                    <p>This timeline item has a name that is not clickable (nameClickable=false by default).</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="clickable-2" title-text="Clickable Name" subtitle-text="Interactive name" icon="customer" name="Interactive User" name-clickable>
+                                    <p>This timeline item has a clickable name - click it to see the name-click event!</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="clickable-3" title-text="Another Clickable" subtitle-text="Link-like name" icon="phone" name="Contact Person" name-clickable>
+                                    <p>Another clickable name example - names become links when nameClickable is true.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="clickable-4" title-text="Team Lead Action" subtitle-text="Management action" icon="meeting-room" name="Team Lead" name-clickable>
+                                    <p>Team lead initiated this action - click the name to view their profile.</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                            <div id="name-click-result" class="mt-2 fw-bold text-success">Name-click events: None</div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Click on the names that appear as links to trigger name-click events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">TitleText Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using titleText property to set the main heading text of timeline items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Short Title" subtitle-text="Brief description" icon="task">
+                                    <p>Timeline item with a concise title text for quick identification.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Medium Length Title for Regular Events" subtitle-text="Moderate description" icon="customer">
+                                    <p>Timeline item with a medium-length title providing more context about the event.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Very Long Title Text That Demonstrates How Timeline Items Handle Extended Titles" subtitle-text="Detailed description" icon="sys-monitor">
+                                    <p>Timeline item with an extensive title showing how long text is handled in the timeline layout.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Special Characters & Symbols in Title: @#$%^&*()" subtitle-text="Symbol test" icon="warning">
+                                    <p>Timeline item testing how special characters and symbols are displayed in titles.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Unicode Characters: 你好 世界 🌍 ✨ 🚀" subtitle-text="Unicode test" icon="message-information">
+                                    <p>Timeline item demonstrating Unicode character support in title text including emojis.</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Notice how different title lengths and character types are displayed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SubtitleText Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using subtitleText property to provide additional context or metadata for timeline items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Meeting Scheduled" subtitle-text="Today at 2:00 PM" icon="meeting-room">
+                                    <p>Subtitle showing time information for the scheduled meeting.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Document Uploaded" subtitle-text="Size: 2.4 MB | Type: PDF" icon="attachment">
+                                    <p>Subtitle providing file metadata including size and format.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Customer Call" subtitle-text="Duration: 45 minutes | Status: Completed" icon="phone">
+                                    <p>Subtitle with call duration and completion status information.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Code Deployment" subtitle-text="Environment: Production | Version: v2.1.3" icon="sys-monitor">
+                                    <p>Subtitle indicating deployment environment and version details.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Empty Subtitle Test" subtitle-text="" icon="task">
+                                    <p>Timeline item with empty subtitle text to test layout behavior.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="No Subtitle Test" icon="employee">
+                                    <p>Timeline item without subtitle property to test default behavior.</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Compare items with different subtitle content, including empty and missing subtitles</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">State Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using state property to control visual state indicators (None, Positive, Critical, Negative, Information)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="ti7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Default State" subtitle-text="No state specified" icon="task" state="None">
+                                    <p>Timeline item with default state (None) - no special visual indicator.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Success State" subtitle-text="Positive outcome" icon="message-success" state="Positive">
+                                    <p>Timeline item with Positive state indicating success, completion, or positive outcome.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Warning State" subtitle-text="Needs attention" icon="warning" state="Critical">
+                                    <p>Timeline item with Critical state indicating warnings or items that need attention.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Error State" subtitle-text="Failed operation" icon="error" state="Negative">
+                                    <p>Timeline item with Negative state indicating errors, failures, or problematic events.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Information State" subtitle-text="FYI notification" icon="message-information" state="Information">
+                                    <p>Timeline item with Information state for neutral informational messages.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Process Completed Successfully" subtitle-text="All checks passed" icon="process" state="Positive" name="System" name-clickable>
+                                    <div>
+                                        <p><strong>Deployment Status:</strong> ✅ Complete</p>
+                                        <ul>
+                                            <li>✅ Build successful</li>
+                                            <li>✅ Tests passed</li>
+                                            <li>✅ Deployed to production</li>
+                                        </ul>
+                                        <ui5-button design="Positive">View Logs</ui5-button>
+                                    </div>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="System Alert Triggered" subtitle-text="High CPU usage detected" icon="sys-monitor" state="Critical" name="Monitoring System" name-clickable>
+                                    <div>
+                                        <p><strong>Alert Details:</strong></p>
+                                        <p>CPU usage exceeded 90% threshold for more than 5 minutes.</p>
+                                        <div class="d-flex gap-2">
+                                            <ui5-button design="Attention">Investigate</ui5-button>
+                                            <ui5-button design="Transparent">Acknowledge</ui5-button>
+                                        </div>
+                                    </div>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item title-text="Database Connection Failed" subtitle-text="Unable to connect to primary DB" icon="error" state="Negative" name="Database Service">
+                                    <div>
+                                        <p><strong>Error Code:</strong> DB_CONNECTION_TIMEOUT</p>
+                                        <p><strong>Impact:</strong> Service temporarily unavailable</p>
+                                        <p><strong>Action Taken:</strong> Failover to backup database initiated</p>
+                                        <ui5-button design="Negative">View Error Details</ui5-button>
+                                    </div>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Notice the different visual indicators for each state type</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Interactive State Demo API</h2>
+                    <div class="text-muted fst-italic mb-3">Interactive demonstration of different state values with dynamic state switching</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti8f9g0h1i2j3k4l5m6n7o8p9q0r1s2t3u4v5w6x7y8">
+                            <div class="d-flex gap-2 mb-3">
+                                <ui5-button id="state-none-btn">None</ui5-button>
+                                <ui5-button id="state-success-btn" design="Positive">Success</ui5-button>
+                                <ui5-button id="state-warning-btn" design="Attention">Warning</ui5-button>
+                                <ui5-button id="state-error-btn" design="Negative">Error</ui5-button>
+                                <ui5-button id="state-information-btn" design="Transparent">Information</ui5-button>
+                            </div>
+                            <ui5-timeline >
+                                <ui5-timeline-item id="interactive-item" title-text="Interactive Timeline Item" subtitle-text="Click buttons to change state" icon="task">
+                                    <p>This timeline item's state can be changed using the buttons above.</p>
+                                    <div id="current-state" class="mt-2 small text-muted">Current state: None</div>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click state buttons to see visual state changes on the timeline item</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name-Click Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when nameClickable is true and the user clicks on the name link</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container-short" data-cy-acc-container-id="ti8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7">
+                            <ui5-timeline >
+                                <ui5-timeline-item id="event-demo-1" title-text="User Profile Access" subtitle-text="Click name for details" icon="employee" name="Alice Johnson" name-clickable>
+                                    <p>Click on "Alice Johnson" to trigger a name-click event and view profile details.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="event-demo-2" title-text="Team Contact" subtitle-text="Reach out to team member" icon="phone" name="Bob Smith" name-clickable>
+                                    <p>Click on "Bob Smith" to get contact information and communication options.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="event-demo-3" title-text="Project Manager Info" subtitle-text="Management details" icon="customer" name="Carol Williams" name-clickable>
+                                    <p>Click on "Carol Williams" to access project management dashboard.</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-item id="event-demo-4" title-text="System Administrator" subtitle-text="Technical support" icon="sys-monitor" name="David Brown" name-clickable>
+                                    <p>Click on "David Brown" for technical support and system administration.</p>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                            <div id="name-event-result" class="mt-2 fw-bold text-success">Name-click events: None</div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Click on any of the names to see name-click events with user details</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Complex Timeline Item Examples API</h2>
+                    <div class="text-muted fst-italic mb-3">Comprehensive examples combining all TimelineItem properties and features</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="ti9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8">
+                            <ui5-timeline >
+                                <ui5-timeline-item 
+                                    id="complex-1"
+                                    title-text="E-commerce Order Processing" 
+                                    subtitle-text="Order #12345 | Customer: premium-customer@example.com" 
+                                    icon="customer" 
+                                    name="Order System" 
+                                    name-clickable
+                                    state="Positive">
+                                    <ui5-card>
+                                        <ui5-card-header title-text="Order Details" subtitle-text="Successfully processed">
+                                        </ui5-card-header>
+                                        <div class="p-3">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p><strong>Items:</strong> 3</p>
+                                                    <p><strong>Total:</strong> $247.99</p>
+                                                    <p><strong>Payment:</strong> Credit Card ****1234</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p><strong>Shipping:</strong> Express Delivery</p>
+                                                    <p><strong>Expected:</strong> Tomorrow by 6 PM</p>
+                                                    <p><strong>Tracking:</strong> TR123456789</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex gap-2 mt-3">
+                                                <ui5-button design="Positive">View Order</ui5-button>
+                                                <ui5-button design="Transparent">Send Email</ui5-button>
+                                                <ui5-button design="Transparent">Track Package</ui5-button>
+                                            </div>
+                                        </div>
+                                    </ui5-card>
+                                </ui5-timeline-item>
+
+                                <ui5-timeline-item 
+                                    id="complex-2"
+                                    title-text="Security Alert: Suspicious Login Activity" 
+                                    subtitle-text="Location: Tokyo, Japan | Device: Unknown Mobile" 
+                                    icon="warning" 
+                                    name="Security Monitor" 
+                                    name-clickable
+                                    state="Critical">
+                                    <div class="alert alert-warning">
+                                        <h6>🛡️ Security Alert Details</h6>
+                                        <p><strong>Time:</strong> 2024-01-15 03:42 AM UTC</p>
+                                        <p><strong>IP Address:</strong> 203.0.113.45</p>
+                                        <p><strong>User Agent:</strong> Mobile Safari 17.0</p>
+                                        <p><strong>Risk Level:</strong> Medium</p>
+                                        <hr>
+                                        <h6>Recommended Actions:</h6>
+                                        <ul>
+                                            <li>Verify if this was you</li>
+                                            <li>Change password if suspicious</li>
+                                            <li>Enable 2FA if not already active</li>
+                                        </ul>
+                                        <div class="d-flex gap-2 mt-3">
+                                            <ui5-button design="Attention">This Was Me</ui5-button>
+                                            <ui5-button design="Negative">Secure Account</ui5-button>
+                                            <ui5-link href="#" class="ms-2">Learn More</ui5-link>
+                                        </div>
+                                    </div>
+                                </ui5-timeline-item>
+
+                                <ui5-timeline-item 
+                                    id="complex-3"
+                                    title-text="API Integration Update Complete" 
+                                    subtitle-text="Version 2.3.0 | 15 endpoints updated" 
+                                    icon="process" 
+                                    name="DevOps Team" 
+                                    name-clickable
+                                    state="Information">
+                                    <div>
+                                        <p><strong>Update Summary:</strong> Successfully deployed API version 2.3.0 with enhanced endpoints and improved performance.</p>
+                                        
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <h6>New Features</h6>
+                                                <ul class="list-unstyled">
+                                                    <li>✅ OAuth 2.0 support</li>
+                                                    <li>✅ Rate limiting</li>
+                                                    <li>✅ GraphQL endpoint</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Performance</h6>
+                                                <ul class="list-unstyled">
+                                                    <li>📈 Response time: -40%</li>
+                                                    <li>📈 Throughput: +65%</li>
+                                                    <li>📉 Error rate: -75%</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Breaking Changes</h6>
+                                                <p><ui5-tag color-scheme="5">None</ui5-tag></p>
+                                                <p class="small text-muted">Fully backward compatible</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <h6>Quick Links</h6>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <ui5-link href="#">📚 API Documentation</ui5-link>
+                                                <ui5-link href="#">🔧 Migration Guide</ui5-link>
+                                                <ui5-link href="#">📊 Performance Metrics</ui5-link>
+                                                <ui5-link href="#">🐛 Report Issues</ui5-link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ui5-timeline-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Interact with all elements - click names, buttons, and links within complex timeline items</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let nameClickCount = 0;
+        let nameEventCount = 0;
+
+        // Name-click event handling for simple name clicking demo
+        const nameClickResult = document.getElementById('name-click-result');
+        const clickableItems = ['clickable-2', 'clickable-3', 'clickable-4'];
+
+        clickableItems.forEach(itemId => {
+            const item = document.getElementById(itemId);
+            if (item && nameClickResult) {
+                item.addEventListener('name-click', (event) => {
+                    nameClickCount++;
+                    const name = event.target.name;
+                    nameClickResult.innerHTML = `Name-click events: ${nameClickCount}<br>Last clicked: "${name}"`;
+                });
+            }
+        });
+
+        // Name-click event handling for detailed event demo
+        const nameEventResult = document.getElementById('name-event-result');
+        const eventDemoItems = ['event-demo-1', 'event-demo-2', 'event-demo-3', 'event-demo-4'];
+
+        eventDemoItems.forEach(itemId => {
+            const item = document.getElementById(itemId);
+            if (item && nameEventResult) {
+                item.addEventListener('name-click', (event) => {
+                    nameEventCount++;
+                    const name = event.target.name;
+                    const title = event.target.titleText;
+                    nameEventResult.innerHTML = `Name-click events: ${nameEventCount}<br>Clicked: "${name}" from "${title}"`;
+                    
+                    // Show additional interaction based on name
+                    let message = '';
+                    switch (name) {
+                        case 'Alice Johnson':
+                            message = '👤 Viewing Alice Johnson\'s profile\n📧 alice.johnson@company.com\n📞 +1-555-0123\n🏢 Engineering Department';
+                            break;
+                        case 'Bob Smith':
+                            message = '👤 Bob Smith - Senior Developer\n📧 bob.smith@company.com\n📞 +1-555-0456\n💬 Available for chat';
+                            break;
+                        case 'Carol Williams':
+                            message = '👤 Carol Williams - Project Manager\n📧 carol.williams@company.com\n📞 +1-555-0789\n📊 Project Dashboard Access';
+                            break;
+                        case 'David Brown':
+                            message = '👤 David Brown - System Admin\n📧 david.brown@company.com\n🔧 Technical Support Available\n📋 System Status: All Green';
+                            break;
+                    }
+                    if (message) {
+                        alert(message);
+                    }
+                });
+            }
+        });
+
+        // Complex timeline item name-click events
+        const complexItems = ['complex-1', 'complex-2', 'complex-3'];
+        complexItems.forEach(itemId => {
+            const item = document.getElementById(itemId);
+            if (item) {
+                item.addEventListener('name-click', (event) => {
+                    const name = event.target.name;
+                    const title = event.target.titleText;
+                    console.log(`Complex timeline name-click: ${name} from "${title}"`);
+                    
+                    let action = '';
+                    switch (name) {
+                        case 'Order System':
+                            action = 'Opening Order Management Dashboard...';
+                            break;
+                        case 'Security Monitor':
+                            action = 'Accessing Security Console...';
+                            break;
+                        case 'DevOps Team':
+                            action = 'Opening DevOps Portal...';
+                            break;
+                    }
+                    if (action) {
+                        alert(action);
+                    }
+                });
+            }
+        });
+
+        // Interactive state demonstration
+        const interactiveItem = document.getElementById('interactive-item');
+        const currentStateDisplay = document.getElementById('current-state');
+        const stateButtons = {
+            'state-none-btn': '',
+            'state-success-btn': 'Success',
+            'state-warning-btn': 'Warning',
+            'state-error-btn': 'Error',
+            'state-information-btn': 'Information'
+        };
+
+        Object.entries(stateButtons).forEach(([buttonId, state]) => {
+            const button = document.getElementById(buttonId);
+            if (button && interactiveItem && currentStateDisplay) {
+                button.addEventListener('click', () => {
+                    if (state === '') {
+                        interactiveItem.removeAttribute('state');
+                        currentStateDisplay.textContent = 'Current state: None';
+                    } else {
+                        interactiveItem.state = state;
+                        currentStateDisplay.textContent = `Current state: ${state}`;
+                    }
+                });
+            }
+        });
+
+        // Button click demonstrations within timeline items
+        document.addEventListener('click', (event) => {
+            if (event.target.matches('ui5-button') && !event.target.id.startsWith('state-')) {
+                const buttonText = event.target.textContent || event.target.innerText;
+                if (buttonText && !buttonText.includes('Action')) { // Avoid generic action buttons
+                    console.log(`Timeline button clicked: ${buttonText}`);
+                }
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

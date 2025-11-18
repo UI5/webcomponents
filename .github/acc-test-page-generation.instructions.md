@@ -18,6 +18,7 @@ Task Requirements:
    - Analyze component-specific interactions
    - Do NOT use any deprecated API's
    - For specific features or functionalities such as F6 Navigation, localization, theming, etc., ensure to include relevant imports
+   - Ensure all necessary assets are imported for proper component rendering and functionality
 
 2. Test Page Structure
    - Follow strictly the styling and structure of APIs_Template.html, do not change any styling and do not add any from your side to the structure, replace whats instructed there
