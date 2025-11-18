@@ -394,7 +394,7 @@ describe("Popover Resize Functionality", () => {
 		it("should reset size when popover is closed and reopened", () => {
 			cy.mount(
 				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "200px" }}>
+					<Button id="btnOpen" style={{ position: "absolute", left: "100px", top: "200px" }}>
 						Open
 					</Button>
 					<Popover id="popover" opener="btnOpen" placement="End" resizable>
@@ -420,7 +420,7 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(600, 300)
+				.realMouseMove(300, 300)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
@@ -480,7 +480,7 @@ describe("Popover Resize Functionality", () => {
 			});
 		});
 
-		it.only("should resize correctly with Bottom placement", () => {
+		it("should resize correctly with Bottom placement", () => {
 			cy.mount(
 				<>
 					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "100px" }}>
@@ -508,7 +508,7 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(400, 500)
+				.realMouseMove(400, 200)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
@@ -704,7 +704,7 @@ describe("Popover Resize Functionality", () => {
 			cy.get("[ui5-popover]")
 				.shadow()
 				.find(".ui5-popover-resize-handle")
-				.realMouseDown({ position: "topLeft" });
+				.realMouseDown({ position: "center" });
 
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 		});
