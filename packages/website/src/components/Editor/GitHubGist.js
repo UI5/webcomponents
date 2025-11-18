@@ -28,10 +28,10 @@ export default function GitHubGist({
   return (
     <div>
       <ui5-label style={{ marginTop: "1rem" }}>GitHub Gist</ui5-label>
-      
+
       {!githubUser ? (
         <div style={{ textAlign: "center", padding: "1rem 0" }}>
-          <ui5-button 
+          <ui5-button
             onClick={onSignIn}
             disabled={isAuthenticating ? true : undefined}
             style={{ width: "100%" }}
@@ -44,11 +44,11 @@ export default function GitHubGist({
         <div>
           {gistUrl ? (
             <div>
-              <div style={{ 
-                display: "flex", 
-                gap: "0.5rem", 
-                alignItems: "center", 
-                marginBottom: "0.5rem" 
+              <div style={{
+                display: "flex",
+                gap: "0.5rem",
+                alignItems: "center",
+                marginBottom: "0.5rem"
               }}>
                 <ui5-input readonly value={gistUrl}></ui5-input>
                 <ui5-button
@@ -60,7 +60,7 @@ export default function GitHubGist({
             </div>
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <ui5-button 
+              <ui5-button
                 onClick={onCreateGist}
                 disabled={isCreatingGist ? true : undefined}
                 icon={GithubIcon}
@@ -76,23 +76,23 @@ export default function GitHubGist({
               </ui5-button>
             </div>
           )}
-          
-          <span style={{ 
-            fontSize: "0.8rem", 
-            color: "var(--sapSuccessColor)" 
+
+          <span style={{
+            fontSize: "0.8rem",
+            color: "var(--ui5-sapSuccessColor)"
           }}>
-            ✓ Signed in as {githubUser.login} 
+            ✓ Signed in as {githubUser.login}
             {githubUser.avatar_url && (
-              <img 
-                src={githubUser.avatar_url} 
-                alt="avatar" 
-                style={{ 
-                  width: "1.5rem", 
-                  height: "1.5rem", 
-                  borderRadius: "50%", 
-                  verticalAlign: "middle", 
-                  marginLeft: "0.5rem" 
-                }} 
+              <img
+                src={githubUser.avatar_url}
+                alt="avatar"
+                style={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                  borderRadius: "50%",
+                  verticalAlign: "middle",
+                  marginLeft: "0.5rem"
+                }}
               />
             )}
           </span>

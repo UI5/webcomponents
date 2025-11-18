@@ -23,9 +23,9 @@
 
 .illustration-collection-list-item {
 	padding: 1rem;
-	box-shadow: var(--sapContent_Shadow0);
-	background-color: var(--sapList_Background);
-	border-radius: var(--sapTile_BorderCornerRadius);
+	box-shadow: var(--ui5-sapContent_Shadow0);
+	background-color: var(--ui5-sapList_Background);
+	border-radius: var(--ui5-sapTile_BorderCornerRadius);
 	display: flex;
 	box-sizing: border-box;
 	flex-direction: column;
@@ -35,12 +35,12 @@
 	gap: 0.5rem;
 }
 .illustration-collection-list-item:hover {
-	background-color: var(--sapList_Hover_Background);
-	box-shadow: var(--sapContent_Shadow2);
+	background-color: var(--ui5-sapList_Hover_Background);
+	box-shadow: var(--ui5-sapContent_Shadow2);
 }
 
 .illustration-collection-list-item:active {
-	background-color: var(--sapList_Active_Background);
+	background-color: var(--ui5-sapList_Active_Background);
 }
 
 .illustration-collection-list-item--title {

@@ -19,13 +19,13 @@
 	padding: 0;
 	inset: unset;
 	right: 0;
-	border-start-start-radius: var(--sapElement_BorderCornerRadius);
-	border-end-start-radius: var(--sapElement_BorderCornerRadius);
-	box-shadow: var(--sapContent_Shadow2);
+	border-start-start-radius: var(--ui5-sapElement_BorderCornerRadius);
+	border-end-start-radius: var(--ui5-sapElement_BorderCornerRadius);
+	box-shadow: var(--ui5-sapContent_Shadow2);
 }
 
 #panel::backdrop {
-	background-color: var(--sapBlockLayer_Background);
+	background-color: var(--ui5-sapBlockLayer_Background);
 	opacity: 0.2;
 }
 
