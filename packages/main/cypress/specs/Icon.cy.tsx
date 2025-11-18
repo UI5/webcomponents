@@ -294,9 +294,10 @@ describe("Icon general interaction", () => {
             const icon = $icon[0] as any;
             const accessibilityInfo = icon.accessibilityInfo;
             
-            // For Interactive mode, accessibilityInfo should have role and description
+            // For Interactive mode, accessibilityInfo should have role, type and description
             expect(accessibilityInfo).to.not.be.undefined;
             expect(accessibilityInfo.role).to.equal("button");
+            expect(accessibilityInfo.type).to.equal("Button");
             expect(accessibilityInfo.description).to.equal(accessibleName);
         });
 
@@ -330,8 +331,11 @@ describe("Icon general interaction", () => {
             const icon = $icon[0] as any;
             const accessibilityInfo = icon.accessibilityInfo;
             
-            // For Image mode, accessibilityInfo should be undefined
-            expect(accessibilityInfo).to.be.undefined;
+            // For Image mode, accessibilityInfo should have role, type and description
+            expect(accessibilityInfo).to.not.be.undefined;
+            expect(accessibilityInfo.role).to.equal("img");
+            expect(accessibilityInfo.type).to.equal("Image");
+            expect(accessibilityInfo.description).to.equal(accessibleName);
         });
     });
 });

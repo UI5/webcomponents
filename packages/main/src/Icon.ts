@@ -8,12 +8,16 @@ import type { IconData, UnsafeIconData } from "@ui5/webcomponents-base/dist/asse
 import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import IconTemplate from "./IconTemplate.js";
 import type IconDesign from "./types/IconDesign.js";
 import IconMode from "./types/IconMode.js";
+
+import { ICON_ARIA_TYPE_IMAGE, ICON_ARIA_TYPE_INTERACTIVE } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import iconCss from "./generated/themes/Icon.css.js";
@@ -118,6 +122,10 @@ class Icon extends UI5Element implements IIcon {
 	eventDetails!: {
 		click: void
 	}
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
 	/**
 	 * Defines the component semantic design.
 	 * @default "Default"
@@ -329,14 +337,27 @@ class Icon extends UI5Element implements IIcon {
 		return this.showTooltip && this.effectiveAccessibleName;
 	}
 
-	get accessibilityInfo() {
-		if (this.mode === IconMode.Interactive) {
-			return {
-				role: this.effectiveAccessibleRole as AriaRole,
-				description: this.effectiveAccessibleName,
-			};
+	_getAriaTypeDescription() {
+		switch (this.mode) {
+		case IconMode.Interactive:
+			return Icon.i18nBundle.getText(ICON_ARIA_TYPE_INTERACTIVE);
+		case IconMode.Image:
+			return Icon.i18nBundle.getText(ICON_ARIA_TYPE_IMAGE);
+		default:
+			return "";
 		}
-		return undefined;
+	}
+
+	get accessibilityInfo() {
+		if (this.mode === IconMode.Decorative) {
+			return undefined;
+		}
+
+		return {
+			role: this.effectiveAccessibleRole as AriaRole,
+			type: this._getAriaTypeDescription(),
+			description: this.effectiveAccessibleName,
+		};
 	}
 }
 
