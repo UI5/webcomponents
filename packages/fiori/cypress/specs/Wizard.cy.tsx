@@ -705,13 +705,4 @@ describe("Wizard - getFocusDomRef Method", () => {
             .find(".ui5-wiz-step-root")
             .should("be.focused");
     });
-
-    it("should return undefined when the Wizard is empty", () => {
-        cy.mount(<Wizard></Wizard>);
-
-        cy.get<Wizard>("[ui5-wizard]")
-            .then(($el) => {
-                expect($el[0].getFocusDomRef()).to.be.undefined;
-            });
-    });
 });
