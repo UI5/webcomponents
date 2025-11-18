@@ -67,6 +67,7 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
-	pointer-events: none;
 	padding-inline: 0.25rem;
+	pointer-events: none;
+	vertical-align: middle;
 }

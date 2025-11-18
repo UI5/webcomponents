@@ -486,6 +486,7 @@ slot[name="profile"] {
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
 	pointer-events: none;
+	vertical-align: middle;
 }
 
 .ui5-shellbar-co-pilot-placeholder {
