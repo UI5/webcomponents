@@ -546,35 +546,6 @@ describe("Validation inside a form", () => {
 });
 
 describe("Icon Tooltip Tests", () => {
-	it("TimePicker icon shows correct tooltip when closed", () => {
-		cy.mount(<TimePicker />);
-
-		cy.get<TimePicker>("[ui5-time-picker]")
-			.as("timePicker")
-			.should("not.have.attr", "open");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("ui5-icon")
-			.should("have.attr", "accessible-name", "Open Picker");
-	});
-
-	it("TimePicker icon shows correct tooltip when opened", () => {
-		cy.mount(<TimePicker />);
-
-		cy.get<TimePicker>("[ui5-time-picker]")
-			.as("timePicker")
-			.ui5TimePickerValueHelpIconPress();
-
-		cy.get<TimePicker>("@timePicker")
-			.should("have.attr", "open");
-
-		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find("ui5-icon")
-			.should("have.attr", "accessible-name", "Close Picker");
-	});
-
 	it("TimePicker icon tooltip changes when toggling picker", () => {
 		cy.mount(<TimePicker />);
 
