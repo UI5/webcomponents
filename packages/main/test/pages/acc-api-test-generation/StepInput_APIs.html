@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 StepInput API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/StepInput.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Button.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="StepInput API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 StepInput Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to set the numeric value of the component</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-step-input value="0"></ui5-step-input>
+                            <ui5-step-input value="5"></ui5-step-input>
+                            <ui5-step-input value="100"></ui5-step-input>
+                            <ui5-step-input value="-10"></ui5-step-input>
+                            <ui5-step-input value="3.14"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use +/- buttons or type values to change numbers</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Min Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using min property to set minimum allowed values</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-step-input min="0" value="0"></ui5-step-input>
+                            <ui5-step-input min="5" value="5"></ui5-step-input>
+                            <ui5-step-input min="-10" value="-5"></ui5-step-input>
+                            <ui5-step-input min="1" max="10" value="5"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try decreasing values below minimum limits</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Max Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using max property to set maximum allowed values</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-step-input max="10" value="5"></ui5-step-input>
+                            <ui5-step-input max="100" value="90"></ui5-step-input>
+                            <ui5-step-input max="0" value="-5"></ui5-step-input>
+                            <ui5-step-input min="1" max="5" value="3"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try increasing values above maximum limits</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Step Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using step property to control increment/decrement amount</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-step-input step="1" value="0"></ui5-step-input>
+                            <ui5-step-input step="5" value="10"></ui5-step-input>
+                            <ui5-step-input step="10" value="50"></ui5-step-input>
+                            <ui5-step-input step="0.1" value="1.5"></ui5-step-input>
+                            <ui5-step-input step="0.25" value="2.75"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click +/- buttons to see different step increments</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueState Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueState property to indicate validation state</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-step-input value-state="None" value="0"></ui5-step-input>
+                            <ui5-step-input value-state="Positive" value="100"></ui5-step-input>
+                            <ui5-step-input value-state="Critical" value="75"></ui5-step-input>
+                            <ui5-step-input value-state="Negative" value="-5"></ui5-step-input>
+                            <ui5-step-input value-state="Information" value="42"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Observe different value state visual indicators</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Required Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using required property to mark component as required for form validation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <ui5-step-input required value="0"></ui5-step-input>
+                            <ui5-step-input required value="5" min="1" max="10"></ui5-step-input>
+                            <ui5-step-input value="0"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Required fields should show validation indicators</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Disabled Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using disabled property to make component noninteractive</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <ui5-step-input value="5"></ui5-step-input>
+                            <ui5-step-input value="10" disabled></ui5-step-input>
+                            <ui5-step-input value="15" step="5" disabled></ui5-step-input>
+                            <ui5-step-input id="toggleDisabledInput" value="20"></ui5-step-input>
+                            <button onclick="toggleDisabled()">Toggle Disabled</button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try interacting with disabled inputs - they should not respond</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Readonly Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using readonly property to prevent value changes while keeping visual accessibility</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-step-input value="5"></ui5-step-input>
+                            <ui5-step-input value="10" readonly></ui5-step-input>
+                            <ui5-step-input value="15" step="5" readonly></ui5-step-input>
+                            <ui5-step-input id="toggleReadonlyInput" value="20"></ui5-step-input>
+                            <button onclick="toggleReadonly()">Toggle Readonly</button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Try changing readonly values - buttons should be disabled</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Placeholder Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using placeholder property to provide user guidance when value is empty</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4">
+                            <ui5-step-input placeholder="Enter quantity"></ui5-step-input>
+                            <ui5-step-input placeholder="Age (years)" min="0" max="120"></ui5-step-input>
+                            <ui5-step-input placeholder="Price ($)" step="0.01"></ui5-step-input>
+                            <ui5-step-input placeholder="Temperature (°C)" step="0.5"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Clear values to see placeholder text</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Name Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using name property for form submission identification</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5">
+                            <ui5-step-input name="quantity" value="1" placeholder="Quantity"></ui5-step-input>
+                            <ui5-step-input name="price" value="9.99" step="0.01" placeholder="Price"></ui5-step-input>
+                            <ui5-step-input name="age" value="25" min="0" max="120" placeholder="Age"></ui5-step-input>
+                            <ui5-step-input name="rating" value="5" min="1" max="10" placeholder="Rating"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Names are used for form data submission</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValuePrecision Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valuePrecision property to control decimal places display</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6">
+                            <ui5-step-input value="3.14159" value-precision="0"></ui5-step-input>
+                            <ui5-step-input value="3.14159" value-precision="1"></ui5-step-input>
+                            <ui5-step-input value="3.14159" value-precision="2"></ui5-step-input>
+                            <ui5-step-input value="3.14159" value-precision="4"></ui5-step-input>
+                            <ui5-step-input value="123.456789" value-precision="3"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Observe different decimal precision formatting</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleName property to provide ARIA labels for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7">
+                            <ui5-step-input accessible-name="Product quantity selector" value="1" min="1" max="99"></ui5-step-input>
+                            <ui5-step-input accessible-name="Price input in dollars" value="19.99" step="0.01"></ui5-step-input>
+                            <ui5-step-input accessible-name="Age in years" value="25" min="0" max="120"></ui5-step-input>
+                            <ui5-step-input accessible-name="Rating from 1 to 5 stars" value="4" min="1" max="5"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to hear descriptive labels</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">AccessibleNameRef Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using accessibleNameRef property to reference labeling elements</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8">
+                            <ui5-label id="qtyLabel">Quantity:</ui5-label>
+                            <ui5-step-input accessible-name-ref="qtyLabel" value="1" min="1"></ui5-step-input>
+                            
+                            <ui5-label id="priceLabel">Price ($):</ui5-label>
+                            <ui5-step-input accessible-name-ref="priceLabel" value="9.99" step="0.01"></ui5-step-input>
+                            
+                            <ui5-label id="tempLabel">Temperature (°F):</ui5-label>
+                            <ui5-step-input accessible-name-ref="tempLabel" value="72" min="32" max="100"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Labels should be read by screen readers</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">ValueStateMessage Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using valueStateMessage slot to provide custom validation messages</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9">
+                            <ui5-step-input value-state="Critical" value="75" min="0" max="100">
+                                <div slot="valueStateMessage">Warning: Value is approaching maximum limit</div>
+                            </ui5-step-input>
+                            
+                            <ui5-step-input value-state="Negative" value="-5" min="0">
+                                <div slot="valueStateMessage">Error: Value cannot be negative</div>
+                            </ui5-step-input>
+                            
+                            <ui5-step-input value-state="Information" value="50">
+                                <div slot="valueStateMessage">Info: This is the recommended default value</div>
+                            </ui5-step-input>
+                            
+                            <ui5-step-input value-state="Positive" value="100" max="100">
+                                <div slot="valueStateMessage">Success: Maximum value reached</div>
+                            </ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus inputs to see custom value state messages</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using change event to handle value changes on Enter or focus out</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0">
+                            <ui5-step-input id="changeEventInput" value="10" min="0" max="100"></ui5-step-input>
+                            <ui5-step-input id="changeEventInput2" value="5" step="2.5"></ui5-step-input>
+                            <ui5-label id="changeOutput">No change events yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Change values and press Enter or click outside to trigger change events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Input Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using input event to handle real-time value changes during typing</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1">
+                            <ui5-step-input id="inputEventInput" value="0" min="-50" max="50"></ui5-step-input>
+                            <ui5-step-input id="inputEventInput2" value="1.5" step="0.5"></ui5-step-input>
+                            <ui5-label id="inputOutput">No input events yet</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Type in the inputs to see real-time input events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value-State-Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value-state-change event to handle validation state updates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2">
+                            <ui5-step-input id="valueStateEventInput" value="5" min="0" max="10"></ui5-step-input>
+                            <ui5-step-input id="valueStateEventInput2" value="50" min="0" max="100"></ui5-step-input>
+                            <ui5-label id="valueStateOutput">No value state changes</ui5-label>
+                        </div>
+                        <div class="test-instruction">Test instructions: Enter values outside min/max range to trigger value state changes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing keyboard interaction patterns for step input controls</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3">
+                            <ui5-step-input value="50" min="0" max="100" step="5"></ui5-step-input>
+                            <ui5-step-input value="2.5" step="0.5" value-precision="1"></ui5-step-input>
+                            <ui5-step-input value="10" min="1" max="20" step="2"></ui5-step-input>
+                        </div>
+                        <div class="test-instruction">Test instructions: Focus inputs and use Arrow Up/Down, Page Up/Down, Ctrl+Arrow keys for different increments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Toggle disabled state
+        function toggleDisabled() {
+            const input = document.getElementById('toggleDisabledInput');
+            input.disabled = !input.disabled;
+        }
+
+        // Toggle readonly state
+        function toggleReadonly() {
+            const input = document.getElementById('toggleReadonlyInput');
+            input.readonly = !input.readonly;
+        }
+
+        // Change event handlers
+        const changeEventInputs = ['changeEventInput', 'changeEventInput2'];
+        changeEventInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('change', (event) => {
+                    const output = document.getElementById('changeOutput');
+                    output.textContent = `Change event: ${inputId} value = ${input.value}`;
+                    console.log(`StepInput change event: ${inputId} = ${input.value}`);
+                });
+            }
+        });
+
+        // Input event handlers
+        const inputEventInputs = ['inputEventInput', 'inputEventInput2'];
+        inputEventInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('input', (event) => {
+                    const output = document.getElementById('inputOutput');
+                    output.textContent = `Input event: ${inputId} value = ${event.detail.value}`;
+                    console.log(`StepInput input event: ${inputId} = ${event.detail.value}`);
+                });
+            }
+        });
+
+        // Value state change event handlers
+        const valueStateEventInputs = ['valueStateEventInput', 'valueStateEventInput2'];
+        valueStateEventInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('value-state-change', (event) => {
+                    const output = document.getElementById('valueStateOutput');
+                    output.textContent = `Value state: ${inputId} = ${event.detail.valueState}, valid: ${event.detail.valid}`;
+                    console.log(`StepInput value-state-change: ${inputId}`, event.detail);
+                });
+            }
+        });
+
+        // Universal event logging for all step inputs
+        const allStepInputs = document.querySelectorAll('ui5-step-input');
+        allStepInputs.forEach((input, index) => {
+            input.addEventListener('change', (event) => {
+                console.log(`StepInput ${index} change: value = ${input.value}`);
+            });
+
+            input.addEventListener('input', (event) => {
+                console.log(`StepInput ${index} input: value = ${event.detail.value}`);
+            });
+
+            input.addEventListener('value-state-change', (event) => {
+                console.log(`StepInput ${index} value-state-change:`, event.detail);
+            });
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
