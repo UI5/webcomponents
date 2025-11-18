@@ -45,6 +45,7 @@ import "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 
+import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
