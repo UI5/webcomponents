@@ -1669,35 +1669,6 @@ describe("Date Picker Tests", () => {
 			.should("have.value", "0202-12-01");
 	});
 
-	it("DatePicker icon shows correct tooltip when closed", () => {
-		cy.mount(<DatePicker />);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.should("not.have.attr", "open");
-
-		cy.get("@datePicker")
-			.shadow()
-			.find("ui5-icon")
-			.should("have.attr", "accessible-name", "Open Picker");
-	});
-
-	it("DatePicker icon shows correct tooltip when opened", () => {
-		cy.mount(<DatePicker />);
-
-		cy.get("[ui5-date-picker]")
-			.as("datePicker")
-			.ui5DatePickerValueHelpIconPress();
-
-		cy.get("@datePicker")
-			.should("have.attr", "open");
-
-		cy.get("@datePicker")
-			.shadow()
-			.find("ui5-icon")
-			.should("have.attr", "accessible-name", "Close Picker");
-	});
-
 	it("DatePicker icon tooltip changes when toggling picker", () => {
 		cy.mount(<DatePicker />);
 
