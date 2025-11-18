@@ -22,6 +22,9 @@ import {
 	VALUE_STATE_WARNING,
 	VALUE_STATE_SUCCESS,
 	FORM_CHECKABLE_REQUIRED,
+	CHECKBOX_CHECKED,
+	CHECKBOX_NOT_CHECKED,
+	CHECKBOX_ARIA_TYPE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -466,9 +469,13 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	}
 
 	get accessibilityInfo() {
+		const checkboxState = this.checked ? CheckBox.i18nBundle.getText(CHECKBOX_CHECKED) : CheckBox.i18nBundle.getText(CHECKBOX_NOT_CHECKED);
+		const description = (this.ariaLabelText || this.text || "") + " " + checkboxState;
+		
 		return {
 			role: this.accInfo.role,
-			description: this.ariaLabelText || this.text || "",
+			type: CheckBox.i18nBundle.getText(CHECKBOX_ARIA_TYPE),
+			description,
 			disabled: !!this.accInfo.ariaDisabled,
 			readonly: !!this.accInfo.ariaReadonly,
 			required: this.accInfo.ariaRequired,
