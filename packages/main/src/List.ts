@@ -534,6 +534,7 @@ class List extends UI5Element {
 	_beforeElement?: HTMLElement | null;
 	_afterElement?: HTMLElement | null;
 	_startMarkerOutOfView: boolean = false;
+	_lastFocusedElementIndex?: number;
 
 	handleResizeCallback: ResizeObserverCallback;
 	onItemFocusedBound: (e: CustomEvent) => void;

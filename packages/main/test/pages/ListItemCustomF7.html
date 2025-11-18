@@ -38,21 +38,22 @@
 		<p><strong>F7 vs F2 Behavior:</strong></p>
 		<ul>
 			<li><strong>F2:</strong> Simple navigation - always goes to first focusable element</li>
-			<li><strong>F7:</strong> Smart navigation - remembers last focused element</li>
+			<li><strong>F7:</strong> Smart navigation - remembers last focused element position across items</li>
 		</ul>
 
 		<p><strong>Test Steps:</strong></p>
 		<ol>
-			<li>Click on a list item</li>
+			<li>Click on first list item</li>
 			<li>Press <strong>F7</strong> → should go to first button</li>
 			<li>Press <strong>TAB</strong> to move to second button</li>
 			<li>Press <strong>F7</strong> → should return to list item</li>
-			<li>Press <strong>F7</strong> again → should return to second button (memory working)</li>
+			<li>Press <strong>ArrowDown</strong> → should go to second list item</li>
+			<li>Press <strong>F7</strong> → should go to SECOND button (maintains position!)</li>
 			<li>Test <strong>F2</strong> → should always go to first button (no memory)</li>
 		</ol>
 	</div>
 
-	<ui5-list id="test-list">
+	<ui5-list id="test-list" header-text="List with Custom Items">
 		<ui5-li-custom>
 			<div class="buttons">
 				<ui5-button>First Button</ui5-button>
