@@ -6,6 +6,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -21,6 +22,7 @@ import ListItemBase from "./ListItemBase.js";
 import type RadioButton from "./RadioButton.js";
 import type CheckBox from "./CheckBox.js";
 import type { IButton } from "./Button.js";
+import type List from "./List.js";
 import {
 	DELETE,
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
@@ -199,12 +201,6 @@ abstract class ListItem extends ListItemBase {
 	 */
 	@property()
 	mediaRange = "S";
-
-	/**
-	 * Stores the last focused element within the list item when navigating with F7.
-	 * @private
-	 */
-	_lastInnerFocusedElement?: HTMLElement;
 
 	/**
 	 * Defines the delete button, displayed in "Delete" mode.
@@ -521,24 +517,23 @@ abstract class ListItem extends ListItemBase {
 		return this.shadowRoot!.querySelector("li");
 	}
 
-	async _handleF7(e: KeyboardEvent) {
-		e.preventDefault(); // Prevent browser default behavior (F7 = Caret Browsing toggle)
+	_getList(): List | null {
+		return this.closest("[ui5-list]");
+	}
+
+	_handleF7(e: KeyboardEvent) {
+		e.preventDefault();
 
 		const focusDomRef = this.getFocusDomRef()!;
 		const activeElement = getActiveElement();
+		const list = this._getList();
 
 		if (activeElement === focusDomRef) {
-			// On list item - restore to stored element or go to first focusable
-			if (this._lastInnerFocusedElement) {
-				this._lastInnerFocusedElement.focus();
-			} else {
-				const firstFocusable = await getFirstFocusableElement(focusDomRef);
-				firstFocusable?.focus();
-				this._lastInnerFocusedElement = firstFocusable || undefined;
-			}
+			this._focusInternalElement(list);
 		} else {
-			// On internal element - store it and go back to list item
-			this._lastInnerFocusedElement = activeElement as HTMLElement;
+			if (activeElement) {
+				this._updateStoredFocusIndex(list, activeElement as HTMLElement);
+			}
 			focusDomRef.focus();
 		}
 	}
@@ -548,12 +543,45 @@ abstract class ListItem extends ListItemBase {
 		const activeElement = getActiveElement();
 
 		if (activeElement === focusDomRef) {
-			// On list item - always go to first focusable (no memory)
 			const firstFocusable = await getFirstFocusableElement(focusDomRef);
 			firstFocusable?.focus();
 		} else {
-			// On internal element - go back to list item
 			focusDomRef.focus();
+		}
+	}
+
+	_getFocusableElements(): HTMLElement[] {
+		const focusDomRef = this.getFocusDomRef()!;
+		return getTabbableElements(focusDomRef);
+	}
+
+	_focusInternalElement(list: List | null) {
+		const focusables = this._getFocusableElements();
+		if (!focusables.length) {
+			return;
+		}
+
+		const targetIndex = list?._lastFocusedElementIndex ?? 0;
+		const safeIndex = Math.min(targetIndex, focusables.length - 1);
+		const elementToFocus = focusables[safeIndex];
+
+		elementToFocus.focus();
+
+		if (list) {
+			list._lastFocusedElementIndex = safeIndex;
+		}
+	}
+
+	_updateStoredFocusIndex(list: List | null, activeElement: HTMLElement) {
+		if (!list) {
+			return;
+		}
+
+		const focusables = this._getFocusableElements();
+		const currentIndex = focusables.indexOf(activeElement);
+
+		if (currentIndex !== -1) {
+			list._lastFocusedElementIndex = currentIndex;
 		}
 	}
 }
