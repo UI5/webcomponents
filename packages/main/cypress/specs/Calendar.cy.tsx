@@ -934,6 +934,154 @@ describe("Calendar general interaction", () => {
 			.should("have.length", 1);
 	});
 
+	it("Disabled date range prevents selection of dates within the range", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="yyyy-MM-dd">
+				<CalendarDateRange slot="disabledDates" startValue="2024-11-10" endValue="2024-11-15"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// Check that disabled dates have the correct class and aria-disabled attribute
+		const disabledDate = new Date(Date.UTC(2024, 10, 12, 0, 0, 0)).valueOf() / 1000;
+		
+		cy.ui5CalendarGetDay("#calendar1", disabledDate.toString())
+			.should("have.class", "ui5-dp-item--disabled")
+			.should("have.attr", "aria-disabled", "true");
+
+		// Try to click on a disabled date
+		cy.ui5CalendarGetDay("#calendar1", disabledDate.toString())
+			.realClick();
+
+		// Verify the date was not selected
+		cy.get<Calendar>("#calendar1")
+			.invoke("prop", "selectedDates")
+			.should("have.length", 0);
+	});
+
+	it("Disabled date range with only start date disables dates from start onwards", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" maxDate="2024-11-20">
+				<CalendarDateRange slot="disabledDates" startValue="2024-11-15"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// Date before start should be enabled
+		const enabledDate = new Date(Date.UTC(2024, 10, 14, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", enabledDate.toString())
+			.should("not.have.class", "ui5-dp-item--disabled");
+
+		// Date at start should be disabled
+		const startDate = new Date(Date.UTC(2024, 10, 15, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", startDate.toString())
+			.should("have.class", "ui5-dp-item--disabled");
+
+		// Date after start should not be disabled
+		const afterStartDate = new Date(Date.UTC(2024, 10, 17, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", afterStartDate.toString())
+			.should("not.have.class", "ui5-dp-item--disabled");
+	});
+
+	it("Disabled date range with only end date disables dates up to end", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" minDate="2024-11-01">
+				<CalendarDateRange slot="disabledDates" endValue="2024-11-10"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// Date after end should be enabled
+		const enabledDate = new Date(Date.UTC(2024, 10, 11, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", enabledDate.toString())
+			.should("not.have.class", "ui5-dp-item--disabled");
+
+		// Date at end should not be disabled
+		const endDate = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", endDate.toString())
+			.should("not.have.class", "ui5-dp-item--disabled");
+
+		// Date before end should be disabled
+		const beforeEndDate = new Date(Date.UTC(2024, 10, 8, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", beforeEndDate.toString())
+			.should("have.class", "ui5-dp-item--disabled");
+	});
+
+	it("Multiple disabled date ranges work correctly", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="yyyy-MM-dd">
+				<CalendarDateRange slot="disabledDates" startValue="2024-11-05" endValue="2024-11-07"></CalendarDateRange>
+				<CalendarDateRange slot="disabledDates" startValue="2024-11-15" endValue="2024-11-17"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// First range - should be disabled
+		const firstRangeDate = new Date(Date.UTC(2024, 10, 6, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", firstRangeDate.toString())
+			.should("have.class", "ui5-dp-item--disabled");
+
+		// Between ranges - should be enabled
+		const betweenDate = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", betweenDate.toString())
+			.should("not.have.class", "ui5-dp-item--disabled");
+
+		// Second range - should be disabled
+		const secondRangeDate = new Date(Date.UTC(2024, 10, 16, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", secondRangeDate.toString())
+			.should("have.class", "ui5-dp-item--disabled");
+	});
+
+	it("Disabled dates respect format pattern", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="dd/MM/yyyy">
+				<CalendarDateRange slot="disabledDates" startValue="10/11/2024" endValue="15/11/2024"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// Check disabled date
+		const disabledDate = new Date(Date.UTC(2024, 10, 12, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", disabledDate.toString())
+			.should("have.class", "ui5-dp-item--disabled");
+	});
+
+	it("Disabled dates work with range selection mode", () => {
+		cy.mount(
+			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" selectionMode="Range">
+				<CalendarDateRange slot="disabledDates" startValue="2024-11-10" endValue="2024-11-15"></CalendarDateRange>
+			</Calendar>
+		);
+
+		const timestamp = new Date(Date.UTC(2024, 10, 5, 0, 0, 0)).valueOf() / 1000;
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		// Try to select a range that includes disabled dates
+		const validStartDate = new Date(Date.UTC(2024, 10, 8, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", validStartDate.toString())
+			.realClick();
+
+		// Try to select an end date in the disabled range
+		const disabledEndDate = new Date(Date.UTC(2024, 10, 12, 0, 0, 0)).valueOf() / 1000;
+		cy.ui5CalendarGetDay("#calendar1", disabledEndDate.toString())
+			.realClick();
+
+		// The disabled date should not be selectable
+		cy.get<Calendar>("#calendar1")
+			.invoke("prop", "selectedDates")
+			.should("have.length", 1); // Only the first date should be selected
+	});
+
 	it("Check calendar week numbers with specific CalendarWeekNumbering configuration", () => {
 		cy.mount(getCalendarsWithWeekNumbers());
 

@@ -93,6 +93,11 @@ type CalendarYearRangeT = {
 	endYear: number,
 }
 
+type DisabledDateRangeT = {
+	startValue?: string,
+	endValue?: string
+}
+
 /**
  * @class
  *
@@ -328,6 +333,16 @@ class Calendar extends CalendarPart {
 	specialDates!: Array<SpecialCalendarDate>;
 
 	/**
+	 * Defines the disabled date ranges that cannot be selected in the calendar.
+	 * Use `ui5-date-range` elements to specify ranges of disabled dates.
+	 * Each range can define a start date, an end date, or both.
+	 * @public
+	 * @since 2.16.0
+	 */
+	@slot({ type: HTMLElement , invalidateOnChildChange: true })
+	disabledDates!: Array<CalendarDateRange>;
+
+	/**
 	 * Defines the selected item type of the calendar legend item (if such exists).
 	 * @private
 	 */
@@ -429,6 +444,19 @@ class Calendar extends CalendarPart {
 	_isValidCalendarDate(dateString: string): boolean {
 		const date = this.getFormat().parse(dateString);
 		return !!date;
+	}
+
+	get _disabledDates() {
+		const validDisabledDateRanges = this._disabledDateRanges.filter(dateRange => {
+			const startValue = dateRange.startValue;
+			const endValue = dateRange.endValue;
+			return (startValue && this._isValidCalendarDate(startValue)) || (endValue && this._isValidCalendarDate(endValue));
+		});
+
+		return validDisabledDateRanges.map(dateRange => ({
+			startValue: dateRange.startValue,
+			endValue: dateRange.endValue,
+		}));
 	}
 
 	get _specialCalendarDates() {
@@ -778,6 +806,10 @@ class Calendar extends CalendarPart {
 		return this.getSlottedNodes<SpecialCalendarDate>("specialDates");
 	}
 
+	get _disabledDateRanges() {
+		return this.getSlottedNodes<CalendarDateRange>("disabledDates");
+	}
+
 	get classes() {
 		return {
 			prevButton: {
@@ -963,4 +995,5 @@ export type {
 	ICalendarSelectedDates,
 	CalendarSelectionChangeEventDetail,
 	SpecialCalendarDateT,
+	DisabledDateRangeT
 };
