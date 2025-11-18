@@ -268,26 +268,14 @@
 
 	<ui5-user-settings-dialog id="settings" header-text="Settings" show-search-field>
 		<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
-			<ui5-user-settings-view slot="pages">
-
-				<div class="container">
-					<ui5-avatar size="L" class="ua-info-profile">
-						<img src="../assets/images/avatars/man_avatar_3.png" />
-					</ui5-avatar>
-					<ui5-title level="H3" size="H3" class="ua-name ua-info-profile">Alain Chevalier</ui5-title>
-					<div class="ua-info-item">
-						<ui5-label for="name">Name:</ui5-label>
-						<ui5-text id="name">Alain Chevalier</ui5-text>
-					</div>
-					<div class="ua-info-item">
-						<ui5-label for="email">Email:</ui5-label>
-						<ui5-text id="email">alian.chevalier@sap.com</ui5-text>
-					</div>
-					<div class="ua-info-item">
-						<ui5-label for="server">Server:</ui5-label>
-						<ui5-text id="server">delivery-001.sap.com</ui5-text>
-					</div>
-				</div>
+			<ui5-user-settings-account-view show-manage-account="true">
+				<ui5-user-menu-account slot="account"
+									   avatar-src="../assets/images/avatars/man_avatar_3.png"
+									   title-text="Alain Chevalier"
+									   subtitle-text="alian.chevalier@sap.com"
+									   description="Delivery Manager, SAP SE"
+									   selected>
+				</ui5-user-menu-account>
 				<ui5-label for="reset-all-button">Personalization</ui5-label><br/>
 				<ui5-button id="reset-all-button">Reset All Personalization</ui5-button>
 				<ui5-panel fixed class="ua-panel">
@@ -295,11 +283,12 @@
 						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
 					</ui5-text>
 				</ui5-panel>
-			</ui5-user-settings-view>
+
+			</ui5-user-settings-account-view>
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-			<ui5-user-settings-view text="Themes">
+			<ui5-user-settings-view text="Themes" slot="tabs">
 				<ui5-list separators="Inner" selection-mode="Single">
 					<ui5-li icon="palette" selected>SAP Morning Horizon</ui5-li>
 					<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
@@ -309,7 +298,7 @@
 				<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
 				<ui5-toast id="toastThemeSave">Changes applied.</ui5-toast>
 			</ui5-user-settings-view>
-			<ui5-user-settings-view text="Display settings">
+			<ui5-user-settings-view text="Display settings" slot="tabs">
 				<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
 				<ui5-panel fixed>
 					<ui5-label>
@@ -321,7 +310,7 @@
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item text="Language & Region" tooltip="Language & Region" header-text="Language & Region">
-			<ui5-user-settings-view slot="pages">
+			<ui5-user-settings-view>
 				<div class="container">
 					<div class="lr-item">
 						<ui5-label>Language and Region:</ui5-label>
@@ -359,12 +348,12 @@
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
-			<ui5-user-settings-view slot="pages">
+			<ui5-user-settings-view>
 				<ui5-button id="mobile1-button">iOS</ui5-button>
 				<ui5-button id="mobile2-button">Android</ui5-button>
 			</ui5-user-settings-view>
 
-			<ui5-user-settings-view slot="pages" text="Inner Page" id="mobile-second-page" secondary>
+			<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
 				<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
 				<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
 				<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
@@ -373,7 +362,7 @@
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-			<ui5-user-settings-view slot="pages">
+			<ui5-user-settings-view>
 				<ui5-checkbox checked text="Show High-Priority Notification Alerts"></ui5-checkbox>
 			</ui5-user-settings-view>
 		</ui5-user-settings-item>

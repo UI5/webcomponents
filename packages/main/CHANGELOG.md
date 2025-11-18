@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **ui5-popover:** fix horizontal placement (Start and End) in rtl mode ([#12606](https://github.com/UI5/webcomponents/issues/12606)) ([8135904](https://github.com/UI5/webcomponents/commit/813590444b04dda4fa089499720d6e2fc4a1f63e))
+* **ui5-slider/ui5-range-slider:** add border to progress indicator ([#12653](https://github.com/UI5/webcomponents/issues/12653)) ([e9fa794](https://github.com/UI5/webcomponents/commit/e9fa7948cfbc44f7d5396274e00d2e0d8b4e459b))
+
+
+### Features
+
+* **ui5-bar:** introduce `accessibleName` and `accessibleNameRef` properties ([#12626](https://github.com/UI5/webcomponents/issues/12626)) ([984f829](https://github.com/UI5/webcomponents/commit/984f829d615140b1f80139afe67dc8bb559a4ccf)), closes [#12591](https://github.com/UI5/webcomponents/issues/12591)
+* **ui5-toolbar-button:** add showOverflowText property for conditional text display ([#12542](https://github.com/UI5/webcomponents/issues/12542)) ([7e2a07d](https://github.com/UI5/webcomponents/commit/7e2a07d928e68d95421844eb2d9d9042d3aaa8fc)), closes [#12381](https://github.com/UI5/webcomponents/issues/12381)
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **ui5-multi-combobox:** skip unstable tests temporarily ([#12641](https://github.com/UI5/webcomponents/issues/12641)) ([78cc5e7](https://github.com/UI5/webcomponents/commit/78cc5e7b308dbe680344f5e56159776c39eec8ec)), closes [#12534](https://github.com/UI5/webcomponents/issues/12534) [#12607](https://github.com/UI5/webcomponents/issues/12607)
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+
+### Bug Fixes
+
+* **ui5-button:** remove reference to last clicked button ([#12370](https://github.com/UI5/webcomponents/issues/12370)) ([d9bbac7](https://github.com/UI5/webcomponents/commit/d9bbac7a0e02ef760dcdce4b5d1c0e39d192aaf0)), closes [#11865](https://github.com/UI5/webcomponents/issues/11865)
+* **ui5-carousel:** add aria-label to the list element ([#12587](https://github.com/UI5/webcomponents/issues/12587)) ([fa59293](https://github.com/UI5/webcomponents/commit/fa5929388c8c3bfe6346af0f190a33cb44cf8e86))
+* **ui5-color-palette-item:** remove inline styles ([#12558](https://github.com/UI5/webcomponents/issues/12558)) ([6aed82d](https://github.com/UI5/webcomponents/commit/6aed82d255ca4ee539b74cf8d54853eaad9e5110)), closes [#12550](https://github.com/UI5/webcomponents/issues/12550)
+* **ui5-color-palette:** enhance HOME/END navigation from any row position ([#12504](https://github.com/UI5/webcomponents/issues/12504)) ([9f8d565](https://github.com/UI5/webcomponents/commit/9f8d565843a4f0f490d6e8c5b1b452fa305d7447))
+* **ui5-date-picker:** apply value format in event detail ([#12615](https://github.com/UI5/webcomponents/issues/12615)) ([74aa404](https://github.com/UI5/webcomponents/commit/74aa404ef2733e7752ffbf2f0977bcb0cb97e6fb)), closes [#12580](https://github.com/UI5/webcomponents/issues/12580)
+* **ui5-dynamic-date-range:** skip test ([#12602](https://github.com/UI5/webcomponents/issues/12602)) ([0d36c6a](https://github.com/UI5/webcomponents/commit/0d36c6a54fc0a0ec6050d283879c4c34c099ce0e)), closes [#12601](https://github.com/UI5/webcomponents/issues/12601)
+* **ui5-popover:** header shadow is restored in high contrast themes ([#12566](https://github.com/UI5/webcomponents/issues/12566)) ([341b467](https://github.com/UI5/webcomponents/commit/341b4673e62fc2e16d1d9481caf6633c6d80241f)), closes [#12530](https://github.com/UI5/webcomponents/issues/12530)
+* **ui5-segmented-button:** correct active/down state background ([#12497](https://github.com/UI5/webcomponents/issues/12497)) ([6faee2d](https://github.com/UI5/webcomponents/commit/6faee2df0d5b3f1b4876e83c0b27be9a30345ffd))
+* **ui5-switch:** prevent toggle when Space is pressed with Shift or Escape ([e50d4c7](https://github.com/UI5/webcomponents/commit/e50d4c72d08287d106d95bca5da437fab60afeb3))
+* **ui5-toggle-button:** align active state styling with hover state when pressed ([#12486](https://github.com/UI5/webcomponents/issues/12486)) ([ca81343](https://github.com/UI5/webcomponents/commit/ca8134391ead238923979f4de2212d544d7ffa86))
+
+
+### Features
+
+* **ui5-ai-input:** introduce new component ([#12407](https://github.com/UI5/webcomponents/issues/12407)) ([6344333](https://github.com/UI5/webcomponents/commit/6344333eb7259c180c309ab18a3a21b6272e5a10))
+* **ui5-checkbox:** implement accessibilityInfo getter ([#12527](https://github.com/UI5/webcomponents/issues/12527)) ([d9b42bc](https://github.com/UI5/webcomponents/commit/d9b42bc7fc2bdcc2a29fbe0f7d6729d445227003))
+* **ui5-form, ui5-form-group:** add accessibleNameRef ([#12595](https://github.com/UI5/webcomponents/issues/12595)) ([dbfe7c5](https://github.com/UI5/webcomponents/commit/dbfe7c5b0f68ddb662ff9947038b5ef115a66139))
+* **ui5-form:** enhance a11y using description list ([#12365](https://github.com/UI5/webcomponents/issues/12365)) ([28994f1](https://github.com/UI5/webcomponents/commit/28994f1ba69e211580fc280c73bd2f47e3827dff))
+* **ui5-segmented-button:** replace the enum property contentMode with boolean one ([0a71381](https://github.com/UI5/webcomponents/commit/0a7138118f2b1556450dcd99a7e2586064fcd251))
+* **ui5-select:** adds new prop textSeparator ([086a92a](https://github.com/UI5/webcomponents/commit/086a92a49d05a9b25a2b645d06a5b597ecbd143e))
+
+
+
+
+
 # [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
 
 

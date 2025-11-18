@@ -1,4 +1,4 @@
-name: Cleanup Website Preview (Netlify)
+name: Reset Preview Deploy
 
 on:
   pull_request:
