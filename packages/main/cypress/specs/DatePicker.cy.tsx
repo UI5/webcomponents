@@ -1937,3 +1937,14 @@ describe("Accessibility", () => {
 			.should("have.text", DESCRIPTION);
 	});
 });
+
+describe("CSS Parts", () => {
+	it("DatePicker exposes input CSS part through DateTimeInput", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get<DatePicker>("[ui5-date-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.should("have.attr", "part", "input");
+	});
+});
