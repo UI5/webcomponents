@@ -214,8 +214,10 @@ describe("Popover Resize Functionality", () => {
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 			let initialWidth: number;
+			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -225,12 +227,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(500, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 
@@ -250,8 +255,10 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
+			let initialWidth: number;
 			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
 				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
@@ -262,16 +269,19 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(300, 400)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
 				const newHeight = $popover[0].getBoundingClientRect().height;
-				expect(newHeight).to.not.equal(initialHeight);
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 
-		it("should respect minimum width during resize", () => {
+		it("should respect minimum width/height during resize", () => {
 			cy.mount(
 				<>
 					<Button id="btnOpen" style={{ position: "absolute", left: "400px", top: "200px" }}>
@@ -283,8 +293,8 @@ describe("Popover Resize Functionality", () => {
 						placement="End"
 						resizable
 						open={true}
-						style={{ minWidth: "150px" }}>
-						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
+						style={{ minWidth: "150px", minHeight: "150px" }}>
+						<div>
 							Content
 						</div>
 					</Popover>
@@ -300,12 +310,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(100, 300)
+				.realMouseMove(-150, -150)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const width = $popover[0].getBoundingClientRect().width;
+				const height = $popover[0].getBoundingClientRect().height;
+
 				expect(width).to.be.at.least(150);
+				expect(height).to.be.at.least(150);
 			});
 		});
 
@@ -332,12 +345,13 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(2000, 300)
+				.realMouseMove(780, 570)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const rect = $popover[0].getBoundingClientRect();
-				expect(rect.right).to.be.lessThan(window.innerWidth - 10);
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
 			});
 		});
 
@@ -364,7 +378,7 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(600, 400)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			let resizedWidth: number;
@@ -420,12 +434,12 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(300, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const resizedWidth = $popover[0].getBoundingClientRect().width;
-				expect(resizedWidth).to.not.equal(initialWidth);
+				expect(resizedWidth).be.greaterThan(initialWidth);
 			});
 
 			cy.get("[ui5-popover]").invoke("prop", "open", false);
@@ -471,12 +485,13 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(500, 200)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const rect = $popover[0].getBoundingClientRect();
-				expect(rect.width).to.not.equal(initialSize.width);
+				expect(rect.width).be.greaterThan(initialSize.width);
+				expect(rect.height).be.lessThan(initialSize.height);
 			});
 		});
 
@@ -496,8 +511,10 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
+			let initialWidth: number;
 			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
 				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
@@ -508,12 +525,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(400, 200)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
 				const newHeight = $popover[0].getBoundingClientRect().height;
-				expect(newHeight).to.not.equal(initialHeight);
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 
@@ -545,12 +565,12 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(400, 300)
+				.realMouseMove(-50, -50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				expect(newWidth).be.greaterThan(initialWidth);
 			});
 		});
 
@@ -571,8 +591,11 @@ describe("Popover Resize Functionality", () => {
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 			let initialWidth: number;
+			let initialHeight: number;
+
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -582,12 +605,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(500, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 	});
@@ -610,8 +636,10 @@ describe("Popover Resize Functionality", () => {
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 			let initialWidth: number;
+			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -621,12 +649,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(550, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 	});
@@ -670,13 +701,13 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(600, 450)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const rect = $popover[0].getBoundingClientRect();
-				expect(rect.width).to.not.equal(initialSize.width);
-				expect(rect.height).to.not.equal(initialSize.height);
+				expect(rect.width).be.greaterThan(initialSize.width);
+				expect(rect.height).be.greaterThan(initialSize.height);
 			});
 		});
 	});
@@ -733,8 +764,10 @@ describe("Popover Resize Functionality", () => {
 				.should("be.visible");
 
 			let initialWidth: number;
+			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -744,12 +777,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(550, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 
 			cy.get("[ui5-popover]")
@@ -780,8 +816,10 @@ describe("Popover Resize Functionality", () => {
 				.should("not.be.visible");
 
 			let initialWidth: number;
+			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -791,12 +829,15 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popover-resize-handle")
 				.realMouseDown({ position: "center" })
-				.realMouseMove(550, 300)
+				.realMouseMove(50, 50)
 				.realMouseUp();
 
 			cy.get("[ui5-popover]").then($popover => {
 				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).to.not.equal(initialWidth);
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 	});
