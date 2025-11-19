@@ -155,57 +155,144 @@ describe("Popover Resize Functionality", () => {
 	});
 
 	describe("Resize Handle Placement in RTL", () => {
-		it("should position resize handle correctly in RTL for right placement", () => {
+		it("should position resize handle at top-left when popover is to the left of opener", () => {
 			cy.mount(
 				<div dir="rtl">
-					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "200px" }}>
+					<Button id="btnOpen" style={{ position: "absolute", right: "100px", top: "200px" }}>
 						Open
 					</Button>
-					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
+					<Popover id="popover" opener="btnOpen" placement="End" resizable>
 						<div style={{ width: "200px", height: "150px", padding: "20px" }}>Content</div>
 					</Popover>
 				</div>
 			);
 
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.should("exist");
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-top-left");
 		});
 
-		it("should position resize handle correctly in RTL for left placement", () => {
+		it("should position resize handle at bottom-right when popover is to the right of opener", () => {
 			cy.mount(
 				<div dir="rtl">
-					<Button id="btnOpen" style={{ position: "absolute", right: "300px", top: "200px" }}>
+					<Button id="btnOpen" style={{ position: "absolute", left: "100px", top: "200px" }}>
 						Open
 					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
+					<Popover id="popover" opener="btnOpen" placement="Start" resizable>
 						<div style={{ width: "200px", height: "150px", padding: "20px" }}>Content</div>
 					</Popover>
 				</div>
 			);
 
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.should("exist");
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-right");
+		});
+
+		it("should position resize handle at top-left when popover is above opener", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", bottom: "100px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Top" resizable>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>Content</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-top-left");
+		});
+
+		it("should position resize handle at bottom-left when popover is below opener", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "100px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>Content</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-left");
 		});
 	});
 
 	describe("Resize Interaction", () => {
-		it("should resize popover width when dragging from right edge", () => {
+		it("should resize correctly with Top placement", () => {
 			cy.mount(
 				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", bottom: "100px" }}>
 						Open
 					</Button>
-					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
-						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
-							Resizable content
+					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
+						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialSize: { width: number; height: number };
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				initialSize = { width: rect.width, height: rect.height };
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialSize.width);
+				expect(rect.height).be.lessThan(initialSize.height);
+			});
+		});
+
+		it("should resize correctly with Bottom placement", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "100px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
+						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
+							Content
 						</div>
 					</Popover>
 				</>
@@ -239,15 +326,15 @@ describe("Popover Resize Functionality", () => {
 			});
 		});
 
-		it("should resize popover height when dragging from bottom edge", () => {
+		it("should resize correctly with Start placement", () => {
 			cy.mount(
 				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "100px" }}>
+					<Button id="btnOpen" style={{ position: "absolute", right: "200px", top: "200px" }}>
 						Open
 					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
-						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
-							Resizable content
+					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
 						</div>
 					</Popover>
 				</>
@@ -257,6 +344,49 @@ describe("Popover Resize Functionality", () => {
 
 			let initialWidth: number;
 			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-50, -50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
+			});
+		});
+
+		it("should resize correctly with End placement", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialWidth: number;
+			let initialHeight: number;
+
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
 				initialHeight = $popover[0].getBoundingClientRect().height;
@@ -404,6 +534,174 @@ describe("Popover Resize Functionality", () => {
 		});
 	});
 
+	describe("Resize Interaction in RTL", () => {
+		it("should resize correctly with Top placement", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", bottom: "100px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
+						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialSize: { width: number; height: number };
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				initialSize = { width: rect.width, height: rect.height };
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialSize.width);
+				expect(rect.height).be.lessThan(initialSize.height);
+			});
+		});
+
+		it("should resize correctly with Bottom placement", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "100px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
+						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
+			});
+		});
+
+		it("should resize correctly with Start placement", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", left: "400px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
+			});
+		});
+
+		it("should resize correctly with End placement", () => {
+			cy.mount(
+				<div dir="rtl">
+					<Button id="btnOpen" style={{ position: "absolute", right: "400px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</div>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			let initialWidth: number;
+			let initialHeight: number;
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-50, -50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const newWidth = $popover[0].getBoundingClientRect().width;
+				const newHeight = $popover[0].getBoundingClientRect().height;
+
+				expect(newWidth).be.greaterThan(initialWidth);
+				expect(newHeight).be.greaterThan(initialHeight);
+			});
+		});
+	});
+
 	describe("Resize State Reset", () => {
 		it("should reset size when popover is closed and reopened", () => {
 			cy.mount(
@@ -451,169 +749,6 @@ describe("Popover Resize Functionality", () => {
 			cy.get("[ui5-popover]").then($popover => {
 				const reopenedWidth = $popover[0].getBoundingClientRect().width;
 				expect(Math.abs(reopenedWidth - initialWidth)).to.be.lessThan(5);
-			});
-		});
-	});
-
-	describe("Resize with Different Placements", () => {
-		it("should resize correctly with Top placement", () => {
-			cy.mount(
-				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "300px", bottom: "100px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
-						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
-							Content
-						</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-
-			let initialSize: { width: number; height: number };
-			cy.get("[ui5-popover]").then($popover => {
-				const rect = $popover[0].getBoundingClientRect();
-				initialSize = { width: rect.width, height: rect.height };
-			});
-
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(300);
-
-			cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.realMouseDown({ position: "center" })
-				.realMouseMove(50, 50)
-				.realMouseUp();
-
-			cy.get("[ui5-popover]").then($popover => {
-				const rect = $popover[0].getBoundingClientRect();
-				expect(rect.width).be.greaterThan(initialSize.width);
-				expect(rect.height).be.lessThan(initialSize.height);
-			});
-		});
-
-		it("should resize correctly with Bottom placement", () => {
-			cy.mount(
-				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "100px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
-						<div style={{ width: "200px", height: "100px", padding: "20px" }}>
-							Content
-						</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-
-			let initialWidth: number;
-			let initialHeight: number;
-			cy.get("[ui5-popover]").then($popover => {
-				initialWidth = $popover[0].getBoundingClientRect().width;
-				initialHeight = $popover[0].getBoundingClientRect().height;
-			});
-
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(300);
-
-			cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.realMouseDown({ position: "center" })
-				.realMouseMove(50, 50)
-				.realMouseUp();
-
-			cy.get("[ui5-popover]").then($popover => {
-				const newWidth = $popover[0].getBoundingClientRect().width;
-				const newHeight = $popover[0].getBoundingClientRect().height;
-
-				expect(newWidth).be.greaterThan(initialWidth);
-				expect(newHeight).be.greaterThan(initialHeight);
-			});
-		});
-
-		it("should resize correctly with Start placement", () => {
-			cy.mount(
-				<>
-					<Button id="btnOpen" style={{ position: "absolute", right: "200px", top: "200px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
-						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
-							Content
-						</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-
-			let initialWidth: number;
-			cy.get("[ui5-popover]").then($popover => {
-				initialWidth = $popover[0].getBoundingClientRect().width;
-			});
-
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(300);
-
-			cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.realMouseDown({ position: "center" })
-				.realMouseMove(-50, -50)
-				.realMouseUp();
-
-			cy.get("[ui5-popover]").then($popover => {
-				const newWidth = $popover[0].getBoundingClientRect().width;
-				expect(newWidth).be.greaterThan(initialWidth);
-			});
-		});
-
-		it("should resize correctly with End placement", () => {
-			cy.mount(
-				<>
-					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
-						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
-							Content
-						</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-
-			let initialWidth: number;
-			let initialHeight: number;
-
-			cy.get("[ui5-popover]").then($popover => {
-				initialWidth = $popover[0].getBoundingClientRect().width;
-				initialHeight = $popover[0].getBoundingClientRect().height;
-			});
-
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(300);
-
-			cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popover-resize-handle")
-				.realMouseDown({ position: "center" })
-				.realMouseMove(50, 50)
-				.realMouseUp();
-
-			cy.get("[ui5-popover]").then($popover => {
-				const newWidth = $popover[0].getBoundingClientRect().width;
-				const newHeight = $popover[0].getBoundingClientRect().height;
-
-				expect(newWidth).be.greaterThan(initialWidth);
-				expect(newHeight).be.greaterThan(initialHeight);
 			});
 		});
 	});
