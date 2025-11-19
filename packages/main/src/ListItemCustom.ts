@@ -285,7 +285,7 @@ class ListItemCustom extends ListItem {
 	private _processAccessibilityInfo(accessibilityInfo: AccessibilityInfo): string {
 		// Extract primary information from accessibilityInfo
 		const {
-			type, description, required, disabled, readonly, children
+			type, description, required, disabled, readonly, children,
 		} = accessibilityInfo;
 
 		// Build main text from description (primary) and type
