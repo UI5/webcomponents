@@ -261,7 +261,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			const isSelectedBetween = this._isDayInsideSelectionRange(timestamp);
 			const isOtherMonth = tempDate.getMonth() !== calendarDate.getMonth();
 			const isWeekend = this._isWeekend(tempDate);
-			const isDisabled = !this._isDisabledDate(tempDate);
+			const isDisabled = !this._isDateEnabled(tempDate);
 			const isToday = tempDate.isSame(todayDate);
 			const isFirstDayOfWeek = tempDate.getDay() === firstDayOfWeek;
 
@@ -834,7 +834,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @returns `true` if the date is enabled (selectable), `false` if disabled
 	 * @private
 	 */
-	_isDisabledDate(date: CalendarDate): boolean {
+	_isDateEnabled(date: CalendarDate): boolean {
 		if ((this._minDate && date.valueOf() < this._minDate.valueOf())
 			|| (this._maxDate && date.valueOf() > this._maxDate.valueOf())) {
 			return false;
