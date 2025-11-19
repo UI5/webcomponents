@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **tools:** fix wc-dev test command ([#12662](https://github.com/UI5/webcomponents/issues/12662)) ([7dd11fb](https://github.com/UI5/webcomponents/commit/7dd11fbb88711a74d3602328a492a923552fd4ef))
+* **ui5-popover:** fix horizontal placement (Start and End) in rtl mode ([#12606](https://github.com/UI5/webcomponents/issues/12606)) ([8135904](https://github.com/UI5/webcomponents/commit/813590444b04dda4fa089499720d6e2fc4a1f63e))
+* **ui5-slider/ui5-range-slider:** add border to progress indicator ([#12653](https://github.com/UI5/webcomponents/issues/12653)) ([e9fa794](https://github.com/UI5/webcomponents/commit/e9fa7948cfbc44f7d5396274e00d2e0d8b4e459b))
+
+
+### Features
+
+* **ui5-bar:** introduce `accessibleName` and `accessibleNameRef` properties ([#12626](https://github.com/UI5/webcomponents/issues/12626)) ([984f829](https://github.com/UI5/webcomponents/commit/984f829d615140b1f80139afe67dc8bb559a4ccf)), closes [#12591](https://github.com/UI5/webcomponents/issues/12591)
+* **ui5-toolbar-button:** add showOverflowText property for conditional text display ([#12542](https://github.com/UI5/webcomponents/issues/12542)) ([7e2a07d](https://github.com/UI5/webcomponents/commit/7e2a07d928e68d95421844eb2d9d9042d3aaa8fc)), closes [#12381](https://github.com/UI5/webcomponents/issues/12381)
+* **ui5-view-settings-dialog:** provide part for header ([#12627](https://github.com/UI5/webcomponents/issues/12627)) ([3206b90](https://github.com/UI5/webcomponents/commit/3206b906785424cac46ceeb6f7d9d61131635316)), closes [#12479](https://github.com/UI5/webcomponents/issues/12479)
+
+
+
+
+
 # [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
 
 

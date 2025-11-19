@@ -1,5 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
+const { scopeThemingVariables } = require("../css-processors/scope-variables.mjs");
 
 const generate = async (argv) => {
 	if (argv.length < 7) {
@@ -91,7 +92,7 @@ const generate = async (argv) => {
 	console.log(`Generating illustrations from ${srcPath} to ${destPath}`)
 
 	const svgImportTemplate = svgContent => {
-		return `export default \`${svgContent}\`;`
+		return `export default \`${scopeThemingVariables(svgContent)}\`;`
 	};
 	const svgToJs = async fileName => {
 		const svg = await fs.readFile(path.join(srcPath, fileName), { encoding: "utf-8" });
