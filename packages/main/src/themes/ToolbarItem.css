@@ -1,3 +1,8 @@
+/* This style we need for the element inside Popover to not fire the click event on empty space */
+:host {
+	display: inline-block;
+}
+
 :host([expand-in-overflow]) ::slotted(*) {
 	width: 100%;
 }
