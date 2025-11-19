@@ -694,6 +694,10 @@ class Wizard extends UI5Element {
 		return contentHeight;
 	}
 
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
+	}
+
 	getStepAriaLabelText(step: WizardStep, ariaLabel: string) {
 		return Wizard.i18nBundle.getText(WIZARD_STEP_ARIA_LABEL, ariaLabel);
 	}

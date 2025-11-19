@@ -485,6 +485,7 @@ slot[name="profile"] {
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
+	vertical-align: middle;
 }
 
 ::slotted([slot="logo"]):active {
