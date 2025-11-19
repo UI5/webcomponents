@@ -25,11 +25,6 @@ type IOverflowToolbarItem = {
 	cancelable: true,
 })
 
-@event("click", {
-	bubbles: true,
-	cancelable: true,
-})
-
 @customElement({
 	tag: "ui5-toolbar-item",
 	languageAware: true,
@@ -193,7 +188,7 @@ class ToolbarItem extends UI5Element {
 	 */
 	onClick(e: Event) {
 		e.stopImmediatePropagation();
-		const prevented = e.defaultPrevented || this.supportsChangeEvent(e.target) || !(this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement }));
+		const prevented = !(this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement }) || e.defaultPrevented || this.supportsChangeEvent(e.target));
 		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
