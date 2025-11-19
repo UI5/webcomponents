@@ -339,7 +339,7 @@ class Calendar extends CalendarPart {
 	 * @public
 	 * @since 2.16.0
 	 */
-	@slot({ type: HTMLElement , invalidateOnChildChange: true })
+	@slot({ type: HTMLElement, invalidateOnChildChange: true })
 	disabledDates!: Array<CalendarDateRange>;
 
 	/**
@@ -995,5 +995,5 @@ export type {
 	ICalendarSelectedDates,
 	CalendarSelectionChangeEventDetail,
 	SpecialCalendarDateT,
-	DisabledDateRangeT
+	DisabledDateRangeT,
 };

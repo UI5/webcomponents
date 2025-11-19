@@ -201,7 +201,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Each range can have a start and/or end date value.
 	 * @private
 	 */
-	@property({ type: Array})
+	@property({ type: Array })
 	disabledDates: Array<DisabledDateRangeT> = [];
 
 	@query("[data-sap-focus-ref]")
@@ -826,18 +826,16 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	/**
 	 * Checks if a given date is disabled (not selectable).
-	 * 
 	 * A date is considered disabled if:
 	 * - It falls outside the min/max date range defined by the component
 	 * - It matches a single disabled date
 	 * - It falls within a disabled date range (inclusive of start and end dates)
-	 * 
 	 * @param date - The date to check
 	 * @returns `true` if the date is enabled (selectable), `false` if disabled
 	 * @private
 	 */
 	_isDisabledDate(date: CalendarDate): boolean {
-		if ((this._minDate && date.valueOf() < this._minDate.valueOf()) 
+		if ((this._minDate && date.valueOf() < this._minDate.valueOf())
 			|| (this._maxDate && date.valueOf() > this._maxDate.valueOf())) {
 			return false;
 		}
@@ -874,8 +872,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		try {
 			const jsDate = this.getValueFormat().parse(dateValue) as Date;
 			const calendarDate = CalendarDate.fromLocalJSDate(
-				jsDate, 
-				this._primaryCalendarType
+				jsDate,
+				this._primaryCalendarType,
 			);
 			return calendarDate.valueOf() / 1000;
 		} catch {
