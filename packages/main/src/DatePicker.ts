@@ -591,7 +591,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		}
 
 		events.forEach(e => {
-			if (!this.fireDecoratorEvent(e, { value, valid })) {
+			if (!this.fireDecoratorEvent(e, { value: this.value, valid })) {
 				executeEvent = false;
 			}
 		});

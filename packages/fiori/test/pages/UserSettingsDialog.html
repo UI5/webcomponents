@@ -40,34 +40,25 @@
 <ui5-button id="btnOpenSettings">User settings</ui5-button>
 <ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
 	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
-		<ui5-user-settings-view slot="pages">
-			<ui5-icon name="person-placeholder"></ui5-icon><ui5-title level="H3" size="H3" class="ua-name">Alain Chevalier</ui5-title>
-			<div class="container">
-				<div class="ua-info-item">
-					<ui5-label for="name">Name:</ui5-label>
-					<ui5-text id="name">Alain Chevalier</ui5-text>
-				</div>
-				<div class="ua-info-item">
-					<ui5-label for="email">Email:</ui5-label>
-					<ui5-text id="email">alian.chevalier@sap.com</ui5-text>
-				</div>
-				<div class="ua-info-item">
-					<ui5-label for="server">Server:</ui5-label>
-					<ui5-text id="server">delivery-001.sap.com</ui5-text>
-				</div>
-			</div>
-			<ui5-label for="reset-all-button">Personalization</ui5-label><br/>
-			<ui5-button id="reset-all-button">Reset All Personalization</ui5-button>
-			<ui5-panel fixed class="ua-panel">
-				<ui5-text>
-					Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
-				</ui5-text>
-			</ui5-panel>
-		</ui5-user-settings-view>
+		<ui5-user-settings-account-view id="account" show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+
+				<ui5-panel fixed class="ua-panel">
+					<ui5-text>
+						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+					</ui5-text>
+				</ui5-panel>
+
+		</ui5-user-settings-account-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-		<ui5-user-settings-view text="Themes">
+		<ui5-user-settings-view text="Themes" slot="tabs">
 			<ui5-list separators="Inner">
 				<ui5-li icon="palette">SAP Morning Horizon</ui5-li>
 				<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
@@ -77,7 +68,7 @@
 			<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
 			<ui5-toast design="Emphasized">Changes applied.</ui5-toast>
 		</ui5-user-settings-view>
-		<ui5-user-settings-view text="Display settings">
+		<ui5-user-settings-view text="Display settings" slot="tabs">
 			<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
 			<ui5-panel fixed>
 				<ui5-label>
@@ -89,7 +80,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item text="Language & Region" tooltip="Language & Region" header-text="Language & Region">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<div class="container">
 			<div class="lr-item">
 			<ui5-label>Language and Region:</ui5-label>
@@ -127,12 +118,12 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view >
 			<ui5-button id="mobile1-button">iOS</ui5-button>
 			<ui5-button id="mobile2-button">Android</ui5-button>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" text="Inner Page" id="mobile-second-page" secondary>
+		<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
 			<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
 			<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
 			<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
@@ -141,7 +132,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<ui5-list class="custom-list-main">
 
 				<ui5-li-custom>
@@ -192,7 +183,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="notification-second-page" secondary>
+		<ui5-user-settings-view id="notification-second-page" secondary>
 			<ui5-li-custom class="ui5-list-secondary">
 				<div class="list-item">
 					<div class="item-left">
@@ -294,7 +285,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="sales-order-second-page" secondary>
+		<ui5-user-settings-view id="sales-order-second-page" secondary>
 			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
 
 			<ui5-list class="ui5-list-secondary" separators="None">
@@ -400,25 +391,6 @@
 	</ui5-user-settings-item>
 </ui5-user-settings-dialog>
 
-<ui5-dialog id="additionalDialog" state="Critical" header-text="Warning">
-	<ui5-text>Clicking on reset will delete your personalization settings for the launchpad (e.g. theme, language, user activities, and home page content) and for apps using the launchpad personalization features (e.g. filter settings, table columns).
-		This action is irreversible.
-		Further changes in the dialog will not be applied.
-		Are you sure you want to proceed with the reset?</ui5-text>
-	<ui5-toolbar slot="footer">
-		<ui5-toolbar-button
-			class="dialogCloser"
-			design="Emphasized"
-			text="OK">
-		</ui5-toolbar-button>
-		<ui5-toolbar-button
-			class="dialogCloser"
-			design="Transparent"
-			text="Cancel">
-		</ui5-toolbar-button>
-	</ui5-toolbar>
-</ui5-dialog>
-
 <ui5-title level="H5" class="header-title">Text Direction</ui5-title>
 <ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
 <script>
@@ -426,14 +398,13 @@
 	const menuShellBar = document.getElementById("userMenuShellBar");
 	const settingsDialog = document.getElementById("setting");
 	const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+	const account = document.getElementById("account");
 
 	const mobileSecondPage = document.getElementById("mobile-second-page");
 	const mobile1Button = document.getElementById("mobile1-button");
 	const mobile2Button = document.getElementById("mobile2-button");
 
-	const resetAllButton = document.getElementById("reset-all-button");
 	const additionalDialog = document.getElementById("additionalDialog");
-	const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 	const resetAll = document.getElementById("resetAll");
 	const resetPersonalization = document.getElementById("resetPersonalization");
 	const toast = [...document.getElementsByTagName("ui5-toast")][0];
@@ -467,6 +438,14 @@
 		}
 	});
 
+	account.addEventListener("edit-accounts-click", function () {
+		console.log("Avatar clicked");
+	});
+
+	account.addEventListener("manage-account-click", function () {
+		console.log("Manage account clicked");
+	});
+
 	direction.addEventListener("ui5-change", function() {
 		document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
 		window["sap-ui-webcomponents-bundle"].applyDirection();
@@ -485,17 +464,7 @@
 		mobileSecondPage.selected = true;
 		mobileSecondPage.text = "Android";
 	});
-
-	resetAllButton.addEventListener("click", function () {
-		additionalDialog.open = true;
-	});
-
-	additionalDialogClosers.forEach(btn => {
-		btn.addEventListener("click", () => {
-			additionalDialog.open = false;
-		});
-	})
-
+	
 	themeSave.addEventListener("click", function () {
 		toast.open = true;
 	});
