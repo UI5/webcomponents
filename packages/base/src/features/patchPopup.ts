@@ -14,6 +14,7 @@ type OpenUI5Popup = {
 		getOpenState: () => "CLOSED" | "CLOSING" | "OPEN" | "OPENING",
 		getContent: () => Control | HTMLElement | null, // this is the OpenUI5 Element/Control instance that opens the Popup (usually sap.m.Popover/sap.m.Dialog)
 		onFocusEvent: (...args: any[]) => void,
+		getModal: () => boolean
 	}
 };
 
@@ -39,14 +40,17 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 const removeOpenedPopup = (popup: object) => {
 	if (isNativePopoverOpen()) {
 		const prevPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 2];
-		if (prevPopup && prevPopup.type === "OpenUI5") {
-			const content = (prevPopup.instance as any).getContent().getDomRef() as HTMLElement;
+		if (prevPopup && prevPopup.type === "OpenUI5" && (prevPopup.instance as any).getModal()) {
+			const content = (prevPopup.instance as any).getContent()?.getDomRef() as HTMLElement;
 			const block = document.getElementById("sap-ui-blocklayer-popup");
 
-			content.hidePopover();
+			content?.hidePopover();
 
-			block?.showPopover();
-			content.showPopover();
+			if ((prevPopup.instance as any).getModal()) {
+				block?.showPopover();
+			}
+
+			content?.showPopover();
 		}
 	}
 
@@ -81,13 +85,14 @@ const hasWebComponentPopupAbove = (popup: object) => {
 	return false;
 };
 
-const openNativePopover = (domRef: HTMLElement) => {
+const openNativePopover = (domRef: HTMLElement, popup: object) => {
 	const block = document.getElementById("sap-ui-blocklayer-popup");
 
-	block?.setAttribute("popover", "manual");
-	block?.hidePopover();
-	block?.showPopover();
-
+	if ((popup as any).getModal() && block) {
+		block?.setAttribute("popover", "manual");
+		block?.hidePopover();
+		block?.showPopover();
+	}
 	domRef.setAttribute("popover", "manual");
 	domRef.showPopover();
 };
@@ -140,7 +145,7 @@ const patchOpen = (Popup: OpenUI5Popup) => {
 			if (element) {
 				const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 				if (domRef) {
-					openNativePopover(domRef);
+					openNativePopover(domRef, this);
 				}
 			}
 		}
