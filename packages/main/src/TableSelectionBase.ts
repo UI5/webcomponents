@@ -61,6 +61,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 
 	readonly identifier = "TableSelection";
 	protected _table?: Table;
+	private _rowsLength = 0;
 
 	onTableActivate(table: Table) {
 		this._table = table;
@@ -77,6 +78,13 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 			this._table = this.parentElement;
 		}
 		this._invalidateTableAndRows();
+	}
+
+	onTableBeforeRendering() {
+		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
+			this._rowsLength = this._table.rows.length;
+			this._table.headerRow[0]._invalidate++;
+		}
 	}
 
 	// this will be removed when the legacy selection component is removed

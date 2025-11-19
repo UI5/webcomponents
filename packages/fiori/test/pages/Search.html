@@ -76,6 +76,7 @@
 			{ text: "List Item 6", icon: "globe" }
 		];
 
+		const searchShow = document.getElementById("searchShowMore");
 		const group1 = document.getElementById("group1");
 		const visibleCount = 3;
 
@@ -121,13 +122,9 @@
 					}
 				}
 
-				showMoreEl.addEventListener("click", () => expandHiddenItems());
-
-				showMoreEl.addEventListener("keydown", (e) => {
-					if (e.key === "Enter") {
-						expandHiddenItems({ focusFirst: true })
-					}
-				});
+			showMoreEl.addEventListener("ui5-click", (e) => {
+					expandHiddenItems({ focusFirst: e.detail.fromKeyboard });
+			});
 			}
 		}
 
@@ -180,6 +177,28 @@
 	<div class="container">
 		<ui5-label>Search with Suggestions - Delete items on delete button click</ui5-label>
 		<ui5-search id="delete-search" show-clear-icon></ui5-search>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Actions - Example of flexible action slot</ui5-label>
+		<ui5-search id="secondary-actions-search" show-clear-icon>
+			<ui5-search-item text="List Item with Favorite Action" icon="history" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="favorite" tooltip="Add to favorites"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Edit Action" icon="search" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="edit" tooltip="Edit item"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Multiple Actions" icon="globe" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="share" tooltip="Share"></ui5-button>
+				<ui5-button slot="actions" design="Transparent" icon="copy" tooltip="Copy"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Tag Action" icon="history">
+				<ui5-tag slot="actions" design="Set2" color-scheme="8">Important</ui5-tag>
+			</ui5-search-item>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			Hover over search items to see secondary actions. Use Tab/Shift+Tab to navigate between action buttons and delete button.
+		</ui5-text>
 	</div>
 
 	<div class="container">
@@ -411,7 +430,7 @@
 					item.remove();
 				});
 			}, 100)
-			
+
 
 			if(e.target.value.length){
 				// simulate lazy loading

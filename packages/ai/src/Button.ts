@@ -181,8 +181,8 @@ class Button extends UI5Element {
 	@query(".ui5-ai-button-hidden[ui5-split-button]")
 	_hiddenSplitButton?: SplitButton;
 
-	@i18n("@ui5/webcomponents")
-	static i18nBundle: I18nBundle;
+	@i18n("@ui5/webcomponents-ai")
+	static i18nBundleAi: I18nBundle;
 
 	get _hideArrowButton() {
 		return !this._effectiveStateObject?.showArrowButton;
@@ -343,7 +343,7 @@ class Button extends UI5Element {
 	get _computedAccessibilityAttributes(): AIButtonAccessibilityAttributes {
 		const labelRefTexts = getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || "";
 
-		const mainTitle = this._hasText ? Button.i18nBundle.getText(BUTTON_TOOLTIP_TEXT, this._stateText as string) : "";
+		const mainTitle = this._hasText ? Button.i18nBundleAi.getText(BUTTON_TOOLTIP_TEXT, this._stateText as string) : "";
 		const title = `${mainTitle} ${labelRefTexts}`.trim();
 
 		return {

@@ -443,6 +443,76 @@ describe("Select - Accessibility", () => {
 			.find("#accessibleDescription")
 			.should("have.text", "First description Updated second description Third description");
 	});
+
+	it("should not display tooltip when Select is not readonly", () => {
+		cy.mount(
+			<Select style="width: 50px">
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("should display user tooltip with precedence over the default tooltip", () => {
+		cy.mount(
+			<Select style="width: 50px" tooltip="Custom tooltip" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "Custom tooltip");
+	});
+
+	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option additionalText="AdditionalInfo" selected>VeryLongOptionText</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+	});
+
+	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+	});
+
+	it("should show the text and additionalText, separated by '-' when select is read-only", () => {
+		cy.mount(
+			<Select readonly>
+				<Option additionalText="ExtraInfo" selected>SelectedOption</Option>
+				<Option additionalText="OtherInfo">OtherOption</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "SelectedOption – ExtraInfo");
+	});
 });
 
 describe("Select - Popover", () => {
@@ -545,6 +615,20 @@ describe("Select - Properties", () => {
 			</Select>);
 
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
+	});
+
+	it("Should show the selected text-separator when select is read-only", () => {
+		cy.mount(
+			<Select readonly text-separator="VerticalLine">
+				<Option additionalText="Additional1" selected>First</Option>
+				<Option additionalText="Additional2">Second</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", " | ");
 	});
 });
 

@@ -6,9 +6,45 @@ import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
-import scopeVariables from "./scope-variables.mjs";
+import { scopeUi5Variables, scopeThemingVariables } from "./scope-variables.mjs";
+import { pathToFileURL } from "url";
 
-const generate = async (argv) => {
+async function processThemingPackageFile(f) {
+    const selector = ':root';
+    const newRule = postcss.rule({ selector });
+    const result = await postcss().process(f.text);
+
+    result.root.walkRules(selector, rule => {
+        for (const decl of rule.nodes) {
+            if (decl.type !== 'decl' ) {
+                continue;
+            } else if (decl.prop.startsWith('--sapFontUrl')) {
+                continue;
+            } else if (!decl.prop.startsWith('--sap')) {
+                newRule.append(decl.clone());
+            } else {
+                const originalProp = decl.prop;
+                const originalValue = decl.value;
+
+                newRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
+            }
+        }
+    });
+
+    return newRule.toString();
+};
+
+async function processComponentPackageFile(f, packageJSON) {
+    let result = await postcss(combineDuplicatedSelectors).process(f.text);
+
+    result = scopeUi5Variables(result.css, packageJSON, f.path);
+
+    result = scopeThemingVariables(result);
+
+    return result;
+}
+
+async function generate(argv) {
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
@@ -19,29 +55,6 @@ const generate = async (argv) => {
     ]);
     const restArgs = argv.slice(2);
 
-    const processThemingPackageFile = async (f) => {
-        const selector = ':root';
-        const result = await postcss().process(f.text);
-
-        const newRule = postcss.rule({ selector });
-
-        result.root.walkRules(selector, rule => {
-            rule.walkDecls(decl => {
-                if (!decl.prop.startsWith('--sapFontUrl')) {
-                    newRule.append(decl.clone());
-                }
-            });
-        });
-
-        return newRule.toString();
-    };
-
-    const processComponentPackageFile = async (f) => {
-        const result = await postcss(combineDuplicatedSelectors).process(f.text);
-
-        return scopeVariables(result.css, packageJSON, f.path);
-    }
-
     let scopingPlugin = {
         name: 'scoping',
         setup(build) {
@@ -49,7 +62,7 @@ const generate = async (argv) => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
+                    let newText = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f, packageJSON);
 
                     await mkdir(path.dirname(f.path), { recursive: true });
                     writeFile(f.path, newText);
@@ -89,10 +102,17 @@ const generate = async (argv) => {
     }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
     generate(process.argv)
 }
 
 export default {
     _ui5mainFn: generate
+}
+
+export {
+    processComponentPackageFile
 }

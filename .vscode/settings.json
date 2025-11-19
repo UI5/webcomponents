@@ -5,11 +5,14 @@
         "./packages/localization",
         "./packages/main",
         "./packages/fiori",
+        "./packages/compat",
         "./packages/ai",
     ],
     "html.customData": [
         "./packages/base/dist/vscode.html-custom-data.json",
         "./packages/main/dist/vscode.html-custom-data.json",
-        "./packages/fiori/dist/vscode.html-custom-data.json"
+        "./packages/fiori/dist/vscode.html-custom-data.json",
+        "./packages/compat/dist/vscode.html-custom-data.json",
+        "./packages/ai/dist/vscode.html-custom-data.json"
     ],
 }

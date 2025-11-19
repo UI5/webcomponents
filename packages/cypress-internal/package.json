@@ -16,9 +16,7 @@
   "dependencies": {
     "@cypress/code-coverage": "^3.14.6",
     "@ui5/cypress-ct-ui5-webc": "0.0.4",
-    "axe-core": "^4.10.2",
     "cypress": "^15.3.0",
-    "cypress-axe": "^1.7.0",
     "cypress-real-events": "^1.15.0",
     "eslint-plugin-cypress": "^3.4.0",
     "rimraf": "^3.0.2",

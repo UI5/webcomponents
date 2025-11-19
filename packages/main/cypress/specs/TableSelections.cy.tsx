@@ -7,6 +7,17 @@ import TableCell from "../../src/TableCell.js";
 import TableSelectionSingle from "../../src/TableSelectionSingle.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
 import type TableSelectionBase from "../../src/TableSelectionBase.js";
+import * as Translations from "../../src/generated/i18n/i18n-defaults.js";
+
+const {
+	TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION: { defaultText: SELECT_ALL_CHECKBOX },
+	TABLE_COLUMNHEADER_SELECTALL_CHECKED: { defaultText: CHECKED },
+	TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED: { defaultText: NOT_CHECKED },
+	TABLE_SELECT_ALL_ROWS: { defaultText: SELECT_ALL_ROWS },
+	TABLE_DESELECT_ALL_ROWS: { defaultText: DESELECT_ALL_ROWS },
+  	TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION: { defaultText: CLEAR_ALL_BUTTON },
+	TABLE_ACC_STATE_DISABLED: { defaultText: DISABLED }
+} = Translations;
 
 function mountTestpage(selectionMode: string) {
 	cy.mount(
@@ -356,6 +367,46 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 
 });
 
+describe("TableSelectionSingle", () => {
+	beforeEach(() => {
+		cy.mount(
+			<Table id="table1">
+				<TableSelectionSingle id="selection" slot="features"></TableSelectionSingle>
+				<TableHeaderRow id="headerRow" slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell><Label>Cell A</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+	});
+
+	it("updates the header row selection cell when rows are added or removed", () => {
+		cy.get("#headerRow").shadow().find("#selection-cell").should("exist");
+
+		cy.get("#row1").invoke("remove");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
+
+		cy.get("#table1").then($table => {
+			$table.append(
+				`<ui5-table-row id="row1">
+					<ui5-table-cell>Cell A</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row id="row2">
+					<ui5-table-cell>Cell A</ui5-table-cell>
+				</ui5-table-row>`
+			);
+		});
+		cy.get("#headerRow").shadow().find("#selection-cell").should("exist");
+
+		cy.get("#row1").invoke("remove");
+		cy.get("#row2").invoke("remove");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
+	});
+});
+
+
 describe("TableSelectionMulti", () => {
 	beforeEach(() => {
 		cy.mount(
@@ -377,10 +428,10 @@ describe("TableSelectionMulti", () => {
 	});
 
 	it("updates the header row checkbox when rows are added or removed", () => {
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", `${SELECT_ALL_CHECKBOX} ${CHECKED}`);
 		cy.get("@headerRowSelectionCell").children().first().as("headerRowCheckBox");
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
-		cy.get("@headerRowCheckBox").should("have.attr", "title", "Deselect All Rows");
+		cy.get("@headerRowCheckBox").should("have.attr", "title", DESELECT_ALL_ROWS);
 		cy.get("#table1").then($table => {
 			$table.append(
 				`<ui5-table-row id="row3" row-key="3">
@@ -389,13 +440,13 @@ describe("TableSelectionMulti", () => {
 				</ui5-table-row>`
 			);
 		});
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Not Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", `${SELECT_ALL_CHECKBOX} ${NOT_CHECKED}`);
 		cy.get("@headerRowCheckBox").should("not.have.attr", "checked");
-		cy.get("@headerRowCheckBox").should("have.attr", "title", "Select All Rows");
+		cy.get("@headerRowCheckBox").should("have.attr", "title", SELECT_ALL_ROWS);
 		cy.get("#row3").invoke("remove");
-		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", "Contains Select All Checkbox . Checked");
+		cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", `${SELECT_ALL_CHECKBOX} ${CHECKED}`);
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
-		cy.get("@headerRowCheckBox").should("have.attr", "title", "Deselect All Rows");
+		cy.get("@headerRowCheckBox").should("have.attr", "title", DESELECT_ALL_ROWS);
 		cy.get("#row2").invoke("remove");
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
 		cy.get("#row1").invoke("remove");
@@ -408,9 +459,9 @@ describe("TableSelectionMulti", () => {
 			cy.get("@headerRowIcon").should("have.attr", "name", "clear-all");
 			cy.get("@headerRowIcon").should("have.attr", "mode", "Decorative");
 			cy.get("@headerRowIcon").should("have.attr", "show-tooltip");
-			cy.get("@headerRowIcon").should("have.attr", "accessible-name", "Deselect All Rows");
+			cy.get("@headerRowIcon").should("have.attr", "accessible-name", DESELECT_ALL_ROWS);
 			cy.get("@headerRowIcon").should("have.attr", "design", hasSelection ? "Default" : "NonInteractive");
-			cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", hasSelection ? "Contains Clear All Button" : "Contains Clear All Button . Disabled");
+			cy.get("@headerRowSelectionCell").should("have.attr", "aria-description", hasSelection ? CLEAR_ALL_BUTTON : `${CLEAR_ALL_BUTTON} ${DISABLED}`);
 		}
 
 		cy.get("#selection").invoke("attr", "header-selector", "ClearAll");

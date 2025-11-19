@@ -17,6 +17,9 @@
 			"@ui5/webcomponents-base/dist/*": [
 				"../base/src/*"
 			],
+			"@ui5/webcomponents/dist/*": [
+				"../main/src/*"
+			],
 			"@ui5/webcomponents-localization/dist/*": [
 				"../localization/src/*"
 			],

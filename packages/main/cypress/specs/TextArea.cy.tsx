@@ -133,6 +133,82 @@ describe("TextArea general interaction", () => {
 				.find("textarea")
 				.should("have.attr", "aria-label", attributeValue);
 		});
+
+		it("Tests accessibleDescription property", () => {
+			const descriptionValue = "This is a direct description";
+
+			cy.mount(<TextArea accessibleDescription={descriptionValue}></TextArea>);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", descriptionValue);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("textarea")
+				.should("have.attr", "aria-describedby")
+				.and("include", "accessibleDescription");
+		});
+
+		it("Tests accessibleDescriptionRef property", () => {
+			const descriptionValue = "External description text";
+
+			cy.mount(
+				<>
+					<div id="external-desc">{descriptionValue}</div>
+					<TextArea accessibleDescriptionRef="external-desc"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", descriptionValue);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("textarea")
+				.should("have.attr", "aria-describedby")
+				.and("include", "accessibleDescription");
+		});
+
+		it("Tests accessibleDescriptionRef with multiple references", () => {
+			const desc1 = "First description";
+			const desc2 = "Second description";
+
+			cy.mount(
+				<>
+					<div id="desc1">{desc1}</div>
+					<div id="desc2">{desc2}</div>
+					<TextArea accessibleDescriptionRef="desc1 desc2"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", desc1)
+				.and("contain.text", desc2);
+		});
+
+		it("Tests accessibleDescriptionRef takes precedence over accessibleDescription", () => {
+			const directDesc = "Direct description";
+			const refDesc = "Referenced description";
+
+			cy.mount(
+				<>
+					<div id="ref-desc">{refDesc}</div>
+					<TextArea accessibleDescription={directDesc} accessibleDescriptionRef="ref-desc"></TextArea>
+				</>
+			);
+
+			cy.get("[ui5-textarea]")
+				.shadow()
+				.find("#accessibleDescription")
+				.should("contain.text", refDesc)
+				.and("not.contain.text", directDesc);
+		});
 	});
 
 	describe("disabled and readonly textarea", () => {

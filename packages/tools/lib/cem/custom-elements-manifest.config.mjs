@@ -27,7 +27,17 @@ import { generateCustomData } from "cem-plugin-vs-code-custom-data-generator";
 import { customElementJetBrainsPlugin } from "custom-element-jet-brains-integration";
 
 const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+let aliasMap = {};
+
 const devMode = process.env.UI5_CEM_MODE === "dev";
+try {
+	aliasMap = JSON.parse(fs.readFileSync("./.ui5-cem-aliases.json"));
+} catch (e) {
+	if (devMode) {
+		console.warn("No .ui5-cem-aliases.json file found. Continuing without aliases.");
+	}
+}
+
 
 const extractClassNodeJSDoc = node => {
 	const fileContent = node.getFullText();
@@ -485,6 +495,12 @@ export default {
 							i--;
 						}
 					}
+
+					moduleDoc.declarations.forEach(declaration => {
+						if (declaration.superclass?.name && aliasMap[declaration.superclass.name]) {
+							declaration.superclass.name = aliasMap[declaration.superclass.name];
+						}
+					})
 
 					const typeReferences = new Set();
 					const registerTypeReference = reference => typeReferences.add(JSON.stringify(reference))

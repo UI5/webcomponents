@@ -6,6 +6,7 @@
 	display: inline-block;
 	margin: var(--_ui5_color-palette-item-margin);
 	box-sizing: border-box;
+	background-color: var(--_ui5-color-palette-item-background-color);
 }
 
 :host(:not([_disabled]):hover),

@@ -24,6 +24,7 @@
 	--_ui5_side_navigation_item_border_style_color: none;
 	--_ui5_side_navigation_item_border_width: 0;
 	--_ui5_side_navigation_item_height: 2.75rem;
+	--_ui5_side_navigation_item_margin: 0.875rem;
 	--_ui5_side_navigation_item_expand_arrow_padding: 0.6875rem;
 	--_ui5_side_navigation_item_border_radius: 0;
 	--_ui5_side_navigation_item_bottom_margin: 0;
@@ -72,6 +73,7 @@
 	--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
 	--_ui5_side_navigation_item_height: 2rem;
 	--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
+	--_ui5_side_navigation_item_margin: 0.5rem;
 }
 
 [dir="rtl"] {

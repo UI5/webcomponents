@@ -47,3 +47,9 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "Copyright (c) 2023 Cypress.io"
 SPDX-License-Identifier = "MIT"
 SPDX-FileComment = "These files are following the oficial template to create component framework definition - https://github.com/cypress-io/cypress-ct-definition-template"
+
+[[annotations]]
+path = "packages/tools/lib/cem/patch/@custom-elements-manifest/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Pascal Schilp, Benny Powers, Matias Huhta and other project contributors"
+SPDX-License-Identifier = "MIT"
