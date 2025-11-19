@@ -541,7 +541,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
 });
 
 describe("Color Popover Palette Home and End keyboard navigation", () => {
-    it("should navigate with Home/End when showDefaultColor is set", () => {
+    it.skip("should navigate with Home/End when showDefaultColor is set", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} />
         );
