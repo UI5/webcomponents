@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.3](https://github.com/UI5/webcomponents/compare/v2.15.2...v2.15.3) (2025-11-19)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** align logo vertically to middle ([07c944d](https://github.com/UI5/webcomponents/commit/07c944dad9a6cc858218b17d481a99b929eb7010))
+
+
+
+
+
 ## [2.15.2](https://github.com/UI5/webcomponents/compare/v2.15.1...v2.15.2) (2025-11-17)
 
 
