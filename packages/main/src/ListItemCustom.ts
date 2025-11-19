@@ -1,9 +1,8 @@
 import { isTabNext, isTabPrevious, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap, AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import type { AccessibilityInfo } from "@ui5/webcomponents-base";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -124,7 +123,7 @@ class ListItemCustom extends ListItem {
 			this.shadowRoot.appendChild(span);
 		}
 	}
-	
+
 	/**
 	 * Returns the invisible text span element used for accessibility announcements
 	 * @returns The invisible text span element or null if not found
@@ -147,19 +146,20 @@ class ListItemCustom extends ListItem {
 		const allTexts = [ListItemCustom.i18nBundle.getText(LISTITEMCUSTOM_TYPE_TEXT), ...accessibilityTexts];
 		
 		// Update the span content
-		invisibleTextSpan.textContent = allTexts.join('. ');
+		invisibleTextSpan.textContent = allTexts.join(". ");
 	}
 
 	private _clearInvisibleTextContent() {
 		const invisibleTextSpan = this._invisibleTextSpan;
 		if (invisibleTextSpan) {
-			invisibleTextSpan.textContent = '';
+			invisibleTextSpan.textContent = "";
 		}
 	}
 
 	/**
 	 * Gets accessibility description by processing content nodes and delete buttons
-	 * @returns Array of accessibility text strings
+	 * @returns {string[]} Array of accessibility text strings
+	 * @private
 	 */
 	private _getAccessibilityDescription(): string[] {
 		const accessibilityTexts: string[] = [];
@@ -180,7 +180,8 @@ class ListItemCustom extends ListItem {
 
 	/**
 	 * Gets delete button nodes to process for accessibility
-	 * @returns Array of nodes to process
+	 * @returns {Node[]} Array of nodes to process
+	 * @private
 	 */
 	private _getDeleteButtonNodes(): Node[] {
 		if (!this.modeDelete) {
@@ -190,17 +191,18 @@ class ListItemCustom extends ListItem {
 		if (this.hasDeleteButtonSlot) {
 			// Return custom delete buttons from slot
 			return this.deleteButton;
-		} else {
-			// Return the built-in delete button from the shadow DOM if it exists
-			const deleteButton = this.shadowRoot?.querySelector(`#${this._id}-deleteSelectionElement`);
-			return deleteButton ? [deleteButton] : [];
 		}
+
+		// Return the built-in delete button from the shadow DOM if it exists
+		const deleteButton = this.shadowRoot?.querySelector(`#${this._id}-deleteSelectionElement`);
+		return deleteButton ? [deleteButton] : [];
 	}
 
 	/**
 	 * Processes a node and adds its accessible text to the given array
-	 * @param node The node to process
-	 * @param textArray The array to add the text to
+	 * @param {Node | null} node The node to process
+	 * @param {string[]} textArray The array to add the text to
+	 * @private
 	 */
 	private _processNodeForAccessibility(node: Node | null, textArray: string[]): void {
 		if (!node) {
@@ -218,25 +220,26 @@ class ListItemCustom extends ListItem {
 	 * UI5 elements provide accessibilityInfo with description and children.
 	 * For elements without accessibilityInfo, we fall back to extracting text content.
 	 * 
-	 * @param node The node to extract text from
-	 * @returns The extracted text
+	 * @param {Node | null} node The node to extract text from
+	 * @returns {string} The extracted text
+	 * @private
 	 */
-	private _getElementAccessibleText(node: Node | null): string {
-		if (!node) {
+	private _getElementAccessibleText(nodeArg: Node | null): string {
+		if (!nodeArg) {
 			return "";
 		}
 		
 		// Handle text nodes directly
-		if (node.nodeType === Node.TEXT_NODE) {
-			return node.textContent?.trim() || "";
+		if (nodeArg.nodeType === Node.TEXT_NODE) {
+			return nodeArg.textContent?.trim() || "";
 		}
 		
 		// Only proceed with Element-specific operations for Element nodes
-		if (node.nodeType !== Node.ELEMENT_NODE) {
+		if (nodeArg.nodeType !== Node.ELEMENT_NODE) {
 			return "";
 		}
 		
-		const element = node as Element;
+		const element = nodeArg as Element;
 		
 		// First, check for accessibilityInfo - expected for all UI5 elements
 		const accessibilityInfo = (element as any).accessibilityInfo as AccessibilityInfo | undefined;
@@ -258,7 +261,7 @@ class ListItemCustom extends ListItem {
 		let shadowContent = "";
 		if ((element as HTMLElement).shadowRoot) {
 			shadowContent = Array.from((element as HTMLElement).shadowRoot!.childNodes)
-				.map(node => this._getElementAccessibleText(node))
+				.map(childNode => this._getElementAccessibleText(childNode))
 				.filter(Boolean)
 				.join(" ");
 		}
@@ -275,8 +278,8 @@ class ListItemCustom extends ListItem {
 
 	/**
 	 * Process accessibility info from UI5 elements
-	 * @param accessibilityInfo The accessibility info object
-	 * @returns Processed accessibility text
+	 * @param {AccessibilityInfo} accessibilityInfo The accessibility info object
+	 * @returns {string} Processed accessibility text
 	 * @private
 	 */
 	private _processAccessibilityInfo(accessibilityInfo: AccessibilityInfo): string {
@@ -284,7 +287,7 @@ class ListItemCustom extends ListItem {
 		const { type, description, required, disabled, readonly, children } = accessibilityInfo;
 		
 		// Build main text from description (primary) and type
-		let textParts: string[] = [];
+		const textParts: string[] = [];
 		
 		// Description is the primary content for accessibility
 		if (description) {
@@ -298,9 +301,15 @@ class ListItemCustom extends ListItem {
 		
 		// Add accessibility states
 		const states: string[] = [];
-		if (required) states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_REQUIRED));
-		if (disabled) states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_DISABLED));
-		if (readonly) states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_READONLY));
+		if (required) {
+			states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_REQUIRED));
+		}
+		if (disabled) {
+			states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_DISABLED));
+		}
+		if (readonly) {
+			states.push(ListItemCustom.i18nBundle.getText(ACCESSIBILITY_STATE_READONLY));
+		}
 		
 		// Build text with states
 		let mainText = textParts.join(" ");
