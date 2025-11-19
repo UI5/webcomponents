@@ -42,7 +42,18 @@ const setFormValidity = async (element: IFormInputElement) => {
 };
 
 const submitForm = (element: UI5Element) => {
-	element._internals?.form?.requestSubmit();
+	const formElements = element._internals?.form?.elements;
+	// @ts-expect-error
+	const submitElement = Array.from(formElements).find(el => {
+		// @ts-expect-error
+		return el.matches(`button:not([type]), button[type="submit"], input[type="submit"], input[type="image"]`) || (el.matches("[ui5-button]") && el._isSubmit);
+	});
+
+	if (submitElement && formElements?.length !== 1) {
+		element._internals?.form?.requestSubmit();
+	} else if (formElements?.length === 1) {
+		element._internals?.form?.requestSubmit();
+	}
 };
 
 const resetForm = (element: UI5Element) => {
