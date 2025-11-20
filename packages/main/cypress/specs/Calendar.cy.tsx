@@ -961,7 +961,7 @@ describe("Calendar general interaction", () => {
 			.should("have.length", 0);
 	});
 
-	it("Disabled date range with only start date disables dates from start onwards", () => {
+	it("Disables a single date equal to start date when end date is not defined", () => {
 		cy.mount(
 			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" maxDate="2024-11-20">
 				<CalendarDateRange slot="disabledDates" startValue="2024-11-15"></CalendarDateRange>
