@@ -987,7 +987,7 @@ describe("Calendar general interaction", () => {
 			.should("not.have.class", "ui5-dp-item--disabled");
 	});
 
-	it("Disabled date range with only end date disables dates up to end", () => {
+	it("Disables all dates before end date when start date is not defined", () => {
 		cy.mount(
 			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" minDate="2024-11-01">
 				<CalendarDateRange slot="disabledDates" endValue="2024-11-10"></CalendarDateRange>
