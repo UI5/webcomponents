@@ -96,6 +96,13 @@
 		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
 	</ui5-popover>
 
+	<ui5-button id="btnOpenWithAttr2">Open with Attribute</ui5-button>
+	<ui5-popover id="popoverAttr2" opener="btnOpenWithAttr2">
+		<ui5-button id="btnCloseWithMethod">Close with Method</ui5-button>
+		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
+		<ui5-input autofocus placeholder="Input with autofocus"></ui5-input>
+	</ui5-popover>
+	
 	<br>
 	<br>
 
@@ -665,6 +672,9 @@ z-index: 1;
 
 		btnOpenWithAttr.addEventListener("click", function () {
 			popoverAttr.setAttribute("open", "");
+		});
+		btnOpenWithAttr2.addEventListener("click", function () {
+			popoverAttr2.setAttribute("open", "");
 		});
 
 		btnCloseWithMethod.addEventListener("click", function () {
