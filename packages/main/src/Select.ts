@@ -1050,6 +1050,14 @@ class Select extends UI5Element implements IFormInputElement {
 		&& this.responsivePopover.open) ? -1 : 0;
 	}
 
+	get activeDescendant() {
+		return this._isPickerOpen ? this.activeDescendantId : "";
+	}
+
+	get activeDescendantId() {
+		return `${this.id}-activeDescendant`;
+	}
+
 	 /**
 	 * This method is relevant for sap_horizon theme only
 	 */

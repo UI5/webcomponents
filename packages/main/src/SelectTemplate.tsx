@@ -43,10 +43,11 @@ export default function SelectTemplate(this: Select) {
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}
 					aria-controls={this.responsivePopoverId}
+					aria-activedescendant={this.activeDescendant}
 				>
 					{this.hasCustomLabel
 						? <slot name="label"></slot>
-						: this.text
+						: <span class="activeDescendant" role="option" id={this.activeDescendantId}>{this.text}</span>
 					}
 				</div>
 
