@@ -453,6 +453,15 @@
 	<br>
 	<br>
 
+	<h3>Input with Dynamic Suggestions Triggering (Threshold = 3)</h3>
+	<ui5-input id="dynamicTriggerInput" placeholder="Type at least 3 characters to see suggestions..." show-suggestions></ui5-input>
+	<div>
+		<small>Suggestions will appear after typing 3 or more characters</small>
+	</div>
+
+	<br>
+	<br>
+
 	<h3>Input - showing wrapping</h3>
 	<ui5-input show-suggestions id="input-change-wrapping">
 		<ui5-suggestion-item text="Item that does not wrap"></ui5-suggestion-item>
@@ -1112,6 +1121,46 @@
 
 		document.getElementById("prevent-input-event-clear-icon").addEventListener("ui5-input", event => {
 			event.preventDefault();
+		});
+
+		// Dynamic Suggestions Triggering with Threshold
+		const dynamicTriggerInput = document.getElementById("dynamicTriggerInput");
+		const THRESHOLD = 3;
+		
+		const countriesForDynamicTrigger = [
+			"Albania", "Andorra", "Armenia", "Austria", "Azerbaijan",
+			"Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
+			"Croatia", "Cyprus", "Czech Republic", "Denmark",
+			"Estonia", "Finland", "France", "Georgia", "Germany", "Greece",
+			"Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan",
+			"Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
+			"Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
+			"North Macedonia", "Norway", "Poland", "Portugal", "Romania",
+			"Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
+			"Spain", "Sweden", "Switzerland", "Turkey", "Ukraine",
+			"United Kingdom", "Vatican City"
+		];
+
+		dynamicTriggerInput.addEventListener("input", () => {
+			const value = dynamicTriggerInput.value;
+			
+			while (dynamicTriggerInput.lastChild) {
+				dynamicTriggerInput.removeChild(dynamicTriggerInput.lastChild);
+			}
+			
+			if (value.length >= THRESHOLD) {
+				dynamicTriggerInput.showSuggestions = true;
+				
+				const filteredCountries = countriesForDynamicTrigger.filter(country => 
+					country.toLowerCase().startsWith(value.toLowerCase())
+				);
+				
+				filteredCountries.forEach(country => {
+					const suggestion = document.createElement("ui5-suggestion-item");
+					suggestion.text = country;
+					dynamicTriggerInput.appendChild(suggestion);
+				});
+			}
 		});
 	</script>
 </body>
