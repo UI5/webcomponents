@@ -1141,7 +1141,7 @@ class Select extends UI5Element implements IFormInputElement {
 		if (this.focused && this._currentlySelectedOption) {
 			text = `${this._currentlySelectedOption.textContent as string} ${this._isPickerOpen ? itemPositionText : ""}`;
 
-			announce(text, InvisibleMessageMode.Polite);
+			announce(text, InvisibleMessageMode.Assertive);
 		}
 	}
 
