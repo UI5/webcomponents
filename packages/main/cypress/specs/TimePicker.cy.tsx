@@ -613,6 +613,8 @@ describe("Icon Tooltip Tests", () => {
 
 		cy.get("@icon")
 			.should("have.attr", "accessible-name", "Open Picker");
+	});
+});
 
 describe("CSS Parts", () => {
 	it("TimePicker exposes input CSS part through DateTimeInput", () => {
