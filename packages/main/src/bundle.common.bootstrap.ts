@@ -4,6 +4,8 @@ import { setRuntimeAlias } from "@ui5/webcomponents-base/dist/Runtimes.js";
 // OpenUI5 integration
 import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 
+import "@ui5/webcomponents-theming/dist/Assets-original.js";
+
 // Assets
 import "./Assets.js";
 

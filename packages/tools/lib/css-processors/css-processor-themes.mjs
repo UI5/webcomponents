@@ -9,24 +9,28 @@ import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import { scopeUi5Variables, scopeThemingVariables } from "./scope-variables.mjs";
 import { pathToFileURL } from "url";
 
-async function processThemingPackageFile(f) {
+async function processThemingPackageFile(f, scope = true) {
     const selector = ':root';
     const newRule = postcss.rule({ selector });
     const result = await postcss().process(f.text);
 
     result.root.walkRules(selector, rule => {
         for (const decl of rule.nodes) {
-            if (decl.type !== 'decl' ) {
+            if (decl.type !== 'decl') {
                 continue;
             } else if (decl.prop.startsWith('--sapFontUrl')) {
                 continue;
             } else if (!decl.prop.startsWith('--sap')) {
                 newRule.append(decl.clone());
             } else {
-                const originalProp = decl.prop;
-                const originalValue = decl.value;
+                if (scope) {
+                    const originalProp = decl.prop;
+                    const originalValue = decl.value;
 
-                newRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
+                    newRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
+                } else {
+                    newRule.append(decl.clone());
+                }
             }
         }
     });
@@ -62,20 +66,51 @@ async function generate(argv) {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f, packageJSON);
+                    if (f.path.includes("packages/theming")) {
+                        const scopedText = await processThemingPackageFile(f);
+                        const originalText = await processThemingPackageFile(f, false);
 
-                    await mkdir(path.dirname(f.path), { recursive: true });
-                    writeFile(f.path, newText);
+                        const originalPath = f.path.replace(/parameters-bundle.css$/, "parameters-bundle-original.css");
 
-                    // JSON
-                    const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                    await mkdir(path.dirname(jsonPath), { recursive: true });
-                    writeFileIfChanged(jsonPath, JSON.stringify(newText));
+                        await mkdir(path.dirname(f.path), { recursive: true });
+                        writeFile(f.path, scopedText);
 
-                    // JS/TS
-                    const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                    const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
-                    writeFileIfChanged(jsPath, jsContent);
+                        await mkdir(path.dirname(originalPath), { recursive: true });
+                        writeFile(originalPath, originalText);
+
+                        // JSON
+                        const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
+                        writeFileIfChanged(jsonPath, JSON.stringify(scopedText));
+
+                        const originalJsonPath = originalPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
+                        await mkdir(path.dirname(originalJsonPath), { recursive: true });
+                        writeFileIfChanged(originalJsonPath, JSON.stringify(originalText));
+
+                        // JS/TS
+                        const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
+                        const jsContent = getFileContent(packageJSON.name, "\`" + scopedText + "\`");
+                        writeFileIfChanged(jsPath, jsContent);
+
+                        // JS/TS
+                        const originalJsPath = originalPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
+                        const originalJsContent = getFileContent(packageJSON.name, "\`" + originalText + "\`");
+                        writeFileIfChanged(originalJsPath, originalJsContent);
+                    } else {
+                        const newText = await processComponentPackageFile(f, packageJSON);
+
+                        await mkdir(path.dirname(f.path), { recursive: true });
+                        writeFile(f.path, newText);
+
+                        // JSON
+                        const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
+                        await mkdir(path.dirname(jsonPath), { recursive: true });
+                        writeFileIfChanged(jsonPath, JSON.stringify(newText));
+
+                        // JS/TS
+                        const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
+                        const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
+                        writeFileIfChanged(jsPath, jsContent);
+                    }
                 });
             })
         },
