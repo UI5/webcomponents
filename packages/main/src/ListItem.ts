@@ -1,6 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import {
-	isSpace, isEnter, isDelete, isF2, isF7,
+	isSpace, isEnter, isDelete, isF2, isF7, isUp, isDown,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -258,8 +258,21 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if ((isSpace(e) || isEnter(e)) && this._isTargetSelfFocusDomRef(e)) {
+		const isInternalElementFocused = this._isTargetSelfFocusDomRef(e);
+
+		if ((isSpace(e) || isEnter(e)) && isInternalElementFocused) {
 			return;
+		}
+
+		// Handle Arrow Up/Down navigation between internal elements
+		const isArrowKey = isUp(e) || isDown(e);
+
+		if (isInternalElementFocused && isArrowKey) {
+			const offset = isUp(e) ? -1 : 1;
+			if (this._navigateToAdjacentItem(offset)) {
+				e.preventDefault();
+				return;
+			}
 		}
 
 		super._onkeydown(e);
@@ -583,6 +596,37 @@ abstract class ListItem extends ListItemBase {
 		if (currentIndex !== -1) {
 			list._lastFocusedElementIndex = currentIndex;
 		}
+	}
+
+	_navigateToAdjacentItem(offset: -1 | 1): boolean {
+		const list = this._getList();
+		if (!list) {
+			return false;
+		}
+
+		const focusables = this._getFocusableElements();
+		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+		if (currentElementIndex === -1) {
+			return false;
+		}
+
+		const allItems = list.getItems().filter(item => "hasConfigurableMode" in item && item.hasConfigurableMode) as ListItem[];
+		let itemIndex = allItems.indexOf(this as ListItem) + offset;
+
+		while (itemIndex >= 0 && itemIndex < allItems.length) {
+			const targetFocusables = allItems[itemIndex]._getFocusableElements();
+
+			if (targetFocusables.length > 0) {
+				const elementIndex = Math.min(currentElementIndex, targetFocusables.length - 1);
+				targetFocusables[elementIndex].focus();
+				list._lastFocusedElementIndex = elementIndex;
+				return true;
+			}
+
+			itemIndex += offset;
+		}
+
+		return false;
 	}
 }
 
