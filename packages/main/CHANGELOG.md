@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Bug Fixes
+
+* **ui5-color-palette-popover:** skip test ([#12690](https://github.com/UI5/webcomponents/issues/12690)) ([5347f7d](https://github.com/UI5/webcomponents/commit/5347f7dcc3289d939d227e1d499e0ae776c01237))
+* **ui5-color-palette-popover:** skip test ([#12693](https://github.com/UI5/webcomponents/issues/12693)) ([3582597](https://github.com/UI5/webcomponents/commit/35825977d54fd099a01ffe96a16ac5947bfb99c2))
+* **ui5-date-picker:** add correct tooltip when picker is opened ([#12669](https://github.com/UI5/webcomponents/issues/12669)) ([6598cdc](https://github.com/UI5/webcomponents/commit/6598cdcc0501f085f6ef3c0ebcefb2172be584b0)), closes [#12616](https://github.com/UI5/webcomponents/issues/12616)
+* **ui5-date-picker:** add input CSS part for styling ([#12559](https://github.com/UI5/webcomponents/issues/12559)) ([cacdba0](https://github.com/UI5/webcomponents/commit/cacdba0c340eaecdcf2bc5964ddbbc42f942003c))
+* **ui5-input:** align input margin to spec ([#12660](https://github.com/UI5/webcomponents/issues/12660)) ([e912c0b](https://github.com/UI5/webcomponents/commit/e912c0bb9be789a2280060952b4a4b1213cd1e9f))
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+* **ui5-color-picker:** update accessibility ([#12556](https://github.com/UI5/webcomponents/issues/12556)) ([56cd503](https://github.com/UI5/webcomponents/commit/56cd503e2570594a62914a51591b9c6277eae7f0))
+
+
+
+
+
 # [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
 
 
