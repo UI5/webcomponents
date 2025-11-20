@@ -544,3 +544,14 @@ describe("Validation inside a form", () => {
 			.should("not.exist", "Timepicker with correct formatted value should not have :invalid CSS class");
 	});
 });
+
+describe("CSS Parts", () => {
+	it("TimePicker exposes input CSS part through DateTimeInput", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.should("have.attr", "part", "input");
+	});
+});

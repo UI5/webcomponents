@@ -12,6 +12,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					data-sap-focus-ref
 					id={`${this._id}-inner`}
 					class="ui5-time-picker-input"
+					part="input"
 					value={this.value}
 					placeholder={this._placeholder}
 					disabled={this.disabled}
