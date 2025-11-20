@@ -124,6 +124,22 @@ class MultiInput extends Input implements IFormInputElement {
 	declare name?: string;
 
 	/**
+	 * Indicates whether to show tokens in suggestions popover
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_showTokensInSuggestions = false;
+
+	/**
+	 * Tracks whether user has explicitly toggled the show tokens state
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_userToggledShowTokens = false;
+
+	/**
 	 * Defines the component tokens.
 	 * @public
 	 */
@@ -343,6 +359,23 @@ class MultiInput extends Input implements IFormInputElement {
 		if (this.tokenizer) {
 			this.tokenizer.readonly = this.readonly;
 		}
+
+		// Reset toggle state if there are tokens and dialog is about to open
+		if (this.tokens.length > 0 && !this._userToggledShowTokens) {
+			this._showTokensInSuggestions = true;
+		}
+	}
+
+	/**
+	 * Override the _handlePickerAfterOpen method to reset toggle state when dialog opens with tokens
+	 */
+	_handlePickerAfterOpen() {
+		if (this.tokens.length > 0) {
+			this._showTokensInSuggestions = true;
+			this._userToggledShowTokens = false;
+		}
+
+		super._handlePickerAfterOpen();
 	}
 
 	onAfterRendering() {
@@ -418,6 +451,25 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get shouldDisplayOnlyValueStateMessage() {
 		return this.hasValueStateMessage && !this.readonly && !this.open && this.focused && !this.tokenizer.open;
+	}
+
+	/**
+	 * Computes the effective state for showing tokens in suggestions.
+	 * Defaults to true when tokens exist, but respects explicit user toggle.
+	 */
+	get _effectiveShowTokensInSuggestions() {
+		// If no tokens exist, always false
+		if (this.tokens.length === 0) {
+			return false;
+		}
+
+		// If user has never interacted with the toggle, default to true when tokens exist
+		if (!this._userToggledShowTokens) {
+			return true;
+		}
+
+		// If user has interacted, respect their choice
+		return this._showTokensInSuggestions;
 	}
 }
 
