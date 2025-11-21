@@ -12,6 +12,7 @@
 @import "../base/ViewSettingsDialog-parameters.css";
 @import "../base/Wizard-parameters.css";
 @import "./SearchField-parameters.css";
+@import "../base/Search-parameters.css";
 @import "./WizardTab-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "../base/DynamicPage-parameters.css";

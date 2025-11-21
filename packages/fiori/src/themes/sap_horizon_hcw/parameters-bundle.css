@@ -15,6 +15,7 @@
 @import "../base/ShellBar-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "./SearchField-parameters.css";
+@import "../base/Search-parameters.css";
 @import "../base/DynamicPage-parameters.css";
 @import "../base/DynamicPageTitle-parameters.css";
 @import "../base/DynamicPageHeader-parameters.css";

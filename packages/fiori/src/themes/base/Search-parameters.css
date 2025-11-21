@@ -1,0 +1,9 @@
+:root {
+	--_ui5_search_item_vertical_padding: 1rem;
+}
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_search_item_vertical_padding: 0.4375rem;
+}
