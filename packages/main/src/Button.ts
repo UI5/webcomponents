@@ -658,6 +658,14 @@ class Button extends UI5Element implements IButton {
 		};
 	}
 
+	get accessibilityInfo() {
+		return {
+			description: this.ariaDescriptionText,
+			role: this.effectiveAccRole,
+			disabled: this.disabled,
+		};
+	}
+
 	get effectiveBadgeDescriptionText() {
 		if (!this.shouldRenderBadge) {
 			return "";
