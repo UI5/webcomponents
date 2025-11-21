@@ -20,6 +20,7 @@ export default function CalendarTemplate(this: Calendar) {
 						formatPattern={this._formatPattern}
 						selectedDates={this._selectedDatesTimestamps}
 						specialCalendarDates={this._specialCalendarDates}
+						disabledDates={this._disabledDates}
 						_hidden={this._isDayPickerHidden}
 						primaryCalendarType={this._primaryCalendarType}
 						secondaryCalendarType={this._secondaryCalendarType}
