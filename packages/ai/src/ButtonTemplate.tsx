@@ -1,3 +1,4 @@
+// import { SplitButton } from "@ui5/webcomponents";
 import SplitButton from "@ui5/webcomponents/dist/SplitButton.js";
 import type Button from "./Button.js";
 
