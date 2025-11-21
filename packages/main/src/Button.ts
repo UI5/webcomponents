@@ -660,15 +660,9 @@ class Button extends UI5Element implements IButton {
 
 	get accessibilityInfo() {
 		return {
-			ariaExpanded: this.accessibilityAttributes.expanded,
-			ariaHasPopup: this.accessibilityAttributes.hasPopup,
-			ariaControls: this.accessibilityAttributes.controls,
-			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
-			ariaLabel: this.accessibilityAttributes.ariaLabel || this.ariaLabelText,
-			ariaDescription: this.ariaDescriptionText,
+			description: this.ariaDescriptionText,
 			role: this.effectiveAccRole,
 			disabled: this.disabled,
-			tabIndex: this.tabIndexValue,
 		};
 	}
 
