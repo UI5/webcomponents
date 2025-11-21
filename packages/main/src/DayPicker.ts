@@ -856,9 +856,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_getFirstDayOfWeek(): number {
 		const localeData = getCachedLocaleDataInstance(getLocale());
 		let firstDayOfWeek;
+		const configurationFirstDayOfWeek = getFirstDayOfWeek();
 
-		if (getFirstDayOfWeek() !== undefined) {
-			firstDayOfWeek = getFirstDayOfWeek()!;
+		if (configurationFirstDayOfWeek !== undefined) {
+			firstDayOfWeek = configurationFirstDayOfWeek;
 		} else {
 			firstDayOfWeek = localeData.getFirstDayOfWeek();
 		}
