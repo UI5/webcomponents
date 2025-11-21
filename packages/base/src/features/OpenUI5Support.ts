@@ -6,7 +6,7 @@ import {
 	removeOpenedPopup,
 	getTopmostPopup,
 } from "./patchPopup.js";
-import type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo } from "./patchPopup.js";
+import type { OpenUI5PopupClass, OpenUI5PopupBasedControlClass, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
@@ -110,7 +110,7 @@ class OpenUI5Support {
 								"sap/ui/core/date/CalendarUtils",
 							];
 						}
-						window.sap.ui.require(deps, (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl, Patcher: OpenUI5Patcher) => {
+						window.sap.ui.require(deps, (Popup: OpenUI5PopupClass, Dialog: OpenUI5PopupBasedControlClass, Popover: OpenUI5PopupBasedControlClass, Patcher: OpenUI5Patcher) => {
 							patchPatcher(Patcher);
 							patchPopup(Popup, Dialog, Popover);
 							resolve();

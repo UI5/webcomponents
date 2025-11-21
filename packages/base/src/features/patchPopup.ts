@@ -6,18 +6,21 @@ type Control = {
 	getDomRef: () => HTMLElement | null,
 }
 
-// The lifecycle of Popup.js is open -> _opened -> close -> _closed, we're interested in the first (open) and last (_closed)
 type OpenUI5Popup = {
-	prototype: {
-		open: (...args: any[]) => void,
-		_closed: (...args: any[]) => void,
-		getOpenState: () => "CLOSED" | "CLOSING" | "OPEN" | "OPENING",
-		getContent: () => Control | HTMLElement | null, // this is the OpenUI5 Element/Control instance that opens the Popup (usually sap.m.Popover/sap.m.Dialog)
-		onFocusEvent: (...args: any[]) => void,
-	}
+	open: (...args: any[]) => void,
+	_closed: (...args: any[]) => void,
+	getOpenState: () => "CLOSED" | "CLOSING" | "OPEN" | "OPENING",
+	getContent: () => Control | HTMLElement | null, // this is the OpenUI5 Element/Control instance that opens the Popup (usually sap.m.Popover/sap.m.Dialog)
+	onFocusEvent: (...args: any[]) => void,
+	getModal: () => boolean
 };
 
-type OpenUI5PopupBasedControl = {
+// The lifecycle of Popup.js is open -> _opened -> close -> _closed, we're interested in the first (open) and last (_closed)
+type OpenUI5PopupClass = {
+	prototype: OpenUI5Popup
+};
+
+type OpenUI5PopupBasedControlClass = {
 	prototype: {
 		onsapescape: (...args: any[]) => void,
 		oPopup: OpenUI5Popup,
@@ -25,8 +28,11 @@ type OpenUI5PopupBasedControl = {
 };
 
 type PopupInfo = {
-	type: "OpenUI5" | "WebComponent";
+	type: "WebComponent";
 	instance: object;
+} | {
+	type: "OpenUI5";
+	instance: OpenUI5Popup;
 };
 
 // contains all OpenUI5 and Web Component popups that are currently opened
@@ -37,6 +43,8 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 };
 
 const removeOpenedPopup = (popup: object) => {
+	arrangeNativePopovers();
+
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
 	if (index > -1) {
 		AllOpenedPopupsRegistry.openedRegistry.splice(index, 1);
@@ -68,15 +76,55 @@ const hasWebComponentPopupAbove = (popup: object) => {
 	return false;
 };
 
-const openNativePopover = (domRef: HTMLElement) => {
+const openNativePopover = (domRef: HTMLElement, popup: OpenUI5Popup) => {
+	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
+
+	if (popup.getModal() && openUI5BlockLayer) {
+		openUI5BlockLayer.setAttribute("popover", "manual");
+		openUI5BlockLayer.hidePopover();
+		openUI5BlockLayer.showPopover();
+	}
+
 	domRef.setAttribute("popover", "manual");
 	domRef.showPopover();
+};
+
+const arrangeNativePopovers = () => {
+	if (!isNativePopoverOpen()) {
+		return;
+	}
+
+	const prevPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 2];
+	if (!prevPopup || prevPopup.type !== "OpenUI5" || !prevPopup.instance.getModal()) {
+		return;
+	}
+
+	const prevPopupContent = prevPopup.instance.getContent()!;
+	const content = prevPopupContent instanceof HTMLElement ? prevPopupContent : prevPopupContent?.getDomRef();
+
+	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
+
+	content?.hidePopover();
+
+	if (prevPopup.instance.getModal()) {
+		openUI5BlockLayer?.showPopover();
+	}
+
+	content?.showPopover();
 };
 
 const closeNativePopover = (domRef: HTMLElement) => {
 	if (domRef.hasAttribute("popover")) {
 		domRef.hidePopover();
 		domRef.removeAttribute("popover");
+	}
+
+	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
+	if (lastPopup.type === "OpenUI5") {
+		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
+		if (openUI5BlockLayer && openUI5BlockLayer.hasAttribute("popover")) {
+			openUI5BlockLayer.hidePopover();
+		}
 	}
 };
 
@@ -91,7 +139,7 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 	});
 };
 
-const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => {
+const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControlClass) => {
 	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
 	PopupBasedControl.prototype.onsapescape = function onsapescape(...args: any[]) {
 		if (hasWebComponentPopupAbove(this.oPopup)) {
@@ -102,18 +150,17 @@ const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControl) => 
 	};
 };
 
-const patchOpen = (Popup: OpenUI5Popup) => {
+const patchOpen = (Popup: OpenUI5PopupClass) => {
 	const origOpen = Popup.prototype.open;
 	Popup.prototype.open = function open(...args: any[]) {
 		origOpen.apply(this, args); // call open first to initiate opening
-		const topLayerAlreadyInUse = isNativePopoverOpen();
 		const openingInitiated = ["OPENING", "OPEN"].includes(this.getOpenState());
-		if (openingInitiated && topLayerAlreadyInUse) {
+		if (openingInitiated && isNativePopoverOpen()) {
 			const element = this.getContent();
 			if (element) {
 				const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 				if (domRef) {
-					openNativePopover(domRef);
+					openNativePopover(domRef, this);
 				}
 			}
 		}
@@ -125,7 +172,7 @@ const patchOpen = (Popup: OpenUI5Popup) => {
 	};
 };
 
-const patchClosed = (Popup: OpenUI5Popup) => {
+const patchClosed = (Popup: OpenUI5PopupClass) => {
 	const _origClosed = Popup.prototype._closed;
 	Popup.prototype._closed = function _closed(...args: any[]) {
 		const element = this.getContent();
@@ -139,7 +186,7 @@ const patchClosed = (Popup: OpenUI5Popup) => {
 	};
 };
 
-const patchFocusEvent = (Popup: OpenUI5Popup) => {
+const patchFocusEvent = (Popup: OpenUI5PopupClass) => {
 	const origFocusEvent = Popup.prototype.onFocusEvent;
 	Popup.prototype.onFocusEvent = function onFocusEvent(...args: any[]) {
 		if (!hasWebComponentPopupAbove(this)) {
@@ -154,7 +201,7 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl) => {
+const patchPopup = (Popup: OpenUI5PopupClass, Dialog: OpenUI5PopupBasedControlClass, Popover: OpenUI5PopupBasedControlClass) => {
 	insertOpenUI5PopupStyles();
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
@@ -171,4 +218,4 @@ export {
 	getTopmostPopup,
 };
 
-export type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo };
+export type { OpenUI5PopupClass, OpenUI5PopupBasedControlClass, PopupInfo };
