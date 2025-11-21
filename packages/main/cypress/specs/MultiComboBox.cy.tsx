@@ -4124,7 +4124,7 @@ describe("Keyboard Handling", () => {
 			cy.get("@input").should("have.value", "2222222222");
 		});
 
-		it("not be able to paste token with CTRL+V in read only", () => {
+		it("not be able to paste token with CTRL+V in read only", async () => {
 			cy.mount(<>
 				<MultiComboBox style={{ width: "500px" }} noValidation={true} readonly={true} />
 			</>)
@@ -4141,6 +4141,7 @@ describe("Keyboard Handling", () => {
 			cy.get("@clipboardRead").should("have.been.calledOnce");
 
 			cy.get("@input").should("have.value", "");
+			cy.get("@tokenes").should("not.exist");
 		});
 
 		it("should cut a token with CTRL+X", () => {
