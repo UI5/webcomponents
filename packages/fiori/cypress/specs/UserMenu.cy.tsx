@@ -116,7 +116,6 @@ describe("Initial rendering", () => {
         cy.get("@info").should("have.class", "ui5-user-menu-selected-account-additional-info");
     });
 
-
     it("tests config show-manage-account", () => {
 		cy.mount(
 			<>

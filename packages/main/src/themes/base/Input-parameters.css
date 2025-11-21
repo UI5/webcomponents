@@ -69,7 +69,6 @@
 	--_ui5_input_icon_wrapper_state_height: 100%;
 	--_ui5_input_icon_wrapper_success_state_height: 100%;
 	--_ui5-input-icons-count: 0;
-	--_ui5_input_margin_top_bottom: 0.1875rem;
 	--_ui5_input_tokenizer_min_width: 3.25rem;
 }
 
@@ -87,4 +86,5 @@
 	--_ui5_input_error_warning_custom_focused_icon_padding: .1875rem .5rem;
 	--_ui5_input_information_custom_icon_padding: .1875rem .5rem;
 	--_ui5_input_information_custom_focused_icon_padding: .1875rem .5rem;
+	--_ui5_input_margin_top_bottom: 0.1875rem;
 }
