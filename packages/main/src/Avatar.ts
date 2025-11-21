@@ -5,7 +5,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -17,7 +17,14 @@ import type { IAvatarGroupItem } from "./AvatarGroup.js";
 // Template
 import AvatarTemplate from "./AvatarTemplate.js";
 
-import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
+import {
+	AVATAR_TOOLTIP,
+	ARIA_HASPOPUP_DIALOG,
+	ARIA_HASPOPUP_GRID,
+	ARIA_HASPOPUP_LISTBOX,
+	ARIA_HASPOPUP_MENU,
+	ARIA_HASPOPUP_TREE,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import AvatarCss from "./generated/themes/Avatar.css.js";
@@ -492,6 +499,32 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 			return;
 		}
 		this._imageLoadError = true;
+	}
+
+	_getAriaTypeDescription() {
+		switch (this._ariaHasPopup) {
+		case "dialog":
+			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_DIALOG);
+		case "grid":
+			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_GRID);
+		case "listbox":
+			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_LISTBOX);
+		case "menu":
+			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_MENU);
+		case "tree":
+			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_TREE);
+		default:
+			return "";
+		}
+	}
+
+	get accessibilityInfo() {
+		return {
+			role: this._role as AriaRole,
+			type: this._getAriaTypeDescription(),
+			description: this.accessibleNameText,
+			disabled: this.disabled,
+		};
 	}
 }
 
