@@ -1,15 +1,18 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import Search from "./Search.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ShellBarSearchTemplate from "./ShellBarSearchTemplate.js";
 import ShellBarSearchCss from "./generated/themes/ShellBarSearch.css.js";
+import BusyIndicatorSize from "@ui5/webcomponents/dist/types/BusyIndicatorSize.js";
 
 import {
 	SEARCH_FIELD_SEARCH_ICON,
 	SHELLBAR_SEARCH_EXPANDED,
 	SHELLBAR_SEARCH_COLLAPSED,
 } from "./generated/i18n/i18n-defaults.js";
+import type BusyState from "@ui5/webcomponents/dist/BusyState.js";
 
 /**
  * @class
@@ -37,6 +40,13 @@ class ShellBarSearch extends Search {
 	 */
 	@property({ type: Boolean })
 	autoOpen = false;
+
+	/**
+	 * Defines the busy state configuration for the search field.
+	 * @public
+	 */
+	@slot({ type: HTMLElement, invalidateOnChildChange: true })
+	busyState!: Array<BusyState>;
 
 	_handleSearchIconPress() {
 		super._handleSearchIconPress();
@@ -97,6 +107,27 @@ class ShellBarSearch extends Search {
 		if (isPhone()) {
 			this.collapsed = true;
 		}
+	}
+
+	/**
+	 * Returns the busy state configuration based on the slotted ui5-busy-state element.
+	 * @private
+	 */
+	get busyStateConfig(): { active: boolean; size: `${BusyIndicatorSize}` } {
+		if (this.busyState.length === 0) {
+			return { active: false, size: BusyIndicatorSize.M };
+		}
+
+		const busyStateElement = this.busyState[0];
+
+		// If size is Auto, use the component's default (S for collapsed, M for expanded)
+		const defaultSize = this.collapsed ? BusyIndicatorSize.S : BusyIndicatorSize.M;
+		const size = busyStateElement.size === "Auto" ? defaultSize : busyStateElement.size;
+
+		return {
+			active: busyStateElement.active,
+			size,
+		 };
 	}
 }
 
