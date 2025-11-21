@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.2](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.2) (2025-11-21)
+
+
+### Bug Fixes
+
+* **build:** fix issue with legacy dev setup ([#12706](https://github.com/UI5/webcomponents/issues/12706)) ([42e7c1e](https://github.com/UI5/webcomponents/commit/42e7c1e3f33770fa80b1f6ffe06c50daa9af9bb9))
+* **tools:** dev-server for 3rd party packages ([#12631](https://github.com/UI5/webcomponents/issues/12631)) ([e75d5bd](https://github.com/UI5/webcomponents/commit/e75d5bde1154c186d58e5f848f4b6d4cebf5fe37))
+* **ui5-ai-input:** add docs and correct samples ([#12643](https://github.com/UI5/webcomponents/issues/12643)) ([5fe7f4e](https://github.com/UI5/webcomponents/commit/5fe7f4e37c1ab189937995d4e2d7432154bdd1ba))
+
+
+
+
+
 # [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
 
 
