@@ -118,6 +118,7 @@ import Title from "./Title.js";
 import Toast from "./Toast.js";
 import ToggleButton from "./ToggleButton.js";
 import Toolbar from "./Toolbar.js";
+import ToolbarItem from "./ToolbarItem.js";
 import ToolbarButton from "./ToolbarButton.js";
 import ToolbarSeparator from "./ToolbarSeparator.js";
 import ToolbarSpacer from "./ToolbarSpacer.js";
