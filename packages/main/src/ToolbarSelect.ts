@@ -4,6 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
 import type Select from "./Select.js";
 
@@ -91,6 +92,7 @@ class ToolbarSelect extends ToolbarItem {
 	@slot({
 		"default": true,
 		type: HTMLElement,
+		invalidateOnChildChange: true,
 	})
 	options!: Array<ToolbarSelectOption>;
 
@@ -146,14 +148,19 @@ class ToolbarSelect extends ToolbarItem {
 	 */
 	@property()
 	set value(newValue: string) {
-		if (this.select && this.select.value !== newValue) {
-			this.select.value = newValue;
-		}
 		this._value = newValue;
+		const selectElement = this.select;
+		if (selectElement && selectElement.value !== newValue) {
+			selectElement.value = newValue;
+		}
 	}
 
 	get value(): string | undefined {
-		return this.select ? this.select.value : this._value;
+		// Always return _value if it's set, as it represents the source of truth
+		if (this._value !== undefined && this._value !== "") {
+			return this._value;
+		}
+		return this.select ? this.select.value : undefined;
 	}
 
 	get select(): Select | null {
@@ -162,6 +169,30 @@ class ToolbarSelect extends ToolbarItem {
 
 	// Internal value storage, in case the composite select is not rendered on the the assignment happens
 	_value: string = "";
+
+	onInvalidation(changeInfo: ChangeInfo) {
+		// When a child ToolbarSelectOption's selected property changes, update the value
+		if (changeInfo.reason === "childchange") {
+			const selectedOption = this.options.find(option => option.selected);
+			if (selectedOption) {
+				const newValue = selectedOption.textContent || "";
+				// Update both internal value and the select component's value
+				this._value = newValue;
+				// Cache the select reference to avoid multiple DOM queries
+				const selectElement = this.select;
+				if (selectElement && selectElement.value !== newValue) {
+					selectElement.value = newValue;
+				}
+			} else {
+				// If no option is selected, clear the value
+				this._value = "";
+				const selectElement = this.select;
+				if (selectElement) {
+					selectElement.value = "";
+				}
+			}
+		}
+	}
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
@@ -189,12 +220,16 @@ class ToolbarSelect extends ToolbarItem {
 
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
 		e.stopImmediatePropagation();
+
+		// Update internal value BEFORE firing the change event
+		// so that when event listeners read this.value, they get the updated value
+		this._value = e.detail.selectedOption?.textContent || "";
+		this._syncOptions(e.detail.selectedOption);
+
 		const prevented = !this.fireDecoratorEvent("change", { ...e.detail, targetRef: e.target as HTMLElement });
 		if (!prevented) {
 			this.fireDecoratorEvent("close-overflow");
 		}
-
-		this._syncOptions(e.detail.selectedOption);
 	}
 
 	_syncOptions(selectedOption: HTMLElement): void {
