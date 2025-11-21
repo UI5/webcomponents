@@ -406,12 +406,13 @@ describe("Accessibility", () => {
 			const accInfo = checkbox.accessibilityInfo;
 			
             // Description should come from accessibleName property
-			expect(accInfo.description).to.equal("Custom Aria Label");
+			expect(accInfo.description).to.equal("Custom Aria Label Not checked");
 			
 			expect(accInfo.readonly).to.be.true;
 			expect(accInfo.required).to.be.true;
 			expect(accInfo.disabled).to.be.false;
-			
+
+            expect(accInfo.type).to.equal("Checkbox");
 			expect(accInfo.role).to.equal("checkbox");
 		});    
 	});
@@ -432,7 +433,7 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test");
+            expect(accInfo.description).to.equal("Label For Accessibility Test Not checked");
         });    
     });
 
@@ -441,7 +442,8 @@ describe("Accessibility", () => {
             <>
                 <CheckBox 
                     id="accessibilityTestCb2" 
-                    text="Accessibility Test Text" 
+                    text="Accessibility Test Text"
+                    checked
                 ></CheckBox>
             </>
         );
@@ -451,7 +453,7 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from text property
-            expect(accInfo.description).to.equal("Accessibility Test Text");
+            expect(accInfo.description).to.equal("Accessibility Test Text Checked");
         });    
     });
 
@@ -470,7 +472,7 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test");
+            expect(accInfo.description).to.equal("Label For Accessibility Test Not checked");
         });    
     });
 });
