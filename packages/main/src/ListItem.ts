@@ -1,11 +1,12 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import {
-	isSpace, isEnter, isDelete, isF2,
+	isSpace, isEnter, isDelete, isF2, isF7, isUp, isDown,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -21,6 +22,7 @@ import ListItemBase from "./ListItemBase.js";
 import type RadioButton from "./RadioButton.js";
 import type CheckBox from "./CheckBox.js";
 import type { IButton } from "./Button.js";
+import type List from "./List.js";
 import {
 	DELETE,
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
@@ -255,9 +257,22 @@ abstract class ListItem extends ListItemBase {
 		document.removeEventListener("touchend", this.deactivate);
 	}
 
-	async _onkeydown(e: KeyboardEvent) {
-		if ((isSpace(e) || isEnter(e)) && this._isTargetSelfFocusDomRef(e)) {
+	_onkeydown(e: KeyboardEvent) {
+		const isInternalElementFocused = this._isTargetSelfFocusDomRef(e);
+
+		if ((isSpace(e) || isEnter(e)) && isInternalElementFocused) {
 			return;
+		}
+
+		// Handle Arrow Up/Down navigation between internal elements
+		const isArrowKey = isUp(e) || isDown(e);
+
+		if (isInternalElementFocused && isArrowKey) {
+			const offset = isUp(e) ? -1 : 1;
+			if (this._navigateToAdjacentItem(offset)) {
+				e.preventDefault();
+				return;
+			}
 		}
 
 		super._onkeydown(e);
@@ -270,15 +285,11 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (isF2(e)) {
-			const activeElement = getActiveElement();
-			const focusDomRef = this.getFocusDomRef()!;
+			this._handleF2();
+		}
 
-			if (activeElement === focusDomRef) {
-				const firstFocusable = await getFirstFocusableElement(focusDomRef);
-				firstFocusable?.focus();
-			} else {
-				focusDomRef.focus();
-			}
+		if (isF7(e)) {
+			this._handleF7(e);
 		}
 	}
 
@@ -517,6 +528,105 @@ abstract class ListItem extends ListItemBase {
 
 	get _listItem() {
 		return this.shadowRoot!.querySelector("li");
+	}
+
+	_getList(): List | null {
+		return this.closest("[ui5-list]");
+	}
+
+	_handleF7(e: KeyboardEvent) {
+		e.preventDefault();
+
+		const focusDomRef = this.getFocusDomRef()!;
+		const activeElement = getActiveElement();
+		const list = this._getList();
+
+		if (activeElement === focusDomRef) {
+			this._focusInternalElement(list);
+		} else {
+			if (activeElement) {
+				this._updateStoredFocusIndex(list, activeElement as HTMLElement);
+			}
+			focusDomRef.focus();
+		}
+	}
+
+	async _handleF2() {
+		const focusDomRef = this.getFocusDomRef()!;
+		const activeElement = getActiveElement();
+
+		if (activeElement === focusDomRef) {
+			const firstFocusable = await getFirstFocusableElement(focusDomRef);
+			firstFocusable?.focus();
+		} else {
+			focusDomRef.focus();
+		}
+	}
+
+	_getFocusableElements(): HTMLElement[] {
+		const focusDomRef = this.getFocusDomRef()!;
+		return getTabbableElements(focusDomRef);
+	}
+
+	_focusInternalElement(list: List | null) {
+		const focusables = this._getFocusableElements();
+		if (!focusables.length) {
+			return;
+		}
+
+		const targetIndex = list?._lastFocusedElementIndex ?? 0;
+		const safeIndex = Math.min(targetIndex, focusables.length - 1);
+		const elementToFocus = focusables[safeIndex];
+
+		elementToFocus.focus();
+
+		if (list) {
+			list._lastFocusedElementIndex = safeIndex;
+		}
+	}
+
+	_updateStoredFocusIndex(list: List | null, activeElement: HTMLElement) {
+		if (!list) {
+			return;
+		}
+
+		const focusables = this._getFocusableElements();
+		const currentIndex = focusables.indexOf(activeElement);
+
+		if (currentIndex !== -1) {
+			list._lastFocusedElementIndex = currentIndex;
+		}
+	}
+
+	_navigateToAdjacentItem(offset: -1 | 1): boolean {
+		const list = this._getList();
+		if (!list) {
+			return false;
+		}
+
+		const focusables = this._getFocusableElements();
+		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+		if (currentElementIndex === -1) {
+			return false;
+		}
+
+		const allItems = list.getItems().filter(item => "hasConfigurableMode" in item && item.hasConfigurableMode) as ListItem[];
+		let itemIndex = allItems.indexOf(this as ListItem) + offset;
+
+		while (itemIndex >= 0 && itemIndex < allItems.length) {
+			const targetFocusables = allItems[itemIndex]._getFocusableElements();
+
+			if (targetFocusables.length > 0) {
+				const elementIndex = Math.min(currentElementIndex, targetFocusables.length - 1);
+				targetFocusables[elementIndex].focus();
+				list._lastFocusedElementIndex = elementIndex;
+				return true;
+			}
+
+			itemIndex += offset;
+		}
+
+		return false;
 	}
 }
 

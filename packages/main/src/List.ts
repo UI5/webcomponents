@@ -534,6 +534,7 @@ class List extends UI5Element {
 	_beforeElement?: HTMLElement | null;
 	_afterElement?: HTMLElement | null;
 	_startMarkerOutOfView: boolean = false;
+	_lastFocusedElementIndex?: number;
 
 	handleResizeCallback: ResizeObserverCallback;
 	onItemFocusedBound: (e: CustomEvent) => void;
@@ -988,8 +989,9 @@ class List extends UI5Element {
 		}
 
 		if (isDown(e)) {
-			this._handleDown();
-			e.preventDefault();
+			if (this._handleDown()) {
+				e.preventDefault();
+			}
 			return;
 		}
 
@@ -1168,10 +1170,10 @@ class List extends UI5Element {
 
 	_handleDown() {
 		if (!this.growsWithButton) {
-			return;
+			return false;
 		}
 
-		this._shouldFocusGrowingButton();
+		return this._shouldFocusGrowingButton();
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -1350,7 +1352,9 @@ class List extends UI5Element {
 
 		if (currentIndex !== -1 && currentIndex === lastIndex) {
 			this.focusGrowingButton();
+			return true;
 		}
+		return false;
 	}
 
 	getGrowingButton() {
