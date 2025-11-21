@@ -103,7 +103,7 @@
 	user-select: none;
 }
 
-.ui5-calheader-middlebtn:focus {
+.ui5-calheader-middlebtn:focus, .ui5-calheader-arrowbtn:focus {
 	border: var(--_ui5_calendar_header_middle_button_focus_border);
 	border-radius: var(--_ui5_calendar_header_middle_button_focus_border_radius);
 	outline: var(--_ui5_calendar_header_middle_button_focus_outline);

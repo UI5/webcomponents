@@ -7,6 +7,7 @@ import slimArowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 export default function CalendarTemplate(this: Calendar) {
 	return (
 		<div class="ui5-calheader-root">
+			
 			<div
 				data-ui5-cal-header-btn-prev
 				class={{
@@ -16,6 +17,8 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onPrevButtonClick}
+				tabindex={this._previousButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipPrevButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowLeft}/>
 			</div>
@@ -35,6 +38,7 @@ export default function CalendarTemplate(this: Calendar) {
 					onClick={this.onHeaderMonthButtonPress}
 					onKeyDown={this.onMonthButtonKeyDown}
 					onKeyUp={this.onMonthButtonKeyUp}
+					
 				>
 					<span>{this._headerMonthButtonText}</span>
 					{this.hasSecondaryCalendarType &&
@@ -93,6 +97,8 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onNextButtonClick}
+				tabindex={this._nextButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipNextButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowRight}/>
 			</div>
