@@ -1,0 +1,2 @@
+declare const _default: ".ui5-tab-semantic-icon{display:var(--_ui5-v2-17-0-rc-3_tc_headerItemSemanticIcon_display);height:var(--_ui5-v2-17-0-rc-3_tc_headerItemSemanticIcon_size);width:var(--_ui5-v2-17-0-rc-3_tc_headerItemSemanticIcon_size);margin-inline-end:.5rem}.ui5-tab-semantic-icon--positive{color:var(--ui5-sapPositiveTextColor)}.ui5-tab-semantic-icon--negative{color:var(--ui5-sapNegativeTextColor)}.ui5-tab-semantic-icon--critical{color:var(--ui5-sapCriticalTextColor)}\n";
+export default _default;

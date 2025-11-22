@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "business-accelerator";
+const pathData = "M291 415q0-12-8-18l-66-66q-8-8-18-8t-18 8-8 18 8 18l48 48-48 48q-8 7-8 17.5t8 18.5q9 7 19 7t17-7l66-66q8-8 8-18zm110 0q0-12-7-18l-66-66q-8-8-18-8t-18 8-8 18 8 18l47 48-47 48q-8 7-8 17.5t8 18.5q9 7 18 7 11 0 18-7l66-66q7-7 7-18zm111 0q0-12-8-18l-66-66q-8-8-18-8t-18 8-8 18 8 18l48 48-48 48q-8 7-8 17.5t8 18.5q9 7 19 7t17-7l66-66q8-8 8-18zM162 91h128V63q0-6-7-6H169q-7 0-7 6v28zm-36 298q11 0 18 7.5t7 18.5-7 18-18 7H90q-37 0-63.5-26T0 351V180q0-37 26.5-63T90 91h21V63q0-23 17-40t41-17h114q24 0 41 17t17 40v28h21q38 0 64 26t26 63v71q0 11-7.5 18t-18.5 7-18-7-7-18v-71q0-16-11.5-27T362 142H90q-16 0-27 11t-11 27v171q0 16 11 27t27 11h36z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/business-accelerator";
+export { pathData, ltr, accData };

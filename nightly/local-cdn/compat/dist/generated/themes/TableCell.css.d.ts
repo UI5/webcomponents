@@ -1,0 +1,2 @@
+declare const _default: ":host{display:table-cell;font-family:var(--ui5-sapFontFamily);font-size:.875rem;height:var(--ui5-v2-17-0-rc-3_table_row_height);box-sizing:border-box;color:var(--ui5-sapList_TextColor);word-break:break-word;vertical-align:middle}td{display:contents}:host([popined]){padding-left:0;padding-top:.25rem}:host([_popined-inline]){padding-top:0}::slotted([ui5-label]){color:inherit}\n";
+export default _default;
