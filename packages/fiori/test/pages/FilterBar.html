@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>FilterBar</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", Arial, sans-serif;
+			padding: 2rem;
+		}
+
+		.section {
+			margin-bottom: 2rem;
+		}
+
+		.section-title {
+			font-size: 1.25rem;
+			font-weight: bold;
+			margin-bottom: 1rem;
+		}
+
+		ui5-filterbar {
+			display: flex;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		ui5-filterbar-item {
+			min-width: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="section">
+		<div class="section-title">FilterBar with Label and Control Slots</div>
+		<ui5-filterbar id="filterbar1">
+			<ui5-filterbar-item>
+				<ui5-label slot="label">Product</ui5-label>
+				<ui5-input placeholder="Enter product name"></ui5-input>
+			</ui5-filterbar-item>
+			<ui5-filterbar-item>
+				<ui5-label slot="label">Status</ui5-label>
+				<ui5-select>
+					<ui5-option>Active</ui5-option>
+					<ui5-option>Inactive</ui5-option>
+					<ui5-option>Pending</ui5-option>
+				</ui5-select>
+			</ui5-filterbar-item>
+			<ui5-filterbar-item>
+				<ui5-label slot="label">Date Range</ui5-label>
+				<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+			</ui5-filterbar-item>
+		</ui5-filterbar>
+	</div>
+
+	<script>
+		const filterbar1 = document.getElementById("filterbar1");
+		
+		filterbar1.addEventListener("click", function(e) {
+			console.log("FilterBar clicked:", e.target);
+		});
+	</script>
+</body>
+</html>

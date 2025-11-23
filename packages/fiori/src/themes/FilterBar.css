@@ -1,0 +1,7 @@
+:host(:not([hidden])) {
+	display: block;
+}
+
+.ui5-filterbar-root {
+	box-sizing: border-box;
+}

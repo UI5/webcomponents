@@ -15,6 +15,8 @@ import DynamicPageHeader from "./DynamicPageHeader.js";
 import DynamicPageTitle from "./DynamicPageTitle.js";
 import DynamicPageHeaderActions from "./DynamicPageHeaderActions.js";
 import DynamicSideContent from "./DynamicSideContent.js";
+import FilterBar from "./FilterBar.js";
+import FilterBarItem from "./FilterBarItem.js";
 import FilterItem from "./FilterItem.js";
 import FilterItemOption from "./FilterItemOption.js";
 import FlexibleColumnLayout from "./FlexibleColumnLayout.js";
