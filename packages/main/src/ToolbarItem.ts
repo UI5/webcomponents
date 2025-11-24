@@ -161,14 +161,6 @@ class ToolbarItem extends UI5Element {
 		return false;
 	}
 
-	/**
-	 * Returns if the item is default wrapper for certain component.
-	 * @protected
-	 */
-	get isDefaultWrapper() {
-		return false;
-	}
-
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
