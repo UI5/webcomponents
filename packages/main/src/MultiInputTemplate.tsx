@@ -1,6 +1,7 @@
 import Icon from "./Icon.js";
 import InputTemplate from "./InputTemplate.js";
 import type MultiInput from "./MultiInput.js";
+import type { MultiInputTokenDeleteEventDetail } from "./MultiInput.js";
 import Tokenizer from "./Tokenizer.js";
 import ToggleButton from "./ToggleButton.js";
 import List from "./List.js";
@@ -78,7 +79,7 @@ function multiInputSuggestionsList(this: MultiInput) {
 					const token = this.tokens.find((t: any) => t._id === tokenId);
 
 					if (token) {
-						this.tokenDelete({ detail: { tokens: [token] } } as any);
+						this.tokenDelete({ detail: { tokens: [token] } } as CustomEvent<MultiInputTokenDeleteEventDetail>);
 					}
 				}}
 			>

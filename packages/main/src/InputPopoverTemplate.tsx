@@ -16,9 +16,14 @@ export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsL
 
 	return (
 		<>
-			{this._effectiveShowSuggestions && this.Suggestions?.template.call(this, { suggestionsList, mobileHeader, valueStateMessage, valueStateMessageInputIcon }) }
+			{this._effectiveShowSuggestions && this.Suggestions?.template.call(this, {
+				suggestionsList,
+				mobileHeader,
+				valueStateMessage,
+				valueStateMessageInputIcon
+			})}
 
-			{this.hasValueStateMessage &&
+			{this.hasValueStateMessage && (
 				<Popover
 					preventInitialFocus={true}
 					preventFocusRestore={true}
@@ -33,10 +38,10 @@ export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsL
 				>
 					<div slot="header" class={this.classes.popoverValueState}>
 						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
-						{ this.valueStateOpen && valueStateMessage.call(this) }
+						{this.valueStateOpen && valueStateMessage.call(this)}
 					</div>
 				</Popover>
-			}
+			)}
 		</>
 	);
 }
