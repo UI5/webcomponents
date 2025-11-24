@@ -189,14 +189,9 @@ class ToolbarItem extends UI5Element {
 	onClick(e: Event) {
 		e.stopImmediatePropagation();
 		const prevented = !(this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement }) || e.defaultPrevented);
-		const hasChangeEvent = this.supportsChangeEvent(e.target);
-		if ((!prevented || hasChangeEvent) && !this.preventOverflowClosing) {
+		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
-	}
-
-	supportsChangeEvent(elem: EventTarget | null) {
-		return elem && ("onchange" in elem);
 	}
 }
 
