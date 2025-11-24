@@ -535,11 +535,16 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_handleF7(e: KeyboardEvent) {
-		e.preventDefault();
-
 		const focusDomRef = this.getFocusDomRef()!;
 		const activeElement = getActiveElement();
 		const list = this._getList();
+
+		const focusables = this._getFocusableElements().length > 0;
+		if (!focusables) {
+			return;
+		}
+
+		e.preventDefault();
 
 		if (activeElement === focusDomRef) {
 			this._focusInternalElement(list);
@@ -554,6 +559,11 @@ abstract class ListItem extends ListItemBase {
 	async _handleF2() {
 		const focusDomRef = this.getFocusDomRef()!;
 		const activeElement = getActiveElement();
+
+		const focusables = this._getFocusableElements().length > 0;
+		if (!focusables) {
+			return;
+		}
 
 		if (activeElement === focusDomRef) {
 			const firstFocusable = await getFirstFocusableElement(focusDomRef);
