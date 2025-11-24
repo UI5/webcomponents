@@ -1,5 +1,5 @@
 /* This style we need for the element inside Popover to not fire the click event on empty space */
-:host([is-overflowed]) {
+:host([is-overflowed]:not([expand-in-overflow])) {
 	display: inline-block;
 }
 
