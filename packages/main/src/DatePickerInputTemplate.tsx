@@ -14,6 +14,7 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				data-sap-focus-ref
 				id={`${this._id}-inner`}
 				class="ui5-date-picker-input"
+				part="input"
 				placeholder={this._placeholder}
 				type={this.type}
 				value={this.displayValue}
