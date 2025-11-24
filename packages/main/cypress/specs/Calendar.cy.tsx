@@ -37,6 +37,19 @@ const getCalendarsWithWeekNumbers = () => (<>
 	</Calendar>
 </>);
 
+const getCalendarWithDisabledDates = (id, formatPattern, ranges, props = {}) => (
+	<Calendar id={id} formatPattern={formatPattern} {...props}>
+		{ranges.map((range, idx) => (
+			<CalendarDateRange
+				slot="disabledDates"
+				key={idx}
+				startValue={range.startValue}
+				endValue={range.endValue}
+			/>
+		))}
+	</Calendar>
+);
+
 describe("Calendar general interaction", () => {
 	it("Focus goes into the current day item of the day picker", () => {
 		const date = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
@@ -937,11 +950,11 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Disabled date range prevents selection of dates within the range", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="yyyy-MM-dd">
-				<CalendarDateRange slot="disabledDates" startValue="2024-11-10" endValue="2024-11-15"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1", 
+			"yyyy-MM-dd", 
+			[{ startValue: "2024-11-10", endValue: "2024-11-15" }]
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
@@ -964,11 +977,12 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Disables a single date equal to start date when end date is not defined", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" maxDate="2024-11-20">
-				<CalendarDateRange slot="disabledDates" startValue="2024-11-15"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1",
+			"yyyy-MM-dd",
+			[{ startValue: "2024-11-15" }],
+			{ maxDate: "2024-11-20" }
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
@@ -990,11 +1004,12 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Disables all dates before end date when start date is not defined", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" minDate="2024-11-01">
-				<CalendarDateRange slot="disabledDates" endValue="2024-11-10"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1",
+			"yyyy-MM-dd",
+			[{ endValue: "2024-11-10" }],
+			{ minDate: "2024-11-01" }
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
@@ -1016,12 +1031,14 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Multiple disabled date ranges work correctly", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="yyyy-MM-dd">
-				<CalendarDateRange slot="disabledDates" startValue="2024-11-05" endValue="2024-11-07"></CalendarDateRange>
-				<CalendarDateRange slot="disabledDates" startValue="2024-11-15" endValue="2024-11-17"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1",
+			"yyyy-MM-dd",
+			[
+				{ startValue: "2024-11-05", endValue: "2024-11-07" },
+				{ startValue: "2024-11-15", endValue: "2024-11-17" }
+			]
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
@@ -1043,11 +1060,11 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Disabled dates respect format pattern", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="dd/MM/yyyy">
-				<CalendarDateRange slot="disabledDates" startValue="10/11/2024" endValue="15/11/2024"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1",
+			"dd/MM/yyyy",
+			[{ startValue: "10/11/2024", endValue: "15/11/2024" }]
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 10, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
@@ -1059,11 +1076,12 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Disabled dates work with range selection mode", () => {
-		cy.mount(
-			<Calendar id="calendar1" formatPattern="yyyy-MM-dd" selectionMode="Range">
-				<CalendarDateRange slot="disabledDates" startValue="2024-11-10" endValue="2024-11-15"></CalendarDateRange>
-			</Calendar>
-		);
+		cy.mount(getCalendarWithDisabledDates(
+			"calendar1",
+			"yyyy-MM-dd",
+			[{ startValue: "2024-11-10", endValue: "2024-11-15" }],
+			{ selectionMode: "Range" }
+		));
 
 		const timestamp = new Date(Date.UTC(2024, 10, 5, 0, 0, 0)).valueOf() / 1000;
 		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
