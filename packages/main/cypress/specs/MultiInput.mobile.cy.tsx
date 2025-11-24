@@ -3,6 +3,7 @@ import Token from "../../src/Token.js";
 import SuggestionItem from "../../src/SuggestionItem.js";
 import Button from "../../src/Button.js";
 import "../../src/features/InputSuggestions.js";
+import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
@@ -38,11 +39,13 @@ describe("Multi Input on mobile device", () => {
 			.as("multiInput");
 
 		cy.get("@multiInput")
+			.shadow()
+			.find(".ui5-input-inner")
 			.realClick();
 
 		cy.get("@multiInput")
 			.shadow()
-			.find("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
@@ -78,7 +81,6 @@ describe("Multi Input on mobile device", () => {
 				</>
 			);
 
-			// Setup token add functionality
 			cy.get("#add-token").then(button => {
 				button[0].addEventListener("click", () => {
 					addTokenToMI(createTokenFromText("Test Token"), "test-multi-input");
@@ -89,13 +91,14 @@ describe("Multi Input on mobile device", () => {
 				multiInput[0].addEventListener("ui5-token-delete", handleTokenDelete);
 			});
 
-			// Open suggestions popover
 			cy.get("#test-multi-input")
+				.shadow()
+				.find(".ui5-input-inner")
 				.realClick();
 
 			cy.get("#test-multi-input")
 				.shadow()
-				.find("[ui5-responsive-popover]")
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
 				.as("popover")
 				.ui5ResponsivePopoverOpened();
 
@@ -105,40 +108,38 @@ describe("Multi Input on mobile device", () => {
 				.as("filterButton")
 				.should("have.attr", "disabled");
 
-			// Close popover to add token
-			cy.get("@popover")
+			cy.get("#test-multi-input")
 				.shadow()
 				.find(".ui5-responsive-popover-close-btn")
 				.realClick();
 
-			// Act: Add a token
 			cy.get("#add-token").realClick();
 
-			// Wait for token to be added and re-open popover
 			cy.get("#test-multi-input")
 				.find("[ui5-token]")
 				.should("have.length", 1);
 
 			cy.get("#test-multi-input")
+				.shadow()
+				.find(".ui5-input-inner")
 				.realClick();
 
-			cy.get("@popover")
+		cy.get<ResponsivePopover>("@popover")
 				.ui5ResponsivePopoverOpened();
 
 			// Assert: Button should be enabled after adding a token
 			cy.get("@filterButton")
 				.should("not.have.attr", "disabled")
+			cy.get("@filterButton")
 				.should("have.attr", "pressed");
 
-			// Act: Remove the token using the delete icon in the token list
 			cy.get("@popover")
-				.find("[ui5-li-standard].ui5-suggestion-token-item")
+				.find("[ui5-li].ui5-suggestion-token-item")
 				.first()
 				.shadow()
 				.find("[ui5-button]")
 				.realClick();
 
-			// Wait for token to be removed
 			cy.get("#test-multi-input")
 				.find("[ui5-token]")
 				.should("have.length", 0);
@@ -153,20 +154,21 @@ describe("Multi Input on mobile device", () => {
 				<MultiInput id="test-multi-input" showSuggestions>
 					<Token slot="tokens" text="Token 1"></Token>
 					<Token slot="tokens" text="Token 2"></Token>
+					<Token slot="tokens" text="Token 3"></Token>
 					<SuggestionItem text="Argentina"></SuggestionItem>
 					<SuggestionItem text="Brazil"></SuggestionItem>
 				</MultiInput>
 			);
 
-			// Open suggestions popover
 			cy.get("#test-multi-input")
-				.realClick();
+				.shadow()
+				.find(".ui5-input-inner")
+				.click();
 
 			cy.get("#test-multi-input")
 				.shadow()
 				.find("[ui5-responsive-popover]")
 				.as("popover")
-				.ui5ResponsivePopoverOpened();
 
 			cy.get("@popover")
 				.find("[ui5-toggle-button]")
@@ -182,8 +184,8 @@ describe("Multi Input on mobile device", () => {
 				.should("exist");
 
 			cy.get("@popover")
-				.find("[ui5-li-standard].ui5-suggestion-token-item")
-				.should("have.length", 2);
+				.find("[ui5-li].ui5-suggestion-token-item")
+				.should("have.length", 3);
 
 			// Act: Toggle to hide tokens
 			cy.get("@filterButton").realClick();
@@ -193,7 +195,7 @@ describe("Multi Input on mobile device", () => {
 				.find("[ui5-list]:not(.ui5-tokenizer-list)")
 				.should("exist");
 
-			cy.get("@popover")
+			cy.get("#test-multi-input")
 				.find("[ui5-suggestion-item]")
 				.should("have.length", 2);
 
@@ -206,8 +208,8 @@ describe("Multi Input on mobile device", () => {
 				.should("exist");
 
 			cy.get("@popover")
-				.find("[ui5-li-standard].ui5-suggestion-token-item")
-				.should("have.length", 2);
+				.find("[ui5-li].ui5-suggestion-token-item")
+				.should("have.length", 3);
 		});
 	});
 });
