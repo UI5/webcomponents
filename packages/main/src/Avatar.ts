@@ -501,7 +501,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	get accessibilityInfo() {
 		return {
 			role: this._role as AriaRole,
-			type:  this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
+			type: this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
 			description: this.accessibleNameText,
 			disabled: this.disabled,
 		};
