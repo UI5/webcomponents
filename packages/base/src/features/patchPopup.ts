@@ -20,7 +20,7 @@ type OpenUI5PopupClass = {
 	prototype: OpenUI5Popup
 };
 
-type OpenUI5PopupBasedControlClass = {
+type OpenUI5DialogClass = {
 	prototype: {
 		onsapescape: (...args: any[]) => void,
 		oPopup: OpenUI5Popup,
@@ -43,9 +43,12 @@ const addOpenedPopup = (popupInfo: PopupInfo) => {
 };
 
 const removeOpenedPopup = (popup: object) => {
-	arrangeNativePopovers();
-
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
+
+	if (index === AllOpenedPopupsRegistry.openedRegistry.length - 1) {
+		fixOpenUI5PopupBelow();
+	}
+
 	if (index > -1) {
 		AllOpenedPopupsRegistry.openedRegistry.splice(index, 1);
 	}
@@ -76,7 +79,7 @@ const hasWebComponentPopupAbove = (popup: object) => {
 	return false;
 };
 
-const openNativePopover = (domRef: HTMLElement, popup: OpenUI5Popup) => {
+const enableNativePopoverForOpenUI5 = (domRef: HTMLElement, popup: OpenUI5Popup) => {
 	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 
 	if (popup.getModal() && openUI5BlockLayer) {
@@ -89,7 +92,22 @@ const openNativePopover = (domRef: HTMLElement, popup: OpenUI5Popup) => {
 	domRef.showPopover();
 };
 
-const arrangeNativePopovers = () => {
+const disableNativePopoverForOpenUI5 = (domRef: HTMLElement) => {
+	if (domRef.hasAttribute("popover")) {
+		domRef.hidePopover();
+		domRef.removeAttribute("popover");
+	}
+
+	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
+	if (lastPopup.type === "OpenUI5" && lastPopup.instance.getModal()) {
+		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
+		if (openUI5BlockLayer && openUI5BlockLayer.hasAttribute("popover")) {
+			openUI5BlockLayer.hidePopover();
+		}
+	}
+};
+
+const fixOpenUI5PopupBelow = () => {
 	if (!isNativePopoverOpen()) {
 		return;
 	}
@@ -113,21 +131,6 @@ const arrangeNativePopovers = () => {
 	content?.showPopover();
 };
 
-const closeNativePopover = (domRef: HTMLElement) => {
-	if (domRef.hasAttribute("popover")) {
-		domRef.hidePopover();
-		domRef.removeAttribute("popover");
-	}
-
-	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
-	if (lastPopup.type === "OpenUI5") {
-		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
-		if (openUI5BlockLayer && openUI5BlockLayer.hasAttribute("popover")) {
-			openUI5BlockLayer.hidePopover();
-		}
-	}
-};
-
 const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean => {
 	if (root.querySelector(":popover-open")) {
 		return true;
@@ -139,9 +142,9 @@ const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean =>
 	});
 };
 
-const patchPopupBasedControl = (PopupBasedControl: OpenUI5PopupBasedControlClass) => {
-	const origOnsapescape = PopupBasedControl.prototype.onsapescape;
-	PopupBasedControl.prototype.onsapescape = function onsapescape(...args: any[]) {
+const patchDialog = (Dialog: OpenUI5DialogClass) => {
+	const origOnsapescape = Dialog.prototype.onsapescape;
+	Dialog.prototype.onsapescape = function onsapescape(...args: any[]) {
 		if (hasWebComponentPopupAbove(this.oPopup)) {
 			return;
 		}
@@ -160,7 +163,7 @@ const patchOpen = (Popup: OpenUI5PopupClass) => {
 			if (element) {
 				const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 				if (domRef) {
-					openNativePopover(domRef, this);
+					enableNativePopoverForOpenUI5(domRef, this);
 				}
 			}
 		}
@@ -179,7 +182,7 @@ const patchClosed = (Popup: OpenUI5PopupClass) => {
 		const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 		_origClosed.apply(this, args); // only then call _close
 		if (domRef) {
-			closeNativePopover(domRef); // unset the popover attribute and close the native popover, but only if still in DOM
+			disableNativePopoverForOpenUI5(domRef); // unset the popover attribute and close the native popover, but only if still in DOM
 		}
 
 		removeOpenedPopup(this);
@@ -201,14 +204,13 @@ const createGlobalStyles = () => {
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
 
-const patchPopup = (Popup: OpenUI5PopupClass, Dialog: OpenUI5PopupBasedControlClass, Popover: OpenUI5PopupBasedControlClass) => {
+const patchPopup = (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass) => {
 	insertOpenUI5PopupStyles();
 	patchOpen(Popup); // Popup.prototype.open
 	patchClosed(Popup); // Popup.prototype._closed
 	createGlobalStyles(); // Ensures correct popover positioning by OpenUI5 (otherwise 0,0 is the center of the screen)
 	patchFocusEvent(Popup);// Popup.prototype.onFocusEvent
-	patchPopupBasedControl(Dialog); // Dialog.prototype.onsapescape
-	patchPopupBasedControl(Popover); // Popover.prototype.onsapescape
+	patchDialog(Dialog); // Dialog.prototype.onsapescape
 };
 
 export {
@@ -218,4 +220,4 @@ export {
 	getTopmostPopup,
 };
 
-export type { OpenUI5PopupClass, OpenUI5PopupBasedControlClass, PopupInfo };
+export type { OpenUI5PopupClass, OpenUI5DialogClass, PopupInfo };

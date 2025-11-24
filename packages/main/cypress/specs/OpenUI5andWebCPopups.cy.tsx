@@ -735,7 +735,6 @@ describe("ui5 and web components integration", () => {
 		OpenUI5DialogWebCPopoverNoFocus();
 		OpenUI5DialogWebCSelect();
 		OpenWebCUI5DialogMixed();
-		// Merge it after OpenUI5 Popup shadow dom focus fix is released
-		// OpenUI5DialogWebCComboBox();
+		OpenUI5DialogWebCComboBox();
 	});
 });
