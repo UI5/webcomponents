@@ -47,6 +47,24 @@ async function processComponentPackageFile(f, packageJSON) {
 
     return result;
 }
+async function writeProcessedContent(basePath, content, packageJSON, extension) {
+    const cssPath = basePath;
+    const jsonPath = basePath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
+    const jsPath = basePath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
+
+    // Write CSS file
+    await mkdir(path.dirname(cssPath), { recursive: true });
+    await writeFile(cssPath, content);
+
+    // Write JSON file
+    await mkdir(path.dirname(jsonPath), { recursive: true });
+    await writeFileIfChanged(jsonPath, JSON.stringify(content));
+
+    // Write JS/TS file
+    const jsContent = getFileContent(packageJSON.name, `\`${content}\``);
+    await mkdir(path.dirname(jsPath), { recursive: true });
+    await writeFileIfChanged(jsPath, jsContent);
+}
 
 async function generate(argv) {
     const tsMode = process.env.UI5_TS === "true";
@@ -59,7 +77,7 @@ async function generate(argv) {
     ]);
     const restArgs = argv.slice(2);
 
-    let scopingPlugin = {
+    const scopingPlugin = {
         name: 'scoping',
         setup(build) {
             build.initialOptions.write = false;
@@ -70,46 +88,15 @@ async function generate(argv) {
                         const scopedText = await processThemingPackageFile(f);
                         const originalText = await processThemingPackageFile(f, false);
 
+                        // Write scoped version
+                        await writeProcessedContent(f.path, scopedText, packageJSON, extension);
+
+                        // Write raw version
                         const originalPath = f.path.replace(/parameters-bundle.css$/, "parameters-bundle-raw.css");
-
-                        await mkdir(path.dirname(f.path), { recursive: true });
-                        writeFile(f.path, scopedText);
-
-                        await mkdir(path.dirname(originalPath), { recursive: true });
-                        writeFile(originalPath, originalText);
-
-                        // JSON
-                        const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                        writeFileIfChanged(jsonPath, JSON.stringify(scopedText));
-
-                        const originalJsonPath = originalPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                        await mkdir(path.dirname(originalJsonPath), { recursive: true });
-                        writeFileIfChanged(originalJsonPath, JSON.stringify(originalText));
-
-                        // JS/TS
-                        const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                        const jsContent = getFileContent(packageJSON.name, "\`" + scopedText + "\`");
-                        writeFileIfChanged(jsPath, jsContent);
-
-                        // JS/TS
-                        const originalJsPath = originalPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                        const originalJsContent = getFileContent(packageJSON.name, "\`" + originalText + "\`");
-                        writeFileIfChanged(originalJsPath, originalJsContent);
+                        await writeProcessedContent(originalPath, originalText, packageJSON, extension);
                     } else {
-                        const newText = await processComponentPackageFile(f, packageJSON);
-
-                        await mkdir(path.dirname(f.path), { recursive: true });
-                        writeFile(f.path, newText);
-
-                        // JSON
-                        const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                        await mkdir(path.dirname(jsonPath), { recursive: true });
-                        writeFileIfChanged(jsonPath, JSON.stringify(newText));
-
-                        // JS/TS
-                        const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                        const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
-                        writeFileIfChanged(jsPath, jsContent);
+                        const processedText = await processComponentPackageFile(f, packageJSON);
+                        await writeProcessedContent(f.path, processedText, packageJSON, extension);
                     }
                 });
             })

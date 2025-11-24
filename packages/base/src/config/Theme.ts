@@ -58,6 +58,13 @@ const getDefaultTheme = (): string => {
 	return DEFAULT_THEME;
 };
 
+/**
+ * Returns the current configuration for loading base theming CSS variables.
+ *
+ * @public
+ * @since 2.17.0
+ * @returns {boolean}
+ */
 const getLoadBaseThemingCSSVariables = () => {
 	if (loadBaseThemingCSSVariables === undefined) {
 		loadBaseThemingCSSVariables = getConfiguredLoadBaseThemingCSSVariables();
@@ -66,6 +73,17 @@ const getLoadBaseThemingCSSVariables = () => {
 	return loadBaseThemingCSSVariables;
 };
 
+/**
+ * Configures whether to load base theming CSS variables.
+ *
+ * - When set to `true` (default), base theming CSS variables are loaded.
+ * - When set to `false`, base theming CSS variables are not loaded.
+ *
+ * **Note:** This method should be called before the boot process.
+ *
+ * @public
+ * @since 2.17.0
+ */
 const setLoadBaseThemingCSSVariables = (value: boolean) => {
 	loadBaseThemingCSSVariables = value;
 };
