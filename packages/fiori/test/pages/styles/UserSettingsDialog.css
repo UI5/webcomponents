@@ -9,6 +9,28 @@
 	margin: 3rem;
 }
 
+.language-region-container{
+	display: flex;
+	min-height: 40px;
+	padding:  7px 16px;
+	align-item:flex-start;
+	flex-direction: column;
+	gap: 9px;
+}
+
+.language-region-label{
+	display: flex;
+	flex: 1 0 0;
+	width: 100%;
+}
+
+.language-region-control{
+	display: flex;
+	padding-bottom: 3px;
+	gap: 3px;
+	width: 100%;
+}
+
 .ua-info-item{
 	display: grid;
 	grid-template-columns: 50px 1fr;
