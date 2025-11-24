@@ -42,8 +42,7 @@ describe("Accessibility", () => {
 			// Check accessibilityInfo properties
 			expect(avatar.accessibilityInfo).to.exist;
 			expect(avatar.accessibilityInfo.role).to.equal("button");
-			// Type contains the i18n text
-			expect(avatar.accessibilityInfo.type).to.equal("Menu");
+			expect(avatar.accessibilityInfo.type).to.equal("Button");
 			expect(avatar.accessibilityInfo.description).to.equal(customLabel);
 		});
 	});
@@ -62,7 +61,7 @@ describe("Accessibility", () => {
 			// Check that accessibilityInfo is undefined
 			expect(avatar.accessibilityInfo).to.exist;
 			expect(avatar.accessibilityInfo.role).to.equal("img");
-			expect(avatar.accessibilityInfo.type).to.equal("");
+			expect(avatar.accessibilityInfo.type).to.equal("Image");
 			expect(avatar.accessibilityInfo.description).to.equal("Avatar JD");
 		});
 	});

@@ -19,11 +19,8 @@ import AvatarTemplate from "./AvatarTemplate.js";
 
 import {
 	AVATAR_TOOLTIP,
-	ARIA_HASPOPUP_DIALOG,
-	ARIA_HASPOPUP_GRID,
-	ARIA_HASPOPUP_LISTBOX,
-	ARIA_HASPOPUP_MENU,
-	ARIA_HASPOPUP_TREE,
+	AVATAR_TYPE_BUTTON,
+	AVATAR_TYPE_IMAGE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -501,27 +498,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		this._imageLoadError = true;
 	}
 
-	_getAriaTypeDescription() {
-		switch (this._ariaHasPopup) {
-		case "dialog":
-			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_DIALOG);
-		case "grid":
-			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_GRID);
-		case "listbox":
-			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_LISTBOX);
-		case "menu":
-			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_MENU);
-		case "tree":
-			return Avatar.i18nBundle.getText(ARIA_HASPOPUP_TREE);
-		default:
-			return "";
-		}
-	}
-
 	get accessibilityInfo() {
 		return {
 			role: this._role as AriaRole,
-			type: this._getAriaTypeDescription(),
+			type:  this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
 			description: this.accessibleNameText,
 			disabled: this.disabled,
 		};
