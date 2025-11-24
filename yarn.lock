@@ -7403,12 +7403,12 @@ __metadata:
   resolution: "@ui5/cypress-ct-ui5-webc@workspace:packages/cypress-ct-ui5-webc"
   dependencies:
     "@cypress/mount-utils": "npm:^4.1.2"
-    cypress: "npm:^15.3.0"
     preact: "npm:^10.25.4"
     rimraf: "npm:^3.0.2"
     typescript: "npm:^5.6.2"
   peerDependencies:
     "@ui5/webcomponents-base": ^2.14.0
+    cypress: ^15.3.0
   languageName: unknown
   linkType: soft
 
