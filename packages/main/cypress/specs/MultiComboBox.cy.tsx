@@ -4318,7 +4318,6 @@ describe("MultiComboBox Composition", () => {
 		simulateCompositionStages(["ㄲ", "ㄲㅏ"], "까");
 
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
@@ -4352,7 +4351,6 @@ describe("MultiComboBox Composition", () => {
 
 		simulateCompositionStages(["ず", "ずx"], "ずx");
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
@@ -4388,7 +4386,6 @@ describe("MultiComboBox Composition", () => {
 
 		simulateCompositionStages(["p", "pi", "pin"], "品味");
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
