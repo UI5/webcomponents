@@ -6,6 +6,8 @@ import YearRangePicker from "../../src/YearRangePicker.js";
 import YearPicker from "../../src/YearPicker.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
+import { resetConfiguration } from "@ui5/webcomponents-base/dist/InitialConfiguration.js";
+import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
 
 const getDefaultCalendar = (date: Date) => {
 	const calDate = new Date(date);
@@ -1432,5 +1434,42 @@ describe("Day Picker Tests", () => {
 				expect(todayFromTimestamp.getMonth()).to.equal(actualToday.getMonth());
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
 			});
+	});
+});
+
+describe("Calendar Global Configuration", () => {
+	it("Should respect firstDayOfWeek from global formatSettings configuration", () => {
+		const configurationObject = {
+			"formatSettings": {
+				"firstDayOfWeek": 6  // Saturday
+			}
+		};
+
+		cy.window()
+			.then($el => {
+				const scriptElement = $el.document.createElement("script");
+				scriptElement.type = "application/json";
+				scriptElement.setAttribute("data-ui5-config", "true");
+				scriptElement.innerHTML = JSON.stringify(configurationObject);
+				$el.document.head.appendChild(scriptElement);
+			});
+
+		cy.wrap({ resetConfiguration })
+			.invoke("resetConfiguration", true);
+
+		cy.wrap({ getFirstDayOfWeek })
+			.invoke("getFirstDayOfWeek")
+			.should("equal", 6);
+
+		const date = new Date(Date.UTC(2023, 0, 1, 0, 0, 0)); // January 1, 2023
+		cy.mount(<Calendar id="calendar1" timestamp={date.valueOf() / 1000} calendarWeekNumbering="Default" />);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-firstday")
+			.first()
+			.should("have.text", "Sat");
 	});
 });
