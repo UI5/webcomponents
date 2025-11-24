@@ -24,6 +24,8 @@
 	padding: 0;
 	font-size: var(--sapFontSize);
 	user-select: none;
+	position: relative;
+	box-sizing: border-box;
 }
 
 .ui5-calheader-arrowbtn.ui5-calheader-arrowbtn-disabled:hover,
@@ -39,10 +41,6 @@
 
 [hidden].ui5-calheader-arrowbtn.ui5-calheader-middlebtn {
 	display: none;
-}
-
-.ui5-calheader-arrowbtn:focus {
-	outline: none;
 }
 
 .ui5-calheader-arrowbtn:hover {
@@ -111,13 +109,13 @@
 	background: var(--_ui5_calendar_header_middle_button_focus_background);
 }
 
-.ui5-calheader-middlebtn:focus:active {
+.ui5-calheader-middlebtn:focus:active, .ui5-calheader-arrowbtn:focus:active {
 	outline: var(--_ui5_calendar_header_middle_button_focus_active_outline);
 	outline-offset: -0.0625rem;
 	background: var(--_ui5_calendar_header_middle_button_focus_active_background)
 }
 
-.ui5-calheader-middlebtn:focus::after {
+.ui5-calheader-middlebtn:focus::after, .ui5-calheader-arrowbtn:focus::after {
 	content: "";
 	display: var(--_ui5_calendar_header_middle_button_focus_after_display);
 	width: var(--_ui5_calendar_header_middle_button_focus_after_width);
@@ -128,6 +126,6 @@
 	left: var(--_ui5_calendar_header_middle_button_focus_after_left_offset);
 }
 
-.ui5-calheader-middlebtn:focus:active::after {
+.ui5-calheader-middlebtn:focus:active::after, .ui5-calheader-arrowbtn:focus:active::after {
 	border-color: var(--sapContent_ContrastFocusColor);
 }
