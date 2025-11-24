@@ -4,7 +4,7 @@ import { setRuntimeAlias } from "@ui5/webcomponents-base/dist/Runtimes.js";
 // OpenUI5 integration
 import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 
-import "@ui5/webcomponents-theming/dist/Assets-original.js";
+import "@ui5/webcomponents-theming/dist/Assets-raw.js";
 
 // Assets
 import "./Assets.js";
@@ -62,7 +62,13 @@ import { resetConfiguration } from "@ui5/webcomponents-base/dist/InitialConfigur
 import { sanitizeHTML, URLListValidator } from "@ui5/webcomponents-base/dist/util/HTMLSanitizer.js";
 
 import { getAnimationMode, setAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
-import { getTheme, setTheme, isLegacyThemeFamily } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import {
+	getTheme,
+	setTheme,
+	isLegacyThemeFamily,
+	getDefaultCSSVariablesLoading,
+	setDefaultCSSVariablesLoading,
+} from "@ui5/webcomponents-base/dist/config/Theme.js";
 import { getThemeRoot, setThemeRoot } from "@ui5/webcomponents-base/dist/config/ThemeRoot.js";
 import { getTimezone, setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 import { getLanguage, setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
@@ -106,6 +112,8 @@ const testAssets = {
 		getFirstDayOfWeek,
 		getTimezone,
 		setTimezone,
+		getDefaultCSSVariablesLoading,
+		setDefaultCSSVariablesLoading,
 	},
 	invisibleMessage: {
 		announce,

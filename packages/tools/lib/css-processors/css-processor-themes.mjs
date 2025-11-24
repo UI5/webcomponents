@@ -70,7 +70,7 @@ async function generate(argv) {
                         const scopedText = await processThemingPackageFile(f);
                         const originalText = await processThemingPackageFile(f, false);
 
-                        const originalPath = f.path.replace(/parameters-bundle.css$/, "parameters-bundle-original.css");
+                        const originalPath = f.path.replace(/parameters-bundle.css$/, "parameters-bundle-raw.css");
 
                         await mkdir(path.dirname(f.path), { recursive: true });
                         writeFile(f.path, scopedText);

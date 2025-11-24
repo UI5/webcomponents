@@ -25,9 +25,9 @@ module.exports = {
 			typescript: "tsc",
 			postcss: `ui5nps-script "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
 			jsonImports: {
-				default: "ui5nps build.jsonImports.scoped build.jsonImports.original",
+				default: "ui5nps build.jsonImports.scoped build.jsonImports.raw",
 				scoped: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports`,
-				original: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports -original`,
+				raw: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports -raw`,
 			}
 		},
 		generateReport: `ui5nps-script "${generateReportScript}"`,

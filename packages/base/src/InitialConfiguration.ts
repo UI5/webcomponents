@@ -24,6 +24,7 @@ type InitialConfig = {
 	formatSettings: FormatSettings,
 	fetchDefaultLanguage: boolean,
 	defaultFontLoading: boolean,
+	defaultCSSVariablesLoading: boolean,
 	enableDefaultTooltips: boolean,
 };
 
@@ -40,6 +41,7 @@ let initialConfig: InitialConfig = {
 	formatSettings: {},
 	fetchDefaultLanguage: false,
 	defaultFontLoading: true,
+	defaultCSSVariablesLoading: true,
 	enableDefaultTooltips: true,
 };
 
@@ -92,6 +94,11 @@ const getNoConflict = () => {
 const getDefaultFontLoading = () => {
 	initConfiguration();
 	return initialConfig.defaultFontLoading;
+};
+
+const getDefaultCSSVariablesLoading = () => {
+	initConfiguration();
+	return initialConfig.defaultCSSVariablesLoading;
 };
 
 const getEnableDefaultTooltips = () => {
@@ -255,6 +262,7 @@ export {
 	getTimezone,
 	getFormatSettings,
 	getDefaultFontLoading,
+	getDefaultCSSVariablesLoading,
 	resetConfiguration,
 	getEnableDefaultTooltips,
 };

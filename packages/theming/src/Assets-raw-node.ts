@@ -10,6 +10,6 @@
  * await import("../assets/themes/sap_horizon/parameters-bundle.css.json", { with: { type: 'json' } })
  */
 
-import "./generated/json-imports/Themes-original-node.js";
+import "./generated/json-imports/Themes-raw-node.js";
 
 import "./OriginalCSSVars.js";

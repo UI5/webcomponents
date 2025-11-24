@@ -1,4 +1,4 @@
-import { getTheme as getConfiguredTheme } from "../InitialConfiguration.js";
+import { getTheme as getConfiguredTheme, getDefaultCSSVariablesLoading as getConfiguredDefaultCSSVariablesLoading } from "../InitialConfiguration.js";
 import { reRenderAllUI5Elements } from "../Render.js";
 import applyTheme from "../theming/applyTheme.js";
 import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
@@ -7,6 +7,7 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
+let defaultCSSVariablesLoading: boolean | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
@@ -57,6 +58,18 @@ const getDefaultTheme = (): string => {
 	return DEFAULT_THEME;
 };
 
+const getDefaultCSSVariablesLoading = () => {
+	if (defaultCSSVariablesLoading === undefined) {
+		defaultCSSVariablesLoading = getConfiguredDefaultCSSVariablesLoading();
+	}
+
+	return defaultCSSVariablesLoading;
+};
+
+const setDefaultCSSVariablesLoading = (value: boolean) => {
+	defaultCSSVariablesLoading = value;
+};
+
 /**
  * Returns if the given theme name is the one currently applied.
  * @private
@@ -98,4 +111,6 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
+	getDefaultCSSVariablesLoading,
+	setDefaultCSSVariablesLoading,
 };
