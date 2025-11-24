@@ -1,4 +1,4 @@
-import { getTheme as getConfiguredTheme, getDefaultCSSVariablesLoading as getConfiguredDefaultCSSVariablesLoading } from "../InitialConfiguration.js";
+import { getTheme as getConfiguredTheme, getLoadBaseThemingCSSVariables as getConfiguredLoadBaseThemingCSSVariables } from "../InitialConfiguration.js";
 import { reRenderAllUI5Elements } from "../Render.js";
 import applyTheme from "../theming/applyTheme.js";
 import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
@@ -7,7 +7,7 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
-let defaultCSSVariablesLoading: boolean | undefined;
+let loadBaseThemingCSSVariables: boolean | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
@@ -58,16 +58,16 @@ const getDefaultTheme = (): string => {
 	return DEFAULT_THEME;
 };
 
-const getDefaultCSSVariablesLoading = () => {
-	if (defaultCSSVariablesLoading === undefined) {
-		defaultCSSVariablesLoading = getConfiguredDefaultCSSVariablesLoading();
+const getLoadBaseThemingCSSVariables = () => {
+	if (loadBaseThemingCSSVariables === undefined) {
+		loadBaseThemingCSSVariables = getConfiguredLoadBaseThemingCSSVariables();
 	}
 
-	return defaultCSSVariablesLoading;
+	return loadBaseThemingCSSVariables;
 };
 
-const setDefaultCSSVariablesLoading = (value: boolean) => {
-	defaultCSSVariablesLoading = value;
+const setLoadBaseThemingCSSVariables = (value: boolean) => {
+	loadBaseThemingCSSVariables = value;
 };
 
 /**
@@ -111,6 +111,6 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
-	getDefaultCSSVariablesLoading,
-	setDefaultCSSVariablesLoading,
+	getLoadBaseThemingCSSVariables,
+	setLoadBaseThemingCSSVariables,
 };

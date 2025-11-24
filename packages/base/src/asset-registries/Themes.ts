@@ -1,4 +1,3 @@
-import { getDefaultCSSVariablesLoading } from "../config/Theme.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { mergeStyles } from "../ManagedStyles.js";
 import { fireThemeRegistered } from "../theming/ThemeRegistered.js";
@@ -24,10 +23,6 @@ const registerCustomThemePropertiesLoader = (packageName: string, themeName: str
 };
 
 const getThemeProperties = async (packageName: string, themeName: string, externalThemeName?: string) => {
-	if (getDefaultCSSVariablesLoading() !== true && packageName === "@ui5/webcomponents-theming-raw") {
-		return;
-	}
-
 	const cacheKey = `${packageName}_${themeName}_${externalThemeName || ""}`;
 	const cachedStyleData = themeStyles.get(cacheKey);
 	if (cachedStyleData !== undefined) { // it's valid for style to be an empty string

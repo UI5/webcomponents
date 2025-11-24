@@ -4,8 +4,6 @@ import { setRuntimeAlias } from "@ui5/webcomponents-base/dist/Runtimes.js";
 // OpenUI5 integration
 import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 
-import "@ui5/webcomponents-theming/dist/Assets-raw.js";
-
 // Assets
 import "./Assets.js";
 
@@ -66,8 +64,8 @@ import {
 	getTheme,
 	setTheme,
 	isLegacyThemeFamily,
-	getDefaultCSSVariablesLoading,
-	setDefaultCSSVariablesLoading,
+	getLoadBaseThemingCSSVariables,
+	setLoadBaseThemingCSSVariables,
 } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import { getThemeRoot, setThemeRoot } from "@ui5/webcomponents-base/dist/config/ThemeRoot.js";
 import { getTimezone, setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
@@ -112,8 +110,8 @@ const testAssets = {
 		getFirstDayOfWeek,
 		getTimezone,
 		setTimezone,
-		getDefaultCSSVariablesLoading,
-		setDefaultCSSVariablesLoading,
+		getLoadBaseThemingCSSVariables,
+		setLoadBaseThemingCSSVariables,
 	},
 	invisibleMessage: {
 		announce,
