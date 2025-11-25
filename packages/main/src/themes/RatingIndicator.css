@@ -3,6 +3,7 @@
 	font-size: 24px;
 	margin: var(--_ui5_rating_indicator_component_spacing);
 	cursor: pointer;
+	vertical-align: middle;
 }
 
 :host([disabled]) {
