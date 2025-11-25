@@ -53,18 +53,10 @@
 	display: none;
 }
 
-:host([desktop]) .ui5-search-item-actions {
-	display: none;
-}
-
 :host(:hover),
 :host(:focus-within) {
 	.ui5-search-item-selected-delete {
 		display: inline-block;
-	}
-	
-	.ui5-search-item-actions {
-		display: flex;
 	}
 }
 

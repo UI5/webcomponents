@@ -268,26 +268,14 @@
 
 	<ui5-user-settings-dialog id="settings" header-text="Settings" show-search-field>
 		<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
-			<ui5-user-settings-view>
-
-				<div class="container">
-					<ui5-avatar size="L" class="ua-info-profile">
-						<img src="../assets/images/avatars/man_avatar_3.png" />
-					</ui5-avatar>
-					<ui5-title level="H3" size="H3" class="ua-name ua-info-profile">Alain Chevalier</ui5-title>
-					<div class="ua-info-item">
-						<ui5-label for="name">Name:</ui5-label>
-						<ui5-text id="name">Alain Chevalier</ui5-text>
-					</div>
-					<div class="ua-info-item">
-						<ui5-label for="email">Email:</ui5-label>
-						<ui5-text id="email">alian.chevalier@sap.com</ui5-text>
-					</div>
-					<div class="ua-info-item">
-						<ui5-label for="server">Server:</ui5-label>
-						<ui5-text id="server">delivery-001.sap.com</ui5-text>
-					</div>
-				</div>
+			<ui5-user-settings-account-view show-manage-account="true">
+				<ui5-user-menu-account slot="account"
+									   avatar-src="../assets/images/avatars/man_avatar_3.png"
+									   title-text="Alain Chevalier"
+									   subtitle-text="alian.chevalier@sap.com"
+									   description="Delivery Manager, SAP SE"
+									   selected>
+				</ui5-user-menu-account>
 				<ui5-label for="reset-all-button">Personalization</ui5-label><br/>
 				<ui5-button id="reset-all-button">Reset All Personalization</ui5-button>
 				<ui5-panel fixed class="ua-panel">
@@ -295,7 +283,8 @@
 						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
 					</ui5-text>
 				</ui5-panel>
-			</ui5-user-settings-view>
+
+			</ui5-user-settings-account-view>
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
