@@ -91,16 +91,20 @@ const clickHandler = (event: MouseEvent) => {
 	}
 
 	// loop all open popovers
-	for (let i = (openedPopups.length - 1); i !== -1; i--) {
+	for (let i = openedPopups.length - 1; i !== -1; i--) {
 		const popup = openedPopups[i].instance;
 
-		// if popup is modal, opener is clicked, popup is dialog skip closing
-		if (popup.isModal || (popup as Popover).isOpenerClicked(event)) {
+		if (!instanceOfPopover(popup)) {
 			return;
 		}
 
-		if ((popup as Popover).isClicked(event)) {
-			break;
+		// if popup is modal, opener is clicked, popup is dialog skip closing
+		if (popup.isModal || popup.isOpenerClicked(event)) {
+			return;
+		}
+
+		if (popup.isClicked(event)) {
+			return;
 		}
 
 		popup.closePopup();

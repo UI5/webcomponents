@@ -1004,50 +1004,39 @@ class Popover extends Popup {
 			return this._resizeHandlePlacement;
 		}
 
-		const offset = 2;
-		const isRtl = this.isRtl;
-
 		const opener = this.getOpenerHTMLElement(this.opener);
-		const openerRect = opener!.getBoundingClientRect();
-		const popoverWrapperRect = this.getBoundingClientRect();
-
-		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
-		const openerCY = Math.floor(openerRect.y + openerRect.height / 2);
-
-		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
-		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
-
-		if (this.isRtl) {
-			openerCX = -openerCX;
-			popoverCX = -popoverCX;
+		if (!opener) {
+			return ResizeHandlePlacement.BottomRight;
 		}
+
+		const openerRect = opener.getBoundingClientRect();
 
 		switch (this.getActualPlacement(openerRect)) {
 		case PopoverActualPlacement.Left:
-			if (popoverCY > openerCY + offset) {
+			if (this.verticalAlign === PopoverVerticalAlign.Top) {
 				return ResizeHandlePlacement.BottomLeft;
 			}
 
 			return ResizeHandlePlacement.TopLeft;
 		case PopoverActualPlacement.Right:
-			if (popoverCY + offset < openerCY) {
+			if (this.verticalAlign === PopoverVerticalAlign.Bottom) {
 				return ResizeHandlePlacement.TopRight;
 			}
 
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Bottom:
-			if (popoverCX + offset < openerCX) {
-				return isRtl ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
+			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
+				return ResizeHandlePlacement.BottomLeft;
 			}
 
-			return isRtl ? ResizeHandlePlacement.BottomLeft : ResizeHandlePlacement.BottomRight;
+			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
 		default:
-			if (popoverCX + offset < openerCX) {
-				return isRtl ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
+			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
+				return ResizeHandlePlacement.TopLeft;
 			}
 
-			return isRtl ? ResizeHandlePlacement.TopLeft : ResizeHandlePlacement.TopRight;
+			return ResizeHandlePlacement.TopRight;
 		}
 	}
 
