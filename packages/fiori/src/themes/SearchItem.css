@@ -92,8 +92,8 @@
 }
 
 :host([description]) {
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+	padding-top: var(--_ui5_search_byline_vertical_padding);
+	padding-bottom: var(--_ui5_search_byline_vertical_padding);
 }
 
 :host([description]) .ui5-search-item-description {

@@ -1,5 +1,6 @@
 :root {
 	--_ui5_search_item_vertical_padding: 1rem;
+	--_ui5_search_byline_vertical_padding: .5rem;
 }
 
 [data-ui5-compact-size],
