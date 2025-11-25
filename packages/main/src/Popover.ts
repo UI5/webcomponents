@@ -1074,7 +1074,7 @@ class Popover extends Popup {
 	_onResizeMouseMove(e: MouseEvent) {
 		const margin = Popover.VIEWPORT_MARGIN;
 		const { clientX, clientY } = e;
-		const placement = this._resizeHandlePlacement;
+		const resizeHandlePlacement = this._resizeHandlePlacement;
 		const initialBoundingRect = this._initialBoundingRect!;
 		const deltaX = clientX - this._initialClientX!;
 		const deltaY = clientY - this._initialClientY!;
@@ -1083,11 +1083,11 @@ class Popover extends Popup {
 			newHeight;
 
 		// Determine if we're resizing from left or right edge
-		const isResizingFromLeft = placement === ResizeHandlePlacement.TopLeft
-			|| placement === ResizeHandlePlacement.BottomLeft;
+		const isResizingFromLeft = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
+			|| resizeHandlePlacement === ResizeHandlePlacement.BottomLeft;
 
-		const isResizingFromTop = placement === ResizeHandlePlacement.TopLeft
-			|| placement === ResizeHandlePlacement.TopRight;
+		const isResizingFromTop = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
+			|| resizeHandlePlacement === ResizeHandlePlacement.TopRight;
 
 		// Calculate width changes
 		if (isResizingFromLeft) {
@@ -1164,7 +1164,17 @@ class Popover extends Popup {
 		this._currentResizeDeltaX += this._totalResizeDeltaX || 0;
 		this._currentResizeDeltaY += this._totalResizeDeltaY || 0;
 
+		const placement = this.calcPlacement(this._openerRect!, {
+			width: newWidth,
+			height: newHeight,
+		});
+
+		this.arrowTranslateX = placement.arrow.x;
+		this.arrowTranslateY = placement.arrow.y;
+
 		Object.assign(this.style, {
+			left: `${placement.left}px`,
+			top: `${placement.top}px`,
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
 		});
