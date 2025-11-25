@@ -1566,7 +1566,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	getInputDOMRef() {
 		if (isPhone() && this.Suggestions) {
-			return this.Suggestions._getPicker()!.querySelector<Input>(".ui5-input-inner-phone")!;
+			return this.Suggestions._getPicker().querySelector<Input>(".ui5-input-inner-phone")!;
 		}
 
 		return this.nativeInput;

@@ -1105,7 +1105,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (isArrowDown || isDownCtrl(e)) {
 			if (this.showSelectAll && !isSelectAllFocused) {
-				return (this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				return (this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 			}
 
 			this._handleArrowDown();
@@ -1202,7 +1202,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 					return;
 				}
 
-				(this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				(this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 			} else {
 				this._inputDom.focus();
 				this._shouldAutocomplete = true;
@@ -1242,7 +1242,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (isArrowDown && this.open) {
 			if (this.showSelectAll) {
-				(this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				(this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 				return;
 			}
 		}
