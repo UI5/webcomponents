@@ -1922,7 +1922,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 			default:
 				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length);
-		}
+			}
 		}
 
 		return undefined;
