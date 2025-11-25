@@ -69,7 +69,6 @@ describe("Calendar general interaction", () => {
 
 		cy.get("@monthBtn")
 			.should("be.focused");
-
 		
 		cy.realPress("Tab");
 
