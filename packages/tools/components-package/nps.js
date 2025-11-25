@@ -129,6 +129,7 @@ const getScripts = (options) => {
 		},
 		copyProps: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/`,
 		copyPropsWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/ --watch --safe --skip-initial-copy`,
+		copySrcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/ --watch --safe --skip-initial-copy`,
 		copy: {
 			default: options.legacy ? "ui5nps copy.src copy.props" : "",
 			src: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/` : "",
@@ -137,7 +138,7 @@ const getScripts = (options) => {
 		watch: {
 			default: `ui5nps-p watch.templates watch.typescript watch.src watch.styles watch.i18n watch.props`, // concurently
 			devServer: 'ui5nps-p watch.default watch.bundle', // concurently
-			src: options.legacy ? 'ui5nps "copy.src --watch --safe --skip-initial-copy"' : "",
+			src: options.legacy ? 'ui5nps copySrcWithWatch' : "",
 			typescript: tsWatchCommandStandalone,
 			props: 'ui5nps copyPropsWithWatch',
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
