@@ -484,7 +484,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (this.disabled) {
 			return [];
 		}
-		
+
 		const tokens = this._tokens;
 		const visible = [];
 
@@ -493,9 +493,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 				break;
 			}
 
-			visible.push(tokens[i])
+			visible.push(tokens[i]);
 		}
-		
+
 		return visible;
 	}
 
