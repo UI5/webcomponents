@@ -826,11 +826,11 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	/**
-	 * Checks if a given date is disabled (not selectable).
+	 * Checks if a given date is enabled (selectable).
 	 * A date is considered disabled if:
 	 * - It falls outside the min/max date range defined by the component
 	 * - It matches a single disabled date
-	 * - It falls within a disabled date range (inclusive of start and end dates)
+	 * - It falls within a disabled date range (exclusive of start and end dates)
 	 * @param date - The date to check
 	 * @returns `true` if the date is enabled (selectable), `false` if disabled
 	 * @private
