@@ -41,7 +41,7 @@ const scripts = {
 	},
 	build: {
 		default: `ui5nps prepare`,
-		bundle: `vite build ${viteConfig}`,
+		bundle: `ui5nps-script "${LIB}/vite-bundler/vite-bundler.mjs" ${viteConfig}`,
 		i18n: {
 			default: "ui5nps build.i18n.defaultsjs build.i18n.json",
 			defaultsjs: `ui5nps-script "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,

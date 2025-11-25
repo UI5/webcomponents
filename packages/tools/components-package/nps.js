@@ -114,7 +114,7 @@ const getScripts = (options) => {
 				default: "ui5nps build.jsImports.illustrationsLoaders",
 				illustrationsLoaders: createIllustrationsLoadersScript,
 			},
-			bundle: `vite build ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
+			bundle: `ui5nps-script "${LIB}vite-bundler/vite-bundler.mjs" ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
 			bundle2: ``,
 			illustrations: createIllustrationsJSImportsScript,
 		},
