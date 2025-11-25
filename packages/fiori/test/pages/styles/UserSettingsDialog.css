@@ -11,11 +11,10 @@
 
 .language-region-container{
 	display: flex;
-	min-height: 40px;
-	padding:  7px 16px;
+	min-height: 2.5rem;
 	align-item:flex-start;
 	flex-direction: column;
-	gap: 9px;
+	gap: 0.563rem;
 }
 
 .language-region-label{
@@ -26,8 +25,7 @@
 
 .language-region-control{
 	display: flex;
-	padding-bottom: 3px;
-	gap: 3px;
+	gap: 0.188rem;
 	width: 100%;
 }
 
