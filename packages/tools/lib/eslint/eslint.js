@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { ESLint: ESLint7 } = require("ui5-webc-eslint"); // isolated v7
+const { ESLint: ESLint7 } = require("eslint"); // isolated v7
 
 const main = async argv => {
 	let eslintConfig;
