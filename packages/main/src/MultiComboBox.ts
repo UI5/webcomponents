@@ -708,7 +708,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
 		const filteredItems: Array<IMultiComboBoxItem> = this._filterItems(value);
-		const oldValueState: `${ValueState}` = this.valueState;
 
 		this._shouldFilterItems = true;
 
@@ -721,24 +720,20 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this.valueState = this._effectiveValueState;
 				this._validationTimeout = null;
 			} else {
-				input.value = this._inputLastValue;
 				return;
 			}
 		}
 
-		this._effectiveValueState = this.valueState;
+		// Save the original value state before setting validation error
+		if (this.valueState !== ValueState.Negative) {
+			this._effectiveValueState = this.valueState;
+		}
 
 		if (!this._isComposing && !filteredItems.length && value && !this.noValidation) {
-			const newValue = this.valueBeforeAutoComplete || this._inputLastValue;
-
-			input.value = newValue;
-			this.value = newValue;
 			this.valueState = ValueState.Negative;
-
 			this._shouldAutocomplete = false;
-			this._resetValueState(oldValueState);
-
-			return;
+		} else if ((filteredItems.length || !value) && this.valueState === ValueState.Negative) {
+			this.valueState = this._effectiveValueState;
 		}
 
 		if (!this._isComposing) {
@@ -1938,10 +1933,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			}
 
 			this._tokenizer.expanded = this.open;
-			// remove the value if user focus out the input and focus is not going in the popover
-			if (!isPhone() && !this.noValidation && !focusIsGoingInPopover) {
-				this.value = "";
-			}
 		}
 	}
 	/**
