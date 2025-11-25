@@ -836,8 +836,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_isDateEnabled(date: CalendarDate): boolean {
-		if ((this._minDate && date.isAfter(this._minDate))
-			|| (this._maxDate && date.isBefore(this._maxDate))) {
+		if ((this._minDate && date.isBefore(this._minDate))
+			|| (this._maxDate && date.isAfter(this._maxDate))) {
 			return false;
 		}
 
