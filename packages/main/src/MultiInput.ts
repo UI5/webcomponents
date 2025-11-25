@@ -19,7 +19,7 @@ import {
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { MULTIINPUT_ROLEDESCRIPTION_TEXT, MULTIINPUT_VALUE_HELP_LABEL, MULTIINPUT_VALUE_HELP } from "./generated/i18n/i18n-defaults.js";
+import { MULTIINPUT_ROLEDESCRIPTION_TEXT, MULTIINPUT_VALUE_HELP_LABEL, MULTIINPUT_VALUE_HELP, MULTIINPUT_FILTER_BUTTON_LABEL } from "./generated/i18n/i18n-defaults.js";
 import Input from "./Input.js";
 import MultiInputTemplate from "./MultiInputTemplate.js";
 import styles from "./generated/themes/MultiInput.css.js";
@@ -402,6 +402,10 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get _valueHelpText() {
 		return MultiInput.i18nBundle.getText(MULTIINPUT_VALUE_HELP);
+	}
+
+	get _filterButtonAccessibleName() {
+		return MultiInput.i18nBundle.getText(MULTIINPUT_FILTER_BUTTON_LABEL);
 	}
 
 	get _tokensCountTextId() {

@@ -116,7 +116,7 @@ function multiInputMobileHeader(this: MultiInput) {
 			class="ui5-multi-input-mobile-dialog-button"
 			design="Transparent"
 			icon="multiselect-all"
-			accessibleName="Show selected tokens"
+			accessibleName={this._filterButtonAccessibleName}
 			disabled={!this.tokens?.length}
 			pressed={this._effectiveShowTokensInSuggestions}
 			onClick={() => {
