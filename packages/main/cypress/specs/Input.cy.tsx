@@ -2629,6 +2629,49 @@ describe("Property open", () => {
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
 			.ui5ResponsivePopoverClosed();
 	});
+
+	it("should show only one valuestate popover when valueState changes during typing", () => {
+		cy.mount(
+			<Input
+				id="input-valuestate-dynamic"
+				valueState="None"
+				showSuggestions={true}
+				onInput={(e) => {
+					(e.target as Input).valueState = "Negative";
+				}}
+			>
+				<SuggestionItem text="Apple"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-valuestate-dynamic")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realType("a");
+
+		cy.get("@input")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("suggestionsPopover")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover]")
+			.as("valueStatePopover")
+			.should("have.attr", "open");
+	});
 });
 
 describe("Input Composition", () => {
