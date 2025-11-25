@@ -484,10 +484,19 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (this.disabled) {
 			return [];
 		}
+		
+		const tokens = this._tokens;
+		const visible = [];
 
-		return this._tokens.filter((token, index) => {
-			return index < (this._tokens.length - this._nMoreCount);
-		});
+		for (let i = 0; i < tokens.length; i++) {
+			if (tokens[i].overflows) {
+				break;
+			}
+
+			visible.push(tokens[i])
+		}
+		
+		return visible;
 	}
 
 	onAfterRendering() {
@@ -1166,16 +1175,17 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			return [];
 		}
 
+		if (this.open) {
+			this.setAttribute("inline", "");
+			return [];
+		}
+
 		const tokensArray = this._tokens;
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
-		tokensArray.forEach(token => {
-			token.overflows = false;
-		});
+		// layouts all tokens inline-block
+		this.setAttribute("inline", "");
 
-		return tokensArray.filter(token => {
+		const tokens = tokensArray.filter(token => {
 			const parentRect = this.contentDom.getBoundingClientRect();
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
@@ -1187,6 +1197,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 			return token.overflows;
 		});
+
+		this.removeAttribute("inline");
+
+		return tokens;
 	}
 
 	get _isPhone() {

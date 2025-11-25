@@ -11,6 +11,11 @@
 	height: auto;
 }
 
+/* synchronously layout the tokens in a single line */
+:host([inline]) ::slotted([ui5-token]) {
+	display: inline-block !important;
+}
+
 :host([multi-line]) .ui5-tokenizer--content {
 	display: flex;
 	align-content: baseline;
