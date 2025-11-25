@@ -1010,6 +1010,7 @@ class Popover extends Popup {
 		}
 
 		const openerRect = opener.getBoundingClientRect();
+		const isRtl = this.isRtl;
 
 		switch (this.getActualPlacement(openerRect)) {
 		case PopoverActualPlacement.Left:
@@ -1025,6 +1026,14 @@ class Popover extends Popup {
 
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Bottom:
+			if (isRtl) {
+				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
+					return ResizeHandlePlacement.BottomRight;
+				}
+
+				return ResizeHandlePlacement.BottomLeft;
+			}
+
 			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
 				return ResizeHandlePlacement.BottomLeft;
 			}
@@ -1032,6 +1041,14 @@ class Popover extends Popup {
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
 		default:
+			if (isRtl) {
+				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
+					return ResizeHandlePlacement.TopRight;
+				}
+
+				return ResizeHandlePlacement.TopLeft;
+			}
+
 			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
 				return ResizeHandlePlacement.TopLeft;
 			}
