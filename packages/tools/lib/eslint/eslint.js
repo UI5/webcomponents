@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { ESLint: ESLint7 } = require("eslint"); // isolated v7
+const path = require("path");
 
 const main = async argv => {
 	let eslintConfig;
@@ -11,11 +12,12 @@ const main = async argv => {
 		eslintConfig = require.resolve("@ui5/webcomponents-tools/components-package/eslint.js")
 	};
 
+	const packageDir = path.dirname(require.resolve("@ui5/webcomponents-tools/package.json"));
 	const eslint = new ESLint7({
 		overrideConfigFile: eslintConfig,
 		fix: argv.includes("--fix"),
+		resolvePluginsRelativeTo: packageDir,
 	});
-
 	console.log("Running ESLint v7...");
 
 	// Lint files
