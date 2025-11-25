@@ -1914,15 +1914,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			const nonGroupItems = this._selectableItems;
 
 			switch (nonGroupItems.length) {
-				case 0:
-					return Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT);
+			case 0:
+				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT);
 
-				case 1:
-					return Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT);
+			case 1:
+				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT);
 
-				default:
-					return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length);
-			}
+			default:
+				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length);
+		}
 		}
 
 		return undefined;
