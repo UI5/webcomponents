@@ -5,13 +5,8 @@
 .ui5-filterbar-item-root {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
 }
 
-.ui5-filterbar-item-label {
-	display: block;
-}
-
-.ui5-filterbar-item-control {
-	display: block;
+::slotted(*) {
+	width: 100%;
 }
