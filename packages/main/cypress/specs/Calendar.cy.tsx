@@ -971,9 +971,8 @@ describe("Calendar general interaction", () => {
 			.realClick();
 
 		// Verify the date was not selected
-		cy.get<Calendar>("#calendar1")
-			.invoke("prop", "selectedDates")
-			.should("have.length", 0);
+		cy.ui5CalendarGetDay("#calendar1", disabledDate.toString())
+			.should("not.have.class", "ui5-dp-item--selected");
 	});
 
 	it("Disables a single date equal to start date when end date is not defined", () => {
@@ -1096,10 +1095,9 @@ describe("Calendar general interaction", () => {
 		cy.ui5CalendarGetDay("#calendar1", disabledEndDate.toString())
 			.realClick();
 
-		// The disabled date should not be selectable
-		cy.get<Calendar>("#calendar1")
-			.invoke("prop", "selectedDates")
-			.should("have.length", 1); // Only the first date should be selected
+		// Verify the date was not selected
+		cy.ui5CalendarGetDay("#calendar1", disabledEndDate.toString())
+			.should("not.have.class", "ui5-dp-item--selected");
 	});
 
 	it("Check calendar week numbers with specific CalendarWeekNumbering configuration", () => {
