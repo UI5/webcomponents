@@ -82,6 +82,7 @@ type TextAreaInputEventDetail = {
 	],
 	renderer: jsxRenderer,
 	template: TextAreaTemplate,
+	shadowRootOptions: { delegatesFocus: true },
 })
 /**
  * Fired when the text has changed and the focus leaves the component.
@@ -376,6 +377,9 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._fnOnResize);
+		if (this.hasAttribute("autofocus")) {
+			this.focus();
+		}
 	}
 
 	onExitDOM() {
