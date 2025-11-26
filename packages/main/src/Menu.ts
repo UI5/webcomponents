@@ -1,26 +1,8 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import {
-	isLeft,
-	isRight,
-	isEnter,
-	isTabNext,
-	isTabPrevious,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import {
-	isPhone,
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, Keys, Device, i18n, jsxRenderer, renderFinished, DOMReferenceConverter } from "@ui5/webcomponents-base";
+
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import type List from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type MenuItem from "./MenuItem.js";
@@ -41,6 +23,18 @@ import {
 
 // Styles
 import menuCss from "./generated/themes/Menu.css.js";
+
+const {
+	isLeft,
+	isRight,
+	isEnter,
+	isTabNext,
+	isTabPrevious,
+} = Keys;
+const {
+	isPhone,
+	isDesktop,
+} = Device;
 
 const MENU_OPEN_DELAY = 300;
 

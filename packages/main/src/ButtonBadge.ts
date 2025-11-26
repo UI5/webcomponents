@@ -1,8 +1,5 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, jsxRenderer } from "@ui5/webcomponents-base";
+import type ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
 import ButtonBadgeTemplate from "./ButtonBadgeTemplate.js";
 
 // Styles
@@ -52,7 +49,7 @@ class ButtonBadge extends UI5Element {
 	text: string = "";
 
 	get effectiveText() {
-		return this.design === ButtonBadgeDesign.AttentionDot ? "" : this.text;
+		return this.design === "AttentionDot" ? "" : this.text;
 	}
 }
 

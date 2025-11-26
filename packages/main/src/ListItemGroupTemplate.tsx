@@ -1,13 +1,12 @@
 import type ListItemGroup from "./ListItemGroup.js";
 import ListItemGroupHeader from "./ListItemGroupHeader.js";
 import DropIndicator from "./DropIndicator.js";
-import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 
 export default function ListItemGroupTemplate(this: ListItemGroup) {
 	return (
 		<>
 			{this.hasHeader &&
-				<ListItemGroupHeader wrappingType={this.wrappingType} focused={this.focused} part="header" accessibleRole={ListItemAccessibleRole.ListItem}>
+				<ListItemGroupHeader wrappingType={this.wrappingType} focused={this.focused} part="header" accessibleRole={"ListItem"}>
 					{ this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText }
 					<div
 						role="list"

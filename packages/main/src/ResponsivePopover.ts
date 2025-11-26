@@ -1,8 +1,5 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import { customElement, property, i18n, Device } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 
 import { RESPONSIVE_POPOVER_CLOSE_DIALOG_BUTTON } from "./generated/i18n/i18n-defaults.js";
 
@@ -13,6 +10,8 @@ import type Dialog from "./Dialog.js";
 // Styles
 import ResponsivePopoverCss from "./generated/themes/ResponsivePopover.css.js";
 import type { PopupBeforeCloseEventDetail } from "./Popup.js";
+
+const { isPhone } = Device;
 
 /**
  * @class

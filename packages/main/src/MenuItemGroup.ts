@@ -1,14 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, slot, i18n, jsxRenderer } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type MenuItem from "./MenuItem.js";
 import { isInstanceOfMenuItem } from "./MenuItem.js";
 import MenuItemGroupTemplate from "./MenuItemGroupTemplate.js";
-import MenuItemGroupCheckMode from "./types/MenuItemGroupCheckMode.js";
+import type MenuItemGroupCheckMode from "./types/MenuItemGroupCheckMode.js";
 import type { IMenuItem } from "./Menu.js";
 import {
 	MENU_ITEM_GROUP_NONE_ACCESSIBLE_NAME,
@@ -74,11 +69,11 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 
 	get ariaLabelText(): string | undefined {
 		switch (this.checkMode) {
-		case MenuItemGroupCheckMode.None:
+		case "None":
 			return MenuItemGroup.i18nBundle.getText(MENU_ITEM_GROUP_NONE_ACCESSIBLE_NAME);
-		case MenuItemGroupCheckMode.Single:
+		case "Single":
 			return MenuItemGroup.i18nBundle.getText(MENU_ITEM_GROUP_SINGLE_ACCESSIBLE_NAME);
-		case MenuItemGroupCheckMode.Multiple:
+		case "Multiple":
 			return MenuItemGroup.i18nBundle.getText(MENU_ITEM_GROUP_MULTI_ACCESSIBLE_NAME);
 		default:
 			return undefined;
@@ -96,7 +91,7 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	onBeforeRendering() {
 		this._updateItemsCheckMode();
 
-		if (this.checkMode === MenuItemGroupCheckMode.Single) {
+		if (this.checkMode === "Single") {
 			this._ensureSingleItemIsChecked();
 		}
 	}
@@ -141,7 +136,7 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 		const clickedItem = e.target as MenuItem;
 		const isChecked = clickedItem.checked;
 
-		if (this.checkMode === MenuItemGroupCheckMode.Single) {
+		if (this.checkMode === "Single") {
 			this._clearCheckedItems();
 			clickedItem.checked = isChecked;
 		}

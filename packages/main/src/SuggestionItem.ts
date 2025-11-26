@@ -1,12 +1,12 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { customElement, property, Device } from "@ui5/webcomponents-base";
 
 import type { IInputSuggestionItemSelectable } from "./Input.js";
 import ListItemBase from "./ListItemBase.js";
 import SuggestionItemTemplate from "./SuggestionItemTemplate.js";
 
 import styles from "./generated/themes/SuggestionItem.css.js";
+
+const { isDesktop } = Device;
 
 /**
  * @class

@@ -1,11 +1,6 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { customElement, slot, i18n, jsxRenderer, Device } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import {
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
+
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import type MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import type NavigationMenuItem from "./NavigationMenuItem.js";
@@ -18,6 +13,10 @@ import menuCss from "@ui5/webcomponents/dist/generated/themes/Menu.css.js";
 import {
 	NAVIGATION_MENU_POPOVER_HIDDEN_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
+
+const {
+	isDesktop,
+} = Device;
 
 /**
  * @class

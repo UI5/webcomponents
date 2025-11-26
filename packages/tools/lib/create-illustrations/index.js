@@ -122,7 +122,7 @@ const generate = async (argv) => {
 		// If no Dot is present, Spot will be imported as Dot
 		const hasDot = dotIllustrationNames.indexOf(illustrationName) !== -1 ? 'Dot' : 'Spot';
 
-		return `import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+		return `import { Illustrations } from "@ui5/webcomponents-base";
 import dialogSvg from "./${illustrationsPrefix}-Dialog-${illustrationName}.js";
 import sceneSvg from "./${illustrationsPrefix}-Scene-${illustrationName}.js";
 import spotSvg from "./${illustrationsPrefix}-Spot-${illustrationName}.js";
@@ -130,6 +130,8 @@ import dotSvg from "./${illustrationsPrefix}-${hasDot}-${illustrationName}.js";$
 	IM_TITLE_${illustrationNameUpperCase},
 	IM_SUBTITLE_${illustrationNameUpperCase},
 } from "../generated/i18n/i18n-defaults.js";` : ``}
+
+const { unsafeRegisterIllustration } = Illustrations;
 
 const name = "${illustrationName}";
 const set = "${illustrationSet}";

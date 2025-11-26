@@ -1,15 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import UI5Element, { customElement, property, slot, i18n, jsxRenderer, executeTemplate, DragRegistry, willShowContent, renderFinished } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	TAB_ARIA_DESIGN_POSITIVE,
 	TAB_ARIA_DESIGN_NEGATIVE,
@@ -22,8 +14,8 @@ import {
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
-import SemanticColor from "./types/SemanticColor.js";
-import ListItemType from "./types/ListItemType.js";
+import type SemanticColor from "./types/SemanticColor.js";
+import type ListItemType from "./types/ListItemType.js";
 import TabContainer from "./TabContainer.js";
 import type { TabContainerStripInfo, TabContainerOverflowInfo, ITab } from "./TabContainer.js";
 import type ListItemCustom from "./ListItemCustom.js";
@@ -38,13 +30,12 @@ import css from "./generated/themes/Tab.css.js";
 import stripCss from "./generated/themes/TabInStrip.css.js";
 import draggableElementStyles from "./generated/themes/DraggableElement.css.js";
 import overflowCss from "./generated/themes/TabInOverflow.css.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 
 const DESIGN_DESCRIPTIONS = {
-	[SemanticColor.Positive]: TAB_ARIA_DESIGN_POSITIVE,
-	[SemanticColor.Negative]: TAB_ARIA_DESIGN_NEGATIVE,
-	[SemanticColor.Neutral]: TAB_ARIA_DESIGN_NEUTRAL,
-	[SemanticColor.Critical]: TAB_ARIA_DESIGN_CRITICAL,
+	"Positive": TAB_ARIA_DESIGN_POSITIVE,
+	"Negative": TAB_ARIA_DESIGN_NEGATIVE,
+	"Neutral": TAB_ARIA_DESIGN_NEUTRAL,
+	"Critical": TAB_ARIA_DESIGN_CRITICAL,
 };
 
 interface TabInStrip extends HTMLElement {
@@ -385,7 +376,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 			classes.push("ui5-tab-strip-item--mixedMode");
 		}
 
-		if (this.design !== SemanticColor.Default) {
+		if (this.design !== "Default") {
 			classes.push(`ui5-tab-strip-item--${this.design.toLowerCase()}`);
 		}
 
@@ -430,11 +421,11 @@ class Tab extends UI5Element implements ITabbable, ITab {
 
 	get semanticIconName() {
 		switch (this.design) {
-		case SemanticColor.Positive:
+		case "Positive":
 			return "sys-enter-2";
-		case SemanticColor.Negative:
+		case "Negative":
 			return "error";
-		case SemanticColor.Critical:
+		case "Critical":
 			return "alert";
 		default:
 			return null;
@@ -442,7 +433,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	}
 
 	get _designDescription() {
-		if (this.design === SemanticColor.Default) {
+		if (this.design === "Default") {
 			return null;
 		}
 
@@ -452,7 +443,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	get semanticIconClasses() {
 		const classes = ["ui5-tab-semantic-icon"];
 
-		if (this.design !== SemanticColor.Default && this.design !== SemanticColor.Neutral) {
+		if (this.design !== "Default" && this.design !== "Neutral") {
 			classes.push(`ui5-tab-semantic-icon--${this.design.toLowerCase()}`);
 		}
 
@@ -462,7 +453,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	get overflowClasses() {
 		const classes = ["ui5-tab-overflow-item"];
 
-		if (this.design !== SemanticColor.Default && this.design !== SemanticColor.Neutral) {
+		if (this.design !== "Default" && this.design !== "Neutral") {
 			classes.push(`ui5-tab-overflow-item--${this.design.toLowerCase()}`);
 		}
 
@@ -478,7 +469,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	}
 
 	get overflowState() {
-		return (this.disabled || this.isSingleClickArea) ? ListItemType.Inactive : ListItemType.Active;
+		return (this.disabled || this.isSingleClickArea) ? "Inactive" : "Active";
 	}
 
 	static get stripTemplate() {

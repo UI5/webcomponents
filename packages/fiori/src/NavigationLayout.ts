@@ -1,14 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import {
-	isPhone,
-	isTablet,
-	isCombi,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import NavigationLayoutMode from "./types/NavigationLayoutMode.js";
+import UI5Element, { customElement, property, slot, jsxRenderer, Device } from "@ui5/webcomponents-base";
+
+import type NavigationLayoutMode from "./types/NavigationLayoutMode.js";
 import type SideNavigation from "./SideNavigation.js";
 
 // Template
@@ -17,6 +9,11 @@ import NavigationLayoutTemplate from "./NavigationLayoutTemplate.js";
 // Styles
 import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
 
+const {
+	isPhone,
+	isTablet,
+	isCombi,
+} = Device;
 /**
  * @class
  *
@@ -134,10 +131,10 @@ class NavigationLayout extends UI5Element {
 	}
 
 	calcSideCollapsed() {
-		if (this.mode === NavigationLayoutMode.Auto) {
+		if (this.mode === "Auto") {
 			this.sideCollapsed = this._defaultSideCollapsed;
 		} else {
-			this.sideCollapsed = this.mode === NavigationLayoutMode.Collapsed;
+			this.sideCollapsed = this.mode === "Collapsed";
 		}
 	}
 }

@@ -1,9 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
+import UI5Element, { customElement, property, jsxRenderer } from "@ui5/webcomponents-base";
+import type MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import type Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
 
 import DropIndicatorTemplate from "./DropIndicatorTemplate.js";
 
@@ -68,7 +65,7 @@ class DropIndicator extends UI5Element {
 	orientation: `${Orientation}` = "Vertical";
 
 	get _positionProperty() {
-		if (this.orientation === Orientation.Vertical) {
+		if (this.orientation === "Vertical") {
 			return "left";
 		}
 
@@ -105,16 +102,16 @@ class DropIndicator extends UI5Element {
 		let isLast = false;
 		let isFirst = false;
 
-		if (this.orientation === Orientation.Vertical) {
+		if (this.orientation === "Vertical") {
 			switch (this.placement) {
-			case MovePlacement.Before:
+			case "Before":
 				position = left;
 				break;
-			case MovePlacement.On:
+			case "On":
 				style.width = `${width}px`;
 				position = left;
 				break;
-			case MovePlacement.After:
+			case "After":
 				position = right;
 				break;
 			}
@@ -122,16 +119,16 @@ class DropIndicator extends UI5Element {
 			style.height = `${height}px`;
 		}
 
-		if (this.orientation === Orientation.Horizontal) {
+		if (this.orientation === "Horizontal") {
 			switch (this.placement) {
-			case MovePlacement.Before:
+			case "Before":
 				position = top;
 				break;
-			case MovePlacement.On:
+			case "On":
 				style.height = `${height}px`;
 				position = top;
 				break;
-			case MovePlacement.After:
+			case "After":
 				position = bottom;
 				break;
 			}

@@ -1,64 +1,21 @@
 /* eslint-disable spaced-comment */
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { property, slot, eventStrict as event, customElement, i18n, jsxRenderer, Device, Keys, getActiveElement, valueStateNavigation, Caret, arraysAreEqual, AccessibilityTextsHelper, InputElementsFormSupport, ResizeHandler, CustomElementsScopeUtils, encodeXML } from "@ui5/webcomponents-base";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type {
 	AriaAutoComplete,
 	AriaRole,
 	AriaHasPopup,
 	ClassMap,
 } from "@ui5/webcomponents-base/dist/types.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
 
-import {
-	isPhone,
-	isAndroid,
-	isMac,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import {
-	isUp,
-	isDown,
-	isSpace,
-	isEnter,
-	isBackSpace,
-	isDelete,
-	isEscape,
-	isTabNext,
-	isPageUp,
-	isPageDown,
-	isHome,
-	isEnd,
-	isCtrlAltF8,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
-import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import {
-	getAssociatedLabelForTexts,
-	getAllAccessibleNameRefTexts,
-	registerUI5Element,
-	deregisterUI5Element,
-	getEffectiveAriaDescriptionText,
-	getAllAccessibleDescriptionRefTexts,
-} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { getCaretPosition, setCaretPosition } from "@ui5/webcomponents-base/dist/util/Caret.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import type SuggestionItem from "./SuggestionItem.js";
 import type { SuggestionComponent } from "./features/InputSuggestions.js";
 import type InputSuggestions from "./features/InputSuggestions.js";
-import InputType from "./types/InputType.js";
+import type InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
@@ -101,6 +58,39 @@ import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from ".
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
 import type InputComposition from "./features/InputComposition.js";
+
+const { getScopedVarName } = CustomElementsScopeUtils;
+const {
+	isPhone,
+	isAndroid,
+	isMac,
+} = Device;
+const {
+	isUp,
+	isDown,
+	isSpace,
+	isEnter,
+	isBackSpace,
+	isDelete,
+	isEscape,
+	isTabNext,
+	isPageUp,
+	isPageDown,
+	isHome,
+	isEnd,
+	isCtrlAltF8,
+} = Keys;
+const { submitForm } = InputElementsFormSupport;
+const {
+	getAssociatedLabelForTexts,
+	getAllAccessibleNameRefTexts,
+	registerUI5Element,
+	deregisterUI5Element,
+	getEffectiveAriaDescriptionText,
+	getAllAccessibleDescriptionRefTexts,
+} = AccessibilityTextsHelper;
+const { attachListeners } = valueStateNavigation;
+const { getCaretPosition, setCaretPosition } = Caret;
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -1714,7 +1704,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get isTypeNumber() {
-		return this.type === InputType.Number;
+		return this.type === "Number";
 	}
 
 	get suggestionsTextId() {
@@ -1760,7 +1750,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		return {
 			"ariaRoledescription": this._inputAccInfo && (this._inputAccInfo.ariaRoledescription || undefined),
 			"ariaDescribedBy": this.ariaDescribedByIds || undefined,
-			"ariaInvalid": this.valueState === ValueState.Negative ? true : undefined,
+			"ariaInvalid": this.valueState === "Negative" ? true : undefined,
 			"ariaHasPopup": this._inputAccInfo.ariaHasPopup ? this._inputAccInfo.ariaHasPopup : ariaHasPopupDefault,
 			"ariaAutoComplete": this._inputAccInfo.ariaAutoComplete ? this._inputAccInfo.ariaAutoComplete : ariaAutoCompleteDefault,
 			"role": this._inputAccInfo && this._inputAccInfo.role,
@@ -1785,7 +1775,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		const valueState = this.valueState !== ValueState.None ? this.valueStateTypeMappings[this.valueState] : "";
+		const valueState = this.valueState !== "None" ? this.valueStateTypeMappings[this.valueState] : "";
 
 		if (this.shouldDisplayDefaultValueStateMessage) {
 			return this.valueStateText ? `${valueState} ${this.valueStateText}` : valueState;
@@ -1849,10 +1839,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			popoverValueState: {
 				"ui5-valuestatemessage-root": true,
 				"ui5-valuestatemessage-header": true,
-				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
-				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
-				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
-				"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
+				"ui5-valuestatemessage--success": this.valueState === "Positive",
+				"ui5-valuestatemessage--error": this.valueState === "Negative",
+				"ui5-valuestatemessage--warning": this.valueState === "Critical",
+				"ui5-valuestatemessage--information": this.valueState === "Information",
 			},
 		};
 	}
@@ -1891,17 +1881,17 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get hasValueState() {
-		return this.valueState !== ValueState.None;
+		return this.valueState !== "None";
 	}
 
 	get hasValueStateMessage() {
-		return this.hasValueState && this.valueState !== ValueState.Positive
+		return this.hasValueState && this.valueState !== "Positive"
 			&& (!this._inputIconFocused // Handles the cases when valueStateMessage is forwarded (from datepicker e.g.)
 				|| !!(this._isPhone && this.Suggestions)); // Handles Input with suggestions on mobile
 	}
 
 	get valueStateText() {
-		return this.valueState !== ValueState.None ? this.valueStateTextMappings()[this.valueState] : undefined;
+		return this.valueState !== "None" ? this.valueStateTextMappings()[this.valueState] : undefined;
 	}
 
 	get suggestionsText() {
@@ -1958,7 +1948,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			Information: `<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M3 0C1.34315 0 0 1.34315 0 3V15C0 16.6569 1.34315 18 3 18H15C16.6569 18 18 16.6569 18 15V3C18 1.34315 16.6569 0 15 0H3ZM9 6.5C9.82843 6.5 10.5 5.82843 10.5 5C10.5 4.17157 9.82843 3.5 9 3.5C8.17157 3.5 7.5 4.17157 7.5 5C7.5 5.82843 8.17157 6.5 9 6.5ZM9 8.5C9.55228 8.5 10 8.94772 10 9.5V13.5C10 14.0523 9.55228 14.5 9 14.5C8.44771 14.5 8 14.0523 8 13.5V9.5C8 8.94772 8.44771 8.5 9 8.5Z" fill="#1B90FF"/>`,
 		};
 
-		if (this.valueState !== ValueState.None) {
+		if (this.valueState !== "None") {
 			return `
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="20" viewBox="0 0 20 20" fill="none">
 				${iconPerValueState[this.valueState]};
@@ -1980,7 +1970,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			Information: "information",
 		};
 
-		return this.valueState !== ValueState.None ? iconPerValueState[this.valueState] : "";
+		return this.valueState !== "None" ? iconPerValueState[this.valueState] : "";
 	}
 
 	/**

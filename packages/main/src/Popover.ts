@@ -1,17 +1,9 @@
-import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
-import { getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
-import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
+import { customElement, property, slot, renderFinished, DOMReferenceConverter, clamp, PopupUtils, Device, instanceOfUI5Element } from "@ui5/webcomponents-base";
 import Popup from "./Popup.js";
-import PopoverPlacement from "./types/PopoverPlacement.js";
-import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
+import type PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
+import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import { addOpenedPopover, removeOpenedPopover } from "./popup-utils/PopoverRegistry.js";
 
 // Template
@@ -20,6 +12,8 @@ import PopoverTemplate from "./PopoverTemplate.js";
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
 
+const { isIOS } = Device;
+const { getClosedPopupParent } = PopupUtils;
 const ARROW_SIZE = 8;
 
 type PopoverSize = {
@@ -462,11 +456,11 @@ class Popover extends Popup {
 			left: `${left}px`,
 		});
 
-		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && this._width) {
+		if (this.horizontalAlign === "Stretch" && this._width) {
 			this.style.width = this._width;
 		}
 
-		if (this.verticalAlign === PopoverVerticalAlign.Stretch && this._height) {
+		if (this.verticalAlign === "Stretch" && this._height) {
 			this.style.height = this._height;
 		}
 	}
@@ -553,10 +547,10 @@ class Popover extends Popup {
 		const isVertical = actualPlacement === PopoverActualPlacement.Top
 			|| actualPlacement === PopoverActualPlacement.Bottom;
 
-		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
+		if (this.horizontalAlign === "Stretch" && isVertical) {
 			popoverSize.width = targetRect.width;
 			this._width = `${targetRect.width}px`;
-		} else if (this.verticalAlign === PopoverVerticalAlign.Stretch && !isVertical) {
+		} else if (this.verticalAlign === "Stretch" && !isVertical) {
 			popoverSize.height = targetRect.height;
 			this._height = `${targetRect.height}px`;
 		}
@@ -725,22 +719,22 @@ class Popover extends Popup {
 
 	getActualPlacement(targetRect: DOMRect): `${PopoverActualPlacement}` {
 		const placement = this.placement;
-		const isVertical = placement === PopoverPlacement.Top || placement === PopoverPlacement.Bottom;
+		const isVertical = placement === "Top" || placement === "Bottom";
 		const popoverSize = this.getPopoverSize(!this.allowTargetOverlap);
 
 		let actualPlacement: PopoverActualPlacement = PopoverActualPlacement.Right;
 
 		switch (placement) {
-		case PopoverPlacement.Start:
+		case "Start":
 			actualPlacement = this.isRtl ? PopoverActualPlacement.Right : PopoverActualPlacement.Left;
 			break;
-		case PopoverPlacement.End:
+		case "End":
 			actualPlacement = this.isRtl ? PopoverActualPlacement.Left : PopoverActualPlacement.Right;
 			break;
-		case PopoverPlacement.Top:
+		case "Top":
 			actualPlacement = PopoverActualPlacement.Top;
 			break;
-		case PopoverPlacement.Bottom:
+		case "Bottom":
 			actualPlacement = PopoverActualPlacement.Bottom;
 			break;
 		}
@@ -806,14 +800,14 @@ class Popover extends Popup {
 		let top = 0;
 
 		switch (this.verticalAlign) {
-		case PopoverVerticalAlign.Center:
-		case PopoverVerticalAlign.Stretch:
+		case "Center":
+		case "Stretch":
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
 			break;
-		case PopoverVerticalAlign.Top:
+		case "Top":
 			top = targetRect.top;
 			break;
-		case PopoverVerticalAlign.Bottom:
+		case "Bottom":
 			top = targetRect.bottom - popoverSize.height;
 			break;
 		}
@@ -873,13 +867,13 @@ class Popover extends Popup {
 
 	get _actualHorizontalAlign() : PopoverActualHorizontalAlign {
 		switch (this.horizontalAlign) {
-		case PopoverHorizontalAlign.Start:
+		case "Start":
 			return this.isRtl ? PopoverActualHorizontalAlign.Right : PopoverActualHorizontalAlign.Left;
-		case PopoverHorizontalAlign.End:
+		case "End":
 			return this.isRtl ? PopoverActualHorizontalAlign.Left : PopoverActualHorizontalAlign.Right;
-		case PopoverHorizontalAlign.Stretch:
+		case "Stretch":
 			return PopoverActualHorizontalAlign.Stretch;
-		case PopoverHorizontalAlign.Center:
+		case "Center":
 		default:
 			return PopoverActualHorizontalAlign.Center;
 		}

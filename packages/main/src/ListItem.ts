@@ -1,22 +1,11 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import {
-	isSpace, isEnter, isDelete, isF2,
-} from "@ui5/webcomponents-base/dist/Keys.js";
+import { customElement, jsxRenderer, property, eventStrict as event, slot, i18n, Keys, getActiveElement, getFirstFocusableElement, DragRegistry } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import Highlight from "./types/Highlight.js";
-import ListItemType from "./types/ListItemType.js";
-import ListSelectionMode from "./types/ListSelectionMode.js";
+import type Highlight from "./types/Highlight.js";
+import type ListItemType from "./types/ListItemType.js";
+import type ListSelectionMode from "./types/ListSelectionMode.js";
 import ListItemBase from "./ListItemBase.js";
 import type RadioButton from "./RadioButton.js";
 import type CheckBox from "./CheckBox.js";
@@ -37,6 +26,8 @@ import listItemAdditionalTextCss from "./generated/themes/ListItemAdditionalText
 
 // Icons
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
+
+const { isSpace, isEnter, isDelete, isF2 } = Keys;
 
 interface IAccessibleListItem {
 	accessibleName?: string;
@@ -239,7 +230,7 @@ abstract class ListItem extends ListItemBase {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		this.actionable = (this.type === ListItemType.Active || this.type === ListItemType.Navigation) && (this._selectionMode !== ListSelectionMode.Delete);
+		this.actionable = (this.type === "Active" || this.type === "Navigation") && (this._selectionMode !== "Delete");
 	}
 
 	onEnterDOM() {
@@ -262,7 +253,7 @@ abstract class ListItem extends ListItemBase {
 
 		super._onkeydown(e);
 
-		const itemActive = this.type === ListItemType.Active,
+		const itemActive = this.type === "Active",
 			itemNavigated = this.typeNavigation;
 
 		if ((isSpace(e) || isEnter(e)) && (itemActive || itemNavigated)) {
@@ -373,7 +364,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	activate() {
-		if (this.type === ListItemType.Active || this.type === ListItemType.Navigation) {
+		if (this.type === "Active" || this.type === "Navigation") {
 			this.active = true;
 		}
 	}
@@ -397,45 +388,45 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get isInactive() {
-		return this.type === ListItemType.Inactive || this.type === ListItemType.Detail;
+		return this.type === "Inactive" || this.type === "Detail";
 	}
 
 	get placeSelectionElementBefore() {
-		return this._selectionMode === ListSelectionMode.Multiple
-			|| this._selectionMode === ListSelectionMode.SingleStart;
+		return this._selectionMode === "Multiple"
+			|| this._selectionMode === "SingleStart";
 	}
 
 	get placeSelectionElementAfter() {
 		return !this.placeSelectionElementBefore
-			&& (this._selectionMode === ListSelectionMode.SingleEnd || this._selectionMode === ListSelectionMode.Delete);
+			&& (this._selectionMode === "SingleEnd" || this._selectionMode === "Delete");
 	}
 
 	get modeSingleSelect() {
 		return [
-			ListSelectionMode.SingleStart,
-			ListSelectionMode.SingleEnd,
-			ListSelectionMode.Single,
+			"SingleStart",
+			"SingleEnd",
+			"Single",
 		].includes(this._selectionMode as ListSelectionMode);
 	}
 
 	get modeMultiple() {
-		return this._selectionMode === ListSelectionMode.Multiple;
+		return this._selectionMode === "Multiple";
 	}
 
 	get modeDelete() {
-		return this._selectionMode === ListSelectionMode.Delete;
+		return this._selectionMode === "Delete";
 	}
 
 	get typeDetail() {
-		return this.type === ListItemType.Detail;
+		return this.type === "Detail";
 	}
 
 	get typeNavigation() {
-		return this.type === ListItemType.Navigation;
+		return this.type === "Navigation";
 	}
 
 	get typeActive() {
-		return this.type === ListItemType.Active;
+		return this.type === "Active";
 	}
 
 	get _ariaSelected() {
@@ -508,7 +499,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get _hasHighlightColor() {
-		return this.highlight !== Highlight.None;
+		return this.highlight !== "None";
 	}
 
 	get hasConfigurableMode() {

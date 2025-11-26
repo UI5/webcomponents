@@ -1,11 +1,5 @@
-import {
-	isSpace, isPlus, isMinus, isLeft, isRight,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+
+import { customElement, property, slot, eventStrict as event, jsxRenderer, Keys } from "@ui5/webcomponents-base";
 import type NotificationListGrowingMode from "@ui5/webcomponents/dist/types/NotificationListGrowingMode.js";
 import type NotificationListGroupList from "./NotificationListGroupList.js";
 import NotificationListItemBase from "./NotificationListItemBase.js";
@@ -28,6 +22,10 @@ import NotificationListGroupItemTemplate from "./NotificationListGroupItemTempla
 
 // Styles
 import NotificationListGroupItemCss from "./generated/themes/NotificationListGroupItem.css.js";
+
+const {
+	isSpace, isPlus, isMinus, isLeft, isRight,
+} = Keys;
 
 type NotificationListGroupItemToggleEventDetail = {
 	item: NotificationListGroupItem,

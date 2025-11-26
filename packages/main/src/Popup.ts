@@ -1,39 +1,34 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, jsxRenderer, ManagedStyles, toLowercaseEnumValue, MediaRange, renderFinished, Device, Keys, AccessibilityTextsHelper, ResizeHandler, PopupUtils, getFirstFocusableElement, getLastFocusableElement } from "@ui5/webcomponents-base";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import {
-	isChrome,
-	isDesktop,
-	isPhone,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import { getFirstFocusableElement, getLastFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-import {
-	registerUI5Element,
-	getEffectiveAriaLabelText,
-	getEffectiveAriaDescriptionText,
-	getAllAccessibleDescriptionRefTexts,
-	deregisterUI5Element,
-} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { hasStyle, createStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
-import { isEnter, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getFocusedElement, isFocusedElementWithinNode } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import PopupTemplate from "./PopupTemplate.js";
-import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
+import type PopupAccessibleRole from "./types/PopupAccessibleRole.js";
 import { addOpenedPopup, removeOpenedPopup } from "./popup-utils/OpenedPopupsRegistry.js";
 
 // Styles
 import popupStlyes from "./generated/themes/Popup.css.js";
 import popupBlockLayerStyles from "./generated/themes/PopupBlockLayer.css.js";
 import globalStyles from "./generated/themes/PopupGlobal.css.js";
+
+const { isEnter, isTabPrevious } = Keys;
+
+const {
+	isChrome,
+	isDesktop,
+	isPhone,
+} = Device;
+
+const {
+	registerUI5Element,
+	getEffectiveAriaLabelText,
+	getEffectiveAriaDescriptionText,
+	getAllAccessibleDescriptionRefTexts,
+	deregisterUI5Element,
+} = AccessibilityTextsHelper;
+
+const { getFocusedElement, isFocusedElementWithinNode } = PopupUtils;
+
+const { hasStyle, createStyle } = ManagedStyles;
 
 const createBlockingStyle = (): void => {
 	if (!hasStyle("data-ui5-popup-scroll-blocker")) {
@@ -80,7 +75,7 @@ type PopupBeforeCloseEventDetail = {
  * @public
  */
 @customElement({
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	styles: [popupStlyes, popupBlockLayerStyles],
 	template: PopupTemplate,
 })
@@ -679,11 +674,11 @@ abstract class Popup extends UI5Element {
 	}
 
 	get _role() {
-		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
+		return (this.accessibleRole === "None") ? undefined : toLowercaseEnumValue(this.accessibleRole);
 	}
 
 	get _ariaModal(): "true" | undefined {
-		return this.accessibleRole === PopupAccessibleRole.None ? undefined : "true";
+		return this.accessibleRole === "None" ? undefined : "true";
 	}
 
 	get contentDOM(): HTMLElement {

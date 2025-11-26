@@ -104,6 +104,7 @@ module.exports = {
 		// }],
 		"valid-typeof": 2,
 		"no-restricted-imports": ["error", {
+			"allowTypeImports": true, // TODO: check if barrel reexport
 			"patterns": [
 				"@ui5/webcomponents-base/dist/*",
 				"@ui5/webcomponents-theming/dist/*",

@@ -1,4 +1,4 @@
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { Device } from "@ui5/webcomponents-base";
 import type RadioButton from "./RadioButton.js";
 import Label from "./Label.js";
 
@@ -21,7 +21,7 @@ export default function RadioButtonTemplate(this: RadioButton) {
 		>
 			<div class={{
 				"ui5-radio-inner": true,
-				"ui5-radio-inner--hoverable": !this.disabled && !this.readonly && isDesktop(),
+				"ui5-radio-inner--hoverable": !this.disabled && !this.readonly && Device.isDesktop(),
 			}}>
 				<svg class="ui5-radio-svg" focusable="false" aria-hidden="true">
 					<circle part="outer-ring" class="ui5-radio-svg-outer" cx="50%" cy="50%" r="50%" />

@@ -1,31 +1,10 @@
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import { jsxRenderer, customElement, property, eventStrict as event, slot, i18n, Keys, Device, renderFinished, ItemNavigation } from "@ui5/webcomponents-base";
 import type { AccessibilityAttributes, AriaHasPopup, AriaRole } from "@ui5/webcomponents-base";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import {
-	isLeft,
-	isRight,
-	isEnter,
-	isSpace,
-	isEnterShift,
-	isSpaceShift,
-	isShift,
-	isTabNext,
-	isTabPrevious,
-	isDown,
-	isUp,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { isDesktop, isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
-import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
-import MenuItemGroupCheckMode from "./types/MenuItemGroupCheckMode.js";
+import type NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
+import type ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
+import type MenuItemGroupCheckMode from "./types/MenuItemGroupCheckMode.js";
 import type { ListItemAccessibilityAttributes } from "./ListItem.js";
 import type List from "./List.js";
 import ListItem from "./ListItem.js";
@@ -42,6 +21,21 @@ import type { IMenuItem } from "./Menu.js";
 
 // Styles
 import menuItemCss from "./generated/themes/MenuItem.css.js";
+
+const {
+	isLeft,
+	isRight,
+	isEnter,
+	isSpace,
+	isEnterShift,
+	isSpaceShift,
+	isShift,
+	isTabNext,
+	isTabPrevious,
+	isDown,
+	isUp,
+} = Keys;
+const { isDesktop, isPhone } = Device;
 
 type MenuBeforeOpenEventDetail = { item?: MenuItem };
 type MenuBeforeCloseEventDetail = { escPressed: boolean };
@@ -322,8 +316,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		super();
 
 		this._itemNavigation = new ItemNavigation(this, {
-			navigationMode: NavigationMode.Horizontal,
-			behavior: ItemNavigationBehavior.Static,
+			navigationMode: "Horizontal",
+			behavior: "Static",
 			getItemsCallback: () => this._navigableItems,
 		});
 	}
@@ -341,7 +335,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	get _isCheckable() {
-		return this._checkMode !== MenuItemGroupCheckMode.None;
+		return this._checkMode !== "None";
 	}
 
 	_navigateToEndContent(shouldNavigateToPreviousItem: boolean) {
@@ -425,9 +419,9 @@ class MenuItem extends ListItem implements IMenuItem {
 
 	get _role() {
 		switch (this._checkMode) {
-		case MenuItemGroupCheckMode.Single:
+		case "Single":
 			return "menuitemradio";
-		case MenuItemGroupCheckMode.Multiple:
+		case "Multiple":
 			return "menuitemcheckbox";
 		default:
 			return "menuitem";
@@ -459,7 +453,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	get _markChecked() {
-		return !this.hasSubmenu && this.checked && this._checkMode !== MenuItemGroupCheckMode.None;
+		return !this.hasSubmenu && this.checked && this._checkMode !== "None";
 	}
 
 	/** Returns menu item groups */
@@ -650,7 +644,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_updateCheckedState() {
-		if (this._checkMode === MenuItemGroupCheckMode.None) {
+		if (this._checkMode === "None") {
 			return;
 		}
 

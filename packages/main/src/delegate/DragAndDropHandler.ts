@@ -1,8 +1,5 @@
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import handleDragOver from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDragOver.js";
-import handleDrop from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDrop.js";
-import { findClosestPosition } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
+import { DragRegistry, handleDragOver, handleDrop, findClosestPosition } from "@ui5/webcomponents-base";
+import type Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type DropIndicator from "../DropIndicator.js";
 import type MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
@@ -10,7 +7,7 @@ import type MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement
 type DragAndDropConfig = {
 	getItems: () => Array<HTMLElement>;
 	getDropIndicator: () => DropIndicator | null;
-	orientation?: Orientation;
+	orientation?: `${Orientation}`;
 	useOriginalEvent?: boolean;
 	clientCoordinate?: "clientX" | "clientY";
 	transformElement?: (element: HTMLElement) => HTMLElement;
@@ -25,7 +22,7 @@ class DragAndDropHandler {
 	constructor(component: UI5Element, config: DragAndDropConfig) {
 		this.component = component;
 		this.config = {
-			orientation: Orientation.Vertical,
+			orientation: "Vertical",
 			clientCoordinate: "clientY",
 			...config,
 		};

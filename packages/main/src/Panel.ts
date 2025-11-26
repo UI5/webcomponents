@@ -1,15 +1,5 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
-import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
-import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
-import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, jsxRenderer, slideDown, slideUp, Keys, getAnimationMode, i18n } from "@ui5/webcomponents-base";
+import type AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type TitleLevel from "./types/TitleLevel.js";
@@ -20,6 +10,8 @@ import { PANEL_ICON } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import panelCss from "./generated/themes/Panel.css.js";
+
+const { isSpace, isEnter } = Keys;
 
 /**
  * @class
@@ -225,7 +217,7 @@ class Panel extends UI5Element {
 	}
 
 	get shouldNotAnimate() {
-		return this.noAnimation || getAnimationMode() === AnimationMode.None;
+		return this.noAnimation || getAnimationMode() === "none";
 	}
 
 	_headerClick(e: MouseEvent) {

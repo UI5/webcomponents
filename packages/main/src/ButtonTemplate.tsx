@@ -1,6 +1,8 @@
 import type Button from "./Button.js";
 import { jsx, useState } from "@ui5/webcomponents-base";
 import type UI5Element from "@ui5/webcomponents-base";
+import LazyIcon from "./Icon.js";
+import LazyBusyIndicator from "./BusyIndicator.js";
 
 function lazy1<T extends typeof UI5Element>(fn: () => Promise<{ default: T }>): T {
 	return function Component(props: { [key: string]: unknown }) {
@@ -27,8 +29,8 @@ function lazy<T extends typeof UI5Element>(tag: string, fn: () => Promise<{ defa
 	} as unknown as T;
 }
 
-const LazyIcon = lazy1(() => import("./Icon.js"));
-const LazyBusyIndicator = lazy1(() => import("./BusyIndicator.js"));
+// const LazyIcon = lazy1(() => import("./Icon.js"));
+// const LazyBusyIndicator = lazy1(() => import("./BusyIndicator.js"));
 // const LazyIcon = lazy("ui5-icon", () => import("./Icon.js"));
 // const LazyBusyIndicator = lazy("ui5-busy-indicator", () => import("./BusyIndicator.js"));
 

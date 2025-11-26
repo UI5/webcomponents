@@ -1,15 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.js";
-import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
+import UI5Element, { customElement, property, eventStrict as event, slot, jsxRenderer, Device, AccessibilityTextsHelper, i18n, valueStateNavigation, arraysAreEqual, Keys, announce, InputElementsFormSupport, CustomElementsScopeUtils } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -17,27 +8,7 @@ import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import {
-	isBackSpace,
-	isDelete,
-	isShow,
-	isUp,
-	isDown,
-	isEnter,
-	isEscape,
-	isTabNext,
-	isTabPrevious,
-	isPageUp,
-	isPageDown,
-	isHome,
-	isEnd,
-	isCtrlAltF8,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
-import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 
 import type { IIcon } from "./Icon.js";
 import * as Filters from "./Filters.js";
@@ -90,6 +61,29 @@ import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type InputComposition from "./features/InputComposition.js";
+
+const { isPhone, isAndroid, isMac } = Device;
+const { getEffectiveAriaLabelText, getAssociatedLabelForTexts } = AccessibilityTextsHelper;
+const { getScopedVarName } = CustomElementsScopeUtils;
+const { submitForm } = InputElementsFormSupport;
+const {
+	isBackSpace,
+	isDelete,
+	isShow,
+	isUp,
+	isDown,
+	isEnter,
+	isEscape,
+	isTabNext,
+	isTabPrevious,
+	isPageUp,
+	isPageDown,
+	isHome,
+	isEnd,
+	isCtrlAltF8,
+} = Keys;
+const { attachListeners } = valueStateNavigation;
+
 
 const SKIP_ITEMS_SIZE = 10;
 
@@ -1287,9 +1281,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const groupHeaderText = ComboBox.i18nBundle.getText(LIST_ITEM_GROUP_HEADER);
 
 		if (isGroupItem) {
-			announce(`${groupHeaderText} ${currentItem.headerText}`, InvisibleMessageMode.Polite);
+			announce(`${groupHeaderText} ${currentItem.headerText}`, "Polite");
 		} else {
-			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), InvisibleMessageMode.Polite);
+			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), "Polite");
 		}
 	}
 
@@ -1346,7 +1340,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const valueStateText = this.shouldDisplayDefaultValueStateMessage ? this.valueStateDefaultText : this.valueStateMessage.map(el => el.textContent).join(" ");
 
 		if (valueStateText) {
-			announce(valueStateText, InvisibleMessageMode.Polite);
+			announce(valueStateText, "Polite");
 		}
 	}
 	/**
@@ -1418,11 +1412,11 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get hasValueState(): boolean {
-		return this.valueState !== ValueState.None;
+		return this.valueState !== "None";
 	}
 
 	get hasValueStateText(): boolean {
-		return this.hasValueState && this.valueState !== ValueState.Positive;
+		return this.hasValueState && this.valueState !== "Positive";
 	}
 
 	get ariaValueStateHiddenText(): string {
@@ -1432,7 +1426,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		let text = "";
 
-		if (this.valueState !== ValueState.None) {
+		if (this.valueState !== "None") {
 			text = this.valueStateTypeMappings[this.valueState];
 		}
 
@@ -1444,7 +1438,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get valueStateDefaultText(): string | undefined {
-		if (this.valueState === ValueState.None) {
+		if (this.valueState === "None") {
 			return;
 		}
 
@@ -1453,19 +1447,19 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get valueStateTextMappings(): ValueStateAnnouncement {
 		return {
-			[ValueState.Positive]: ComboBox.i18nBundle.getText(VALUE_STATE_SUCCESS),
-			[ValueState.Negative]: ComboBox.i18nBundle.getText(VALUE_STATE_ERROR),
-			[ValueState.Critical]: ComboBox.i18nBundle.getText(VALUE_STATE_WARNING),
-			[ValueState.Information]: ComboBox.i18nBundle.getText(VALUE_STATE_INFORMATION),
+			["Positive"]: ComboBox.i18nBundle.getText(VALUE_STATE_SUCCESS),
+			["Negative"]: ComboBox.i18nBundle.getText(VALUE_STATE_ERROR),
+			["Critical"]: ComboBox.i18nBundle.getText(VALUE_STATE_WARNING),
+			["Information"]: ComboBox.i18nBundle.getText(VALUE_STATE_INFORMATION),
 		};
 	}
 
 	get valueStateTypeMappings(): ValueStateTypeAnnouncement {
 		return {
-			[ValueState.Positive]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
-			[ValueState.Information]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
-			[ValueState.Negative]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
-			[ValueState.Critical]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
+			["Positive"]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
+			["Information"]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
+			["Negative"]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
+			["Critical"]: ComboBox.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
 		};
 	}
 
@@ -1482,7 +1476,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * This method is relevant for sap_horizon theme only
 	 */
 	get _valueStateMessageIcon(): string {
-		return this.valueState !== ValueState.None ? ValueStateIconMapping[this.valueState] : "";
+		return this.valueState !== "None" ? ValueStateIconMapping[this.valueState] : "";
 	}
 
 	get linksInAriaValueStateHiddenText() {
@@ -1574,10 +1568,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			popoverValueState: {
 				"ui5-valuestatemessage-header": true,
 				"ui5-valuestatemessage-root": true,
-				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
-				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
-				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
-				"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
+				"ui5-valuestatemessage--success": this.valueState === "Positive",
+				"ui5-valuestatemessage--error": this.valueState === "Negative",
+				"ui5-valuestatemessage--warning": this.valueState === "Critical",
+				"ui5-valuestatemessage--information": this.valueState === "Information",
 			},
 		};
 	}

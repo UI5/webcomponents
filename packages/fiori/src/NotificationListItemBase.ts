@@ -1,16 +1,13 @@
-import { isSpace, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { property, i18n, getTabbableElements, getActiveElement, getFirstFocusableElement, Keys } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 
 // Texts
 import {
 	NOTIFICATION_LIST_ITEM_LOADING,
 } from "./generated/i18n/i18n-defaults.js";
+
+const { isSpace, isF2 } = Keys;
 
 /**
  * @class

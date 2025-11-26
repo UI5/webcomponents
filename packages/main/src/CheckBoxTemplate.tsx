@@ -1,4 +1,4 @@
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { Device } from "@ui5/webcomponents-base";
 
 import type CheckBox from "./CheckBox.js";
 import Label from "./Label.js";
@@ -13,7 +13,7 @@ export default function CheckBoxTemplate(this: CheckBox) {
 		<div
 			class={{
 				"ui5-checkbox-root": true,
-				"ui5-checkbox--hoverable": !this.disabled && !this.readonly && isDesktop(),
+				"ui5-checkbox--hoverable": !this.disabled && !this.readonly && Device.isDesktop(),
 			}}
 			role={this.accInfo.role}
 			part="root"

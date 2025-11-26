@@ -1,7 +1,4 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import { customElement, jsxRenderer, property, slot } from "@ui5/webcomponents-base";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ListItem from "./ListItem.js";
 import type { IAccessibleListItem } from "./ListItem.js";

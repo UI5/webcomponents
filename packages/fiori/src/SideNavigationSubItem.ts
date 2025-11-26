@@ -1,5 +1,4 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { customElement, jsxRenderer } from "@ui5/webcomponents-base";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import SideNavigationSubItemTemplate from "./SideNavigationSubItemTemplate.js";
 
@@ -25,7 +24,7 @@ import SideNavigationSubItemCss from "./generated/themes/SideNavigationSubItem.c
  */
 @customElement({
 	tag: "ui5-side-navigation-sub-item",
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	template: SideNavigationSubItemTemplate,
 	styles: SideNavigationSubItemCss,
 })

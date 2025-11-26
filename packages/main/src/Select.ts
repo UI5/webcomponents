@@ -1,42 +1,12 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import {
-	isSpace,
-	isUp,
-	isDown,
-	isEnter,
-	isEscape,
-	isHome,
-	isEnd,
-	isShow,
-	isTabNext,
-	isTabPrevious,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import {
-	getEffectiveAriaLabelText,
-	getAssociatedLabelForTexts,
-	registerUI5Element,
-	deregisterUI5Element,
-	getAllAccessibleDescriptionRefTexts,
-	getEffectiveAriaDescriptionText,
-} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import SelectTextSeparator from "./types/SelectTextSeparator.js";
+import UI5Element, { customElement, property, eventStrict as event, slot, i18n, jsxRenderer, Keys, announce, AccessibilityTextsHelper, Device, CustomElementsScopeUtils } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type SelectTextSeparator from "./types/SelectTextSeparator.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
-import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import List from "./List.js";
 import type { ListItemClickEventDetail } from "./List.js";
@@ -69,6 +39,29 @@ import selectCss from "./generated/themes/Select.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
 import SelectPopoverCss from "./generated/themes/SelectPopover.css.js";
+
+const {
+	isSpace,
+	isUp,
+	isDown,
+	isEnter,
+	isEscape,
+	isHome,
+	isEnd,
+	isShow,
+	isTabNext,
+	isTabPrevious,
+} = Keys;
+const {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	registerUI5Element,
+	deregisterUI5Element,
+	getAllAccessibleDescriptionRefTexts,
+	getEffectiveAriaDescriptionText,
+} = AccessibilityTextsHelper;
+const { isPhone } = Device;
+const { getScopedVarName } = CustomElementsScopeUtils;
 
 /**
  * Interface for components that may be slotted inside `ui5-select` as options
@@ -648,11 +641,11 @@ class Select extends UI5Element implements IFormInputElement {
 
 	get _separatorSymbol(): string {
 		switch (this.textSeparator) {
-		case SelectTextSeparator.Bullet:
+		case "Bullet":
 			return "·"; // Middle dot (U+00B7)
-		case SelectTextSeparator.VerticalLine:
+		case "VerticalLine":
 			return "|"; // Vertical line (U+007C)
-		case SelectTextSeparator.Dash:
+		case "Dash":
 		default:
 			return "–"; // En dash (U+2013)
 		}
@@ -984,19 +977,19 @@ class Select extends UI5Element implements IFormInputElement {
 
 	get valueStateTextMappings() {
 		return {
-			[ValueState.Positive]: Select.i18nBundle.getText(VALUE_STATE_SUCCESS),
-			[ValueState.Information]: Select.i18nBundle.getText(VALUE_STATE_INFORMATION),
-			[ValueState.Negative]: Select.i18nBundle.getText(VALUE_STATE_ERROR),
-			[ValueState.Critical]: Select.i18nBundle.getText(VALUE_STATE_WARNING),
+			["Positive"]: Select.i18nBundle.getText(VALUE_STATE_SUCCESS),
+			["Information"]: Select.i18nBundle.getText(VALUE_STATE_INFORMATION),
+			["Negative"]: Select.i18nBundle.getText(VALUE_STATE_ERROR),
+			["Critical"]: Select.i18nBundle.getText(VALUE_STATE_WARNING),
 		};
 	}
 
 	get valueStateTypeMappings() {
 		return {
-			[ValueState.Positive]: Select.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
-			[ValueState.Information]: Select.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
-			[ValueState.Negative]: Select.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
-			[ValueState.Critical]: Select.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
+			["Positive"]: Select.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
+			["Information"]: Select.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
+			["Negative"]: Select.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
+			["Critical"]: Select.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
 		};
 	}
 
@@ -1013,15 +1006,15 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get valueStateDefaultText() {
-		return this.valueState !== ValueState.None ? this.valueStateTextMappings[this.valueState] : "";
+		return this.valueState !== "None" ? this.valueStateTextMappings[this.valueState] : "";
 	}
 
 	get valueStateTypeText() {
-		return this.valueState !== ValueState.None ? this.valueStateTypeMappings[this.valueState] : "";
+		return this.valueState !== "None" ? this.valueStateTypeMappings[this.valueState] : "";
 	}
 
 	get hasValueState() {
-		return this.valueState !== ValueState.None;
+		return this.valueState !== "None";
 	}
 
 	get valueStateTextId() {
@@ -1061,7 +1054,7 @@ class Select extends UI5Element implements IFormInputElement {
 			Information: "information",
 		};
 
-		return this.valueState !== ValueState.None ? iconPerValueState[this.valueState] : "";
+		return this.valueState !== "None" ? iconPerValueState[this.valueState] : "";
 	}
 
 	get iconsCount(): number {
@@ -1073,10 +1066,10 @@ class Select extends UI5Element implements IFormInputElement {
 			popoverValueState: {
 				"ui5-valuestatemessage-root": true,
 				"ui5-valuestatemessage-header": !this._isPhone,
-				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
-				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
-				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
-				"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
+				"ui5-valuestatemessage--success": this.valueState === "Positive",
+				"ui5-valuestatemessage--error": this.valueState === "Negative",
+				"ui5-valuestatemessage--warning": this.valueState === "Critical",
+				"ui5-valuestatemessage--information": this.valueState === "Information",
 			},
 			popover: {
 				"ui5-select-popover-valuestate": this.hasValueState,
@@ -1109,7 +1102,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get hasValueStateText() {
-		return this.hasValueState && this.valueState !== ValueState.Positive;
+		return this.hasValueState && this.valueState !== "Positive";
 	}
 
 	get shouldOpenValueStateMessagePopover() {
@@ -1133,7 +1126,7 @@ class Select extends UI5Element implements IFormInputElement {
 		if (this.focused && this._currentlySelectedOption) {
 			text = `${this._currentlySelectedOption.textContent as string} ${this._isPickerOpen ? itemPositionText : ""}`;
 
-			announce(text, InvisibleMessageMode.Polite);
+			announce(text, "Polite");
 		}
 	}
 

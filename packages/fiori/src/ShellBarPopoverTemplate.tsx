@@ -1,6 +1,5 @@
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
-import PopoverHorizontalAlign from "@ui5/webcomponents/dist/types/PopoverHorizontalAlign.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBar from "./ShellBar.js";
 
@@ -22,7 +21,7 @@ export default function PopoversTemplate(this: ShellBar) {
 			<Popover class="ui5-shellbar-overflow-popover"
 				placement="Bottom"
 				preventInitialFocus={true}
-				horizontalAlign={PopoverHorizontalAlign.End}
+				horizontalAlign={"End"}
 				hideArrow={true}
 				onBeforeOpen={this._overflowPopoverBeforeOpen}
 				onClose={this._overflowPopoverAfterClose}

@@ -1,18 +1,19 @@
+import { customElement, Keys, getActiveElement } from "@ui5/webcomponents-base";
 import List from "@ui5/webcomponents/dist/List.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
+import type NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import NotificationListGroupItem from "./NotificationListGroupItem.js";
-import {
+
+import type NotificationListItemBase from "./NotificationListItemBase.js";
+
+const {
 	isDown,
 	isUp,
 	isLeft,
 	isRight,
 	isHome,
 	isEnd,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import type NotificationListItemBase from "./NotificationListItemBase.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+} = Keys;
 
 /**
  * @class
@@ -27,7 +28,7 @@ class NotificationListInternal extends List {
 	constructor() {
 		super();
 
-		this._itemNavigation._navigationMode = NavigationMode.Auto;
+		this._itemNavigation._navigationMode = "Auto";
 	}
 
 	_allNavigationItems: Array<HTMLElement> = [];

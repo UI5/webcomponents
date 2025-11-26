@@ -1,7 +1,7 @@
 import UI5Element, { customElement, property, i18n, jsxRenderer, Device, willShowContent, Keys } from "@ui5/webcomponents-base";
 import type { I18nBundle, Timeout } from "@ui5/webcomponents-base";
 import type BusyIndicatorSize from "./types/BusyIndicatorSize.js";
-import BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
+import type BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
 
 // Template
 import BusyIndicatorTemplate from "./BusyIndicatorTemplate.js";
@@ -155,8 +155,8 @@ class BusyIndicator extends UI5Element {
 
 	get textPosition() {
 		return {
-			top: this.text && this.textPlacement === BusyIndicatorTextPlacement.Top,
-			bottom: this.text && this.textPlacement === BusyIndicatorTextPlacement.Bottom,
+			top: this.text && this.textPlacement === "Top",
+			bottom: this.text && this.textPlacement === "Bottom",
 		};
 	}
 

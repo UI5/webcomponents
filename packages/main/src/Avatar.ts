@@ -1,18 +1,8 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, i18n, jsxRenderer, ResizeHandler, renderFinished, Keys, Device } from "@ui5/webcomponents-base";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IAvatarGroupItem } from "./AvatarGroup.js";
 // Template
 import AvatarTemplate from "./AvatarTemplate.js";
@@ -23,12 +13,15 @@ import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
 import AvatarCss from "./generated/themes/Avatar.css.js";
 
 import type Icon from "./Icon.js";
-import AvatarSize from "./types/AvatarSize.js";
+import type AvatarSize from "./types/AvatarSize.js";
 import type AvatarShape from "./types/AvatarShape.js";
 import type AvatarColorScheme from "./types/AvatarColorScheme.js";
 
 // Icon
 import "@ui5/webcomponents-icons/dist/employee.js";
+
+const { isEnter, isSpace } = Keys;
+const { isDesktop } = Device;
 
 type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
 
@@ -280,7 +273,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 */
 	get effectiveSize(): AvatarSize {
 		// we read the attribute, because the "size" property will always have a default value
-		return this.getAttribute("size") as AvatarSize || AvatarSize.S;
+		return this.getAttribute("size") as AvatarSize || "S";
 	}
 
 	/**

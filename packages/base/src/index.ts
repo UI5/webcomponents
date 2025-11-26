@@ -124,6 +124,44 @@ export * as Icons from "./asset-registries/Icons.js";
 export { default as executeTemplate } from "./renderer/executeTemplate.js";
 export * as CustomElementsScopeUtils from "./CustomElementsScopeUtils.js";
 
+export { default as getActiveElement } from "./util/getActiveElement.js";
+export { default as getParentElement } from "./util/getParentElement.js";
+export { getTabbableElements } from "./util/TabbableElements.js";
+export { getFirstFocusableElement } from "./util/FocusableElements.js";
+export { getLastFocusableElement } from "./util/FocusableElements.js";
+export { default as DragRegistry } from "./util/dragAndDrop/DragRegistry.js";
+export { default as DOMReferenceConverter } from "./converters/DOMReference.js";
+export { default as clamp } from "./util/clamp.js";
+export * as PopupUtils from "./util/PopupUtils.js";
+export { instanceOfUI5Element } from "./UI5Element.js";
+export * as ManagedStyles from "./ManagedStyles.js";
+export { default as getSharedResource } from "./getSharedResource.js";
+export { getFeature, registerFeature } from "./FeaturesRegistry.js";
+export { default as isEventMarked } from "./util/isEventMarked.js";
+export { default as getNormalizedTarget } from "./util/getNormalizedTarget.js";
+export { default as isElementInView } from "./util/isElementInView.js";
+
+// TODO: barrel?
+export { findClosestPosition } from "./util/dragAndDrop/findClosestPosition.js";
+export { findClosestPositionsByKey } from "./util/dragAndDrop/findClosestPosition.js";
+export { isMovingKey } from "./util/dragAndDrop/findClosestPosition.js";
+
+export { default as handleDragOver } from "./util/dragAndDrop/handleDragOver.js";
+export { default as handleDrop } from "./util/dragAndDrop/handleDrop.js";
+export { default as longDragOverHandler } from "./util/dragAndDrop/longDragOverHandler.js";
+
+export { default as debounce } from "./util/debounce.js";
+export { default as throttle } from "./util/throttle.js";
+export * as Location from "./Location.js";
+export { default as announce } from "./util/InvisibleMessage.js";
+export { default as arraysAreEqual } from "./util/arraysAreEqual.js";
+export * as valueStateNavigation from "./util/valueStateNavigation.js";
+// @ts-expect-error
+export { default as encodeXML } from "./sap/base/security/encodeXML.js";
+export * as Caret from "./util/Caret.js";
+export { default as generateHighlightedMarkup } from "./util/generateHighlightedMarkup.js";
+export * as Illustrations from "./asset-registries/Illustrations.js";
+
 export default UI5Element;
 export {
 	// drag and drop

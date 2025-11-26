@@ -1,13 +1,13 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import { customElement, property, Keys, Device } from "@ui5/webcomponents-base";
 
-import { isSpaceShift } from "@ui5/webcomponents-base/dist/Keys.js";
-import { isSafari } from "@ui5/webcomponents-base/dist/Device.js";
 import Button from "./Button.js";
 import ToggleButtonTemplate from "./ToggleButtonTemplate.js";
 
 // Styles
 import toggleBtnCss from "./generated/themes/ToggleButton.css.js";
+
+const { isSpaceShift } = Keys;
+const { isSafari } = Device;
 
 /**
  * @class

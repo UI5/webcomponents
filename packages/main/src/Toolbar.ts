@@ -1,19 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { slot, property, eventStrict as event, customElement, jsxRenderer, renderFinished, ResizeHandler, AccessibilityTextsHelper, getActiveElement, i18n, CustomElementsScopeUtils } from "@ui5/webcomponents-base";
 import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 
 import {
 	TOOLBAR_OVERFLOW_BUTTON_ARIA_LABEL,
@@ -27,14 +17,16 @@ import ToolbarPopoverCss from "./generated/themes/ToolbarPopover.css.js";
 
 import type ToolbarAlign from "./types/ToolbarAlign.js";
 import type ToolbarDesign from "./types/ToolbarDesign.js";
-import ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
+import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 import type ToolbarItem from "./ToolbarItem.js";
 import type ToolbarSeparator from "./ToolbarSeparator.js";
 
 import type Button from "./Button.js";
 import type Popover from "./Popover.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
+const { getScopedVarName } = CustomElementsScopeUtils;
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
@@ -196,11 +188,11 @@ class Toolbar extends UI5Element {
 	}
 
 	get alwaysOverflowItems() {
-		return this.items.filter((item: ToolbarItem) => item.overflowPriority === ToolbarItemOverflowBehavior.AlwaysOverflow);
+		return this.items.filter((item: ToolbarItem) => item.overflowPriority === "AlwaysOverflow");
 	}
 
 	get movableItems() {
-		return this.items.filter((item: ToolbarItem) => item.overflowPriority !== ToolbarItemOverflowBehavior.AlwaysOverflow && item.overflowPriority !== ToolbarItemOverflowBehavior.NeverOverflow);
+		return this.items.filter((item: ToolbarItem) => item.overflowPriority !== "AlwaysOverflow" && item.overflowPriority !== "NeverOverflow");
 	}
 
 	get overflowItems() {
@@ -374,7 +366,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach((item: ToolbarItem) => {
 			const itemWidth = this.getItemWidth(item);
 			totalWidth += itemWidth;
-			if (item.overflowPriority === ToolbarItemOverflowBehavior.NeverOverflow) {
+			if (item.overflowPriority === "NeverOverflow") {
 				minWidth += itemWidth;
 			}
 			this.ITEMS_WIDTH_MAP.set(item._id, itemWidth);

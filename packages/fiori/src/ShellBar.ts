@@ -1,22 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import {
-	isSpace,
-	isEnter,
-	isLeft,
-	isRight,
-	isHome,
-	isEnd,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
+import UI5Element, { property, slot, customElement, eventStrict as event, i18n, jsxRenderer, ResizeHandler, renderFinished, getActiveElement, throttle, CustomElementsScopeUtils, getTabbableElements, Keys, Device, AccessibilityTextsHelper } from "@ui5/webcomponents-base";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -28,7 +10,6 @@ import Menu from "@ui5/webcomponents/dist/Menu.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isDesktop, isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
 import da from "@ui5/webcomponents-icons/dist/da.js";
 import bell from "@ui5/webcomponents-icons/dist/bell.js";
@@ -41,9 +22,6 @@ import type {
 	UI5CustomEvent,
 } from "@ui5/webcomponents-base";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
-import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import type ShellBarItem from "./ShellBarItem.js";
 import type { ShellBarItemAccessibilityAttributes } from "./ShellBarItem.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
@@ -73,6 +51,18 @@ import {
 	SHELLBAR_PRODUCT_SWITCH_BTN,
 	SHELLBAR_IMAGE_BTN,
 } from "./generated/i18n/i18n-defaults.js";
+
+const {
+	isSpace,
+	isEnter,
+	isLeft,
+	isRight,
+	isHome,
+	isEnd,
+}  = Keys;
+const { isDesktop, isPhone } = Device;
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
+const { getScopedVarName } = CustomElementsScopeUtils;
 
 type ShellBarLogoAccessibilityAttributes = {
 	role?: Extract<AriaRole, "button" | "link">,

@@ -1,12 +1,26 @@
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import { property, slot, eventStrict as event, customElement, i18n, Device, Keys, jsxRenderer } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type Popover from "@ui5/webcomponents/dist/Popover.js";
 import type List from "@ui5/webcomponents/dist/List.js";
-import {
+
+import SearchTemplate from "./SearchTemplate.js";
+import SearchCss from "./generated/themes/Search.css.js";
+import SearchField from "./SearchField.js";
+import { StartsWith } from "@ui5/webcomponents/dist/Filters.js";
+import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type SearchItem from "./SearchItem.js";
+import type Button from "@ui5/webcomponents/dist/Button.js";
+import type IllustratedMessage from "./IllustratedMessage.js";
+import type SearchItemGroup from "./SearchItemGroup.js";
+import type SearchMessageArea from "./SearchMessageArea.js";
+import { SEARCH_CANCEL_BUTTON, SEARCH_SUGGESTIONS } from "./generated/i18n/i18n-defaults.js";
+import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
+import type Input from "@ui5/webcomponents/dist/Input.js";
+import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
+import type Select from "@ui5/webcomponents/dist/Select.js";
+
+const { isPhone } = Device;
+const {
 	isUp,
 	isDown,
 	isEnter,
@@ -19,25 +33,7 @@ import {
 	isHome,
 	isEnd,
 	isTabPrevious,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-
-import SearchTemplate from "./SearchTemplate.js";
-import SearchCss from "./generated/themes/Search.css.js";
-import SearchField from "./SearchField.js";
-import { StartsWith } from "@ui5/webcomponents/dist/Filters.js";
-import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type SearchItem from "./SearchItem.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type Button from "@ui5/webcomponents/dist/Button.js";
-import type IllustratedMessage from "./IllustratedMessage.js";
-import type SearchItemGroup from "./SearchItemGroup.js";
-import type SearchMessageArea from "./SearchMessageArea.js";
-import { SEARCH_CANCEL_BUTTON, SEARCH_SUGGESTIONS } from "./generated/i18n/i18n-defaults.js";
-import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
-import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
-import type Input from "@ui5/webcomponents/dist/Input.js";
-import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
-import type Select from "@ui5/webcomponents/dist/Select.js";
+} = Keys;
 
 interface ISearchSuggestionItem extends UI5Element {
 	selected: boolean;

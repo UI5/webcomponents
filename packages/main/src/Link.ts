@@ -1,19 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, eventStrict as event, property, jsxRenderer, Keys, AccessibilityTextsHelper, i18n, Device, toLowercaseEnumValue, Location } from "@ui5/webcomponents-base";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
-import { getLocationHostname, getLocationPort, getLocationProtocol } from "@ui5/webcomponents-base/dist/Location.js";
-import LinkDesign from "./types/LinkDesign.js";
+import type LinkDesign from "./types/LinkDesign.js";
 import type WrappingType from "./types/WrappingType.js";
 import type LinkAccessibleRole from "./types/LinkAccessibleRole.js";
 import type InteractiveAreaSize from "./types/InteractiveAreaSize.js";
@@ -24,6 +14,11 @@ import { LINK_SUBTLE, LINK_EMPHASIZED } from "./generated/i18n/i18n-defaults.js"
 
 // Styles
 import linkCss from "./generated/themes/Link.css.js";
+
+const { isSpace, isEnter } = Keys;
+const { isDesktop } = Device;
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
+const { getLocationHostname, getLocationPort, getLocationProtocol } = Location;
 
 type LinkClickEventDetail = {
 	altKey: boolean;
@@ -319,7 +314,7 @@ class Link extends UI5Element implements ITabbable {
 	}
 
 	get hasLinkType() {
-		return this.design !== LinkDesign.Default;
+		return this.design !== "Default";
 	}
 
 	static typeTextMappings(): Record<string, I18nText> {

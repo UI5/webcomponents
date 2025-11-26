@@ -1,46 +1,12 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, eventStrict as event, slot, i18n, ResizeHandler, jsxRenderer, renderFinished, Keys, debounce, findClosestPositionsByKey, MediaRange, isElementInView, getNormalizedTarget, AccessibilityTextsHelper, toLowercaseEnumValue, ItemNavigation } from "@ui5/webcomponents-base";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import {
-	isTabNext,
-	isSpace,
-	isEnter,
-	isTabPrevious,
-	isCtrl,
-	isEnd,
-	isHome,
-	isDown,
-	isUp,
-} from "@ui5/webcomponents-base/dist/Keys.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import type { MoveEventDetail } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import { findClosestPositionsByKey } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
-import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
-import {
-	getAllAccessibleDescriptionRefTexts,
-	getEffectiveAriaDescriptionText,
-	getEffectiveAriaLabelText,
-	registerUI5Element,
-	deregisterUI5Element,
-	getAllAccessibleNameRefTexts,
-} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
-import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
-import ListSelectionMode from "./types/ListSelectionMode.js";
-import ListGrowingMode from "./types/ListGrowingMode.js";
-import ListAccessibleRole from "./types/ListAccessibleRole.js";
+import type ListSelectionMode from "./types/ListSelectionMode.js";
+import type ListGrowingMode from "./types/ListGrowingMode.js";
+import type ListAccessibleRole from "./types/ListAccessibleRole.js";
 import type ListItemBase from "./ListItemBase.js";
 import type {
 	ListItemBasePressEventDetail,
@@ -50,8 +16,7 @@ import type ListItem from "./ListItem.js";
 import type {
 	SelectionRequestEventDetail,
 } from "./ListItem.js";
-import ListSeparator from "./types/ListSeparator.js";
-import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import type ListSeparator from "./types/ListSeparator.js";
 
 // Template
 import ListTemplate from "./ListTemplate.js";
@@ -71,6 +36,27 @@ import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+
+const {
+	isTabNext,
+	isSpace,
+	isEnter,
+	isTabPrevious,
+	isCtrl,
+	isEnd,
+	isHome,
+	isDown,
+	isUp,
+} = Keys;
+
+const {
+	getAllAccessibleDescriptionRefTexts,
+	getEffectiveAriaDescriptionText,
+	getEffectiveAriaLabelText,
+	registerUI5Element,
+	deregisterUI5Element,
+	getAllAccessibleNameRefTexts,
+} = AccessibilityTextsHelper;
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -553,7 +539,7 @@ class List extends UI5Element {
 
 		this._itemNavigation = new ItemNavigation(this, {
 			skipItemsSize: PAGE_UP_DOWN_SIZE, // PAGE_UP and PAGE_DOWN will skip trough 10 items
-			navigationMode: NavigationMode.Vertical,
+			navigationMode: "Vertical",
 			getItemsCallback: () => this.getEnabledItems(),
 		});
 
@@ -686,20 +672,20 @@ class List extends UI5Element {
 	}
 
 	get isDelete() {
-		return this.selectionMode === ListSelectionMode.Delete;
+		return this.selectionMode === "Delete";
 	}
 
 	get isSingleSelect() {
 		return [
-			ListSelectionMode.Single,
-			ListSelectionMode.SingleStart,
-			ListSelectionMode.SingleEnd,
-			ListSelectionMode.SingleAuto,
+			"Single",
+			"SingleStart",
+			"SingleEnd",
+			"SingleAuto",
 		].includes(this.selectionMode as ListSelectionMode);
 	}
 
 	get isMultiple() {
-		return this.selectionMode === ListSelectionMode.Multiple;
+		return this.selectionMode === "Multiple";
 	}
 
 	get ariaLabelledBy() {
@@ -751,9 +737,9 @@ class List extends UI5Element {
 		let description = "";
 
 		if (this._groupCount > 0) {
-			if (this.accessibleRole === ListAccessibleRole.List) {
+			if (this.accessibleRole === "List") {
 				description = List.i18nBundle.getText(LIST_ROLE_LIST_GROUP_DESCRIPTION, this._groupCount, this._groupItemCount);
-			} else if (this.accessibleRole === ListAccessibleRole.ListBox) {
+			} else if (this.accessibleRole === "ListBox") {
 				description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
 			}
 		}
@@ -778,15 +764,15 @@ class List extends UI5Element {
 	}
 
 	get grows() {
-		return this.growing !== ListGrowingMode.None;
+		return this.growing !== "None";
 	}
 
 	get growsOnScroll() {
-		return this.growing === ListGrowingMode.Scroll;
+		return this.growing === "Scroll";
 	}
 
 	get growsWithButton() {
-		return this.growing === ListGrowingMode.Button;
+		return this.growing === "Button";
 	}
 
 	get _growingButtonText(): string {
@@ -810,8 +796,8 @@ class List extends UI5Element {
 
 		slottedItems.forEach((item, key) => {
 			const isLastChild = key === slottedItems.length - 1;
-			const showBottomBorder = this.separators === ListSeparator.All
-				|| (this.separators === ListSeparator.Inner && !isLastChild);
+			const showBottomBorder = this.separators === "All"
+				|| (this.separators === "Inner" && !isLastChild);
 
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
@@ -867,7 +853,7 @@ class List extends UI5Element {
 		const previouslySelectedItems = this.getSelectedItems();
 		let selectionChange = false;
 
-		if (this.selectionMode !== ListSelectionMode.None && this[`handle${this.selectionMode}`]) {
+		if (this.selectionMode !== "None" && this[`handle${this.selectionMode}`]) {
 			selectionChange = this[`handle${this.selectionMode}`](e.detail.item, !!e.detail.selected);
 		}
 
@@ -1257,7 +1243,7 @@ class List extends UI5Element {
 		this._itemNavigation.setCurrentItem(target);
 		this.fireDecoratorEvent("item-focused", { item: target });
 
-		if (this.selectionMode === ListSelectionMode.SingleAuto) {
+		if (this.selectionMode === "SingleAuto") {
 			const detail: SelectionRequestEventDetail = {
 				item: target,
 				selectionComponentPressed: false,
@@ -1276,7 +1262,7 @@ class List extends UI5Element {
 			return;
 		}
 
-		if (this.selectionMode !== ListSelectionMode.Delete) {
+		if (this.selectionMode !== "Delete") {
 			const detail: SelectionRequestEventDetail = {
 				item: pressedItem,
 				selectionComponentPressed: false,

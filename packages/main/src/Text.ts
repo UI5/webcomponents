@@ -1,6 +1,6 @@
 import UI5Element, { customElement, property, slot, jsxRenderer, i18n, willShowContent, CustomElementsScopeUtils } from "@ui5/webcomponents-base";
 import type { I18nBundle } from "@ui5/webcomponents-base";
-import TextEmptyIndicatorMode from "./types/TextEmptyIndicatorMode.js";
+import type TextEmptyIndicatorMode from "./types/TextEmptyIndicatorMode.js";
 // Template
 import TextTemplate2 from "./TextTemplate.js";
 
@@ -82,7 +82,7 @@ class Text extends UI5Element {
 	}
 
 	get _renderEmptyIndicator() {
-		return !this.hasText && this.emptyIndicatorMode === TextEmptyIndicatorMode.On;
+		return !this.hasText && this.emptyIndicatorMode === "On";
 	}
 
 	get _emptyIndicatorAriaLabel() {

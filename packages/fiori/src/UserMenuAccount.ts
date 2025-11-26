@@ -1,5 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
+import UI5Element, { customElement, property } from "@ui5/webcomponents-base";
 
 @customElement({
 	tag: "ui5-user-menu-account",

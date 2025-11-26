@@ -2,7 +2,7 @@ import UI5Element, { jsxRenderer, customElement, eventStrict as event, property,
 import type { I18nText, IconData, UnsafeIconData } from "@ui5/webcomponents-base";
 import IconTemplate from "./IconTemplate.js";
 import type IconDesign from "./types/IconDesign.js";
-import IconMode from "./types/IconMode.js";
+import type IconMode from "./types/IconMode.js";
 
 // Styles
 import iconCss from "./generated/themes/Icon.css.js";
@@ -210,7 +210,7 @@ class Icon extends UI5Element implements IIcon {
 	customTemplateAsString?: string;
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.mode !== IconMode.Interactive) {
+		if (this.mode !== "Interactive") {
 			return;
 		}
 
@@ -224,7 +224,7 @@ class Icon extends UI5Element implements IIcon {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this.mode === IconMode.Interactive && isSpace(e)) {
+		if (this.mode === "Interactive" && isSpace(e)) {
 			this.fireDecoratorEvent("click");
 		}
 	}
@@ -237,18 +237,18 @@ class Icon extends UI5Element implements IIcon {
 	}
 
 	get effectiveAriaHidden() {
-		return this.mode === IconMode.Decorative ? "true" : undefined;
+		return this.mode === "Decorative" ? "true" : undefined;
 	}
 
 	get _tabIndex() {
-		return this.mode === IconMode.Interactive ? 0 : undefined;
+		return this.mode === "Interactive" ? 0 : undefined;
 	}
 
 	get effectiveAccessibleRole() {
 		switch (this.mode) {
-		case IconMode.Interactive:
+		case "Interactive":
 			return "button";
-		case IconMode.Decorative:
+		case "Decorative":
 			return "presentation";
 		default:
 			return "img";

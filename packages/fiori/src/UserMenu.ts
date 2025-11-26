@@ -1,10 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import {
-	customElement, slot, eventStrict as event, property,
-} from "@ui5/webcomponents-base/dist/decorators.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
+import UI5Element, { customElement, slot, eventStrict as event, property, jsxRenderer, query, DOMReferenceConverter, i18n, Device } from "@ui5/webcomponents-base";
 import type Title from "@ui5/webcomponents/dist/Title.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -12,9 +6,7 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { PopupScrollEventDetail } from "@ui5/webcomponents/dist/Popup.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
 import UserMenuTemplate from "./UserMenuTemplate.js";
@@ -33,6 +25,8 @@ import {
 	USER_MENU_CURRENT_INFORMATION_TXT,
 	USER_MENU_ACTIONS_TXT,
 } from "./generated/i18n/i18n-defaults.js";
+
+const { isPhone } = Device;
 
 type UserMenuItemClickEventDetail = {
 	item: UserMenuItem;

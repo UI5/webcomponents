@@ -1,10 +1,10 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import {
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
+import UI5Element, { property, Device } from "@ui5/webcomponents-base";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type SideNavigation from "./SideNavigation.js";
+
+const {
+	isDesktop,
+} = Device;
 
 type SideNavigationItemClickEventDetail = {
 	altKey: boolean;
