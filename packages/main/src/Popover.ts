@@ -170,7 +170,7 @@ class Popover extends Popup {
 
 	/**
 	 * Determines whether the component is resizable.
-	 * **Note:** This property is effective only on Desktop
+	 * **Note:** This property is effective only on desktop devices.
 	 * @default false
 	 * @public
 	 * @since 2.17.0
