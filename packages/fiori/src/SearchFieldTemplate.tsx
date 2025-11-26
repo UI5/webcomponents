@@ -5,7 +5,6 @@ import Select from "@ui5/webcomponents/dist/Select.js";
 import type SearchField from "./SearchField.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
-import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 
 export type SearchFieldTemplateOptions = {
 	/**
@@ -20,7 +19,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 			<Button
 				class="ui5-shell-search-field-button"
 				icon={search}
-				design={ButtonDesign.Transparent}
+				design={"Transparent"}
 				data-sap-focus-ref
 				onClick={this._handleSearchIconPress}
 				tooltip={this._effectiveIconTooltip}

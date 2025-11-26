@@ -1,8 +1,5 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import TitleLevel from "./types/TitleLevel.js";
+import UI5Element, { jsxRenderer, customElement, property } from "@ui5/webcomponents-base";
+import type TitleLevel from "./types/TitleLevel.js";
 import type WrappingType from "./types/WrappingType.js";
 
 // Template
@@ -68,27 +65,27 @@ class Title extends UI5Element {
 	size: `${TitleLevel}` = "H5";
 
 	get h1() {
-		return this.level === TitleLevel.H1;
+		return this.level === "H1";
 	}
 
 	get h2() {
-		return this.level === TitleLevel.H2;
+		return this.level === "H2";
 	}
 
 	get h3() {
-		return this.level === TitleLevel.H3;
+		return this.level === "H3";
 	}
 
 	get h4() {
-		return this.level === TitleLevel.H4;
+		return this.level === "H4";
 	}
 
 	get h5() {
-		return this.level === TitleLevel.H5;
+		return this.level === "H5";
 	}
 
 	get h6() {
-		return this.level === TitleLevel.H6;
+		return this.level === "H6";
 	}
 }
 

@@ -1,17 +1,8 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import UI5Element, { customElement, property, slot, i18n, ResizeHandler, jsxRenderer, executeTemplate, AccessibilityTextsHelper, Illustrations } from "@ui5/webcomponents-base";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getIllustrationDataSync, getIllustrationData } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
-import IllustrationMessageDesign from "./types/IllustrationMessageDesign.js";
+import type IllustrationMessageDesign from "./types/IllustrationMessageDesign.js";
 import IllustrationMessageType from "./types/IllustrationMessageType.js";
 import "./illustrations/BeforeSearch.js";
 
@@ -20,6 +11,9 @@ import IllustratedMessageCss from "./generated/themes/IllustratedMessage.css.js"
 
 // Template
 import IllustratedMessageTemplate from "./IllustratedMessageTemplate.js";
+
+const { getIllustrationDataSync, getIllustrationData } = Illustrations;
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
 
 const getEffectiveIllustrationName = (name: string): string => {
 	if (name.startsWith("Tnt")) {
@@ -324,9 +318,9 @@ class IllustratedMessage extends UI5Element {
 		let illustrationData = getIllustrationDataSync(effectiveName);
 
 		if (this.hasAttribute("name") && !this.isValidIllustration(effectiveName)) {
-			effectiveName = getEffectiveIllustrationName(IllustrationMessageType.BeforeSearch);
+			effectiveName = getEffectiveIllustrationName("BeforeSearch");
 			// eslint-disable-next-line
-			console.warn(`The illustration "${effectiveName!}" does not exist. The default illustration "${IllustrationMessageType.BeforeSearch}" is loaded instead.`);
+			console.warn(`The illustration "${effectiveName!}" does not exist. The default illustration "${"BeforeSearch"}" is loaded instead.`);
 		}
 
 		if (illustrationData === undefined) {
@@ -364,7 +358,7 @@ class IllustratedMessage extends UI5Element {
 		this.illustrationTitle = IllustratedMessage.i18nBundle.getText(illustrationData!.title);
 		this.illustrationSubtitle = IllustratedMessage.i18nBundle.getText(illustrationData!.subtitle);
 
-		if (this.design !== IllustrationMessageDesign.Auto) {
+		if (this.design !== "Auto") {
 			this._handleCustomSize();
 		}
 	}
@@ -378,7 +372,7 @@ class IllustratedMessage extends UI5Element {
 	}
 
 	handleResize() {
-		if (this.design !== IllustrationMessageDesign.Auto) {
+		if (this.design !== "Auto") {
 			this._adjustHeightToFitContainer();
 			return;
 		}
@@ -470,25 +464,25 @@ class IllustratedMessage extends UI5Element {
 	 */
 	_handleCustomSize() {
 		switch (this.design) {
-		case IllustrationMessageDesign.Base:
+		case "Base":
 			this.media = IllustratedMessage.MEDIA.BASE;
 			return;
-		case IllustrationMessageDesign.Dot:
+		case "Dot":
 			this.media = IllustratedMessage.MEDIA.DOT;
 			return;
-		case IllustrationMessageDesign.Spot:
+		case "Spot":
 			this.media = IllustratedMessage.MEDIA.SPOT;
 			return;
-		case IllustrationMessageDesign.Dialog:
+		case "Dialog":
 			this.media = IllustratedMessage.MEDIA.DIALOG;
 			return;
-		case IllustrationMessageDesign.ExtraSmall:
+		case "ExtraSmall":
 			this.media = IllustratedMessage.MEDIA.DOT;
 			return;
-		case IllustrationMessageDesign.Small:
+		case "Small":
 			this.media = IllustratedMessage.MEDIA.SPOT;
 			return;
-		case IllustrationMessageDesign.Medium:
+		case "Medium":
 			this.media = IllustratedMessage.MEDIA.DIALOG;
 			return;
 		default:

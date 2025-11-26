@@ -1,41 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { customElement, eventStrict as event, property, slot, jsxRenderer, ResizeHandler, renderFinished, slideDown, slideUp, DragRegistry, handleDragOver, handleDrop,longDragOverHandler, arraysAreEqual, isMovingKey, findClosestPosition, findClosestPositionsByKey, CustomElementsScopeUtils, ItemNavigation, Device, Keys, MediaRange, i18n,  } from "@ui5/webcomponents-base";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
-import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
-import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import {
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import {
-	isSpace,
-	isEnter,
-	isDown,
-	isRight,
-	isLeft,
-	isUp,
-	isCtrl,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-up.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
-import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
-import { findClosestPosition, findClosestPositionsByKey, isMovingKey } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import handleDragOver from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDragOver.js";
-import handleDrop from "@ui5/webcomponents-base/dist/util/dragAndDrop/handleDrop.js";
-import longDragOverHandler from "@ui5/webcomponents-base/dist/util/dragAndDrop/longDragOverHandler.js";
-import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import type MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import {
 	TABCONTAINER_PREVIOUS_ICON_ACC_NAME,
 	TABCONTAINER_NEXT_ICON_ACC_NAME,
@@ -52,11 +20,11 @@ import type { TabInStrip, TabInOverflow } from "./Tab.js";
 import type { TabSeparatorInOverflow, TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import TabContainerTabsPlacement from "./types/TabContainerTabsPlacement.js";
-import SemanticColor from "./types/SemanticColor.js";
+import type TabContainerTabsPlacement from "./types/TabContainerTabsPlacement.js";
+import type SemanticColor from "./types/SemanticColor.js";
 import type BackgroundDesign from "./types/BackgroundDesign.js";
-import TabLayout from "./types/TabLayout.js";
-import OverflowMode from "./types/OverflowMode.js";
+import type TabLayout from "./types/TabLayout.js";
+import type OverflowMode from "./types/OverflowMode.js";
 import type { IButton } from "./Button.js";
 
 // Templates
@@ -65,6 +33,21 @@ import TabContainerTemplate from "./TabContainerTemplate.js";
 // Styles
 import tabContainerCss from "./generated/themes/TabContainer.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
+
+const { getScopedVarName } = CustomElementsScopeUtils;
+
+const {
+	isDesktop,
+} = Device;
+const {
+	isSpace,
+	isEnter,
+	isDown,
+	isRight,
+	isLeft,
+	isUp,
+	isCtrl,
+} = Keys;
 
 type TabContainerPopoverOwner = "start-overflow" | "end-overflow" | TabInStrip;
 
@@ -468,7 +451,7 @@ class TabContainer extends UI5Element {
 			if (!item.isSeparator) {
 				info = {
 					...info,
-					isInline: this.tabLayout === TabLayout.Inline,
+					isInline: this.tabLayout === "Inline",
 					mixedMode: this.mixedMode,
 					posinset,
 					setsize,
@@ -516,7 +499,7 @@ class TabContainer extends UI5Element {
 		const closestPosition = findClosestPosition(
 			[...this._getTabStrip().querySelectorAll<HTMLElement>(`[role="tab"]:not([hidden])`)],
 			e.clientX,
-			Orientation.Horizontal,
+			"Horizontal",
 		);
 		const overflowButton = e.target.closest<HTMLElement>("[data-ui5-stable=overflow-start],[data-ui5-stable=overflow-end]");
 		let popoverTarget = null;
@@ -528,13 +511,13 @@ class TabContainer extends UI5Element {
 			const dropTarget = (closestPosition.element as TabInStrip).realTabReference;
 
 			if (dropTarget === draggedElement) {
-				closestPosition.placements = closestPosition.placements.filter(placement => placement !== MovePlacement.On);
+				closestPosition.placements = closestPosition.placements.filter(placement => placement !== "On");
 			}
 
 			const { targetReference, placement } = handleDragOver(e, this, closestPosition, dropTarget);
 			this.dropIndicatorDOM!.targetReference = targetReference;
 			this.dropIndicatorDOM!.placement = placement;
-			if (placement === MovePlacement.On && (closestPosition.element as TabInStrip).realTabReference.items.length) {
+			if (placement === "On" && (closestPosition.element as TabInStrip).realTabReference.items.length) {
 				popoverTarget = closestPosition.element;
 			} else if (!placement) {
 				this.dropIndicatorDOM!.targetReference = null;
@@ -569,14 +552,14 @@ class TabContainer extends UI5Element {
 		let positions = findClosestPositionsByKey(headerItems, tab.getDomRefInStrip()!, e);
 
 		positions = positions.map(({ element, placement }) => {
-			while (element && (element as TabInStrip).realTabReference.hasAttribute("ui5-tab-separator") && placement === MovePlacement.Before) {
+			while (element && (element as TabInStrip).realTabReference.hasAttribute("ui5-tab-separator") && placement === "Before") {
 				element = headerItems.at(headerItems.indexOf(element as TabInStrip) - 1) as HTMLElement;
-				placement = MovePlacement.After;
+				placement = "After";
 			}
 
-			while (element && (element as TabInStrip).realTabReference.hasAttribute("ui5-tab-separator") && placement === MovePlacement.After) {
+			while (element && (element as TabInStrip).realTabReference.hasAttribute("ui5-tab-separator") && placement === "After") {
 				element = headerItems.at(headerItems.indexOf(element as TabInStrip) + 1) as HTMLElement;
-				placement = MovePlacement.Before;
+				placement = "Before";
 			}
 
 			return {
@@ -649,7 +632,7 @@ class TabContainer extends UI5Element {
 			return;
 		}
 
-		if (destination.placement === MovePlacement.On && (destinationElement.hasAttribute("ui5-tab-separator") || draggedElement === destinationElement)) {
+		if (destination.placement === "On" && (destinationElement.hasAttribute("ui5-tab-separator") || draggedElement === destinationElement)) {
 			return;
 		}
 
@@ -959,7 +942,7 @@ class TabContainer extends UI5Element {
 	_sendOverflowPresentationInfos(items: Array<ITab>) {
 		const semanticIcons = items
 			.filter((item): item is Tab => !item.isSeparator)
-			.some(tab => tab.design !== SemanticColor.Default && tab.design !== SemanticColor.Neutral);
+			.some(tab => tab.design !== "Default" && tab.design !== "Neutral");
 
 		walk(items, (item, level) => {
 			item.receiveOverflowInfo({
@@ -1275,7 +1258,7 @@ class TabContainer extends UI5Element {
 	}
 
 	get isModeStartAndEnd() {
-		return this.overflowMode === OverflowMode.StartAndEnd;
+		return this.overflowMode === "StartAndEnd";
 	}
 
 	_updateOverflowCounters() {
@@ -1475,7 +1458,7 @@ class TabContainer extends UI5Element {
 	}
 
 	get standardTabLayout() {
-		return this.tabLayout === TabLayout.Standard;
+		return this.tabLayout === "Standard";
 	}
 
 	get previousIconACCName() {
@@ -1491,7 +1474,7 @@ class TabContainer extends UI5Element {
 	}
 
 	get tabsAtTheBottom() {
-		return this.tabsPlacement === TabContainerTabsPlacement.Bottom;
+		return this.tabsPlacement === "Bottom";
 	}
 
 	get overflowMenuIcon() {

@@ -1,7 +1,5 @@
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import { customElement, property, Device } from "@ui5/webcomponents-base";
 import Search from "./Search.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ShellBarSearchTemplate from "./ShellBarSearchTemplate.js";
 import ShellBarSearchCss from "./generated/themes/ShellBarSearch.css.js";
 
@@ -10,6 +8,8 @@ import {
 	SHELLBAR_SEARCH_EXPANDED,
 	SHELLBAR_SEARCH_COLLAPSED,
 } from "./generated/i18n/i18n-defaults.js";
+
+const { isPhone } = Device;
 
 /**
  * @class

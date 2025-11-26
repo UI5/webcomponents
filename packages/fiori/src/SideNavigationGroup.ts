@@ -1,15 +1,5 @@
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import {
-	isSpace,
-	isLeft,
-	isRight,
-	isMinus,
-	isPlus,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import { customElement, property, slot, i18n, jsxRenderer, Keys } from "@ui5/webcomponents-base";
+
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import SideNavigationItemBase from "./SideNavigationItemBase.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
@@ -23,6 +13,14 @@ import {
 
 // Styles
 import SideNavigationGroupCss from "./generated/themes/SideNavigationGroup.css.js";
+
+const {
+	isSpace,
+	isLeft,
+	isRight,
+	isMinus,
+	isPlus,
+} = Keys;
 
 /**
  * @class
@@ -44,7 +42,7 @@ import SideNavigationGroupCss from "./generated/themes/SideNavigationGroup.css.j
  */
 @customElement({
 	tag: "ui5-side-navigation-group",
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	template: SideNavigationGroupTemplate,
 	styles: SideNavigationGroupCss,
 })

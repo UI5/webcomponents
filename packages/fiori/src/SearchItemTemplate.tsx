@@ -3,8 +3,8 @@ import type SearchItem from "./SearchItem.js";
 import Tag from "@ui5/webcomponents/dist/Tag.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
-import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
-import TagDesign from "@ui5/webcomponents/dist/types/TagDesign.js";
+import type ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
+import type TagDesign from "@ui5/webcomponents/dist/types/TagDesign.js";
 
 export default function SearchFieldTemplate(this: SearchItem) {
 	return (
@@ -33,7 +33,7 @@ export default function SearchFieldTemplate(this: SearchItem) {
 					}
 
 					{this.scopeName &&
-						<Tag design={TagDesign.Set2} colorScheme="10">
+						<Tag design={"Set2"} colorScheme="10">
 							{this.scopeName}
 						</Tag>
 					}
@@ -53,7 +53,7 @@ export default function SearchFieldTemplate(this: SearchItem) {
 
 						{this.deletable &&
 							<Button class="ui5-search-item-selected-delete"
-								design={ButtonDesign.Transparent}
+								design={"Transparent"}
 								icon={decline}
 								onClick={this._onDeleteButtonClick}
 								tooltip={this._deleteButtonTooltip}

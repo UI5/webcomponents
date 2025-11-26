@@ -1,27 +1,18 @@
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import { customElement, property, slot, jsxRenderer, eventStrict as event, i18n, getActiveElement, Keys, encodeXML, generateHighlightedMarkup, getFirstFocusableElement, getTabbableElements } from "@ui5/webcomponents-base";
 import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import SearchItemTemplate from "./SearchItemTemplate.js";
 import SearchItemCss from "./generated/themes/SearchItem.css.js";
-import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import { SEARCH_ITEM_DELETE_BUTTON } from "./generated/i18n/i18n-defaults.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
-import {
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+
+const {
 	isSpace,
 	isEnter,
 	isF2,
 	isTabNext,
 	isTabPrevious,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
+} = Keys;
+
 /**
  * @class
  *

@@ -1,6 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import UI5Element, { property, eventStrict as event } from "@ui5/webcomponents-base";
 
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 

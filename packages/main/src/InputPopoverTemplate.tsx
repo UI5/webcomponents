@@ -6,9 +6,7 @@ import alert from "@ui5/webcomponents-icons/dist/alert.js";
 import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import information from "@ui5/webcomponents-icons/dist/information.js";
 
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
 export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult }) {
 	const suggestionsList = hooks?.suggestionsList;
@@ -25,7 +23,7 @@ export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsL
 					class="ui5-valuestatemessage-popover"
 					placement="Bottom"
 					tabindex={-1}
-					horizontalAlign={PopoverHorizontalAlign.Start}
+					horizontalAlign={"Start"}
 					opener={this}
 					open={this.valueStateOpen}
 					onClose={this._handleValueStatePopoverAfterClose}
@@ -58,5 +56,5 @@ function valueStateMessageInputIcon(this: Input) {
 		Information: information,
 	};
 
-	return this.valueState !== ValueState.None ? iconPerValueState[this.valueState] : "";
+	return this.valueState !== "None" ? iconPerValueState[this.valueState] : "";
 }

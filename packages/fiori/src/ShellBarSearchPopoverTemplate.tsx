@@ -1,5 +1,4 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
-import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import type ShellBarSearch from "./ShellBarSearch.js";
 import SearchPopoverTemplate from "./SearchPopoverTemplate.js";
 import SearchFieldTemplate from "./SearchFieldTemplate.js";
@@ -18,7 +17,7 @@ function ShellBarSearchDialogHeader(this: ShellBarSearch) {
 				{ SearchFieldTemplate.call(this, { forceExpanded: true }) }
 			</div>
 
-			<Button design={ButtonDesign.Transparent} onClick={this._handleCancel}>{this.cancelButtonText}</Button>
+			<Button design={"Transparent"} onClick={this._handleCancel}>{this.cancelButtonText}</Button>
 		</header>
 	</>);
 }

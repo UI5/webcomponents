@@ -1,10 +1,5 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, i18n, jsxRenderer, Device } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { LinkAccessibilityAttributes } from "./Link.js";
 import ExpandableTextOverflowMode from "./types/ExpandableTextOverflowMode.js";
@@ -23,6 +18,8 @@ import ExpandableTextTemplate from "./ExpandableTextTemplate.js";
 
 // Styles
 import ExpandableTextCss from "./generated/themes/ExpandableText.css.js";
+
+const { isPhone } = Device;
 
 /**
  * @class
@@ -55,7 +52,7 @@ import ExpandableTextCss from "./generated/themes/ExpandableText.css.js";
  */
 @customElement({
 	tag: "ui5-expandable-text",
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	styles: ExpandableTextCss,
 	template: ExpandableTextTemplate,
 })

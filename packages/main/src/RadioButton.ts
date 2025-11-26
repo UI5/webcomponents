@@ -1,22 +1,7 @@
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, eventStrict as event, i18n, jsxRenderer, Device, Keys, AccessibilityTextsHelper } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import {
-	isSpace,
-	isEnter,
-	isDown,
-	isLeft,
-	isUp,
-	isRight,
-} from "@ui5/webcomponents-base/dist/Keys.js";
 import RadioButtonGroup from "./RadioButtonGroup.js";
 import type WrappingType from "./types/WrappingType.js";
 
@@ -34,6 +19,17 @@ import {
 
 // Styles
 import radioButtonCss from "./generated/themes/RadioButton.css.js";
+
+const {
+	isSpace,
+	isEnter,
+	isDown,
+	isLeft,
+	isUp,
+	isRight,
+} = Keys;
+const { isDesktop } = Device;
+const { getEffectiveAriaLabelText } = AccessibilityTextsHelper;
 
 let isGlobalHandlerAttached = false;
 let activeRadio: RadioButton;
@@ -414,18 +410,18 @@ class RadioButton extends UI5Element implements IFormInputElement {
 	}
 
 	get hasValueState() {
-		return this.valueState !== ValueState.None;
+		return this.valueState !== "None";
 	}
 
 	get valueStateText() {
 		switch (this.valueState) {
-		case ValueState.Negative:
+		case "Negative":
 			return RadioButton.i18nBundle.getText(VALUE_STATE_ERROR);
-		case ValueState.Critical:
+		case "Critical":
 			return RadioButton.i18nBundle.getText(VALUE_STATE_WARNING);
-		case ValueState.Positive:
+		case "Positive":
 			return RadioButton.i18nBundle.getText(VALUE_STATE_SUCCESS);
-		case ValueState.Information:
+		case "Information":
 			return RadioButton.i18nBundle.getText(VALUE_STATE_INFORMATION);
 		default:
 			return "";

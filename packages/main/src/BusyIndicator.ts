@@ -1,17 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isTabNext } from "@ui5/webcomponents-base/dist/Keys.js";
-import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
-import {
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
+import UI5Element, { customElement, property, i18n, jsxRenderer, Device, willShowContent, Keys } from "@ui5/webcomponents-base";
+import type { I18nBundle, Timeout } from "@ui5/webcomponents-base";
 import type BusyIndicatorSize from "./types/BusyIndicatorSize.js";
-import BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
+import type BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
 
 // Template
 import BusyIndicatorTemplate from "./BusyIndicatorTemplate.js";
@@ -20,6 +10,9 @@ import { BUSY_INDICATOR_TITLE } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import busyIndicatorCss from "./generated/themes/BusyIndicator.css.js";
+
+const { isDesktop } = Device;
+const { isTabNext } = Keys;
 
 /**
  * @class
@@ -162,8 +155,8 @@ class BusyIndicator extends UI5Element {
 
 	get textPosition() {
 		return {
-			top: this.text && this.textPlacement === BusyIndicatorTextPlacement.Top,
-			bottom: this.text && this.textPlacement === BusyIndicatorTextPlacement.Bottom,
+			top: this.text && this.textPlacement === "Top",
+			bottom: this.text && this.textPlacement === "Bottom",
 		};
 	}
 

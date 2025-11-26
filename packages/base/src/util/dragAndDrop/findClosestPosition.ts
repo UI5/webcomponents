@@ -27,7 +27,7 @@ const closestPlacement = (point: number, beforePoint: number, centerPoint: numbe
 	return placements;
 };
 
-const findClosestPosition = (elements: Array<HTMLElement>, point: number, layoutOrientation: Orientation) => {
+const findClosestPosition = (elements: Array<HTMLElement>, point: number, layoutOrientation: `${Orientation}`) => {
 	let shortestDist = Number.POSITIVE_INFINITY;
 	let closestElement: HTMLElement | null = null;
 
@@ -100,7 +100,7 @@ const _moveForward = (elements: Array<HTMLElement>, index: number) => {
 	}];
 };
 
-const keyToPlacement: { [key: string]: (arg1: Array<HTMLElement>, arg2: number) => Array<{element: HTMLElement, placement: MovePlacement}>} = {
+const keyToPlacement: { [key: string]: (arg1: Array<HTMLElement>, arg2: number) => Array<{element: HTMLElement, placement: `${MovePlacement}`}>} = {
 	ArrowLeft: _moveBackward,
 	ArrowUp: _moveBackward,
 	ArrowRight: _moveForward,

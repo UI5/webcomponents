@@ -1,7 +1,11 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import {
+import { customElement, property, eventStrict as event, Keys } from "@ui5/webcomponents-base";
+
+import SideNavigationItemBase from "./SideNavigationItemBase.js";
+import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
+import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { SideNavigationItemClickEventDetail } from "./SideNavigationItemBase.js";
+
+const {
 	isSpace,
 	isEnter,
 	isEnterShift,
@@ -9,11 +13,7 @@ import {
 	isEnterAlt,
 	isLeft,
 	isRight,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import SideNavigationItemBase from "./SideNavigationItemBase.js";
-import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
-import type { SideNavigationItemClickEventDetail } from "./SideNavigationItemBase.js";
+} = Keys;
 
 type SideNavigationItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
 

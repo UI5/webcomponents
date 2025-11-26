@@ -1,23 +1,13 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import UI5Element, { customElement, jsxRenderer, property, eventStrict as event, getActiveElement, Device, Keys, getTabbableElements } from "@ui5/webcomponents-base";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import {
-	isEnter,
-	isSpace,
-	isTabNext,
-	isTabPrevious,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
 // Styles
 import styles from "./generated/themes/ListItemBase.css.js";
 import draggableElementStyles from "./generated/themes/DraggableElement.css.js";
+
+const { isEnter, isSpace, isTabNext, isTabPrevious } = Keys;
+const { isDesktop } = Device;
 
 type ListItemBasePressEventDetail = {
 	item: ListItemBase,

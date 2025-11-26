@@ -1,11 +1,6 @@
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, jsxRenderer } from "@ui5/webcomponents-base";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
-import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import type MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
 import type ListItemBase from "./ListItemBase.js";
 
@@ -199,7 +194,7 @@ class ListItemGroup extends UI5Element {
 	_filterPlacements(placements: MovePlacement[], draggedElement: HTMLElement, targetElement: HTMLElement): MovePlacement[] {
 		// Filter out MovePlacement.On when dragged element is the same as target
 		if (targetElement === draggedElement) {
-			return placements.filter(placement => placement !== MovePlacement.On);
+			return placements.filter(placement => placement !== "On");
 		}
 		return placements;
 	}

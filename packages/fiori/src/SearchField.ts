@@ -1,9 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, i18n, Keys, jsxRenderer } from "@ui5/webcomponents-base";
 import SearchFieldTemplate from "./SearchFieldTemplate.js";
 import SearchFieldCss from "./generated/themes/SearchField.css.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
@@ -11,16 +6,13 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IOption, SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";
 
 import {
-	isEnter,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-
-import {
 	SEARCH_FIELD_SCOPE_SELECT_LABEL,
 	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
 	SEARCH_FIELD_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
+
+const {	isEnter } = Keys;
 
 /**
  * Interface for components that may be slotted inside a `ui5-search`

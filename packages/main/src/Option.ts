@@ -1,6 +1,4 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import { customElement, property, slot } from "@ui5/webcomponents-base";
 import type { IOption } from "./Select.js";
 import ListItemBase from "./ListItemBase.js";
 

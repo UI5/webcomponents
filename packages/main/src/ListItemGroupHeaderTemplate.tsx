@@ -1,5 +1,4 @@
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
-import WrappingType from "./types/WrappingType.js";
 
 export default function ListItemGroupHeaderTemplate(this: ListItemGroupHeader) {
 	return (
@@ -26,7 +25,7 @@ export default function ListItemGroupHeaderTemplate(this: ListItemGroupHeader) {
 }
 
 function renderTitle(this: ListItemGroupHeader) {
-	if (this.wrappingType === WrappingType.Normal) {
+	if (this.wrappingType === "Normal") {
 		return this.expandableTextTemplate?.call(this, {
 			className: "ui5-ghli-title",
 			text: this._textContent,

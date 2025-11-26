@@ -1,22 +1,13 @@
-import {
-	isSpace, isDelete, isF10Shift, isEnterShift,
-} from "@ui5/webcomponents-base/dist/Keys.js";
+
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { customElement, property, query, slot, eventStrict as event, ResizeHandler, Keys, willShowContent, jsxRenderer } from "@ui5/webcomponents-base";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ButtonAccessibilityAttributes } from "@ui5/webcomponents/dist/Button.js";
 import type Link from "@ui5/webcomponents/dist/Link.js";
-import WrappingType from "@ui5/webcomponents/dist/types/WrappingType.js";
+import type WrappingType from "@ui5/webcomponents/dist/types/WrappingType.js";
 import type Menu from "@ui5/webcomponents/dist/Menu.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import NotificationListItemImportance from "./types/NotificationListItemImportance.js";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type NotificationListItemImportance from "./types/NotificationListItemImportance.js";
 import NotificationListItemBase from "./NotificationListItemBase.js";
 
 // Icons
@@ -47,7 +38,11 @@ import NotificationListItemTemplate from "./NotificationListItemTemplate.js";
 
 // Styles
 import NotificationListItemCss from "./generated/themes/NotificationListItem.css.js";
-import IconDesign from "@ui5/webcomponents/dist/types/IconDesign.js";
+import type IconDesign from "@ui5/webcomponents/dist/types/IconDesign.js";
+
+const {
+	isSpace, isDelete, isF10Shift, isEnterShift,
+} = Keys;
 
 type NotificationListItemCloseEventDetail = {
 	item: HTMLElement,
@@ -63,22 +58,22 @@ type Footnote = Record<string, any>;
  * Defines the icons name corresponding to the notification's status indicator.
  */
 const ICON_PER_STATUS_NAME = {
-	[ValueState.Negative]: iconError,
-	[ValueState.Critical]: iconAlert,
-	[ValueState.Positive]: iconSysEnter2,
-	[ValueState.Information]: iconInformation,
-	[ValueState.None]: "",
+	["Negative"]: iconError,
+	["Critical"]: iconAlert,
+	["Positive"]: iconSysEnter2,
+	["Information"]: iconInformation,
+	["None"]: "",
 };
 
 /**
  * Defines the icons design (color) corresponding to the notification's status indicator.
  */
 const ICON_PER_STATUS_DESIGN = {
-	[ValueState.Negative]: IconDesign.Negative,
-	[ValueState.Critical]: IconDesign.Critical,
-	[ValueState.Positive]: IconDesign.Positive,
-	[ValueState.Information]: IconDesign.Information,
-	[ValueState.None]: undefined,
+	["Negative"]: "Negative",
+	["Critical"]: "Critical",
+	["Positive"]: "Positive",
+	["Information"]: "Information",
+	["None"]: undefined,
 };
 
 /**
@@ -293,7 +288,7 @@ class NotificationListItem extends NotificationListItemBase {
 	}
 
 	get hasState() {
-		return this.state !== ValueState.None;
+		return this.state !== "None";
 	}
 
 	get hasDesc() {
@@ -301,7 +296,7 @@ class NotificationListItem extends NotificationListItemBase {
 	}
 
 	get hasImportance() {
-		return this.importance !== NotificationListItemImportance.Standard;
+		return this.importance !== "Standard";
 	}
 
 	get hasFootNotes() {
@@ -329,7 +324,7 @@ class NotificationListItem extends NotificationListItemBase {
 	}
 
 	get hideShowMore() {
-		if (this.wrappingType === WrappingType.None && this._showMore) {
+		if (this.wrappingType === "None" && this._showMore) {
 			return undefined;
 		}
 
@@ -435,19 +430,19 @@ class NotificationListItem extends NotificationListItemBase {
 	}
 
 	get stateText() {
-		if (this.state === ValueState.Positive) {
+		if (this.state === "Positive") {
 			return NotificationListItem.i18nFioriBundle.getText(NOTIFICATION_LIST_ITEM_POSITIVE_STATUS_TXT);
 		}
 
-		if (this.state === ValueState.Critical) {
+		if (this.state === "Critical") {
 			return NotificationListItem.i18nFioriBundle.getText(NOTIFICATION_LIST_ITEM_CRITICAL_STATUS_TXT);
 		}
 
-		if (this.state === ValueState.Negative) {
+		if (this.state === "Negative") {
 			return NotificationListItem.i18nFioriBundle.getText(NOTIFICATION_LIST_ITEM_NEGATIVE_STATUS_TXT);
 		}
 
-		if (this.state === ValueState.Information) {
+		if (this.state === "Information") {
 			return NotificationListItem.i18nFioriBundle.getText(NOTIFICATION_LIST_ITEM_INFORMATION_STATUS_TXT);
 		}
 
@@ -560,7 +555,7 @@ class NotificationListItem extends NotificationListItemBase {
 	}
 
 	onResize() {
-		if (this.wrappingType === WrappingType.Normal) {
+		if (this.wrappingType === "Normal") {
 			this._showMore = false;
 			return;
 		}

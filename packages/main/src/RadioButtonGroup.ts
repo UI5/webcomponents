@@ -1,4 +1,4 @@
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import { getActiveElement } from "@ui5/webcomponents-base";
 import type RadioButton from "./RadioButton.js";
 
 class RadioButtonGroup {

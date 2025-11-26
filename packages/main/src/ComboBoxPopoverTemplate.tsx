@@ -2,7 +2,6 @@ import Icon from "./Icon.js";
 import Button from "./Button.js";
 import List from "./List.js";
 import Input from "./Input.js";
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
@@ -117,7 +116,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 			hideArrow={true}
 			tabindex={-1}
 			class="ui5-valuestatemessage-popover"
-			horizontalAlign={PopoverHorizontalAlign.Start}
+			horizontalAlign={"Start"}
 			placement="Bottom"
 			opener={this}
 			open={this.valueStateOpen}

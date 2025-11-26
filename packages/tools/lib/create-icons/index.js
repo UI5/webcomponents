@@ -1,7 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const iconTemplate = (name, pathData, ltr, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+const iconTemplate = (name, pathData, ltr, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base";
 
 const name = "${name}";
 const pathData = "${pathData}";
@@ -16,7 +16,7 @@ export default "${collection}/${name}";
 export { pathData, ltr, accData };`;
 
 
-const iconAccTemplate = (name, pathData, ltr, accData, collection, packageName, versioned) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+const iconAccTemplate = (name, pathData, ltr, accData, collection, packageName, versioned) => `import { registerIcon } from "@ui5/webcomponents-base";
 import { ${accData.key} } from "${versioned ? "../" : "./"}generated/i18n/i18n-defaults.js";
 
 const name = "${name}";
@@ -33,7 +33,7 @@ export { pathData, ltr, accData };`;
 
 
 
-const collectionTemplate = (name, versions, fullName) => `import { isLegacyThemeFamilyAsync } from "@ui5/webcomponents-base/dist/config/Theme.js";
+const collectionTemplate = (name, versions, fullName) => `import { isLegacyThemeFamilyAsync } from "@ui5/webcomponents-base";
 import { pathData as pathData${versions[0]}, ltr, accData } from "./${versions[0]}/${name}.js";
 import { pathData as pathData${versions[1]} } from "./${versions[1]}/${name}.js";
 

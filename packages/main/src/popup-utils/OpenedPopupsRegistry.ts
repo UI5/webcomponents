@@ -1,10 +1,9 @@
-import getSharedResource from "@ui5/webcomponents-base/dist/getSharedResource.js";
-import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
-import isEventMarked from "@ui5/webcomponents-base/dist/util/isEventMarked.js";
+import { getSharedResource, Keys, getFeature, isEventMarked } from "@ui5/webcomponents-base";
 import type OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import type Popup from "../Popup.js";
 import type { PopupInfo } from "@ui5/webcomponents-base/dist/features/patchPopup.js";
+
+const { isEscape } = Keys;
 
 type RegisteredPopup = {
 	instance: Popup;

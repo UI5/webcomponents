@@ -103,6 +103,16 @@ module.exports = {
 		// 	"requireReturn": false
 		// }],
 		"valid-typeof": 2,
+		"no-restricted-imports": ["error", {
+			"allowTypeImports": true, // TODO: check if barrel reexport
+			"patterns": [
+				"@ui5/webcomponents-base/dist/*",
+				"@ui5/webcomponents-theming/dist/*",
+				"@ui5/webcomponents-localization/dist/*",
+				"@ui5/webcomponents/dist/*",
+			],
+		}],
+		"object-curly-newline": ["error", { "ImportDeclaration": "never", "ExportDeclaration": "never" }],
 
 		"accessor-pairs": 2,
 		"block-scoped-var": 1,

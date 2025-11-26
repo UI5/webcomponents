@@ -1,5 +1,4 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import { customElement, property } from "@ui5/webcomponents-base";
 import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemBase from "./ListItemBase.js";
 

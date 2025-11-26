@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+	<title>ui5 webcomponents</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="./kitchen-styles.css">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "en",
+			"theme": "sap_horizon"
+		}
+	</script>
+
+	<!-- https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js -->
+	<script
+		src='https://sdk.openui5.org/resources/sap-ui-core.js'
+		id='sap-ui-bootstrap'
+		data-sap-ui-libs="sap.m"
+	></script>
+	<script>
+		sap.ui.require(["sap/ui/core/Core", "sap/ui/test/RecordReplay"], async function(Core, RecordReplay) {
+			await Core.ready();
+
+			async function test() {
+				try {
+					await sap.ui.test.RecordReplay.waitForUI5({timeout: 4000})
+					console.log("resolved");
+					test();
+				} catch (e) {
+					console.log("Error:", e)
+				}
+			}
+			test();
+			
+			function poll() {
+				Promise.resolve().then(() => {
+					console.log("polling...");
+					setTimeout(poll, 100);
+				});
+			}
+			poll();
+		});
+	</script>
+
+</head>
+
+<body class="kitchen_openui51auto">
+
+</body>
+</html>

@@ -1,7 +1,6 @@
 import type ListItemGroup from "./ListItemGroup.js";
 import ListItemGroupHeader from "./ListItemGroupHeader.js";
 import DropIndicator from "./DropIndicator.js";
-import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 
 export default function ListItemGroupTemplate(this: ListItemGroup, hooks?: { items: () => void }) {
 	const items = hooks?.items || defaultItems;
@@ -16,7 +15,7 @@ export default function ListItemGroupTemplate(this: ListItemGroup, hooks?: { ite
 			onDragLeave={this._ondragleave}
 		>
 			{this.hasHeader &&
-				<ListItemGroupHeader focused={this.focused} part="header" accessibleRole={ListItemAccessibleRole.Group}>
+				<ListItemGroupHeader focused={this.focused} part="header" accessibleRole="Group">
 					{ this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText }
 				</ListItemGroupHeader>
 			}

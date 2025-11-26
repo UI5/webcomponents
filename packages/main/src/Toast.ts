@@ -1,10 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import jsxRendererer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
-import { isMac } from "@ui5/webcomponents-base/dist/Device.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import UI5Element, { customElement, property, eventStrict as event, Keys, Device, jsxRenderer } from "@ui5/webcomponents-base";
 import type ToastPlacement from "./types/ToastPlacement.js";
 
 // Template
@@ -12,6 +6,9 @@ import ToastTemplate from "./ToastTemplate.js";
 
 // Styles
 import ToastCss from "./generated/themes/Toast.css.js";
+
+const { isEscape } = Keys;
+const { isMac } = Device;
 
 // Constants
 const MIN_DURATION = 500;
@@ -80,7 +77,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
  */
 @customElement({
 	tag: "ui5-toast",
-	renderer: jsxRendererer,
+	renderer: jsxRenderer,
 	styles: ToastCss,
 	template: ToastTemplate,
 })

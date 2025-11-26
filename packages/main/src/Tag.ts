@@ -1,15 +1,5 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, slot, i18n, eventStrict as event, jsxRenderer, willShowContent, Device } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
-import {
-	isDesktop,
-} from "@ui5/webcomponents-base/dist/Device.js";
 import type { IIcon } from "./Icon.js";
 import "@ui5/webcomponents-icons/dist/sys-help-2.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -17,7 +7,7 @@ import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import type WrappingType from "./types/WrappingType.js";
-import TagDesign from "./types/TagDesign.js";
+import type TagDesign from "./types/TagDesign.js";
 import type TagSize from "./types/TagSize.js";
 // Template
 import TagTemplate from "./TagTemplate.js";
@@ -33,6 +23,8 @@ import {
 
 // Styles
 import tagCss from "./generated/themes/Tag.css.js";
+
+const { isDesktop } = Device;
 
 /**
  * @class
@@ -188,13 +180,13 @@ class Tag extends UI5Element {
 
 	get _valueState() {
 		switch (this.design) {
-		case TagDesign.Positive:
+		case "Positive":
 			return Tag.i18nBundle.getText(TAG_SUCCESS);
-		case TagDesign.Negative:
+		case "Negative":
 			return Tag.i18nBundle.getText(TAG_ERROR);
-		case TagDesign.Critical:
+		case "Critical":
 			return Tag.i18nBundle.getText(TAG_WARNING);
-		case TagDesign.Information:
+		case "Information":
 			return Tag.i18nBundle.getText(TAG_INFORMATION);
 		}
 
@@ -238,15 +230,14 @@ class Tag extends UI5Element {
 		}
 
 		switch (this.design) {
-		case TagDesign.Neutral:
+		case "Neutral":
 			return "sys-help-2";
-		case TagDesign.Positive:
+		case "Positive":
 			return "sys-enter-2";
-		case TagDesign.Negative:
-			return "error";
-		case TagDesign.Critical:
+		case "Negative":
+		case "Critical":
 			return "alert";
-		case TagDesign.Information:
+		case "Information":
 			return "information";
 		default:
 			return null;

@@ -1,8 +1,6 @@
-import { slot, property, customElement } from "@ui5/webcomponents-base/dist/decorators.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { slot, property, customElement, i18n, toLowercaseEnumValue } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import ListItemBase from "./ListItemBase.js";
 import type { ExpandableTextTemplateParams } from "./types/ExpandableTextTemplateParams.js";
 
@@ -13,7 +11,7 @@ import ListItemGroupHeaderTemplate from "./ListItemGroupHeaderTemplate.js";
 
 // Styles
 import ListItemGroupHeaderCss from "./generated/themes/ListItemGroupHeader.css.js";
-import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
+import type ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 import type WrappingType from "./types/WrappingType.js";
 
 /**
@@ -60,7 +58,7 @@ class ListItemGroupHeader extends ListItemBase {
 	accessibleName?: string;
 
 	@property()
-	accessibleRole: `${ListItemAccessibleRole}` = ListItemAccessibleRole.ListItem;
+	accessibleRole: `${ListItemAccessibleRole}` = "ListItem";
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.

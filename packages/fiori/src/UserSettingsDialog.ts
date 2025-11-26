@@ -1,17 +1,10 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import {
-	customElement, property, slot, eventStrict as event,
-} from "@ui5/webcomponents-base/dist/decorators.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, property, slot, eventStrict as event, jsxRenderer, i18n, Device, MediaRange } from "@ui5/webcomponents-base";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
-import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
-import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -23,6 +16,8 @@ import {
 	USER_SETTINGS_DIALOG_CLOSE_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
+
+const { isPhone, isTablet, isCombi } = Device;
 
 type UserSettingsItemSelectEventDetail = {
 	item: UserSettingsItem;

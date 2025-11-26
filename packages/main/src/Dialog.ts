@@ -1,15 +1,6 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import {
-	isUp, isDown, isLeft, isRight,
-	isUpShift, isDownShift, isLeftShift, isRightShift,
-} from "@ui5/webcomponents-base/dist/Keys.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { customElement, property, slot, clamp, Keys, i18n, toLowercaseEnumValue } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import Popup from "./Popup.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
@@ -28,7 +19,11 @@ import DialogTemplate from "./DialogTemplate.js";
 // Styles
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import dialogCSS from "./generated/themes/Dialog.css.js";
-import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
+
+const {
+	isUp, isDown, isLeft, isRight,
+	isUpShift, isDownShift, isLeftShift, isRightShift,
+} = Keys;
 
 /**
  * Defines the step size at which this component would change by when being dragged or resized with the keyboard.
@@ -40,10 +35,10 @@ type ValueStateWithIcon = ValueState.Negative | ValueState.Critical | ValueState
  * Defines the icons corresponding to the dialog's state.
  */
 const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
-	[ValueState.Negative]: "error",
-	[ValueState.Critical]: "alert",
-	[ValueState.Positive]: "sys-enter-2",
-	[ValueState.Information]: "information",
+	["Negative"]: "error",
+	["Critical"]: "alert",
+	["Positive"]: "sys-enter-2",
+	["Information"]: "information",
 };
 
 /**
@@ -308,7 +303,7 @@ class Dialog extends Popup {
 	}
 
 	get hasValueState() {
-		return this.state !== ValueState.None;
+		return this.state !== "None";
 	}
 
 	get _dialogStateIcon() {
@@ -316,12 +311,12 @@ class Dialog extends Popup {
 	}
 
 	get _role() {
-		if (this.accessibleRole === PopupAccessibleRole.None) {
+		if (this.accessibleRole === "None") {
 			return undefined;
 		}
 
-		if (this.state === ValueState.Negative || this.state === ValueState.Critical) {
-			return toLowercaseEnumValue(PopupAccessibleRole.AlertDialog);
+		if (this.state === "Negative" || this.state === "Critical") {
+			return toLowercaseEnumValue("AlertDialog");
 		}
 
 		return toLowercaseEnumValue(this.accessibleRole);

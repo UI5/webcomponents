@@ -1,23 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import UI5Element, { customElement, i18n, jsxRenderer, eventStrict as event, property, slot, ItemNavigation, Device, ResizeHandler } from "@ui5/webcomponents-base";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import type NavigationMenu from "./NavigationMenu.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import {
-	isPhone,
-	isTablet,
-	isCombi,
-} from "@ui5/webcomponents-base/dist/Device.js";
-
-import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
+import type NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
 import { isInstanceOfSideNavigationSelectableItemBase } from "./SideNavigationSelectableItemBase.js";
 import { isInstanceOfSideNavigationItemBase } from "./SideNavigationItemBase.js";
@@ -41,6 +27,12 @@ import {
 // Styles
 import SideNavigationCss from "./generated/themes/SideNavigation.css.js";
 import SideNavigationPopoverCss from "./generated/themes/SideNavigationPopover.css.js";
+
+const {
+	isPhone,
+	isTablet,
+	isCombi,
+} = Device;
 
 const PAGE_UP_DOWN_SIZE = 10;
 
@@ -106,7 +98,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 @customElement({
 	tag: "ui5-side-navigation",
 	fastNavigation: true,
-	renderer: jsxRender,
+	renderer: jsxRenderer,
 	template: SideNavigationTemplate,
 	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
@@ -215,13 +207,13 @@ class SideNavigation extends UI5Element {
 
 		this._flexibleItemNavigation = new ItemNavigation(this, {
 			skipItemsSize: PAGE_UP_DOWN_SIZE, // PAGE_UP and PAGE_DOWN will skip trough 10 items
-			navigationMode: NavigationMode.Vertical,
+			navigationMode: "Vertical",
 			getItemsCallback: () => this.getEnabledFlexibleItems(),
 		});
 
 		this._fixedItemNavigation = new ItemNavigation(this, {
 			skipItemsSize: PAGE_UP_DOWN_SIZE, // PAGE_UP and PAGE_DOWN will skip trough 10 items
-			navigationMode: NavigationMode.Vertical,
+			navigationMode: "Vertical",
 			getItemsCallback: () => this.getEnabledFixedItems(),
 		});
 

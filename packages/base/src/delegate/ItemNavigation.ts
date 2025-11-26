@@ -23,10 +23,10 @@ interface ITabbable {
 
 type ItemNavigationOptions = {
 	currentIndex?: number,
-	navigationMode?: NavigationMode,
+	navigationMode?: `${NavigationMode}`,
 	rowSize?: number
 	skipItemsSize?: number,
-	behavior?: ItemNavigationBehavior,
+	behavior?: `${ItemNavigationBehavior}`,
 	getItemsCallback: () => Array<ITabbable>,
 	affectedPropertiesNames?: Array<string>,
 };
@@ -73,9 +73,9 @@ class ItemNavigation {
 
 	_rowSize: number;
 
-	_behavior: ItemNavigationBehavior;
+	_behavior: `${ItemNavigationBehavior}`;
 
-	_navigationMode: NavigationMode;
+	_navigationMode: `${NavigationMode}`;
 
 	_affectedPropertiesNames: Array<string>;
 

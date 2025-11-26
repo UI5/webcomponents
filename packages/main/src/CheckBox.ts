@@ -1,14 +1,6 @@
-import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import UI5Element, { customElement, property, eventStrict as event, jsxRenderer, i18n, Keys, Device, AccessibilityTextsHelper } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type WrappingType from "./types/WrappingType.js";
 import type {
@@ -29,6 +21,10 @@ import checkboxCss from "./generated/themes/CheckBox.css.js";
 
 // Template
 import CheckBoxTemplate from "./CheckBoxTemplate.js";
+
+const { isSpace, isEnter } = Keys;
+const { isDesktop } = Device;
+const { getEffectiveAriaLabelText, getAssociatedLabelForTexts } = AccessibilityTextsHelper;
 
 let isGlobalHandlerAttached = false;
 let activeCb: CheckBox;
@@ -436,11 +432,11 @@ class CheckBox extends UI5Element implements IFormInputElement {
 	}
 
 	get hasValueState() {
-		return this.valueState !== ValueState.None;
+		return this.valueState !== "None";
 	}
 
 	get valueStateText() {
-		if (this.valueState !== ValueState.None && this.valueState !== ValueState.Information) {
+		if (this.valueState !== "None" && this.valueState !== "Information") {
 			return this.valueStateTextMappings()[this.valueState];
 		}
 	}

@@ -1,5 +1,4 @@
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import { customElement, slot } from "@ui5/webcomponents-base";
 import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemGroup from "./ListItemGroup.js";
 import type ComboBoxItem from "./ComboBoxItem.js";

@@ -2,7 +2,6 @@ import Icon from "./Icon.js";
 import type ListItemStandard from "./ListItemStandard.js";
 import ListItemTemplate from "./ListItemTemplate.js";
 import type { ListItemHooks } from "./ListItemTemplate.js";
-import WrappingType from "./types/WrappingType.js";
 
 const predefinedHooks: Partial<ListItemHooks> = {
 	imageBegin,
@@ -31,7 +30,7 @@ function listItemContent(this: ListItemStandard) {
 }
 
 function renderTitle(this: ListItemStandard) {
-	if (this.wrappingType === WrappingType.Normal) {
+	if (this.wrappingType === "Normal") {
 		return this.expandableTextTemplate?.call(this, {
 			className: "ui5-li-title",
 			text: this._textContent,
@@ -52,7 +51,7 @@ function renderDescription(this: ListItemStandard) {
 		return null;
 	}
 
-	if (this.wrappingType === WrappingType.Normal) {
+	if (this.wrappingType === "Normal") {
 		return (
 			<div class="ui5-li-description-info-wrapper">
 				{this.expandableTextTemplate?.call(this, {
