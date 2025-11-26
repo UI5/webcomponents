@@ -357,8 +357,6 @@ describe("Events", () => {
 
 describe("Dialog general interaction", () => {
 	it("tests dialog toggling", () => {
-
-
 		cy.mount(
 			<>
 				<Dialog id="dialog" accessibleName="Resizable" stretch>
@@ -406,6 +404,62 @@ describe("Dialog general interaction", () => {
 			.should("be.calledOnce");
 	});
 
+	it("dynamic dialog initial positioning", () => {
+		const dialog = document.createElement("ui5-dialog") as Dialog;
+		dialog.setAttribute("id", "dynamic-dialog");
+
+		const content = document.createElement("div");
+		content.style.height = "600px";
+		content.style.width = "600px";
+		content.textContent = "Content";
+
+		dialog.appendChild(content);
+
+		// Spy on Object.assign only for this dialog's style
+		cy.window().then(() => {
+			const originalAssign = Object.assign;
+			const topAndLeftStyles: Array<{ top: number; left: number }> = [];
+			
+			cy.stub(Object, "assign").callsFake(function(target: any, ...sources: any[]) {
+				// Check if target is the dialog's style object
+				if (target === dialog.style) {
+					const styleObj = sources[0];
+					if (styleObj && styleObj.top !== undefined && styleObj.left !== undefined) {
+						topAndLeftStyles.push({
+							top: parseInt(styleObj.top),
+							left: parseInt(styleObj.left)
+						});
+					}
+				}
+				return originalAssign.call(this, target, ...sources);
+			}).as("objectAssignStub");
+
+			cy.wrap(topAndLeftStyles).as("topAndLeftStyles");
+
+			dialog.setAttribute("open", "true");
+			document.body.appendChild(dialog);
+		});
+
+		cy.get<Dialog>("#dynamic-dialog").ui5DialogOpened();
+
+		// Assert the captured style values
+		cy.get<Array<{ top: number; left: number }>>("@topAndLeftStyles")
+			.should((topAndLeftStyles) => {
+				expect(topAndLeftStyles.length).to.be.greaterThan(1, "'top' and 'left' styles should have been assigned");
+
+				// styles from initial call of _center method
+				const firstStyles = topAndLeftStyles[0];
+
+				expect(firstStyles.top).to.not.equal(0, "top should not start from 0");
+				expect(firstStyles.left).to.not.equal(0, "left should not start from 0");
+
+				// styles from _center method called as resize handler callback
+				const secondStyles = topAndLeftStyles[1];
+	
+				expect(secondStyles.top).to.equal(firstStyles.top, "top should remain the same after resize event");
+				expect(secondStyles.left).to.equal(firstStyles.left, "left should remain the same after resize event");
+			});
+	});
 
 	it("dialog repositions after screen resize", () => {
 		cy.mount(
@@ -516,46 +570,56 @@ describe("Dialog general interaction", () => {
 		cy.get("#draggable-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
+		let topBeforeDragging: number;
+		let leftBeforeDragging: number;
+
 		// Capture position before dragging
 		cy.get("#draggable-dialog")
-			.then(dialog => {
-				const topBeforeDragging = parseInt(dialog.css("top"));
-				const leftBeforeDragging = parseInt(dialog.css("left"));
+			.should(dialog => {
+				topBeforeDragging = parseInt(dialog.css("top"));
+				leftBeforeDragging = parseInt(dialog.css("left"));
 
-				// Drag dialog
-				cy.get("#draggable-dialog")
-					.find("#header-slot")
-					.trigger("mousedown", { which: 1 })
-					.trigger("mousemove", { clientX: 150, clientY: 150 })
-					.trigger("mouseup");
+				expect(topBeforeDragging).to.equal(492);
+				expect(leftBeforeDragging).to.equal(560);
+			});
 
-				// Capture position after dragging
-				cy.get("#draggable-dialog")
-					.should(dialogAfterDragging => {
-						const topAfterDragging = parseInt(dialogAfterDragging.css("top"));
-						const leftAfterDragging = parseInt(dialogAfterDragging.css("left"));
+		// Drag dialog
+		cy.get("#draggable-dialog")
+			.find("#header-slot")
+			.trigger("mousedown", { which: 1 })
+			.trigger("mousemove", { clientX: 200, clientY: 150,  })
+			.trigger("mouseup");
 
-						// Assert position changes
-						expect(topBeforeDragging).not.to.equal(topAfterDragging);
-						expect(leftBeforeDragging).not.to.equal(leftAfterDragging);
-					});
+		cy.get("#draggable-dialog")
+			.should("have.css", "top", "141px")
+			.should("have.css", "left", "40px");
 
-					// Close dialog
-					cy.get("#draggable-dialog").invoke("attr", "open", false);
+		// Capture position after dragging
+		cy.get("#draggable-dialog")
+			.should(dialogAfterDragging => {
+				const topAfterDragging = parseInt(dialogAfterDragging.css("top"));
+				const leftAfterDragging = parseInt(dialogAfterDragging.css("left"));
 
-					// Reopen dialog
-					cy.get("#draggable-dialog").invoke("attr", "open", true);
+				// Assert position changes
+				expect(topBeforeDragging).not.to.equal(topAfterDragging);
+				expect(leftBeforeDragging).not.to.equal(leftAfterDragging);
+			});
 
-					// Capture position after reopening
-					cy.get("#draggable-dialog")
-						.should(dialogAfterReopening => {
-							const topAfterReopening = parseInt(dialogAfterReopening.css("top"));
-							const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
+		// Close dialog
+		cy.get("#draggable-dialog").invoke("attr", "open", false);
 
-							// Assert position resets
-							expect(topBeforeDragging).to.equal(topAfterReopening);
-							expect(leftBeforeDragging).to.equal(leftAfterReopening);
-					});
+		// Reopen dialog
+		cy.get("#draggable-dialog").invoke("attr", "open", true);
+
+		// Capture position after reopening
+		cy.get("#draggable-dialog")
+			.should(dialogAfterReopening => {
+				const topAfterReopening = parseInt(dialogAfterReopening.css("top"));
+				const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
+
+				// Assert position resets
+				expect(topBeforeDragging).to.equal(topAfterReopening);
+				expect(leftBeforeDragging).to.equal(leftAfterReopening);
 			});
 	});
 
@@ -631,7 +695,6 @@ describe("Dialog general interaction", () => {
 	});
 
 	it("resizable - mouse support", () => {
-
 		cy.mount(
 			<>
 				<Dialog id="resizable-dialog" resizable>

@@ -604,7 +604,7 @@ abstract class Popup extends UI5Element {
 	}
 
 	/**
-	 * Sets "block" display to the popup. The property can be overriden by derivatives of Popup.
+	 * Sets "popover=manual" to the popup. The method can be overridden by derivatives of Popup.
 	 * @protected
 	 */
 	_show() {
