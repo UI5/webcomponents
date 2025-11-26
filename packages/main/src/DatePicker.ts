@@ -671,6 +671,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		return this.isValidValue(value) && this.isInValidRange(value);
 	}
 
+	get showClearIcon() {
+		return true;
+	}
+
 	/**
 	 * Checks if the provided value is valid and within valid range.
 	 * @protected
