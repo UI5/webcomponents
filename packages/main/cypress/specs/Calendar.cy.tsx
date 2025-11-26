@@ -38,47 +38,60 @@ const getCalendarsWithWeekNumbers = () => (<>
 </>);
 
 describe("Calendar general interaction", () => {
-	it("Focus goes into the current day item of the day picker", () => {
-		const date = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
-		cy.mount(getDefaultCalendar(date));
-
-		cy.ui5CalendarGetDay("#calendar1", "974851200")
-			.as("selectedDay");
-
-		cy.get("@selectedDay")
-			.realClick();
-
-		cy.get("@selectedDay")
-			.should("have.focus")
-			.realPress("Tab");
+	it("Focus goes into the header items and then to the current day item of the day picker", () => {
+		const calendarTestDate = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
+		cy.mount(getDefaultCalendar(calendarTestDate));
 
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find(".ui5-calheader")
 			.as("calheader");
+
+		cy.ui5CalendarGetDay("#calendar1", "974851200").as("selectedDay");
+
+		cy.get("#calendar1")
+			.realClick();
+
+		cy.realPress("Tab");
 		
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-prev]")
+			.as("prevBtn");
+
+		cy.get("@prevBtn")
+			.should("be.focused");
+		
+		cy.realPress("Tab");
+
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-month]")
 			.as("monthBtn");
-		
+
 		cy.get("@monthBtn")
-			.should("have.focus")
-			.realPress("Tab");
+			.should("be.focused");
+		
+		cy.realPress("Tab");
 
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-year]")
 			.as("yearBtn");
-		
-		cy.get("@yearBtn")
-			.should("have.focus")
-			.realPress(["Shift", "Tab"]);
 
-		cy.get("@monthBtn")
-			.should("have.focus")
-			.realPress(["Shift", "Tab"]);
+		cy.get("@yearBtn")
+			.should("be.focused");
+		
+		cy.realPress("Tab");
+
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-next]")
+			.as("nextBtn");
+
+		cy.get("@nextBtn")
+			.should("be.focused");
+		
+		cy.realPress("Tab");
 
 		cy.get("@selectedDay")
-			.should("have.focus");
+			.should("be.focused");
 	});
 
 	it("Calendar focuses the selected year when yearpicker is opened", () => {
@@ -108,11 +121,32 @@ describe("Calendar general interaction", () => {
 		const date = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
 		cy.mount(getDefaultCalendar(date));
 
-		cy.ui5CalendarGetDay("#calendar1", "974851200")
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find(".ui5-calheader")
+			.as("calheader");
+
+		cy.ui5CalendarGetDay("#calendar1", "974851200").as("selectedDay");
+
+		cy.get("#calendar1")
 			.realClick();
 
-		cy.focused().realPress("Tab");
-		cy.focused().realPress("Space");
+		cy.realPress("Tab");
+		
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-prev]")
+			.as("prevBtn");
+
+		cy.get("@prevBtn")
+			.should("be.focused");
+		
+		cy.realPress("Tab");
+
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-month]")
+			.as("monthBtn");
+
+		cy.realPress("Space");
 
 		cy.get<Calendar>("#calendar1")
 			.shadow()
@@ -135,12 +169,46 @@ describe("Calendar general interaction", () => {
 		const date = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
 		cy.mount(getDefaultCalendar(date));
 
-		cy.ui5CalendarGetDay("#calendar1", "974851200")
-			.realClick();
+		
+		cy.get<Calendar>("#calendar1")
+				.shadow()
+				.find(".ui5-calheader")
+				.as("calheader");
 
-		cy.focused().realPress("Tab");
-		cy.focused().realPress("Tab");
-		cy.focused().realPress("Space");
+			cy.ui5CalendarGetDay("#calendar1", "974851200").as("selectedDay");
+
+			cy.get("#calendar1")
+				.realClick();
+
+			cy.realPress("Tab");
+			
+			cy.get("@calheader")
+				.find("[data-ui5-cal-header-btn-prev]")
+				.as("prevBtn");
+
+			cy.get("@prevBtn")
+				.should("be.focused");
+			
+			cy.realPress("Tab");
+
+			cy.get("@calheader")
+				.find("[data-ui5-cal-header-btn-month]")
+				.as("monthBtn");
+
+			cy.get("@monthBtn")
+				.should("be.focused");
+
+			
+			cy.realPress("Tab");
+
+			cy.get("@calheader")
+				.find("[data-ui5-cal-header-btn-year]")
+				.as("yearBtn");
+
+			cy.get("@yearBtn")
+				.should("be.focused");
+			
+			cy.realPress("Space");
 
 		cy.get<Calendar>("#calendar1")
 			.shadow()
@@ -414,7 +482,7 @@ describe("Calendar general interaction", () => {
 			.should("have.focus");
 
 		cy.focused().realPress(["Shift", "F4"]);
-		
+			
 		// Wait for focus to settle before proceeding
 		cy.get<Calendar>("#calendar1")
 			.shadow()
@@ -422,7 +490,7 @@ describe("Calendar general interaction", () => {
 			.shadow()
 			.find("[tabindex='0']")
 			.should("have.focus");
-		
+			
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -996,6 +1064,26 @@ describe("Calendar general interaction", () => {
 });
 
 describe("Calendar accessibility", () => {
+	it("Header prev/next buttons have correct title and tabindex", () => {
+		const date = new Date(Date.UTC(2025, 0, 15, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find(".ui5-calheader")
+			.as("calheader");
+
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-prev]")
+			.should("have.attr", "title")
+			.and("contain", "Previous Month (Pagedown)");
+
+		cy.get("@calheader")
+			.find("[data-ui5-cal-header-btn-next]")
+			.should("have.attr", "title")
+			.and("contain", "Next Month (Pageup)");
+	});
+
 	it("Should have proper aria-label attributes on header buttons", () => {
 		const date = new Date(Date.UTC(2000, 10, 22, 0, 0, 0));
 		cy.mount(getDefaultCalendar(date));
@@ -1271,7 +1359,7 @@ describe("Calendar accessibility", () => {
 		// Get the selected days and verify their aria-labels
 		cy.get("@selectedDays").each(($day, index) => {
 			cy.wrap($day).should("have.attr", "aria-label");
-			
+				
 			if (index === 0) {
 				// First day should contain "First date of range"
 				cy.wrap($day)
@@ -1293,22 +1381,22 @@ describe("Calendar accessibility", () => {
 });
 
 describe("Day Picker Tests", () => {
-	it.skip("Select day with Space", () => {	
+	it.skip("Select day with Space", () => {    
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-		
+			
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find(".ui5-dp-item--now")
 			.as("today");
-		
+			
 		cy.get("@today")
 			.realClick()
 			.should("be.focused")
 			.realPress("ArrowRight")
 			.realPress("Space");
-		
+			
 		cy.focused()
 			.invoke("attr", "data-sap-timestamp")
 			.then(timestampAttr => {
@@ -1317,7 +1405,7 @@ describe("Day Picker Tests", () => {
 				const expectedDate = new Date(Date.now() + 24 * 3600 * 1000).getDate();
 				expect(selectedDate).to.eq(expectedDate);
 			});
-		
+			
 		cy.get<Calendar>("#calendar1")
 			.should(($calendar) => {
 				const selectedDates = $calendar.prop("selectedDates");
@@ -1330,7 +1418,7 @@ describe("Day Picker Tests", () => {
 		const tomorrow = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0, 0) / 1000);
 
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-		
+			
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
@@ -1369,7 +1457,7 @@ describe("Day Picker Tests", () => {
 
 	it("Day names are correctly displayed", () => {
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-		
+			
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
@@ -1429,7 +1517,7 @@ describe("Day Picker Tests", () => {
 				const timestamp = parseInt(timestampAttr!);
 				const todayFromTimestamp = new Date(timestamp * 1000);
 				const actualToday = new Date();
-				
+					
 				expect(todayFromTimestamp.getDate()).to.equal(actualToday.getDate());
 				expect(todayFromTimestamp.getMonth()).to.equal(actualToday.getMonth());
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
