@@ -447,7 +447,7 @@ class Calendar extends CalendarPart {
 	}
 
 	get _disabledDates() {
-		const validDisabledDateRanges = this._disabledDateRanges.filter(dateRange => {
+		const validDisabledDateRanges = this.disabledDates.filter(dateRange => {
 			const startValue = dateRange.startValue;
 			const endValue = dateRange.endValue;
 			return (startValue && this._isValidCalendarDate(startValue)) || (endValue && this._isValidCalendarDate(endValue));
@@ -804,10 +804,6 @@ class Calendar extends CalendarPart {
 
 	get _specialDates() {
 		return this.getSlottedNodes<SpecialCalendarDate>("specialDates");
-	}
-
-	get _disabledDateRanges() {
-		return this.getSlottedNodes<CalendarDateRange>("disabledDates");
 	}
 
 	get classes() {
