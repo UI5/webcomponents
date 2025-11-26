@@ -75,7 +75,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 				</div>
 			}
 
-			{suggestionsList.call(this)}
+			{ this.showSuggestions && suggestionsList.call(this) }
 
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
