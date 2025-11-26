@@ -596,6 +596,158 @@ describe("Keyboard navigation", () => {
 
 		cy.get("@input").should("have.value", "b");
 	});
+
+	it("should NOT auto-select item when noTypeahead is enabled and filtering", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>,
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke("on", "ui5-selection-change", cy.spy().as("selectionChangeSpy"));
+
+		cy.get("@combo").shadow().find("input").as("input");
+
+		// Type full item text - should NOT auto-select when noTypeahead is true
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bulgaria");
+
+		// Verify no selection was made automatically
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+		cy.get("@combo")
+			.find("[ui5-cb-item]")
+			.eq(1)
+			.should("not.have.prop", "selected", true);
+	});
+
+	it("should allow explicit selection via click when noTypeahead is enabled", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>,
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke("on", "ui5-selection-change", cy.spy().as("selectionChangeSpy"));
+
+		cy.get("@combo").shadow().find("input").as("input");
+
+		// Type to filter, then click item - should select
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bulg");
+
+		cy.get("@combo").find("[ui5-cb-item]").eq(1).realClick();
+
+		// Verify selection was made via click
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should(
+			"have.been.calledWithMatch",
+			Cypress.sinon.match((event) => {
+				return event.detail.item.text === "Bulgaria";
+			}),
+		);
+		cy.get("@combo").should("have.prop", "value", "Bulgaria");
+	});
+
+	it("should allow explicit selection via Enter key when noTypeahead is enabled", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>,
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke("on", "ui5-selection-change", cy.spy().as("selectionChangeSpy"));
+
+		cy.get("@combo").shadow().find("input").as("input");
+
+		// Type to filter items - this opens the picker
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bul");
+
+		// No auto-selection should have happened yet
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+
+		// Navigate to the first filtered item with arrow down
+		cy.get("@input").realPress("ArrowDown");
+
+		// Selection should occur via keyboard navigation
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+
+		// Now press Enter to confirm and close picker
+		cy.get("@input").realPress("Enter");
+		cy.get("@combo").should("have.prop", "value", "Bulgaria");
+	});
+
+	it("should allow explicit selection via keyboard navigation when noTypeahead is enabled", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>,
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke("on", "ui5-selection-change", cy.spy().as("selectionChangeSpy"));
+
+		cy.get("@combo").shadow().find("input").as("input");
+
+		// Open picker and use keyboard navigation to select
+		cy.get("@combo").shadow().find(".inputIcon").realClick();
+
+		// Navigate with arrow keys
+		cy.get("@input").realPress("ArrowDown");
+
+		// Selection should occur via keyboard navigation
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should(
+			"have.been.calledWithMatch",
+			Cypress.sinon.match((event) => {
+				return event.detail.item.text === "Argentina";
+			}),
+		);
+		cy.get("@combo").should("have.prop", "value", "Argentina");
+	});
+
+	it("should auto-select when noTypeahead is false (default behavior)", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>,
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke("on", "ui5-selection-change", cy.spy().as("selectionChangeSpy"));
+
+		cy.get("@combo").shadow().find("input").as("input");
+
+		// Type full item text - should auto-select when noTypeahead is false
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bulgaria");
+
+		// Verify selection was made automatically
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@combo")
+			.find("[ui5-cb-item]")
+			.eq(1)
+			.should("have.prop", "selected", true);
+		cy.get("@combo").should("have.prop", "value", "Bulgaria");
+	});
 });
 
 describe("Grouping", () => {

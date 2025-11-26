@@ -1188,8 +1188,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			}
 		});
 
+		// Skip auto-selection during filtering when noTypeahead is enabled
+		// Allow selection only through explicit user interaction (clicks, Enter key, keyboard navigation)
+		const isActiveFiltering = this.focused && this.value && !this._selectionPerformed && !this._isKeyNavigation;
+		const shouldSkipAutoSelection = this.noTypeahead && isActiveFiltering;
+
 		this._filteredItems.forEach(item => {
-			if (!shouldSelectionBeCleared && !itemToBeSelected) {
+			if (!shouldSelectionBeCleared && !itemToBeSelected && !shouldSkipAutoSelection) {
 				itemToBeSelected = ((!item.isGroupItem && (item.text === this.value)) ? item : item?.items?.find(i => i.text === this.value));
 			}
 		});
