@@ -851,11 +851,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				return dateTimestamp > startTimestamp && dateTimestamp < endTimestamp;
 			}
 
-			if (startTimestamp && !endTimestamp) {
-				return dateTimestamp === startTimestamp;
-			}
-
-			return false;
+			return startTimestamp && dateTimestamp === startTimestamp;
 		});
 	}
 
