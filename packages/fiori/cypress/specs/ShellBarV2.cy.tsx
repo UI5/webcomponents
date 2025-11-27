@@ -616,6 +616,62 @@ describe("Slots", () => {
 				.find("[slot='searchField']")
 				.should("be.visible");
 		});
+
+		it("Test search button hide/show priority", () => {
+			cy.mount(
+				<ShellBar 
+					id="shellbar" 
+					primaryTitle="Product Title"
+					showNotifications={true}
+					showProductSwitch={true}
+					showSearchField={false}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button id="content1" slot="content">Content 1</Button>
+					<Button id="content2" slot="content">Content 2</Button>
+					<ShellBarSearch slot="searchField"></ShellBarSearch>
+					<ShellBarItem icon={activities} id="action1" text="Action 1"></ShellBarItem>
+					<ShellBarItem icon={activities} id="action2" text="Action 2"></ShellBarItem>
+					<ShellBarItem icon={activities} id="action3" text="Action 3"></ShellBarItem>
+					<Avatar slot="profile">
+						<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+					</Avatar>
+				</ShellBar>
+			);
+
+			cy.get("#shellbar").as("shellbar");
+
+			// wide viewport - search, content, actions all visible
+			cy.viewport(1200, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// Assert all elements are visible
+			cy.get("@shellbar").shadow().find(".ui5-shellbar-search-toggle").should("be.visible");
+			cy.get("#content1").should("be.visible");
+			cy.get("#content2").should("be.visible");
+
+			cy.get("#action1").should("be.visible");
+			cy.get("#action2").should("be.visible");
+			cy.get("#action3").should("be.visible");
+
+
+			// Act - reduce viewport to hide action buttons
+			cy.get("@shellbar").invoke("prop", "showSearchField", false);
+			cy.viewport(350, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// Assert action buttons are hidden and search are hidden, before the last content item
+			cy.get("@shellbar").shadow().find(".ui5-shellbar-search-toggle").should("not.be.visible");
+			cy.get("#content1").should("be.visible");
+
+			// Act - increase viewport
+			cy.viewport(400, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// Assert search is visible again before with highest priority
+			cy.get("#content1").should("be.visible");
+			cy.get("@shellbar").shadow().find(".ui5-shellbar-search-toggle").should("be.visible");
+		});
 	});
 });
 

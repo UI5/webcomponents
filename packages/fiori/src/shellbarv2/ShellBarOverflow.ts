@@ -4,10 +4,10 @@ import type { ShellBarV2ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js"
 
 interface ShellBarV2HidableItem {
 	id: string;
-	selector: string; // CSS selector to find the element
-	hideOrder: number;
-	keepHidden: boolean;
-	showInOverflow?: boolean; // If true, hiding this item triggers overflow button
+	selector: string; 			// CSS selector to find the element
+	hideOrder: number;			// Priority for hiding - later adjusted based on search field state
+	keepHidden: boolean; 		// Keep item hidden to prevent flickering when searchfield expands/collapses
+	showInOverflow?: boolean; 	// If true, hiding this item triggers overflow button
 }
 
 interface ShellBarV2OverflowParams {
@@ -40,16 +40,16 @@ type ShellBarV2OverflowItem = {
 
 class ShellBarV2Overflow {
 	private readonly CLOSED_SEARCH_STRATEGY = {
-		ACTIONS: 0,			// All actions first
+		ACTIONS: 0,			// All actions hide first
 		CONTENT: 1000,		// Then content (except last)
 		SEARCH: 2000,		// Then search button
-		LAST_CONTENT: 3000,	// Last content item protected
+		LAST_CONTENT: 3000,	// Last content item hides last
 	};
 
 	private readonly OPEN_SEARCH_STRATEGY = {
-		CONTENT: 0, 		// All content first
+		CONTENT: 0, 		// All content hide first
 		ACTIONS: 1000,		// All actions next
-		SEARCH: 2000,		// Search after all actions
+		SEARCH: 2000,		// Then search button
 		LAST_CONTENT: 0,	// Last content same as other content
 	};
 
@@ -145,7 +145,7 @@ class ShellBarV2Overflow {
 				id: slotName,
 				selector: `#${slotName}`,
 				hideOrder: priority + dataHideOrder,
-				keepHidden: false,
+				keepHidden: false, // Content items don't cause flickering
 				showInOverflow: false,
 			});
 		});
@@ -191,7 +191,7 @@ class ShellBarV2Overflow {
 				id: ShellBarV2Actions.Search,
 				selector: ShellBarV2ActionsSelectors.Search,
 				hideOrder: overflowStrategy.SEARCH + actionIndex++,
-				keepHidden: hiddenItemsIds.includes(ShellBarV2Actions.Search),
+				keepHidden: false, // Search button can be shown/hidden freely
 				showInOverflow: true,
 			});
 		}
