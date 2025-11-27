@@ -284,46 +284,64 @@ describe("Toolbar general interaction", () => {
 		cy.get("ui5-toolbar-select").should("be.visible");
 	});
 
-	it("Should update ToolbarSelect value when option selected property changes via button click", () => {
+	it("Should update selection when option's selected property is changed programmatically", () => {
 		cy.mount(
 			<>
 				<Toolbar>
-					<ToolbarSelect id="testSelect">
-						<ToolbarSelectOption id="opt1" selected>Option 1</ToolbarSelectOption>
-						<ToolbarSelectOption id="opt2">Option 2</ToolbarSelectOption>
+					<ToolbarSelect>
+						<ToolbarSelectOption>1</ToolbarSelectOption>
+						<ToolbarSelectOption id="opt2">2</ToolbarSelectOption>
+						<ToolbarSelectOption>3</ToolbarSelectOption>
+						<ToolbarSelectOption>4</ToolbarSelectOption>
 					</ToolbarSelect>
 				</Toolbar>
-				<Button id="btnNext">Next Step</Button>
+				<Button id="btn">select option 2</Button>
 			</>
 		);
 
-		// Wait for component to render
-		cy.wait(500);
-
-		// Initial check - Option 1 should be selected
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.should("have.prop", "value", "Option 1");
-
 		// Set up button click handler
-		cy.get("[ui5-button]").then($btn => {
-			$btn.get(0).addEventListener("click", () => {
-				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
+		cy.get("#btn").then($btn => {
+			$btn.get(0).addEventListener("ui5-click", () => {
+				// First, deselect all options
+				const select = document.querySelector("ui5-toolbar-select");
+				const options = select?.querySelectorAll("ui5-toolbar-select-option");
+				options?.forEach(opt => {
+					(opt as ToolbarSelectOption).selected = false;
+				});
+				// Then select option 2
 				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
-				opt1.selected = false;
 				opt2.selected = true;
 			});
 		});
 
-		// Click the button
-		cy.get("[ui5-button]").realClick();
-
-		// Wait for update
-		cy.wait(200);
-
-		// Verify the ToolbarSelect value property updated
+		// Verify initial state - first option has selected attribute
 		cy.get("[ui5-toolbar]")
 			.find("[ui5-toolbar-select]")
-			.should("have.prop", "value", "Option 2");
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.should("have.attr", "selected");
+
+		// Click button using realClick
+		cy.get("#btn").realClick();
+
+		// Verify option 2 now has the selected attribute
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(1)
+			.should("have.attr", "selected");
+
+		// Verify option 1 no longer has selected attribute
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.should("not.have.attr", "selected");
 	});
 });
