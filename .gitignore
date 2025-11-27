@@ -99,3 +99,5 @@ packages/playground/assets/*.gif
 packages/playground/assets/*.css
 packages/playground/assets/test/pages/*.css
 packages/playground/assets/test/pages/*.js
+
+AGENTS.md
