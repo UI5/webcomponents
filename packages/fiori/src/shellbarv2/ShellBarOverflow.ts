@@ -93,11 +93,6 @@ class ShellBarV2Overflow {
 			}
 		}
 
-		// never hide just one item as overflow button also accounts for one item
-		if (hiddenItemsIds.length === 1 && nextItemToHide) {
-			hiddenItemsIds.push(nextItemToHide.id);
-		}
-
 		return {
 			hiddenItemsIds,
 			showOverflowButton,

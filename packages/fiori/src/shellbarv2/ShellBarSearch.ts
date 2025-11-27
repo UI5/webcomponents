@@ -1,4 +1,4 @@
-import { isPhone } from "@ui5/webcomponents-base";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IShellBarSearchField } from "../ShellBarV2.js";
 import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 

@@ -11,7 +11,7 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { renderFinished } from "@ui5/webcomponents-base";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
