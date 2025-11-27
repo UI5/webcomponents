@@ -1112,7 +1112,18 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
-	 * Returns the component accessibility info.
+	 * Provides the accessibility information for the component.
+	 *
+	 * **Note:** The default implementation returns `undefined`, indicating that
+	 * the component does not provide any accessibility metadata by default. In such cases,
+	 * consumers of this API may apply their own fallback if needed.
+	 *
+	 * Subclasses overriding this getter must return an object of type `AccessibilityInfo`
+	 * describing the component's accessible name, role, description, and other relevant properties.
+	 *
+	 * If the component is intentionally decorative and should be ignored by assistive
+	 * technologies, return an empty object `{}`.
+	 *
 	 * @private
 	 */
 	get accessibilityInfo(): AccessibilityInfo | undefined {
