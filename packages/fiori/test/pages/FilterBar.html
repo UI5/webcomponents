@@ -20,7 +20,8 @@
 
 <body>
 	<div class="section">
-		<ui5-filterbar id="filterbar1">
+		<h3>FilterBar with all buttons visible (default)</h3>
+		<ui5-filterbar id="filterbar1" show-basic-search>
 			<ui5-filterbar-item>
 				<ui5-label slot="label" for="product">Product</ui5-label>
 				<ui5-input placeholder="Enter product name" id="product"></ui5-input>
@@ -40,12 +41,61 @@
 		</ui5-filterbar>
 	</div>
 
+	<!-- <div class="section">
+		<h3>FilterBar with custom button visibility</h3>
+		<ui5-filterbar id="filterbar2" show-restore-on-f-b show-clear-on-f-b>
+			<ui5-filterbar-item>
+				<ui5-label slot="label" for="name">Name</ui5-label>
+				<ui5-input placeholder="Enter name" id="name"></ui5-input>
+			</ui5-filterbar-item>
+		</ui5-filterbar>
+	</div>
+
+	<div class="section">
+		<h3>FilterBar with hidden buttons</h3>
+		<ui5-filterbar id="filterbar3" hide-go-on-f-b hide-filters-on-f-b show-restore-on-f-b show-clear-on-f-b>
+			<ui5-filterbar-item>
+				<ui5-label slot="label" for="category">Category</ui5-label>
+				<ui5-input placeholder="Enter category" id="category"></ui5-input>
+			</ui5-filterbar-item>
+		</ui5-filterbar>
+	</div> -->
+
+	<div class="section">
+		<h3>Event Log:</h3>
+		<div id="eventLog" style="border: 1px solid #ccc; padding: 10px; min-height: 100px; font-family: monospace;"></div>
+	</div>
+
 	<script>
 		const filterbar1 = document.getElementById("filterbar1");
-		
-		filterbar1.addEventListener("click", function(e) {
-			console.log("FilterBar clicked:", e.target);
-		});
+		const filterbar2 = document.getElementById("filterbar2");
+		const filterbar3 = document.getElementById("filterbar3");
+		const eventLog = document.getElementById("eventLog");
+
+		function logEvent(filterbarId, eventName) {
+			const timestamp = new Date().toLocaleTimeString();
+			const message = `[${timestamp}] ${filterbarId}: ${eventName} event fired\n`;
+			eventLog.textContent += message;
+			console.log(message);
+		}
+
+		// Add event listeners for filterbar1
+		filterbar1.addEventListener("go", () => logEvent("filterbar1", "go"));
+		filterbar1.addEventListener("filters-press", () => logEvent("filterbar1", "filters-press"));
+		filterbar1.addEventListener("restore", () => logEvent("filterbar1", "restore"));
+		filterbar1.addEventListener("clear", () => logEvent("filterbar1", "clear"));
+
+		// // Add event listeners for filterbar2
+		// filterbar2.addEventListener("go", () => logEvent("filterbar2", "go"));
+		// filterbar2.addEventListener("filters-press", () => logEvent("filterbar2", "filters-press"));
+		// filterbar2.addEventListener("restore", () => logEvent("filterbar2", "restore"));
+		// filterbar2.addEventListener("clear", () => logEvent("filterbar2", "clear"));
+
+		// // Add event listeners for filterbar3
+		// filterbar3.addEventListener("go", () => logEvent("filterbar3", "go"));
+		// filterbar3.addEventListener("filters-press", () => logEvent("filterbar3", "filters-press"));
+		// filterbar3.addEventListener("restore", () => logEvent("filterbar3", "restore"));
+		// filterbar3.addEventListener("clear", () => logEvent("filterbar3", "clear"));
 	</script>
 </body>
 </html>

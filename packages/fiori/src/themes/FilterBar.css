@@ -17,6 +17,7 @@
 	gap: 0 1rem;
 }
 
+.ui5-filterbar-basic-search,
 .ui5-filterbar-item,
 .ui5-filterbar-spacer {
 	flex: 1 0 12rem;
@@ -31,16 +32,21 @@
 	margin-bottom: 0.25rem;
 }
 
-.ui5-fitlerbar-search,
+.ui5-filterbar-basic-search,
 .ui5-filterbar-buttons {
 	display: flex;
 	align-items: flex-end;
 	flex-wrap: wrap;
 }
-.ui5-filterbar-search,
+
+.ui5-filterbar-basic-search,
 .ui5-filterbar-buttons,
 .ui5-filterbar-item {
 	margin-top: 0.5rem;
+}
+
+.ui5-filterbar-basic-search [ui5-input] {
+	width: 100%;
 }
 
 .ui5-filterbar-layout-one-line .ui5-filterbar-spacer {
