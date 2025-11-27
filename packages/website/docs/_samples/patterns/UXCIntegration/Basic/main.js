@@ -45,6 +45,7 @@ import "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 
+import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -273,18 +274,42 @@ userMenu.addEventListener("sign-out-click", function (event) {
 /* User Settings Dialog */
 const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+
+//Language and Region
+const languageRegion = document.getElementById("language-region-container");
+const language = document.getElementById("language");
+const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
+const additionalDialog = document.getElementById("additionalDialog");
+const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
 const mobile2Button = document.getElementById("mobile2-button");
 const resetAllButton = document.getElementById("reset-all-button");
-const additionalDialog = document.getElementById("additionalDialog");
-const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
 const toast = document.getElementById("toastThemeSave");
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
 const themeSave =document.getElementById("themeSave");
+
+
+//Language and Region
+language.addEventListener("selection-change",  function (event) {
+	additionalDialog.open = true;
+});
+
+additionalDialogClosers.forEach(btn => {
+	btn.addEventListener("click", () => {
+		additionalDialog.open = false;
+	});
+});
+
+regionSettings.forEach((settingsItem) => {
+	settingsItem.addEventListener("selection-change",  function (event) {
+		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
+	});
+});
 
 mobile1Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
@@ -300,12 +325,6 @@ resetAllButton.addEventListener("click", function () {
 	additionalDialog.open = true;
 });
 
-additionalDialogClosers.forEach(btn => {
-	btn.addEventListener("click", () => {
-		additionalDialog.open = false;
-	});
-})
-
 themeSave.addEventListener("click", function () {
 	toast.open = true;
 });
@@ -320,12 +339,12 @@ resetAll.addEventListener("click", function () {
 
 settingsDialog.addEventListener("selection-change", function (event) {
 	console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
-	if(event.detail.item?.text ==="Language & Region"){
+	if(event.detail.item?.text ==="Language and Region"){
 		event.detail.item.loading=true;
 		event.detail.item.loadingReason="Language & Region loading data...";
 		setTimeout(function(){
 			event.detail.item.loading=false;
-		}, 1000);
+		}, 500);
 	}
 });
 

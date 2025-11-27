@@ -19,11 +19,6 @@ on:
         required: false
         default: ''
         type: string
-      npm_tag:
-          description: 'tag (hotfix only)'
-          required: false
-          default: ''
-          type: string
 
   # Scheduled automatic RC releases
   schedule:
@@ -184,7 +179,7 @@ jobs:
 
   # ✅ Job 3: Hotfix Release Flow
   hotfix-release:
-    if: ${{ github.event.inputs.release_type == 'hotfix' }}
+    if: ${{ github.event.inputs.release_type == 'hotfix' && github.event.inputs.new_version != '' }}
     permissions:
       contents: write
       id-token: write
@@ -224,7 +219,9 @@ jobs:
             --create-release github
 
       - name: Publish
-        run: yarn lerna publish from-git --yes --dist-tag ${{ github.event.inputs.npm_tag || 'sf' }}
+        run:  |
+          major_minor=$(echo "${{ github.event.inputs.new_version }}" | cut -d. -f1,2)
+          yarn lerna publish from-git --yes --dist-tag "hotfix-${major_minor}"
 
   # ✅ Job 4: Experimental Release Flow
   experimental-release:
@@ -270,4 +267,4 @@ jobs:
 
       - name: Publish
         run: |
-          yarn lerna publish from-git --yes --dist-tag experimental
+          yarn lerna publish from-git --yes --dist-tag experimental --pre-dist-tag experimental
