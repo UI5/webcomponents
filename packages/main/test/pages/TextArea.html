@@ -225,7 +225,43 @@
 		<ui5-textarea id="textarea-accessible-description-both" class="textarea-width" accessible-description="Direct description" accessible-description-ref="external-desc" placeholder="TextArea with both direct and referenced descriptions"></ui5-textarea>
 	</section>
 
+	<section class="group">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-textarea id="textareaForm" required maxlength="10" show-exceeded-text="true" rows="1"></ui5-textarea>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+	</section>
+		<br><br>
+
 	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const textareaForm = document.getElementById('textareaForm');
+
+		btnCheckFormValidity.addEventListener('click', function () {
+			checkFormValidity('textareaForm');
+		});
+
+		textareaForm.addEventListener('ui5-change', function () {
+			setTimeout(() => {
+				checkFormValidity('textareaForm', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
 		var changeCounter = 0;
 		var inputCounter = 0;
 
