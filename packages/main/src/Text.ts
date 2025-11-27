@@ -22,25 +22,25 @@ import styles from "./generated/themes/Text.css.js";
 /**
  * @class
  *
- * <h3>Overview</h3>
+ * ### Overview
  *
  * The `ui5-text` component displays text that can be used in any content area of an application.
  *
- * <h3>Usage</h3>
+ * ### Usage
  *
  * - Use the `ui5-text` if you want to display text inside a form, table, or any other content area.
  * - Do not use the `ui5-text` if you need to reference input type of components (use ui5-label).
  *
- * <h3>Responsive behavior</h3>
+ * ### Responsive behavior
  *
  * The `ui5-text` component is fully adaptive to all screen sizes.
  * By default, the text will wrap when the space is not enough.
- * In addition, the component supports truncation via the <code>max-lines</code> property,
+ * In addition, the component supports truncation via the `max-lines` property,
  * by defining the number of lines the text should wrap before start truncating.
  *
- * <h3>ES6 Module Import</h3>
+ * ### ES6 Module Import
  *
- * <code>import "@ui5/webcomponents/dist/Text";</code>
+ * `import "@ui5/webcomponents/dist/Text";`
  *
  * @constructor
  * @extends UI5Element

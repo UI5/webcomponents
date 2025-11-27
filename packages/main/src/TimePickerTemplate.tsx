@@ -40,6 +40,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 							name={timeEntryRequest}
 							tabindex={-1}
 							showTooltip={true}
+							accessibleName={this.openIconTitle}
 							mode={this._iconMode}
 							onClick={this._togglePicker}
 							class={{
