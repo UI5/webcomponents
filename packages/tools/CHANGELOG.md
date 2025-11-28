@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **build:** fix issue with legacy dev setup ([#12706](https://github.com/UI5/webcomponents/issues/12706)) ([89fa5ca](https://github.com/UI5/webcomponents/commit/89fa5ca9f83551363e8c1d9980269cd58fa09d85))
+
+
+
+
+
 # [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
 
 
