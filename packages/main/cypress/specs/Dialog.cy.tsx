@@ -416,29 +416,27 @@ describe("Dialog general interaction", () => {
 		dialog.appendChild(content);
 
 		// Spy on Object.assign only for this dialog's style
-		cy.window().then(() => {
-			const originalAssign = Object.assign;
-			const topAndLeftStyles: Array<{ top: number; left: number }> = [];
-			
-			cy.stub(Object, "assign").callsFake(function(target: any, ...sources: any[]) {
-				// Check if target is the dialog's style object
-				if (target === dialog.style) {
-					const styleObj = sources[0];
-					if (styleObj && styleObj.top !== undefined && styleObj.left !== undefined) {
-						topAndLeftStyles.push({
-							top: parseInt(styleObj.top),
-							left: parseInt(styleObj.left)
-						});
-					}
+		const originalAssign = Object.assign;
+		const topAndLeftStyles: Array<{ top: number; left: number }> = [];
+		
+		cy.stub(Object, "assign").callsFake(function(target: any, ...sources: any[]) {
+			// Check if target is the dialog's style object
+			if (target === dialog.style) {
+				const styleObj = sources[0];
+				if (styleObj && styleObj.top !== undefined && styleObj.left !== undefined) {
+					topAndLeftStyles.push({
+						top: parseInt(styleObj.top),
+						left: parseInt(styleObj.left)
+					});
 				}
-				return originalAssign.call(this, target, ...sources);
-			}).as("objectAssignStub");
+			}
+			return originalAssign.call(this, target, ...sources);
+		}).as("objectAssignStub");
 
-			cy.wrap(topAndLeftStyles).as("topAndLeftStyles");
+		cy.wrap(topAndLeftStyles).as("topAndLeftStyles");
 
-			dialog.setAttribute("open", "true");
-			document.body.appendChild(dialog);
-		});
+		dialog.setAttribute("open", "true");
+		document.body.appendChild(dialog);
 
 		cy.get<Dialog>("#dynamic-dialog").ui5DialogOpened();
 
