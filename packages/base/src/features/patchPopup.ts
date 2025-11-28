@@ -6,6 +6,7 @@ type Control = {
 	getDomRef: () => HTMLElement | null,
 }
 
+// The lifecycle of Popup.js is open -> _opened -> close -> _closed, we're interested in the first (open) and last (_closed)
 type OpenUI5Popup = {
 	open: (...args: any[]) => void,
 	_closed: (...args: any[]) => void,
@@ -15,7 +16,6 @@ type OpenUI5Popup = {
 	getModal: () => boolean
 };
 
-// The lifecycle of Popup.js is open -> _opened -> close -> _closed, we're interested in the first (open) and last (_closed)
 type OpenUI5PopupClass = {
 	prototype: OpenUI5Popup
 };
@@ -79,7 +79,23 @@ const hasWebComponentPopupAbove = (popup: object) => {
 	return false;
 };
 
-const enableNativePopoverForOpenUI5 = (domRef: HTMLElement, popup: OpenUI5Popup) => {
+const getPopupContentElement = (popup: OpenUI5Popup): HTMLElement | null => {
+	const content = popup.getContent()!;
+	return content instanceof HTMLElement ? content : content?.getDomRef() || null;
+};
+
+const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
+	const openingInitiated = ["OPENING", "OPEN"].includes(popup.getOpenState());
+	if (!openingInitiated || !isNativePopoverOpen()) {
+		return;
+	}
+
+	const domRef = getPopupContentElement(popup);
+
+	if (!domRef) {
+		return;
+	}
+
 	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 
 	if (popup.getModal() && openUI5BlockLayer) {
@@ -92,14 +108,19 @@ const enableNativePopoverForOpenUI5 = (domRef: HTMLElement, popup: OpenUI5Popup)
 	domRef.showPopover();
 };
 
-const disableNativePopoverForOpenUI5 = (domRef: HTMLElement) => {
+const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
+	const domRef = getPopupContentElement(popup);
+
+	if (!domRef) {
+		return;
+	}
+
 	if (domRef.hasAttribute("popover")) {
 		domRef.hidePopover();
 		domRef.removeAttribute("popover");
 	}
 
-	const lastPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1];
-	if (lastPopup.type === "OpenUI5" && lastPopup.instance.getModal()) {
+	if (popup.getModal()) {
 		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 		if (openUI5BlockLayer && openUI5BlockLayer.hasAttribute("popover")) {
 			openUI5BlockLayer.hidePopover();
@@ -113,20 +134,17 @@ const fixOpenUI5PopupBelow = () => {
 	}
 
 	const prevPopup = AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 2];
-	if (!prevPopup || prevPopup.type !== "OpenUI5" || !prevPopup.instance.getModal()) {
+	if (!prevPopup
+		|| prevPopup.type !== "OpenUI5"
+		|| !prevPopup.instance.getModal()) {
 		return;
 	}
 
-	const prevPopupContent = prevPopup.instance.getContent()!;
-	const content = prevPopupContent instanceof HTMLElement ? prevPopupContent : prevPopupContent?.getDomRef();
-
+	const content = getPopupContentElement(prevPopup.instance);
 	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 
 	content?.hidePopover();
-
-	if (prevPopup.instance.getModal()) {
-		openUI5BlockLayer?.showPopover();
-	}
+	openUI5BlockLayer?.showPopover();
 
 	content?.showPopover();
 };
@@ -157,16 +175,7 @@ const patchOpen = (Popup: OpenUI5PopupClass) => {
 	const origOpen = Popup.prototype.open;
 	Popup.prototype.open = function open(...args: any[]) {
 		origOpen.apply(this, args); // call open first to initiate opening
-		const openingInitiated = ["OPENING", "OPEN"].includes(this.getOpenState());
-		if (openingInitiated && isNativePopoverOpen()) {
-			const element = this.getContent();
-			if (element) {
-				const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
-				if (domRef) {
-					enableNativePopoverForOpenUI5(domRef, this);
-				}
-			}
-		}
+		openNativePopoverForOpenUI5(this);
 
 		addOpenedPopup({
 			type: "OpenUI5",
@@ -178,13 +187,8 @@ const patchOpen = (Popup: OpenUI5PopupClass) => {
 const patchClosed = (Popup: OpenUI5PopupClass) => {
 	const _origClosed = Popup.prototype._closed;
 	Popup.prototype._closed = function _closed(...args: any[]) {
-		const element = this.getContent();
-		const domRef = element instanceof HTMLElement ? element : element?.getDomRef();
 		_origClosed.apply(this, args); // only then call _close
-		if (domRef) {
-			disableNativePopoverForOpenUI5(domRef); // unset the popover attribute and close the native popover, but only if still in DOM
-		}
-
+		closeNativePopoverForOpenUI5(this);
 		removeOpenedPopup(this);
 	};
 };
