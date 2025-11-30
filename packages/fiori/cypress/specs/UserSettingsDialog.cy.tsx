@@ -1,6 +1,9 @@
 import UserSettingsItem from "../../src/UserSettingsItem.js";
 import UserSettingsView from "../../src/UserSettingsView.js";
 import UserSettingsAccountView from "../../src/UserSettingsAccountView.js";
+import UserSettingsAppearanceView from "../../src/UserSettingsAppearanceView.js";
+import UserSettingsAppearanceViewItem from "../../src/UserSettingsAppearanceViewItem.js";
+import UserSettingsAppearanceViewGroup from "../../src/UserSettingsAppearanceViewGroup.js";
 import UserMenuAccount from "../../src/UserMenuAccount.js";
 import UserSettingsDialog from "../../src/UserSettingsDialog.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -903,5 +906,464 @@ describe("User account view", () => {
         cy.get("@manageAccountBtn").click();
 
         cy.get("@clicked").should("have.been.calledOnce");
+    });
+});
+
+describe("Appearance view", () => {
+    it("tests appearance view no config", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem>
+                <UserSettingsAppearanceView>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").should("exist");
+        cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+        cy.get("@settingItem").should("exist");
+        cy.get("@settingItem").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").should("exist");
+    });
+
+    it("tests appearance view text", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").should("exist");
+        cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+        cy.get("@settingItem").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").should("exist");
+        cy.get("@appearanceView").should("have.attr", "text", "Themes");
+        cy.get("@settingItem").shadow().find("[ui5-tabcontainer]").should("not.exist");
+    });
+
+    it("tests appearance view items exist", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").should("exist");
+        cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+        cy.get("@settingItem").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").should("exist");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("items");
+        cy.get("@items").should("have.length", 2);
+    });
+
+    it("tests appearance view item properties", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette" color-scheme="Accent5"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").should("exist");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").should("exist");
+        cy.get("@item").should("have.attr", "text", "SAP Morning Horizon");
+        cy.get("@item").should("have.attr", "icon", "palette");
+        cy.get("@item").should("have.attr", "color-scheme", "Accent5");
+        cy.get("@item").then($item => {
+            const item = $item.get(0) as any;
+            expect(item.itemKey).to.equal("sap_horizon");
+            expect(item.text).to.equal("SAP Morning Horizon");
+            expect(item.icon).to.equal("palette");
+            expect(item.colorScheme).to.equal("Accent5");
+        });
+    });
+
+    it("tests appearance view item default icon", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="custom_theme" text="Custom Theme"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").then($item => {
+            const item = $item.get(0) as any;
+            expect(item.icon).to.equal("product");
+        });
+    });
+
+    it("tests appearance view item default color-scheme", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="custom_theme" text="Custom Theme"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").then($item => {
+            const item = $item.get(0) as any;
+            expect(item.colorScheme).to.equal("Accent7");
+        });
+    });
+
+    it("tests appearance view item custom color-scheme", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="custom_theme" text="Custom Theme" color-scheme="Accent3"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").shadow().find("[ui5-avatar]").as("avatar");
+        cy.get("@avatar").should("have.attr", "color-scheme", "Accent3");
+    });
+
+    it("tests appearance view item avatar", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").shadow().find("[ui5-avatar]").as("avatar");
+        cy.get("@avatar").should("exist");
+        cy.get("@avatar").should("have.length", 1);
+        cy.get("@avatar").should("have.attr", "icon", "palette");
+        cy.get("@avatar").should("have.attr", "shape", "Square");
+        cy.get("@avatar").should("have.attr", "color-scheme", "Accent7");
+    });
+
+    it("tests appearance view item text displayed", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        cy.get("@item").shadow().find(".item-title").as("title");
+        cy.get("@title").should("exist");
+        cy.get("@title").contains("SAP Morning Horizon");
+    });
+
+    it("tests appearance view with groups", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewGroup header-text="SAP Horizon">
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                    <UserSettingsAppearanceViewGroup header-text="SAP Quartz">
+                        <UserSettingsAppearanceViewItem item-key="sap_fiori_3" text="SAP Quartz Light" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-group]").should("have.length", 2);
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").should("have.length", 3);
+    });
+
+    it("tests appearance view group header-text", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewGroup header-text="SAP Horizon">
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-group]").as("group");
+        cy.get("@group").should("have.attr", "header-text", "SAP Horizon");
+        cy.get("@group").shadow().find("[ui5-li-group-header]").contains("SAP Horizon");
+    });
+
+    it("tests appearance view mixed grouped and ungrouped items", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+					<UserSettingsAppearanceViewItem item-key="custom_theme" text="Custom Theme" icon="palette"></UserSettingsAppearanceViewItem>
+
+                    <UserSettingsAppearanceViewGroup header-text="SAP Horizon">
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-group]").should("have.length", 1);
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").should("have.length", 2);
+    });
+
+    it("tests theme-selected event", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        
+        cy.get("@appearanceView").then($view => {
+            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelected"));
+        });
+
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .click();
+
+        cy.get("@themeSelected").should("have.been.calledOnce");
+    });
+
+    it("tests theme-selected event detail contains correct key", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        
+        // Set itemKey programmatically after mount
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").then($items => {
+            ($items.get(0) as any).itemKey = "sap_horizon";
+            ($items.get(1) as any).itemKey = "sap_horizon_dark";
+        });
+        
+        cy.get("@appearanceView").then($view => {
+            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelectedWithDetail"));
+        });
+
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .eq(1)
+            .click();
+
+        cy.get("@themeSelectedWithDetail").should("have.been.calledOnce");
+        cy.get("@themeSelectedWithDetail").then((stub: any) => {
+            const call = stub.getCall(0);
+            expect(call.args[0].detail.selectedTheme).to.equal("sap_horizon_dark");
+        });
+    });
+
+    it("tests item selection state", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes" selected-item-key="sap_horizon_dark">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(1).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.true;
+        });
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.false;
+        });
+    });
+
+    it("tests item selection changes on click", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .click();
+
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.true;
+        });
+
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .eq(1)
+            .click();
+
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.false;
+        });
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(1).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.true;
+        });
+    });
+
+    it("tests item clickable and hover states", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
+        
+        cy.get("@item").then($item => {
+            const item = $item.get(0) as any;
+            expect(item.type).to.equal("Active");
+        });
+        
+        cy.get("@item").shadow().find(".ui5-li-root").should("exist");
+    });
+
+    it("tests additionalContent slot", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <div slot="additionalContent">Additional content here</div>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").shadow().find("slot[name='additionalContent']").should("exist");
+    });
+
+    it("tests additionalContent slot renders above items", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <div slot="additionalContent" id="additional-content-test">Additional content above items</div>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        
+        // Get positions of additionalContent and the list
+        cy.get("@appearanceView").find("#additional-content-test").then($additional => {
+            const additionalTop = $additional.get(0).getBoundingClientRect().top;
+            
+            cy.get("@appearanceView").shadow().find("[ui5-list]").then($list => {
+                const listTop = $list.get(0).getBoundingClientRect().top;
+                
+                // Additional content should be positioned above the list
+                expect(additionalTop).to.be.lessThan(listTop);
+            });
+        });
+    });
+
+    it("tests selection persists across re-renders", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes" selected-item-key="sap_horizon">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        
+        cy.get("@appearanceView").then($view => {
+            const view = $view.get(0) as any;
+            expect(view.selectedItemKey).to.equal("sap_horizon");
+        });
+        
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.true;
+        });
+    });
+
+    it("tests items in groups fire theme-selected event", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewGroup header-text="SAP Horizon">
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                        <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        
+        cy.get("@appearanceView").then($view => {
+            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelected"));
+        });
+
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-group]")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .click();
+
+        cy.get("@themeSelected").should("have.been.calledOnce");
+        cy.get("@themeSelected").then((stub: any) => {
+            const call = stub.getCall(0);
+            expect(call.args[0].detail.selectedTheme).to.equal("sap_horizon");
+        });
+    });
+
+    it("tests appearance view list renders correctly", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").shadow().find("[ui5-list]").as("list");
+        cy.get("@list").should("exist");
+        cy.get("@list").should("have.class", "user-settings-appearance-view-list");
     });
 });
