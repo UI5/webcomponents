@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **ui5-table:** accessibility improvements implemented ([#12684](https://github.com/UI5/webcomponents/issues/12684)) ([94bae79](https://github.com/UI5/webcomponents/commit/94bae79f85b1207b44d69f028fd6876f7df4963c)), closes [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946) [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946)
+
+
+### Features
+
+* **ui5-input,ui5-multi-input:** dynamic suggestions triggering ([#12597](https://github.com/UI5/webcomponents/issues/12597)) ([d006cd6](https://github.com/UI5/webcomponents/commit/d006cd6ee89a796e56c99713dd6e3ae9726e6be5))
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Features
+
+* **ui5-user-settings-account-view:** introduce new component `UserSettingsAccountView` ([#12658](https://github.com/UI5/webcomponents/issues/12658)) ([b818abb](https://github.com/UI5/webcomponents/commit/b818abb57326ffde13ac431f26d787ee3a294693))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **ui5-ai-input:** add docs and correct samples ([#12643](https://github.com/UI5/webcomponents/issues/12643)) ([90ca4a9](https://github.com/UI5/webcomponents/commit/90ca4a92d924999be3202569d02c409d6dd8256a))
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+
+### Features
+
+* **ui5-ai-input:** introduce new component ([#12407](https://github.com/UI5/webcomponents/issues/12407)) ([6344333](https://github.com/UI5/webcomponents/commit/6344333eb7259c180c309ab18a3a21b6272e5a10))
+* **ui5-form:** enhance a11y using description list ([#12365](https://github.com/UI5/webcomponents/issues/12365)) ([28994f1](https://github.com/UI5/webcomponents/commit/28994f1ba69e211580fc280c73bd2f47e3827dff))
+* **ui5-segmented-button:** replace the enum property contentMode with boolean one ([0a71381](https://github.com/UI5/webcomponents/commit/0a7138118f2b1556450dcd99a7e2586064fcd251))
+* **ui5-user-settings-item:** 'pages' is default slot ([#12610](https://github.com/UI5/webcomponents/issues/12610)) ([d303627](https://github.com/UI5/webcomponents/commit/d3036277fcab2a8d6af8129a2ccde7e48d64486d))
+
+
+
+
+
 # [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
 
 

@@ -1,5 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
+const { scopeThemingVariables } = require("../css-processors/scope-variables.mjs");
 
 const generate = async (argv) => {
 	if (argv.length < 7) {
@@ -91,7 +92,7 @@ const generate = async (argv) => {
 	console.log(`Generating illustrations from ${srcPath} to ${destPath}`)
 
 	const svgImportTemplate = svgContent => {
-		return `export default \`${svgContent}\`;`
+		return `export default \`${scopeThemingVariables(svgContent)}\`;`
 	};
 	const svgToJs = async fileName => {
 		const svg = await fs.readFile(path.join(srcPath, fileName), { encoding: "utf-8" });
@@ -121,7 +122,7 @@ const generate = async (argv) => {
 		// If no Dot is present, Spot will be imported as Dot
 		const hasDot = dotIllustrationNames.indexOf(illustrationName) !== -1 ? 'Dot' : 'Spot';
 
-		return `import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+		return `import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import dialogSvg from "./${illustrationsPrefix}-Dialog-${illustrationName}.js";
 import sceneSvg from "./${illustrationsPrefix}-Scene-${illustrationName}.js";
 import spotSvg from "./${illustrationsPrefix}-Spot-${illustrationName}.js";
@@ -136,7 +137,7 @@ const collection = "${collection}";${defaultText ? `
 const title = IM_TITLE_${illustrationNameUpperCase};
 const subtitle = IM_SUBTITLE_${illustrationNameUpperCase};` : ``}
 
-registerIllustration(name, {
+unsafeRegisterIllustration(name, {
 	dialogSvg,
 	sceneSvg,
 	spotSvg,

@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **build:** fix issue with legacy dev setup ([#12706](https://github.com/UI5/webcomponents/issues/12706)) ([89fa5ca](https://github.com/UI5/webcomponents/commit/89fa5ca9f83551363e8c1d9980269cd58fa09d85))
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Bug Fixes
+
+* **cem:** alias references ([#12682](https://github.com/UI5/webcomponents/issues/12682)) ([4ce5617](https://github.com/UI5/webcomponents/commit/4ce5617ff580c869640996545fa618ff90447ba4))
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **tools:** fix wc-dev test command ([#12662](https://github.com/UI5/webcomponents/issues/12662)) ([7dd11fb](https://github.com/UI5/webcomponents/commit/7dd11fbb88711a74d3602328a492a923552fd4ef))
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **tools:** dev-server for 3rd party packages ([#12631](https://github.com/UI5/webcomponents/issues/12631)) ([a4f4dd5](https://github.com/UI5/webcomponents/commit/a4f4dd5b0a68620ec063de32e724c064bd73af87))
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
 # [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
 
 

@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -35,12 +36,19 @@ const shellbar = document.getElementById("shellbar");
 const menuShellBar = document.getElementById("userMenuShellBar");
 const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+const account = document.getElementById("account");
+const resetAllButton = document.getElementById("reset-all-button");
+//Language and Region
+const languageRegion = document.getElementById("language-region-container");
+const language = document.getElementById("language");
+const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
+const additionalDialog = document.getElementById("additionalDialog");
+const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
 const mobile2Button = document.getElementById("mobile2-button");
-const resetAllButton = document.getElementById("reset-all-button");
-const additionalDialog = document.getElementById("additionalDialog");
-const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
 const toast = [...document.getElementsByTagName("ui5-toast")][0];
@@ -52,7 +60,7 @@ shellbar.addEventListener("ui5-profile-click", (event) => {
 	console.log(" menuShellBar ui5-profile-click")
 
 	menuShellBar.opener = event.detail.targetRef;
-	if(menuShellBar.open){
+	if (menuShellBar.open) {
 		menuShellBar.open = false;
 	} else {
 		menuShellBar.open = true;
@@ -69,6 +77,35 @@ menuShellBar.addEventListener("item-click", function (event) {
 	}
 });
 
+account.addEventListener("edit-accounts-click", function () {
+	console.log("Avatar clicked");
+});
+
+account.addEventListener("manage-account-click", function () {
+	console.log("Manage account clicked");
+});
+
+resetAllButton.addEventListener("click", function () {
+	additionalDialog.open = true;
+});
+
+//Language and Region
+language.addEventListener("selection-change",  function (event) {
+	additionalDialog.open = true;
+});
+
+dialogClosers.forEach(btn => {
+	btn.addEventListener("click", () => {
+		additionalDialog.open = false;
+	});
+});
+
+regionSettings.forEach((settingsItem) => {
+	settingsItem.addEventListener("selection-change",  function (event) {
+		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
+	});
+});
+
 mobile1Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
 	mobileSecondPage.text = "iOS";
@@ -79,15 +116,6 @@ mobile2Button.addEventListener("click", function () {
 	mobileSecondPage.text = "Android";
 });
 
-resetAllButton.addEventListener("click", function () {
-	additionalDialog.open = true;
-});
-
-additionalDialogClosers.forEach(btn => {
-	btn.addEventListener("click", () => {
-		additionalDialog.open = false;
-	});
-})
 
 themeSave.addEventListener("click", function () {
 	toast.open = true;
@@ -103,12 +131,12 @@ resetAll.addEventListener("click", function () {
 
 settingsDialog.addEventListener("selection-change", function (event) {
 	console.log(`Selection change: ${event.detail.item.text}`, event.detail);
-	if(event.detail.item.text ==="Language & Region"){
+	if(event.detail.item.text ==="Language and Region"){
 		event.detail.item.loading=true;
 		event.detail.item.loadingReason="Language & Region loading data...";
 		setTimeout(function(){
 			event.detail.item.loading=false;
-		}, 3000);
+		}, 500);
 	}
 });
 

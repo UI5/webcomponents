@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **build:** fix issue with legacy dev setup ([#12706](https://github.com/UI5/webcomponents/issues/12706)) ([89fa5ca](https://github.com/UI5/webcomponents/commit/89fa5ca9f83551363e8c1d9980269cd58fa09d85))
+* **ui5-calendar:** use global configuration for first day of week ([#12665](https://github.com/UI5/webcomponents/issues/12665)) ([4e18756](https://github.com/UI5/webcomponents/commit/4e187560b35dd45198d640ee7c17b0a0523ef5c8)), closes [#12426](https://github.com/UI5/webcomponents/issues/12426)
+* **ui5-search-item:** action slot visibility ([#12694](https://github.com/UI5/webcomponents/issues/12694)) ([2d34b93](https://github.com/UI5/webcomponents/commit/2d34b9384ecf3a1288705a5c969228d5c55c1278))
+* **ui5-table:** accessibility improvements implemented ([#12684](https://github.com/UI5/webcomponents/issues/12684)) ([94bae79](https://github.com/UI5/webcomponents/commit/94bae79f85b1207b44d69f028fd6876f7df4963c)), closes [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946) [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946)
+* **ui5-time-picker:** add tooltip to icon in input ([#12671](https://github.com/UI5/webcomponents/issues/12671)) ([538deb0](https://github.com/UI5/webcomponents/commit/538deb023b1cb61c33edf900172223efaec5738d)), closes [#12616](https://github.com/UI5/webcomponents/issues/12616)
+
+
+### Features
+
+* **ui5-button:** add  `accessibilityInfo` getter ([#12704](https://github.com/UI5/webcomponents/issues/12704)) ([bb0670b](https://github.com/UI5/webcomponents/commit/bb0670bdb4054071cd5a1abc7c693d47a0e746cf))
+* **ui5-input,ui5-multi-input:** dynamic suggestions triggering ([#12597](https://github.com/UI5/webcomponents/issues/12597)) ([d006cd6](https://github.com/UI5/webcomponents/commit/d006cd6ee89a796e56c99713dd6e3ae9726e6be5))
+* **ui5-multi-combobox:** adjust validation behavior ([#12707](https://github.com/UI5/webcomponents/issues/12707)) ([7a4a7e1](https://github.com/UI5/webcomponents/commit/7a4a7e105f3e9f066427c420961f5130d8642778))
+* **ui5-tokenizer:** add getFocusDomRef ([#12713](https://github.com/UI5/webcomponents/issues/12713)) ([bbda5a3](https://github.com/UI5/webcomponents/commit/bbda5a3fadc93c3997271e31e0bded6b2a496539))
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Bug Fixes
+
+* **cem:** alias references ([#12682](https://github.com/UI5/webcomponents/issues/12682)) ([4ce5617](https://github.com/UI5/webcomponents/commit/4ce5617ff580c869640996545fa618ff90447ba4))
+* **ui5-color-palette-popover:** skip test ([#12690](https://github.com/UI5/webcomponents/issues/12690)) ([5347f7d](https://github.com/UI5/webcomponents/commit/5347f7dcc3289d939d227e1d499e0ae776c01237))
+* **ui5-color-palette-popover:** skip test ([#12693](https://github.com/UI5/webcomponents/issues/12693)) ([3582597](https://github.com/UI5/webcomponents/commit/35825977d54fd099a01ffe96a16ac5947bfb99c2))
+* **ui5-date-picker:** add correct tooltip when picker is opened ([#12669](https://github.com/UI5/webcomponents/issues/12669)) ([6598cdc](https://github.com/UI5/webcomponents/commit/6598cdcc0501f085f6ef3c0ebcefb2172be584b0)), closes [#12616](https://github.com/UI5/webcomponents/issues/12616)
+* **ui5-date-picker:** add input CSS part for styling ([#12559](https://github.com/UI5/webcomponents/issues/12559)) ([cacdba0](https://github.com/UI5/webcomponents/commit/cacdba0c340eaecdcf2bc5964ddbbc42f942003c))
+* **ui5-input:** align input margin to spec ([#12660](https://github.com/UI5/webcomponents/issues/12660)) ([e912c0b](https://github.com/UI5/webcomponents/commit/e912c0bb9be789a2280060952b4a4b1213cd1e9f))
+* **ui5-shellbar:** align logo vertically to middle ([#12685](https://github.com/UI5/webcomponents/issues/12685)) ([acff8fa](https://github.com/UI5/webcomponents/commit/acff8fa6727ebed2779cb9387c418346931bda45))
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+* **ui5-color-picker:** update accessibility ([#12556](https://github.com/UI5/webcomponents/issues/12556)) ([56cd503](https://github.com/UI5/webcomponents/commit/56cd503e2570594a62914a51591b9c6277eae7f0))
+* **ui5-user-settings-account-view:** introduce new component `UserSettingsAccountView` ([#12658](https://github.com/UI5/webcomponents/issues/12658)) ([b818abb](https://github.com/UI5/webcomponents/commit/b818abb57326ffde13ac431f26d787ee3a294693))
+* **ui5-wizard:** add getFocusDomRef ([#12668](https://github.com/UI5/webcomponents/issues/12668)) ([ba10757](https://github.com/UI5/webcomponents/commit/ba1075762b3afd7770dc11593312db1920d07a0d))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **tools:** fix wc-dev test command ([#12662](https://github.com/UI5/webcomponents/issues/12662)) ([7dd11fb](https://github.com/UI5/webcomponents/commit/7dd11fbb88711a74d3602328a492a923552fd4ef))
+* **ui5-popover:** fix horizontal placement (Start and End) in rtl mode ([#12606](https://github.com/UI5/webcomponents/issues/12606)) ([8135904](https://github.com/UI5/webcomponents/commit/813590444b04dda4fa089499720d6e2fc4a1f63e))
+* **ui5-slider/ui5-range-slider:** add border to progress indicator ([#12653](https://github.com/UI5/webcomponents/issues/12653)) ([e9fa794](https://github.com/UI5/webcomponents/commit/e9fa7948cfbc44f7d5396274e00d2e0d8b4e459b))
+
+
+### Features
+
+* **ui5-bar:** introduce `accessibleName` and `accessibleNameRef` properties ([#12626](https://github.com/UI5/webcomponents/issues/12626)) ([984f829](https://github.com/UI5/webcomponents/commit/984f829d615140b1f80139afe67dc8bb559a4ccf)), closes [#12591](https://github.com/UI5/webcomponents/issues/12591)
+* **ui5-toolbar-button:** add showOverflowText property for conditional text display ([#12542](https://github.com/UI5/webcomponents/issues/12542)) ([7e2a07d](https://github.com/UI5/webcomponents/commit/7e2a07d928e68d95421844eb2d9d9042d3aaa8fc)), closes [#12381](https://github.com/UI5/webcomponents/issues/12381)
+* **ui5-view-settings-dialog:** provide part for header ([#12627](https://github.com/UI5/webcomponents/issues/12627)) ([3206b90](https://github.com/UI5/webcomponents/commit/3206b906785424cac46ceeb6f7d9d61131635316)), closes [#12479](https://github.com/UI5/webcomponents/issues/12479)
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **tools:** dev-server for 3rd party packages ([#12631](https://github.com/UI5/webcomponents/issues/12631)) ([a4f4dd5](https://github.com/UI5/webcomponents/commit/a4f4dd5b0a68620ec063de32e724c064bd73af87))
+* **ui5-ai-input:** add docs and correct samples ([#12643](https://github.com/UI5/webcomponents/issues/12643)) ([90ca4a9](https://github.com/UI5/webcomponents/commit/90ca4a92d924999be3202569d02c409d6dd8256a))
+* **ui5-dynamic-page-title:** correct ARIA attribute handling for non-interactive titles ([#12598](https://github.com/UI5/webcomponents/issues/12598)) ([ddbb8d4](https://github.com/UI5/webcomponents/commit/ddbb8d4bed6a75d661a994c8d5737654a7a62e9c)), closes [#12466](https://github.com/UI5/webcomponents/issues/12466)
+* **ui5-multi-combobox:** skip unstable tests temporarily ([#12641](https://github.com/UI5/webcomponents/issues/12641)) ([78cc5e7](https://github.com/UI5/webcomponents/commit/78cc5e7b308dbe680344f5e56159776c39eec8ec)), closes [#12534](https://github.com/UI5/webcomponents/issues/12534) [#12607](https://github.com/UI5/webcomponents/issues/12607)
+* **ui5-search:** fix popup opening when there are no suggestions ([#12640](https://github.com/UI5/webcomponents/issues/12640)) ([2e760c6](https://github.com/UI5/webcomponents/commit/2e760c6760f79de3337977cf51dc3ed62c594b6e)), closes [#12519](https://github.com/UI5/webcomponents/issues/12519)
+* **ui5-shellbar:** image button is now properly read ([#12611](https://github.com/UI5/webcomponents/issues/12611)) ([873abf8](https://github.com/UI5/webcomponents/commit/873abf816101c3f1ca77b35167dd2e94cf18762b))
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** update header action button tooltip text ([#12634](https://github.com/UI5/webcomponents/issues/12634)) ([4cf0976](https://github.com/UI5/webcomponents/commit/4cf097658638c61e5e3bc4b8d196f74b4764c003)), closes [#12617](https://github.com/UI5/webcomponents/issues/12617)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package webcomponents
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+
+### Bug Fixes
+
+* **playground:** tsx support in editor ([#12599](https://github.com/UI5/webcomponents/issues/12599)) ([8b6b947](https://github.com/UI5/webcomponents/commit/8b6b9470a95d485c2bcbf809851cab8f47c55698))
+* **ui5-ai-textarea:** apply feedback and suggestions ([6ed3731](https://github.com/UI5/webcomponents/commit/6ed3731008f432eb5cf102a5a82234b0c1e6cb82))
+* **ui5-button:** remove reference to last clicked button ([#12370](https://github.com/UI5/webcomponents/issues/12370)) ([d9bbac7](https://github.com/UI5/webcomponents/commit/d9bbac7a0e02ef760dcdce4b5d1c0e39d192aaf0)), closes [#11865](https://github.com/UI5/webcomponents/issues/11865)
+* **ui5-carousel:** add aria-label to the list element ([#12587](https://github.com/UI5/webcomponents/issues/12587)) ([fa59293](https://github.com/UI5/webcomponents/commit/fa5929388c8c3bfe6346af0f190a33cb44cf8e86))
+* **ui5-color-palette-item:** remove inline styles ([#12558](https://github.com/UI5/webcomponents/issues/12558)) ([6aed82d](https://github.com/UI5/webcomponents/commit/6aed82d255ca4ee539b74cf8d54853eaad9e5110)), closes [#12550](https://github.com/UI5/webcomponents/issues/12550)
+* **ui5-color-palette:** enhance HOME/END navigation from any row position ([#12504](https://github.com/UI5/webcomponents/issues/12504)) ([9f8d565](https://github.com/UI5/webcomponents/commit/9f8d565843a4f0f490d6e8c5b1b452fa305d7447))
+* **ui5-date-picker:** apply value format in event detail ([#12615](https://github.com/UI5/webcomponents/issues/12615)) ([74aa404](https://github.com/UI5/webcomponents/commit/74aa404ef2733e7752ffbf2f0977bcb0cb97e6fb)), closes [#12580](https://github.com/UI5/webcomponents/issues/12580)
+* **ui5-dynamic-date-range:** skip test ([#12602](https://github.com/UI5/webcomponents/issues/12602)) ([0d36c6a](https://github.com/UI5/webcomponents/commit/0d36c6a54fc0a0ec6050d283879c4c34c099ce0e)), closes [#12601](https://github.com/UI5/webcomponents/issues/12601)
+* **ui5-dynamic-page:** prevent scroll when focusing title/header ([#12588](https://github.com/UI5/webcomponents/issues/12588)) ([cd6da99](https://github.com/UI5/webcomponents/commit/cd6da99302f197e5b04f044172eed3f93ef5102f))
+* **ui5-popover:** header shadow is restored in high contrast themes ([#12566](https://github.com/UI5/webcomponents/issues/12566)) ([341b467](https://github.com/UI5/webcomponents/commit/341b4673e62fc2e16d1d9481caf6633c6d80241f)), closes [#12530](https://github.com/UI5/webcomponents/issues/12530)
+* **ui5-segmented-button:** correct active/down state background ([#12497](https://github.com/UI5/webcomponents/issues/12497)) ([6faee2d](https://github.com/UI5/webcomponents/commit/6faee2df0d5b3f1b4876e83c0b27be9a30345ffd))
+* **ui5-switch:** prevent toggle when Space is pressed with Shift or Escape ([e50d4c7](https://github.com/UI5/webcomponents/commit/e50d4c72d08287d106d95bca5da437fab60afeb3))
+* **ui5-toggle-button:** align active state styling with hover state when pressed ([#12486](https://github.com/UI5/webcomponents/issues/12486)) ([ca81343](https://github.com/UI5/webcomponents/commit/ca8134391ead238923979f4de2212d544d7ffa86))
+
+
+### Features
+
+* **ui5-ai-input:** introduce new component ([#12407](https://github.com/UI5/webcomponents/issues/12407)) ([6344333](https://github.com/UI5/webcomponents/commit/6344333eb7259c180c309ab18a3a21b6272e5a10))
+* **ui5-checkbox:** implement accessibilityInfo getter ([#12527](https://github.com/UI5/webcomponents/issues/12527)) ([d9b42bc](https://github.com/UI5/webcomponents/commit/d9b42bc7fc2bdcc2a29fbe0f7d6729d445227003))
+* **ui5-form, ui5-form-group:** add accessibleNameRef ([#12595](https://github.com/UI5/webcomponents/issues/12595)) ([dbfe7c5](https://github.com/UI5/webcomponents/commit/dbfe7c5b0f68ddb662ff9947038b5ef115a66139))
+* **ui5-form:** enhance a11y using description list ([#12365](https://github.com/UI5/webcomponents/issues/12365)) ([28994f1](https://github.com/UI5/webcomponents/commit/28994f1ba69e211580fc280c73bd2f47e3827dff))
+* **ui5-segmented-button:** replace the enum property contentMode with boolean one ([0a71381](https://github.com/UI5/webcomponents/commit/0a7138118f2b1556450dcd99a7e2586064fcd251))
+* **ui5-select:** adds new prop textSeparator ([086a92a](https://github.com/UI5/webcomponents/commit/086a92a49d05a9b25a2b645d06a5b597ecbd143e))
+* **ui5-user-settings-item:** 'pages' is default slot ([#12610](https://github.com/UI5/webcomponents/issues/12610)) ([d303627](https://github.com/UI5/webcomponents/commit/d3036277fcab2a8d6af8129a2ccde7e48d64486d))
+
+
+
+
+
 # [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
 
 

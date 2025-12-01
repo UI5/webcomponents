@@ -1,4 +1,4 @@
-name: Deploy Website Preview (Netlify)
+name: Deploy Preview
 
 on:
   pull_request:
@@ -14,12 +14,16 @@ on:
         - 'packages/base/src/**/*.ts'
         - 'packages/ai/src/**/*.css' 
         - 'packages/ai/src/**/*.ts'
+        - 'packages/ai/src/**/*.tsx'
         - 'packages/compat/src/**/*.css'
         - 'packages/compat/src/**/*.ts'
+        - 'packages/compat/src/**/*.tsx'
         - 'packages/fiori/src/**/*.css'
         - 'packages/fiori/src/**/*.ts'
+        - 'packages/fiori/src/**/*.tsx'
         - 'packages/main/src/**/*.css'
         - 'packages/main/src/**/*.ts'
+        - 'packages/main/src/**/*.tsx'
         - '!**/*.spec.ts'
         - '!**/*.test.ts'
         - '!**/test/**'
@@ -40,7 +44,7 @@ jobs:
         node-version: 22
         cache: 'yarn'
 
-    - name: Install dependencies
+    - name: Install
       run: |
         export NODE_OPTIONS="--max_old_space_size=4096"
         yarn install
@@ -53,7 +57,7 @@ jobs:
         echo "Branch: ${{ github.head_ref }}" >> packages/website/static/version.md
         echo "Commit: $(git rev-parse HEAD)" >> packages/website/static/version.md
 
-    - name: Build website
+    - name: Build
       env:
         DEPLOYMENT_TYPE: "netlify_preview"
         DEPLOYMENT_NETLIFY_PREVIEW_BASE_URL: "https://pr-${{ github.event.number }}--ui5-webcomponents-preview.netlify.app"
@@ -61,7 +65,7 @@ jobs:
       run: |
         yarn ci:deploy:preview
 
-    - name: Check PR status before deployment
+    - name: Check PR status
       id: final-pr-check
       if: always()
       uses: actions/github-script@v7
@@ -101,7 +105,7 @@ jobs:
                 Cache-Control = "public, max-age=31536000, immutable"
             EOF
             
-    - name: Deploy to Netlify
+    - name: Deploy
       if: steps.final-pr-check.outputs.should_deploy == 'true'
       uses: nwtgck/actions-netlify@v3.0
       with:
@@ -117,8 +121,3 @@ jobs:
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-    - name: Skip deployment notification
-      if: steps.final-pr-check.outputs.should_deploy == 'false'
-      run: |
-        echo "::notice::Skipping deployment - PR #${{ github.event.number }} was closed during build"

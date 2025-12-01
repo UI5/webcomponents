@@ -9,6 +9,26 @@
 	margin: 3rem;
 }
 
+.language-region-container{
+	display: flex;
+	min-height: 2.5rem;
+	align-item:flex-start;
+	flex-direction: column;
+	gap: 0.563rem;
+}
+
+.language-region-label{
+	display: flex;
+	flex: 1 0 0;
+	width: 100%;
+}
+
+.language-region-control{
+	display: flex;
+	gap: 0.188rem;
+	width: 100%;
+}
+
 .ua-info-item{
 	display: grid;
 	grid-template-columns: 50px 1fr;
@@ -18,7 +38,7 @@
 
 .ua-panel{
 	border-top: 2px solid lightgrey;
-	margin: 1rem;
+	margin: 1rem 0;
 }
 
 .save-btn{

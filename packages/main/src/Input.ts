@@ -62,7 +62,7 @@ import InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+
 // Templates
 import InputTemplate from "./InputTemplate.js";
 import { StartsWith } from "./Filters.js";
@@ -1110,7 +1110,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_onfocusout(e: FocusEvent) {
 		const toBeFocused = e.relatedTarget as HTMLElement;
 
-		if (this.Suggestions?._getPicker().contains(toBeFocused) || this.contains(toBeFocused) || this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))) {
+		if (this.Suggestions?._getPicker()?.contains(toBeFocused) || this.contains(toBeFocused) || this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))) {
 			return;
 		}
 
@@ -1174,7 +1174,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (this.previousValue !== this.getInputDOMRefSync()!.value) {
 			// if picker is open there might be a selected item, wait next tick to get the value applied
-			if (this.Suggestions?._getPicker().open && this._flattenItems.some(item => item.hasAttribute("ui5-suggestion-item") && (item as SuggestionItem).selected)) {
+			if (this.Suggestions?._getPicker()?.open && this._flattenItems.some(item => item.hasAttribute("ui5-suggestion-item") && (item as SuggestionItem).selected)) {
 				this._changeToBeFired = true;
 			} else {
 				fireChange();
@@ -1566,15 +1566,21 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	getInputDOMRef() {
 		if (isPhone() && this.Suggestions) {
-			return this.Suggestions._getPicker()!.querySelector<Input>(".ui5-input-inner-phone")!;
+			const picker = this.Suggestions._getPicker();
+			if (picker) {
+				return picker.querySelector<Input>(".ui5-input-inner-phone")!;
+			}
 		}
 
 		return this.nativeInput;
 	}
 
 	getInputDOMRefSync() {
-		if (isPhone() && this.Suggestions?._getPicker()) {
-			return this.Suggestions._getPicker().querySelector(".ui5-input-inner-phone")!.shadowRoot!.querySelector<HTMLInputElement>("input")!;
+		if (isPhone() && this.Suggestions) {
+			const picker = this.Suggestions._getPicker();
+			if (picker) {
+				return picker.querySelector(".ui5-input-inner-phone")!.shadowRoot!.querySelector<HTMLInputElement>("input")!;
+			}
 		}
 
 		return this.nativeInput;
@@ -1967,10 +1973,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		return "";
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
 	}
 
 	/**
