@@ -577,4 +577,61 @@ describe("Accessibility", () => {
 		cy.get("@tag")
 			.should("have.text", "999+");
 	});
+
+	it("accessibilityInfo returns correct properties for different button states", () => {
+		cy.mount(<Button design="Emphasized" accessibleDescription="Submit form">Submit</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.description).to.include("Submit form");
+				expect(info.description).to.include(Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
+				expect(info.role).to.equal("button");
+				expect(info.disabled).to.be.false;
+			});
+	});
+
+	it("accessibilityInfo reflects custom role and disabled state", () => {
+		cy.mount(<Button accessibleRole="Link" disabled>Navigate</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.role).to.equal("link");
+				expect(info.disabled).to.be.true;
+				expect(info.description).to.be.undefined;
+			});
+	});
+
+	it("accessibilityInfo updates when properties change", () => {
+		cy.mount(<Button>Click me</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.as("button");
+
+		cy.get<Button>("@button")
+			.then($button => {
+				const button = $button.get(0);
+				expect(button.accessibilityInfo.disabled).to.be.false;
+				expect(button.accessibilityInfo.role).to.equal("button");
+
+				button.disabled = true;
+				button.accessibleRole = "Link";
+				button.design = "Negative";
+			});
+
+		cy.get<Button>("@button")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.disabled).to.be.true;
+				expect(info.role).to.equal("link");
+				expect(info.description).to.include("Negative Action");
+			});
+	});
 });
