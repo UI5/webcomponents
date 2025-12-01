@@ -550,7 +550,8 @@ describe("Select - Accessibility", () => {
 			expect(accessInfo.type).to.equal("Listbox");
 			expect(accessInfo.readonly).to.be.false;
 			expect(accessInfo.required).to.be.false;
-			expect(accessInfo.description).to.equal("Option 1"); // Just text since no aria-label
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.be.undefined; // No aria-label
 		});
 
 		// Test select with accessibleName
@@ -558,7 +559,8 @@ describe("Select - Accessibility", () => {
 			const select = $select[0] as Select;
 			const accessInfo = select.accessibilityInfo;
 			
-			expect(accessInfo.description).to.equal("Select Name Option 1");
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Select Name"); // Aria label
 		});
 
 		// Test select with accessibleNameRef
@@ -566,7 +568,8 @@ describe("Select - Accessibility", () => {
 			const select = $select[0] as Select;
 			const accessInfo = select.accessibilityInfo;
 			
-			expect(accessInfo.description).to.equal("Reference Label Option 1");
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Reference Label"); // Aria label from ref
 		});
 
 		// Test select with readonly and required properties
@@ -579,13 +582,14 @@ describe("Select - Accessibility", () => {
 			expect(accessInfo.disabled).to.be.true;
 		});
 
-		// Update the referenced label and check if the description updates
+		// Update the referenced label and check if the label updates
 		cy.get("#labelRef").invoke("text", "Updated Reference");
 		cy.get("#refSelect").then(($select) => {
 			const select = $select[0] as Select;
 			const accessInfo = select.accessibilityInfo;
 			
-			expect(accessInfo.description).to.equal("Updated Reference Option 1");
+			expect(accessInfo.description).to.equal("Option 1"); // Text remains the same
+			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
 		});
 	});
 });
