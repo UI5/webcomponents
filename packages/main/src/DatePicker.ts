@@ -44,6 +44,7 @@ import "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 import {
 	DATEPICKER_OPEN_ICON_TITLE,
+	DATEPICKER_OPEN_ICON_TITLE_OPENED,
 	DATEPICKER_DATE_DESCRIPTION,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	INPUT_SUGGESTIONS_TITLE,
@@ -175,6 +176,7 @@ type Picker = "day" | "month" | "year";
  * @constructor
  * @extends DateComponentBase
  * @public
+ * @csspart input - Used to style the input element. This part is forwarded to the underlying ui5-input element.
  */
 
 @customElement({
@@ -920,6 +922,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get openIconTitle() {
+		if (this.open) {
+			return DatePicker.i18nBundle.getText(DATEPICKER_OPEN_ICON_TITLE_OPENED);
+		}
+
 		return DatePicker.i18nBundle.getText(DATEPICKER_OPEN_ICON_TITLE);
 	}
 
