@@ -6,6 +6,7 @@ import Basic from "../../../_samples/main/Input/Basic/Basic.md";
 import Suggestions from "../../../_samples/main/Input/Suggestions/Suggestions.md";
 import ClearIcon from "../../../_samples/main/Input/ClearIcon/ClearIcon.md";
 import SuggestionsWrapping from "../../../_samples/main/Input/SuggestionsWrapping/SuggestionsWrapping.md";
+import DynamicSuggestions from "../../../_samples/main/Input/DynamicSuggestions/DynamicSuggestions.md";
 import ValueStateMessage from "../../../_samples/main/Input/ValueStateMessage/ValueStateMessage.md";
 import Label from "../../../_samples/main/Input/Label/Label.md";
 import ValueHelpDialog from "../../../_samples/main/Input/ValueHelpDialog/ValueHelpDialog.md";
@@ -36,6 +37,12 @@ The Input can show dropdown with suggestions upon user input - see the <b>showSu
 The sample demonstrates how the text of the suggestions wrap when too long.
 
 <SuggestionsWrapping />
+
+### Dynamic Suggestion Control
+This sample demonstrates how applications can control when suggestions appear by dynamically toggling the <b>showSuggestions</b> property.
+In this example, suggestions are only shown when the user has typed 3 or more characters.
+
+<DynamicSuggestions />
 
 ### Input and Label
 <Label />

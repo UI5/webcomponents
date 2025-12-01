@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **ui5-search-item:** action slot visibility ([#12694](https://github.com/UI5/webcomponents/issues/12694)) ([2d34b93](https://github.com/UI5/webcomponents/commit/2d34b9384ecf3a1288705a5c969228d5c55c1278))
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** align logo vertically to middle ([#12685](https://github.com/UI5/webcomponents/issues/12685)) ([acff8fa](https://github.com/UI5/webcomponents/commit/acff8fa6727ebed2779cb9387c418346931bda45))
+
+
+### Features
+
+* **ui5-user-settings-account-view:** introduce new component `UserSettingsAccountView` ([#12658](https://github.com/UI5/webcomponents/issues/12658)) ([b818abb](https://github.com/UI5/webcomponents/commit/b818abb57326ffde13ac431f26d787ee3a294693))
+* **ui5-wizard:** add getFocusDomRef ([#12668](https://github.com/UI5/webcomponents/issues/12668)) ([ba10757](https://github.com/UI5/webcomponents/commit/ba1075762b3afd7770dc11593312db1920d07a0d))
+
+
+
+
+
 # [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
 
 
