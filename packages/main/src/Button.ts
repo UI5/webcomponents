@@ -31,6 +31,7 @@ import ButtonType from "./types/ButtonType.js";
 import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
 import type ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
+import type { IOverflowToolbarItem } from "./ToolbarItem.js";
 import ButtonTemplate from "./ButtonTemplate.js";
 import {
 	BUTTON_ARIA_TYPE_ACCEPT,
@@ -132,7 +133,7 @@ type ButtonClickEventDetail = {
 	bubbles: true,
 	cancelable: true,
 })
-class Button extends UI5Element implements IButton {
+class Button extends UI5Element implements IButton, IOverflowToolbarItem {
 	eventDetails!: {
 		"click": ButtonClickEventDetail,
 		"active-state-change": void,
@@ -692,7 +693,7 @@ class Button extends UI5Element implements IButton {
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	get hasToolbarWrapper() {
-		return "ToolbarSelect";
+		return "ToolbarButton";
 	}
 }
 

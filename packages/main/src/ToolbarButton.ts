@@ -194,6 +194,14 @@ class ToolbarButton extends ToolbarItem {
 		return this.text;
 	}
 
+	onClick(e: Event) {
+		e.stopImmediatePropagation();
+		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
+		if (!prevented && !this.preventOverflowClosing) {
+			this.fireDecoratorEvent("close-overflow");
+		}
+	}
+
 	/**
 	 * @override
 	 */

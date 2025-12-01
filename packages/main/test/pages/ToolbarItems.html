@@ -91,7 +91,7 @@
 		<br />
 		<section>
 			<ui5-toolbar>
-				<ui5-toolbar-item self-overflowed>
+				<ui5-toolbar-item>
 					<ui5-breadcrumbs>
 						<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
 						<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
@@ -122,7 +122,7 @@
 				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
 				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
 				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
-				<ui5-toolbar-item self-overflowed>
+				<ui5-toolbar-item>
 					<ui5-breadcrumbs>
 						<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
 						<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
@@ -142,26 +142,26 @@
 		<section>
         <ui5-toolbar>
             <!-- Toolbar Item with Radio Buttons -->
-            <ui5-toolbar-item prevent-overflow-closing>
+            <ui5-toolbar-item>
                 <ui5-radio-button name="group1" text="Option 1" selected></ui5-radio-button>
                 <ui5-radio-button name="group1" text="Option 2"></ui5-radio-button>
                 <ui5-radio-button name="group1" text="Option 3"></ui5-radio-button>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Checkboxes -->
-            <ui5-toolbar-item prevent-overflow-closing>
+            <ui5-toolbar-item>
                 <ui5-checkbox text="Checkbox 1"></ui5-checkbox>
                 <ui5-checkbox text="Checkbox 2" checked></ui5-checkbox>
                 <ui5-checkbox text="Checkbox 3"></ui5-checkbox>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Input Field -->
-            <ui5-toolbar-item prevent-overflow-closing expand-in-overflow>
+            <ui5-toolbar-item expand-in-overflow>
                 <ui5-input placeholder="Enter text"></ui5-input>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with ComboBox -->
-            <ui5-toolbar-item prevent-overflow-closing expand-in-overflow>
+            <ui5-toolbar-item expand-in-overflow>
                 <ui5-combobox placeholder="Select an option">
                     <ui5-cb-item text="Option 1"></ui5-cb-item>
                     <ui5-cb-item text="Option 2"></ui5-cb-item>
@@ -170,12 +170,12 @@
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Switch -->
-            <ui5-toolbar-item prevent-overflow-closing>
+            <ui5-toolbar-item>
                 <ui5-switch text-on="On" text-off="Off"></ui5-switch>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Date Picker -->
-            <ui5-toolbar-item prevent-overflow-closing expand-in-overflow>
+            <ui5-toolbar-item expand-in-overflow>
                 <ui5-date-picker placeholder="Select a date"></ui5-date-picker>
             </ui5-toolbar-item>
         </ui5-toolbar>

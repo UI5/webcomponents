@@ -14,7 +14,7 @@ export default function ToolbarTemplate(this: Toolbar) {
 			aria-label={this.accInfo.root.accessibleName}
 		>
 			{this.standardItems.map(item => {
-				const selfOverflowClass = item.selfOverflowed ? "ui5-tb-self-overflow" : "";
+				const selfOverflowClass = item._selfOverflowed ? "ui5-tb-self-overflow" : "";
 				const classes = `ui5-tb-item ${selfOverflowClass}`;
 				return (
 					<div class={classes} id={item._individualSlot}>
@@ -44,6 +44,7 @@ export default function ToolbarTemplate(this: Toolbar) {
 			horizontalAlign="End"
 			onClose={this.onOverflowPopoverClosed}
 			onOpen={this.onOverflowPopoverOpened}
+			onBeforeClose={this.onOverflowPopoverBeforeClose}
 			accessibleName={this.accInfo.popover.accessibleName}
 			hideArrow={true}
 		>
@@ -52,7 +53,7 @@ export default function ToolbarTemplate(this: Toolbar) {
 			}}>
 				{this.overflowItems.map(item => {
 					const separatorClass = item.isSeparator ? " ui5-tb-separator ui5-tb-separator-in-overflow" : "";
-					const selfOverflowClass = item.selfOverflowed ? " ui5-tb-popover-self-overflow" : "";
+					const selfOverflowClass = item._selfOverflowed ? " ui5-tb-popover-self-overflow" : "";
 					const classes = `ui5-tb-popover-item${separatorClass}${selfOverflowClass}`;
 					return (
 						<div class={classes} id={item._individualSlot}>
