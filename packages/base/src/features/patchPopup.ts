@@ -46,7 +46,7 @@ const removeOpenedPopup = (popup: object) => {
 	const index = AllOpenedPopupsRegistry.openedRegistry.findIndex(el => el.instance === popup);
 
 	if (index === AllOpenedPopupsRegistry.openedRegistry.length - 1) {
-		fixOpenUI5PopupBelow();
+		fixTopmostOpenUI5Popup();
 	}
 
 	if (index > -1) {
@@ -120,6 +120,15 @@ const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 		domRef.removeAttribute("popover");
 	}
 
+	if (getTopmostPopup() !== popup) {
+		return;
+	}
+
+	// The OpenUI5 block layer is only one for all modal OpenUI5 popups,
+	// and it is displayed above all opened pupups - OpenUI5 and Web Components,
+	// as a result, we need to hide this block layer.
+	// If the underlying popup is a Web Component - it is displayed like a native popover, and we don't need to do anything
+	// If the underlying popup is an OpenUI5 popup, it will be fixed in fixTopmostOpenUI5Popup method.
 	if (popup.getModal()) {
 		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 		if (openUI5BlockLayer && openUI5BlockLayer.hasAttribute("popover")) {
@@ -128,7 +137,7 @@ const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 	}
 };
 
-const fixOpenUI5PopupBelow = () => {
+const fixTopmostOpenUI5Popup = () => {
 	if (!isNativePopoverOpen()) {
 		return;
 	}
