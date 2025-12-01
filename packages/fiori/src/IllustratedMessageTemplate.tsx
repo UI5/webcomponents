@@ -7,7 +7,7 @@ export default function IllustratedMessageTemplate(this: IllustratedMessage) {
 			<div class="ui5-illustrated-message-inner">
 				<div class="ui5-illustrated-message-illustration"
 					role={this.decorative ? "presentation" : "img"}
-					aria-hidden={this.decorative}
+					aria-hidden={this.decorative ? true : undefined}
 					aria-label={!this.decorative ? this.name : undefined}>
 					{renderIllustration.call(this)}
 				</div>
