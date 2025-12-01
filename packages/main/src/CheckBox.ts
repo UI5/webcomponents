@@ -470,12 +470,13 @@ class CheckBox extends UI5Element implements IFormInputElement {
 
 	get accessibilityInfo() {
 		const checkboxState = this.checked ? CheckBox.i18nBundle.getText(CHECKBOX_CHECKED) : CheckBox.i18nBundle.getText(CHECKBOX_NOT_CHECKED);
-		const description = `${this.ariaLabelText || this.text || ""} ${checkboxState}`;
+		const description = [this.text || "", checkboxState].filter(Boolean).join(" ");
 
 		return {
 			role: this.accInfo.role,
 			type: CheckBox.i18nBundle.getText(CHECKBOX_ARIA_TYPE),
 			description,
+			label: this.ariaLabelText,
 			disabled: !!this.accInfo.ariaDisabled,
 			readonly: !!this.accInfo.ariaReadonly,
 			required: this.accInfo.ariaRequired,

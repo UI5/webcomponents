@@ -406,7 +406,8 @@ describe("Accessibility", () => {
 			const accInfo = checkbox.accessibilityInfo;
 			
             // Description should come from accessibleName property
-			expect(accInfo.description).to.equal("Custom Aria Label Not checked");
+			expect(accInfo.description).to.equal("Accessibility Test Not checked");
+            expect(accInfo.label).to.equal("Custom Aria Label");
 			
 			expect(accInfo.readonly).to.be.true;
 			expect(accInfo.required).to.be.true;
@@ -433,27 +434,8 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test Not checked");
-        });    
-    });
-
-    it("should provide correct accessibilityInfo description from text", () => {
-        cy.mount(
-            <>
-                <CheckBox 
-                    id="accessibilityTestCb2" 
-                    text="Accessibility Test Text"
-                    checked
-                ></CheckBox>
-            </>
-        );
-
-        cy.get("#accessibilityTestCb2").then($checkbox => {
-            const checkbox = $checkbox[0] as CheckBox;
-            const accInfo = checkbox.accessibilityInfo;
-            
-            // Description should come from text property
-            expect(accInfo.description).to.equal("Accessibility Test Text Checked");
+            expect(accInfo.description).to.equal("Not checked");
+            expect(accInfo.label).to.equal("Label For Accessibility Test");
         });    
     });
 
@@ -472,7 +454,8 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test Not checked");
+            expect(accInfo.description).to.equal("Not checked");
+            expect(accInfo.label).to.equal("Label For Accessibility Test");
         });    
     });
 });
