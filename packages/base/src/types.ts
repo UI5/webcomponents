@@ -34,8 +34,11 @@ export type AccessibilityInfo = {
 	// A translated text that represents the component type.
 	type?: string,
 
-	// A translated text that represents relevant component description/state - value, placeholder, label, etc.
+	// A translated text that represents relevant component description/state - value, placeholder, etc.
 	description?: string,
+
+	// Label of the component, e.g. `accessible-name` or `accessible-name-ref` for form elements.
+	label?: string,
 
 	// Disabled state of the component.
 	disabled?: boolean,
