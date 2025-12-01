@@ -264,6 +264,37 @@
 									}
 								}).openBy(oEvent.getSource());
 							}
+						}),
+						new Button({
+							text: "Open new OpenUI5 Modal Popover",
+							press: function (oEvent) {
+								new Popover({
+									title: "New OpenUI5 Modal Popover",
+									modal: true,
+									placement: "Bottom",
+									content: [
+										new Button({
+											text: "Focus stop"
+										}),
+										new Button({
+											text: "Open Ui5 Dialog",
+											press: function () {
+												openUI5Dialog3();
+											}
+										}),
+										new Button({
+											text: "Open WebC Dialog",
+											press: function () {
+												document.getElementById("newDialog4").open = true;
+											}
+										})
+									],
+									initialFocus: "someButton",
+									afterClose: function () {
+										this.destroy();
+									}
+								}).openBy(oEvent.getSource());
+							}
 						})
 					],
 					initialFocus: "popoverButtonNoFocus",

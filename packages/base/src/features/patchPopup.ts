@@ -196,8 +196,8 @@ const patchOpen = (Popup: OpenUI5PopupClass) => {
 const patchClosed = (Popup: OpenUI5PopupClass) => {
 	const _origClosed = Popup.prototype._closed;
 	Popup.prototype._closed = function _closed(...args: any[]) {
-		_origClosed.apply(this, args); // only then call _close
 		closeNativePopoverForOpenUI5(this);
+		_origClosed.apply(this, args); // only then call _close
 		removeOpenedPopup(this);
 	};
 };
