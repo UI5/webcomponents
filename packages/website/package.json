@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-website",
-  "version": "2.17.0-rc.2",
+  "version": "2.17.0-rc.4",
   "private": true,
   "scripts": {
     "generate-local-cdn": "rimraf ./local-cdn && node ./build-scripts/local-cdn.mjs",
