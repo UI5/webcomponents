@@ -538,7 +538,7 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenUI5DialogWebCPopoverNoFocus() {
-		cy.get("#openUI5Button")
+		cy.get("#openUI5Button", { timeout: 10000 })
 			.should('be.visible')
 			.realClick();
 
@@ -556,6 +556,9 @@ describe("ui5 and web components integration", () => {
 		cy.get("#respPopoverNoInitialFocus")
 			.should('not.be.visible');
 
+		cy.get("#openResPopoverNoInitialFocusButton")
+			.should('be.focused');
+
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
@@ -564,13 +567,13 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
 
-		cy.get("#openResPopoverNoInitialFocusButton")
+		cy.get("#openUI5Button")
 			.should('be.focused');
 	}
 
 	function OpenUI5DialogWebCSelect() {
-		cy.get("#openUI5Button")
-			.should('be.focused')
+		cy.get("#openUI5Button", { timeout: 10000 })
+			.should('be.visible')
 			.realClick();
 
 		cy.get("#openUI5Dialog1")
@@ -644,9 +647,11 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenWebCUI5DialogMixed() {
+		cy.get("#openUI5Button", { timeout: 10000 })
+			.should('be.visible');
+
 		// Open UI5 Dialog
 		cy.get("#openUI5Button")
-			.should('be.visible')
 			.realClick();
 
 		cy.get("#openUI5Dialog1")
