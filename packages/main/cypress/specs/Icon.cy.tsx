@@ -314,8 +314,8 @@ describe("Icon general interaction", () => {
             const icon = $icon[0] as any;
             const accessibilityInfo = icon.accessibilityInfo;
             
-            // For Decorative mode, accessibilityInfo should be undefined
-            expect(accessibilityInfo).to.be.undefined;
+            // For Decorative mode, accessibilityInfo should return an empty object
+            expect(accessibilityInfo).to.deep.equal({});
         });
 
         // Test with Image mode

@@ -350,7 +350,7 @@ class Icon extends UI5Element implements IIcon {
 
 	get accessibilityInfo() {
 		if (this.mode === IconMode.Decorative) {
-			return undefined;
+			return {};
 		}
 
 		return {
