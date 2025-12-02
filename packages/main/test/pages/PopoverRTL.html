@@ -60,6 +60,15 @@
 <ui5-button id="btn4">Open</ui5-button>
 <span> Popover placement End</span>
 
+<div class="center">
+	<ui5-button id="btnPlacementStart">Placement Start</ui5-button>
+</div>
+<br>
+<div class="center">
+	<ui5-button id="btnPlacementEnd">Placement End</ui5-button>
+</div>
+<br>
+
 <ui5-popover id="respPopover1" opener="btn1" placement="Top">
 	<div class="popover-content">
 		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
@@ -81,6 +90,28 @@
 <ui5-popover id="respPopover4" opener="btn4" placement="End">
 	<div class="popover-content">
 		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="popoverPlacementStart"
+			 header-text="Placement = Start"
+			 opener="btnPlacementStart"
+			 placement="Start">
+	<div class="popover-content">
+		<div>
+			Some content
+		</div>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="popoverPlacementEnd"
+			 header-text="Placement = End"
+			 opener="btnPlacementEnd"
+			 placement="End">
+	<div class="popover-content">
+		<div>
+			Some content
+		</div>
 	</div>
 </ui5-popover>
 
@@ -115,6 +146,14 @@
 
 	btn4.addEventListener("click", () => {
 		respPopover4.open = !respPopover4.open;
+	});
+
+	document.getElementById("btnPlacementStart").addEventListener("click", () => {
+		document.getElementById("popoverPlacementStart").open = true;
+	});
+
+	document.getElementById("btnPlacementEnd").addEventListener("click", () => {
+		document.getElementById("popoverPlacementEnd").open = true;
 	});
 </script>
 </body>

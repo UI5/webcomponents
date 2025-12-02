@@ -40,34 +40,25 @@
 <ui5-button id="btnOpenSettings">User settings</ui5-button>
 <ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
 	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
-		<ui5-user-settings-view slot="pages">
-			<ui5-icon name="person-placeholder"></ui5-icon><ui5-title level="H3" size="H3" class="ua-name">Alain Chevalier</ui5-title>
-			<div class="container">
-				<div class="ua-info-item">
-					<ui5-label for="name">Name:</ui5-label>
-					<ui5-text id="name">Alain Chevalier</ui5-text>
-				</div>
-				<div class="ua-info-item">
-					<ui5-label for="email">Email:</ui5-label>
-					<ui5-text id="email">alian.chevalier@sap.com</ui5-text>
-				</div>
-				<div class="ua-info-item">
-					<ui5-label for="server">Server:</ui5-label>
-					<ui5-text id="server">delivery-001.sap.com</ui5-text>
-				</div>
-			</div>
-			<ui5-label for="reset-all-button">Personalization</ui5-label><br/>
-			<ui5-button id="reset-all-button">Reset All Personalization</ui5-button>
-			<ui5-panel fixed class="ua-panel">
-				<ui5-text>
-					Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
-				</ui5-text>
-			</ui5-panel>
-		</ui5-user-settings-view>
+		<ui5-user-settings-account-view id="account" show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+
+				<ui5-panel fixed class="ua-panel">
+					<ui5-text>
+						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+					</ui5-text>
+				</ui5-panel>
+
+		</ui5-user-settings-account-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-		<ui5-user-settings-view text="Themes">
+		<ui5-user-settings-view text="Themes" slot="tabs">
 			<ui5-list separators="Inner">
 				<ui5-li icon="palette">SAP Morning Horizon</ui5-li>
 				<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
@@ -77,7 +68,7 @@
 			<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
 			<ui5-toast design="Emphasized">Changes applied.</ui5-toast>
 		</ui5-user-settings-view>
-		<ui5-user-settings-view text="Display settings">
+		<ui5-user-settings-view text="Display settings" slot="tabs">
 			<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
 			<ui5-panel fixed>
 				<ui5-label>
@@ -88,51 +79,127 @@
 		</ui5-user-settings-view>
 	</ui5-user-settings-item>
 
-	<ui5-user-settings-item text="Language & Region" tooltip="Language & Region" header-text="Language & Region">
-		<ui5-user-settings-view slot="pages">
-			<div class="container">
-			<div class="lr-item">
-			<ui5-label>Language and Region:</ui5-label>
-			<ui5-combobox placeholder="Language">
-				<ui5-cb-item text="Browse Language" selected></ui5-cb-item>
-				<ui5-cb-item text="English"></ui5-cb-item>
-				<ui5-cb-item text="European Spanish"></ui5-cb-item>
-				<ui5-cb-item text="French (France)"></ui5-cb-item>
-				<ui5-cb-item text="Germany"></ui5-cb-item>
+	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
+		<ui5-user-settings-view>
+			<div id="language-region-container" class="language-region-container">
+			<ui5-label class="language-region-label">Display Language:</ui5-label>
+			<ui5-combobox id="language" class="language-region-control" placeholder="Language" value="English (United States)">
+				<ui5-cb-item text="Browser Language" selected additional-text="English"></ui5-cb-item>
+				<ui5-cb-item text="English (United Kingdom)" additional-text="English (United Kingdom)"></ui5-cb-item>
+				<ui5-cb-item text="English (United States)" additional-text="English (United States)"></ui5-cb-item>
+				<ui5-cb-item text="French (France)" additional-text="Français (France)"></ui5-cb-item>
+				<ui5-cb-item text="French (Canada)" additional-text="Français (Canada)"></ui5-cb-item>
+				<ui5-cb-item text="German (Germany)" additional-text="Deutsch (Deutschland)"></ui5-cb-item>
+				<ui5-cb-item text="German (Switzerland)" additional-text="Deutsch (Schweiz)"></ui5-cb-item>
+				<ui5-cb-item text="Japanese" additional-text="日本語 (日本)"></ui5-cb-item>
+				<ui5-cb-item text="Portuguese (Brazil)" additional-text="Português (Brasil)" ></ui5-cb-item>
+				<ui5-cb-item text="Simplified Chinese (China)" additional-text="简体中文（中国)"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Mexico)" additional-text="Español (América Latina)"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Spain)" additional-text="Español (España)"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Region:</ui5-label>
+			<ui5-combobox id="region" class="language-region-control" placeholder="Region" value="United States">
+				<ui5-cb-item text="United Kingdom" additional-text="GB"></ui5-cb-item>
+				<ui5-cb-item text="United States" additional-text="US"></ui5-cb-item>
+				<ui5-cb-item text="French (France)" additional-text="FR"></ui5-cb-item>
+				<ui5-cb-item text="French (Canada)" additional-text="CA"></ui5-cb-item>
+				<ui5-cb-item text="German (Germany)" additional-text="DE"></ui5-cb-item>
+				<ui5-cb-item text="German (Switzerland)" additional-text="CH" ></ui5-cb-item>
+				<ui5-cb-item text="Japanese" additional-text="JP"></ui5-cb-item>
+				<ui5-cb-item text="Portuguese (Brazil)" additional-text="BR"></ui5-cb-item>
+				<ui5-cb-item text="Simplified Chinese (China)" additional-text="CN"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Mexico)" additional-text="MX"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Spain)" additional-text="ES"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Date Format:</ui5-label>
+			<ui5-combobox  id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
+				<ui5-cb-item text="MM/DD/YYYY" additional-text="e.g. 10/23/2025"></ui5-cb-item>
+				<ui5-cb-item text="MM.DD.YYYY" additional-text="e.g. 10.23.2025"></ui5-cb-item>
+				<ui5-cb-item text="MM-DD-YYYY" additional-text="e.g. 10-23-2025"></ui5-cb-item>
+				<ui5-cb-item text="DD/MM/YYYY" additional-text="e.g. 23/10/2025"></ui5-cb-item>
+				<ui5-cb-item text="DD.MM.YYYY" additional-text="e.g. 23.10.2025"></ui5-cb-item>
+				<ui5-cb-item text="DD-MM-YYYY" additional-text="e.g. 23-10-2025"></ui5-cb-item>
+				<ui5-cb-item text="YYYY/MM/DD" additional-text="e.g. 2025/10/23"></ui5-cb-item>
+				<ui5-cb-item text="YYYY.MM.DD" additional-text="e.g. 2025.10.23"></ui5-cb-item>
+				<ui5-cb-item text="YYYY-MM-DD" additional-text="e.g. 2025-10-23"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Time Format:</ui5-label>
+			<ui5-combobox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
+				<ui5-cb-item text="24 Hour" additional-text="e.g. 12:05:10"></ui5-cb-item>
+				<ui5-cb-item text="12 Hour" additional-text="e.g. 12:05:10 PM"></ui5-cb-item>
+				<ui5-cb-item text="12 Hour (lowercase)" additional-text="e.g. 12:05:10 pm"></ui5-cb-item>
+				<ui5-cb-item text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM"></ui5-cb-item>
+				<ui5-cb-item text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Time Zone:</ui5-label>
+			<ui5-combobox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)">
+				<ui5-cb-item text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States"></ui5-cb-item>
+				<ui5-cb-item text="Mountain Time (UTC -07:00)" additional-text="Denver, United States"></ui5-cb-item>
+				<ui5-cb-item text="Central Time (UTC -06:00)" additional-text="Austin, United States"></ui5-cb-item>
+				<ui5-cb-item text="Eastern Standard Time (UTC -05:00)" additional-text="Washington, United States"></ui5-cb-item>
+				<ui5-cb-item text="Atlantic Time (UTC -04:00)" additional-text="Halifax, Canada"></ui5-cb-item>
+				<ui5-cb-item text="Newfoundland Time (UTC -03:30)" additional-text="St. John's, Canada"></ui5-cb-item>
+				<ui5-cb-item text="Brasilia Time (UTC -03:00)" additional-text="Brasília, Brazil"></ui5-cb-item>
+				<ui5-cb-item text="Argentina Time (UTC -03:00)" additional-text="Buenos Aires, Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Greenwich Mean Time (UTC +00:00)" additional-text="London, United Kingdom"></ui5-cb-item>
+				<ui5-cb-item text="Central European Time (UTC +01:00)" additional-text="Berlin, Germany"></ui5-cb-item>
+				<ui5-cb-item text="Eastern European Time (UTC +02:00)" additional-text="Athens, Greece"></ui5-cb-item>
+				<ui5-cb-item text="Turkey Time (UTC +03:00)" additional-text="Ankara, Türkiye"></ui5-cb-item>
+				<ui5-cb-item text="Arabian Time (UTC +04:00)" additional-text="Abu Dhabi, United Arab Emirates"></ui5-cb-item>
+				<ui5-cb-item text="Pakistan Standard Time (UTC +05:00)" additional-text="Islamabad, Pakistan"></ui5-cb-item>
+				<ui5-cb-item text="India Standard Time (UTC +05:30)" additional-text="New Delhi, India"></ui5-cb-item>
+				<ui5-cb-item text="Bangladesh Standard Time (UTC +06:00)" additional-text="Dhaka, Bangladesh"></ui5-cb-item>
+				<ui5-cb-item text="Indochina Time (UTC +07:00)" additional-text="Bangkok, Thailand"></ui5-cb-item>
+				<ui5-cb-item text="China Standard Time (UTC +08:00)" additional-text="Beijing, China"></ui5-cb-item>
+				<ui5-cb-item text="Singapore Time (UTC +08:00)" additional-text="Singapore, Singapore"></ui5-cb-item>
+				<ui5-cb-item text="Hong Kong Time (UTC +08:00)" additional-text="Hong Kong, China"></ui5-cb-item>
+				<ui5-cb-item text="Japan Standard Time (UTC +09:00)" additional-text="Tokyo, Japan"></ui5-cb-item>
+				<ui5-cb-item text="Korea Standard Time (UTC +09:00)" additional-text="Seoul, South Korea"></ui5-cb-item>
+				<ui5-cb-item text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia"></ui5-cb-item>
+				<ui5-cb-item text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Currency:</ui5-label>
+			<ui5-combobox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar">
+				<ui5-cb-item text="USD - United States Dollar" additional-text="USD" value="USD"></ui5-cb-item>
+				<ui5-cb-item text="Euro" additional-text="EUR"></ui5-cb-item>
+				<ui5-cb-item text="British Pound" additional-text="GBP"></ui5-cb-item>
+				<ui5-cb-item text="Japanese Yen" additional-text="JPY"></ui5-cb-item>
+				<ui5-cb-item text="Swiss Franc" additional-text="CHF"></ui5-cb-item>
+				<ui5-cb-item text="Canadian Dollar" additional-text="CAD"></ui5-cb-item>
+				<ui5-cb-item text="Australian Dollar" additional-text="AUD"></ui5-cb-item>
+				<ui5-cb-item text="New Zealand Dollar" additional-text="NZD"></ui5-cb-item>
+				<ui5-cb-item text="Chinese Yuan Renminbi" additional-text="CNY"></ui5-cb-item>
+				<ui5-cb-item text="Indian Rupee" additional-text="INR"></ui5-cb-item>
+				<ui5-cb-item text="Brazilian Real" additional-text="BRL"></ui5-cb-item>
+				<ui5-cb-item text="South African Rand" additional-text="ZAR"></ui5-cb-item>
+				<ui5-cb-item text="Russian Ruble" additional-text="RUB"></ui5-cb-item>
+				<ui5-cb-item text="Mexican Peso" additional-text="MXN"></ui5-cb-item>
+				<ui5-cb-item text="Singapore Dollar" additional-text="SGD"></ui5-cb-item>
+				<ui5-cb-item text="Hong Kong Dollar" additional-text="HKD"></ui5-cb-item>
+				<ui5-cb-item text="Norwegian Krone" additional-text="NOK"></ui5-cb-item>
+				<ui5-cb-item text="Swedish Krona" additional-text="SEK"></ui5-cb-item>
+				<ui5-cb-item text="South Korean Won" additional-text="KRW"></ui5-cb-item>
+				<ui5-cb-item text="Turkish Lira" additional-text="TRY"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Number Format:</ui5-label>
+			<ui5-combobox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56">
+				<ui5-cb-item text="1.234,56" additional-text="Germany"></ui5-cb-item>
+				<ui5-cb-item text="1,234.56" additional-text="US/UK"></ui5-cb-item>
+				<ui5-cb-item text="1 234,56" additional-text="France"></ui5-cb-item>
+				<ui5-cb-item text="1'234.56" additional-text="Switzerland"></ui5-cb-item>
+				<ui5-cb-item text="1234,56" additional-text="SI/SO Format"></ui5-cb-item>
 			</ui5-combobox>
 			</div>
-			<div class="lr-item">
-				<ui5-label for="format">Date Format:</ui5-label>
-				<ui5-text id="format">MMM d, y</ui5-text>
-			</div>
-			</div>
-			<ui5-panel fixed>
-				<ui5-label>
-					The time zone will not be applied in UI5 apps.
-					If you don't know the type of an app, you can check it in the "About" dialog in the "ID of the Application Framework” field.
-				</ui5-label>
-			</ui5-panel>
-			</br>
-			<div class="lt-time-format">
-			<ui5-label for="timeFormat">Time Format:</ui5-label>
-			<ui5-radio-button name="timeFormat" text="12h"></ui5-radio-button>
-				<ui5-radio-button checked name="timeFormat" text="24h"></ui5-radio-button>
-			</div>
-			<ui5-panel fixed>
-			<ui5-label>
-				After you save your settings, the browser will refresh for the new settings to take effect.
-			</ui5-label>
-			</ui5-panel>
 		</ui5-user-settings-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view >
 			<ui5-button id="mobile1-button">iOS</ui5-button>
 			<ui5-button id="mobile2-button">Android</ui5-button>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" text="Inner Page" id="mobile-second-page" secondary>
+		<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
 			<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
 			<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
 			<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
@@ -141,7 +208,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-view slot="pages">
+		<ui5-user-settings-view>
 			<ui5-list class="custom-list-main">
 
 				<ui5-li-custom>
@@ -192,7 +259,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="notification-second-page" secondary>
+		<ui5-user-settings-view id="notification-second-page" secondary>
 			<ui5-li-custom class="ui5-list-secondary">
 				<div class="list-item">
 					<div class="item-left">
@@ -294,7 +361,7 @@
 			</ui5-list>
 		</ui5-user-settings-view>
 
-		<ui5-user-settings-view slot="pages" id="sales-order-second-page" secondary>
+		<ui5-user-settings-view id="sales-order-second-page" secondary>
 			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
 
 			<ui5-list class="ui5-list-secondary" separators="None">
@@ -400,23 +467,20 @@
 	</ui5-user-settings-item>
 </ui5-user-settings-dialog>
 
-<ui5-dialog id="additionalDialog" state="Critical" header-text="Warning">
-	<ui5-text>Clicking on reset will delete your personalization settings for the launchpad (e.g. theme, language, user activities, and home page content) and for apps using the launchpad personalization features (e.g. filter settings, table columns).
-		This action is irreversible.
-		Further changes in the dialog will not be applied.
-		Are you sure you want to proceed with the reset?</ui5-text>
-	<ui5-toolbar slot="footer">
-		<ui5-toolbar-button
-			class="dialogCloser"
-			design="Emphasized"
-			text="OK">
-		</ui5-toolbar-button>
-		<ui5-toolbar-button
-			class="dialogCloser"
-			design="Transparent"
-			text="Cancel">
-		</ui5-toolbar-button>
-	</ui5-toolbar>
+<ui5-dialog id="additionalDialog" state="Information" header-text="Change Display Language">
+	<ui5-text>Changing the display language to [New Language] will update the language across the user interface.</ui5-text>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Emphasized"
+					text="Change Language">
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Transparent"
+					text="Cancel">
+			</ui5-toolbar-button>
+		</ui5-toolbar>
 </ui5-dialog>
 
 <ui5-title level="H5" class="header-title">Text Direction</ui5-title>
@@ -426,14 +490,20 @@
 	const menuShellBar = document.getElementById("userMenuShellBar");
 	const settingsDialog = document.getElementById("setting");
 	const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+	const account = document.getElementById("account");
+
+	//Language and Region
+	const languageRegion = document.getElementById("language-region-container");
+	const language = document.getElementById("language");
+	const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
+	const additionalDialog = document.getElementById("additionalDialog");
+	const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
 
 	const mobileSecondPage = document.getElementById("mobile-second-page");
 	const mobile1Button = document.getElementById("mobile1-button");
 	const mobile2Button = document.getElementById("mobile2-button");
 
-	const resetAllButton = document.getElementById("reset-all-button");
-	const additionalDialog = document.getElementById("additionalDialog");
-	const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 	const resetAll = document.getElementById("resetAll");
 	const resetPersonalization = document.getElementById("resetPersonalization");
 	const toast = [...document.getElementsByTagName("ui5-toast")][0];
@@ -467,6 +537,32 @@
 		}
 	});
 
+	account.addEventListener("edit-accounts-click", function () {
+		console.log("Avatar clicked");
+	});
+
+	account.addEventListener("manage-account-click", function () {
+		console.log("Manage account clicked");
+	});
+
+
+	//Language and Region
+	language.addEventListener("selection-change",  function (event) {
+		additionalDialog.open = true;
+	});
+
+	dialogClosers.forEach(btn => {
+		btn.addEventListener("click", () => {
+			additionalDialog.open = false;
+		});
+	});
+
+	regionSettings.forEach((settingsItem) => {
+			settingsItem.addEventListener("selection-change",  function (event) {
+			console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
+		});
+	});
+
 	direction.addEventListener("ui5-change", function() {
 		document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
 		window["sap-ui-webcomponents-bundle"].applyDirection();
@@ -486,16 +582,6 @@
 		mobileSecondPage.text = "Android";
 	});
 
-	resetAllButton.addEventListener("click", function () {
-		additionalDialog.open = true;
-	});
-
-	additionalDialogClosers.forEach(btn => {
-		btn.addEventListener("click", () => {
-			additionalDialog.open = false;
-		});
-	})
-
 	themeSave.addEventListener("click", function () {
 		toast.open = true;
 	});
@@ -510,12 +596,12 @@
 
 	settingsDialog.addEventListener("selection-change", function (event) {
 		console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
-		if(event.detail.item?.text ==="Language & Region"){
+		if(event.detail.item?.text ==="Language and Region"){
 			event.detail.item.loading=true;
 			event.detail.item.loadingReason="Language & Region loading data...";
 			setTimeout(function(){
 				event.detail.item.loading=false;
-				}, 3000);
+				}, 500);
 		}
 	});
 
@@ -539,6 +625,9 @@
 	settingsDialog.addEventListener("close", function (event) {
 		console.log("Settings dialog closed", event);
 	});
+
+	//Language and Region
+
 
 	//Notification Tab
 	notificationNavIcon.forEach(icon => {

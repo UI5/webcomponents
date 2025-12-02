@@ -19,8 +19,7 @@ const convertToJSON = async (file, distPath) => {
 	const filename = path.basename(file, path.extname(file));
 	const language = filename.match(/^messagebundle_(.*?)$/)[1];
 	if (!allLanguages.includes(language)) {
-		console.log("Not supported language: ", language);
-		return;
+		console.warn("Not supported language or script: ", language);
 	}
 	const outputFile = path.normalize(`${distPath}/${filename}.json`);
 

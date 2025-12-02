@@ -514,6 +514,35 @@ describe("Properties", () => {
 			.should("not.exist");
 	});
 
+	it("action buttons are always visible", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable>
+					<Button design={ButtonDesign.Transparent} icon={favorite} slot="actions"/>
+					<Button design={ButtonDesign.Transparent} icon={edit} slot="actions"/>
+				</SearchItem>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("I");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='favorite']")
+			.should("be.visible");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.find("[ui5-button][icon='edit']")
+			.should("be.visible");
+
+	})
+
 	it("tab navigation between action buttons works correctly", () => {
 		cy.mount(
 			<Search>
@@ -1051,6 +1080,63 @@ describe("Events", () => {
 
 		cy.get("@opened")
 			.should("not.have.been.called");
+	});
+
+	it("should not open popover when typing with no items", () => {
+		cy.mount(
+			<Search>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("[ui5-search]")
+			.realPress("e");
+
+		cy.get("[ui5-search]")
+			.realPress("s");
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("@openSpy")
+			.should("not.have.been.called");
+
+		cy.get("[ui5-search]")
+			.should("not.have.attr", "open");
+	});
+
+	it("should open popover when loading is true even with no items", () => {
+		cy.mount(
+			<Search loading={true}>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.invoke("on", "ui5-open", cy.spy().as("openSpy"));
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("t");
+
+		cy.get("@openSpy")
+			.should("have.been.calledOnce");
+
+		cy.get("[ui5-search]")
+			.should("have.attr", "open");
 	});
 
 	it("open event - typing, pressing Escape, then typing again should reopen suggestions", () => {
