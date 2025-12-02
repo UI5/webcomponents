@@ -144,7 +144,7 @@ class Input extends BaseInput {
 	loading: boolean = false;
 
 	/**
-	 * Indicates if the menu is open.
+	 * Indicates if the menu is open..
 	 * @default 0
 	 * @private
 	 */
