@@ -43,7 +43,7 @@
 
 	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
 	--_ui5_range_slider_active_handle_icon_display: none;
-	--_ui5_range_slider_progress_focus_top: -15px;
+	--_ui5_range_slider_progress_focus_top: -1.063rem;
 	--_ui5_range_slider_progress_focus_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 5px);
 	--_ui5_range_slider_progress_focus_padding: 0 1rem 0 1rem;
 	--_ui5_range_slider_progress_focus_width: calc(100% + var(--_ui5_slider_handle_width) + 10px);
@@ -64,7 +64,7 @@
 	--_ui5_slider_handle_width: 1.5rem;
 	--_ui5_range_slider_progress_focus_width: calc(100% + var(--_ui5_slider_handle_width) + 10px);
 	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 10px);
-	--_ui5_range_slider_progress_focus_top: -.8125rem;
+	--_ui5_range_slider_progress_focus_top: -.938rem;
 	--_ui5_slider_tooltip_bottom: 1.75rem;
 	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
 	--_ui5_range_slider_progress_focus_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 5px);

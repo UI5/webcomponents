@@ -9,7 +9,7 @@
 :host {
 	box-sizing: border-box;
 	cursor: pointer;
-	vertical-align: top;
+	vertical-align: middle;
 	width: 100%;
 }
 
