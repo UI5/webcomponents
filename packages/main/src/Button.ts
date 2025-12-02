@@ -29,7 +29,7 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import ButtonDesign from "./types/ButtonDesign.js";
 import ButtonType from "./types/ButtonType.js";
 import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
-import type ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
+import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
 import {
@@ -39,6 +39,8 @@ import {
 	BUTTON_ARIA_TYPE_ATTENTION,
 	BUTTON_BADGE_ONE_ITEM,
 	BUTTON_BADGE_MANY_ITEMS,
+	BUTTON_ROLE_DESCRIPTION,
+	LINK_ROLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -656,6 +658,28 @@ class Button extends UI5Element implements IButton {
 			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
 			ariaLabel: this.accessibilityAttributes.ariaLabel || this.ariaLabelText,
 		};
+	}
+
+	get accessibilityInfo() {
+		return {
+			description: this.ariaDescriptionText,
+			role: this.effectiveAccRole,
+			disabled: this.disabled,
+			children: this.text,
+			type: this.effectiveAccRoleTranslation,
+		};
+	}
+
+	get effectiveAccRoleTranslation(): string {
+		if (this.role === ButtonAccessibleRole.Button) {
+			return Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION);
+		}
+
+		if (this.role === ButtonAccessibleRole.Link) {
+			return Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION);
+		}
+
+		return "";
 	}
 
 	get effectiveBadgeDescriptionText() {
