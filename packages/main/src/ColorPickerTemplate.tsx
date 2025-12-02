@@ -13,6 +13,7 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 		>
 			<div
 				class="ui5-color-picker-main-color"
+				role="presentation"
 				style={{ "background-color": `rgb(${this._mainValue.r}, ${this._mainValue.g}, ${this._mainValue.b})` }}
 				onMouseDown={this._handleMouseDown}
 				onMouseUp={this._handleMouseUp}
