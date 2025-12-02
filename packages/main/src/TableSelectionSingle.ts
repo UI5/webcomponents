@@ -1,5 +1,6 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
+import CheckBox from "./CheckBox.js";
 import type TableRow from "./TableRow.js";
 
 /**
@@ -34,6 +35,7 @@ import type TableRow from "./TableRow.js";
 @customElement({ tag: "ui5-table-selection-single" })
 
 class TableSelectionSingle extends TableSelectionBase {
+	CheckBox = CheckBox;
 	/**
 	 * Defines the `row-key` value of the selected row.
 	 *

@@ -1,12 +1,25 @@
 import TableCell from "./TableCell.js";
-import CheckBox from "./CheckBox.js";
 import RadioButton from "./RadioButton.js";
 import Button from "./Button.js";
 import ButtonDesign from "./types/ButtonDesign.js";
 import iconOverflow from "@ui5/webcomponents-icons/dist/overflow.js";
 import type TableRow from "./TableRow.js";
+import type TableSelectionMulti from "./TableSelectionMulti.js";
+import type CheckBoxT from "./CheckBox.js";
+
+const instanceOfMulti = (object: any): object is TableSelectionMulti => {
+	return "isMultiSelectable" in object && object.isMultiSelectable();
+};
+
+const exctractCheckBox = (object: any) => {
+	if (instanceOfMulti(object)) {
+		return object.CheckBox;
+	}
+};
 
 export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 1) {
+	const selection = this._table?._getSelection();
+	let CheckBox = exctractCheckBox(selection);
 	return (
 		<>
 			{ this._hasSelector &&
@@ -17,7 +30,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					data-ui5-table-cell-fixed
 					data-ui5-table-acc-text=""
 				>
-					{ this._isMultiSelect ?
+					{ this._isMultiSelect && CheckBox ?
 						<CheckBox id="selection-component"
 							tabindex={-1}
 							checked={this._isSelected}

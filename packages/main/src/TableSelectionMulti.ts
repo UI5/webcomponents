@@ -3,6 +3,7 @@ import TableSelectionBase from "./TableSelectionBase.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import { isUpShift } from "@ui5/webcomponents-base/dist/Keys.js";
+import CheckBox from "./CheckBox.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowBase from "./TableRowBase.js";
@@ -47,6 +48,9 @@ import {
 @customElement({ tag: "ui5-table-selection-multi" })
 
 class TableSelectionMulti extends TableSelectionBase {
+	get CheckBox() {
+		return CheckBox;
+	}
 	/**
 	 * Defines the `row-key` values of selected rows, with each value separated by a space.
 	 *

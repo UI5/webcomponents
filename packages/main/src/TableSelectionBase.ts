@@ -10,6 +10,7 @@ import {
 	TABLE_MULTI_SELECTABLE,
 	TABLE_SINGLE_SELECTABLE,
 } from "./generated/i18n/i18n-defaults.js";
+import type TableSelectionMulti from "./TableSelectionMulti.js";
 
 /**
  * Fired when selection is changed by user interaction.
