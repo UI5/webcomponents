@@ -544,6 +544,79 @@ describe("Input general interaction", () => {
 		cy.get("@onChange").should("have.been.calledOnce");
 		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
+
+	it("Should control suggestions dynamically based on threshold", () => {
+		const THRESHOLD = 3;
+		const countries = [
+			"Argentina", "Albania", "Algeria", "Angola", "Austria", "Australia",
+			"Bulgaria", "Belgium", "Brazil", "Canada", "Colombia", "Croatia"
+		];
+
+		cy.mount(<Input id="threshold-input" showSuggestions />);
+
+		cy.document().then(doc => {
+			const input = doc.querySelector<Input>("#threshold-input")!;
+			
+			input.addEventListener("input", () => {
+				const value = input.value;
+				
+				while (input.lastChild) {
+					input.removeChild(input.lastChild);
+				}
+				
+				if (value.length >= THRESHOLD) {
+					input.showSuggestions = true;
+					
+					const filtered = countries.filter(country => 
+						country.toUpperCase().indexOf(value.toUpperCase()) === 0
+					);
+					
+					filtered.forEach(country => {
+						const item = document.createElement("ui5-suggestion-item");
+						item.setAttribute("text", country);
+						input.appendChild(item);
+					});
+				} else {
+					input.showSuggestions = false;
+				}
+			});
+		});
+
+		cy.get("#threshold-input")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.realType("B");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.exist", "true");
+
+		cy.realType("ul");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("have.length", 1)
+			.first()
+			.should("have.attr", "text", "Bulgaria");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.exist", "true");
+	});
 });
 
 describe("Input arrow navigation", () => {
