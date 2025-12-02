@@ -149,16 +149,18 @@ class ToolbarItem extends UI5Element {
 	// We want to close the overflow popover, when closing event is being executed
 	getClosingEvents(): string[] {
 		const ctor = this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.constructor as typeof ToolbarItem;
-		const tagName = ctor?.getMetadata().getPureTag();
+		const tagName = ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.tagName;
 		return [...(this.closeOverflowSet[tagName as keyof typeof this.closeOverflowSet] || []), ...this.eventsToCloseOverflow];
 	}
 
 	attachCloseOverflowHandlers() {
 		const closingEvents = this.getClosingEvents();
 		closingEvents.forEach(clEvent => {
-			this.addEventListener(clEvent, () => {
-				this.fireDecoratorEvent("close-overflow");
-			});
+			if (!this.preventOverflowClosing) {
+				this.addEventListener(clEvent, () => {
+					this.fireDecoratorEvent("close-overflow");
+				});
+			}
 		});
 	}
 
