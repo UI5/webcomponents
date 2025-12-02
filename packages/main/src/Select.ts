@@ -1055,7 +1055,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get activeDescendantId() {
-		return `${this.id}-activeDescendant`;
+		return this.id ? `${this.id}-activeDescendant` : `${this.__id}-activeDescendant`;
 	}
 
 	 /**

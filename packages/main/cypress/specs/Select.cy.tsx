@@ -245,7 +245,7 @@ describe("Select - Accessibility", () => {
 					.find(".ui5-select-label-root")
 					.should("have.attr", "aria-controls", popoverId);
 			});
-	});	
+	});
 
 	it("Tests accessibility", () => {
 		cy.mount(
@@ -699,25 +699,25 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT = "Cozy";
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").should("have.attr", "opened");
-	
+
 		cy.get("@select")
 			.find("[ui5-option]")
 			.eq(0)
 			.realClick();
-	
+
 		cy.get("@changeStub").should("have.been.calledOnce");
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT);
 		cy.get("@select")
 			.shadow()
@@ -733,7 +733,7 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
@@ -741,18 +741,18 @@ describe("Select general interaction", () => {
 					e.preventDefault();
 				}));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT = "Condensed";
-	
+
 		cy.get("@select").realClick();
-	
+
 		cy.get("@select")
 			.find("[ui5-option]")
 			.eq(1)
 			.realClick();
-	
+
 		cy.get("@changeStub").should("have.been.calledOnce");
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT);
 		cy.get("@select")
 			.shadow()
@@ -768,20 +768,20 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		cy.get("@select").realClick();
-	
+
 		cy.get("@select")
 			.find("[ui5-option]")
 			.eq(2)
 			.realClick();
-	
+
 		cy.get("@changeStub").should("not.have.been.called");
 	});
 
@@ -793,15 +793,15 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-open", cy.stub().as("openStub"));
 			});
-	
+
 		cy.get("@select").realClick();
-	
+
 		cy.get("@openStub").should("have.been.calledOnce");
 	});
 
@@ -813,16 +813,16 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-close", cy.stub().as("closeStub"));
 			});
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realClick();
-	
+
 		cy.get("@closeStub").should("have.been.calledOnce");
 	});
 
@@ -834,40 +834,40 @@ describe("Select general interaction", () => {
 				<Option value="Condensed">Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowDown");
 		cy.get("@select").realPress("Enter");
-	
+
 		cy.get("@changeStub").should("have.been.calledOnce");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowDown");
 		cy.get("@select").realPress("Space");
-	
+
 		cy.get("@changeStub").should("have.been.calledTwice");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT2);
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT2);
 	});
 
@@ -879,27 +879,27 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT1 = "Condensed";
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select").realPress("ArrowDown");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@changeStub").should("not.have.been.called");
 	});
 
@@ -911,40 +911,40 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select").realPress("ArrowUp");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").realPress("ArrowDown");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT2);
-	
+
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT2);
-	
+
 		cy.get("@changeStub").should("have.been.calledTwice");
 	});
-	
+
 	it("changes selection sync with selection announcement", () => {
 		cy.mount(
 			<>
@@ -956,45 +956,45 @@ describe("Select general interaction", () => {
 				<button>click</button>
 			</>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select").realPress("ArrowUp");
-	
+
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("@select").realPress("ArrowDown");
-	
+
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Enter");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
-	
+
 		cy.get("button").realClick();
-	
+
 		cy.get("@changeStub").should("have.been.calledThrice");
 	});
-	
+
 
 	it("remains closed and unchanged when read-only", () => {
 		cy.mount(
@@ -1427,13 +1427,13 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		let initialSelectText = "";
 		cy.get("@select")
 			.shadow()
@@ -1441,17 +1441,17 @@ describe("Select general interaction", () => {
 			.then(($el) => {
 				initialSelectText = $el[0].innerHTML;
 			});
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowDown");
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select")
 			.find("[ui5-option][selected]")
 			.should("have.prop", "selected", true);
-	
+
 		cy.get("@changeStub").should("not.have.been.called");
-	
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
@@ -1471,18 +1471,18 @@ describe("Select general interaction", () => {
 				<button>click</button>
 			</>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowUp");
-	
+
 		cy.get("button").realClick();
-	
+
 		cy.get("@changeStub").should("have.been.calledOnce");
 	});
 
@@ -1494,23 +1494,23 @@ describe("Select general interaction", () => {
 				<Option value="Condensed" selected>Condensed</Option>
 			</Select>
 		);
-	
+
 		cy.get("[ui5-select]")
 			.as("select")
 			.then(($select) => {
 				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
 			});
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("ArrowDown");
-	
+
 		cy.get("@select").realPress("Escape");
-	
+
 		cy.get("@select").realClick();
 		cy.get("@select")
 			.find("[ui5-option]:first-child")
 			.realClick();
-	
+
 		cy.get("@changeStub").should("have.been.calledOnce");
 	});
 
@@ -1739,5 +1739,47 @@ describe("Select general interaction", () => {
 			.eq(2)
 			.should("have.attr", "selected");
 		cy.get("[ui5-select]").should("have.prop", "value", "C");
+	});
+
+	describe.only("Select Component - aria-activedescendant Validation", () => {
+		it("should update aria-activedescendant on the Select root element when navigating options", () => {
+		  // Mount the Select component
+		  cy.mount(
+			<Select>
+			  <Option id="option-a" value="A">A</Option>
+			  <Option id="option-b" value="B">B</Option>
+			  <Option id="option-c" value="C">C</Option>
+			</Select>
+		  );
+		// Ensure the Select component is rendered
+		cy.get("[ui5-select]").should("exist");
+
+		// Open the dropdown
+		cy.get("[ui5-select]").realClick();
+
+		// Validate the initial aria-activedescendant value (should not exist initially)
+		cy.get("[ui5-select]").should("not.have.attr", "aria-activedescendant");
+
+		// Navigate to the second option using ArrowDown
+		cy.get("[ui5-select]").realPress("ArrowDown");
+
+		// Validate the aria-activedescendant attribute dynamically
+		cy.get("[ui5-select]")
+		.shadow()
+		.find(".ui5-select-label-root")
+		.should("have.attr", "aria-activedescendant")
+		.then((ariaActiveDescendant) => {
+			// Use the activeDescendantId getter to locate the corresponding element
+			cy.get("[ui5-select]")
+			.invoke("prop", "activeDescendantId")
+			.should("equal", ariaActiveDescendant);
+
+			// Validate the text of the dynamically resolved active descendant
+			cy.get("[ui5-select]").shadow().find(`[id="${ariaActiveDescendant}"]`)
+			.should("exist")
+			.and("have.text", "B");
+		});
+
+		});
 	});
 });
