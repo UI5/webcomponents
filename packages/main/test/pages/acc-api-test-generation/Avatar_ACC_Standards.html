@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Avatar - SAP Accessibility Standard 4.3 Compliance Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+
+	<script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+
+    <script type="module">
+        // Import UI5 Avatar component and required icons for testing
+        import "@ui5/webcomponents/dist/Avatar.js";
+        import "@ui5/webcomponents/dist/Tag.js";
+        import "@ui5/webcomponents/dist/Icon.js";
+        import "@ui5/webcomponents-icons/dist/employee.js";
+        import "@ui5/webcomponents-icons/dist/filter.js";
+        import "@ui5/webcomponents-icons/dist/accelerated.js";
+        import "@ui5/webcomponents-icons/dist/alert.js";
+    </script>
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap Icons -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+	<!-- Custom CSS for test-specific styling -->
+	<style>
+		.test-section {
+			border-left-width: 3px;
+		}
+
+		.test-section.fullfiled {
+			border-left-color: #198754;
+		}
+
+        .test-section.not-fullfiled {
+			border-left-color: red;
+		}
+
+		.test-section.not-applicable{
+			border-left-color: #6c757d;
+		}
+
+		.test-section.contextual {
+			border-left-color: #fd7e14;
+			background-color: #fff3e0;
+		}
+
+		.test-section.manual-testing {
+			border-left-color: #6f42c1;
+			background-color: #f3f0ff;
+		}
+
+		.components-row {
+			gap: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container-fluid py-4">
+		<h1 class="display-5 text-dark mb-4">Avatar - SAP Accessibility Standard 4.3 Compliance Test</h1>
+
+		<!-- Ease of Understanding -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">Ease of Understanding</h2>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-253 - Labels</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar provides accessible labels through accessibleName property and aria-label attribute in template</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar with accessible names and automatic fallback labeling
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Avatar with explicit accessible name -->
+						<ui5-avatar accessible-name="User profile picture" initials="AB"></ui5-avatar>
+						<!-- Avatar with initials gets automatic label -->
+						<ui5-avatar initials="CD" aria-label="Avatar CD"></ui5-avatar>
+						<!-- Avatar with icon uses icon accessible name -->
+						<ui5-avatar icon="employee" accessible-name="Employee avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Use screen reader to navigate to each avatar</li>
+						<li>Verify each avatar announces meaningful label</li>
+						<li>Check that fallback labels are provided when accessibleName is not set</li>
+					</ol>
+					<p><strong>Expected:</strong> Each avatar announces appropriate descriptive label. Code shows accessibleNameText getter provides fallback labeling.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-254 - Screen Titles and Headings</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is a single UI component, not a page or screen requiring titles/headings</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-255 - Text Alternative for Non-Text Content</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar provides text alternatives for images, icons, and initials through aria-label</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Non-text content (images, icons, initials) with text alternatives
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Avatar with image gets accessible name -->
+						<ui5-avatar accessible-name="John Miller profile photo">
+							<img src="./img/John_Miller.png" alt="John Miller">
+						</ui5-avatar>
+						<!-- Avatar with icon -->
+						<ui5-avatar icon="employee" accessible-name="Employee icon avatar"></ui5-avatar>
+						<!-- Avatar with initials -->
+						<ui5-avatar initials="JS" accessible-name="Jane Smith avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Use screen reader to navigate each avatar type</li>
+						<li>Verify meaningful description is announced</li>
+						<li>Check that visual content purpose is conveyed through text</li>
+					</ol>
+					<p><strong>Expected:</strong> All non-text content (images, icons, initials) has meaningful text alternative accessible to screen readers</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-256 - Two-Sensory Concept</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar uses color schemes that require manual verification for non-color information conveyance</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Color-based Avatar schemes should convey information through additional means
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar color-scheme="Accent1" initials="A1" accessible-name="Accent 1 avatar"></ui5-avatar>
+						<ui5-avatar color-scheme="Accent2" initials="A2" accessible-name="Accent 2 avatar"></ui5-avatar>
+						<ui5-avatar color-scheme="Accent3" initials="A3" accessible-name="Accent 3 avatar"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Check if color scheme differences convey meaningful information</li>
+						<li>Verify that any functional differences are also indicated by text, shape, or position</li>
+						<li>Test with color vision deficiency simulation tools</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Color blindness simulation, screen reader</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-257 - Purpose and Target of a Reference</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar component does not contain links or references to other content</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section contextual border-warning">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-258 - Consistent Use of Identical UI-Elements</h3>
+				<p><span class="badge bg-warning text-dark">CONTEXTUAL (tested by AI)</span> - Applies when multiple Avatars with same function exist across application</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatars with same function should have consistent labeling and behavior
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Consistent user profile avatars -->
+						<ui5-avatar accessible-name="Current user profile" initials="ME" interactive></ui5-avatar>
+						<ui5-avatar accessible-name="Current user profile" initials="ME" interactive></ui5-avatar>
+					</div>
+					<p><strong>Expected:</strong> When Avatars represent same function (e.g., user profiles), they should have consistent labels, tooltips, and interaction patterns</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-259 - Accessible Alternatives</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not contain inaccessible technologies requiring alternatives</p>
+			</div>
+		</div>
+
+		<!-- Visual Perception -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">Visual Perception</h2>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-260 - Text Resizing up to 200 percent</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar scalability needs verification at 200% zoom without horizontal scrolling</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar components at various sizes with 200% browser zoom
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar size="XS" initials="XS"></ui5-avatar>
+						<ui5-avatar size="S" initials="S"></ui5-avatar>
+						<ui5-avatar size="M" initials="M"></ui5-avatar>
+						<ui5-avatar size="L" initials="L"></ui5-avatar>
+						<ui5-avatar size="XL" initials="XL"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Set browser zoom to 200%</li>
+						<li>Verify all avatar text (initials) remains readable</li>
+						<li>Check no horizontal scrolling required</li>
+						<li>Ensure avatar maintains proportions and functionality</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Browser zoom functionality</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-261 - Minimum Contrast</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar color schemes require contrast ratio verification</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar color schemes contrast testing
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar color-scheme="Accent1" initials="A1"></ui5-avatar>
+						<ui5-avatar color-scheme="Accent6" initials="A6"></ui5-avatar>
+						<ui5-avatar color-scheme="Placeholder" initials="PL"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Use color contrast analyzer on text/background pairs</li>
+						<li>Verify minimum 4.5:1 ratio for normal text</li>
+						<li>Check 3:1 ratio for large text (18pt+ or 14pt+ bold)</li>
+						<li>Test focus indicators meet 3:1 against adjacent colors</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Color contrast analyzer, browser developer tools</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-262 - Color and Contrast Setting</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar should respect system high contrast settings</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar appearance with high contrast mode
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar initials="HC" accessible-name="High contrast test avatar"></ui5-avatar>
+						<ui5-avatar icon="employee" accessible-name="High contrast icon avatar"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Enable operating system high contrast mode</li>
+						<li>Verify avatar elements remain visible and usable</li>
+						<li>Check that custom colors don't override system preferences</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> OS high contrast settings</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-281 - Display Orientation</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar should function in both portrait and landscape orientations</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar functionality across device orientations
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar size="L" initials="PL" accessible-name="Portrait/Landscape test"></ui5-avatar>
+						<ui5-avatar size="L" interactive initials="IL" accessible-name="Interactive orientation test"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Test on mobile device or simulate mobile in browser</li>
+						<li>Rotate device between portrait and landscape</li>
+						<li>Verify avatar remains functional and visible</li>
+						<li>Check interactive avatars remain clickable</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Mobile device or browser device simulation</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-282 - Responsive Design</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar should adapt to viewport width down to 320px</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar responsive behavior at minimum viewport width
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar size="S" initials="RS" accessible-name="Responsive small"></ui5-avatar>
+						<ui5-avatar size="M" initials="RM" accessible-name="Responsive medium"></ui5-avatar>
+						<ui5-avatar size="L" initials="RL" accessible-name="Responsive large"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Resize browser window to 320px width</li>
+						<li>Verify avatars remain visible and proportional</li>
+						<li>Check no horizontal scrolling required</li>
+						<li>Ensure interactive features still work</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Browser responsive design mode</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-283 - Text Spacing</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar initials should remain readable with increased text spacing</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar with increased line height, letter spacing, word spacing, and paragraph spacing
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar initials="TS" accessible-name="Text spacing test" style="line-height: 1.5; letter-spacing: 0.12em;"></ui5-avatar>
+						<ui5-avatar size="L" initials="TSL" accessible-name="Large text spacing test" style="line-height: 1.5; letter-spacing: 0.12em;"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Apply CSS to increase line-height to 1.5</li>
+						<li>Set letter-spacing to 0.12em</li>
+						<li>Set word-spacing to 0.16em</li>
+						<li>Verify initials remain visible and within avatar boundaries</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Browser developer tools to modify CSS</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Assistive Tool Support -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">Assistive Tool Support</h2>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-263 - Information, Structures and Relationships</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar uses semantic HTML structure with proper ARIA role and labeling</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar semantic structure and relationships
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Interactive avatar with button role -->
+						<ui5-avatar interactive initials="BT" accessible-name="Interactive button avatar"></ui5-avatar>
+						<!-- Non-interactive avatar with img role -->
+						<ui5-avatar initials="IM" accessible-name="Image avatar"></ui5-avatar>
+						<!-- Avatar with badge showing relationship -->
+						<ui5-avatar initials="BD" accessible-name="Avatar with badge">
+							<ui5-tag slot="badge">
+								<ui5-icon slot="icon" name="accelerated"></ui5-icon>
+							</ui5-tag>
+						</ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Use screen reader navigation to verify roles (button vs img)</li>
+						<li>Check that badge relationship is announced</li>
+						<li>Verify proper nesting and structure</li>
+					</ol>
+					<p><strong>Expected:</strong> Template shows role="button" for interactive avatars, role="img" for non-interactive. Structure is programmatically determinable.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-264 - Interoperability with Assistive Technologies</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar implements proper ARIA attributes for state, properties, and relationships</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> ARIA attributes and assistive technology support
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Avatar with hasPopup for menu -->
+						<ui5-avatar interactive initials="HP" accessible-name="Avatar with popup menu" id="popup-avatar"></ui5-avatar>
+						<!-- Disabled avatar -->
+						<ui5-avatar interactive disabled initials="DS" accessible-name="Disabled interactive avatar"></ui5-avatar>
+						<!-- Avatar with different states -->
+						<ui5-avatar initials="ST" accessible-name="Standard avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Use screen reader to check announced properties and states</li>
+						<li>Verify disabled state is announced</li>
+						<li>Check aria-haspopup when set through accessibilityAttributes</li>
+						<li>Test that changes to properties are announced</li>
+					</ol>
+					<p><strong>Expected:</strong> All UI properties, states, and values are programmatically available to assistive technologies</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-265 - Language Attributes</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Avatar initials in different languages should be marked with lang attribute when applicable</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Avatar with non-English initials
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar initials="ÄÖ" accessible-name="German initials avatar" lang="de"></ui5-avatar>
+						<ui5-avatar initials="José" accessible-name="Spanish name avatar" lang="es"></ui5-avatar>
+						<ui5-avatar initials="EN" accessible-name="English initials avatar" lang="en"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Use screen reader with multiple language support</li>
+					<li>Verify correct pronunciation of non-English initials</li>
+						<li>Check that lang attributes are respected</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Screen reader with multi-language support</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-266 - Correct Use of Markup Language</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar uses valid HTML structure with proper custom element implementation</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Valid HTML markup and structure
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar initials="VM" accessible-name="Valid markup avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Validate HTML markup using W3C validator</li>
+						<li>Check proper custom element registration</li>
+						<li>Verify no duplicate IDs or malformed attributes</li>
+					</ol>
+					<p><strong>Expected:</strong> Clean, valid HTML structure without parsing errors</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Orientation and Navigation -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">Orientation and Navigation</h2>
+
+		<div class="card mb-3 test-section contextual border-warning">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-267 - Consistent Navigation and Help</h3>
+				<p><span class="badge bg-warning text-dark">CONTEXTUAL (tested by AI)</span> - Applies when Avatar is used as navigation element across multiple pages</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Consistent Avatar placement and behavior for navigation
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar interactive initials="CV" accessible-name="Consistent navigation avatar"></ui5-avatar>
+					</div>
+					<p><strong>Expected:</strong> When Avatar serves navigation purpose (e.g., user profile menu), placement and interaction should be consistent across application screens</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-268 - Multiple Ways to Find Content</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is a display component, not a content discovery mechanism</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-269 - Group Skipping</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is a single element, not a group requiring skip navigation</p>
+			</div>
+		</div>
+
+		<!-- User Interaction -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">User Interaction</h2>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-270 - Full Input Channel Support (Keyboard, Mouse, Touch)</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Interactive Avatar supports keyboard (Space/Enter), mouse click, and touch activation</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Multi-modal interaction support
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar interactive initials="KB" accessible-name="Keyboard accessible avatar" onclick="alert('Keyboard/Mouse/Touch works!')"></ui5-avatar>
+						<ui5-avatar initials="NI" accessible-name="Non-interactive avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Tab to interactive avatar and press Space or Enter</li>
+						<li>Click interactive avatar with mouse</li>
+						<li>Touch interactive avatar on touch device</li>
+						<li>Verify non-interactive avatar doesn't respond to activation</li>
+					</ol>
+					<p><strong>Expected:</strong> Interactive Avatar responds to keyboard, mouse, and touch. Template shows _onkeydown, _onkeyup, and _onclick handlers.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-271 - Visible Focus</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Interactive Avatar must show visible focus indicator</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Focus indicator visibility and prominence
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar interactive initials="F1" accessible-name="Focus test avatar 1"></ui5-avatar>
+						<ui5-avatar interactive initials="F2" accessible-name="Focus test avatar 2"></ui5-avatar>
+						<ui5-avatar interactive disabled initials="DF" accessible-name="Disabled focus avatar"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Tab through interactive avatars using keyboard</li>
+						<li>Verify visible focus indicator appears</li>
+						<li>Check focus indicator has sufficient contrast (3:1 ratio)</li>
+						<li>Ensure disabled avatar cannot receive focus</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Keyboard navigation, color contrast analyzer</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-272 - Tab/Reading Order</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Interactive Avatar participates in logical tab order</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Tab order sequence with multiple interactive elements
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<!-- Tab order: 1 -->
+						<ui5-avatar interactive initials="T1" accessible-name="Tab order 1"></ui5-avatar>
+						<!-- Tab order: 2 -->
+						<ui5-avatar interactive initials="T2" accessible-name="Tab order 2"></ui5-avatar>
+						<!-- Not in tab order -->
+						<ui5-avatar initials="NT" accessible-name="Not tabbable"></ui5-avatar>
+						<!-- Tab order: 3 -->
+						<ui5-avatar interactive initials="T3" accessible-name="Tab order 3"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Use Tab key to navigate through elements</li>
+						<li>Verify logical order: T1 → T2 → T3</li>
+						<li>Check non-interactive avatar (NT) is skipped</li>
+						<li>Use Shift+Tab to navigate backwards</li>
+					</ol>
+					<p><strong>Expected:</strong> Interactive avatars appear in tab sequence in DOM order. Non-interactive avatars are not focusable (tabindex undefined).</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section fullfiled border-success">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-273 - Robust Context</h3>
+				<p><span class="badge bg-success">FULFILLED (tested by AI)</span> - Avatar focus and state changes don't cause unexpected context changes</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Stable context during focus and interaction
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar interactive initials="RC" accessible-name="Robust context avatar"></ui5-avatar>
+						<ui5-avatar initials="NF" accessible-name="No focus change avatar"></ui5-avatar>
+					</div>
+					<p><strong>Testing Instructions:</strong></p>
+					<ol class="mb-3">
+						<li>Tab to interactive avatar - check focus stays on avatar</li>
+						<li>Click avatar - verify focus doesn't jump elsewhere</li>
+						<li>Change avatar properties - ensure focus remains stable</li>
+					</ol>
+					<p><strong>Expected:</strong> Focus and state changes don't cause automatic navigation or context switches. Avatar click requires explicit user action to trigger navigation.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-274 - Error Prevention</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is not an input component that can create legal, financial, or data modification errors</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-275 - Correct Error Handling</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is not an input component that validates user data or generates errors</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-277 - Embedded or External Applications</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not embed or require external applications</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-284 - Content on Hover or Focus</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not show additional content on hover or focus by default</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section manual-testing border-info">
+			<div class="card-body">
+				<h3 class="h6 fw-bold mb-3">ACC-287 - Target Size</h3>
+				<p><span class="badge bg-info text-dark">NEED MANUAL TESTING</span> - Interactive Avatar should meet minimum 24px target size including spacing</p>
+				<div class="alert alert-light mt-3">
+					<strong>Test Case:</strong> Target size measurement for interactive avatars
+					<div class="d-flex flex-wrap align-items-center gap-3 my-3 components-row">
+						<ui5-avatar interactive size="XS" initials="XS" accessible-name="Extra small target"></ui5-avatar>
+						<ui5-avatar interactive size="S" initials="S" accessible-name="Small target"></ui5-avatar>
+						<ui5-avatar interactive size="M" initials="M" accessible-name="Medium target"></ui5-avatar>
+					</div>
+					<p><strong>Manual Test Steps:</strong></p>
+					<ol class="mb-3">
+						<li>Measure clickable area of each interactive avatar</li>
+						<li>Include surrounding spacing in measurement</li>
+						<li>Verify total target area is at least 24x24 CSS pixels</li>
+						<li>Test touch interaction on mobile device</li>
+					</ol>
+					<p><strong>Tools Needed:</strong> Browser developer tools, ruler/measurement tool, mobile device</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Time-Dependent Content and Cognitive Load -->
+		<h2 class="h4 text-secondary border-bottom pb-2 mb-4">Time-Dependent Content and Cognitive Load</h2>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-278 - Time Limits</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not implement time limits or auto-updating content</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-279 - Animation, Audio and Video Control</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not contain auto-playing animations, audio, or video content</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-280 - Avoidance of Flickering and Flashing Content</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar does not contain flickering or flashing content</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-285 - Accessible Authentication</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is not an authentication component</p>
+			</div>
+		</div>
+
+		<div class="card mb-3 test-section not-applicable bg-light">
+			<div class="card-body">
+				<h3 class="h6 fw-bold text-muted mb-3">ACC-286 - Avoidance of Redundant Entries</h3>
+				<p><span class="badge bg-secondary">NOT APPLICABLE (tested by AI)</span> - Avatar is not part of multi-step input processes requiring redundant data entry</p>
+			</div>
+		</div>
+
+	</main>
+
+	<!-- Bootstrap JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<script>
+		// Set up accessibility attributes for testing
+		document.addEventListener('DOMContentLoaded', function() {
+			// Set hasPopup attribute for popup avatar test
+			const popupAvatar = document.getElementById('popup-avatar');
+			if (popupAvatar) {
+				popupAvatar.accessibilityAttributes = { hasPopup: 'menu' };
+			}
+		});
+	</script>
+</body>
+
+</html>

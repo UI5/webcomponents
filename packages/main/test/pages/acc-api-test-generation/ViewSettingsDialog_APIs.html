@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 ViewSettingsDialog API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- DO NOT change, use as it is-->
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
+        import "@ui5/webcomponents-fiori/dist/SortItem.js";
+        import "@ui5/webcomponents-fiori/dist/FilterItem.js";
+        import "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
+        import "@ui5/webcomponents-fiori/dist/GroupItem.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="ViewSettingsDialog API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 ViewSettingsDialog Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Open Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using open property to control dialog visibility programmatically</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="p90123456789012345678901234567890123456789">
+                            <ui5-view-settings-dialog id="open-demo">
+                                <ui5-sort-item slot="sortItems" text="Name" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Date"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Size"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="open-btn">Open Dialog</ui5-button>
+                            <ui5-button id="close-btn">Close Dialog</ui5-button>
+                            <ui5-button id="toggle-btn">Toggle Dialog</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use buttons to programmatically control dialog visibility</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SortDescending Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using sortDescending property to set initial sort order (ascending/descending)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="q901234567890123456789012345678901234567890">
+                            <ui5-view-settings-dialog id="ascending-demo">
+                                <ui5-sort-item slot="sortItems" text="Title" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Year"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="ascending-btn">Show Ascending Sort</ui5-button>
+                            <ui5-view-settings-dialog id="descending-demo" sort-descending>
+                                <ui5-sort-item slot="sortItems" text="Price" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Rating"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Popularity"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="descending-btn">Show Descending Sort</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Compare ascending vs descending initial sort order settings</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">GroupDescending Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using groupDescending property to set initial group order (ascending/descending)</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="r9012345678901234567890123456789012345678901">
+                            <ui5-view-settings-dialog id="group-demo" group-descending>
+                                <ui5-sort-item slot="sortItems" text="Employee Name"></ui5-sort-item>
+                                <ui5-group-item slot="groupItems" text="Department" selected></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Location"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Role"></ui5-group-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="group-btn">Show Group Settings</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see group settings with descending order pre-selected</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">SortItems Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using sortItems slot to define available sorting criteria</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="s90123456789012345678901234567890123456789012">
+                            <ui5-view-settings-dialog id="sort-items-demo">
+                                <ui5-sort-item slot="sortItems" text="Customer Name" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Order Date"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Order Amount"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Status"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Sales Rep"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Product Category"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="sort-items-btn">Show Sort Items</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to explore comprehensive sorting options</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">FilterItems Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using filterItems slot to define available filtering categories</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="t901234567890123456789012345678901234567890123">
+                            <ui5-view-settings-dialog id="filter-items-demo">
+                                <ui5-sort-item slot="sortItems" text="Product Name"></ui5-sort-item>
+                                <ui5-filter-item slot="filterItems" text="Category" additional-text="2 selected">
+                                    <ui5-filter-item-option slot="values" text="Electronics" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Clothing" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Books"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Home & Garden"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Price Range">
+                                    <ui5-filter-item-option slot="values" text="Under $25"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="$25 - $50"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="$50 - $100"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Over $100"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Brand">
+                                    <ui5-filter-item-option slot="values" text="Brand A"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Brand B"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Brand C"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="filter-items-btn">Show Filter Items</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to explore filtering options and drill down into categories</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">GroupItems Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using groupItems slot to define available grouping criteria</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="u9012345678901234567890123456789012345678901234">
+                            <ui5-view-settings-dialog id="group-items-demo">
+                                <ui5-sort-item slot="sortItems" text="Task Name"></ui5-sort-item>
+                                <ui5-group-item slot="groupItems" text="Project" selected></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Assignee"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Priority"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Status"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Due Date"></ui5-group-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="group-items-btn">Show Group Items</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to explore different grouping criteria options</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Comprehensive Dialog API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating all slots together: sortItems, filterItems, and groupItems</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="v90123456789012345678901234567890123456789012345">
+                            <ui5-view-settings-dialog id="comprehensive-demo" sort-descending>
+                                <ui5-sort-item slot="sortItems" text="Customer ID"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Company Name" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Contact Person"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Revenue"></ui5-sort-item>
+                                
+                                <ui5-filter-item slot="filterItems" text="Industry" additional-text="1 selected">
+                                    <ui5-filter-item-option slot="values" text="Technology" selected></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Healthcare"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Finance"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Manufacturing"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Company Size">
+                                    <ui5-filter-item-option slot="values" text="Startup (1-50)"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Medium (51-500)"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Large (500+)"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                <ui5-filter-item slot="filterItems" text="Relationship">
+                                    <ui5-filter-item-option slot="values" text="Prospect"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Active Client"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Former Client"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                                
+                                <ui5-group-item slot="groupItems" text="Region" selected></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Account Manager"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Customer Tier"></ui5-group-item>
+                                <ui5-group-item slot="groupItems" text="Industry Vertical"></ui5-group-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="comprehensive-btn">Show Complete Dialog</ui5-button>
+                            <div class="mt-2 w-100 d-flex gap-2">
+                                <ui5-button id="toggle-sort-order" design="Transparent">Toggle Sort Order</ui5-button>
+                                <ui5-button id="toggle-group-order" design="Transparent">Toggle Group Order</ui5-button>
+                            </div>
+                            <div class="mt-2 w-100">
+                                <div id="dialog-properties" class="small text-muted">Dialog properties will be shown here...</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use toggle buttons to change sort/group order, open dialog to see all features</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Events API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating confirm, cancel, before-open, open, and close events</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="w901234567890123456789012345678901234567890123456">
+                            <ui5-view-settings-dialog id="events-demo">
+                                <ui5-sort-item slot="sortItems" text="Event Name" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Timestamp"></ui5-sort-item>
+                                <ui5-filter-item slot="filterItems" text="Event Type">
+                                    <ui5-filter-item-option slot="values" text="User Action"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="System Event"></ui5-filter-item-option>
+                                    <ui5-filter-item-option slot="values" text="Error"></ui5-filter-item-option>
+                                </ui5-filter-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="events-btn">Show Events Demo</ui5-button>
+                            <div class="mt-2 w-100">
+                                <div id="events-log" class="small text-muted bg-white rounded p-2" style="height: 120px; overflow-y: auto; border: 1px solid #dee2e6;">
+                                    Event log will appear here...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Open dialog, make changes, confirm/cancel to see all events logged</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Event handlers for basic open/close functionality
+        document.getElementById('open-btn').addEventListener('click', () => {
+            document.getElementById('open-demo').open = true;
+        });
+
+        document.getElementById('close-btn').addEventListener('click', () => {
+            document.getElementById('open-demo').open = false;
+        });
+
+        document.getElementById('toggle-btn').addEventListener('click', () => {
+            const dialog = document.getElementById('open-demo');
+            dialog.open = !dialog.open;
+        });
+
+        // Sort order demos
+        document.getElementById('ascending-btn').addEventListener('click', () => {
+            document.getElementById('ascending-demo').open = true;
+        });
+
+        document.getElementById('descending-btn').addEventListener('click', () => {
+            document.getElementById('descending-demo').open = true;
+        });
+
+        // Other dialog demos
+        document.getElementById('group-btn').addEventListener('click', () => {
+            document.getElementById('group-demo').open = true;
+        });
+
+        document.getElementById('sort-items-btn').addEventListener('click', () => {
+            document.getElementById('sort-items-demo').open = true;
+        });
+
+        document.getElementById('filter-items-btn').addEventListener('click', () => {
+            document.getElementById('filter-items-demo').open = true;
+        });
+
+        document.getElementById('group-items-btn').addEventListener('click', () => {
+            document.getElementById('group-items-demo').open = true;
+        });
+
+        document.getElementById('comprehensive-btn').addEventListener('click', () => {
+            document.getElementById('comprehensive-demo').open = true;
+        });
+
+        document.getElementById('events-btn').addEventListener('click', () => {
+            document.getElementById('events-demo').open = true;
+        });
+
+        // Property monitoring for comprehensive demo
+        const comprehensiveDialog = document.getElementById('comprehensive-demo');
+        const dialogProperties = document.getElementById('dialog-properties');
+        const toggleSortOrderBtn = document.getElementById('toggle-sort-order');
+        const toggleGroupOrderBtn = document.getElementById('toggle-group-order');
+
+        function updateDialogProperties() {
+            if (!dialogProperties || !comprehensiveDialog) return;
+            
+            const sortOrder = comprehensiveDialog.sortDescending ? 'Descending' : 'Ascending';
+            const groupOrder = comprehensiveDialog.groupDescending ? 'Descending' : 'Ascending';
+            const isOpen = comprehensiveDialog.open ? 'Open' : 'Closed';
+            
+            dialogProperties.textContent = `Dialog State: ${isOpen} | Sort Order: ${sortOrder} | Group Order: ${groupOrder}`;
+        }
+
+        // Property toggle handlers
+        toggleSortOrderBtn?.addEventListener('click', () => {
+            comprehensiveDialog.sortDescending = !comprehensiveDialog.sortDescending;
+            updateDialogProperties();
+        });
+
+        toggleGroupOrderBtn?.addEventListener('click', () => {
+            comprehensiveDialog.groupDescending = !comprehensiveDialog.groupDescending;
+            updateDialogProperties();
+        });
+
+        // Monitor dialog open/close state
+        if (comprehensiveDialog) {
+            comprehensiveDialog.addEventListener('open', updateDialogProperties);
+            comprehensiveDialog.addEventListener('close', updateDialogProperties);
+        }
+
+        // Events logging functionality
+        const eventsLog = document.getElementById('events-log');
+        const eventsDialog = document.getElementById('events-demo');
+
+        function logEvent(eventType, detail = '') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${eventType}${detail ? ': ' + detail : ''}`;
+            eventsLog.innerHTML += logEntry + '<br>';
+            eventsLog.scrollTop = eventsLog.scrollHeight;
+        }
+
+        // Add event listeners for all ViewSettingsDialog events
+        if (eventsDialog) {
+            eventsDialog.addEventListener('before-open', () => {
+                logEvent('before-open', 'Dialog is about to open');
+            });
+
+            eventsDialog.addEventListener('open', () => {
+                logEvent('open', 'Dialog opened successfully');
+            });
+
+            eventsDialog.addEventListener('close', () => {
+                logEvent('close', 'Dialog closed');
+            });
+
+            eventsDialog.addEventListener('confirm', (e) => {
+                const sortBy = e.detail.sortBy || 'None';
+                const sortOrder = e.detail.sortDescending ? 'Descending' : 'Ascending';
+                const filters = e.detail.filters?.length || 0;
+                logEvent('confirm', `Sort: ${sortBy} (${sortOrder}), Filters: ${filters} categories`);
+            });
+
+            eventsDialog.addEventListener('cancel', (e) => {
+                logEvent('cancel', 'User cancelled dialog');
+            });
+        }
+
+        // Clear log initially
+        document.addEventListener('DOMContentLoaded', () => {
+            eventsLog.innerHTML = 'Event log initialized. Open the Events Demo dialog to see events.<br>';
+            updateDialogProperties();
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
