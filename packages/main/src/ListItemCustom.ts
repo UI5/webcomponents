@@ -146,7 +146,7 @@ class ListItemCustom extends ListItem {
 		const allTexts = [ListItemCustom.i18nBundle.getText(LISTITEMCUSTOM_TYPE_TEXT), ...accessibilityTexts];
 
 		// Update the span content
-		invisibleTextSpan.textContent = allTexts.join(". ");
+		invisibleTextSpan.textContent = allTexts.join(" ");
 	}
 
 	private _clearInvisibleTextContent() {
@@ -288,7 +288,7 @@ class ListItemCustom extends ListItem {
 			type, description, required, disabled, readonly, children,
 		} = accessibilityInfo;
 
-		// Build main text from description (primary) and type
+		// Build text parts starting with description
 		const textParts: string[] = [];
 
 		// Description is the primary content for accessibility
@@ -296,7 +296,21 @@ class ListItemCustom extends ListItem {
 			textParts.push(description);
 		}
 
-		// Type is added next
+		// Process accessibility children after description if provided
+		let childrenText = "";
+		if (children && children.length > 0) {
+			childrenText = children
+				.map(child => this._getElementAccessibleText(child))
+				.filter(Boolean)
+				.join(" ");
+
+			// Add children text after description but before type
+			if (childrenText) {
+				textParts.push(childrenText);
+			}
+		}
+
+		// Type is added after children
 		if (type) {
 			textParts.push(type);
 		}
@@ -317,20 +331,6 @@ class ListItemCustom extends ListItem {
 		let mainText = textParts.join(" ");
 		if (states.length > 0) {
 			mainText = [mainText, states.join(" ")].filter(Boolean).join(" ");
-		}
-
-		// Process accessibility children if provided
-		let childrenText = "";
-		if (children && children.length > 0) {
-			childrenText = children
-				.map(child => this._getElementAccessibleText(child))
-				.filter(Boolean)
-				.join(". ");
-
-			// Combine main text with children text
-			if (childrenText) {
-				return [mainText, childrenText].filter(Boolean).join(". ");
-			}
 		}
 
 		return mainText;
