@@ -253,15 +253,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleNameRef?: string;
 
-	/**
- 	 * Defines whether to display thousands separator.
- 	 * @default false
- 	 * @public
- 	 * @since 2.16.0
- 	*/
-	@property({ type: Boolean })
-	showThousandsSeparator = false;
-
 	@property({ noAttribute: true })
 	_decIconDisabled = false;
 
@@ -344,7 +335,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get type() {
-		return this.showThousandsSeparator ? InputType.Text : InputType.Number;
+		return InputType.Text;
 	}
 
 	// icons-related
@@ -404,7 +395,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
 				decimals: this.valuePrecision,
-				groupingEnabled: this.showThousandsSeparator,
+				groupingEnabled: true,
 			});
 		}
 
@@ -453,7 +444,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (!this._isFocused) {
+		if (this._isFocused) {
 			e.preventDefault();
 		}
 
@@ -569,9 +560,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
-		if (this.showThousandsSeparator) {
-			return true;
-		}
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
 		const delimiter = this.input?.value?.includes(".") ? "." : ",";
 		const numberParts = this.input?.value?.split(delimiter);
@@ -585,9 +573,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 		const inputValue = this._parseNumber(this.input.value);
 		if (this._isValueChanged(inputValue)) {
 			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
+			this.innerInput.value = this.input.value;
 		}
-
-		this.innerInput.value = this._formatNumber(this._parseNumber(this.innerInput.value));
 	}
 
 	_setDefaultInputValueIfNeeded() {
@@ -663,15 +650,14 @@ class StepInput extends UI5Element implements IFormInputElement {
 			preventDefault = false;
 		}
 
-		const cursorPosition = this.input.getDomRef()!.querySelector("input")!.selectionStart;
-		const inputValue = this.innerInput.value;
-		const typedValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		if(e.key && e.key.length !== 1) {
+			return;
+		}
 
-		if (!this._isNavigationKey(e.key)) {
-			const parsedValue = this._parseNumber(typedValue);
-			if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
-				preventDefault = true;
-			}
+		const { parsedValue: parsedValue, cursorPosition, stringValue: typedValue } = this._getValueOnkeyDown(e);
+
+		if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
+			preventDefault = true;
 		}
 
 		if (preventDefault) {
@@ -681,22 +667,19 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (cursorPosition === 0 && isMinus(e)) {
 			this._updateValueAndValidate(this._parseNumber(typedValue));
 		}
-
-		if (this.type === InputType.Number) {
-			this.innerInput.value = this._formatNumber(this._parseNumber(this.innerInput.value));
-		}
 	}
 
-	_isNavigationKey(key: string) {
-		const navigationKeys = [
-			"ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
-			"Home", "End", "Tab", "Escape", "Enter",
-			"Backspace", "Delete", "Control", "Alt", "Shift",
-			"Meta", "CapsLock", "NumLock", "ScrollLock",
-			"PageUp", "PageDown", "Insert",
-		];
+	_getValueOnkeyDown(e: KeyboardEvent) {
+		const cursorPosition = this.input.getDomRef()!.querySelector("input")!.selectionStart;
+		const inputValue = this.innerInput.value;
+		const typedValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		const parsedValue = this._parseNumber(typedValue);
 
-		return navigationKeys.includes(key) || key.startsWith("F");
+		return {
+			stringValue: typedValue,
+			parsedValue: parsedValue,
+			cursorPosition
+		}
 	}
 
 	_decSpin() {
