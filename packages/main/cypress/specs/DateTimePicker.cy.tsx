@@ -550,6 +550,27 @@ describe("DateTimePicker general interaction", () => {
 });
 
 describe("Accessibility", () => {
+	it("initial focus goes to calendar's current date in phone mode", () => {
+		// Set viewport to trigger phone mode UI (breakpoint is 640px)
+		// Using viewport instead of device simulation allows focus to work (focus is not available on actual phone devices)
+		cy.viewport(500, 800);
+
+		cy.mount(<DateTimePickerTemplate value="13/04/2020, 03:16:16 PM" formatPattern="dd/MM/yyyy, hh:mm:ss a" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]").as("dtp");
+		
+		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--selected")
+			.should("be.focused");
+	});
+
 	it("picker popover accessible name", () => {
 		const LABEL = "Deadline";
 		cy.mount(<DateTimePicker accessible-name={LABEL} />);
