@@ -68,7 +68,7 @@ const ICON_PER_STATUS_NAME = {
 /**
  * Defines the icons design (color) corresponding to the notification's status indicator.
  */
-const ICON_PER_STATUS_DESIGN = {
+const ICON_PER_STATUS_DESIGN: Record<`${ValueState}`, `${IconDesign}` | undefined> = {
 	["Negative"]: "Negative",
 	["Critical"]: "Critical",
 	["Positive"]: "Positive",
