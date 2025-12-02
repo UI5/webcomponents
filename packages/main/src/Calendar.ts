@@ -617,7 +617,7 @@ class Calendar extends CalendarPart {
 	 * @override
 	 */
 	getFocusDomRef(): HTMLElement | undefined {
-		return this._currentPickerDOM as unknown as HTMLElement;
+		return this.shadowRoot?.querySelector(`[ui5-${this._currentPicker}picker]`) as HTMLElement | undefined;
 	}
 
 	/**
