@@ -288,10 +288,13 @@ class ListItemCustom extends ListItem {
 			type, description, required, disabled, readonly, children,
 		} = accessibilityInfo;
 
-		// Build text parts starting with description
 		const textParts: string[] = [];
 
-		// Description is the primary content for accessibility
+		// Add type and description first
+		if (type) {
+			textParts.push(type);
+		}
+
 		if (description) {
 			textParts.push(description);
 		}
@@ -304,15 +307,10 @@ class ListItemCustom extends ListItem {
 				.filter(Boolean)
 				.join(" ");
 
-			// Add children text after description but before type
+			// Add children text after description
 			if (childrenText) {
 				textParts.push(childrenText);
 			}
-		}
-
-		// Type is added after children
-		if (type) {
-			textParts.push(type);
 		}
 
 		// Add accessibility states

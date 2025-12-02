@@ -123,7 +123,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-ui5")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Click me Button Check option Checkbox Not checked required");
+                    .should("have.text", "List Item Button Click me Checkbox Check option Not checked required");
                 
                 // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
                 cy.get("#li-custom-ui5")
@@ -167,7 +167,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-ui5-focus")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Click Me Button Check Option Checkbox Not checked");
+                    .should("have.text", "List Item Button Click Me Checkbox Check Option Not checked");
                 
                 // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
                 cy.get("#li-custom-ui5-focus")
@@ -186,7 +186,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-ui5-focus")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Click Me Button Check Option Checkbox Not checked");
+                    .should("have.text", "List Item Button Click Me Checkbox Check Option Not checked");
             });
 
             // Click outside the list to truly remove focus
@@ -230,7 +230,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-nested")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Container Text Nested Button Button Paragraph outside container");
+                    .should("have.text", "List Item Container Text Button Nested Button Paragraph outside container");
                 
                 // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
                 cy.get("#li-custom-nested")
@@ -270,7 +270,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-deep-nested")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Deeply Nested Button Button Level 2 Text Nested Checkbox Not checked");
+                    .should("have.text", "List Item Button Deeply Nested Button Level 2 Text Checkbox Nested Not checked");
                 
                 // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
                 cy.get("#li-custom-deep-nested")
@@ -293,6 +293,64 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
         });
     });
     
+    describe("With delete mode and custom delete button", () => {
+        it("should handle ListItemCustom with delete mode and custom delete button", () => {
+            // Mount ListItemCustom with delete mode and custom delete button
+            cy.mount(
+                <List selectionMode="Delete">
+                    <ListItemCustom id="li-custom-delete">
+                        <div>Delete Mode Item</div>
+                        <Button slot="deleteButton" id="custom-delete-button">
+                            Remove
+                        </Button>
+                    </ListItemCustom>
+                </List>
+            );
+
+            // Store the component ID
+            cy.get("#li-custom-delete").invoke("prop", "_id").as("itemId");
+            
+            // Focus the list item
+            cy.get("#li-custom-delete").click();
+
+            // Verify text content is processed and included in the invisible text
+            cy.get("@itemId").then(itemId => {
+                cy.get("#li-custom-delete")
+                    .shadow()
+                    .find(`#${itemId}-invisibleTextContent`)
+                    .should("have.text", "List Item Delete Mode Item Button Remove");
+                
+                // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
+                cy.get("#li-custom-delete")
+                    .shadow()
+                    .find("li[part='native-li']")
+                    .should("have.attr", "aria-labelledby")
+                    .and("include", `${itemId}-invisibleTextContent`);
+
+                // Verify that the custom delete button is properly rendered in the shadow DOM
+                cy.get("#li-custom-delete")
+                    .shadow()
+                    .find("div.ui5-li-deletebtn")
+                    .should("exist")
+                    .and("contain", "Remove");
+                
+                // Check that clicking the delete button triggers the delete event
+                cy.get("#custom-delete-button").should("exist");
+            });
+
+            // Remove focus
+            cy.focused().blur();
+
+            // After blur, invisible text content should be cleared
+            cy.get("@itemId").then(itemId => {
+                cy.get("#li-custom-delete")
+                    .shadow()
+                    .find(`#${itemId}-invisibleTextContent`)
+                    .should("have.text", "");
+            });
+        });
+    });
+
     describe("Edge cases", () => {
         it("should handle empty list item content", () => {
             cy.mount(
