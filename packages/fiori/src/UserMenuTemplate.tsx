@@ -152,7 +152,7 @@ function otherAccountsList(this: UserMenu) {
 			{this._otherAccounts.map((account, index) =>
 				<ListItemCustom
 					ref={this.captureRef.bind(account)}
-					aria-possition={index + 1}
+					aria-posinset={index + 1}
 					aria-setsize={this._otherAccounts.length}
 					aria-label={account.titleText}
 				>
