@@ -551,8 +551,7 @@ describe("DateTimePicker general interaction", () => {
 
 describe("Accessibility", () => {
 	it("initial focus goes to calendar's current date in phone mode", () => {
-		// Set viewport to trigger phone mode UI (breakpoint is 640px)
-		// Using viewport instead of device simulation allows focus to work (focus is not available on actual phone devices)
+		// Using viewport instead of device simulation (focus is not available on actual phone devices), to trigger SegmentedButton view.
 		cy.viewport(500, 800);
 
 		cy.mount(<DateTimePickerTemplate value="13/04/2020, 03:16:16 PM" formatPattern="dd/MM/yyyy, hh:mm:ss a" />);

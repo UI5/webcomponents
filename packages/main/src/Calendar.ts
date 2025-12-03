@@ -616,8 +616,8 @@ class Calendar extends CalendarPart {
 	 * Returns the focusable element inside the Calendar (the current picker)
 	 * @override
 	 */
-	getFocusDomRef(): HTMLElement | undefined {
-		return this.shadowRoot?.querySelector(`[ui5-${this._currentPicker}picker]`) as HTMLElement | undefined;
+	getFocusDomRef() {
+		return this._currentPickerDOM as HTMLElement | undefined;
 	}
 
 	/**
