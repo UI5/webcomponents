@@ -40,30 +40,30 @@
 		</ui5-input>
 	</div>
 
-		<div>
-			<h3>Flat items</h3>
+	<div>
+		<h3>Flat items</h3>
 
-			<ui5-input show-suggestions id="flat-items-input">
-			</ui5-input>
-		</div>
+		<ui5-input show-suggestions id="flat-items-input">
+		</ui5-input>
+	</div>
 
-		<br>
-		<br>
+	<br>
+	<br>
 
-		<div>
-			<h3>Custom Suggestions</h3>
+	<div>
+		<h3>Custom Suggestions</h3>
 
-			<ui5-input show-suggestions id="custom">
-			</ui5-input>
-		</div>
+		<ui5-input show-suggestions id="custom">
+		</ui5-input>
+	</div>
 
-		<h3>Custom Suggestions Flat</h3>
+	<h3>Custom Suggestions Flat</h3>
 
-		<ui5-input placeholder="Type something ..." show-suggestions id="input-custom-flat"></ui5-input>
+	<ui5-input placeholder="Type something ..." show-suggestions id="input-custom-flat"></ui5-input>
 
-		<br>
-		<span>SelectionChange: <span id='custom-items-selection-change-count'>0</span></span>
-		<span>Item index: <span id='custom-items-selection-item-index'>-1</span></span>
+	<br>
+	<span>SelectionChange: <span id='custom-items-selection-change-count'>0</span></span>
+	<span>Item index: <span id='custom-items-selection-item-index'>-1</span></span>
 	</div>
 
 	<br />
@@ -127,7 +127,8 @@
 	<h3>Input with long suggestions with valueState and ui5-li</h3>
 	<ui5-input id="long-sugg" show-suggestions class="input2auto" value-state="Information">
 		<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
-		<ui5-suggestion-item text="Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2. text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2."></ui5-suggestion-item>
+		<ui5-suggestion-item
+			text="Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2. text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2.Extra long text used as a list item. Extra long text used as a list item -2."></ui5-suggestion-item>
 		<ui5-suggestion-item text="Condensed"></ui5-suggestion-item>
 		<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
 		<ui5-suggestion-item text="Compact"></ui5-suggestion-item>
@@ -159,8 +160,10 @@
 
 	<h3> Test 'input' event</h3>
 	<ui5-input id="input2" value-state="Negative" placeholder="Negative state ...">
-		<div slot="valueStateMessage">Information message. This is a <ui5-link href="#">Link</ui5-link>. Extra long text used as an
-			information message. Extra long text used as an information message - 2. Extra long text used as an information
+		<div slot="valueStateMessage">Information message. This is a <ui5-link href="#">Link</ui5-link>. Extra long text
+			used as an
+			information message. Extra long text used as an information message - 2. Extra long text used as an
+			information
 			message - 3.</div>
 	</ui5-input>
 	<h3> 'input' test result</h3>
@@ -263,7 +266,8 @@
 
 	<h3> Input firing submit event and submit action on 'ENTER' in a form</h3>
 	<form id="submit-form">
-		<ui5-input id="submit-input" name="my-submit-input" placeholder="Type something and press 'ENTER' ..."></ui5-input>
+		<ui5-input id="submit-input" name="my-submit-input"
+			placeholder="Type something and press 'ENTER' ..."></ui5-input>
 	</form>
 
 	<h3> Test scroll pos</h3>
@@ -339,7 +343,8 @@
 
 	<h3>Test width of suggestions popover</h3>
 	<ui5-input id="suggestionsPopoverWidth" show-suggestions class="input6auto">
-		<ui5-suggestion-item text="Argentinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"></ui5-suggestion-item>
+		<ui5-suggestion-item
+			text="Argentinaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"></ui5-suggestion-item>
 	</ui5-input>
 
 	<h3>Input in a Dialog</h3>
@@ -387,7 +392,8 @@
 		<ui5-input id="vs-error-default" placeholder="Negative ValueState" value-state="Negative"></ui5-input>
 		<ui5-input id="vs-warning-default" placeholder="Critical ValueState" value-state="Critical"></ui5-input>
 		<ui5-input id="vs-success-default" placeholder="Positive ValueState" value-state="Positive"></ui5-input>
-		<ui5-input id="vs-information-default" placeholder="Information ValueState" value-state="Information"></ui5-input>
+		<ui5-input id="vs-information-default" placeholder="Information ValueState"
+			value-state="Information"></ui5-input>
 	</div>
 
 	<br>
@@ -433,7 +439,8 @@
 		<br />
 		<span>Input with suggestions and clear icon</span>
 		<br />
-		<ui5-input id="clear-input-suggestions" show-suggestions show-clear-icon placeholder="Type to show clear icon...">
+		<ui5-input id="clear-input-suggestions" show-suggestions show-clear-icon
+			placeholder="Type to show clear icon...">
 			<ui5-suggestion-item text="text 1"></ui5-suggestion-item>
 			<ui5-suggestion-item text="text 2"></ui5-suggestion-item>
 			<ui5-suggestion-item text="text 3"></ui5-suggestion-item>
@@ -444,11 +451,21 @@
 	</div>
 
 	<h3>Input with open suggestions on focusin</h3>
-	<ui5-input id="openPickerInput" show-suggestions show-clear-icon class="input3auto" placeholder="Click to show recent values...">
+	<ui5-input id="openPickerInput" show-suggestions show-clear-icon class="input3auto"
+		placeholder="Click to show recent values...">
 		<ui5-suggestion-item-group header-text="Recent Items">
 			<ui5-suggestion-item type="Inactive">No recent users</ui5-suggestion-item>
 		</ui5-suggestion-item-group>
 	</ui5-input>
+
+	<br>
+	<br>
+
+	<h3>Input with Dynamic Suggestions Triggering (Threshold = 3)</h3>
+	<ui5-input id="dynamicTriggerInput" placeholder="Type at least 3 characters to see suggestions..." show-suggestions></ui5-input>
+	<div>
+		<small>Suggestions will appear after typing 3 or more characters</small>
+	</div>
 
 	<br>
 	<br>
@@ -510,9 +527,9 @@
 
 	<h3>Input - open suggestions picker</h3>
 	<ui5-input id="input-suggestions-open" show-suggestions>
-		<ui5-suggestion-item text ="Cozy"></ui5-suggestion-item>
-		<ui5-suggestion-item text ="Compact"></ui5-suggestion-item>
-		<ui5-suggestion-item text ="Condensed"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Compact"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Condensed"></ui5-suggestion-item>
 	</ui5-input>
 
 	<br />
@@ -558,7 +575,7 @@
 	<ui5-label id="description">Input Composition with Chinese Suggestions</ui5-label>
 	<br>
 	<ui5-input id="input-composition-chinese" show-suggestions placeholder="Type in Chinese ...">
-		<ui5-suggestion-item text="你好"></ui5-suggestion-item>
+		<ui5-suggestion-item text="you好"></ui5-suggestion-item>
 		<ui5-suggestion-item text="謝謝"></ui5-suggestion-item>
 		<ui5-suggestion-item text="北京"></ui5-suggestion-item>
 		<ui5-suggestion-item text="上海"></ui5-suggestion-item>
@@ -1112,6 +1129,46 @@
 
 		document.getElementById("prevent-input-event-clear-icon").addEventListener("ui5-input", event => {
 			event.preventDefault();
+		});
+
+		// Dynamic Suggestions Triggering with Threshold
+		const dynamicTriggerInput = document.getElementById("dynamicTriggerInput");
+		const THRESHOLD = 3;
+
+		const countriesForDynamicTrigger = [
+			"Albania", "Andorra", "Armenia", "Austria", "Azerbaijan",
+			"Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
+			"Croatia", "Cyprus", "Czech Republic", "Denmark",
+			"Estonia", "Finland", "France", "Georgia", "Germany", "Greece",
+			"Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan",
+			"Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
+			"Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
+			"North Macedonia", "Norway", "Poland", "Portugal", "Romania",
+			"Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
+			"Spain", "Sweden", "Switzerland", "Turkey", "Ukraine",
+			"United Kingdom", "Vatican City"
+		];
+
+		dynamicTriggerInput.addEventListener("input", () => {
+			const value = dynamicTriggerInput.value;
+
+			while (dynamicTriggerInput.lastChild) {
+				dynamicTriggerInput.removeChild(dynamicTriggerInput.lastChild);
+			}
+
+			if (value.length >= THRESHOLD) {
+				dynamicTriggerInput.showSuggestions = true;
+
+				const filteredCountries = countriesForDynamicTrigger.filter(country =>
+					country.toLowerCase().startsWith(value.toLowerCase())
+				);
+
+				filteredCountries.forEach(country => {
+					const suggestion = document.createElement("ui5-suggestion-item");
+					suggestion.text = country;
+					dynamicTriggerInput.appendChild(suggestion);
+				});
+			}
 		});
 	</script>
 </body>
