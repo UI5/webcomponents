@@ -14,10 +14,11 @@ import information from "@ui5/webcomponents-icons/dist/information.js";
 
 type TemplateHook = () => void;
 
-export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { header?: TemplateHook, content?: TemplateHook, footer?: TemplateHook }) {
+export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { header?: TemplateHook, content?: TemplateHook, footer?: TemplateHook, initialFocus?: string }) {
 	const header = hooks?.header || defaultHeader;
 	const content = hooks?.content || defaultContent;
 	const footer = hooks?.footer || defaultFooter;
+	const initialFocus = hooks?.initialFocus;
 
 	return (
 		<ResponsivePopover
@@ -31,6 +32,7 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 			accessibleName={this.pickerAccessibleName}
 			hideArrow={true}
 			_hideHeader={this._shouldHideHeader}
+			initialFocus={initialFocus}
 			onKeyDown={this._onkeydown}
 			onClose={this.onResponsivePopoverAfterClose}
 			onOpen={this.onResponsivePopoverAfterOpen}
