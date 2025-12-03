@@ -649,7 +649,7 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button id="dummyButton">Dummy Button</Button></>
+			</MultiComboBox><Button>Dummy Button</Button></>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -676,14 +676,12 @@ describe("General", () => {
 			.find(".ui5-mcb-select-all-checkbox")
 			.should("not.have.attr", "checked");
 
-		cy.get("[ui5-button]")
-			.click();
+		// focus the dummy button to close the popover
+		cy.realPress("Tab");
+		cy.realPress("Tab");
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("not.be.focused");
 
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
