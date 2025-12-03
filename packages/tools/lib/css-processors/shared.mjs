@@ -28,11 +28,20 @@ const DEFAULT_THEME = assets.themes.default;
 
 const getDefaultThemeCode = packageName => {
 	return `import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
-
+import { getLoadBaseThemingCSSVariables } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.css.js";
 import defaultTheme from "./${DEFAULT_THEME}/parameters-bundle.css.js";
 
-registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}", async () => {
+	if (getLoadBaseThemingCSSVariables()) {
+		const rawCss = (await import("@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle-raw.css.js")).default;
+
+		return \`\$\{defaultThemeBase\}\\n\$\{rawCss\}\`;
+	}
+
+	return defaultThemeBase;
+});
+
 registerThemePropertiesLoader(${ packageName.split("").map(c => `"${c}"`).join (" + ") }, "${DEFAULT_THEME}", async () => defaultTheme);
 `;
 };
