@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-input</title>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+</head>
+
+<body>
+	<ui5-input show-suggestions>
+		<ui5-table slot="table">
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell>
+					<ui5-label>Coutry</ui5-label>
+				</ui5-table-header-cell>
+				<ui5-table-header-cell>
+					Population
+				</ui5-table-header-cell>
+				<ui5-table-header-cell>
+					<ui5-label>Capital</ui5-label>
+				</ui5-table-header-cell>
+			</ui5-table-header-row>
+
+			<ui5-table-row row-key="0" interactive>
+				<ui5-table-cell><ui5-label>Germany</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>83 Million</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Berlin</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row row-key="1" interactive>
+				<ui5-table-cell><ui5-label>France</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>67 Million</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Paris</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row row-key="2" interactive>
+				<ui5-table-cell><ui5-label>Italy</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>60 Million</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Rome</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="3" interactive>
+				<ui5-table-cell><ui5-label>Spain</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>47 Million</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Madrid</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+		</ui5-table>
+	</ui5-input>
+
+	<script type="module">
+			const generateHighlightedMarkup = window["sap-ui-webcomponents-bundle"].generateHighlightedMarkup;
+			const input = document.querySelector("ui5-input");
+
+			input.addEventListener("input", (e) => {
+				const cells = document.querySelectorAll("ui5-table-row > ui5-table-cell:first-child");
+	
+				[...cells].map((cell, index) => {
+					// happens in apps
+					cell.innerHTML = generateHighlightedMarkup(cell.textContent, e.target.value);
+					console.log(cell.textContent);
+				});
+			});
+	</script>
+</body>
+
+</html>

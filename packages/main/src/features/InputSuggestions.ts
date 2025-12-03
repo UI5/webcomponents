@@ -18,6 +18,7 @@ import {
 import type ListItemBase from "../ListItemBase.js";
 import type SuggestionItemGroup from "../SuggestionItemGroup.js";
 import type { IInputSuggestionItem, IInputSuggestionItemSelectable } from "../Input.js";
+import type Table from "../Table.js";
 
 interface SuggestionComponent extends UI5Element {
 	focused: boolean;
@@ -27,6 +28,7 @@ interface SuggestionComponent extends UI5Element {
 	hasValueStateMessage: boolean;
 	suggestionItems: Array<IInputSuggestionItem>;
 	open: boolean;
+	table: Array<HTMLElement>;
 	onItemSelected: (pressedItem: IInputSuggestionItemSelectable, keyboardUsed: boolean) => void;
 	onItemSelect: (item: IInputSuggestionItem) => void;
 }
@@ -450,7 +452,7 @@ class Suggestions {
 	}
 
 	_getList() {
-		return this._getPicker().querySelector<List>("[ui5-list]")!;
+		return this._getComponent().table ? this._getPicker().querySelector<Table>("[ui5-table]")! : this._getPicker().querySelector<List>("[ui5-list]")!;
 	}
 
 	_getListWidth() {

@@ -7,6 +7,12 @@ import ResponsivePopover from "../ResponsivePopover.js";
 import Button from "../Button.js";
 import ListAccessibleRole from "../types/ListAccessibleRole.js";
 
+const tableSuggestionList = function(this: Input) {
+	return (
+		<slot name="table"></slot>
+	);
+};
+
 export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
 	const suggestionsList = hooks?.suggestionsList || defaultSuggestionsList;
 	const valueStateMessage = hooks?.valueStateMessage;
@@ -25,7 +31,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 			onOpen={this._afterOpenPicker}
 			onClose={this._afterClosePicker}
 			onScroll={this._scroll}
-			open={this.open}
+			open={true}
 			opener={this}
 			accessibleName={this._popupLabel}
 		>
@@ -72,7 +78,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 					</div>
 			}
 
-			{ this.showSuggestions && suggestionsList.call(this) }
+			{ this.table ? tableSuggestionList.call(this) : (this.showSuggestions && suggestionsList.call(this))}
 
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
@@ -94,6 +100,8 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 		</ResponsivePopover>
 	);
 }
+
+
 
 function defaultSuggestionsList(this: Input) {
 	return (

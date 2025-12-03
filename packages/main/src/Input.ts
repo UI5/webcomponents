@@ -101,6 +101,8 @@ import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from ".
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
 import type InputComposition from "./features/InputComposition.js";
+import type Table from "./Table.js";
+import type TableRow from "./TableRow.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -576,6 +578,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	@property({ type: Boolean, noAttribute: true })
 	_isComposing = false;
 
+	@slot({ type: HTMLElement })
+	table!: Array<HTMLElement>;
+
 	/**
 	 * Defines the suggestion items.
 	 *
@@ -789,11 +794,25 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		// If there is already a selection the autocomplete has already been performed
 		if (this._shouldAutocomplete && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
 			const item = this._getFirstMatchingItem(value);
-			if (item) {
-				if (!this._isComposing) {
-					this._handleTypeAhead(item);
+
+			if (this.table.length) {
+				if (item) {
+					const value2 = item?.textContent || "";
+					this._innerValue = value2;
+					this.value = value2;
+					this._performTextSelection = true;
+
+					this._shouldAutocomplete = false;
 				}
-				this._selectMatchingItem(item);
+				// TODO
+				// (item?.parentElement as TableRow).selected = true;
+			} else {
+				if (item) {
+					if (!this._isComposing) {
+						this._handleTypeAhead(item);
+					}
+					this._selectMatchingItem(item);
+				}
 			}
 		}
 	}
@@ -805,7 +824,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this._listWidth = this.Suggestions._getListWidth();
 
 			// disabled ItemNavigation from the list since we are not using it
-			this.Suggestions._getList()._itemNavigation._getItems = () => [];
+			// this.Suggestions._getList()._itemNavigation._getItems = () => [];
 		}
 
 		if (this._performTextSelection) {
@@ -1313,7 +1332,17 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		return StartsWith(str, this._selectableItems, "text");
 	}
 
-	_getFirstMatchingItem(current: string): IInputSuggestionItemSelectable | undefined {
+	_getFirstMatchingItem(current: string): HTMLElement | undefined {
+		if (this.table.length) {
+			const table = this.table[0] as Table;
+
+			const matchedCell = table.rows.map(row => row.cells[0]).find(cell => {
+				return cell.textContent?.toLowerCase().startsWith(current.toLowerCase());
+			});
+
+			return matchedCell;
+		}
+
 		if (!this._flattenItems.length) {
 			return;
 		}
