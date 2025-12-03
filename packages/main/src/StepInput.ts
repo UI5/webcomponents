@@ -650,11 +650,11 @@ class StepInput extends UI5Element implements IFormInputElement {
 			preventDefault = false;
 		}
 
-		if(e.key && e.key.length !== 1) {
+		if (e.key && e.key.length !== 1) {
 			return;
 		}
 
-		const { parsedValue: parsedValue, cursorPosition, stringValue: typedValue } = this._getValueOnkeyDown(e);
+		const { parsedValue, cursorPosition, stringValue: typedValue } = this._getValueOnkeyDown(e);
 
 		if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
 			preventDefault = true;
@@ -672,14 +672,14 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_getValueOnkeyDown(e: KeyboardEvent) {
 		const cursorPosition = this.input.getDomRef()!.querySelector("input")!.selectionStart;
 		const inputValue = this.innerInput.value;
-		const typedValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
-		const parsedValue = this._parseNumber(typedValue);
+		const stringValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		const parsedValue = this._parseNumber(stringValue);
 
 		return {
-			stringValue: typedValue,
-			parsedValue: parsedValue,
-			cursorPosition
-		}
+			stringValue,
+			parsedValue,
+			cursorPosition,
+		};
 	}
 
 	_decSpin() {
