@@ -152,10 +152,8 @@ function otherAccountsList(this: UserMenu) {
 			{this._otherAccounts.map((account, index) =>
 				<ListItemCustom
 					ref={this.captureRef.bind(account)}
-					accessibilityAttributes={{
-						"ariaPosinset": index + 1,
-						"ariaSetsize": this._otherAccounts.length
-					}}
+					aria-possition={index + 1}
+					aria-setsize={this._otherAccounts.length}
 					aria-label={account.titleText}
 				>
 					<div class="ui5-user-menu-other-accounts-content">
