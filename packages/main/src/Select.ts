@@ -886,7 +886,7 @@ class Select extends UI5Element implements IFormInputElement {
 		const root: iElement = this.shadowRoot!.querySelector(".ui5-select-label-root")!;
 		root.ariaActiveDescendantElement = this.options[nextIndex];
 
-		setTimeout(() => this._applyActualFocus.bind(this, this.options[nextIndex]));
+		setTimeout(this._applyActualFocus.bind(this, this.options[nextIndex]));
 	}
 
 	_applyActualFocus(element: HTMLElement) {
