@@ -25,10 +25,6 @@
 	<link rel="stylesheet" type="text/css" href="./styles/StepInput.css">
 </head>
 <body class="stepinput1auto">
-	<ui5-step-input
-    	value="10000"
-		value-precision="2">
-	</ui5-step-input>
 	<h3> StepInput</h3>
 	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
 
@@ -171,6 +167,14 @@
 
 	<h3> 'change' event result</h3>
 	<ui5-input id="changeResult"></ui5-input>
+	<div>	
+		<h3>StepInput with large value and precision (thousands separator)</h3>
+		<ui5-step-input
+			class="stepinput2auto"
+			value="10000"
+			value-precision="2">
+		</ui5-step-input>
+	</div>
 
 	<section>
 			<h3>Form validation</h3>
