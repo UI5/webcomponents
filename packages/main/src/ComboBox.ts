@@ -1410,7 +1410,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_getPickerInput() {
-		return this._getPicker()!.querySelector<HTMLInputElement>("[ui5-input]")!;
+		return this._getPicker().querySelector<HTMLInputElement>("[ui5-input]")!;
 	}
 
 	get openOnMobile() {
