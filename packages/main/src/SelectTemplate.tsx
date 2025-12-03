@@ -47,7 +47,7 @@ export default function SelectTemplate(this: Select) {
 				>
 					{this.hasCustomLabel
 						? <slot name="label"></slot>
-						: <span class="activeDescendant" role="option" id={this.activeDescendantId}>{this.text}</span>
+						: this.text
 					}
 				</div>
 

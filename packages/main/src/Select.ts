@@ -480,6 +480,9 @@ class Select extends UI5Element implements IFormInputElement {
 				this._listWidth = this.responsivePopover.offsetWidth;
 			}
 		}
+		this.options.forEach((option, index) => {
+			!option.id && (option.id = `option${index}`);
+		});
 	}
 
 	/**
@@ -690,7 +693,7 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleHomeKey(e);
 		} else if (isEnd(e)) {
 			this._handleEndKey(e);
-		} else if (isEnter(e)) {
+		} else if (isEnter(e) && !e.defaultPrevented) {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
 			this._handleArrowNavigation(e);
@@ -875,6 +878,9 @@ class Select extends UI5Element implements IFormInputElement {
 			this.itemSelectionAnnounce();
 			this._scrollSelectedItem();
 		}
+		this.shadowRoot!.querySelector(".ui5-select-label-root")!.ariaActiveDescendantElement = this.options[nextIndex];
+
+		setTimeout(() => this.options[nextIndex].focus);
 	}
 
 	_changeSelectedItem(oldIndex: number, newIndex: number) {
@@ -928,6 +934,7 @@ class Select extends UI5Element implements IFormInputElement {
 	_beforeOpen() {
 		this._selectedIndexBeforeOpen = this._selectedIndex;
 		this._lastSelectedOption = this.options[this._selectedIndex];
+		this.shadowRoot!.querySelector(".ui5-select-label-root")!.removeAttribute("aria-activedescendant");
 	}
 
 	_afterOpen() {
