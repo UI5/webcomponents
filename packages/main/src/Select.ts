@@ -81,6 +81,11 @@ interface IOption extends ListItemBase {
 	additionalText?: string,
 	focused: boolean,
 	effectiveDisplayText: string,
+	ariaActiveDescendantElement?: HTMLElement
+}
+
+type iElement extends Element {
+	ariaActiveDescendantElement?: HTMLElement
 }
 
 type SelectChangeEventDetail = {
@@ -878,7 +883,8 @@ class Select extends UI5Element implements IFormInputElement {
 			this.itemSelectionAnnounce();
 			this._scrollSelectedItem();
 		}
-		this.shadowRoot!.querySelector(".ui5-select-label-root")!.ariaActiveDescendantElement = this.options[nextIndex];
+		const root = this.shadowRoot!.querySelector(".ui5-select-label-root")! as iElement;
+		root.ariaActiveDescendantElement = this.options[nextIndex];
 
 		setTimeout(() => this.options[nextIndex].focus);
 	}
