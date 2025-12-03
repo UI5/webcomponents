@@ -1,9 +1,10 @@
+ @import "./FormComponents.css";
+
 :host(:not([hidden])) {
 	display: inline-block;
 	font-size: 24px;
 	margin: var(--_ui5_rating_indicator_component_spacing);
 	cursor: pointer;
-	vertical-align: middle;
 }
 
 :host([disabled]) {
