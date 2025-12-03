@@ -84,7 +84,7 @@ interface IOption extends ListItemBase {
 	ariaActiveDescendantElement?: HTMLElement
 }
 
-type iElement extends Element {
+type iElement = Element & {
 	ariaActiveDescendantElement?: HTMLElement
 }
 
@@ -883,10 +883,14 @@ class Select extends UI5Element implements IFormInputElement {
 			this.itemSelectionAnnounce();
 			this._scrollSelectedItem();
 		}
-		const root = this.shadowRoot!.querySelector(".ui5-select-label-root")! as iElement;
+		const root: iElement = this.shadowRoot!.querySelector(".ui5-select-label-root")!;
 		root.ariaActiveDescendantElement = this.options[nextIndex];
 
-		setTimeout(() => this.options[nextIndex].focus);
+		setTimeout(() => this._applyActualFocus.bind(this, this.options[nextIndex]));
+	}
+
+	_applyActualFocus(element: HTMLElement) {
+		element.focus();
 	}
 
 	_changeSelectedItem(oldIndex: number, newIndex: number) {
