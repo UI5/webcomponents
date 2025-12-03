@@ -15,6 +15,7 @@ There are several configuration settings that affect all UI5 Web Components glob
 | [secondaryCalendarType](#calendarType)        | `Gregorian`, `Islamic`, `Buddhist`, `Japanese`, `Persian`                                                                                                                                                                                                                                      | `undefined`           | Default secondary calendar type to be used for date-related components | Date/time components (`ui5-date-picker`, etc.)                 |
 | [noConflict](#noConflict)                     | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | When set to true, all events will be fired with a `ui5-` prefix only   | Components that fire events (most do)                          |
 | [formatSettings](#formatSettings)             | See the [Format settings](#formatSettings) section below                                                                                                                                                                                                                                       | `{}`                  | Allows to override locale-specific configuration                       | Date/time components (`ui5-date-picker`, etc.)                 |
+| [loadBaseThemingCSSVariables](#loadBaseThemingCSSVariables) | `true`, `false` | `true` | Whether to load CSS variables from `@sap-theming/theming-base-content` package | Framework |
 | [fetchDefaultLanguage](#fetchDefaultLanguage) | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | Whether to fetch assets even for the default language                  | Framework                                                      |
 | [defaultFontLoading](#defaultFontLoading) | `true`, `false`                                                                                                                                                                                                                                                                                | `true`               | Whether to fetch default font faces                  | Framework                                                      |
 | [enableDefaultTooltips](#enableDefaultTooltips) | `true`, `false`                                                                                                                                                                                                                                                                                | `true`               | Whether to display default tooltips                     | Components (Icon, Button, RatingIndicator, etc.)                                                      |
@@ -219,6 +220,23 @@ Example:
 }
 </script>
 ```
+
+### loadBaseThemingCSSVariables
+<a name="loadBaseThemingCSSVariables"></a>
+
+This configuration option controls whether the framework should load the CSS variables from `@sap-theming/theming-base-content` package.
+
+Typically, you would not need to modify this setting. However, if your application provides its **own** instance or version of `@sap-theming/theming-base-content` and you prefer the framework **not** to load the built-in base theming CSS variables, you can set `loadBaseThemingCSSVariables` to `false`.
+
+Example:
+```html
+<script data-ui5-config type="application/json">
+{
+    "loadBaseThemingCSSVariables": false
+}
+</script>
+```
+
 ### defaultFontLoading
 <a name="defaultFontLoading"></a>
 

@@ -24,7 +24,7 @@ const scripts = {
 		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
-	lint: `eslint .`,
+	lint: `ui5nps-script "${LIB}/eslint/eslint.js"`,
 	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
 	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
@@ -41,7 +41,7 @@ const scripts = {
 	},
 	build: {
 		default: `ui5nps prepare`,
-		bundle: `vite build ${viteConfig}`,
+		bundle: `ui5nps-script "${LIB}/vite-bundler/vite-bundler.mjs" ${viteConfig}`,
 		i18n: {
 			default: "ui5nps build.i18n.defaultsjs build.i18n.json",
 			defaultsjs: `ui5nps-script "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
@@ -82,7 +82,7 @@ const scripts = {
 		withBundle: 'ui5nps-p watch.src watch.bundle watch.styles', // concurently
 		src: 'ui5nps copy.srcWithWatch',
 		bundle: `ui5nps-script ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
-		styles: 'chokidar "src/css/*.css" -c "ui5nps generateStyles"'
+		styles: `ui5nps-script "${LIB}/chokidar/chokidar.js" "src/css/*.css" "ui5nps generateStyles"`
 	},
 	test: {
 		default: 'ui5nps-p test.ssr test.ssr2 test.test-cy-ci', // concurently
