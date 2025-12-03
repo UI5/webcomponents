@@ -35,9 +35,7 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@ui5/webcomponents-tools": "2.17.0-rc.4",
     "babel-plugin-amd-to-esm": "^2.0.3",
-    "eslint": "^7.22.0",
     "estree-walk": "^2.2.0",
-    "mkdirp": "^1.0.4",
     "resolve": "^1.20.0"
   },
   "dependencies": {

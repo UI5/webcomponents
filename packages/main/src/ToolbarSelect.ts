@@ -91,6 +91,7 @@ class ToolbarSelect extends ToolbarItem {
 	@slot({
 		"default": true,
 		type: HTMLElement,
+		invalidateOnChildChange: true,
 	})
 	options!: Array<ToolbarSelectOption>;
 
