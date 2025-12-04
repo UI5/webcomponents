@@ -62,7 +62,7 @@ class SearchItemShowMore extends ListItemBase {
 	}
 	/**
 	 * Specifies the number of additional items available to show.
-	 * If undefined, the control shows “Show more” (without any counter).
+If no value is defined, the control shows "Show more" (without any counter). 
 	 * If a number is provided, the control shows “Show more (N)”, where N is the provided value.
 	 * @public
 	 * @default undefined
