@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+
+### Features
+
+* **ui5-calendar:** add disabled dates functionality ([cc7c174](https://github.com/UI5/webcomponents/commit/cc7c1741f29d1d747a8b9a19df4b8d8c53c5d8ca))
+
+
+
+
+
 # [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
 
 
