@@ -13,6 +13,7 @@ import PopoverPlacement from "./types/PopoverPlacement.js";
 import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import { addOpenedPopover, removeOpenedPopover } from "./popup-utils/PopoverRegistry.js";
+import PopoverResize from "./PopoverResize.js";
 
 // Template
 import PopoverTemplate from "./PopoverTemplate.js";
@@ -51,13 +52,6 @@ type CalculatedPlacement = {
 	top: number,
 	left: number,
 	actualPlacement: `${PopoverActualPlacement}`,
-}
-
-enum ResizeHandlePlacement {
-	TopLeft = "TopLeft",
-	TopRight = "TopRight",
-	BottomLeft = "BottomLeft",
-	BottomRight = "BottomRight",
 }
 
 /**
@@ -173,7 +167,7 @@ class Popover extends Popup {
 	 * **Note:** This property is effective only on desktop devices.
 	 * @default false
 	 * @public
-	 * @since 2.17.0
+	 * @since 2.18.0
 	 */
 	@property({ type: Boolean })
 	resizable = false;
@@ -228,27 +222,7 @@ class Popover extends Popup {
 	_width?: string;
 	_height?: string;
 
-	_resizeMouseMoveHandler: (e: MouseEvent) => void;
-	_resizeMouseUpHandler: (e: MouseEvent) => void;
-
-	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
-
-	_initialClientX?: number;
-	_initialClientY?: number;
-	_initialBoundingRect?: DOMRect;
-	_minWidth?: number;
-	_minHeight?: number;
-	_resized = false;
-
-	_currentResizeDeltaX?: number;
-	_currentResizeDeltaY?: number;
-
-	// These variables track the cumulative resize difference throughout the entire resizing process.
-	// It covers scenarios where: the mouse is pressed down,
-	// moved, and released; the popover remains open;
-	// and the mouse is pressed down, moved, and released again.
-	_totalResizeDeltaX?: number;
-	_totalResizeDeltaY?: number;
+	_popoverResize: PopoverResize;
 
 	_initialWidth?: string;
 	_initialHeight?: string;
@@ -260,8 +234,7 @@ class Popover extends Popup {
 	constructor() {
 		super();
 
-		this._resizeMouseMoveHandler = this._onResizeMouseMove.bind(this);
-		this._resizeMouseUpHandler = this._onResizeMouseUp.bind(this);
+		this._popoverResize = new PopoverResize(this);
 	}
 
 	/**
@@ -321,17 +294,7 @@ class Popover extends Popup {
 			height: this._initialHeight,
 		});
 
-		if (this._resized) {
-			this._resized = false;
-
-			delete this._currentResizeDeltaX;
-			delete this._currentResizeDeltaY;
-
-			delete this._totalResizeDeltaX;
-			delete this._totalResizeDeltaY;
-
-			delete this._resizeHandlePlacement;
-		}
+		this._popoverResize.reset();
 
 		super.closePopup(escPressed, preventRegistryUpdate, preventFocusRestore);
 	}
@@ -458,6 +421,10 @@ class Popover extends Popup {
 		}
 	}
 
+	get _viewportMargin() {
+		return Popover.VIEWPORT_MARGIN;
+	}
+
 	reposition() {
 		this._show();
 	}
@@ -542,7 +509,7 @@ class Popover extends Popup {
 			left: `${left}px`,
 		});
 
-		if (this._resized) {
+		if (this._popoverResize.isResized) {
 			return;
 		}
 
@@ -637,7 +604,7 @@ class Popover extends Popup {
 		const isVertical = actualPlacement === PopoverActualPlacement.Top
 			|| actualPlacement === PopoverActualPlacement.Bottom;
 
-		if (!this._resized) {
+		if (!this._popoverResize.isResized) {
 			if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
 				popoverSize.width = targetRect.width;
 				this._width = `${targetRect.width}px`;
@@ -876,9 +843,7 @@ class Popover extends Popup {
 		case PopoverActualHorizontalAlign.Center:
 		case PopoverActualHorizontalAlign.Stretch:
 			left = targetRect.left - (popoverSize.width - targetRect.width) / 2;
-			if (this._resized) {
-				left -= this._currentResizeDeltaX || 0;
-			}
+			left = this._popoverResize.getCorrectedLeft(left);
 			break;
 		case PopoverActualHorizontalAlign.Left:
 			left = targetRect.left;
@@ -898,9 +863,7 @@ class Popover extends Popup {
 		case PopoverVerticalAlign.Center:
 		case PopoverVerticalAlign.Stretch:
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
-			if (this._resized) {
-				top -= this._currentResizeDeltaY || 0;
-			}
+			top = this._popoverResize.getCorrectedTop(top);
 			break;
 		case PopoverVerticalAlign.Top:
 			top = targetRect.top;
@@ -944,20 +907,7 @@ class Popover extends Popup {
 		allClasses.root["ui5-popover-rtl"] = this.isRtl;
 
 		if (this.resizable) {
-			switch (this._getResizeHandlePlacement()) {
-			case ResizeHandlePlacement.BottomLeft:
-				allClasses.root["ui5-popover-resize-handle-bottom-left"] = true;
-				break;
-			case ResizeHandlePlacement.BottomRight:
-				allClasses.root["ui5-popover-resize-handle-bottom-right"] = true;
-				break;
-			case ResizeHandlePlacement.TopLeft:
-				allClasses.root["ui5-popover-resize-handle-top-left"] = true;
-				break;
-			case ResizeHandlePlacement.TopRight:
-				allClasses.root["ui5-popover-resize-handle-top-right"] = true;
-				break;
-			}
+			this._popoverResize.setCorrectResizeHandleClass(allClasses);
 		}
 
 		return allClasses;
@@ -999,222 +949,8 @@ class Popover extends Popup {
 		return this.resizable && this.onDesktop;
 	}
 
-	_getResizeHandlePlacement() {
-		if (this._resizeHandlePlacement) {
-			return this._resizeHandlePlacement;
-		}
-
-		const opener = this.getOpenerHTMLElement(this.opener);
-		if (!opener) {
-			return ResizeHandlePlacement.BottomRight;
-		}
-
-		const openerRect = opener.getBoundingClientRect();
-		const isRtl = this.isRtl;
-
-		switch (this.getActualPlacement(openerRect)) {
-		case PopoverActualPlacement.Left:
-			if (this.verticalAlign === PopoverVerticalAlign.Top) {
-				return ResizeHandlePlacement.BottomLeft;
-			}
-
-			return ResizeHandlePlacement.TopLeft;
-		case PopoverActualPlacement.Right:
-			if (this.verticalAlign === PopoverVerticalAlign.Bottom) {
-				return ResizeHandlePlacement.TopRight;
-			}
-
-			return ResizeHandlePlacement.BottomRight;
-		case PopoverActualPlacement.Bottom:
-			if (isRtl) {
-				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
-					return ResizeHandlePlacement.BottomRight;
-				}
-
-				return ResizeHandlePlacement.BottomLeft;
-			}
-
-			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
-				return ResizeHandlePlacement.BottomLeft;
-			}
-
-			return ResizeHandlePlacement.BottomRight;
-		case PopoverActualPlacement.Top:
-		default:
-			if (isRtl) {
-				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
-					return ResizeHandlePlacement.TopRight;
-				}
-
-				return ResizeHandlePlacement.TopLeft;
-			}
-
-			if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
-				return ResizeHandlePlacement.TopLeft;
-			}
-
-			return ResizeHandlePlacement.TopRight;
-		}
-	}
-
 	_onResizeMouseDown(e: MouseEvent) {
-		if (!this.resizable) {
-			return;
-		}
-
-		e.preventDefault();
-
-		this._resized = true;
-		this._initialBoundingRect = this.getBoundingClientRect();
-
-		this._totalResizeDeltaX = this._currentResizeDeltaX;
-		this._totalResizeDeltaY = this._currentResizeDeltaY;
-
-		const {
-			minWidth,
-			minHeight,
-		} = window.getComputedStyle(this);
-
-		const domRefComputedStyle = window.getComputedStyle(this._getRealDomRef!());
-
-		this._initialClientX = e.clientX;
-		this._initialClientY = e.clientY;
-
-		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
-		this._minHeight = Number.parseFloat(minHeight);
-
-		this._resizeHandlePlacement = this._getResizeHandlePlacement();
-
-		this._attachMouseResizeHandlers();
-	}
-
-	_onResizeMouseMove(e: MouseEvent) {
-		const margin = Popover.VIEWPORT_MARGIN;
-		const { clientX, clientY } = e;
-		const resizeHandlePlacement = this._resizeHandlePlacement;
-		const initialBoundingRect = this._initialBoundingRect!;
-		const deltaX = clientX - this._initialClientX!;
-		const deltaY = clientY - this._initialClientY!;
-
-		let newWidth,
-			newHeight;
-
-		// Determine if we're resizing from left or right edge
-		const isResizingFromLeft = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
-			|| resizeHandlePlacement === ResizeHandlePlacement.BottomLeft;
-
-		const isResizingFromTop = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
-			|| resizeHandlePlacement === ResizeHandlePlacement.TopRight;
-
-		// Calculate width changes
-		if (isResizingFromLeft) {
-			// Resizing from left edge - width increases when moving left (negative delta)
-			const maxWidthFromLeft = initialBoundingRect.x + initialBoundingRect.width - margin;
-
-			newWidth = clamp(
-				initialBoundingRect.width - deltaX,
-				this._minWidth!,
-				maxWidthFromLeft,
-			);
-
-			// Adjust left position when resizing from left
-			// Ensure the left edge respects the viewport margin and the right edge position
-			const newLeft = clamp(
-				initialBoundingRect.x + deltaX,
-				margin,
-				initialBoundingRect.x + initialBoundingRect.width - this._minWidth!,
-			);
-
-			// Recalculate width based on actual left position to stay within viewport with margin
-			newWidth = Math.min(newWidth, initialBoundingRect.x + initialBoundingRect.width - newLeft);
-
-			this._currentResizeDeltaX = (initialBoundingRect.x - newLeft) / 2;
-		} else {
-			// Resizing from right edge - width increases when moving right (positive delta)
-			const maxWidthFromRight = window.innerWidth - initialBoundingRect.x - margin;
-
-			newWidth = clamp(
-				initialBoundingRect.width + deltaX,
-				this._minWidth!,
-				maxWidthFromRight,
-			);
-
-			this._currentResizeDeltaX = (initialBoundingRect.width - newWidth) / 2;
-		}
-
-		// Calculate height changes
-		if (isResizingFromTop) {
-			// Resizing from top edge - height increases when moving up (negative delta)
-			const maxHeightFromTop = initialBoundingRect.y + initialBoundingRect.height - margin;
-
-			newHeight = clamp(
-				initialBoundingRect.height - deltaY,
-				this._minHeight!,
-				maxHeightFromTop,
-			);
-
-			// Adjust top position when resizing from top
-			// Ensure the top edge respects the viewport margin and the bottom edge position
-			const newTop = clamp(
-				initialBoundingRect.y + deltaY,
-				margin,
-				initialBoundingRect.y + initialBoundingRect.height - this._minHeight!,
-			);
-
-			// Recalculate height based on actual top position to stay within viewport with margin
-			newHeight = Math.min(newHeight, initialBoundingRect.y + initialBoundingRect.height - newTop);
-
-			this._currentResizeDeltaY = (initialBoundingRect.y - newTop) / 2;
-		} else {
-			// Resizing from bottom edge - height increases when moving down (positive delta)
-			const maxHeightFromBottom = window.innerHeight - initialBoundingRect.y - margin;
-
-			newHeight = clamp(
-				initialBoundingRect.height + deltaY,
-				this._minHeight!,
-				maxHeightFromBottom,
-			);
-
-			this._currentResizeDeltaY = (initialBoundingRect.height - newHeight) / 2;
-		}
-
-		this._currentResizeDeltaX += this._totalResizeDeltaX || 0;
-		this._currentResizeDeltaY += this._totalResizeDeltaY || 0;
-
-		const placement = this.calcPlacement(this._openerRect!, {
-			width: newWidth,
-			height: newHeight,
-		});
-
-		this.arrowTranslateX = placement.arrow.x;
-		this.arrowTranslateY = placement.arrow.y;
-
-		Object.assign(this.style, {
-			left: `${placement.left}px`,
-			top: `${placement.top}px`,
-			height: `${newHeight}px`,
-			width: `${newWidth}px`,
-		});
-	}
-
-	_onResizeMouseUp() {
-		delete this._initialClientX;
-		delete this._initialClientY;
-		delete this._initialBoundingRect;
-		delete this._minWidth;
-		delete this._minHeight;
-
-		this._detachMouseResizeHandlers();
-	}
-
-	_attachMouseResizeHandlers() {
-		window.addEventListener("mousemove", this._resizeMouseMoveHandler);
-		window.addEventListener("mouseup", this._resizeMouseUpHandler);
-	}
-
-	_detachMouseResizeHandlers() {
-		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
-		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+		this._popoverResize.onResizeMouseDown(e);
 	}
 }
 
@@ -1226,4 +962,4 @@ Popover.define();
 
 export default Popover;
 
-export { instanceOfPopover };
+export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
