@@ -24,12 +24,8 @@ module.exports = {
 			src: `ui5nps-script "${TOOLS_LIB}copy-and-watch/index.js" "src/**/*.{json}" dist/`,
 			typescript: "tsc",
 			postcss: `ui5nps-script "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
-			jsonImports: {
-				default: "ui5nps build.jsonImports.scoped build.jsonImports.raw",
-				scoped: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports`,
-				raw: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports -raw`,
-			}
+			jsonImports: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports`,
 		},
-		generateReport: `ui5nps-script "${generateReportScript}"`,
+		generateReport: `node "${generateReportScript}"`,
 	},
 };

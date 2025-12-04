@@ -7,10 +7,9 @@ const ext = isTypeScript ? 'ts' : 'js';
 
 const generate = async (argv) => {
 	const inputFolder = path.normalize(argv[2]);
-	const outputSuffix = argv[4] || "";
-	const outputFileDynamic = path.normalize(`${argv[3]}/Themes${outputSuffix}.${ext}`);
-	const outputFileDynamicImportJSONAttr = path.normalize(`${argv[3]}/Themes${outputSuffix}-node.${ext}`);
-	const outputFileFetchMetaResolve = path.normalize(`${argv[3]}/Themes${outputSuffix}-fetch.${ext}`);
+	const outputFileDynamic = path.normalize(`${argv[3]}/Themes.${ext}`);
+	const outputFileDynamicImportJSONAttr = path.normalize(`${argv[3]}/Themes-node.${ext}`);
+	const outputFileFetchMetaResolve = path.normalize(`${argv[3]}/Themes-fetch.${ext}`);
 
 	// All supported optional themes
 	const allThemes = assets.themes.all;
@@ -25,9 +24,30 @@ const generate = async (argv) => {
 	const packageName = JSON.parse(await fs.readFile("package.json")).name;
 
 	const availableThemesArray = `[${themesOnFileSystem.map(theme => `"${theme}"`).join(", ")}]`;
-	const dynamicImportLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle${outputSuffix}.css.json")).default;`).join("\n");
-	const dynamicImportJSONAttrLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle${outputSuffix}.css.json", {with: { type: 'json'}})).default;`).join("\n");
-	const fetchMetaResolveLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await fetch(new URL("../assets/themes/${theme}/parameters-bundle${outputSuffix}.css.json", import.meta.url))).json();`).join("\n");
+
+	const dynamicImportLines = themesOnFileSystem.map(theme => `case "${theme}": {
+	const scopedCss = (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle.css.json")).default;
+	const rawCss = ${packageName === "@ui5/webcomponents-theming" ? `(await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle-raw" */"../assets/themes/${theme}/parameters-bundle-raw.css.json")).default` : "\"\""};
+
+	return \`\$\{scopedCss\}\\n\$\{rawCss\}\`;
+	}
+`).join("\n");
+
+	const dynamicImportJSONAttrLines = themesOnFileSystem.map(theme => `case "${theme}": {
+	const scopedCss = (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle.css.json", {with: { type: 'json'}})).default;
+	const rawCss = ${packageName === "@ui5/webcomponents-theming" ? `(await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle-raw" */"../assets/themes/${theme}/parameters-bundle-raw.css.json", {with: { type: 'json'}})).default` : "\"\""};
+
+	return \`\$\{scopedCss\}\\n\$\{rawCss\}\`;
+	}
+`).join("\n");
+
+	const fetchMetaResolveLines = themesOnFileSystem.map(theme => `case "${theme}": {
+	const scopedCss = (await fetch(new URL("../assets/themes/${theme}/parameters-bundle.css.json", import.meta.url))).json();
+	const rawCss = ${packageName === "@ui5/webcomponents-theming" ? `(await fetch(new URL("../assets/themes/${theme}/parameters-bundle-raw.css.json", import.meta.url))).json()` : "\"\""};
+
+	return \`\$\{scopedCss\}\\n\$\{rawCss\}\`;
+	}
+`).join("\n");
 
 	// dynamic imports file content
 	const contentDynamic = function (lines) {
@@ -50,7 +70,7 @@ const loadAndCheck = async (themeName) => {
 };
 
 ${availableThemesArray}
-  .forEach(themeName => registerThemePropertiesLoader(${`${packageName + outputSuffix}`.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck));
+  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck));
 `;
 	}
 
