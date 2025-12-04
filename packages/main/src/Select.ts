@@ -1193,6 +1193,11 @@ class Select extends UI5Element implements IFormInputElement {
 	_getPopover() {
 		return this.shadowRoot!.querySelector<Popover>("[ui5-popover]");
 	}
+
+	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
+	get hasToolbarWrapper() {
+		return "ToolbarSelect";
+	}
 }
 
 Select.define();
