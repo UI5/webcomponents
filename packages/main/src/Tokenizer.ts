@@ -364,6 +364,8 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_previousToken: Token | null = null;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_deletedDialogItems!: Token[];
+	_lastFocusedToken: Token | null = null;
+	_isFocusSetInternally: boolean = false;
 	/**
 	 * Scroll to end when tokenizer is expanded
 	 * @private
@@ -496,7 +498,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		this._nMoreCount = this.overflownTokens.length;
 
-		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex) {
+		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
 		}
 
@@ -652,7 +654,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleBeforeOpen() {
 		const list = this._getList();
-		const firstListItem = list.querySelectorAll("[ui5-li]")[0]! as ListItem;
+		const firstListItem = list.querySelectorAll("[ui5-li]")[0] as ListItem;
 
 		list._itemNavigation.setCurrentItem(firstListItem);
 
@@ -946,6 +948,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	_onfocusin(e: FocusEvent) {
 		const target = e.target as Token;
+		this._lastFocusedToken = target;
 
 		if (target && target.toBeDeleted) {
 			this._tokenDeleting = true;
@@ -975,6 +978,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		if (!this.contains(relatedTarget)) {
 			this._tokens[0].forcedTabIndex = "0";
+			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
 		}
 
@@ -982,6 +986,22 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
+	}
+
+	/**
+ 	 * Determines the DOM element to focus when the Tokenizer receives focus.
+ 	 * If the last-focused token is not overflown, focus is restored to it.
+ 	 * Otherwise, the focus defaults to the first visible token.
+ 	 */
+	getFocusDomRef(): HTMLElement | undefined {
+		if (this._lastFocusedToken && !this.overflownTokens.includes(this._lastFocusedToken)) {
+			this._itemNav._currentIndex = this.tokens.indexOf(this._lastFocusedToken);
+			this._isFocusSetInternally = true;
+			this.tokens[0].forcedTabIndex = "-1";
+		} else {
+			this._itemNav._currentIndex = 0;
+		}
+		return this._itemNav._getCurrentItem();
 	}
 
 	_toggleTokenSelection(tokens: Array<Token>) {

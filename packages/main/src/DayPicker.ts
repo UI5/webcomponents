@@ -31,6 +31,7 @@ import {
 	isPageDownAlt,
 	isPageDownShiftCtrl,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
 import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
@@ -39,6 +40,7 @@ import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import CalendarPart from "./CalendarPart.js";
 import type {
+	DisabledDateRangeT,
 	ICalendarPicker,
 	SpecialCalendarDateT,
 } from "./Calendar.js";
@@ -195,6 +197,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	@property({ type: Array })
 	specialCalendarDates: Array<SpecialCalendarDateT> = [];
 
+	/**
+	 * Array of disabled date ranges that cannot be selected.
+	 * Each range can have a start and/or end date value.
+	 * @private
+	 */
+	@property({ type: Array })
+	disabledDates: Array<DisabledDateRangeT> = [];
+
 	@query("[data-sap-focus-ref]")
 	_focusableDay!: HTMLElement;
 
@@ -230,8 +240,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
 		const todayDate = CalendarDate.fromLocalJSDate(UI5Date.getInstance(), this._primaryCalendarType); // current day date - calculate once
 		const calendarDate = this._calendarDate; // store the _calendarDate value as this getter is expensive and degrades IE11 perf
-		const minDate = this._minDate; // store the _minDate (expensive getter)
-		const maxDate = this._maxDate; // store the _maxDate (expensive getter)
 
 		const tempSecondDate = this.hasSecondaryCalendarType ? this._getSecondaryDay(tempDate) : undefined;
 
@@ -254,7 +262,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			const isSelectedBetween = this._isDayInsideSelectionRange(timestamp);
 			const isOtherMonth = tempDate.getMonth() !== calendarDate.getMonth();
 			const isWeekend = this._isWeekend(tempDate);
-			const isDisabled = tempDate.valueOf() < minDate.valueOf() || tempDate.valueOf() > maxDate.valueOf();
+			const isDisabled = !this._isDateEnabled(tempDate);
 			const isToday = tempDate.isSame(todayDate);
 			const isFirstDayOfWeek = tempDate.getDay() === firstDayOfWeek;
 
@@ -817,6 +825,59 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			|| (iWeekendEnd < iWeekendStart && (iWeekDay >= iWeekendStart || iWeekDay <= iWeekendEnd));
 	}
 
+	/**
+	 * Checks if a given date is enabled (selectable).
+	 * A date is considered disabled if:
+	 * - It falls outside the min/max date range defined by the component
+	 * - It matches a single disabled date
+	 * - It falls within a disabled date range (exclusive of start and end dates)
+	 * @param date - The date to check
+	 * @returns `true` if the date is enabled (selectable), `false` if disabled
+	 * @private
+	 */
+	_isDateEnabled(date: CalendarDate): boolean {
+		if ((this._minDate && date.isBefore(this._minDate))
+			|| (this._maxDate && date.isAfter(this._maxDate))) {
+			return false;
+		}
+
+		const dateTimestamp = date.valueOf() / 1000;
+
+		return !this.disabledDates.some(range => {
+			const startTimestamp = this._getTimestampFromDateValue(range.startValue);
+			const endTimestamp = this._getTimestampFromDateValue(range.endValue);
+
+			if (endTimestamp) {
+				return dateTimestamp > startTimestamp && dateTimestamp < endTimestamp;
+			}
+
+			return startTimestamp && dateTimestamp === startTimestamp;
+		});
+	}
+
+	/**
+	 * Converts a date value string to a timestamp.
+	 * @param dateValue - Date string to convert
+	 * @returns timestamp in seconds, or 0 if invalid
+	 * @private
+	 */
+	_getTimestampFromDateValue(dateValue?: string): number {
+		if (!dateValue) {
+			return 0;
+		}
+
+		try {
+			const jsDate = this.getValueFormat().parse(dateValue) as Date;
+			const calendarDate = CalendarDate.fromLocalJSDate(
+				jsDate,
+				this._primaryCalendarType,
+			);
+			return calendarDate.valueOf() / 1000;
+		} catch {
+			return 0;
+		}
+	}
+
 	_isDayPressed(target: HTMLElement): boolean {
 		const targetParent = target.parentNode as HTMLElement;
 		return (target.className.indexOf("ui5-dp-item") > -1) || (targetParent && targetParent.classList && targetParent.classList.contains("ui5-dp-item"));
@@ -853,10 +914,23 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_getFirstDayOfWeek(): number {
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		let firstDayOfWeek;
+		const configurationFirstDayOfWeek = getFirstDayOfWeek();
+
+		if (configurationFirstDayOfWeek !== undefined) {
+			firstDayOfWeek = configurationFirstDayOfWeek;
+		} else {
+			firstDayOfWeek = localeData.getFirstDayOfWeek();
+		}
+
 		const result = CalendarUtils.getWeekConfigurationValues(this.calendarWeekNumbering);
 
-		const localeData = getCachedLocaleDataInstance(getLocale());
-		return result?.firstDayOfWeek ? result.firstDayOfWeek : localeData.getFirstDayOfWeek();
+		if (result?.firstDayOfWeek !== undefined && this.calendarWeekNumbering !== "Default") {
+			return result.firstDayOfWeek;
+		}
+
+		return firstDayOfWeek;
 	}
 
 	get styles() {

@@ -396,7 +396,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	onAfterRendering() {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (this.rows === 1) {
 			nativeTextArea.setAttribute("rows", "1");
@@ -463,7 +463,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	_oninput(e: InputEvent) {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (e.target === nativeTextArea) {
 			// stop the native event, as the semantic "input" would be fired.

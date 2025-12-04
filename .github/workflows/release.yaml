@@ -267,4 +267,4 @@ jobs:
 
       - name: Publish
         run: |
-          yarn lerna publish from-git --yes --dist-tag experimental
+          yarn lerna publish from-git --yes --dist-tag experimental --pre-dist-tag experimental
