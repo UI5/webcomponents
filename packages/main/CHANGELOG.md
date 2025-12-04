@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** use global configuration for first day of week ([#12665](https://github.com/UI5/webcomponents/issues/12665)) ([4e18756](https://github.com/UI5/webcomponents/commit/4e187560b35dd45198d640ee7c17b0a0523ef5c8)), closes [#12426](https://github.com/UI5/webcomponents/issues/12426)
+* **ui5-table:** accessibility improvements implemented ([#12684](https://github.com/UI5/webcomponents/issues/12684)) ([94bae79](https://github.com/UI5/webcomponents/commit/94bae79f85b1207b44d69f028fd6876f7df4963c)), closes [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946) [#12630](https://github.com/UI5/webcomponents/issues/12630) [#12657](https://github.com/UI5/webcomponents/issues/12657) [#11946](https://github.com/UI5/webcomponents/issues/11946)
+* **ui5-time-picker:** add tooltip to icon in input ([#12671](https://github.com/UI5/webcomponents/issues/12671)) ([538deb0](https://github.com/UI5/webcomponents/commit/538deb023b1cb61c33edf900172223efaec5738d)), closes [#12616](https://github.com/UI5/webcomponents/issues/12616)
+
+
+### Features
+
+* **ui5-button:** add  `accessibilityInfo` getter ([#12704](https://github.com/UI5/webcomponents/issues/12704)) ([bb0670b](https://github.com/UI5/webcomponents/commit/bb0670bdb4054071cd5a1abc7c693d47a0e746cf))
+* **ui5-input,ui5-multi-input:** dynamic suggestions triggering ([#12597](https://github.com/UI5/webcomponents/issues/12597)) ([d006cd6](https://github.com/UI5/webcomponents/commit/d006cd6ee89a796e56c99713dd6e3ae9726e6be5))
+* **ui5-multi-combobox:** adjust validation behavior ([#12707](https://github.com/UI5/webcomponents/issues/12707)) ([7a4a7e1](https://github.com/UI5/webcomponents/commit/7a4a7e105f3e9f066427c420961f5130d8642778))
+* **ui5-tokenizer:** add getFocusDomRef ([#12713](https://github.com/UI5/webcomponents/issues/12713)) ([bbda5a3](https://github.com/UI5/webcomponents/commit/bbda5a3fadc93c3997271e31e0bded6b2a496539))
+
+
+
+
+
 # [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
 
 

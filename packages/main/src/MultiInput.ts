@@ -19,7 +19,12 @@ import {
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { MULTIINPUT_ROLEDESCRIPTION_TEXT, MULTIINPUT_VALUE_HELP_LABEL, MULTIINPUT_VALUE_HELP } from "./generated/i18n/i18n-defaults.js";
+import {
+	MULTIINPUT_ROLEDESCRIPTION_TEXT,
+	MULTIINPUT_VALUE_HELP_LABEL,
+	MULTIINPUT_VALUE_HELP,
+	MULTIINPUT_FILTER_BUTTON_LABEL,
+} from "./generated/i18n/i18n-defaults.js";
 import Input from "./Input.js";
 import MultiInputTemplate from "./MultiInputTemplate.js";
 import styles from "./generated/themes/MultiInput.css.js";
@@ -122,6 +127,22 @@ class MultiInput extends Input implements IFormInputElement {
 	 */
 	@property()
 	declare name?: string;
+
+	/**
+	 * Indicates whether to show tokens in suggestions popover
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_showTokensInSuggestions = false;
+
+	/**
+	 * Tracks whether user has explicitly toggled the show tokens state
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_userToggledShowTokens = false;
 
 	/**
 	 * Defines the component tokens.
@@ -343,6 +364,23 @@ class MultiInput extends Input implements IFormInputElement {
 		if (this.tokenizer) {
 			this.tokenizer.readonly = this.readonly;
 		}
+
+		// Reset toggle state if there are tokens and dialog is about to open
+		if (this.tokens.length > 0 && !this._userToggledShowTokens) {
+			this._showTokensInSuggestions = true;
+		}
+	}
+
+	/**
+	 * Override the _handlePickerAfterOpen method to reset toggle state when dialog opens with tokens
+	 */
+	_handlePickerAfterOpen() {
+		if (this.tokens.length > 0) {
+			this._showTokensInSuggestions = true;
+			this._userToggledShowTokens = false;
+		}
+
+		super._handlePickerAfterOpen();
 	}
 
 	onAfterRendering() {
@@ -369,6 +407,10 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get _valueHelpText() {
 		return MultiInput.i18nBundle.getText(MULTIINPUT_VALUE_HELP);
+	}
+
+	get _filterButtonAccessibleName() {
+		return MultiInput.i18nBundle.getText(MULTIINPUT_FILTER_BUTTON_LABEL);
 	}
 
 	get _tokensCountTextId() {
@@ -418,6 +460,25 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get shouldDisplayOnlyValueStateMessage() {
 		return this.hasValueStateMessage && !this.readonly && !this.open && this.focused && !this.tokenizer.open;
+	}
+
+	/**
+	 * Computes the effective state for showing tokens in suggestions.
+	 * Defaults to true when tokens exist, but respects explicit user toggle.
+	 */
+	get _effectiveShowTokensInSuggestions() {
+		// If no tokens exist, always false
+		if (this.tokens.length === 0) {
+			return false;
+		}
+
+		// If user has never interacted with the toggle, default to true when tokens exist
+		if (!this._userToggledShowTokens) {
+			return true;
+		}
+
+		// If user has interacted, respect their choice
+		return this._showTokensInSuggestions;
 	}
 }
 
