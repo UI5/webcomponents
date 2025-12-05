@@ -5,7 +5,6 @@ import { fireThemeLoaded } from "./ThemeLoaded.js";
 import { attachCustomThemeStylesToHead, getThemeRoot } from "../config/ThemeRoot.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
-import { getLoadBaseThemingCSSVariables } from "../config/Theme.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -34,10 +33,6 @@ const loadComponentPackages = async (theme: string, externalThemeName?: string) 
 	const registeredPackages = getRegisteredPackages();
 
 	const packagesStylesPromises = [...registeredPackages].map(async packageName => {
-		if (getLoadBaseThemingCSSVariables() !== true && packageName === `${BASE_THEME_PACKAGE}-raw`) {
-			return;
-		}
-
 		if (packageName === BASE_THEME_PACKAGE) {
 			return;
 		}
