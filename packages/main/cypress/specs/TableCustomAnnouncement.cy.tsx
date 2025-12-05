@@ -84,6 +84,7 @@ describe("Cell Custom Announcement - More details", () => {
 		}
 
 		cy.get("body").then($body => {
+			debugger;
 			expect($body.find("#ui5-table-invisible-text").text()).to.equal(expectedText);
 		});
 	}
@@ -126,7 +127,7 @@ describe("Cell Custom Announcement - More details", () => {
 		checkAnnouncement(CONTAINS_CONTROL, true);
 
 		cy.realPress("ArrowRight"); // fourth cell focused
-		checkAnnouncement(`Row1Cell3 . ${CONTAINS_CONTROL}`);
+		checkAnnouncement(`Button Row1Cell3 . ${CONTAINS_CONTROL}`);
 		cy.focused().should("have.attr", "aria-colindex", "5")
 					.should("have.attr", "role", "gridcell");
 
