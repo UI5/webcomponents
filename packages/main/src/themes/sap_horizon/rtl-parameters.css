@@ -1,6 +1,6 @@
 @import "../base/rtl-parameters.css";
 
-[dir="rtl"] {
+:dir(rtl) {
 	--_ui5_segmented_btn_item_border_left: 0.0625rem;
 	--_ui5_segmented_btn_item_border_right: 0.0625rem;
 	--_ui5_progress_indicator_bar_border_radius: 0.5rem;

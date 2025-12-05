@@ -60,13 +60,7 @@ import { resetConfiguration } from "@ui5/webcomponents-base/dist/InitialConfigur
 import { sanitizeHTML, URLListValidator } from "@ui5/webcomponents-base/dist/util/HTMLSanitizer.js";
 
 import { getAnimationMode, setAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
-import {
-	getTheme,
-	setTheme,
-	isLegacyThemeFamily,
-	getLoadBaseThemingCSSVariables,
-	setLoadBaseThemingCSSVariables,
-} from "@ui5/webcomponents-base/dist/config/Theme.js";
+import { getTheme, setTheme, isLegacyThemeFamily } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import { getThemeRoot, setThemeRoot } from "@ui5/webcomponents-base/dist/config/ThemeRoot.js";
 import { getTimezone, setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 import { getLanguage, setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
@@ -110,8 +104,6 @@ const testAssets = {
 		getFirstDayOfWeek,
 		getTimezone,
 		setTimezone,
-		getLoadBaseThemingCSSVariables,
-		setLoadBaseThemingCSSVariables,
 	},
 	invisibleMessage: {
 		announce,
