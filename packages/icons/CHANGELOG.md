@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-icons
+
+
+
+
+
 # [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
 
 **Note:** Version bump only for package @ui5/webcomponents-icons
