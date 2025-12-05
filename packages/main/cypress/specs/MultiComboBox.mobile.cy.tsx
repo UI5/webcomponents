@@ -299,6 +299,11 @@ describe("Items selection", () => {
             .realClick();
 
         cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
             .eq(0)
             .realClick();
@@ -330,6 +335,11 @@ describe("Items selection", () => {
             .shadow()
             .find("input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
@@ -486,6 +496,11 @@ describe("Items selection", () => {
 
         cy.get("[ui5-multi-combobox]")
             .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
             .find("[ui5-responsive-popover]")
             .find(".ui5-mcb-select-all-checkbox")
             .shadow()
@@ -627,6 +642,11 @@ describe("Eventing", () => {
             .shadow()
             .find("input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
