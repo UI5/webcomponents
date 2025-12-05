@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Form ENTER Behavior Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			max-width: 800px;
+			margin: 40px auto;
+			padding: 20px;
+			background: #f5f5f5;
+		}
+
+		.test-section {
+			background: white;
+			padding: 20px;
+			margin-bottom: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		h2 {
+			margin-top: 0;
+			color: #333;
+		}
+
+		form {
+			margin: 15px 0;
+			padding: 15px;
+			background: #f9f9f9;
+			border: 2px solid #ddd;
+			border-radius: 4px;
+		}
+
+		input,
+		textarea,
+		button {
+			display: block;
+			width: 100%;
+			padding: 8px;
+			margin: 8px 0;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+		button {
+			width: auto;
+			cursor: pointer;
+			background: #007bff;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+		}
+
+		button:hover {
+			background: #0056b3;
+		}
+
+		.log {
+			background: #1e1e1e;
+			color: #00ff00;
+			padding: 15px;
+			border-radius: 4px;
+			font-family: monospace;
+			font-size: 14px;
+			max-height: 200px;
+			overflow-y: auto;
+			margin-top: 20px;
+		}
+
+		.log-entry {
+			margin: 5px 0;
+		}
+
+		.clear-btn {
+			background: #dc3545;
+			margin-top: 10px;
+		}
+
+		.clear-btn:hover {
+			background: #c82333;
+		}
+
+		.description {
+			color: #666;
+			font-size: 14px;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Form ENTER Key Behavior Test</h1>
+	<p>Try pressing ENTER while focused on different input fields to see when forms submit.</p>
+	<div class="test-section">
+		<form id="form1">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form2">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form3">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<button>Submit</button>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form3">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<button>Submit</button>
+			<button>Submit</button>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form4">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<button>Submit</button>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form4">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<button>Submit</button>
+			<button>Submit</button>
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form5">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" type="submit" value="Submit">
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form5">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" type="submit" value="Submit">
+				<ui5-input name="proba" type="submit" value="Submit">
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form6">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" type="submit" value="Submit">
+		</form>
+	</div>
+
+	<div class="test-section">
+		<form id="form6">
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<ui5-input name="proba" placeholder="First name"></ui5-input>
+			<input name="proba" type="submit" value="Submit">
+			<input name="proba" type="submit" value="Submit">
+		</form>
+	</div>
+
+	<div class="log" id="log">
+		<div class="log-entry">Event log will appear here...</div>
+	</div>
+	<button class="clear-btn" onclick="clearLog()">Clear Log</button>
+
+	<script>
+		const logEl = document.getElementById('log');
+
+		function log(message) {
+			const time = new Date().toLocaleTimeString();
+			const entry = document.createElement('div');
+			entry.className = 'log-entry';
+			entry.textContent = `[${time}] ${message}`;
+			logEl.appendChild(entry);
+			logEl.scrollTop = logEl.scrollHeight;
+		}
+
+		function clearLog() {
+			logEl.innerHTML = '<div class="log-entry">Log cleared...</div>';
+		}
+
+		// Add submit listeners to all forms
+		document.querySelectorAll('form').forEach((form, index) => {
+			form.addEventListener('submit', (e) => {
+				console.log(e.submitter)
+				e.preventDefault();
+				log(`✓ FORM SUBMITTED: ${form.id}`);
+			});
+		});
+
+		// // Add keydown listeners to track ENTER presses
+		// document.querySelectorAll('input, textarea').forEach(input  name="proba" => {
+		//     input.addEventListener('keydown', (e) => {
+		//         if (e.key === 'Enter') {
+		//             const formId = e.target.closest('form')?.id || 'no form';
+		//             const fieldType = e.target.tagName.toLowerCase();
+		//             log(`ENTER pressed in ${fieldType} (${formId})`);
+		//         }
+		//     });
+		// });
+	</script>
+</body>
+
+</html>
