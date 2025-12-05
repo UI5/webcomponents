@@ -45,7 +45,7 @@ import {
  *
  * @public
  */
-class TableHeaderRow extends TableRowBase {
+class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 	/**
 	 * Defines the cells of the component.
 	 *

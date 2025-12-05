@@ -634,7 +634,7 @@ class Table extends UI5Element {
 		}
 
 		const widths = [];
-		const visibleHeaderCells = this.headerRow[0]._visibleCells as TableHeaderCell[];
+		const visibleHeaderCells = this.headerRow[0]._visibleCells;
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {
