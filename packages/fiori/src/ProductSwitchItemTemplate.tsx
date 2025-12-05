@@ -17,7 +17,7 @@ export default function ProductSwitchItemTemplate(this: ProductSwitchItem) {
 					href={this.targetSrc}
 					target={this._effectiveTarget}
 				>
-					{ item.call(this) }
+					{item.call(this)}
 				</a>
 				:
 				<div
@@ -31,7 +31,7 @@ export default function ProductSwitchItemTemplate(this: ProductSwitchItem) {
 					onKeyUp={this._onkeyup}
 					tabindex={this.forcedTabIndex ? parseInt(this.forcedTabIndex) : undefined}
 				>
-					{ item.call(this) }
+					{item.call(this)}
 				</div>
 			}
 		</>
@@ -41,17 +41,18 @@ export default function ProductSwitchItemTemplate(this: ProductSwitchItem) {
 function item(this: ProductSwitchItem) {
 	return (
 		<>
-			{this.image && this.image.length > 0 ? (
-				<span class="ui5-product-switch-item-image-placeholder">
+			<span class="ui5-product-switch-item-image-placeholder">
+				{this.image && this.image.length > 0 ? (
 					<slot name="image"></slot>
-				</span>
-			) : (
-				this.icon &&
-				<Icon
-					class="ui5-product-switch-item-icon"
-					name={this.icon}
-				/>
-			)}
+				) : (
+					this.icon &&
+					<Icon
+						part="icon"
+						class="ui5-product-switch-item-icon"
+						name={this.icon}
+					/>
+				)}
+			</span>
 
 			<span class="ui5-product-switch-item-text-content">
 				{this.titleText &&
