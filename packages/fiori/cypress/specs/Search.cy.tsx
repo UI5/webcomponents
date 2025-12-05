@@ -1778,9 +1778,7 @@ describe("Accessibility", () => {
 					.should("have.attr", "id", ariaControlsId);
 			});
 	});
-});
 
-describe("SearchItem delete button accessibility", () => {
 	it("should have aria-label on the delete button", () => {
 		cy.mount(
 			<Search>
@@ -1800,29 +1798,7 @@ describe("SearchItem delete button accessibility", () => {
 			.eq(0)
 			.shadow()
 			.find(".ui5-search-item-selected-delete")
-			.should("have.attr", "aria-label");
-	});
-
-	it("should have correct i18n text in aria-label for delete button", () => {
-		cy.mount(
-			<Search>
-				<SearchItem text="Item 1" deletable />
-			</Search>
-		);
-
-		cy.get("[ui5-search]")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-search]")
-			.realPress("I");
-
-		cy.get("[ui5-search-item]")
-			.eq(0)
-			.shadow()
-			.find(".ui5-search-item-selected-delete")
-			.should("have.attr", "aria-label", 'Remove');
+			.should("have.attr", "accessible-name", 'Remove');
 	});
 });
 

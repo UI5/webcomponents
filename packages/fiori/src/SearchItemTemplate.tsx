@@ -53,7 +53,7 @@ export default function SearchFieldTemplate(this: SearchItem) {
 
 						{this.deletable &&
 							<Button class="ui5-search-item-selected-delete"
-								aria-label={this._deleteButtonAriaLabel}
+								accessibleName={this._deleteButtonAriaLabel}
 								design={ButtonDesign.Transparent}
 								icon={decline}
 								onClick={this._onDeleteButtonClick}
