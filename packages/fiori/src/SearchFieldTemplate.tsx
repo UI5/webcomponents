@@ -62,6 +62,8 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 						role="searchbox"
 						aria-description={this.accessibleDescription}
 						aria-label={this.accessibleName || this._translations.searchFieldAriaLabel}
+						aria-autocomplete="both"
+						aria-controls="ui5-search-list"
 						value={this.value}
 						placeholder={this.placeholder}
 						data-sap-focus-ref
