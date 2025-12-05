@@ -9,7 +9,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import {
 	SEARCH_ITEM_DELETE_BUTTON_TOOLTIP,
-	SEARCH_ITEM_DELETE_BUTTON_ARIA_LABEL 
+	SEARCH_ITEM_DELETE_BUTTON_ARIA_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
