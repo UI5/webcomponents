@@ -81,11 +81,6 @@ interface IOption extends ListItemBase {
 	additionalText?: string,
 	focused: boolean,
 	effectiveDisplayText: string,
-	ariaActiveDescendantElement?: HTMLElement
-}
-
-type iElement = Element & {
-	ariaActiveDescendantElement?: HTMLElement
 }
 
 type SelectChangeEventDetail = {
@@ -883,10 +878,6 @@ class Select extends UI5Element implements IFormInputElement {
 			this.itemSelectionAnnounce();
 			this._scrollSelectedItem();
 		}
-		const root: iElement = this.shadowRoot!.querySelector(".ui5-select-label-root")!;
-		root.ariaActiveDescendantElement = this.options[nextIndex];
-
-		setTimeout(this._applyActualFocus.bind(this, this.options[nextIndex]));
 	}
 
 	_applyActualFocus(element: HTMLElement) {
@@ -944,7 +935,6 @@ class Select extends UI5Element implements IFormInputElement {
 	_beforeOpen() {
 		this._selectedIndexBeforeOpen = this._selectedIndex;
 		this._lastSelectedOption = this.options[this._selectedIndex];
-		this.shadowRoot!.querySelector(".ui5-select-label-root")!.removeAttribute("aria-activedescendant");
 	}
 
 	_afterOpen() {
@@ -958,7 +948,7 @@ class Select extends UI5Element implements IFormInputElement {
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
 			option.focused = option.selected;
-			if (option.focused && isPhone()) {
+			if (option.focused) {
 				// on phone, the popover opens full screen (dialog)
 				// move focus to option to read out dialog header
 				option.focus();
@@ -979,6 +969,7 @@ class Select extends UI5Element implements IFormInputElement {
 			this._lastSelectedOption = this.options[this._selectedIndex];
 		}
 		this.fireDecoratorEvent("close");
+		this._applyFocus();
 	}
 
 	get hasCustomLabel() {
@@ -1065,14 +1056,6 @@ class Select extends UI5Element implements IFormInputElement {
 		return this.disabled
 		|| (this.responsivePopover // Handles focus on Tab/Shift + Tab when the popover is opened
 		&& this.responsivePopover.open) ? -1 : 0;
-	}
-
-	get activeDescendant() {
-		return this._isPickerOpen ? this.activeDescendantId : "";
-	}
-
-	get activeDescendantId() {
-		return this.id ? `${this.id}-activeDescendant` : `${this.__id}-activeDescendant`;
 	}
 
 	 /**

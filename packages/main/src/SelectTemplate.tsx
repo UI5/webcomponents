@@ -42,9 +42,7 @@ export default function SelectTemplate(this: Select) {
 					onKeyUp={this._onkeyup}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}
-					aria-controls={this.responsivePopoverId}
-					aria-activedescendant={this.activeDescendant}
-				>
+					aria-controls={this.responsivePopoverId}				>
 					{this.hasCustomLabel
 						? <slot name="label"></slot>
 						: this.text
