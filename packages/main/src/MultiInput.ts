@@ -23,6 +23,7 @@ import {
 	MULTIINPUT_ROLEDESCRIPTION_TEXT,
 	MULTIINPUT_VALUE_HELP_LABEL,
 	MULTIINPUT_VALUE_HELP,
+	FORM_MIXED_TEXTFIELD_REQUIRED,
 	MULTIINPUT_FILTER_BUTTON_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 import Input from "./Input.js";
@@ -153,6 +154,10 @@ class MultiInput extends Input implements IFormInputElement {
 
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;
+
+	get formValidityMessage() {
+		return MultiInput.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
+	}
 
 	get formValidity(): ValidityStateFlags {
 		const tokens = (this.tokens || []);

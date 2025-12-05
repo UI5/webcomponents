@@ -32,6 +32,7 @@ import {
 	TEXTAREA_CHARACTERS_LEFT,
 	TEXTAREA_CHARACTERS_EXCEEDED,
 	FORM_TEXTFIELD_REQUIRED,
+	TEXTAREA_EXCEEDS_MAXLENGTH,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -350,11 +351,20 @@ class TextArea extends UI5Element implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		if (this.formValidity.valueMissing) {
+			return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		}
+
+		if (this.formValidity.tooLong) {
+			return TextArea.i18nBundle.getText(TEXTAREA_EXCEEDS_MAXLENGTH, this.value.length - (this.maxlength ?? 0));
+		}
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			tooLong: this.showExceededText && (this.value.length > (this.maxlength ?? 0)),
+		};
 	}
 
 	async formElementAnchor() {

@@ -89,7 +89,6 @@ import {
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
-	FORM_TEXTFIELD_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -652,7 +651,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_handleLinkNavigation: boolean = false;
 
 	get formValidityMessage() {
-		return Input.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		return this.nativeInput?.validationMessage;
 	}
 
 	get _effectiveShowSuggestions() {
@@ -660,7 +659,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.nativeInput?.validity.valueMissing,
+			typeMismatch: this.required && this.nativeInput?.validity.typeMismatch,
+			patternMismatch: this.nativeInput?.validity.patternMismatch,
+		};
 	}
 
 	async formElementAnchor() {

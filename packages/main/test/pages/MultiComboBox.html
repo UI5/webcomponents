@@ -678,6 +678,47 @@
 		<span>Submit event calls: <span id="mcb-form-submit">0</span></span>
 	</div>
 
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-multi-combobox id="mcbInAForm" no-validation required>
+				<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+				<ui5-mcb-item text="Denmark"></ui5-mcb-item>
+				<ui5-mcb-item text="England"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('mcbInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('mcbInAForm');
+			});
+
+			mcbInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('mcbInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
+	</div>
+
 	<script>
 		let selectionChangeEventsFired = 0;
 		var eventNameInput = document.getElementById("events-input");
