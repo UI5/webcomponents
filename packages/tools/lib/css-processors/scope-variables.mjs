@@ -45,7 +45,6 @@ const scopeUi5Variables = (cssText, packageJSON, inputFile) => {
 	return newText.replaceAll("--sap", `--ui5-sap`);
 }
 
-// Used with CSS text and SVG file content (illustrations)
 const scopeThemingVariables = (cssText) => {
 	return cssText.replaceAll("--sap", `--ui5-sap`);
 }
