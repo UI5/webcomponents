@@ -75,8 +75,3 @@
 	--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
 	--_ui5_side_navigation_item_margin: 0.5rem;
 }
-
-[dir="rtl"] {
-	--_ui5_side_navigation_item_expand_icon_hover_left: 0;
-	--_ui5_side_navigation_item_expand_icon_hover_right: auto;
-}
