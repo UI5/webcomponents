@@ -1746,6 +1746,106 @@ describe("Accessibility", () => {
 		cy.get("[ui5-search]")
 			.should("be.focused");
 	});
+
+	it("should have aria-autocomplete='both' on the input element", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-autocomplete", "both");
+	});
+
+	it("should have aria-controls pointing to responsive popover", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.invoke("attr", "aria-controls")
+			.then((ariaControlsId) => {
+				cy.get("[ui5-search]")
+					.shadow()
+					.find("[ui5-responsive-popover]")
+					.should("have.attr", "id", ariaControlsId);
+			});
+	});
+});
+
+describe("SearchItem delete button accessibility", () => {
+	it("should have aria-label on the delete button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("have.attr", "aria-label");
+	});
+
+	it("should have correct i18n text in aria-label for delete button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("have.attr", "aria-label", 'Remove');
+	});
+
+	it("should have tabIndex=-1 on the delete button", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-search-item-selected-delete")
+			.should("have.attr", "tabindex", "-1");
+	});
 });
 
 describe("Lazy loaded items and autocomplete", () => {
