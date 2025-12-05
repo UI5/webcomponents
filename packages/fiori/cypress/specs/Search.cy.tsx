@@ -1824,28 +1824,6 @@ describe("SearchItem delete button accessibility", () => {
 			.find(".ui5-search-item-selected-delete")
 			.should("have.attr", "aria-label", 'Remove');
 	});
-
-	it("should have tabIndex=-1 on the delete button", () => {
-		cy.mount(
-			<Search>
-				<SearchItem text="Item 1" deletable />
-			</Search>
-		);
-
-		cy.get("[ui5-search]")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-search]")
-			.realPress("I");
-
-		cy.get("[ui5-search-item]")
-			.eq(0)
-			.shadow()
-			.find(".ui5-search-item-selected-delete")
-			.should("have.attr", "tabindex", "-1");
-	});
 });
 
 describe("Lazy loaded items and autocomplete", () => {
