@@ -1,0 +1,22 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "ui5element",
+      "description": "Base class for all UI5 Web Components\n\n\n---\n\n\n\n\n### **Methods:**\n - **onBeforeRendering(): _void_** - Called every time before the component renders.\n- **onAfterRendering(): _void_** - Called every time after the component renders.\n- **onEnterDOM(): _void_** - Called on connectedCallback - added to the DOM.\n- **onExitDOM(): _void_** - Called on disconnectedCallback - removed from the DOM.\n- **attachInvalidate(callback: _(param: InvalidationInfo) => void_): _void_** - Attach a callback that will be executed whenever the component is invalidated\n- **detachInvalidate(callback: _(param: InvalidationInfo) => void_): _void_** - Detach the callback that is executed whenever the component is invalidated\n- **onInvalidation(changeInfo: _ChangeInfo_): _void_** - A callback that is executed each time an already rendered component is invalidated (scheduled for re-rendering)\n- **getDomRef(): _HTMLElement | undefined_** - Returns the DOM Element inside the Shadow Root that corresponds to the opening tag in the UI5 Web Component's template\n*Note:* For logical (abstract) elements (items, options, etc...), returns the part of the parent's DOM that represents this option\nUse this method instead of \"this.shadowRoot\" to read the Shadow DOM, if ever necessary\n- **getFocusDomRef(): _HTMLElement | undefined_** - Returns the DOM Element marked with \"data-sap-focus-ref\" inside the template.\nThis is the element that will receive the focus by default.\n- **getFocusDomRefAsync(): _Promise<HTMLElement | undefined>_** - Waits for dom ref and then returns the DOM Element marked with \"data-sap-focus-ref\" inside the template.\nThis is the element that will receive the focus by default.\n- **focus(focusOptions: _FocusOptions_): _Promise<void>_** - Set the focus to the element, returned by \"getFocusDomRef()\" (marked by \"data-sap-focus-ref\")\n- **fireDecoratorEvent(name: _N_, data: _this[\"eventDetails\"][N] | undefined_): _boolean_** - Fires a custom event, configured via the \"event\" decorator.\n- **getSlottedNodes(): _Array<T>_** - Returns the actual children, associated with a slot.\nUseful when there are transitive slots in nested component scenarios and you don't want to get a list of the slots, but rather of their content.\n- **attachComponentStateFinalized(callback: _() => void_): _void_** - Attach a callback that will be executed whenever the component's state is finalized\n- **detachComponentStateFinalized(callback: _() => void_): _void_** - Detach the callback that is executed whenever the component's state is finalized\n- **getUniqueDependencies(): _Array<typeof UI5Element>_** - Returns a list of the unique dependencies for this UI5 Web Component\n- **define(): _typeof UI5Element_** - Registers a UI5 Web Component in the browser window object\n- **getMetadata(): _UI5ElementMetadata_** - Returns an instance of UI5ElementMetadata.js representing this UI5 Web Component's full metadata (its and its parents')\nNote: not to be confused with the \"get metadata()\" method, which returns an object for this class's metadata only",
+      "attributes": [
+        {
+          "name": "effective-dir",
+          "description": "Determines whether the component should be rendered in RTL mode or not.\nReturns: \"rtl\", \"ltr\" or undefined",
+          "values": [{ "name": "any" }]
+        },
+        {
+          "name": "is-ui5-element",
+          "description": "Used to duck-type UI5 elements without using instanceof",
+          "values": [{ "name": "any" }]
+        }
+      ],
+      "references": []
+    }
+  ]
+}
