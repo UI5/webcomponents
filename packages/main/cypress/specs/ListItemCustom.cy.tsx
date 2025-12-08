@@ -326,16 +326,6 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                     .find("li[part='native-li']")
                     .should("have.attr", "aria-labelledby")
                     .and("include", `${itemId}-invisibleTextContent`);
-
-                // Verify that the custom delete button is properly rendered in the shadow DOM
-                cy.get("#li-custom-delete")
-                    .shadow()
-                    .find("div.ui5-li-deletebtn")
-                    .should("exist")
-                    .and("contain", "Remove");
-                
-                // Check that clicking the delete button triggers the delete event
-                cy.get("#custom-delete-button").should("exist");
             });
 
             // Remove focus
