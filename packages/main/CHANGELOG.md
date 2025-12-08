@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.8](https://github.com/UI/webcomponents/compare/v2.13.7...v2.13.8) (2025-12-08)
+
+
+### Bug Fixes
+
+* **ui5-button:** announce the text node properly ([#12077](https://github.com/UI/webcomponents/issues/12077)) ([666e7e7](https://github.com/UI/webcomponents/commit/666e7e709d911f2276eecadb02c0e36eaea88a6f))
+* **ui5-button:** move button type text from aria-label to aria-description ([#12474](https://github.com/UI/webcomponents/issues/12474)) ([def1196](https://github.com/UI/webcomponents/commit/def119629808c0cd99a3634cd3e876f04a67eb84)), closes [#12413](https://github.com/UI/webcomponents/issues/12413)
+* **ui5-button:** prioritize accessibleName over button text in aria-label ([#12473](https://github.com/UI/webcomponents/issues/12473)) ([abc0b9f](https://github.com/UI/webcomponents/commit/abc0b9fea0426e50b62576ef4bf21446b6a4733a)), closes [#12398](https://github.com/UI/webcomponents/issues/12398)
+
+
+
+
+
 ## [2.13.8](https://github.com/SAP/ui5-webcomponents/compare/v2.13.7...v2.13.8) (2025-12-08)
 
 
