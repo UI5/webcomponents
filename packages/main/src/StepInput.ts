@@ -513,7 +513,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
-		// checks if the value will be displayed with correct precision
+		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
 			// integers and zero will be formatted with toFixed, so they're always valid
