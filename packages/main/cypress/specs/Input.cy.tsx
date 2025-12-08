@@ -491,19 +491,19 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#input-equal-click")
-		.shadow()
-		.find("input")
-		.click()
-		.realType("Cozy");
+			.shadow()
+			.find("input")
+			.click()
+			.realType("Cozy");
 
 		cy.get("#input-equal-click")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get('#input-equal-click')
-		.find('ui5-suggestion-item[text="Cozy"]')
-		.click();
+			.find('ui5-suggestion-item[text="Cozy"]')
+			.click();
 
 		cy.get("#input-equal-click").should("have.value", "Cozy");
 		cy.get("@onChange").should("have.been.calledOnce");
@@ -527,15 +527,15 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#input-equal-keyboard")
-		.shadow()
-		.find("input")
-		.click()
-		.realType("Cozy");
+			.shadow()
+			.find("input")
+			.click()
+			.realType("Cozy");
 
 		cy.get("#input-equal-keyboard")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.realPress("ArrowDown");
 		cy.realPress("Enter");
@@ -894,7 +894,7 @@ describe("Input Ctrl + Alt + F8 navigation", () => {
 			.should("have.focus");
 
 		cy.get("@secondLink")
-		.realPress("Tab");
+			.realPress("Tab");
 
 		cy.get("@secondInput")
 			.should("have.focus");
@@ -1655,9 +1655,9 @@ describe("Input general interaction", () => {
 		// Mount Input with suggestions and a change event spy
 		cy.mount(
 			<Input
-			id="myInput"
-			showSuggestions={true}
-			onChange={cy.spy().as("changeSpy")}
+				id="myInput"
+				showSuggestions={true}
+				onChange={cy.spy().as("changeSpy")}
 			>
 				<SuggestionItem text="Canada"></SuggestionItem>
 				<SuggestionItem text="Cuba"></SuggestionItem>
@@ -1871,7 +1871,7 @@ describe("Input general interaction", () => {
 			.find("input")
 			.should("not.have.attr", "aria-describedby");
 	});
-	
+
 	it("Checks if aria-label is reflected in the shadow DOM", () => {
 		const accessibleName = "New cool text";
 		cy.mount(<Input accessibleName={accessibleName} />);
@@ -2034,7 +2034,7 @@ describe("Input general interaction", () => {
 		cy.get("#input-disabled-autocomplete").shadow().find("input").click().realType("c");
 		cy.get("#input-disabled-autocomplete").shadow().find("input").should("have.value", "c");
 	});
-	
+
 	it("Tests disabled autocomplete(type-ahead)", () => {
 		cy.mount(
 			<Input id="input-disabled-autocomplete" showSuggestions noTypeahead>
@@ -2072,9 +2072,9 @@ describe("Input general interaction", () => {
 
 		cy.get("#inputPreview2").shadow().find("input").click().realType("c");
 		cy.get("#inputPreview2")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get("#inputPreview2").shadow().find("input").realPress("ArrowDown");
 
@@ -2093,9 +2093,9 @@ describe("Input general interaction", () => {
 
 		cy.get("#myInput").shadow().find("input").click().realType("a");
 		cy.get("#myInput")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get("#myInput").shadow().find<ResponsivePopover>("ui5-responsive-popover").ui5ResponsivePopoverOpened();
 		cy.get("@onOpen").should("have.been.calledOnce");
@@ -2130,17 +2130,17 @@ describe("Input general interaction", () => {
 
 		cy.get("#inputInDialog").shadow().find("input").realType("c");
 		cy.get("#inputInDialog")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#inputInDialog").shadow().find<ResponsivePopover>("ui5-responsive-popover").ui5ResponsivePopoverOpened();
 
 		cy.get("#inputInDialog").shadow().find("input").realPress("ArrowDown");
 		cy.get("#inputInDialog").shadow().find("input").realPress("Escape");
 		cy.get("#inputInDialog")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 		cy.get("#dialog").should("have.attr", "open");
 	});
 
@@ -2294,7 +2294,7 @@ describe("Input general interaction", () => {
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
-			cy.get("#openPickerInput")
+		cy.get("#openPickerInput")
 			.shadow()
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
 			.should("have.attr", "open");
@@ -2368,7 +2368,7 @@ describe("Input general interaction", () => {
 	});
 
 	it("Tests prevented input event", () => {
-		cy.mount(<Input id="prevent-input-event" onInput={e => (e.target as Input).value.length > 3 ? e.preventDefault() : null}/>);
+		cy.mount(<Input id="prevent-input-event" onInput={e => (e.target as Input).value.length > 3 ? e.preventDefault() : null} />);
 
 		cy.get("#prevent-input-event").shadow().find("input").click().realType("abcd");
 		cy.get("#prevent-input-event").should("have.value", "abc");
@@ -2571,9 +2571,9 @@ describe("Lazy loading", () => {
 
 		cy.get("#field").shadow().find("input").click().realType("a");
 		cy.get("#field")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 	});
 
 	it("Does not reopen picker on focus in", () => {
@@ -2589,9 +2589,9 @@ describe("Lazy loading", () => {
 		cy.get("#field").shadow().find("input").realPress("Tab");
 		cy.wait(3000);
 		cy.get("#field")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 	});
 
 	it("Should not close picker when items are updated", () => {
@@ -2604,14 +2604,14 @@ describe("Lazy loading", () => {
 
 		cy.get("#field1").shadow().find("input").click().realType("S");
 		cy.get("#field1")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#field1").shadow().find("input").realType("b");
 		cy.get("#field1")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 	});
 });
 
@@ -2682,9 +2682,9 @@ describe("Property open", () => {
 		);
 
 		cy.get("#input-suggestions-open")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#input-suggestions-open").find("ui5-suggestion-item").should("have.length", 3);
 	});
 
@@ -2698,9 +2698,52 @@ describe("Property open", () => {
 		);
 
 		cy.get("#input-suggestions-open")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
+	});
+
+	it("should show only one valuestate popover when valueState changes during typing", () => {
+		cy.mount(
+			<Input
+				id="input-valuestate-dynamic"
+				valueState="None"
+				showSuggestions={true}
+				onInput={(e) => {
+					(e.target as Input).valueState = "Negative";
+				}}
+			>
+				<SuggestionItem text="Apple"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-valuestate-dynamic")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realType("a");
+
+		cy.get("@input")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("suggestionsPopover")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover]")
+			.as("valueStatePopover")
+			.should("have.attr", "open");
 	});
 });
 
@@ -2738,7 +2781,7 @@ describe("Input Composition", () => {
 		cy.get("@input").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "사랑")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2793,7 +2836,7 @@ describe("Input Composition", () => {
 		cy.get("@input").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "ありがとう")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2848,7 +2891,7 @@ describe("Input Composition", () => {
 		cy.get("@input").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "谢谢")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2868,5 +2911,186 @@ describe("Input Composition", () => {
 
 		cy.get("@input")
 			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.realType("Albania");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+
+	it("has correct validity for typeMismatch- Email", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="Email"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("email");
+
+		cy.get("@input")
+			.should("have.value", "email");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("email@gmail.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+		it("has correct validity for typeMismatch- URL", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="URL"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("google");
+
+		cy.get("@input")
+			.should("have.value", "google");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("https://www.google.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: false },
+				validity: { typeMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
 	});
 });

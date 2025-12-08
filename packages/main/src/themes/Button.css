@@ -377,7 +377,7 @@ bdi {
 	top:0;
 }
 
-:host([has-end-icon]) .ui5-button-root {
+:host([has-end-icon]:not([icon])) .ui5-button-root {
 	justify-content: flex-start;
 }
 
@@ -385,6 +385,6 @@ bdi {
 	justify-content: center;
 }
 
-:host([has-end-icon]) .ui5-button-end-icon {
+:host([has-end-icon]:not([icon])) .ui5-button-end-icon {
 	margin-left: auto;
 }
