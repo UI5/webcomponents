@@ -3,12 +3,12 @@ import {
 	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
-import type ShellBarV2 from "../ShellBarV2.js";
+import type ShellBar from "../ShellBar.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import type Popover from "@ui5/webcomponents/dist/Popover.js";
 
-type ShellBarV2LegacyDeps = {
-	component: ShellBarV2;
+type ShellBarLegacyDeps = {
+	component: ShellBar;
 	getShadowRoot: () => ShadowRoot | null;
 };
 
@@ -16,8 +16,8 @@ type ShellBarV2LegacyDeps = {
  * Controller for legacy ShellBar features that will be removed in future versions.
  * Handles: logo slot, primaryTitle/secondaryTitle properties, menuItems slot.
  */
-class ShellBarV2Legacy {
-	private component: ShellBarV2;
+class ShellBarLegacy {
+	private component: ShellBar;
 	private getShadowRoot: () => ShadowRoot | null;
 
 	// Bound handlers for event listeners
@@ -29,7 +29,7 @@ class ShellBarV2Legacy {
 	handleMenuPopoverBeforeOpenBound = this.handleMenuPopoverBeforeOpen.bind(this);
 	handleMenuPopoverAfterCloseBound = this.handleMenuPopoverAfterClose.bind(this);
 
-	constructor(deps: ShellBarV2LegacyDeps) {
+	constructor(deps: ShellBarLegacyDeps) {
 		this.component = deps.component;
 		this.getShadowRoot = deps.getShadowRoot;
 	}
@@ -184,4 +184,4 @@ class ShellBarV2Legacy {
 	}
 }
 
-export default ShellBarV2Legacy;
+export default ShellBarLegacy;

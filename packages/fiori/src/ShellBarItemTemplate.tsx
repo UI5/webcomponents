@@ -1,9 +1,9 @@
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
-import type ShellBarV2Item from "./ShellBarV2Item.js";
+import type ShellBarItem from "./ShellBarItem.js";
 
-export default function ShellBarV2ItemTemplate(this: ShellBarV2Item) {
+export default function ShellBarItemTemplate(this: ShellBarItem) {
 	if (this.inOverflow) {
 		return (
 			<ListItemStandard

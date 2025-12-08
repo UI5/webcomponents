@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>ShellBar vs ShellBarV2 Comparison</title>
+	<title>ShellBar vs ShellBar Comparison</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script data-ui5-config type="application/json">
 		{
@@ -92,7 +92,7 @@
 	</style>
 </head>
 <body>
-	<h1>ShellBar v1 vs ShellBarV2 Comparison</h1>
+	<h1>ShellBar v1 vs ShellBar Comparison</h1>
 
 	<div class="controls">
 		<!-- Theme Selection -->
@@ -250,8 +250,8 @@
 
 	<!-- ShellBar V2 (New) -->
 	<div class="shellbar-container">
-		<ui5-shellbar-v2
-			id="shellbarV2"
+		<ui5-shellbar
+			id="ShellBar"
 			secondary-title="Secondary Title"
 		>
 			<ui5-shellbar-branding slot="branding">
@@ -271,16 +271,16 @@
 			</ui5-avatar>
 
 			<!-- Custom Items -->
-			<ui5-shellbar-v2-item icon="activities" text="Tasks" id="itemV2-1"></ui5-shellbar-v2-item>
-			<ui5-shellbar-v2-item icon="sys-help" text="Help" id="itemV2-2"></ui5-shellbar-v2-item>
-		</ui5-shellbar-v2>
+			<ui5-shellbar-item icon="activities" text="Tasks" id="itemV2-1"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="sys-help" text="Help" id="itemV2-2"></ui5-shellbar-item>
+		</ui5-shellbar>
 	</div>
 
 	<div class="spacer"></div>
 
 	<script>
 		const shellbarV1 = document.getElementById('shellbarV1');
-		const shellbarV2 = document.getElementById('shellbarV2');
+		const ShellBar = document.getElementById('ShellBar');
 		
 		const themeSelect = document.getElementById('themeSelect');
 		const toggleNotifications = document.getElementById('toggleNotifications');
@@ -379,7 +379,7 @@
 				return el;
 			},
 			itemV23: () => {
-				const el = document.createElement('ui5-shellbar-v2-item');
+				const el = document.createElement('ui5-shellbar-item');
 				el.id = 'itemV2-3';
 				el.icon = 'action-settings';
 				el.text = 'Settings';
@@ -387,7 +387,7 @@
 				return el;
 			},
 			itemV24: () => {
-				const el = document.createElement('ui5-shellbar-v2-item');
+				const el = document.createElement('ui5-shellbar-item');
 				el.id = 'itemV2-4';
 				el.icon = 'feedback';
 				el.text = 'Feedback';
@@ -471,7 +471,7 @@
 					} else if (elementTemplates[id.replace(/-/g, '')]) {
 						// Create element from template
 						el = elementTemplates[id.replace(/-/g, '')]();
-						const shellbarId = id.includes('V1') ? 'shellbarV1' : 'shellbarV2';
+						const shellbarId = id.includes('V1') ? 'shellbarV1' : 'ShellBar';
 						const shellbar = document.getElementById(shellbarId);
 						
 						// Special handling for spacer: insert after content-3 to split start/end groups
@@ -503,7 +503,7 @@
 		toggleNotifications.addEventListener('ui5-change', (e) => {
 			const checked = e.target.checked;
 			shellbarV1.showNotifications = checked;
-			shellbarV2.showNotifications = checked;
+			ShellBar.showNotifications = checked;
 			console.log('Notifications:', checked);
 		});
 
@@ -511,7 +511,7 @@
 		toggleProductSwitch.addEventListener('ui5-change', (e) => {
 			const checked = e.target.checked;
 			shellbarV1.showProductSwitch = checked;
-			shellbarV2.showProductSwitch = checked;
+			ShellBar.showProductSwitch = checked;
 			console.log('Product Switch:', checked);
 		});
 
@@ -519,7 +519,7 @@
 		toggleSearchField.addEventListener('ui5-change', (e) => {
 			const checked = e.target.checked;
 			shellbarV1.showSearchField = checked;
-			shellbarV2.showSearchField = checked;
+			ShellBar.showSearchField = checked;
 			toggleElement('searchFieldV1', checked);
 			toggleElement('searchFieldV2', checked);
 			console.log('Search Field:', checked);
@@ -591,7 +591,7 @@
 		toggleSecondaryTitle.addEventListener('ui5-change', (e) => {
 			const checked = e.target.checked;
 			shellbarV1.secondaryTitle = checked ? 'Secondary Title' : '';
-			shellbarV2.secondaryTitle = checked ? 'Secondary Title' : '';
+			ShellBar.secondaryTitle = checked ? 'Secondary Title' : '';
 			console.log('Secondary Title:', checked);
 		});
 
@@ -651,7 +651,7 @@
 				newV2.setAttribute('collapsed', '');
 				
 				replaceSearchField('searchFieldV1', newV1, 'shellbarV1');
-				replaceSearchField('searchFieldV2', newV2, 'shellbarV2');
+				replaceSearchField('searchFieldV2', newV2, 'ShellBar');
 			} else {
 				// Create ui5-input elements
 				const newV1 = document.createElement('ui5-input');
@@ -665,7 +665,7 @@
 				newV2.setAttribute('placeholder', 'Search');
 				
 				replaceSearchField('searchFieldV1', newV1, 'shellbarV1');
-				replaceSearchField('searchFieldV2', newV2, 'shellbarV2');
+				replaceSearchField('searchFieldV2', newV2, 'ShellBar');
 			}
 		});
 
@@ -673,7 +673,7 @@
 		notificationsCount.addEventListener('ui5-input', (e) => {
 			const value = e.target.value;
 			shellbarV1.notificationsCount = value || undefined;
-			shellbarV2.notificationsCount = value || undefined;
+			ShellBar.notificationsCount = value || undefined;
 			console.log('Notifications Count:', value);
 		});
 
@@ -704,7 +704,7 @@
 				// Switch to logo + primaryTitle mode
 				// Cache and remove branding slots
 				const brandingV1 = shellbarV1.querySelector('[slot="branding"]');
-				const brandingV2 = shellbarV2.querySelector('[slot="branding"]');
+				const brandingV2 = ShellBar.querySelector('[slot="branding"]');
 				
 				console.log('Switching to legacy mode - brandingV1:', brandingV1, 'brandingV2:', brandingV2);
 				
@@ -723,10 +723,10 @@
 				
 				// Ensure primaryTitle is set
 				shellbarV1.primaryTitle = 'Product Title';
-				shellbarV2.primaryTitle = 'Product Title';
+				ShellBar.primaryTitle = 'Product Title';
 				
-				console.log('Legacy mode set - V1 logo:', shellbarV1.logo, 'V2 logo:', shellbarV2.logo);
-				console.log('Legacy mode set - V1 title:', shellbarV1.primaryTitle, 'V2 title:', shellbarV2.primaryTitle);
+				console.log('Legacy mode set - V1 logo:', shellbarV1.logo, 'V2 logo:', ShellBar.logo);
+				console.log('Legacy mode set - V1 title:', shellbarV1.primaryTitle, 'V2 title:', ShellBar.primaryTitle);
 			} else {
 				// Switch to branding slot mode
 				toggleElement('logoV1', false);
@@ -748,7 +748,7 @@
 				}
 				
 				if (cachedBrandingV2) {
-					shellbarV2.insertBefore(cachedBrandingV2, shellbarV2.firstChild);
+					ShellBar.insertBefore(cachedBrandingV2, ShellBar.firstChild);
 				} else {
 					const newBrandingV2 = document.createElement('ui5-shellbar-branding');
 					newBrandingV2.slot = 'branding';
@@ -757,13 +757,13 @@
 					logoImg.src = 'https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg';
 					logoImg.slot = 'logo';
 					newBrandingV2.appendChild(logoImg);
-					shellbarV2.insertBefore(newBrandingV2, shellbarV2.firstChild);
+					ShellBar.insertBefore(newBrandingV2, ShellBar.firstChild);
 					cachedBrandingV2 = newBrandingV2;
 				}
 				
 				// Clear primaryTitle
 				shellbarV1.primaryTitle = '';
-				shellbarV2.primaryTitle = '';
+				ShellBar.primaryTitle = '';
 			}
 		});
 
@@ -790,24 +790,24 @@
 		});
 
 		// Event listeners for V2
-		shellbarV2.addEventListener('ui5-notifications-click', (e) => {
+		ShellBar.addEventListener('ui5-notifications-click', (e) => {
 			e.preventDefault();
 			console.log('V2 Notifications clicked', e.detail);
 		});
 
-		shellbarV2.addEventListener('ui5-profile-click', (e) => {
+		ShellBar.addEventListener('ui5-profile-click', (e) => {
 			console.log('V2 Profile clicked', e.detail);
 		});
 
-		shellbarV2.addEventListener('ui5-product-switch-click', (e) => {
+		ShellBar.addEventListener('ui5-product-switch-click', (e) => {
 			console.log('V2 Product Switch clicked', e.detail);
 		});
 
-		shellbarV2.addEventListener('ui5-search-button-click', (e) => {
+		ShellBar.addEventListener('ui5-search-button-click', (e) => {
 			console.log('V2 Search button clicked', e.detail);
 		});
 
-		shellbarV2.addEventListener('ui5-logo-click', (e) => {
+		ShellBar.addEventListener('ui5-logo-click', (e) => {
 			console.log('V2 Logo clicked', e.detail);
 		});
 
@@ -815,7 +815,7 @@
 			console.log('V1 Menu item clicked', e.detail);
 		});
 
-		shellbarV2.addEventListener('ui5-menu-item-click', (e) => {
+		ShellBar.addEventListener('ui5-menu-item-click', (e) => {
 			console.log('V2 Menu item clicked', e.detail);
 		});
 
@@ -823,7 +823,7 @@
 			console.log('V1 Content visibility changed:', e.detail.items.length, 'items hidden');
 		});
 
-		shellbarV2.addEventListener('ui5-content-item-visibility-change', (e) => {
+		ShellBar.addEventListener('ui5-content-item-visibility-change', (e) => {
 			console.log('V2 Content visibility changed:', e.detail.items.length, 'items hidden');
 		});
 
@@ -831,7 +831,7 @@
 			console.log('V1 Search field toggled:', e.detail.expanded);
 		});
 
-		shellbarV2.addEventListener('ui5-search-field-toggle', (e) => {
+		ShellBar.addEventListener('ui5-search-field-toggle', (e) => {
 			console.log('V2 Search field toggled:', e.detail.expanded);
 		});
 
@@ -880,7 +880,7 @@
 		});
 
 		observer.observe(shellbarV1, { childList: true });
-		observer.observe(shellbarV2, { childList: true });
+		observer.observe(ShellBar, { childList: true });
 
 		console.log('ShellBar Comparison Page loaded');
 		console.log('Open browser console to see event logs');

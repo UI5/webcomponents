@@ -1,8 +1,8 @@
-import type ShellBarV2Item from "../ShellBarV2Item.js";
-import { ShellBarV2Actions, ShellBarV2ActionsSelectors } from "../ShellBarV2.js";
-import type { ShellBarV2ActionId, ShellBarV2ActionItem } from "../ShellBarV2.js";
+import type ShellBarItem from "../ShellBarItem.js";
+import { ShellBarActions, ShellBarActionsSelectors } from "../ShellBar.js";
+import type { ShellBarActionId, ShellBarActionItem } from "../ShellBar.js";
 
-interface ShellBarV2HidableItem {
+interface ShellBarHidableItem {
 	id: string;
 	selector: string; 			// CSS selector to find the element
 	hideOrder: number;			// Priority for hiding - later adjusted based on search field state
@@ -10,10 +10,10 @@ interface ShellBarV2HidableItem {
 	showInOverflow?: boolean; 	// If true, hiding this item triggers overflow button
 }
 
-interface ShellBarV2OverflowParams {
-	actions: readonly ShellBarV2ActionItem[];
+interface ShellBarOverflowParams {
+	actions: readonly ShellBarActionItem[];
 	content: readonly HTMLElement[];
-	customItems: readonly ShellBarV2Item[];
+	customItems: readonly ShellBarItem[];
 	overflowOuter: HTMLElement;
 	overflowInner: HTMLElement;
 	hiddenItemsIds: readonly string[];
@@ -21,24 +21,24 @@ interface ShellBarV2OverflowParams {
 	setVisible: (selector: string, visible: boolean) => void;
 }
 
-interface ShellBarV2OverflowResult {
+interface ShellBarOverflowResult {
 	hiddenItemsIds: string[];
 	showOverflowButton: boolean;
 }
 
-type ShellBarV2OverflowItem = {
+type ShellBarOverflowItem = {
 	type: "action";
-	id: ShellBarV2ActionId;
-	data: ShellBarV2ActionItem
+	id: ShellBarActionId;
+	data: ShellBarActionItem
 	order: number;
 } | {
 	type: "item";
 	id: string;
-	data: ShellBarV2Item;
+	data: ShellBarItem;
 	order: number;
 }
 
-class ShellBarV2Overflow {
+class ShellBarOverflow {
 	private readonly CLOSED_SEARCH_STRATEGY = {
 		ACTIONS: 0,			// All actions hide first
 		CONTENT: 1000,		// Then content (except last)
@@ -53,7 +53,7 @@ class ShellBarV2Overflow {
 		LAST_CONTENT: 0,	// Last content same as other content
 	};
 
-	updateOverflow(params: ShellBarV2OverflowParams): ShellBarV2OverflowResult {
+	updateOverflow(params: ShellBarOverflowParams): ShellBarOverflowResult {
 		const {
 			overflowOuter, overflowInner, setVisible,
 		} = params;
@@ -65,7 +65,7 @@ class ShellBarV2Overflow {
 		const sortedItems = this.buildHidableItems(params);
 
 		// set initial state, to account for isOverflowing calculation
-		setVisible(ShellBarV2ActionsSelectors.Overflow, false);
+		setVisible(ShellBarActionsSelectors.Overflow, false);
 		sortedItems.forEach(item => {
 			// show all items to account for isOverflowing calculation
 			setVisible(item.selector, true);
@@ -88,7 +88,7 @@ class ShellBarV2Overflow {
 
 			if (nextItemToHide.showInOverflow) {
 				// show overflow button to account in isOverflowing calculation
-				setVisible(ShellBarV2ActionsSelectors.Overflow, true);
+				setVisible(ShellBarActionsSelectors.Overflow, true);
 				showOverflowButton = true;
 			}
 		}
@@ -107,8 +107,8 @@ class ShellBarV2Overflow {
 		return showSearchField ? this.OPEN_SEARCH_STRATEGY : this.CLOSED_SEARCH_STRATEGY;
 	}
 
-	private buildHidableItems(params: ShellBarV2OverflowParams): ShellBarV2HidableItem[] {
-		const items: ShellBarV2HidableItem[] = [
+	private buildHidableItems(params: ShellBarOverflowParams): ShellBarHidableItem[] {
+		const items: ShellBarHidableItem[] = [
 			...this.buildContent(params),
 			...this.buildActions(params),
 		];
@@ -125,12 +125,12 @@ class ShellBarV2Overflow {
 		});
 	}
 
-	private buildContent(params: ShellBarV2OverflowParams): readonly ShellBarV2HidableItem[] {
+	private buildContent(params: ShellBarOverflowParams): readonly ShellBarHidableItem[] {
 		const {
 			content, showSearchField,
 		} = params;
 
-		const items: ShellBarV2HidableItem[] = [];
+		const items: ShellBarHidableItem[] = [];
 		const overflowStrategy = this.getOverflowStrategy(showSearchField);
 
 		// Build content items
@@ -153,12 +153,12 @@ class ShellBarV2Overflow {
 		return items;
 	}
 
-	private buildActions(params: ShellBarV2OverflowParams): readonly ShellBarV2HidableItem[] {
+	private buildActions(params: ShellBarOverflowParams): readonly ShellBarHidableItem[] {
 		const {
 			customItems, actions, showSearchField, hiddenItemsIds,
 		} = params;
 
-		const items: ShellBarV2HidableItem[] = [];
+		const items: ShellBarHidableItem[] = [];
 		const overflowStrategy = this.getOverflowStrategy(showSearchField);
 		let actionIndex = 0;
 
@@ -174,7 +174,7 @@ class ShellBarV2Overflow {
 
 		actions
 			// skip protected actions and search (handled separately)
-			.filter(a => !a.isProtected && a.id !== ShellBarV2Actions.Search)
+			.filter(a => !a.isProtected && a.id !== ShellBarActions.Search)
 			.forEach(config => {
 				items.push({
 					id: config.id,
@@ -188,8 +188,8 @@ class ShellBarV2Overflow {
 		if (!showSearchField) {
 			// Only move search to overflow if it's closed
 			items.push({
-				id: ShellBarV2Actions.Search,
-				selector: ShellBarV2ActionsSelectors.Search,
+				id: ShellBarActions.Search,
+				selector: ShellBarActionsSelectors.Search,
 				hideOrder: overflowStrategy.SEARCH + actionIndex++,
 				keepHidden: false, // Search button can be shown/hidden freely
 				showInOverflow: true,
@@ -199,25 +199,25 @@ class ShellBarV2Overflow {
 	}
 
 	getOverflowItems(params: {
-		actions: readonly ShellBarV2ActionItem[];
-		customItems: readonly ShellBarV2Item[];
+		actions: readonly ShellBarActionItem[];
+		customItems: readonly ShellBarItem[];
 		hiddenItemsIds: readonly string[];
-	}): ReadonlyArray<ShellBarV2OverflowItem> {
+	}): ReadonlyArray<ShellBarOverflowItem> {
 		const { actions, customItems, hiddenItemsIds } = params;
-		const result: ShellBarV2OverflowItem[] = [];
+		const result: ShellBarOverflowItem[] = [];
 
 		// Add hidden custom items
-		const hiddenCustomItems = customItems.filter((item: ShellBarV2Item) => hiddenItemsIds.includes(item._id));
-		hiddenCustomItems.forEach((item: ShellBarV2Item, index: number) => {
+		const hiddenCustomItems = customItems.filter((item: ShellBarItem) => hiddenItemsIds.includes(item._id));
+		hiddenCustomItems.forEach((item: ShellBarItem, index: number) => {
 			result.push({
 				type: "item", id: item._id, data: item, order: 3 + index,
 			});
 		});
 
 		const actionOrder: Record<string, number> = {
-			[ShellBarV2Actions.Search]: 0,
-			[ShellBarV2Actions.Notifications]: 1,
-			[ShellBarV2Actions.Assistant]: 2,
+			[ShellBarActions.Search]: 0,
+			[ShellBarActions.Notifications]: 1,
+			[ShellBarActions.Assistant]: 2,
 		};
 
 		const hiddenActions = actions.filter(action => hiddenItemsIds.includes(action.id));
@@ -234,10 +234,10 @@ class ShellBarV2Overflow {
 	}
 }
 
-export default ShellBarV2Overflow;
+export default ShellBarOverflow;
 export type {
-	ShellBarV2HidableItem,
-	ShellBarV2OverflowParams,
-	ShellBarV2OverflowResult,
-	ShellBarV2OverflowItem,
+	ShellBarHidableItem,
+	ShellBarOverflowParams,
+	ShellBarOverflowResult,
+	ShellBarOverflowItem,
 };

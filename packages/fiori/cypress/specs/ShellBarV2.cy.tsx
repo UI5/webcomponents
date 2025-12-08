@@ -1,5 +1,5 @@
-import ShellBar from "../../src/ShellBarV2.js";
-import ShellBarItem from "../../src/ShellBarV2Item.js";
+import ShellBar from "../../src/ShellBar.js";
+import ShellBarItem from "../../src/ShellBarItem.js";
 import ShellBarSpacer from "../../src/ShellBarSpacer.js";
 import activities from "@ui5/webcomponents-icons/dist/activities.js";
 import navBack from "@ui5/webcomponents-icons/dist/nav-back.js";
@@ -299,7 +299,7 @@ describe("Responsiveness", () => {
 	it("Test accessibility attributes on custom action buttons", () => {
 		cy.mount(basicTemplate()).as("html");
 
-		// V2: ShellBarV2Item properly supports accessibilityAttributes property
+		// V2: ShellBarItem properly supports accessibilityAttributes property
 		// which are passed through to the ui5-button in its shadow root
 		cy.get("@shellbar")
 			.find(`[stable-dom-ref="call"]`)
@@ -682,7 +682,7 @@ describe("Events", () => {
 				<Input slot="searchField"></Input>
 			</ShellBar>
 		);
-		cy.get("[ui5-shellbar-v2]")
+		cy.get("[ui5-shellbar]")
 			.as("shellbar");
 
 		cy.get("@shellbar")
@@ -709,7 +709,7 @@ describe("Events", () => {
 			</ShellBar>
 		);
 
-		cy.get("[ui5-shellbar-v2]")
+		cy.get("[ui5-shellbar]")
 			.as("shellbar");
 
 		cy.get("@shellbar")
@@ -759,7 +759,7 @@ describe("Events", () => {
 			</ShellBar>
 		);
 
-		cy.get("[ui5-shellbar-v2]")
+		cy.get("[ui5-shellbar]")
 			.as("shellbar");
 
 		// Set up event listener without preventing default
@@ -796,7 +796,7 @@ describe("Events", () => {
 			</ShellBar>
 		);
 
-		cy.get("[ui5-shellbar-v2]")
+		cy.get("[ui5-shellbar]")
 			.as("shellbar");
 
 		// Set up event listener that prevents default
@@ -843,12 +843,12 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.realClick();
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-popover")
 				.should("have.prop", "open", true);
@@ -861,7 +861,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -888,7 +888,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -912,7 +912,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -936,7 +936,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -963,7 +963,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -1001,7 +1001,7 @@ describe("Events", () => {
 				item.addEventListener("click", cy.stub().as(`menuItemClick${item.getAttribute("data-key")}`));
 			});
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.click();
@@ -1011,7 +1011,7 @@ describe("Events", () => {
 			cy.get("@menuItemClickkey1")
 				.should("have.been.calledOnce");
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.click();
@@ -1030,21 +1030,21 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-search-field")
 				.should("exist");
 
-			cy.get("[ui5-shellbar-v2]").invoke("prop", "showSearchField", false);
+			cy.get("[ui5-shellbar]").invoke("prop", "showSearchField", false);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-search-field")
 				.should("not.exist");
 
-			cy.get("[ui5-shellbar-v2]").invoke("prop", "showSearchField", true);
+			cy.get("[ui5-shellbar]").invoke("prop", "showSearchField", true);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-search-field")
 				.should("exist");
@@ -1063,7 +1063,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -1089,12 +1089,12 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.realClick();
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-popover")
 				.should("have.prop", "open", true);
@@ -1110,7 +1110,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -1134,7 +1134,7 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.as("shellbar");
 
 			cy.get("@shellbar")
@@ -1171,30 +1171,30 @@ describe("Events", () => {
 				</ShellBar>
 			);
 
-			cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+			cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
 				const shellbar = $shellbar[0] as HTMLElement;
 				shellbar.addEventListener("ui5-notifications-click", (e: Event) => {
 					e.preventDefault();
 				});
 			});
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-button")
 				.realClick();
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover")
 				.should("to.exist")
 				.invoke("prop", "open", true);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
-				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-shellbar-v2-item]:nth-child(1)")
+				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-shellbar-item]:nth-child(1)")
 				.realClick();
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover")
 				.should("to.exist")
@@ -1212,7 +1212,7 @@ describe("ButtonBadge in ShellBar", () => {
 			</ShellBar>
 		);
 
-		// V2: Badge is inside ShellBarV2Item's shadow DOM, not directly in ShellBar's shadow
+		// V2: Badge is inside ShellBarItem's shadow DOM, not directly in ShellBar's shadow
 		cy.get("#test-item")
 			.shadow()
 			.find("ui5-button-badge[slot='badge']")
@@ -1229,7 +1229,7 @@ describe("ButtonBadge in ShellBar", () => {
 
 		cy.get("#test-invalidation-item").invoke("attr", "count", "3");
 
-		// V2: Badge is inside ShellBarV2Item's shadow DOM
+		// V2: Badge is inside ShellBarItem's shadow DOM
 		cy.get("#test-invalidation-item")
 			.shadow()
 			.find("ui5-button-badge[slot='badge']")
@@ -1409,7 +1409,7 @@ describe("Keyboard Navigation", () => {
 		cy.mount(<ShellBar></ShellBar>);
 		cy.wait(RESIZE_THROTTLE_RATE);
 
-		cy.get("[ui5-shellbar-v2]")
+		cy.get("[ui5-shellbar]")
 			.shadow()
 			.find(".ui5-shellbar-logo-area")
 			.should("not.exist");
@@ -1426,7 +1426,7 @@ describe("Keyboard Navigation", () => {
 		cy.wait(RESIZE_THROTTLE_RATE);
 
 		function placeAtStartOfInput() {
-			cy.get("[ui5-shellbar-v2] [slot='searchField']")
+			cy.get("[ui5-shellbar] [slot='searchField']")
 				.shadow()
 				.find("input")
 				.then($input => {
@@ -1434,7 +1434,7 @@ describe("Keyboard Navigation", () => {
 				});
 		}
 		function placeAtEndOfInput() {
-			cy.get("[ui5-shellbar-v2] [slot='searchField']")
+			cy.get("[ui5-shellbar] [slot='searchField']")
 				.shadow()
 				.find("input")
 				.then($input => {
@@ -1443,7 +1443,7 @@ describe("Keyboard Navigation", () => {
 				});
 		}
 		function placeInMiddleOfInput() {
-			cy.get("[ui5-shellbar-v2] [slot='searchField']")
+			cy.get("[ui5-shellbar] [slot='searchField']")
 				.shadow()
 				.find("input")
 				.then($input => {
@@ -1454,7 +1454,7 @@ describe("Keyboard Navigation", () => {
 		}
 
 		// Focus the search input
-		cy.get("[ui5-shellbar-v2] [slot='searchField']")
+		cy.get("[ui5-shellbar] [slot='searchField']")
 			.realClick()
 			.shadow()
 			.find("input")
@@ -1464,14 +1464,14 @@ describe("Keyboard Navigation", () => {
 		// Press left arrow - should move focus away from input since cursor is at start
 		cy.get("@nativeInput").type("{leftArrow}");
 		// Verify focus is now on the button
-		cy.get("[ui5-shellbar-v2] [ui5-button]").should("be.focused");
+		cy.get("[ui5-shellbar] [ui5-button]").should("be.focused");
 
 
 		placeAtEndOfInput();
 		// Press right arrow - should move focus away from input since cursor is at end
 		cy.get("@nativeInput").type("{rightArrow}");
 		// Verify focus is now on the ShellBarItem
-		cy.get("[ui5-shellbar-v2-item]")
+		cy.get("[ui5-shellbar-item]")
 			.should("have.focus");
 
 		placeInMiddleOfInput();
@@ -1548,7 +1548,7 @@ describe("Component Behavior", () => {
 			</ShellBar>
 		);
 
-		cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+		cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
 			$shellbar[0].accessibilityAttributes = {
 				profile: {
 					name: PROFILE_BTN_CUSTOM_TOOLTIP,
@@ -1559,7 +1559,7 @@ describe("Component Behavior", () => {
 			};
 		});
 
-		cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+		cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
 			expect($shellbar[0].actionsAccessibilityInfo.profile.title).to.equal(PROFILE_BTN_CUSTOM_TOOLTIP);
 			expect($shellbar[0].legacyAdaptor.logoAriaLabel).to.equal(LOGO_CUSTOM_TOOLTIP);
 		});
@@ -1581,7 +1581,7 @@ describe("Component Behavior", () => {
 				</ShellBar>
 			);
 
-			cy.get<ShellBar>("[ui5-shellbar-v2]").then(($shellbar) => {
+			cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
 				$shellbar[0].accessibilityAttributes = {
 					notifications: {
 						hasPopup: NOTIFICATIONS_BTN_ARIA_HASPOPUP
@@ -1589,7 +1589,7 @@ describe("Component Behavior", () => {
 				};
 			});
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-bell-button")
 				.shadow()
@@ -1614,7 +1614,7 @@ describe("Component Behavior", () => {
 				$item[0].addEventListener("click", cy.stub().as("menuItemClick"));
 			});
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.click();
@@ -1623,7 +1623,7 @@ describe("Component Behavior", () => {
 			cy.get("@menuItemClick")
 				.should("have.been.calledOnce");
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-popover")
 				.should("have.prop", "open", true);
@@ -1643,11 +1643,11 @@ describe("Component Behavior", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]").should("exist");
+			cy.get("[ui5-shellbar]").should("exist");
 
 			cy.get("[slot='menuItems']").should("have.length", 2);
 
-			cy.get("[ui5-shellbar-v2]").should(($shellbar) => {
+			cy.get("[ui5-shellbar]").should(($shellbar) => {
 				const shellbar = $shellbar[0] as any;
 				expect(shellbar.menuItems).to.exist;
 				expect(shellbar.menuItems.length).to.be.greaterThan(0);
@@ -1657,14 +1657,14 @@ describe("Component Behavior", () => {
 				$item[0].addEventListener("click", cy.stub().as("menuItemClick"));
 			});
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-button")
 				.should("exist")
 				.should("be.visible")
 				.realClick();
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-popover")
 				.should("have.prop", "open", true);
@@ -1677,7 +1677,7 @@ describe("Component Behavior", () => {
 			cy.get("@menuItemClick")
 				.should("have.been.calledOnce");
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-menu-popover")
 				.should("have.prop", "open", false);
@@ -1693,7 +1693,7 @@ describe("Component Behavior", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2]")
+			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(`[data-ui5-stable="schedule"]`)
 				.should("exist");
@@ -1707,20 +1707,20 @@ describe("Component Behavior", () => {
 				</ShellBar>
 			);
 
-			cy.get("[ui5-shellbar-v2-item]").each(($item) => {
+			cy.get("[ui5-shellbar-item]").each(($item) => {
 				const item = $item[0];
 				const icon = item.getAttribute("icon");
 				const stubAlias = icon === "accept" ? "acceptClick" : "alertClick";
 				item.addEventListener("click", cy.stub().as(stubAlias));
 			});
 
-			cy.get("[ui5-shellbar-v2-item][icon='accept']")
+			cy.get("[ui5-shellbar-item][icon='accept']")
 				.click();
 
 			cy.get("@acceptClick")
 				.should("have.been.calledOnce");
 
-			cy.get("[ui5-shellbar-v2-item][icon='alert']")
+			cy.get("[ui5-shellbar-item][icon='alert']")
 				.click();
 
 			cy.get("@alertClick")

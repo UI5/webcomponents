@@ -2,9 +2,9 @@ import Icon from "@ui5/webcomponents/dist/Icon.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
-import type ShellBarV2 from "../../ShellBarV2.js";
+import type ShellBar from "../../ShellBar.js";
 
-function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
+function ShellBarLegacyBrandingArea(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy) {
 		return null;
@@ -12,17 +12,17 @@ function ShellBarV2LegacyBrandingArea(this: ShellBarV2) {
 
 	return (
 		<>
-			{legacy.hasMenuItems && ShellBarV2InteractiveMenuButton.call(this)}
-			{legacy.hasMenuItems && ShellBarV2LegacySecondaryTitle.call(this)}
-			{!legacy.hasMenuItems && ShellBarV2LegacyTitleArea.call(this)}
+			{legacy.hasMenuItems && ShellBarInteractiveMenuButton.call(this)}
+			{legacy.hasMenuItems && ShellBarLegacySecondaryTitle.call(this)}
+			{!legacy.hasMenuItems && ShellBarLegacyTitleArea.call(this)}
 
 			{/* Menu Popover (legacy) */}
-			{ShellBarV2MenuPopover.call(this)}
+			{ShellBarMenuPopover.call(this)}
 		</>
 	);
 }
 
-function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
+function ShellBarLegacyTitleArea(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy) {
 		return null;
@@ -30,11 +30,11 @@ function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
 
 	return (
 		<>
-			{!!(legacy.isSBreakPoint && legacy.hasLogo) && ShellBarV2SingleLogo.call(this)}
+			{!!(legacy.isSBreakPoint && legacy.hasLogo) && ShellBarSingleLogo.call(this)}
 			{!legacy.isSBreakPoint && (legacy.hasLogo || legacy.primaryTitle) && (
 				<>
-					{ShellBarV2CombinedLogo.call(this)}
-					{legacy.hasSecondaryTitle && legacy.hasPrimaryTitle && ShellBarV2LegacySecondaryTitle.call(this)}
+					{ShellBarCombinedLogo.call(this)}
+					{legacy.hasSecondaryTitle && legacy.hasPrimaryTitle && ShellBarLegacySecondaryTitle.call(this)}
 				</>
 			)}
 		</>
@@ -45,7 +45,7 @@ function ShellBarV2LegacyTitleArea(this: ShellBarV2) {
  * Renders interactive menu button for non-S breakpoints.
  * Shows primaryTitle with arrow, opens menu popover.
  */
-function ShellBarV2InteractiveMenuButton(this: ShellBarV2) {
+function ShellBarInteractiveMenuButton(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy) {
 		return null;
@@ -53,7 +53,7 @@ function ShellBarV2InteractiveMenuButton(this: ShellBarV2) {
 
 	return (
 		<>
-			{!legacy.showLogoInMenuButton && legacy.hasLogo && ShellBarV2SingleLogo.call(this)}
+			{!legacy.showLogoInMenuButton && legacy.hasLogo && ShellBarSingleLogo.call(this)}
 			{legacy.showTitleInMenuButton && <h1 class="ui5-hidden-text">{legacy.primaryTitle}</h1>}
 			{legacy.showMenuButton && (
 				<button
@@ -86,7 +86,7 @@ function ShellBarV2InteractiveMenuButton(this: ShellBarV2) {
  * Renders single logo on S breakpoint when no menu items.
  * Used on S breakpoint when no menu items and no branding slot.
  */
-function ShellBarV2SingleLogo(this: ShellBarV2) {
+function ShellBarSingleLogo(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy) {
 		return null;
@@ -108,7 +108,7 @@ function ShellBarV2SingleLogo(this: ShellBarV2) {
 	);
 }
 
-function ShellBarV2CombinedLogo(this: ShellBarV2) {
+function ShellBarCombinedLogo(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy) {
 		return null;
@@ -142,7 +142,7 @@ function ShellBarV2CombinedLogo(this: ShellBarV2) {
 	);
 }
 
-function ShellBarV2LegacySecondaryTitle(this: ShellBarV2) {
+function ShellBarLegacySecondaryTitle(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy || !legacy.showSecondaryTitle) {
 		return null;
@@ -159,7 +159,7 @@ function ShellBarV2LegacySecondaryTitle(this: ShellBarV2) {
  * Renders the menu popover.
  * Contains the list of menu items.
  */
-function ShellBarV2MenuPopover(this: ShellBarV2) {
+function ShellBarMenuPopover(this: ShellBar) {
 	const legacy = this.legacyAdaptor;
 	if (!legacy || !legacy.hasMenuItems) {
 		return null;
@@ -181,10 +181,10 @@ function ShellBarV2MenuPopover(this: ShellBarV2) {
 }
 
 export {
-	ShellBarV2SingleLogo,
-	ShellBarV2MenuPopover,
-	ShellBarV2LegacyTitleArea,
-	ShellBarV2LegacyBrandingArea,
-	ShellBarV2LegacySecondaryTitle,
-	ShellBarV2InteractiveMenuButton,
+	ShellBarSingleLogo,
+	ShellBarMenuPopover,
+	ShellBarLegacyTitleArea,
+	ShellBarLegacyBrandingArea,
+	ShellBarLegacySecondaryTitle,
+	ShellBarInteractiveMenuButton,
 };

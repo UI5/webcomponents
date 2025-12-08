@@ -1,26 +1,26 @@
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
 
 // Legacy Type logo accessibility attributes
-type ShellBarV2LogoAccessibilityAttributes = {
+type ShellBarLogoAccessibilityAttributes = {
 	role?: Extract<AriaRole, "button" | "link">;
 	name?: string;
 };
 
-type ShellBarV2ProfileAccessibilityAttributes = Pick<AccessibilityAttributes, "name" | "expanded" | "hasPopup">;
-type ShellBarV2AreaAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded">;
-type ShellBarV2BrandingAccessibilityAttributes = Pick<AccessibilityAttributes, "name">;
+type ShellBarProfileAccessibilityAttributes = Pick<AccessibilityAttributes, "name" | "expanded" | "hasPopup">;
+type ShellBarAreaAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded">;
+type ShellBarBrandingAccessibilityAttributes = Pick<AccessibilityAttributes, "name">;
 
-type ShellBarV2AccessibilityAttributes = {
-	logo?: ShellBarV2LogoAccessibilityAttributes;
-	notifications?: ShellBarV2AreaAccessibilityAttributes;
-	profile?: ShellBarV2ProfileAccessibilityAttributes;
-	product?: ShellBarV2AreaAccessibilityAttributes;
-	search?: ShellBarV2AreaAccessibilityAttributes;
-	overflow?: ShellBarV2AreaAccessibilityAttributes;
-	branding?: ShellBarV2BrandingAccessibilityAttributes;
+type ShellBarAccessibilityAttributes = {
+	logo?: ShellBarLogoAccessibilityAttributes;
+	notifications?: ShellBarAreaAccessibilityAttributes;
+	profile?: ShellBarProfileAccessibilityAttributes;
+	product?: ShellBarAreaAccessibilityAttributes;
+	search?: ShellBarAreaAccessibilityAttributes;
+	overflow?: ShellBarAreaAccessibilityAttributes;
+	branding?: ShellBarBrandingAccessibilityAttributes;
 };
 
-interface ShellBarV2AreaAccessibilityInfo {
+interface ShellBarAreaAccessibilityInfo {
 	title: string | undefined;
 	accessibilityAttributes: {
 		name?: string;
@@ -29,22 +29,22 @@ interface ShellBarV2AreaAccessibilityInfo {
 	};
 }
 
-type ShellBarV2AccessibilityInfo = {
-	notifications: ShellBarV2AreaAccessibilityInfo;
-	profile: ShellBarV2AreaAccessibilityInfo;
-	products: ShellBarV2AreaAccessibilityInfo;
-	overflow: ShellBarV2AreaAccessibilityInfo;
-	search: ShellBarV2AreaAccessibilityInfo;
+type ShellBarAccessibilityInfo = {
+	notifications: ShellBarAreaAccessibilityInfo;
+	profile: ShellBarAreaAccessibilityInfo;
+	products: ShellBarAreaAccessibilityInfo;
+	overflow: ShellBarAreaAccessibilityInfo;
+	search: ShellBarAreaAccessibilityInfo;
 };
 
-class ShellBarV2Accessibility {
+class ShellBarAccessibility {
 	getActionsAccessibilityAttributes(
 		defaultTexts: Record<string, string | undefined>,
 		params: {
-			accessibilityAttributes: ShellBarV2AccessibilityAttributes;
+			accessibilityAttributes: ShellBarAccessibilityAttributes;
 			overflowPopoverOpen: boolean;
 		},
-	): ShellBarV2AccessibilityInfo {
+	): ShellBarAccessibilityInfo {
 		const { overflowPopoverOpen, accessibilityAttributes } = params;
 		const overflowExpanded = accessibilityAttributes.overflow?.expanded;
 
@@ -95,13 +95,13 @@ class ShellBarV2Accessibility {
 	}
 }
 
-export default ShellBarV2Accessibility;
+export default ShellBarAccessibility;
 
 export type {
-	ShellBarV2AccessibilityInfo,
-	ShellBarV2AreaAccessibilityInfo,
-	ShellBarV2AccessibilityAttributes,
-	ShellBarV2LogoAccessibilityAttributes,
-	ShellBarV2AreaAccessibilityAttributes,
-	ShellBarV2ProfileAccessibilityAttributes,
+	ShellBarAccessibilityInfo,
+	ShellBarAreaAccessibilityInfo,
+	ShellBarAccessibilityAttributes,
+	ShellBarLogoAccessibilityAttributes,
+	ShellBarAreaAccessibilityAttributes,
+	ShellBarProfileAccessibilityAttributes,
 };

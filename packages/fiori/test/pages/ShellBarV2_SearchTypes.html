@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>ShellBarV2 - Search Types Demo</title>
+	<title>ShellBar - Search Types Demo</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<script data-ui5-config type="application/json">
 		{
@@ -74,7 +74,7 @@
 </head>
 
 <body>
-	<h1>ShellBarV2 - Search Types Demonstration</h1>
+	<h1>ShellBar - Search Types Demonstration</h1>
 	<p>This page demonstrates all 3 supported search field types and legacy properties.</p>
 
 	<!-- Type 1: Self-Collapsible Search (ui5-shellbar-search) -->
@@ -84,9 +84,9 @@
 			<strong>Type:</strong> ui5-shellbar-search<br>
 			<strong>Features:</strong> Auto-expands/collapses, search suggestions, scopes<br>
 			<strong>Properties:</strong> collapsed, open (managed by component)<br>
-			<strong>Controller:</strong> ShellBarV2Search
+			<strong>Controller:</strong> ShellBarSearch
 		</div>
-		<ui5-shellbar-v2 id="shellbar-self-collapsible" show-search-field>
+		<ui5-shellbar id="shellbar-self-collapsible" show-search-field>
 			<ui5-shellbar-branding slot="branding">
 				Self-Collapsible Search
 			</ui5-shellbar-branding>
@@ -98,7 +98,7 @@
 			<ui5-button slot="content">Reports</ui5-button>
 			<ui5-button slot="content">Analytics</ui5-button>
 			<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Click the search icon to toggle. Supports auto-collapse when space is tight (except when focused or has value).</em></p>
 	</div>
 
@@ -111,7 +111,7 @@
 			<strong>Properties:</strong> hideSearchButton, disableSearchCollapse supported<br>
 			<strong>Controller:</strong> ShellBarSearchLegacy
 		</div>
-		<ui5-shellbar-v2 id="shellbar-ui5-input" show-search-field>
+		<ui5-shellbar id="shellbar-ui5-input" show-search-field>
 			<ui5-shellbar-branding slot="branding">
 				ui5-input Search
 			</ui5-shellbar-branding>
@@ -122,7 +122,7 @@
 			<ui5-button slot="content">Customers</ui5-button>
 			<ui5-button slot="content">Orders</ui5-button>
 			<ui5-avatar slot="profile" initials="AB" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Separate search button appears. Auto-collapse works based on focus and value.</em></p>
 	</div>
 
@@ -135,7 +135,7 @@
 			<strong>Properties:</strong> hideSearchButton, disableSearchCollapse supported<br>
 			<strong>Controller:</strong> ShellBarSearchLegacy
 		</div>
-		<ui5-shellbar-v2 id="shellbar-custom-div" show-search-field>
+		<ui5-shellbar id="shellbar-custom-div" show-search-field>
 			<ui5-shellbar-branding slot="branding">
 				Custom Search
 			</ui5-shellbar-branding>
@@ -150,7 +150,7 @@
 			<ui5-button slot="content">Dashboard</ui5-button>
 			<ui5-button slot="content">Settings</ui5-button>
 			<ui5-avatar slot="profile" icon="customer" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Custom HTML allows full control. Search button provided by ShellBar. Custom close button included.</em></p>
 	</div>
 
@@ -162,7 +162,7 @@
 			<strong>Properties:</strong> disableSearchCollapse=true<br>
 			<strong>Behavior:</strong> Search field always stays expanded, never auto-collapses
 		</div>
-		<ui5-shellbar-v2 id="shellbar-no-collapse" show-search-field disable-search-collapse>
+		<ui5-shellbar id="shellbar-no-collapse" show-search-field disable-search-collapse>
 			<ui5-shellbar-branding slot="branding">
 				Always Expanded
 			</ui5-shellbar-branding>
@@ -173,7 +173,7 @@
 			<ui5-button slot="content" data-hide-order="4">Action 4</ui5-button>
 			<ui5-button slot="content" data-hide-order="5">Action 5</ui5-button>
 			<ui5-avatar slot="profile" initials="CD" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Resize window - search stays expanded even when items overflow.</em></p>
 	</div>
 
@@ -185,7 +185,7 @@
 			<strong>Properties:</strong> hideSearchButton=true<br>
 			<strong>Behavior:</strong> No search button shown, field always visible
 		</div>
-		<ui5-shellbar-v2 id="shellbar-hide-button" show-search-field hide-search-button>
+		<ui5-shellbar id="shellbar-hide-button" show-search-field hide-search-button>
 			<ui5-shellbar-branding slot="branding">
 				No Search Button
 			</ui5-shellbar-branding>
@@ -195,7 +195,7 @@
 			<ui5-button slot="content">Home</ui5-button>
 			<ui5-button slot="content">About</ui5-button>
 			<ui5-avatar slot="profile" initials="EF" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Search button hidden. Field is always visible (useful when managing state externally).</em></p>
 	</div>
 
@@ -206,7 +206,7 @@
 			<strong>Type:</strong> ui5-input<br>
 			<strong>Behavior:</strong> Search auto-collapses when content overflows (unless focused/has value)
 		</div>
-		<ui5-shellbar-v2 id="shellbar-overflow" show-search-field show-notifications notifications-count="12">
+		<ui5-shellbar id="shellbar-overflow" show-search-field show-notifications notifications-count="12">
 			<ui5-shellbar-branding slot="branding">
 				Overflow Demo
 			</ui5-shellbar-branding>
@@ -221,7 +221,7 @@
 			<ui5-button slot="content" data-hide-order="7">Import</ui5-button>
 			<ui5-button slot="content" data-hide-order="8">Print</ui5-button>
 			<ui5-avatar slot="profile" icon="manager" size="XS"></ui5-avatar>
-		</ui5-shellbar-v2>
+		</ui5-shellbar>
 		<p><em>Resize window to see auto-collapse. Type something or focus the field to prevent collapse.</em></p>
 	</div>
 
@@ -247,7 +247,7 @@
 		}
 
 		// Setup event listeners for all shellbars
-		document.querySelectorAll('ui5-shellbar-v2').forEach(shellbar => {
+		document.querySelectorAll('ui5-shellbar').forEach(shellbar => {
 			const id = shellbar.id;
 
 			shellbar.addEventListener('search-button-click', (e) => {
