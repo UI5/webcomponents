@@ -55,6 +55,9 @@ const removeOpenedPopup = (popup: object) => {
 };
 
 const getTopmostPopup = () => {
+	if (AllOpenedPopupsRegistry.openedRegistry.length === 0) {
+		return null;
+	}
 	return AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1].instance;
 };
 
@@ -80,7 +83,7 @@ const hasWebComponentPopupAbove = (popup: object) => {
 };
 
 const getPopupContentElement = (popup: OpenUI5Popup): HTMLElement | null => {
-	const content = popup.getContent()!;
+	const content = popup.getContent();
 	return content instanceof HTMLElement ? content : content?.getDomRef() || null;
 };
 
