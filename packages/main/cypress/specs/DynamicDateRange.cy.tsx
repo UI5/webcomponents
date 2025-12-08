@@ -150,17 +150,17 @@ describe("DynamicDateRange Component", () => {
 
 		cy.get("@calendar")
 			.should("exist");
-
-		cy.realPress("Tab");
+		
 		cy.realPress("Tab");
 		cy.realPress("Tab");
 
 		cy.get("@calendar")
 			.shadow()
-			.find("[data-ui5-cal-header-btn-year='true']")
+			.find("[data-ui5-cal-header-btn-year]")
 			.as("yearButton");
 
 		cy.get("@yearButton")
+			.should("exist")
 			.should("be.focused");
 
 		cy.realPress("Space");

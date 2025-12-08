@@ -324,8 +324,8 @@ describe("DateTimePicker general interaction", () => {
 
 				cy.get("@daypicker")
 					.find(".ui5-dp-item--selected")
-					.should("be.focused")
-					.realClick();
+					.realClick()
+					.should("be.focused");
 
 				cy.get("[ui5-time-selection-clocks]")
 					.shadow()
@@ -397,10 +397,10 @@ describe("DateTimePicker general interaction", () => {
 		cy.get("@daypicker")
 			.shadow()
 			.find("[data-sap-focus-ref]")
-			.should("be.focused")
-			.realClick();
+			.realClick()
+			.should("be.focused");
 
-		// act: confirm selection
+		//act: confirm selection
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetSubmitButton()
 			.should("have.prop", "disabled", false);

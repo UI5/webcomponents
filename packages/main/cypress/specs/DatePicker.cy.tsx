@@ -1363,7 +1363,11 @@ describe("Date Picker Tests", () => {
 			.realPress("ArrowDown");
 
 		cy.get<DatePicker>("@datePicker")
-			.ui5DatePickerGetDisplayedDay(13)
+			.shadow()
+			.find("ui5-calendar")
+			.as("calendar")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-month]")
 			.should("have.focus");
 	});
 
