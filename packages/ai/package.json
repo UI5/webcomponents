@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-ai",
-  "version": "2.13.8",
+  "version": "2.13.7",
   "description": "UI5 Web Components: webcomponents.ai",
   "ui5": {
     "webComponentsPackage": true
@@ -48,14 +48,14 @@
     "directory": "packages/ai"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.13.8",
-    "@ui5/webcomponents-base": "2.13.8",
-    "@ui5/webcomponents-icons": "2.13.8",
-    "@ui5/webcomponents-theming": "2.13.8"
+    "@ui5/webcomponents": "2.13.7",
+    "@ui5/webcomponents-base": "2.13.7",
+    "@ui5/webcomponents-icons": "2.13.7",
+    "@ui5/webcomponents-theming": "2.13.7"
   },
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.13.8",
+    "@ui5/webcomponents-tools": "2.13.7",
     "chromedriver": "^137.0.4"
   }
 }

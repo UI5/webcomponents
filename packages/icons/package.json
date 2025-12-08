@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-icons",
-  "version": "2.13.8",
+  "version": "2.13.7",
   "description": "UI5 Web Components: webcomponents.SAP-icons",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -28,9 +28,9 @@
     "directory": "packages/icons"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "2.13.8"
+    "@ui5/webcomponents-base": "2.13.7"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.13.8"
+    "@ui5/webcomponents-tools": "2.13.7"
   }
 }
