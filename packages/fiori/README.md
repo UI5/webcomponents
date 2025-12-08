@@ -41,6 +41,8 @@ such as a common header (ShellBar).
 | User Settings Item                        | `ui5-user-settings-item`                | `import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";`          |
 | User Settings Account View                | `ui5-user-settings-account-view`        | `import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";`   |
 | User Settings Appearance View             | `ui5-user-settings-appearance-view`     | `import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";`|
+| User Settings Appearance View Item        | `ui5-user-settings-appearance-view-item`| `import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";`|
+| User Settings Appearance View Group       | `ui5-user-settings-appearance-view-group`| `import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";`|
 | User Settings View                        | `ui5-user-settings-view`                | `import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";`          |
 | View Settings Dialog                      | `ui5-view-settings-dialog`              | `import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";`        |
 | View Settings Dialog - Sort Item          | `ui5-sort-item`                         | `import "@ui5/webcomponents-fiori/dist/SortItem.js";`                  |

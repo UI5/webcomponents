@@ -13,6 +13,7 @@ function listItemContent(this: UserSettingsAppearanceViewItem) {
 	return (
 		<div class="list-item">
 			<div class="item-left">
+				{/* Two avatars are rendered for different content density modes - CSS controls visibility */}
 				<Avatar class="avatar-cozy" shape="Square" icon={this.icon} color-scheme={this.colorScheme} size={AvatarSize.S}></Avatar>
 				<Avatar class="avatar-compact" shape="Square" icon={this.icon} color-scheme={this.colorScheme} size={AvatarSize.XS}></Avatar>
 				<div class="item-texts">

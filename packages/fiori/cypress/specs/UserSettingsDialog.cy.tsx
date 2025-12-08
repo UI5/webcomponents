@@ -1046,10 +1046,10 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
         cy.get("@item").shadow().find("[ui5-avatar]").as("avatar");
         cy.get("@avatar").should("exist");
-        cy.get("@avatar").should("have.length", 1);
-        cy.get("@avatar").should("have.attr", "icon", "palette");
-        cy.get("@avatar").should("have.attr", "shape", "Square");
-        cy.get("@avatar").should("have.attr", "color-scheme", "Accent7");
+        cy.get("@avatar").should("have.length", 2); // Two avatars: one for cozy, one for compact mode
+        cy.get("@avatar").first().should("have.attr", "icon", "palette");
+        cy.get("@avatar").first().should("have.attr", "shape", "Square");
+        cy.get("@avatar").first().should("have.attr", "color-scheme", "Accent7");
     });
 
     it("tests appearance view item text displayed", () => {
@@ -1123,7 +1123,7 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").should("have.length", 2);
     });
 
-    it("tests theme-selected event", () => {
+    it("tests selection-change event", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
                 <UserSettingsAppearanceView text="Themes">
@@ -1136,7 +1136,7 @@ describe("Appearance view", () => {
         cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
         
         cy.get("@appearanceView").then($view => {
-            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelected"));
+            $view.get(0).addEventListener("selection-change", cy.stub().as("selectionChange"));
         });
 
         cy.get("@appearanceView")
@@ -1144,29 +1144,24 @@ describe("Appearance view", () => {
             .first()
             .click();
 
-        cy.get("@themeSelected").should("have.been.calledOnce");
+        cy.get("@selectionChange").should("have.been.calledOnce");
     });
 
-    it("tests theme-selected event detail contains correct key", () => {
+    it("tests selection-change event detail contains correct item", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
                 <UserSettingsAppearanceView text="Themes">
-                    <UserSettingsAppearanceViewItem text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
-                    <UserSettingsAppearanceViewItem text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
                 </UserSettingsAppearanceView>
             </UserSettingsItem>
         </UserSettingsDialog>);
         
-        // Set itemKey programmatically after mount
         cy.get("[ui5-user-settings-dialog]").as("settings");
         cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
-        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").then($items => {
-            ($items.get(0) as any).itemKey = "sap_horizon";
-            ($items.get(1) as any).itemKey = "sap_horizon_dark";
-        });
         
         cy.get("@appearanceView").then($view => {
-            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelectedWithDetail"));
+            $view.get(0).addEventListener("selection-change", cy.stub().as("selectionChangeWithDetail"));
         });
 
         cy.get("@appearanceView")
@@ -1174,68 +1169,32 @@ describe("Appearance view", () => {
             .eq(1)
             .click();
 
-        cy.get("@themeSelectedWithDetail").should("have.been.calledOnce");
-        cy.get("@themeSelectedWithDetail").then((stub: any) => {
+        cy.get("@selectionChangeWithDetail").should("have.been.calledOnce");
+        cy.get("@selectionChangeWithDetail").then((stub: any) => {
             const call = stub.getCall(0);
-            expect(call.args[0].detail.selectedTheme).to.equal("sap_horizon_dark");
+            expect(call.args[0].detail.item.itemKey).to.equal("sap_horizon_dark");
+            expect(call.args[0].detail.item.text).to.equal("SAP Evening Horizon");
         });
     });
 
     it("tests item selection state", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
-                <UserSettingsAppearanceView text="Themes" selected-item-key="sap_horizon_dark">
-                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
-                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
-                </UserSettingsAppearanceView>
-            </UserSettingsItem>
-        </UserSettingsDialog>);
-        cy.get("[ui5-user-settings-dialog]").as("settings");
-        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
-        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(1).then($item => {
-            const item = $item.get(0) as any;
-            expect(item.selected).to.be.true;
-        });
-        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
-            const item = $item.get(0) as any;
-            expect(item.selected).to.be.false;
-        });
-    });
-
-    it("tests item selection changes on click", () => {
-        cy.mount(<UserSettingsDialog open>
-            <UserSettingsItem text="Appearance">
                 <UserSettingsAppearanceView text="Themes">
                     <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
-                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette" selected></UserSettingsAppearanceViewItem>
                 </UserSettingsAppearanceView>
             </UserSettingsItem>
         </UserSettingsDialog>);
         cy.get("[ui5-user-settings-dialog]").as("settings");
         cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
-        
-        cy.get("@appearanceView")
-            .find("[ui5-user-settings-appearance-view-item]")
-            .first()
-            .click();
-
-        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
-            const item = $item.get(0) as any;
-            expect(item.selected).to.be.true;
-        });
-
-        cy.get("@appearanceView")
-            .find("[ui5-user-settings-appearance-view-item]")
-            .eq(1)
-            .click();
-
-        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
-            const item = $item.get(0) as any;
-            expect(item.selected).to.be.false;
-        });
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(1).then($item => {
             const item = $item.get(0) as any;
             expect(item.selected).to.be.true;
+        });
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.false;
         });
     });
 
@@ -1298,11 +1257,11 @@ describe("Appearance view", () => {
         });
     });
 
-    it("tests selection persists across re-renders", () => {
+    it("tests selection-change event can be prevented", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
-                <UserSettingsAppearanceView text="Themes" selected-item-key="sap_horizon">
-                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette" selected></UserSettingsAppearanceViewItem>
                     <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
                 </UserSettingsAppearanceView>
             </UserSettingsItem>
@@ -1311,17 +1270,31 @@ describe("Appearance view", () => {
         cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
         
         cy.get("@appearanceView").then($view => {
-            const view = $view.get(0) as any;
-            expect(view.selectedItemKey).to.equal("sap_horizon");
+            $view.get(0).addEventListener("selection-change", (e: Event) => e.preventDefault());
+            $view.get(0).addEventListener("selection-change", cy.stub().as("selectionChange"));
         });
         
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .eq(1)
+            .click();
+
+        cy.get("@selectionChange").should("have.been.calledOnce");
+        
+        // First item should still be selected because event was prevented
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(0).then($item => {
             const item = $item.get(0) as any;
             expect(item.selected).to.be.true;
         });
+        
+        // Second item should not be selected
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").eq(1).then($item => {
+            const item = $item.get(0) as any;
+            expect(item.selected).to.be.false;
+        });
     });
 
-    it("tests items in groups fire theme-selected event", () => {
+    it("tests items in groups fire selection-change event", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
                 <UserSettingsAppearanceView text="Themes">
@@ -1336,7 +1309,7 @@ describe("Appearance view", () => {
         cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
         
         cy.get("@appearanceView").then($view => {
-            $view.get(0).addEventListener("theme-selected", cy.stub().as("themeSelected"));
+            $view.get(0).addEventListener("selection-change", cy.stub().as("selectionChange"));
         });
 
         cy.get("@appearanceView")
@@ -1345,10 +1318,10 @@ describe("Appearance view", () => {
             .first()
             .click();
 
-        cy.get("@themeSelected").should("have.been.calledOnce");
-        cy.get("@themeSelected").then((stub: any) => {
+        cy.get("@selectionChange").should("have.been.calledOnce");
+        cy.get("@selectionChange").then((stub: any) => {
             const call = stub.getCall(0);
-            expect(call.args[0].detail.selectedTheme).to.equal("sap_horizon");
+            expect(call.args[0].detail.item.itemKey).to.equal("sap_horizon");
         });
     });
 

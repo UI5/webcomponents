@@ -3,11 +3,17 @@ import UserSettingsAppearanceViewTemplate from "./UserSettingsAppearanceViewTemp
 import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
 import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js";
 import type UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
+import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 import {
 	customElement, slot, eventStrict as event, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+
+type UserSettingsAppearanceViewItemSelectEventDetail = {
+	item: UserSettingsAppearanceViewItem;
+}
 
 @customElement({
 	tag: "ui5-user-settings-appearance-view",
@@ -17,10 +23,13 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 })
 
 /**
- * Fired when a theme is selected.
+ * Fired when an item is selected.
+ * @param {UserSettingsAppearanceViewItem} item The selected `user settings appearance view item`.
  * @public
  */
-@event("theme-selected")
+@event("selection-change", {
+	cancelable: true,
+})
 
 /**
  * @class
@@ -39,16 +48,8 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
  */
 class UserSettingsAppearanceView extends UserSettingsView {
 	eventDetails!: {
-		"theme-selected": { selectedTheme: string };
+		"selection-change": UserSettingsAppearanceViewItemSelectEventDetail;
 	}
-
-	/**
-	 * Defines the currently selected theme key.
-	 * @default ""
-	 * @public
-	 */
-	@property()
-	selectedItemKey = "";
 
 	/**
 	 * Defines the items of the component.
@@ -72,16 +73,6 @@ class UserSettingsAppearanceView extends UserSettingsView {
 	})
 	additionalContent?: Array<HTMLElement>;
 
-	onBeforeRendering() {
-		this._updateSelection();
-	}
-
-	_updateSelection() {
-		this._getAllItems().forEach(item => {
-			item.selected = item.itemKey === this.selectedItemKey;
-		});
-	}
-
 	_getAllItems(): Array<UserSettingsAppearanceViewItem> {
 		const allItems: Array<UserSettingsAppearanceViewItem> = [];
 
@@ -100,15 +91,26 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		return allItems;
 	}
 
-	_handleItemSelected = (e: CustomEvent) => {
-		const listItem = e.detail.item;
+	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
+		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
 		if (listItem.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM") {
 			const item = listItem as UserSettingsAppearanceViewItem;
-			this.selectedItemKey = item.itemKey;
-			this.fireDecoratorEvent("theme-selected", { selectedTheme: item.itemKey });
+			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
+				item,
+			});
+
+			if (!eventPrevented) {
+				this._getAllItems().forEach(viewItem => {
+					viewItem.selected = false;
+				});
+				item.selected = true;
+			}
 		}
 	};
 }
 
 UserSettingsAppearanceView.define();
 export default UserSettingsAppearanceView;
+export type {
+	UserSettingsAppearanceViewItemSelectEventDetail,
+};

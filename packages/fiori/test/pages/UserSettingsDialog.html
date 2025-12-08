@@ -685,11 +685,11 @@
 	// Theme switching functionality
 	const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
 
-	appearanceView.addEventListener("theme-selected", (e) => {
-		const selectedKey = e.detail.selectedTheme;
+	appearanceView.addEventListener("selection-change", (e) => {
+		const selectedItem = e.detail.item;
 				
-		if (selectedKey) {
-			window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedKey);
+		if (selectedItem?.itemKey) {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
 		}
 	});
 </script>
