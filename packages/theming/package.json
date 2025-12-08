@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-theming",
-  "version": "2.17.0-rc.3",
+  "version": "2.17.0",
   "description": "UI5 Web Components: webcomponents.theming",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -30,10 +30,10 @@
   },
   "dependencies": {
     "@sap-theming/theming-base-content": "11.29.3",
-    "@ui5/webcomponents-base": "2.17.0-rc.3"
+    "@ui5/webcomponents-base": "2.17.0"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.17.0-rc.3",
+    "@ui5/webcomponents-tools": "2.17.0",
     "globby": "^13.1.1",
     "json-beautify": "^1.1.1",
     "postcss": "^8.4.5",

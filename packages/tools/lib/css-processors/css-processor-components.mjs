@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import chokidar from "chokidar";
-import {scopeUi5Variables} from "./scope-variables.mjs";
+import scopeVariables from "./scope-variables.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import { pathToFileURL } from "url";
 
@@ -24,7 +24,7 @@ const generate = async (argv) => {
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
                     // scoping
-                    let newText = scopeUi5Variables(f.text, packageJSON);
+                    let newText = scopeVariables(f.text, packageJSON);
                     newText = newText.replaceAll(/\\/g, "\\\\"); // Escape backslashes as they might appear in css rules
                     await mkdir(path.dirname(f.path), { recursive: true });
                     writeFile(f.path, newText);

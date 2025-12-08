@@ -319,7 +319,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @private
 	 */
 	get _shouldHideHeader() {
-		return true;
+		return false;
 	}
 
 	/**
