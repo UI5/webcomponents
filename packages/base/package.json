@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-base",
-  "version": "2.13.7",
+  "version": "2.13.8",
   "description": "UI5 Web Components: webcomponents.base",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "@openui5/sap.ui.core": "1.120.17",
     "@ui5/cypress-internal": "0.0.0",
-    "@ui5/webcomponents-tools": "2.13.7",
+    "@ui5/webcomponents-tools": "2.13.8",
     "chromedriver": "^137.0.4",
     "clean-css": "^5.2.2",
     "copy-and-watch": "^0.1.5",

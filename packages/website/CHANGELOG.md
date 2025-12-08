@@ -19,6 +19,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [2.13.8](https://github.com/UI5/webcomponents/compare/v2.13.7...v2.13.8) (2025-12-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
 ## [2.13.7](https://github.com/UI5/webcomponents/compare/v2.13.6...v2.13.7) (2025-11-03)
 
 **Note:** Version bump only for package @ui5/webcomponents-website
