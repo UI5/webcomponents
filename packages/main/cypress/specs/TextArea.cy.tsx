@@ -847,3 +847,121 @@ describe("TextArea general interaction", () => {
 		});
 	});
 });
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<TextArea id="textareaForm" required maxlength={10} show-exceeded-text="true"/>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#textareaForm:invalid")
+			.should("exist");
+
+		cy.get("@textarea")
+			.realType("Albania");
+
+		cy.get("@textarea")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#textareaForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+
+	it("has correct validity for tooLong", () => {
+		cy.mount(
+			<form>
+				<TextArea id="textareaForm" required maxlength={10} show-exceeded-text="true"/>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick()
+			.realType("Some long text");
+
+		cy.get("@textarea")
+			.should("have.value", "Some long text");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@textarea")
+			.ui5AssertValidityState({
+				formValidity: { tooLong: true },
+				validity: { tooLong: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#textareaForm:invalid")
+			.should("exist");
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.clear();
+
+		cy.get("@textarea")
+			.realType("Short text");
+
+		cy.get("@textarea")
+			.ui5AssertValidityState({
+				formValidity: { tooLong: false },
+				validity: { tooLong: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#textareaForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
