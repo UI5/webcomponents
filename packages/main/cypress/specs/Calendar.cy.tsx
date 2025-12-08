@@ -69,7 +69,8 @@ describe("Calendar general interaction", () => {
 		
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-prev]")
-			.as("prevBtn");
+			.as("prevBtn")
+			.should("have.attr", "tabindex", "0");
 
 		cy.get("@prevBtn")
 			.should("be.focused");
@@ -78,7 +79,8 @@ describe("Calendar general interaction", () => {
 
 		cy.get("@calheader")
 			.find("[data-ui5-cal-header-btn-month]")
-			.as("monthBtn");
+			.as("monthBtn")
+			.should("have.attr", "tabindex", "0");;
 
 		cy.get("@monthBtn")
 			.should("be.focused");
