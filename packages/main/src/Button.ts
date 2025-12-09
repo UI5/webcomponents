@@ -671,11 +671,11 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get effectiveAccRoleTranslation(): string {
-		if (this.role === ButtonAccessibleRole.Button) {
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Button) {
 			return Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION);
 		}
 
-		if (this.role === ButtonAccessibleRole.Link) {
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Link) {
 			return Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION);
 		}
 

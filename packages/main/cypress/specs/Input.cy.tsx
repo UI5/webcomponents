@@ -2913,3 +2913,184 @@ describe("Input Composition", () => {
 			.should("have.attr", "value", "谢谢");
 	});
 });
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.realType("Albania");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+
+	it("has correct validity for typeMismatch- Email", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="Email"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("email");
+
+		cy.get("@input")
+			.should("have.value", "email");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("email@gmail.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+		it("has correct validity for typeMismatch- URL", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="URL"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("google");
+
+		cy.get("@input")
+			.should("have.value", "google");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("https://www.google.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: false },
+				validity: { typeMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
