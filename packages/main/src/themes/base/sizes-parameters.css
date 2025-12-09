@@ -64,9 +64,11 @@
 	--_ui5_datetime_timeview_phonemode_clocks_width: 24.5rem;
 	--_ui5_datetime_dateview_phonemode_margin_bottom: 0;
 
+	/* Popup */
+	--_ui5_popup_footer_height: 2.75rem;
+
 	/* Dialog */
 	--_ui5_dialog_content_min_height: 2.75rem;
-	--_ui5_dialog_footer_height: 2.75rem;
 
 	--_ui5_input_inner_padding: 0 0.625rem;
 	--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.625rem;
@@ -265,9 +267,11 @@
 	--_ui5_datetime_timeview_phonemode_clocks_width: 21.125rem;
 	--_ui5_datetime_dateview_phonemode_margin_bottom: 3.125rem;
 
+	/* Popup */
+	--_ui5_popup_footer_height: 2.5rem;
+
 	/* Dialog */
 	--_ui5_dialog_content_min_height: 2.5rem;
-	--_ui5_dialog_footer_height: 2.5rem;
 
 	/* Form */
 	--_ui5_form_item_min_height: 2rem;
