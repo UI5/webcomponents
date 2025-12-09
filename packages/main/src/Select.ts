@@ -690,7 +690,7 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleHomeKey(e);
 		} else if (isEnd(e)) {
 			this._handleEndKey(e);
-		} else if (isEnter(e)) {
+		} else if (isEnter(e) && !e.defaultPrevented) {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
 			this._handleArrowNavigation(e);
@@ -941,7 +941,7 @@ class Select extends UI5Element implements IFormInputElement {
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
 			option.focused = option.selected;
-			if (option.focused && isPhone()) {
+			if (option.focused) {
 				// on phone, the popover opens full screen (dialog)
 				// move focus to option to read out dialog header
 				option.focus();
@@ -962,6 +962,7 @@ class Select extends UI5Element implements IFormInputElement {
 			this._lastSelectedOption = this.options[this._selectedIndex];
 		}
 		this.fireDecoratorEvent("close");
+		this._applyFocus();
 	}
 
 	get hasCustomLabel() {
