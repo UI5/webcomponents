@@ -52,6 +52,7 @@ import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 import "@ui5/webcomponents-icons/dist/globe.js";
 import "@ui5/webcomponents-icons/dist/collaborate.js";
@@ -80,6 +81,7 @@ import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/user-settings.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
 import "@ui5/webcomponents-icons/dist/palette.js";
+import "@ui5/webcomponents-icons/dist/product.js";
 import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
@@ -294,11 +296,8 @@ const mobile2Button = document.getElementById("mobile2-button");
 const resetAllButton = document.getElementById("reset-all-button");
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
-const toast = document.getElementById("toastThemeSave");
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
-const themeSave =document.getElementById("themeSave");
-
 
 //Language and Region
 language.addEventListener("selection-change",  function (event) {
@@ -322,7 +321,7 @@ appearanceView.addEventListener("selection-change", (e) => {
 	const selectedItem = e.detail.item;
 			
 	if (selectedItem?.itemKey) {
-		window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+		setTheme(selectedItem.itemKey);
 	}
 });
 
@@ -338,10 +337,6 @@ mobile2Button.addEventListener("click", function () {
 
 resetAllButton.addEventListener("click", function () {
 	additionalDialog.open = true;
-});
-
-themeSave.addEventListener("click", function () {
-	toast.open = true;
 });
 
 resetPersonalization.addEventListener("click", function () {

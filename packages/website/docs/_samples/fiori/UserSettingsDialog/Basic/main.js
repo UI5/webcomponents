@@ -5,6 +5,7 @@ import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -30,6 +31,7 @@ import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/user-settings.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
 import "@ui5/webcomponents-icons/dist/palette.js";
+import "@ui5/webcomponents-icons/dist/product.js";
 import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
@@ -42,7 +44,7 @@ const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings
 const account = document.getElementById("account");
 const resetAllButton = document.getElementById("reset-all-button");
 // Theme change
-const appearanceView = document.getElementById("appearanceView");
+const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
 //Language and Region
 const languageRegion = document.getElementById("language-region-container");
 const language = document.getElementById("language");
@@ -56,10 +58,8 @@ const mobile2Button = document.getElementById("mobile2-button");
 
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
-const toast = [...document.getElementsByTagName("ui5-toast")][0];
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
-const themeSave =document.getElementById("themeSave");
 
 shellbar.addEventListener("ui5-profile-click", (event) => {
 	console.log(" menuShellBar ui5-profile-click")
@@ -104,9 +104,9 @@ appearanceView.addEventListener("selection-change", (e) => {
 	const selectedItem = e.detail.item;
 			
 	if (selectedItem?.itemKey) {
-		window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+		setTheme(selectedItem.itemKey);
 	}
-	});
+});
 
 dialogClosers.forEach(btn => {
 	btn.addEventListener("click", () => {
@@ -128,11 +128,6 @@ mobile1Button.addEventListener("click", function () {
 mobile2Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
 	mobileSecondPage.text = "Android";
-});
-
-
-themeSave.addEventListener("click", function () {
-	toast.open = true;
 });
 
 resetPersonalization.addEventListener("click", function () {
