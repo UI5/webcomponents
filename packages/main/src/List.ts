@@ -1419,10 +1419,7 @@ class List extends UI5Element {
 		const lastIndex = items.length - 1;
 		const currentIndex = this._itemNavigation._currentIndex;
 
-		if (currentIndex !== -1 && currentIndex === lastIndex) {
-			return true;
-		}
-		return false;
+		return currentIndex !== -1 && currentIndex === lastIndex;
 	}
 
 	getGrowingButton() {
