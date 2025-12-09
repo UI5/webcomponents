@@ -126,7 +126,7 @@ class ListItemCustom extends ListItem {
 
 	/**
 	 * Returns the invisible text span element used for accessibility announcements
-	 * @returns The invisible text span element or null if not found
+	 * @returns {HTMLElement | null} The HTMLElement representing the invisible text span used for accessibility announcements, or null if the element is not found in the shadow DOM
 	 * @private
 	 */
 	private get _invisibleTextSpan(): HTMLElement | null {
@@ -220,7 +220,7 @@ class ListItemCustom extends ListItem {
 	 * UI5 elements provide accessibilityInfo with description and children.
 	 * For elements without accessibilityInfo, we fall back to extracting text content.
 	 *
-	 * @param {Node | null} node The node to extract text from
+	 * @param {Node | null} nodeArg The node to extract text from
 	 * @returns {string} The extracted text
 	 * @private
 	 */
