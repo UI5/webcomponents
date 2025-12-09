@@ -1,6 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import {
-	isSpace, isEnter, isDelete, isF2, isF7, isUp, isDown,
+	isSpace, isEnter, isDelete, isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -22,7 +22,6 @@ import ListItemBase from "./ListItemBase.js";
 import type RadioButton from "./RadioButton.js";
 import type CheckBox from "./CheckBox.js";
 import type { IButton } from "./Button.js";
-import type List from "./List.js";
 import {
 	DELETE,
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
@@ -258,21 +257,10 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		const isInternalElementFocused = this._isTargetSelfFocusDomRef(e);
+		const isInternalElementFocused = e.target !== this.getFocusDomRef();
 
 		if ((isSpace(e) || isEnter(e)) && isInternalElementFocused) {
 			return;
-		}
-
-		// Handle Arrow Up/Down navigation between internal elements
-		const isArrowKey = isUp(e) || isDown(e);
-
-		if (isInternalElementFocused && isArrowKey) {
-			const offset = isUp(e) ? -1 : 1;
-			if (this._navigateToAdjacentItem(offset)) {
-				e.preventDefault();
-				return;
-			}
 		}
 
 		super._onkeydown(e);
@@ -286,10 +274,6 @@ abstract class ListItem extends ListItemBase {
 
 		if (isF2(e)) {
 			this._handleF2();
-		}
-
-		if (isF7(e)) {
-			this._handleF7(e);
 		}
 	}
 
@@ -354,13 +338,6 @@ abstract class ListItem extends ListItemBase {
 			DragRegistry.clearDraggedElement();
 			this.removeAttribute("data-moving");
 		}
-	}
-
-	_isTargetSelfFocusDomRef(e: KeyboardEvent): boolean {
-		const target = e.target as HTMLElement,
-			focusDomRef = this.getFocusDomRef();
-
-		return target !== focusDomRef;
 	}
 
 	/**
@@ -530,32 +507,6 @@ abstract class ListItem extends ListItemBase {
 		return this.shadowRoot!.querySelector("li");
 	}
 
-	_getList(): List | null {
-		return this.closest("[ui5-list]");
-	}
-
-	_handleF7(e: KeyboardEvent) {
-		const focusDomRef = this.getFocusDomRef()!;
-		const activeElement = getActiveElement();
-		const list = this._getList();
-
-		const focusables = this._getFocusableElements().length > 0;
-		if (!focusables) {
-			return;
-		}
-
-		e.preventDefault();
-
-		if (activeElement === focusDomRef) {
-			this._focusInternalElement(list);
-		} else {
-			if (activeElement) {
-				this._updateStoredFocusIndex(list, activeElement as HTMLElement);
-			}
-			focusDomRef.focus();
-		}
-	}
-
 	async _handleF2() {
 		const focusDomRef = this.getFocusDomRef()!;
 		const activeElement = getActiveElement();
@@ -578,65 +529,34 @@ abstract class ListItem extends ListItemBase {
 		return getTabbableElements(focusDomRef);
 	}
 
-	_focusInternalElement(list: List | null) {
+	_getFocusedElementIndex(): number {
+		const focusables = this._getFocusableElements();
+		const activeElement = getActiveElement() as HTMLElement;
+		return focusables.indexOf(activeElement);
+	}
+
+	_hasFocusableElements(): boolean {
+		return this._getFocusableElements().length > 0;
+	}
+
+	_isFocusOnInternalElement(): boolean {
+		const focusables = this._getFocusableElements();
+		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+		return currentElementIndex !== -1;
+	}
+
+	_focusInternalElement(targetIndex: number) {
 		const focusables = this._getFocusableElements();
 		if (!focusables.length) {
 			return;
 		}
 
-		const targetIndex = list?._lastFocusedElementIndex ?? 0;
 		const safeIndex = Math.min(targetIndex, focusables.length - 1);
 		const elementToFocus = focusables[safeIndex];
 
 		elementToFocus.focus();
 
-		if (list) {
-			list._lastFocusedElementIndex = safeIndex;
-		}
-	}
-
-	_updateStoredFocusIndex(list: List | null, activeElement: HTMLElement) {
-		if (!list) {
-			return;
-		}
-
-		const focusables = this._getFocusableElements();
-		const currentIndex = focusables.indexOf(activeElement);
-
-		if (currentIndex !== -1) {
-			list._lastFocusedElementIndex = currentIndex;
-		}
-	}
-
-	_navigateToAdjacentItem(offset: -1 | 1): boolean {
-		const list = this._getList();
-		if (!list) {
-			return false;
-		}
-
-		const focusables = this._getFocusableElements();
-		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
-		if (currentElementIndex === -1) {
-			return false;
-		}
-
-		const allItems = list.getItems().filter(item => "hasConfigurableMode" in item && item.hasConfigurableMode) as ListItem[];
-		let itemIndex = allItems.indexOf(this as ListItem) + offset;
-
-		while (itemIndex >= 0 && itemIndex < allItems.length) {
-			const targetFocusables = allItems[itemIndex]._getFocusableElements();
-
-			if (targetFocusables.length > 0) {
-				const elementIndex = Math.min(currentElementIndex, targetFocusables.length - 1);
-				targetFocusables[elementIndex].focus();
-				list._lastFocusedElementIndex = elementIndex;
-				return true;
-			}
-
-			itemIndex += offset;
-		}
-
-		return false;
+		return safeIndex;
 	}
 }
 
