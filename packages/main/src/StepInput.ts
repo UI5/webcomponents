@@ -98,13 +98,14 @@ type StepInputValueStateChangeEventDetail = {
  */
 @customElement({
 	tag: "ui5-step-input",
+	cldr: true,
 	formAssociated: true,
 	renderer: jsxRenderer,
 	styles: StepInputCss,
 	template: StepInputTemplate,
 	languageAware: true,
-	cldr: true,
 })
+	
 /**
  * Fired when the input operation has finished by pressing Enter or on focusout.
  * @public
@@ -395,7 +396,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
 				decimals: this.valuePrecision,
-				groupingEnabled: true,
+				groupingEnabled: true
 			});
 		}
 
@@ -561,7 +562,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	get _isValueWithCorrectPrecision() {
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = this.input?.value?.includes(".") ? "." : ",";
+		// @ts-ignore oFormatOptions is a private API of NumberFormat but we need it here to get the decimal separator
+		const delimiter = this.formatter?.oFormatOptions?.decimalSeparator || ".";
 		const numberParts = this.input?.value?.split(delimiter);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
@@ -654,32 +656,32 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		const { parsedValue, cursorPosition, stringValue: typedValue } = this._getValueOnkeyDown(e);
+		const cursorPosition = this._getCursorPosition();
+		const inputValue = this.innerInput.value;
+		const typedValue = this._getValueOnkeyDown(e, inputValue, cursorPosition!);
+		const parsedValue = this._parseNumber(typedValue);
+		const isValidTypedValue = this._isTypedValueValid(typedValue, parsedValue);
 
-		if (Number.isNaN(parsedValue) || /,{2,}/.test(typedValue)) {
-			preventDefault = true;
-		}
-
-		if (preventDefault) {
+		if (preventDefault || !isValidTypedValue) {
 			e.preventDefault();
+			return;
 		}
 
 		if (cursorPosition === 0 && isMinus(e)) {
-			this._updateValueAndValidate(this._parseNumber(typedValue));
+			this._updateValueAndValidate(parsedValue);
 		}
 	}
 
-	_getValueOnkeyDown(e: KeyboardEvent) {
-		const cursorPosition = this.input.getDomRef()!.querySelector("input")!.selectionStart;
-		const inputValue = this.innerInput.value;
-		const stringValue = `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
-		const parsedValue = this._parseNumber(stringValue);
+	_getCursorPosition() {
+		return this.input.getDomRef()!.querySelector("input")!.selectionStart;
+	}
 
-		return {
-			stringValue,
-			parsedValue,
-			cursorPosition,
-		};
+	_getValueOnkeyDown(e: KeyboardEvent,inputValue: string ,cursorPosition?: number) {
+		return `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+	}
+
+	_isTypedValueValid(typedValue: string, parsedValue: number) {
+		return !Number.isNaN(parsedValue) && !/, {2,}/.test(typedValue);
 	}
 
 	_decSpin() {
