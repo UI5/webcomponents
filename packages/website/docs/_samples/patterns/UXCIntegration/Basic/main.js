@@ -46,6 +46,9 @@ import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 
 import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -275,6 +278,9 @@ userMenu.addEventListener("sign-out-click", function (event) {
 const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
 
+// Theme change
+const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
+
 //Language and Region
 const languageRegion = document.getElementById("language-region-container");
 const language = document.getElementById("language");
@@ -309,6 +315,15 @@ regionSettings.forEach((settingsItem) => {
 	settingsItem.addEventListener("selection-change",  function (event) {
 		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
 	});
+});
+
+// Theme change
+appearanceView.addEventListener("selection-change", (e) => {
+	const selectedItem = e.detail.item;
+			
+	if (selectedItem?.itemKey) {
+		window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+	}
 });
 
 mobile1Button.addEventListener("click", function () {

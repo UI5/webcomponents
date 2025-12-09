@@ -1,4 +1,7 @@
 import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -38,6 +41,8 @@ const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
 const account = document.getElementById("account");
 const resetAllButton = document.getElementById("reset-all-button");
+// Theme change
+const appearanceView = document.getElementById("appearanceView");
 //Language and Region
 const languageRegion = document.getElementById("language-region-container");
 const language = document.getElementById("language");
@@ -93,6 +98,15 @@ resetAllButton.addEventListener("click", function () {
 language.addEventListener("selection-change",  function (event) {
 	additionalDialog.open = true;
 });
+
+// Theme change
+appearanceView.addEventListener("selection-change", (e) => {
+	const selectedItem = e.detail.item;
+			
+	if (selectedItem?.itemKey) {
+		window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+	}
+	});
 
 dialogClosers.forEach(btn => {
 	btn.addEventListener("click", () => {
