@@ -29,8 +29,7 @@ export default function ListTemplate(this: List) {
 				active={this.showBusyIndicatorOverlay}
 				class="ui5-list-busy-indicator"
 			>
-
-				<div class="ui5-list-scroll-container">
+				<div class="ui5-list-container">
 					<span tabindex={-1} aria-hidden="true" class="ui5-list-start-marker"></span>
 
 					{this.header.length > 0 && <slot name="header" />}
@@ -41,40 +40,42 @@ export default function ListTemplate(this: List) {
 						</header>
 					}
 
-					{this.hasData &&
-						<div id={`${this._id}-before`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
-					}
+					<div class="ui5-list-scroll-container">
 
-					<span id={`${this._id}-modeLabel`} class="ui5-hidden-text">{this.ariaLabelModeText}</span>
-
-					<ul id={`${this._id}-listUl`}
-						class="ui5-list-ul"
-						role={this.listAccessibleRole}
-						aria-label={this.ariaLabelTxt}
-						aria-labelledby={this.ariaLabelledBy}
-						aria-description={this.ariaDescriptionText}
-					>
-						<slot></slot>
-
-						{this.showNoDataText &&
-							<li tabindex={0} id={`${this._id}-nodata`} class="ui5-list-nodata" role="listitem">
-								<div id={`${this._id}-nodata-text`} class="ui5-list-nodata-text">
-									{this.noDataText}
-								</div>
-							</li>
+						{this.hasData &&
+							<div id={`${this._id}-before`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
 						}
-					</ul>
 
-					{ this.growsWithButton && moreRow.call(this) }
+						<span id={`${this._id}-modeLabel`} class="ui5-hidden-text">{this.ariaLabelModeText}</span>
 
-					{this.footerText &&
-						<footer id={`${this._id}-footer`} class="ui5-list-footer">{this.footerText}</footer>
-					}
+						<ul id={`${this._id}-listUl`}
+							class="ui5-list-ul"
+							role={this.listAccessibleRole}
+							aria-label={this.ariaLabelTxt}
+							aria-labelledby={this.ariaLabelledBy}
+							aria-description={this.ariaDescriptionText}
+						>
+							<slot></slot>
 
-					{this.hasData &&
-						<div id={`${this._id}-after`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
-					}
+							{this.showNoDataText &&
+								<li tabindex={0} id={`${this._id}-nodata`} class="ui5-list-nodata" role="listitem">
+									<div id={`${this._id}-nodata-text`} class="ui5-list-nodata-text">
+										{this.noDataText}
+									</div>
+								</li>
+							}
+						</ul>
 
+						{ this.growsWithButton && moreRow.call(this) }
+
+						{this.footerText &&
+							<footer id={`${this._id}-footer`} class="ui5-list-footer">{this.footerText}</footer>
+						}
+
+						{this.hasData &&
+							<div id={`${this._id}-after`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
+						}
+					</div>
 					<span tabindex={-1} aria-hidden="true" class="ui5-list-end-marker"></span>
 				</div>
 				<DropIndicator orientation="Horizontal" ownerReference={this}/>
