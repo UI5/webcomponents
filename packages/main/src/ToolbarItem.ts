@@ -99,6 +99,7 @@ class ToolbarItem extends UI5Element {
 
 	_isRendering = true;
 	_maxWidth = 0;
+	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 
 	eventsToCloseOverflow: string[] = [];
 
@@ -111,7 +112,7 @@ class ToolbarItem extends UI5Element {
 		"ui5-switch": ["change"],
 	}
 	onBeforeRendering(): void {
-		const slottedItem = this.getSlottedNodes("item")![0] as IOverflowToolbarItem;
+		const slottedItem = this.getSlottedNodes("item")[0] as IOverflowToolbarItem;
 		this.checkForWrapper();
 		this.attachCloseOverflowHandlers();
 		this._selfOverflowed = !!slottedItem?._selfOverflowed;
@@ -140,9 +141,9 @@ class ToolbarItem extends UI5Element {
 	checkForWrapper() {
 		if (this.tagName === "UI5-TOOLBAR-ITEM"
 			&& this.getSlottedNodes<IOverflowToolbarItem>("item").length
-			&& this.getSlottedNodes<IOverflowToolbarItem>("item")[0]!.hasToolbarWrapper) {
+			&& this.getSlottedNodes<IOverflowToolbarItem>("item")[0].hasToolbarWrapper) {
 			// eslint-disable-next-line no-console
-			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.getSlottedNodes<IOverflowToolbarItem>("item")[0]!.hasToolbarWrapper}.`);
+			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.getSlottedNodes<IOverflowToolbarItem>("item")[0].hasToolbarWrapper}.`);
 		}
 	}
 
@@ -157,9 +158,7 @@ class ToolbarItem extends UI5Element {
 		const closingEvents = this.getClosingEvents();
 		closingEvents.forEach(clEvent => {
 			if (!this.preventOverflowClosing) {
-				this.addEventListener(clEvent, () => {
-					this.fireDecoratorEvent("close-overflow");
-				});
+				this.addEventListener(clEvent, this.fireCloseOverflowRef);
 			}
 		});
 	}
@@ -167,10 +166,12 @@ class ToolbarItem extends UI5Element {
 	detachCloseOverflowHandlers() {
 		const closingEvents = this.getClosingEvents();
 		closingEvents.forEach(clEvent => {
-			this.removeEventListener(clEvent, () => {
-				this.fireDecoratorEvent("close-overflow");
-			});
+			this.removeEventListener(clEvent, this.fireCloseOverflowRef);
 		});
+	}
+
+	fireCloseOverflow() {
+		this.fireDecoratorEvent("close-overflow");
 	}
 	/**
 	* Defines if the width of the item should be ignored in calculating the whole width of the toolbar

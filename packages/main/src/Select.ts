@@ -39,6 +39,7 @@ import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMe
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import List from "./List.js";
+import type { IOverflowToolbarItem } from "./ToolbarItem.js";
 import type { ListItemClickEventDetail } from "./List.js";
 import {
 	VALUE_STATE_SUCCESS,
@@ -143,6 +144,7 @@ type SelectLiveChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/OptionCustom";`
  * @constructor
  * @extends UI5Element
+ * @implements {IOverflowToolbarItem}
  * @public
  * @csspart popover - Used to style the popover element
  * @since 0.8.0
@@ -215,7 +217,7 @@ type SelectLiveChangeEventDetail = {
 	bubbles: true,
 })
 
-class Select extends UI5Element implements IFormInputElement {
+class Select extends UI5Element implements IFormInputElement, IOverflowToolbarItem {
 	eventDetails!: {
 		"change": SelectChangeEventDetail,
 		"live-change": SelectLiveChangeEventDetail,
