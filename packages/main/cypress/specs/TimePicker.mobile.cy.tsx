@@ -125,6 +125,16 @@ describe("TimePicker on phone - general interactions", () => {
 			.ui5TimePickerGetClock("seconds")
 			.should("have.prop", "valueNow", 13);
 
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.shadow()
+			.find("[ui5-toggle-spin-button]")
+			.first()
+			.realClick()
+			.should("be.focused");
+
 		cy.realType("092233");
 
 		cy.get<TimePicker>("@timePicker")
