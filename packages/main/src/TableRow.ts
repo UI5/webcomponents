@@ -35,7 +35,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase {
+class TableRow extends TableRowBase<TableCell> {
 	/**
 	 * Defines the cells of the component.
 	 *
