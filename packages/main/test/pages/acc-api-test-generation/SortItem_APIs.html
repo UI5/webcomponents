@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 SortItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- DO NOT change, use as it is-->
+    <script type="importmap">
+      {
+        "imports": {"@ui5/webcomponents/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/","@ui5/webcomponents-ai/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/","@ui5/webcomponents-fiori/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/","@ui5/webcomponents-compat/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/","@ui5/webcomponents-base/jsx-runtime":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js","@ui5/webcomponents-base/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/","@ui5/webcomponents-icons/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/","@ui5/webcomponents-localization/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/","@ui5/webcomponents-theming/":"https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/","lit-html":"https://cdn.jsdelivr.net/npm/lit-html@2","lit-html/":"https://cdn.jsdelivr.net/npm/lit-html@2/","@zxing/library/":"https://cdn.jsdelivr.net/npm/@zxing/library@0/"}
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/SortItem.js";
+        import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="SortItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 SortItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Text Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using text property to define sort criteria names</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="j9012345678901234abcdef0123456789">
+                            <ui5-view-settings-dialog id="text-demo">
+                                <ui5-sort-item slot="sortItems" text="Name"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Date Created"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Last Modified"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Size"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Priority"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Category"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="text-btn">Show Sort Options</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see different sort criteria with various text values</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Selected Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using selected property to define pre-selected sort criteria</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="k90123456789012345abcdef01234567890">
+                            <ui5-view-settings-dialog id="selected-demo">
+                                <ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Publication Date" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Rating"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Price"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="selected-btn">Show Pre-selected Sort</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see a dialog with "Title" pre-selected as sort criteria</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Database Field Sort Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating sort items for typical database fields</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="l901234567890123456abcdef012345678901">
+                            <ui5-view-settings-dialog id="database-demo">
+                                <ui5-sort-item slot="sortItems" text="ID" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="First Name"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Last Name"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Email Address"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Department"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Hire Date"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Salary"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Performance Rating"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="database-btn">Show Database Field Sorting</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see comprehensive sorting options for employee data</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">E-commerce Sort Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Showcasing sort items commonly used in e-commerce applications</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="m9012345678901234567abcdef0123456789012">
+                            <ui5-view-settings-dialog id="ecommerce-demo">
+                                <ui5-sort-item slot="sortItems" text="Relevance" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Price: Low to High"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Price: High to Low"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Customer Rating"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Number of Reviews"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Newest Arrivals"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Best Sellers"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Brand Name"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="ecommerce-btn">Show E-commerce Sorting</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to explore typical product sorting options in online stores</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Interactive Sort Selection API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating dynamic sort option selection and order changes</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="n90123456789012345678abcdef01234567890123">
+                            <ui5-view-settings-dialog id="interactive-demo" sort-descending>
+                                <ui5-sort-item slot="sortItems" id="sort-name" text="Project Name"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" id="sort-status" text="Status"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" id="sort-due" text="Due Date" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" id="sort-progress" text="Progress"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" id="sort-owner" text="Project Owner"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" id="sort-priority" text="Priority Level"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="interactive-btn">Show Interactive Sort</ui5-button>
+                            <div class="mt-2 w-100">
+                                <div id="sort-status-display" class="small text-muted">Sort status will appear here...</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to open dialog, select different sort options and see the status update</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Complex Sort Combinations API</h2>
+                    <div class="text-muted fst-italic mb-3">Showcasing various sort item configurations with different selection states</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="o901234567890123456789abcdef012345678901234">
+                            <ui5-view-settings-dialog id="complex-demo">
+                                <ui5-sort-item slot="sortItems" text="Alphabetical (A-Z)"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Chronological (Oldest First)"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Chronological (Newest First)" selected></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Numerical (Ascending)"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Numerical (Descending)"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Custom Sort Order"></ui5-sort-item>
+                                <ui5-sort-item slot="sortItems" text="Random"></ui5-sort-item>
+                            </ui5-view-settings-dialog>
+                            <ui5-button id="complex-btn">Show Complex Sort Options</ui5-button>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see various sorting algorithms and ordering options</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Event handlers for opening dialogs
+        document.getElementById('text-btn').addEventListener('click', () => {
+            document.getElementById('text-demo').open = true;
+        });
+
+        document.getElementById('selected-btn').addEventListener('click', () => {
+            document.getElementById('selected-demo').open = true;
+        });
+
+        document.getElementById('database-btn').addEventListener('click', () => {
+            document.getElementById('database-demo').open = true;
+        });
+
+        document.getElementById('ecommerce-btn').addEventListener('click', () => {
+            document.getElementById('ecommerce-demo').open = true;
+        });
+
+        document.getElementById('interactive-btn').addEventListener('click', () => {
+            document.getElementById('interactive-demo').open = true;
+        });
+
+        document.getElementById('complex-btn').addEventListener('click', () => {
+            document.getElementById('complex-demo').open = true;
+        });
+
+        // Interactive sort selection monitoring
+        const sortStatusElement = document.getElementById('sort-status-display');
+        const interactiveDialog = document.getElementById('interactive-demo');
+
+        // Function to update sort status
+        function updateSortStatus() {
+            if (!sortStatusElement || !interactiveDialog) return;
+            
+            // Check all sort items for selection
+            const allSortItems = interactiveDialog.querySelectorAll('ui5-sort-item');
+            let selectedSort = null;
+            
+            allSortItems.forEach(item => {
+                if (item.selected) {
+                    selectedSort = item;
+                }
+            });
+            
+            const sortOrder = interactiveDialog.sortDescending ? 'Descending' : 'Ascending';
+            
+            if (selectedSort) {
+                const sortText = selectedSort.text || 'Unknown';
+                sortStatusElement.textContent = `Sorting by: ${sortText} (${sortOrder})`;
+            } else {
+                sortStatusElement.textContent = `No sort criteria selected (Order: ${sortOrder})`;
+            }
+        }
+
+        // Monitor sort selection changes via dialog events
+        if (interactiveDialog) {
+            interactiveDialog.addEventListener('confirm', (e) => {
+                const detail = e.detail;
+                const sortBy = detail.sortBy || '';
+                const sortOrder = detail.sortDescending ? 'Descending' : 'Ascending';
+                
+                if (sortBy) {
+                    sortStatusElement.textContent = `Sorting by: ${sortBy} (${sortOrder})`;
+                } else {
+                    sortStatusElement.textContent = `No sort criteria selected (Order: ${sortOrder})`;
+                }
+            });
+
+            interactiveDialog.addEventListener('cancel', () => {
+                sortStatusElement.textContent = `Sort operation cancelled`;
+            });
+            
+            // Initial status update
+            document.addEventListener('DOMContentLoaded', updateSortStatus);
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

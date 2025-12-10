@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 MenuSeparator API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Menu.js";
+        import "@ui5/webcomponents/dist/MenuItem.js";
+        import "@ui5/webcomponents/dist/MenuSeparator.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents-icons/dist/save.js";
+        import "@ui5/webcomponents-icons/dist/print.js";
+        import "@ui5/webcomponents-icons/dist/copy.js";
+        import "@ui5/webcomponents-icons/dist/paste.js";
+        import "@ui5/webcomponents-icons/dist/add.js";
+        import "@ui5/webcomponents-icons/dist/delete.js";
+        import "@ui5/webcomponents-icons/dist/settings.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="MenuSeparator API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 MenuSeparator Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Basic MenuSeparator API</h2>
+                    <div class="text-muted fst-italic mb-3">Using MenuSeparator to create visual separation between menu items</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6">
+                            <ui5-button id="basicBtn">Basic Separator Menu</ui5-button>
+                            <ui5-menu id="basicMenu" opener="basicBtn">
+                                <ui5-menu-item text="New Document" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="Open File"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="Save As..."></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Exit"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see horizontal line separators between menu item groups</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Multiple Separators API</h2>
+                    <div class="text-muted fst-italic mb-3">Using multiple MenuSeparators to organize complex menu structures</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7">
+                            <ui5-button id="multipleBtn">Multiple Separators Menu</ui5-button>
+                            <ui5-menu id="multipleMenu" opener="multipleBtn">
+                                <ui5-menu-item text="File Operations" icon="save"></ui5-menu-item>
+                                <ui5-menu-item text="New" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="Open"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Edit Operations"></ui5-menu-item>
+                                <ui5-menu-item text="Copy" icon="copy"></ui5-menu-item>
+                                <ui5-menu-item text="Paste" icon="paste"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Print Operations"></ui5-menu-item>
+                                <ui5-menu-item text="Print" icon="print"></ui5-menu-item>
+                                <ui5-menu-item text="Print Preview"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Settings" icon="settings"></ui5-menu-item>
+                                <ui5-menu-item text="Exit"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see menu with multiple separator sections</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Nested Menu Separators API</h2>
+                    <div class="text-muted fst-italic mb-3">Using MenuSeparators in nested sub-menus for hierarchical organization</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8">
+                            <ui5-button id="nestedBtn">Nested Separators Menu</ui5-button>
+                            <ui5-menu id="nestedMenu" opener="nestedBtn">
+                                <ui5-menu-item text="File" icon="save">
+                                    <ui5-menu-item text="New Document" icon="add"></ui5-menu-item>
+                                    <ui5-menu-item text="Open File"></ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Recent Files">
+                                        <ui5-menu-item text="Document1.txt"></ui5-menu-item>
+                                        <ui5-menu-item text="Document2.pdf"></ui5-menu-item>
+                                        <ui5-menu-separator></ui5-menu-separator>
+                                        <ui5-menu-item text="Clear Recent"></ui5-menu-item>
+                                    </ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+                                    <ui5-menu-item text="Save As..."></ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Import"></ui5-menu-item>
+                                    <ui5-menu-item text="Export"></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Edit">
+                                    <ui5-menu-item text="Undo"></ui5-menu-item>
+                                    <ui5-menu-item text="Redo"></ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Copy" icon="copy"></ui5-menu-item>
+                                    <ui5-menu-item text="Paste" icon="paste"></ui5-menu-item>
+                                    <ui5-menu-item text="Cut"></ui5-menu-item>
+                                    <ui5-menu-separator></ui5-menu-separator>
+                                    <ui5-menu-item text="Select All"></ui5-menu-item>
+                                </ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Exit"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Navigate through nested menus to see separators in sub-menus</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Separator Positioning API</h2>
+                    <div class="text-muted fst-italic mb-3">Using MenuSeparators at different positions within menu structure</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9">
+                            <ui5-button id="positionBtn">Separator Positions Menu</ui5-button>
+                            <ui5-menu id="positionMenu" opener="positionBtn">
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Top Item After Separator" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="Regular Item"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Middle Section Item 1" icon="copy"></ui5-menu-item>
+                                <ui5-menu-item text="Middle Section Item 2" icon="paste"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Another Middle Item" icon="print"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Bottom Item Before Separator" icon="settings"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see separators at top, middle, and bottom positions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Logical Grouping API</h2>
+                    <div class="text-muted fst-italic mb-3">Using MenuSeparators for logical grouping of related functionality</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0">
+                            <ui5-button id="groupingBtn">Logical Grouping Menu</ui5-button>
+                            <ui5-menu id="groupingMenu" opener="groupingBtn">
+                                <!-- Document Creation Group -->
+                                <ui5-menu-item text="New Document" icon="add"></ui5-menu-item>
+                                <ui5-menu-item text="New from Template"></ui5-menu-item>
+                                <ui5-menu-item text="New Project"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- File Operations Group -->
+                                <ui5-menu-item text="Open" additional-text="Ctrl+O"></ui5-menu-item>
+                                <ui5-menu-item text="Save" icon="save" additional-text="Ctrl+S"></ui5-menu-item>
+                                <ui5-menu-item text="Save All"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Import/Export Group -->
+                                <ui5-menu-item text="Import File"></ui5-menu-item>
+                                <ui5-menu-item text="Export as PDF"></ui5-menu-item>
+                                <ui5-menu-item text="Export as HTML"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Dangerous Actions Group -->
+                                <ui5-menu-item text="Delete File" icon="delete"></ui5-menu-item>
+                                <ui5-menu-item text="Reset All Settings"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see logical groups separated by functionality</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Context Menu Separators API</h2>
+                    <div class="text-muted fst-italic mb-3">Using MenuSeparators in context menu scenarios</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1">
+                            <ui5-button id="contextBtn">Context Menu</ui5-button>
+                            <ui5-menu id="contextMenu" opener="contextBtn">
+                                <!-- Primary Actions -->
+                                <ui5-menu-item text="Open"></ui5-menu-item>
+                                <ui5-menu-item text="Open With..."></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Edit Actions -->
+                                <ui5-menu-item text="Cut" additional-text="Ctrl+X"></ui5-menu-item>
+                                <ui5-menu-item text="Copy" icon="copy" additional-text="Ctrl+C"></ui5-menu-item>
+                                <ui5-menu-item text="Paste" icon="paste" additional-text="Ctrl+V"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Organization Actions -->
+                                <ui5-menu-item text="Rename"></ui5-menu-item>
+                                <ui5-menu-item text="Move to..."></ui5-menu-item>
+                                <ui5-menu-item text="Copy to..."></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Information Actions -->
+                                <ui5-menu-item text="Properties"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                
+                                <!-- Destructive Actions -->
+                                <ui5-menu-item text="Delete" icon="delete"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Click to see context menu with grouped actions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Accessibility Role API</h2>
+                    <div class="text-muted fst-italic mb-3">MenuSeparator provides proper ARIA separator role for screen readers</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2">
+                            <ui5-button id="accessibilityBtn">Accessibility Menu</ui5-button>
+                            <ui5-menu id="accessibilityMenu" opener="accessibilityBtn">
+                                <ui5-menu-item text="Accessible Item 1"></ui5-menu-item>
+                                <ui5-menu-item text="Accessible Item 2"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Screen Reader Announcement"></ui5-menu-item>
+                                <ui5-menu-item text="Keyboard Navigation"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="ARIA Support"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use screen reader to experience proper separator announcements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Non-Focusable Behavior API</h2>
+                    <div class="text-muted fst-italic mb-3">MenuSeparator is non-focusable and does not interfere with keyboard navigation</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-wrap gap-3 align-items-center" data-cy-acc-container-id="b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3">
+                            <ui5-button id="focusBtn">Focus Navigation Menu</ui5-button>
+                            <ui5-menu id="focusMenu" opener="focusBtn">
+                                <ui5-menu-item text="Focusable Item 1"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Focusable Item 2"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Focusable Item 3"></ui5-menu-item>
+                                <ui5-menu-separator></ui5-menu-separator>
+                                <ui5-menu-item text="Focusable Item 4"></ui5-menu-item>
+                            </ui5-menu>
+                        </div>
+                        <div class="test-instruction">Test instructions: Use arrow keys to navigate - focus skips over separators</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Menu button event handlers
+        document.getElementById('basicBtn').addEventListener('click', () => {
+            document.getElementById('basicMenu').open = true;
+        });
+
+        document.getElementById('multipleBtn').addEventListener('click', () => {
+            document.getElementById('multipleMenu').open = true;
+        });
+
+        document.getElementById('nestedBtn').addEventListener('click', () => {
+            document.getElementById('nestedMenu').open = true;
+        });
+
+        document.getElementById('positionBtn').addEventListener('click', () => {
+            document.getElementById('positionMenu').open = true;
+        });
+
+        document.getElementById('groupingBtn').addEventListener('click', () => {
+            document.getElementById('groupingMenu').open = true;
+        });
+
+        document.getElementById('contextBtn').addEventListener('click', () => {
+            document.getElementById('contextMenu').open = true;
+        });
+
+        document.getElementById('accessibilityBtn').addEventListener('click', () => {
+            document.getElementById('accessibilityMenu').open = true;
+        });
+
+        document.getElementById('focusBtn').addEventListener('click', () => {
+            document.getElementById('focusMenu').open = true;
+        });
+
+        // Log menu interactions for demonstration
+        const menus = [
+            'basicMenu', 'multipleMenu', 'nestedMenu', 'positionMenu', 
+            'groupingMenu', 'contextMenu', 'accessibilityMenu', 'focusMenu'
+        ];
+
+        menus.forEach(menuId => {
+            const menu = document.getElementById(menuId);
+            if (menu) {
+                menu.addEventListener('item-click', (event) => {
+                    console.log(`Menu ${menuId} item clicked:`, event.detail.text);
+                });
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

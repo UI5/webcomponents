@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 DynamicDateRange API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script data-ui5-config type="application/json">
+      {
+        "language": "en",
+        "fetchDefaultLanguage": true
+      }
+    </script>
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents/dist/Assets-fetch.js";
+        import "@ui5/webcomponents/dist/DynamicDateRange.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/Yesterday.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/Tomorrow.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/SingleDate.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";
+        import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="DynamicDateRange API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 DynamicDateRange Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Options Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using options property to define available date range options as comma-separated string</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0">
+                            <div>
+                                <ui5-label>Basic Options: TODAY, YESTERDAY, TOMORROW</ui5-label>
+                                <ui5-dynamic-date-range options="TODAY, YESTERDAY, TOMORROW"></ui5-dynamic-date-range>
+                            </div>
+                            <div>
+                                <ui5-label>Extended Options with Date Ranges</ui5-label>
+                                <ui5-dynamic-date-range options="TODAY, DATERANGE, LASTDAYS, NEXTWEEKS"></ui5-dynamic-date-range>
+                            </div>
+                            <div>
+                                <ui5-label>All Standard Options</ui5-label>
+                                <ui5-dynamic-date-range options="TODAY, YESTERDAY, TOMORROW, DATE, DATERANGE, LASTDAYS, LASTWEEKS, LASTMONTHS, NEXTDAYS, NEXTWEEKS, NEXTMONTHS"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Value Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using value property to set initial dynamic date range values programmatically</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1">
+                            <div>
+                                <ui5-label>Preset TODAY Value</ui5-label>
+                                <ui5-dynamic-date-range id="today-preset" options="TODAY, YESTERDAY, TOMORROW"></ui5-dynamic-date-range>
+                            </div>
+                            <div>
+                                <ui5-label>Preset Date Range Value</ui5-label>
+                                <ui5-dynamic-date-range id="daterange-preset" options="DATERANGE, LASTDAYS, NEXTWEEKS"></ui5-dynamic-date-range>
+                            </div>
+                            <div>
+                                <ui5-label>Preset Last 7 Days Value</ui5-label>
+                                <ui5-dynamic-date-range id="lastdays-preset" options="LASTDAYS, LASTWEEKS, LASTMONTHS"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Change Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when the input operation has finished by pressing Enter, on focusout, or when a value is selected in the popover</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2">
+                            <div>
+                                <ui5-label>Change Event Demonstration</ui5-label>
+                                <ui5-dynamic-date-range id="change-event" options="TODAY, YESTERDAY, DATERANGE, LASTDAYS"></ui5-dynamic-date-range>
+                                <div id="change-result" class="mt-2 fw-bold text-success">Event result will appear here</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Select different options or enter values to see change events</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">toDates Method API</h2>
+                    <div class="text-muted fst-italic mb-3">Using toDates method to convert DynamicDateRangeValue into concrete start and end Date objects</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3">
+                            <div>
+                                <ui5-label>Convert Value to Dates</ui5-label>
+                                <ui5-dynamic-date-range id="todates-demo" options="TODAY, LASTDAYS, DATERANGE, NEXTWEEKS"></ui5-dynamic-date-range>
+                                <ui5-button id="todates-btn" class="mt-2">Convert Current Value to Dates</ui5-button>
+                                <div id="todates-result" class="mt-2 fw-bold text-primary">Converted dates will appear here</div>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Select a value and click button to see date conversion</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Single Date Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating single date options like TODAY, YESTERDAY, TOMORROW</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4">
+                            <div>
+                                <ui5-label>Single Date Options</ui5-label>
+                                <ui5-dynamic-date-range options="TODAY, YESTERDAY, TOMORROW, DATE"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Date Range Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating date range options that require start and end dates</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5">
+                            <div>
+                                <ui5-label>Date Range Options</ui5-label>
+                                <ui5-dynamic-date-range options="DATERANGE"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Last Period Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating last period options like LASTDAYS, LASTWEEKS, LASTMONTHS</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6">
+                            <div>
+                                <ui5-label>Last Period Options</ui5-label>
+                                <ui5-dynamic-date-range options="LASTDAYS, LASTWEEKS, LASTMONTHS, LASTQUARTERS, LASTYEARS"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Next Period Options API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating next period options like NEXTDAYS, NEXTWEEKS, NEXTMONTHS</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7">
+                            <div>
+                                <ui5-label>Next Period Options</ui5-label>
+                                <ui5-dynamic-date-range options="NEXTDAYS, NEXTWEEKS, NEXTMONTHS, NEXTQUARTERS, NEXTYEARS"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing keyboard navigation including F4 and Alt+Down to open popover</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="d-flex flex-column gap-3" data-cy-acc-container-id="ddr9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8">
+                            <div>
+                                <ui5-label>Keyboard Navigation Test</ui5-label>
+                                <ui5-dynamic-date-range id="keyboard-test" options="TODAY, YESTERDAY, DATERANGE, LASTDAYS, NEXTWEEKS"></ui5-dynamic-date-range>
+                            </div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Use F4 or Alt+Down/Up arrow keys to open/close popover, Tab to navigate</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Set preset values
+        document.addEventListener('DOMContentLoaded', function() {
+            const todayPreset = document.getElementById('today-preset');
+            if (todayPreset) {
+                todayPreset.value = { operator: "TODAY" };
+            }
+
+            const daterangePreset = document.getElementById('daterange-preset');
+            if (daterangePreset) {
+                const startDate = new Date();
+                const endDate = new Date();
+                endDate.setDate(startDate.getDate() + 7);
+                daterangePreset.value = { 
+                    operator: "DATERANGE", 
+                    values: [startDate, endDate] 
+                };
+            }
+
+            const lastdaysPreset = document.getElementById('lastdays-preset');
+            if (lastdaysPreset) {
+                lastdaysPreset.value = { operator: "LASTDAYS", values: [7] };
+            }
+        });
+
+        // Change event demonstration
+        const changeEvent = document.getElementById('change-event');
+        const changeResult = document.getElementById('change-result');
+        
+        if (changeEvent && changeResult) {
+            changeEvent.addEventListener('change', () => {
+                const value = changeEvent.value;
+                if (value) {
+                    changeResult.textContent = `Changed: ${value.operator} with values: ${JSON.stringify(value.values || [])}`;
+                } else {
+                    changeResult.textContent = 'Value cleared';
+                }
+            });
+        }
+
+        // toDates method demonstration
+        const todatesDemo = document.getElementById('todates-demo');
+        const todatesBtn = document.getElementById('todates-btn');
+        const todatesResult = document.getElementById('todates-result');
+        
+        if (todatesBtn && todatesDemo && todatesResult) {
+            todatesBtn.addEventListener('click', () => {
+                if (todatesDemo.value) {
+                    try {
+                        const dates = todatesDemo.toDates(todatesDemo.value);
+                        if (dates && dates.length > 0) {
+                            const dateStrings = dates.map(date => date.toLocaleDateString());
+                            todatesResult.textContent = `Converted dates: ${dateStrings.join(' to ')}`;
+                        } else {
+                            todatesResult.textContent = 'No dates returned';
+                        }
+                    } catch (error) {
+                        todatesResult.textContent = `Error: ${error.message}`;
+                    }
+                } else {
+                    todatesResult.textContent = 'No value to convert';
+                }
+            });
+        }
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

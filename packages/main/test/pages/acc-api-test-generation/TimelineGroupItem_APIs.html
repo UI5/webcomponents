@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>UI5 TimelineGroupItem API Samples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2.15.0-rc.0/",
+          "@ui5/webcomponents-ai/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-ai@2.15.0-rc.0/",
+          "@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2.15.0-rc.0/",
+          "@ui5/webcomponents-compat/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-compat@2.15.0-rc.0/",
+          "@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/dist/jsx-runtime.js",
+          "@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2.15.0-rc.0/",
+          "@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2.15.0-rc.0/",
+          "@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2.15.0-rc.0/",
+          "@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2.15.0-rc.0/",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/",
+          "@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0/"
+        }
+      }
+    </script>
+    
+    <script type="module">
+        import "@ui5/webcomponents-fiori/dist/Timeline.js";
+        import "@ui5/webcomponents-fiori/dist/TimelineItem.js";
+        import "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js";
+        import "@ui5/webcomponents/dist/Button.js";
+        import "@ui5/webcomponents/dist/Label.js";
+        import "@ui5/webcomponents/dist/Link.js";
+        import "@ui5/webcomponents-icons/dist/employee.js";
+        import "@ui5/webcomponents-icons/dist/task.js";
+        import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+        import "@ui5/webcomponents-icons/dist/customer.js";
+        import "@ui5/webcomponents-icons/dist/phone.js";
+        import "@ui5/webcomponents-icons/dist/email.js";
+        import "@ui5/webcomponents-icons/dist/attachment.js";
+        import "@ui5/webcomponents-icons/dist/calendar.js";
+        import "@ui5/webcomponents-icons/dist/meeting-room.js";
+        import "@ui5/webcomponents-icons/dist/activities.js";
+        import "@ui5/webcomponents-icons/dist/sys-monitor.js";
+        import "@ui5/webcomponents-icons/dist/process.js";
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS for API-specific styling -->
+    <style>
+        .api-section {
+            border-left-width: 3px;
+        }
+        
+        .api-section.blue-accent {
+            border-left-color: #0d6efd;
+        }
+        
+        .test-instruction {
+            font-size: 0.75rem;
+            color: darkred;
+            font-weight: 500;
+        }
+        
+        .timeline-container {
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" aria-label="TimelineGroupItem API test samples">
+        <div class="container-fluid py-4">
+            <h1 class="display-5 text-dark mb-4">UI5 TimelineGroupItem Component API Samples</h1>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Items Slot API</h2>
+                    <div class="text-muted fst-italic mb-3">Using the items slot to define timeline items within a group container</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0">
+                            <ui5-timeline>
+                                <ui5-timeline-group-item group-name="Project Phase 1">
+                                    <ui5-timeline-item title-text="Planning" subtitle-text="Week 1-2" icon="calendar">
+                                        <p>Initial project planning and requirement gathering phase.</p>
+                                        <p><strong>Deliverables:</strong> Project charter, requirements document</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Design" subtitle-text="Week 3-4" icon="activities">
+                                        <p>System design and architecture planning phase.</p>
+                                        <p><strong>Deliverables:</strong> Design documents, wireframes</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Development Setup" subtitle-text="Week 5" icon="sys-monitor">
+                                        <p>Development environment setup and tooling configuration.</p>
+                                        <p><strong>Deliverables:</strong> Dev environment, CI/CD pipeline</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Click group header to expand/collapse the timeline group</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">GroupName Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using groupName property to set the text displayed in the group header</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item group-name="Q1 2024 Marketing Activities">
+                                    <ui5-timeline-item title-text="Campaign Launch" subtitle-text="January" icon="activities">
+                                        <p>Launch new product marketing campaign</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Social Media Push" subtitle-text="February" icon="phone">
+                                        <p>Intensive social media marketing activities</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item group-name="Q1 2024 Development Milestones">
+                                    <ui5-timeline-item title-text="Feature Complete" subtitle-text="February" icon="task">
+                                        <p>All planned features implemented and tested</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Bug Fixes" subtitle-text="March" icon="sys-monitor">
+                                        <p>Final bug fixing and performance optimization</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item group-name="Q1 2024 Customer Engagement">
+                                    <ui5-timeline-item title-text="Customer Feedback" subtitle-text="January-March" icon="customer">
+                                        <p>Collecting and analyzing customer feedback</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="User Training" subtitle-text="March" icon="meeting-room">
+                                        <p>Conducting user training sessions</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Notice how different group names are displayed in the timeline headers</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Collapsed Property API</h2>
+                    <div class="text-muted fst-italic mb-3">Using collapsed property to control the initial expanded/collapsed state of timeline groups</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item group-name="Expanded Group (default)" collapsed="false">
+                                    <ui5-timeline-item title-text="Visible Item 1" subtitle-text="Always visible" icon="employee">
+                                        <p>This group starts expanded by default</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Visible Item 2" subtitle-text="Always visible" icon="task">
+                                        <p>Items in expanded groups are immediately visible</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item group-name="Collapsed Group (initially hidden)" collapsed="true">
+                                    <ui5-timeline-item title-text="Hidden Item 1" subtitle-text="Click to reveal" icon="customer">
+                                        <p>This group starts collapsed - items are hidden</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Hidden Item 2" subtitle-text="Click to reveal" icon="phone">
+                                        <p>Click the group header to expand and see items</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item group-name="Another Expanded Group">
+                                    <ui5-timeline-item title-text="Another Visible Item" subtitle-text="Default expanded" icon="email">
+                                        <p>Groups are expanded by default when collapsed is not set</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Compare expanded vs collapsed groups; click headers to toggle states</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Toggle Event API</h2>
+                    <div class="text-muted fst-italic mb-3">Fired when a timeline group is expanded or collapsed by user interaction</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item id="toggle-demo-1" group-name="Interactive Group 1" collapsed="true">
+                                    <ui5-timeline-item title-text="Event Demo Item 1" subtitle-text="Toggle to see" icon="activities">
+                                        <p>This item becomes visible when group is expanded</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Event Demo Item 2" subtitle-text="Toggle to see" icon="calendar">
+                                        <p>Toggle events are fired when expanding/collapsing</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item id="toggle-demo-2" group-name="Interactive Group 2">
+                                    <ui5-timeline-item title-text="Another Event Item" subtitle-text="Click header above" icon="meeting-room">
+                                        <p>Each group fires its own toggle events</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                            <div id="toggle-result" class="mt-2 fw-bold text-success">Toggle events: None</div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Click group headers to see toggle events fired with group details</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Mixed Timeline Groups API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating timeline with both grouped and ungrouped items for flexible organization</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4">
+                            <ui5-timeline >
+                                <ui5-timeline-item title-text="Standalone Event" subtitle-text="Not grouped" icon="process">
+                                    <p>This timeline item is not part of any group</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-group-item group-name="Meeting Series" collapsed="false">
+                                    <ui5-timeline-item title-text="Kickoff Meeting" subtitle-text="Week 1" icon="meeting-room">
+                                        <p>Initial project kickoff with all stakeholders</p>
+                                        <ui5-link href="#">Meeting Minutes</ui5-link>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Progress Review" subtitle-text="Week 3" icon="sys-monitor">
+                                        <p>Mid-project progress review and status update</p>
+                                        <ui5-link href="#">Status Report</ui5-link>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-item title-text="Another Standalone" subtitle-text="Independent" icon="attachment">
+                                    <p>Another timeline item outside of groups</p>
+                                </ui5-timeline-item>
+                                <ui5-timeline-group-item group-name="Documentation Tasks" collapsed="true">
+                                    <ui5-timeline-item title-text="API Documentation" subtitle-text="Technical docs" icon="task">
+                                        <p>Complete API documentation and examples</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="User Guide" subtitle-text="User docs" icon="customer">
+                                        <p>Create comprehensive user guide and tutorials</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Notice how standalone items and grouped items coexist in the timeline</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Nested Timeline Content API</h2>
+                    <div class="text-muted fst-italic mb-3">TimelineGroupItem with rich content including buttons, links, and complex HTML structures</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item group-name="Project Deliverables & Actions">
+                                    <ui5-timeline-item title-text="Requirements Document" subtitle-text="Due: Jan 15" icon="attachment" name="Project Manager" name-clickable>
+                                        <div>
+                                            <p><strong>Status:</strong> Complete</p>
+                                            <p><strong>Description:</strong> Comprehensive requirements analysis including functional and non-functional requirements.</p>
+                                            <div class="d-flex gap-2 mt-2">
+                                                <ui5-button>Download PDF</ui5-button>
+                                                <ui5-link href="#">View Online</ui5-link>
+                                            </div>
+                                            <ul class="mt-2">
+                                                <li>Functional Requirements (25 pages)</li>
+                                                <li>Non-functional Requirements (10 pages)</li>
+                                                <li>Use Cases and Scenarios (15 pages)</li>
+                                            </ul>
+                                        </div>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Technical Specification" subtitle-text="Due: Jan 30" icon="sys-monitor" name="Lead Developer" name-clickable>
+                                        <div>
+                                            <p><strong>Status:</strong> In Progress (80% complete)</p>
+                                            <p><strong>Description:</strong> Detailed technical architecture and implementation specifications.</p>
+                                            <div class="alert alert-warning py-2">
+                                                <strong>Note:</strong> Pending final review from architecture team
+                                            </div>
+                                            <div class="d-flex gap-2 mt-2">
+                                                <ui5-button>Review Draft</ui5-button>
+                                                <ui5-button>Schedule Review</ui5-button>
+                                            </div>
+                                        </div>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Implementation Plan" subtitle-text="Due: Feb 5" icon="calendar" name="Scrum Master" name-clickable>
+                                        <div>
+                                            <p><strong>Status:</strong> Not Started</p>
+                                            <p><strong>Description:</strong> Sprint planning and resource allocation for development phases.</p>
+                                            <table class="table table-sm mt-2">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Phase</th>
+                                                        <th>Duration</th>
+                                                        <th>Resources</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Phase 1</td>
+                                                        <td>3 weeks</td>
+                                                        <td>4 developers</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Phase 2</td>
+                                                        <td>4 weeks</td>
+                                                        <td>6 developers</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Interact with buttons, links, and clickable names within grouped timeline items</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Keyboard Navigation with Groups API</h2>
+                    <div class="text-muted fst-italic mb-3">Testing keyboard navigation behavior within timeline groups: Tab, Arrow keys, Enter/Space</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item group-name="Keyboard Navigation Test Group">
+                                    <ui5-timeline-item title-text="Focusable Item A" subtitle-text="Tab to navigate" icon="employee" name="User A" name-clickable>
+                                        <p>Use Tab key to navigate between interactive elements</p>
+                                        <ui5-button>Action A</ui5-button>
+                                        <ui5-link href="#" class="ms-2">Link A</ui5-link>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Focusable Item B" subtitle-text="Arrow keys work" icon="task" name="User B" name-clickable>
+                                        <p>Arrow keys navigate between timeline items</p>
+                                        <ui5-button>Action B</ui5-button>
+                                        <ui5-link href="#" class="ms-2">Link B</ui5-link>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Focusable Item C" subtitle-text="Enter activates" icon="customer" name="User C" name-clickable>
+                                        <p>Enter and Space activate buttons and clickable names</p>
+                                        <ui5-button>Action C</ui5-button>
+                                        <ui5-link href="#" class="ms-2">Link C</ui5-link>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                        </div>
+                        <div class="test-instruction">Test instruction: Use Tab, Arrow keys, Enter/Space to navigate and activate elements within the group</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-start api-section blue-accent mb-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Multiple Groups Management API</h2>
+                    <div class="text-muted fst-italic mb-3">Demonstrating multiple timeline groups with independent collapse states and event handling</div>
+                    <div class="bg-light rounded p-3">
+                        <div class="timeline-container" data-cy-acc-container-id="tgi8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7">
+                            <ui5-timeline >
+                                <ui5-timeline-group-item id="group-alpha" group-name="Alpha Team Activities" collapsed="false">
+                                    <ui5-timeline-item title-text="Alpha Sprint Planning" subtitle-text="Monday 9 AM" icon="calendar">
+                                        <p>Sprint planning session for Alpha team</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Alpha Code Review" subtitle-text="Wednesday 2 PM" icon="sys-monitor">
+                                        <p>Weekly code review session</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item id="group-beta" group-name="Beta Team Activities" collapsed="true">
+                                    <ui5-timeline-item title-text="Beta Design Review" subtitle-text="Tuesday 10 AM" icon="activities">
+                                        <p>UI/UX design review for new features</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Beta Testing Session" subtitle-text="Friday 3 PM" icon="customer">
+                                        <p>User acceptance testing session</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                                <ui5-timeline-group-item id="group-gamma" group-name="Gamma Team Activities" collapsed="true">
+                                    <ui5-timeline-item title-text="Gamma Architecture Meeting" subtitle-text="Thursday 11 AM" icon="meeting-room">
+                                        <p>Technical architecture discussion</p>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Gamma Performance Review" subtitle-text="Friday 4 PM" icon="sys-monitor">
+                                        <p>Application performance analysis</p>
+                                    </ui5-timeline-item>
+                                </ui5-timeline-group-item>
+                            </ui5-timeline>
+                            <div id="multi-group-result" class="mt-2 fw-bold text-success">Group interactions: None</div>
+                        </div>
+                        <div class="test-instruction">Test instruction: Toggle different groups independently to see individual toggle events</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let toggleEventCount = 0;
+
+        // Toggle event handling for individual groups
+        const toggleDemo1 = document.getElementById('toggle-demo-1');
+        const toggleDemo2 = document.getElementById('toggle-demo-2');
+        const toggleResult = document.getElementById('toggle-result');
+
+        [toggleDemo1, toggleDemo2].forEach((group, index) => {
+            if (group && toggleResult) {
+                group.addEventListener('toggle', (event) => {
+                    toggleEventCount++;
+                    const groupName = event.target.groupName;
+                    const collapsed = event.target.collapsed;
+                    const state = collapsed ? 'collapsed' : 'expanded';
+                    toggleResult.innerHTML = `Toggle events: ${toggleEventCount}<br>Last: "${groupName}" was ${state}`;
+                });
+            }
+        });
+
+        // Multiple groups toggle tracking
+        const groupAlpha = document.getElementById('group-alpha');
+        const groupBeta = document.getElementById('group-beta');
+        const groupGamma = document.getElementById('group-gamma');
+        const multiGroupResult = document.getElementById('multi-group-result');
+
+        let multiGroupEvents = [];
+
+        [groupAlpha, groupBeta, groupGamma].forEach((group) => {
+            if (group && multiGroupResult) {
+                group.addEventListener('toggle', (event) => {
+                    const groupName = event.target.groupName;
+                    const collapsed = event.target.collapsed;
+                    const state = collapsed ? 'collapsed' : 'expanded';
+                    const timestamp = new Date().toLocaleTimeString();
+                    
+                    multiGroupEvents.push(`${timestamp}: ${groupName} ${state}`);
+                    
+                    // Keep only last 5 events
+                    if (multiGroupEvents.length > 5) {
+                        multiGroupEvents = multiGroupEvents.slice(-5);
+                    }
+                    
+                    multiGroupResult.innerHTML = `Group interactions:<br>${multiGroupEvents.join('<br>')}`;
+                });
+            }
+        });
+
+        // Name click event demonstrations
+        document.addEventListener('name-click', (event) => {
+            if (event.target.matches('ui5-timeline-item')) {
+                console.log('Name clicked:', event.target.name);
+                alert(`Clicked on: ${event.target.name}`);
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
