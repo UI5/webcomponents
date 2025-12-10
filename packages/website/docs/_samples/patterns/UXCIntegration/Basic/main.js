@@ -18,6 +18,8 @@ import "@ui5/webcomponents/dist/ComboBoxItem.js";
 import "@ui5/webcomponents/dist/RadioButton.js";
 import "@ui5/webcomponents/dist/CheckBox.js";
 import "@ui5/webcomponents/dist/Toast.js";
+import "@ui5/webcomponents/dist/Switch.js";
+
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";

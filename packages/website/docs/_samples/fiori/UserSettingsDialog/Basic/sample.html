@@ -12,6 +12,20 @@
 		}
 	</style>
 	<link rel="stylesheet" href="main.css">
+	<style>
+		.ui5-user-settings-appearance-view-additional-content-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 0.5rem;
+			width: 100%;
+		}
+		.ui5-user-settings-appearance-view-additional-content-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSmallSize);
+		}
+	</style>
 </head>
 
 <body style="background-color: var(--sapBackgroundColor)">
@@ -58,6 +72,16 @@
 
 	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
 		<ui5-user-settings-appearance-view text="Themes">
+			<div slot="additionalContent">
+				<div class="ui5-user-settings-appearance-view-additional-content-header">
+					<ui5-text>Optimize for Touch Input</ui5-text>
+					<ui5-switch></ui5-switch>
+				</div>
+				<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+					Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+					This is useful for hybrid devices that combine touch and mouse events.
+				</ui5-text>
+			</div>
 			<ui5-user-settings-appearance-view-group header-text="SAP Horizon">
 				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="SAP Morning Horizon"></ui5-user-settings-appearance-view-item>
 				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="SAP Evening Horizon"></ui5-user-settings-appearance-view-item>
