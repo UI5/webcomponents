@@ -394,8 +394,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get formatter(): NumberFormat {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
-				decimals: this.valuePrecision,
-				groupingEnabled: true,
+				decimals: this.valuePrecision
 			});
 		}
 
