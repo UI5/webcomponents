@@ -105,7 +105,6 @@ type StepInputValueStateChangeEventDetail = {
 	template: StepInputTemplate,
 	languageAware: true,
 })
-	
 /**
  * Fired when the input operation has finished by pressing Enter or on focusout.
  * @public
@@ -396,7 +395,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
 				decimals: this.valuePrecision,
-				groupingEnabled: true
+				groupingEnabled: true,
 			});
 		}
 
@@ -564,7 +563,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
 		// @ts-ignore oFormatOptions is a private API of NumberFormat but we need it here to get the decimal separator
 		const delimiter = this.formatter?.oFormatOptions?.decimalSeparator || ".";
-		const numberParts = this.input?.value?.split(delimiter);
+		const numberParts = this.input?.value?.split(delimiter as string);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
 		return decimalPartLength === this.valuePrecision;
@@ -664,7 +663,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 		if (preventDefault || !isValidTypedValue) {
 			e.preventDefault();
-			return;
 		}
 
 		if (cursorPosition === 0 && isMinus(e)) {
@@ -676,8 +674,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return this.input.getDomRef()!.querySelector("input")!.selectionStart;
 	}
 
-	_getValueOnkeyDown(e: KeyboardEvent,inputValue: string ,cursorPosition?: number) {
-		return `${inputValue.substring(0, cursorPosition!)}${e.key}${inputValue.substring(cursorPosition!)}`;
+	_getValueOnkeyDown(e: KeyboardEvent, inputValue: string, cursorPosition?: number) {
+		return `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
 	}
 
 	_isTypedValueValid(typedValue: string, parsedValue: number) {
