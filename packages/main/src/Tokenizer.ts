@@ -654,7 +654,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleBeforeOpen() {
 		const list = this._getList();
-		const firstListItem = list.querySelectorAll("[ui5-li]")[0]! as ListItem;
+		const firstListItem = list.querySelectorAll("[ui5-li]")[0] as ListItem;
 
 		list._itemNavigation.setCurrentItem(firstListItem);
 
