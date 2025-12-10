@@ -6,6 +6,7 @@ import type SearchField from "./SearchField.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
+import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 
 export type SearchFieldTemplateOptions = {
 	/**
@@ -20,6 +21,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 			<Button
 				class="ui5-shell-search-field-button"
 				icon={search}
+				loading={this.fieldLoading}
 				design={ButtonDesign.Transparent}
 				data-sap-focus-ref
 				onClick={this._handleSearchIconPress}
@@ -29,10 +31,15 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 			></Button>
 		) : (
 			<div class="ui5-search-field-root" role="search" onFocusOut={this._onFocusOutSearch}>
-				<div class="ui5-search-field-content">
+				<div class="search-field-busy-wrapper">
+					<BusyIndicator inert class="search-field-busy-indicator" active={this.fieldLoading}></BusyIndicator>
+				</div>
+				<div class="ui5-search-field-content"
+				>
 					{this.scopes?.length ? (
 						<>
 							<Select
+								inert={this.fieldLoading}
 								onChange={this._handleScopeChange}
 								class="sapUiSizeCompact ui5-search-field-select"
 								accessibleName={this._translations.scope}
@@ -60,6 +67,8 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 					<input
 						class="ui5-search-field-inner-input"
 						role="searchbox"
+						readonly={this.fieldLoading}
+						aria-busy={this.fieldLoading ? "true" : undefined}
 						aria-description={this.accessibleDescription}
 						aria-label={this.accessibleName || this._translations.searchFieldAriaLabel}
 						value={this.value}

@@ -61,6 +61,7 @@
 	margin-bottom: .5rem;
 }
 
+.search-field-busy-wrapper,
 .search-popover-busy-wrapper {
 	position: absolute;
 	left: 50%;
@@ -75,16 +76,19 @@
 	pointer-events: all;
 }
 
+:host([field-loading]) .search-field-busy-wrapper,
 :host([loading]) .search-popover-busy-wrapper {
 	display: flex;
 	width: 100%;
 	height: 100%;
 }
 
+.search-field-busy-wrapper [ui5-busy-indicator],
 .search-popover-busy-wrapper [ui5-busy-indicator] {
 	z-index: 1;
 }
 
+.search-field-busy-wrapper::after,
 .search-popover-busy-wrapper::after {
 	content: "";
 	position: absolute;
