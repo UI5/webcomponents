@@ -361,6 +361,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _displayValue() {
+		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
 		const value = this.input?.value && !this._isValueWithCorrectPrecision ? this.input.value : this._formatNumber(this.value);
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
 			return value
