@@ -617,6 +617,14 @@ class Calendar extends CalendarPart {
 	}
 
 	/**
+	 * Returns the focusable element inside the Calendar (the current picker)
+	 * @override
+	 */
+	getFocusDomRef() {
+		return this._currentPickerDOM as HTMLElement | undefined;
+	}
+
+	/**
 	 * The year clicked the "Previous" button in the header
 	 */
 	onHeaderPreviousPress() {
