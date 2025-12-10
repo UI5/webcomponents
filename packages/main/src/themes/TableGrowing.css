@@ -6,6 +6,7 @@
 	flex-direction: column;
 	cursor: pointer;
 	border-bottom: 1px solid var(--sapList_BorderColor);
+	background: var(--sapList_Background);
 }
 
 #button:focus {
