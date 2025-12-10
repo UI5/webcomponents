@@ -361,15 +361,16 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _displayValue() {
+		const value = this.input?.value && !this._isValueWithCorrectPrecision ? this.input.value : this._formatNumber(this.value);
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
-			return this._formatNumber(this.value);
+			return value
 		}
 
 		if (this.input && this.value === Number(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
 			return this.input.value;
 		}
 
-		return this._formatNumber(this.value);
+		return value;
 	}
 
 	get accInfo(): InputAccInfo {
