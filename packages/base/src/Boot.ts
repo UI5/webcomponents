@@ -91,7 +91,7 @@ const onThemeRegistered = (theme: string) => {
 	if (!booted) {
 		return;
 	}
-	
+
 	const currentTheme = getTheme();
 	const currentBaseTheme = getBaseTheme();
 

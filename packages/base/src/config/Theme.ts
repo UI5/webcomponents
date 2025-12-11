@@ -7,7 +7,7 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
-let curBaseTheme: string | undefined = undefined;
+let curBaseTheme: string | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
