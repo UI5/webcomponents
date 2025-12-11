@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "@cypress/mount-utils": "^4.1.2",
-    "cypress": "^15.3.0",
     "preact": "^10.25.4"
   },
   "peerDependencies": {
-    "@ui5/webcomponents-base": "^2.14.0"
+    "@ui5/webcomponents-base": "^2.14.0",
+    "cypress": "^15.3.0"
   }
 }
