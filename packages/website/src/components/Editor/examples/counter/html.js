@@ -3,7 +3,7 @@ export default `<!-- playground-fold -->
 <head>
 </head>
 
-<body style="background-color: var(--sapBackgroundColor); color: var(--sapTextColor);">
+<body style="background-color: var(--ui5-sapBackgroundColor); color: var(--ui5-sapTextColor);">
   <!-- playground-fold-end -->
 
   <my-counter>
