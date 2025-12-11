@@ -1,0 +1,65 @@
+.list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.625rem 0;
+	width: 100%;
+}
+
+.item-left {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex: 1;
+}
+
+/* Default: show cozy avatar, hide compact avatar */
+.avatar-cozy {
+	display: inline-block;
+}
+
+.avatar-compact {
+	display: none;
+}
+
+/* In compact mode: hide cozy avatar, show compact avatar */
+:host-context(.sapUiSizeCompact) .avatar-cozy,
+:host-context(.ui5-content-density-compact) .avatar-cozy,
+:host-context([data-ui5-compact-size]) .avatar-cozy {
+	display: none;
+}
+
+:host-context(.sapUiSizeCompact) .avatar-compact,
+:host-context(.ui5-content-density-compact) .avatar-compact,
+:host-context([data-ui5-compact-size]) .avatar-compact {
+	display: inline-block;
+}
+
+.item-texts {
+	display: flex;
+	flex-direction: column;
+}
+
+.item-title {
+	font-weight: 600;
+	font-size: var(--sapFontSize);
+	color: var(--sapList_TextColor);
+	margin: 0.5rem;
+}
+
+:host-context(.sapUiSizeCompact) .item-title,
+:host-context([data-ui5-compact-size]) .item-title {
+	font-size: var(--sapFontLargeSize);
+}
+
+.item-subtitle {
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSize);
+	margin: 0.5rem;
+}
+
+.item-right {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
