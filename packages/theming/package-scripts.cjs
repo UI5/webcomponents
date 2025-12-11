@@ -26,6 +26,6 @@ module.exports = {
 			postcss: `ui5nps-script "${TOOLS_LIB}/css-processors/css-processor-themes.mjs"`,
 			jsonImports: `ui5nps-script "${jsonImportsScript}" src/themes src/generated/json-imports`,
 		},
-		generateReport: `ui5nps-script "${generateReportScript}"`,
+		generateReport: `node "${generateReportScript}"`,
 	},
 };
