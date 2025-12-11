@@ -9,9 +9,9 @@ const require = createRequire(import.meta.url);
  * @returns
  */
 const getOverrideVersion = filePath => {
-    if (!filePath) {
-        return;
-    }
+	if (!filePath) {
+		return;
+	}
 
 	if (!filePath.includes(`overrides${path.sep}`)) {
 		return; // The "overrides/" directory is the marker
@@ -36,14 +36,22 @@ const getOverrideVersion = filePath => {
 	return overrideVersion;
 }
 
-const scopeVariables = (cssText, packageJSON, inputFile) => {
-    const escapeVersion = version => "v" + version?.replaceAll(/[^0-9A-Za-z\-_]/g, "-");
-    const versionStr = escapeVersion(getOverrideVersion(inputFile) || packageJSON.version);
+const scopeUi5Variables = (cssText, packageJSON, inputFile) => {
+	const escapeVersion = version => "v" + version?.replaceAll(/[^0-9A-Za-z\-_]/g, "-");
+	const versionStr = escapeVersion(getOverrideVersion(inputFile) || packageJSON.version);
+	const expr = /(--_?ui5)([^\,\:\)\s]+)/g;
+	let newText = cssText.replaceAll(expr, `$1-${versionStr}$2`);
 
-    const expr = /(--_?ui5)([^\,\:\)\s]+)/g;
-
-    return cssText.replaceAll(expr, `$1-${versionStr}$2`);
+	return newText.replaceAll("--sap", `--ui5-sap`);
 }
 
-export default scopeVariables;
+// Used with CSS text and SVG file content (illustrations)
+const scopeThemingVariables = (cssText) => {
+	return cssText.replaceAll("--sap", `--ui5-sap`);
+}
+
+export {
+	scopeUi5Variables,
+	scopeThemingVariables,
+};
 
