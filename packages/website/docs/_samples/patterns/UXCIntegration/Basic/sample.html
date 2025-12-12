@@ -40,10 +40,10 @@
 
             <ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 
-			<ui5-shellbar-search slot="searchField" id="search-scope" show-clear-icon placeholder="Search Apps, Products">
-				<ui5-search-scope text="All" selected slot="scopes"></ui5-search-scope>
-				<ui5-search-scope text="Apps" slot="scopes"></ui5-search-scope>
-				<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+			<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" show-clear-icon placeholder="Search Apps, Products">
+				<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 			</ui5-shellbar-search>
 
             <ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>

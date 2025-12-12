@@ -139,7 +139,7 @@
 
 		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
 
-		<ui5-shellbar-search slot="searchField">
+		<ui5-shellbar-search slot="searchField" scope-value="apps">
 			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
 			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
 			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
@@ -148,9 +148,9 @@
 			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
 			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
 
-			<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Apps" selected slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 		</ui5-shellbar-search>
 
 		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>

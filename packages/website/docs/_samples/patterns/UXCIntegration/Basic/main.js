@@ -408,7 +408,7 @@ const searchScope = document.getElementById("search-scope");
 createScopeItems();
 
 searchScope.addEventListener("ui5-scope-change", (event) => {
-    const scope = event.detail.scope.text === "All" ? "" : event.detail.scope.text.toLowerCase();
+    const scope = event.detail.scope.value === "all" ? "" : event.detail.scope.value;
 
     searchScope.items.forEach(item => {
         item.remove();
