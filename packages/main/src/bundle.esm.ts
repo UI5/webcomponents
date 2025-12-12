@@ -97,6 +97,7 @@ import Select from "./Select.js";
 import Option from "./Option.js";
 import CustomOption from "./OptionCustom.js";
 import Slider from "./Slider.js";
+import SliderScale from "./SliderScale.js";
 import SplitButton from "./SplitButton.js";
 import StepInput from "./StepInput.js";
 import RangeSlider from "./RangeSlider.js";

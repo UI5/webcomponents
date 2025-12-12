@@ -1,0 +1,21 @@
+:host {
+	height: .25rem;
+	display: inline-block;
+	position: relative;
+}
+
+.ui5-slider-scale-root {
+	height: 100%;
+	box-sizing: border-box;
+	border-radius: 0.25rem;
+	width: 100%;
+	background-color: var(--sapSlider_Background);
+}
+
+.ui5-slider-scale-progress {
+	position: absolute;
+	height: 100%;
+	top: 0;
+	border-radius: 0.25rem;
+	background-color: red;
+}

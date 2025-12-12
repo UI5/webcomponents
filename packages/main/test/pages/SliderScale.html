@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>UI5 Slider</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="./styles/Slider.css">
+</head>
+
+	<body class="slider1auto">
+		<section class="group">
+			<ui5-slider-scale style="width: 420px"></ui5-slider-scale>
+		</section>
+		<section class="group">
+			<ui5-slider-scale style="width: 420px" start-value="20" end-value="50"></ui5-slider-scale>
+		</section>
+		<section class="group">
+			<ui5-slider-scale style="width: 420px" end-value="40"></ui5-slider-scale>
+		</section>
+		<section class="group">
+			<ui5-slider-scale style="width: 420px" min="0" max="200" start-value="50" end-value="150"></ui5-slider-scale>
+		</section>
+	</body>
+</html>
