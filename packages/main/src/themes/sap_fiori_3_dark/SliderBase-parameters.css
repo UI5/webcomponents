@@ -2,6 +2,7 @@
 
 :root {
 	--_ui5_slider_inner_min_width: 4rem;
+	--_ui5_slider_handle_top: -0.6875rem;
 	--_ui5_range_slider_handle_background: transparent;
 	--_ui5_range_slider_root_hover_handle_bg: transparent;
 }
