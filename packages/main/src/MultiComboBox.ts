@@ -651,7 +651,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		console.log("here");
 		const { value } = (e.target as Input);
 		const matchingItem = this._getItems().find(item => item.text === value);
 
