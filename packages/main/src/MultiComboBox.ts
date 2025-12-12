@@ -628,6 +628,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._dialogInputValueState = this.valueState;
 		}
 
+		if (this.filterSelected) {
+			this.filterSelected = false;
+		}
+
 		this.value = value;
 		this._shouldFilterItems = true;
 		this.valueBeforeAutoComplete = value;
@@ -646,6 +650,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (!isEnter(e)) {
 			return;
 		}
+
 		const { value } = (e.target as Input);
 		const matchingItem = this._getItems().find(item => item.text === value);
 
