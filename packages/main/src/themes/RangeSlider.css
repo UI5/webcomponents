@@ -42,6 +42,7 @@
 
 .ui5-slider-progress {
   position: relative;
+  inset-inline-start: 0;
 }
 
 .ui5-slider-progress:focus::after {
@@ -52,8 +53,8 @@
 	position: absolute;
 	top: var(--_ui5_range_slider_progress_focus_top);
 	left: var(--_ui5_range_slider_progress_focus_left);
+	right: var(--_ui5_range_slider_progress_focus_right);
 	padding: var(--_ui5_range_slider_progress_focus_padding);
-	width: var(--_ui5_range_slider_progress_focus_width);
 	height: var(--_ui5_range_slider_progress_focus_height);
 	box-sizing: border-box;
 }
