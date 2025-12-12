@@ -570,6 +570,130 @@ describe("Items selection", () => {
             .find<ResponsivePopover>("[ui5-responsive-popover]")
             .ui5ResponsivePopoverOpened();
     });
+
+    it("Should disable the toggle button when there are no selected items", () => {
+        cy.mount(
+            <MultiComboBox>
+                <MultiComboBoxItem text="Cosy"></MultiComboBoxItem>
+                <MultiComboBoxItem text="Compact"></MultiComboBoxItem>
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "disabled");
+    });
+
+    it("Should enable the toggle button when there is selected item", () => {
+        cy.mount(
+            <MultiComboBox>
+                <MultiComboBoxItem text="Cosy" selected></MultiComboBoxItem>
+                <MultiComboBoxItem text="Compact"></MultiComboBoxItem>
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("not.have.attr", "disabled");
+    });
+
+    it("Should show only selected items on n-more click and toggle the button", () => {
+        cy.mount(
+            <MultiComboBox placeholder="Select options">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" selected />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 3);
+    });
+
+    it("Shows all items matching 'I' after clicking N-more and typing in the popover input", () => {
+        cy.mount(
+            <MultiComboBox placeholder="Select options">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 2);
+
+        cy.get("@respPopover")
+            .find("[ui5-input]")
+            .realClick()
+            .realType("I");
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("not.have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 4);
+    });
 });
 
 describe("Value state header", () => {
