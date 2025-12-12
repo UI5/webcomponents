@@ -364,7 +364,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
 		const value = this.input?.value && !this._isValueWithCorrectPrecision ? this.input.value : this._formatNumber(this.value);
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
-			return value
+			return value;
 		}
 
 		if (this.input && this.value === Number(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
@@ -396,7 +396,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get formatter(): NumberFormat {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
-				decimals: this.valuePrecision
+				decimals: this.valuePrecision,
 			});
 		}
 
