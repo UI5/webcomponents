@@ -165,9 +165,9 @@ class OpenUI5Support {
 			animationMode: config.getAnimationMode(),
 			language: config.getLanguage(),
 			theme: config.getTheme(),
-			themeRoot: config.getThemeRoot(),
+			themeRoot: typeof config.getThemeRoot === "function" ? config.getThemeRoot() : undefined,
 			rtl: config.getRTL(),
-			timezone: config.getTimezone(),
+			timezone: typeof config.getTimezone === "function" ? config.getTimezone() : undefined,
 			calendarType: config.getCalendarType(),
 			formatSettings: {
 				firstDayOfWeek: LocaleData ? LocaleData.getInstance(config.getLocale()).getFirstDayOfWeek() : undefined,
