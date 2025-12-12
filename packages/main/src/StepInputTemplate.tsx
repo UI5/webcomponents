@@ -13,6 +13,7 @@ export default function StepInputTemplate(this: StepInput) {
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
 			onFocusOut={this._onfocusout}
+			onWheel={this._onMouseWheel}
 		>
 			{/* Decrement Icon */}
 			{!this.readonly &&

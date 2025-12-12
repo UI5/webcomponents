@@ -25,11 +25,10 @@
 	<link rel="stylesheet" type="text/css" href="./styles/StepInput.css">
 </head>
 <body class="stepinput1auto">
-
 	<h3> StepInput</h3>
 	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
 
-	<div>
+	 <div>
 		<h3>StepInput in Cozy</h3>
 		<ui5-step-input id="stepInputCozy"
 			placeholder="Enter number"
@@ -168,6 +167,14 @@
 
 	<h3> 'change' event result</h3>
 	<ui5-input id="changeResult"></ui5-input>
+	<div>	
+		<h3>StepInput with large value and precision (thousands separator)</h3>
+		<ui5-step-input
+			class="stepinput2auto"
+			value="10000"
+			value-precision="2">
+		</ui5-step-input>
+	</div>
 
 	<section>
 			<h3>Form validation</h3>
@@ -177,7 +184,6 @@
 					min="5"
 					max="10"
 					step="0.05"
-					value="6"
 					value-precision="2"
 					required
 					id="formStepInput"></ui5-step-input>
