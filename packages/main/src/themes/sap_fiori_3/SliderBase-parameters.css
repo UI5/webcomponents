@@ -3,7 +3,7 @@
 :root {
 	--_ui5_slider_inner_min_width: 4rem;
 	--_ui5_range_slider_handle_background_focus: transparent;
-	--_ui5_slider_handle_top: -.875rem;
+	--_ui5_slider_handle_top: -0.8125rem;
 	--_ui5_range_slider_handle_background: transparent;
 	--_ui5_range_slider_handle_active_background: transparent;
 	--_ui5_slider_handle_background: var(--sapButton_Background);
@@ -13,7 +13,8 @@
 	--_ui5_slider_handle_width: 1.875rem;
 	--_ui5_slider_handle_height: 1.875rem;
 	--_ui5_slider_handle_box_sizing: border-box;
-	--_ui5_slider_tickmark_top: -.34375rem;
+	--_ui5_slider_tickmark_height: 1rem;
+	--_ui5_slider_tickmark_top: -0.375rem;
 }
 
 [data-ui5-compact-size],
