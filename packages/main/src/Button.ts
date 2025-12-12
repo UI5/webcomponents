@@ -31,6 +31,7 @@ import ButtonType from "./types/ButtonType.js";
 import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
 import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
+import type { IOverflowToolbarItem } from "./ToolbarItem.js";
 import ButtonTemplate from "./ButtonTemplate.js";
 import {
 	BUTTON_ARIA_TYPE_ACCEPT,
@@ -97,7 +98,7 @@ type ButtonClickEventDetail = {
  * @csspart endIcon - Used to style the end icon in the native button element
  * @constructor
  * @extends UI5Element
- * @implements { IButton }
+ * @implements { IButton, IOverflowToolbarItem }
  * @public
  */
 @customElement({
@@ -134,7 +135,7 @@ type ButtonClickEventDetail = {
 	bubbles: true,
 	cancelable: true,
 })
-class Button extends UI5Element implements IButton {
+class Button extends UI5Element implements IButton, IOverflowToolbarItem {
 	eventDetails!: {
 		"click": ButtonClickEventDetail,
 		"active-state-change": void,
@@ -712,6 +713,11 @@ class Button extends UI5Element implements IButton {
 
 	get shouldRenderBadge() {
 		return !!this.badge.length && (!!this.badge[0].text.length || this.badge[0].design === ButtonBadgeDesign.AttentionDot);
+	}
+
+	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
+	get hasToolbarWrapper() {
+		return "ToolbarButton";
 	}
 }
 
