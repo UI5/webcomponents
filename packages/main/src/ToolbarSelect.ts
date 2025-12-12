@@ -201,11 +201,7 @@ class ToolbarSelect extends ToolbarItem {
 	_syncOptions(selectedOption: HTMLElement): void {
 		const selectedOptionIndex = Number(selectedOption?.getAttribute("data-ui5-external-action-item-index"));
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
-			if (index === selectedOptionIndex) {
-				option.setAttribute("selected", "");
-			} else {
-				option.removeAttribute("selected");
-			}
+			option.selected = index === selectedOptionIndex;
 		});
 	}
 
