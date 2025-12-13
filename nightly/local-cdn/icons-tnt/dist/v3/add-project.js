@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "add-project";
+const pathData = "M108 461q11 0 18.5 7t7.5 18-7.5 18.5T108 512H77q-32 0-54.5-22.5T0 435V26Q0 15 7.5 7.5T26 0t18 7.5T51 26v409q0 11 7.5 18.5T77 461h31zm102-140q11 0 18.5 7t7.5 18-7.5 18.5T210 372h-74q-11 0-18.5-7.5T110 346t7.5-18 18.5-7h74zm-23-77q-11 0-18-7.5t-7-18.5 7-18.5 18-7.5h125q11 0 18.5 7.5T338 218t-7.5 18.5T312 244H187zm187 182h-60q-11 0-18.5-7.5T288 400t7.5-18.5T314 374h60v-60q0-11 7.5-18.5T400 288t18.5 7.5T426 314v60h60q11 0 18.5 7.5T512 400t-7.5 18.5T486 426h-60v60q0 11-7.5 18.5T400 512t-18.5-7.5T374 486v-60zm34-362q11 0 18.5 7.5T434 90t-7.5 18-18.5 7H136q-11 0-18.5-7T110 90t7.5-18.5T136 64h272z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/add-project";
+export { pathData, ltr, accData };
