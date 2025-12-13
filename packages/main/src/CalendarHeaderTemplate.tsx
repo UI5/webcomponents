@@ -16,6 +16,8 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onPrevButtonClick}
+				tabindex={this._previousButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipPrevButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowLeft}/>
 			</div>
@@ -93,6 +95,8 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onNextButtonClick}
+				tabindex={this._nextButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipNextButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowRight}/>
 			</div>
