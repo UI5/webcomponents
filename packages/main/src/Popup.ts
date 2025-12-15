@@ -270,10 +270,6 @@ abstract class Popup extends UI5Element {
 	}
 
 	onAfterRendering() {
-		renderFinished().then(() => {
-			this._updateMediaRange();
-		});
-
 		if (this.open) {
 			this._registerResizeHandler();
 		} else {
@@ -358,11 +354,6 @@ abstract class Popup extends UI5Element {
 
 		this._show();
 		this._opened = true;
-
-		if (this.getDomRef()) {
-			this._updateMediaRange();
-		}
-
 		this._addOpenedPopup();
 
 		this.open = true;
@@ -611,6 +602,8 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
+
+			requestAnimationFrame(this._updateMediaRange.bind(this));
 		}
 	}
 
