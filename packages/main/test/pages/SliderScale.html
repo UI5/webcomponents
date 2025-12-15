@@ -25,16 +25,43 @@
 
 	<body class="slider1auto">
 		<section class="group">
-			<ui5-slider-scale style="width: 420px"></ui5-slider-scale>
+			<ui5-slider-scale show-tickmarks style="width: 100%"></ui5-slider-scale>
 		</section>
 		<section class="group">
-			<ui5-slider-scale style="width: 420px" start-value="20" end-value="50"></ui5-slider-scale>
+			<ui5-slider-scale show-tickmarks style="width: 100%" start-value="20" end-value="50"></ui5-slider-scale>
 		</section>
 		<section class="group">
-			<ui5-slider-scale style="width: 420px" end-value="40"></ui5-slider-scale>
+			<ui5-slider-scale show-tickmarks style="width: 100%" end-value="40"></ui5-slider-scale>
 		</section>
 		<section class="group">
-			<ui5-slider-scale style="width: 420px" min="0" max="200" start-value="50" end-value="150"></ui5-slider-scale>
+			<ui5-slider-scale step="1" show-tickmark-labels show-tickmarks style="width: 100%" min="0" max="100" start-value="50" end-value="60"></ui5-slider-scale>
 		</section>
+
+		<section>
+			<ui5-slider min="0" max="100" step="2" show-tickmarks value="12"></ui5-slider>
+		</section>
+
+		<ui5-slider-scale id="temp" end-value="25" show-tickmark-labels></ui5-slider-scale>
+
+		<br>
+
+		<ui5-slider-scale style="height: 420px; margin-top: 3rem;" min="0" max="100" value="50" end-value="60" orientation="Vertical"></ui5-slider-scale>
+
+		<ui5-slider-scale step="1" show-tickmark-labels show-tickmarks style="height: 420px; margin-top: 3rem; margin-left: 3rem;" min="0" max="100" start-value="50" end-value="60" orientation="Vertical"></ui5-slider-scale>
+
+		<ui5-slider-scale id="temp2" show-tickmark-labels show-tickmarks style="height: 420px; margin-top: 3rem; margin-left: 3rem;" min="0" max="100" step="2" start-value="0" end-value="37" orientation="Vertical"></ui5-slider-scale>
+		<script>
+			document.getElementById('temp').tickmarks = [
+				{ value: 0, label: '0°C' },
+				{ value: 25, label: 'Room Temperature' },
+				{ value: 100, label: 'Boiling' }
+			];
+
+			document.getElementById('temp2').tickmarks = [
+				{ value: 0, label: '0°C' },
+				{ value: 25, label: 'Room Temperature' },
+				{ value: 100, label: 'Boiling' }
+			];
+		</script>
 	</body>
 </html>
