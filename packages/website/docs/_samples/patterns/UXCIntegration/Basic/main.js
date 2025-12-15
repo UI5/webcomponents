@@ -18,6 +18,8 @@ import "@ui5/webcomponents/dist/ComboBoxItem.js";
 import "@ui5/webcomponents/dist/RadioButton.js";
 import "@ui5/webcomponents/dist/CheckBox.js";
 import "@ui5/webcomponents/dist/Toast.js";
+import "@ui5/webcomponents/dist/Switch.js";
+
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -46,9 +48,13 @@ import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 
 import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 import "@ui5/webcomponents-icons/dist/globe.js";
 import "@ui5/webcomponents-icons/dist/collaborate.js";
@@ -77,6 +83,7 @@ import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/user-settings.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
 import "@ui5/webcomponents-icons/dist/palette.js";
+import "@ui5/webcomponents-icons/dist/product.js";
 import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
@@ -275,6 +282,9 @@ userMenu.addEventListener("sign-out-click", function (event) {
 const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
 
+// Theme change
+const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
+
 //Language and Region
 const languageRegion = document.getElementById("language-region-container");
 const language = document.getElementById("language");
@@ -288,11 +298,8 @@ const mobile2Button = document.getElementById("mobile2-button");
 const resetAllButton = document.getElementById("reset-all-button");
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
-const toast = document.getElementById("toastThemeSave");
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
-const themeSave =document.getElementById("themeSave");
-
 
 //Language and Region
 language.addEventListener("selection-change",  function (event) {
@@ -311,6 +318,15 @@ regionSettings.forEach((settingsItem) => {
 	});
 });
 
+// Theme change
+appearanceView.addEventListener("selection-change", (e) => {
+	const selectedItem = e.detail.item;
+			
+	if (selectedItem?.itemKey) {
+		setTheme(selectedItem.itemKey);
+	}
+});
+
 mobile1Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
 	mobileSecondPage.text = "iOS";
@@ -323,10 +339,6 @@ mobile2Button.addEventListener("click", function () {
 
 resetAllButton.addEventListener("click", function () {
 	additionalDialog.open = true;
-});
-
-themeSave.addEventListener("click", function () {
-	toast.open = true;
 });
 
 resetPersonalization.addEventListener("click", function () {
