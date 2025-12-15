@@ -9,6 +9,10 @@
 	padding: 0;
 }
 
+.ui5-user-settings-dialog::part(footer) {
+	padding: 0;
+}
+
 .ui5-user-settings-root {
 	display: flex;
 	height: 100%;

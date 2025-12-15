@@ -68,7 +68,7 @@
 
 .ui5-search-item-text {
 	display: inline-block;
-	font-size: var(--sapFontLargeSize);
+	font-size: var(--sapFontSize);
 	font-family: var(--sapFontFamily);
 	font-weight: normal;
 	color: var(--sapList_TextColor);

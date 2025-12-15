@@ -581,9 +581,47 @@
 		<ui5-suggestion-item text="上海"></ui5-suggestion-item>
 	</ui5-input>
 
-	<br>
+	<br><br>
+
+	<ui5-title>Form validation</ui5-title>
+	<form id="formValidation">
+		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		<ui5-input id="inputInForm" required type="URL">
+			<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Compact"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Condensed"></ui5-suggestion-item>
+		</ui5-input>
+		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+	</form>
+	<br><br>
 
 	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const inputInForm = document.getElementById('inputInForm');
+
+		btnCheckFormValidity.addEventListener('click', function () {
+			checkFormValidity('inputInForm');
+		});
+
+		inputInForm.addEventListener('ui5-change', function () {
+			setTimeout(() => {
+				checkFormValidity('inputInForm', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
 		const dynamicValueState = document.getElementById("dynamic-value-state");
 		const dynamicValueStateTrigger = document.getElementById("dynamic-value-state-trigger");
 

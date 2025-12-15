@@ -319,7 +319,15 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @private
 	 */
 	get _shouldHideHeader() {
-		return true;
+		return false;
+	}
+
+	/**
+	 * Returns the ID of the element to focus initially when the picker opens in phone mode
+	 * @private
+	 */
+	get _initialFocusId() {
+		return this._phoneMode ? `${this._id}-calendar` : undefined;
 	}
 
 	/**
