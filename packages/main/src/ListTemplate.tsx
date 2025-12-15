@@ -30,7 +30,6 @@ export default function ListTemplate(this: List) {
 				class="ui5-list-busy-indicator"
 			>
 				<div class="ui5-list-container">
-					<span tabindex={-1} aria-hidden="true" class="ui5-list-start-marker"></span>
 
 					{this.header.length > 0 && <slot name="header" />}
 
@@ -41,6 +40,7 @@ export default function ListTemplate(this: List) {
 					}
 
 					<div class="ui5-list-scroll-container">
+						<span tabindex={-1} aria-hidden="true" class="ui5-list-start-marker"></span>
 
 						{this.hasData &&
 							<div id={`${this._id}-before`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
@@ -75,8 +75,8 @@ export default function ListTemplate(this: List) {
 						{this.hasData &&
 							<div id={`${this._id}-after`} tabindex={0} role="none" class="ui5-list-focusarea"></div>
 						}
+						<span tabindex={-1} aria-hidden="true" class="ui5-list-end-marker"></span>
 					</div>
-					<span tabindex={-1} aria-hidden="true" class="ui5-list-end-marker"></span>
 				</div>
 				<DropIndicator orientation="Horizontal" ownerReference={this}/>
 			</BusyIndicator>
