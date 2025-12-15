@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* **ui5-button:** fix end-icon margin ([#12777](https://github.com/UI5/webcomponents/issues/12777)) ([4a52be6](https://github.com/UI5/webcomponents/commit/4a52be6b82adfd4e8fe91616e995a3ead15c6919)), closes [#12710](https://github.com/UI5/webcomponents/issues/12710)
+* **ui5-button:** set "type" property in accessibilityInfo with correct value. ([#12759](https://github.com/UI5/webcomponents/issues/12759)) ([337d97b](https://github.com/UI5/webcomponents/commit/337d97b485bfd9c6ea2fc3fd294e2d1e93370ea8)), closes [#12750](https://github.com/UI5/webcomponents/issues/12750)
+* **ui5-date-time-picker:** correct initial focus on small screens ([#12752](https://github.com/UI5/webcomponents/issues/12752)) ([1884137](https://github.com/UI5/webcomponents/commit/1884137632a0563f3a4eae45011216c8eb3c5435))
+* **ui5-datetime-picker:** show header on mobile mode ([#12746](https://github.com/UI5/webcomponents/issues/12746)) ([7bdad89](https://github.com/UI5/webcomponents/commit/7bdad891f1196aebb4a227b7bee1f6135cf5ce2d)), closes [#12724](https://github.com/UI5/webcomponents/issues/12724)
+* **ui5-popover:** render block layers in the correct order ([#12659](https://github.com/UI5/webcomponents/issues/12659)) ([43e545a](https://github.com/UI5/webcomponents/commit/43e545a4a5e486f19fb52ae18fe7c162680cf56e))
+* **ui5-step-input:** prevent false validation error with valuePrecision ([#12778](https://github.com/UI5/webcomponents/issues/12778)) ([08f8e35](https://github.com/UI5/webcomponents/commit/08f8e353a3e2f0ede3aa8239e3ef89dce7c5e70e))
+* **ui5-time-picker:** show header on mobile ([#12768](https://github.com/UI5/webcomponents/issues/12768)) ([8447e0d](https://github.com/UI5/webcomponents/commit/8447e0d052a5a380ff2e9e49fd3537678dd60da7)), closes [#12695](https://github.com/UI5/webcomponents/issues/12695)
+
+
+### Features
+
+* **ui5-li-custom:** enhance arrow key navigation ([#12700](https://github.com/UI5/webcomponents/issues/12700)) ([f672e13](https://github.com/UI5/webcomponents/commit/f672e130aff2db2bdea62ed05de52ebaeacc7ae8)), closes [#11987](https://github.com/UI5/webcomponents/issues/11987)
+* **ui5-link:** add default text slot ([#12781](https://github.com/UI5/webcomponents/issues/12781)) ([6bc4f0a](https://github.com/UI5/webcomponents/commit/6bc4f0a41de164f4aa504fff99719c361f953d80))
+
+
+
+
+
+# [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
+
+
+### Reverts
+
+* Revert "feat(framework): scope theming css variables with component packages (#12491)" (#12775) ([3385623](https://github.com/UI5/webcomponents/commit/33856235e357a3d4d0b9391eab2a83a5b3010556)), closes [#12491](https://github.com/UI5/webcomponents/issues/12491) [#12775](https://github.com/UI5/webcomponents/issues/12775)
+* Revert "feat(framework): introduce loadBaseThemingCSSVariables configuration (#12699)" (#12767) ([db375d3](https://github.com/UI5/webcomponents/commit/db375d30b9f4a7e07961fabbdcefdcdc78a93f46)), closes [#12699](https://github.com/UI5/webcomponents/issues/12699) [#12767](https://github.com/UI5/webcomponents/issues/12767)
+
+
+
+
+
 # [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
 
 
