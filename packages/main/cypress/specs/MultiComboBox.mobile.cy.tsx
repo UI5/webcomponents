@@ -193,6 +193,11 @@ describe("Typeahead", () => {
 
         cy.get("[ui5-multi-combobox]")
             .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
             .find("[ui5-responsive-popover]")
             .find("[ui5-input]")
             .as("respPopoverInput")
