@@ -518,12 +518,11 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get<Dialog>("#respPopover").ui5DialogOpened();
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverOpened();
 
 		cy.realPress("Escape");
 
-		cy.get("#respPopover")
-			.should('not.be.visible');
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -549,12 +548,12 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get<Dialog>("#respPopoverNoInitialFocus").ui5DialogOpened();
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus").ui5ResponsivePopoverOpened();
 
 		cy.realPress("Escape");
 
-		cy.get("#respPopoverNoInitialFocus")
-			.should('not.be.visible');
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openResPopoverNoInitialFocusButton")
 			.should('be.focused');
@@ -591,8 +590,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCSelect1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -631,8 +630,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCComboBox1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
