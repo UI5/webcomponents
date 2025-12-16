@@ -1,4 +1,6 @@
-import { isTabNext, isTabPrevious, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isTabNext, isTabPrevious, isF2, isF7, isUp, isDown,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ClassMap, AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
@@ -71,26 +73,28 @@ class ListItemCustom extends ListItem {
 	@slot({ type: Node, "default": true })
 	content!: Array<Node>;
 
-	async _onkeydown(e: KeyboardEvent) {
-		const isTab = isTabNext(e) || isTabPrevious(e);
+	_onkeydown(e: KeyboardEvent) {
 		const isFocused = this.matches(":focus");
+		const shouldHandle = isFocused
+			|| isTabNext(e) || isTabPrevious(e)
+			|| isF2(e) || isF7(e)
+			|| isUp(e) || isDown(e);
 
-		if (!isTab && !isFocused && !isF2(e)) {
-			return;
+		if (shouldHandle) {
+			super._onkeydown(e);
 		}
-
-		await super._onkeydown(e);
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		const isTab = isTabNext(e) || isTabPrevious(e);
 		const isFocused = this.matches(":focus");
+		const shouldHandle = isFocused
+			|| isTabNext(e) || isTabPrevious(e)
+			|| isF2(e) || isF7(e)
+			|| isUp(e) || isDown(e);
 
-		if (!isTab && !isFocused && !isF2(e)) {
-			return;
+		if (shouldHandle) {
+			super._onkeyup(e);
 		}
-
-		super._onkeyup(e);
 	}
 
 	get _accessibleNameRef(): string {
