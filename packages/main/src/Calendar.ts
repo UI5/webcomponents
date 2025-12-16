@@ -57,6 +57,10 @@ import {
 	CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT,
 	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_TITLE,
 	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_YEAR_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_PREVIOUS_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
 
@@ -306,6 +310,9 @@ class Calendar extends CalendarPart {
 
 	@property({ noAttribute: true })
 	_pickersMode: `${CalendarPickersMode}` = "DAY_MONTH_YEAR";
+
+	@property({ type: Boolean, noAttribute: true })
+	_isOpenedFromPopover?: boolean = false;
 
 	_valueIsProcessed = false;
 
@@ -842,8 +849,16 @@ class Calendar extends CalendarPart {
 		const monthLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON, headerMonthButtonText);
 		const yearLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_BUTTON, this._headerYearButtonText as string);
 		const yearRangeLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON, rangeStartText, rangeEndText);
-		const nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_NEXT_BUTTON_TITLE);
-		const prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_TITLE);
+		let nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_NEXT_BUTTON_TITLE);
+		let prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_TITLE);
+
+		if (this._currentPicker === "month") {
+			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_NEXT_BUTTON_TITLE);
+			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_PREVIOUS_BUTTON_TITLE);
+		} else if (this._currentPicker === "year") {
+			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE);
+			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE);
+		}
 
 		// Get shortcuts
 		const monthShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON_SHORTCUT);
@@ -856,11 +871,15 @@ class Calendar extends CalendarPart {
 			ariaLabelMonthButton: monthLabel,
 			ariaLabelYearButton: yearLabel,
 			ariaLabelYearRangeButton: yearRangeLabel,
+			ariaLabelNextButton: nextBtnLabel,
+			ariaLabelPrevButton: prevBtnLabel,
 
 			// Keyboard shortcuts for aria-keyshortcuts
 			keyShortcutMonthButton: monthShortcut,
 			keyShortcutYearButton: yearShortcut,
 			keyShortcutYearRangeButton: yearRangeShortcut,
+			keyShortcutNextButton: nextBtnShortcut,
+			keyShortcutPrevButton: prevBtnShortcut,
 
 			// Tooltips combining label and shortcut
 			tooltipMonthButton: `${monthLabel} (${monthShortcut})`,
