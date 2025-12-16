@@ -109,39 +109,74 @@ class PopoverResize {
 		}
 	}
 
-	/**
-	 * Gets the resize handle placement
-	 */
-	getResizeHandlePlacement(): `${ResizeHandlePlacement}` {
+	getResizeHandlePlacement() {
 		if (this._resizeHandlePlacement) {
 			return this._resizeHandlePlacement;
 		}
 
-		const opener = this._popover.getOpenerHTMLElement(this._popover.opener);
-		if (!opener) {
-			return ResizeHandlePlacement.BottomRight;
+		const popover = this._popover;
+		const offset = 2;
+		const isRtl = popover.isRtl;
+
+		const opener = popover.getOpenerHTMLElement(popover.opener);
+		const openerRect = opener!.getBoundingClientRect();
+		const popoverWrapperRect = popover.getBoundingClientRect();
+
+		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
+		const openerCY = Math.floor(openerRect.y + openerRect.height / 2);
+
+		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
+		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
+
+		const verticalAlign = popover.verticalAlign;
+		const actualHorizontalAlign = popover._actualHorizontalAlign;
+
+		const isPopoverWidthBiggerThanOpener = popoverWrapperRect.width > openerRect.width;
+		const isPopoverHeightBiggerThanOpener = popoverWrapperRect.height > openerRect.height;
+
+		if (isRtl) {
+			openerCX = -openerCX;
+			popoverCX = -popoverCX;
 		}
 
-		const openerRect = opener.getBoundingClientRect();
-		const isRtl = this._popover.isRtl;
-		const actualPlacement = this._popover.getActualPlacement(openerRect);
-		const verticalAlign = this._popover.verticalAlign;
-		const actualHorizontalAlign = this._popover._actualHorizontalAlign;
-
-		switch (actualPlacement) {
+		switch (popover.getActualPlacement(openerRect)) {
 		case PopoverActualPlacement.Left:
+			if (isPopoverHeightBiggerThanOpener) {
+				if (popoverCY > openerCY + offset) {
+					return ResizeHandlePlacement.BottomLeft;
+				}
+
+				return ResizeHandlePlacement.TopLeft;
+			}
+
 			if (verticalAlign === PopoverVerticalAlign.Top) {
 				return ResizeHandlePlacement.BottomLeft;
 			}
 
 			return ResizeHandlePlacement.TopLeft;
 		case PopoverActualPlacement.Right:
+			if (isPopoverHeightBiggerThanOpener) {
+				if (popoverCY + offset < openerCY) {
+					return ResizeHandlePlacement.TopRight;
+				}
+
+				return ResizeHandlePlacement.BottomRight;
+			}
+
 			if (verticalAlign === PopoverVerticalAlign.Bottom) {
 				return ResizeHandlePlacement.TopRight;
 			}
 
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Bottom:
+			if (isPopoverWidthBiggerThanOpener) {
+				if (popoverCX + offset < openerCX) {
+					return isRtl ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
+				}
+
+				return isRtl ? ResizeHandlePlacement.BottomLeft : ResizeHandlePlacement.BottomRight;
+			}
+
 			if (isRtl) {
 				if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
 					return ResizeHandlePlacement.BottomRight;
@@ -157,6 +192,14 @@ class PopoverResize {
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
 		default:
+			if (isPopoverWidthBiggerThanOpener) {
+				if (popoverCX + offset < openerCX) {
+					return isRtl ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
+				}
+
+				return isRtl ? ResizeHandlePlacement.TopLeft : ResizeHandlePlacement.TopRight;
+			}
+
 			if (isRtl) {
 				if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
 					return ResizeHandlePlacement.TopRight;

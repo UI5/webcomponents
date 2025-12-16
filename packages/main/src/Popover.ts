@@ -695,6 +695,10 @@ class Popover extends Popup {
 		};
 	}
 
+	get isVertical() : boolean {
+		return this.placement === PopoverPlacement.Top || this.placement === PopoverPlacement.Bottom;
+	}
+
 	getRTLCorrectionLeft() {
 		return parseFloat(window.getComputedStyle(this).left) - this.getBoundingClientRect().left;
 	}
@@ -778,7 +782,6 @@ class Popover extends Popup {
 
 	getActualPlacement(targetRect: DOMRect): `${PopoverActualPlacement}` {
 		const placement = this.placement;
-		const isVertical = placement === PopoverPlacement.Top || placement === PopoverPlacement.Bottom;
 		const popoverSize = this.getPopoverSize(!this.allowTargetOverlap);
 
 		let actualPlacement: PopoverActualPlacement = PopoverActualPlacement.Right;
@@ -802,7 +805,7 @@ class Popover extends Popup {
 		let clientHeight = document.documentElement.clientHeight;
 		let popoverHeight = popoverSize.height;
 
-		if (isVertical) {
+		if (this.isVertical) {
 			popoverHeight += this.hideArrow ? 0 : ARROW_SIZE;
 			clientHeight -= Popover.VIEWPORT_MARGIN;
 		}
