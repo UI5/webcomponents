@@ -38,8 +38,7 @@ function inlineUTF(properties) {
 }
 
 const convertToJSON = async (file, distPath) => {
-	const properties = PropertiesReader(file)._properties;
-	inlineUTF(properties);
+	const properties = inlineUTF(PropertiesReader(file)._properties);
 	const filename = path.basename(file, path.extname(file));
 	const language = filename.match(/^messagebundle_(.*?)$/)[1];
 	if (!allLanguages.includes(language)) {
