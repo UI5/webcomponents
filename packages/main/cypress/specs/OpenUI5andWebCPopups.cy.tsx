@@ -7,11 +7,20 @@ import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
 
+let OpenUI5Element;
+
 function onOpenUI5InitMethod(win) {
-	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], async (HTML, Button, Dialog, Popover, Input) => {
+	(win as any).sap.ui.require([
+		"sap/ui/core/Element",
+		"sap/ui/core/HTML",
+		"sap/m/Button",
+		"sap/m/Dialog",
+		"sap/m/Popover",
+		"sap/m/Input"
+	], async (Element, HTML, Button, Dialog, Popover, Input) => {
 
 		await OpenUI5Support.init();
-
+		OpenUI5Element = Element;
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
 			press: function () {
@@ -687,7 +696,15 @@ describe("ui5 and web components integration", () => {
 			.realClick();
 
 		cy.get("#openUI5DialogFinal")
-			.should('be.visible');
+			.should('be.visible')
+			.should(($dialog) => {
+				expect(OpenUI5Element).to.exist;
+
+				const dialogInstance = OpenUI5Element.getElementById($dialog.attr("id"));
+
+				expect(dialogInstance).to.exist
+				expect(dialogInstance.isOpen()).to.be.true;
+			});
 
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
