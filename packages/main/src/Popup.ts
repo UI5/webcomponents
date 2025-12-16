@@ -270,6 +270,8 @@ abstract class Popup extends UI5Element {
 	}
 
 	onAfterRendering() {
+		this._updateMediaRange();
+
 		if (this.open) {
 			this._registerResizeHandler();
 		} else {
