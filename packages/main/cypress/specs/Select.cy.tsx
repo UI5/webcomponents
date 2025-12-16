@@ -513,6 +513,85 @@ describe("Select - Accessibility", () => {
 			.find(".ui5-select-label-root")
 			.should("contain.text", "SelectedOption – ExtraInfo");
 	});
+
+	it("tests accessibilityInfo getter returns correct values", () => {
+		cy.mount(
+			<>
+				<span id="labelRef">Reference Label</span>
+				{/* Basic select with selected option */}
+				<Select id="basicSelect">
+					<Option value="Option1" selected>Option 1</Option>
+					<Option value="Option2">Option 2</Option>
+				</Select>
+				
+				{/* Select with accessibleName */}
+				<Select id="namedSelect" accessibleName="Select Name">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with accessibleNameRef */}
+				<Select id="refSelect" accessibleNameRef="labelRef">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with readonly and required attributes */}
+				<Select id="propsSelect" readonly required disabled>
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+			</>
+		);
+
+		// Test basic select
+		cy.get("#basicSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.role).to.equal("combobox");
+			expect(accessInfo.type).to.equal("Listbox");
+			expect(accessInfo.readonly).to.be.false;
+			expect(accessInfo.required).to.be.false;
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.be.undefined; // No aria-label
+		});
+
+		// Test select with accessibleName
+		cy.get("#namedSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Select Name"); // Aria label
+		});
+
+		// Test select with accessibleNameRef
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Reference Label"); // Aria label from ref
+		});
+
+		// Test select with readonly and required properties
+		cy.get("#propsSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.readonly).to.be.true;
+			expect(accessInfo.required).to.be.true;
+			expect(accessInfo.disabled).to.be.true;
+		});
+
+		// Update the referenced label and check if the label updates
+		cy.get("#labelRef").invoke("text", "Updated Reference");
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Text remains the same
+			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
+		});
+	});
 });
 
 describe("Select - Popover", () => {
