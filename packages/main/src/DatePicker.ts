@@ -404,12 +404,16 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.valueMissing) {
+			const format = this.getFormat();
 			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DatePicker.i18nBundle.getText(DATEPICKER_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+			const pattern = format ? format.oFormatOptions?.pattern : this._formatPattern;
+			return DatePicker.i18nBundle.getText(DATEPICKER_VALUE_MISSING, pattern as string);
 		}
 		if (validity.patternMismatch) {
-			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DatePicker.i18nBundle.getText(DATEPICKER_PATTERN_MISSMATCH, this.getFormat().oFormatOptions.pattern as string);
+			const format = this.getFormat();
+			// @ts-ignore oFormatOptions is private API of DateFormat
+			const pattern = format ? format.oFormatOptions?.pattern : this._formatPattern;
+			return DatePicker.i18nBundle.getText(DATEPICKER_PATTERN_MISSMATCH, pattern as string);
 		}
 		if (validity.rangeUnderflow) {
 			return DatePicker.i18nBundle.getText(DATEPICKER_RANGE_UNDERFLOW, this.minDate);
@@ -622,19 +626,35 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	getValueFromDisplayValue(value: string): string {
-		if (!this.getDisplayFormat().parse(value)) {
+		const displayFormat = this.getDisplayFormat();
+		const valueFormat = this.getValueFormat();
+
+		if (!displayFormat || !valueFormat) {
+			// CLDR not loaded yet
 			return value;
 		}
 
-		return this.getValueFormat().format(this.getDisplayFormat().parse(value));
+		if (!displayFormat.parse(value)) {
+			return value;
+		}
+
+		return valueFormat.format(displayFormat.parse(value));
 	}
 
 	getDisplayValueFromValue(value: string): string {
-		if (!this.getValueFormat().parse(value)) {
+		const valueFormat = this.getValueFormat();
+		const displayFormat = this.getDisplayFormat();
+
+		if (!valueFormat || !displayFormat) {
+			// CLDR not loaded yet
 			return value;
 		}
 
-		return this.getDisplayFormat().format(this.getValueFormat().parse(value));
+		if (!valueFormat.parse(value)) {
+			return value;
+		}
+
+		return displayFormat.format(valueFormat.parse(value));
 	}
 
 	/**
@@ -702,7 +722,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return true;
 		}
 
-		return !!this.getFormat().parse(value);
+		const format = this.getFormat();
+		if (!format) {
+			// CLDR data not loaded yet
+			return false;
+		}
+
+		return !!format.parse(value);
 	}
 
 	/**
@@ -715,7 +741,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return true;
 		}
 
-		return !!this.getValueFormat().parse(value);
+		const format = this.getValueFormat();
+		if (!format) {
+			// CLDR data not loaded yet
+			return false;
+		}
+
+		return !!format.parse(value);
 	}
 
 	/**
@@ -728,7 +760,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return true;
 		}
 
-		return !!this.getDisplayFormat().parse(value);
+		const format = this.getDisplayFormat();
+		if (!format) {
+			// CLDR data not loaded yet
+			return false;
+		}
+
+		return !!format.parse(value);
 	}
 
 	/**
@@ -801,7 +839,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return value;
 		}
 
-		return this.getFormat().format(this.getFormat().parse(value, true), true); // it is important to both parse and format the date as UTC
+		const format = this.getFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return value;
+		}
+
+		return format.format(format.parse(value, true), true); // it is important to both parse and format the date as UTC
 	}
 
 	/**
@@ -809,7 +853,14 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @protected
 	 */
 	normalizeFormattedValue(value: string) {
-		if (!this.getValueFormat().parse(value, true)) {
+		const format = this.getValueFormat();
+
+		if (!format) {
+			// CLDR not loaded yet
+			return "";
+		}
+
+		if (!format.parse(value, true)) {
 			return "";
 		}
 
@@ -817,7 +868,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return value;
 		}
 
-		return this.getValueFormat().format(this.getValueFormat().parse(value, true), true); // it is important to both parse and format the date as UTC
+		return format.format(format.parse(value, true), true); // it is important to both parse and format the date as UTC
 	}
 
 	/**
@@ -825,17 +876,31 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @protected
 	 */
 	normalizeDisplayValue(value: string) {
-		if (value === "" || !this.getDisplayFormat().parse(value, true)) {
+		const format = this.getDisplayFormat();
+
+		if (!format) {
+			// CLDR not loaded yet
 			return value;
 		}
 
-		return this.getDisplayFormat().format(this.getDisplayFormat().parse(value, true), true); // it is important to both parse and format the date as UTC
+		if (value === "" || !format.parse(value, true)) {
+			return value;
+		}
+
+		return format.format(format.parse(value, true), true); // it is important to both parse and format the date as UTC
 	}
 
 	get _lastDayOfTheYear() {
 		const currentYear = UI5Date.getInstance().getFullYear();
 		const lastDayOfTheYear = UI5Date.getInstance(currentYear, 11, 31, 23, 59, 59);
-		return this.getFormat().format(lastDayOfTheYear);
+		const format = this.getFormat();
+
+		if (!format) {
+			// CLDR not loaded yet - return ISO format as fallback
+			return `${currentYear}-12-31`;
+		}
+
+		return format.format(lastDayOfTheYear);
 	}
 
 	/**
@@ -863,7 +928,15 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get displayValue(): string {
-		if (!this.getValueFormat().parse(this.value, true)) {
+		const valueFormat = this.getValueFormat();
+		const displayFormat = this.getDisplayFormat();
+
+		if (!valueFormat || !displayFormat) {
+			// CLDR not loaded yet
+			return this.value;
+		}
+
+		if (!valueFormat.parse(this.value, true)) {
 			return this.value;
 		}
 
@@ -875,7 +948,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return this.liveValue!;
 		}
 
-		return this.getDisplayFormat().format(this.getValueFormat().parse(this.value, true), true);
+		return displayFormat.format(valueFormat.parse(this.value, true), true);
 	}
 
 	get accInfo(): InputAccInfo {
@@ -978,7 +1051,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get _calendarPickersMode() {
-		const format = this.getFormat() as DateFormat & { aFormatArray: Array<{ type: string }> };
+		const format = this.getFormat() as DateFormat & { aFormatArray: Array<{ type: string }> } | null;
+
+		if (!format) {
+			// CLDR not loaded yet - default to most common mode
+			return CalendarPickersMode.DAY_MONTH_YEAR;
+		}
+
 		const patternSymbolTypes = format.aFormatArray.map(patternSymbolSettings => {
 			return patternSymbolSettings.type.toLowerCase();
 		});
@@ -1029,7 +1108,14 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @returns The date as string
 	 */
 	formatValue(date: Date): string {
-		return this.getValueFormat().format(date);
+		const format = this.getValueFormat();
+
+		if (!format) {
+			// CLDR not loaded yet - return ISO format as fallback
+			return date.toISOString().split("T")[0];
+		}
+
+		return format.format(date);
 	}
 
 	_togglePicker(): void {
@@ -1047,11 +1133,25 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @default null
 	 */
 	get dateValue(): Date | null {
-		return this.liveValue ? this.getValueFormat().parse(this.liveValue) as Date : this.getValueFormat().parse(this.value) as Date;
+		const format = this.getValueFormat();
+
+		if (!format) {
+			// CLDR not loaded yet
+			return null;
+		}
+
+		return this.liveValue ? format.parse(this.liveValue) as Date : format.parse(this.value) as Date;
 	}
 
 	get dateValueUTC(): Date | null {
-		return this.liveValue ? this.getValueFormat().parse(this.liveValue, true) as Date : this.getValueFormat().parse(this.value) as Date;
+		const format = this.getValueFormat();
+
+		if (!format) {
+			// CLDR not loaded yet
+			return null;
+		}
+
+		return this.liveValue ? format.parse(this.liveValue, true) as Date : format.parse(this.value) as Date;
 	}
 
 	get styles() {

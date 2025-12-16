@@ -90,12 +90,16 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.valueMissing) {
+			const format = this.getFormat();
 			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DateRangePicker.i18nBundle.getText(DATERANGE_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+			const pattern = format ? format.oFormatOptions.pattern : this._formatPattern;
+			return DateRangePicker.i18nBundle.getText(DATERANGE_VALUE_MISSING, pattern as string);
 		}
 		if (validity.patternMismatch) {
+			const format = this.getFormat();
 			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DateRangePicker.i18nBundle.getText(DATERANGE_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+			const pattern = format ? format.oFormatOptions.pattern : this._formatPattern;
+			return DateRangePicker.i18nBundle.getText(DATERANGE_PATTERN_MISMATCH, pattern as string);
 		}
 		if (validity.rangeUnderflow) {
 			return DateRangePicker.i18nBundle.getText(DATERANGE_UNDERFLOW, this.minDate);
@@ -163,7 +167,15 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	get _tempTimestamp() {
-		return this._tempValue && (this.getValueFormat().parse(this._tempValue, true) as Date).getTime() / 1000; // valueformat
+		if (!this._tempValue) {
+			return undefined;
+		}
+		const format = this.getValueFormat();
+		if (!format) {
+			return undefined;
+		}
+		const parsedDate = format.parse(this._tempValue, true) as Date;
+		return parsedDate ? parsedDate.getTime() / 1000 : undefined;
 	}
 
 	/**
@@ -227,7 +239,13 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const lastDayOfTheYear = UI5Date.getInstance(currentYear, 11, 31, 23, 59, 59);
 		const sevenDaysBeforeLastDayOfYear = UI5Date.getInstance(currentYear, 11, 24, 23, 59, 59);
 
-		return `${this.getFormat().format(sevenDaysBeforeLastDayOfYear)} ${this._effectiveDelimiter} ${this.getFormat().format(lastDayOfTheYear)}`;
+		const format = this.getFormat();
+		if (!format) {
+			// CLDR not loaded yet - return ISO format as fallback
+			return `${currentYear}-12-24 ${this._effectiveDelimiter} ${currentYear}-12-31`;
+		}
+
+		return `${format.format(sevenDaysBeforeLastDayOfYear)} ${this._effectiveDelimiter} ${format.format(lastDayOfTheYear)}`;
 	}
 
 	/**
@@ -440,8 +458,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_splitValueByDelimiter(value: string) {
 		const valuesArray: Array<string> = [];
 		const partsArray = value.split(this._prevDelimiter || this._effectiveDelimiter);
+		const format = this.getValueFormat();
 		// if format successfully parse the value, the value contains only single date
-		if (this.getValueFormat().parse(value)) {
+		if (format && format.parse(value)) {
 			valuesArray[0] = partsArray.join(this._effectiveDelimiter);
 			valuesArray[1] = "";
 		} else {
@@ -484,8 +503,15 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		}
 
 		const dateStrings = this._splitValueByDelimiter(value); // at least one item guaranteed due to the checks above (non-empty and valid)
+		const format = this.getValueFormat();
+		if (!format) {
+			return undefined;
+		}
 
-		const parsedDate = this.getValueFormat().parse(dateStrings[0], true) as Date;
+		const parsedDate = format.parse(dateStrings[0], true) as Date;
+		if (!parsedDate) {
+			return undefined;
+		}
 
 		return parsedDate.getTime() / 1000;
 	}
@@ -502,7 +528,14 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		let dateStrings = this._splitValueByDelimiter(value);
 		dateStrings = dateStrings.filter(str => str !== " "); // remove empty strings
 		if (dateStrings[1]) {
-			const parsedDate = this.getValueFormat().parse(dateStrings[1], true) as Date;
+			const format = this.getValueFormat();
+			if (!format) {
+				return undefined;
+			}
+			const parsedDate = format.parse(dateStrings[1], true) as Date;
+			if (!parsedDate) {
+				return undefined;
+			}
 
 			return parsedDate.getTime() / 1000;
 		}
@@ -516,7 +549,11 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		}
 
 		if (value) {
-			const parsedDate = this.getDisplayFormat().parse(value, true) as Date;
+			const format = this.getDisplayFormat();
+			if (!format) {
+				return undefined;
+			}
+			const parsedDate = format.parse(value, true) as Date;
 
 			return parsedDate.getTime() / 1000;
 		}

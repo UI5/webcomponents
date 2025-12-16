@@ -366,8 +366,9 @@ class Calendar extends CalendarPart {
 
 		if (this.selectionMode === CalendarSelectionMode.Range) {
 			const range = this.dates.find(date => date.hasAttribute("ui5-date-range"));
-			const startDate = range && range.startValue && this.getFormat().parse(range.startValue, true) as Date;
-			const endDate = range && range.endValue && this.getFormat().parse(range.endValue, true) as Date;
+			const format = this.getFormat();
+			const startDate = range && range.startValue && format ? format.parse(range.startValue, true) as Date : null;
+			const endDate = range && range.endValue && format ? format.parse(range.endValue, true) as Date : null;
 
 			if (startDate) {
 				selectedDates.push(startDate.getTime() / 1000);
@@ -394,7 +395,11 @@ class Calendar extends CalendarPart {
 	 * @private
 	 */
 	_setSelectedDates(selectedDates: Array<number>) {
-		const selectedUTCDates = selectedDates.map(timestamp => this.getFormat().format(UI5Date.getInstance(timestamp * 1000), true));
+		const format = this.getFormat();
+		if (!format) {
+			return;
+		}
+		const selectedUTCDates = selectedDates.map(timestamp => format.format(UI5Date.getInstance(timestamp * 1000), true));
 
 		if (this.selectionMode === CalendarSelectionMode.Range) {
 			// Create tags for the selected dates that don't already exist in DOM
@@ -418,7 +423,7 @@ class Calendar extends CalendarPart {
 					});
 			}
 		} else {
-			const valuesInDOM = this._selectedDatesTimestamps.map(timestamp => this.getFormat().format(UI5Date.getInstance(timestamp * 1000)));
+			const valuesInDOM = this._selectedDatesTimestamps.map(timestamp => format.format(UI5Date.getInstance(timestamp * 1000)));
 
 			// Remove all elements for dates that are no longer selected
 			this.dates
@@ -442,7 +447,11 @@ class Calendar extends CalendarPart {
 	}
 
 	_isValidCalendarDate(dateString: string): boolean {
-		const date = this.getFormat().parse(dateString);
+		const format = this.getFormat();
+		if (!format) {
+			return false;
+		}
+		const date = format.parse(dateString);
 		return !!date;
 	}
 
@@ -478,8 +487,13 @@ class Calendar extends CalendarPart {
 		const uniqueDates = new Set();
 		const uniqueSpecialDates: Array<SpecialCalendarDateT> = [];
 
+		const format = this.getFormat();
+		if (!format) {
+			return uniqueSpecialDates;
+		}
+
 		validSpecialDates.forEach(date => {
-			const dateFromValue = this.getFormat().parse(date.value) as Date | UI5Date;
+			const dateFromValue = format.parse(date.value) as Date | UI5Date;
 			const timestamp = dateFromValue.getTime();
 
 			if (!uniqueDates.has(timestamp)) {
@@ -738,9 +752,13 @@ class Calendar extends CalendarPart {
 	}
 
 	_fireEventAndUpdateSelectedDates(selectedDates: Array<number>) {
+		const format = this.getFormat();
+		if (!format) {
+			return;
+		}
 		const datesValues = selectedDates.map(timestamp => {
 			const calendarDate = CalendarDateComponent.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
-			return this.getFormat().format(calendarDate.toUTCJSDate(), true);
+			return format.format(calendarDate.toUTCJSDate(), true);
 		});
 
 		const defaultPrevented = !this.fireDecoratorEvent("selection-change", { timestamp: this.timestamp, selectedDates: [...selectedDates], selectedValues: datesValues });
