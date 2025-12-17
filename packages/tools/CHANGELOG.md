@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.1](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.17.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* **build:** fix legacy (hbs templates) build flow on Windows ([d09bad6](https://github.com/UI5/webcomponents/commit/d09bad66ef29be2472f3f9202416d2eca2317511))
+
+
+
+
+
 # [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
 
 
