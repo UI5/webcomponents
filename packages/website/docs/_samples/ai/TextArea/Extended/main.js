@@ -270,7 +270,6 @@ function stopGeneration() {
 	stopTypingAnimation();
 	currentGenerationIndex += 1;
 	
-	// Save the stopped generation if there is content
 	const stoppedValue = textarea.value;
 	if (stoppedValue.trim()) {
 		const action = currentActionInProgress || 'generate';
@@ -284,8 +283,6 @@ function stopGeneration() {
 			timestamp: new Date().toISOString()
 		});
 
-		// Restore the previous content
-		textarea.value = contentBeforeGeneration;
 		currentIndexHistory = versionHistory.length - 1;
 		buildMenuFromConfig();
 		updateComponentState();
