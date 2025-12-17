@@ -61,6 +61,7 @@ import {
 	TIMEPICKER_PATTERN_MISSMATCH,
 	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
 	TIMEPICKER_OPEN_ICON_TITLE,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -832,6 +833,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	get shouldDisplayValueStateMessageOnDesktop() {
 		return this.valueStateMessage.length > 0 && !this.open && !this._isMobileDevice;
+	}
+
+	get _headerTitleText() {
+		return this.ariaLabelText || TimePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get showHeader() {
+		return isPhone();
+	}
+
+	/**
+	 * Defines whether the dialog on mobile should have header
+	 * @private
+	 */
+	get _shouldHideHeader() {
+		return !this.showHeader && !this.hasValueStateText;
 	}
 
 	/**

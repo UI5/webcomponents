@@ -25,8 +25,8 @@ import {
 	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
 })
-abstract class TableRowBase extends UI5Element {
-	cells!: Array<TableCellBase>;
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+	cells!: Array<TCell>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;

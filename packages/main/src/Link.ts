@@ -2,6 +2,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -267,6 +268,15 @@ class Link extends UI5Element implements ITabbable {
 	 */
 	@property()
 	endIcon?: string;
+
+	/**
+	 * Defines the text of the component.
+	 *
+	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
+	 * @public
+	 */
+	@slot({ type: Node, "default": true })
+	text!: Array<Node>;
 
 	@property({ noAttribute: true })
 	_rel: string | undefined;

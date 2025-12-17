@@ -9,10 +9,10 @@
     --_ui5_dynamic_page_header_padding_M: 1rem 2rem;
     --_ui5_dynamic_page_header_padding_L: 1rem 2rem;
     --_ui5_dynamic_page_header_padding_XL: 1rem 3rem;
-    --_ui5_dynamic_page_content_padding_S: 2rem 1rem 0;
-    --_ui5_dynamic_page_content_padding_M: 2rem 2rem 0;
-    --_ui5_dynamic_page_content_padding_L: 1rem 2rem 0;
-    --_ui5_dynamic_page_content_padding_XL: 1rem 3rem 0;
+    --_ui5_dynamic_page_content_padding_S: 1rem 0 0;
+    --_ui5_dynamic_page_content_padding_M: 1rem 1rem 0;
+    --_ui5_dynamic_page_content_padding_L: 1rem 1rem 0;
+    --_ui5_dynamic_page_content_padding_XL: 1rem 2rem 0;
 
     --ui5_dynamic_page_background:  var(--sapBackgroundColor);
 }

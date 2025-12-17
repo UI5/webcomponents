@@ -13,9 +13,10 @@ on:
           - 'stable'
           - 'hotfix'
           - 'experimental'
+          - 'v1'
         default: 'rc'
       new_version:
-        description: 'version (stable and hotfix only)'
+        description: 'version (relevant for stable, hotfix, and v1)'  # Updated description
         required: false
         default: ''
         type: string
@@ -48,7 +49,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -132,7 +133,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -200,7 +201,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -244,7 +245,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -268,3 +269,46 @@ jobs:
       - name: Publish
         run: |
           yarn lerna publish from-git --yes --dist-tag experimental --pre-dist-tag experimental
+
+  # ✅ Job 5: V1 Release Flow
+  v1-release:
+    if: ${{ github.event.inputs.release_type == 'v1' && github.event.inputs.new_version != '' }}
+    permissions:
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn ci:releasebuild
+        
+      - name: Version Bump
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+            git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
+            git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
+            yarn lerna version ${{ github.event.inputs.new_version || '' }} \
+                --conventional-graduate \
+                --force-conventional-graduate \
+                --yes \
+                --exact \
+                --create-release github
+
+      - name: Publish
+        run: |
+          yarn lerna publish from-git --yes --dist-tag "v1"

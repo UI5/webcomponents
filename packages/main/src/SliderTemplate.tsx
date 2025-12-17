@@ -64,8 +64,12 @@ export function handles(this: Slider) {
 				max={this.max}
 				editable={this.editableTooltip}
 				followRef={this.shadowRoot?.querySelector("#handle1") as HTMLElement}
+				valueState={this.tooltipValueState}
 				onChange={this._onTooltipChange}
-				onForwardFocus={this._onTooltopForwardFocus}
+				onKeyDown={this._onTooltipKeydown}
+				onFocusChange={this._onTooltipFocusChange}
+				onOpen={this._onTooltipOpen}
+				onInput={this._onTooltipInput}
 			>
 			</SliderTooltip>
 		</div>

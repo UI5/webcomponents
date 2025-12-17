@@ -1,4 +1,4 @@
-import { getTheme as getConfiguredTheme, getLoadBaseThemingCSSVariables as getConfiguredLoadBaseThemingCSSVariables } from "../InitialConfiguration.js";
+import { getTheme as getConfiguredTheme } from "../InitialConfiguration.js";
 import { reRenderAllUI5Elements } from "../Render.js";
 import applyTheme from "../theming/applyTheme.js";
 import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
@@ -7,7 +7,6 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
-let loadBaseThemingCSSVariables: boolean | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
@@ -59,36 +58,6 @@ const getDefaultTheme = (): string => {
 };
 
 /**
- * Returns the current configuration for loading base theming CSS variables.
- *
- * @public
- * @since 2.17.0
- * @returns {boolean}
- */
-const getLoadBaseThemingCSSVariables = () => {
-	if (loadBaseThemingCSSVariables === undefined) {
-		loadBaseThemingCSSVariables = getConfiguredLoadBaseThemingCSSVariables();
-	}
-
-	return loadBaseThemingCSSVariables;
-};
-
-/**
- * Configures whether to load base theming CSS variables.
- *
- * - When set to `true` (default), base theming CSS variables are loaded.
- * - When set to `false`, base theming CSS variables are not loaded.
- *
- * **Note:** This method should be called before the boot process.
- *
- * @public
- * @since 2.17.0
- */
-const setLoadBaseThemingCSSVariables = (value: boolean) => {
-	loadBaseThemingCSSVariables = value;
-};
-
-/**
  * Returns if the given theme name is the one currently applied.
  * @private
  * @param {string} theme
@@ -129,6 +98,4 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
-	getLoadBaseThemingCSSVariables,
-	setLoadBaseThemingCSSVariables,
 };
