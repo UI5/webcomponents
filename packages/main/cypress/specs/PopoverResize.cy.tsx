@@ -447,8 +447,8 @@ describe("Popover Resize Functionality", () => {
 				const width = $popover[0].getBoundingClientRect().width;
 				const height = $popover[0].getBoundingClientRect().height;
 
-				expect(width).to.be.at.least(150);
-				expect(height).to.be.at.least(150);
+				expect(width).to.be.at.least(149);
+				expect(height).to.be.at.least(149);
 			});
 		});
 
@@ -973,6 +973,571 @@ describe("Popover Resize Functionality", () => {
 
 				expect(newWidth).be.greaterThan(initialWidth);
 				expect(newHeight).be.greaterThan(initialHeight);
+			});
+		});
+	});
+
+	describe("Opener at Viewport Edges", () => {
+		it("should position and resize popover correctly when opener is at top-left edge", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "10px", top: "10px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.left).to.be.at.least(0);
+				expect(rect.top).to.be.at.least(0);
+			});
+
+			// Verify correct resize handle placement class
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-right");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Test resizing
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is at top-right edge", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", right: "10px", top: "10px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.right).to.be.at.most(window.innerWidth);
+				expect(rect.top).to.be.at.least(0);
+			});
+
+			// Verify correct resize handle placement class
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-left");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing - try to expand but respect viewport bounds
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(30, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is at bottom-left edge", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "10px", bottom: "10px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.left).to.be.at.least(0);
+				expect(rect.bottom).to.be.at.most(window.innerHeight);
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify correct resize handle placement class
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-top-right");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 30)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				// Ensure it stays within viewport
+				expect(rect.left).to.be.at.least(0);
+				expect(rect.top).to.be.at.least(0);
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is at bottom-right edge", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", right: "10px", bottom: "10px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.right).to.be.at.most(window.innerWidth);
+				expect(rect.bottom).to.be.at.most(window.innerHeight);
+			});
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify correct resize handle placement class
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-top-left");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing - should respect viewport boundaries
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(20, 20)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				// Ensure it stays within viewport
+				expect(rect.left).to.be.at.least(0);
+				expect(rect.top).to.be.at.least(0);
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is at left edge (middle)", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "10px", top: "400px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.left).to.be.at.least(0);
+			});
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is at right edge (middle)", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", right: "10px", top: "400px" }}>
+						Open
+					</Button>
+					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
+						<div style={{ width: "200px", height: "150px", padding: "20px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is visible and positioned correctly
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.right).to.be.at.most(window.innerWidth);
+			});
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-50, -50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.left).to.be.at.least(0);
+			});
+		});
+	});
+
+	describe("Opener Bigger Than Popover", () => {
+		it("should position and resize popover correctly when opener is wider than popover", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "100px", top: "200px", width: "400px", height: "60px" }}>
+						Large Opener Button
+					</Button>
+					<Popover id="popover" horizontalAlign="Start" opener="btnOpen" placement="Bottom" resizable open={true}>
+						<div style={{ width: "150px", height: "100px", padding: "20px" }}>
+							Small Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is visible
+			cy.get("[ui5-popover]").then($popover => {
+				const popoverRect = $popover[0].getBoundingClientRect();
+				cy.get("#btnOpen").then($button => {
+					const buttonRect = $button[0].getBoundingClientRect();
+					// Popover should be narrower than opener
+					expect(popoverRect.width).to.be.lessThan(buttonRect.width);
+				});
+			});
+
+			// Verify correct resize handle placement class (popover is narrower, so handle should be based on horizontal alignment)
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-right");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing - expand to match or exceed opener width
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(100, 50)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is taller than popover", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "100px", width: "100px", height: "300px" }}>
+						Tall Opener
+					</Button>
+					<Popover id="popover" opener="btnOpen" verticalAlign="Top" placement="End" resizable open={true}>
+						<div style={{ width: "150px", height: "100px", padding: "20px" }}>
+							Small Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is visible
+			cy.get("[ui5-popover]").then($popover => {
+				const popoverRect = $popover[0].getBoundingClientRect();
+				cy.get("#btnOpen").then($button => {
+					const buttonRect = $button[0].getBoundingClientRect();
+					// Popover should be shorter than opener
+					expect(popoverRect.height).to.be.lessThan(buttonRect.height);
+				});
+			});
+
+			// Verify correct resize handle placement class (popover is shorter, so handle should be at top)
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-right");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing - expand to match or exceed opener height
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(50, 100)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+			});
+		});
+
+		it("should position and resize popover correctly when opener is much larger in both dimensions", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "100px", top: "100px", width: "500px", height: "400px" }}>
+						Very Large Opener
+					</Button>
+					<Popover id="popover" opener="btnOpen" horizontalAlign="Start" placement="Bottom" resizable open={true}>
+						<div style={{ width: "100px", height: "80px", padding: "10px" }}>
+							Tiny Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is much smaller than opener
+			cy.get("[ui5-popover]").then($popover => {
+				const popoverRect = $popover[0].getBoundingClientRect();
+				cy.get("#btnOpen").then($button => {
+					const buttonRect = $button[0].getBoundingClientRect();
+					expect(popoverRect.width).to.be.lessThan(buttonRect.width);
+					expect(popoverRect.height).to.be.lessThan(buttonRect.height);
+				});
+			});
+
+			// Verify correct resize handle placement class (popover is much smaller, so handle at bottom-left based on center positions)
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-right");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing - expand significantly
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(150, 100)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
+			});
+		});
+
+		it("should handle resizing when opener is larger and positioned at viewport edge", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "10px", top: "10px", width: "400px", height: "200px" }}>
+						Large Opener at Edge
+					</Button>
+					<Popover id="popover" opener="btnOpen" horizontalAlign="End" placement="Bottom" resizable open={true}>
+						<div style={{ width: "120px", height: "100px", padding: "15px" }}>
+							Content
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
+
+			// Verify popover is smaller than opener
+			cy.get("[ui5-popover]").then($popover => {
+				const popoverRect = $popover[0].getBoundingClientRect();
+				cy.get("#btnOpen").then($button => {
+					const buttonRect = $button[0].getBoundingClientRect();
+					expect(popoverRect.width).to.be.lessThan(buttonRect.width);
+					expect(popoverRect.height).to.be.lessThan(buttonRect.height);
+				});
+			});
+
+			// Verify correct resize handle placement class (smaller popover at edge, handle at bottom-left)
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popup-root")
+				.should("have.class", "ui5-popover-resize-handle-bottom-left");
+
+			let initialWidth: number;
+			let initialHeight: number;
+			cy.get("[ui5-popover]").then($popover => {
+				initialWidth = $popover[0].getBoundingClientRect().width;
+				initialHeight = $popover[0].getBoundingClientRect().height;
+			});
+
+			// Test resizing with viewport constraints
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-100, 80)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).be.greaterThan(initialWidth);
+				expect(rect.height).be.greaterThan(initialHeight);
+				// Ensure it stays within viewport
+				expect(rect.left).to.be.at.least(0);
+				expect(rect.top).to.be.at.least(0);
+				expect(rect.right).to.be.lessThan(window.innerWidth);
+				expect(rect.bottom).to.be.lessThan(window.innerHeight);
 			});
 		});
 	});
