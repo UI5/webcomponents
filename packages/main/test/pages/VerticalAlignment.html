@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+	<title>ui5 webcomponents</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="./kitchen-styles.css">
+
+	<script
+		src='https://sdk.openui5.org/resources/sap-ui-core.js'
+		id='sap-ui-bootstrap'
+		data-sap-ui-libs="sap.m"
+	></script>
+	<script>
+		sap.ui.getCore().attachInit(function () {
+			new sap.m.CheckBox({ text: "Check" }).placeAt("content3");
+			new sap.m.RadioButton({ text: "Option x" }).placeAt("content3");
+			new sap.m.Switch().placeAt("content3");
+			new sap.m.Button({ text: "Click Me" }).placeAt("content3");
+			new sap.m.Label({ text: "Lorem ipsum dolor sit" }).placeAt("content3");
+			new sap.m.Link({ text: "Link", href: "https://ui5webcomponents.github.io", target: "_blank" }).placeAt("content3");
+			new sap.m.SegmentedButton({
+				items: [
+					new sap.m.SegmentedButtonItem({ text: "Opt1" }),
+					new sap.m.SegmentedButtonItem({ text: "Opt2", selected: true })
+				]
+			}).placeAt("content3");
+
+
+			new sap.m.Input({ placeholder: "Enter text here" }).placeAt("content");
+			new sap.m.DatePicker().placeAt("content");
+			new sap.m.CheckBox({ text: "Check" }).placeAt("content");
+			new sap.m.RadioButton({ text: "Option x" }).placeAt("content");
+			new sap.m.Switch().placeAt("content");
+			new sap.m.Button({ text: "Click Me" }).placeAt("content");
+			new sap.m.Label({ text: "Lorem ipsum dolor sit" }).placeAt("content");
+			new sap.m.Link({ text: "Link", href: "https://ui5webcomponents.github.io", target: "_blank" }).placeAt("content");
+			new sap.m.SegmentedButton({
+				items: [
+					new sap.m.SegmentedButtonItem({ text: "Opt1" }),
+					new sap.m.SegmentedButtonItem({ text: "Opt2", selected: true })
+				]
+			}).placeAt("content");
+			new sap.m.ComboBox({
+				value: "Bulgaria",
+				items: [
+					new sap.ui.core.Item({ text: "Algeria" }),
+					new sap.ui.core.Item({ text: "Bulgaria" }),
+			]}).placeAt("content");
+
+
+			new sap.m.VBox({
+				direction: "Row",
+				items: [
+					new sap.m.Input({ placeholder: "Enter text here" }),
+					new sap.m.DatePicker(),
+					new sap.m.CheckBox({ text: "Check" }),
+					new sap.m.RadioButton({ text: "Option x" }),
+					new sap.m.Switch(),
+					new sap.m.Button({ text: "Click Me" }),
+					new sap.m.Label({ text: "Lorem ipsum dolor sit" }),
+					new sap.m.Link({ text: "Link", href: "https://ui5webcomponents.github.io", target: "_blank" }),
+					new sap.m.SegmentedButton({
+						items: [
+							new sap.m.SegmentedButtonItem({ text: "Opt1" }),
+							new sap.m.SegmentedButtonItem({ text: "Opt2", selected: true })
+						]
+					}),
+					new sap.m.ComboBox({
+						value: "Bulgaria",
+						items: [
+							new sap.ui.core.Item({ text: "Algeria" }),
+							new sap.ui.core.Item({ text: "Bulgaria" }),
+					]}),
+				]	
+			}).placeAt("content2");
+		})
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		[ui5-slider], [ui5-range-slider] {
+			max-width: 300px;
+		}
+	</style>
+</head>
+
+<body class="kitchen_openui51auto">
+	
+
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-checkbox id="cb1" text="ui5-checkbox without name"></ui5-checkbox>
+		<ui5-combobox id="combobox1"></ui5-combobox>
+		<ui5-date-picker id="date_picker1"></ui5-date-picker>
+		<ui5-daterange-picker id="daterange_picker1"></ui5-daterange-picker>
+		<ui5-datetime-picker id="datetime_picker1"></ui5-datetime-picker>
+		<ui5-file-uploader value="&quot;Scree.53.png&quot; "></ui5-file-uploader>
+		<ui5-input id="input1"></ui5-input>
+		<ui5-multi-combobox id="multi_combobox1"></ui5-multi-combobox>
+		<ui5-multi-input id="multi_input1"></ui5-multi-input>
+		<ui5-radio-button id="rb_1" name="rb1"></ui5-radio-button>
+		<ui5-range-slider id="range_slider1"></ui5-range-slider>
+		<ui5-select id="select1"></ui5-select>
+		<ui5-slider id="slider1"></ui5-slider>
+		<ui5-step-input id="step_input1"></ui5-step-input>
+		<ui5-switch id="switch1" text="ui5-switch without name"></ui5-switch>
+		<ui5-time-picker id="time_picker1"></ui5-time-picker>
+	</div>
+
+
+	<br>
+	<br>
+
+	webc
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-input value="value"></ui5-input>
+		<ui5-time-picker></ui5-time-picker>
+		<ui5-date-picker value="today"></ui5-date-picker>
+		<ui5-button>Button</ui5-button>
+		<ui5-combobox value="Bulgaria">
+			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Brazil"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+
+	<br>
+	<br>
+	webc
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-dynamic-date-range
+				id="last-next"
+				options="LASTDAYS, NEXTDAYS, LASTWEEKS, NEXTWEEKS, LASTMONTHS, NEXTMONTHS, LASTQUARTERS, NEXTQUARTERS, LASTYEARS, NEXTYEARS"
+		></ui5-dynamic-date-range>
+		<ui5-multi-input id="empty-mi" placeholder="Placeholder"></ui5-multi-input>
+		<ui5-multi-combobox no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
+			<ui5-mcb-item selected text="Longest word in the whole universe"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<ui5-file-uploader id="fileSelector1" style="width: 350px;" multiple required>
+			<ui5-button>Upload</ui5-button>
+		</ui5-file-uploader>
+		<ui5-step-input></ui5-step-input>
+	</div>
+
+
+	<br>
+	<br>
+
+	webc
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-input value="value"></ui5-input>
+		<ui5-date-picker value="today"></ui5-date-picker>
+		
+		<ui5-checkbox text="Check" checked></ui5-checkbox>
+		<ui5-switch text-on="On" text-off="Off"></ui5-switch>
+		<ui5-radio-button text="option c" checked></ui5-radio-button>
+		<ui5-button>Button</ui5-button>
+		
+		<ui5-label>Lorem ipsum dolor sit</ui5-label>
+		<ui5-link href="https://ui5webcomponents.github.io" target="_blank">Link</ui5-link>
+		<ui5-text>Some text here</ui5-text>
+
+		<ui5-segmented-button accessible-name="Geographic location">
+			<ui5-segmented-button-item>Map</ui5-segmented-button-item>
+			<ui5-segmented-button-item selected>Satellite</ui5-segmented-button-item>
+		</ui5-segmented-button>
+
+		<ui5-combobox value="Bulgaria">
+			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Brazil"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<br>
+	<br>
+
+	webc
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-checkbox text="Check" checked></ui5-checkbox>
+		<ui5-switch text-on="On" text-off="Off"></ui5-switch>
+		<ui5-radio-button text="option c" checked></ui5-radio-button>
+		<ui5-button>Button</ui5-button>
+		<ui5-rating-indicator id="rating-indicator-readonly" value="1" max="3"></ui5-rating-indicator>
+		<ui5-icon name="home"></ui5-icon>
+		<ui5-tag design="Set1" color-scheme="6">
+			Tag Text
+		</ui5-tag>
+	</div>
+
+
+	webc
+	<div style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<ui5-checkbox text="Check" checked></ui5-checkbox>
+		<ui5-switch text-on="On" text-off="Off"></ui5-switch>
+		<ui5-label>Lorem ipsum dolor sit</ui5-label>
+		<ui5-text>Some text here</ui5-text>
+		<ui5-link href="https://ui5webcomponents.github.io" target="_blank">Link</ui5-link>
+		<ui5-rating-indicator id="rating-indicator-readonly" value="1" max="3"></ui5-rating-indicator>
+		<ui5-step-input></ui5-step-input>
+	</div>
+
+	<br>
+	<br>
+	<br>
+
+	OpenUI5
+	<div id="content" style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<!-- OpenUI5 controls will be placed here -->
+	</div>
+
+
+	<br>
+	<br>
+	<br>
+
+	OpenUI5 in VBOX
+	<div id="content2" style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<!-- OpenUI5 controls will be placed here -->
+	</div>
+
+	<br>
+	<br>
+	<br>
+
+	Mixed
+	<div id="content3" style="border-block-start: 1px solid red; border-block-end: 1px solid red">
+		<!-- OpenUI5 controls will be placed here -->
+		<ui5-input value="value"></ui5-input>
+		<ui5-date-picker value="today"></ui5-date-picker>
+		<ui5-checkbox text="Check" checked></ui5-checkbox>
+		<ui5-switch text-on="On" text-off="Off"></ui5-switch>
+		<ui5-radio-button text="option c" checked></ui5-radio-button>
+		<ui5-button>Button</ui5-button>
+	</div>
+</body>
+</html>

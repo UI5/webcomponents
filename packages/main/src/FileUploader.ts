@@ -304,8 +304,6 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_tokenizerOpen = false;
 
-	static emptyInput: HTMLInputElement;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -488,10 +486,6 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		this._clearFileSelection();
 	}
 
-	_onFormSubmit(e: SubmitEvent) {
-		e.preventDefault();
-	}
-
 	_openFileBrowser() {
 		this._input.click();
 	}
@@ -499,7 +493,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	_clearFileSelection() {
 		this._selectedFilesNames = [];
 		this.value = "";
-		this._form?.reset();
+		this._input.files = new DataTransfer().files;
 		this.fireDecoratorEvent("change", {
 			files: this.files,
 		});
@@ -515,7 +509,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 			return this._input.files;
 		}
 
-		return FileUploader._emptyFilesList;
+		return null;
 	}
 
 	onAfterRendering() {
@@ -619,18 +613,6 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		if (this._messagePopover) {
 			this._messagePopover.open = false;
 		}
-	}
-
-	/**
-	 * in case when the component is not placed in the DOM, return empty FileList, like native input would do
-	 * @private
-	 */
-	static get _emptyFilesList() {
-		if (!this.emptyInput) {
-			this.emptyInput = document.createElement("input");
-			this.emptyInput.type = "file";
-		}
-		return this.emptyInput.files;
 	}
 
 	get accInfo(): InputAccInfo {
