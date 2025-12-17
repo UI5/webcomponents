@@ -312,7 +312,7 @@
 			<ui5-suggestion-item text="사랑"></ui5-suggestion-item>
 			<ui5-suggestion-item text="한국"></ui5-suggestion-item>
 		</ui5-multi-input>
-		
+
 		<ui5-title>Japanese</ui5-title>
 		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-japanese" placeholder="Type in Japanese ...">
 			<ui5-suggestion-item text="こんにちは"></ui5-suggestion-item>
@@ -320,7 +320,7 @@
 			<ui5-suggestion-item text="日本"></ui5-suggestion-item>
 			<ui5-suggestion-item text="東京"></ui5-suggestion-item>
 		</ui5-multi-input>
-		
+
 		<ui5-title>Chinese</ui5-title>
 		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-chinese" placeholder="Type in Chinese ...">
 			<ui5-suggestion-item text="你好"></ui5-suggestion-item>
@@ -431,7 +431,44 @@
 		<ui5-token slot="tokens" text="excepteur"></ui5-token>
 	</ui5-multi-input>
 
+	<ui5-title>Form validation</ui5-title>
+	<form id="formValidation">
+		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-inform" required>
+			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
+			<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+		</ui5-multi-input>
+		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+	</form>
+	<br><br>
+
 	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const miInForm = document.getElementById('suggestion-token-inform');
+
+		btnCheckFormValidity.addEventListener('click', function () {
+			checkFormValidity('suggestion-token-inform');
+		});
+
+		miInForm.addEventListener('ui5-change', function () {
+			setTimeout(() => {
+				checkFormValidity('suggestion-token-inform', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
 
 		var createTokenFromText = function (text) {
 			var token = document.createElement("ui5-token");
@@ -488,10 +525,33 @@
 			document.getElementById("dialog").open = true;
 		});
 
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-value-help-trigger", function (event) {
+			var list = document.getElementById("tokens-list");
+
+			list.innerHTML = "";
+
+			event.target.tokens.forEach(function (token) {
+				var li = document.createElement("ui5-li");
+				li.innerHTML = token.text;
+
+				list.appendChild(li);
+			});
+
+			document.getElementById("dialog").open = true;
+		});
+
 		document.getElementById("suggestion-token").addEventListener("ui5-change", function (event) {
 			var text = event.target.value;
 
 			addTokenToMI(createTokenFromText(text), "suggestion-token");
+
+			event.target.value = "";
+		});
+
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-change", function (event) {
+			var text = event.target.value;
+
+			addTokenToMI(createTokenFromText(text), "suggestion-token-inform");
 
 			event.target.value = "";
 		});
@@ -516,6 +576,7 @@
 		document.getElementById("token-unique").addEventListener("ui5-token-delete", handleTokenDelete);
 		document.getElementById("test-token-delete").addEventListener("ui5-token-delete", handleTokenDelete);
 		document.getElementById("suggestion-token").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-token-delete", handleTokenDelete);
 		document.getElementById("two-tokens").addEventListener("ui5-token-delete", handleTokenDelete);
 		document.getElementById("readonly-mi").addEventListener("ui5-token-delete", handleTokenDelete);
 
