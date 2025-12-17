@@ -7,6 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample</title>
 	<link rel="stylesheet" href="./main.css">
+	<style>
+		.ui5-user-settings-appearance-view-additional-content-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 0.5rem;
+			width: 100%;
+		}
+		.ui5-user-settings-appearance-view-additional-content-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSmallSize);
+		}
+	</style>
 </head>
 
 <body style="background-color: var(--sapBackgroundColor); height: 50rem;">
@@ -26,10 +40,10 @@
 
             <ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 
-			<ui5-shellbar-search slot="searchField" id="search-scope" show-clear-icon placeholder="Search Apps, Products">
-				<ui5-search-scope text="All" selected slot="scopes"></ui5-search-scope>
-				<ui5-search-scope text="Apps" slot="scopes"></ui5-search-scope>
-				<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+			<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" show-clear-icon placeholder="Search Apps, Products">
+				<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 			</ui5-shellbar-search>
 
             <ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
@@ -288,25 +302,30 @@
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-			<ui5-user-settings-view text="Themes" slot="tabs">
-				<ui5-list separators="Inner" selection-mode="Single">
-					<ui5-li icon="palette" selected>SAP Morning Horizon</ui5-li>
-					<ui5-li icon="palette">SAP Evening Horizon</ui5-li>
-					<ui5-li icon="palette">SAP High Contrast Black (SAP Horizon)</ui5-li>
-					<ui5-li icon="palette">SAP High Contrast White (SAP Horizon)</ui5-li>
-				</ui5-list>
-				<ui5-button id="themeSave" class="save-btn" design="Emphasized">Save</ui5-button>
-				<ui5-toast id="toastThemeSave">Changes applied.</ui5-toast>
-			</ui5-user-settings-view>
-			<ui5-user-settings-view text="Display settings" slot="tabs">
-				<ui5-checkbox checked text="Optimized for Touch Input"></ui5-checkbox>
-				<ui5-panel fixed>
-					<ui5-label>
+			<ui5-user-settings-appearance-view text="Themes">
+				<div slot="additionalContent">
+					<div class="ui5-user-settings-appearance-view-additional-content-header">
+						<ui5-text>Optimize for Touch Input</ui5-text>
+						<ui5-switch></ui5-switch>
+					</div>
+					<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
 						Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
 						This is useful for hybrid devices that combine touch and mouse events.
-					</ui5-label>
-				</ui5-panel>
-			</ui5-user-settings-view>
+					</ui5-text>
+				</div>
+				<ui5-user-settings-appearance-view-group header-text="SAP Horizon">
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="SAP Morning Horizon"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="SAP Evening Horizon"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="SAP Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="SAP Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+				</ui5-user-settings-appearance-view-group>
+				<ui5-user-settings-appearance-view-group header-text="SAP Quartz">
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="SAP Quartz Light"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="SAP Quartz Dark"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="SAP Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="SAP Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+				</ui5-user-settings-appearance-view-group>
+			</ui5-user-settings-appearance-view>
 		</ui5-user-settings-item>
 
 		<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">

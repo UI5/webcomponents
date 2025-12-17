@@ -36,10 +36,12 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 								onChange={this._handleScopeChange}
 								class="sapUiSizeCompact ui5-search-field-select"
 								accessibleName={this._translations.scope}
-								tooltip={this._translations.scope}>
+								tooltip={this._translations.scope}
+								value={this.scopeValue}
+							>
 								{this.scopes.map(scopeOption => (
 									<Option
-										selected={scopeOption.selected}
+										value={scopeOption.value}
 										data-ui5-stable={scopeOption.stableDomRef}
 										ref={this.captureRef.bind(scopeOption)}
 									>{scopeOption.text}
