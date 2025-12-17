@@ -855,7 +855,7 @@ class Calendar extends CalendarPart {
 		if (this._currentPicker === "month") {
 			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_NEXT_BUTTON_TITLE);
 			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_PREVIOUS_BUTTON_TITLE);
-		} else if (this._currentPicker === "year") {
+		} else if (this._currentPicker === "year" || this._currentPicker === "yearrange") {
 			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE);
 			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE);
 		}
