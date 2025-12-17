@@ -979,24 +979,26 @@ class Calendar extends CalendarPart {
 		}
 	}
 
-	onPrevButtonClick(e: MouseEvent) {
-		if (this._previousButtonDisabled) {
+	_handleNavigationButtonKeyDown(e: MouseEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
 			e.preventDefault();
 			return;
 		}
 
-		this.onHeaderPreviousPress();
+		if (e.button !== 0) {
+			return;
+		}
+
+		action();
 		e.preventDefault();
 	}
 
-	onNextButtonClick(e: MouseEvent) {
-		if (this._nextButtonDisabled) {
-			e.preventDefault();
-			return;
-		}
+	onPrevButtonClick(e: MouseEvent) {
+		this._handleNavigationButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
 
-		this.onHeaderNextPress();
-		e.preventDefault();
+	onNextButtonClick(e: MouseEvent) {
+		this._handleNavigationButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
 	}
 
 	/**
