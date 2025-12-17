@@ -311,9 +311,6 @@ class Calendar extends CalendarPart {
 	@property({ noAttribute: true })
 	_pickersMode: `${CalendarPickersMode}` = "DAY_MONTH_YEAR";
 
-	@property({ type: Boolean, noAttribute: true })
-	_isOpenedFromPopover?: boolean = false;
-
 	_valueIsProcessed = false;
 
 	_rangeStartYear?: number;

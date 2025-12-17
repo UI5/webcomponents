@@ -497,7 +497,7 @@ describe("Calendar general interaction", () => {
 			.should("have.focus");
 
 		cy.focused().realPress(["Shift", "F4"]);
-			
+
 		// Wait for focus to settle before proceeding
 		cy.get<Calendar>("#calendar1")
 			.shadow()
@@ -505,7 +505,7 @@ describe("Calendar general interaction", () => {
 			.shadow()
 			.find("[tabindex='0']")
 			.should("have.focus");
-			
+
 		cy.focused().realPress("PageUp");
 
 		cy.get<Calendar>("#calendar1")
@@ -1525,7 +1525,7 @@ describe("Calendar accessibility", () => {
 		// Get the selected days and verify their aria-labels
 		cy.get("@selectedDays").each(($day, index) => {
 			cy.wrap($day).should("have.attr", "aria-label");
-				
+
 			if (index === 0) {
 				// First day should contain "First date of range"
 				cy.wrap($day)
@@ -1547,22 +1547,22 @@ describe("Calendar accessibility", () => {
 });
 
 describe("Day Picker Tests", () => {
-	it.skip("Select day with Space", () => {    
+	it.skip("Select day with Space", () => {
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-			
+
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find(".ui5-dp-item--now")
 			.as("today");
-			
+
 		cy.get("@today")
 			.realClick()
 			.should("be.focused")
 			.realPress("ArrowRight")
 			.realPress("Space");
-			
+
 		cy.focused()
 			.invoke("attr", "data-sap-timestamp")
 			.then(timestampAttr => {
@@ -1571,7 +1571,7 @@ describe("Day Picker Tests", () => {
 				const expectedDate = new Date(Date.now() + 24 * 3600 * 1000).getDate();
 				expect(selectedDate).to.eq(expectedDate);
 			});
-			
+
 		cy.get<Calendar>("#calendar1")
 			.should(($calendar) => {
 				const selectedDates = $calendar.prop("selectedDates");
@@ -1584,7 +1584,7 @@ describe("Day Picker Tests", () => {
 		const tomorrow = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0, 0) / 1000);
 
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-			
+
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
@@ -1623,7 +1623,7 @@ describe("Day Picker Tests", () => {
 
 	it("Day names are correctly displayed", () => {
 		cy.mount(<Calendar id="calendar1"></Calendar>);
-			
+
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find("[ui5-daypicker]")
@@ -1683,7 +1683,6 @@ describe("Day Picker Tests", () => {
 				const timestamp = parseInt(timestampAttr!);
 				const todayFromTimestamp = new Date(timestamp * 1000);
 				const actualToday = new Date();
-					
 				expect(todayFromTimestamp.getDate()).to.equal(actualToday.getDate());
 				expect(todayFromTimestamp.getMonth()).to.equal(actualToday.getMonth());
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
