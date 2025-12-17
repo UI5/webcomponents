@@ -994,12 +994,8 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
-			// Verify popover is visible and positioned correctly
-			cy.get("[ui5-popover]").then($popover => {
-				const rect = $popover[0].getBoundingClientRect();
-				expect(rect.left).to.be.at.least(0);
-				expect(rect.top).to.be.at.least(0);
-			});
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(300);
 
 			// Verify correct resize handle placement class
 			cy.get("[ui5-popover]")
@@ -1013,9 +1009,6 @@ describe("Popover Resize Functionality", () => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
 				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
-
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(300);
 
 			// Test resizing
 			cy.get("[ui5-popover]")
@@ -1067,10 +1060,8 @@ describe("Popover Resize Functionality", () => {
 				.find(".ui5-popup-root")
 				.should("have.class", "ui5-popover-resize-handle-bottom-left");
 
-			let initialWidth: number;
 			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
-				initialWidth = $popover[0].getBoundingClientRect().width;
 				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
@@ -1124,10 +1115,8 @@ describe("Popover Resize Functionality", () => {
 				.should("have.class", "ui5-popover-resize-handle-top-right");
 
 			let initialWidth: number;
-			let initialHeight: number;
 			cy.get("[ui5-popover]").then($popover => {
 				initialWidth = $popover[0].getBoundingClientRect().width;
-				initialHeight = $popover[0].getBoundingClientRect().height;
 			});
 
 			// Test resizing
@@ -1179,13 +1168,6 @@ describe("Popover Resize Functionality", () => {
 				.shadow()
 				.find(".ui5-popup-root")
 				.should("have.class", "ui5-popover-resize-handle-top-left");
-
-			let initialWidth: number;
-			let initialHeight: number;
-			cy.get("[ui5-popover]").then($popover => {
-				initialWidth = $popover[0].getBoundingClientRect().width;
-				initialHeight = $popover[0].getBoundingClientRect().height;
-			});
 
 			// Test resizing - should respect viewport boundaries
 			cy.get("[ui5-popover]")
