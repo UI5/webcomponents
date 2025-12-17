@@ -1,0 +1,125 @@
+name: Deploy
+
+on:
+  # Manual deployment trigger
+  workflow_dispatch:
+    inputs:
+      deploy_type:
+        description: 'type'
+        required: true
+        type: choice
+        options:
+            - 'nightly'
+            - 'latest'
+            - 'v1'
+        default: 'nightly'
+
+  # Scheduled nightly deployments
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
+jobs:
+  deploy-nightly:
+    if: ${{ github.event.inputs.deploy_type == 'nightly' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 22
+        cache: 'yarn'
+
+    - name: Install
+      run: |
+        export NODE_OPTIONS="--max_old_space_size=4096"
+        yarn install
+
+    - name: Update version.md
+      run: |
+        touch packages/website/static/version.md
+        git log -1 &>> packages/website/static/version.md
+
+    - name: Build
+      env:
+        DEPLOYMENT_TYPE: "nightly"
+      run: |
+        yarn ci:deploy:nightly
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.7.6
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: packages/website/build # The folder the action should deploy.
+        target-folder: nightly
+        clean: true
+
+  deploy-latest:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy_type == 'latest' }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 22
+        cache: 'yarn'
+
+    - name: Install
+      run: |
+        export NODE_OPTIONS="--max_old_space_size=4096"
+        yarn install
+
+    - name: Update version.md
+      run: |
+        touch packages/website/static/version.md
+        git log -1 &>> packages/website/static/version.md
+
+    - name: Build
+      env:
+        DEPLOYMENT_TYPE: "latest"
+      run: |
+        yarn ci:deploy
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.7.6
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: packages/website/build # The folder the action should deploy.
+        clean: true
+        clean-exclude: |
+            nightly
+            v1
+            googlea519d963aa8f580f.html
+
+  deploy-v1:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy_type == 'v1' }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 22
+        cache: 'yarn'
+
+    - name: Install
+      run: |
+        export NODE_OPTIONS="--max_old_space_size=4096"
+        yarn install
+
+    - name: Update version.md
+      run: |
+        touch packages/website/static/version.md
+        git log -1 &>> packages/website/static/version.md
+
+    - name: Build
+      env:
+        DEPLOYMENT_TYPE: "v1"
+      run: |
+        yarn ci:deploy
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.7.6
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: packages/website/build # The folder the action should deploy.
+        target-folder: v1
+        clean: true

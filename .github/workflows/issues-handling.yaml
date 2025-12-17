@@ -34,7 +34,7 @@ jobs:
         -H "Authorization: Bearer ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}" \
         -H "Accept: application/vnd.github.v3+json" \
         -d '{"body": "Test comment from workflow!"}' \
-        https://api.github.com/repos/SAP/ui5-webcomponents/issues/1/comments  # Replace 1 with an actual issue number
+        https://api.github.com/repos/UI5/webcomponents/issues/1/comments  # Replace 1 with an actual issue number
 
     - name: Publish Release Comments
       uses: actions/github-script@v7
