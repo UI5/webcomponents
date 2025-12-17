@@ -214,7 +214,7 @@ class OpenUI5Support {
 			return false;
 		}
 
-		return !!link.href.match(/\/css(-|_)variables\.css/);
+		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
 	}
 
 	static getNextZIndex() {
