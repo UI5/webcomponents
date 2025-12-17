@@ -92,7 +92,7 @@ const getScripts = (options) => {
 		},
 		build: {
 			default: "ui5nps prepare lint build.bundle", // build.bundle2
-			templates: options.legacy ? `mkdir -p src/generated/templates && node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
+			templates: options.legacy ? `node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
 			styles: {
 				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
 				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
