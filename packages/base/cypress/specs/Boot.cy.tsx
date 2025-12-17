@@ -51,18 +51,15 @@ describe("Framework boot", () => {
 				return Promise.resolve(`:root{--_ui5_internal_var: #ccc }`);
 			});
 
-		// Assert that the properties for the base theme are loaded
-		cy.document()
-			.its("adoptedStyleSheets")
-			.then(adoptedStyleSheets => {
-				// eslint-disable-next-line
-				const sheet = adoptedStyleSheets.find(sh => (sh as Record<string, any>)._ui5StyleId === `${dataPropAttr}|@ui5/webcomponents-test`);
-				return sheet && sheet.cssRules.length > 0 ? sheet : undefined;
-			})
-			.should("exist")
-			.its("cssRules")
-			.its(0)
-			.its("cssText")
-			.should("include", "--_ui5_internal_var: #ccc");
+		// Assert - theme properties for the base theme are loaded
+		cy.document().should(($doc) => {
+			const adoptedStyleSheets = $doc.adoptedStyleSheets;
+			const sheet = adoptedStyleSheets.find(sh => (sh as any)._ui5StyleId === `${dataPropAttr}|@ui5/webcomponents-test`);
+
+			expect(sheet, "stylesheet should exist").to.exist;
+			expect(sheet!.cssRules, "cssRules should exist").to.exist;
+			expect(sheet!.cssRules.length, "cssRules should have at least one rule").to.be.greaterThan(0);
+			expect(sheet!.cssRules[0].cssText, "the custom variable should exist").to.include("--_ui5_internal_var: #ccc");
+		});
 	});
 });
