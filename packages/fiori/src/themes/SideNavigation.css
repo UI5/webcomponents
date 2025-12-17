@@ -20,7 +20,7 @@
 	width: var(--_ui5_side_navigation_collapsed_width);
 }
 
-:host([is-phone]) {
+:host([is-layout-s]) {
 	width: 100%;
 }
 

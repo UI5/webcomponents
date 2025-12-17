@@ -18,7 +18,7 @@ function Sample() {
 
 			<SideNavigationGroup text="Group 1" expanded={true}>
 				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
-				<SideNavigationItem text="Item 2" href="#item2"icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
 				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
 			</SideNavigationGroup>
 
@@ -69,27 +69,27 @@ describe("Rendering and interaction", () => {
 			.should("exist");
 	});
 
-	// it("tests collapsing", () => {
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", false);
+	it("tests collapsing", () => {
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", false);
 
-	// 	cy.get("[ui5-navigation-layout]")
-	// 		.invoke("prop", "mode", "Collapsed");
+		cy.get("[ui5-navigation-layout]")
+			.invoke("prop", "mode", "Collapsed");
 
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", true);
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", true);
 
-	// 	cy.get("[ui5-navigation-layout]")
-	// 		.invoke("prop", "mode", "Expanded");
+		cy.get("[ui5-navigation-layout]")
+			.invoke("prop", "mode", "Expanded");
 
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", false);
-	// });
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", false);
+	});
 });
 
-describe("Navigation Layout on Phone", () => {
+describe("Navigation Layout on Size S", () => {
 	beforeEach(() => {
-		cy.ui5SimulateDevice("phone");
+		cy.viewport(500, 1080);
 		cy.mount(<Sample />);
 	});
 
