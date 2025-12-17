@@ -215,6 +215,15 @@ function openUI5Popover(win, opener) {
 	});
 }
 
+function isOpenUI5DialogOpen($dialog) {
+	expect(OpenUI5Element).to.exist;
+
+	const dialogInstance = OpenUI5Element.getElementById($dialog.attr("id"));
+
+	expect(dialogInstance).to.exist
+	expect(dialogInstance.isOpen()).to.be.true;
+};
+
 describe("ui5 and web components integration", () => {
 	beforeEach(() => {
 		// mount the components
@@ -489,6 +498,10 @@ describe("ui5 and web components integration", () => {
 			.find('input')
 			.focus();
 
+		cy.get("#openUI5Combobox1")
+			.find('input')
+			.should('be.focused');
+
 		cy.realPress("Escape");
 
 		cy.get('#dialog1')
@@ -697,14 +710,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#openUI5DialogFinal")
 			.should('be.visible')
-			.should(($dialog) => {
-				expect(OpenUI5Element).to.exist;
-
-				const dialogInstance = OpenUI5Element.getElementById($dialog.attr("id"));
-
-				expect(dialogInstance).to.exist
-				expect(dialogInstance.isOpen()).to.be.true;
-			});
+			.should(isOpenUI5DialogOpen);
+		cy.wait(1000);
 
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
@@ -722,7 +729,9 @@ describe("ui5 and web components integration", () => {
 			.should('not.exist');
 
 		cy.get("#openUI5DialogWithButtons")
-			.should('be.visible');
+			.should('be.visible')
+			.should(isOpenUI5DialogOpen);
+		cy.wait(100);
 
 		cy.realPress("Escape");
 

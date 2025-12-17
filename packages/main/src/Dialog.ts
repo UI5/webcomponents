@@ -329,10 +329,7 @@ class Dialog extends Popup {
 
 	_show() {
 		super._show();
-		requestAnimationFrame(() => {
-			this._updateMediaRange();
-			this._center();
-		});
+		requestAnimationFrame(this._center.bind(this));
 	}
 
 	onBeforeRendering() {
