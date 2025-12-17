@@ -48,7 +48,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -132,7 +132,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -200,7 +200,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
@@ -244,7 +244,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
         run: yarn ci:releasebuild
