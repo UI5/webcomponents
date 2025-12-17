@@ -58,7 +58,7 @@
 	</style>
 </head>
 
-<body>
+<body class="sapUiSizeCompact">
 	<div class="demo-container">
 		<h1 class="demo-title">AI TextArea Component</h1>
 
@@ -125,7 +125,7 @@
 			{
 				text: "Regenerate",
 				action: "regenerate",
-				processingLabel: "Regenerating text...",
+				processingLabel: "Regenerating ...",
 				completedLabel: "Regenerated text",
 				textKey: "en",
 				replaces: "generate"
@@ -237,7 +237,7 @@
 			
 			if (!hasHistory) {
 				const generateItem = document.createElement('ui5-menu-item');
-				generateItem.setAttribute('text', 'Generate text');
+				generateItem.setAttribute('text', 'Generate');
 				generateItem.dataset.action = 'generate';
 				generateItem.dataset.processingLabel = 'Generating...';
 				generateItem.dataset.completedLabel = 'Generated text';

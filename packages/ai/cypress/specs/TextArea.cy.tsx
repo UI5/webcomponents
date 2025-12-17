@@ -540,7 +540,7 @@ describe("Basic", () => {
 				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="previous"]')
-				.should("have.attr", "tooltip", "Previous Version");
+				.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)");
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -549,7 +549,83 @@ describe("Basic", () => {
 				.find("[ui5-ai-versioning]")
 				.shadow()
 				.find('[data-ui5-versioning-button="next"]')
-				.should("have.attr", "tooltip", "Next Version");
+				.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)");
+		});
+	});
+
+	describe("AI Button Focus Visibility", () => {
+		it("should show AI button only when textarea, button, or menu has focus", () => {
+			cy.mount(
+				<TextArea>
+					<Menu slot="menu" id="test-menu">
+						<MenuItem text="Generate text" />
+						<MenuItem text="Summarize" />
+					</Menu>
+				</TextArea>
+			);
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("not.exist");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("textarea")
+				.focus();
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("exist")
+				.should("be.visible");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.focus();
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("exist")
+				.should("be.visible");
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.realClick();
+
+			cy.get("[ui5-ai-textarea]")
+				.find("ui5-menu")
+				.should("have.prop", "open", true);
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("exist")
+				.should("be.visible");
+
+			cy.get("body").click();
+
+			cy.get("[ui5-ai-textarea]")
+				.shadow()
+				.find("[ui5-ai-writing-assistant]")
+				.shadow()
+				.find("#ai-menu-btn")
+				.should("not.exist");
 		});
 	});
 
