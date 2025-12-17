@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-fiori",
-  "version": "1.24.24",
+  "version": "1.24.25",
   "description": "UI5 Web Components: webcomponents.fiori",
   "ui5": {
     "webComponentsPackage": true
@@ -46,14 +46,14 @@
     "directory": "packages/fiori"
   },
   "dependencies": {
-    "@ui5/webcomponents": "1.24.24",
-    "@ui5/webcomponents-base": "1.24.24",
-    "@ui5/webcomponents-icons": "1.24.24",
-    "@ui5/webcomponents-theming": "1.24.24",
+    "@ui5/webcomponents": "1.24.25",
+    "@ui5/webcomponents-base": "1.24.25",
+    "@ui5/webcomponents-icons": "1.24.25",
+    "@ui5/webcomponents-theming": "1.24.25",
     "@zxing/library": "^0.17.1"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "1.24.24",
+    "@ui5/webcomponents-tools": "1.24.25",
     "chromedriver": "^137.0.0"
   }
 }
