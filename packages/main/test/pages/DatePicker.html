@@ -76,7 +76,7 @@
 		<ui5-date-picker id='dp6' format-pattern='short'></ui5-date-picker>
 
 		<h3>format-pattern - 'long'</h3>
-		<ui5-date-picker id='dp7' format-pattern='long'></ui5-date-picker>
+		<ui5-date-picker id='dp7' show-clear-icon format-pattern='long'></ui5-date-picker>
 
 		<h3>format-pattern - 'QQQ yyyy, MMM dd'</h3>
 		<ui5-date-picker id='dp8' format-pattern='QQQ yyyy, MMM dd'></ui5-date-picker>
@@ -179,7 +179,7 @@
 			<ui5-title>Form validation</ui5-title>
 			<form id="formValidation">
 				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
-				<ui5-date-picker min-date="6/1/2020" max-date="5/1/2021" format-pattern="dd/MM/yyyy" required id="formDatepicker"></ui5-date-picker>
+				<ui5-date-picker min-date="6/1/2020" max-date="5/1/2021" value="11/11/2020" format-pattern="dd/MM/yyyy" required id="formDatepicker"></ui5-date-picker>
 				<br><br>
 				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 			</form>

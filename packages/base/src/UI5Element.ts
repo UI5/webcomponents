@@ -1354,21 +1354,21 @@ abstract class UI5Element extends HTMLElement {
 				this.i18nBundleStorage[bundleName] = i18nBundles[index];
 			});
 			this.asyncFinished = true;
+
+			// Register the custom element only after CLDR and i18n data is loaded
+			const tag = this.getMetadata().getTag();
+			const definedLocally = isTagRegistered(tag);
+			const definedGlobally = customElements.get(tag);
+
+			if (definedGlobally && !definedLocally) {
+				recordTagRegistrationFailure(tag);
+			} else if (!definedGlobally) {
+				this._generateAccessors();
+				registerTag(tag);
+				customElements.define(tag, this as unknown as CustomElementConstructor);
+			}
 		};
 		this.definePromise = defineSequence();
-
-		const tag = this.getMetadata().getTag();
-
-		const definedLocally = isTagRegistered(tag);
-		const definedGlobally = customElements.get(tag);
-
-		if (definedGlobally && !definedLocally) {
-			recordTagRegistrationFailure(tag);
-		} else if (!definedGlobally) {
-			this._generateAccessors();
-			registerTag(tag);
-			customElements.define(tag, this as unknown as CustomElementConstructor);
-		}
 
 		return this;
 	}
