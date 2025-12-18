@@ -204,7 +204,8 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 
 			// If current value is invalid, use the last valid value for time selection
 			if (!timeSelectionValue || !this.isValidValue(timeSelectionValue)) {
-				timeSelectionValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+				const format = this.getValueFormat();
+				timeSelectionValue = this._lastValidValue || (format ? format.format(UI5Date.getInstance()) : "");
 			}
 
 			this._previewValues = {
@@ -218,12 +219,16 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.valueMissing) {
+			const format = this.getFormat();
 			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DateTimePicker.i18nBundle.getText(DATETIME_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+			const pattern = format ? format.oFormatOptions?.pattern : this._formatPattern;
+			return DateTimePicker.i18nBundle.getText(DATETIME_VALUE_MISSING, pattern as string);
 		}
 		if (validity.patternMismatch) {
+			const format = this.getFormat();
 			// @ts-ignore oFormatOptions is a private API of DateFormat
-			return DateTimePicker.i18nBundle.getText(DATETIME_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+			const pattern = format ? format.oFormatOptions?.pattern : this._formatPattern;
+			return DateTimePicker.i18nBundle.getText(DATETIME_PATTERN_MISMATCH, pattern as string);
 		}
 		if (validity.rangeUnderflow) {
 			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEUNDERFLOW, this.minDate);
@@ -344,7 +349,8 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		// but fallback to last valid value if current picker time is empty or invalid
 		let timeValue = this._clocks?.value || "";
 		if (!timeValue || !this.isValidValue(timeValue)) {
-			timeValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+			const format = this.getValueFormat();
+			timeValue = this._lastValidValue || (format ? format.format(UI5Date.getInstance()) : "");
 		}
 
 		this._previewValues = {
@@ -392,8 +398,14 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	_submitClick() {
 		const selectedDate = this.getSelectedDateTime();
+		const format = this.getValueFormat();
 
-		const value = this.getValueFormat().format(selectedDate);
+		if (!selectedDate || !format) {
+			this._togglePicker();
+			return;
+		}
+
+		const value = format.format(selectedDate);
 		if (this.value !== value) {
 			this._updateValueAndFireEvents(value, true, ["change", "value-changed"]);
 		}
@@ -462,9 +474,13 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	}
 
 	getSelectedDateTime() {
-		const selectedDate = this.getValueFormat().parse(this._calendarSelectedDates[0]) as Date;
-		const selectedTime = this.getValueFormat().parse(this._timeSelectionValue) as Date;
-		if (selectedTime) {
+		const format = this.getValueFormat();
+		if (!format) {
+			return null;
+		}
+		const selectedDate = format.parse(this._calendarSelectedDates[0]) as Date;
+		const selectedTime = format.parse(this._timeSelectionValue) as Date;
+		if (selectedTime && selectedDate) {
 			selectedDate.setHours(selectedTime.getHours());
 			selectedDate.setMinutes(selectedTime.getMinutes());
 			selectedDate.setSeconds(selectedTime.getSeconds());

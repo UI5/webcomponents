@@ -867,7 +867,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		try {
-			const jsDate = this.getValueFormat().parse(dateValue) as Date;
+			const format = this.getValueFormat();
+			if (!format) {
+				return 0;
+			}
+			const jsDate = format.parse(dateValue) as Date;
+			if (!jsDate) {
+				return 0;
+			}
 			const calendarDate = CalendarDate.fromLocalJSDate(
 				jsDate,
 				this._primaryCalendarType,

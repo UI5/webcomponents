@@ -125,6 +125,20 @@ class DateComponentBase extends UI5Element {
 		super();
 	}
 
+	/**
+	 * Checks if CLDR data is loaded and available for date formatting.
+	 * @private
+	 */
+	_isCLDRReady(): boolean {
+		try {
+			// Try to get locale data - this will throw if CLDR is not loaded
+			const localeData = getCachedLocaleDataInstance(getLocale());
+			return !!localeData;
+		} catch (e) {
+			return false;
+		}
+	}
+
 	get _primaryCalendarType() {
 		const localeData = getCachedLocaleDataInstance(getLocale());
 		return this.primaryCalendarType || getCalendarType() || localeData.getPreferredCalendarType();
@@ -175,25 +189,44 @@ class DateComponentBase extends UI5Element {
 	}
 
 	_getMinMaxCalendarDateFromString(date: string) {
-		if (this.getFormat().parse(date)) {
+		const format = this.getFormat();
+		if (format && format.parse(date)) {
 			return this._getCalendarDateFromString(date);
 		}
 
-		const jsDate = this.getISOFormat().parse(date) as Date;
+		const isoFormat = this.getISOFormat();
+		if (!isoFormat) {
+			// CLDR not loaded yet
+			return undefined;
+		}
+
+		const jsDate = isoFormat.parse(date) as Date;
 		if (jsDate) {
 			return CalendarDate.fromLocalJSDate(jsDate, this._primaryCalendarType);
 		}
 	}
 
 	_getCalendarDateFromString(value: string) {
-		const jsDate = this.getValueFormat().parse(value) as Date;
+		const format = this.getValueFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return undefined;
+		}
+
+		const jsDate = format.parse(value) as Date;
 		if (jsDate) {
 			return CalendarDate.fromLocalJSDate(jsDate, this._primaryCalendarType);
 		}
 	}
 
 	_getCalendarDateFromStringDisplayValue(value: string) {
-		const jsDate = this.getDisplayFormat().parse(value) as Date;
+		const format = this.getDisplayFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return undefined;
+		}
+
+		const jsDate = format.parse(value) as Date;
 		if (jsDate) {
 			return CalendarDate.fromLocalJSDate(jsDate, this._primaryCalendarType);
 		}
@@ -211,8 +244,14 @@ class DateComponentBase extends UI5Element {
 			return "";
 		}
 
+		const format = this.getFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return "";
+		}
+
 		const localDate = UI5Date.getInstance(timestamp);
-		return this.getFormat().format(localDate, true);
+		return format.format(localDate, true);
 	}
 
 	_getDisplayStringFromTimestamp(timestamp: number) {
@@ -220,8 +259,14 @@ class DateComponentBase extends UI5Element {
 			return "";
 		}
 
+		const format = this.getDisplayFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return "";
+		}
+
 		const localDate = UI5Date.getInstance(timestamp);
-		return this.getDisplayFormat().format(localDate, true);
+		return format.format(localDate, true);
 	}
 
 	_getValueStringFromTimestamp(timestamp: number) {
@@ -229,22 +274,36 @@ class DateComponentBase extends UI5Element {
 			return "";
 		}
 
+		const format = this.getValueFormat();
+		if (!format) {
+			// CLDR not loaded yet
+			return "";
+		}
+
 		const localDate = UI5Date.getInstance(timestamp);
-		return this.getValueFormat().format(localDate, true);
+		return format.format(localDate, true);
 	}
 
-	getFormat() {
-		return this._isPattern
-			? DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				strictParsing: true,
-				style: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			});
+	getFormat(): DateFormat | null {
+		if (!this._isCLDRReady()) {
+			return null;
+		}
+
+		try {
+			return this._isPattern
+				? DateFormat.getDateInstance({
+					strictParsing: true,
+					pattern: this._formatPattern,
+					calendarType: this._primaryCalendarType,
+				})
+				: DateFormat.getDateInstance({
+					strictParsing: true,
+					style: this._formatPattern,
+					calendarType: this._primaryCalendarType,
+				});
+		} catch (e) {
+			return null;
+		}
 	}
 
 	get _displayFormat() {
@@ -267,45 +326,69 @@ class DateComponentBase extends UI5Element {
 		return "";
 	}
 
-	getDisplayFormat() {
-		return this._isDisplayFormatPattern
-			? DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: this._displayFormat,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				strictParsing: true,
-				style: this._displayFormat,
-				calendarType: this._primaryCalendarType,
-			});
+	getDisplayFormat(): DateFormat | null {
+		if (!this._isCLDRReady()) {
+			return null;
+		}
+
+		try {
+			return this._isDisplayFormatPattern
+				? DateFormat.getDateInstance({
+					strictParsing: true,
+					pattern: this._displayFormat,
+					calendarType: this._primaryCalendarType,
+				})
+				: DateFormat.getDateInstance({
+					strictParsing: true,
+					style: this._displayFormat,
+					calendarType: this._primaryCalendarType,
+				});
+		} catch (e) {
+			return null;
+		}
 	}
 
-	getValueFormat() {
+	getValueFormat(): DateFormat | null {
 		if (!this._valueFormat) {
 			return this.getISOFormat();
 		}
 
-		return this._isValueFormatPattern
-			? DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: this._valueFormat,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				strictParsing: true,
-				style: this._valueFormat,
-				calendarType: this._primaryCalendarType,
-			});
+		if (!this._isCLDRReady()) {
+			return null;
+		}
+
+		try {
+			return this._isValueFormatPattern
+				? DateFormat.getDateInstance({
+					strictParsing: true,
+					pattern: this._valueFormat,
+					calendarType: this._primaryCalendarType,
+				})
+				: DateFormat.getDateInstance({
+					strictParsing: true,
+					style: this._valueFormat,
+					calendarType: this._primaryCalendarType,
+				});
+		} catch (e) {
+			return null;
+		}
 	}
 
-	getISOFormat() {
+	getISOFormat(): DateFormat | null {
+		if (!this._isCLDRReady()) {
+			return null;
+		}
+
 		if (!this._isoFormatInstance) {
-			this._isoFormatInstance = DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: "yyyy-MM-dd",
-				calendarType: this._primaryCalendarType,
-			});
+			try {
+				this._isoFormatInstance = DateFormat.getDateInstance({
+					strictParsing: true,
+					pattern: "yyyy-MM-dd",
+					calendarType: this._primaryCalendarType,
+				});
+			} catch (e) {
+				return null;
+			}
 		}
 		return this._isoFormatInstance;
 	}
