@@ -72,6 +72,7 @@ let currentIndexHistory = 0;
 let currentActionInProgress = null;
 let typingInterval = null;
 let currentGenerationIndex = 0;
+let contentBeforeGeneration = "";
 
 const textarea = document.getElementById('ai-textarea');
 const menu = document.getElementById('ai-menu');
@@ -95,7 +96,7 @@ function updateComponentState(versionIndex = null) {
 		textarea.value = versionHistory[versionIndex].value;
 	}
 
-	textarea.currentVersion = currentIndexHistory;
+	textarea.currentVersion = currentIndexHistory + 1;
 	textarea.totalVersions = versionHistory.length;
 
 	if (versionHistory[currentIndexHistory]) {
@@ -242,6 +243,7 @@ async function executeAction(action) {
 	const textKey = menuItem.dataset.textKey || 'en';
 
 	saveCurrentVersion();
+	contentBeforeGeneration = textarea.value;
 	currentActionInProgress = action;
 	currentGenerationIndex += 1;
 	const generationIdForThisRun = currentGenerationIndex;
@@ -267,22 +269,26 @@ function stopGeneration() {
 
 	stopTypingAnimation();
 	currentGenerationIndex += 1;
-	const action = currentActionInProgress || 'generate';
-	const menuItem = findMenuItemByAction(action);
-	const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
+	
+	const stoppedValue = textarea.value;
+	if (stoppedValue.trim()) {
+		const action = currentActionInProgress || 'generate';
+		const menuItem = findMenuItemByAction(action);
+		const completedLabel = (menuItem && menuItem.dataset.completedLabel) ? menuItem.dataset.completedLabel : 'Action completed';
 
-	versionHistory.push({
-		value: textarea.value,
-		action,
-		endAction: completedLabel + " (stopped)",
-		timestamp: new Date().toISOString()
-	});
+		versionHistory.push({
+			value: stoppedValue,
+			action,
+			endAction: completedLabel + " (stopped)",
+			timestamp: new Date().toISOString()
+		});
 
-	currentIndexHistory = versionHistory.length - 1;
+		currentIndexHistory = versionHistory.length - 1;
+		buildMenuFromConfig();
+		updateComponentState();
+	}
+
 	currentActionInProgress = null;
-
-	buildMenuFromConfig();
-	updateComponentState();
 	textarea.loading = false;
 }
 
