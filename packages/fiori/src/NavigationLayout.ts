@@ -26,10 +26,10 @@ import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
  *
  * ### Responsive Behavior
  *
- * On a breakpoint over Size S (over 600px width of the display), the side navigation is visible
+ * On larger screens (over 600px width), the side navigation is visible
  * by default and can be expanded or collapsed using the `mode` property.
- * On a breakpoint of Size S (under 600px width of the display), the side navigation is hidden by default and can
- * be displayed using the `mode` property.
+ * On small screens(under 600px width), the side navigation is hidden by
+ * default and can be displayed using the `mode` property.
  *
  * ### ES6 Module Import
  *
