@@ -170,6 +170,10 @@ class DateComponentBase extends UI5Element {
 		return this._displayFormat !== "medium" && this._displayFormat !== "short" && this._displayFormat !== "long";
 	}
 
+	get initialFocusId(): string {
+		return `${this._id}-calendar`;
+	}
+
 	get hasSecondaryCalendarType() {
 		return !!this.secondaryCalendarType && this.secondaryCalendarType !== this.primaryCalendarType;
 	}
