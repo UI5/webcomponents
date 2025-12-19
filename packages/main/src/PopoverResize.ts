@@ -119,7 +119,12 @@ class PopoverResize {
 		const isRtl = popover.isRtl;
 
 		const opener = popover.getOpenerHTMLElement(popover.opener);
-		const openerRect = opener!.getBoundingClientRect();
+
+		if (!opener) {
+			return ResizeHandlePlacement.BottomRight;
+		}
+
+		const openerRect = opener.getBoundingClientRect();
 		const popoverWrapperRect = popover.getBoundingClientRect();
 
 		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
