@@ -72,12 +72,6 @@ class NavigationLayout extends UI5Element {
 	hasSideNavigation = false;
 
 	/**
-	 * @private
-	 */
-	@property({ type: Boolean })
-	isLayoutS = window.innerWidth < 600;
-
-	/**
 	 * Gets whether the side navigation is collapsed.
 	 * @public
 	 */
@@ -110,7 +104,7 @@ class NavigationLayout extends UI5Element {
 	onBeforeRendering() {
 		this.calcSideCollapsed();
 
-		if (this.isLayoutS) {
+		if (window.innerWidth < 600) {
 			return;
 		}
 

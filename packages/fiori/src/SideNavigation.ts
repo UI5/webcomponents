@@ -186,13 +186,6 @@ class SideNavigation extends UI5Element {
 	@property({ type: Object })
 	_menuPopoverItems: Array<SideNavigationItem> = [];
 
-	/**
-	 * Defines if the component is rendered on a mobile device.
-	 * @private
-	 */
-	@property({ type: Boolean })
-	isLayoutS = window.innerWidth < 600;
-
 	_isOverflow = false;
 	_flexibleItemNavigation: ItemNavigation;
 	_fixedItemNavigation: ItemNavigation;
