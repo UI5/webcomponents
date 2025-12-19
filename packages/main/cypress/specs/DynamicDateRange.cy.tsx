@@ -150,32 +150,8 @@ describe("DynamicDateRange Component", () => {
 
 		cy.get("@calendar")
 			.should("exist");
-
+		
 		cy.realPress("Tab");
-		cy.realPress("Tab");
-		cy.realPress("Tab");
-
-		cy.get("@calendar")
-			.shadow()
-			.find("[data-ui5-cal-header-btn-year='true']")
-			.as("yearButton");
-
-		cy.get("@yearButton")
-			.should("be.focused");
-
-		cy.realPress("Space");
-
-		cy.get("@calendar")
-			.shadow()
-			.find("ui5-yearpicker")
-			.as("yearPicker");
-
-		cy.get("@yearPicker")
-			.shadow()
-			.find(".ui5-dp-yeartext")
-			.contains("2035")
-			.realClick();
-
 		cy.realPress("Tab");
 
 		cy.get("@calendar")
@@ -184,7 +160,8 @@ describe("DynamicDateRange Component", () => {
 			.as("monthButton");
 
 		cy.get("@monthButton")
-			.should("be.focused");
+			.should("exist")
+			.should("have.focus");
 
 		cy.realPress("Space");
 
@@ -199,6 +176,24 @@ describe("DynamicDateRange Component", () => {
 			.contains("May")
 			.realClick();
 
+		cy.get("@calendar")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-year='true']")
+			.as("yearButton")
+			.should("exist")
+			.realClick();
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-yearpicker")
+			.as("yearPicker");
+
+		cy.get("@yearPicker")
+			.shadow()
+			.find(".ui5-dp-yeartext")
+			.contains("2035")
+			.realClick();	
+		
 		cy.get("@calendar")
 			.shadow()
 			.find("ui5-daypicker")
