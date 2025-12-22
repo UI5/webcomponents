@@ -20,6 +20,10 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 	const footer = hooks?.footer || defaultFooter;
 	const initialFocus = hooks?.initialFocus;
 
+	if (!this.open) {
+		return;
+	}
+
 	return (
 		<ResponsivePopover
 			id={`${this._id}-responsive-popover`}
