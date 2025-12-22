@@ -14,6 +14,7 @@ import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import { addOpenedPopover, removeOpenedPopover } from "./popup-utils/PopoverRegistry.js";
 import PopoverResize from "./PopoverResize.js";
+import type { ResizeHandlePlacement } from "./PopoverResize.js";
 
 // Template
 import PopoverTemplate from "./PopoverTemplate.js";
@@ -198,6 +199,9 @@ class Popover extends Popup {
 
 	@property({ type: Number, noAttribute: true })
 	_maxWidth?: number;
+
+	@property({ noAttribute: true })
+	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
 
 	/**
 	 * Defines the header HTML Element.
@@ -427,6 +431,10 @@ class Popover extends Popup {
 
 	reposition() {
 		this._show();
+
+		if (this.resizable) {
+			this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
+		}
 	}
 
 	async _show() {

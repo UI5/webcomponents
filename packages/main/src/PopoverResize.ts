@@ -20,7 +20,6 @@ class PopoverResize {
 	private _resizeMouseMoveHandler: (e: MouseEvent) => void;
 	private _resizeMouseUpHandler: (e: MouseEvent) => void;
 
-	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
 	_initialClientX?: number;
 	_initialClientY?: number;
 	_initialBoundingRect?: DOMRect;
@@ -60,7 +59,7 @@ class PopoverResize {
 		delete this._totalDeltaX;
 		delete this._totalDeltaY;
 
-		delete this._resizeHandlePlacement;
+		delete this._popover._resizeHandlePlacement;
 	}
 
 	/**
@@ -110,11 +109,12 @@ class PopoverResize {
 	}
 
 	getResizeHandlePlacement() {
-		if (this._resizeHandlePlacement) {
-			return this._resizeHandlePlacement;
+		const popover = this._popover;
+
+		if (this._resized) {
+			return popover._resizeHandlePlacement;
 		}
 
-		const popover = this._popover;
 		const offset = 2;
 		const isRtl = popover.isRtl;
 
@@ -250,7 +250,7 @@ class PopoverResize {
 		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
 		this._minHeight = Number.parseFloat(minHeight);
 
-		this._resizeHandlePlacement = this.getResizeHandlePlacement();
+		this._popover._resizeHandlePlacement = this.getResizeHandlePlacement();
 
 		this._attachMouseResizeHandlers();
 	}
@@ -259,9 +259,10 @@ class PopoverResize {
 	 * Handles mouse move event during resize
 	 */
 	private _onResizeMouseMove(e: MouseEvent) {
-		const margin = this._popover._viewportMargin;
+		const popover = this._popover;
+		const margin = popover._viewportMargin;
 		const { clientX, clientY } = e;
-		const resizeHandlePlacement = this._resizeHandlePlacement;
+		const resizeHandlePlacement = popover._resizeHandlePlacement;
 		const initialBoundingRect = this._initialBoundingRect!;
 		const deltaX = clientX - this._initialClientX!;
 		const deltaY = clientY - this._initialClientY!;
@@ -396,5 +397,7 @@ class PopoverResize {
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
 	}
 }
+
+export { ResizeHandlePlacement };
 
 export default PopoverResize;
