@@ -55,6 +55,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 							icon={multiSelectAll}
 							design="Transparent"
 							pressed={this._showAllItemsButtonPressed}
+							disabled={this._getSelectedItems().length === 0}
 							onClick={this.filterSelectedItems}
 							accessibleName={this._showSelectedButtonAccessibleNameText}
 						></ToggleButton>

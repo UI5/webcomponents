@@ -32,10 +32,10 @@
 	</div>
 	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
 		<ui5-label>Initially expanded fixed search with scope and placeholder:</ui5-label>
-		<ui5-search-field accessible-name="Global Search" id="scoped-search" fixed expanded mode="Scoped" placeholder="Placeholder">
-			<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Apps" selected slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+		<ui5-search-field accessible-name="Global Search" id="scoped-search" scope-value="apps" fixed expanded mode="Scoped" placeholder="Placeholder">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 		</ui5-search-field>
 	</div>
 	<ui5-label>Advanced filtering search</ui5-label>

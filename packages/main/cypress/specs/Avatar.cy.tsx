@@ -21,6 +21,71 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", expectedLabel);
 	});
 
+	it("should return correct accessibilityInfo object when avatar is interactive", () => {
+		const INITIALS = "JD";
+		const hasPopup = "menu";
+		const customLabel = "John Doe Avatar";
+
+		cy.mount(
+			<Avatar 
+				id="interactive-info" 
+				initials={INITIALS} 
+				interactive 
+				accessibleName={customLabel}
+				accessibilityAttributes={{hasPopup}}
+			></Avatar>
+		);
+
+		cy.get("#interactive-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+			
+			// Check accessibilityInfo properties
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.role).to.equal("button");
+			expect(avatar.accessibilityInfo.type).to.equal("Button");
+			expect(avatar.accessibilityInfo.description).to.equal(customLabel);
+		});
+	});
+
+	it("should return correct accessibilityInfo object when avatar is not interactive", () => {
+		cy.mount(
+			<Avatar 
+				id="non-interactive-info" 
+				initials="JD"
+			></Avatar>
+		);
+
+		cy.get("#non-interactive-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+			
+			// Check that accessibilityInfo is undefined
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.role).to.equal("img");
+			expect(avatar.accessibilityInfo.type).to.equal("Image");
+			expect(avatar.accessibilityInfo.description).to.equal("Avatar JD");
+		});
+	});
+
+	it("should use default label for accessibilityInfo description when no custom label is provided", () => {
+		const INITIALS = "AB";
+		
+		cy.mount(
+			<Avatar 
+				id="default-label-info" 
+				initials={INITIALS}
+				interactive
+			></Avatar>
+		);
+
+		cy.get("#default-label-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+			
+			// Check that accessibilityInfo uses the default label format that includes initials
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.description).to.equal(`Avatar ${INITIALS}`);
+		});
+	});
+
 	it("checks if accessible-name is correctly passed to the icon", () => {
 		const ACCESSIBLE_NAME = "Supplier Icon";
 		const ICON_NAME = "supplier";

@@ -5,7 +5,6 @@
 
 :host(:not([hidden])) {
 	display: inline-block;
-	width: 100%;
 	line-height: normal;
 	letter-spacing: normal;
 	word-spacing: normal;

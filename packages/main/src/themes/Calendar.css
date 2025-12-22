@@ -15,8 +15,7 @@
     width: var(--_ui5_calendar_width);
     padding: var(--_ui5_calendar_top_bottom_padding) var(--_ui5_calendar_left_right_padding) 0;
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: flex-end;
+    flex-direction: column;
     overflow: hidden;
 }
 

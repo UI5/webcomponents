@@ -1,12 +1,11 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { customElement, i18n, property } from "@ui5/webcomponents-base/dist/decorators.js";
-import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
 import SliderTooltipTemplate from "./SliderTooltipTemplate.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import SliderTooltipCss from "./generated/themes/SliderTooltip.css.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import { isEnter, isF2, isTabNext } from "@ui5/webcomponents-base/dist/Keys.js";
 import type Input from "./Input.js";
 
 import {
@@ -14,6 +13,7 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { Interval } from "@ui5/webcomponents-base/dist/types.js";
+import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 
 type SliderTooltipChangeEventDetails = {
 	value: string,
@@ -34,21 +34,38 @@ type SliderTooltipChangeEventDetails = {
 	styles: SliderTooltipCss,
 })
 
+/**
+ * Fired when the value is confirmed by user interaction (Enter key or focusout)
+ */
 @event("change")
 
-@event("forward-focus")
+/**
+ * Fired when the value is changed by user interaction
+ */
+@event("input")
+
+/**
+ * Fired when the tooltip is opened or closed
+ */
+@event("open")
+
+/**
+ * Fired when the tooltip focus changes
+ */
+@event("focus-change")
 
 class SliderTooltip extends UI5Element {
 	eventDetails!: {
 		"change": SliderTooltipChangeEventDetails,
-		"forward-focus": void
+		"focus-change": void,
+		"open": void,
+		"input": {
+			value?: string,
+		},
 	};
 
 	@property()
-	value?: string;
-
-	@property()
-	inputValue?: string;
+	value = "";
 
 	@property({ type: Boolean })
 	open = false;
@@ -73,6 +90,7 @@ class SliderTooltip extends UI5Element {
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	_open: boolean = false;
 
 	constructor() {
 		super();
@@ -80,11 +98,22 @@ class SliderTooltip extends UI5Element {
 		this._repositionTooltipBound = this.repositionTooltip.bind(this);
 	}
 
-	onBeforeRendering(): void { }
+	onBeforeRendering(): void {
+		if (this.open !== this._open) {
+			this.fireDecoratorEvent("open");
+		}
+
+		this._open = this.open;
+	}
 
 	onAfterRendering(): void {
 		if (!this.hasAttribute("popover")) {
 			this.setAttribute("popover", "manual");
+		}
+
+		// Workaround to skip DOM state
+		if (this.inputRef && this.inputRef.value !== this.value) {
+			this.inputRef.value = this.value;
 		}
 
 		if (this.isConnected) {
@@ -120,44 +149,12 @@ class SliderTooltip extends UI5Element {
 		this.style.right = "auto";
 	}
 
-	isValueValid(value: string): boolean {
-		return parseFloat(value) >= this.min && parseFloat(value) <= this.max;
-	}
-
 	attachGlobalScrollHandler() {
 		document.addEventListener("scroll", this._repositionTooltipBound, { capture: true });
 	}
 
 	detachGlobalScrollHandler() {
 		document.removeEventListener("scroll", this._repositionTooltipBound, { capture: true });
-	}
-
-	_keydown(e: KeyboardEvent) {
-		if (isF2(e) || isTabNext(e)) {
-			e.preventDefault();
-
-			if (!this.isValueValid(this.inputRef.value)) {
-				const value = this.value;
-				this.inputRef.value = value || "";
-			}
-
-			this.valueState = ValueState.None;
-
-			this.fireDecoratorEvent("change", { value: this.inputRef.value });
-			this.fireDecoratorEvent("forward-focus");
-		}
-
-		if (isEnter(e)) {
-			if (!this.isValueValid(this.inputRef.value)) {
-				this.valueState = ValueState.Negative;
-
-				return;
-			}
-
-			this.valueState = ValueState.None;
-
-			this.fireDecoratorEvent("change", { value: this.inputRef.value });
-		}
 	}
 
 	_onInputFocusin() {
@@ -167,25 +164,33 @@ class SliderTooltip extends UI5Element {
 		});
 	}
 
-	_onInputFocusOut(e: FocusEvent) {
-		if (!this.isValueValid(this.inputRef.value)) {
-			const value = this.value;
-			this.inputRef.value = value || "";
+	_onInputKeydown(e: KeyboardEvent) {
+		if (isEnter(e)) {
+			this.fireDecoratorEvent("change", { value: (e.target as Input).value });
 		}
+	}
 
+	_onInputInput() {
+		this.fireDecoratorEvent("input", { value: this.inputRef?.value });
+	}
+
+	_onInputFocusOut(e: FocusEvent) {
 		const relatedTarget = e.relatedTarget as HTMLElement;
 
 		if (!this.parentElement?.contains(relatedTarget)) {
 			this.hidePopover();
 		}
-	}
 
-	get inputRef() {
-		return this.shadowRoot?.querySelector("ui5-input") as Input;
+		this.fireDecoratorEvent("change", { value: (e.target as Input).value });
+		this.fireDecoratorEvent("focus-change");
 	}
 
 	get _ariaLabelledByInputText() {
 		return SliderTooltip.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_LABEL);
+	}
+
+	get inputRef() {
+		return this.shadowRoot?.querySelector<Input>("[ui5-input]");
 	}
 }
 

@@ -16,6 +16,11 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onPrevButtonClick}
+				tabindex={this._previousButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipPrevButton}
+				aria-label={this.accInfo.ariaLabelPrevButton}
+				aria-description={this.accInfo.ariaLabelPrevButton}
+				aria-keyshortcuts={this.accInfo.keyShortcutPrevButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowLeft}/>
 			</div>
@@ -93,6 +98,11 @@ export default function CalendarTemplate(this: Calendar) {
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onNextButtonClick}
+				tabindex={this._nextButtonDisabled ? -1 : 0}
+				title={this.accInfo.tooltipNextButton}
+				aria-label={this.accInfo.ariaLabelNextButton}
+				aria-description={this.accInfo.ariaLabelNextButton}
+				aria-keyshortcuts={this.accInfo.keyShortcutNextButton}
 			>
 				<Icon class="ui5-calheader-arrowicon" name={slimArowRight}/>
 			</div>

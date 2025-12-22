@@ -2,7 +2,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEscape, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import SliderBase from "./SliderBase.js";
@@ -10,6 +10,7 @@ import type SliderTooltip from "./SliderTooltip.js";
 
 // Template
 import SliderTemplate from "./SliderTemplate.js";
+import type { SliderTooltipChangeEventDetails } from "./SliderTooltip.js";
 
 // Texts
 import {
@@ -89,13 +90,17 @@ class Slider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	value = 0;
 
+	@property()
+	tooltipValueState: `${ValueState}` = "None";
+
+	@property()
+	tooltipValue = "";
+
 	_valueInitial?: number;
 	_valueOnInteractionStart?: number;
 	_progressPercentage = 0;
 	_handlePositionFromStart = 0;
 	_lastValidInputValue: string;
-	_tooltipInputValue: string = this.value.toString();
-	_tooltipInputValueState: `${ValueState}` = "None";
 
 	get formFormattedValue() {
 		return this.value.toString();
@@ -129,6 +134,12 @@ class Slider extends SliderBase implements IFormInputElement {
 		this.notResized = true;
 		this.syncUIAndState();
 		this._updateHandleAndProgress(this.value);
+	}
+
+	onAfterRendering(): void {
+		super.onAfterRendering();
+
+		this.tooltip?.repositionTooltip();
 	}
 
 	syncUIAndState() {
@@ -219,6 +230,47 @@ class Slider extends SliderBase implements IFormInputElement {
 		}
 	}
 
+	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
+		const value = parseFloat(e.detail.value);
+		const isInvalid = value < this._effectiveMin || value > this._effectiveMax;
+
+		if (isInvalid) {
+			this.tooltipValueState = "Negative";
+			this.tooltipValue = `${value}`;
+			return;
+		}
+
+		this.value = value;
+		this.fireDecoratorEvent("change");
+	}
+
+	_onTooltipFocusChange() {
+		const value = parseFloat(this.tooltipValue);
+		const isInvalid = value < this._effectiveMin || value > this._effectiveMax;
+
+		if (isInvalid) {
+			this.tooltipValueState = "None";
+			this.tooltipValue = this.value.toString();
+		}
+	}
+
+	_onTooltipKeydown(e: KeyboardEvent) {
+		if (isF2(e)) {
+			e.preventDefault();
+			this._sliderHandle.focus();
+		}
+	}
+
+	_onTooltipOpen() {
+		const ctor = this.constructor as typeof Slider;
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
+		this.tooltipValue = this.value.toFixed(stepPrecision);
+	}
+
+	_onTooltipInput(e: CustomEvent) {
+		this.tooltipValue = e.detail.value;
+	}
+
 	/**
 	 * Called when the user moves the slider
 	 * @private
@@ -237,6 +289,7 @@ class Slider extends SliderBase implements IFormInputElement {
 
 		this._updateHandleAndProgress(newValue);
 		this.value = newValue;
+		this.tooltipValue = newValue.toString();
 		this.updateStateStorageAndFireInputEvent("value");
 	}
 
@@ -295,6 +348,7 @@ class Slider extends SliderBase implements IFormInputElement {
 		if (newValue !== currentValue) {
 			this._updateHandleAndProgress(newValue!);
 			this.value = newValue!;
+			this.tooltipValue = this.value.toString();
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
@@ -309,6 +363,10 @@ class Slider extends SliderBase implements IFormInputElement {
 		return this.value.toString();
 	}
 
+	get tooltip() {
+		return this.getDomRef()?.querySelector<SliderTooltip>("[ui5-slider-tooltip]");
+	}
+
 	get styles() {
 		return {
 			progress: {
@@ -321,14 +379,8 @@ class Slider extends SliderBase implements IFormInputElement {
 		};
 	}
 
-	get _sliderHandle() {
+	get _sliderHandle() : HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-slider-handle")!;
-	}
-
-	get tooltipValue() {
-		const ctor = this.constructor as typeof Slider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		return this.value.toFixed(stepPrecision);
 	}
 
 	get _ariaDisabled() {
