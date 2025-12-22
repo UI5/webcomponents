@@ -372,6 +372,9 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property()
 	_calendarCurrentPicker: Picker = "day";
 
+	@property({ type: Boolean })
+	_shouldRenderPopover = false;
+
 	liveValue?: string;
 
 	isLiveUpdate?: boolean;
@@ -474,6 +477,9 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			this.value = this.normalizeFormattedValue(this.value) || this.value;
 		}
 		this.liveValue = this.value;
+		if (this.open) {
+			this._shouldRenderPopover = true; // render the popover only when the picker is open (but never remove it from DOM once rendered)
+		}
 	}
 
 	/**
