@@ -81,7 +81,7 @@
 	justify-content: space-between;
 	flex: 1;
 	max-width: 100%;
-	gap: 1rem;
+	gap: 0.25rem;
 }
 
 .ui5-search-item-icon {
