@@ -17,6 +17,7 @@ import {
 	isPageDownShift,
 	isEscape,
 	isEnter,
+	isMinus,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -38,6 +39,7 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import type Input from "./Input.js";
 import type { InputAccInfo, InputEventDetail } from "./Input.js";
 import InputType from "./types/InputType.js";
+import NumberFormat from "@ui5/webcomponents-localization/dist/NumberFormat.js";
 
 // Styles
 import StepInputCss from "./generated/themes/StepInput.css.js";
@@ -96,10 +98,12 @@ type StepInputValueStateChangeEventDetail = {
  */
 @customElement({
 	tag: "ui5-step-input",
+	cldr: true,
 	formAssociated: true,
 	renderer: jsxRenderer,
 	styles: StepInputCss,
 	template: StepInputTemplate,
+	languageAware: true,
 })
 /**
  * Fired when the input operation has finished by pressing Enter or on focusout.
@@ -293,6 +297,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_initialValueState?: `${ValueState}`;
 
+	_formatter?: NumberFormat;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -329,7 +335,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get type() {
-		return InputType.Number;
+		return InputType.Text;
 	}
 
 	// icons-related
@@ -355,15 +361,17 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _displayValue() {
+		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
+		const value = this.input?.value && !this._isValueWithCorrectPrecision ? this.input.value : this._formatNumber(this.value);
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
-			return this.value.toFixed(this.valuePrecision);
+			return value;
 		}
 
 		if (this.input && this.value === Number(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
 			return this.input.value;
 		}
 
-		return this.value.toString();
+		return value;
 	}
 
 	get accInfo(): InputAccInfo {
@@ -383,6 +391,16 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	onBeforeRendering() {
 		this._setButtonState();
+	}
+
+	get formatter(): NumberFormat {
+		if (!this._formatter) {
+			this._formatter = NumberFormat.getFloatInstance({
+				decimals: this.valuePrecision,
+			});
+		}
+
+		return this._formatter;
 	}
 
 	get input(): Input {
@@ -420,6 +438,20 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_onInputFocusOut() {
 		this._inputFocused = false;
 		this._onInputChange();
+	}
+
+	_onMouseWheel(e: WheelEvent) {
+		if (this.disabled || this.readonly) {
+			return;
+		}
+
+		if (this._isFocused) {
+			e.preventDefault();
+		}
+
+		const isScrollUp = e.deltaY < 0;
+		const modifier = isScrollUp ? this.step : -this.step;
+		this._modifyValue(modifier, true);
 	}
 
 	_setButtonState() {
@@ -485,7 +517,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		value = this._preciseValue(value);
 		if (value !== this.value) {
 			this.value = value;
-			this.input.value = value.toFixed(this.valuePrecision);
+			this.input.value = this._formatNumber(value);
 			this._validate();
 			this._setButtonState();
 			this.focused = true;
@@ -496,6 +528,22 @@ class StepInput extends UI5Element implements IFormInputElement {
 				this.input.focus();
 			}
 		}
+	}
+
+	/**
+ 	 * Formats a number with thousands separator based on current locale
+ 	 * @private
+ 	 */
+	_formatNumber(value: number): string {
+		return this.formatter.format(value);
+	}
+
+	/**
+ 	 * Parses formatted number string back to numeric value
+ 	 * @private
+ 	*/
+	_parseNumber(formattedValue: string): number {
+		return this.formatter.parse(formattedValue) as number;
 	}
 
 	_incValue() {
@@ -521,8 +569,9 @@ class StepInput extends UI5Element implements IFormInputElement {
 		}
 
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = this.input?.value?.includes(".") ? "." : ",";
-		const numberParts = this.input?.value?.split(delimiter);
+		// @ts-ignore oFormatOptions is a private API of NumberFormat but we need it here to get the decimal separator
+		const delimiter = this.formatter?.oFormatOptions?.decimalSeparator || ".";
+		const numberParts = this.input?.value?.split(delimiter as string);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
 		return decimalPartLength === this.valuePrecision;
@@ -530,16 +579,16 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
-
-		const inputValue = Number(this.input.value);
+		const inputValue = this._parseNumber(this.input.value);
 		if (this._isValueChanged(inputValue)) {
-			this._updateValueAndValidate(inputValue);
+			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
+			this.innerInput.value = this.input.value;
 		}
 	}
 
 	_setDefaultInputValueIfNeeded() {
 		if (this.input.value === "") {
-			const defaultValue = (this.min || 0).toFixed(this.valuePrecision);
+			const defaultValue = this._formatNumber(this.min || 0);
 			this.input.value = defaultValue;
 			this.innerInput.value = defaultValue; // we need to update inner input value as well, to avoid empty input scenario
 		}
@@ -555,7 +604,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 			|| this.value !== inputValue
 			|| inputValue === 0
 			|| !isValueWithCorrectPrecision
-			|| isPrecisionCorrectButValueStateError;
+			|| isPrecisionCorrectButValueStateError
+			|| Number.isNaN(inputValue);
 	}
 
 	_updateValueAndValidate(inputValue: number) {
@@ -608,9 +658,36 @@ class StepInput extends UI5Element implements IFormInputElement {
 		} else if (!isUpCtrl(e) && !isDownCtrl(e) && !isUpShift(e) && !isDownShift(e)) {
 			preventDefault = false;
 		}
-		if (preventDefault) {
+
+		if (e.key && e.key.length !== 1) {
+			return;
+		}
+
+		const cursorPosition = this._getCursorPosition();
+		const inputValue = this.innerInput.value;
+		const typedValue = this._getValueOnkeyDown(e, inputValue, cursorPosition!);
+		const parsedValue = this._parseNumber(typedValue);
+		const isValidTypedValue = this._isTypedValueValid(typedValue, parsedValue);
+
+		if (preventDefault || !isValidTypedValue) {
 			e.preventDefault();
 		}
+
+		if (cursorPosition === 0 && isMinus(e)) {
+			this._updateValueAndValidate(parsedValue);
+		}
+	}
+
+	_getCursorPosition() {
+		return this.input.getDomRef()!.querySelector("input")!.selectionStart;
+	}
+
+	_getValueOnkeyDown(e: KeyboardEvent, inputValue: string, cursorPosition?: number) {
+		return `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
+	}
+
+	_isTypedValueValid(typedValue: string, parsedValue: number) {
+		return !Number.isNaN(parsedValue) && !/, {2,}/.test(typedValue);
 	}
 
 	_decSpin() {
