@@ -371,6 +371,43 @@ describe("MultiInput tokens", () => {
 		cy.get("@changeSpy").should("have.been.calledOnce");
 	});
 
+	it("should show suggestions (not tokens) when typing for a second token", () => {
+		cy.mount(
+			<MultiInput showSuggestions>
+				<Token slot="tokens" text="Argentina"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+				<SuggestionItem text="Belgium"></SuggestionItem>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@input")
+			.realType("b");
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-multi-input]")
+			.find("[ui5-suggestion-item]")
+			.should("have.length", 3)
+			.should("be.visible");
+
+		cy.get("@popover")
+			.find("[ui5-list].ui5-tokenizer-list")
+			.should("not.exist");
+	});
+
 	it("Tokens should not have delete icon when MI is readonly", () => {
 		cy.mount(
 			<MultiInput id="readonly-mi" readonly>
