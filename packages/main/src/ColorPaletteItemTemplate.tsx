@@ -8,7 +8,7 @@ export default function ColorPaletteItemTemplate(this: ColorPaletteItem) {
 			role="button"
 			aria-label={`${this.colorLabel} - ${this.index}: ${this.value}`}
 			aria-pressed={this.selected}
-			title={`${this.colorLabel} - ${this.index}: ${this.value}`}
+			title={`${this.colorLabel} - ${this.index}: ${this.tooltip ? this.tooltip : this.value}`}
 		></div>
 	);
 }
