@@ -7,11 +7,20 @@ import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
 
+let OpenUI5Element;
+
 function onOpenUI5InitMethod(win) {
-	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], async (HTML, Button, Dialog, Popover, Input) => {
+	(win as any).sap.ui.require([
+		"sap/ui/core/Element",
+		"sap/ui/core/HTML",
+		"sap/m/Button",
+		"sap/m/Dialog",
+		"sap/m/Popover",
+		"sap/m/Input"
+	], async (Element, HTML, Button, Dialog, Popover, Input) => {
 
 		await OpenUI5Support.init();
-
+		OpenUI5Element = Element;
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
 			press: function () {
@@ -21,7 +30,7 @@ function onOpenUI5InitMethod(win) {
 					content: [
 						new HTML({
 							content:
-`<ui5-select id="webCSelect1">
+								`<ui5-select id="webCSelect1">
 	<ui5-option>Option 1</ui5-option>
 	<ui5-option>Option 2</ui5-option>
 	<ui5-option>Option 3</ui5-option>
@@ -205,6 +214,15 @@ function openUI5Popover(win, opener) {
 		}).openBy(opener);
 	});
 }
+
+function isOpenUI5DialogOpen($dialog) {
+	expect(OpenUI5Element).to.exist;
+
+	const dialogInstance = OpenUI5Element.getElementById($dialog.attr("id"));
+
+	expect(dialogInstance).to.exist
+	expect(dialogInstance.isOpen()).to.be.true;
+};
 
 describe("ui5 and web components integration", () => {
 	beforeEach(() => {
@@ -480,6 +498,10 @@ describe("ui5 and web components integration", () => {
 			.find('input')
 			.focus();
 
+		cy.get("#openUI5Combobox1")
+			.find('input')
+			.should('be.focused');
+
 		cy.realPress("Escape");
 
 		cy.get('#dialog1')
@@ -518,12 +540,11 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get<Dialog>("#respPopover").ui5DialogOpened();
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverOpened();
 
 		cy.realPress("Escape");
 
-		cy.get("#respPopover")
-			.should('not.be.visible');
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -549,12 +570,12 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get<Dialog>("#respPopoverNoInitialFocus").ui5DialogOpened();
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus").ui5ResponsivePopoverOpened();
 
 		cy.realPress("Escape");
 
-		cy.get("#respPopoverNoInitialFocus")
-			.should('not.be.visible');
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openResPopoverNoInitialFocusButton")
 			.should('be.focused');
@@ -591,8 +612,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCSelect1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -631,8 +652,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCComboBox1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -688,7 +709,9 @@ describe("ui5 and web components integration", () => {
 			.realClick();
 
 		cy.get("#openUI5DialogFinal")
-			.should('be.visible');
+			.should('be.visible')
+			.should(isOpenUI5DialogOpen);
+		cy.wait(1000);
 
 		cy.get("#openUI5Dialog1")
 			.should('not.be.visible');
@@ -706,7 +729,9 @@ describe("ui5 and web components integration", () => {
 			.should('not.exist');
 
 		cy.get("#openUI5DialogWithButtons")
-			.should('be.visible');
+			.should('be.visible')
+			.should(isOpenUI5DialogOpen);
+		cy.wait(100);
 
 		cy.realPress("Escape");
 
