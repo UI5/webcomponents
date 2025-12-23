@@ -1,24 +1,3 @@
-.ui5-ai-textarea-root {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height: 100%;
-}
-
-.ui5-ai-textarea-root .ui5-textarea-wrapper {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	position: relative;
-}
-
-.ui5-ai-textarea-root [part="footer"] {
-	width: 100%;
-	margin-top: auto;
-	flex-shrink: 0;
-}
-
 .ui5-ai-writing-assistant-footer-bar {
 	background: var(--_ui5_texteditor_toolbar_background, var(--sapPageFooter_Background));
 	width: 100%;
@@ -27,7 +6,6 @@
 	border-bottom: none;
 	border-top: none;
 	padding: 0.5rem;
-	min-height: 2.75rem;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
