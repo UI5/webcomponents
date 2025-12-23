@@ -1,7 +1,8 @@
 @import "../base/SliderBase-parameters.css";
 
 :root {
-	--_ui5_slider_inner_height: 0.375rem;
+	--_ui5_slider_inner_height: 0.375rem; /* Total height including border */
+	--_ui5_slider_progress_box_sizing: border-box;
 	--_ui5_slider_progress_border: solid 0.0625rem var(--sapField_BorderColor);
 	--_ui5_slider_progress_border_radius: 0.375rem;
 	--_ui5_range_slider_handle_background: transparent;
@@ -9,7 +10,17 @@
 	--_ui5_slider_handle_border: solid 0.125rem var(--sapField_BorderColor);
 	--_ui5_slider_handle_height: 1.65rem;
 	--_ui5_slider_handle_width: 1.65rem;
-	--_ui5_slider_handle_top: -0.75rem;
+	--_ui5_slider_handle_top: -0.6375rem; /* -(1.65rem handle - 0.375rem track) / 2 */
+	--_ui5_slider_handle_box_sizing: border-box;
 	--_ui5_slider_progress_background: var(--sapSelectedColor);
-	--_ui5_slider_tickmark_top: -0.2525rem;
+	--_ui5_slider_tickmark_height: 1rem;
+	--_ui5_slider_tickmark_top: -0.3125rem; /* -(1rem tickmark - 0.375rem track) / 2 */
+	--_ui5_slider_active_progress_border: none;
+	--_ui5_slider_active_progress_left: 0;
+	--_ui5_slider_active_progress_top: 0;
+	--_ui5_slider_active_progress_height: var(--_ui5_slider_progress_height);
+	--_ui5_slider_no_tickmarks_active_progress_border: none;
+	--_ui5_slider_no_tickmarks_active_progress_left: 0;
+	--_ui5_slider_no_tickmarks_active_progress_top: 0;
+	--_ui5_slider_no_tickmarks_active_progress_height: var(--_ui5_slider_no_tickmarks_progress_height);
 }
