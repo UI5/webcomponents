@@ -11,11 +11,6 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import {
-	isPhone,
-	isTablet,
-	isCombi,
-} from "@ui5/webcomponents-base/dist/Device.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -77,7 +72,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * The `ui5-side-navigation` component is designed to be used within a `ui5-navigation-layout` component to ensure an optimal user experience.
  *
  * Using it standalone may not match the intended design and functionality.
- * For example, the side navigation may not exhibit the correct behavior on phones and tablets.
+ * For example, the side navigation may not exhibit the correct behavior on smaller screens.
  * Padding of the `ui5-shellbar` will not match the padding of the side navigation.
  *
  * ### Keyboard Handling
@@ -128,11 +123,12 @@ class SideNavigation extends UI5Element {
 	/**
 	 * Defines whether the `ui5-side-navigation` is expanded or collapsed.
 	 *
-	 * **Note:** The collapsed mode is not supported on phones.
+	 * **Note:** The collapsed mode is not supported on small screens (under 600 px wide) and in
+	 * expanded mode the Side Navigation will take the whole width of the screen.
 	 * The `ui5-side-navigation` component is intended to be used within a `ui5-navigation-layout`
 	 * component to ensure proper responsive behavior. If you choose not to use the
 	 * `ui5-navigation-layout`, you will need to implement the appropriate responsive patterns yourself,
-	 * particularly for phones where the collapsed mode should not be used.
+	 * particularly for smaller screens where the collapsed mode should not be used.
 	 *
 	 * @public
 	 * @default false
@@ -190,22 +186,9 @@ class SideNavigation extends UI5Element {
 	@property({ type: Object })
 	_menuPopoverItems: Array<SideNavigationItem> = [];
 
-	/**
-	 * Defines if the component is rendered on a mobile device.
-	 * @private
-	 */
-	@property({ type: Boolean })
-	isPhone = isPhone();
-
 	_isOverflow = false;
 	_flexibleItemNavigation: ItemNavigation;
 	_fixedItemNavigation: ItemNavigation;
-
-	/**
-	 * @private
-	 */
-	@property({ type: Boolean })
-	isTouchDevice = false;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -492,8 +475,6 @@ class SideNavigation extends UI5Element {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
-
-		this.isTouchDevice = isPhone() || (isTablet() && !isCombi());
 	}
 
 	onExitDOM() {

@@ -20,9 +20,12 @@
 	width: var(--_ui5_side_navigation_collapsed_width);
 }
 
-:host([is-phone]) {
-	width: 100%;
+@media (width < 600px) {
+	:host(:not([hidden])) {
+		width: 100%;
+	}
 }
+
 
 .ui5-sn-root {
 	height: 100%;
