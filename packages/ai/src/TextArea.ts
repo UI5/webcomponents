@@ -268,9 +268,10 @@ class TextArea extends BaseTextArea {
 			return;
 		}
 
-		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
+		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean, horizontalAlign?: string };
 		if (menu && typeof menu.open !== "undefined") {
-			menu.opener = e.detail.clickTarget;
+			menu.opener = e.detail.clickTarget.shadowRoot?.querySelector("ui5-button") as HTMLElement;
+			menu.horizontalAlign = "End";
 			menu.open = true;
 		}
 	}
