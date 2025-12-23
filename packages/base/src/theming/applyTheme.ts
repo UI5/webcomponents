@@ -4,6 +4,7 @@ import getThemeDesignerTheme from "./getThemeDesignerTheme.js";
 import { fireThemeLoaded } from "./ThemeLoaded.js";
 import { getFeature } from "../FeaturesRegistry.js";
 import { attachCustomThemeStylesToHead, getThemeRoot } from "../config/ThemeRoot.js";
+import { setBaseTheme } from "../config/Theme.js";
 import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
@@ -87,9 +88,13 @@ const applyTheme = async (theme: string) => {
 	}
 
 	// Always load component packages properties. For non-registered themes, try with the base theme, if any
-	const packagesTheme = isThemeRegistered(theme) ? theme : extTheme && extTheme.baseThemeName;
-	await loadComponentPackages(packagesTheme || DEFAULT_THEME, extTheme && extTheme.themeName === theme ? theme : undefined);
+	const externalThemeName = extTheme && extTheme.themeName === theme ? theme : undefined;
+	const baseThemeName = extTheme && extTheme.baseThemeName;
+	const effectiveThemeName = isThemeRegistered(theme) ? theme : (baseThemeName || DEFAULT_THEME);
 
+	await loadComponentPackages(effectiveThemeName, externalThemeName);
+
+	setBaseTheme(baseThemeName);
 	fireThemeLoaded(theme);
 };
 

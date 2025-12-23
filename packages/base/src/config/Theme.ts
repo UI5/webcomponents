@@ -7,6 +7,7 @@ import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
 let curTheme: string | undefined;
+let curBaseTheme: string | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
@@ -91,6 +92,24 @@ const isLegacyThemeFamilyAsync = async () => {
 
 const isKnownTheme = (theme: string) => SUPPORTED_THEMES.includes(theme);
 
+/**
+ * Returns the base theme of external theme.
+ * @private
+ * @returns {string | undefined} the base theme name
+ */
+const getBaseTheme = (): string | undefined => {
+	return curBaseTheme;
+};
+
+/**
+ * Sets the base theme of the current external theme.
+ * @param { string | undefined } theme the name of the new base theme
+ * @private
+ */
+const setBaseTheme = (theme: string | undefined): void => {
+	curBaseTheme = theme;
+};
+
 export {
 	getTheme,
 	setTheme,
@@ -98,4 +117,6 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
+	getBaseTheme,
+	setBaseTheme,
 };

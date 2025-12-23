@@ -3,7 +3,7 @@ import EventProvider from "./EventProvider.js";
 import insertFontFace from "./FontFace.js";
 import insertSystemCSSVars from "./SystemCSSVars.js";
 import insertScrollbarStyles from "./ScrollbarStyles.js";
-import { getTheme } from "./config/Theme.js";
+import { getTheme, getBaseTheme } from "./config/Theme.js";
 import applyTheme from "./theming/applyTheme.js";
 import { registerCurrentRuntime } from "./Runtimes.js";
 import { getFeature } from "./FeaturesRegistry.js";
@@ -88,8 +88,15 @@ const boot = async (): Promise<void> => {
  * @param { string } theme
  */
 const onThemeRegistered = (theme: string) => {
-	if (booted && theme === getTheme()) { // getTheme should only be called if "booted" is true
-		applyTheme(getTheme());
+	if (!booted) {
+		return;
+	}
+
+	const currentTheme = getTheme();
+	const currentBaseTheme = getBaseTheme();
+
+	if (theme === currentTheme || theme === currentBaseTheme) {
+		applyTheme(currentTheme);
 	}
 };
 
