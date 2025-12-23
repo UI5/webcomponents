@@ -168,7 +168,7 @@ class Popover extends Popup {
 	 * **Note:** This property is effective only on desktop devices.
 	 * @default false
 	 * @public
-	 * @since 2.18.0
+	 * @since 2.19.0
 	 */
 	@property({ type: Boolean })
 	resizable = false;

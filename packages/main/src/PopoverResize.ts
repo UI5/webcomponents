@@ -111,18 +111,18 @@ class PopoverResize {
 	getResizeHandlePlacement() {
 		const popover = this._popover;
 
-		if (this._resized) {
+		if (this._resized && popover._resizeHandlePlacement) {
 			return popover._resizeHandlePlacement;
 		}
-
-		const offset = 2;
-		const isRtl = popover.isRtl;
 
 		const opener = popover.getOpenerHTMLElement(popover.opener);
 
 		if (!opener) {
-			return ResizeHandlePlacement.BottomRight;
+			return undefined;
 		}
+
+		const offset = 2;
+		const isRtl = popover.isRtl;
 
 		const openerRect = opener.getBoundingClientRect();
 		const popoverWrapperRect = popover.getBoundingClientRect();
@@ -262,7 +262,7 @@ class PopoverResize {
 		const popover = this._popover;
 		const margin = popover._viewportMargin;
 		const { clientX, clientY } = e;
-		const resizeHandlePlacement = popover._resizeHandlePlacement;
+		const resizeHandlePlacement = this.getResizeHandlePlacement();
 		const initialBoundingRect = this._initialBoundingRect!;
 		const deltaX = clientX - this._initialClientX!;
 		const deltaY = clientY - this._initialClientY!;
