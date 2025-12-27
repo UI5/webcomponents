@@ -193,6 +193,11 @@ describe("Typeahead", () => {
 
         cy.get("[ui5-multi-combobox]")
             .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
             .find("[ui5-responsive-popover]")
             .find("[ui5-input]")
             .as("respPopoverInput")
@@ -218,6 +223,11 @@ describe("Typeahead", () => {
 
         cy.get("@input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .shadow()
@@ -299,6 +309,11 @@ describe("Items selection", () => {
             .realClick();
 
         cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
             .eq(0)
             .realClick();
@@ -330,6 +345,11 @@ describe("Items selection", () => {
             .shadow()
             .find("input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
@@ -483,6 +503,11 @@ describe("Items selection", () => {
             .shadow()
             .find("input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .shadow()
@@ -751,6 +776,11 @@ describe("Eventing", () => {
             .shadow()
             .find("input")
             .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
 
         cy.get("[ui5-multi-combobox]")
             .find("[ui5-mcb-item]")
