@@ -37,12 +37,55 @@ function Sample() {
 	</NavigationLayout>;
 }
 
+function SampleWithCollapsedMode() {
+	return <NavigationLayout id="nl1" mode="Collapsed">
+		<ShellBar slot="header" primaryTitle="UI5 Web Components">
+			<Button icon={menu} slot="startButton" id="startButton"></Button>
+		</ShellBar>
+
+		<SideNavigation id="sn1" slot="sideContent">
+			<SideNavigationItem text="Home" href="#home" icon={home}></SideNavigationItem>
+
+			<SideNavigationGroup text="Group 1" expanded={true}>
+				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
+			</SideNavigationGroup>
+		</SideNavigation>
+
+		<div>
+			Content
+		</div>
+	</NavigationLayout>;
+}
+
+function SampleWithExpandedMode() {
+	return <NavigationLayout id="nl1" mode="Expanded">
+		<ShellBar slot="header" primaryTitle="UI5 Web Components">
+			<Button icon={menu} slot="startButton" id="startButton"></Button>
+		</ShellBar>
+
+		<SideNavigation id="sn1" slot="sideContent">
+			<SideNavigationItem text="Home" href="#home" icon={home}></SideNavigationItem>
+
+			<SideNavigationGroup text="Group 1" expanded={true}>
+				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
+			</SideNavigationGroup>
+		</SideNavigation>
+
+		<div>
+			Content
+		</div>
+	</NavigationLayout>;
+}
+
 describe("Rendering and interaction", () => {
-	beforeEach(() => {
-		cy.mount(<Sample />);
-	});
 
 	it("tests initial rendering", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
 			.find(".ui5-nl-root")
@@ -70,6 +113,8 @@ describe("Rendering and interaction", () => {
 	});
 
 	it("tests collapsing", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-side-navigation]")
 			.should("have.prop", "collapsed", false);
 
@@ -85,15 +130,23 @@ describe("Rendering and interaction", () => {
 		cy.get("[ui5-side-navigation]")
 			.should("have.prop", "collapsed", false);
 	});
+
+	it("tests that initial mode=Collapsed overrides default expand/collapse behaviour", () => {
+		cy.mount(<SampleWithCollapsedMode />);
+
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", true);
+	});
 });
 
 describe("Navigation Layout on Size S", () => {
 	beforeEach(() => {
 		cy.viewport(500, 1080);
-		cy.mount(<Sample />);
 	});
 
 	it("tests initial rendering", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.should("have.prop", "sideCollapsed", true);
 
@@ -107,6 +160,8 @@ describe("Navigation Layout on Size S", () => {
 	});
 
 	it("tests collapsing", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.invoke("prop", "mode", "Expanded");
 
@@ -122,5 +177,14 @@ describe("Navigation Layout on Size S", () => {
 			.shadow()
 			.find(".ui5-nl-aside")
 			.should("not.be.visible");
+	});
+
+	it("tests that initial mode=Expanded overrides default expand/collapse behaviour", () => {
+		cy.mount(<SampleWithExpandedMode />);
+
+		cy.get("[ui5-navigation-layout]")
+			.shadow()
+			.find(".ui5-nl-aside")
+			.should("be.visible");
 	});
 });
