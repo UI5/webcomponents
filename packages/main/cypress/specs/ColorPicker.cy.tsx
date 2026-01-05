@@ -1,5 +1,5 @@
 import ColorPicker from "../../src/ColorPicker.js";
-import { COLORPICKER_HUE_SLIDER } from "../../src/generated/i18n/i18n-defaults.js";
+import { COLORPICKER_HUE_SLIDER, COLORPICKER_ALPHA_SLIDER } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Color Picker general interaction tests", () => {
 	it("should not display color channel inputs and alpha slider in simplified mode", () => {
@@ -378,6 +378,6 @@ describe("Color Picker accessibility tests", () => {
 		cy.get<ColorPicker>("@colorPicker")
 			.shadow()
 			.find(".ui5-color-picker-alpha-slider")
-			.should("have.attr", "accessible-name", "Alpha control");
+			.should("have.attr", "accessible-name", ColorPicker.i18nBundle.getText(COLORPICKER_ALPHA_SLIDER));
 	});
 });
