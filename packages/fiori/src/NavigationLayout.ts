@@ -104,7 +104,7 @@ class NavigationLayout extends UI5Element {
 	onBeforeRendering() {
 		this.calcSideCollapsed();
 
-		if (window.innerWidth < 600) {
+		if (window.innerWidth < 600 && this.isSideCollapsed()) {
 			return;
 		}
 
