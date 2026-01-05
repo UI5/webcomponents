@@ -28,7 +28,8 @@ jobs:
             // Allowed bots
             const isSystemUser = ['ui5-webcomponents-bot', 'github-actions[bot]'].includes(commenter);
 
-            core.setOutput('shouldReopen', !isSystemUser && commentAt > closedAt);
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `shouldReopen=${!isSystemUser && commentAt > closedAt}\n`);
 
       - name: Reopen Issue
         if: steps.check.outputs.shouldReopen == 'true'

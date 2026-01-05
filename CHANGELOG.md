@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package webcomponents
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+
+### Bug Fixes
+
+* **ui5-multi-combo-box:** unskip test ([#12829](https://github.com/UI5/webcomponents/issues/12829)) ([b62c313](https://github.com/UI5/webcomponents/commit/b62c313d4ba1f2baa1feb048066eb90c5c4f7571))
+* **ui5-search-item:** update search item gap with design spec ([#12831](https://github.com/UI5/webcomponents/issues/12831)) ([1a65306](https://github.com/UI5/webcomponents/commit/1a653065b586817e505f03a950ae83d15ba9cf41))
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** stabilize popups tests ([#12830](https://github.com/UI5/webcomponents/issues/12830)) ([6bf7b05](https://github.com/UI5/webcomponents/commit/6bf7b053682d140bdaf1db45cf476e0d1e0c94aa))
+
+
+### Features
+
+* **ui5-calendar:** improve header and day picker accessibility and focus behavior ([5111ce7](https://github.com/UI5/webcomponents/commit/5111ce7d4bd6436efacd0167b811623f6b8b304f))
+* **ui5-multi-combobox:** filtering selection enhancement ([#12799](https://github.com/UI5/webcomponents/issues/12799)) ([9eb128d](https://github.com/UI5/webcomponents/commit/9eb128d72fd963869c8dde3b7f48824df4ed8fd7))
+* **ui5-token:** change readonly select state visual ([#12822](https://github.com/UI5/webcomponents/issues/12822)) ([dee55cf](https://github.com/UI5/webcomponents/commit/dee55cf1147759cbfad20a72c8315664c8e95ae9))
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* **ui5-*:** improve `vertical alignment` of inline web comps ([#12718](https://github.com/UI5/webcomponents/issues/12718)) ([dda0591](https://github.com/UI5/webcomponents/commit/dda0591df7864354a45794546dc139df4f595fac))
+* **ui5-breadcrumbs:** remove role='link' from current page element ([#12797](https://github.com/UI5/webcomponents/issues/12797)) ([878d8a3](https://github.com/UI5/webcomponents/commit/878d8a39b5c6a5cf0ce9a5b3363655e68c7ecd3e)), closes [#12780](https://github.com/UI5/webcomponents/issues/12780)
+* **ui5-panel:** toggle on ENTER keydown ([#12794](https://github.com/UI5/webcomponents/issues/12794)) ([ce1bd8f](https://github.com/UI5/webcomponents/commit/ce1bd8fdf2b0a49a8a7c099888d471c5f9008fb4))
+* **ui5-search-field:** add scope-value property ([#12795](https://github.com/UI5/webcomponents/issues/12795)) ([fdd67e4](https://github.com/UI5/webcomponents/commit/fdd67e475aa5b444627227e1a65aa04a2b52d31f))
+* **ui5-slider:** rework tooltips states ([#12725](https://github.com/UI5/webcomponents/issues/12725)) ([7f94de3](https://github.com/UI5/webcomponents/commit/7f94de386a896e75f8b13115009912cb6bb0b676)), closes [#12553](https://github.com/UI5/webcomponents/issues/12553)
+* **ui5-toolbar-select:** sync programmatic selection ([#12790](https://github.com/UI5/webcomponents/issues/12790)) ([fc063f0](https://github.com/UI5/webcomponents/commit/fc063f02accbdc1929337a8d64ec5d5ec3dbcec1)), closes [#12619](https://github.com/UI5/webcomponents/issues/12619)
+
+
+### Features
+
+* **ui5-avatar:** implement accessibilityInfo getter ([#12613](https://github.com/UI5/webcomponents/issues/12613)) ([a6bc028](https://github.com/UI5/webcomponents/commit/a6bc0281965924f09570491dcb493734b70cef0e))
+* **ui5-search:** enhance accessibility support ([#12717](https://github.com/UI5/webcomponents/issues/12717)) ([e97c302](https://github.com/UI5/webcomponents/commit/e97c302a8277aa13c2dab8573a2eb3c1c065c89a))
+* **ui5-user-settings:** add UserSettingsAppearanceView components ([#12739](https://github.com/UI5/webcomponents/issues/12739)) ([5f8bf37](https://github.com/UI5/webcomponents/commit/5f8bf3798fd8fad7a87479193f7e6fdaae4c68b2))
+
+
+
+
+
 # [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
 
 
