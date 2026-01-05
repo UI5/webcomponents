@@ -152,6 +152,9 @@ class WritingAssistant extends UI5Element {
 	@property({ type: Number })
 	totalVersions = 0;
 
+	@property({ type: Boolean })
+	focused = false;
+
 	@i18n("@ui5/webcomponents-ai")
 	static i18nBundleAi: I18nBundle;
 
