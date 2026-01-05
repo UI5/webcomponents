@@ -65,7 +65,7 @@ import type { IIcon } from "./Icon.js";
 
 // Templates
 import InputTemplate from "./InputTemplate.js";
-import { StartsWith } from "./Filters.js";
+import * as Filters from "./Filters.js";
 
 import {
 	VALUE_STATE_SUCCESS,
@@ -100,6 +100,7 @@ import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from ".
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
 import type InputComposition from "./features/InputComposition.js";
+import ComboBoxFilter from "./types/ComboBoxFilter.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -493,6 +494,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	open = false;
 
 	/**
+	 * Defines the filter type of the component.
+	 * @default "None"
+	 * @public
+	 */
+	@property()
+	filter: `${ComboBoxFilter}` = ComboBoxFilter.None;
+
+	/**
 	 * Defines whether the clear icon is visible.
 	 * @default false
 	 * @private
@@ -787,6 +796,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
+		if (this.filter !== ComboBoxFilter.None) {
+			this._filterItems(this.typedInValue);
+		}
+
 		const autoCompletedChars = innerInput.selectionEnd! - innerInput.selectionStart!;
 
 		// Typehead causes issues on Android devices, so we disable it for now
@@ -911,8 +924,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get currentItemIndex() {
 		const allItems = this.Suggestions?._getItems() as IInputSuggestionItemSelectable[];
-		const currentItem = allItems.find(item => { return item.selected || item.focused; });
-		const indexOfCurrentItem = currentItem ? allItems.indexOf(currentItem) : -1;
+		const visibleItems = allItems.filter(item => !item.hidden);
+		const currentItem = visibleItems.find(item => { return item.selected || item.focused; });
+		const indexOfCurrentItem = currentItem ? visibleItems.indexOf(currentItem) : -1;
 		return indexOfCurrentItem;
 	}
 
@@ -1310,11 +1324,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this.Suggestions.updateSelectedItemPosition(-1);
 		}
 
+		if (this.filter && (e.target as HTMLInputElement).value === "") {
+			this.open = false;
+		}
+
 		this.isTyping = true;
 	}
 
 	_startsWithMatchingItems(str: string): Array<IInputSuggestionItemSelectable> {
-		return StartsWith(str, this._selectableItems, "text");
+		return Filters.StartsWith(str, this._selectableItems, "text");
 	}
 
 	_getFirstMatchingItem(current: string): IInputSuggestionItemSelectable | undefined {
@@ -1335,6 +1353,52 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_selectMatchingItem(item: IInputSuggestionItemSelectable) {
 		item.selected = true;
+	}
+
+	_filterItems(value: string) {
+		let matchingItems: Array<IInputSuggestionItem> = [];
+		const groupItems = this._flattenItems.filter(item => this._isGroupItem(item));
+
+		this._resetItemVisibility();
+
+		if (groupItems.length) {
+			matchingItems = this._filterGroups(this.filter, groupItems);
+		} else {
+			matchingItems = (Filters[this.filter] || Filters.StartsWith)(value, this._selectableItems, "text");
+		}
+		this._selectableItems.forEach(item => {
+			item.hidden = !matchingItems.includes(item);
+		});
+
+		if (matchingItems.length === 0) {
+			this.open = false;
+		}
+	}
+
+	_filterGroups(filterType: `${ComboBoxFilter}`, groupItems: IInputSuggestionItem[]) {
+		const filteredGroupItems: IInputSuggestionItem[] = [];
+		groupItems.forEach(groupItem => {
+			const currentGroupItems = (Filters[filterType] || Filters.StartsWith)(this.typedInValue, groupItem.items ?? [], "text");
+			filteredGroupItems.push(...currentGroupItems);
+			if (currentGroupItems.length === 0) {
+				groupItem.hidden = true;
+			} else {
+				groupItem.hidden = false;
+			}
+		});
+		return filteredGroupItems;
+	}
+
+	_resetItemVisibility() {
+		this._flattenItems.forEach(item => {
+			if (this._isGroupItem(item)) {
+				item.items?.forEach(i => {
+					i.hidden = false;
+				});
+				return;
+			}
+			item.hidden = false;
+		});
 	}
 
 	_handleTypeAhead(item: IInputSuggestionItemSelectable) {

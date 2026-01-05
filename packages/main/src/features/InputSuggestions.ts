@@ -130,7 +130,7 @@ class Suggestions {
 	onPageDown(e: KeyboardEvent) {
 		e.preventDefault();
 
-		const items = this._getItems();
+		const items = this.visibleItems;
 
 		if (!items) {
 			return true;
@@ -302,7 +302,7 @@ class Suggestions {
 	}
 
 	_selectPreviousItem() {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const previousSelectedIdx = this.selectedItemIndex;
 
 		if (previousSelectedIdx === -1 || previousSelectedIdx === null) {
@@ -325,12 +325,16 @@ class Suggestions {
 		this._moveItemSelection(previousSelectedIdx, --this.selectedItemIndex);
 	}
 
+	get visibleItems() {
+		return this._getItems().filter(item => !item.hidden);
+	}
+
 	_moveItemSelection(previousIdx: number, nextIdx: number) {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const currentItem = items[nextIdx];
 		const previousItem = items[previousIdx];
 		const nonGroupItems = this._getNonGroupItems();
-		const isGroupItem = currentItem.hasAttribute("ui5-suggestion-item-group");
+		const isGroupItem = currentItem?.hasAttribute("ui5-suggestion-item-group");
 
 		if (!currentItem) {
 			return;
@@ -338,7 +342,7 @@ class Suggestions {
 
 		this.component.focused = false;
 
-		const selectedItem = this._getItems()[this.selectedItemIndex];
+		const selectedItem = this.visibleItems[this.selectedItemIndex];
 
 		this.accInfo = {
 			isGroup: isGroupItem,
