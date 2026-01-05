@@ -224,6 +224,58 @@ describe("DynamicPage", () => {
 			.find("[ui5-dynamic-page-header-actions]")
 			.should("have.prop", "hidePinButton", true);
 	});
+
+	it("sets scroll padding when content receives focus", () => {
+		cy.mount(
+			<DynamicPage showFooter style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<input data-testid="test-input" />
+				<Bar slot="footerArea" design="FloatingFooter">
+					<Button slot="endContent">Save</Button>
+				</Bar>
+			</DynamicPage>
+		);
+
+		cy.get("[data-testid='test-input']").focus();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.should("have.css", "scroll-padding-top")
+			.and("not.equal", "0px");
+
+		cy.get("[data-testid='test-input']").blur();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.should("have.css", "scroll-padding-top", "0px");
+	});
+
+	it("scrolls focused elements into view", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					<input data-testid="bottom-input" style={{ marginTop: "900px" }} />
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[data-testid='bottom-input']").focus();
+
+		cy.get("[data-testid='bottom-input']").should("be.visible");
+	});
 });
 
 describe("Scroll", () => {
@@ -905,8 +957,8 @@ describe("ARIA attributes", () => {
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find("[ui5-button].ui5-dynamic-page-header-action-expand")
-			.should("have.prop", "accessibleName", "Snap Header")
-			.should("have.prop", "tooltip", "Snap Header");
+			.should("have.prop", "accessibleName", "Collapse Header")
+			.should("have.prop", "tooltip", "Collapse Header");
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()

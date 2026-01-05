@@ -84,6 +84,7 @@ describe("Cell Custom Announcement - More details", () => {
 		}
 
 		cy.get("body").then($body => {
+			debugger;
 			expect($body.find("#ui5-table-invisible-text").text()).to.equal(expectedText);
 		});
 	}
@@ -126,7 +127,7 @@ describe("Cell Custom Announcement - More details", () => {
 		checkAnnouncement(CONTAINS_CONTROL, true);
 
 		cy.realPress("ArrowRight"); // fourth cell focused
-		checkAnnouncement(`Row1Cell3 . ${CONTAINS_CONTROL}`);
+		checkAnnouncement(`Button Row1Cell3 . ${CONTAINS_CONTROL}`);
 		cy.focused().should("have.attr", "aria-colindex", "5")
 					.should("have.attr", "role", "gridcell");
 
@@ -148,7 +149,15 @@ describe("Cell Custom Announcement - More details", () => {
 		cy.realPress("ArrowRight"); // Row actions cell
 		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
 		cy.focused().should("have.attr", "aria-colindex", "6")
-					.should("have.attr", "role", "gridcell");
+					.should("have.attr", "role", "gridcell")
+					.then($rowActionsCell => {
+						const rowActionsCell = $rowActionsCell[0];
+						const invisibleText = document.getElementById("ui5-table-invisible-text");
+						expect(rowActionsCell.ariaLabelledByElements[0]).to.equal(invisibleText);
+						rowActionsCell.blur();
+						expect(rowActionsCell.ariaLabelledByElements).to.equal(null);
+						rowActionsCell.focus();
+					});
 
 		cy.get("#row1-edit-action").invoke("remove");
 		checkAnnouncement(ONE_ROW_ACTION, true);

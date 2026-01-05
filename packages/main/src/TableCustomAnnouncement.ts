@@ -23,37 +23,32 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 let invisibleText: HTMLElement;
-const i18nBundle = new I18nBundle("@ui5/webcomponents/main");
+const i18nBundle = new I18nBundle("@ui5/webcomponents");
 
 const checkVisibility = (element: HTMLElement): boolean => {
 	return element.checkVisibility() || getComputedStyle(element).display === "contents";
 };
 
-const updateInvisibleText = (element: HTMLElement, text: string | string[] = []) => {
-	const invisibleTextId = "ui5-table-invisible-text";
+const updateInvisibleText = (element: any, text: string | string[] = []) => {
 	if (!invisibleText || !invisibleText.isConnected) {
 		invisibleText = document.createElement("span");
-		invisibleText.id = invisibleTextId;
+		invisibleText.id = "ui5-table-invisible-text";
 		invisibleText.ariaHidden = "true";
 		invisibleText.style.display = "none";
 		document.body.appendChild(invisibleText);
 	}
 
-	let ariaLabelledBy = (element.getAttribute("aria-labelledby") || "").split(" ").filter(Boolean);
-	const invisibleTextAssociated = ariaLabelledBy.includes(invisibleTextId);
-
+	const ariaLabelledByElements = [...(element.ariaLabelledByElements || [])];
+	const invisibleTextIndex = ariaLabelledByElements.indexOf(invisibleText);
 	text = Array.isArray(text) ? text.filter(Boolean).join(" . ").trim() : text.trim();
-	if (text && !invisibleTextAssociated) {
-		ariaLabelledBy.push(invisibleTextId);
-	} else if (!text && invisibleTextAssociated) {
-		ariaLabelledBy = ariaLabelledBy.filter(id => id !== invisibleTextId);
-	}
-
 	invisibleText.textContent = text;
-	if (ariaLabelledBy.length > 0) {
-		element.setAttribute("aria-labelledby", ariaLabelledBy.join(" "));
-	} else {
-		element.removeAttribute("aria-labelledby");
+
+	if (text && invisibleTextIndex === -1) {
+		ariaLabelledByElements.unshift(invisibleText);
+		element.ariaLabelledByElements = ariaLabelledByElements;
+	} else if (!text && invisibleTextIndex > -1) {
+		ariaLabelledByElements.splice(invisibleTextIndex, 1);
+		element.ariaLabelledByElements = ariaLabelledByElements.length ? ariaLabelledByElements : null;
 	}
 };
 
@@ -207,7 +202,7 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(i18nBundle.getText(TABLE_ROW_ACTIVE));
 		}
 
-		const cells = [...row._visibleCells, ...row._popinCells] as TableCell[];
+		const cells = [...row._visibleCells, ...row._popinCells];
 		cells.flatMap(cell => {
 			return cell._popin ? [cell._popinHeader!, cell._popinContent!] : [cell._headerCell, cell];
 		}).forEach(node => {

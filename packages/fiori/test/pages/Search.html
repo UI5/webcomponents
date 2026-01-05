@@ -29,7 +29,11 @@
 	<ui5-search>
 		<ui5-search-message-area slot="messageArea" description="Search for example “All my open Objects”" text="Try This!"></ui5-search-message-area>
 
-		<ui5-search-item text="List Item"></ui5-search-item>
+		<ui5-search-item text="List Item 1"></ui5-search-item>
+		<ui5-search-item text="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna."></ui5-search-item>
+		
+		<ui5-search-item text="List Item 2" description="List Item"></ui5-search-item>
+		<ui5-search-item text="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna." description="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna."></ui5-search-item>
 
 		<ui5-illustrated-message slot="illustration"></ui5-illustrated-message>
 
@@ -180,6 +184,28 @@
 	</div>
 
 	<div class="container">
+		<ui5-label>Search with Actions - Example of flexible action slot</ui5-label>
+		<ui5-search id="secondary-actions-search" show-clear-icon>
+			<ui5-search-item text="List Item with Favorite Action" icon="history" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="favorite" tooltip="Add to favorites"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Edit Action" icon="search" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="edit" tooltip="Edit item"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Multiple Actions" icon="globe" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="share" tooltip="Share"></ui5-button>
+				<ui5-button slot="actions" design="Transparent" icon="copy" tooltip="Copy"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Tag Action" icon="history">
+				<ui5-tag slot="actions" design="Set2" color-scheme="8">Important</ui5-tag>
+			</ui5-search-item>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			Hover over search items to see secondary actions. Use Tab/Shift+Tab to navigate between action buttons and delete button.
+		</ui5-text>
+	</div>
+
+	<div class="container">
 		<ui5-label>Search with Suggestions - Filter by typing</ui5-label>
 		<ui5-search id="filtering" show-clear-icon placeholder="Start typing ..."></ui5-search>
 		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows filtering per user input and highlighting user input. Type "a" to see highlighting. Type "t" to see "typeahead"</ui5-text>
@@ -187,10 +213,10 @@
 
 	<div class="container">
 		<ui5-label>Search with Scoped Suggestions - Filter by scope</ui5-label>
-		<ui5-search id="search-scope" show-clear-icon placeholder="Search Apps, Products">
-			<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Apps" selected slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+		<ui5-search id="search-scope" show-clear-icon scope-value="apps" placeholder="Search Apps, Products">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 		</ui5-search>
 		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows scoped search with scoped suggestions. Change scope to filter suggestions.</ui5-text>
 	</div>
@@ -298,7 +324,7 @@
 		const searchScope = document.getElementById('search-scope');
 		createScopeItems();
 		searchScope.addEventListener('ui5-scope-change', (event) => {
-			let scope = event.detail.scope.text === "All" ? "" : event.detail.scope.text.toLowerCase();
+			let scope = event.detail.scope.value === "all" ? "" : event.detail.scope.value;
 
 			searchScope.getSlottedNodes("items").forEach(item => {
 				item.remove();

@@ -59,6 +59,9 @@ import {
 	VALUE_STATE_WARNING,
 	TIMEPICKER_VALUE_MISSING,
 	TIMEPICKER_PATTERN_MISSMATCH,
+	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
+	TIMEPICKER_OPEN_ICON_TITLE,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -138,6 +141,7 @@ type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
  * @extends UI5Element
  * @public
  * @since 1.0.0-rc.6
+ * @csspart input - Used to style the input element. This part is forwarded to the underlying ui5-input element.
  */
 @customElement({
 	tag: "ui5-time-picker",
@@ -486,6 +490,14 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		this.tempValue = e.detail.value; // every time the user changes the time selection -> update tempValue
 	}
 
+	get openIconTitle() {
+		if (this.open) {
+			return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE_OPENED);
+		}
+
+		return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE);
+	}
+
 	_togglePicker() {
 		this.open = !this.open;
 		if (this._isMobileDevice) {
@@ -821,6 +833,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	get shouldDisplayValueStateMessageOnDesktop() {
 		return this.valueStateMessage.length > 0 && !this.open && !this._isMobileDevice;
+	}
+
+	get _headerTitleText() {
+		return this.ariaLabelText || TimePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get showHeader() {
+		return isPhone();
+	}
+
+	/**
+	 * Defines whether the dialog on mobile should have header
+	 * @private
+	 */
+	get _shouldHideHeader() {
+		return !this.showHeader && !this.hasValueStateText;
 	}
 
 	/**

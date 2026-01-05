@@ -209,6 +209,25 @@ describe("FlexibleColumnLayout Behavior", () => {
 		cy.get("@fcl")
 			.should("have.attr", "_visible-columns", "3");
 
+		// Assert default column widths
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 25%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 50%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 25%");
+
 		cy.get("@layoutChangeStub")
 			.should("not.have.been.called");
 	});
@@ -232,6 +251,25 @@ describe("FlexibleColumnLayout Behavior", () => {
 
 		cy.get("@fcl")
 			.should("have.attr", "_visible-columns", "2");
+
+		// Assert default column widths for tablet size
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
 
 		cy.get("@layoutChangeStub")
 			.should("have.been.calledOnce");
@@ -1117,3 +1155,257 @@ describe("Accessibility with Animation Disabled", () => {
 			.should("have.attr", "aria-hidden", "true");
 	});
 });
+
+describe("Layouts configuration", () => {
+	const COLUMN_MIN_WIDTH = 248;
+
+	it("initial configuration", () => {
+
+		cy.mount(
+			<FlexibleColumnLayout layout="TwoColumnsStartExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl")
+			.then($fcl => {
+				$fcl.get(0).addEventListener("layout-configuration-change", cy.stub().as("layoutConfigChangeStub"));
+			});
+
+		// Assert resulting column widths
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		// Assert layoutsConfiguration is initially an empty object
+		cy.get("@fcl")
+			.invoke("prop", "layoutsConfiguration")
+			.should("deep.equal", {});
+
+		cy.get("@layoutConfigChangeStub")
+			.should("not.have.been.called");
+	});
+
+	it("allows set configuration programatically", () => {
+
+		cy.mount(
+			<FlexibleColumnLayout layout="TwoColumnsStartExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl")
+			.then($fcl => {
+				$fcl.get(0).addEventListener("layout-configuration-change", cy.stub().as("layoutConfigChangeStub"));
+			});
+
+		// Set layoutsConfiguration programmatically
+		cy.get("@fcl")
+			.invoke("prop", "layoutsConfiguration", {
+				"desktop": {
+					"TwoColumnsStartExpanded": {
+						layout: ["75%", "25%", "0%"]
+					}
+				}
+			});
+
+		// Assert resulting column widths
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 75%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 25%");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("@layoutConfigChangeStub")
+			.should("not.have.been.called");
+	});
+
+	it("fires layout-configuration-change event when dragging separator within same layout", () => {
+		cy.mount(
+			<FlexibleColumnLayout
+				layout="TwoColumnsStartExpanded">
+				<div slot="startColumn">Start</div>
+				<div slot="midColumn">Mid</div>
+				<div slot="endColumn">End</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]").then(($fcl) => {
+			const fcl = $fcl[0];
+			fcl.addEventListener("layout-configuration-change", cy.stub().as("layoutConfigurationChanged"));
+		});
+
+		cy.get("[ui5-flexible-column-layout]").as("fcl");
+
+		// resize the columns within the same layout-type
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-start")
+			.should("be.visible")
+			.realMouseDown()
+			.realMouseMove(10, 0)
+			.realMouseUp();
+
+		cy.get("@layoutConfigurationChanged").should("have.been.calledOnce");
+		cy.get("@fcl").should("have.prop", "layout", "TwoColumnsStartExpanded");
+
+		// Check that layoutsConfiguration property has the expected structure
+		cy.get("@fcl").invoke("prop", "layoutsConfiguration").then((layoutsConfig: any) => {
+			expect(layoutsConfig).to.have.property("desktop");
+			expect(layoutsConfig.desktop).to.have.property("TwoColumnsStartExpanded");
+			expect(layoutsConfig.desktop.TwoColumnsStartExpanded).to.have.property("layout");
+			expect(layoutsConfig.desktop.TwoColumnsStartExpanded.layout).to.be.an("array");
+			expect(layoutsConfig.desktop.TwoColumnsStartExpanded.layout).to.have.length(3);
+			expect(layoutsConfig.desktop.TwoColumnsStartExpanded.layout).to.satisfy((arr: any[]) => 
+				arr.every(item => typeof item === "string")
+			);
+
+			// Check the exact values of the layout array
+			const layoutArray = layoutsConfig.desktop.TwoColumnsStartExpanded.layout;
+			
+			// 1) Calling parseInt on each of them should return a number
+			const parsedNumbers = layoutArray.map((item: string) => parseInt(item, 10));
+			expect(parsedNumbers).to.satisfy((nums: number[]) => 
+				nums.every(num => !isNaN(num))
+			);
+
+			// 2) The last number should be 0
+			expect(parsedNumbers[2]).to.equal(0);
+
+			// 3) The first number should be greater than the second number
+			expect(parsedNumbers[0]).to.be.greaterThan(parsedNumbers[1]);
+		});
+	});
+
+	it("fires layout-configuration-change event when dragging separator to update the layout", () => {
+		cy.mount(
+			<FlexibleColumnLayout
+				layout="TwoColumnsStartExpanded">
+				<div slot="startColumn">Start</div>
+				<div slot="midColumn">Mid</div>
+				<div slot="endColumn">End</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]").then(($fcl) => {
+			const fcl = $fcl[0];
+			fcl.addEventListener("layout-configuration-change", cy.stub().as("layoutConfigurationChanged"));
+		});
+
+		cy.get("[ui5-flexible-column-layout]").as("fcl");
+
+		// resize the columns to a new layout-type
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-start")
+			.should("be.visible")
+			.realMouseDown()
+			.realMouseMove(-400, 0)
+			.realMouseUp();
+
+		cy.get("@layoutConfigurationChanged").should("have.been.calledOnce");
+		cy.get("@fcl").should("have.prop", "layout", "TwoColumnsMidExpanded");
+
+		// Check that layoutsConfiguration property has the expected structure
+		cy.get("@fcl").invoke("prop", "layoutsConfiguration").then((layoutsConfig: any) => {
+			expect(layoutsConfig).to.have.property("desktop");
+			expect(layoutsConfig.desktop).to.have.property("TwoColumnsMidExpanded");
+			expect(layoutsConfig.desktop.TwoColumnsMidExpanded).to.have.property("layout");
+			expect(layoutsConfig.desktop.TwoColumnsMidExpanded.layout).to.be.an("array");
+			expect(layoutsConfig.desktop.TwoColumnsMidExpanded.layout).to.have.length(3);
+			expect(layoutsConfig.desktop.TwoColumnsMidExpanded.layout).to.satisfy((arr: any[]) => 
+				arr.every(item => typeof item === "string")
+			);
+
+			// Check the exact values of the layout array
+			const layoutArray = layoutsConfig.desktop.TwoColumnsMidExpanded.layout;
+			
+			// 1) Calling parseInt on each of them should return a number
+			const parsedNumbers = layoutArray.map((item: string) => parseInt(item, 10));
+			expect(parsedNumbers).to.satisfy((nums: number[]) => 
+				nums.every(num => !isNaN(num))
+			);
+
+			// 2) The last number should be 0
+			expect(parsedNumbers[2]).to.equal(0);
+
+			// 3) The first number should be smaller than the second number
+			expect(parsedNumbers[0]).to.be.lessThan(parsedNumbers[1]);
+		});
+	});
+
+	it("applies min width constraints", () => {
+
+		cy.mount(
+			<FlexibleColumnLayout layout="ThreeColumnsMidExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl")
+			.then($fcl => {
+				$fcl.get(0).addEventListener("layout-configuration-change", cy.stub().as("layoutConfigChangeStub"));
+			});
+
+		// Set layoutsConfiguration programmatically
+		cy.get("@fcl")
+			.invoke("prop", "layoutsConfiguration", {
+				"desktop": {
+					"ThreeColumnsMidExpanded": {
+						layout: ["10%", "80%", "10%"]
+					}
+				}
+			});
+
+		// Assert resulting column widths respect minimum width constraint
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.prop", "offsetWidth", COLUMN_MIN_WIDTH);
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.prop", "offsetWidth", COLUMN_MIN_WIDTH);
+
+		cy.get("@layoutConfigChangeStub")
+			.should("not.have.been.called");
+	});
+
+});
+

@@ -28,7 +28,7 @@ import {
  */
 interface ISearchScope extends UI5Element {
 	text?: string,
-	selected: boolean,
+	value?: string,
 	stableDomRef: string,
 }
 
@@ -154,6 +154,20 @@ class SearchField extends UI5Element {
 	accessibleDescription?: string;
 
 	/**
+	 * Defines the value of the component:
+	 *
+	 * Applications are responsible for setting the correct scope value.
+	 *
+	 * **Note:** If the given value does not match any existing scopes,
+	 * no scope will be selected and the SearchField scope component will be displayed as empty.
+	 * @public
+	 * @default ""
+	 * @since 2.18.0
+	 */
+	@property()
+	scopeValue?: string;
+
+	/**
 	 * Defines the component scope options.
 	 * @public
 	 */
@@ -241,6 +255,12 @@ class SearchField extends UI5Element {
 
 	_handleScopeChange(e: CustomEvent<SelectChangeEventDetail>) {
 		const item = e.detail.selectedOption as IOption & { scopeOption: ISearchScope };
+
+		// Set the scopeValue property if the selected scope has a value defined
+		if (item.value) {
+			this.scopeValue = item.value;
+		}
+
 		this.fireDecoratorEvent("scope-change", {
 			scope: item.scopeOption,
 		});

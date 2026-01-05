@@ -26,7 +26,7 @@ import {
 	getEffectiveAriaDescriptionText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import SelectTwoColumnSeparator from "./types/SelectTwoColumnSeparator.js";
+import SelectTextSeparator from "./types/SelectTextSeparator.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -34,7 +34,7 @@ import "@ui5/webcomponents-icons/dist/information.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
+import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
@@ -346,7 +346,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @since 2.16.0
 	 */
 	@property()
-	twoColumnSeparator: `${SelectTwoColumnSeparator}` = "Dash";
+	textSeparator: `${SelectTextSeparator}` = "Dash";
 
 	/**
 	 * Constantly updated value of texts collected from the associated description texts
@@ -647,12 +647,12 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _separatorSymbol(): string {
-		switch (this.twoColumnSeparator) {
-		case SelectTwoColumnSeparator.Bullet:
+		switch (this.textSeparator) {
+		case SelectTextSeparator.Bullet:
 			return "·"; // Middle dot (U+00B7)
-		case SelectTwoColumnSeparator.VerticalLine:
+		case SelectTextSeparator.VerticalLine:
 			return "|"; // Vertical line (U+007C)
-		case SelectTwoColumnSeparator.Dash:
+		case SelectTextSeparator.Dash:
 		default:
 			return "–"; // En dash (U+2013)
 		}
@@ -1172,6 +1172,18 @@ class Select extends UI5Element implements IFormInputElement {
 	get ariaDescribedByIds() {
 		const ids = [this.valueStateTextId, this.ariaDescriptionTextId].filter(Boolean);
 		return ids.length ? ids.join(" ") : undefined;
+	}
+
+	get accessibilityInfo() {
+		return {
+			role: "combobox" as AriaRole,
+			type: this._ariaRoleDescription,
+			description: this.text,
+			label: this.ariaLabelText,
+			readonly: this.readonly,
+			required: this.required,
+			disabled: this.disabled,
+		};
 	}
 
 	_updateAssociatedLabelsTexts() {

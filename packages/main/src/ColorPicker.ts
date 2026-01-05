@@ -24,6 +24,8 @@ import type Input from "./Input.js";
 import type Slider from "./Slider.js";
 
 import {
+	COLORPICKER_LABEL,
+	COLORPICKER_SLIDER_GROUP,
 	COLORPICKER_ALPHA_SLIDER,
 	COLORPICKER_HUE_SLIDER,
 	COLORPICKER_HEX,
@@ -545,6 +547,14 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		return this._colorValue.R === value.r
 			&& this._colorValue.G === value.g
 			&& this._colorValue.B === value.b;
+	}
+
+	get colorPickerLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
+	}
+
+	get sliderGroupLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_SLIDER_GROUP);
 	}
 
 	get hueSliderLabel() {

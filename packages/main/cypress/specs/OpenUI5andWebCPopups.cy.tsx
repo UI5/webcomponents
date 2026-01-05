@@ -7,20 +7,30 @@ import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
 
+let OpenUI5Element;
+
 function onOpenUI5InitMethod(win) {
-	(win as any).sap.ui.require(["sap/ui/core/HTML", "sap/m/Button", "sap/m/Dialog", "sap/m/Popover", "sap/m/Input"], async (HTML, Button, Dialog, Popover, Input) => {
+	(win as any).sap.ui.require([
+		"sap/ui/core/Element",
+		"sap/ui/core/HTML",
+		"sap/m/Button",
+		"sap/m/Dialog",
+		"sap/m/Popover",
+		"sap/m/Input"
+	], async (Element, HTML, Button, Dialog, Popover, Input) => {
 
 		await OpenUI5Support.init();
-
+		OpenUI5Element = Element;
 		new Button("openUI5Button", {
 			text: "Open OpenUI5 Dialog",
 			press: function () {
 				new Dialog("openUI5Dialog1", {
 					title: "OpenUI5 Dialog",
+					draggable: true,
 					content: [
 						new HTML({
 							content:
-`<ui5-select id="webCSelect1">
+								`<ui5-select id="webCSelect1">
 	<ui5-option>Option 1</ui5-option>
 	<ui5-option>Option 2</ui5-option>
 	<ui5-option>Option 3</ui5-option>
@@ -48,6 +58,12 @@ function onOpenUI5InitMethod(win) {
 							text: "Open WebC RP with NO Initial Focus",
 							press: function () {
 								(document.getElementById("respPopoverNoInitialFocus") as any).open = true;
+							}
+						}),
+						new Button("openWebCDialog", {
+							text: "Open WebC Dialog",
+							press: function () {
+								(document.getElementById("webCDialog1") as any).open = true;
 							}
 						})
 					],
@@ -112,6 +128,10 @@ function onOpenUI5InitMethod(win) {
 		openUI5Dialog(win);
 	});
 
+	document.getElementById("openUI5DialogFromWebC").addEventListener("click", function () {
+		openUI5Dialog(win);
+	});
+
 	document.getElementById("popoverButtonNoFocus").addEventListener("click", function (event) {
 		openUI5Popover(win, event.target);
 	});
@@ -121,6 +141,7 @@ function openUI5Dialog(win) {
 	(win as any).sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
 		new Dialog("openUI5DialogWithButtons", {
 			title: "OpenUI5 Dialog",
+			draggable: true,
 			content: [
 				new Button({
 					text: "Focus stop"
@@ -130,6 +151,29 @@ function openUI5Dialog(win) {
 					press: function () {
 						(document.getElementById("newDialog1") as any).open = true;
 					}
+				}),
+				new Button("openUI5DialogFromUi5", {
+					text: "Open UI5 Dialog",
+					press: function () {
+						openUI5DialogFromUi5(win)
+					}
+				})
+			],
+			afterClose: function () {
+				this.destroy();
+			}
+		}).open();
+	});
+}
+
+function openUI5DialogFromUi5(win) {
+	(win as any).sap.ui.require(["sap/m/Button", "sap/m/Dialog"], (Button, Dialog) => {
+		new Dialog("openUI5DialogFinal", {
+			title: "OpenUI5 Dialog",
+			draggable: true,
+			content: [
+				new Button({
+					text: "Focus stop"
 				})
 			],
 			afterClose: function () {
@@ -171,6 +215,15 @@ function openUI5Popover(win, opener) {
 	});
 }
 
+function isOpenUI5DialogOpen($dialog) {
+	expect(OpenUI5Element).to.exist;
+
+	const dialogInstance = OpenUI5Element.getElementById($dialog.attr("id"));
+
+	expect(dialogInstance).to.exist
+	expect(dialogInstance.isOpen()).to.be.true;
+};
+
 describe("ui5 and web components integration", () => {
 	beforeEach(() => {
 		// mount the components
@@ -203,6 +256,9 @@ describe("ui5 and web components integration", () => {
 				</Dialog>
 				<Dialog id="newDialog1" headerText="This is an WebC Dialog 2">
 					<Button id="someButton">Some button</Button>
+				</Dialog>
+				<Dialog id="webCDialog1" draggable headerText="This is a WebC Dialog">
+					<Button id="openUI5DialogFromWebC">Open UI5 Dialog 2</Button>
 				</Dialog>
 				<div id="content"></div>
 				<ResponsivePopover
@@ -442,6 +498,10 @@ describe("ui5 and web components integration", () => {
 			.find('input')
 			.focus();
 
+		cy.get("#openUI5Combobox1")
+			.find('input')
+			.should('be.focused');
+
 		cy.realPress("Escape");
 
 		cy.get('#dialog1')
@@ -480,12 +540,11 @@ describe("ui5 and web components integration", () => {
 			.should('be.visible')
 			.realClick();
 
-		cy.get<Dialog>("#respPopover").ui5DialogOpened();
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverOpened();
 
 		cy.realPress("Escape");
 
-		cy.get("#respPopover")
-			.should('not.be.visible');
+		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -500,39 +559,42 @@ describe("ui5 and web components integration", () => {
 	}
 
 	function OpenUI5DialogWebCPopoverNoFocus() {
+		cy.get("#openUI5Button", { timeout: 10000 })
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.get("#openResPopoverNoInitialFocusButton")
+			.should('be.visible')
+			.realClick();
+
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus").ui5ResponsivePopoverOpened();
+
+		cy.realPress("Escape");
+
+		cy.get<ResponsivePopover>("#respPopoverNoInitialFocus")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("#openResPopoverNoInitialFocusButton")
+			.should('be.focused');
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+
 		cy.get("#openUI5Button")
-			.should('be.visible')
-			.realClick();
-
-		cy.get("#openUI5Dialog1")
-			.should('be.visible');
-
-		cy.get("#openResPopoverNoInitialFocusButton")
-			.should('be.visible')
-			.realClick();
-
-		cy.get<Dialog>("#respPopoverNoInitialFocus").ui5DialogOpened();
-
-		cy.realPress("Escape");
-
-		cy.get("#respPopoverNoInitialFocus")
-			.should('not.be.visible');
-
-		cy.get("#openUI5Dialog1")
-			.should('be.visible');
-
-		cy.realPress("Escape");
-
-		cy.get("#openUI5Dialog1")
-			.should('not.be.visible');
-
-		cy.get("#openResPopoverNoInitialFocusButton")
 			.should('be.focused');
 	}
 
 	function OpenUI5DialogWebCSelect() {
-		cy.get("#openUI5Button")
-			.should('be.focused')
+		cy.get("#openUI5Button", { timeout: 10000 })
+			.should('be.visible')
 			.realClick();
 
 		cy.get("#openUI5Dialog1")
@@ -550,8 +612,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCSelect1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -590,8 +652,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#webCComboBox1")
 			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should('not.be.visible');
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
@@ -603,6 +665,91 @@ describe("ui5 and web components integration", () => {
 
 		cy.get("#openUI5Button")
 			.should('be.focused');
+	}
+
+	function OpenWebCUI5DialogMixed() {
+		cy.get("#openUI5Button", { timeout: 10000 })
+			.should('be.visible');
+
+		// Open UI5 Dialog
+		cy.get("#openUI5Button")
+			.realClick();
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		// Open WebC Dialog from UI5 Dialog
+		cy.get("#openWebCDialog")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#webCDialog1")
+			.should('be.visible');
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+
+		// Open UI5 Dialog from WebC Dialog
+		cy.get("#openUI5DialogFromWebC")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#webCDialog1")
+			.should('not.be.visible');
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('be.visible');
+
+		// Open UI5 Dialog from UI5 Dialog
+		cy.get("#openUI5DialogFromUi5")
+			.should('be.visible')
+			.realClick();
+
+		cy.get("#openUI5DialogFinal")
+			.should('be.visible')
+			.should(isOpenUI5DialogOpen);
+		cy.wait(1000);
+
+		cy.get("#openUI5Dialog1")
+			.should('not.be.visible');
+
+		cy.get("#webCDialog1")
+			.should('not.be.visible');
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('not.be.visible');
+
+		// Close all with Escape
+		cy.realPress("Escape");
+
+		cy.get("#openUI5DialogFinal")
+			.should('not.exist');
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('be.visible')
+			.should(isOpenUI5DialogOpen);
+		cy.wait(100);
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5DialogWithButtons")
+			.should('not.exist');
+
+		cy.get("#webCDialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openWebCDialog")
+			.should('not.exist');
 	}
 
 	it("Keyboard", () => {
@@ -617,7 +764,7 @@ describe("ui5 and web components integration", () => {
 		OpenUI5DialogWebCDialog();
 		OpenUI5DialogWebCPopoverNoFocus();
 		OpenUI5DialogWebCSelect();
-		// Merge it after OpenUI5 Popup shadow dom focus fix is released
-		// OpenUI5DialogWebCComboBox();
+		OpenWebCUI5DialogMixed();
+		OpenUI5DialogWebCComboBox();
 	});
 });

@@ -1,4 +1,5 @@
 @import "./InvisibleTextStyles.css";
+@import "./FormComponents.css";
 
 :host([disabled]) {
 	opacity: var(--_ui5_slider_disabled_opacity);
@@ -9,7 +10,6 @@
 :host {
 	box-sizing: border-box;
 	cursor: pointer;
-	vertical-align: top;
 	width: 100%;
 }
 
@@ -72,7 +72,7 @@
 	height: var(--_ui5_slider_progress_height);
 	position: relative;
 	outline: none;
-	box-sizing: border-box;
+	box-sizing: var(--_ui5_slider_active_progress_box_sizing);
 	border: var(--_ui5_slider_active_progress_border);
 	left: var(--_ui5_slider_active_progress_left);
 	top: var(--_ui5_slider_active_progress_top);

@@ -119,6 +119,9 @@ describe("DateTimePicker general interaction", () => {
 				cy.get("[ui5-calendar]")
 					.shadow()
 					.as("calendar");
+				
+				cy.realPress("Tab"); 
+				cy.realPress("Tab"); 
 
 				cy.get("@calendar")
 					.find("[ui5-daypicker]")
@@ -174,7 +177,7 @@ describe("DateTimePicker general interaction", () => {
 
 		cy.realPress("Tab");
 
-		// Simulate keyboard interactions
+		//Simulate keyboard interactions
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -300,7 +303,7 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests selection of 12:34:56 AM", () => {
 		setAnimationMode(AnimationMode.None);
 
@@ -324,8 +327,8 @@ describe("DateTimePicker general interaction", () => {
 
 				cy.get("@daypicker")
 					.find(".ui5-dp-item--selected")
-					.should("be.focused")
-					.realClick();
+					.realClick()
+					.should("be.focused");
 
 				cy.get("[ui5-time-selection-clocks]")
 					.shadow()
@@ -389,18 +392,18 @@ describe("DateTimePicker general interaction", () => {
 			.find("ui5-daypicker")
 			.as("daypicker");
 
-		// act: open the picker
+		//act: open the picker
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
-		// act: click today's date
+		//act: click today's date
 		cy.get("@daypicker")
 			.shadow()
 			.find("[data-sap-focus-ref]")
-			.should("be.focused")
-			.realClick();
+			.realClick()
+			.should("be.focused");
 
-		// act: confirm selection
+		//act: confirm selection
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetSubmitButton()
 			.should("have.prop", "disabled", false);
@@ -412,7 +415,7 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// assert: the value is not changed
+		//assert: the value is not changed
 		cy.get("@input")
 			.should("be.focused")
 			.and("have.attr", "value", "");
@@ -488,7 +491,7 @@ describe("DateTimePicker general interaction", () => {
 			.should("have.text", "Invalid entry");
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests change event is fired on submit", () => {
 		cy.mount(<DateTimePickerTemplate onChange={cy.stub().as("changeStub")} />);
 
@@ -525,10 +528,10 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// Assert the change event was fired once
+		//Assert the change event was fired once
 		cy.get("@changeStub").should("have.been.calledOnce");
 
-		// Re-open the picker and submit without making a change
+		//Re-open the picker and submit without making a change
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
@@ -540,16 +543,36 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerGetSubmitButton()
 			.realClick();
 
-		// Verify the picker is closed
+		//Verify the picker is closed
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// The change event should not have been fired a second time.
+		//The change event should not have been fired a second time.
 		cy.get("@changeStub").should("have.been.calledOnce");
 	});
 });
 
 describe("Accessibility", () => {
+	it("initial focus goes to calendar's current date in phone mode", () => {
+		// Using viewport instead of device simulation (focus is not available on actual phone devices), to trigger SegmentedButton view.
+		cy.viewport(500, 800);
+
+		cy.mount(<DateTimePickerTemplate value="13/04/2020, 03:16:16 PM" formatPattern="dd/MM/yyyy, hh:mm:ss a" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]").as("dtp");
+		
+		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--selected")
+			.should("be.focused");
+	});
+
 	it("picker popover accessible name", () => {
 		const LABEL = "Deadline";
 		cy.mount(<DateTimePicker accessible-name={LABEL} />);
