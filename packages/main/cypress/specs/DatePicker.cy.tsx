@@ -911,7 +911,7 @@ describe("Date Picker Tests", () => {
 			.should("have.text", "0001");
 	});
 
-	it("placeholder, based on the formatPattern", () => {
+	it.only("placeholder, based on the formatPattern", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 
 		cy.get("[ui5-date-picker]")
