@@ -89,7 +89,6 @@ import {
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
-	FORM_TEXTFIELD_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -652,7 +651,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_handleLinkNavigation: boolean = false;
 
 	get formValidityMessage() {
-		return Input.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		return this.nativeInput?.validationMessage;
 	}
 
 	get _effectiveShowSuggestions() {
@@ -660,7 +659,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.nativeInput?.validity.valueMissing,
+			typeMismatch: this.required && this.nativeInput?.validity.typeMismatch,
+			patternMismatch: this.nativeInput?.validity.patternMismatch,
+		};
 	}
 
 	async formElementAnchor() {
@@ -762,18 +765,19 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const hasItems = !!this._flattenItems.length;
 		const hasValue = !!this.value;
 		const isFocused = this.shadowRoot!.querySelector("input") === getActiveElement();
-		if (this.shouldDisplayOnlyValueStateMessage) {
-			this.openValueStatePopover();
-		} else {
-			this.closeValueStatePopover();
-		}
-
 		const preventOpenPicker = this.disabled || this.readonly;
+		const shouldOpenSuggestions = !preventOpenPicker && !this._isPhone && hasItems && (this.open || (hasValue && isFocused && this.isTyping));
 
 		if (preventOpenPicker) {
 			this.open = false;
 		} else if (!this._isPhone) {
 			this.open = hasItems && (this.open || (hasValue && isFocused && this.isTyping));
+		}
+
+		if (this.shouldDisplayOnlyValueStateMessage && !shouldOpenSuggestions) {
+			this.openValueStatePopover();
+		} else {
+			this.closeValueStatePopover();
 		}
 
 		const value = this.value;
@@ -980,9 +984,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			});
 			link.addEventListener("keydown", this._linksListenersArray[index]);
 		});
-	 }
+	}
 
-	 _removeLinksEventListeners() {
+	_removeLinksEventListeners() {
 		const links = this.linksInAriaValueStateHiddenText;
 
 		links.forEach((link, index) => {
@@ -1105,12 +1109,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * Called on "focusin" of the native input HTML Element.
 	 * **Note:** implemented in MultiInput, but used in the Input template.
 	 */
-	innerFocusIn(): void | undefined {}
+	innerFocusIn(): void | undefined { }
 
 	_onfocusout(e: FocusEvent) {
 		const toBeFocused = e.relatedTarget as HTMLElement;
 
-		if (this.Suggestions?._getPicker().contains(toBeFocused) || this.contains(toBeFocused) || this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))) {
+		if (this.Suggestions?._getPicker()?.contains(toBeFocused) || this.contains(toBeFocused) || this.getSlottedNodes("valueStateMessage").some(el => el.contains(toBeFocused))) {
 			return;
 		}
 
@@ -1174,7 +1178,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (this.previousValue !== this.getInputDOMRefSync()!.value) {
 			// if picker is open there might be a selected item, wait next tick to get the value applied
-			if (this.Suggestions?._getPicker().open && this._flattenItems.some(item => item.hasAttribute("ui5-suggestion-item") && (item as SuggestionItem).selected)) {
+			if (this.Suggestions?._getPicker()?.open && this._flattenItems.some(item => item.hasAttribute("ui5-suggestion-item") && (item as SuggestionItem).selected)) {
 				this._changeToBeFired = true;
 			} else {
 				fireChange();
@@ -1443,7 +1447,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		// If the feature is preloaded (the user manually imported InputSuggestions.js), it is already available on the constructor
 		if (Input.SuggestionsClass) {
 			setup(Input.SuggestionsClass);
-		// If feature is not preloaded, load it dynamically
+			// If feature is not preloaded, load it dynamically
 		} else {
 			import("./features/InputSuggestions.js").then(SuggestionsModule => {
 				setup(SuggestionsModule.default);
@@ -1566,15 +1570,21 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	getInputDOMRef() {
 		if (isPhone() && this.Suggestions) {
-			return this.Suggestions._getPicker()!.querySelector<Input>(".ui5-input-inner-phone")!;
+			const picker = this.Suggestions._getPicker();
+			if (picker) {
+				return picker.querySelector<Input>(".ui5-input-inner-phone")!;
+			}
 		}
 
 		return this.nativeInput;
 	}
 
 	getInputDOMRefSync() {
-		if (isPhone() && this.Suggestions?._getPicker()) {
-			return this.Suggestions._getPicker().querySelector(".ui5-input-inner-phone")!.shadowRoot!.querySelector<HTMLInputElement>("input")!;
+		if (isPhone() && this.Suggestions) {
+			const picker = this.Suggestions._getPicker();
+			if (picker) {
+				return picker.querySelector(".ui5-input-inner-phone")!.shadowRoot!.querySelector<HTMLInputElement>("input")!;
+			}
 		}
 
 		return this.nativeInput;
@@ -1802,7 +1812,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const links: Array<HTMLElement> = [];
 		if (this.valueStateMessage) {
 			this.valueStateMessage.forEach(element => {
-				if (element.children.length)	{
+				if (element.children.length) {
 					element.querySelectorAll("ui5-link").forEach(link => {
 						links.push(link as HTMLElement);
 					});

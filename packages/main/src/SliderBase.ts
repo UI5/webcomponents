@@ -11,7 +11,6 @@ import {
 
 // Styles
 import sliderBaseStyles from "./generated/themes/SliderBase.css.js";
-import type { SliderTooltipChangeEventDetails } from "./SliderTooltip.js";
 import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 type StateStorage = {
@@ -163,9 +162,6 @@ abstract class SliderBase extends UI5Element {
 	@property({ type: Boolean })
 	_hiddenTickmarks = false;
 
-	@property({ type: Boolean })
-	_isInputValueValid = false;
-
 	_resizeHandler: ResizeObserverCallback;
 	_moveHandler: (e: TouchEvent | MouseEvent) => void;
 	_upHandler: (e: TouchEvent | MouseEvent) => void;
@@ -315,24 +311,6 @@ abstract class SliderBase extends UI5Element {
 			this._isUserInteraction = true;
 			this._handleActionKeyPress(e);
 		}
-	}
-
-	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
-		const value = e.detail.value;
-
-		this._updateValueFromInput(value);
-	}
-
-	_updateValueFromInput(fieldValue: string) {
-		const value = parseFloat(fieldValue);
-		this._isInputValueValid = value >= this._effectiveMin && value <= this._effectiveMax;
-
-		if (!this._isInputValueValid) {
-			return;
-		}
-
-		this.value = value;
-		this.fireDecoratorEvent("change");
 	}
 
 	_onKeyupBase() {

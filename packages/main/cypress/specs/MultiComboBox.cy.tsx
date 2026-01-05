@@ -641,7 +641,7 @@ describe("General", () => {
 			}));
 	});
 
-	it.skip("Select All functionality + N-more integration", () => {
+	it("Select All functionality + N-more integration", () => {
 		cy.mount(
 			<><MultiComboBox style="width: 100px" noValidation={true} showSelectAll={true}>
 				<MultiComboBoxItem selected={true} text="Very Very Very Very long Item 1"></MultiComboBoxItem>
@@ -649,7 +649,7 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button id="dummyButton"></Button></>
+			</MultiComboBox><Button>Dummy Button</Button></>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -676,14 +676,12 @@ describe("General", () => {
 			.find(".ui5-mcb-select-all-checkbox")
 			.should("not.have.attr", "checked");
 
-		cy.get("#dummyButton")
-			.realClick();
+		// focus the dummy button to close the popover
+		cy.realPress("Tab");
+		cy.realPress("Tab");
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("not.be.focused");
 
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
@@ -1495,18 +1493,18 @@ describe("Validation & Value State", () => {
 		cy.realType("4");
 
 		cy.get("@input")
-			.should("have.value", "1");
+			.should("have.value", "14");
 
 		cy.get("@mcb")
 			.should("have.attr", "value-state", "Negative");
 	});
 
-	it("Reset value state validation after 2500ms", () => {
+	it("Invalid input persists - no automatic clearing", () => {
 		cy.mount(
 			<MultiComboBox>
-				<MultiComboBoxItem text="112"></MultiComboBoxItem>
-				<MultiComboBoxItem text="12"></MultiComboBoxItem>
-				<MultiComboBoxItem text="3"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -1517,37 +1515,141 @@ describe("Validation & Value State", () => {
 		cy.get("@mcb")
 			.should("be.focused");
 
-		cy.realType("4");
+		cy.realType("InvalidText");
 
 		cy.get("@mcb")
 			.should("have.attr", "value-state", "Negative");
-
-		cy.wait(2500);
-
-		cy.get("@mcb")
-			.should("have.attr", "value-state", "None");
-	});
-
-	it("Built in validation by typing a non existing option", () => {
-		cy.mount(
-			<MultiComboBox>
-				<MultiComboBoxItem text="Cosy"></MultiComboBoxItem>
-			</MultiComboBox>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb")
-			.should("be.focused");
-
-		cy.realType("CCo");
 
 		cy.get("@mcb")
 			.shadow()
 			.find("input")
-			.should("have.value", "Cosy");
+			.as("input")
+			.should("have.value", "InvalidText");
+
+		// Wait to test that the value state persists after some time
+		cy.wait(2500)
+
+		cy.get("@input")
+			.should("have.value", "InvalidText");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("Value state resets when valid entry is entered after invalid input", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		// Type invalid text
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input")
+			.should("have.value", "xyz");
+
+		// Clear and type valid text
+		cy.get("@input")
+			.clear();
+
+		cy.realType("Item");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@input")
+			.should("have.value", "Item 1");
+	});
+
+	it("Value state resets when input is cleared after invalid entry", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		// Type invalid text
+		cy.realType("InvalidValue");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input")
+			.should("have.value", "InvalidValue");
+
+		// Clear the input
+		cy.get("@input")
+			.clear();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@input")
+			.should("have.value", "");
+	});
+
+	it("Value state preserved when switching between valid and invalid", () => {
+		cy.mount(
+			<MultiComboBox valueState="Critical">
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Critical");
+
+		// Type invalid text
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		// Clear and verify original state is restored
+		cy.get("@input")
+			.clear();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Critical");
 	});
 
 	it("Tests if item is created when enter is pressed while validation is ongoing", () => {
@@ -1743,7 +1845,7 @@ describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", ()
 
 	});
 
-	it.skip("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
+	it("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
 		cy.get("[ui5-multi-combobox]")
 			.as("multi-combobox");
 
@@ -4214,7 +4316,6 @@ describe("MultiComboBox Composition", () => {
 		simulateCompositionStages(["ㄲ", "ㄲㅏ"], "까");
 
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
@@ -4248,7 +4349,6 @@ describe("MultiComboBox Composition", () => {
 
 		simulateCompositionStages(["ず", "ずx"], "ずx");
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
@@ -4284,10 +4384,67 @@ describe("MultiComboBox Composition", () => {
 
 		simulateCompositionStages(["p", "pi", "pin"], "品味");
 		cy.get("@mcb").should("have.attr", "value-state", "Negative");
-		cy.get("@input").should("have.value", "");
 		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 0);
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<MultiComboBox id="mcbInAForm" no-validation required>
+					<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Denmark"></MultiComboBoxItem>
+					<MultiComboBoxItem text="England"></MultiComboBoxItem>
+				</MultiComboBox>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("exist");
+
+		cy.get("@mcb")
+			.realType("Albania");
+
+		cy.get("@mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
 	});
 });

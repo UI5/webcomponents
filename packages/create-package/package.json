@@ -1,6 +1,6 @@
 {
   "name": "@ui5/create-webcomponents-package",
-  "version": "2.17.0-rc.2",
+  "version": "2.18.0",
   "description": "UI5 Web Components: create package",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -17,8 +17,6 @@
     "directory": "packages/create-package"
   },
   "dependencies": {
-    "chokidar-cli": "^3.0.0",
-    "mkdirp": "^1.0.4",
     "npm-config-user-agent-parser": "^1.0.0",
     "prettier": "^3.5.3",
     "prompts": "^2.4.1",

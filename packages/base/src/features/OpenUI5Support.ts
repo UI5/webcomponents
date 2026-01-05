@@ -6,7 +6,7 @@ import {
 	removeOpenedPopup,
 	getTopmostPopup,
 } from "./patchPopup.js";
-import type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo } from "./patchPopup.js";
+import type { OpenUI5PopupClass, OpenUI5DialogClass, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
@@ -99,7 +99,7 @@ class OpenUI5Support {
 			OpenUI5Support.initPromise = new Promise<void>(resolve => {
 				window.sap.ui.require(["sap/ui/core/Core"], async (Core: OpenUI5Core) => {
 					const callback = () => {
-						let deps: Array<string> = ["sap/ui/core/Popup", "sap/m/Dialog", "sap/m/Popover", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
+						let deps: Array<string> = ["sap/ui/core/Popup", "sap/m/Dialog", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
 						if (OpenUI5Support.isAtLeastVersion116()) { // for versions since 1.116.0 and onward, use the modular core
 							deps = [
 								...deps,
@@ -110,9 +110,9 @@ class OpenUI5Support {
 								"sap/ui/core/date/CalendarUtils",
 							];
 						}
-						window.sap.ui.require(deps, (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl, Patcher: OpenUI5Patcher) => {
+						window.sap.ui.require(deps, (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass, Patcher: OpenUI5Patcher) => {
 							patchPatcher(Patcher);
-							patchPopup(Popup, Dialog, Popover);
+							patchPopup(Popup, Dialog);
 							resolve();
 						});
 					};
@@ -165,9 +165,9 @@ class OpenUI5Support {
 			animationMode: config.getAnimationMode(),
 			language: config.getLanguage(),
 			theme: config.getTheme(),
-			themeRoot: config.getThemeRoot(),
+			themeRoot: typeof config.getThemeRoot === "function" ? config.getThemeRoot() : undefined,
 			rtl: config.getRTL(),
-			timezone: config.getTimezone(),
+			timezone: typeof config.getTimezone === "function" ? config.getTimezone() : undefined,
 			calendarType: config.getCalendarType(),
 			formatSettings: {
 				firstDayOfWeek: LocaleData ? LocaleData.getInstance(config.getLocale()).getFirstDayOfWeek() : undefined,

@@ -406,11 +406,11 @@ slot[name="profile"] {
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-bell-button [slot="badge"] {
-    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
+    inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-custom-item [slot="badge"] {
-    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
+    inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
 }
 
 .ui5-shellbar-menu-button {
@@ -485,6 +485,7 @@ slot[name="profile"] {
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
+	vertical-align: middle;
 }
 
 ::slotted([slot="logo"]):active {
