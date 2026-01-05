@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package webcomponents
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+
+### Bug Fixes
+
+* **ui5-multi-combo-box:** unskip test ([#12829](https://github.com/UI5/webcomponents/issues/12829)) ([b62c313](https://github.com/UI5/webcomponents/commit/b62c313d4ba1f2baa1feb048066eb90c5c4f7571))
+* **ui5-search-item:** update search item gap with design spec ([#12831](https://github.com/UI5/webcomponents/issues/12831)) ([1a65306](https://github.com/UI5/webcomponents/commit/1a653065b586817e505f03a950ae83d15ba9cf41))
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** stabilize popups tests ([#12830](https://github.com/UI5/webcomponents/issues/12830)) ([6bf7b05](https://github.com/UI5/webcomponents/commit/6bf7b053682d140bdaf1db45cf476e0d1e0c94aa))
+
+
+### Features
+
+* **ui5-calendar:** improve header and day picker accessibility and focus behavior ([5111ce7](https://github.com/UI5/webcomponents/commit/5111ce7d4bd6436efacd0167b811623f6b8b304f))
+* **ui5-multi-combobox:** filtering selection enhancement ([#12799](https://github.com/UI5/webcomponents/issues/12799)) ([9eb128d](https://github.com/UI5/webcomponents/commit/9eb128d72fd963869c8dde3b7f48824df4ed8fd7))
+* **ui5-token:** change readonly select state visual ([#12822](https://github.com/UI5/webcomponents/issues/12822)) ([dee55cf](https://github.com/UI5/webcomponents/commit/dee55cf1147759cbfad20a72c8315664c8e95ae9))
+
+
+
+
+
 # [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
 
 

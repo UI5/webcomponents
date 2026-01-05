@@ -28,7 +28,7 @@ const MENU_CONFIG = [
 	{
 		text: "Regenerate",
 		action: "regenerate",
-		processingLabel: "Regenerating text...",
+		processingLabel: "Regenerating ...",
 		completedLabel: "Regenerated text",
 		textKey: "en",
 		replaces: "generate"
@@ -141,9 +141,9 @@ function buildMenuFromConfig() {
 	// Add initial "Generate text" option if no history
 	if (!hasHistory) {
 		const generateItem = document.createElement('ui5-menu-item');
-		generateItem.setAttribute('text', 'Generate text');
+		generateItem.setAttribute('text', 'Generate');
 		generateItem.dataset.action = 'generate';
-		generateItem.dataset.processingLabel = 'Generating text...';
+		generateItem.dataset.processingLabel = 'Generating ...';
 		generateItem.dataset.completedLabel = 'Generated text';
 		generateItem.dataset.textKey = 'en';
 		menu.appendChild(generateItem);
