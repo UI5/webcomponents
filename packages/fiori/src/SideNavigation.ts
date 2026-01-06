@@ -669,7 +669,7 @@ class SideNavigation extends UI5Element {
 		const result: Array<SideNavigationItem> = [];
 
 		this.overflowItems.forEach(item => {
-			if (isInstanceOfSideNavigationItem(item) && item.classList.contains(overflowClass)) {
+			if (item && isInstanceOfSideNavigationItem(item) && item.classList.contains(overflowClass)) {
 				result.push(item);
 			}
 		});
