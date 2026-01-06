@@ -67,11 +67,6 @@ class ListItemCustom extends ListItem {
 	@property()
 	declare accessibleName?: string;
 
-	/**
-	 * @public
-	 */
-	@slot({ type: Node, "default": true })
-	content!: Array<Node>;
 
 	_onkeydown(e: KeyboardEvent) {
 		const isFocused = this.matches(":focus");
@@ -109,12 +104,28 @@ class ListItemCustom extends ListItem {
 
 	_onfocusin(e: FocusEvent) {
 		super._onfocusin(e);
-		this._updateInvisibleTextContent();
+		// Skip updating invisible text during drag operations
+		if (!this._isDragging()) {
+			this._updateInvisibleTextContent();
+		}
 	}
 
 	_onfocusout(e: FocusEvent) {
 		super._onfocusout(e);
-		this._clearInvisibleTextContent();
+		// Skip clearing invisible text during drag operations
+		if (!this._isDragging()) {
+			this._clearInvisibleTextContent();
+		}
+	}
+	
+	/**
+	 * Checks if this element is currently being dragged
+	 * @returns {boolean} True if this element is being dragged
+	 * @private
+	 */
+	_isDragging(): boolean {
+		// Check if this specific element has the data-moving attribute
+		return this.hasAttribute("data-moving");
 	}
 
 	onAfterRendering() {
@@ -168,10 +179,14 @@ class ListItemCustom extends ListItem {
 	private _getAccessibilityDescription(): string[] {
 		const accessibilityTexts: string[] = [];
 
-		// Process slotted content elements
-		this.content.forEach(child => {
-			this._processNodeForAccessibility(child, accessibilityTexts);
-		});
+		// Process slotted content elements (default slot)
+		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])");
+		if (defaultSlot) {
+			const assignedNodes = (defaultSlot as HTMLSlotElement).assignedNodes({flatten: true});
+			assignedNodes.forEach(child => {
+				this._processNodeForAccessibility(child, accessibilityTexts);
+			});
+		}
 
 		// Process delete button in delete mode
 		const deleteButtonNodes = this._getDeleteButtonNodes();
@@ -339,7 +354,7 @@ class ListItemCustom extends ListItem {
 	}
 
 	get classes(): ClassMap {
-		const result = super.classes;
+		const result = super.classes as ClassMap;
 
 		result.main["ui5-custom-li-root"] = true;
 
