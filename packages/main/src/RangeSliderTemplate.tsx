@@ -70,14 +70,18 @@ export function handles(this: RangeSlider) {
 
 			<SliderTooltip
 				open={this._tooltipsOpen}
-				value={this.startValue.toString()}
+				value={this.tooltipStartValue}
+				valueState={this.tooltipStartValueState}
 				min={this.min}
 				max={this.max}
 				data-sap-ui-start-value
 				editable={this.editableTooltip}
 				followRef={this._startHandle}
 				onChange={this._onTooltipChange}
-				onForwardFocus={this._onTooltopForwardFocus}
+				onKeyDown={this._onTooltipKeydown}
+				onFocusChange={this._onTooltipFocusChange}
+				onOpen={this._onTooltipOpen}
+				onInput={this._onTooltipInput}
 			>
 			</SliderTooltip>
 		</div>
@@ -105,14 +109,18 @@ export function handles(this: RangeSlider) {
 
 			<SliderTooltip
 				open={this._tooltipsOpen}
-				value={this.endValue.toString()}
+				value={this.tooltipEndValue}
+				valueState={this.tooltipEndValueState}
 				min={this.min}
 				max={this.max}
 				data-sap-ui-end-value
 				editable={this.editableTooltip}
 				followRef={this._endHandle}
 				onChange={this._onTooltipChange}
-				onForwardFocus={this._onTooltopForwardFocus}
+				onKeyDown={this._onTooltipKeydown}
+				onFocusChange={this._onTooltipFocusChange}
+				onOpen={this._onTooltipOpen}
+				onInput={this._onTooltipInput}
 			>
 			</SliderTooltip>
 		</div>

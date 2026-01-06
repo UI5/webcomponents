@@ -15,7 +15,7 @@
 }
 
 :host(:not([max-lines="1"])) {
-	display: -webkit-box;
+	display: -webkit-inline-box;
 	-webkit-line-clamp: var(--_ui5_text_max_lines);
 	line-clamp: var(--_ui5_text_max_lines);
 	-webkit-box-orient: vertical;
