@@ -12,6 +12,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
+import Bar from "../../src/Bar.js";
 
 function getGrowingWithScrollList(length: number, height: string = "100px") {
 	return (
@@ -2515,5 +2516,78 @@ describe("List keyboard drag and drop tests", () => {
 		}
 
 		cy.get("#item9").prev().should("have.id", "item4");
+	});
+});
+
+describe("List sticky header", () => {
+	it("sticks default header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List headerText="Sticky Header" stickyHeader>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-header")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+	
+				cy.get("@container")
+					.scrollTo(0, 50);
+	
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
+	});
+
+	it("sticks custom header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List stickyHeader>
+					<Bar slot="header">
+						<Title>Sticky Header Bar</Title>
+					</Bar>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-bar]")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+	
+				cy.get("@container")
+					.scrollTo(0, 50);
+	
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
 	});
 });
