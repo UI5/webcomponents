@@ -83,6 +83,8 @@ class TextArea extends BaseTextArea {
 
 	// Store bound handler for proper cleanup
 	private _keydownHandler?: (event: KeyboardEvent) => void;
+	private _menuFocusinHandler?: () => void;
+	private _menuFocusoutHandler?: (event: Event) => void;
 
 	/**
 	 * Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.
@@ -123,6 +125,9 @@ class TextArea extends BaseTextArea {
 	 */
 	@property({ type: Number })
 	totalVersions = 0;
+
+	@property({ type: Boolean })
+	focused = false;
 
 	@slot({ type: HTMLElement })
 	menu!: Array<HTMLElement>;
@@ -199,11 +204,52 @@ class TextArea extends BaseTextArea {
 	onAfterRendering() {
 		super.onAfterRendering();
 
-		// Add keydown event listener to the textarea
 		const textarea = this.shadowRoot?.querySelector("textarea");
 		if (textarea && !this._keydownHandler) {
 			this._keydownHandler = this._handleKeydown.bind(this);
 			textarea.addEventListener("keydown", this._keydownHandler);
+		}
+
+		const menuNodes = this.getSlottedNodes("menu");
+		if (menuNodes.length > 0) {
+			const menu = menuNodes[0];
+			if (!this._menuFocusinHandler) {
+				this._menuFocusinHandler = () => {
+					this.focused = true;
+				};
+				menu.addEventListener("focusin", this._menuFocusinHandler);
+			}
+			if (!this._menuFocusoutHandler) {
+				this._menuFocusoutHandler = (evt: Event) => {
+					const e = evt as FocusEvent;
+					const relatedTarget = e.relatedTarget as HTMLElement;
+					const focusMovingWithinComponent = relatedTarget && this.shadowRoot?.contains(relatedTarget);
+					const focusStayingInMenu = relatedTarget && menu.contains(relatedTarget);
+					if (!focusMovingWithinComponent && !focusStayingInMenu) {
+						this.focused = false;
+					}
+				};
+				menu.addEventListener("focusout", this._menuFocusoutHandler);
+			}
+		}
+	}
+
+	_onfocusin() {
+		super._onfocusin();
+		this.focused = true;
+	}
+
+	_onfocusout(e: FocusEvent) {
+		super._onfocusout(e);
+		const relatedTarget = e.relatedTarget as HTMLElement;
+		const focusMovingWithinShadowDOM = relatedTarget && this.shadowRoot?.contains(relatedTarget);
+		const menuNodes = this.getSlottedNodes("menu");
+		const focusMovingToMenu = menuNodes.length > 0 && relatedTarget && (
+			menuNodes[0].contains(relatedTarget)
+			|| relatedTarget === menuNodes[0]
+		);
+		if (!focusMovingWithinShadowDOM && !focusMovingToMenu) {
+			this.focused = false;
 		}
 	}
 
@@ -222,9 +268,10 @@ class TextArea extends BaseTextArea {
 			return;
 		}
 
-		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
+		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean, horizontalAlign?: string };
 		if (menu && typeof menu.open !== "undefined") {
-			menu.opener = e.detail.clickTarget;
+			menu.opener = e.detail.clickTarget.shadowRoot?.querySelector("ui5-button") as HTMLElement;
+			menu.horizontalAlign = "End";
 			menu.open = true;
 		}
 	}
