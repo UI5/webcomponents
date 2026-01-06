@@ -9,9 +9,10 @@ export default function SliderTooltipTemplate(this: SliderTooltip) {
 					value={this.value}
 					type="Number"
 					accessibleNameRef="ui5-slider-InputLabel"
-					onKeyDown={this._keydown}
 					onFocusIn={this._onInputFocusin}
 					onFocusOut={this._onInputFocusOut}
+					onKeyDown={this._onInputKeydown}
+					onInput={this._onInputInput}
 					tabIndex={-1}
 					data-sap-focus-ref
 					valueState={this.valueState}

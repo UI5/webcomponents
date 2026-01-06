@@ -20,7 +20,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 				onDragOver={this._ondrag}
 				onDrop={this._ondrop}
 			>
-				<form class="ui5-file-uploader-form" onSubmit={this._onFormSubmit}>
+				<div class="ui5-file-uploader-form">
 					<input
 						type="file"
 						class="ui5-file-uploader-native-input"
@@ -39,7 +39,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 						onChange={this._onChange}
 						data-sap-focus-ref
 					/>
-				</form>
+				</div>
 
 				{this.hideInput ? (
 					<slot></slot>

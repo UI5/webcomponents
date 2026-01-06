@@ -1746,6 +1746,38 @@ describe("Accessibility", () => {
 		cy.get("[ui5-search]")
 			.should("be.focused");
 	});
+
+	it("should have aria-autocomplete='both' on the input element", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-autocomplete", "both");
+	});
+
+	it("should have aria-controls pointing to responsive popover", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.invoke("attr", "aria-controls")
+			.then((ariaControlsId) => {
+				cy.get("[ui5-search]")
+					.shadow()
+					.find("[ui5-responsive-popover]")
+					.should("have.attr", "id", ariaControlsId);
+			});
+	});
 });
 
 describe("Lazy loaded items and autocomplete", () => {

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* **ui5-popover:** render block layers in the correct order ([#12659](https://github.com/UI5/webcomponents/issues/12659)) ([43e545a](https://github.com/UI5/webcomponents/commit/43e545a4a5e486f19fb52ae18fe7c162680cf56e))
+
+
+
+
+
 # [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
 
 

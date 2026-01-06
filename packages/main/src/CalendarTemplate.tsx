@@ -13,6 +13,9 @@ export default function CalendarTemplate(this: Calendar) {
 				class="ui5-cal-root"
 				onKeyDown={this._onkeydown}
 			>
+				<div class="ui5-calheader" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
+					{ CalendarHeaderTemplate.call(this) }
+				</div>
 				<div id={`${this._id}-content`} class="ui5-cal-content">
 					<DayPicker
 						id={`${this._id}-daypicker`}
@@ -87,10 +90,6 @@ export default function CalendarTemplate(this: Calendar) {
 						onNavigate={this.onNavigate}
 						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
 					/>
-				</div>
-
-				<div class="ui5-calheader" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
-					{ CalendarHeaderTemplate.call(this) }
 				</div>
 			</div>
 
