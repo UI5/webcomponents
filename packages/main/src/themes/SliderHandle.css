@@ -1,0 +1,48 @@
+:host {
+	background: var(--_ui5_slider_handle_background);
+	border: var(--_ui5_slider_handle_border);
+	border-radius: var(--_ui5_slider_handle_border_radius);
+	position: absolute;
+	outline: none;
+	height: var(--_ui5_slider_handle_height);
+	width: var(--_ui5_slider_handle_width);
+	box-sizing: var(--_ui5_slider_handle_box_sizing);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 2;
+	top: 0;
+	cursor: pointer;
+}
+
+.ui5-slider-handle-container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	outline: none;
+}
+
+[slider-icon] {
+	display: var(--_ui5_slider_handle_icon_display);
+	color: var(--sapContent_Selected_ForegroundColor);
+	width: var(--_ui5_slider_handle_icon_size);
+	height: var(--_ui5_slider_handle_icon_size);
+}
+
+:host(:focus),
+:host([active]),
+:host(:active) {
+	[slider-icon] {
+		display: none;
+	}
+
+	background-color: transparent;
+	border: var(--_ui5_slider_handle_focus_border);
+}
+
+:host([orientation="Vertical"]) {
+	/* rotate */
+	transform: rotate(90deg);
+}

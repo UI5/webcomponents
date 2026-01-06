@@ -25,6 +25,14 @@
 
 	<body class="slider1auto">
 		<section class="group">
+			<h1 style="font-size: 1.5rem;">Slider Evolution examples</h1>
+			<ui5-slider-evolution show-tickmarks style="width: 100%" value="50" show-tickmark-labels></ui5-slider-evolution>
+		</section>
+		<section class="group" style="position: relative; margin-top: 3rem;">
+			<ui5-slider-handle></ui5-slider-handle>
+			<ui5-slider-handle orientation="Vertical" style="margin-left: 5rem;"></ui5-slider-handle>
+		</section>
+		<section class="group">
 			<ui5-slider-scale show-tickmarks style="width: 100%"></ui5-slider-scale>
 		</section>
 		<section class="group">
@@ -50,16 +58,31 @@
 		<ui5-slider-scale step="1" show-tickmark-labels show-tickmarks style="height: 420px; margin-top: 3rem; margin-left: 3rem;" min="0" max="100" start-value="50" end-value="60" orientation="Vertical"></ui5-slider-scale>
 
 		<ui5-slider-scale id="temp2" show-tickmark-labels show-tickmarks style="height: 420px; margin-top: 3rem; margin-left: 3rem;" min="0" max="100" step="2" start-value="0" end-value="37" orientation="Vertical"></ui5-slider-scale>
+
+		<ui5-slider-evolution show-tickmarks style="height: 420px; margin-top: 3rem; margin-left: 10rem;" value="50" show-tickmark-labels orientation="Vertical"></ui5-slider-evolution>
+
 		<script>
 			document.getElementById('temp').tickmarks = [
 				{ value: 0, label: '0°C' },
 				{ value: 25, label: 'Room Temperature' },
+				{ value: 37, label: 'Room Temperature' },
+				{ value: 55, label: 'Room Temperature' },
+				{ value: 55, label: 'Room Temperature' },
+				{ value: 77, label: 'Room Temperature' },
+				{ value: 88, label: 'Room Temperature' },
+				{ value: 93, label: 'Room Temperature' },
 				{ value: 100, label: 'Boiling' }
 			];
 
 			document.getElementById('temp2').tickmarks = [
 				{ value: 0, label: '0°C' },
 				{ value: 25, label: 'Room Temperature' },
+				{ value: 37, label: 'Room Temperature' },
+				{ value: 55, label: 'Room Temperature' },
+				{ value: 55, label: 'Room Temperature' },
+				{ value: 77, label: 'Room Temperature' },
+				{ value: 88, label: 'Room Temperature' },
+				{ value: 93, label: 'Room Temperature' },
 				{ value: 100, label: 'Boiling' }
 			];
 		</script>

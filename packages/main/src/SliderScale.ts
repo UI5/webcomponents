@@ -145,7 +145,7 @@ class SliderScale extends UI5Element {
 		}
 
 		return {
-			left: `${start}%`,
+			insetInlineStart: `${start}%`,
 			width: `${end - start}%`,
 		};
 	}
@@ -222,4 +222,5 @@ class SliderScale extends UI5Element {
 SliderScale.define();
 
 export default SliderScale;
+export { SliderScaleOrientation };
 export type { Tickmark };

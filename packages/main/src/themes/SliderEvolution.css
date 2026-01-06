@@ -1,0 +1,28 @@
+:host {
+	display: inline-block;
+	width: 100%;
+	height: 3rem;
+	box-sizing: border-box;
+	user-select: none;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-top: 0;
+}
+
+.ui5-slider-evolution-root {
+	position: relative;
+	width: 100%;
+	height: 3rem;
+	cursor: pointer;
+}
+
+:host([orientation="Vertical"]) {
+	width: 3rem;
+	height: 100%;
+	padding: 0 0.5rem;
+
+	.ui5-slider-evolution-root {
+		width: 3rem;
+		height: 100%;
+	}
+}

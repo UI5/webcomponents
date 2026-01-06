@@ -1,20 +1,28 @@
 :host {
-	height: 0.25rem;
-	display: inline-block;
+	height: 2rem;
 	position: relative;
 	width: 100%;
-	padding-left: 1rem;
-	padding-right: 1rem;
 	box-sizing: border-box;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ui5-slider-scale-root {
+	height: .25rem;
 }
 
 :host([orientation="Vertical"]) {
-	width: 0.25rem;
+	width: 2rem;
 	height: 100%;
-	padding-left: 0;
-	padding-right: 0;
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+
+	.ui5-slider-scale-root {
+		box-sizing: border-box;
+		height: 100%;
+		width: 0.25rem;
+		background-color: var(--sapSlider_Background);
+		position: relative;
+	}
 
 	.ui5-slider-scale-progress {
 		width: 100%;
@@ -50,11 +58,11 @@
 		margin-top: 0;
 		margin-left: 0;
 		border-left: none;
-		border-top: 0.0625rem solid var(--sapField_BorderColor);}
+		border-top: 0.0625rem solid var(--sapField_BorderColor);
+	}
 }
 
 .ui5-slider-scale-root {
-	height: 100%;
 	box-sizing: border-box;
 	border-radius: 0.25rem;
 	width: 100%;
