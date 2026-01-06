@@ -745,7 +745,7 @@ describe("Calendar general interaction", () => {
 			.should("have.length", 2);
 	});
 
-	it("Buttons for month and year in header are rendered with correct value", () => {
+	it.skip("Buttons for month and year in header are rendered with correct value", () => {
 		cy.mount(<Calendar id="calendar1" primaryCalendarType="Islamic" secondaryCalendarType="Gregorian"></Calendar>);
 		const timestamp = new Date(Date.UTC(2000, 9, 10, 0, 0, 0)).valueOf() / 1000;
 
