@@ -593,27 +593,22 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	get colorFieldsAnnouncementText() {
-		const sMode = this._displayHSL ? "HSL" : "RGB";
-		let sText = "";
+		const mode = this._displayHSL ? "HSL" : "RGB";
+		let text = "";
 
-		switch (sMode) {
-		case "RGB":
-			sText = `${this.redInputLabel} ${this._colorValue.R}, `
+		if (mode === "RGB") {
+			text = `${this.redInputLabel} ${this._colorValue.R}, `
 				+ `${this.greenInputLabel} ${this._colorValue.G}, `
 				+ `${this.blueInputLabel} ${this._colorValue.B}, `
 				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
-			break;
-		case "HSL":
-			sText = `${this.hueInputLabel} ${this._colorValue.H}, `
+		} else {
+			text = `${this.hueInputLabel} ${this._colorValue.H}, `
 				+ `${this.saturationInputLabel} ${this._colorValue.S} ${this.percentageLabel}, `
 				+ `${this.lightInputLabel} ${this._colorValue.L} ${this.percentageLabel}, `
 				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
-			break;
-		default:
-			break;
 		}
 
-		return ColorPicker.i18nBundle.getText(COLORPICKER_COLOR_MODE_CHANGED, sMode, sText);
+		return ColorPicker.i18nBundle.getText(COLORPICKER_COLOR_MODE_CHANGED, mode, text);
 	}
 
 	get toggleModeTooltip() {
