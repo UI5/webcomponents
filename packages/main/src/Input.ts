@@ -100,7 +100,7 @@ import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from ".
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
 import type InputComposition from "./features/InputComposition.js";
-import ComboBoxFilter from "./types/ComboBoxFilter.js";
+import InputSuggestionsFilter from "./types/InputSuggestionsFilter.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -499,7 +499,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * @public
 	 */
 	@property()
-	filter: `${ComboBoxFilter}` = ComboBoxFilter.None;
+	filter: `${InputSuggestionsFilter}` = InputSuggestionsFilter.None;
 
 	/**
 	 * Defines whether the clear icon is visible.
@@ -796,7 +796,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		if (this.filter !== ComboBoxFilter.None) {
+		if (this.filter !== InputSuggestionsFilter.None) {
 			this._filterItems(this.typedInValue);
 		}
 
@@ -833,7 +833,13 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			}
 
 			if (this.typedInValue.length && this.value.length) {
-				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+				// "Contains" filtering requires custom selection range handling.
+				// Example: "e" → "Belgium" (item does not start with typed value, so select all).
+				if (this.filter === InputSuggestionsFilter.Contains) {
+					this._adjustContainsSelectionRange();
+				} else {
+					innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+				}
 			}
 
 			this.fireDecoratorEvent("type-ahead");
@@ -845,6 +851,22 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this._removeLinksEventListeners();
 			this._addLinksEventListeners();
 			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
+		}
+	}
+
+	_adjustContainsSelectionRange() {
+		const innerInput = this.getInputDOMRefSync()!;
+		const visibleItems = this.Suggestions?._getItems().filter(item => !item.hidden) as IInputSuggestionItemSelectable[];
+		const currentItem = visibleItems?.find(item => { return item.selected || item.focused; });
+		const groupItems = this._flattenItems.filter(item => this._isGroupItem(item));
+
+		if (currentItem && !groupItems.includes(currentItem)) {
+			const doesItemStartWithTypedValue = currentItem?.text?.toLowerCase().startsWith(this.typedInValue.toLowerCase());
+			if (doesItemStartWithTypedValue) {
+				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+			} else {
+				innerInput.setSelectionRange(0, this.value.length);
+			}
 		}
 	}
 
@@ -1364,7 +1386,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (groupItems.length) {
 			matchingItems = this._filterGroups(this.filter, groupItems);
 		} else {
-			matchingItems = (Filters[this.filter] || Filters.StartsWith)(value, this._selectableItems, "text");
+			matchingItems = (Filters[this.filter])(value, this._selectableItems, "text");
 		}
 		this._selectableItems.forEach(item => {
 			item.hidden = !matchingItems.includes(item);
@@ -1375,10 +1397,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 	}
 
-	_filterGroups(filterType: `${ComboBoxFilter}`, groupItems: IInputSuggestionItem[]) {
+	_filterGroups(filterType: `${InputSuggestionsFilter}`, groupItems: IInputSuggestionItem[]) {
 		const filteredGroupItems: IInputSuggestionItem[] = [];
 		groupItems.forEach(groupItem => {
-			const currentGroupItems = (Filters[filterType] || Filters.StartsWith)(this.typedInValue, groupItem.items ?? [], "text");
+			const currentGroupItems = (Filters[filterType])(this.typedInValue, groupItem.items ?? [], "text");
 			filteredGroupItems.push(...currentGroupItems);
 			if (currentGroupItems.length === 0) {
 				groupItem.hidden = true;
