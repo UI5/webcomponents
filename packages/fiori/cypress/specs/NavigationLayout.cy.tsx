@@ -151,7 +151,7 @@ describe("Navigation Layout on Size S", () => {
 			.should("have.prop", "sideCollapsed", true);
 
 		cy.get("[ui5-side-navigation]")
-			.should("have.prop", "collapsed", false);
+			.should("have.prop", "collapsed", true);
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()

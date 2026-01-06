@@ -104,10 +104,6 @@ class NavigationLayout extends UI5Element {
 	onBeforeRendering() {
 		this.calcSideCollapsed();
 
-		if (window.innerWidth < 600 && this.isSideCollapsed()) {
-			return;
-		}
-
 		const sideNavigation = this.sideContent[0];
 		this.hasSideNavigation = !!sideNavigation;
 

@@ -482,7 +482,10 @@ class SideNavigation extends UI5Element {
 	}
 
 	handleResize() {
-		this._updateOverflowItems();
+		// In smaller screen the side navigation hidden when collapsed and there is no overflow items
+		if (window.innerWidth > 600) {
+			this._updateOverflowItems();
+		}
 	}
 
 	_updateOverflowItems() {
