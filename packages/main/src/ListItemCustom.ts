@@ -4,7 +4,6 @@ import {
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ClassMap, AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -67,7 +66,6 @@ class ListItemCustom extends ListItem {
 	@property()
 	declare accessibleName?: string;
 
-
 	_onkeydown(e: KeyboardEvent) {
 		const isFocused = this.matches(":focus");
 		const shouldHandle = isFocused
@@ -117,7 +115,7 @@ class ListItemCustom extends ListItem {
 			this._clearInvisibleTextContent();
 		}
 	}
-	
+
 	/**
 	 * Checks if this element is currently being dragged
 	 * @returns {boolean} True if this element is being dragged
@@ -182,7 +180,7 @@ class ListItemCustom extends ListItem {
 		// Process slotted content elements (default slot)
 		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])");
 		if (defaultSlot) {
-			const assignedNodes = (defaultSlot as HTMLSlotElement).assignedNodes({flatten: true});
+			const assignedNodes = (defaultSlot as HTMLSlotElement).assignedNodes({ flatten: true });
 			assignedNodes.forEach(child => {
 				this._processNodeForAccessibility(child, accessibilityTexts);
 			});
@@ -354,7 +352,7 @@ class ListItemCustom extends ListItem {
 	}
 
 	get classes(): ClassMap {
-		const result = super.classes as ClassMap;
+		const result = super.classes;
 
 		result.main["ui5-custom-li-root"] = true;
 
