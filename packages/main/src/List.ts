@@ -402,7 +402,7 @@ class List extends UI5Element {
 	 * the application, the header of the list will be always visible.
 	 * @default false
 	 * @public
-	 * @since 2.18.0
+	 * @since 2.19.0
 	 */
 	 @property({ type: Boolean })
 	 stickyHeader = false;
