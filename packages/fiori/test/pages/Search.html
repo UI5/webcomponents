@@ -26,7 +26,7 @@
 
 <body class="search sapUiSizeCompact" style="background-color: var(--sapBackgroundColor);">
 
-	<ui5-search field-loading>
+	<ui5-search>
 		<ui5-search-message-area slot="messageArea" description="Search for example “All my open Objects”" text="Try This!"></ui5-search-message-area>
 
 		<ui5-search-item text="List Item 1"></ui5-search-item>
@@ -44,7 +44,7 @@
 
 	<div class="container first">
 		<ui5-label>Search with Suggestions - Example No Results, but suggestions</ui5-label>
-		<ui5-search show-clear-icon field-loading>
+		<ui5-search show-clear-icon>
 			<ui5-search-message-area slot="messageArea" description="You can try the following" text="Oh, there are no results"></ui5-search-message-area>
 
 			<ui5-search-item text="List Item Deletable" icon="history" deletable></ui5-search-item>
@@ -58,7 +58,7 @@
 	</div>
 
 	<ui5-label>Search with Grouped Suggestions and Show More (N) Item</ui5-label>
-	<ui5-search id="searchShowMore" show-clear-icon placeholder="Placeholder" field-loading>
+	<ui5-search id="searchShowMore" show-clear-icon placeholder="Placeholder">
 		<ui5-search-message-area slot="messageArea" description="You can try the following"
 			text="Oh, there are no results"></ui5-search-message-area>
 		<ui5-search-item-group id="group1" header-text="Group Header">
@@ -138,7 +138,7 @@
 	<div class="container">
 		<ui5-label>Search - Initially collapsed with Busy State</ui5-label>
 		<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
-			<ui5-search id="expanding" loading collapsed field-loading></ui5-search>
+			<ui5-search id="expanding" loading collapsed></ui5-search>
 		</div>
 	</div>
 
@@ -175,7 +175,7 @@
 
 	<div class="container">
 		<ui5-label>Search with no initial items</ui5-label>
-		<ui5-search field-loading show-clear-icon placeholder="Start typing ..."></ui5-search>
+		<ui5-search show-clear-icon placeholder="Start typing ..."></ui5-search>
 	</div>
 
 	<div class="container">
@@ -251,6 +251,11 @@
 				</ui5-search-item>
 			</ui5-search-item-group>
 		</ui5-search>
+	</div>
+
+	<div class="container" style="padding-top: 1rem;">
+		<ui5-label>Search with field loading state (type and press Enter)</ui5-label>
+		<ui5-search id="search-with-loading" show-clear-icon placeholder="Search..."></ui5-search>
 	</div>
 
 	<div class="container last" style="padding-top: 1rem;">
@@ -448,6 +453,15 @@
 					];
 					createItems(searchLazy, lazyData);
 				}, 300);
+			}
+		});
+
+		const searchWithLoading = document.getElementById('search-with-loading');
+		searchWithLoading.addEventListener('ui5-search', async (e) => {
+			if (e.target.value) {
+				e.target.fieldLoading = true;
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				e.target.fieldLoading = false;
 			}
 		});
 	</script>
