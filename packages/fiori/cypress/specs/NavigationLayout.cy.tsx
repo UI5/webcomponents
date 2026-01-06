@@ -51,6 +51,14 @@ function SampleWithCollapsedMode() {
 				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
 				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
 			</SideNavigationGroup>
+
+			<SideNavigationItem
+				slot="fixedItems"
+				text="Legal"
+				href="https://www.sap.com/about/legal/impressum.html"
+				target="_blank"
+				icon={home}>
+			</SideNavigationItem>
 		</SideNavigation>
 
 		<div>
@@ -65,7 +73,7 @@ function SampleWithExpandedMode() {
 			<Button icon={menu} slot="startButton" id="startButton"></Button>
 		</ShellBar>
 
-		<SideNavigation id="sn1" slot="sideContent">
+	<SideNavigation id="sn1" slot="sideContent">
 			<SideNavigationItem text="Home" href="#home" icon={home}></SideNavigationItem>
 
 			<SideNavigationGroup text="Group 1" expanded={true}>
@@ -73,6 +81,14 @@ function SampleWithExpandedMode() {
 				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
 				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
 			</SideNavigationGroup>
+
+			<SideNavigationItem
+				slot="fixedItems"
+				text="Legal"
+				href="https://www.sap.com/about/legal/impressum.html"
+				target="_blank"
+				icon={home}>
+			</SideNavigationItem>
 		</SideNavigation>
 
 		<div>

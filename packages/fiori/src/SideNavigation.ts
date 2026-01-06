@@ -505,6 +505,9 @@ class SideNavigation extends UI5Element {
 		const overflowItems = this.overflowItems;
 
 		let itemsHeight = overflowItems.reduce<number>((sum, itemRef) => {
+			if (!itemRef) {
+				return sum;
+			}
 			itemRef.classList.remove("ui5-sn-item-hidden");
 			return sum + itemRef.offsetHeight;
 		}, 0);
@@ -532,7 +535,7 @@ class SideNavigation extends UI5Element {
 		}
 
 		overflowItems.forEach(item => {
-			if (item === selectedItem) {
+			if (!item || item === selectedItem) {
 				return;
 			}
 
