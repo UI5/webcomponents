@@ -14,10 +14,11 @@ export default function ToolbarTemplate(this: Toolbar) {
 			aria-label={this.accInfo.root.accessibleName}
 		>
 			{this.standardItems.map(item => {
-				const selfOverflowClass = item._selfOverflowed ? "ui5-tb-self-overflow" : "";
-				const classes = `ui5-tb-item ${selfOverflowClass}`;
 				return (
-					<div class={classes} id={item._individualSlot}>
+					<div class={{
+						"ui5-tb-item": true,
+						"ui5-tb-self-overflow": item._selfOverflowed,
+					}} id={item._individualSlot}>
 						<slot name={item._individualSlot}></slot>
 					</div>
 				);
@@ -44,7 +45,6 @@ export default function ToolbarTemplate(this: Toolbar) {
 			horizontalAlign="End"
 			onClose={this.onOverflowPopoverClosed}
 			onOpen={this.onOverflowPopoverOpened}
-			onBeforeClose={this.onOverflowPopoverBeforeClose}
 			accessibleName={this.accInfo.popover.accessibleName}
 			hideArrow={true}
 		>

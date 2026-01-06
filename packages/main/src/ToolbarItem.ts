@@ -82,7 +82,7 @@ class ToolbarItem extends UI5Element {
 	 * Defines if the component, wrapped in the toolbar item, has his own overflow mechanism.
 	 * @default false
 	 * @private
-	 * @since 2.17.0
+	 * @since 2.19.0
 	 */
 	@property({ type: Boolean })
 	_selfOverflowed: boolean = false;
@@ -91,7 +91,7 @@ class ToolbarItem extends UI5Element {
 	 * Defines if the component, wrapped in the toolbar item, should be expanded in the overflow popover.
 	 * @default false
 	 * @public
-	 * @since 2.17.0
+	 * @since 2.19.0
 	 */
 
 	@property({ type: Boolean })
@@ -100,6 +100,7 @@ class ToolbarItem extends UI5Element {
 	_isRendering = true;
 	_maxWidth = 0;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
+	_kind = "ToolbarItem";
 
 	eventsToCloseOverflow: string[] = [];
 
@@ -129,19 +130,18 @@ class ToolbarItem extends UI5Element {
 	/**
 	 * Wrapped component slot.
 	 * @public
-	 * @since 2.17.0
+	 * @since 2.19.0
 	 */
 
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true,
 	})
-	item!: HTMLElement | undefined;
+	item!: IOverflowToolbarItem[]; // here
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
-		if (this.tagName === "UI5-TOOLBAR-ITEM"
-			&& this.getSlottedNodes<IOverflowToolbarItem>("item").length
-			&& this.getSlottedNodes<IOverflowToolbarItem>("item")[0].hasToolbarWrapper) {
+		if (this._kind === "ToolbarItem"
+			&& this.item?.[0].hasToolbarWrapper) {
 			// eslint-disable-next-line no-console
 			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.getSlottedNodes<IOverflowToolbarItem>("item")[0].hasToolbarWrapper}.`);
 		}

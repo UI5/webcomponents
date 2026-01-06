@@ -48,6 +48,8 @@ class ToolbarSpacer extends ToolbarItem {
 	get isInteractive() {
 		return false;
 	}
+
+	_kind = "ToolbarSpacer";
 }
 
 ToolbarSpacer.define();

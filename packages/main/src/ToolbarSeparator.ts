@@ -38,6 +38,7 @@ class ToolbarSeparator extends ToolbarItem {
 	get isInteractive() {
 		return false;
 	}
+	_kind = "ToolbarSeparator";
 }
 
 ToolbarSeparator.define();

@@ -170,6 +170,8 @@ class ToolbarButton extends ToolbarItem {
 	@property()
 	width?: string;
 
+	_kind = "ToolbarButton";
+
 	get styles() {
 		return {
 			width: this.width,

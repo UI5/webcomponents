@@ -307,7 +307,7 @@ class Toolbar extends UI5Element {
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItem) {
-		item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
+		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
 		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
 		if (item._selfOverflowed && !item.isOverflowed && itemWrapper) {
 			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
@@ -473,9 +473,6 @@ class Toolbar extends UI5Element {
 
 	onOverflowPopoverClosed() {
 		this.popoverOpen = false;
-	}
-
-	onOverflowPopoverBeforeClose() {
 	}
 
 	onOverflowPopoverOpened() {
