@@ -746,14 +746,18 @@ describe("Calendar general interaction", () => {
 	});
 
 	it("Buttons for month and year in header are rendered with correct value", () => {
-		cy.mount(<Calendar id="calendar1" primaryCalendarType="Islamic" secondaryCalendarType="Gregorian"></Calendar>);
 		const timestamp = new Date(Date.UTC(2000, 9, 10, 0, 0, 0)).valueOf() / 1000;
 
-		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+		cy.mount(<Calendar id="calendar1" primaryCalendarType="Islamic" secondaryCalendarType="Gregorian"></Calendar>);
 
 		cy.get<Calendar>("#calendar1")
 			.shadow()
 			.find(".ui5-calheader")
+			.as("calheader");
+			
+		cy.get<Calendar>("#calendar1").invoke("prop", "timestamp", timestamp);
+
+		cy.get<Calendar>("@calheader")
 			.find("[data-ui5-cal-header-btn-month]")
 			.find("span")
 			.should(spans => {
@@ -761,12 +765,10 @@ describe("Calendar general interaction", () => {
 				expect(spans[1].textContent).to.equal("Sep – Oct");
 			});
 
-		cy.get<Calendar>("#calendar1")
-			.shadow()
-			.find(".ui5-calheader")
+		cy.get<Calendar>("@calheader")
 			.find("[data-ui5-cal-header-btn-year]")
 			.find("span")
-			.then(spans => {
+			.should(spans => {
 				expect(spans[0].textContent).to.equal("1421 AH");
 				expect(spans[1].textContent).to.equal("2000");
 			});
