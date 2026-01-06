@@ -62,6 +62,7 @@ type InputVersionChangeEventDetail = {
  * @extends BaseInput
  * @since 2.16.0
  * @experimental The **@ui5/webcomponents-ai** package is under active development and considered experimental. Component APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  * @public
  */
 @customElement({
