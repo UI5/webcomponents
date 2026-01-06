@@ -131,7 +131,7 @@ describe("Rendering and interaction", () => {
 			.should("have.prop", "collapsed", false);
 	});
 
-	it("tests that initial mode=Collapsed overrides default expand/collapse behaviour", () => {
+	it("tests that initial mode=Collapsed overrides default expand/collapse behavior", () => {
 		cy.mount(<SampleWithCollapsedMode />);
 
 		cy.get("[ui5-side-navigation]")
@@ -139,7 +139,7 @@ describe("Rendering and interaction", () => {
 	});
 });
 
-describe("Navigation Layout on Size S", () => {
+describe("Navigation Layout on Small screens (599px or less)", () => {
 	beforeEach(() => {
 		cy.viewport(500, 1080);
 	});
@@ -179,7 +179,7 @@ describe("Navigation Layout on Size S", () => {
 			.should("not.be.visible");
 	});
 
-	it("tests that initial mode=Expanded overrides default expand/collapse behaviour", () => {
+	it("tests that initial mode=Expanded overrides default expand/collapse behavior", () => {
 		cy.mount(<SampleWithExpandedMode />);
 
 		cy.get("[ui5-navigation-layout]")

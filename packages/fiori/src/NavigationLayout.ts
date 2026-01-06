@@ -26,9 +26,9 @@ import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
  *
  * ### Responsive Behavior
  *
- * On larger screens (over 600px width), the side navigation is visible
+ * On larger screens (screen width of 600px or more), the side navigation is visible
  * by default and can be expanded or collapsed using the `mode` property.
- * On small screens (under 600px width), the side navigation is hidden by
+ * On small screens (screen width of 599px or less), the side navigation is hidden by
  * default and can be displayed using the `mode` property.
  *
  * ### ES6 Module Import
@@ -49,7 +49,7 @@ import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
 	template: NavigationLayoutTemplate,
 })
 class NavigationLayout extends UI5Element {
-	_defaultSideCollapsed = window.innerWidth < 600; // Size S
+	_defaultSideCollapsed = window.innerWidth < 600; // Small screens (599px or less)
 
 	/**
 	 * Specifies the navigation layout mode.

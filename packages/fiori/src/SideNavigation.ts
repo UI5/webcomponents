@@ -73,7 +73,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  *
  * Using it standalone may not match the intended design and functionality.
  * For example, the side navigation may not exhibit the correct behavior on smaller screens.
- * Padding of the `ui5-shellbar` will not match the padding of the side navigation.
+ * Additionally, the padding of the `ui5-shellbar` will not match the padding of the side navigation.
  *
  * ### Keyboard Handling
  *
@@ -123,8 +123,8 @@ class SideNavigation extends UI5Element {
 	/**
 	 * Defines whether the `ui5-side-navigation` is expanded or collapsed.
 	 *
-	 * **Note:** On small screens (under 600 px wide) the collapsed mode is not supported and in
-	 * expanded mode the Side Navigation will take the whole width of the screen.
+	 * **Note:** On small screens (screen width of 599px or less) the collapsed mode is not supported, and in
+	 * expanded mode the side navigation will take the whole width of the screen.
 	 * The `ui5-side-navigation` component is intended to be used within a `ui5-navigation-layout`
 	 * component to ensure proper responsive behavior. If you choose not to use the
 	 * `ui5-navigation-layout`, you will need to implement the appropriate responsive patterns yourself,
