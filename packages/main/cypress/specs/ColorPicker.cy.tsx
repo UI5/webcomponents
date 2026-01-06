@@ -380,4 +380,41 @@ describe("Color Picker accessibility tests", () => {
 			.find(".ui5-color-picker-alpha-slider")
 			.should("have.attr", "accessible-name", ColorPicker.i18nBundle.getText(COLORPICKER_ALPHA_SLIDER));
 	});
+
+	it("should return correct colorFieldsAnnouncementText for RGB and HSL modes", () => {
+		cy.mount(<ColorPicker value="rgb(255, 0, 0)"></ColorPicker>);
+
+		cy.get("[ui5-color-picker]")
+			.as("colorPicker");
+
+		// Test RGB mode announcement text
+		cy.get<ColorPicker>("@colorPicker")
+			.then($item => {
+				const colorPicker = $item.get(0);
+				const announcementText = colorPicker.colorFieldsAnnouncementText;
+				expect(announcementText).to.include("RGB");
+				expect(announcementText).to.include("Red 255");
+				expect(announcementText).to.include("Green 0");
+				expect(announcementText).to.include("Blue 0");
+				expect(announcementText).to.include("Alpha 1");
+			});
+
+		// Toggle to HSL mode
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerToggleColorMode();
+
+		// Test HSL mode announcement text
+		cy.get<ColorPicker>("@colorPicker")
+			.then($item => {
+				const colorPicker = $item.get(0);
+				const announcementText = colorPicker.colorFieldsAnnouncementText;
+				expect(announcementText).to.include("HSL");
+				expect(announcementText).to.include("Hue 0");
+				expect(announcementText).to.include("Saturation 100");
+				expect(announcementText).to.include("Light 50");
+				expect(announcementText).to.include("Alpha 1");
+			});
+	});
+
+
 });
