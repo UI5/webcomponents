@@ -43,10 +43,12 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 								onChange={this._handleScopeChange}
 								class="sapUiSizeCompact ui5-search-field-select"
 								accessibleName={this._translations.scope}
-								tooltip={this._translations.scope}>
+								tooltip={this._translations.scope}
+								value={this.scopeValue}
+							>
 								{this.scopes.map(scopeOption => (
 									<Option
-										selected={scopeOption.selected}
+										value={scopeOption.value}
 										data-ui5-stable={scopeOption.stableDomRef}
 										ref={this.captureRef.bind(scopeOption)}
 									>{scopeOption.text}
@@ -71,6 +73,8 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 						aria-busy={this.fieldLoading ? "true" : undefined}
 						aria-description={this.accessibleDescription}
 						aria-label={this.accessibleName || this._translations.searchFieldAriaLabel}
+						aria-autocomplete="both"
+						aria-controls="ui5-search-list"
 						value={this.value}
 						placeholder={this.placeholder}
 						data-sap-focus-ref
