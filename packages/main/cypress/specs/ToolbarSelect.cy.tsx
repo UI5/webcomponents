@@ -344,4 +344,42 @@ describe("Toolbar general interaction", () => {
 			.eq(0)
 			.should("not.have.attr", "selected");
 	});
+
+	it("Should ensure only one option is selected at any time", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarSelect>
+						<ToolbarSelectOption id="opt1">1</ToolbarSelectOption>
+						<ToolbarSelectOption id="opt2">2</ToolbarSelectOption>
+						<ToolbarSelectOption id="opt3">3</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+				<Button id="selectMultiple">Select Multiple</Button>
+			</>
+		);
+
+		// Set up button to attempt selecting multiple options
+		cy.get("#selectMultiple").then($btn => {
+			$btn.get(0).addEventListener("ui5-click", () => {
+				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
+				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
+				const opt3 = document.getElementById("opt3") as ToolbarSelectOption;
+
+				// Try to select multiple options
+				opt1.selected = true;
+				opt2.selected = true;
+				opt3.selected = true; // This should be the final selection
+			});
+		});
+
+		// Click button to attempt multiple selections
+		cy.get("#selectMultiple").realClick();
+
+		// Verify only the last option (opt3) is selected
+		cy.get("[ui5-toolbar-select-option]").eq(2).should("have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(1).should("not.have.attr", "selected");
+		cy.get("ui5-select", { includeShadowDom: true }).should("have.attr", "value", "3");
+	});
 });
