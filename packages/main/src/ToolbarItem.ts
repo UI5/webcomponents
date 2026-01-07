@@ -17,7 +17,6 @@ type ToolbarItemEventDetail = {
 }
 
 interface IOverflowToolbarItem extends HTMLElement {
-	hasToolbarWrapper?: string | undefined;
 	eventsToCloseOverflow?: string[] | undefined;
 	_selfOverflowed?: boolean | undefined;
 }
@@ -112,6 +111,12 @@ class ToolbarItem extends UI5Element {
 		"ui5-date-picker": ["change"],
 		"ui5-switch": ["change"],
 	}
+
+	predefinedWrapperSet = {
+		"ui5-button": "ToolbarButton",
+		"ui5-select": "ToolbarSelect",
+	}
+
 	onBeforeRendering(): void {
 		const slottedItem = this.getSlottedNodes("item")[0] as IOverflowToolbarItem;
 		this.checkForWrapper();
@@ -140,10 +145,11 @@ class ToolbarItem extends UI5Element {
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
+		const tagName = this.item?.[0]?.localName as keyof typeof this.predefinedWrapperSet;
 		if (this._kind === "ToolbarItem"
-			&& this.item?.[0]?.hasToolbarWrapper) {
+			&& this.predefinedWrapperSet[tagName]) {
 			// eslint-disable-next-line no-console
-			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.getSlottedNodes<IOverflowToolbarItem>("item")[0].hasToolbarWrapper}.`);
+			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.predefinedWrapperSet[tagName]}.`);
 		}
 	}
 
