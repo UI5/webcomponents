@@ -31,6 +31,8 @@ type InputVersionChangeEventDetail = {
 	backwards: boolean,
 };
 
+type InputItemClickEventDetail = MenuItemClickEventDetail;
+
 /**
  * @class
  *
@@ -86,6 +88,8 @@ type InputVersionChangeEventDetail = {
 })
 
 /** Fired when an item from the AI actions menu is clicked.
+ * @param { HTMLElement } item The currently clicked menu item.
+ * @param { string } text The text of the currently clicked menu item.
  * @public
  */
 @event("item-click")
@@ -109,7 +113,7 @@ class Input extends BaseInput {
 		"version-change": InputVersionChangeEventDetail;
 		"stop-generation": void;
 		"button-click": void;
-		"item-click": MenuItemClickEventDetail;
+		"item-click": InputItemClickEventDetail;
 	};
 
 	/**
@@ -255,7 +259,7 @@ class Input extends BaseInput {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: false } }));
 	}
 
-	_onMenuIconClick(e: CustomEvent<MenuItemClickEventDetail>): void {
+	_onMenuIconClick(e: CustomEvent<InputItemClickEventDetail>): void {
 		this.fireDecoratorEvent("item-click", e.detail);
 	}
 
@@ -317,5 +321,8 @@ class Input extends BaseInput {
 
 Input.define();
 
-export type { InputVersionChangeEventDetail, MenuItemClickEventDetail as InputItemClickEventDetail };
+export type { 
+	InputVersionChangeEventDetail,
+	InputItemClickEventDetail,
+};
 export default Input;
