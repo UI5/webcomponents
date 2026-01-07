@@ -1,7 +1,4 @@
----
-title: Loading State
----
+import html from '!!raw-loader!./sample.html';
+import js from '!!raw-loader!./main.js';
 
-The `field-loading` property displays a loading indicator while search results are being fetched.
-
-In collapsed mode, the loading state is shown on the search button. In expanded mode, a busy indicator wraps the input field.
+<Editor html={html} js={js} />
