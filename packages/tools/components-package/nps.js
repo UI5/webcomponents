@@ -85,7 +85,7 @@ const getScripts = (options) => {
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
-			default: `ui5nps clean prepare.all copy copyProps prepare.typescript generateAPI`,
+			default: `ui5nps clean prepare.all copy copyProps prepare.typescript`,
 			all: `ui5nps-p build.templates build.i18n prepare.styleRelated build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
@@ -164,9 +164,9 @@ const getScripts = (options) => {
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {
-			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM" : "",
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
+			mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
 		},
 	};
 
