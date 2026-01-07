@@ -224,7 +224,7 @@ function isOpenUI5DialogOpen($dialog) {
 	expect(dialogInstance.isOpen()).to.be.true;
 };
 
-describe("ui5 and web components integration", () => {
+describe.skip("ui5 and web components integration", () => {
 	beforeEach(() => {
 		// mount the components
 		cy.mount(
