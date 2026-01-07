@@ -71,7 +71,6 @@ type LinkAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "h
  * @public
  * @csspart icon - Used to style the provided icon within the link
  * @csspart endIcon - Used to style the provided endIcon within the link
- * @slot {Array<Node>} default - Defines the text of the component.
  *
  * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
  */
