@@ -38,6 +38,7 @@ import SideNavigationCss from "./generated/themes/SideNavigation.css.js";
 import SideNavigationPopoverCss from "./generated/themes/SideNavigationPopover.css.js";
 
 const PAGE_UP_DOWN_SIZE = 10;
+const SCREEN_WIDTH_BREAKPOINT = 600;
 
 type SideNavigationPopoverContents = {
 	item: SideNavigationItem,
@@ -483,7 +484,7 @@ class SideNavigation extends UI5Element {
 
 	handleResize() {
 		// In smaller screen the side navigation hidden when collapsed and there is no overflow items
-		if (window.innerWidth > 600) {
+		if (window.innerWidth > SCREEN_WIDTH_BREAKPOINT) {
 			this._updateOverflowItems();
 		}
 	}

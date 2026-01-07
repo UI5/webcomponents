@@ -12,6 +12,8 @@ import NavigationLayoutTemplate from "./NavigationLayoutTemplate.js";
 // Styles
 import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
 
+const SCREEN_WIDTH_BREAKPOINT = 600;
+
 /**
  * @class
  *
@@ -49,7 +51,7 @@ import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
 	template: NavigationLayoutTemplate,
 })
 class NavigationLayout extends UI5Element {
-	_defaultSideCollapsed = window.innerWidth < 600; // Small screens (599px or less)
+	_defaultSideCollapsed = window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
 
 	/**
 	 * Specifies the navigation layout mode.

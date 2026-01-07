@@ -4,7 +4,7 @@
  */
 enum NavigationLayoutMode {
 	/**
-	 * Automatically calculates the navigation layout mode based on the screen device type.
+	 * Automatically calculates the navigation layout mode based on the screen width.
 	 * `Collapsed` on small screens (screen width of 599px or less) and `Expanded` on larger screens (screen width of 600px or more).
 	 * @public
 	 */
