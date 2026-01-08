@@ -143,7 +143,6 @@ type SelectLiveChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/OptionCustom";`
  * @constructor
  * @extends UI5Element
- * @implements {IOverflowToolbarItem}
  * @public
  * @csspart popover - Used to style the popover element
  * @since 0.8.0

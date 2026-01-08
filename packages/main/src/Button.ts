@@ -97,7 +97,7 @@ type ButtonClickEventDetail = {
  * @csspart endIcon - Used to style the end icon in the native button element
  * @constructor
  * @extends UI5Element
- * @implements { IButton, IOverflowToolbarItem }
+ * @implements { IButton }
  * @public
  */
 @customElement({
