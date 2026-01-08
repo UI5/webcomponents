@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-base",
-  "version": "2.18.0",
+  "version": "2.19.0-rc.0",
   "description": "UI5 Web Components: webcomponents.base",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -64,7 +64,7 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@sap-theming/theming-base-content": "11.29.3",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.18.0",
+    "@ui5/webcomponents-tools": "2.19.0-rc.0",
     "clean-css": "^5.2.2",
     "cypress": "^15.3.0",
     "mocha": "^11.7.2",
