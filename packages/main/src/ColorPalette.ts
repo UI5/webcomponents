@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
@@ -706,8 +707,11 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusDefaultColor(): boolean {
 		if (this.showDefaultColor && this._defaultColorButton) {
-			this._defaultColorButton.focus();
-			return true;
+			const focusDomRef = this._defaultColorButton.getFocusDomRef();
+			if (focusDomRef) {
+				focusDomRef.focus();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -718,8 +722,11 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusMoreColors(): boolean {
 		if (this.showMoreColors && this._moreColorsButton) {
-			this._moreColorsButton.focus();
-			return true;
+			const focusDomRef = this._moreColorsButton.getFocusDomRef();
+			if (focusDomRef) {
+				focusDomRef.focus();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -800,7 +807,10 @@ class ColorPalette extends UI5Element {
 
 	focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
 		itemNavigation.setCurrentItem(element);
+		// Use 10ms delay to ensure the re-render from forcedTabIndex property change completes
+		// setTimeout(() => {
 		itemNavigation._focusCurrentItem();
+		// }, 10);
 	}
 
 	onColorPickerChange(e: Event) {
