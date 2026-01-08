@@ -269,15 +269,6 @@ class Link extends UI5Element implements ITabbable {
 	@property()
 	endIcon?: string;
 
-	/**
-	 * Defines the text of the component.
-	 *
-	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
-	 * @public
-	 */
-	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
-
 	@property({ noAttribute: true })
 	_rel: string | undefined;
 
