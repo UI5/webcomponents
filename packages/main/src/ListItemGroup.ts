@@ -15,7 +15,7 @@ import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 // Styles
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
-import type WrappingType from "./types/WrappingType.js";
+import WrappingType from "./types/WrappingType.js";
 
 type ListItemGroupMoveEventDetail = {
 	source: {
@@ -208,7 +208,7 @@ class ListItemGroup extends UI5Element {
 		return this.groupHeaderItem || this.items.at(0);
 	}
 
-	getGroupHeaderWrapping(): `${WrappingType}` { return "None"; }
+	getGroupHeaderWrapping(): WrappingType { return WrappingType.None; }
 }
 
 ListItemGroup.define();
