@@ -321,7 +321,7 @@ class Input extends BaseInput {
 
 Input.define();
 
-export type { 
+export type {
 	InputVersionChangeEventDetail,
 	InputItemClickEventDetail,
 };
