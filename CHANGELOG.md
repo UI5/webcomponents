@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **i18n:** handle utf-8 escape sequences in message bundle properties files ([#12784](https://github.com/UI5/webcomponents/issues/12784)) ([54a3f15](https://github.com/UI5/webcomponents/commit/54a3f15a8d23de8683db5829c78255307ef3f8b5))
+* **OpenUI5Support:** stabilize tests ([#12867](https://github.com/UI5/webcomponents/issues/12867)) ([0431b5b](https://github.com/UI5/webcomponents/commit/0431b5bed5aa1f7b039e2e8d42b329d29fbf2fec))
+* **ui5-multi-input:** show suggestions instead of tokens on desktop ([#12827](https://github.com/UI5/webcomponents/issues/12827)) ([2dd4ad5](https://github.com/UI5/webcomponents/commit/2dd4ad5944c22565691b09deb1ab7eeba36bcb42))
+* **ui5-range-slider:** correct property description ([#12838](https://github.com/UI5/webcomponents/issues/12838)) ([e85b3f4](https://github.com/UI5/webcomponents/commit/e85b3f436bc3f1bdd47a554bbb635cca58910b2c))
+
+
+### Features
+
+* **ui5-color-picker:** add screenreader announcement on color mode change ([#12841](https://github.com/UI5/webcomponents/issues/12841)) ([e71bac3](https://github.com/UI5/webcomponents/commit/e71bac38ccbbd1070445f17a1444986e29fb04e8))
+* **ui5-icon:** implement accessibilityInfo getter ([#12604](https://github.com/UI5/webcomponents/issues/12604)) ([f974edb](https://github.com/UI5/webcomponents/commit/f974edba57a324af9bb20f76495a2308b885f999))
+* **ui5-list:** add sticky header property ([#12782](https://github.com/UI5/webcomponents/issues/12782)) ([2f9e76d](https://github.com/UI5/webcomponents/commit/2f9e76d13a16a9fa62dc6c5572af57811855b73e))
+* **ui5-navigation-layout:** introduce breakpoint-based responsive behavior ([#12817](https://github.com/UI5/webcomponents/issues/12817)) ([e6bda4b](https://github.com/UI5/webcomponents/commit/e6bda4b89fad9b5513efb4e31a8852580f4e6fc8))
+
+
+
+
+
 # [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
 
 **Note:** Version bump only for package webcomponents
