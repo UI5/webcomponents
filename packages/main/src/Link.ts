@@ -321,7 +321,7 @@ class Link extends UI5Element implements ITabbable {
 			return Number.parseInt(this.forcedTabIndex);
 		}
 
-		return (this.disabled || !this.textContent?.length) ? -1 : 0;
+		return this.disabled ? -1 : 0;
 	}
 
 	get ariaLabelText() {
