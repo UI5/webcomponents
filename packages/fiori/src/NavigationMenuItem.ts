@@ -22,6 +22,7 @@ import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
 import navigationMenuItemCss from "./generated/themes/NavigationMenuItem.css.js";
 
 import {
+	NAVIGATION_MENU_CLOSE_BUTTON_ARIA_LABEL,
 	NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -208,6 +209,10 @@ class NavigationMenuItem extends MenuItem {
 	get accessibleNameText() {
 		// For the submenu's dialog
 		return this.text ?? "";
+	}
+
+	get labelClose() {
+		return MenuItem.i18nBundle.getText(NAVIGATION_MENU_CLOSE_BUTTON_ARIA_LABEL);
 	}
 }
 
