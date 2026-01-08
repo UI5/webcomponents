@@ -387,21 +387,21 @@ class IllustratedMessage extends UI5Element {
 		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
 	}
 
-	_applyMedia(heightChange?: boolean) {
+	_applyMedia() {
 		const currOffsetWidth = this.offsetWidth,
 			currOffsetHeight = this.offsetHeight;
 
-		const design = heightChange ? currOffsetHeight : currOffsetWidth,
-			oBreakpounts = heightChange ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
+		const designHeight = currOffsetHeight,
+			designWidth = currOffsetWidth;
 		let newMedia = "";
 
-		if (design <= oBreakpounts.BASE) {
+		if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.BASE || designWidth <= IllustratedMessage.BREAKPOINTS.BASE) {
 			newMedia = IllustratedMessage.MEDIA.BASE;
-		} else if (design <= oBreakpounts.DOT) {
+		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DOT || designWidth <= IllustratedMessage.BREAKPOINTS.DOT) {
 			newMedia = IllustratedMessage.MEDIA.DOT;
-		} else if (design <= oBreakpounts.SPOT) {
+		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.SPOT || designWidth <= IllustratedMessage.BREAKPOINTS.SPOT) {
 			newMedia = IllustratedMessage.MEDIA.SPOT;
-		} else if (design <= oBreakpounts.DIALOG) {
+		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DIALOG || designWidth <= IllustratedMessage.BREAKPOINTS.DIALOG) {
 			newMedia = IllustratedMessage.MEDIA.DIALOG;
 		} else {
 			newMedia = IllustratedMessage.MEDIA.SCENE;
@@ -453,7 +453,7 @@ class IllustratedMessage extends UI5Element {
 			illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", false);
 			if (this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight) {
 				illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", true);
-				this._applyMedia(true /* height change */);
+				this._applyMedia();
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 import IllustratedMessage from "../../src/IllustratedMessage.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
+import Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js"
 import Panel from "@ui5/webcomponents/dist/Panel.js";
 
@@ -124,7 +125,7 @@ describe('SVG CSP Compliance', () => {
         const violationReport = invalidFiles
           .map(v => `${v.file}: has violations`)
           .join('\n')
-        
+
         throw new Error(`Found ${invalidFiles.length} SVG files with CSP violations:\n${violationReport}`)
       }
 
@@ -199,7 +200,7 @@ describe("Vertical responsiveness", () => {
 				expect(scrollHeight).to.be.lessThan(500);
 				expect(scrollHeight).to.equal(offsetHeight);
 			});
-	
+
 		cy.get("[ui5-illustrated-message]")
 			.should("have.prop", "media", expectedMedia);
 	});
@@ -236,9 +237,7 @@ describe("Vertical responsiveness", () => {
 			.invoke("css", "height", "auto");
 
 		cy.get("[ui5-illustrated-message]")
-			.shadow()
-			.find(".ui5-illustrated-message-illustration svg")
-			.should("have.css", "height", "160px");
+		.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
 	});
 
 	it("Illustration visible, when container fit content height", () => {
@@ -257,6 +256,23 @@ describe("Vertical responsiveness", () => {
 			});
 	});
 
+	it("Illustration visible, when container fit content height", () => {
+		cy.mount(
+			<div style={{ height: "440px" }}>
+				<IllustratedMessage design="Scene" />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration svg")
+			.should(($illustration) => {
+				const scrollHeight = $illustration[0].scrollHeight;
+				expect(scrollHeight).to.not.equal(0);
+			});
+	});
+
+
 	it("Illustration visible, when IM slotted and container has fixed height", () => {
 		cy.mount(
 			<Panel style={{ height: "19rem" }} noAnimation>
@@ -271,6 +287,64 @@ describe("Vertical responsiveness", () => {
 				const scrollHeight = $illustration[0].scrollHeight;
 				expect(scrollHeight).to.not.equal(0);
 			});
+	});
+	it("IllustratedMessage variations in a dialog with resizing", () => {
+		cy.mount(
+		  <Dialog id="illustratedMessageDialog" open>
+			<div style={{ width: "100%", height: "100%" }}>
+			  <IllustratedMessage
+				id="illustration1"
+				name="NoData"
+			  />
+			</div>
+		  </Dialog>
+		);
+
+		// Ensure the dialog is rendered and open
+		cy.get("[ui5-dialog]").as("Dialog").should("exist").and("have.attr", "open");
+
+		// Validate the first IllustratedMessage
+		cy.get("#illustration1")
+		  .shadow()
+		  .find(".ui5-illustrated-message-illustration svg")
+		  .should(($illustration) => {
+			const scrollHeight = $illustration[0].scrollHeight;
+			expect(scrollHeight).to.not.equal(0);
+		  });
+
+		// Resize the dialog and validate the media property for each IllustratedMessage
+		cy.get("[ui5-dialog]").then(($dialog) => {
+		  // Resize the dialog to a smaller size
+		  $dialog[0].style.width = "300px";
+		  $dialog[0].style.height = "300px";
+		});
+		  // Validate the media property for the first IllustratedMessage
+		  cy.get("#illustration1")
+			.invoke("prop", "media")
+			.should("equal", "spot");
+
+		cy.get("[ui5-dialog]").then(($dialog) => {
+		  // Resize the dialog to a larger size
+		  $dialog[0].style.width = "800px";
+		  $dialog[0].style.height = "600px";
+		});
+
+		  // Validate the media property for the first IllustratedMessage
+		  cy.get("#illustration1")
+			.invoke("prop", "media")
+			.should("equal", "scene");
+
+		cy.get("[ui5-dialog]").then(($dialog) => {
+			// Resize the dialog to a smallest size
+			$dialog[0].style.width = "200px";
+			$dialog[0].style.height = "200px";
+			});
+
+		// Validate the media property for the first IllustratedMessage
+		cy.get("#illustration1")
+			.invoke("prop", "media")
+			.should("equal", "dot");
+
 	});
 });
 
