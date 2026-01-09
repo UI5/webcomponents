@@ -1,3 +1,5 @@
+import Icon from "./Icon.js";
+import resizeCorner from "@ui5/webcomponents-icons/dist/resize-corner.js";
 import type Popover from "./Popover.js";
 import PopupTemplate from "./PopupTemplate.js";
 import Title from "./Title.js";
@@ -31,6 +33,14 @@ function afterContent(this: Popover) {
 			<footer class="ui5-popup-footer-root" part="footer">
 				<slot name="footer"></slot>
 			</footer>
+		}
+
+		{this._showResizeHandle &&
+			<div class="ui5-popover-resize-handle"
+				 onMouseDown={this._onResizeMouseDown}
+			>
+				<Icon name={resizeCorner} />
+			</div>
 		}
 	</>);
 }
