@@ -299,6 +299,7 @@ class Popover extends Popup {
 		});
 
 		this._popoverResize.reset();
+		delete this._resizeHandlePlacement;
 
 		super.closePopup(escPressed, preventRegistryUpdate, preventFocusRestore);
 	}
@@ -960,8 +961,13 @@ class Popover extends Popup {
 		return this.resizable && this.onDesktop;
 	}
 
+	get resizeHandlePlacement() {
+		return this._resizeHandlePlacement;
+	}
+
 	_onResizeMouseDown(e: MouseEvent) {
 		this._popoverResize.onResizeMouseDown(e);
+		this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
 	}
 }
 

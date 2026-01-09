@@ -58,8 +58,6 @@ class PopoverResize {
 
 		delete this._totalDeltaX;
 		delete this._totalDeltaY;
-
-		delete this._popover._resizeHandlePlacement;
 	}
 
 	/**
@@ -111,8 +109,8 @@ class PopoverResize {
 	getResizeHandlePlacement() {
 		const popover = this._popover;
 
-		if (this._resized && popover._resizeHandlePlacement) {
-			return popover._resizeHandlePlacement;
+		if (this._resized && popover.resizeHandlePlacement) {
+			return popover.resizeHandlePlacement;
 		}
 
 		const opener = popover.getOpenerHTMLElement(popover.opener);
@@ -249,8 +247,6 @@ class PopoverResize {
 
 		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
 		this._minHeight = Number.parseFloat(minHeight);
-
-		this._popover._resizeHandlePlacement = this.getResizeHandlePlacement();
 
 		this._attachMouseResizeHandlers();
 	}
