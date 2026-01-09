@@ -16,7 +16,6 @@ import navigationMenuCss from "./generated/themes/NavigationMenu.css.js";
 import menuCss from "@ui5/webcomponents/dist/generated/themes/Menu.css.js";
 
 import {
-	NAVIGATION_MENU_CLOSE_BUTTON_ARIA_LABEL,
 	NAVIGATION_MENU_POPOVER_HIDDEN_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -72,10 +71,6 @@ class NavigationMenu extends Menu {
 
 	get accSideNavigationPopoverHiddenText() {
 		return NavigationMenu.i18nBundleFiori.getText(NAVIGATION_MENU_POPOVER_HIDDEN_TEXT);
-	}
-
-	get labelClose() {
-		return Menu.i18nBundle.getText(NAVIGATION_MENU_CLOSE_BUTTON_ARIA_LABEL);
 	}
 }
 
