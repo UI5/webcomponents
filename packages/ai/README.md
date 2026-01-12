@@ -5,8 +5,7 @@
 Provides web components implementing AI-related visual and interaction.
 
 
-**Note:** The package is available since 2.0 and experimental
-
+**Note:** The package is available since 2.0. It's under active development and considered experimental. Component APIs are subject to change. Furthermore, the package supports **Horizon** themes only.
 
 ## Provided components
 
@@ -16,13 +15,14 @@ Provides web components implementing AI-related visual and interaction.
 | Button State             | `ui5-ai-button-state`          | comes with `ui5-ai-button`                              |
 | PromptInput              | `ui5-ai-prompt-input`          | `import "@ui5/webcomponents-ai/dist/PromptInput.js";`   |
 | TextArea                 | `ui5-ai-textarea`              | `import "@ui5/webcomponents-ai/dist/TextArea.js";`      |
+| Input                    | `ui5-ai-input`                 | `import "@ui5/webcomponents-ai/dist/Input.js";`         |
 
 ## Provided assets
 
 
 | Assets | Module | Notes
-|------------|-----------|----------- 
-| `i18n`, `themes` | `@ui5/webcomponents-ai/dist/Assets.js` | Theming parameters and translations for the components  
+|------------|-----------|-----------
+| `i18n`, `themes` | `@ui5/webcomponents-ai/dist/Assets.js` | Theming parameters (Horizon themes only) and translations for the components
 
 
 ## Resources

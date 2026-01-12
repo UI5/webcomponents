@@ -3,6 +3,214 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+
+### Features
+
+* **ui5-navigation-layout:** introduce breakpoint-based responsive behavior ([#12817](https://github.com/UI5/webcomponents/issues/12817)) ([e6bda4b](https://github.com/UI5/webcomponents/commit/e6bda4b89fad9b5513efb4e31a8852580f4e6fc8))
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+
+### Bug Fixes
+
+* **ui5-search-item:** update search item gap with design spec ([#12831](https://github.com/UI5/webcomponents/issues/12831)) ([1a65306](https://github.com/UI5/webcomponents/commit/1a653065b586817e505f03a950ae83d15ba9cf41))
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* **ui5-search-field:** add scope-value property ([#12795](https://github.com/UI5/webcomponents/issues/12795)) ([fdd67e4](https://github.com/UI5/webcomponents/commit/fdd67e475aa5b444627227e1a65aa04a2b52d31f))
+
+
+### Features
+
+* **ui5-search:** enhance accessibility support ([#12717](https://github.com/UI5/webcomponents/issues/12717)) ([e97c302](https://github.com/UI5/webcomponents/commit/e97c302a8277aa13c2dab8573a2eb3c1c065c89a))
+* **ui5-user-settings:** add UserSettingsAppearanceView components ([#12739](https://github.com/UI5/webcomponents/issues/12739)) ([5f8bf37](https://github.com/UI5/webcomponents/commit/5f8bf3798fd8fad7a87479193f7e6fdaae4c68b2))
+
+
+
+
+
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** fit content paddings aligned with specification ([#12738](https://github.com/UI5/webcomponents/issues/12738)) ([00803e6](https://github.com/UI5/webcomponents/commit/00803e68e431c663e5fc1595ff3a45cf0b1876ce)), closes [#12652](https://github.com/UI5/webcomponents/issues/12652)
+* **ui5-search-item:** correct font size ([#12758](https://github.com/UI5/webcomponents/issues/12758)) ([35ae11a](https://github.com/UI5/webcomponents/commit/35ae11a9e10f1578a1c16e3e0f93221680f98aee))
+
+
+
+
+
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+
+### Bug Fixes
+
+* **tools:** dependencies usage ([#12716](https://github.com/UI5/webcomponents/issues/12716)) ([89bb0dd](https://github.com/UI5/webcomponents/commit/89bb0dd62322598bd1ea7ce984eaf0618546a6f2))
+
+
+### Features
+
+* **ui5-search:** items wrapping ([#12681](https://github.com/UI5/webcomponents/issues/12681)) ([992a70b](https://github.com/UI5/webcomponents/commit/992a70bcd5f1f82266884cfb9137fda252ac6d66))
+
+
+
+
+
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* **ui5-search-item:** action slot visibility ([#12694](https://github.com/UI5/webcomponents/issues/12694)) ([2d34b93](https://github.com/UI5/webcomponents/commit/2d34b9384ecf3a1288705a5c969228d5c55c1278))
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** align logo vertically to middle ([#12685](https://github.com/UI5/webcomponents/issues/12685)) ([acff8fa](https://github.com/UI5/webcomponents/commit/acff8fa6727ebed2779cb9387c418346931bda45))
+
+
+### Features
+
+* **ui5-user-settings-account-view:** introduce new component `UserSettingsAccountView` ([#12658](https://github.com/UI5/webcomponents/issues/12658)) ([b818abb](https://github.com/UI5/webcomponents/commit/b818abb57326ffde13ac431f26d787ee3a294693))
+* **ui5-wizard:** add getFocusDomRef ([#12668](https://github.com/UI5/webcomponents/issues/12668)) ([ba10757](https://github.com/UI5/webcomponents/commit/ba1075762b3afd7770dc11593312db1920d07a0d))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* **ui5-popover:** fix horizontal placement (Start and End) in rtl mode ([#12606](https://github.com/UI5/webcomponents/issues/12606)) ([8135904](https://github.com/UI5/webcomponents/commit/813590444b04dda4fa089499720d6e2fc4a1f63e))
+
+
+### Features
+
+* **ui5-view-settings-dialog:** provide part for header ([#12627](https://github.com/UI5/webcomponents/issues/12627)) ([3206b90](https://github.com/UI5/webcomponents/commit/3206b906785424cac46ceeb6f7d9d61131635316)), closes [#12479](https://github.com/UI5/webcomponents/issues/12479)
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page-title:** correct ARIA attribute handling for non-interactive titles ([#12598](https://github.com/UI5/webcomponents/issues/12598)) ([ddbb8d4](https://github.com/UI5/webcomponents/commit/ddbb8d4bed6a75d661a994c8d5737654a7a62e9c)), closes [#12466](https://github.com/UI5/webcomponents/issues/12466)
+* **ui5-search:** fix popup opening when there are no suggestions ([#12640](https://github.com/UI5/webcomponents/issues/12640)) ([2e760c6](https://github.com/UI5/webcomponents/commit/2e760c6760f79de3337977cf51dc3ed62c594b6e)), closes [#12519](https://github.com/UI5/webcomponents/issues/12519)
+* **ui5-shellbar:** image button is now properly read ([#12611](https://github.com/UI5/webcomponents/issues/12611)) ([873abf8](https://github.com/UI5/webcomponents/commit/873abf816101c3f1ca77b35167dd2e94cf18762b))
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** update header action button tooltip text ([#12634](https://github.com/UI5/webcomponents/issues/12634)) ([4cf0976](https://github.com/UI5/webcomponents/commit/4cf097658638c61e5e3bc4b8d196f74b4764c003)), closes [#12617](https://github.com/UI5/webcomponents/issues/12617)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** prevent scroll when focusing title/header ([#12588](https://github.com/UI5/webcomponents/issues/12588)) ([cd6da99](https://github.com/UI5/webcomponents/commit/cd6da99302f197e5b04f044172eed3f93ef5102f))
+
+
+### Features
+
+* **ui5-user-settings-item:** 'pages' is default slot ([#12610](https://github.com/UI5/webcomponents/issues/12610)) ([d303627](https://github.com/UI5/webcomponents/commit/d3036277fcab2a8d6af8129a2ccde7e48d64486d))
+
+
+
+
+
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Features
+
+* **ui5-flexible-column-layout:** public layoutsConfiguration property ([#9290](https://github.com/UI5/webcomponents/issues/9290)) ([a92742c](https://github.com/UI5/webcomponents/commit/a92742cf13cbbfae3a9d07801339477b4b781720))
+* **ui5-user-settings-item:** introduce option to hide icon ([#12512](https://github.com/UI5/webcomponents/issues/12512)) ([33b962f](https://github.com/UI5/webcomponents/commit/33b962f98f3d3427681abdd05c1c50c21debd415))
+
+
+
+
+
+# [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
 # [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
 
 

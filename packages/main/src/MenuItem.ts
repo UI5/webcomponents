@@ -30,13 +30,12 @@ import type { ListItemAccessibilityAttributes } from "./ListItem.js";
 import type List from "./List.js";
 import ListItem from "./ListItem.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import type PopoverPlacement from "./types/PopoverPlacement.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
 import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
-	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 import type { IMenuItem } from "./Menu.js";
@@ -357,10 +356,6 @@ class MenuItem extends ListItem implements IMenuItem {
 		}
 	}
 
-	get placement(): `${PopoverPlacement}` {
-		return this.isRtl ? "Start" : "End";
-	}
-
 	get isRtl() {
 		return this.effectiveDir === "rtl";
 	}
@@ -393,8 +388,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		return MenuItem.i18nBundle.getText(MENU_BACK_BUTTON_ARIA_LABEL);
 	}
 
-	get labelClose() {
-		return MenuItem.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
+	get labelCancel() {
+		return MenuItem.i18nBundle.getText(MENU_CANCEL_BUTTON_TEXT);
 	}
 
 	get accessibleNameText() {
@@ -480,8 +475,9 @@ class MenuItem extends ListItem implements IMenuItem {
 	/** Returns all menu items (including those in groups */
 	get _allMenuItems() {
 		const items: MenuItem[] = [];
+		const slottedItems = this.getSlottedNodes<IMenuItem>("items");
 
-		this.items.forEach(item => {
+		slottedItems.forEach(item => {
 			if (isInstanceOfMenuItemGroup(item)) {
 				items.push(...item._menuItems);
 			} else if (!isInstanceOfMenuSeparator(item)) {

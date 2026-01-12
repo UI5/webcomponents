@@ -3,6 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* **ui5-popover:** render block layers in the correct order ([#12659](https://github.com/UI5/webcomponents/issues/12659)) ([43e545a](https://github.com/UI5/webcomponents/commit/43e545a4a5e486f19fb52ae18fe7c162680cf56e))
+
+
+
+
+
+# [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
+
+
+### Reverts
+
+* Revert "feat(framework): scope theming css variables with component packages (#12491)" (#12775) ([3385623](https://github.com/UI5/webcomponents/commit/33856235e357a3d4d0b9391eab2a83a5b3010556)), closes [#12491](https://github.com/UI5/webcomponents/issues/12491) [#12775](https://github.com/UI5/webcomponents/issues/12775)
+* Revert "feat(framework): introduce loadBaseThemingCSSVariables configuration (#12699)" (#12767) ([db375d3](https://github.com/UI5/webcomponents/commit/db375d30b9f4a7e07961fabbdcefdcdc78a93f46)), closes [#12699](https://github.com/UI5/webcomponents/issues/12699) [#12767](https://github.com/UI5/webcomponents/issues/12767)
+
+
+
+
+
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing of sap.m.Popover with esc key ([#12730](https://github.com/UI5/webcomponents/issues/12730)) ([fae0ab8](https://github.com/UI5/webcomponents/commit/fae0ab8289baa060d5d65024c47fd4dc34c7aac0))
+* **tools:** dependencies usage ([#12716](https://github.com/UI5/webcomponents/issues/12716)) ([89bb0dd](https://github.com/UI5/webcomponents/commit/89bb0dd62322598bd1ea7ce984eaf0618546a6f2))
+
+
+### Features
+
+* **framework:** introduce loadBaseThemingCSSVariables configuration ([#12699](https://github.com/UI5/webcomponents/issues/12699)) ([f01b2eb](https://github.com/UI5/webcomponents/commit/f01b2eb6256f2032bd802d0a60c4625b0d1af5fe))
+
+
+
+
+
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* dev server on windows ([#12565](https://github.com/UI5/webcomponents/issues/12565)) ([af96b2c](https://github.com/UI5/webcomponents/commit/af96b2ce2292e7624c6186c58e002c6337e13847))
+* **OpenUI5Support:** pass all parameters to the onFocusEvent/onsapescape events ([#12492](https://github.com/UI5/webcomponents/issues/12492)) ([8937c4e](https://github.com/UI5/webcomponents/commit/8937c4e777f031f8f45c0f11deb6d99844169dbf))
+
+
+
+
+
+# [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
+
+
+### Bug Fixes
+
+* native scrollbar styles ([#12485](https://github.com/UI5/webcomponents/issues/12485)) ([92a954f](https://github.com/UI5/webcomponents/commit/92a954f9459996a26c9079b3dbbe21e06461b061))
+
+
+
+
+
 # [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
 
 

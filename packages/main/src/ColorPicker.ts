@@ -20,10 +20,14 @@ import type {
 import "@ui5/webcomponents-icons/dist/expand.js";
 import ColorValue from "./colorpicker-utils/ColorValue.js";
 import ColorPickerTemplate from "./ColorPickerTemplate.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type Input from "./Input.js";
 import type Slider from "./Slider.js";
 
 import {
+	COLORPICKER_LABEL,
+	COLORPICKER_SLIDER_GROUP,
 	COLORPICKER_ALPHA_SLIDER,
 	COLORPICKER_HUE_SLIDER,
 	COLORPICKER_HEX,
@@ -35,6 +39,8 @@ import {
 	COLORPICKER_LIGHT,
 	COLORPICKER_HUE,
 	COLORPICKER_TOGGLE_MODE_TOOLTIP,
+	COLORPICKER_PERCENTAGE,
+	COLORPICKER_COLOR_MODE_CHANGED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -357,6 +363,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	_togglePickerMode() {
 		this._displayHSL = !this._displayHSL;
+
+		// Announce a message to screen readers
+		announce(this.colorFieldsAnnouncementText, InvisibleMessageMode.Polite);
 	}
 
 	_handleColorInputChange(e: Event) {
@@ -531,6 +540,14 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 			&& this._colorValue.B === value.b;
 	}
 
+	get colorPickerLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
+	}
+
+	get sliderGroupLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_SLIDER_GROUP);
+	}
+
 	get hueSliderLabel() {
 		return ColorPicker.i18nBundle.getText(COLORPICKER_HUE_SLIDER);
 	}
@@ -569,6 +586,29 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	get alphaInputLabel() {
 		return ColorPicker.i18nBundle.getText(COLORPICKER_ALPHA);
+	}
+
+	get percentageLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_PERCENTAGE);
+	}
+
+	get colorFieldsAnnouncementText() {
+		const mode = this._displayHSL ? "HSL" : "RGB";
+		let text = "";
+
+		if (mode === "RGB") {
+			text = `${this.redInputLabel} ${this._colorValue.R}, `
+				+ `${this.greenInputLabel} ${this._colorValue.G}, `
+				+ `${this.blueInputLabel} ${this._colorValue.B}, `
+				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
+		} else {
+			text = `${this.hueInputLabel} ${this._colorValue.H}, `
+				+ `${this.saturationInputLabel} ${this._colorValue.S} ${this.percentageLabel}, `
+				+ `${this.lightInputLabel} ${this._colorValue.L} ${this.percentageLabel}, `
+				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
+		}
+
+		return ColorPicker.i18nBundle.getText(COLORPICKER_COLOR_MODE_CHANGED, mode, text);
 	}
 
 	get toggleModeTooltip() {

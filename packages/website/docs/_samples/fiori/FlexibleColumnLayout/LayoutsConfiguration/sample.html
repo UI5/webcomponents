@@ -1,0 +1,81 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <div class="layout-grid">
+        <ui5-label show-colon>Current layout</ui5-label>
+        <ui5-select id="selectLayout">
+			<ui5-option>OneColumn</ui5-option>
+            <ui5-option>TwoColumnsStartExpanded</ui5-option>
+            <ui5-option>TwoColumnsMidExpanded</ui5-option>
+            <ui5-option>ThreeColumnsMidExpanded</ui5-option>
+            <ui5-option>ThreeColumnsEndExpanded</ui5-option>
+            <ui5-option>ThreeColumnsStartExpandedEndHidden</ui5-option>
+            <ui5-option>ThreeColumnsMidExpandedEndHidden</ui5-option>
+        </ui5-select>
+        <ui5-label show-colon>Custom configuration for current layout</ui5-label>
+        <ui5-text id="configurationInfo" class="configurationInfo">none</ui5-text>
+    </div>
+    <ui5-flexible-column-layout id="fcl" class="fcl">
+        <div class="col" slot="startColumn">
+            <div class="colHeader">
+                <ui5-title>Categories</ui5-title>
+            </div>
+            <ui5-list id="categoriesList">
+                <ui5-li data-category="electronics" icon="slim-arrow-right" icon-end>Electronics</ui5-li>
+                <ui5-li data-category="clothing" icon="slim-arrow-right" icon-end>Clothing</ui5-li>
+                <ui5-li data-category="books" icon="slim-arrow-right" icon-end>Books</ui5-li>
+                <ui5-li data-category="home" icon="slim-arrow-right" icon-end>Home & Garden</ui5-li>
+                <ui5-li data-category="sports" icon="slim-arrow-right" icon-end>Sports</ui5-li>
+            </ui5-list>
+        </div>
+        <div class="col" slot="midColumn">
+            <div class="colHeader">
+                <ui5-title id="categoryTitle">Select a category</ui5-title>
+            </div>
+            <ui5-list id="productsList" style="display: none;">
+            </ui5-list>
+        </div>
+        <div class="col" slot="endColumn">
+            <div class="colHeader">
+                <ui5-title id="productTitle">Product Details</ui5-title>
+                <div class="colSubHeader">
+                    <ui5-button id="closeEndColumn" icon="decline" design="Transparent"></ui5-button>
+                </div>
+            </div>
+            <div id="productDetails" class="product-details">
+                <ui5-text>Select a product to view details</ui5-text>
+            </div>
+        </div>
+    </ui5-flexible-column-layout>
+
+    <!-- Template for product details -->
+    <template id="productDetailsTemplate">
+        <div class="product-info">
+            <ui5-title level="H3" id="productName"></ui5-title>
+            <ui5-text id="productDescription"></ui5-text>
+            <br><br>
+            <ui5-label show-colon>Category</ui5-label>
+            <ui5-text id="productCategory"></ui5-text>
+            <br><br>
+            <ui5-label show-colon>Product ID</ui5-label>
+            <ui5-text id="productId"></ui5-text>
+        </div>
+    </template>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

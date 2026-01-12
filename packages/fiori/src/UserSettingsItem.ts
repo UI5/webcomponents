@@ -149,9 +149,13 @@ class UserSettingsItem extends UI5Element {
 	accessibleName?: string;
 
 	/**
-	 * Defines the tab views of the user settings item.
+	 * Defines the page views of the user settings item.
 	 *
-	 * The tab views are displayed by default if there is no selected page view.
+	 * If there are no tab views, the first page view will be shown unless there is selected one. If there is selected page
+	 * view it will be shown no matter if there are tab views.
+	 *
+	 * The page views are displayed by default if there is no selected tab view.
+	 *
 	 * @public
 	 */
 	@slot({
@@ -163,13 +167,10 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	tabs!: Array<UserSettingsView>;
+	pages!: Array<UserSettingsView>;
 
 	/**
-	 * Defines the page views of the user settings item.
-	 *
-	 * If there are no tab views, the first page view will be shown unless there is selected one. If there is selected page
-	 * view it will be shown no matter if there are tab views.
+	 * Defines the tab views of the user settings item.
 	 *
 	 * @public
 	 */
@@ -181,7 +182,13 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	pages!: Array<UserSettingsView>;
+	tabs!: Array<UserSettingsView>;
+
+	/**
+	 * Indicates whether any of the element siblings have icon.
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_siblingsWithIcon = false;
 
 	/**
 	 * @private

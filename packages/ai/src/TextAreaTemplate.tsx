@@ -1,9 +1,9 @@
-import type AITextArea from "./TextArea.js";
+import type TextArea from "./TextArea.js";
 import WritingAssistant from "./WritingAssistant.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 import TextAreaPopoverTemplate from "@ui5/webcomponents/dist/TextAreaPopoverTemplate.js";
 
-export default function TextAreaTemplate(this: AITextArea) {
+export default function TextAreaTemplate(this: TextArea) {
 	return (
 		<div class="ui5-ai-textarea-root">
 			<div
@@ -55,9 +55,10 @@ export default function TextAreaTemplate(this: AITextArea) {
 						<slot name="footer">
 							<WritingAssistant
 								loading={this.loading}
-								currentVersionIndex={this.currentVersionIndex}
+								currentVersion={this.currentVersion}
 								totalVersions={this.totalVersions}
-								actionText={this.actionText}
+								promptDescription={this.promptDescription}
+								focused={this.focused}
 								onButtonClick={this._handleAIButtonClick}
 								onStopGeneration={this.handleStopGeneration}
 								onVersionChange={this._handleVersionChange}
@@ -79,7 +80,7 @@ export default function TextAreaTemplate(this: AITextArea) {
 
 			{/* ARIA live region for screen readers */}
 			<div aria-live="polite" aria-atomic="true" class="ui5-hidden-text">
-				{this.loading ? this.actionText : ""}
+				{this.loading ? this.promptDescription : ""}
 			</div>
 
 			<div id="ai-menu-wrapper">

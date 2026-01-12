@@ -140,7 +140,11 @@ class Parser {
 			process.exit(1);
 		}
 
-		envs = scripts.__ui5envs;
+		envs = JSON.parse(JSON.stringify(scripts.__ui5envs || {}));
+
+		Object.entries(envs).forEach(([key, value]) => {
+			envs[key] = String(value);
+		});
 
 		// Package-script should provide default export with scripts object
 		if (envs && typeof envs !== "object") {
@@ -161,13 +165,22 @@ class Parser {
 			return new Promise(async (resolve, reject) => {
 				if (command.trim().startsWith("ui5nps-script")) {
 					const argv = parseArgsStringToArgv(command);
-					const importedContent = require(argv[1]);
+					if (!path.isAbsolute(argv[1])) {
+						throw new Error(`Script path must be absolute: ${argv[1]}`);
+					}
+
+					const importPath = argv[1];
+					const importedContent = require(importPath);
 					let _ui5mainFn;
 
 					if (importedContent.__esModule) {
 						_ui5mainFn = importedContent.default._ui5mainFn;
 					} else {
 						_ui5mainFn = importedContent._ui5mainFn;
+					}
+
+					if (!_ui5mainFn) {
+						return reject(new Error(`No valid _ui5mainFn function exported from ${importPath} tried to be executed with ui5nps-script. Either provide a valid _ui5mainFn function or use another way to execute the script (via node).`));
 					}
 
 					console.log(` |  Executing command ${commandName} as module.`);

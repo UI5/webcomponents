@@ -5,3 +5,10 @@
 .datepicker1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+#dp6::part(input) {
+    text-align: right;
+
+form ui5-date-picker:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}

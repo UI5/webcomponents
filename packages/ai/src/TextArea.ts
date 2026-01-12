@@ -4,45 +4,47 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
-import TextArea from "@ui5/webcomponents/dist/TextArea.js";
-import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
+import { BaseTextArea } from "@ui5/webcomponents/dist/TextArea.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	WRITING_ASSISTANT_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 // Styles
-import AITextAreaCss from "./generated/themes/AITextArea.css.js";
+import TextAreaCss from "./generated/themes/TextArea.css.js";
 import textareaStyles from "@ui5/webcomponents/dist/generated/themes/TextArea.css.js";
 import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/ValueStateMessage.css.js";
 
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
-import WritingAssistant from "./WritingAssistant.js";
+
+type TextAreaVersionChangeEventDetail = {
+	backwards: boolean,
+};
 
 /**
  * @class
  *
  * ### Overview
  *
- * The `ui5-ai-textarea` component extends the standard TextArea with AI Writing Assistant capabilities.
+ * The `ui5-ai-textarea` component extends the standard TextArea with Writing Assistant capabilities.
  * It provides AI-powered text generation, editing suggestions, and version management functionality.
  *
  * ### Structure
  * The `ui5-ai-textarea` consists of the following elements:
  * - TextArea: The main text input area with all standard textarea functionality
- * - AI Toolbar: Specialized toolbar with AI generation controls
- * - Version Navigation: Controls for navigating between AI-generated versions
- * - Menu Integration: Support for AI action menu
- *
- * Single vs multiple result display is determined internally based on totalVersions count.
+ * - WritingAssistant: Dedicated toolbar containing:
+ *   - Versioning: A component with left/right navigation buttons and a label for browsing AI-generated versions
+ *   - AI Button: Opens a menu that can be extended with custom AI generation options through slotting
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/TextArea.js";`
+ * `import "@ui5/webcomponents-ai/dist/TextArea.js";`
  *
  * @constructor
- * @extends TextArea
+ * @extends BaseTextArea
+ * @experimental The **@ui5/webcomponents-ai** package is under development and considered experimental - components' APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  * @since 2.16.0
  * @public
  * @slot {HTMLElement} menu Defines a slot for `ui5-menu` integration. This slot allows you to pass a `ui5-menu` instance that will be associated with the assistant.
@@ -55,17 +57,14 @@ import WritingAssistant from "./WritingAssistant.js";
 	styles: [
 		textareaStyles,
 		valueStateMessageStyles,
-		AITextAreaCss,
-	],
-	dependencies: [
-		WritingAssistant,
-		BusyIndicator,
+		TextAreaCss,
 	],
 })
 
 /**
  * Fired when the user clicks on version navigation buttons.
  *
+ * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default).
  * @public
  */
 @event("version-change")
@@ -77,16 +76,16 @@ import WritingAssistant from "./WritingAssistant.js";
  */
 @event("stop-generation")
 
-class AITextArea extends TextArea {
-	eventDetails!: TextArea["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
+class TextArea extends BaseTextArea {
+	eventDetails!: BaseTextArea["eventDetails"] & {
+		"version-change": TextAreaVersionChangeEventDetail;
+		"stop-generation": void;
 	};
 
 	// Store bound handler for proper cleanup
 	private _keydownHandler?: (event: KeyboardEvent) => void;
+	private _menuFocusinHandler?: () => void;
+	private _menuFocusoutHandler?: (event: Event) => void;
 
 	/**
 	 * Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.
@@ -98,33 +97,38 @@ class AITextArea extends TextArea {
 	loading = false;
 
 	/**
-	 * Defines the action text of the AI Writing Assistant.
+	 * Defines the prompt description of the current action.
 	 *
 	 * @default ""
 	 * @public
 	 */
 	@property()
-	actionText = "";
+	promptDescription = "";
 
 	/**
-	 * Indicates the index of the currently displayed result version.
+	 * Indicates the index of the currently displayed version.
 	 *
-	 * The index is **1-based** (i.e. `1` represents the first result).
 	 *
-	 * @default 1
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	currentVersionIndex = 1;
+	currentVersion = 0;
 
 	/**
 	 * Indicates the total number of result versions available.
 	 *
-	 * @default 1
+	 * Notes:
+	 * Versioning is hidden if the value is `0`
+	 *
+	 * @default 0
 	 * @public
 	 */
 	@property({ type: Number })
-	totalVersions = 1;
+	totalVersions = 0;
+
+	@property({ type: Boolean })
+	focused = false;
 
 	@slot({ type: HTMLElement })
 	menu!: Array<HTMLElement>;
@@ -132,7 +136,7 @@ class AITextArea extends TextArea {
 	static i18nBundle: I18nBundle;
 
 	static async onDefine() {
-		AITextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
+		TextArea.i18nBundle = await getI18nBundle("@ui5/webcomponents-ai");
 	}
 
 	/**
@@ -201,11 +205,52 @@ class AITextArea extends TextArea {
 	onAfterRendering() {
 		super.onAfterRendering();
 
-		// Add keydown event listener to the textarea
 		const textarea = this.shadowRoot?.querySelector("textarea");
 		if (textarea && !this._keydownHandler) {
 			this._keydownHandler = this._handleKeydown.bind(this);
 			textarea.addEventListener("keydown", this._keydownHandler);
+		}
+
+		const menuNodes = this.getSlottedNodes("menu");
+		if (menuNodes.length > 0) {
+			const menu = menuNodes[0];
+			if (!this._menuFocusinHandler) {
+				this._menuFocusinHandler = () => {
+					this.focused = true;
+				};
+				menu.addEventListener("focusin", this._menuFocusinHandler);
+			}
+			if (!this._menuFocusoutHandler) {
+				this._menuFocusoutHandler = (evt: Event) => {
+					const e = evt as FocusEvent;
+					const relatedTarget = e.relatedTarget as HTMLElement;
+					const focusMovingWithinComponent = relatedTarget && this.shadowRoot?.contains(relatedTarget);
+					const focusStayingInMenu = relatedTarget && menu.contains(relatedTarget);
+					if (!focusMovingWithinComponent && !focusStayingInMenu) {
+						this.focused = false;
+					}
+				};
+				menu.addEventListener("focusout", this._menuFocusoutHandler);
+			}
+		}
+	}
+
+	_onfocusin() {
+		super._onfocusin();
+		this.focused = true;
+	}
+
+	_onfocusout(e: FocusEvent) {
+		super._onfocusout(e);
+		const relatedTarget = e.relatedTarget as HTMLElement;
+		const focusMovingWithinShadowDOM = relatedTarget && this.shadowRoot?.contains(relatedTarget);
+		const menuNodes = this.getSlottedNodes("menu");
+		const focusMovingToMenu = menuNodes.length > 0 && relatedTarget && (
+			menuNodes[0].contains(relatedTarget)
+			|| relatedTarget === menuNodes[0]
+		);
+		if (!focusMovingWithinShadowDOM && !focusMovingToMenu) {
+			this.focused = false;
 		}
 	}
 
@@ -224,14 +269,15 @@ class AITextArea extends TextArea {
 			return;
 		}
 
-		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean };
+		const menu = menuNodes[0] as HTMLElement & { opener?: HTMLElement; open?: boolean, horizontalAlign?: string };
 		if (menu && typeof menu.open !== "undefined") {
-			menu.opener = e.detail.clickTarget;
+			menu.opener = e.detail.clickTarget.shadowRoot?.querySelector("ui5-button") as HTMLElement;
+			menu.horizontalAlign = "End";
 			menu.open = true;
 		}
 	}
 	get _ariaLabel() {
-		return this.accessibleName || AITextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
+		return this.accessibleName || TextArea.i18nBundle.getText(WRITING_ASSISTANT_LABEL);
 	}
 
 	/**
@@ -245,6 +291,7 @@ class AITextArea extends TextArea {
 	}
 }
 
-AITextArea.define();
+TextArea.define();
 
-export default AITextArea;
+export type { TextAreaVersionChangeEventDetail };
+export default TextArea;

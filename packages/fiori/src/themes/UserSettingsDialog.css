@@ -9,6 +9,10 @@
 	padding: 0;
 }
 
+.ui5-user-settings-dialog::part(footer) {
+	padding: 0;
+}
+
 .ui5-user-settings-root {
 	display: flex;
 	height: 100%;
@@ -63,6 +67,10 @@
 
 .ui5-user-settings-dialog[on-phone] {
 	border-radius: 0;
+}
+
+.ui5-user-settings-item-no-icon::part(title) {
+	padding-left: 1.875rem; /* width of icon */
 }
 
 @media screen and (width >= 37.5rem) and (width < 64rem) {

@@ -112,7 +112,6 @@ import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import CheckBox from "./CheckBox.js";
 import Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type InputComposition from "./features/InputComposition.js";
 
@@ -629,6 +628,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._dialogInputValueState = this.valueState;
 		}
 
+		if (this.filterSelected) {
+			this.filterSelected = false;
+		}
+
 		this.value = value;
 		this._shouldFilterItems = true;
 		this.valueBeforeAutoComplete = value;
@@ -647,6 +650,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (!isEnter(e)) {
 			return;
 		}
+
 		const { value } = (e.target as Input);
 		const matchingItem = this._getItems().find(item => item.text === value);
 
@@ -709,7 +713,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
 		const filteredItems: Array<IMultiComboBoxItem> = this._filterItems(value);
-		const oldValueState: `${ValueState}` = this.valueState;
 
 		this._shouldFilterItems = true;
 
@@ -722,27 +725,26 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this.valueState = this._effectiveValueState;
 				this._validationTimeout = null;
 			} else {
-				input.value = this._inputLastValue;
 				return;
 			}
 		}
 
-		this._effectiveValueState = this.valueState;
-
-		if (!filteredItems.length && value && !this.noValidation) {
-			const newValue = this.valueBeforeAutoComplete || this._inputLastValue;
-
-			input.value = newValue;
-			this.value = newValue;
-			this.valueState = ValueState.Negative;
-
-			this._shouldAutocomplete = false;
-			this._resetValueState(oldValueState);
-
-			return;
+		// Save the original value state before setting validation error
+		if (this.valueState !== ValueState.Negative) {
+			this._effectiveValueState = this.valueState;
 		}
 
-		this._inputLastValue = input.value;
+		if (!this._isComposing && !filteredItems.length && value && !this.noValidation) {
+			this.valueState = ValueState.Negative;
+			this._shouldAutocomplete = false;
+		} else if ((filteredItems.length || !value) && this.valueState === ValueState.Negative) {
+			this.valueState = this._effectiveValueState;
+		}
+
+		if (!this._isComposing) {
+			this._inputLastValue = input.value;
+		}
+
 		this.value = input.value;
 		this._filteredItems = filteredItems;
 
@@ -1103,7 +1105,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (isArrowDown || isDownCtrl(e)) {
 			if (this.showSelectAll && !isSelectAllFocused) {
-				return (this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				return (this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 			}
 
 			this._handleArrowDown();
@@ -1200,7 +1202,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 					return;
 				}
 
-				(this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				(this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 			} else {
 				this._inputDom.focus();
 				this._shouldAutocomplete = true;
@@ -1240,7 +1242,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (isArrowDown && this.open) {
 			if (this.showSelectAll) {
-				(this._getResponsivePopover()!.querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
+				(this._getResponsivePopover().querySelector(".ui5-mcb-select-all-checkbox") as CheckBox).focus();
 				return;
 			}
 		}
@@ -1749,8 +1751,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
 
-		this._inputLastValue = value;
-
 		if (input && !input.value) {
 			this.valueBeforeAutoComplete = "";
 			this._filteredItems = this._getItems();
@@ -1773,10 +1773,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this._shouldAutocomplete && !isAndroid()) {
 			const item = this._getFirstMatchingItem(value);
 
-			// Keep the original typed in text intact
-			this.valueBeforeAutoComplete = value;
 			// Prevent typeahead during composition to avoid interfering with the composition process
 			if (!this._isComposing && item) {
+				// Keep the original typed in text intact
+				this.valueBeforeAutoComplete = value;
 				this._handleTypeAhead(item, value);
 			}
 		}
@@ -1938,10 +1938,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			}
 
 			this._tokenizer.expanded = this.open;
-			// remove the value if user focus out the input and focus is not going in the popover
-			if (!isPhone() && !this.noValidation && !focusIsGoingInPopover) {
-				this.value = "";
-			}
 		}
 	}
 	/**
@@ -2196,10 +2192,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const shouldBeExpanded = this.focused || this.open || isCurrentlyExpanded;
 
 		return shouldBeExpanded;
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
 	}
 
 	get iconsCount() {

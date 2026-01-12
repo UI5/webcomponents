@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from "path";
 import CleanCSS from "clean-css";
+import { pathToFileURL } from "url";
 
 const generate = async () => {
 	await fs.mkdir("src/generated/css/", { recursive: true });
@@ -19,7 +20,10 @@ const generate = async () => {
 		});
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate()
 }
 

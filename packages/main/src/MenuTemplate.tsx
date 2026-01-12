@@ -3,14 +3,13 @@ import ResponsivePopover from "./ResponsivePopover.js";
 import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import Button from "./Button.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function MenuTemplate(this: Menu) {
 	return (
 		<ResponsivePopover
 			id={`${this._id}-menu-rp`}
 			class="ui5-menu-rp"
-			placement="Bottom"
+			placement={this.placement}
 			verticalAlign="Bottom"
 			horizontalAlign={this.horizontalAlign}
 			opener={this.opener}
@@ -31,12 +30,6 @@ export default function MenuTemplate(this: Menu) {
 							{this.headerText}
 						</h1>
 					</div>
-					<Button
-						icon={declineIcon}
-						design="Transparent"
-						aria-label={this.labelClose}
-						onClick={this._close}
-					/>
 				</div>
 			}
 			<div
@@ -68,6 +61,16 @@ export default function MenuTemplate(this: Menu) {
 					)
 				}
 			</div>
+			{this.isPhone &&
+				<div slot="footer" class="ui5-menu-dialog-footer">
+					<Button
+						design="Transparent"
+						onClick={this._close}
+					>
+						{this.labelCancel}
+					</Button>
+				</div>
+			}
 		</ResponsivePopover >
 	);
 }

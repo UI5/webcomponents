@@ -1,4 +1,4 @@
-import "../../dist/Assets.js";
+import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DateRangePicker from "../../src/DateRangePicker.js";
 import Label from "../../src/Label.js";
@@ -784,5 +784,188 @@ describe("Accessibility", () => {
 				expect(dayInBetween).to.have.attr("aria-selected", "true");
 				expect(endSelectionDay).to.have.attr("aria-selected", "true");
 			});
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" required formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("09/09/2020 - 10/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" required formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("invalid input");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("09/09/2020 - 10/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for rangeUnderflow", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" minDate="10/10/2020" formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("01/10/2020 - 02/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: true },
+				validity: { rangeUnderflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("11/10/2020 - 12/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: false },
+				validity: { rangeUnderflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for rangeOverflow", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" maxDate="10/10/2020" formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("11/10/2020 - 12/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: true },
+				validity: { rangeOverflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("07/09/2020 - 09/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: false },
+				validity: { rangeOverflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
 	});
 });

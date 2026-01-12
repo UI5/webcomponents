@@ -57,7 +57,7 @@ class TreeItemCustom extends TreeItemBase {
 	@slot()
 	content!: Array<HTMLElement>;
 
-	async _onkeydown(e: KeyboardEvent) {
+	_onkeydown(e: KeyboardEvent) {
 		if (isDown(e) && this.content?.some(el => el.contains(e.target as Node))) {
 			e.stopPropagation();
 			return;
@@ -69,7 +69,7 @@ class TreeItemCustom extends TreeItemBase {
 			return;
 		}
 
-		await super._onkeydown(e);
+		super._onkeydown(e);
 	}
 
 	_onkeyup(e: KeyboardEvent) {

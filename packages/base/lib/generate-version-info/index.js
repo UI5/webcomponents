@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import { pathToFileURL } from "url";
 
 const generate = async () => {
 	const version = JSON.parse(await fs.readFile("package.json")).version;
@@ -29,7 +30,10 @@ export default VersionInfo;`;
 	console.log("Version info file generated.");
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate()
 }
 

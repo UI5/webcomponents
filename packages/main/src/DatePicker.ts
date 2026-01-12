@@ -44,15 +44,19 @@ import "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 import {
 	DATEPICKER_OPEN_ICON_TITLE,
+	DATEPICKER_OPEN_ICON_TITLE_OPENED,
 	DATEPICKER_DATE_DESCRIPTION,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	INPUT_SUGGESTIONS_TITLE,
-	FORM_TEXTFIELD_REQUIRED,
 	DATEPICKER_POPOVER_ACCESSIBLE_NAME,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_INFORMATION,
 	VALUE_STATE_SUCCESS,
 	VALUE_STATE_WARNING,
+	DATEPICKER_VALUE_MISSING,
+	DATEPICKER_PATTERN_MISSMATCH,
+	DATEPICKER_RANGE_UNDERFLOW,
+	DATEPICKER_RANGE_OVERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 import DateComponentBase from "./DateComponentBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -172,6 +176,7 @@ type Picker = "day" | "month" | "year";
  * @constructor
  * @extends DateComponentBase
  * @public
+ * @csspart input - Used to style the input element. This part is forwarded to the underlying ui5-input element.
  */
 
 @customElement({
@@ -396,11 +401,33 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return DatePicker.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DatePicker.i18nBundle.getText(DATEPICKER_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DatePicker.i18nBundle.getText(DATEPICKER_PATTERN_MISSMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DatePicker.i18nBundle.getText(DATEPICKER_RANGE_UNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DatePicker.i18nBundle.getText(DATEPICKER_RANGE_OVERFLOW, this.maxDate);
+		}
+
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !this.isValidValue(this.value),
+			rangeUnderflow: !this.isValidMin(this.value),
+			rangeOverflow: !this.isValidMax(this.value),
+		};
 	}
 
 	async formElementAnchor() {
@@ -546,28 +573,26 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
 	}
 
-	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue = true) {
+	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue: boolean = true) {
 		const valid = this._checkValueValidity(value);
 		this.isLiveUpdate = !updateValue;
-
-		if ((valid && normalizeValue) || !this.isLiveUpdate) {
+		if ((valid && normalizeValue) || !this.isLiveUpdate) { // in case that value is not valid we format it in change event
 			value = this.getDisplayValueFromValue(value);
 			value = this.normalizeDisplayValue(value); // transform valid values (in any format) to the correct format
 		}
 
 		let executeEvent = true;
 		this.liveValue = value;
-
 		const previousValue = this.value;
 
 		if (updateValue) {
 			this._dateTimeInput.value = value;
 			this.value = this.getValueFromDisplayValue(value);
-			this._updateValueState(); // Change the value state to Error/None, but only if needed
+			this._updateValueState();
 		}
 
 		events.forEach(e => {
-			if (!this.fireDecoratorEvent(e, { value, valid })) {
+			if (!this.fireDecoratorEvent(e, { value: this.value, valid })) {
 				executeEvent = false;
 			}
 		});
@@ -725,6 +750,34 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		return calendarDate.valueOf() >= this._minDate.valueOf() && calendarDate.valueOf() <= this._maxDate.valueOf();
 	}
 
+	isValidMin(value: string): boolean {
+		if (value === "" || value === undefined) {
+			return true;
+		}
+
+		const calendarDate = this._getCalendarDateFromString(value);
+
+		if (!calendarDate || !this._minDate) {
+			return false;
+		}
+
+		return calendarDate.valueOf() >= this._minDate.valueOf();
+	}
+
+	isValidMax(value: string): boolean {
+		if (value === "" || value === undefined) {
+			return true;
+		}
+
+		const calendarDate = this._getCalendarDateFromString(value);
+
+		if (!calendarDate || !this._maxDate) {
+			return false;
+		}
+
+		return calendarDate.valueOf() <= this._maxDate.valueOf();
+	}
+
 	isInValidRangeDisplayValue(value: string): boolean {
 		if (value === "" || value === undefined) {
 			return true;
@@ -809,7 +862,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		return isPhone();
 	}
 
-	get displayValue() : string {
+	get displayValue(): string {
 		if (!this.getValueFormat().parse(this.value, true)) {
 			return this.value;
 		}
@@ -869,6 +922,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get openIconTitle() {
+		if (this.open) {
+			return DatePicker.i18nBundle.getText(DATEPICKER_OPEN_ICON_TITLE_OPENED);
+		}
+
 		return DatePicker.i18nBundle.getText(DATEPICKER_OPEN_ICON_TITLE);
 	}
 
@@ -921,7 +978,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get _calendarPickersMode() {
-		const format = this.getFormat() as DateFormat & { aFormatArray: Array<{type: string}> };
+		const format = this.getFormat() as DateFormat & { aFormatArray: Array<{ type: string }> };
 		const patternSymbolTypes = format.aFormatArray.map(patternSymbolSettings => {
 			return patternSymbolSettings.type.toLowerCase();
 		});
