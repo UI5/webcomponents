@@ -565,15 +565,15 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get _isValueWithCorrectPrecision() {
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
-		if ((this.value === 0) || (Number.isInteger(this.value)) && this.valuePrecision === 0) {
+		if (this.valuePrecision === 0 && ((this.value === 0) || (Number.isInteger(this.value)))) {
 			// integers and zero will be formatted with toFixed, so thex y're always valid
 			return true;
 		}
 
 		const localeData = getCachedLocaleDataInstance(getLocale());
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = localeData?.getNumberSymbol("decimal") || ".";;
-		const numberParts = this.input?.value?.split(delimiter as string);
+		const delimiter = localeData?.getNumberSymbol("decimal") || ".";
+		const numberParts = this.input?.value?.split(delimiter);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
 		return decimalPartLength === this.valuePrecision;
