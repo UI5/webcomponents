@@ -28,7 +28,10 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListIte
 
 function listItemContent(this: MenuItem) {
 	return (<>
-		{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
+		{this.text &&
+			<div class={`ui5-menu-item-text ${this.isPhone ? "ui5-menu-item-text-phone" : ""}`}>
+				{this.text}
+			</div>}
 
 		{rightContent.call(this)}
 		{checkmarkContent.call(this)}
