@@ -102,6 +102,15 @@ class SearchField extends UI5Element {
 	}
 
 	/**
+	 * Indicates whether a loading indicator should be shown in the input field.
+	 * @default false
+	 * @since 2.19.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	fieldLoading = false
+
+	/**
 	 * Defines whether the clear icon of the search will be shown.
 	 * @default false
 	 * @public

@@ -139,22 +139,6 @@
 	color: var(--sapButton_Lite_TextColor);
 }
 
-::slotted([slot="footer"]) {
-	height: var(--_ui5_dialog_footer_height);
-}
-
-::slotted([slot="footer"][ui5-bar][design="Footer"]) {
-	border-top: none;
-}
-
-::slotted([slot="header"][ui5-bar]) {
-	box-shadow: none;
-}
-
-::slotted([slot="footer"][ui5-toolbar]) {
-	border: 0;
-}
-
 :host::backdrop {
 	background-color: var(--_ui5_popup_block_layer_background);
 	opacity: var(--_ui5_popup_block_layer_opacity);
