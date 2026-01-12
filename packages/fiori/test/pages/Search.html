@@ -254,8 +254,8 @@
 	</div>
 
 	<div class="container" style="padding-top: 1rem;">
-		<ui5-label>Search with lazy loaded Suggestions - Autocomplete and highlighting</ui5-label>
-		<ui5-search id="search-lazy" show-clear-icon placeholder="Type 'a'..."></ui5-search>
+		<ui5-label>Search with field loading state (type and press Enter)</ui5-label>
+		<ui5-search id="search-with-loading" show-clear-icon placeholder="Search..."></ui5-search>
 	</div>
 
 	<div class="container last">
@@ -458,6 +458,15 @@
 					];
 					createItems(searchLazy, lazyData);
 				}, 300);
+			}
+		});
+
+		const searchWithLoading = document.getElementById('search-with-loading');
+		searchWithLoading.addEventListener('ui5-search', async (e) => {
+			if (e.target.value) {
+				e.target.fieldLoading = true;
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				e.target.fieldLoading = false;
 			}
 		});
 	</script>

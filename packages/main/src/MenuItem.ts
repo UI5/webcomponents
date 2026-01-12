@@ -35,7 +35,7 @@ import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
 import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
-	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 import type { IMenuItem } from "./Menu.js";
@@ -388,8 +388,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		return MenuItem.i18nBundle.getText(MENU_BACK_BUTTON_ARIA_LABEL);
 	}
 
-	get labelClose() {
-		return MenuItem.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
+	get labelCancel() {
+		return MenuItem.i18nBundle.getText(MENU_CANCEL_BUTTON_TEXT);
 	}
 
 	get accessibleNameText() {
