@@ -43,6 +43,8 @@ import NumberFormat from "@ui5/webcomponents-localization/dist/NumberFormat.js";
 
 // Styles
 import StepInputCss from "./generated/themes/StepInput.css.js";
+import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
+import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 
 // Spin variables
 const INITIAL_WAIT_TIMEOUT = 500; // milliseconds
@@ -367,7 +369,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return value;
 		}
 
-		if (this.input && this.value === Number(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
+		if (this.input && this.value === this._parseNumber(this.input.value)) { // For the cases where the number is fractional and is ending with 0s.
 			return this.input.value;
 		}
 
@@ -468,8 +470,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	_updateValueState() {
-		const isWithinRange = (this.min === undefined || Number(this.input.value) >= this.min)
-							  && (this.max === undefined || Number(this.input.value) <= this.max);
+		const isWithinRange = (this.min === undefined || this._parseNumber(this.input.value) >= this.min)
+							  && (this.max === undefined || this._parseNumber(this.input.value) <= this.max);
 		const isValueWithCorrectPrecision = this._isValueWithCorrectPrecision;
 		const previousValueState = this.valueState;
 		const isValid = isWithinRange && isValueWithCorrectPrecision;
@@ -563,14 +565,14 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get _isValueWithCorrectPrecision() {
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
-		if ((this.value === 0) || (Number.isInteger(this.value))) {
-			// integers and zero will be formatted with toFixed, so they're always valid
+		if ((this.value === 0) || (Number.isInteger(this.value)) && this.valuePrecision === 0) {
+			// integers and zero will be formatted with toFixed, so thex y're always valid
 			return true;
 		}
 
+		const localeData = getCachedLocaleDataInstance(getLocale());
 		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		// @ts-ignore oFormatOptions is a private API of NumberFormat but we need it here to get the decimal separator
-		const delimiter = this.formatter?.oFormatOptions?.decimalSeparator || ".";
+		const delimiter = localeData?.getNumberSymbol("decimal") || ".";;
 		const numberParts = this.input?.value?.split(delimiter as string);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
@@ -663,22 +665,22 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		const cursorPosition = this._getCursorPosition();
+		const caretPosition = this._getCaretPosition();
 		const inputValue = this.innerInput.value;
-		const typedValue = this._getValueOnkeyDown(e, inputValue, cursorPosition!);
+		const typedValue = this._getValueOnkeyDown(e, inputValue, caretPosition!);
 		const parsedValue = this._parseNumber(typedValue);
-		const isValidTypedValue = this._isTypedValueValid(typedValue, parsedValue);
+		const isValidTypedValue = this._isInputValueValid(typedValue, parsedValue);
 
 		if (preventDefault || !isValidTypedValue) {
 			e.preventDefault();
 		}
 
-		if (cursorPosition === 0 && isMinus(e)) {
+		if (caretPosition === 0 && isMinus(e)) {
 			this._updateValueAndValidate(parsedValue);
 		}
 	}
 
-	_getCursorPosition() {
+	_getCaretPosition() {
 		return this.input.getDomRef()!.querySelector("input")!.selectionStart;
 	}
 
@@ -686,7 +688,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
 	}
 
-	_isTypedValueValid(typedValue: string, parsedValue: number) {
+	_isInputValueValid(typedValue: string, parsedValue: number) {
 		return !Number.isNaN(parsedValue) && !/, {2,}/.test(typedValue);
 	}
 
