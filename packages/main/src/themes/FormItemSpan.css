@@ -1,5 +1,5 @@
-/* 
-* By default, 
+/*
+* By default:
 * - in M, L ans XL sizes the Form's labels take 4 cells out 12 of the whole width, e.g 4:8:0
 * - in S size, it  the Form's labels take the whole width 12/12 cells, e.g the label and the input are displayed vertically.
 *
