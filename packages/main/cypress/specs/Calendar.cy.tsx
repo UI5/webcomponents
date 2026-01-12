@@ -316,6 +316,32 @@ describe("Calendar general interaction", () => {
 			.should("not.have.class", "ui5-mp-item--selected");
 	});
 
+	it("Initial timestamp property is respected when no selected dates exist", () => {
+		const specificDate = new Date(Date.UTC(2015, 5, 15, 0, 0, 0));
+		const timestamp = specificDate.valueOf() / 1000;
+
+		cy.mount(<Calendar id="calendar1" timestamp={timestamp}></Calendar>);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find(".ui5-calheader")
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "June");
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find(".ui5-calheader")
+			.find("[data-ui5-cal-header-btn-year]")
+			.should("contain.text", "2015");
+
+		cy.get<Calendar>("#calendar1")
+			.invoke("prop", "timestamp")
+			.should("equal", timestamp);
+
+		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
+			.should("have.attr", "tabindex", "0");
+	});
+
 	it("Should navigate to Year Picker when selecting a range in Year Range Picker", () => {
 		const YEAR = 1997;
 		const date = Date.UTC(YEAR);
