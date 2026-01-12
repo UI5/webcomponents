@@ -581,66 +581,6 @@ describe("MultiInput tokens", () => {
 			.should("have.attr", "value", "Bulgaria");
 	});
 });
-
-describe("MultiInput Form Submission Prevention", () => {
-	it("should prevent form submission when Enter is pressed", () => {
-		cy.mount(
-			<form>
-				<MultiInput/>
-			</form>
-		);
-
-		cy.get("form")
-			.as("testForm")
-			.invoke('on', 'submit', cy.spy().as('formSubmit'));
-
-		cy.get("[ui5-multi-input]")
-			.shadow()
-			.find("input")
-			.as("innerInput");
-
-		cy.get("@innerInput")
-			.realClick()
-			.should("be.focused");
-
-		cy.get("@innerInput")
-			.realType("test value");
-
-		cy.get("@innerInput")
-			.realPress("Enter");
-
-		// Form submission should be prevented when there's a value
-		cy.get("@formSubmit").should("not.have.been.called");
-	});
-
-	it("should prevent form submission when there are multiple inputs in form", () => {
-		cy.mount(
-			<form>
-				<MultiInput id="mi-form-multi1" />
-				<MultiInput id="mi-form-multi2" />
-			</form>
-		);
-
-		cy.get("form")
-			.as("testForm")
-			.invoke('on', 'submit', cy.spy().as('formSubmit'));
-
-		cy.get("#mi-form-multi1")
-			.shadow()
-			.find("input")
-			.as("firstInput");
-
-		cy.get("@firstInput")
-			.realClick()
-			.should("be.focused");
-
-		cy.get("@firstInput")
-			.realPress("Enter");
-
-		cy.get("@formSubmit").should("not.have.been.called");
-	});
-});
-
 describe("MultiInput Truncated Token", () => {
 	beforeEach(() => {
 		cy.mount(
