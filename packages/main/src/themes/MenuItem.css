@@ -61,10 +61,6 @@
 	font-size: var(--sapFontSize);
 }
 
-.ui5-menu-item-text-phone {
-	font-size: initial;
-}
-
 .ui5-menu-item-dummy-icon {
 	visibility: hidden;
 }
