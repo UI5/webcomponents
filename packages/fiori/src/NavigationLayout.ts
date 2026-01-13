@@ -29,9 +29,9 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
  *
  * ### Responsive Behavior
  *
- * On larger screens (screen width of 600px or more), the side navigation is visible
+ * On larger screens with a width of 600px or more, excluding phones, the side navigation is visible
  * by default and can be expanded or collapsed using the `mode` property.
- * On small screens (screen width of 599px or less), the side navigation is hidden by
+ * On phone devices and screens with a width of 599px or less, the side navigation is hidden by
  * default and can be displayed using the `mode` property.
  *
  * ### ES6 Module Import
