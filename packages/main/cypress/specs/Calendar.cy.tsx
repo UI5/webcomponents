@@ -1549,7 +1549,7 @@ describe("Calendar accessibility", () => {
 });
 
 describe("Day Picker Tests", () => {
-	it.only("Select day with Space", () => {
+	it("Select day with Space", () => {
 		const today = new Date();
 		const tomorrow = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0, 0) / 1000);
 
