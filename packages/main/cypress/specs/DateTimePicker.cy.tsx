@@ -289,6 +289,37 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
+	it("tests time controls with value-format HH:mm shows only hours and minutes", () => {
+		cy.mount(<DateTimePicker value-format="yyyy-MM-dd HH:mm" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.within(() => {
+				cy.get("[ui5-time-selection-clocks]")
+					.shadow()
+					.as("clocks");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="hours"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="minutes"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="seconds"]`)
+					.should("not.exist");
+			});
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerClose();
+	});
+
 	it("tests hours clock is active on picker open", () => {
 		cy.mount(<DateTimePickerTemplate />);
 
