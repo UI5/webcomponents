@@ -1,5 +1,4 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
@@ -805,12 +804,29 @@ class ColorPalette extends UI5Element {
 		return false;
 	}
 
-	focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
+	async focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
 		itemNavigation.setCurrentItem(element);
-		// Use 10ms delay to ensure the re-render from forcedTabIndex property change completes
-		// setTimeout(() => {
+		// Wait for DOM to reflect property changes before focusing
+		await this._waitForTabindexReady(element);
 		itemNavigation._focusCurrentItem();
-		// }, 10);
+	}
+
+	/**
+	 * Waits for an element's tabindex attribute to update to "0" in the DOM.
+	 * Uses frame-synchronized polling to detect when property changes have rendered.
+	 *
+	 * @private
+	 */
+	private async _waitForTabindexReady(element: ColorPaletteNavigationItem, maxAttempts = 30): Promise<void> {
+		// eslint-disable-next-line no-await-in-loop
+		for (let i = 0; i < maxAttempts; i++) {
+			const focusRef = element.getDomRef()?.querySelector("[data-sap-focus-ref]") as HTMLElement;
+			if (focusRef && focusRef.getAttribute("tabindex") === "0") {
+				return; // Ready!
+			}
+			// eslint-disable-next-line no-await-in-loop
+			await new Promise(resolve => requestAnimationFrame(resolve));
+		}
 	}
 
 	onColorPickerChange(e: Event) {
