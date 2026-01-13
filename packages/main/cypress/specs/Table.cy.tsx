@@ -493,12 +493,7 @@ describe("Table - Popin Mode", () => {
 describe("Table - Horizontal alignment of cells", () => {
 	function check(id: string, index: number, alignment: string) {
 		cy.get(id)
-			.should("have.css", "justify-content", alignment)
-			.and($el => {
-				const style = $el.attr("style");
-				const variable = style?.match(/justify-content: ([^;]+)/)?.[1] ?? "";
-				expect(variable).to.equal(`var(--horizontal-align-default-${index})`);
-			});
+			.should("have.css", "justify-content", alignment);
 
 		cy.get("ui5-table-row")
 			.get(`ui5-table-cell:nth-of-type(${index})`)
@@ -530,11 +525,11 @@ describe("Table - Horizontal alignment of cells", () => {
 					<TableCell><Label><b>1249</b> EUR</Label></TableCell>
 				</TableRow>
 				<TableRow>
-					<TableCell><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
-					<TableCell><Label>Technocom</Label></TableCell>
-					<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
-					<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
-					<TableCell><Label><b>29</b> EUR</Label></TableCell>
+					<TableCell class="productCol"><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
+					<TableCell class="supplierCol"><Label>Technocom</Label></TableCell>
+					<TableCell class="dimensionsCol"><Label>32 x 21 x 4 cm</Label></TableCell>
+					<TableCell class="weightCol"><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
+					<TableCell class="priceCol"><Label><b>29</b> EUR</Label></TableCell>
 				</TableRow>
 			</Table>
 		);
@@ -647,8 +642,10 @@ describe("Table - Horizontal alignment of cells", () => {
 
 				if (shouldBePoppedIn) {
 					check(`#${id}`, index + 1, "normal");
+					cy.get(`.${id}`).should("have.css", "justify-content", "normal");
 				} else {
 					check(`#${id}`, index + 1, alignments[id]);
+					cy.get(`.${id}`).should("have.css", "justify-content", alignments[id]);
 				}
 			});
 		});
