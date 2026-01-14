@@ -19,6 +19,15 @@
 
 .ui5-menu-busy-indicator {
 	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.menu-busy-indicator-main {
+	position: relative;
+	min-height: var(--_ui5_list_item_base_height);
 }
 
 .ui5-menu-dialog-header {

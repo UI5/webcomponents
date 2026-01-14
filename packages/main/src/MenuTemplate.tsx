@@ -34,6 +34,7 @@ export default function MenuTemplate(this: Menu) {
 			}
 			<div
 				id={`${this._id}-menu-main`}
+				class={this.loading ? "menu-busy-indicator-main" : ""}
 			>
 				{this.items.length ?
 					(<List
