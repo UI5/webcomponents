@@ -326,9 +326,7 @@ abstract class UI5Element extends HTMLElement {
 			await this._processChildren();
 		}
 
-		if (!ctor.asyncFinished) {
-			await ctor.definePromise;
-		}
+		await this.definePromiseSafe;
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
@@ -338,6 +336,14 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+	}
+
+	get definePromiseSafe() {
+		const ctor = this.constructor as typeof UI5Element;
+		if (!ctor.asyncFinished && ctor.definePromise) {
+			return ctor.definePromise;
+		}
+		return Promise.resolve();
 	}
 
 	/**

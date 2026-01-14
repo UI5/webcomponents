@@ -1,11 +1,14 @@
 import type UI5Element from "../UI5Element.js";
 
+type FormattedValue = FormData | string | null;
+type ElementAnchor = HTMLElement | undefined;
+
 interface IFormInputElement extends UI5Element {
 	name?: string;
-	formFormattedValue: FormData | string | null;
-	formValidityMessage?: string;
-	formValidity?: ValidityStateFlags;
-	formElementAnchor?: () => HTMLElement | undefined | Promise<HTMLElement | undefined>;
+	formFormattedValue: FormattedValue | Promise<FormattedValue>;
+	formValidityMessage?: string | Promise<string>;
+	formValidity?: ValidityStateFlags | Promise<ValidityStateFlags>;
+	formElementAnchor?: () => ElementAnchor | Promise<ElementAnchor>;
 }
 
 const updateFormValue = (element: IFormInputElement | UI5Element) => {
@@ -14,7 +17,7 @@ const updateFormValue = (element: IFormInputElement | UI5Element) => {
 	}
 };
 
-const setFormValue = (element: IFormInputElement) => {
+const setFormValue = async (element: IFormInputElement) => {
 	if (!element._internals?.form) {
 		return;
 	}
@@ -26,16 +29,27 @@ const setFormValue = (element: IFormInputElement) => {
 		return;
 	}
 
-	element._internals.setFormValue(element.formFormattedValue);
+	const formattedValue = element.formFormattedValue instanceof Promise
+		? await element.formFormattedValue
+		: element.formFormattedValue;
+	element._internals.setFormValue(formattedValue);
 };
 
 const setFormValidity = async (element: IFormInputElement) => {
 	if (!element._internals?.form) {
 		return;
 	}
-	if (element.formValidity && Object.keys(element.formValidity).some(key => key)) {
+	const formValidity = element.formValidity instanceof Promise
+		? await element.formValidity
+		: element.formValidity;
+
+	const formValidityMessage = element.formValidityMessage instanceof Promise
+		? await element.formValidityMessage
+		: element.formValidityMessage;
+
+	if (formValidity && Object.keys(formValidity).some(key => key)) {
 		const focusRef = await element.formElementAnchor?.();
-		element._internals.setValidity(element.formValidity, element.formValidityMessage, focusRef);
+		element._internals.setValidity(formValidity, formValidityMessage, focusRef);
 	} else {
 		element._internals.setValidity({});
 	}

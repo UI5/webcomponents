@@ -301,27 +301,29 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get formValidityMessage() {
-		const validity = this.formValidity;
+		return this.formValidity.then(validity => {
+			if (validity.patternMismatch) {
+				return StepInput.i18nBundle.getText(STEPINPUT_PATTER_MISSMATCH, this.valuePrecision);
+			}
+			if (validity.rangeUnderflow) {
+				return StepInput.i18nBundle.getText(STEPINPUT_RANGEUNDERFLOW, this.min as number);
+			}
+			if (validity.rangeOverflow) {
+				return StepInput.i18nBundle.getText(STEPINPUT_RANGEOVERFLOW, this.max as number);
+			}
 
-		if (validity.patternMismatch) {
-			return StepInput.i18nBundle.getText(STEPINPUT_PATTER_MISSMATCH, this.valuePrecision);
-		}
-		if (validity.rangeUnderflow) {
-			return StepInput.i18nBundle.getText(STEPINPUT_RANGEUNDERFLOW, this.min as number);
-		}
-		if (validity.rangeOverflow) {
-			return StepInput.i18nBundle.getText(STEPINPUT_RANGEOVERFLOW, this.max as number);
-		}
-
-		return ""; // No error
+			return ""; // No error
+		});
 	}
 
-	get formValidity(): ValidityStateFlags {
-		return {
-			patternMismatch: this.value !== 0 && !this._isValueWithCorrectPrecision,
-			rangeOverflow: this.max !== undefined && this.value >= this.max,
-			rangeUnderflow: this.min !== undefined && this.value <= this.min,
-		};
+	get formValidity(): Promise<ValidityStateFlags> {
+		return this.definePromiseSafe.then(() => {
+			return {
+				patternMismatch: this.value !== 0 && !this._isValueWithCorrectPrecision,
+				rangeOverflow: this.max !== undefined && this.value >= this.max,
+				rangeUnderflow: this.min !== undefined && this.value <= this.min,
+			};
+		});
 	}
 
 	get formFormattedValue(): FormData | string | null {
