@@ -497,6 +497,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * Defines the filter type of the component.
 	 * @default "None"
 	 * @public
+	 * @since 2.19.0
 	 */
 	@property()
 	filter: `${InputSuggestionsFilter}` = InputSuggestionsFilter.None;
