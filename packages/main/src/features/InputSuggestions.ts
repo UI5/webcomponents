@@ -375,7 +375,7 @@ class Suggestions {
 		this.onItemSelect(currentItem);
 
 		if (!this._isItemIntoView(currentItem)) {
-			const itemRef = this._isGroupItem ? (currentItem.shadowRoot!.querySelector("[ui5-li-group-header]") as ListItemGroupHeader)! : currentItem;
+			const itemRef = this._isGroupItem ? (currentItem.shadowRoot!.querySelector("[ui5-li-group-header]") as ListItemGroupHeader) : currentItem;
 			this._scrollItemIntoView(itemRef);
 		}
 	}
@@ -423,7 +423,7 @@ class Suggestions {
 
 	_getScrollContainer() {
 		if (!this._scrollContainer) {
-			this._scrollContainer = this._getPicker()!.shadowRoot!.querySelector(".ui5-popup-content")!;
+			this._scrollContainer = this._getPicker().shadowRoot!.querySelector(".ui5-popup-content")!;
 		}
 
 		return this._scrollContainer;

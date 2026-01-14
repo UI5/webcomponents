@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-tools",
-  "version": "2.15.0",
+  "version": "2.19.0-rc.0",
   "description": "UI5 Web Components: webcomponents.tools",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -20,7 +20,7 @@
     "directory": "packages/tools"
   },
   "dependencies": {
-    "@custom-elements-manifest/analyzer": "patch:@custom-elements-manifest/analyzer@npm%3A0.10.6#~/.yarn/patches/@custom-elements-manifest-analyzer-npm-0.10.6-9b5ff0c50b.patch",
+    "@custom-elements-manifest/analyzer": "^0.10.10",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "@wdio/cli": "^7.19.7",
@@ -34,7 +34,6 @@
     "chai": "^4.3.4",
     "child_process": "^1.0.2",
     "chokidar": "^3.6.0",
-    "chokidar-cli": "^3.0.0",
     "command-line-args": "^5.1.1",
     "comment-parser": "^1.4.0",
     "cross-env": "^7.0.3",
@@ -54,7 +53,6 @@
     "ignore": "^7.0.5",
     "is-port-reachable": "^3.1.0",
     "json-beautify": "^1.1.1",
-    "mkdirp": "^1.0.4",
     "postcss": "^8.4.5",
     "postcss-cli": "^9.1.0",
     "postcss-selector-parser": "^6.0.10",
@@ -76,6 +74,9 @@
     "typescript": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",

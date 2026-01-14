@@ -12,6 +12,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
+import Bar from "../../src/Bar.js";
 
 function getGrowingWithScrollList(length: number, height: string = "100px") {
 	return (
@@ -171,6 +172,37 @@ describe("List Tests", () => {
 			.shadow()
 			.find("[id$='growing-btn']")
 			.should("not.have.attr", "aria-labelledby");
+	});
+
+	it("tests growing button accessible description property", () => {
+		cy.mount(
+			<List growing="Button">
+				<ListItemStandard>Product 1</ListItemStandard>
+				<ListItemStandard>Product 2</ListItemStandard>
+				<ListItemStandard>Product 3</ListItemStandard>
+			</List>
+		);
+	
+		cy.get("[ui5-list]")
+			.as("list");
+
+		cy.get("@list").invoke('prop', 'accessibilityAttributes', {
+			growingButton: {
+				description: "This button will load additional products to the list. Click or press Enter to see more items."
+			}
+		});
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growing-btn']")
+			.should("have.attr", "aria-describedby");
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growingButton-description']")
+			.should("exist")
+			.should("have.class", "ui5-hidden-text")
+			.should("contain.text", "This button will load additional products to the list. Click or press Enter to see more items.");
 	});
 });
 
@@ -1255,6 +1287,291 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 	});
 
+	it("keyboard handling on F7", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>First</Button>
+					<Button>Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-li-custom]").realClick();
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 goes to first focusable element
+		cy.realPress("F7");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 returns to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 remembers last focused element (second button)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
+	it("keyboard handling on F7 after TAB navigation", () => {
+		cy.mount(
+			<div>
+				<button>Before</button>
+				<List>
+					<ListItemCustom>
+						<Button>First</Button>
+						<Button>Second</Button>
+					</ListItemCustom>
+				</List>
+			</div>
+		);
+
+		cy.get("button").realClick();
+		cy.get("button").should("be.focused");
+
+		// Tab into list item
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// Tab into internal elements (goes to first button)
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 should store current element and return to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 should remember the second button (not go to first)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
+	it("keyboard handling on F7 maintains focus position across list items", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+					<Button>Item 1 - Third</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+					<Button>Item 2 - Third</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first list item
+		cy.get("[ui5-li-custom]").first().realClick();
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// F7 to enter (should go to first button)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(0).should("be.focused");
+
+		// Tab to second button
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").eq(1).should("be.focused");
+
+		// F7 to exit back to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// Navigate to second list item with ArrowDown
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li-custom]").last().should("be.focused");
+
+		// F7 should focus the second button (same index as previous item)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(4).should("be.focused").and("contain", "Item 2 - Second");
+	});
+
+	it("arrow down navigates to same-index element in next custom item", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 3 - First</Button>
+					<Button>Item 3 - Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first button in first item
+		cy.get("[ui5-button]").first().realClick();
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Arrow down should move to first button in second item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(2).should("be.focused").and("contain", "Item 2 - First");
+
+		// Arrow down again should move to first button in third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(4).should("be.focused").and("contain", "Item 3 - First");
+	});
+
+	it("arrow up navigates to same-index element in previous custom item", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 3 - First</Button>
+					<Button>Item 3 - Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus second button in last item
+		cy.get("[ui5-button]").eq(5).realClick();
+		cy.get("[ui5-button]").eq(5).should("be.focused");
+
+		// Arrow up should move to second button in second item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").eq(3).should("be.focused").and("contain", "Item 2 - Second");
+
+		// Arrow up again should move to second button in first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").eq(1).should("be.focused").and("contain", "Item 1 - Second");
+	});
+
+	it("arrow navigation skips standard list items", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Custom 1</Button>
+				</ListItemCustom>
+				<ListItemStandard>Standard Item</ListItemStandard>
+				<ListItemStandard>Another Standard</ListItemStandard>
+				<ListItemCustom>
+					<Button>Custom 2</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus button in first custom item
+		cy.get("[ui5-button]").first().realClick();
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Arrow down should skip standard items and focus button in second custom item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused").and("contain", "Custom 2");
+
+		// Arrow up should skip standard items and return to first custom item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").first().should("be.focused").and("contain", "Custom 1");
+	});
+
+	it("arrow navigation works across groups", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Before Group</Button>
+				</ListItemCustom>
+				<ListItemGroup headerText="Group 1">
+					<ListItemCustom>
+						<Button>In Group 1</Button>
+					</ListItemCustom>
+				</ListItemGroup>
+				<ListItemGroup headerText="Group 2">
+					<ListItemCustom>
+						<Button>In Group 2</Button>
+					</ListItemCustom>
+				</ListItemGroup>
+				<ListItemCustom>
+					<Button>After Group</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus button before groups
+		cy.get("[ui5-button]").first().realClick();
+
+		// Navigate down through groups
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(1).should("be.focused").and("contain", "In Group 1");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(2).should("be.focused").and("contain", "In Group 2");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused").and("contain", "After Group");
+	});
+
+	it("arrow navigation handles items with different element counts", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - A</Button>
+					<Button>Item 1 - B</Button>
+					<Button>Item 1 - C</Button>
+					<Button>Item 1 - D</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - A</Button>
+					<Button>Item 2 - B</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus fourth button (index 3) in first item
+		cy.get("[ui5-button]").eq(3).realClick();
+		cy.get("[ui5-button]").eq(3).should("be.focused");
+
+		// Arrow down should focus last button in second item (index clamped to 1)
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(5).should("be.focused").and("contain", "Item 2 - B");
+	});
+
+	it("arrow navigation does nothing at list boundaries", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>First Item</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Last Item</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first button
+		cy.get("[ui5-button]").first().realClick();
+
+		// Arrow up should do nothing (at top boundary)
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Focus last button
+		cy.get("[ui5-button]").last().realClick();
+
+		// Arrow down should do nothing (at bottom boundary)
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
 	it("keyboard handling on TAB when 2 level nested UI5Element is focused", () => {
 		cy.mount(
 			<div>
@@ -2199,5 +2516,78 @@ describe("List keyboard drag and drop tests", () => {
 		}
 
 		cy.get("#item9").prev().should("have.id", "item4");
+	});
+});
+
+describe("List sticky header", () => {
+	it("sticks default header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List headerText="Sticky Header" stickyHeader>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-header")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+	
+				cy.get("@container")
+					.scrollTo(0, 50);
+	
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
+	});
+
+	it("sticks custom header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List stickyHeader>
+					<Bar slot="header">
+						<Title>Sticky Header Bar</Title>
+					</Bar>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-bar]")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+	
+				cy.get("@container")
+					.scrollTo(0, 50);
+	
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
 	});
 });

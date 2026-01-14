@@ -332,6 +332,43 @@ describe("General", () => {
 			.should("have.been.called");
 	});
 
+	it("Should delete token when clicking on token decline icon - regression test for long token deletion fix", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true}>
+				<MultiComboBoxItem selected={true} text="This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer")
+			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
+
+		// The first token is the long one and should be hidden in the n-more, so we target the second token
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.eq(1)
+			.as("token")
+			.should("exist");
+
+		cy.get("@token")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@tokenDelete")
+			.should("have.been.calledOnce")
+			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.tokens.length === 1;
+			}));
+
+		cy.get("@token")
+			.should("not.exist");
+	});
+
 	it("Autocomplete (typeahead)", () => {
 		cy.mount(
 			<MultiComboBox>
@@ -612,7 +649,7 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button id="dummyButton"></Button></>
+			</MultiComboBox><Button>Dummy Button</Button></>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -639,14 +676,12 @@ describe("General", () => {
 			.find(".ui5-mcb-select-all-checkbox")
 			.should("not.have.attr", "checked");
 
-		cy.get("#dummyButton")
-			.realClick();
+		// focus the dummy button to close the popover
+		cy.realPress("Tab");
+		cy.realPress("Tab");
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("not.be.focused");
 
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
@@ -1458,18 +1493,18 @@ describe("Validation & Value State", () => {
 		cy.realType("4");
 
 		cy.get("@input")
-			.should("have.value", "1");
+			.should("have.value", "14");
 
 		cy.get("@mcb")
 			.should("have.attr", "value-state", "Negative");
 	});
 
-	it("Reset value state validation after 2500ms", () => {
+	it("Invalid input persists - no automatic clearing", () => {
 		cy.mount(
 			<MultiComboBox>
-				<MultiComboBoxItem text="112"></MultiComboBoxItem>
-				<MultiComboBoxItem text="12"></MultiComboBoxItem>
-				<MultiComboBoxItem text="3"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -1480,37 +1515,141 @@ describe("Validation & Value State", () => {
 		cy.get("@mcb")
 			.should("be.focused");
 
-		cy.realType("4");
+		cy.realType("InvalidText");
 
 		cy.get("@mcb")
 			.should("have.attr", "value-state", "Negative");
-
-		cy.wait(2500);
-
-		cy.get("@mcb")
-			.should("have.attr", "value-state", "None");
-	});
-
-	it("Built in validation by typing a non existing option", () => {
-		cy.mount(
-			<MultiComboBox>
-				<MultiComboBoxItem text="Cosy"></MultiComboBoxItem>
-			</MultiComboBox>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb")
-			.should("be.focused");
-
-		cy.realType("CCo");
 
 		cy.get("@mcb")
 			.shadow()
 			.find("input")
-			.should("have.value", "Cosy");
+			.as("input")
+			.should("have.value", "InvalidText");
+
+		// Wait to test that the value state persists after some time
+		cy.wait(2500)
+
+		cy.get("@input")
+			.should("have.value", "InvalidText");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("Value state resets when valid entry is entered after invalid input", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		// Type invalid text
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input")
+			.should("have.value", "xyz");
+
+		// Clear and type valid text
+		cy.get("@input")
+			.clear();
+
+		cy.realType("Item");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@input")
+			.should("have.value", "Item 1");
+	});
+
+	it("Value state resets when input is cleared after invalid entry", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		// Type invalid text
+		cy.realType("InvalidValue");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input")
+			.should("have.value", "InvalidValue");
+
+		// Clear the input
+		cy.get("@input")
+			.clear();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@input")
+			.should("have.value", "");
+	});
+
+	it("Value state preserved when switching between valid and invalid", () => {
+		cy.mount(
+			<MultiComboBox valueState="Critical">
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Critical");
+
+		// Type invalid text
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		// Clear and verify original state is restored
+		cy.get("@input")
+			.clear();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Critical");
 	});
 
 	it("Tests if item is created when enter is pressed while validation is ongoing", () => {
@@ -4116,180 +4255,196 @@ describe("Keyboard Handling", () => {
 });
 
 describe("MultiComboBox Composition", () => {
-	it("should handle Korean composition correctly", () => {
+	const mountMultiComboBox = (children: any, id: string, placeholder: string = "") => {
 		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-korean"
-				placeholder="Type in Korean ..."
-			>
-				<MultiComboBoxItem text="안녕하세요" />
-				<MultiComboBoxItem text="고맙습니다" />
-				<MultiComboBoxItem text="사랑" />
-				<MultiComboBoxItem text="한국" />
+			<MultiComboBox id={id} placeholder={placeholder}>
+				{children}
 			</MultiComboBox>
 		);
+		cy.get("[ui5-multi-combobox]").as("mcb").realClick();
+		cy.get("@mcb").shadow().find("input").as("input").focus();
+	};
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
-			.realClick();
+	const simulateCompositionStages = (stages: string[], final: string) => {
+		cy.get("@input").trigger("compositionstart", { data: "" });
+		stages.forEach(stage => {
+			cy.get("@input")
+				.invoke("val", stage)
+				.trigger("input", { inputType: "insertCompositionText" })
+				.trigger("compositionupdate", { data: stage });
 
-		cy.get("@multicombobox")
-			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
-
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-
-		cy.get("@nativeInput")
-			.invoke("val", "사랑")
+			cy.get("@mcb").should("have.prop", "_isComposing", true);
+			cy.get("@input").should("have.value", stage);
+			cy.get("@mcb").should("have.attr", "value", stage);
+			cy.get("@mcb").should("have.attr", "value-state", "None");
+		});
+		cy.get("@input")
+			.trigger("compositionend", { data: final })
+			.invoke("val", final)
 			.trigger("input", { inputType: "insertCompositionText" });
+		cy.get("@mcb").should("have.prop", "_isComposing", false);
+	};
 
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
+	it("IME Korean matching suggestion", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="사랑" />,
+			<MultiComboBoxItem key="2" text="사랑해요" />,
+			<MultiComboBoxItem key="3" text="한국" />,
+		], "mcb-korean", "Type in Korean ...");
 
-		cy.get("@multicombobox").should("have.attr", "value", "사랑");
+		simulateCompositionStages(["ㅅ", "사", "사랑"], "사랑");
 
-		cy.get("@multicombobox")
+		cy.get("@mcb")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
+			.find<ResponsivePopover>("ui5-responsive-popover")
 			.ui5ResponsivePopoverOpened();
 
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
 			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
+			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 1);
-
-		cy.get("@multicombobox").should("have.attr", "value", "");
+		cy.get("@mcb").should("have.attr", "value", "");
 	});
 
-	it("should handle Japanese composition correctly", () => {
-		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-japanese"
-				placeholder="Type in Japanese ..."
-			>
-				<MultiComboBoxItem text="こんにちは" />
-				<MultiComboBoxItem text="ありがとう" />
-				<MultiComboBoxItem text="東京" />
-				<MultiComboBoxItem text="日本" />
-			</MultiComboBox>
-		);
+	it("IME Korean non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="사랑" />,
+			<MultiComboBoxItem key="2" text="한국" />,
+		], "mcb-ko-non", "Type in Korean ...");
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
-			.realClick();
+		simulateCompositionStages(["ㄲ", "ㄲㅏ"], "까");
 
-		cy.get("@multicombobox")
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@mcb")
 			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
-
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
-
-		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-
-		cy.get("@nativeInput")
-			.invoke("val", "ありがとう")
-			.trigger("input", { inputType: "insertCompositionText" });
-
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
-
-		cy.get("@multicombobox").should("have.attr", "value", "ありがとう");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
-			.should("have.length", 1);
-
-		cy.get("@multicombobox").should("have.attr", "value", "");
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
 	});
 
-	it("should handle Chinese composition correctly", () => {
+	it("IME Japanese matching – multi-stage selection", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="ありがとう" />,
+			<MultiComboBoxItem key="2" text="こんにちは" />,
+			<MultiComboBoxItem key="3" text="東京" />,
+		], "mcb-ja", "Type in Japanese ...");
+
+		simulateCompositionStages(["あ", "あり", "ありが", "ありがとう"], "ありがとう");
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 1);
+	});
+
+	it("IME Japanese non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="ありがとう" />,
+			<MultiComboBoxItem key="2" text="こんにちは" />,
+		], "mcb-ja-non", "Type in Japanese ...");
+
+		simulateCompositionStages(["ず", "ずx"], "ずx");
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
+	});
+
+	it("IME Chinese matching – preserves pinyin stages & selects", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="你好" />,
+			<MultiComboBoxItem key="2" text="谢谢" />,
+			<MultiComboBoxItem key="3" text="谢谢你" />,
+			<MultiComboBoxItem key="4" text="北京" />,
+		], "mcb-zh", "Type in Chinese ...");
+
+		simulateCompositionStages(["x", "xi", "xie", "xiex", "xiexie"], "谢谢");
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+		cy.get("@mcb").realPress("Enter");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 1);
+		cy.get("@mcb").should("have.attr", "value", "");
+	});
+
+	it("IME Chinese non-matching – error state after commit", () => {
+		mountMultiComboBox([
+			<MultiComboBoxItem key="1" text="你好" />,
+			<MultiComboBoxItem key="2" text="谢谢" />,
+		], "mcb-zh-non", "Type in Chinese ...");
+
+		simulateCompositionStages(["p", "pi", "pin"], "品味");
+		cy.get("@mcb").should("have.attr", "value-state", "Negative");
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer] [ui5-token]")
+			.should("have.length", 0);
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
 		cy.mount(
-			<MultiComboBox
-				id="multicombobox-composition-chinese"
-				placeholder="Type in Chinese ..."
-			>
-				<MultiComboBoxItem text="你好" />
-				<MultiComboBoxItem text="谢谢" />
-				<MultiComboBoxItem text="北京" />
-				<MultiComboBoxItem text="中国" />
-			</MultiComboBox>
+			<form>
+				<MultiComboBox id="mcbInAForm" no-validation required>
+					<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Denmark"></MultiComboBoxItem>
+					<MultiComboBoxItem text="England"></MultiComboBoxItem>
+				</MultiComboBox>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
 		);
 
-		cy.get("[ui5-multi-combobox]")
-			.as("multicombobox")
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
 			.realClick();
 
-		cy.get("@multicombobox")
-			.shadow()
-			.find("input")
-			.as("nativeInput")
-			.focus();
+		cy.get("@submit")
+			.should("have.not.been.called");
 
-		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
 
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+		cy.get("#mcbInAForm:invalid")
+			.should("exist");
 
-		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+		cy.get("@mcb")
+			.realType("Albania");
 
-		cy.get("@multicombobox").should("have.prop", "_isComposing", true);
+		cy.get("@mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
 
-		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+		cy.get("#mcbInAForm:invalid")
+			.should("not.exist");
 
-		cy.get("@nativeInput")
-			.invoke("val", "谢谢")
-			.trigger("input", { inputType: "insertCompositionText" });
+		cy.get("#submitBtn")
+			.realClick();
 
-		cy.get("@multicombobox").should("have.prop", "_isComposing", false);
-
-		cy.get("@multicombobox").should("have.attr", "value", "谢谢");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@multicombobox")
-			.realPress("Enter");
-
-		cy.get("@multicombobox")
-			.shadow()
-			.find("[ui5-tokenizer]")
-			.find("[ui5-token]")
-			.should("have.length", 1);
-
-		cy.get("@multicombobox").should("have.attr", "value", "");
+		cy.get("@submit")
+			.should("have.been.calledOnce");
 	});
 });

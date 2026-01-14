@@ -376,3 +376,15 @@ bdi {
 	width: 100%;
 	top:0;
 }
+
+:host([has-end-icon]:not([icon])) .ui5-button-root {
+	justify-content: flex-start;
+}
+
+:host([icon-only]) .ui5-button-root {
+	justify-content: center;
+}
+
+:host([has-end-icon]:not([icon])) .ui5-button-end-icon {
+	margin-left: auto;
+}

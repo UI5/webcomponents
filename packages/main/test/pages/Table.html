@@ -17,7 +17,7 @@
 
 <body>
 	<!-- toolbar with ui5-bar -->
-	<ui5-bar design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 50px;">
+	<ui5-bar design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 46px;">
 		<ui5-title tabindex="0" level="H3" id="title" slot="startContent">My Selectable Products (3)</ui5-title>
 		<ui5-segmented-button id="sizeBtn" accessible-name="Switch Table Size">
 			<ui5-segmented-button-item>25%</ui5-segmented-button-item>
@@ -31,8 +31,8 @@
 		</ui5-segmented-button>
 	</ui5-bar>
 
-	<ui5-table id="table" overflow-mode="Popin" accessible-name-ref="title" style="height: 400px" row-action-count="3">
-		<ui5-table-growing id="growing" type="Scroll" slot="features"></ui5-table-growing>
+	<ui5-table id="table" overflow-mode="Popin" accessible-name-ref="title" style="height: 400px" row-action-count="3" alternate-row-colors>
+		<ui5-table-growing id="growing" mode="Scroll" slot="features"></ui5-table-growing>
 		<ui5-table-selection-multi id="selection" selected="1 3" slot="features"></ui5-table-selection-multi>
 		<!-- <ui5-table-selection-single id="selection" selected="1" slot="features"></ui5-table-selection-single> -->
 		<ui5-table-header-row slot="headerRow" sticky>
@@ -51,7 +51,7 @@
 		<ui5-table-row row-key="0">
 			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
 			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
-			<ui5-table-cell><div style="display: flex; flex-direction: row;"><ui5-label>30 x 18 x 3 cm</ui5-label><ui5-button>Button</ui5-button></div></ui5-table-cell>
+			<ui5-table-cell><div style="display: flex; flex-direction: row;"><ui5-label>30 x 18 x 3 cm</ui5-label><ui5-button>Calculate</ui5-button></div></ui5-table-cell>
 			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
 			<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label><ui5-checkbox></ui5-checkbox></ui5-table-cell>
 		</ui5-table-row>

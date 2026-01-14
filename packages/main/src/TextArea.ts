@@ -7,13 +7,16 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getEffectiveAriaDescriptionText,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -29,6 +32,7 @@ import {
 	TEXTAREA_CHARACTERS_LEFT,
 	TEXTAREA_CHARACTERS_EXCEEDED,
 	FORM_TEXTFIELD_REQUIRED,
+	TEXTAREA_EXCEEDS_MAXLENGTH,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -274,6 +278,24 @@ class TextArea extends UI5Element implements IFormInputElement {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the textarea.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Boolean })
@@ -329,11 +351,20 @@ class TextArea extends UI5Element implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		if (this.formValidity.valueMissing) {
+			return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		}
+
+		if (this.formValidity.tooLong) {
+			return TextArea.i18nBundle.getText(TEXTAREA_EXCEEDS_MAXLENGTH, this.value.length - (this.maxlength ?? 0));
+		}
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			tooLong: this.showExceededText && (this.value.length > (this.maxlength ?? 0)),
+		};
 	}
 
 	async formElementAnchor() {
@@ -375,7 +406,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	onAfterRendering() {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (this.rows === 1) {
 			nativeTextArea.setAttribute("rows", "1");
@@ -442,7 +473,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	_oninput(e: InputEvent) {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (e.target === nativeTextArea) {
 			// stop the native event, as the semantic "input" would be fired.
@@ -575,8 +606,21 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return effectiveAriaLabelText;
 	}
 
+	get ariaDescriptionText() {
+		return getEffectiveAriaDescriptionText(this);
+	}
+
+	get ariaDescriptionTextId() {
+		return this.ariaDescriptionText ? "accessibleDescription" : "";
+	}
+
 	get ariaDescribedBy() {
-		return this.hasValueState ? `${this._id}-valueStateDesc` : undefined;
+		const ids = [
+			this.hasValueState ? `${this._id}-valueStateDesc` : "",
+			this.ariaDescriptionTextId,
+		].filter(Boolean).join(" ");
+
+		return ids || undefined;
 	}
 
 	get ariaValueStateHiddenText() {
@@ -623,10 +667,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return this.valueState === ValueState.Negative || this.valueState === ValueState.Critical || this.valueState === ValueState.Information;
 	}
 
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
-	}
-
 	get valueStateTextMappings() {
 		return {
 			"Positive": TextArea.i18nBundle.getText(VALUE_STATE_SUCCESS),
@@ -649,4 +689,5 @@ class TextArea extends UI5Element implements IFormInputElement {
 TextArea.define();
 
 export default TextArea;
+export { TextArea as BaseTextArea };
 export type { TextAreaInputEventDetail };

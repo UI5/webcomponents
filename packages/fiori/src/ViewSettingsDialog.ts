@@ -14,9 +14,8 @@ import type List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
-
 import ViewSettingsDialogMode from "./types/ViewSettingsDialogMode.js";
+
 import "@ui5/webcomponents-icons/dist/sort.js";
 import "@ui5/webcomponents-icons/dist/filter.js";
 import "@ui5/webcomponents-icons/dist/group-2.js";
@@ -115,6 +114,7 @@ type VSDInternalSettings = {
  * @extends UI5Element
  * @since 1.0.0-rc.16
  * @public
+ * @csspart header - Used to style the header.
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",
@@ -328,14 +328,6 @@ class ViewSettingsDialog extends UI5Element {
 
 		if (this.shouldBuildGroup) {
 			this._currentMode = ViewSettingsDialogMode.Group;
-		}
-	}
-
-	onAfterRendering() {
-		if (this.isModeFilter) {
-			renderFinished().then(() => {
-				this._list?.focusFirstItem();
-			});
 		}
 	}
 

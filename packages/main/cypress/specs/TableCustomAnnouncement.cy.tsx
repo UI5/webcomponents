@@ -33,6 +33,7 @@ const {
 	TABLE_COLUMN_HEADER_ROW: { defaultText: COLUMN_HEADER_ROW },
 	TABLE_ROW_SELECTED: { defaultText: SELECTED },
 	TABLE_ROW_NAVIGABLE: { defaultText: NAVIGABLE },
+	TABLE_ROW_NAVIGATED: { defaultText: NAVIGATED },
 	TABLE_ROW_ACTIVE: { defaultText: ACTIVE },
 } = Translations;
 
@@ -48,7 +49,7 @@ describe("Cell Custom Announcement - More details", () => {
 					</TableHeaderCell>
 					<TableHeaderCell data-ui5-table-acc-text="Header2"><input/></TableHeaderCell>
 					<TableHeaderCell><div>Header3</div></TableHeaderCell>
-					<TableHeaderCell></TableHeaderCell>
+					<TableHeaderCell sort-indicator="Descending"></TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow navigated>
 					<TableCell>
@@ -73,6 +74,7 @@ describe("Cell Custom Announcement - More details", () => {
 		cy.get("@row1").find("#row1-input1").as("row1Input1");
 		cy.get("@row1").find("#row1-input2").as("row1Input2");
 		cy.get("@row1").find("#row1-div").as("row1Div");
+		cy.get("@row1").shadow().find("#navigated-cell").as("row1NavigatedCell");
 	});
 
 	function checkAnnouncement(expectedText: string, focusAgain = false) {
@@ -82,20 +84,30 @@ describe("Cell Custom Announcement - More details", () => {
 		}
 
 		cy.get("body").then($body => {
+			debugger;
 			expect($body.find("#ui5-table-invisible-text").text()).to.equal(expectedText);
 		});
 	}
 
 	it("should announce table cells", () => {
 		cy.get("@row1").realClick(); // row focused
+		cy.focused().should("have.attr", "aria-rowindex", "2")
+					.should("have.attr", "role", "row");
+
 		cy.realPress("ArrowRight"); // selection cell focused
 		checkAnnouncement("");
+		cy.focused().should("have.attr", "aria-colindex", "1")
+					.should("have.attr", "role", "gridcell");
 
 		cy.realPress("ArrowRight"); // first cell focused
 		checkAnnouncement("Row1Cell1");
+		cy.focused().should("have.attr", "aria-colindex", "2")
+					.should("have.attr", "role", "gridcell");
 
 		cy.realPress("ArrowRight"); // second cell focused
 		checkAnnouncement(CONTAINS_CONTROL);
+		cy.focused().should("have.attr", "aria-colindex", "3")
+					.should("have.attr", "role", "gridcell");
 
 		cy.get("@row1Input2").invoke("removeAttr", "hidden");
 		checkAnnouncement(CONTAINS_CONTROLS, true);
@@ -105,6 +117,8 @@ describe("Cell Custom Announcement - More details", () => {
 
 		cy.realPress("ArrowRight"); // third cell focused
 		checkAnnouncement(EMPTY);
+		cy.focused().should("have.attr", "aria-colindex", "4")
+					.should("have.attr", "role", "gridcell");
 
 		cy.get("@row1Div").invoke("attr", "tabindex", "0");
 		cy.get("@row1Div").invoke("css", "width", "150px");
@@ -113,7 +127,9 @@ describe("Cell Custom Announcement - More details", () => {
 		checkAnnouncement(CONTAINS_CONTROL, true);
 
 		cy.realPress("ArrowRight"); // fourth cell focused
-		checkAnnouncement(`Row1Cell3 . ${CONTAINS_CONTROL}`);
+		checkAnnouncement(`Button Row1Cell3 . ${CONTAINS_CONTROL}`);
+		cy.focused().should("have.attr", "aria-colindex", "5")
+					.should("have.attr", "role", "gridcell");
 
 		cy.document().then((doc) => {
 			const row1Button = doc.getElementById("row1-button") as Button;
@@ -130,8 +146,18 @@ describe("Cell Custom Announcement - More details", () => {
 		cy.get("@row1Button").invoke("attr", "data-ui5-table-acc-text", "Button with custom accessibility text");
 		checkAnnouncement(`Button with custom accessibility text . ${CONTAINS_CONTROL}`, true);
 
-		cy.realPress("ArrowRight"); // ROW_ACTIONS cell
+		cy.realPress("ArrowRight"); // Row actions cell
 		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
+		cy.focused().should("have.attr", "aria-colindex", "6")
+					.should("have.attr", "role", "gridcell")
+					.then($rowActionsCell => {
+						const rowActionsCell = $rowActionsCell[0];
+						const invisibleText = document.getElementById("ui5-table-invisible-text");
+						expect(rowActionsCell.ariaLabelledByElements[0]).to.equal(invisibleText);
+						rowActionsCell.blur();
+						expect(rowActionsCell.ariaLabelledByElements).to.equal(null);
+						rowActionsCell.focus();
+					});
 
 		cy.get("#row1-edit-action").invoke("remove");
 		checkAnnouncement(ONE_ROW_ACTION, true);
@@ -139,29 +165,49 @@ describe("Cell Custom Announcement - More details", () => {
 		cy.get("#row1-add-action").invoke("remove");
 		checkAnnouncement(EMPTY, true);
 
+		cy.get("@row1NavigatedCell").should("have.attr", "role", "none")
+									.should("have.attr", "aria-hidden", "true");
+
 		cy.realPress("Home"); // selection cell focused
 		checkAnnouncement("");
 	});
 
 	it("should announce table header cells", () => {
 		cy.get("@headerRow").realClick(); // header row focused
+		cy.focused().should("have.attr", "aria-rowindex", "1")
+					.should("have.attr", "role", "row");
+
 		cy.realPress("ArrowRight"); // selection cell focused
 		checkAnnouncement("");
+		cy.focused().should("have.attr", "aria-colindex", "1")
+					.should("have.attr", "role", "columnheader");
 
 		cy.realPress("ArrowRight"); // first cell focused
 		checkAnnouncement(`Header1 ${GENERATED_BY_AI} . ${CONTAINS_CONTROL}`);
+		cy.focused().should("have.attr", "aria-colindex", "2")
+					.should("have.attr", "role", "columnheader")
+					.should("have.attr", "aria-sort", "ascending");
 
 		cy.realPress("ArrowRight"); // second cell focused
 		checkAnnouncement("Header2");
+		cy.focused().should("have.attr", "aria-colindex", "3")
+					.should("have.attr", "role", "columnheader");
 
 		cy.realPress("ArrowRight"); // third cell focused
 		checkAnnouncement("Header3");
+		cy.focused().should("have.attr", "aria-colindex", "4")
+					.should("have.attr", "role", "columnheader");
 
 		cy.realPress("ArrowRight"); // forth cell focused
 		checkAnnouncement(EMPTY);
+		cy.focused().should("have.attr", "aria-colindex", "5")
+					.should("have.attr", "role", "columnheader")
+					.should("have.attr", "aria-sort", "descending");
 
-		cy.realPress("ArrowRight"); // forth cell focused
+		cy.realPress("ArrowRight"); // row action focused
 		checkAnnouncement(ROW_ACTIONS);
+		cy.focused().should("have.attr", "aria-colindex", "6")
+					.should("have.attr", "role", "columnheader");
 
 		cy.realPress("Home"); // selection cell focused
 		checkAnnouncement("");
@@ -217,6 +263,8 @@ describe("Row Custom Announcement - Less details", () => {
 		cy.get("#table0").shadow().find("#table").as("innerTable");
 		cy.get("@rows").first().as("row1");
 		cy.get("@row1").find("#row1-button").as("row1Button");
+		cy.get("@row1").find("ui5-table-cell").as("row1Cells");
+		cy.get("@headerRow").find("ui5-table-header-cell").first().as("headerRowCells");
 
 		cy.document().then((doc) => {
 			const header1Label = doc.getElementById("Header1Label") as Label;
@@ -257,6 +305,8 @@ describe("Row Custom Announcement - Less details", () => {
 		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${NAVIGABLE} . H1`);
 		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`);
 		checkAnnouncement(ONE_ROW_ACTION);
+		cy.focused().should("have.attr", "aria-rowindex", "2")
+					.should("have.attr", "role", "row");
 
 		cy.get("#selection").invoke("attr", "selected", "");
 		checkAnnouncement(`Row . 2 of 2 . ${NAVIGABLE}`, true);
@@ -277,17 +327,50 @@ describe("Row Custom Announcement - Less details", () => {
 
 		cy.get("#row1-nav-action").invoke("remove");
 		cy.get("#row1-add-action").invoke("remove");
-		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button`, true, "equal");
+		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
 
 		cy.realPress("ArrowRight"); // selection cell focused
 		checkAnnouncement("");
+		cy.focused().should("have.attr", "aria-colindex", "1")
+					.should("have.attr", "role", "gridcell");
+
+		cy.realPress("ArrowRight"); // first cell focused
+		checkAnnouncement("R1C1", false, "equal");
+		cy.focused().should("have.attr", "aria-colindex", "2")
+					.should("have.attr", "role", "gridcell");
+
+		cy.realPress("ArrowRight"); // row action cell focused
+		checkAnnouncement(EMPTY, false, "equal");
+		cy.focused().should("have.attr", "aria-colindex", "3")
+					.should("have.attr", "role", "gridcell");
 
 		cy.realPress("End"); // popin cell focused we need details
 		checkAnnouncement(`H2 . ${CONTAINS_CONTROLS} . H4Popin ${GENERATED_BY_AI} . ${CONTAINS_CONTROL} . C4 Button C4Button ${REQUIRED} ${DISABLED} ${READONLY} . ${CONTAINS_CONTROL}`);
+		cy.focused().should("have.attr", "aria-colindex", "4")
+					.should("have.attr", "role", "gridcell");
+
+		cy.get("@row1Cells").each(($cell, index) => {
+			if (index === 0) return;
+			cy.wrap($cell).should("have.attr", "_popin");
+			cy.wrap($cell).should("not.have.attr", "role");
+			cy.wrap($cell).should("not.have.attr", "aria-colindex");
+		});
 
 		cy.realPress("Home"); // selection cell focused
 		cy.realPress("Home"); // row focused
+
 		cy.get("#table0").invoke("css", "width", "1000px");
+		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
+		cy.get("@row1Cells").each(($cell, index) => {
+			cy.wrap($cell).should("not.have.attr", "_popin");
+			cy.wrap($cell).should("have.attr", "role", "gridcell");
+			cy.wrap($cell).should("have.attr", "aria-colindex", `${index + 2}`);
+		});
+
+		cy.get("@row1").shadow().find("#navigated-cell").should("have.attr", "role", "none")
+														.should("have.attr", "aria-hidden", "true");
+
+		cy.get("@row1").invoke("prop", "navigated", false);
 		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`, true, "equal");
 
 		cy.realPress("ArrowUp"); // header row focused
@@ -319,5 +402,25 @@ describe("Row Custom Announcement - Less details", () => {
 
 		cy.get("#table0").invoke("append", '<ui5-table-selection-single slot="features"></ui5-table-selection-single>');
 		checkAnnouncement(`${COLUMN_HEADER_ROW} . ${SELECTION} . H1 . H2 . H3 . H4`, true, "equal");
+
+		cy.get("#table0").invoke("css", "width", "301px");
+		checkAnnouncement(`${COLUMN_HEADER_ROW} . ${SELECTION} . H1`, true, "equal");
+		cy.get("@headerRowCells").each(($cell, index) => {
+			if (index === 0) {
+				cy.wrap($cell).should("have.attr", "role", "columnheader");
+				cy.wrap($cell).should("have.attr", "aria-colindex", "2");
+			} else {
+				cy.wrap($cell).should("have.attr", "_popin");
+				cy.wrap($cell).should("not.have.attr", "role");
+				cy.wrap($cell).should("not.have.attr", "aria-colindex");
+			}
+		});
+
+		cy.get("#table0").invoke("css", "width", "1000px");
+		checkAnnouncement(`${COLUMN_HEADER_ROW} . ${SELECTION} . H1 . H2 . H3 . H4`, true, "equal");
+		cy.get("@headerRowCells").each(($cell, index) => {
+			cy.wrap($cell).should("have.attr", "role", "columnheader");
+			cy.wrap($cell).should("have.attr", "aria-colindex", `${index + 2}`);
+		});
 	});
 });

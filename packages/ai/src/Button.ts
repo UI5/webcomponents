@@ -2,6 +2,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -17,12 +18,11 @@ import {
 	getAssociatedLabelForTexts,
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 
 // Styles
 import ButtonCss from "./generated/themes/Button.css.js";
-import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 
 type AIButtonRootAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
 type AIButtonArrowButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
@@ -57,7 +57,8 @@ type AIButtonAccessibilityAttributes = { root?: AIButtonRootAccessibilityAttribu
  * @extends UI5Element
  * @since 2.0.0
  * @public
- * @experimental The Button and ButtonState web components are availabe since 2.0 under an experimental flag and their API and behaviour are subject to change.
+ * @experimental The **@ui5/webcomponents-ai** package (including Button and ButtonState) is under active development and considered experimental. Component APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  */
 
 @customElement({
@@ -190,8 +191,8 @@ class Button extends UI5Element {
 	@query(".ui5-ai-button-hidden[ui5-split-button]")
 	_hiddenSplitButton?: SplitButton;
 
-	@i18n("@ui5/webcomponents")
-	static i18nBundle: I18nBundle;
+	@i18n("@ui5/webcomponents-ai")
+	static i18nBundleAi: I18nBundle;
 
 	get _hideArrowButton() {
 		return !this._effectiveStateObject?.showArrowButton;
@@ -352,7 +353,7 @@ class Button extends UI5Element {
 	get _computedAccessibilityAttributes(): AIButtonAccessibilityAttributes {
 		const labelRefTexts = getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || "";
 
-		const mainTitle = this._hasText ? Button.i18nBundle.getText(BUTTON_TOOLTIP_TEXT, this._stateText as string) : "";
+		const mainTitle = this._hasText ? Button.i18nBundleAi.getText(BUTTON_TOOLTIP_TEXT, this._stateText as string) : "";
 		const title = `${mainTitle} ${labelRefTexts}`.trim();
 
 		return {

@@ -66,29 +66,19 @@ const getScripts = (options) => {
 		viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-package/vite.config.js")}"`;
 	}
 
-	let eslintConfig;
-	if (fs.existsSync(".eslintrc.js") || fs.existsSync(".eslintrc.cjs")) {
-		// preferred way of custom configuration in root project folder
-		eslintConfig = "";
-	} else {
-		// no custom configuration - use default from tools project
-		eslintConfig = `--config "${require.resolve("@ui5/webcomponents-tools/components-package/eslint.js")}"`;
-	}
-
 	const scripts = {
 		__ui5envs: {
 			UI5_CEM_MODE: options.dev,
 			UI5_TS: `${tsOption}`,
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
-			CYPRESS_UI5_ACC: !!(options.internal?.cypress_acc_tests),
 		},
 		clean: {
 			"default": "ui5nps clean.generated clean.dist scope.testPages.clean",
 			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 		},
-		lint: `eslint . ${eslintConfig}`,
-		lintfix: `eslint . ${eslintConfig} --fix`,
+		lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
+		lintfix: `ui5nps-script "${LIB}eslint/eslint.js" --fix`,
 		generate: {
 			default: `ui5nps prepare.all`,
 			all: `ui5nps-p build.templates build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
@@ -102,7 +92,7 @@ const getScripts = (options) => {
 		},
 		build: {
 			default: "ui5nps prepare lint build.bundle", // build.bundle2
-			templates: options.legacy ? `mkdirp src/generated/templates && node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
+			templates: options.legacy ? `node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
 			styles: {
 				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
 				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
@@ -124,12 +114,13 @@ const getScripts = (options) => {
 				default: "ui5nps build.jsImports.illustrationsLoaders",
 				illustrationsLoaders: createIllustrationsLoadersScript,
 			},
-			bundle: `vite build ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
+			bundle: `ui5nps-script "${LIB}vite-bundler/vite-bundler.mjs" ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
 			bundle2: ``,
 			illustrations: createIllustrationsJSImportsScript,
 		},
 		copyProps: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/`,
 		copyPropsWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/ --watch --safe --skip-initial-copy`,
+		copySrcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/ --watch --safe --skip-initial-copy`,
 		copy: {
 			default: options.legacy ? "ui5nps copy.src copy.props" : "",
 			src: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/` : "",
@@ -138,7 +129,7 @@ const getScripts = (options) => {
 		watch: {
 			default: `ui5nps-p watch.templates watch.typescript watch.src watch.styles watch.i18n watch.props`, // concurently
 			devServer: 'ui5nps-p watch.default watch.bundle', // concurently
-			src: options.legacy ? 'ui5nps "copy.src --watch --safe --skip-initial-copy"' : "",
+			src: options.legacy ? 'ui5nps copySrcWithWatch' : "",
 			typescript: tsWatchCommandStandalone,
 			props: 'ui5nps copyPropsWithWatch',
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
@@ -147,8 +138,8 @@ const getScripts = (options) => {
 				themes: 'ui5nps build.styles.themesWithWatch',
 				components: `ui5nps build.styles.componentsWithWatch`,
 			},
-			templates: options.legacy ? 'chokidar "src/**/*.hbs" -i "src/generated" -c "ui5nps build.templates"' : "",
-			i18n: 'chokidar "src/i18n/messagebundle.properties" -c "ui5nps build.i18n.defaultsjs"'
+			templates: options.legacy ? `ui5nps-script "${LIB}chokidar/chokidar.js" "src/**/*.hbs" "ui5nps build.templates"` : "",
+			i18n: `ui5nps-script "${LIB}chokidar/chokidar.js" "src/i18n/messagebundle.properties" "ui5nps build.i18n.defaultsjs"`
 		},
 		start: "ui5nps prepare watch.devServer",
 		test: `ui5nps-script "${LIB}/test-runner/test-runner.js"`,

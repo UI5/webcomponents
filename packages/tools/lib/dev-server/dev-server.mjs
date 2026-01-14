@@ -1,15 +1,12 @@
 import fs from "fs/promises";
 import { createServer } from 'vite';
 import yargs from 'yargs';
-import { hideBin }  from 'yargs/helpers';
+import { hideBin } from 'yargs/helpers';
+import { pathToFileURL } from "url";
 
-const argv = yargs(hideBin(process.argv))
-	.alias("c", "config")
-	.argv;
-
-const startVite = async (port) => {
+const startVite = async (config, port) => {
 	const server = await createServer({
-		configFile: argv.config,
+		configFile: config,
 		server: {
 			port: port,
 			strictPort: true,
@@ -28,7 +25,7 @@ const rmPortFile = async () => {
 	// exit handler must be sync
 	try {
 		await fs.rm(".dev-server-port");
-	} catch (e) {}
+	} catch (e) { }
 	process.exit();
 }
 
@@ -36,7 +33,11 @@ const rmPortFile = async () => {
 	process.on(eventType, rmPortFile);
 });
 
-(async () => {
+async function start(outArgv) {
+	const argv = yargs(hideBin(outArgv))
+		.alias("c", "config")
+		.argv;
+
 	let retries = 10;
 	let port = 8080;
 	while (retries--) {
@@ -44,7 +45,7 @@ const rmPortFile = async () => {
 		await fs.writeFile(".dev-server-port", `${port}`);
 		try {
 			// execSync(command, {stdio: 'pipe'});
-			const server = await startVite(port);
+			const server = await startVite(argv.config ?? "", port);
 			if (server) {
 				// server started, don't try other ports
 				break;
@@ -63,4 +64,15 @@ const rmPortFile = async () => {
 		// no error normal exit
 		// process.exit();
 	}
-})();
+};
+
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	start(process.argv)
+}
+
+export default {
+	_ui5mainFn: start
+}

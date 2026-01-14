@@ -443,6 +443,155 @@ describe("Select - Accessibility", () => {
 			.find("#accessibleDescription")
 			.should("have.text", "First description Updated second description Third description");
 	});
+
+	it("should not display tooltip when Select is not readonly", () => {
+		cy.mount(
+			<Select style="width: 50px">
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("should display user tooltip with precedence over the default tooltip", () => {
+		cy.mount(
+			<Select style="width: 50px" tooltip="Custom tooltip" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "Custom tooltip");
+	});
+
+	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option additionalText="AdditionalInfo" selected>VeryLongOptionText</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+	});
+
+	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+	});
+
+	it("should show the text and additionalText, separated by '-' when select is read-only", () => {
+		cy.mount(
+			<Select readonly>
+				<Option additionalText="ExtraInfo" selected>SelectedOption</Option>
+				<Option additionalText="OtherInfo">OtherOption</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "SelectedOption – ExtraInfo");
+	});
+
+	it("tests accessibilityInfo getter returns correct values", () => {
+		cy.mount(
+			<>
+				<span id="labelRef">Reference Label</span>
+				{/* Basic select with selected option */}
+				<Select id="basicSelect">
+					<Option value="Option1" selected>Option 1</Option>
+					<Option value="Option2">Option 2</Option>
+				</Select>
+				
+				{/* Select with accessibleName */}
+				<Select id="namedSelect" accessibleName="Select Name">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with accessibleNameRef */}
+				<Select id="refSelect" accessibleNameRef="labelRef">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with readonly and required attributes */}
+				<Select id="propsSelect" readonly required disabled>
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+			</>
+		);
+
+		// Test basic select
+		cy.get("#basicSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.role).to.equal("combobox");
+			expect(accessInfo.type).to.equal("Listbox");
+			expect(accessInfo.readonly).to.be.false;
+			expect(accessInfo.required).to.be.false;
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.be.undefined; // No aria-label
+		});
+
+		// Test select with accessibleName
+		cy.get("#namedSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Select Name"); // Aria label
+		});
+
+		// Test select with accessibleNameRef
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Reference Label"); // Aria label from ref
+		});
+
+		// Test select with readonly and required properties
+		cy.get("#propsSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.readonly).to.be.true;
+			expect(accessInfo.required).to.be.true;
+			expect(accessInfo.disabled).to.be.true;
+		});
+
+		// Update the referenced label and check if the label updates
+		cy.get("#labelRef").invoke("text", "Updated Reference");
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Text remains the same
+			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
+		});
+	});
 });
 
 describe("Select - Popover", () => {
@@ -545,6 +694,20 @@ describe("Select - Properties", () => {
 			</Select>);
 
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
+	});
+
+	it("Should show the selected text-separator when select is read-only", () => {
+		cy.mount(
+			<Select readonly text-separator="VerticalLine">
+				<Option additionalText="Additional1" selected>First</Option>
+				<Option additionalText="Additional2">Second</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", " | ");
 	});
 });
 

@@ -6,7 +6,7 @@ import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import TagDesign from "@ui5/webcomponents/dist/types/TagDesign.js";
 
-export default function SearchFieldTemplate(this: SearchItem) {
+export default function SearchItemTemplate(this: SearchItem) {
 	return (
 		<li
 			part="native-li"
@@ -44,14 +44,22 @@ export default function SearchFieldTemplate(this: SearchItem) {
 						<span part="subtitle" class="ui5-search-item-description">{this.description}</span>
 					</div>
 
-					{this.deletable &&
-						<Button class="ui5-search-item-selected-delete"
-							design={ButtonDesign.Transparent}
-							icon={decline}
-							onClick={this._onDeleteButtonClick}
-							tooltip={this._deleteButtonTooltip}
-							onKeyDown={this._onDeleteButtonKeyDown}></Button>
-					}
+					<div class="ui5-search-item-actions-container">
+						{this.hasActions &&
+							<div class="ui5-search-item-actions">
+								<slot name="actions"></slot>
+							</div>
+						}
+
+						{this.deletable &&
+							<Button class="ui5-search-item-selected-delete"
+								design={ButtonDesign.Transparent}
+								icon={decline}
+								onClick={this._onDeleteButtonClick}
+								tooltip={this._deleteButtonTooltip}
+								onKeyDown={this._onDeleteButtonKeyDown}></Button>
+						}
+					</div>
 				</div>
 			</div>
 		</li >

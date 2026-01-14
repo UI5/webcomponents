@@ -1,0 +1,26 @@
+name: Issue - auto-close
+
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/stale@v9
+      with:
+        # The number of days old an issue can be before marking it stale.
+        days-before-stale: 21
+        # The number of days to wait to close an issue or pull request after it being marked stale.
+        days-before-close: 7
+        # The message to post on the issue when tagging it.
+        stale-issue-message: >
+          Hello, everyone! 
+          The issue has been inactive for 21 days. If there are still questions or comments, please feel free to continue the discussion. 
+          Inactive issues will be closed after 7 days!
+        # The message to post on the issue when closing it. If none provided, will not comment when closing an issue.
+        close-issue-message: >
+          Hello, everyone!
+          The issue has been inactive for 28 days, so I am closing the issue. 
+        any-of-issue-labels: 'author action,wontfix,stale'

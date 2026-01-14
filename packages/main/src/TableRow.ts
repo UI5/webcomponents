@@ -35,7 +35,7 @@ import {
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
-class TableRow extends TableRowBase {
+class TableRow extends TableRowBase<TableCell> {
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -125,10 +125,10 @@ class TableRow extends TableRowBase {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		toggleAttribute(this, "aria-current", this._renderNavigated && this.navigated, "true");
-		toggleAttribute(this, "_interactive", this._isInteractive);
+		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
 		toggleAttribute(this, "draggable", this.movable, "true");
-		this.ariaRowIndex = `${this._rowIndex + 2}`;
+		toggleAttribute(this, "_interactive", this._isInteractive);
+		toggleAttribute(this, "_alternate", this._alternate);
 	}
 
 	async focus(focusOptions?: FocusOptions | undefined): Promise<void> {

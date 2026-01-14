@@ -26,6 +26,7 @@ import {
 	getEffectiveAriaDescriptionText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import SelectTextSeparator from "./types/SelectTextSeparator.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -33,7 +34,7 @@ import "@ui5/webcomponents-icons/dist/information.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
+import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
@@ -338,6 +339,16 @@ class Select extends UI5Element implements IFormInputElement {
 	tooltip?: string;
 
 	/**
+	 * Defines the separator type for the two columns layout when Select is in read-only mode.
+	 *
+	 * @default "Dash"
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	textSeparator: `${SelectTextSeparator}` = "Dash";
+
+	/**
 	 * Constantly updated value of texts collected from the associated description texts
 	 * @private
 	 */
@@ -582,8 +593,69 @@ class Select extends UI5Element implements IFormInputElement {
 		return this.options.find(option => option.selected);
 	}
 
-	get text() {
-		return this.selectedOption?.effectiveDisplayText;
+	/**
+	 * Helper function to build display text with separator when additional text exists
+	 * @param mainText - The main text content
+	 * @param additionalText - The additional text (optional)
+	 * @returns The combined text with separator if additionalText exists, otherwise just mainText
+	 * @private
+	 */
+	_buildDisplayText(mainText: string, additionalText?: string) {
+		if (!additionalText) {
+			return mainText;
+		}
+
+		return `${mainText} ${this._separatorSymbol} ${additionalText}`;
+	}
+
+	get text(): string {
+		const selectedOption = this.selectedOption;
+		if (!selectedOption) {
+			return "";
+		}
+
+		// Only show separator when readonly and there's additional text
+		if (this.readonly && selectedOption.additionalText) {
+			return this._buildDisplayText(
+				selectedOption.effectiveDisplayText,
+				selectedOption.additionalText,
+			);
+		}
+
+		return selectedOption.effectiveDisplayText;
+	}
+
+	get _effectiveTooltip(): string | undefined {
+		// User-defined tooltip takes precedence
+		if (this.tooltip) {
+			return this.tooltip;
+		}
+
+		// Provide default tooltip for readonly mode to show full content
+		if (this.readonly) {
+			const selectedOption = this.selectedOption;
+			if (!selectedOption) {
+				return undefined;
+			}
+
+			// Use textContent for tooltip to show actual text content, not display text
+			const mainText = selectedOption.textContent || "";
+			return this._buildDisplayText(mainText, selectedOption.additionalText);
+		}
+
+		return undefined;
+	}
+
+	get _separatorSymbol(): string {
+		switch (this.textSeparator) {
+		case SelectTextSeparator.Bullet:
+			return "·"; // Middle dot (U+00B7)
+		case SelectTextSeparator.VerticalLine:
+			return "|"; // Vertical line (U+007C)
+		case SelectTextSeparator.Dash:
+		default:
+			return "–"; // En dash (U+2013)
+		}
 	}
 
 	_toggleRespPopover() {
@@ -1100,6 +1172,18 @@ class Select extends UI5Element implements IFormInputElement {
 	get ariaDescribedByIds() {
 		const ids = [this.valueStateTextId, this.ariaDescriptionTextId].filter(Boolean);
 		return ids.length ? ids.join(" ") : undefined;
+	}
+
+	get accessibilityInfo() {
+		return {
+			role: "combobox" as AriaRole,
+			type: this._ariaRoleDescription,
+			description: this.text,
+			label: this.ariaLabelText,
+			readonly: this.readonly,
+			required: this.required,
+			disabled: this.disabled,
+		};
 	}
 
 	_updateAssociatedLabelsTexts() {

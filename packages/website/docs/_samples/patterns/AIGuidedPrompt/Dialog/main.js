@@ -28,12 +28,12 @@ if (!response) {
 }
 
 const dialog = document.getElementById("dialog");
-const aiDialogButton = document.getElementById("aiDialogButton");
+const busyIndicator = document.querySelector("ui5-busy-indicator");
+const applyTextImprovementsButton = document.getElementById("applyTextImprovementsButton");
 const openDialogButton = document.getElementById("openDialogButton");
 const closeDialogButton = document.getElementById("closeDialogButton");
 const output = document.getElementById("output");
-const dialogOutput = document.getElementById("dialogOutput");
-const structrureSelect = document.getElementById("structureSelect");
+const structureSelect = document.getElementById("structureSelect");
 const languageSelect = document.getElementById("languageSelect");
 const toneOfVoiceSelect = document.getElementById("toneOfVoiceSelect");
 const sendButton = document.getElementById("sendButton");
@@ -53,58 +53,46 @@ let dialogGenerationId;
 
 function startGenerating() {
 	console.warn("startGenerating");
-	dialogOutput.value = "";
 	text = texts[options.structure][options.language][options.toneOfVoice];
-	let generatedWordIndex = 0;
-	const generationId = setInterval(function () {
-	const words = text.split(" ");
-	const maxWordIndex = words.length - 1;
-	if (generatedWordIndex > maxWordIndex) {
-		stopGenerating(generationId);
-		aiDialogButton.state = "revise";
-		openDialogButton.innerText = "Revise";
-		closeDialogButton.disabled = false;
-		return;
-	}
+	busyIndicator.active = true;
+	output.value = "";
+	openDialogButton.state = "generating";
 
-	dialogOutput.value += words[generatedWordIndex] + " ";
-	generatedWordIndex++;
-	}, 75);
+	closeDialog();
+	
+	var generationId = setTimeout(() => {
+		stopGenerating(generationId)
+		output.value = text;
+	}, 3000);
+
 	return generationId;
 }
 
 function stopGenerating(generationId) {
 	console.warn("stopGenerating");
-	closeDialogButton.disabled = false;
+	busyIndicator.active = false;
+	openDialogButton.state = "generate";
 	clearTimeout(generationId);
 }
 
 function openDialogButtonClickHandler(evt) {
-	openDialog();
-}
-
-function aiDialogButtonClickHandler(evt) {
 	var button = evt.target;
 	switch (button.state) {
-	case "":
 	case "generate":
-		startGeneratingFromDialog();
-		break;
-	case "revise":
-		startGeneratingFromDialog();
+		openDialog();
 		break;
 	case "generating":
-		button.state = "generate";
-		openDialogButton.innerText = "Generate";
-		closeDialogButton.disabled = false;
-		stopGenerating(dialogGenerationId, closeDialogButton);
+		stopGenerating(dialogGenerationId);
+		openDialogButton.state = "generate";
 		break;
 	}
 }
 
+function applyTextImprovementsButtonClickHandler() {
+	startGeneratingFromDialog();
+}
+
 function startGeneratingFromDialog() {
-	aiDialogButton.state = "generating";
-	closeDialogButton.disabled = true;
 	dialogGenerationId = startGenerating();
 }
 
@@ -114,7 +102,6 @@ function openDialog() {
 
 function closeDialog() {
 	dialog.open = false;
-	output.value = dialogOutput.value;
 }
 
 function structureSelectHandler(evt) {
@@ -151,10 +138,10 @@ sendButton.addEventListener("click", function() {
 	}
 });
 
-structrureSelect.addEventListener("change", structureSelectHandler);
+structureSelect.addEventListener("change", structureSelectHandler);
 openDialogButton.addEventListener("click", openDialogButtonClickHandler);
-aiDialogButton.addEventListener("click", aiDialogButtonClickHandler);
 closeDialogButton.addEventListener("click", closeDialog);
+applyTextImprovementsButton.addEventListener("click", applyTextImprovementsButtonClickHandler);
 languageSelect.addEventListener("change", languageSelectHandler);
 toneOfVoiceSelect.addEventListener(
 	"selection-change",

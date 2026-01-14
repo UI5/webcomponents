@@ -25,8 +25,8 @@ import {
 	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
 })
-abstract class TableRowBase extends UI5Element {
-	cells!: Array<TableCellBase>;
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+	cells!: Array<TCell>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
@@ -36,6 +36,9 @@ abstract class TableRowBase extends UI5Element {
 
 	@property({ type: Boolean, noAttribute: true })
 	_renderNavigated = false;
+
+	@property({ type: Boolean, noAttribute: true })
+	_alternate = false;
 
 	@query("#selection-cell")
 	_selectionCell?: HTMLElement;
@@ -47,7 +50,7 @@ abstract class TableRowBase extends UI5Element {
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
-		this.setAttribute("role", "row");
+		!this.role && this.setAttribute("role", "row");
 		this.toggleAttribute("ui5-table-row-base", true);
 	}
 

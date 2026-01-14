@@ -5,7 +5,6 @@
 
 :host(:not([hidden])) {
 	display: inline-block;
-	width: 100%;
 	line-height: normal;
 	letter-spacing: normal;
 	word-spacing: normal;
@@ -163,23 +162,30 @@
 }
 
 :host .ui5-step-input-root {
-	white-space: nowrap;
 	line-height: inherit;
 	letter-spacing: inherit;
 	word-spacing: inherit;
 	height: inherit;
 }
 
-:host .ui5-step-input-input[text-align=left] {
+:host .ui5-step-input-input::part(input) {
+	white-space: nowrap;
+}
+
+:host .ui5-step-input-input[text-align=left]::part(input) {
 	text-align: left;
 }
 
-:host .ui5-step-input-input[text-align=center] {
+:host .ui5-step-input-input[text-align=center]::part(input) {
 	text-align: center;
 }
 
-:host .ui5-step-input-input[text-align=right] {
+:host .ui5-step-input-input[text-align=right]::part(input) {
 	text-align: right;
+}
+
+::slotted([slot="valueStateMessage"]) {
+	text-align: left;
 }
 
 :host .ui5-step-icon {

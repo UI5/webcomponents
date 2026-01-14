@@ -18,7 +18,7 @@
 
 .ua-panel{
 	border-top: 2px solid lightgrey;
-	margin: 1rem;
+	margin: 1rem 0;
 }
 
 .save-btn{
@@ -37,4 +37,37 @@
 	display: flex;
 	align-items: center;
 	margin: 0 1rem 0 1rem;
+}
+
+.language-region-container{
+	display: flex;
+	min-height: 2.5rem;
+	align-item:flex-start;
+	flex-direction: column;
+	gap: 0.563rem;
+}
+
+.language-region-label{
+	display: flex;
+	flex: 1 0 0;
+	width: 100%;
+}
+
+.language-region-control{
+	display: flex;
+	gap: 0.188rem;
+	width: 100%;
+}
+
+.ui5-user-settings-appearance-view-additional-content-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem;
+	width: 100%;
+}
+.ui5-user-settings-appearance-view-additional-content-description {
+	display: block;
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSmallSize);
 }

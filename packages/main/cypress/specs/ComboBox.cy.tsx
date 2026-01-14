@@ -91,7 +91,7 @@ describe("General Interaction", () => {
 
 		cy.get("@combobox").should("have.prop", "value", "One");
 		cy.get("[ui5-cb-item]").first().should("have.prop", "selected", true);
-		
+
 		cy.window().then(window => {
 			return window.getSelection()?.toString();
 		}).should("contains", "ne");
@@ -894,6 +894,37 @@ describe("Accessibility", () => {
 		cy.get("@invisibleMessageSpan").should("contain.text", "Group Header Donut");
 	});
 
+	it("should announce only the item text when accessed via keyboard and popover is not opened", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Bulgaria" />
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+				<ComboBoxItem text="Belgium" />
+				<ComboBoxItem text="Brazil" />
+				<ComboBoxItem text="Canada" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.realClick();
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessageSpan")
+			.should("have.text", "");
+
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("have.text", "");
+
+		// open the popover
+		cy.get("@combo").shadow().find("input").realPress("F4");
+		cy.get("@combo").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("@invisibleMessageSpan").should("have.text", "List item 2 of 6");
+	});
+
 	it("tests setting value programmatically", () => {
 		cy.mount(
 			<>
@@ -1226,14 +1257,14 @@ describe("Additional Navigation", () => {
 			const scrollableRect = picker[0].shadowRoot.querySelector(".ui5-popup-content").getBoundingClientRect();
 			const lastItem = document.querySelector("#combo-grouping ui5-cb-item-group:last-child ui5-cb-item:last-child");
 			const elementRect = lastItem!.getBoundingClientRect();
-			
+
 			const isInVisibleArea = !(
 				elementRect.bottom < scrollableRect.top ||
 				elementRect.top > scrollableRect.bottom ||
 				elementRect.right < scrollableRect.left ||
 				elementRect.left > scrollableRect.right
 			);
-			
+
 			expect(isInVisibleArea).to.be.true;
 		});
 
@@ -1248,14 +1279,14 @@ describe("Additional Navigation", () => {
 			const scrollableRect = picker[0].shadowRoot.querySelector(".ui5-popup-content").getBoundingClientRect();
 			const firstItem = document.querySelector("#combo-grouping ui5-cb-item-group:first-child ui5-cb-item:first-child");
 			const elementRect = firstItem!.getBoundingClientRect();
-			
+
 			const isInVisibleArea = !(
 				elementRect.bottom < scrollableRect.top ||
 				elementRect.top > scrollableRect.bottom ||
 				elementRect.right < scrollableRect.left ||
 				elementRect.left > scrollableRect.right
 			);
-			
+
 			expect(isInVisibleArea).to.be.true;
 		});
 	});
@@ -1367,7 +1398,7 @@ describe("Keyboard interaction", () => {
 
 		cy.get("#combo-grouping").shadow().find("input").realClick();
 		cy.get("#combo-grouping").should("be.focused");
-		
+
 		cy.get("#combo-grouping").shadow().find("input").realClick();
 		cy.get("#combo-grouping").should("be.focused");
 
@@ -1891,7 +1922,7 @@ describe("Event firing", () => {
 
 		// Focus out to trigger change event
 		cy.get("body").realClick();
-		
+
 		cy.get("@changeSpy").should('have.been.calledOnce');
 		cy.get("@changeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
 			return event.target.value === "Algeria";
@@ -1966,7 +1997,7 @@ describe("Event firing", () => {
 
 		// Verify change event was fired
 		cy.get("@changeSpy").should('have.callCount', 1);
-		
+
 		// Verify the event contains correct data
 		cy.get("@changeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
 			return event.target.value === "Bahrain";
@@ -2075,11 +2106,11 @@ describe("Event firing", () => {
 
 		cy.get("@combo").shadow().find("[ui5-icon]").realClick();
 		cy.get("@combo").shadow().find("[inner-input]").realPress("ArrowDown");
-		
+
 		cy.get("@changeSpy").should('have.callCount', 0);
-		
+
 		cy.get("@combo").find("[ui5-cb-item]").first().realClick();
-		
+
 		cy.get("@changeSpy").should('have.been.calledOnce');
 		cy.get("@changeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
 			return event.target.value === "Algeria";
@@ -2100,7 +2131,7 @@ describe("Event firing", () => {
 
 		cy.get("#change-cb").shadow().find("[inner-input]").realClick();
 		cy.get("#change-cb").shadow().find("[inner-input]").realPress("ArrowDown");
-		
+
 		cy.get("@changeSpy").should('have.callCount', 0);
 
 		cy.get("#change-cb").shadow().find("[inner-input]").realPress("ArrowDown");
@@ -2154,7 +2185,7 @@ describe("Event firing", () => {
 
 		cy.get("#input-cb").shadow().find("[inner-input]").realClick();
 		cy.get("#input-cb").shadow().find("[inner-input]").realPress("ArrowDown");
-		
+
 		cy.get("@inputSpy").should('have.been.calledOnce');
 		cy.get("@inputSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
 			return event.target.value === "Argentina";
@@ -2566,7 +2597,7 @@ describe("Event firing", () => {
 
 		cy.get("@combo").should("have.prop", "_effectiveShowClearIcon", true);
 		cy.get("@combo").shadow().find(".ui5-input-clear-icon-wrapper").realClick();
-		cy.get("@inputSpy").should('have.been.calledTwice');		
+		cy.get("@inputSpy").should('have.been.calledTwice');
 	});
 
 	it("should show all items if value does not match any item and arrow is pressed", () => {
@@ -2812,7 +2843,7 @@ describe("ComboBox Composition", () => {
 		cy.get("@combobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "사랑")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2866,7 +2897,7 @@ describe("ComboBox Composition", () => {
 		cy.get("@combobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "ありがとう")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2920,7 +2951,7 @@ describe("ComboBox Composition", () => {
 		cy.get("@combobox").should("have.prop", "_isComposing", true);
 
 		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
-		
+
 		cy.get("@nativeInput")
 			.invoke("val", "谢谢")
 			.trigger("input", { inputType: "insertCompositionText" });
@@ -2940,5 +2971,59 @@ describe("ComboBox Composition", () => {
 
 		cy.get("@combobox")
 			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<ComboBox id="cmbForm" required></ComboBox>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#cmbForm:invalid")
+			.should("exist");
+
+		cy.get("@combo")
+			.realType("Albania");
+
+		cy.get("@combo")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#cmbForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
 	});
 });

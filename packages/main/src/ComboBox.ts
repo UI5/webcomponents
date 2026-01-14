@@ -87,7 +87,6 @@ import "./ComboBoxItemGroup.js";
 // eslint-disable-next-line
 import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type InputComposition from "./features/InputComposition.js";
@@ -977,7 +976,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (isEscape(e)) {
 			this.focused = true;
-			this.value = !this.open ? this._lastValue : this.value;
+			const shouldResetValueAndStopPropagation = !this.open && this.value !== this._lastValue;
+			if (shouldResetValueAndStopPropagation) {
+				this.value = this._lastValue;
+				// stop propagation to prevent closing the popup when using the combobox inside it
+				e.stopPropagation();
+			}
 		}
 
 		if ((isTabNext(e) || isTabPrevious(e)) && this.open) {
@@ -1285,7 +1289,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (isGroupItem) {
 			announce(`${groupHeaderText} ${currentItem.headerText}`, InvisibleMessageMode.Polite);
 		} else {
-			announce(`${currentItemAdditionalText} ${itemPositionText}`.trim(), InvisibleMessageMode.Polite);
+			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), InvisibleMessageMode.Polite);
 		}
 	}
 
@@ -1406,7 +1410,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_getPickerInput() {
-		return this._getPicker()!.querySelector<HTMLInputElement>("[ui5-input]")!;
+		return this._getPicker().querySelector<HTMLInputElement>("[ui5-input]")!;
 	}
 
 	get openOnMobile() {
@@ -1472,10 +1476,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get shouldDisplayDefaultValueStateMessage(): boolean {
 		return !this.valueStateMessage.length && this.hasValueStateText;
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? PopoverHorizontalAlign.Start : PopoverHorizontalAlign.End;
 	}
 
 	/**

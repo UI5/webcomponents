@@ -66,6 +66,15 @@ class UserMenuAccount extends UI5Element {
 	description = "";
 
 	/**
+	 * Defines additional information for the user.
+	 *
+	 * @default ""
+	 * @public
+	 */
+	@property({ type: String })
+	additionalInfo = "";
+
+	/**
 	 * Defines if the user is selected.
 	 *
 	 * @default false

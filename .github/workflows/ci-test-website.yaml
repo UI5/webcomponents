@@ -1,4 +1,4 @@
-name: CI - Website
+name: CI - website
 
 on:
   pull_request:

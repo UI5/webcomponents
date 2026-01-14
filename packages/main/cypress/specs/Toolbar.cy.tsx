@@ -544,7 +544,7 @@ describe("ToolbarButton", () => {
 		cy.get("[ui5-toolbar-button][accessible-name]").shadow().find(".ui5-tb-button")
 			.should("have.prop", "accessibilityAttributes")
 			.should("deep.include", { expanded: "true", controls: "btn", hasPopup: "dialog" });
-		 });
+	});
 
 	it("Should not recalculate overflow when button state changes without affecting width", () => {
 		cy.mount(
@@ -588,5 +588,79 @@ describe("ToolbarButton", () => {
 				expect(toolbarAfter.itemsWidth).to.equal(initialItemsWidth);
 			});
 		});
+	});
+
+	it("Should display text only in overflow when showOverflowText is true", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton
+					icon={add}
+					text="Add Document"
+					showOverflowText={true}
+				></ToolbarButton>
+
+				<ToolbarButton
+					icon={employee}
+					text="Employee"
+					showOverflowText={false}
+				></ToolbarButton>
+
+				<ToolbarButton
+					icon={decline}
+					text="Decline Item"
+				></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.viewport(800, 600);
+
+		cy.get("[ui5-toolbar-button][text='Add Document']")
+			.should("have.prop", "isOverflowed", false)
+			.shadow()
+			.find("[ui5-button]")
+			.should("not.contain.text", "Add Document");
+
+		cy.get("[ui5-toolbar-button][text='Employee']")
+			.should("have.prop", "isOverflowed", false)
+			.shadow()
+			.find("[ui5-button]")
+			.should("contain.text", "Employee");
+
+		cy.get("[ui5-toolbar-button][text='Decline Item']")
+			.should("have.prop", "isOverflowed", false)
+			.shadow()
+			.find("[ui5-button]")
+			.should("contain.text", "Decline Item");
+
+		cy.viewport(100, 600);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
+			.realClick();
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-overflow-popover")
+			.should("have.attr", "open", "open");
+
+		cy.get("[ui5-toolbar-button][text='Add Document']")
+			.should("have.prop", "isOverflowed", true)
+			.shadow()
+			.find("[ui5-button]")
+			.should("contain.text", "Add Document");
+
+		cy.get("[ui5-toolbar-button][text='Employee']")
+			.should("have.prop", "isOverflowed", true)
+			.shadow()
+			.find("[ui5-button]")
+			.should("contain.text", "Employee");
+
+		cy.get("[ui5-toolbar-button][text='Decline Item']")
+			.should("have.prop", "isOverflowed", true)
+			.shadow()
+			.find("[ui5-button]")
+			.should("contain.text", "Decline Item");
 	});
 });

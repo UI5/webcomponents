@@ -66,7 +66,6 @@ class TableSelectionMulti extends TableSelectionBase {
 	@property()
 	headerSelector: `${TableSelectionMultiHeaderSelector}` = "SelectAll";
 
-	private _rowsLength = 0;
 	private _rangeSelection?: {
 		selected: boolean,
 		isUp: boolean | null,
@@ -83,11 +82,7 @@ class TableSelectionMulti extends TableSelectionBase {
 	}
 
 	onTableBeforeRendering() {
-		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
-			this._rowsLength = this._table.rows.length;
-			this._table.headerRow[0]._invalidate++;
-		}
-
+		super.onTableBeforeRendering();
 		this._table?.removeEventListener("click", this._onClickCaptureBound);
 	}
 
@@ -205,7 +200,7 @@ class TableSelectionMulti extends TableSelectionBase {
 
 		const focusedElement = getActiveElement(); // Assumption: The focused element is always the "next" row after navigation.
 
-		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse || focusedElement?.hasAttribute("ui5-growing-row"))) {
+		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse)) {
 			this._stopRangeSelection();
 			return;
 		}

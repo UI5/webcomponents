@@ -12,7 +12,7 @@
 :host([sticky]) {
 	position: sticky;
 	top: var(--ui5_grid_sticky_top, 0);
-	z-index: 2;
+	z-index: 3;
 }
 
 #popin-cell {
@@ -26,6 +26,7 @@
 	height: var(--_ui5_checkbox_inner_width_height);
 }
 
+#popin-cell-content,
 #actions-cell-content {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
