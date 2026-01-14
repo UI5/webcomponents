@@ -1582,33 +1582,36 @@ describe("Day Picker Tests", () => {
 		cy.mount(<Calendar></Calendar>);
 
 		cy.get<Calendar>("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get<Calendar>("@calendar")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find(".ui5-dp-item--now")
 			.realClick();
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find("[tabindex='0']")
 			.should("have.focus");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.realPress("ArrowRight");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find(`[data-sap-timestamp='${tomorrow}']`)
 			.should("have.focus");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.realPress("Space");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.should(($calendar) => {
 				const selectedDates = $calendar.prop("selectedDates");
 				expect(selectedDates).to.include(tomorrow);
