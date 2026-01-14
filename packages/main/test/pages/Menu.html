@@ -77,6 +77,10 @@
 			<ui5-link id="detailsLink" href="https://en.wikipedia.org/wiki/Google_logo" target="_blank"></ui5-link>
 	</ui5-popover>
 
+	<ui5-button id="btnOpenLoading">Open Loading Menu</ui5-button>
+	<ui5-menu id="menuLoading" header-text="My ui5-menu" busy-delay="100" busy></ui5-menu>
+	</ui5-menu>
+
 	<script>
 		btnOpen.accessibilityAttributes = {
 			hasPopup: "Menu",
@@ -98,9 +102,29 @@
 			menu.open = btnToggleOpen.pressed;
 		});
 
+		btnOpenLoading.addEventListener("click", function() {
+			menuLoading.showAt(btnOpenLoading);
+		});
+
 		let fetched = false;
 
 		menu.addEventListener("ui5-before-open", function(event) {
+			const item = event.detail.item;
+			if (item && item.text === "Open" && !fetched) {
+				setTimeout(function() {
+					item.removeAttribute("busy");
+					item.removeAttribute("busy-delay");
+					let oneNode = document.createElement("ui5-menu-item");
+					oneNode.setAttribute("text", "Open from Amazon Cloud");
+					let twoNode = document.createElement("ui5-menu-item");
+					twoNode.setAttribute("text", "Open from Google Cloud");
+					item.append(oneNode, twoNode);
+					fetched = true;
+				}, 1000);
+			}
+		});
+
+		menuLoading.addEventListener("ui5-before-open", function(event) {
 			const item = event.detail.item;
 			if (item && item.text === "Open" && !fetched) {
 				setTimeout(function() {
