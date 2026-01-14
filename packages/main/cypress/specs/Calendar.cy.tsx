@@ -320,25 +320,25 @@ describe("Calendar general interaction", () => {
 		const specificDate = new Date(Date.UTC(2015, 5, 15, 0, 0, 0));
 		const timestamp = specificDate.valueOf() / 1000;
 
-		cy.mount(<Calendar id="calendar1" timestamp={timestamp}></Calendar>);
+		cy.mount(<Calendar timestamp={timestamp}></Calendar>);
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("[ui5-calendar]")
 			.shadow()
 			.find(".ui5-calheader")
 			.find("[data-ui5-cal-header-btn-month]")
 			.should("contain.text", "June");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("[ui5-calendar]")
 			.shadow()
 			.find(".ui5-calheader")
 			.find("[data-ui5-cal-header-btn-year]")
 			.should("contain.text", "2015");
 
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("[ui5-calendar]")
 			.invoke("prop", "timestamp")
 			.should("equal", timestamp);
 
-		cy.ui5CalendarGetDay("#calendar1", timestamp.toString())
+		cy.ui5CalendarGetDay("[ui5-calendar]", timestamp.toString())
 			.should("have.attr", "tabindex", "0");
 	});
 
