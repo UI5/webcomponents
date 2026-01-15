@@ -326,7 +326,9 @@ abstract class UI5Element extends HTMLElement {
 			await this._processChildren();
 		}
 
-		await this.definePromiseSafe;
+		if (!ctor.asyncFinished) {
+			await ctor.definePromise;
+		}
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
