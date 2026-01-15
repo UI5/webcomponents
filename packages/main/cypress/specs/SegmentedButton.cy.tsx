@@ -4,6 +4,42 @@ import SegmentedButtonItem from "../../src/SegmentedButtonItem.js";
 import type UI5Element from "@ui5/webcomponents-base";
 import { SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "../../src/generated/i18n/i18n-defaults.js";
 
+function testSelectItem(shouldPreventSelect: boolean, pressedKeys: []) {
+	cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.as("segmentedButton");
+
+		cy.get<SegmentedButton>("@segmentedButton")
+			.find("[ui5-segmented-button-item]")
+			.as("items");
+
+		cy.get<SegmentedButtonItem>("@items")
+			.ui5SegmentedButtonFocusFirstItem();
+
+		cy.realPress("ArrowRight");
+
+		cy.get<SegmentedButtonItem>("@items")
+			.eq(1)
+			.as("secondItem");
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should("be.focused");
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should("not.have.attr", "selected");
+
+		cy.realPress(pressedKeys);
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should(shouldPreventSelect ? "not.have.attr" : "have.attr", "selected");
+}
+
 describe("SegmentedButton general interaction tests", () => {
 	it("should have first item selected by default", () => {
 		cy.mount(
@@ -59,39 +95,15 @@ describe("SegmentedButton general interaction tests", () => {
 	});
 
 	it("should select second item with space", () => {
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem>First</SegmentedButtonItem>
-				<SegmentedButtonItem>Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
+		testSelectItem(false, ["Space"]);
+	});
 
-		cy.get("[ui5-segmented-button]")
-			.as("segmentedButton");
+	it("should not select second item on space when shift is pressed", () => {
+		testSelectItem(true, ["Space", "Shift"]);
+	});
 
-		cy.get<SegmentedButton>("@segmentedButton")
-			.find("[ui5-segmented-button-item]")
-			.as("items");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.ui5SegmentedButtonFocusFirstItem();
-
-		cy.realPress("ArrowRight");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.eq(1)
-			.as("secondItem");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("be.focused");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("not.have.attr", "selected");
-
-		cy.realPress("Space");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("have.attr", "selected");
+	it("should not select second item on space when escape is pressed", () => {
+		testSelectItem(true, ["Space", "Escape"]);
 	});
 
 	it("should select last item with mouse", () => {
@@ -451,10 +463,12 @@ describe("SegmentedButton Accessibility", () => {
 			.should("have.attr", "aria-multiselectable", "true")
 			.should("have.attr", "aria-orientation", "horizontal");
 	});
+
+	
 });
 
 
-describe("SebmentedButtonItem Accessibility", () => {
+describe("SegmentedButtonItem Accessibility", () => {
 	it("segmented button items should have correct aria labels", () => {
 		const LABEL = "Text Label";
 		const REF_LABEL = "Ref Label";
