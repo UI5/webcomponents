@@ -26,7 +26,6 @@
 }
 
 .menu-busy-indicator-main {
-	position: relative;
 	min-height: var(--_ui5_list_item_base_height);
 }
 

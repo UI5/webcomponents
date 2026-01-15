@@ -126,10 +126,6 @@
 	padding-top: 0.25rem;
 }
 
-.menu-busy-indicator-main {
-	position: relative;
-}
-
 .ui5-menu-busy-indicator {
 	position: absolute;
 	width: 100%;
