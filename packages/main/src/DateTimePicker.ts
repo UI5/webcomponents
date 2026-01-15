@@ -245,11 +245,12 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	}
 
 	get _formatPattern() {
-		const hasHours = !!(this.formatPattern || "").match(/H/i);
-		const fallback = !this.formatPattern || !hasHours;
+		const formatPattern = this.formatPattern || this.valueFormat || "medium";
+		const hasHours = !!(formatPattern || "").match(/H/i);
+		const fallback = !formatPattern || !hasHours;
 
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		return fallback ? localeData.getCombinedDateTimePattern("medium", "medium", this._primaryCalendarType) : (this.formatPattern || "");
+		return fallback ? localeData.getCombinedDateTimePattern("medium", "medium", this._primaryCalendarType) : (formatPattern || "");
 	}
 
 	get _calendarTimestamp() {
@@ -320,14 +321,6 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	get _shouldHideHeader() {
 		return false;
-	}
-
-	/**
-	 * Returns the ID of the element to focus initially when the picker opens in phone mode
-	 * @private
-	 */
-	get _initialFocusId() {
-		return this._phoneMode ? `${this._id}-calendar` : undefined;
 	}
 
 	/**

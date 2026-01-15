@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-compat",
-  "version": "2.18.0-rc.1",
+  "version": "2.19.0-rc.1",
   "description": "UI5 Web Components: webcomponents.compat",
   "ui5": {
     "webComponentsPackage": true
@@ -46,15 +46,15 @@
     "directory": "packages/compat"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.18.0-rc.1",
-    "@ui5/webcomponents-base": "2.18.0-rc.1",
-    "@ui5/webcomponents-icons": "2.18.0-rc.1",
-    "@ui5/webcomponents-theming": "2.18.0-rc.1"
+    "@ui5/webcomponents": "2.19.0-rc.1",
+    "@ui5/webcomponents-base": "2.19.0-rc.1",
+    "@ui5/webcomponents-icons": "2.19.0-rc.1",
+    "@ui5/webcomponents-theming": "2.19.0-rc.1"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.18.0-rc.1",
+    "@ui5/webcomponents-tools": "2.19.0-rc.1",
     "cypress": "^15.3.0",
     "vite": "5.4.21"
   }

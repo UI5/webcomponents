@@ -30,7 +30,7 @@ function onOpenUI5InitMethod(win) {
 					content: [
 						new HTML({
 							content:
-`<ui5-select id="webCSelect1">
+								`<ui5-select id="webCSelect1">
 	<ui5-option>Option 1</ui5-option>
 	<ui5-option>Option 2</ui5-option>
 	<ui5-option>Option 3</ui5-option>
@@ -566,6 +566,8 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
+		cy.wait(1000);
+
 		cy.get("#openResPopoverNoInitialFocusButton")
 			.should('be.visible')
 			.realClick();
@@ -661,6 +663,11 @@ describe("ui5 and web components integration", () => {
 		cy.realPress("Escape");
 
 		cy.get("#openUI5Dialog1")
+			.should('be.visible');
+
+		cy.realPress("Escape");
+
+		cy.get("#openUI5Dialog1")
 			.should('not.exist');
 
 		cy.get("#openUI5Button")
@@ -711,6 +718,7 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5DialogFinal")
 			.should('be.visible')
 			.should(isOpenUI5DialogOpen);
+
 		cy.wait(1000);
 
 		cy.get("#openUI5Dialog1")

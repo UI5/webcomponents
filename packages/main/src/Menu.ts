@@ -35,7 +35,7 @@ import type {
 } from "./List.js";
 import menuTemplate from "./MenuTemplate.js";
 import {
-	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -264,8 +264,8 @@ class Menu extends UI5Element {
 		return this.effectiveDir === "rtl";
 	}
 
-	get labelClose() {
-		return Menu.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
+	get labelCancel() {
+		return Menu.i18nBundle.getText(MENU_CANCEL_BUTTON_TEXT);
 	}
 
 	get isPhone() {
