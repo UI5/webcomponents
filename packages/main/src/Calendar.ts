@@ -528,7 +528,7 @@ class Calendar extends CalendarPart {
 		this._normalizeCurrentPicker();
 
 		if (!this._valueIsProcessed) {
-			if (this._selectedDatesTimestamps) {
+			if (this._selectedDatesTimestamps.length) {
 				this.timestamp = this._selectedDatesTimestamps[0];
 			}
 
