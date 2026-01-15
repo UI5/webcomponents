@@ -604,8 +604,6 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
-
-			requestAnimationFrame(this._updateMediaRange.bind(this));
 		}
 	}
 

@@ -29,6 +29,7 @@ import DialogTemplate from "./DialogTemplate.js";
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import dialogCSS from "./generated/themes/Dialog.css.js";
 import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
+import { isIOS } from "@ui5/webcomponents-base";
 
 /**
  * Defines the step size at which this component would change by when being dragged or resized with the keyboard.
@@ -329,7 +330,16 @@ class Dialog extends Popup {
 
 	_show() {
 		super._show();
-		requestAnimationFrame(this._center.bind(this));
+
+		if (isIOS()) {
+			this._updateMediaRange();
+			this._center();
+		} else {
+			requestAnimationFrame(() => {
+				this._updateMediaRange();
+				this._center();
+			});
+		}
 	}
 
 	onBeforeRendering() {
