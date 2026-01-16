@@ -14,6 +14,13 @@
 	width: 100%;
 }
 
+.ui5-menu-busy-indicator {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .ui5-menu-dialog-header {
 	display: flex;
 	height: var(--_ui5-responsive_popover_header_height);
