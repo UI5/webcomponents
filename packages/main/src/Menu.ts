@@ -350,7 +350,7 @@ class Menu extends UI5Element {
 		this.open = false;
 	}
 
-	_openItemSubMenu(item: MenuItem) {
+	_openItemSubMenu(item: MenuItem, openedByMouse = false) {
 		clearTimeout(this._timeout);
 
 		if (!item._popover || item._popover.open) {
@@ -364,6 +364,7 @@ class Menu extends UI5Element {
 		item._popover.opener = item;
 		item._popover.open = true;
 		item.selected = true;
+		item._openedByMouse = openedByMouse;
 	}
 
 	_itemMouseOver(e: MouseEvent) {
@@ -412,7 +413,7 @@ class Menu extends UI5Element {
 		this._timeout = setTimeout(() => {
 			this._closeOtherSubMenus(item);
 
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, true);
 		}, MENU_OPEN_DELAY);
 	}
 
@@ -454,7 +455,7 @@ class Menu extends UI5Element {
 		}
 
 		if (shouldOpenMenu) {
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, false);
 		} else if (isTabNextPrevious) {
 			this._close();
 		}

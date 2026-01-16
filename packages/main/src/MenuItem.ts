@@ -317,6 +317,7 @@ class MenuItem extends ListItem implements IMenuItem {
 
 	_itemNavigation: ItemNavigation;
 	_shiftPressed: boolean = false;
+	_openedByMouse = false;
 
 	constructor() {
 		super();
@@ -620,7 +621,9 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_afterPopoverOpen() {
-		this._allMenuItems[0]?.focus();
+		if (!this._openedByMouse) {
+			this._allMenuItems[0]?.focus();
+		}
 		this.fireDecoratorEvent("open");
 	}
 
@@ -642,6 +645,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_afterPopoverClose() {
+		this._openedByMouse = false;
 		this.fireDecoratorEvent("close");
 	}
 
