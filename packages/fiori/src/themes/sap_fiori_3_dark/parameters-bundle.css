@@ -7,7 +7,7 @@
 @import "../base/ProductSwitchItem-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "../base/SideNavigation-parameters.css";
-@import "../base/TimelineItem-parameters.css";
+@import "./TimelineItem-parameters.css";
 @import "../base/UploadCollection-parameters.css";
 @import "../base/ViewSettingsDialog-parameters.css";
 @import "../base/Wizard-parameters.css";
@@ -19,3 +19,4 @@
 @import "../base/DynamicPageHeader-parameters.css";
 @import "../sap_fiori_3/DynamicPageHeaderActions-parameters.css";
 @import "../sap_fiori_3/TimelineGroupItem-parameters.css";
+@import "../base/rtl-parameters.css";
