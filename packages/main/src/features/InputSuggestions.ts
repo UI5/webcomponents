@@ -221,7 +221,7 @@ class Suggestions {
 			currentPos: nonGroupItems.indexOf(item) + 1,
 			listSize: nonGroupItems.length,
 			itemText: item.text || "",
-			additionalText: item.additionalText || "",
+			additionalText: item.additionalText,
 		};
 
 		this._getComponent().onItemSelected(item, keyboardUsed);

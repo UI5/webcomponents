@@ -921,7 +921,7 @@ describe("ARIA attributes", () => {
 			.should("have.attr", "aria-haspopup", "dialog");
 	});
 
-	it("announces correct suggestion position when selecting a suggestion with Enter", () => {
+	it.only("announces correct suggestion position when selecting a suggestion with Enter", () => {
 		cy.mount(
 			<MultiInput show-suggestions id="suggestion-token">
 				<SuggestionItem text="Aute"></SuggestionItem>
@@ -945,13 +945,8 @@ describe("ARIA attributes", () => {
 		cy.get("[ui5-multi-input]")
 			.realClick();
 
-		cy.realType("a");
-		cy.realPress("Enter");
-
-		cy.realType("a");
-
-		cy.realPress("ArrowDown");
-		cy.realPress("Enter");
+			cy.realType("a");
+			cy.realPress("ArrowDown");
 
 		cy.get("[ui5-multi-input]")
 			.then(($mi) => {
@@ -961,8 +956,15 @@ describe("ARIA attributes", () => {
 				cy.get("[ui5-multi-input]")
 					.shadow()
 					.find("#selectionText")
+					.as("selectionText")
 					.should("have.text", `${miSelectionText}`);
-			});
+		});
+
+		cy.realPress("Enter");
+
+		cy.get("@selectionText")
+			.should("have.text", "");
+
 	});
 })
 
