@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **framework:** call `appyTheme` on delayed theme registration after framework `boot` ([#12787](https://github.com/UI5/webcomponents/issues/12787)) ([42611e9](https://github.com/UI5/webcomponents/commit/42611e92c2e06504a2952ce0c6574891c4971d40))
+* **ui5-button:** align end icon padding ([#12908](https://github.com/UI5/webcomponents/issues/12908))v ([1ce986e](https://github.com/UI5/webcomponents/commit/1ce986ecd926d20a0b3ee53944f97ecfb0664d8c)), closes [#12803](https://github.com/UI5/webcomponents/issues/12803)
+* **ui5-calendar:** use timestamp as initially focused date ([#12894](https://github.com/UI5/webcomponents/issues/12894)) ([d9e10a3](https://github.com/UI5/webcomponents/commit/d9e10a35ead82e86983c71fee2fc9b1a31102cec)), closes [#12837](https://github.com/UI5/webcomponents/issues/12837)
+* **ui5-datetime-picker:** use value-format for building the hours part ([#12899](https://github.com/UI5/webcomponents/issues/12899)) ([ec7b72e](https://github.com/UI5/webcomponents/commit/ec7b72e50bf36bdc1bf078c4d315fda147d9979b)), closes [#12832](https://github.com/UI5/webcomponents/issues/12832)
+* **ui5-form:** group elements ordering ([#12890](https://github.com/UI5/webcomponents/issues/12890)) ([b50425a](https://github.com/UI5/webcomponents/commit/b50425a22cf2dc4f4d80a85908e5eb7dfead41d9))
+* **ui5-link:** remove length check from tabindex calculation ([#12870](https://github.com/UI5/webcomponents/issues/12870)) ([e2f530c](https://github.com/UI5/webcomponents/commit/e2f530c039d53cf897238f9e82d20a3be81ba840))
+* **ui5-list:** correct sample for stickyHeader ([#12876](https://github.com/UI5/webcomponents/issues/12876)) ([461c29b](https://github.com/UI5/webcomponents/commit/461c29b2097dcf84cf25dae7e451dab63d4121b7))
+* **ui5-menu-item:** use correct font size ([#12896](https://github.com/UI5/webcomponents/issues/12896)) ([9b3c752](https://github.com/UI5/webcomponents/commit/9b3c7523e216d75940e6b919ba5cd31ce0455b03)), closes [#12403](https://github.com/UI5/webcomponents/issues/12403)
+* **ui5-menu:** adapt mobile menu to latest visual design ([#12879](https://github.com/UI5/webcomponents/issues/12879)) ([d3d85f6](https://github.com/UI5/webcomponents/commit/d3d85f6a5273940a569bed3f2bfee55cda66738e))
+* **ui5-navigation-layout:** recheck the screen width upon calculating the collapsed state([#12877](https://github.com/UI5/webcomponents/issues/12877)) ([eb58a0a](https://github.com/UI5/webcomponents/commit/eb58a0a8e963cef160af52ebb364af0d91408028))
+
+
+### Features
+
+* **framework:** detect dynamically loaded OpenUI5 ([#12235](https://github.com/UI5/webcomponents/issues/12235)) ([2292ffd](https://github.com/UI5/webcomponents/commit/2292ffd404da8a59229abdc24b1edb4bf428f7cf))
+* **ui5-popover:** implement resizable popover ([#12623](https://github.com/UI5/webcomponents/issues/12623)) ([50f11ec](https://github.com/UI5/webcomponents/commit/50f11ec98a67b4dcbba8a6412f76d3d096c7ec9d))
+* **ui5-search:** add new property fieldLoading ([#12846](https://github.com/UI5/webcomponents/issues/12846)) ([b7e185f](https://github.com/UI5/webcomponents/commit/b7e185fe4ff99951245a6d2589b3a4e525d4f77c))
+* **ui5-search:** add suggestion group header text wrapping ([#12866](https://github.com/UI5/webcomponents/issues/12866)) ([6298688](https://github.com/UI5/webcomponents/commit/629868855f4abcc30138bc1a687284a009d964a4))
+
+
+
+
+
 # [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
 
 

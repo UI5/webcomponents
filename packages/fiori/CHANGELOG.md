@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **ui5-menu:** adapt mobile menu to latest visual design ([#12879](https://github.com/UI5/webcomponents/issues/12879)) ([d3d85f6](https://github.com/UI5/webcomponents/commit/d3d85f6a5273940a569bed3f2bfee55cda66738e))
+* **ui5-navigation-layout:** recheck the screen width upon calculating the collapsed state([#12877](https://github.com/UI5/webcomponents/issues/12877)) ([eb58a0a](https://github.com/UI5/webcomponents/commit/eb58a0a8e963cef160af52ebb364af0d91408028))
+
+
+### Features
+
+* **ui5-search:** add new property fieldLoading ([#12846](https://github.com/UI5/webcomponents/issues/12846)) ([b7e185f](https://github.com/UI5/webcomponents/commit/b7e185fe4ff99951245a6d2589b3a4e525d4f77c))
+* **ui5-search:** add suggestion group header text wrapping ([#12866](https://github.com/UI5/webcomponents/issues/12866)) ([6298688](https://github.com/UI5/webcomponents/commit/629868855f4abcc30138bc1a687284a009d964a4))
+
+
+
+
+
 # [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
 
 
