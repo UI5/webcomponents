@@ -87,6 +87,13 @@
 			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
 		</ui5-multi-combobox>
+		<script>
+			document.getElementById("mcb-predefined-value").addEventListener("ui5-value-state-change", (e) => {
+				e.preventDefault();
+				console.log(e.detail.valueState);
+			});
+
+		</script>
 	</div>
 
 	<div class="demo-section">
