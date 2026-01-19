@@ -1,6 +1,14 @@
+---
+sidebar_class_name: newComponentBadge expComponentBadge
+---
+
 import html from '!!raw-loader!./sample.html';
 import css from '!!raw-loader!./main.css';
 import js from '!!raw-loader!./main.js';
+
+:::info
+The **@ui5/webcomponents-ai** package (including AI CustomPrompt pattern) is under active development and considered experimental. Component APIs are subject to change. Furthermore, the package supports **Horizon** themes only.
+:::
 
 ### Overview
 On top of Level 1, different actions are added in a Toolbar below the Prompt input.
