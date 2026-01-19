@@ -3,6 +3,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import NavigationLayoutMode from "./types/NavigationLayoutMode.js";
 import type SideNavigation from "./SideNavigation.js";
 
@@ -28,9 +29,9 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
  *
  * ### Responsive Behavior
  *
- * On larger screens (screen width of 600px or more), the side navigation is visible
+ * On larger screens with a width of 600px or more, excluding mobile phone devices, the side navigation is visible
  * by default and can be expanded or collapsed using the `mode` property.
- * On small screens (screen width of 599px or less), the side navigation is hidden by
+ * On mobile phone devices and screens with a width of 599px or less, the side navigation is hidden by
  * default and can be displayed using the `mode` property.
  *
  * ### ES6 Module Import
@@ -51,8 +52,6 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
 	template: NavigationLayoutTemplate,
 })
 class NavigationLayout extends UI5Element {
-	_defaultSideCollapsed = window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
-
 	/**
 	 * Specifies the navigation layout mode.
 	 * @default "Auto"
@@ -65,13 +64,19 @@ class NavigationLayout extends UI5Element {
 	 * @private
 	 */
 	@property({ type: Boolean })
-	sideCollapsed : boolean = this._defaultSideCollapsed;
+	sideCollapsed : boolean = isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
 
 	/**
 	 * @private
 	 */
 	@property({ type: Boolean })
 	hasSideNavigation = false;
+
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean })
+	isPhone = isPhone();
 
 	/**
 	 * Gets whether the side navigation is collapsed.
@@ -116,7 +121,7 @@ class NavigationLayout extends UI5Element {
 
 	calcSideCollapsed() {
 		if (this.mode === NavigationLayoutMode.Auto) {
-			this.sideCollapsed = this._defaultSideCollapsed;
+			this.sideCollapsed = isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
 		} else {
 			this.sideCollapsed = this.mode === NavigationLayoutMode.Collapsed;
 		}
