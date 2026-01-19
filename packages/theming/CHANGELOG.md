@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.26](https://github.com/UI5/webcomponents/compare/v1.24.25...v1.24.26) (2026-01-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-theming
+
+
+
+
+
 ## [1.24.25](https://github.com/UI5/webcomponents/compare/v1.24.24...v1.24.25) (2025-12-17)
 
 **Note:** Version bump only for package @ui5/webcomponents-theming

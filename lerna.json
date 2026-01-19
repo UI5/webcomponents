@@ -13,7 +13,7 @@
     "packages/website",
     "packages/create-package"
   ],
-  "version": "1.24.25",
+  "version": "1.24.26",
   "command": {
     "publish": {
       "allowBranch": "*",

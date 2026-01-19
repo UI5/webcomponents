@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.26](https://github.com/UI5/webcomponents/compare/v1.24.25...v1.24.26) (2026-01-19)
+
+
+### Bug Fixes
+
+* **ui5-menu:** center busy state animation ([#12907](https://github.com/UI5/webcomponents/issues/12907)) ([f9131eb](https://github.com/UI5/webcomponents/commit/f9131ebecc5838550e152777714cd35f307426b8)), closes [#12887](https://github.com/UI5/webcomponents/issues/12887)
+
+
+
+
+
 ## [1.24.25](https://github.com/UI5/webcomponents/compare/v1.24.24...v1.24.25) (2025-12-17)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization
