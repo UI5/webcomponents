@@ -13,26 +13,12 @@
 	flex: 1;
 }
 
-/* Default: show cozy avatar, hide compact avatar */
 .avatar-cozy {
-	display: inline-block;
+	display: var(--_ui5_user_settings_avatar_cozy_display);
 }
 
 .avatar-compact {
-	display: none;
-}
-
-/* In compact mode: hide cozy avatar, show compact avatar */
-:host-context(.sapUiSizeCompact) .avatar-cozy,
-:host-context(.ui5-content-density-compact) .avatar-cozy,
-:host-context([data-ui5-compact-size]) .avatar-cozy {
-	display: none;
-}
-
-:host-context(.sapUiSizeCompact) .avatar-compact,
-:host-context(.ui5-content-density-compact) .avatar-compact,
-:host-context([data-ui5-compact-size]) .avatar-compact {
-	display: inline-block;
+	display: var(--_ui5_user_settings_avatar_compact_display);
 }
 
 .item-texts {
@@ -42,14 +28,9 @@
 
 .item-title {
 	font-weight: 600;
-	font-size: var(--sapFontSize);
+	font-size: var(--_ui5_list_item_title_size);
 	color: var(--sapList_TextColor);
 	margin: 0.5rem;
-}
-
-:host-context(.sapUiSizeCompact) .item-title,
-:host-context([data-ui5-compact-size]) .item-title {
-	font-size: var(--sapFontLargeSize);
 }
 
 .item-subtitle {

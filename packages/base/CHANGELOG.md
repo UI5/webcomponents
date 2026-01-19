@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **framework:** call `appyTheme` on delayed theme registration after framework `boot` ([#12787](https://github.com/UI5/webcomponents/issues/12787)) ([42611e9](https://github.com/UI5/webcomponents/commit/42611e92c2e06504a2952ce0c6574891c4971d40))
+
+
+### Features
+
+* **framework:** detect dynamically loaded OpenUI5 ([#12235](https://github.com/UI5/webcomponents/issues/12235)) ([2292ffd](https://github.com/UI5/webcomponents/commit/2292ffd404da8a59229abdc24b1edb4bf428f7cf))
+
+
+
+
+
 # [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

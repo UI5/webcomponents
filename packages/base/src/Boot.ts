@@ -15,6 +15,7 @@ import fixSafariActiveState from "./util/fixSafariActiveState.js";
 
 let booted = false;
 let bootPromise: Promise<void>;
+let openUI5ListenersAttached = false;
 const eventProvider = new EventProvider<void, void>();
 
 const isBooted = (): boolean => {
@@ -36,6 +37,36 @@ const attachBoot = (listener: () => void) => {
 	listener();
 };
 
+/**
+ * This function may now be called twice - once without OpenUI5Support, and then later again, when OpenUI5 is loaded dynamically
+ * In this case, deregister the UI5 Web Components listener
+ */
+const initF6Navigation = async () => {
+	const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
+	const isOpenUI5Loaded = openUI5Support ? openUI5Support.isOpenUI5Detected() : false;
+	const f6Navigation = getFeature<typeof F6Navigation>("F6Navigation");
+
+	if (openUI5Support) {
+		f6Navigation && f6Navigation.destroy(); // F6Navigation is not needed when OpenUI5 is used
+		await openUI5Support.init();
+	}
+
+	if (f6Navigation && !isOpenUI5Loaded) {
+		f6Navigation.init();
+	}
+};
+
+const attachOpenUI5SupportListeners = () => {
+	if (openUI5ListenersAttached) {
+		return;
+	}
+
+	const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
+	if (openUI5Support) {
+		openUI5ListenersAttached = openUI5Support.attachListeners(); // listeners will be attached (return true) only if OpenUI5 is loaded
+	}
+};
+
 const boot = async (): Promise<void> => {
 	if (bootPromise !== undefined) {
 		return bootPromise;
@@ -51,21 +82,10 @@ const boot = async (): Promise<void> => {
 
 		attachThemeRegistered(onThemeRegistered);
 
-		const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
-		const isOpenUI5Loaded = openUI5Support ? openUI5Support.isOpenUI5Detected() : false;
-		const f6Navigation = getFeature<typeof F6Navigation>("F6Navigation");
-
-		if (openUI5Support) {
-			await openUI5Support.init();
-		}
-
-		if (f6Navigation && !isOpenUI5Loaded) {
-			f6Navigation.init();
-		}
-
+		await initF6Navigation(); // depends on OpenUI5Support
 		await whenDOMReady();
 		await applyTheme(getTheme());
-		openUI5Support && openUI5Support.attachListeners();
+		attachOpenUI5SupportListeners(); // depends on OpenUI5Support
 		insertFontFace();
 		insertSystemCSSVars();
 		insertScrollbarStyles();
@@ -79,6 +99,12 @@ const boot = async (): Promise<void> => {
 
 	bootPromise = new Promise(bootExecutor as (resolve: PromiseResolve) => void);
 	return bootPromise;
+};
+
+const secondaryBoot = async (): Promise<void> => {
+	await boot(); // make sure we're not in the middle of boot before re-running the skipped parts
+	await initF6Navigation();
+	attachOpenUI5SupportListeners();
 };
 
 /**
@@ -102,6 +128,7 @@ const onThemeRegistered = (theme: string) => {
 
 export {
 	boot,
+	secondaryBoot,
 	attachBoot,
 	isBooted,
 };

@@ -58,6 +58,7 @@
 	white-space: nowrap;
 	pointer-events: none;
 	display: inline-block;
+	font-size: var(--sapFontSize);
 }
 
 .ui5-menu-item-dummy-icon {
