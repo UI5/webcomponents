@@ -34,7 +34,8 @@ const setFormValidity = async (element: IFormInputElement) => {
 		return;
 	}
 
-	await element.definePromiseSafe;
+	element._internals.setValidity({ customError: true }, " "); // treat the form as invalid until CLDR and message bundles are loaded
+	await element.definePromise;
 
 	if (element.formValidity && Object.keys(element.formValidity).some(key => key)) {
 		const focusRef = await element.formElementAnchor?.();
