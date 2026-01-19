@@ -163,7 +163,6 @@ class ToolbarSelect extends ToolbarItem {
 
 	// Internal value storage, in case the composite select is not rendered on the the assignment happens
 	_value: string = "";
-	_kind = "ToolbarSelect";
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();

@@ -17,7 +17,7 @@ export default function ToolbarTemplate(this: Toolbar) {
 				return (
 					<div class={{
 						"ui5-tb-item": true,
-						"ui5-tb-self-overflow": item._selfOverflowed,
+						"ui5-tb-self-overflow": item.hasOverflow,
 					}} id={item._individualSlot}>
 						<slot name={item._individualSlot}></slot>
 					</div>
@@ -52,11 +52,12 @@ export default function ToolbarTemplate(this: Toolbar) {
 				"ui5-overflow-list": true
 			}}>
 				{this.overflowItems.map(item => {
-					const separatorClass = item.isSeparator ? " ui5-tb-separator ui5-tb-separator-in-overflow" : "";
-					const selfOverflowClass = item._selfOverflowed ? " ui5-tb-popover-self-overflow" : "";
-					const classes = `ui5-tb-popover-item${separatorClass}${selfOverflowClass}`;
 					return (
-						<div class={classes} id={item._individualSlot}>
+						<div class= {{
+							"ui5-tb-popover-item": true,
+							"ui5-tb-separator ui5-tb-separator-in-overflow": item.isSeparator,
+							"ui5-tb-popover-self-overflow": item.hasOverflow,
+						}}id={item._individualSlot}>
 							<slot name={item._individualSlot}></slot>
 						</div>
 					);

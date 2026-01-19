@@ -644,7 +644,7 @@ class Breadcrumbs extends UI5Element implements IOverflowToolbarItem {
 	get _cancelButtonText() {
 		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_CANCEL_BUTTON);
 	}
-	get _selfOverflowed() {
+	get hasOverflow() {
 		return true;
 	}
 }

@@ -309,7 +309,7 @@ class Toolbar extends UI5Element {
 	addItemsAdditionalProperties(item: ToolbarItem) {
 		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
 		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
-		if (item._selfOverflowed && !item.isOverflowed && itemWrapper) {
+		if (item.hasOverflow && !item.isOverflowed && itemWrapper) {
 			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
 			// since, unlike the other items, it is allowed to grow and shrink
 			// We need to set the max-width to none and its position to absolute to allow the item to grow and measure its width,

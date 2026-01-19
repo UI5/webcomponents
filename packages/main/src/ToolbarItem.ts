@@ -18,7 +18,7 @@ type ToolbarItemEventDetail = {
 
 interface IOverflowToolbarItem extends HTMLElement {
 	eventsToCloseOverflow?: string[] | undefined;
-	_selfOverflowed?: boolean | undefined;
+	hasOverflow?: boolean | undefined;
 }
 
 @event("close-overflow", {
@@ -78,15 +78,6 @@ class ToolbarItem extends UI5Element {
 	isOverflowed: boolean = false;
 
 	/**
-	 * Defines if the component, wrapped in the toolbar item, has his own overflow mechanism.
-	 * @default false
-	 * @private
-	 * @since 2.19.0
-	 */
-	@property({ type: Boolean })
-	_selfOverflowed: boolean = false;
-
-	/**
 	 * Defines if the component, wrapped in the toolbar item, should be expanded in the overflow popover.
 	 * @default false
 	 * @public
@@ -94,14 +85,13 @@ class ToolbarItem extends UI5Element {
 	 */
 
 	@property({ type: Boolean })
-	expandInOverflow: boolean = false;
+	shrinkInOverflow: boolean = false;
 
 	_isRendering = true;
 	_maxWidth = 0;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
-	_kind = "ToolbarItem";
 
-	eventsToCloseOverflow: string[] = [];
+	overflowCloseEvents: string[] = [];
 
 	closeOverflowSet = {
 		"ui5-button": ["click"],
@@ -118,10 +108,8 @@ class ToolbarItem extends UI5Element {
 	}
 
 	onBeforeRendering(): void {
-		const slottedItem = this.getSlottedNodes("item")[0] as IOverflowToolbarItem;
 		this.checkForWrapper();
 		this.attachCloseOverflowHandlers();
-		this._selfOverflowed = !!slottedItem?._selfOverflowed;
 	}
 
 	onAfterRendering(): void {
@@ -141,12 +129,14 @@ class ToolbarItem extends UI5Element {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true,
 	})
-	item!: IOverflowToolbarItem[]; // here
+	item!: IOverflowToolbarItem[];
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
-		const tagName = this.item?.[0]?.localName as keyof typeof this.predefinedWrapperSet;
-		if (this._kind === "ToolbarItem"
+		const tagName = this.itemTagName as keyof typeof this.predefinedWrapperSet;
+		const ctor = this.constructor as typeof UI5Element;
+		const wrapperName = ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.tagName;
+		if (wrapperName === "ToolbarItem"
 			&& this.predefinedWrapperSet[tagName]) {
 			// eslint-disable-next-line no-console
 			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.predefinedWrapperSet[tagName]}.`);
@@ -155,9 +145,7 @@ class ToolbarItem extends UI5Element {
 
 	// We want to close the overflow popover, when closing event is being executed
 	getClosingEvents(): string[] {
-		const ctor = this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.constructor as typeof ToolbarItem;
-		const tagName = ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.tagName;
-		return [...(this.closeOverflowSet[tagName as keyof typeof this.closeOverflowSet] || []), ...this.eventsToCloseOverflow];
+		return [...(this.closeOverflowSet[this.itemTagName as keyof typeof this.closeOverflowSet] || []), ...this.overflowCloseEvents];
 	}
 
 	attachCloseOverflowHandlers() {
@@ -204,6 +192,15 @@ class ToolbarItem extends UI5Element {
 	 */
 	get isInteractive(): boolean {
 		return true;
+	}
+
+	get itemTagName() {
+		const ctor = this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.constructor as typeof UI5Element;
+		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.tagName;
+	}
+
+	get hasOverflow(): boolean {
+		return this.item[0].hasOverflow ?? false;
 	}
 
 	/**
