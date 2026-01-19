@@ -200,7 +200,7 @@ class ToolbarItem extends UI5Element {
 	}
 
 	get hasOverflow(): boolean {
-		return this.item[0].hasOverflow ?? false;
+		return this.item[0].hasOverflow! ?? false;
 	}
 
 	/**
