@@ -340,6 +340,14 @@ abstract class UI5Element extends HTMLElement {
 		this.onEnterDOM();
 	}
 
+	get definePromiseSafe() {
+		const ctor = this.constructor as typeof UI5Element;
+		if (!ctor.asyncFinished && ctor.definePromise) {
+			return ctor.definePromise;
+		}
+		return Promise.resolve();
+	}
+
 	/**
 	 * Do not call this method from derivatives of UI5Element, use "onExitDOM" only
 	 * @private

@@ -33,6 +33,9 @@ const setFormValidity = async (element: IFormInputElement) => {
 	if (!element._internals?.form) {
 		return;
 	}
+
+	await element.definePromiseSafe;
+
 	if (element.formValidity && Object.keys(element.formValidity).some(key => key)) {
 		const focusRef = await element.formElementAnchor?.();
 		element._internals.setValidity(element.formValidity, element.formValidityMessage, focusRef);
