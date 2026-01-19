@@ -115,28 +115,40 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetPopover()
 			.within(() => {
-				// Click the currently selected day and then move to the next day.
 				cy.get("[ui5-calendar]")
 					.shadow()
-					.as("calendar");
-
-				cy.get("@calendar")
 					.find("[ui5-daypicker]")
 					.shadow()
 					.find(".ui5-dp-item--selected")
+					.as("selectedDay");
+
+				cy.get("[ui5-calendar]")
+					.shadow()
+					.find("[ui5-daypicker]")
+					.shadow()
+					.find('.ui5-dp-item')
+					.contains('.ui5-dp-daytext', '14')
+					.closest('.ui5-dp-item')
+					.as("nextSelectedDay");
+
+				// Click the currently selected day and move to the next day with Arrow + Right
+				cy.get("@selectedDay")
 					.realClick()
-					.should("be.focused");
+					.should("be.focused")
+					.realPress("ArrowRight");
 
-				cy.realPress("ArrowRight");
-				cy.realPress("Space");
-
-				// Confirm the change.
+				// Wait next day to be focused and then - select it with Space.
+				cy.get("@nextSelectedDay")
+					.should("be.focused")
+					.realPress("Space");
+				
+				// Confirm the new selection
 				cy.get("#ok").realClick();
 			});
 
 		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerExpectToBeClosed();
 
-		// Only the date has changed; the time remains the same.
+		// Only the date has changed - the time remains the same.
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -174,7 +186,7 @@ describe("DateTimePicker general interaction", () => {
 
 		cy.realPress("Tab");
 
-		// Simulate keyboard interactions
+		//Simulate keyboard interactions
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -277,6 +289,37 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
+	it("tests time controls with value-format HH:mm shows only hours and minutes", () => {
+		cy.mount(<DateTimePicker value-format="yyyy-MM-dd HH:mm" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.within(() => {
+				cy.get("[ui5-time-selection-clocks]")
+					.shadow()
+					.as("clocks");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="hours"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="minutes"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="seconds"]`)
+					.should("not.exist");
+			});
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerClose();
+	});
+
 	it("tests hours clock is active on picker open", () => {
 		cy.mount(<DateTimePickerTemplate />);
 
@@ -300,7 +343,7 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests selection of 12:34:56 AM", () => {
 		setAnimationMode(AnimationMode.None);
 
@@ -324,8 +367,8 @@ describe("DateTimePicker general interaction", () => {
 
 				cy.get("@daypicker")
 					.find(".ui5-dp-item--selected")
-					.should("be.focused")
-					.realClick();
+					.realClick()
+					.should("be.focused");
 
 				cy.get("[ui5-time-selection-clocks]")
 					.shadow()
@@ -389,18 +432,18 @@ describe("DateTimePicker general interaction", () => {
 			.find("ui5-daypicker")
 			.as("daypicker");
 
-		// act: open the picker
+		//act: open the picker
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
-		// act: click today's date
+		//act: click today's date
 		cy.get("@daypicker")
 			.shadow()
 			.find("[data-sap-focus-ref]")
-			.should("be.focused")
-			.realClick();
+			.realClick()
+			.should("be.focused");
 
-		// act: confirm selection
+		//act: confirm selection
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetSubmitButton()
 			.should("have.prop", "disabled", false);
@@ -412,7 +455,7 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// assert: the value is not changed
+		//assert: the value is not changed
 		cy.get("@input")
 			.should("be.focused")
 			.and("have.attr", "value", "");
@@ -488,7 +531,7 @@ describe("DateTimePicker general interaction", () => {
 			.should("have.text", "Invalid entry");
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests change event is fired on submit", () => {
 		cy.mount(<DateTimePickerTemplate onChange={cy.stub().as("changeStub")} />);
 
@@ -525,10 +568,10 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// Assert the change event was fired once
+		//Assert the change event was fired once
 		cy.get("@changeStub").should("have.been.calledOnce");
 
-		// Re-open the picker and submit without making a change
+		//Re-open the picker and submit without making a change
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
@@ -540,11 +583,11 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerGetSubmitButton()
 			.realClick();
 
-		// Verify the picker is closed
+		//Verify the picker is closed
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// The change event should not have been fired a second time.
+		//The change event should not have been fired a second time.
 		cy.get("@changeStub").should("have.been.calledOnce");
 	});
 });

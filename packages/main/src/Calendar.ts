@@ -53,6 +53,14 @@ import {
 	CALENDAR_HEADER_YEAR_BUTTON_SHORTCUT,
 	CALENDAR_HEADER_YEAR_RANGE_BUTTON,
 	CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_MONTH_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_TITLE,
+	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_YEAR_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_PREVIOUS_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
 
@@ -520,7 +528,7 @@ class Calendar extends CalendarPart {
 		this._normalizeCurrentPicker();
 
 		if (!this._valueIsProcessed) {
-			if (this._selectedDatesTimestamps) {
+			if (this._selectedDatesTimestamps.length) {
 				this.timestamp = this._selectedDatesTimestamps[0];
 			}
 
@@ -838,26 +846,44 @@ class Calendar extends CalendarPart {
 		const monthLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON, headerMonthButtonText);
 		const yearLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_BUTTON, this._headerYearButtonText as string);
 		const yearRangeLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON, rangeStartText, rangeEndText);
+		let nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_NEXT_BUTTON_TITLE);
+		let prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_TITLE);
+
+		if (this._currentPicker === "month") {
+			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_NEXT_BUTTON_TITLE);
+			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_PREVIOUS_BUTTON_TITLE);
+		} else if (this._currentPicker === "year" || this._currentPicker === "yearrange") {
+			nextBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE);
+			prevBtnLabel = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE);
+		}
 
 		// Get shortcuts
 		const monthShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_BUTTON_SHORTCUT);
 		const yearShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_BUTTON_SHORTCUT);
 		const yearRangeShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT);
+		const nextBtnShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT);
+		const prevBtnShortcut = Calendar.i18nBundle?.getText(CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT);
 
 		return {
 			ariaLabelMonthButton: monthLabel,
 			ariaLabelYearButton: yearLabel,
 			ariaLabelYearRangeButton: yearRangeLabel,
+			ariaLabelNextButton: nextBtnLabel,
+			ariaLabelPrevButton: prevBtnLabel,
 
 			// Keyboard shortcuts for aria-keyshortcuts
 			keyShortcutMonthButton: monthShortcut,
 			keyShortcutYearButton: yearShortcut,
 			keyShortcutYearRangeButton: yearRangeShortcut,
+			keyShortcutNextButton: nextBtnShortcut,
+			keyShortcutPrevButton: prevBtnShortcut,
 
 			// Tooltips combining label and shortcut
 			tooltipMonthButton: `${monthLabel} (${monthShortcut})`,
 			tooltipYearButton: `${yearLabel} (${yearShortcut})`,
 			tooltipYearRangeButton: `${yearRangeLabel} (${yearRangeShortcut})`,
+			tooltipNextButton: `${nextBtnLabel} (${nextBtnShortcut})`,
+			tooltipPrevButton: `${prevBtnLabel} (${prevBtnShortcut})`,
 		};
 	}
 
@@ -950,24 +976,26 @@ class Calendar extends CalendarPart {
 		}
 	}
 
-	onPrevButtonClick(e: MouseEvent) {
-		if (this._previousButtonDisabled) {
+	_handleNavigationButtonKeyDown(e: MouseEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
 			e.preventDefault();
 			return;
 		}
 
-		this.onHeaderPreviousPress();
+		if (e.button !== 0) {
+			return;
+		}
+
+		action();
 		e.preventDefault();
 	}
 
-	onNextButtonClick(e: MouseEvent) {
-		if (this._nextButtonDisabled) {
-			e.preventDefault();
-			return;
-		}
+	onPrevButtonClick(e: MouseEvent) {
+		this._handleNavigationButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
 
-		this.onHeaderNextPress();
-		e.preventDefault();
+	onNextButtonClick(e: MouseEvent) {
+		this._handleNavigationButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
 	}
 
 	/**

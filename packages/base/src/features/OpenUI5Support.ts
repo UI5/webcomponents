@@ -11,6 +11,7 @@ import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
 import type { LegacyDateCalendarCustomizing } from "../features/LegacyDateFormats.js";
+import { secondaryBoot } from "../Boot.js";
 
 type OpenUI5Core = {
 	attachInit: (callback: () => void) => void,
@@ -71,7 +72,11 @@ type Locale = {
 	_get: () => CLDRData,
 };
 
+const OPENUI5_POLLING_INTERVAL = 100;
+
 class OpenUI5Support {
+	static enablePolling = false; // set to true for old OpenUI5 versions
+
 	static isAtLeastVersion116() {
 		if (!window.sap.ui!.version) {
 			return true; // sap.ui.version will be removed in newer OpenUI5 versions
@@ -90,9 +95,32 @@ class OpenUI5Support {
 
 	static initPromise?: Promise<void>;
 
+	/**
+	 * Important - if OpenUI5 is loaded after UI5 Web Components, configuration is not synchronized and it's up to the app to initialize OpenUI5 with the same settings as UI5 Web Components for consistency.
+	 */
+	static OpenUI5DelayedInit = async () => {
+		OpenUI5Support.init(); // This ensures patchPopover and patchPatcher are called; and from this point OpenUI5 CSS vars start being detected
+		await secondaryBoot(); // Re-run the parts of boot that were skipped due to OpenUI5 not having been loaded
+	}
+
+	static awaitForOpenUI5() {
+		if (OpenUI5Support.enablePolling) {
+			const interval = setInterval(() => {
+				if (OpenUI5Support.isOpenUI5Detected()) {
+					clearInterval(interval);
+					OpenUI5Support.OpenUI5DelayedInit();
+				}
+			}, OPENUI5_POLLING_INTERVAL);
+		} else {
+			document.addEventListener("sap-ui-core-ready", () => {
+				OpenUI5Support.OpenUI5DelayedInit();
+			});
+		}
+	}
+
 	static init() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return Promise.resolve();
+			return OpenUI5Support.awaitForOpenUI5();
 		}
 
 		if (!OpenUI5Support.initPromise) {
@@ -152,7 +180,7 @@ class OpenUI5Support {
 				formatSettings: {
 					firstDayOfWeek: CalendarUtils.getWeekConfigurationValues().firstDayOfWeek,
 					legacyDateCalendarCustomizing: Formatting.getCustomIslamicCalendarData?.()
-												?? Formatting.getLegacyDateCalendarCustomizing?.(),
+						?? Formatting.getLegacyDateCalendarCustomizing?.(),
 				},
 			};
 		}
@@ -165,9 +193,9 @@ class OpenUI5Support {
 			animationMode: config.getAnimationMode(),
 			language: config.getLanguage(),
 			theme: config.getTheme(),
-			themeRoot: config.getThemeRoot(),
+			themeRoot: typeof config.getThemeRoot === "function" ? config.getThemeRoot() : undefined,
 			rtl: config.getRTL(),
-			timezone: config.getTimezone(),
+			timezone: typeof config.getTimezone === "function" ? config.getTimezone() : undefined,
 			calendarType: config.getCalendarType(),
 			formatSettings: {
 				firstDayOfWeek: LocaleData ? LocaleData.getInstance(config.getLocale()).getFirstDayOfWeek() : undefined,
@@ -210,10 +238,11 @@ class OpenUI5Support {
 
 	static attachListeners() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return;
+			return false;
 		}
 
 		OpenUI5Support._listenForThemeChange();
+		return true;
 	}
 
 	static cssVariablesLoaded() {
