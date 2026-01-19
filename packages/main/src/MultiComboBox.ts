@@ -264,6 +264,7 @@ type MultiComboBoxValueStateChangeEventDetail = {
  * The event is preventable, meaning that if it's default action is
  * prevented, the component will not update the value state.
  * @public
+ * @since 2.19.0
  * @param {string} valueState The new `valueState` that will be set.
  */
 @event("value-state-change", {
@@ -779,8 +780,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_updateValueState(newValueState: `${ValueState}`) {
 		const oldValueState = this.valueState;
 		if (oldValueState !== newValueState) {
-			this.valueState = newValueState;
-			this.fireDecoratorEvent("value-state-change", { valueState: newValueState });
+			const eventPrevented = !this.fireDecoratorEvent("value-state-change", {
+				valueState: newValueState,
+			});
+
+			if (!eventPrevented) {
+				this.valueState = newValueState;
+			}
 		}
 	}
 
