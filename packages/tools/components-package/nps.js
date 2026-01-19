@@ -70,6 +70,7 @@ const getScripts = (options) => {
 		__ui5envs: {
 			UI5_CEM_MODE: options.dev,
 			UI5_TS: `${tsOption}`,
+			CSS_VARS_SCHEMA: "local",
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
 		},
 		clean: {

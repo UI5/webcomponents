@@ -8,7 +8,9 @@ import scopeVariables from "./scope-variables.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import { pathToFileURL } from "url";
 
+
 const generate = async (argv) => {
+    const CSS_VARS_SCHEMA = process.env.CSS_VARS_SCHEMA === "local";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
@@ -23,8 +25,15 @@ const generate = async (argv) => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    // scoping
-                    let newText = scopeVariables(f.text, packageJSON);
+                    let newText
+
+                    if (CSS_VARS_SCHEMA) {
+                        newText = f.text;
+                    } else {
+                        // scoping
+                        newText = scopeVariables(f.text, packageJSON);
+                    }
+
                     newText = newText.replaceAll(/\\/g, "\\\\"); // Escape backslashes as they might appear in css rules
                     await mkdir(path.dirname(f.path), { recursive: true });
                     writeFile(f.path, newText);
