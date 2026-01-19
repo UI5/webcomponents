@@ -344,7 +344,7 @@ abstract class UI5Element extends HTMLElement {
 	 * Promise that is resolved when the component is defined and CLDR/Message bundles are ready to use.
 	 * @public
 	 */
-	get definePromise() {
+	get definePromise(): Promise<void> {
 		const ctor = this.constructor as typeof UI5Element;
 		if (!ctor.asyncFinished && ctor._definePromise) {
 			return ctor._definePromise;
