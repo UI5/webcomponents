@@ -195,6 +195,7 @@ class Dialog extends Popup {
 	_minWidth?: number;
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
+	_dragHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -338,18 +339,30 @@ class Dialog extends Popup {
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
-	onEnterDOM() {
-		super.onEnterDOM();
-		this._attachScreenResizeHandler();
+	onAfterRendering() {
+		super.onAfterRendering();
 
-		this.addEventListener("dragstart", this._dragStartHandler);
+		if (this.open) {
+			this._registerResizeHandler();
+			this._registerDragHandler();
+		} else {
+			this._deregisterResizeHandler();
+			this._deregisterDragHandler();
+		}
 	}
 
-	onExitDOM() {
-		super.onExitDOM();
-		this._detachScreenResizeHandler();
+	_registerDragHandler() {
+		if (this.draggable && !this._dragHandlerRegistered) {
+			this.addEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = true;
+		}
+	}
 
-		this.removeEventListener("dragstart", this._dragStartHandler);
+	_deregisterDragHandler() {
+		if (this._dragHandlerRegistered) {
+			this.removeEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = false;
+		}
 	}
 
 	/**
