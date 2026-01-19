@@ -136,7 +136,7 @@ class ToolbarItem extends UI5Element {
 		const tagName = this.itemTagName as keyof typeof this.predefinedWrapperSet;
 		const ctor = this.constructor as typeof UI5Element;
 		const wrapperName = ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.tagName;
-		if (wrapperName === "ToolbarItem"
+		if (wrapperName === "ui5-toolbar-item"
 			&& this.predefinedWrapperSet[tagName]) {
 			// eslint-disable-next-line no-console
 			console.warn(`This UI5 web component has its predefined toolbar wrapper called ${this.predefinedWrapperSet[tagName]}.`);
