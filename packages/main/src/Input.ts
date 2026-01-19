@@ -1383,8 +1383,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_afterClosePicker() {
-		this.announceSelectedItem();
-
 		// close device's keyboard and prevent further typing
 		if (isPhone()) {
 			this.blur();
@@ -1405,6 +1403,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this.hasSuggestionItemSelected) {
 			this.focus();
 		}
+
+		const invisibleText = this.shadowRoot!.querySelector(`#selectionText`);
+		if (invisibleText) {
+			invisibleText.textContent = "";
+		}
+
 		this._handlePickerAfterClose();
 	}
 
