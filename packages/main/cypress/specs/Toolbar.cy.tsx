@@ -444,6 +444,59 @@ describe("Accessibility", () => {
 			.find(".ui5-overflow-popover")
 			.should("have.attr", "accessible-name", "Available Values");
 	});
+
+	it("Should navigate between toolbar items using arrow keys", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1"></ToolbarButton>
+				<ToolbarButton text="Button 2"></ToolbarButton>
+				<ToolbarButton text="Button 3"></ToolbarButton>
+				<ToolbarButton text="Button 4"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Focus on the first button
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick()
+			.should("be.focused");
+
+		// Press Right Arrow and verify focus moves to Button 2
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Button 2']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Press Right Arrow and verify focus moves to Button 3
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Button 3']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Press Left Arrow and verify focus moves back to Button 2
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Button 2']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Press Home and verify focus moves to first button
+		cy.realPress("Home");
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Press End and verify focus moves to last button
+		cy.realPress("End");
+		cy.get("[ui5-toolbar-button][text='Button 4']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
 });
 
 describe("Toolbar in Dialog", () => {
