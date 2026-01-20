@@ -350,6 +350,8 @@ abstract class Popup extends UI5Element {
 			return;
 		}
 
+		this._attachBrowserEvents();
+
 		if (this.isModal) {
 			Popup.blockPageScrolling(this);
 		}
@@ -386,6 +388,14 @@ abstract class Popup extends UI5Element {
 	 */
 	_preventBlockLayerFocus(e: KeyboardEvent | MouseEvent) {
 		e.preventDefault();
+	}
+
+	_attachBrowserEvents() {
+
+	}
+
+	_detachBrowserEvents() {
+
 	}
 
 	/**
@@ -574,6 +584,8 @@ abstract class Popup extends UI5Element {
 
 		this.hide();
 		this.open = false;
+
+		this._detachBrowserEvents();
 
 		if (!preventRegistryUpdate) {
 			this._removeOpenedPopup();
