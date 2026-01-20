@@ -613,6 +613,29 @@ describe("MultiInput Form Submission Prevention", () => {
 		cy.get("@formSubmit").should("not.have.been.called");
 	});
 
+	it("should fire change event on enter press when MultiInput is inside of form", () => {
+		cy.mount(
+			<form>
+				<MultiInput id="mi-form-multi1" onChange={cy.stub().as("changeEvent")} />
+			</form>
+		);
+
+		cy.get("#mi-form-multi1")
+			.shadow()
+			.find("input")
+			.as("firstInput");
+
+		cy.get("@firstInput")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@firstInput")
+			.realType("test")
+			.realPress("Enter");
+
+		cy.get("@changeEvent").should("have.been.calledOnce");
+	});
+
 	it("should prevent form submission when there are multiple inputs in form", () => {
 		cy.mount(
 			<form>
@@ -921,7 +944,7 @@ describe("ARIA attributes", () => {
 			.should("have.attr", "aria-haspopup", "dialog");
 	});
 
-	it.only("announces correct suggestion position when selecting a suggestion with Enter", () => {
+	it("announces correct suggestion position when selecting a suggestion with Enter", () => {
 		cy.mount(
 			<MultiInput show-suggestions id="suggestion-token">
 				<SuggestionItem text="Aute"></SuggestionItem>
