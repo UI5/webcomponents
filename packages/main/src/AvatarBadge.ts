@@ -23,9 +23,8 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
  * The badge should be used as a child element of `ui5-avatar` in the `badge` slot.
  *
  * ```html
- * <ui5-avatar size="M">
- *   <img src="..." alt="Avatar Image">
- *   <ui5-avatar-badge icon="accept" value-state="Positive" slot="badge"></ui5-avatar-badge>
+ * <ui5-avatar>
+ *   <ui5-avatar-badge icon="sys-enter" slot="badge"></ui5-avatar-badge>
  * </ui5-avatar>
  * ```
  *
