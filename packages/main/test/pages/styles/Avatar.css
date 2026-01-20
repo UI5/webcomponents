@@ -1,5 +1,11 @@
+body {
+	font-family: var(--sapFontFamily, "72", "72full", Arial, sans-serif);
+	background: var(--sapBackgroundColor, #f7f7f7);
+	color: var(--sapTextColor, #1a1a1a);
+}
+
 :not(:defined) {
-    display: none;
+	display: none;
 }
 
 .section {
@@ -10,38 +16,39 @@
 }
 
 .avatar-image {
-    object-fit: cover;
+	object-fit: cover;
 }
 
 .avatar-image1 {
-    object-fit: contain;
+	object-fit: contain;
 }
 
 .avatar1auto {
-    background-color: var(--sapBackgroundColor);
+	background-color: var(--sapBackgroundColor);
 }
 
 .avatar2auto {
-    border: 1px dashed red;
+	border: 1px dashed red;
 }
 
 .avatar3auto {
-    width: 250px;
-    height: 250px;
-    border: 1px solid var(--sapField_BorderColor)
+	width: 250px;
+	height: 250px;
+	border: 1px solid var(--sapField_BorderColor)
 }
 
 .avatar4auto {
-    object-fit: cover;
+	object-fit: cover;
 }
 
 .avatar5auto {
-    object-fit: contain;
+	object-fit: contain;
 }
 
 .custom-badge {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(255, 0, 0);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 0, 0);
+	color: var(--sapBackgroundColor);
 }
