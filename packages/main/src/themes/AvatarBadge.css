@@ -1,7 +1,3 @@
-/* ============================================ */
-/* Avatar Badge                               */
-/* ============================================ */
-
 :host {
 	display: flex;
 	align-items: center;
@@ -9,16 +5,6 @@
 	box-sizing: border-box;
 	outline: none;
 	border: 0.0625rem solid;
-}
-
-.ui5-avatar-badge-icon {
-	width: var(--_ui5-avatar-badge-icon-size);
-	height: var(--_ui5-avatar-badge-icon-size);
-	color: inherit;
-}
-
-:host(:not([value-state])),
-:host([value-state="None"]) {
 	background: var(--sapButton_Emphasized_Background);
 	border-color: var(--sapButton_Emphasized_BorderColor);
 	color: var(--sapButton_Emphasized_TextColor);
@@ -46,4 +32,10 @@
 	background: var(--sapInformationBackground);
 	border-color: var(--sapInformationBorderColor);
 	color: var(--sapInformativeTextColor);
+}
+
+.ui5-avatar-badge-icon {
+	width: var(--_ui5-avatar-badge-icon-size);
+	height: var(--_ui5-avatar-badge-icon-size);
+	color: inherit;
 }

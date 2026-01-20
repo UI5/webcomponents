@@ -56,7 +56,6 @@ class AvatarBadge extends UI5Element {
 	 * `import "@ui5/webcomponents-icons/dist/{icon_name}.js"`
 	 *
 	 * @default undefined
-	 * @since 2.19.0
 	 * @public
 	 */
 	@property()
@@ -73,7 +72,6 @@ class AvatarBadge extends UI5Element {
 	 * - `Information` - Blue, used for informational states
 	 *
 	 * @default "None"
-	 * @since 2.19.0
 	 * @public
 	 */
 	@property()
