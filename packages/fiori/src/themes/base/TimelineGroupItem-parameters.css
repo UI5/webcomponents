@@ -2,3 +2,13 @@
 	--_ui5_timeline_tlgi_line_horizontal_height: 14.8125rem;
 	--_ui5_timeline_tlgi_root_horizontal_height: 19.9375rem;
 }
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_timeline_tlgi_compact_icon_before_height: calc(100% + 1.5rem);
+	--_ui5_timeline_tlgi_horizontal_line_placeholder_before_width: var(--_ui5_timeline_tlgi_compact_icon_before_height);
+	--_ui5_timeline_tlgi_horizontal_compact_root_margin_left: 0.5rem;
+	--_ui5_timeline_tlgi_compact_root_gap: 0.5rem;
+	--_ui5_timeline_tlgi_root_horizontal_height: 19.375rem;
+}

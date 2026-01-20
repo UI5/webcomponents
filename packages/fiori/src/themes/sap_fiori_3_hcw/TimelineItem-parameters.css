@@ -4,3 +4,11 @@
 	--_ui5_TimelineItem_bubble_rtl_left_offset: -0.1875rem;
 	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.6875rem;
 }
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_timeline_tli_indicator_after_height: 50%;
+	--_ui5_timeline_tli_indicator_after_top: -50%;
+	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
+}

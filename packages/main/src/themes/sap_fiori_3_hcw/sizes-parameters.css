@@ -18,9 +18,4 @@
 
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
-	/* Timeline Item */
-	--_ui5_timeline_tli_indicator_after_height: 50%;
-	--_ui5_timeline_tli_indicator_after_top: -50%;
-	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
 }
