@@ -309,7 +309,8 @@ abstract class Popup extends UI5Element {
 			this._removeOpenedPopup();
 		}
 
-		ResizeHandler.deregister(this, this._resizeHandler);
+		this._deregisterResizeHandler();
+		this._detachBrowserEvents();
 		deregisterUI5Element(this);
 	}
 
