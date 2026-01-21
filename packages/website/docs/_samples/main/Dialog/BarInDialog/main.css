@@ -4,7 +4,6 @@
     padding-inline: 0;
 }
 
-
 /* Styles for Dialog with State */
 #dialogState::part(header),
 #dialogState::part(footer) {
@@ -13,4 +12,9 @@
 
 #bar::part(startContent) {
     padding-inline-start: 0;
+}
+
+/* remove default margins */
+.dialogsContent {
+    margin: 0;
 }
