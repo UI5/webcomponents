@@ -747,7 +747,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Changes the currently displayed page.
-	 * @param itemIndex The index of the target page
+	 * @param itemIndex The index of the target item
 	 * @since 1.0.0-rc.15
 	 * @public
 	 */
