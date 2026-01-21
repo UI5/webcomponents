@@ -55,19 +55,21 @@ const generate = async (argv) => {
     };
 
     const processComponentPackageFile = async (f) => {
+        if (CSS_VARS_SCHEMA) {
+            const result = await postcss([
+                combineDuplicatedSelectors,
+                postcssPlugin
+            ]).process(f.text);
+
+            return { css: result.css };
+        }
+
+
         const combined = await postcss([
             combineDuplicatedSelectors,
         ]).process(f.text);
 
-        if (CSS_VARS_SCHEMA) {
-            const resultWithPolyfill = await postcss([
-                postcssPlugin
-            ]).process(combined.css);
-
-            return { css: combined.css, polyfilledCss: resultWithPolyfill.css };
-        } else {
-            return { css: scopeVariables(combined.css, packageJSON, f.path) };
-        }
+        return { css: scopeVariables(combined.css, packageJSON, f.path) };
     }
 
     let scopingPlugin = {
@@ -77,13 +79,9 @@ const generate = async (argv) => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let { css, polyfilledCss } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
+                    let { css } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
 
                     saveFiles(f.path, css);
-
-                    if (polyfilledCss) {
-                        saveFiles(f.path, polyfilledCss, "-polyfilled");
-                    }
                 });
             })
         },
