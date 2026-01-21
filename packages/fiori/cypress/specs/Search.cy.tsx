@@ -833,6 +833,31 @@ describe("Properties", () => {
 			.find(".ui5-search-item-selected-delete")
 			.should("be.focused");
 	});
+
+	it("SearchItemGroup has wrapping type set to Normal", () => {
+		cy.mount(
+			<Search>
+				<SearchItemGroup headerText="Very long group header text that should wrap when wrapping type is set to Normal">
+					<SearchItem text="List Item 1" icon={history}></SearchItem>
+					<SearchItem text="List Item 2" icon={searchIcon}></SearchItem>
+				</SearchItemGroup>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("L");
+
+		// Verify that the header element has the correct wrapping-type attribute
+		cy.get("ui5-search-item-group")
+			.shadow()
+			.find("[ui5-li-group-header]")
+			.should("have.attr", "wrapping-type", "Normal");
+	});
 });
 
 describe("Events", () => {
