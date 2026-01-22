@@ -21,16 +21,16 @@
 
 	<section>
 		<h3>Avatar - special characters in image path</h3>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John$$$ ' (_)Miller 100%25 &=.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John Miller.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John%20Miller.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="SAP Logo">
 		</ui5-avatar>
 	</section>
@@ -172,18 +172,39 @@
 	</section>
 
 	<section>
+		<h3>Avatar Badge - All Sizes</h3>
+		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
+			<ui5-avatar size="XS">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<ui5-avatar size="S">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<ui5-avatar size="M">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<ui5-avatar size="L">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<ui5-avatar size="XL">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+		</div>
+	</section>
+
+	<section>
 		<h3>Avatar Badge - All Sizes with Value States (Circle)</h3>
 		<ui5-avatar size="XS">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="ai" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="S">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="accept" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="message-error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="L">
 			<img src="./img/John_Miller.png" alt="John Miller">
@@ -199,36 +220,36 @@
 		<h3>Avatar Badge - All Sizes with Value States (Square)</h3>
 		<ui5-avatar size="XS" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="ai" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="S" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="employee" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="accept" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="L" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="message-error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="XL" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 
 	<section>
 		<h3>Avatar Badge - With Initials and Color Schemes</h3>
 		<ui5-avatar size="M" initials="AB" color-scheme="Accent1">
-			<ui5-avatar-badge icon="ai" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="CD" color-scheme="Accent8">
-			<ui5-avatar-badge icon="accept" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="EF" color-scheme="Accent7">
-			<ui5-avatar-badge icon="message-error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="GH" color-scheme="Accent4">
 			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
@@ -241,16 +262,19 @@
 	<section>
 		<h3>Avatar Badge - With Icons</h3>
 		<ui5-avatar icon="employee" size="M">
-			<ui5-avatar-badge icon="ai" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="product" size="M" color-scheme="Accent10">
-			<ui5-avatar-badge icon="accept" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="supplier" size="M" color-scheme="Accent9">
-			<ui5-avatar-badge icon="message-error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="shipping-status" size="M" color-scheme="Accent4">
 			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar icon="filter" size="M" color-scheme="Accent3">
+			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 

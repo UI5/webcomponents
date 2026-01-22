@@ -24,7 +24,7 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
  *
  * ```html
  * <ui5-avatar>
- *   <ui5-avatar-badge icon="sys-enter" slot="badge"></ui5-avatar-badge>
+ *   <ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
  * </ui5-avatar>
  * ```
  *

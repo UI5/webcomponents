@@ -27,10 +27,6 @@ body {
 	background-color: var(--sapBackgroundColor);
 }
 
-.avatar2auto {
-	border: 1px dashed red;
-}
-
 .avatar3auto {
 	width: 250px;
 	height: 250px;
