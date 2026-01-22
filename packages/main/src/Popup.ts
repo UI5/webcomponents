@@ -270,9 +270,7 @@ abstract class Popup extends UI5Element {
 	}
 
 	onAfterRendering() {
-		renderFinished().then(() => {
-			this._updateMediaRange();
-		});
+		this._updateMediaRange();
 
 		if (this.open) {
 			this._registerResizeHandler();
@@ -358,11 +356,6 @@ abstract class Popup extends UI5Element {
 
 		this._show();
 		this._opened = true;
-
-		if (this.getDomRef()) {
-			this._updateMediaRange();
-		}
-
 		this._addOpenedPopup();
 
 		this.open = true;
@@ -604,7 +597,7 @@ abstract class Popup extends UI5Element {
 	}
 
 	/**
-	 * Sets "block" display to the popup. The property can be overriden by derivatives of Popup.
+	 * Sets "popover=manual" to the popup. The method can be overridden by derivatives of Popup.
 	 * @protected
 	 */
 	_show() {

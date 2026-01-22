@@ -95,6 +95,9 @@
 		<br>
 		<br>
 		<ui5-button id="open-big-content">Open dialog with big content</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="open-big-dynamic-content">Open dynamic dialog with big content</ui5-button>
 	</div>
 	<ui5-block-layer></ui5-block-layer>
 
@@ -1126,6 +1129,72 @@
 
 		document.getElementById("open-big-content").addEventListener("click", function () {
 			window["dlgBigContent"].open = true;
+		});
+
+		document.getElementById("open-big-dynamic-content").addEventListener("click", function () {
+			const dialog = document.createElement("ui5-dialog");
+			const child1 = `
+				<div slot="header" design="Header">
+					<h3>Random Title</h3>
+				</div>
+			`;
+
+			const child2 = `
+				<div>
+					<div>
+						<div>
+							<div>
+								<div>
+									<img src="randomImage.png">
+								</div>
+							</div>
+							<div>
+								<div>Contact RANDOM CORP</div>
+								<div>Some subtitle</div>
+							</div>
+						</div>
+					</div>
+					<form>
+						<div>
+							<div>
+								<p>Subscribe to our newsletter</p>
+								<small>No spam, only updates.</small>
+							</div>
+						</div>
+						<div>
+							<small>Hint: Use a valid code</small>
+						</div>
+						<div>Your Info</div>
+						<div>
+							<div>
+							</div>
+							<div>
+							</div>
+						</div>
+						<div>Company Info</div>
+						<div>
+							<div>
+							</div>
+							<div>
+							</div>
+						</div>
+						<div></div>
+						<div>
+							<div>
+								<span>
+									I agree to the random terms and conditions.
+										Read Privacy Policy.
+								</span>
+							</div>
+						</div>
+						<div></div>
+					</form>
+				</div>
+			`;
+
+			dialog.innerHTML = child1 + child2;
+			document.body.appendChild(dialog);
+			dialog.open = true;
 		});
 	</script>
 </body>
