@@ -10,6 +10,10 @@
 	color: var(--sapButton_Emphasized_TextColor);
 }
 
+:host([invalid]) {
+	display: none;
+}
+
 :host([value-state="Positive"]) {
 	background: var(--sapSuccessBackground);
 	border-color: var(--sapSuccessBorderColor);

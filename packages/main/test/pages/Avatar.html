@@ -279,6 +279,48 @@
 	</section>
 
 	<section>
+		<h3>Avatar Badge - Handling Invalid Icon Names</h3>
+		<p>The badge should not be displayed in the following cases:</p>
+		<ul>
+			<li>Empty icon name</li>
+			<li>Invalid icon name</li>
+			<li>No icon property set</li>
+		</ul>
+		<p>Only the last avatar should display the badge correctly.</p>
+		<br>
+		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Empty icon</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="invalid-icon-name" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Invalid icon</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">No icon property</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Valid icon (reference)</p>
+			</div>
+		</div>
+	</section>
+
+	<section>
 		<h3>Avatar Badge - Custom Badge in Slot</h3>
 		<div class="section">
 			<ui5-avatar size="M" initials="AB" color-scheme="Accent1">

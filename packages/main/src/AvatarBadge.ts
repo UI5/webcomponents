@@ -2,6 +2,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
@@ -75,6 +76,16 @@ class AvatarBadge extends UI5Element {
 	 */
 	@property()
 	valueState: `${ValueState}` = ValueState.None;
+
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean })
+	invalid = false;
+
+	onBeforeRendering() {
+		this.invalid = !this.icon || !getIconDataSync(this.icon);
+	}
 }
 
 AvatarBadge.define();
