@@ -306,12 +306,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_languageChanged?: boolean = false;
 
-	_currentDelimiter?: string;
-
-	_currentGroupSeparator?: string;
-
-	_tempInputValue?: string;
-
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -373,40 +367,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return this.focused;
 	}
 
-	/**
-	 * Converts a formatted number from old locale to new locale by swapping delimiters and group separators.
-	 * Uses temporary placeholders to avoid symbol collision when symbols swap (e.g., en→de).
-	 */
-	_convertValueToNewLanguage(value: string): string {
-		const oldDelimiter = this._currentDelimiter || ".";
-		const oldGroupSeparator = this._currentGroupSeparator || ",";
-		// Fetch new locale symbols
-		this._currentDelimiter = undefined;
-		this._currentGroupSeparator = undefined;
-		const newDelimiter = this._delimiter;
-		const newGroupSeparator = this._groupSeperator;
-
-		// Use Unicode control characters as temporary placeholders to avoid collision
-		const TEMP_DELIMITER = "\x00";
-		const TEMP_GROUP = "\x01";
-		const convertedValue = value
-			.replaceAll(oldDelimiter, TEMP_DELIMITER)
-			.replaceAll(oldGroupSeparator, TEMP_GROUP)
-			.replaceAll(TEMP_DELIMITER, newDelimiter)
-			.replaceAll(TEMP_GROUP, newGroupSeparator);
-
-		this._tempInputValue = convertedValue;
-		return convertedValue;
-	}
-
 	get _displayValue() {
 		if (this._languageChanged) {
 			this._languageChanged = false;
-			if (this._tempInputValue) {
-				const convertedValue = this._convertValueToNewLanguage(this._tempInputValue);
-				const parsedNumber = this._parseNumber(convertedValue);
-				return !Number.isNaN(parsedNumber) && this._isWithCorrectPrecision(convertedValue) ? this._formatNumber(parsedNumber) : convertedValue;
-			}
+			this.valueState = ValueState.None; // to reset the value state visual
 			return this._formatNumber(this.value);
 		}
 		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
@@ -442,17 +406,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 	onEnterDOM() {
 		this._setupLanguageChangeHandler();
-		this._initializeLocaleSymbols();
 	}
 
 	onExitDOM() {
 		this._cleanupLanguageChangeHandler();
-		this._cleanupLocaleSymbols();
-	}
-
-	_initializeLocaleSymbols() {
-		this._currentDelimiter = this._delimiter;
-		this._currentGroupSeparator = this._groupSeperator;
 	}
 
 	_setupLanguageChangeHandler() {
@@ -467,11 +424,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return Promise.resolve();
 		};
 		attachLanguageChange(this._languageChangeHandler);
-	}
-
-	_cleanupLocaleSymbols() {
-		this._currentDelimiter = undefined;
-		this._currentGroupSeparator = undefined;
 	}
 
 	_cleanupLanguageChangeHandler() {
@@ -517,8 +469,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (prevented) {
 			e.preventDefault();
 		}
-
-		this._tempInputValue = this.input?.value ?? this.innerInput?.value ?? "";
 	}
 
 	_onInputFocusIn() {
@@ -650,48 +600,17 @@ class StepInput extends UI5Element implements IFormInputElement {
 		}
 	}
 
-	get _delimiter() {
-		if (!this._currentDelimiter) {
-			try {
-				const localeData = getCachedLocaleDataInstance(getLocale());
-				// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-				const delimiter = localeData.getNumberSymbol("decimal");
-				this._currentDelimiter = delimiter;
-			} catch (e) {
-				this._currentDelimiter = ".";
-			}
-		}
-
-		return this._currentDelimiter;
-	}
-
-	get _groupSeperator() {
-		if (!this._currentGroupSeparator) {
-			try {
-				const localeData = getCachedLocaleDataInstance(getLocale());
-				const groupSeparator = localeData.getNumberSymbol("group");
-				this._currentGroupSeparator = groupSeparator;
-			} catch (e) {
-				this._currentGroupSeparator = ",";
-			}
-		}
-
-		return this._currentGroupSeparator;
-	}
-
 	get _isValueWithCorrectPrecision() {
-		return this._isWithCorrectPrecision(this.input?.value);
-	}
-
-	_isWithCorrectPrecision(value: string) {
-		const delimiter = this._delimiter;
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
+		const delimiter = localeData.getNumberSymbol("decimal") || ".";
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
-		if (this.valuePrecision === 0 && !value?.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
+		if (this.valuePrecision === 0 && !this.input?.value.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
 			// integers and zero will be formatted with toFixed, so thex y're always valid
 			return true;
 		}
-		const numberParts = value?.split(delimiter);
+		const numberParts = this.input?.value?.split(delimiter);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
 		return decimalPartLength === this.valuePrecision;
