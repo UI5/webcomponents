@@ -5,7 +5,7 @@ const assets = require("../../assets-meta.js");
 const isTypeScript = process.env.UI5_TS;
 const ext = isTypeScript ? 'ts' : 'js';
 
-const CSS_VARS_SCHEMA = process.env.CSS_VARS_SCHEMA === "local";
+const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "local";
 
 const generate = async (argv) => {
 	const inputFolder = path.normalize(argv[2]);
@@ -51,7 +51,7 @@ const loadAndCheck = async (themeName) => {
 };
 
 ${availableThemesArray}
-  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARS_SCHEMA ? ', "local"' : ''}));
+  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''}));
 `;
 	}
 

@@ -40,16 +40,16 @@ const deleteThemeBase = () => {
 const loadComponentPackages = async (theme: string, externalThemeName?: string) => {
 	const registeredPackages = getRegisteredPackages();
 
-	const packagesStylesPromises = [...registeredPackages.entries()].map(async ([packageName, { cssVariablesSchema }]) => {
+	const packagesStylesPromises = [...registeredPackages.entries()].map(async ([packageName, { cssVariablesTarget }]) => {
 		if (packageName === BASE_THEME_PACKAGE) {
 			return;
 		}
 
 		const cssData = await getThemeProperties(packageName, theme, externalThemeName);
 		if (cssData) {
-			if (cssVariablesSchema === "global") {
+			if (cssVariablesTarget === "root") {
 				createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
-			} else if (cssVariablesSchema === "local") {
+			} else if (cssVariablesTarget === "host") {
 				updateComponentStyles(packageName, cssData);
 			}
 		}

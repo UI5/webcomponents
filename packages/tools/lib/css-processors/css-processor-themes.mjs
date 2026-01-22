@@ -11,7 +11,7 @@ import scopeVariables from "./scope-variables.mjs";
 import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
-    const CSS_VARS_SCHEMA = process.env.CSS_VARS_SCHEMA === "local";
+    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
@@ -55,7 +55,7 @@ const generate = async (argv) => {
     };
 
     const processComponentPackageFile = async (f) => {
-        if (CSS_VARS_SCHEMA) {
+        if (CSS_VARIABLES_TARGET) {
             const result = await postcss([
                 combineDuplicatedSelectors,
                 postcssPlugin
