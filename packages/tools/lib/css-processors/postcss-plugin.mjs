@@ -49,16 +49,29 @@ export default function postcssPlugin(opts = {}) {
                     rule.walkDecls((decl) => {
                         if (decl.prop.startsWith('--') && hostVariables.has(decl.prop)) {
                             const variableData = hostVariables.get(decl.prop);
-
                             if (variableData.compact && variableData.cozy) {
                                 decl.value = `var(--_ui5-compact-size, ${variableData.compact}) var(--_ui5-cozy-size, ${variableData.cozy})`;
-                            } else if (variableData.compact) {
-                                decl.value = `var(--_ui5-compact-size, ${variableData.compact})`;
+                                hostVariables.delete(decl.prop);
                             }
                         }
                     });
                 }
             });
+
+            if (hostVariables.size > 0) {
+                root.walkRules((rule) => {
+                    if (rule.selector === ':host') {
+                        for (const [variable, variableData] of hostVariables) {
+                            rule.append({
+                                prop: variable,
+                                value: `var(--_ui5-compact-size, ${variableData.compact})  var(--_ui5-cozy-size, initial)`
+                            });
+                        }
+                        hostVariables.clear();
+                        return false; // Stop walking after first :host
+                    }
+                });
+            }
         }
     }
 }
