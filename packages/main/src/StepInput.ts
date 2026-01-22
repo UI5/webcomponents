@@ -485,7 +485,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 			this._formatter = undefined;
 			this._languageChanged = true;
 
-			return await Promise.resolve();
+			return Promise.resolve();
 		};
 		attachLanguageChange(this._languageChangeHandler);
 	}
