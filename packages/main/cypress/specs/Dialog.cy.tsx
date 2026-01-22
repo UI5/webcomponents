@@ -1665,7 +1665,7 @@ describe("Event Registration", () => {
 			</>
 		);
 
-		// Open dialog first time
+		// Open dialog for the first time
 		cy.get("#dialog-reopen-events").invoke("prop", "open", true);
 		cy.get<Dialog>("#dialog-reopen-events").ui5DialogOpened();
 
