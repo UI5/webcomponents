@@ -5,7 +5,7 @@ const assets = require("../../assets-meta.js");
 const isTypeScript = process.env.UI5_TS;
 const ext = isTypeScript ? 'ts' : 'js';
 
-const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "local";
+const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
 
 const generate = async (argv) => {
 	const inputFolder = path.normalize(argv[2]);
