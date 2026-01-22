@@ -12,7 +12,7 @@
 	max-width: 36rem;
 	margin: 0;
 	height: 2.25rem;
-	color: var(--sapField_TextColor);
+	color: var(--_ui5-search-field-text-color);
 	font-size: var(--sapFontSize);
 	font-family: var(--sapFontFamily);
 	font-style: normal;

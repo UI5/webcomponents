@@ -25,4 +25,5 @@
 	--_ui5_search_input_end_padding: 0.25rem;
 	--_ui5-search-input-start-padding: 0.625rem;
 	--_ui5-search-select-height: 2.25rem;
+	--_ui5-search-field-text-color: var(--sapShell_InteractiveTextColor);
 }
