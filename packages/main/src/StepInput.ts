@@ -286,9 +286,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 	@property({ noAttribute: true })
 	_spinStarted = false;
 
-	@property({ noAttribute: true })
-	_localeVersion = 0;
-
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
 	 *
@@ -376,49 +373,29 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return this.focused;
 	}
 
-	_findDelimiterPositions(value: string, delimiter: string): number[] {
-		const positions: number[] = [];
-		let index = value.indexOf(delimiter);
-
-		while (index !== -1) {
-			positions.push(index);
-			index = value.indexOf(delimiter, index + 1);
-		}
-
-		return positions;
-	}
-
-	_replaceAtPositions(value: string, positions: number[], newChar: string) {
-		const chars = [...value]; // Convert string to array of characters
-		positions.forEach(pos => {
-			if (pos >= 0 && pos < chars.length) {
-				chars[pos] = newChar;
-			}
-		});
-
-		return chars.join("");
-	}
-
+	/**
+	 * Converts a formatted number from old locale to new locale by swapping delimiters and group separators.
+	 * Uses temporary placeholders to avoid symbol collision when symbols swap (e.g., en→de).
+	 */
 	_convertValueToNewLanguage(value: string): string {
-		const oldDelimiter = this._delimiter;
-		const oldGroupSeparator = this._groupSeperator;
-		// Reset cached symbols so getters fetch the current locale symbols
+		const oldDelimiter = this._currentDelimiter || ".";
+		const oldGroupSeparator = this._currentGroupSeparator || ",";
+		// Fetch new locale symbols
 		this._currentDelimiter = undefined;
 		this._currentGroupSeparator = undefined;
-		const currentDelimiter = this._delimiter;
-		const currentGroupSeparator = this._groupSeperator;
-		const oldDelimiterPositions = this._findDelimiterPositions(value, oldDelimiter);
-		const oldGroupSeparatorPositions = this._findDelimiterPositions(value, oldGroupSeparator);
-		let convertedValue = value;
-		if (oldDelimiterPositions.length > 0) {
-			convertedValue = this._replaceAtPositions(convertedValue, oldDelimiterPositions, currentDelimiter);
-		}
-		if (oldGroupSeparatorPositions.length > 0) {
-			convertedValue = this._replaceAtPositions(convertedValue, oldGroupSeparatorPositions, currentGroupSeparator);
-		}
+		const newDelimiter = this._delimiter;
+		const newGroupSeparator = this._groupSeperator;
+
+		// Use Unicode control characters as temporary placeholders to avoid collision
+		const TEMP_DELIMITER = "\x00";
+		const TEMP_GROUP = "\x01";
+		const convertedValue = value
+			.replaceAll(oldDelimiter, TEMP_DELIMITER)
+			.replaceAll(oldGroupSeparator, TEMP_GROUP)
+			.replaceAll(TEMP_DELIMITER, newDelimiter)
+			.replaceAll(TEMP_GROUP, newGroupSeparator);
 
 		this._tempInputValue = convertedValue;
-
 		return convertedValue;
 	}
 
@@ -426,7 +403,9 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (this._languageChanged) {
 			this._languageChanged = false;
 			if (this._tempInputValue) {
-				return this._convertValueToNewLanguage(this._tempInputValue);
+				const convertedValue = this._convertValueToNewLanguage(this._tempInputValue);
+				const parsedNumber = this._parseNumber(convertedValue);
+				return !Number.isNaN(parsedNumber) && this._isWithCorrectPrecision(convertedValue) ? this._formatNumber(parsedNumber) : convertedValue;
 			}
 			return this._formatNumber(this.value);
 		}
@@ -481,7 +460,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this._languageChangeHandler = async () => {
+		this._languageChangeHandler = () => {
 			this._formatter = undefined;
 			this._languageChanged = true;
 
@@ -701,14 +680,18 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
+		return this._isWithCorrectPrecision(this.input?.value);
+	}
+
+	_isWithCorrectPrecision(value: string) {
 		const delimiter = this._delimiter;
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
-		if (this.valuePrecision === 0 && !this.input?.value?.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
+		if (this.valuePrecision === 0 && !value?.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
 			// integers and zero will be formatted with toFixed, so thex y're always valid
 			return true;
 		}
-		const numberParts = this.input?.value?.split(delimiter);
+		const numberParts = value?.split(delimiter);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 
 		return decimalPartLength === this.valuePrecision;
