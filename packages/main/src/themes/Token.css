@@ -45,7 +45,7 @@
 	color: var(--sapContent_ContrastTextColor);
 }
 
-:host([selected]:hover) {
+:host(:not([readonly])[selected]:hover) {
 	background: var(--sapButton_Selected_Hover_Background);
 }
 
