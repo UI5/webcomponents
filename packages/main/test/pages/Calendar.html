@@ -86,7 +86,6 @@
 	</style>
 </head>
 <body class="calendar1auto">
-
 	<section>
 		<ui5-label id="selectLabel" label-for="selectionType">Selection type for the first calendar:</ui5-label>
 		<ui5-select id="selectionType">
@@ -103,7 +102,7 @@
 	</section>
 
 	<section>
-		<ui5-calendar data-ui5-compact-size></ui5-calendar>
+		<ui5-calendar data-ui5-compact-size timestamp="1594166400"></ui5-calendar>
 	</section>
 
 	<section>
@@ -132,6 +131,8 @@
 			<ui5-date value="08/07/2020"></ui5-date>
 		</ui5-calendar>
 	</section>
+
+	
 
 	<section>
 		<ui5-title> Calendar with no format pattern & ISO min-max dates</ui5-title>
@@ -176,6 +177,22 @@
 	<section>
 		<ui5-title>Shadow Parts Demo - Custom Header Buttons</ui5-title>
 		<ui5-calendar class="header-parts-demo"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Disabled Dates</ui5-title>
+		<ui5-calendar id="calendar-disabled-dates">
+			<ui5-date-range slot="disabledDates" start-value="15 Nov 2025" end-value="20 Nov 2025"></ui5-date-range>
+			<ui5-date-range slot="disabledDates" start-value="25 Nov 2025" end-value="27 Nov 2025"></ui5-date-range>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Disabled Dates using a format pattern</ui5-title>
+		<ui5-calendar id="calendar-disabled-dates" format-pattern="dd/MM/yyyy">
+			<ui5-date-range slot="disabledDates" start-value="15/11/2025" end-value="20/11/2025"></ui5-date-range>
+			<ui5-date-range slot="disabledDates" start-value="25/11/2025" end-value="27/11/2025"></ui5-date-range>
+		</ui5-calendar>
 	</section>
 
 </body>

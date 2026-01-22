@@ -641,7 +641,7 @@ describe("General", () => {
 			}));
 	});
 
-	it.skip("Select All functionality + N-more integration", () => {
+	it("Select All functionality + N-more integration", () => {
 		cy.mount(
 			<><MultiComboBox style="width: 100px" noValidation={true} showSelectAll={true}>
 				<MultiComboBoxItem selected={true} text="Very Very Very Very long Item 1"></MultiComboBoxItem>
@@ -649,7 +649,7 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button id="dummyButton"></Button></>
+			</MultiComboBox><Button>Dummy Button</Button></>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -676,14 +676,12 @@ describe("General", () => {
 			.find(".ui5-mcb-select-all-checkbox")
 			.should("not.have.attr", "checked");
 
-		cy.get("#dummyButton")
-			.realClick();
+		// focus the dummy button to close the popover
+		cy.realPress("Tab");
+		cy.realPress("Tab");
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("not.be.focused");
 
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
@@ -1847,7 +1845,7 @@ describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", ()
 
 	});
 
-	it.skip("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
+	it("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
 		cy.get("[ui5-multi-combobox]")
 			.as("multi-combobox");
 
@@ -2175,6 +2173,42 @@ describe("Event firing", () => {
 
 		cy.get("@submitEvent")
 			.should("have.been.called");
+	});
+
+	it("tests if value-state-change event is fired correctly", () => {
+		cy.mount(
+				<MultiComboBox onValueStateChange={cy.stub().as("valueStateChangeEvent")}>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
+				</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("@valueStateChangeEvent")
+			.should("not.have.been.called");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledTwice");
 	});
 });
 
@@ -4390,5 +4424,63 @@ describe("MultiComboBox Composition", () => {
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 0);
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<MultiComboBox id="mcbInAForm" no-validation required>
+					<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Denmark"></MultiComboBoxItem>
+					<MultiComboBoxItem text="England"></MultiComboBoxItem>
+				</MultiComboBox>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("exist");
+
+		cy.get("@mcb")
+			.realType("Albania");
+
+		cy.get("@mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
 	});
 });

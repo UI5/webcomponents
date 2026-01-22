@@ -28,7 +28,6 @@
 }
 
 .ui5-form-item-root {
-	container-type: inline-size;
 	background-color: inherit;
 	color: inherit;
 }

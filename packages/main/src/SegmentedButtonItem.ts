@@ -192,6 +192,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 		if (this.disabled) {
 			e.preventDefault();
 			e.stopPropagation();
+			return;
 		}
 
 		this.selected = !this.selected;

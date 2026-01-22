@@ -609,12 +609,10 @@ class Table extends UI5Element {
 
 	get styles() {
 		const virtualizer = this._getVirtualizer();
-		const headerStyleMap = this.headerRow?.[0]?.cells?.reduce((headerStyles, headerCell) => {
-			if (headerCell.horizontalAlign !== undefined && !headerCell._popin) {
-				headerStyles[`--horizontal-align-${headerCell._individualSlot}`] = headerCell.horizontalAlign;
-			}
-			return headerStyles;
-		}, {} as { [key: string]: string });
+		const headerStyleMap: Record<string, string> = {};
+		this.headerRow[0]?.cells.forEach(headerCell => {
+			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "normal";
+		});
 		return {
 			table: {
 				"grid-template-columns": this._gridTemplateColumns,
@@ -634,7 +632,7 @@ class Table extends UI5Element {
 		}
 
 		const widths = [];
-		const visibleHeaderCells = this.headerRow[0]._visibleCells as TableHeaderCell[];
+		const visibleHeaderCells = this.headerRow[0]._visibleCells;
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {

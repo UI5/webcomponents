@@ -202,9 +202,9 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(i18nBundle.getText(TABLE_ROW_ACTIVE));
 		}
 
-		const cells = [...row._visibleCells, ...row._popinCells] as TableCell[];
+		const cells = [...row._visibleCells, ...row._popinCells];
 		cells.flatMap(cell => {
-			return cell._popin ? [cell._popinHeader!, cell._popinContent!] : [cell._headerCell, cell];
+			return cell._popin ? [cell._popinHeader!, cell._popinContent!] : [cell._headerCell!, cell];
 		}).forEach(node => {
 			const nodeDescription = getAccessibilityDescription(node, true);
 			descriptions.push(nodeDescription);

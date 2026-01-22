@@ -17,4 +17,54 @@
 	--_ui5_TimelineItem_bubble_content_padding: var(--_ui5_tl_bubble_padding);
 	--_ui5_TimelineItem_bubble_content_subtitle_padding_top: 0.375rem;
 	--_ui5_TimelineItem_bubble_content_description_padding_top: 0.75rem;
+
+	/* Timeline (container) */
+	--_ui5_tl_bubble_padding: 1rem;
+	--_ui5_tl_padding: 1rem 1rem 1rem .5rem;
+	--_ui5_tl_li_margin_bottom: 1.625rem;
+
+	/* TimelineItem */
+	--_ui5_timeline_tli_indicator_before_bottom: -1.5rem;
+	--_ui5_timeline_tli_indicator_before_right: -1.625rem;
+	--_ui5_timeline_tli_indicator_before_without_icon_bottom: -1.875rem;
+	--_ui5_timeline_tli_indicator_before_without_icon_right: -1.9375rem;
+
+	/* TimelineItem COZY */
+	--_ui5_timeline_tli_indicator_after_top: calc(-100% - 1rem);
+	--_ui5_timeline_tli_indicator_after_height: calc(100% + 1rem);
+	--_ui5_timeline_tli_indicator_before_height: 100%;
+	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% + 0.25rem);
+	--_ui5_timeline_tli_horizontal_indicator_after_left: 1.9375rem;
+	--_ui5_timeline_tli_horizontal_without_icon_indicator_before_width: calc(100% + 0.5rem);
+	--_ui5_timeline_tli_horizontal_indicator_before_width: calc(100% + 0.5rem);
+	--_ui5_timeline_tli_icon_horizontal_indicator_after_width: calc(100% + 0.25rem);
+	--_ui5_timeline_tli_without_icon_horizontal_indicator_before_width: calc(100% + 0.375rem);
+	--_ui5_timeline_tli_horizontal_indicator_short_after_width: 100%;
+}
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	/* Timeline (container) */
+	--_ui5_tl_bubble_padding: .5rem;
+	--_ui5_tl_padding: .5rem;
+	--_ui5_tl_li_margin_bottom: .5rem;
+
+	/* TimelineItem */
+	--_ui5_timeline_tli_indicator_before_bottom: -0.75rem;
+	--_ui5_timeline_tli_indicator_before_right: -0.5rem;
+	--_ui5_timeline_tli_indicator_before_without_icon_bottom: -1rem;
+	--_ui5_timeline_tli_indicator_before_without_icon_right: -0.8125rem;
+
+	/* TimelineItem COMPACT */
+	--_ui5_timeline_tli_indicator_before_height: calc(100% - 1.25rem);
+	--_ui5_timeline_tli_horizontal_without_icon_indicator_before_width: var(--_ui5_timeline_tli_indicator_after_height);
+	--_ui5_timeline_tli_horizontal_indicator_after_width: var(--_ui5_timeline_tli_indicator_after_height);
+	--_ui5_timeline_tli_horizontal_indicator_before_width: var(--_ui5_timeline_tli_indicator_after_height);
+	--_ui5_timeline_tli_icon_horizontal_indicator_after_width: var(--_ui5_timeline_tli_indicator_after_height);
+	--_ui5_timeline_tli_indicator_after_top: calc(-100% + 0.9375rem);
+	--_ui5_timeline_tli_indicator_after_height: calc(100% - 0.75rem);
+	--_ui5_timeline_tli_horizontal_indicator_after_left: 1.8625rem;
+	--_ui5_timeline_tli_horizontal_indicator_short_after_width: calc(100% - 1rem);
+	--_ui5_timeline_tli_without_icon_horizontal_indicator_before_width: calc(100% - 0.625rem);
 }

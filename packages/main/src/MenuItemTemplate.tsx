@@ -5,7 +5,6 @@ import Button from "./Button.js";
 import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Icon from "./Icon.js";
@@ -116,18 +115,15 @@ function listItemPostContent(this: MenuItem) {
 								{this.text}
 							</div>
 						</div>
-						<Button
-							icon={declineIcon}
-							design="Transparent"
-							aria-label={this.labelClose}
-							onClick={this._closeAll}
-						/>
 					</div >
 				</>
 			)
 		}
 
-		<div id={`${this._id}-menu-main`}>
+		<div
+			id={`${this._id}-menu-main`}
+			class={this.loading ? "menu-busy-indicator-main" : ""}
+		>
 			{
 				this.items.length ? (
 					<List
@@ -154,5 +150,17 @@ function listItemPostContent(this: MenuItem) {
 				/>
 			}
 		</div >
+		{
+			this.isPhone && (
+				<div slot="footer" class="ui5-menu-dialog-footer">
+					<Button
+						design="Transparent"
+						onClick={this._closeAll}
+					>
+						{this.labelCancel}
+					</Button>
+				</div>
+			)
+		}
 	</ResponsivePopover>;
 }

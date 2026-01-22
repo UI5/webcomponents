@@ -24,6 +24,12 @@
 	position: relative;
 }
 
+.ui5-search-field-busy-indicator {
+	width: 100%;
+	height: 100%;
+	border-radius: var(--_ui5_search_input_border_radius);
+}
+
 .ui5-shellbar-search-field-wrapper {
 	flex: 1;
 	min-width: auto;

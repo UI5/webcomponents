@@ -1,0 +1,46 @@
+.list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.625rem 0;
+	width: 100%;
+}
+
+.item-left {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex: 1;
+}
+
+.avatar-cozy {
+	display: var(--_ui5_user_settings_avatar_cozy_display);
+}
+
+.avatar-compact {
+	display: var(--_ui5_user_settings_avatar_compact_display);
+}
+
+.item-texts {
+	display: flex;
+	flex-direction: column;
+}
+
+.item-title {
+	font-weight: 600;
+	font-size: var(--_ui5_list_item_title_size);
+	color: var(--sapList_TextColor);
+	margin: 0.5rem;
+}
+
+.item-subtitle {
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSize);
+	margin: 0.5rem;
+}
+
+.item-right {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
