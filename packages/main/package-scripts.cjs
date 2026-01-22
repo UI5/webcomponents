@@ -5,7 +5,7 @@ const options = {
 	portStep: 2,
 	noWatchTS: true,
 	dev: true,
-	// cssVarsSchema: "local",
+	cssVarsSchema: "local",
 	internal: {
 		cypress_code_coverage: false,
 	},
