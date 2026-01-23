@@ -46,6 +46,14 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	_isVisible = false;
 
 	/**
+	 * Defines the value of the `ui5-combobox-item`.
+	 * Used for selection. Check ComboBox' complexValue property for more information.
+	 * @public
+	 */
+	@property()
+	value?: string;
+
+	/**
 	 * Indicates whether the item is focssed
 	 * @protected
 	 */

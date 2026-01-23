@@ -100,6 +100,7 @@ const SKIP_ITEMS_SIZE = 10;
 interface IComboBoxItem extends UI5Element {
 	text?: string,
 	headerText?: string,
+	value?: string,
 	focused: boolean,
 	isGroupItem?: boolean,
 	selected?: boolean,
@@ -234,6 +235,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	value = "";
+
+	@property()
+	set selectedValue(itemValue: string) {
+		this._useSelectedValue = true;
+		this._selectedValue = itemValue;
+	}
+
+	get selectedValue(): string {
+		return this._selectedValue;
+	}
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -457,6 +468,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
+	_useSelectedValue: boolean = false;
+	_isArrowDown: boolean = false;
+	_isArrowUp: boolean = false;
+	_selectedValue: string = "";
 	_valueStateLinks: Array<HTMLElement> = [];
 	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
@@ -878,6 +893,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_handleArrowDown(e: KeyboardEvent, indexOfItem: number) {
 		const isOpen = this.open;
+		this._isArrowDown = true;
 
 		if (this.focused && indexOfItem === -1 && isOpen) {
 			this.focused = false;
@@ -888,6 +904,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
 		const isOpen = this.open;
+		this._isArrowUp = true;
 
 		if (indexOfItem === 0) {
 			this._clearFocus();
@@ -907,6 +924,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_handlePageUp(e: KeyboardEvent, indexOfItem: number) {
 		const allItems = this._getItems();
+		this._isArrowUp = true;
 		const isProposedIndexValid = indexOfItem - SKIP_ITEMS_SIZE > -1;
 		indexOfItem = isProposedIndexValid ? indexOfItem - SKIP_ITEMS_SIZE : 0;
 		const shouldMoveForward = isInstanceOfComboBoxItemGroup(allItems[indexOfItem]) && !this.open;
@@ -918,6 +936,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const allItems = this._getItems();
 		const itemsLength = allItems.length;
 		const isProposedIndexValid = indexOfItem + SKIP_ITEMS_SIZE < itemsLength;
+		this._isArrowDown = true;
 
 		indexOfItem = isProposedIndexValid ? indexOfItem + SKIP_ITEMS_SIZE : itemsLength - 1;
 		const shouldMoveForward = isInstanceOfComboBoxItemGroup(allItems[indexOfItem]) && !this.open;
@@ -1152,10 +1171,27 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		const matchingItems: Array<IComboBoxItem> = this._startsWithMatchingItems(current);
+		let matchingItems: Array<IComboBoxItem> = this._startsWithMatchingItems(current);
+		const currentlySelectedItem = matchingItems.find(item => item.selected === true);
+
+		if (matchingItems && currentlySelectedItem) {
+			if (this._isArrowDown) {
+				matchingItems = matchingItems.slice(matchingItems.indexOf(currentlySelectedItem) + 1, matchingItems.length);
+				this._isArrowDown = false;
+			} else if (this._isArrowUp) {
+				matchingItems = matchingItems.slice(0, matchingItems.indexOf(currentlySelectedItem)).reverse();
+				this._isArrowUp = false;
+			}
+		}
 
 		if (matchingItems.length) {
-			const exactMatch = matchingItems.find(item => item.text === current);
+			let exactMatch;
+			if (this._useSelectedValue) {
+				exactMatch = matchingItems.find(item => item.value === currentlyFocusedItem?.value || item.text === current);
+			} else {
+				exactMatch = matchingItems.find(item => item.text === current);
+			}
+
 			return exactMatch ?? matchingItems[0];
 		}
 	}
@@ -1166,6 +1202,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this.inner.value = value;
 		this.inner.setSelectionRange(filterValue.length, value.length);
 		this.value = value;
+
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value || "";
+		}
 	}
 
 	_selectMatchingItem() {
@@ -1190,7 +1230,19 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._filteredItems.forEach(item => {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
-				itemToBeSelected = ((!item.isGroupItem && (item.text === this.value)) ? item : item?.items?.find(i => i.text === this.value));
+				if (isInstanceOfComboBoxItemGroup(item)) {
+					itemToBeSelected = item.items?.find(i => i.text === this.value);
+				} else {
+					// itemToBeSelected = this._useSelectedValue
+					// 	? this.items.find(i => (currentlyFocusedItem ? i.value === currentlyFocusedItem.value : i.value === this.selectedValue))
+					// 	: (item.text === this.value ? item : undefined);
+					const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
+					if (this._useSelectedValue) {
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch);
+					} else {
+						itemToBeSelected = item.text === this.value ? item : undefined;
+					}
+				}
 			}
 		});
 
@@ -1259,6 +1311,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value || "";
+		}
 
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {

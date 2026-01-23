@@ -43,7 +43,44 @@
 		<ui5-button id="combo-focus">Focus ComboBox</ui5-button>
 		<ui5-button id="value-set-btn">Set value</ui5-button>
 
-		<ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
+			<ui5-combobox selected-value="2">
+				<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+				<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+				<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+				<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+				<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
+			</ui5-combobox>
+
+			<ui5-combobox selected-value="2">
+				<ui5-cb-item text="Bulgari1a" value="bz"></ui5-cb-item>
+				<ui5-cb-item text="Bulgaria" value="bg"></ui5-cb-item>
+				<ui5-cb-item text="ㅁㄴㅇㄴ" value="ch"></ui5-cb-item>
+				<ui5-cb-item text="Brazil" value="br"></ui5-cb-item>
+				<ui5-cb-item text="Германия" value="de"></ui5-cb-item>
+			</ui5-combobox>
+
+		<ui5-combobox id="value-state-grouping" selected-value="ar">
+			<ui5-cb-item-group header-text="A">
+				<ui5-cb-item text="Argentina" value="ar"></ui5-cb-item>
+				<ui5-cb-item text="Australia" value="au"></ui5-cb-item>
+				<ui5-cb-item text="Austria" value="at"></ui5-cb-item>
+				<ui5-cb-item text="Bolivia" value="bo"></ui5-cb-item>
+			</ui5-cb-item-group>
+
+			<ui5-cb-item-group header-text="B">
+				<ui5-cb-item text="Bahrain" value="bh"></ui5-cb-item>
+				<ui5-cb-item text="Belgium" value="be"></ui5-cb-item>
+				<ui5-cb-item text="Brazil" value="br"></ui5-cb-item>
+			</ui5-cb-item-group>
+
+			<ui5-cb-item-group header-text="C">
+				<ui5-cb-item text="Canada" value="ca"></ui5-cb-item>
+				<ui5-cb-item text="Chile" value="cl"></ui5-cb-item>
+			</ui5-cb-item-group>
+		</ui5-combobox>
+
+
+		<!-- <ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
 			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
 			<ui5-cb-item text="Argentina"></ui5-cb-item>
 			<ui5-cb-item text="Australia"></ui5-cb-item>
@@ -604,7 +641,7 @@
 		document.getElementById("combo-focus").addEventListener("click", function () {
 			document.getElementById("combo").focus();
 		});
-	</script>
+	</script> -->
 
 </body>
 
