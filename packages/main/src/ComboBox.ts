@@ -1187,7 +1187,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (matchingItems.length) {
 			let exactMatch;
 			if (this._useSelectedValue) {
-				exactMatch = matchingItems.find(item => item.value === currentlyFocusedItem?.value || item.text === current);
+				exactMatch = matchingItems.find(item => item.value === currentlyFocusedItem?.value && item.text === current);
 			} else {
 				exactMatch = matchingItems.find(item => item.text === current);
 			}
@@ -1211,6 +1211,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_selectMatchingItem() {
 		const currentlyFocusedItem = this.items.find(item => item.focused);
 		const shouldSelectionBeCleared = currentlyFocusedItem && currentlyFocusedItem.isGroupItem;
+		const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
 		let itemToBeSelected: IComboBoxItem | undefined;
 		let previouslySelectedItem: IComboBoxItem | undefined;
 
@@ -1231,17 +1232,20 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._filteredItems.forEach(item => {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
 				if (isInstanceOfComboBoxItemGroup(item)) {
-					itemToBeSelected = item.items?.find(i => i.text === this.value);
+					if (this._useSelectedValue) {
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch);
+					} else {
+						itemToBeSelected = item.items?.find(i => i.text === this.value);
+					}
 				} else {
 					// itemToBeSelected = this._useSelectedValue
 					// 	? this.items.find(i => (currentlyFocusedItem ? i.value === currentlyFocusedItem.value : i.value === this.selectedValue))
 					// 	: (item.text === this.value ? item : undefined);
-					const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
 					if (this._useSelectedValue) {
 						itemToBeSelected = this.items.find(i => i.value === valueToMatch);
-					} else {
-						itemToBeSelected = item.text === this.value ? item : undefined;
+						return;
 					}
+					itemToBeSelected = item.text === this.value ? item : undefined;
 				}
 			}
 		});
