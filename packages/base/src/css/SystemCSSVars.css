@@ -1,13 +1,18 @@
 :root {
+	/* Use non-existen variable. This will trigger the fallback in
+	all cases becausethe variable is not defined anywhere. */
+	--_ui5-cozy-size: var(--_ui5-f2d95f8);
+
 	--_ui5-compact-size: ;
-	--_ui5-cozy-size: initial;
 	--_ui5_content_density: cozy;
 }
 
 [data-ui5-compact-size],
 .ui5-content-density-compact,
 .sapUiSizeCompact {
-	--_ui5-compact-size: initial;
 	--_ui5-cozy-size: ;
+	/* Use non-existen variable. This will trigger the fallback in
+	all cases becausethe variable is not defined anywhere. */
+	--_ui5-compact-size: var(--_ui5-f2d95f8);
 	--_ui5_content_density: compact;
 }

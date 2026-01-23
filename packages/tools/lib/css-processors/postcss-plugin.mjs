@@ -123,9 +123,12 @@ export default function postcssPlugin() {
                         value: `var(--_ui5-compact-size, ${variableData.compact})  var(--_ui5-cozy-size, ${variableData.cozy})`,
                     });
                 } else if (variableData.compact) {
+
+                    // Use non - existen variable.This will trigger the fallback in
+                    // all cases becausethe variable is not defined anywhere.
                     hostRule.append({
                         prop: variable,
-                        value: `var(--_ui5-compact-size, ${variableData.compact}) var(--_ui5-cozy-size, initial)`,
+                        value: `var(--_ui5-compact-size, ${variableData.compact}) var(--_ui5-cozy-size, var(--_ui5-f2d95f8))`,
                     });
                 } else {
                     hostRule.append({
