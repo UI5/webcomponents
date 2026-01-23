@@ -28,4 +28,5 @@
 	--_ui5-search-select-height: 1.625rem;
 	--_ui5-search-loading-overlay-background: var(--sapBackgroundColor);
 	--_ui5-search-loading-overlay-transparency: 0.72;
+	--_ui5-search-field-text-color: var(--sapField_TextColor);
 }

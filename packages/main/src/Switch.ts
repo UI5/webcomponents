@@ -6,6 +6,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import {
 	isSpace, isEnter, isShift, isEscape,
+	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -201,6 +202,9 @@ class Switch extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_cancelAction = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_isSpacePressed = false;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -233,9 +237,11 @@ class Switch extends UI5Element implements IFormInputElement {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._cancelAction = isShift(e) || isEscape(e);
 		if (isSpace(e)) {
 			e.preventDefault();
+			this._isSpacePressed = true;
+		} else if (isShift(e) || isEscape(e)) {
+			this._cancelAction = true;
 		}
 
 		if (isEnter(e)) {
@@ -244,7 +250,22 @@ class Switch extends UI5Element implements IFormInputElement {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (isSpace(e) && !this._cancelAction) {
+		const isSpaceKey = isSpace(e);
+		const isCancelKey = isShift(e) || isEscape(e);
+
+		if (isSpaceKey || isSpaceShift(e)) {
+			if (this._cancelAction) {
+				this._cancelAction = false;
+				this._isSpacePressed = false;
+				e.preventDefault();
+				return;
+			}
+
+			this._isSpacePressed = false;
+		} else if (isCancelKey && !this._isSpacePressed) {
+			this._cancelAction = false;
+		}
+		if (isSpaceKey) {
 			this._onclick();
 		}
 	}

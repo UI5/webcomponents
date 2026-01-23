@@ -498,7 +498,7 @@ class Toolbar extends UI5Element {
 		}
 		const id: string = item._id;
 		// Measure rendered width for spacers with width, and for normal items
-		const renderedItem = this.shadowRoot!.querySelector<HTMLElement>(`#${item.slot}`);
+		const renderedItem = this.shadowRoot!.querySelector<HTMLElement>(`#${item._individualSlot}`);
 
 		let itemWidth = 0;
 
