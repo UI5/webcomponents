@@ -1055,7 +1055,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	/**
 	 * Promise that resolves to the currently selected date represented as a Local JavaScript Date instance.
 	 * @public
-	 * @default Promise<null>
+	 * @default Promise
 	 */
 	get dateValueAsync(): Promise<Date | null> {
 		return this.definePromise.then(() => {
