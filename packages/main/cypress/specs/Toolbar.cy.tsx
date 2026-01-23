@@ -438,24 +438,24 @@ describe("Keyboard Navigation", () => {
 			</Toolbar>
 		);
 
-		// Focus the first button
-		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+		// Focus the first button (go through both shadow roots)
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").shadow().find("button").focus();
 
 		// Press Arrow Right to move to second button
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 
 		// Press Arrow Right to move to third button
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 
 		// Press Arrow Right to move to select (skip separator)
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='select1']").shadow().find("[ui5-select]").should("be.focused");
+		cy.get("[data-testid='select1']").shadow().find("[ui5-select]").shadow().find("[data-sap-focus-ref]").should("be.focused");
 
 		// Press Arrow Left to move back to third button
 		cy.realPress("ArrowLeft");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 	});
 
 	it("Should navigate using Home and End keys", () => {
@@ -468,15 +468,15 @@ describe("Keyboard Navigation", () => {
 		);
 
 		// Focus the middle button
-		cy.get("[data-testid='middle']").shadow().find("[ui5-button]").focus();
+		cy.get("[data-testid='middle']").shadow().find("[ui5-button]").shadow().find("button").focus();
 
 		// Press End to move to last button
 		cy.realPress("End");
-		cy.get("[data-testid='last']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='last']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 
 		// Press Home to move to first button
 		cy.realPress("Home");
-		cy.get("[data-testid='first']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='first']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 	});
 
 	it("Should skip disabled items during arrow navigation", () => {
@@ -489,11 +489,11 @@ describe("Keyboard Navigation", () => {
 		);
 
 		// Focus the first button
-		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").shadow().find("button").focus();
 
 		// Press Arrow Right - should skip disabled button and go to button 3
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 	});
 
 	it("Should skip non-interactive items during arrow navigation", () => {
@@ -507,11 +507,11 @@ describe("Keyboard Navigation", () => {
 		);
 
 		// Focus the first button
-		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").shadow().find("button").focus();
 
 		// Press Arrow Right - should skip separator and spacer
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 	});
 
 	it("Should have correct tabindex values for toolbar items", () => {
@@ -524,15 +524,15 @@ describe("Keyboard Navigation", () => {
 		);
 
 		// First button should have tabindex="0", others should have tabindex="-1"
-		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "0");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "-1");
 
 		// Focus second button and check tabindex updates
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").focus();
-		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").focus();
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "0");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "-1");
 	});
 
 	it("Should maintain focus when clicking on toolbar items", () => {
@@ -545,14 +545,14 @@ describe("Keyboard Navigation", () => {
 		);
 
 		// Click on second button
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").realClick();
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").realClick();
 
 		// Check that second button has tabindex="0" and can navigate from there
-		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").shadow().find("button").should("have.attr", "tabindex", "0");
 
 		// Navigate with arrow key
 		cy.realPress("ArrowRight");
-		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").shadow().find("button").should("be.focused");
 	});
 
 	it("Should have role='toolbar' when there are multiple interactive items", () => {
