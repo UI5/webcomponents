@@ -390,16 +390,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	value = "";
 
 	/**
-	 * Defines the inner stored value of the component.
-	 *
-	 * **Note:** The property is updated upon typing. In some special cases the old value is kept (e.g. deleting the value after the dot in a float)
-	 * @default ""
-	 * @private
-	 */
-	@property({ noAttribute: true })
-	_innerValue = "";
-
-	/**
 	 * Defines the value state of the component.
 	 * @default "None"
 	 * @public
@@ -634,7 +624,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	lastConfirmedValue: string
 	isTyping: boolean
 	_handleResizeBound: ResizeObserverCallback;
-	_keepInnerValue: boolean;
 	_shouldAutocomplete?: boolean;
 	_enterKeyDown?: boolean;
 	_isKeyNavigation?: boolean;
@@ -724,7 +713,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		this._handleResizeBound = this._handleResize.bind(this);
 
-		this._keepInnerValue = false;
 		this._focusedAfterClear = false;
 		this._valueStateLinks = [];
 	}
@@ -751,10 +739,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onBeforeRendering() {
-		if (!this._keepInnerValue) {
-			this._innerValue = this.value === null ? "" : this.value;
-		}
-
 		if (this.showSuggestions) {
 			this.enableSuggestions();
 
@@ -829,9 +813,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this._performTextSelection) {
 			// this is required to syncronize lit-html input's value and user's input
 			// lit-html does not sync its stored value for the value property when the user is typing
-			if (innerInput.value !== this._innerValue) {
-				innerInput.value = this._innerValue;
-			}
+			// if (innerInput.value !== this._innerValue) {
+			// 	innerInput.value = this._innerValue;
+			// }
 
 			if (this.typedInValue.length && this.value.length) {
 				// "Contains" filtering requires custom selection range handling.
@@ -1155,7 +1139,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		this._keepInnerValue = false;
 		this.focused = false; // invalidating property
 		this._isChangeTriggeredBySuggestion = false;
 		if (this.showClearIcon && !this._effectiveShowClearIcon) {
@@ -1275,9 +1258,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_input(e: CustomEvent<InputEventDetail> | InputEvent, eventType: string) {
 		const inputDomRef = this.getInputDOMRefSync();
-		const emptyValueFiredOnNumberInput = this.value && this.isTypeNumber && !inputDomRef!.value;
-
-		this._keepInnerValue = false;
 
 		const allowedEventTypes = [
 			"deleteWordBackward",
@@ -1296,41 +1276,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		];
 
 		this._shouldAutocomplete = !allowedEventTypes.includes(eventType) && !this.noTypeahead;
-
-		if (e instanceof InputEvent) {
-			// ---- Special cases of numeric Input ----
-			// ---------------- Start -----------------
-
-			// When the last character after the delimiter is removed.
-			// In such cases, we want to skip the re-rendering of the
-			// component as this leads to cursor repositioning and causes user experience issues.
-
-			// There are few scenarios:
-			// Example: type "123.4" and press BACKSPACE - the native input is firing event with the whole part as value (123).
-			// Pressing BACKSPACE again will remove the delimiter and the native input will fire event with the whole part as value again (123).
-			// Example: type "123.456", select/mark "456" and press BACKSPACE - the native input is firing event with the whole part as value (123).
-			// Example: type "123.456", select/mark "123.456" and press BACKSPACE - the native input is firing event with empty value.
-			const delimiterCase = this.isTypeNumber
-				&& (e.inputType === "deleteContentForward" || e.inputType === "deleteContentBackward")
-				&& !(e.target as HTMLInputElement).value.includes(".")
-				&& this.value.includes(".");
-
-			// Handle special numeric notation with "e", example "12.5e12"
-			const eNotationCase = emptyValueFiredOnNumberInput && e.data === "e";
-
-			// Handle special numeric notation with "-", example "-3"
-			// When pressing BACKSPACE, the native input fires event with empty value
-			const minusRemovalCase = emptyValueFiredOnNumberInput
-				&& this.value.startsWith("-")
-				&& this.value.length === 2
-				&& (e.inputType === "deleteContentForward" || e.inputType === "deleteContentBackward");
-
-			if (delimiterCase || eNotationCase || minusRemovalCase) {
-				this.value = (e.target as HTMLInputElement).value;
-				this._keepInnerValue = true;
-			}
-			// ----------------- End ------------------
-		}
 
 		if (e.target === inputDomRef) {
 			this.focused = true;
@@ -1427,7 +1372,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_handleTypeAhead(item: IInputSuggestionItemSelectable) {
 		const value = item.text ? item.text : "";
 
-		this._innerValue = value;
 		this.value = value;
 		this._performTextSelection = true;
 
