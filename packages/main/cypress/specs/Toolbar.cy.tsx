@@ -423,6 +423,166 @@ describe("Toolbar general interaction", () => {
 	});
 });
 
+describe("Keyboard Navigation", () => {
+	it("Should navigate between toolbar items using arrow keys", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" data-testid="btn1"></ToolbarButton>
+				<ToolbarButton text="Button 2" data-testid="btn2"></ToolbarButton>
+				<ToolbarButton text="Button 3" data-testid="btn3"></ToolbarButton>
+				<ToolbarSeparator></ToolbarSeparator>
+				<ToolbarSelect data-testid="select1">
+					<ToolbarSelectOption>1</ToolbarSelectOption>
+					<ToolbarSelectOption>2</ToolbarSelectOption>
+				</ToolbarSelect>
+			</Toolbar>
+		);
+
+		// Focus the first button
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+
+		// Press Arrow Right to move to second button
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("be.focused");
+
+		// Press Arrow Right to move to third button
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+
+		// Press Arrow Right to move to select (skip separator)
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='select1']").shadow().find("[ui5-select]").should("be.focused");
+
+		// Press Arrow Left to move back to third button
+		cy.realPress("ArrowLeft");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+	});
+
+	it("Should navigate using Home and End keys", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First" data-testid="first"></ToolbarButton>
+				<ToolbarButton text="Middle" data-testid="middle"></ToolbarButton>
+				<ToolbarButton text="Last" data-testid="last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Focus the middle button
+		cy.get("[data-testid='middle']").shadow().find("[ui5-button]").focus();
+
+		// Press End to move to last button
+		cy.realPress("End");
+		cy.get("[data-testid='last']").shadow().find("[ui5-button]").should("be.focused");
+
+		// Press Home to move to first button
+		cy.realPress("Home");
+		cy.get("[data-testid='first']").shadow().find("[ui5-button]").should("be.focused");
+	});
+
+	it("Should skip disabled items during arrow navigation", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" data-testid="btn1"></ToolbarButton>
+				<ToolbarButton text="Button 2" disabled data-testid="btn2"></ToolbarButton>
+				<ToolbarButton text="Button 3" data-testid="btn3"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Focus the first button
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+
+		// Press Arrow Right - should skip disabled button and go to button 3
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+	});
+
+	it("Should skip non-interactive items during arrow navigation", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" data-testid="btn1"></ToolbarButton>
+				<ToolbarSeparator data-testid="sep1"></ToolbarSeparator>
+				<ToolbarSpacer data-testid="spacer1"></ToolbarSpacer>
+				<ToolbarButton text="Button 2" data-testid="btn2"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Focus the first button
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").focus();
+
+		// Press Arrow Right - should skip separator and spacer
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("be.focused");
+	});
+
+	it("Should have correct tabindex values for toolbar items", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" data-testid="btn1"></ToolbarButton>
+				<ToolbarButton text="Button 2" data-testid="btn2"></ToolbarButton>
+				<ToolbarButton text="Button 3" data-testid="btn3"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// First button should have tabindex="0", others should have tabindex="-1"
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+
+		// Focus second button and check tabindex updates
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").focus();
+		cy.get("[data-testid='btn1']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "-1");
+	});
+
+	it("Should maintain focus when clicking on toolbar items", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" data-testid="btn1"></ToolbarButton>
+				<ToolbarButton text="Button 2" data-testid="btn2"></ToolbarButton>
+				<ToolbarButton text="Button 3" data-testid="btn3"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Click on second button
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").realClick();
+
+		// Check that second button has tabindex="0" and can navigate from there
+		cy.get("[data-testid='btn2']").shadow().find("[ui5-button]").should("have.attr", "tabindex", "0");
+
+		// Navigate with arrow key
+		cy.realPress("ArrowRight");
+		cy.get("[data-testid='btn3']").shadow().find("[ui5-button]").should("be.focused");
+	});
+
+	it("Should have role='toolbar' when there are multiple interactive items", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1"></ToolbarButton>
+				<ToolbarButton text="Button 2"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-items")
+			.should("have.attr", "role", "toolbar");
+	});
+
+	it("Should not have role='toolbar' when there is only one interactive item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-items")
+			.should("not.have.attr", "role");
+	});
+});
+
 describe("Accessibility", () => {
 	it("Should apply accessibile-name to the popover", () => {
 		cy.mount(

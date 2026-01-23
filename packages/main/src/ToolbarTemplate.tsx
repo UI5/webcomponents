@@ -12,6 +12,9 @@ export default function ToolbarTemplate(this: Toolbar) {
 			}}
 			role={this.accInfo.root.role}
 			aria-label={this.accInfo.root.accessibleName}
+			onKeyDown={this._onkeydown}
+			onFocusIn={this._onfocusin}
+			onMouseDown={this._onmousedown}
 		>
 			{this.standardItems.map(item => {
 				if ("styles" in item) {
