@@ -713,4 +713,56 @@ describe("Avatar with Badge", () => {
 			.find(".ui5-avatar-badge-icon")
 			.should("have.css", "width", "16px");
 	});
+
+	it("hides badge when icon is invalid and shows when valid", () => {
+		// Test all invalid cases and valid case in one test using direct DOM manipulation
+		cy.document().then(doc => {
+			// Create and test empty icon badge
+			const badgeEmpty = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeEmpty.icon = "";
+			doc.body.appendChild(badgeEmpty);
+
+			// Create and test invalid icon badge
+			const badgeInvalid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeInvalid.icon = "non-existent-icon-xyz";
+			doc.body.appendChild(badgeInvalid);
+
+			// Create and test no icon badge
+			const badgeNoIcon = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			doc.body.appendChild(badgeNoIcon);
+
+			// Create and test valid icon badge
+			const badgeValid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeValid.icon = "accept";
+			doc.body.appendChild(badgeValid);
+
+			// Wait for components to render
+			cy.wait(200).then(() => {
+				// Test empty icon
+				expect(badgeEmpty.hasAttribute("invalid"), "empty icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeEmpty).display, "empty icon should be hidden").to.equal("none");
+
+				// Test invalid icon
+				expect(badgeInvalid.hasAttribute("invalid"), "invalid icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeInvalid).display, "invalid icon should be hidden").to.equal("none");
+
+				// Test no icon
+				expect(badgeNoIcon.hasAttribute("invalid"), "no icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeNoIcon).display, "no icon should be hidden").to.equal("none");
+
+				// Test valid icon
+				expect(badgeValid.hasAttribute("invalid"), "valid icon should NOT have invalid attr").to.be.false;
+				expect(getComputedStyle(badgeValid).display, "valid icon should be visible").to.not.equal("none");
+				const icon = badgeValid.shadowRoot?.querySelector(".ui5-avatar-badge-icon");
+				expect(icon, "valid icon should have icon in shadow DOM").to.exist;
+				expect(icon?.getAttribute("name")).to.equal("accept");
+
+				// Cleanup: remove elements from DOM
+				badgeEmpty.remove();
+				badgeInvalid.remove();
+				badgeNoIcon.remove();
+				badgeValid.remove();
+			});
+		});
+	});
 });
