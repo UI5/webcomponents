@@ -316,6 +316,32 @@ describe("Calendar general interaction", () => {
 			.should("not.have.class", "ui5-mp-item--selected");
 	});
 
+	it("Initial timestamp property is respected when no selected dates exist", () => {
+		const specificDate = new Date(Date.UTC(2015, 5, 15, 0, 0, 0));
+		const timestamp = specificDate.valueOf() / 1000;
+
+		cy.mount(<Calendar timestamp={timestamp}></Calendar>);
+
+		cy.get<Calendar>("[ui5-calendar]")
+			.shadow()
+			.find(".ui5-calheader")
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "June");
+
+		cy.get<Calendar>("[ui5-calendar]")
+			.shadow()
+			.find(".ui5-calheader")
+			.find("[data-ui5-cal-header-btn-year]")
+			.should("contain.text", "2015");
+
+		cy.get<Calendar>("[ui5-calendar]")
+			.invoke("prop", "timestamp")
+			.should("equal", timestamp);
+
+		cy.ui5CalendarGetDay("[ui5-calendar]", timestamp.toString())
+			.should("have.attr", "tabindex", "0");
+	});
+
 	it("Should navigate to Year Picker when selecting a range in Year Range Picker", () => {
 		const YEAR = 1997;
 		const date = Date.UTC(YEAR);
@@ -1549,35 +1575,46 @@ describe("Calendar accessibility", () => {
 });
 
 describe("Day Picker Tests", () => {
-	it.skip("Select day with Space", () => {
-		cy.mount(<Calendar id="calendar1"></Calendar>);
+	it("Select day with Space", () => {
+		const today = new Date();
+		const tomorrow = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0, 0) / 1000);
 
-		cy.get<Calendar>("#calendar1")
+		cy.mount(<Calendar></Calendar>);
+
+		cy.get<Calendar>("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get<Calendar>("@calendar")
 			.shadow()
 			.find("[ui5-daypicker]")
 			.shadow()
 			.find(".ui5-dp-item--now")
-			.as("today");
+			.realClick();
 
-		cy.get("@today")
-			.realClick()
-			.should("be.focused")
-			.realPress("ArrowRight")
+		cy.get<Calendar>("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.focus");
+
+		cy.get<Calendar>("@calendar")
+			.realPress("ArrowRight");
+
+		cy.get<Calendar>("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(`[data-sap-timestamp='${tomorrow}']`)
+			.should("have.focus");
+
+		cy.get<Calendar>("@calendar")
 			.realPress("Space");
 
-		cy.focused()
-			.invoke("attr", "data-sap-timestamp")
-			.then(timestampAttr => {
-				const timestamp = parseInt(timestampAttr!);
-				const selectedDate = new Date(timestamp * 1000).getDate();
-				const expectedDate = new Date(Date.now() + 24 * 3600 * 1000).getDate();
-				expect(selectedDate).to.eq(expectedDate);
-			});
-
-		cy.get<Calendar>("#calendar1")
+		cy.get<Calendar>("@calendar")
 			.should(($calendar) => {
 				const selectedDates = $calendar.prop("selectedDates");
-				expect(selectedDates).to.have.length.greaterThan(0);
+				expect(selectedDates).to.include(tomorrow);
 			});
 	});
 

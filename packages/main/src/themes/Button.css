@@ -385,6 +385,7 @@ bdi {
 	justify-content: center;
 }
 
-:host([has-end-icon]:not([icon])) .ui5-button-end-icon {
-	margin-left: auto;
+:host([has-end-icon]:not([icon]):not(:empty)) .ui5-button-end-icon {
+	padding-inline-start: var(--_ui5_button_base_icon_margin);
+	margin-inline-start: auto;
 }
