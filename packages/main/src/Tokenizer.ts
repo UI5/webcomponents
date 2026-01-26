@@ -333,7 +333,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Defines the popover title.
-	 * **Note:** Used inside MultiInput and MultiComboBox components.
+	 * **Note:** Used inside MultiInput component.
 	 * @default undefined
 	 * @private
 	 */
