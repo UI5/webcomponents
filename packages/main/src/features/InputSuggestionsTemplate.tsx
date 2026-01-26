@@ -7,10 +7,11 @@ import ResponsivePopover from "../ResponsivePopover.js";
 import Button from "../Button.js";
 import ListAccessibleRole from "../types/ListAccessibleRole.js";
 
-export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
+export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult, mobileTitle?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
 	const suggestionsList = hooks?.suggestionsList || defaultSuggestionsList;
 	// Mobile header hook - intended only for MultiInput design scenario
 	const mobileHeader = hooks?.mobileHeader;
+	const mobileTitle = hooks?.mobileTitle || defaultMobileTitle;
 	const valueStateMessage = hooks?.valueStateMessage;
 	const valueStateMessageInputIcon = hooks?.valueStateMessageInputIcon;
 
@@ -35,7 +36,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
-							<span>{this._headerTitleText}</span>
+							{mobileTitle.call(this) || null}
 						</div>
 						<div class="row">
 							<div class="input-root-phone native-input-wrapper">
@@ -110,5 +111,11 @@ function defaultSuggestionsList(this: Input) {
 		>
 			<slot></slot>
 		</List>
+	);
+}
+
+function defaultMobileTitle(this: Input) {
+	return (
+		<span>{this._headerTitleText}</span>
 	);
 }

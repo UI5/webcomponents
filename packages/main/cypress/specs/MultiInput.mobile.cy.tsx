@@ -4,6 +4,8 @@ import SuggestionItem from "../../src/SuggestionItem.js";
 import Button from "../../src/Button.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import { TOKENIZER_POPOVER_REMOVE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
@@ -66,6 +68,72 @@ describe("Multi Input on mobile device", () => {
 		cy.get("@multiInput")
 			.should("have.value", "test");
 		cy.get("@onChange").should("not.have.been.called");
+	});
+
+	it("Should test dialog title with default text", () => {
+		cy.mount(
+			<MultiInput id="test-title" showSuggestions>
+				<Token text="Amet"></Token>
+				<Token text="Dolor"></Token>
+				<Token text="Lorem"></Token>
+				<Token text="Ipsum"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.realClick();
+
+		cy.get("@multiInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Without accessibleName, should use default text from i18n
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", TOKENIZER_POPOVER_REMOVE.defaultText);
+		
+	});
+
+	it("Should test dialog title with label", () => {
+		cy.mount(
+			<>
+			<Label for="test-title2">Custom Title</Label>
+			<MultiInput id="test-title2" showSuggestions>
+				<Token text="Amet"></Token>
+				<Token text="Dolor"></Token>
+				<Token text="Lorem"></Token>
+				<Token text="Ipsum"></Token>
+			</MultiInput>
+			</>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.realClick();
+
+		cy.get("@multiInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Without accessibleName, should use default text from i18n
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", "Custom Title");
 	});
 
 	describe("Filter-Selected Button", () => {

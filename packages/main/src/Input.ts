@@ -89,6 +89,7 @@ import {
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
+	TOKENIZER_POPOVER_REMOVE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -1733,6 +1734,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get _headerTitleText() {
 		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get _mobileHeaderTitleText() {
+		console.log(getAssociatedLabelForTexts(this));
+		return getAssociatedLabelForTexts(this) || Input.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
 	}
 
 	get _suggestionsOkButtonText() {

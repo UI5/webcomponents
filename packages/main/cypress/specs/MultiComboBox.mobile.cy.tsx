@@ -1,4 +1,5 @@
-import { SHOW_SELECTED_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { SHOW_SELECTED_BUTTON, TOKENIZER_POPOVER_REMOVE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
@@ -168,6 +169,72 @@ describe("MultiComboBox mobile general interaction", () => {
             .find("[ui5-input]")
             .should("have.attr", "placeholder", "Select options");
     });
+
+	it("Should test dialog title with default text", () => {
+		cy.mount(
+			<MultiComboBox id="test-title">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" selected />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox");
+
+		cy.get("@multiComboBox")
+			.shadow()
+			.find("#ui5-multi-combobox-input")
+			.realClick();
+
+		cy.get("@multiComboBox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Without label, should use default text from i18n
+		cy.get("@multiComboBox")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", TOKENIZER_POPOVER_REMOVE.defaultText);
+		
+	});
+
+	it("Should test dialog title with label", () => {
+		cy.mount(
+			<>
+			<Label for="test-title2">Custom Title</Label>
+			<MultiComboBox id="test-title2">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" selected />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+			</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox");
+
+		cy.get("@multiComboBox")
+			.shadow()
+			.find("#ui5-multi-combobox-input")
+			.realClick();
+
+		cy.get("@multiComboBox")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Without label, should use default text from i18n
+		cy.get("@multiComboBox")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", "Custom Title");
+	});
 });
 
 describe("Typeahead", () => {

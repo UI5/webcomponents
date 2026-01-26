@@ -8,7 +8,7 @@ import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.j
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { getAssociatedLabelForTexts, getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFocusedElement } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
@@ -330,6 +330,15 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 */
 	@property({ type: Boolean })
 	hidePopoverArrow = false;
+
+	/**
+	 * Defines the popover title.
+	 * **Note:** Used inside MultiInput and MultiComboBox components.
+	 * @default undefined
+	 * @private
+	 */
+	@property()
+	_popoverTitle?: string;
 
 	@property({ type: Number })
 	_nMoreCount = 0;
@@ -1178,7 +1187,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
+		return this._popoverTitle || getAssociatedLabelForTexts(this) || Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
 	}
 
 	get overflownTokens() {

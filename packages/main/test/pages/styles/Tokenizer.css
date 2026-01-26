@@ -41,3 +41,10 @@ ui5-tokenizer#nmore-tokenizer {
 	background-color: var(--sapBackgroundColor);
 	color: var(--_ui5_token_text_color);
 }
+
+.sample-container-title {
+	display: block;
+	font-weight: bold;
+	margin: 2rem 0 .2rem 0;
+	font-size: 1rem;
+}

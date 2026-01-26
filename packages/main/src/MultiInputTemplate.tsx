@@ -8,6 +8,7 @@ import List from "./List.js";
 import ListItemStandard from "./ListItemStandard.js";
 import ListAccessibleRole from "./types/ListAccessibleRole.js";
 import valueHelp from "@ui5/webcomponents-icons/dist/value-help.js";
+import Title from "./Title.js";
 
 export default function MultiInputTemplate(this: MultiInput) {
 	return [
@@ -16,6 +17,7 @@ export default function MultiInputTemplate(this: MultiInput) {
 			postContent,
 			suggestionsList: multiInputSuggestionsList,
 			mobileHeader: multiInputMobileHeader,
+			mobileTitle: popoverMobileTitle,
 		}),
 	];
 }
@@ -34,6 +36,7 @@ function preContent(this: MultiInput) {
 				popoverMinWidth={this._inputWidth}
 				hidePopoverArrow={true}
 				expanded={this.tokenizerExpanded}
+				_popoverTitle={this._mobileHeaderTitleText}
 				onKeyDown={this._onTokenizerKeydown}
 				onTokenDelete={this.tokenDelete}
 				onFocusOut={this._tokenizerFocusOut}
@@ -124,5 +127,17 @@ function multiInputMobileHeader(this: MultiInput) {
 				this._showTokensInSuggestions = !this._effectiveShowTokensInSuggestions;
 			}}
 		/>
+	);
+}
+
+function popoverMobileTitle(this: MultiInput) {
+	return (
+		<Title
+			level="H1"
+			wrappingType="None"
+			class="ui5-responsive-popover-header-text"
+		>
+			{this._mobileHeaderTitleText}
+		</Title>
 	);
 }
