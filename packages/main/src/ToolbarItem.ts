@@ -60,6 +60,13 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
 
+	/**
+	 * Defines the tabIndex of the component.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	forcedTabIndex?: string;
+
 	_isRendering = true;
 
 	onAfterRendering(): void {
