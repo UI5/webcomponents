@@ -12,7 +12,7 @@
 	max-width: 36rem;
 	margin: 0;
 	height: 2.25rem;
-	color: var(--sapShell_TextColor);
+	color: var(--_ui5-search-field-text-color);
 	font-size: var(--sapFontSize);
 	font-family: var(--sapFontFamily);
 	font-style: normal;
@@ -20,8 +20,7 @@
 	border-radius: var(--_ui5_search_input_border_radius);
 	box-sizing: border-box;
 	text-align: start;
-	background: var(--sapField_BackgroundStyle);
-	background-color: var(--_ui5-search-wrapper-background);
+	background: var(--_ui5-search-wrapper-background);
 	position: relative;
 }
 
