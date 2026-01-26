@@ -32,7 +32,6 @@ import {
 	isPageDownShiftCtrl,
 	isShow,
 	isF4,
-	isEnter,
 	isTabNext,
 	isTabPrevious,
 	isF6Next,
@@ -532,11 +531,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return;
 		}
 
-		if (isEnter(e)) {
-			if (this._internals.form) {
-				submitForm(this);
-			}
-		} else if (isPageUpShiftCtrl(e)) {
+		if (isPageUpShiftCtrl(e)) {
 			e.preventDefault();
 			this._modifyDateValue(1, "year");
 		} else if (isPageUpShift(e)) {
@@ -641,7 +636,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "submit" event handler - fire change event when the user presses enter
 	 * @protected
 	 */
-	_onInputSubmit() {}
+	_onInputRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
+	}
 
 	/**
 	 * The ui5-input "change" event handler - fire change event when the user focuses out of the input
