@@ -237,6 +237,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	value = "";
 
 	@property()
+	// selectedValue?: string;
+
 	set selectedValue(itemValue: string) {
 		this._useSelectedValue = true;
 		this._selectedValue = itemValue;
@@ -860,6 +862,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
+			this.selectedValue = isGroupItem ? "" : currentItem?.value || "";
 			this.focused = false;
 
 			currentItem.focused = true;
@@ -1233,7 +1236,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
 				if (isInstanceOfComboBoxItemGroup(item)) {
 					if (this._useSelectedValue) {
-						itemToBeSelected = item.items.find(i => i.value === valueToMatch);
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch && i.text === this.value);
 					} else {
 						itemToBeSelected = item.items?.find(i => i.text === this.value);
 					}
@@ -1242,7 +1245,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 					// 	? this.items.find(i => (currentlyFocusedItem ? i.value === currentlyFocusedItem.value : i.value === this.selectedValue))
 					// 	: (item.text === this.value ? item : undefined);
 					if (this._useSelectedValue) {
-						itemToBeSelected = this.items.find(i => i.value === valueToMatch);
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch && i.text === this.value);
 						return;
 					}
 					itemToBeSelected = item.text === this.value ? item : undefined;
