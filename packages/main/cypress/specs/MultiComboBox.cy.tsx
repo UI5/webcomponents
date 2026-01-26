@@ -2174,6 +2174,42 @@ describe("Event firing", () => {
 		cy.get("@submitEvent")
 			.should("have.been.called");
 	});
+
+	it("tests if value-state-change event is fired correctly", () => {
+		cy.mount(
+				<MultiComboBox onValueStateChange={cy.stub().as("valueStateChangeEvent")}>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
+				</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("@valueStateChangeEvent")
+			.should("not.have.been.called");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledTwice");
+	});
 });
 
 describe("MultiComboBox RTL/LTR Arrow Navigation", () => {

@@ -120,7 +120,10 @@ function listItemPostContent(this: MenuItem) {
 			)
 		}
 
-		<div id={`${this._id}-menu-main`}>
+		<div
+			id={`${this._id}-menu-main`}
+			class={this.loading ? "menu-busy-indicator-main" : ""}
+		>
 			{
 				this.items.length ? (
 					<List

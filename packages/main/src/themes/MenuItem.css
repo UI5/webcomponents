@@ -125,3 +125,11 @@
 	color: var(--sapContent_BusyColor);
 	padding-top: 0.25rem;
 }
+
+.ui5-menu-busy-indicator {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
