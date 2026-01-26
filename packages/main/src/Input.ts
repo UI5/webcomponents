@@ -1737,7 +1737,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get _mobileHeaderTitleText() {
-		console.log(getAssociatedLabelForTexts(this));
 		return getAssociatedLabelForTexts(this) || Input.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
 	}
 
