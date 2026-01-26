@@ -1,6 +1,14 @@
 :root {
-	/* Use non-existen variable. This will trigger the fallback in
-	all cases becausethe variable is not defined anywhere. */
+	/*
+	Use a non-existent variable to always trigger the fallback.
+	Because this variable is never defined, the fallback is used
+	in all cases.
+
+	Using `initial` as a fallback can work only for properties
+	that treat it as an invalid value. To avoid this inconsistency,
+	we intentionally reference an undefined variable, which is
+	always considered invalid and undefined.
+	*/
 	--_ui5-cozy-size: var(--_ui5-f2d95f8);
 
 	--_ui5-compact-size: ;
@@ -11,8 +19,16 @@
 .ui5-content-density-compact,
 .sapUiSizeCompact {
 	--_ui5-cozy-size: ;
-	/* Use non-existen variable. This will trigger the fallback in
-	all cases becausethe variable is not defined anywhere. */
+	/*
+	Use a non-existent variable to always trigger the fallback.
+	Because this variable is never defined, the fallback is used
+	in all cases.
+
+	Using `initial` as a fallback can work only for properties
+	that treat it as an invalid value. To avoid this inconsistency,
+	we intentionally reference an undefined variable, which is
+	always considered invalid and undefined.
+	*/
 	--_ui5-compact-size: var(--_ui5-f2d95f8);
 	--_ui5_content_density: compact;
 }

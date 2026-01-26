@@ -17,7 +17,7 @@ const saveVariable = (variable, value, density) => {
  *
  * The plugin scans CSS for `:host` rules that define density-specific custom properties.
  * Variables declared in a root-level `:host` rule are treated as **cozy** values, while
- * variables declared inside `@container style(--_ui5-compact-size: initial)` `:host` rules
+ * variables declared inside `@container style(--ui5_content_density: compact)` `:host` rules
  * are treated as **compact** values.
  *
  * All discovered variables are merged into a single root `:host` rule. For variables that
@@ -35,7 +35,7 @@ const saveVariable = (variable, value, density) => {
  *   --cozy-only-variable: cozy-only-value;
  * }
  *
- * @container style(--_ui5-compact-size: initial) {
+ * @container style(--ui5_content_density: compact) {
  *   :host {
  *     --my-variable: compact-value;
  *     --compact-only-variable: compact-only;
@@ -86,7 +86,7 @@ export default function postcssPlugin() {
 
                 // Handle :host rules inside @container (compact)
                 if (rule.parent.type === "atrule") {
-                    if (rule.parent.params.replaceAll("\s", "") === 'style(--_ui5-compact-size: initial)'.replaceAll("\s", "")) {
+                    if (rule.parent.params.replaceAll("\s", "") === 'style(--ui5_content_density: compact)'.replaceAll("\s", "")) {
                         rule.walkDecls((decl) => {
                             if (decl.prop.startsWith('--')) {
                                 saveVariable(decl.prop, decl.value, 'compact');
@@ -124,8 +124,14 @@ export default function postcssPlugin() {
                     });
                 } else if (variableData.compact) {
 
-                    // Use non - existen variable.This will trigger the fallback in
-                    // all cases becausethe variable is not defined anywhere.
+                    // Use a non-existent variable to always trigger the fallback.
+                    // Because this variable is never defined, the fallback is used
+                    // in all cases.
+
+                    // Using `initial` as a fallback can work only for properties
+                    // that treat it as an invalid value. To avoid this inconsistency,
+                    // we intentionally reference an undefined variable, which is
+                    // always considered invalid and undefined.
                     hostRule.append({
                         prop: variable,
                         value: `var(--_ui5-compact-size, ${variableData.compact}) var(--_ui5-cozy-size, var(--_ui5-f2d95f8))`,
