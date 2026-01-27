@@ -213,10 +213,5 @@ class ListItemGroup extends UI5Element {
 
 ListItemGroup.define();
 
-const isInstanceOfListItemGroup = (object: any): object is ListItemGroup => {
-	return "isListItemGroup" in object;
-};
-
 export default ListItemGroup;
-export { isInstanceOfListItemGroup };
 export type { ListItemGroupMoveEventDetail };

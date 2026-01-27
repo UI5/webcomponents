@@ -2,7 +2,7 @@ import type { Interval } from "@ui5/webcomponents-base/dist/types.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import getParentElement from "@ui5/webcomponents-base/dist/util/getParentElement.js";
 import type Popover from "../Popover.js";
-import { instanceOfPopover } from "../Popover.js";
+import { isInstanceOfPopover } from "../utils/InstanceChecks.js";
 import { getOpenedPopups, addOpenedPopup, removeOpenedPopup } from "./OpenedPopupsRegistry.js";
 
 type RegisteredPopover = {
@@ -84,7 +84,7 @@ const clickHandler = (event: MouseEvent) => {
 		return;
 	}
 
-	const isTopPopupPopover = instanceOfPopover(openedPopups[openedPopups.length - 1].instance);
+	const isTopPopupPopover = isInstanceOfPopover(openedPopups[openedPopups.length - 1].instance);
 
 	if (!isTopPopupPopover) {
 		return;
@@ -94,7 +94,7 @@ const clickHandler = (event: MouseEvent) => {
 	for (let i = openedPopups.length - 1; i !== -1; i--) {
 		const popup = openedPopups[i].instance;
 
-		if (!instanceOfPopover(popup)) {
+		if (!isInstanceOfPopover(popup)) {
 			return;
 		}
 

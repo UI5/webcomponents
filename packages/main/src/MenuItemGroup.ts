@@ -6,7 +6,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type MenuItem from "./MenuItem.js";
-import { isInstanceOfMenuItem } from "./MenuItem.js";
+import { isInstanceOfMenuItem } from "./utils/InstanceChecks.js";
 import MenuItemGroupTemplate from "./MenuItemGroupTemplate.js";
 import MenuItemGroupCheckMode from "./types/MenuItemGroupCheckMode.js";
 import type { IMenuItem } from "./Menu.js";
@@ -148,14 +148,6 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	}
 }
 
-const isInstanceOfMenuItemGroup = (object: any): object is MenuItemGroup => {
-	return "isGroup" in object;
-};
-
 MenuItemGroup.define();
 
 export default MenuItemGroup;
-
-export {
-	isInstanceOfMenuItemGroup,
-};

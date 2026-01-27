@@ -25,9 +25,7 @@ import type List from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type MenuItem from "./MenuItem.js";
 // The import below should be kept, as MenuItem is part of the Menu component.
-import { isInstanceOfMenuItem } from "./MenuItem.js";
-import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
-import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
+import { isInstanceOfMenuItem, isInstanceOfMenuItemGroup, isInstanceOfMenuSeparator } from "./utils/InstanceChecks.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {

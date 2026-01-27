@@ -39,14 +39,6 @@ import UserMenuItemGroupTemplate from "./UserMenuItemGroupTemplate.js";
 class UserMenuItemGroup extends MenuItemGroup {
 }
 
-const isInstanceOfUserMenuItemGroup = (object: any): object is UserMenuItemGroup => {
-	return "isGroup" in object;
-};
-
 UserMenuItemGroup.define();
 
 export default UserMenuItemGroup;
-
-export {
-	isInstanceOfUserMenuItemGroup,
-};

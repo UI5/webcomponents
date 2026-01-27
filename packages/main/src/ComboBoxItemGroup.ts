@@ -34,9 +34,8 @@ class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
 	})
 	items!: Array<ComboBoxItem>;
 
-	get isGroupItem(): boolean {
-		return true;
-	}
+	// for instance checking
+	readonly isGroupItem = true;
 
 	get _isVisible() {
 		return this.items.some(item => item._isVisible);
@@ -45,9 +44,4 @@ class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
 
 ComboBoxItemGroup.define();
 
-const isInstanceOfComboBoxItemGroup = (object: any): object is ComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
-
-export { isInstanceOfComboBoxItemGroup };
 export default ComboBoxItemGroup;

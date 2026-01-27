@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { customElement, property, i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
-import { isInstanceOfTable, toggleAttribute } from "./TableUtils.js";
+import { toggleAttribute } from "./TableUtils.js";
+import { isInstanceOfTable } from "./utils/InstanceChecks.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableRowBaseCss from "./generated/themes/TableRowBase.css.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";

@@ -334,14 +334,7 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 }
 
-const isInstanceOfSideNavigationSelectableItemBase = (object: any): object is SideNavigationSelectableItemBase => {
-	return "isSideNavigationSelectableItemBase" in object;
-};
-
 export default SideNavigationSelectableItemBase;
-export {
-	isInstanceOfSideNavigationSelectableItemBase,
-};
 export type {
 	SideNavigationItemAccessibilityAttributes,
 };

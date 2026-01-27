@@ -337,9 +337,4 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 SideNavigationItem.define();
 
-const isInstanceOfSideNavigationItem = (object: any): object is SideNavigationItem => {
-	return "isSideNavigationItem" in object;
-};
-
 export default SideNavigationItem;
-export { isInstanceOfSideNavigationItem };

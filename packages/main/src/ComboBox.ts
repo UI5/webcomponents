@@ -85,7 +85,7 @@ import type { ListItemClickEventDetail } from "./List.js";
 // eslint-disable-next-line
 import "./ComboBoxItemGroup.js";
 // eslint-disable-next-line
-import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
+import { isInstanceOfComboBoxItemGroup } from "./utils/InstanceChecks.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";

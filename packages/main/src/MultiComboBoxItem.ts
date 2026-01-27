@@ -83,11 +83,6 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	}
 }
 
-const isInstanceOfMultiComboBoxItem = (object: any): object is MultiComboBoxItem => {
-	return "isMultiComboBoxItem" in object;
-};
-
 MultiComboBoxItem.define();
 
 export default MultiComboBoxItem;
-export { isInstanceOfMultiComboBoxItem };

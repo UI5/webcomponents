@@ -14,11 +14,13 @@ import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNaviga
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
-import { isInstanceOfSideNavigationSelectableItemBase } from "./SideNavigationSelectableItemBase.js";
-import { isInstanceOfSideNavigationItemBase } from "./SideNavigationItemBase.js";
+import {
+	isInstanceOfSideNavigationSelectableItemBase,
+	isInstanceOfSideNavigationItemBase,
+	isInstanceOfSideNavigationItem,
+	isInstanceOfSideNavigationGroup,
+} from "./utils/InstanceChecks.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
-import { isInstanceOfSideNavigationItem } from "./SideNavigationItem.js";
-import { isInstanceOfSideNavigationGroup } from "./SideNavigationGroup.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
 import type SideNavigationSubItem from "./SideNavigationSubItem.js";
 import type SideNavigationGroup from "./SideNavigationGroup.js";

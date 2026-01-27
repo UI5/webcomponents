@@ -707,6 +707,9 @@ abstract class Popup extends UI5Element {
 			},
 		};
 	}
+
+	// for instance checks
+	readonly isPopup = true;
 }
 
 export default Popup;

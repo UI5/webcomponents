@@ -1,6 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { property, eventStrict } from "@ui5/webcomponents-base/dist/decorators.js";
-import { isInstanceOfTable } from "./TableUtils.js";
+import { isInstanceOfTable } from "./utils/InstanceChecks.js";
 import type Table from "./Table.js";
 import type TableRowBase from "./TableRowBase.js";
 import type TableRow from "./TableRow.js";

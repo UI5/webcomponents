@@ -51,14 +51,6 @@ class MenuSeparator extends ListItemBase implements IMenuItem {
 	}
 }
 
-const isInstanceOfMenuSeparator = (object: any): object is MenuSeparator => {
-	return "isSeparator" in object;
-};
-
 MenuSeparator.define();
 
 export default MenuSeparator;
-
-export {
-	isInstanceOfMenuSeparator,
-};

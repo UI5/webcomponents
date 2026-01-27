@@ -1,0 +1,22 @@
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import type ComboBoxItemGroup from "../ComboBoxItemGroup.js";
+import type ListItemGroup from "../ListItemGroup.js";
+import type MenuItem from "../MenuItem.js";
+import type MenuItemGroup from "../MenuItemGroup.js";
+import type MenuSeparator from "../MenuSeparator.js";
+import type MultiComboBoxItem from "../MultiComboBoxItem.js";
+import type MultiComboBoxItemGroup from "../MultiComboBoxItemGroup.js";
+import type Popover from "../Popover.js";
+import type Popup from "../Popup.js";
+import type Table from "../Table.js";
+
+export const isInstanceOfComboBoxItemGroup = createInstanceChecker<ComboBoxItemGroup>("isGroupItem");
+export const isInstanceOfPopover = createInstanceChecker<Popover>("isPopover");
+export const isInstanceOfMultiComboBoxItemGroup = createInstanceChecker<MultiComboBoxItemGroup>("isGroupItem");
+export const isInstanceOfMultiComboBoxItem = createInstanceChecker<MultiComboBoxItem>("isMultiComboBoxItem");
+export const isInstanceOfMenuSeparator = createInstanceChecker<MenuSeparator>("isSeparator");
+export const isInstanceOfMenuItemGroup = createInstanceChecker<MenuItemGroup>("isGroup");
+export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem");
+export const isInstanceOfListItemGroup = createInstanceChecker<ListItemGroup>("isListItemGroup");
+export const isInstanceOfPopup = createInstanceChecker<Popup>("isPopup");
+export const isInstanceOfTable = createInstanceChecker<Table>("isTable");

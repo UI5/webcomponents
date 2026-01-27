@@ -38,9 +38,7 @@ class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBox
 	 * Used to avoid tag name checks
 	 * @protected
 	 */
-	get isGroupItem() {
-		return true;
-	}
+	readonly isGroupItem = true;
 
 	get selected() {
 		return false;
@@ -57,10 +55,4 @@ class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBox
 
 MultiComboBoxItemGroup.define();
 
-const isInstanceOfMultiComboBoxItemGroup = (object: any): object is MultiComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
-
 export default MultiComboBoxItemGroup;
-
-export { isInstanceOfMultiComboBoxItemGroup };

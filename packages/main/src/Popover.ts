@@ -241,6 +241,9 @@ class Popover extends Popup {
 		this._popoverResize = new PopoverResize(this);
 	}
 
+	// for instance checking
+	readonly isPopover = true;
+
 	/**
 	 * Defines the ID or DOM Reference of the element at which the popover is shown.
 	 * When using this attribute in a declarative way, you must only use the `id` (as a string) of the element at which you want to show the popover.
@@ -971,12 +974,8 @@ class Popover extends Popup {
 	}
 }
 
-const instanceOfPopover = (object: any): object is Popover => {
-	return "opener" in object;
-};
-
 Popover.define();
 
 export default Popover;
 
-export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };

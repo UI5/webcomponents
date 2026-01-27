@@ -1,9 +1,4 @@
-import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
-
-const isInstanceOfTable = (obj: any): obj is Table => {
-	return !!obj && "isTable" in obj && !!obj.isTable;
-};
 
 const isSelectionCell = (e: Event) => {
 	return e.composedPath().some((el: EventTarget) => (el as HTMLElement).hasAttribute?.("data-ui5-table-selection-cell"));
@@ -112,7 +107,6 @@ const isValidColumnWidth = (width: string | undefined): width is string => {
 };
 
 export {
-	isInstanceOfTable,
 	isSelectionCell,
 	isHeaderSelectionCell,
 	findRowInPath,

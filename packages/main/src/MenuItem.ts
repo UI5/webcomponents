@@ -30,8 +30,7 @@ import type { ListItemAccessibilityAttributes } from "./ListItem.js";
 import type List from "./List.js";
 import ListItem from "./ListItem.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
-import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
+import { isInstanceOfMenuSeparator, isInstanceOfMenuItem, isInstanceOfMenuItemGroup } from "./utils/InstanceChecks.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
 import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
@@ -663,18 +662,10 @@ class MenuItem extends ListItem implements IMenuItem {
 
 MenuItem.define();
 
-const isInstanceOfMenuItem = (object: any): object is MenuItem => {
-	return "isMenuItem" in object;
-};
-
 export default MenuItem;
 
 export type {
 	MenuBeforeCloseEventDetail,
 	MenuBeforeOpenEventDetail,
 	MenuItemAccessibilityAttributes,
-};
-
-export {
-	isInstanceOfMenuItem,
 };

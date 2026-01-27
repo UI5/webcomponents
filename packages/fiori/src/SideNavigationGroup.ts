@@ -196,9 +196,4 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 SideNavigationGroup.define();
 
-const isInstanceOfSideNavigationGroup = (object: any): object is SideNavigationGroup => {
-	return "isSideNavigationGroup" in object;
-};
-
 export default SideNavigationGroup;
-export { isInstanceOfSideNavigationGroup };

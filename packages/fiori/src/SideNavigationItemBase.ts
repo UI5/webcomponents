@@ -154,12 +154,7 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	}
 }
 
-const isInstanceOfSideNavigationItemBase = (object: any): object is SideNavigationItemBase => {
-	return "isSideNavigationItemBase" in object;
-};
-
 export default SideNavigationItemBase;
 export type {
 	SideNavigationItemClickEventDetail,
 };
-export { isInstanceOfSideNavigationItemBase };

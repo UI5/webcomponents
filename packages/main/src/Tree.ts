@@ -30,6 +30,7 @@ import TreeTemplate from "./TreeTemplate.js";
 
 // Styles
 import TreeCss from "./generated/themes/Tree.css.js";
+import { createChecker } from "./utils/InstanceChecks.js";
 
 type TreeMoveEventDetail = {
 	source: {
@@ -524,9 +525,7 @@ class Tree extends UI5Element {
 		return placements;
 	}
 
-	_isInstanceOfTreeItemBase(object: any): object is TreeItemBase {
-		return "isTreeItem" in object;
-	}
+	_isInstanceOfTreeItemBase = createChecker<TreeItemBase>("isTreeItem");
 }
 
 const walkTree = (el: Tree | TreeItemBase, level: number, callback: WalkCallback) => {

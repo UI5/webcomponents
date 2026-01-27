@@ -71,7 +71,7 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
-import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
+import { isInstanceOfListItemGroup } from "./utils/InstanceChecks.js";
 import type ListItemGroup from "./ListItemGroup.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
