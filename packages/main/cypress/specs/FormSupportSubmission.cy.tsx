@@ -10,9 +10,19 @@ import DateRangePicker from "../../src/DateRangePicker.js";
 import DateTimePicker from "../../src/DateTimePicker.js";
 import TimePicker from "../../src/TimePicker.js";
 import StepInput from "../../src/StepInput.js";
+import MultiInput from "../../src/MultiInput.js";
+import MultiComboBox from "../../src/MultiComboBox.js";
+import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
+import Tokenizer from "../../src/Tokenizer.js";
+import Token from "../../src/Token.js";
+import CheckBox from "../../src/CheckBox.js";
+import RadioButton from "../../src/RadioButton.js";
+import Switch from "../../src/Switch.js";
+import Slider from "../../src/Slider.js";
+import RangeSlider from "../../src/RangeSlider.js";
 
-describe("Form support (submission)", () => {
-	describe("ComboBox form submission with Enter key", () => {
+describe("Form submission with Enter key", () => {
+	describe("ComboBox", () => {
 		const mountComboBoxForm = (hasItems = false) => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -106,14 +116,208 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe.skip("MultiComboBox form submission with Enter key", () => {
-		it("submits form without firing change event when Enter is pressed on empty input", () => { })
-	});
-	describe.skip("MultiIInput form submission with Enter key", () => {
-		it("submits form without firing change event when Enter is pressed on empty input", () => { })
+	describe("MultiComboBox", () => {
+		const mountMultiComboBoxForm = (hasItems = false) => {
+			const submit = cy.spy().as("submit");
+			const change = cy.spy().as("change");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<MultiComboBox name="date" onChange={() => change()}>
+						{hasItems && (
+							<>
+								<MultiComboBoxItem text="Item 1" />
+								<MultiComboBoxItem text="Item 2" />
+								<MultiComboBoxItem text="Item 3" />
+							</>
+						)}
+					</MultiComboBox>
+				</form>
+			);
+			cy.get("[ui5-multi-combobox]").as("multiComboBox");
+
+			cy.get("@multiComboBox")
+				.realClick()
+				.should("be.focused");
+		};
+
+		const assertChangeCalledBeforeSubmit = () => {
+			cy.get("@change").then((changeSpy: any) =>
+				cy.get("@submit").then((submitSpy: any) =>
+					expect(changeSpy.getCall(0))
+						.to.have.been.calledBefore(submitSpy.getCall(0))
+				)
+			);
+		};
+
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
+			mountMultiComboBoxForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("not.have.been.called");
+		});
+
+		it("fires change event then submits form when Enter is pressed after typing", () => {
+			mountMultiComboBoxForm();
+
+			cy.realType("ASD");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+
+		it.skip("fires change on first Enter when selecting type ahead, then submits on second Enter", () => {
+			mountMultiComboBoxForm(true);
+
+			cy.realType("Item");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+			cy.get("@change").should("have.been.calledOnce");
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+
+		it.skip("fires change on first Enter when selecting item from dropdown, then submits on second Enter", () => {
+			mountMultiComboBoxForm(true);
+
+			cy.realType("Item");
+			cy.realPress("ArrowDown");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+			cy.get("@change").should("have.been.calledOnce");
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
 	});
 
-	describe("TextArea form submission with Enter key", () => {
+	describe("MultiInput", () => {
+		const mountMultiInputForm = (hasItems = false) => {
+			const submit = cy.spy().as("submit");
+			const change = cy.spy().as("change");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<MultiInput name="date" showSuggestions={hasItems} onChange={() => change()}>
+						{hasItems && (
+							<>
+								<SuggestionItem text="Item 1" />
+								<SuggestionItem text="Item 2" />
+								<SuggestionItem text="Item 3" />
+							</>
+						)}
+					</MultiInput>
+				</form>
+			);
+			cy.get("[ui5-multi-input]").as("input");
+
+			cy.get("@input")
+				.realClick()
+				.should("be.focused");
+		};
+
+		const assertChangeCalledBeforeSubmit = () => {
+			cy.get("@change").then((changeSpy: any) =>
+				cy.get("@submit").then((submitSpy: any) =>
+					expect(changeSpy.getCall(0))
+						.to.have.been.calledBefore(submitSpy.getCall(0))
+				)
+			);
+		};
+
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
+			mountMultiInputForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("not.have.been.called");
+		});
+
+		it("fires change event then submits form when Enter is pressed after typing", () => {
+			mountMultiInputForm();
+
+			cy.realType("ASD");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+
+		it("fires change on first Enter when selecting type ahead, then submits on second Enter", () => {
+			mountMultiInputForm(true);
+
+			cy.realType("Item");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+			cy.get("@change").should("have.been.calledOnce");
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+
+		it("fires change on first Enter when selecting item from dropdown, then submits on second Enter", () => {
+			mountMultiInputForm(true);
+
+			cy.realType("Item");
+			cy.realPress("ArrowDown");
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+			cy.get("@change").should("have.been.calledOnce");
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+	});
+
+
+
+	describe("DynamicDateRange", () => {
+
+		it.skip("submits form without firing change event when Enter is pressed on empty input", () => { });
+
+		it.skip("fires change event then submits form when Enter is pressed after typing", () => { });
+
+		it.skip("fires change on first Enter when selecting type ahead, then submits on second Enter", () => { });
+
+		it.skip("fires change on first Enter when selecting item from dropdown, then submits on second Enter", () => { });
+	});
+
+	describe("TextArea", () => {
 		const mountTextAreaForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -153,7 +357,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe("Input form submission with Enter key", () => {
+	describe("Input", () => {
 		const mountInputForm = (hasItems = false) => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -247,7 +451,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe("DatePicker form submission with Enter key", () => {
+	describe("DatePicker", () => {
 		const mountDatePickerForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -276,7 +480,7 @@ describe("Form support (submission)", () => {
 			);
 		};
 
-		it("submits form without firing change event when Enter is pressed on empty datePicker", () => {
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
 			mountDatePickerForm();
 
 			cy.realPress("Enter");
@@ -315,7 +519,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe("DateRangePicker form submission with Enter key", () => {
+	describe("DateRangePicker", () => {
 		const mountDateRangePickerForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -344,7 +548,7 @@ describe("Form support (submission)", () => {
 			);
 		};
 
-		it("submits form without firing change event when Enter is pressed on empty dateRangePicker", () => {
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
 			mountDateRangePickerForm();
 
 			cy.realPress("Enter");
@@ -389,7 +593,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe("DateTimePicker form submission with Enter key", () => {
+	describe("DateTimePicker", () => {
 		const mountDateTimePickerForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -418,7 +622,7 @@ describe("Form support (submission)", () => {
 			);
 		};
 
-		it("submits form without firing change event when Enter is pressed on empty dateTimePicker", () => {
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
 			mountDateTimePickerForm();
 
 			cy.realPress("Enter");
@@ -467,7 +671,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-	describe("TimePicker form submission with Enter key", () => {
+	describe("TimePicker", () => {
 		const mountTimePickerForm = (hasItems = false) => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -496,7 +700,7 @@ describe("Form support (submission)", () => {
 			);
 		};
 
-		it("submits form without firing change event when Enter is pressed on empty timePicker", () => {
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
 			mountTimePickerForm();
 
 			cy.realPress("Enter");
@@ -535,9 +739,7 @@ describe("Form support (submission)", () => {
 		});
 	});
 
-
-
-	describe("StepInput form submission with Enter key", () => {
+	describe("StepInput", () => {
 		const mountStepInputForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
@@ -566,7 +768,7 @@ describe("Form support (submission)", () => {
 			);
 		};
 
-		it("submits form without firing change event when Enter is pressed on empty stepInput", () => {
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
 			mountStepInputForm();
 
 			cy.realPress("Enter");
@@ -586,5 +788,183 @@ describe("Form support (submission)", () => {
 
 			assertChangeCalledBeforeSubmit();
 		});
+	});
+
+	describe("Tokenizer", () => {
+		const mountTokenizerForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<Tokenizer>
+						<Token text="Token 1" />
+					</Tokenizer>
+				</form>
+			);
+			cy.get("[ui5-token]").as("token");
+
+			cy.get("@token")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountTokenizerForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("CheckBox", () => {
+		const mountCheckBoxForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<CheckBox />
+				</form>
+			);
+			cy.get("[ui5-checkbox]").as("checkbox");
+
+			cy.get("@checkbox")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountCheckBoxForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("RadioButton", () => {
+		const mountRadioButtonForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<RadioButton />
+				</form>
+			);
+			cy.get("[ui5-radio-button]").as("radioButton");
+
+			cy.get("@radioButton")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountRadioButtonForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("Switch", () => {
+		const mountSwitchForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<Switch />
+				</form>
+			);
+			cy.get("[ui5-switch]").as("switch");
+
+			cy.get("@switch")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountSwitchForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("Slider", () => {
+		const mountSliderForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<Slider />
+				</form>
+			);
+			cy.get("[ui5-slider]").as("slider");
+
+			cy.get("@slider")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountSliderForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("RangeSlider", () => {
+		const mountRangeSliderForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<RangeSlider />
+				</form>
+			);
+			cy.get("[ui5-range-slider]").as("rangeSlider");
+
+			cy.get("@rangeSlider")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountRangeSliderForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
+	describe("ColorPicker", () => {
+		it.skip("doesn't submit form when Enter is pressed", () => {});
+	});
+
+	describe("FileUploader", () => {
+		it.skip("doesn't submit form when Enter is pressed", () => {});
 	});
 });
