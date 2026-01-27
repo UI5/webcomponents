@@ -237,7 +237,7 @@ describe("Vertical responsiveness", () => {
 			.invoke("css", "height", "auto");
 
 		cy.get("[ui5-illustrated-message]")
-		.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
+		.should("have.attr", "media", IllustratedMessage.MEDIA.DIALOG);
 	});
 
 	it("Illustration visible, when container fit content height", () => {

@@ -390,18 +390,25 @@ class IllustratedMessage extends UI5Element {
 	_applyMedia() {
 		const currOffsetWidth = this.offsetWidth,
 			currOffsetHeight = this.offsetHeight;
+		if (currOffsetHeight === 0 || currOffsetWidth === 0) {
+			return;
+		}
 
 		const designHeight = currOffsetHeight,
 			designWidth = currOffsetWidth;
+
+		const hasHeightChanged = ((this.media && this._lastKnownOffsetHeightForMedia[this.media] !== designHeight)
+		|| this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight);
+		const shouldRespectHeight = hasHeightChanged;
 		let newMedia = "";
 
-		if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.BASE || designWidth <= IllustratedMessage.BREAKPOINTS.BASE) {
+		if (designWidth <= IllustratedMessage.BREAKPOINTS.BASE || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.BASE)) {
 			newMedia = IllustratedMessage.MEDIA.BASE;
-		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DOT || designWidth <= IllustratedMessage.BREAKPOINTS.DOT) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.DOT || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DOT)) {
 			newMedia = IllustratedMessage.MEDIA.DOT;
-		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.SPOT || designWidth <= IllustratedMessage.BREAKPOINTS.SPOT) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.SPOT || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.SPOT)) {
 			newMedia = IllustratedMessage.MEDIA.SPOT;
-		} else if (designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DIALOG || designWidth <= IllustratedMessage.BREAKPOINTS.DIALOG) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.DIALOG || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DIALOG)) {
 			newMedia = IllustratedMessage.MEDIA.DIALOG;
 		} else {
 			newMedia = IllustratedMessage.MEDIA.SCENE;
