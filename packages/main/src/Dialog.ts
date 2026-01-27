@@ -195,6 +195,7 @@ class Dialog extends Popup {
 	_minWidth?: number;
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
+	_dragHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -338,20 +339,6 @@ class Dialog extends Popup {
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
-	onEnterDOM() {
-		super.onEnterDOM();
-		this._attachScreenResizeHandler();
-
-		this.addEventListener("dragstart", this._dragStartHandler);
-	}
-
-	onExitDOM() {
-		super.onExitDOM();
-		this._detachScreenResizeHandler();
-
-		this.removeEventListener("dragstart", this._dragStartHandler);
-	}
-
 	/**
 	 * @override
 	 */
@@ -367,6 +354,16 @@ class Dialog extends Popup {
 		this._center();
 	}
 
+	_attachBrowserEvents() {
+		this._attachScreenResizeHandler();
+		this._registerDragHandler();
+	}
+
+	_detachBrowserEvents() {
+		this._detachScreenResizeHandler();
+		this._deregisterDragHandler();
+	}
+
 	_attachScreenResizeHandler() {
 		if (!this._screenResizeHandlerAttached) {
 			window.addEventListener("resize", this._screenResizeHandler);
@@ -378,6 +375,20 @@ class Dialog extends Popup {
 		if (this._screenResizeHandlerAttached) {
 			window.removeEventListener("resize", this._screenResizeHandler);
 			this._screenResizeHandlerAttached = false; // prevent dialog from repositioning during resizing
+		}
+	}
+
+	_registerDragHandler() {
+		if (!this._dragHandlerRegistered) {
+			this.addEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = true;
+		}
+	}
+
+	_deregisterDragHandler() {
+		if (this._dragHandlerRegistered) {
+			this.removeEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = false;
 		}
 	}
 
