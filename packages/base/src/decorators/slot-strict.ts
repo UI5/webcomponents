@@ -3,10 +3,9 @@ import type { Slot, DefaultSlot } from "../UI5Element.js";
 import type { Slot as SlotMetadata } from "../UI5ElementMetadata.js";
 
 function slot<
-	T extends Record<K, Slot<unknown> | DefaultSlot<unknown>>, 
+	T extends Record<K, Slot<unknown> | DefaultSlot<unknown>>,
 	K extends string
 >(slotData?: SlotMetadata): (target: T, prop: K) => void {
-
 	return (target: any, slotKey: string | symbol) => {
 		const ctor = target.constructor as typeof UI5Element;
 

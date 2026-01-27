@@ -169,7 +169,6 @@ type TargetedEventHandler<D, T> = {
 }["asMethod"];
 type Convert<T, K extends UI5Element> = { [Property in keyof T as `on${KebabToPascal<string & Property>}`]: IsAny<T[Property], any, TargetedEventHandler<T[Property], K>> }
 
-
 // Create a unique symbol as a marker
 declare const SlotMarker: unique symbol;
 declare const DefaultSlotMarker: unique symbol;
@@ -193,8 +192,7 @@ abstract class UI5Element extends HTMLElement {
 	};
 	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"], this> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"], this>;
 	_jsxProps!: Pick<JSX.AllHTMLAttributes<HTMLElement>, GlobalHTMLAttributeNames> & ElementProps<this> & Partial<this["_jsxEvents"]> & { key?: any };
-    // _jsxSlots!: NotEqual<this, UI5Element> extends true ? Exclude<ExtractSlotNames<this>, undefined> : string;
-	
+
 	__id?: string;
 	_suppressInvalidation: boolean;
 	_changedState: Array<ChangeInfo>;

@@ -1,4 +1,5 @@
-import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -289,13 +290,12 @@ class ColorPalette extends UI5Element {
 	}
 
 	get effectiveColorItems() {
-		// let colorItems = this.colors;
 		let colorItems: Array<IColorPaletteItem> = this.colors;
 
 		if (this.popupMode) {
 			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");
 		}
-	
+
 		return colorItems;
 	}
 

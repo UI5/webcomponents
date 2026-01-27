@@ -1,4 +1,5 @@
-import UI5Element, { type DefaultSlot, type Slot, type IsSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -67,8 +68,8 @@ const offsets = {
 		[AvatarGroupType.Group]: "-1.625rem",
 	},
 	[AvatarSize.L]: {
-			[AvatarGroupType.Individual]: "0.125rem",
-		[AvatarGroupType.Group]: " -2rem",
+		[AvatarGroupType.Individual]: "0.125rem",
+		[AvatarGroupType.Group]: "-2rem",
 	},
 	[AvatarSize.XL]: {
 		[AvatarGroupType.Individual]: "0.25rem",
@@ -602,13 +603,6 @@ class AvatarGroup extends UI5Element {
 }
 
 AvatarGroup.define();
-
-
-// Check for the brand
-type Expect<T extends true> = T;
-type Test1 = Expect<IsSlot<AvatarGroup['overflowButton']>>;   // true
-type Test1A = Expect<IsSlot<AvatarGroup['items']>>;   // true
-
 
 export default AvatarGroup;
 export type {

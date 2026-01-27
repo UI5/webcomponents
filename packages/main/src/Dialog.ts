@@ -1,4 +1,4 @@
-import { type IsDefaultSlot, type IsSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -218,7 +218,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	footer!:  Slot<Array<HTMLElement>>;
+	footer!: Slot<Array<HTMLElement>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
