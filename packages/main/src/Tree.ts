@@ -6,6 +6,7 @@ import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import createChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type DropIndicator from "./DropIndicator.js";
 import "./TreeItem.js";
 import type TreeItemBase from "./TreeItemBase.js";
@@ -30,7 +31,6 @@ import TreeTemplate from "./TreeTemplate.js";
 
 // Styles
 import TreeCss from "./generated/themes/Tree.css.js";
-import { createChecker } from "./utils/InstanceChecks.js";
 
 type TreeMoveEventDetail = {
 	source: {
