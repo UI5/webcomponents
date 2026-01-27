@@ -20,8 +20,11 @@ import RadioButton from "../../src/RadioButton.js";
 import Switch from "../../src/Switch.js";
 import Slider from "../../src/Slider.js";
 import RangeSlider from "../../src/RangeSlider.js";
+import Select from "../../src/Select.js";
+import Option from "../../src/Option.js";
 
 describe("Form submission with Enter key", () => {
+
 	describe("ComboBox", () => {
 		const mountComboBoxForm = (hasItems = false) => {
 			const submit = cy.spy().as("submit");
@@ -960,11 +963,47 @@ describe("Form submission with Enter key", () => {
 		});
 	});
 
+	describe("Select", () => {
+		const mountSelectForm = () => {
+			const submit = cy.spy().as("submit");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<Select>
+						<Option value="1">Item 1</Option>
+						<Option value="2">Item 2</Option>
+						<Option value="3">Item 3</Option>
+					</Select>
+				</form>
+			);
+			cy.get("[ui5-select]").as("select");
+
+			cy.get("@select")
+				.realClick()
+				.should("be.focused");
+		};
+
+		it("doesn't submit form when Enter is pressed", () => {
+			mountSelectForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("not.have.been.called");
+		});
+	});
+
 	describe("ColorPicker", () => {
-		it.skip("doesn't submit form when Enter is pressed", () => {});
+		it.skip("doesn't submit form when Enter is pressed", () => { });
 	});
 
 	describe("FileUploader", () => {
-		it.skip("doesn't submit form when Enter is pressed", () => {});
+		it.skip("doesn't submit form when Enter is pressed", () => { });
 	});
 });
