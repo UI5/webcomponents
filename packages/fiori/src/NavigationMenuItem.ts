@@ -14,7 +14,6 @@ import {
 	isEnterAlt,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
-import { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Templates
 import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";

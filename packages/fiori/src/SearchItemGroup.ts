@@ -3,7 +3,6 @@ import ListItemGroup from "@ui5/webcomponents/dist/ListItemGroup.js";
 import SearchItemGroupCss from "./generated/themes/SearchItemGroup.css.js";
 import ListBoxItemGroupTemplate from "@ui5/webcomponents/dist/ListBoxItemGroupTemplate.js";
 import WrappingType from "@ui5/webcomponents/dist/types/WrappingType.js";
-import { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class

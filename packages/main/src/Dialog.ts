@@ -686,21 +686,6 @@ class Dialog extends Popup {
 	}
 }
 
-// TODO: Remove afterwards - used only to test the slot types union
-// type ExtractSlots<T> = {
-//     [K in keyof T]: IsDefaultSlot<NonNullable<T[K]>> extends true 
-// 	? "default"
-// 	: IsSlot<NonNullable<T[K]>> extends true 
-// 		? K
-// 		: never
-// }[keyof T];
-
-// type DialogSlots = Exclude<ExtractSlots<Dialog>, undefined>;
-
-// let a: DialogSlots;
-// a = "footer";
-// a = "default";
-
 Dialog.define();
 
 export default Dialog;
