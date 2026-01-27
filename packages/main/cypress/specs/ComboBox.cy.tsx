@@ -596,6 +596,170 @@ describe("Keyboard navigation", () => {
 
 		cy.get("@input").should("have.value", "b");
 	});
+	it("updates selectedValue when navigating through items with values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Bahrain" value="bh"/>
+				<ComboBoxItem text="Belgium" value="be"/>
+				<ComboBoxItem text="Bulgaria" value="bg"/>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "");
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick()
+			.realType("B");
+
+		cy.get("[ui5-combobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("respPopover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "bh");
+
+		cy.realPress("ArrowDown");
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "be");
+	});
+
+	it("does not set selectedValue when item group header is focused", () => {
+		cy.mount(
+			<ComboBox id="combo-grouping">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Item 1" value="1.1"/>
+					<ComboBoxItem text="Item 1" value="1.2"/>
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "");
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-combobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("respPopover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowDown");
+
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item-group]")
+			.eq(0)
+			.should("have.prop", "focused");
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "")
+			.should("have.value", "");
+
+		cy.realPress("ArrowDown");
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "1.1")
+			.should("have.attr", "value", "Item 1");
+	});
+
+
+	it("updates selectedValue when navigating items with PageUp and PageDown", () => {
+		cy.mount(
+			<ComboBox filter="None">
+				<ComboBoxItem text="Argentina" value="ar"/>
+				<ComboBoxItem text="Bahrain" value="bh"/>
+				<ComboBoxItem text="Belgium" value="be"/>
+				<ComboBoxItem text="Bulgaria" value="bg"/>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "");
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-combobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("respPopover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "ar")
+			.should("have.attr", "value", "Argentina");
+
+		cy.realPress("PageDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "bg")
+			.should("have.attr", "value", "Bulgaria");
+
+		cy.realPress("PageUp");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "ar")
+			.should("have.attr", "value", "Argentina");
+	});
+
+	it("navigates correctly between items with same text and different values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item" value="1"/>
+				<ComboBoxItem text="Item" value="2"/>
+				<ComboBoxItem text="Item" value="3"/>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "");
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("[ui5-combobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("respPopover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "1")
+			.should("have.attr", "value", "Item");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "2")
+			.should("have.attr", "value", "Item");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "3")
+			.should("have.attr", "value", "Item");
+
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "2")
+			.should("have.attr", "value", "Item");
+	});
 });
 
 describe("Grouping", () => {
@@ -2576,6 +2740,49 @@ describe("Event firing", () => {
 		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
 			return event.detail.item.text === "Argentina";
 		}));
+	});
+
+		it("fires selection-change when selectedValue changes via keyboard and input", () => {
+		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
+		cy.mount(
+			<ComboBox onSelectionChange={selectionChangeSpy}>
+				<ComboBoxItem text="Bulgaria" value="bg"></ComboBoxItem>
+				<ComboBoxItem text="Brazil" value="br"></ComboBoxItem>
+				<ComboBoxItem text="China" value="ch"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="de"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "bg")
+			.should("have.attr", "value", "Bulgaria");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "br")
+			.should("have.attr", "value", "Brazil");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledTwice");
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "")
+			.should("have.attr", "value", "Brazi");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledThrice");
 	});
 
 	it("should check clear icon events", () => {
