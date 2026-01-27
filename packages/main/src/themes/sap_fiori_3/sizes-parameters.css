@@ -13,16 +13,4 @@
 .sapUiSizeCompact {
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
-	/* Timeline Item */
-	--_ui5_timeline_tli_indicator_after_height: 50%;
-	--_ui5_timeline_tli_indicator_after_top: -50%;
-	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
-
-	/* Timeline Group Item */
-	--_ui5_timeline_tlgi_root_horizontal_height: 20.90625rem;
-
-	/* Slider, Range Slider */
-	--_ui5_slider_handle_width: 1.25rem;
-	--_ui5_slider_handle_height: 1.25rem;
 }

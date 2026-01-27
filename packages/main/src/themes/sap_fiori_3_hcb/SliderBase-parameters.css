@@ -1,15 +1,39 @@
 @import "../base/SliderBase-parameters.css";
 
 :root {
-	--_ui5_slider_inner_height: 0.375rem;
+	--_ui5_slider_inner_height: 0.375rem; /* Total height including border */
+	--_ui5_slider_track_total_height: var(--_ui5_slider_inner_height);
+	--_ui5_slider_progress_box_sizing: border-box;
 	--_ui5_slider_progress_border: solid 0.0625rem var(--sapField_BorderColor);
 	--_ui5_slider_progress_border_radius: 0.375rem;
 	--_ui5_range_slider_handle_background: transparent;
 	--_ui5_slider_handle_hover_background: var(--sapButton_Hover_Background);
-	--_ui5_slider_handle_border: solid 0.125rem var(--sapField_BorderColor);
-	--_ui5_slider_handle_height: 1.65rem;
-	--_ui5_slider_handle_width: 1.65rem;
-	--_ui5_slider_handle_top: -0.75rem;
+	--_ui5_slider_handle_width: 1.875rem;
+	--_ui5_slider_handle_height: 1.875rem;
+	--_ui5_slider_handle_border: 0.125rem solid var(--sapField_BorderColor);
+	--_ui5_slider_handle_border_radius: 1rem;
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+	--_ui5_slider_handle_box_sizing: border-box;
 	--_ui5_slider_progress_background: var(--sapSelectedColor);
-	--_ui5_slider_tickmark_top: -0.2525rem;
+	--_ui5_slider_tickmark_height: 1rem;
+	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
+	--_ui5_slider_active_progress_border: none;
+	--_ui5_slider_active_progress_left: 0rem;
+	--_ui5_slider_active_progress_top: 0;
+	--_ui5_slider_active_progress_height: var(--_ui5_slider_progress_height);
+	--_ui5_slider_no_tickmarks_active_progress_border: none;
+	--_ui5_slider_no_tickmarks_active_progress_left: 0;
+	--_ui5_slider_no_tickmarks_active_progress_top: 0;
+	--_ui5_slider_no_tickmarks_active_progress_height: var(--_ui5_slider_no_tickmarks_progress_height);
+}
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_slider_handle_width: 1.5rem;
+	--_ui5_slider_handle_height: 1.5rem;
+	--_ui5_slider_handle_border_radius: 1rem;
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+	--_ui5_slider_tickmark_height: 0.75rem;
+	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
 }

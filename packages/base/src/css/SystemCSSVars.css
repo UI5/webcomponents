@@ -1,9 +1,34 @@
 :root {
-    --_ui5_content_density:cozy;
+	/*
+	Use a non-existent variable to always trigger the fallback.
+	Because this variable is never defined, the fallback is used
+	in all cases.
+
+	Using `initial` as a fallback can work only for properties
+	that treat it as an invalid value. To avoid this inconsistency,
+	we intentionally reference an undefined variable, which is
+	always considered invalid and undefined.
+	*/
+	--_ui5-cozy-size: var(--_ui5-f2d95f8);
+
+	--_ui5-compact-size: ;
+	--_ui5_content_density: cozy;
 }
 
 [data-ui5-compact-size],
 .ui5-content-density-compact,
 .sapUiSizeCompact {
-    --_ui5_content_density:compact;
+	--_ui5-cozy-size: ;
+	/*
+	Use a non-existent variable to always trigger the fallback.
+	Because this variable is never defined, the fallback is used
+	in all cases.
+
+	Using `initial` as a fallback can work only for properties
+	that treat it as an invalid value. To avoid this inconsistency,
+	we intentionally reference an undefined variable, which is
+	always considered invalid and undefined.
+	*/
+	--_ui5-compact-size: var(--_ui5-f2d95f8);
+	--_ui5_content_density: compact;
 }
