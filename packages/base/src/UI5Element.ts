@@ -1404,14 +1404,18 @@ abstract class UI5Element extends HTMLElement {
 /**
  * Always use duck-typing to cover all runtimes on the page.
  */
-const instanceOfUI5Element = (object: any): object is UI5Element => {
+export const instanceOfUI5Element = (object: any): object is UI5Element => {
 	return "isUI5Element" in object;
 };
 
-export default UI5Element;
-export {
-	instanceOfUI5Element,
+/**
+ * Checks whether the object is a UI5Element with the given tag before scoping
+ */
+export const hasTag = (object: any, tag: Lowercase<string>): boolean => {
+	return instanceOfUI5Element(object) && (object.constructor as typeof UI5Element).getMetadata().getPureTag() === tag;
 };
+
+export default UI5Element;
 export type {
 	ChangeInfo,
 	InvalidationInfo,
