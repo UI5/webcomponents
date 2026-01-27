@@ -390,9 +390,6 @@ class IllustratedMessage extends UI5Element {
 	_applyMedia() {
 		const currOffsetWidth = this.offsetWidth,
 			currOffsetHeight = this.offsetHeight;
-		if (currOffsetHeight === 0 || currOffsetWidth === 0) {
-			return;
-		}
 
 		const designHeight = currOffsetHeight,
 			designWidth = currOffsetWidth;
