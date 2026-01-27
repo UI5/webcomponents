@@ -65,7 +65,7 @@ import type { IIcon } from "./Icon.js";
 
 // Templates
 import InputTemplate from "./InputTemplate.js";
-import { StartsWith } from "./Filters.js";
+import * as Filters from "./Filters.js";
 
 import {
 	VALUE_STATE_SUCCESS,
@@ -100,6 +100,7 @@ import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from ".
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type InputKeyHint from "./types/InputKeyHint.js";
 import type InputComposition from "./features/InputComposition.js";
+import InputSuggestionsFilter from "./types/InputSuggestionsFilter.js";
 
 /**
  * Interface for components that represent a suggestion item, usable in `ui5-input`
@@ -389,16 +390,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	value = "";
 
 	/**
-	 * Defines the inner stored value of the component.
-	 *
-	 * **Note:** The property is updated upon typing. In some special cases the old value is kept (e.g. deleting the value after the dot in a float)
-	 * @default ""
-	 * @private
-	 */
-	@property({ noAttribute: true })
-	_innerValue = "";
-
-	/**
 	 * Defines the value state of the component.
 	 * @default "None"
 	 * @public
@@ -491,6 +482,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 */
 	@property({ type: Boolean })
 	open = false;
+
+	/**
+	 * Defines the filter type of the component.
+	 * @default "None"
+	 * @public
+	 * @since 2.19.0
+	 */
+	@property()
+	filter: `${InputSuggestionsFilter}` = InputSuggestionsFilter.None;
 
 	/**
 	 * Defines whether the clear icon is visible.
@@ -624,7 +624,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	lastConfirmedValue: string
 	isTyping: boolean
 	_handleResizeBound: ResizeObserverCallback;
-	_keepInnerValue: boolean;
 	_shouldAutocomplete?: boolean;
 	_enterKeyDown?: boolean;
 	_isKeyNavigation?: boolean;
@@ -714,7 +713,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		this._handleResizeBound = this._handleResize.bind(this);
 
-		this._keepInnerValue = false;
 		this._focusedAfterClear = false;
 		this._valueStateLinks = [];
 	}
@@ -741,10 +739,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onBeforeRendering() {
-		if (!this._keepInnerValue) {
-			this._innerValue = this.value === null ? "" : this.value;
-		}
-
 		if (this.showSuggestions) {
 			this.enableSuggestions();
 
@@ -787,6 +781,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
+		if (this.filter !== InputSuggestionsFilter.None) {
+			this._filterItems(this.typedInValue);
+		}
+
 		const autoCompletedChars = innerInput.selectionEnd! - innerInput.selectionStart!;
 
 		// Typehead causes issues on Android devices, so we disable it for now
@@ -815,12 +813,18 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this._performTextSelection) {
 			// this is required to syncronize lit-html input's value and user's input
 			// lit-html does not sync its stored value for the value property when the user is typing
-			if (innerInput.value !== this._innerValue) {
-				innerInput.value = this._innerValue;
-			}
+			// if (innerInput.value !== this._innerValue) {
+			// 	innerInput.value = this._innerValue;
+			// }
 
 			if (this.typedInValue.length && this.value.length) {
-				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+				// "Contains" filtering requires custom selection range handling.
+				// Example: "e" → "Belgium" (item does not start with typed value, so select all).
+				if (this.filter === InputSuggestionsFilter.Contains) {
+					this._adjustContainsSelectionRange();
+				} else {
+					innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+				}
 			}
 
 			this.fireDecoratorEvent("type-ahead");
@@ -832,6 +836,22 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this._removeLinksEventListeners();
 			this._addLinksEventListeners();
 			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
+		}
+	}
+
+	_adjustContainsSelectionRange() {
+		const innerInput = this.getInputDOMRefSync()!;
+		const visibleItems = this.Suggestions?._getItems().filter(item => !item.hidden) as IInputSuggestionItemSelectable[];
+		const currentItem = visibleItems?.find(item => { return item.selected || item.focused; });
+		const groupItems = this._flattenItems.filter(item => this._isGroupItem(item));
+
+		if (currentItem && !groupItems.includes(currentItem)) {
+			const doesItemStartWithTypedValue = currentItem?.text?.toLowerCase().startsWith(this.typedInValue.toLowerCase());
+			if (doesItemStartWithTypedValue) {
+				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
+			} else {
+				innerInput.setSelectionRange(0, this.value.length);
+			}
 		}
 	}
 
@@ -911,8 +931,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	get currentItemIndex() {
 		const allItems = this.Suggestions?._getItems() as IInputSuggestionItemSelectable[];
-		const currentItem = allItems.find(item => { return item.selected || item.focused; });
-		const indexOfCurrentItem = currentItem ? allItems.indexOf(currentItem) : -1;
+		const visibleItems = allItems.filter(item => !item.hidden);
+		const currentItem = visibleItems.find(item => { return item.selected || item.focused; });
+		const indexOfCurrentItem = currentItem ? visibleItems.indexOf(currentItem) : -1;
 		return indexOfCurrentItem;
 	}
 
@@ -1118,7 +1139,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		this._keepInnerValue = false;
 		this.focused = false; // invalidating property
 		this._isChangeTriggeredBySuggestion = false;
 		if (this.showClearIcon && !this._effectiveShowClearIcon) {
@@ -1238,9 +1258,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_input(e: CustomEvent<InputEventDetail> | InputEvent, eventType: string) {
 		const inputDomRef = this.getInputDOMRefSync();
-		const emptyValueFiredOnNumberInput = this.value && this.isTypeNumber && !inputDomRef!.value;
-
-		this._keepInnerValue = false;
 
 		const allowedEventTypes = [
 			"deleteWordBackward",
@@ -1260,41 +1277,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		this._shouldAutocomplete = !allowedEventTypes.includes(eventType) && !this.noTypeahead;
 
-		if (e instanceof InputEvent) {
-			// ---- Special cases of numeric Input ----
-			// ---------------- Start -----------------
-
-			// When the last character after the delimiter is removed.
-			// In such cases, we want to skip the re-rendering of the
-			// component as this leads to cursor repositioning and causes user experience issues.
-
-			// There are few scenarios:
-			// Example: type "123.4" and press BACKSPACE - the native input is firing event with the whole part as value (123).
-			// Pressing BACKSPACE again will remove the delimiter and the native input will fire event with the whole part as value again (123).
-			// Example: type "123.456", select/mark "456" and press BACKSPACE - the native input is firing event with the whole part as value (123).
-			// Example: type "123.456", select/mark "123.456" and press BACKSPACE - the native input is firing event with empty value.
-			const delimiterCase = this.isTypeNumber
-				&& (e.inputType === "deleteContentForward" || e.inputType === "deleteContentBackward")
-				&& !(e.target as HTMLInputElement).value.includes(".")
-				&& this.value.includes(".");
-
-			// Handle special numeric notation with "e", example "12.5e12"
-			const eNotationCase = emptyValueFiredOnNumberInput && e.data === "e";
-
-			// Handle special numeric notation with "-", example "-3"
-			// When pressing BACKSPACE, the native input fires event with empty value
-			const minusRemovalCase = emptyValueFiredOnNumberInput
-				&& this.value.startsWith("-")
-				&& this.value.length === 2
-				&& (e.inputType === "deleteContentForward" || e.inputType === "deleteContentBackward");
-
-			if (delimiterCase || eNotationCase || minusRemovalCase) {
-				this.value = (e.target as HTMLInputElement).value;
-				this._keepInnerValue = true;
-			}
-			// ----------------- End ------------------
-		}
-
 		if (e.target === inputDomRef) {
 			this.focused = true;
 
@@ -1310,11 +1292,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this.Suggestions.updateSelectedItemPosition(-1);
 		}
 
+		if (this.filter && (e.target as HTMLInputElement).value === "") {
+			this.open = false;
+		}
+
 		this.isTyping = true;
 	}
 
 	_startsWithMatchingItems(str: string): Array<IInputSuggestionItemSelectable> {
-		return StartsWith(str, this._selectableItems, "text");
+		return Filters.StartsWith(str, this._selectableItems, "text");
 	}
 
 	_getFirstMatchingItem(current: string): IInputSuggestionItemSelectable | undefined {
@@ -1337,10 +1323,55 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		item.selected = true;
 	}
 
+	_filterItems(value: string) {
+		let matchingItems: Array<IInputSuggestionItem> = [];
+		const groupItems = this._flattenItems.filter(item => this._isGroupItem(item));
+
+		this._resetItemVisibility();
+
+		if (groupItems.length) {
+			matchingItems = this._filterGroups(this.filter, groupItems);
+		} else {
+			matchingItems = (Filters[this.filter])(value, this._selectableItems, "text");
+		}
+		this._selectableItems.forEach(item => {
+			item.hidden = !matchingItems.includes(item);
+		});
+
+		if (matchingItems.length === 0) {
+			this.open = false;
+		}
+	}
+
+	_filterGroups(filterType: `${InputSuggestionsFilter}`, groupItems: IInputSuggestionItem[]) {
+		const filteredGroupItems: IInputSuggestionItem[] = [];
+		groupItems.forEach(groupItem => {
+			const currentGroupItems = (Filters[filterType])(this.typedInValue, groupItem.items ?? [], "text");
+			filteredGroupItems.push(...currentGroupItems);
+			if (currentGroupItems.length === 0) {
+				groupItem.hidden = true;
+			} else {
+				groupItem.hidden = false;
+			}
+		});
+		return filteredGroupItems;
+	}
+
+	_resetItemVisibility() {
+		this._flattenItems.forEach(item => {
+			if (this._isGroupItem(item)) {
+				item.items?.forEach(i => {
+					i.hidden = false;
+				});
+				return;
+			}
+			item.hidden = false;
+		});
+	}
+
 	_handleTypeAhead(item: IInputSuggestionItemSelectable) {
 		const value = item.text ? item.text : "";
 
-		this._innerValue = value;
 		this.value = value;
 		this._performTextSelection = true;
 
@@ -1383,8 +1414,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_afterClosePicker() {
-		this.announceSelectedItem();
-
 		// close device's keyboard and prevent further typing
 		if (isPhone()) {
 			this.blur();
@@ -1405,6 +1434,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		if (this.hasSuggestionItemSelected) {
 			this.focus();
 		}
+
+		const invisibleText = this.shadowRoot!.querySelector(`#selectionText`);
+		if (invisibleText) {
+			invisibleText.textContent = "";
+		}
+
 		this._handlePickerAfterClose();
 	}
 

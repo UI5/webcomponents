@@ -141,6 +141,10 @@ type MultiComboboxItemWithSelection = {
 	selected: boolean,
 };
 
+type MultiComboBoxValueStateChangeEventDetail = {
+	valueState: `${ValueState}`,
+}
+
 /**
  * @class
  *
@@ -255,6 +259,19 @@ type MultiComboboxItemWithSelection = {
 	cancelable: true,
 })
 
+/**
+ * Fired before the value state of the component is updated internally.
+ * The event is preventable, meaning that if it's default action is
+ * prevented, the component will not update the value state.
+ * @public
+ * @since 2.19.0
+ * @param {string} valueState The new `valueState` that will be set.
+ */
+@event("value-state-change", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class MultiComboBox extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		change: void,
@@ -262,6 +279,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		open: void,
 		close: void,
 		"selection-change": MultiComboBoxSelectionChangeEventDetail,
+		"value-state-change": MultiComboBoxValueStateChangeEventDetail,
 	}
 	/**
 	 * Defines the value of the component.
@@ -722,7 +740,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (this._validationTimeout) {
 			if (this._filterItems(value).length) {
-				this.valueState = this._effectiveValueState;
+				this._updateValueState(this._effectiveValueState);
 				this._validationTimeout = null;
 			} else {
 				return;
@@ -735,10 +753,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (!this._isComposing && !filteredItems.length && value && !this.noValidation) {
-			this.valueState = ValueState.Negative;
+			this._updateValueState(ValueState.Negative);
 			this._shouldAutocomplete = false;
 		} else if ((filteredItems.length || !value) && this.valueState === ValueState.Negative) {
-			this.valueState = this._effectiveValueState;
+			this._updateValueState(this._effectiveValueState);
 		}
 
 		if (!this._isComposing) {
@@ -757,6 +775,19 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+	}
+
+	_updateValueState(newValueState: `${ValueState}`) {
+		const oldValueState = this.valueState;
+		if (oldValueState !== newValueState) {
+			const eventPrevented = !this.fireDecoratorEvent("value-state-change", {
+				valueState: newValueState,
+			});
+
+			if (!eventPrevented) {
+				this.valueState = newValueState;
+			}
+		}
 	}
 
 	_tokenDelete(e: CustomEvent<TokenizerTokenDeleteEventDetail>) {
@@ -1383,8 +1414,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				if (this._validationTimeout) {
 					return;
 				}
-
-				this.valueState = ValueState.Negative;
+				this._updateValueState(ValueState.Negative);
 				this._performingSelectionTwice = true;
 				this._resetValueState(oldValueState, () => {
 					this._performingSelectionTwice = false;
@@ -1416,7 +1446,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._validationTimeout = setTimeout(() => {
 			this._effectiveValueState = this.valueState;
 			this._dialogInputValueState = valueState;
-			this.valueState = valueState;
+			this._updateValueState(valueState);
 			this._validationTimeout = null;
 			this._innerInput.focus();
 
@@ -2271,4 +2301,5 @@ export default MultiComboBox;
 export type {
 	IMultiComboBoxItem,
 	MultiComboBoxSelectionChangeEventDetail,
+	MultiComboBoxValueStateChangeEventDetail,
 };

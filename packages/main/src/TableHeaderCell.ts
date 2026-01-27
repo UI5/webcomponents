@@ -123,9 +123,6 @@ class TableHeaderCell extends TableCellBase {
 	@slot()
 	action!: Slot<Array<TableHeaderCellActionBase>>;
 
-	@property({ type: Boolean, noAttribute: true })
-	_popin = false;
-
 	@query("slot:not([name])")
 	_defaultSlot!: HTMLSlotElement;
 
@@ -137,10 +134,7 @@ class TableHeaderCell extends TableCellBase {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		if (this._individualSlot) {
-			// overwrite setting of TableCellBase so that the TableHeaderCell always uses the slot variable
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
-		}
+		this.style.justifyContent = this.horizontalAlign || "";
 		toggleAttribute(this, "aria-sort", this.sortIndicator !== SortOrder.None, this.sortIndicator.toLowerCase());
 	}
 
