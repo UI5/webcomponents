@@ -112,6 +112,10 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 		return;
 	}
 
+	if (changeInfo.oldValue === changeInfo.newValue) {
+		return;
+	}
+
 	const ctor = this.constructor as typeof UI5Element;
 
 	// Skip re-rendering of language-aware components while language-specific data (e.g., CLDR, language bundles) is still loading.
@@ -1208,35 +1212,34 @@ abstract class UI5Element extends HTMLElement {
 					const ctor = this.constructor as typeof UI5Element;
 					const oldState = origGet ? origGet.call(this) : this._state[prop];
 
-					const isDifferent = oldState !== value;
-					if (isDifferent) {
-						// if the decorator is on a setter, use it for storage
-						if (origSet) {
-							origSet.call(this, value);
-						} else {
-							this._state[prop] = value;
-						}
-						_invalidate.call(this, {
-							type: "property",
-							name: prop,
-							newValue: value,
-							oldValue: oldState,
-						});
+					// if the decorator is on a setter, use it for storage
+					if (origSet) {
+						origSet.call(this, value);
+					} else {
+						this._state[prop] = value;
+					}
 
-						if (this._rendered) {
-							// the component is already rendered, indicating it is not the constructor -
-							// therefore the attribute can be set synchronously.
+					const newValue = origGet ? origGet.call(this) : this._state[prop];
 
-							// get the effective value of the property,
-							// as it might differ from the provided value
-							const newValue = origGet ? origGet.call(this) : this._state[prop];
+					_invalidate.call(this, {
+						type: "property",
+						name: prop,
+						newValue,
+						oldValue: oldState,
+					});
 
-							this._updateAttribute(prop, newValue);
-						}
+					if (this._rendered) {
+						// the component is already rendered, indicating it is not the constructor -
+						// therefore the attribute can be set synchronously.
 
-						if (ctor.getMetadata().isFormAssociated()) {
-							setFormValue(this as unknown as IFormInputElement);
-						}
+						// get the effective value of the property,
+						// as it might differ from the provided value
+
+						this._updateAttribute(prop, newValue);
+					}
+
+					if (ctor.getMetadata().isFormAssociated()) {
+						setFormValue(this as unknown as IFormInputElement);
 					}
 				},
 			});

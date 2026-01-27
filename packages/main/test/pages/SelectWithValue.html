@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>ui5-select</title>
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
-<link rel="stylesheet" type="text/css" href="./styles/Select.css">
+	<link rel="stylesheet" type="text/css" href="./styles/Select.css">
 </head>
 
 <body class="select1auto">
-
 	<h2>No "value", No "selected" => expected Cozy</h2>
 	<ui5-select id="sel1">
 		<ui5-option>Cozy</ui5-option>
@@ -18,7 +18,7 @@
 	</ui5-select>
 	<ui5-label id="lbl1"></ui5-label>
 
-	<hr/>
+	<hr />
 
 	<h2>No "value", Condensed "selected=true" => expected Condensed</h2>
 
@@ -29,34 +29,34 @@
 	</ui5-select>
 	<ui5-label id="lbl2"></ui5-label>
 
-	<hr/>
+	<hr />
 
-	<h2>With value="Compact, No "selected" used</h2>
-	<ui5-select id="sel3" value="Compact">
-		<ui5-option>Cozy</ui5-option>
-		<ui5-option>Compact</ui5-option>
-		<ui5-option>Condensed</ui5-option>
+	<h2>With value="", No "selected" used</h2>
+	<ui5-select id="sel3" value="">
+		<ui5-option value="cozy">Cozy</ui5-option>
+		<ui5-option value="compact">Compact</ui5-option>
+		<ui5-option value="condensed">Condensed</ui5-option>
 	</ui5-select>
 	<ui5-label id="lbl3"></ui5-label>
 
-	<h2>With value="Compact" set with delay => expected: Compact</h2>
-
-	<ui5-select id="sel4">
+	<h2>With value="Compact, No "selected" used</h2>
+	<ui5-select id="sel4" value="Compact">
 		<ui5-option>Cozy</ui5-option>
 		<ui5-option>Compact</ui5-option>
 		<ui5-option>Condensed</ui5-option>
 	</ui5-select>
 	<ui5-label id="lbl4"></ui5-label>
 
-	<h2>With value="Compact" set and Compact option added with delay => expected: Compact</h2>
+	<h2>With value="Compact" set with delay => expected: Compact</h2>
 
-	<ui5-select id="sel5" value="Compact">
+	<ui5-select id="sel5">
 		<ui5-option>Cozy</ui5-option>
+		<ui5-option>Compact</ui5-option>
 		<ui5-option>Condensed</ui5-option>
 	</ui5-select>
 	<ui5-label id="lbl5"></ui5-label>
 
-	<h2>With value="Compact", but Compact option never added = > expected: Cozy</h2>
+	<h2>With value="Compact" set and Compact option added with delay => expected: Compact</h2>
 
 	<ui5-select id="sel6" value="Compact">
 		<ui5-option>Cozy</ui5-option>
@@ -64,41 +64,48 @@
 	</ui5-select>
 	<ui5-label id="lbl6"></ui5-label>
 
-	<hr/>
+	<h2>With value="Compact", but Compact option never added = > expected: Cozy</h2>
+
+	<ui5-select id="sel7" value="Compact">
+		<ui5-option>Cozy</ui5-option>
+		<ui5-option>Condensed</ui5-option>
+	</ui5-select>
+	<ui5-label id="lbl7"></ui5-label>
+	<hr />
 
 	<h2>With value="Compact" and Condensed option selected="true" => expected: Compact</h2>
 
-	<ui5-select id="sel7" value="Compact">
+	<ui5-select id="sel8" value="Compact">
 		<ui5-option id="cozy">Cozy</ui5-option>
 		<ui5-option id="comp">Compact</ui5-option>
 		<ui5-option selected>Condensed</ui5-option>
 	</ui5-select>
-	<ui5-label id="lbl7"></ui5-label>
+	<ui5-label id="lbl8"></ui5-label>
 	<ui5-button id="btn">Set Option Cozy selected="true"</ui5-button>
 
 	<h2>No value, Item selected="true"</h2>
-	<ui5-select id="sel8">
+	<ui5-select id="sel9">
 		<ui5-option>Item1</ui5-option>
 		<ui5-option>Item2</ui5-option>
 		<ui5-option selected>Item3</ui5-option>
 	</ui5-select>
-	<ui5-label id="lbl8"></ui5-label>
+	<ui5-label id="lbl9"></ui5-label>
 	<ui5-button id="btnSetValue">select.value = "Item2"</ui5-button>
 	<ui5-button id="btnSetInvalidValue">select.value = "NAN"</ui5-button> -->
 
 	<script>
 		// set "value" property after 1 second
 		setTimeout(() => {
-			document.getElementById('sel4').value = 'Compact';
+			document.getElementById('sel5').value = 'Compact';
 		}, 1000);
 
 		// add "Compact" option after 2 seconds
 		setTimeout(() => {
 			const opt = document.createElement('ui5-option');
 			opt.textContent = 'Compact';
-			document.getElementById('sel5').appendChild(opt);
+			document.getElementById('sel6').appendChild(opt);
 		}, 2000);
-		
+
 		setInterval(() => {
 			document.getElementById('lbl1').textContent = `this.value :: ${document.getElementById('sel1').value}, getAttribute("value"): ${document.getElementById('sel1').getAttribute('value')}`;
 			document.getElementById('lbl2').textContent = `this.value :: ${document.getElementById('sel2').value}, getAttribute("value"): ${document.getElementById('sel2').getAttribute('value')}`;
@@ -108,19 +115,20 @@
 			document.getElementById('lbl6').textContent = `this.value :: ${document.getElementById('sel6').value}, getAttribute("value"): ${document.getElementById('sel6').getAttribute('value')}`;
 			document.getElementById('lbl7').textContent = `this.value :: ${document.getElementById('sel7').value}, getAttribute("value"): ${document.getElementById('sel7').getAttribute('value')}`;
 			document.getElementById('lbl8').textContent = `this.value :: ${document.getElementById('sel8').value}, getAttribute("value"): ${document.getElementById('sel8').getAttribute('value')}`;
+			document.getElementById('lbl9').textContent = `this.value :: ${document.getElementById('sel9').value}, getAttribute("value"): ${document.getElementById('sel9').getAttribute('value')}`;
 		}, 250);
-		
+
 		btn.addEventListener('click', () => {
 			document.getElementById('comp').selected = false;
 			document.getElementById('cozy').selected = true;
 		});
 
-		btnSetValue.addEventListener("click", function(e) {
-			sel8.value = "Item2";
+		btnSetValue.addEventListener("click", function (e) {
+			sel9.value = "Item2";
 		});
 
-		btnSetInvalidValue.addEventListener("click", function(e) {
-			sel8.value = "NAN";
+		btnSetInvalidValue.addEventListener("click", function (e) {
+			sel9.value = "NAN";
 		});
 	</script>
 </body>
