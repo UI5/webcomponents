@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AdaptFiltersDialog Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			padding: 2rem;
+			background-color: #fafafa;
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-bottom: 2rem;
+		}
+
+		.example-section {
+			background: white;
+			padding: 2rem;
+			margin-bottom: 2rem;
+			border-radius: 0.5rem;
+			box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+		}
+
+		.example-section h2 {
+			margin-top: 0;
+			margin-bottom: 1rem;
+			font-size: 1.25rem;
+		}
+
+		.button-group {
+			display: flex;
+			gap: 1rem;
+			margin-bottom: 2rem;
+		}
+
+		.result {
+			margin-top: 1rem;
+			padding: 1rem;
+			background-color: #f5f5f5;
+			border-radius: 0.25rem;
+			font-family: monospace;
+			font-size: 0.875rem;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>AdaptFiltersDialog Test Page</h1>
+
+		<div class="example-section">
+			<h2>Example 1: Basic AdaptFiltersDialog (FilterBarItem)</h2>
+			<div class="button-group">
+				<ui5-button id="openDialog1">Open Adapt Filters Dialog</ui5-button>
+			</div>
+			<div class="result" id="result1">Click the button to open the dialog</div>
+
+			<ui5-adapt-filters-dialog id="dialog1">
+				<ui5-filterbar-item id="afi-product">
+					<ui5-label slot="label">Product Name</ui5-label>
+					<ui5-input placeholder="Product"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-category">
+					<ui5-label slot="label">Category</ui5-label>
+					<ui5-select>
+						<ui5-option>Electronics</ui5-option>
+						<ui5-option>Clothing</ui5-option>
+						<ui5-option>Food</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-status">
+					<ui5-label slot="label">Status</ui5-label>
+					<ui5-select>
+						<ui5-option>Active</ui5-option>
+						<ui5-option>Inactive</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+			</ui5-adapt-filters-dialog>
+		</div>
+
+		<div class="example-section">
+			<h2>Example 2: With FilterBar Integration</h2>
+			<ui5-filterbar id="filterBar">
+				<ui5-filterbar-item id="filter-product">
+					<ui5-label slot="label">Product Name</ui5-label>
+					<ui5-input placeholder="Enter product name"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="filter-category">
+					<ui5-label slot="label">Category</ui5-label>
+					<ui5-select>
+						<ui5-option>Electronics</ui5-option>
+						<ui5-option>Clothing</ui5-option>
+						<ui5-option>Food</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="filter-status" style="display: none;">
+					<ui5-label slot="label">Status</ui5-label>
+					<ui5-select>
+						<ui5-option>Active</ui5-option>
+						<ui5-option>Inactive</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+			</ui5-filterbar>
+
+			<div class="button-group">
+				<ui5-button id="openDialog2">Adapt Filters</ui5-button>
+			</div>
+			<div class="result" id="result2">Click "Adapt Filters" to show/hide filters</div>
+
+			<ui5-adapt-filters-dialog id="dialog2">
+				<ui5-filterbar-item id="filter-product-afi">
+					<ui5-label slot="label">Product Name</ui5-label>
+					<ui5-input></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="filter-category-afi">
+					<ui5-label slot="label">Category</ui5-label>
+					<ui5-select>
+						<ui5-option>Electronics</ui5-option>
+						<ui5-option>Clothing</ui5-option>
+						<ui5-option>Food</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="filter-status-afi">
+					<ui5-label slot="label">Status</ui5-label>
+					<ui5-select>
+						<ui5-option>Active</ui5-option>
+						<ui5-option>Inactive</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+			</ui5-adapt-filters-dialog>
+		</div>
+
+		<div class="example-section">
+			<h2>Example 3: Many Filters (Search Test)</h2>
+			<div class="button-group">
+				<ui5-button id="openDialog3">Open Adapt Filters Dialog</ui5-button>
+			</div>
+			<div class="result" id="result3">Click the button to open dialog with many filters</div>
+
+			<ui5-adapt-filters-dialog id="dialog3">
+				<ui5-filterbar-item id="afi-accountNumber">
+					<ui5-label slot="label">Account Number</ui5-label>
+					<ui5-input placeholder="Enter account number"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-balance">
+					<ui5-label slot="label">Balance</ui5-label>
+					<ui5-input type="Number" placeholder="Enter balance"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-companyName">
+					<ui5-label slot="label">Company Name</ui5-label>
+					<ui5-input placeholder="Enter company name"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-contactPerson">
+					<ui5-label slot="label">Contact Person</ui5-label>
+					<ui5-input placeholder="Enter contact person"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-country">
+					<ui5-label slot="label">Country</ui5-label>
+					<ui5-select>
+						<ui5-option>USA</ui5-option>
+						<ui5-option>Germany</ui5-option>
+						<ui5-option>UK</ui5-option>
+						<ui5-option>France</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-createdDate">
+					<ui5-label slot="label">Created Date</ui5-label>
+					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-currency">
+					<ui5-label slot="label">Currency</ui5-label>
+					<ui5-select>
+						<ui5-option>USD</ui5-option>
+						<ui5-option>EUR</ui5-option>
+						<ui5-option>GBP</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-customerId">
+					<ui5-label slot="label">Customer ID</ui5-label>
+					<ui5-input placeholder="Enter customer ID"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-department">
+					<ui5-label slot="label">Department</ui5-label>
+					<ui5-input placeholder="Enter department"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-email">
+					<ui5-label slot="label">Email Address</ui5-label>
+					<ui5-input type="Email" placeholder="Enter email"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-fax">
+					<ui5-label slot="label">Fax Number</ui5-label>
+					<ui5-input type="Tel" placeholder="Enter fax number"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-industry">
+					<ui5-label slot="label">Industry</ui5-label>
+					<ui5-select>
+						<ui5-option>Technology</ui5-option>
+						<ui5-option>Manufacturing</ui5-option>
+						<ui5-option>Services</ui5-option>
+						<ui5-option>Retail</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-lastModified">
+					<ui5-label slot="label">Last Modified</ui5-label>
+					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-phone">
+					<ui5-label slot="label">Phone Number</ui5-label>
+					<ui5-input type="Tel" placeholder="Enter phone number"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-region">
+					<ui5-label slot="label">Region</ui5-label>
+					<ui5-select>
+						<ui5-option>North America</ui5-option>
+						<ui5-option>Europe</ui5-option>
+						<ui5-option>Asia Pacific</ui5-option>
+						<ui5-option>Latin America</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-salesRep">
+					<ui5-label slot="label">Sales Rep</ui5-label>
+					<ui5-input placeholder="Enter sales rep"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-statusCode">
+					<ui5-label slot="label">Status Code</ui5-label>
+					<ui5-select>
+						<ui5-option>Active</ui5-option>
+						<ui5-option>Inactive</ui5-option>
+						<ui5-option>Pending</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-taxId">
+					<ui5-label slot="label">Tax ID</ui5-label>
+					<ui5-input placeholder="Enter tax ID"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-type">
+					<ui5-label slot="label">Type</ui5-label>
+					<ui5-select>
+						<ui5-option>Direct</ui5-option>
+						<ui5-option>Indirect</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-zipCode">
+					<ui5-label slot="label">ZIP Code</ui5-label>
+					<ui5-input placeholder="Enter ZIP code"></ui5-input>
+				</ui5-filterbar-item>
+			</ui5-adapt-filters-dialog>
+		</div>
+
+		<div class="example-section">
+			<h2>Example 4: Groups, Mandatory Filters, and Group Ordering (NEW FEATURES)</h2>
+			<div class="button-group">
+				<ui5-button id="openDialog4">Open Grouped Filters Dialog</ui5-button>
+			</div>
+			<div class="result" id="result4">Click the button to see grouped filters with custom ordering</div>
+
+			<ui5-adapt-filters-dialog id="dialog4">
+				<!-- Basic Group (groupOrder=0, always first) -->
+				<ui5-filterbar-item text="Company Code" groupName="Basic" group-order="0" key="companyCode" required>
+					<ui5-label slot="label">Company Code *</ui5-label>
+					<ui5-multi-input placeholder="e.g., 1984">
+						<ui5-token text="1984"></ui5-token>
+						<ui5-token text="1995"></ui5-token>
+					</ui5-multi-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Fiscal Year" groupName="Basic" group-order="0" key="fiscalYear">
+					<ui5-label slot="label">Fiscal Year</ui5-label>
+					<ui5-multi-input placeholder="e.g., 2024">
+						<ui5-token text="1984"></ui5-token>
+						<ui5-token text="1995"></ui5-token>
+					</ui5-multi-input>
+				</ui5-filterbar-item>
+
+				<!-- Fiscal Date Types Group (groupOrder=1) -->
+				<ui5-filterbar-item text="Fiscal Period" groupName="Fiscal Date Types" group-order="1" key="fiscalPeriod">
+					<ui5-label slot="label">Fiscal Period</ui5-label>
+					<ui5-multi-input placeholder="e.g., 001">
+						<ui5-token text="0003"></ui5-token>
+						<ui5-token text="0002"></ui5-token>
+						<ui5-token text="0001"></ui5-token>
+					</ui5-multi-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Fiscal Quarter" groupName="Fiscal Date Types" group-order="1" key="fiscalQuarter" required>
+					<ui5-label slot="label">Fiscal Quarter *</ui5-label>
+					<ui5-input placeholder="No value"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Fiscal Year Period" groupName="Fiscal Date Types" group-order="1" key="fiscalYearPeriod">
+					<ui5-label slot="label">Fiscal Year Period</ui5-label>
+					<ui5-input placeholder="Enter value"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Another very important Group (groupOrder=2) -->
+				<ui5-filterbar-item text="Company Code" groupName="Another very important Group" group-order="2" key="costCenter">
+					<ui5-label slot="label">Company Code</ui5-label>
+					<ui5-input placeholder="Enter code"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- One more Group (groupOrder=3) -->
+				<ui5-filterbar-item text="One more Filter" groupName="One more Group" group-order="3" key="oneMoreFilter">
+					<ui5-label slot="label">One more Filter</ui5-label>
+					<ui5-input placeholder="Enter value"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Available Filters that can be added -->
+				<ui5-filterbar-item slot="availableFilters" text="Country" groupName="Basic" group-order="0" key="country">
+					<ui5-label slot="label">Country</ui5-label>
+					<ui5-input placeholder="Enter country"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item slot="availableFilters" text="City" groupName="Basic" group-order="0" key="city">
+					<ui5-label slot="label">City</ui5-label>
+					<ui5-input placeholder="Enter city"></ui5-input>
+				</ui5-filterbar-item>
+			</ui5-adapt-filters-dialog>
+		</div>
+	</div>
+
+	<script>
+		// Example 1: Basic Dialog
+		const openDialog1 = document.getElementById('openDialog1');
+		const dialog1 = document.getElementById('dialog1');
+		const result1 = document.getElementById('result1');
+
+		openDialog1.addEventListener('click', () => {
+			dialog1.show();
+		});
+
+		dialog1.addEventListener('confirm', (event) => {
+			const selected = event.detail.selectedFilters;
+			result1.textContent = `Confirmed! Selected filters: ${selected.map(f => f.querySelector('[slot="label"]').textContent).join(', ')}`;
+		});
+
+		dialog1.addEventListener('cancel', (event) => {
+			result1.textContent = 'Dialog cancelled';
+		});
+
+		// Example 2: FilterBar Integration
+		const openDialog2 = document.getElementById('openDialog2');
+		const dialog2 = document.getElementById('dialog2');
+		const result2 = document.getElementById('result2');
+
+		openDialog2.addEventListener('click', () => {
+			dialog2.show();
+		});
+
+		dialog2.addEventListener('confirm', (event) => {
+			const selected = event.detail.selectedFilters;
+
+			// Show selected items in filterBar, hide others
+			const filterBar = document.getElementById('filterBar');
+			const selectedIds = new Set(selected.map(f => String(f.id)));
+			filterBar.querySelectorAll('ui5-filterbar-item').forEach(el => {
+				if (selectedIds.has(String(el.id))) {
+					el.style.display = '';
+				} else {
+					el.style.display = 'none';
+				}
+			});
+
+			result2.textContent = `Visible filters: ${selected.map(f => f.querySelector('[slot="label"]').textContent).join(', ')}`;
+		});
+
+		// Example 3: Many Filters
+		const openDialog3 = document.getElementById('openDialog3');
+		const dialog3 = document.getElementById('dialog3');
+		const result3 = document.getElementById('result3');
+
+		openDialog3.addEventListener('click', () => {
+			dialog3.show();
+		});
+
+		dialog3.addEventListener('confirm', (event) => {
+			const selected = event.detail.selectedFilters;
+			result3.textContent = `Selected ${selected.length} filters: ${selected.map(f => f.label).join(', ')}`;
+		});
+
+		// Example 4: Groups, Mandatory, and Ordering
+		const openDialog4 = document.getElementById('openDialog4');
+		const dialog4 = document.getElementById('dialog4');
+		const result4 = document.getElementById('result4');
+
+		openDialog4.addEventListener('click', () => {
+			dialog4.viewMode = 'groups'; // Start in Groups view
+			dialog4.show();
+		});
+
+		dialog4.addEventListener('confirm', (event) => {
+			const selected = event.detail.selectedFilters;
+			const visibilityMap = event.detail.visibilityMap;
+			result4.innerHTML = `
+				<strong>Confirmed!</strong><br>
+				Selected filters: ${selected.map(f => f.getAttribute('text')).join(', ')}<br>
+				Visibility map: ${JSON.stringify(visibilityMap, null, 2)}
+			`;
+		});
+
+		dialog4.addEventListener('filter-visibility-change', (event) => {
+			console.log('Visibility changed:', event.detail);
+		});
+
+		dialog4.addEventListener('filter-add', (event) => {
+			console.log('Filter added:', event.detail.filterKey);
+			result4.textContent = `Filter "${event.detail.filterKey}" was added!`;
+		});
+	</script>
+</body>
+</html>

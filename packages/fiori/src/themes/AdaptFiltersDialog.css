@@ -1,0 +1,49 @@
+@import "./InvisibleTextStyles.css";
+
+/* Dialog overrides */
+.ui5-adapt-filters-dialog {
+	--_ui5_input_margin_top_bottom: 0;
+	max-width: 640px;
+	width: 640px;
+}
+
+/* Responsive: Size S (max 600px) */
+@media (max-width: 600px) {
+	.ui5-adapt-filters-dialog {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+/* Dialog CSS parts */
+.ui5-adapt-filters-dialog::part(header) {
+	padding: 0;
+}
+
+.ui5-adapt-filters-dialog::part(content) {
+	padding: 0;
+}
+
+/* TabContainer CSS parts */
+.ui5-adapt-filters-content::part(tabstrip) {
+	padding: 0;
+}
+.ui5-adapt-filters-content::part(content) {
+	padding: 0;
+}
+
+.ui5-adapt-filter-item-content {
+	flex: 1;
+}
+
+.ui5-adapt-filter-item::part(content) {
+	align-items: flex-end;
+	gap: 0.5rem;
+}
+
+/* Filter Actions */
+.ui5-adapt-filter-actions {
+	display: flex;
+	gap: 0.125rem;
+	flex-shrink: 0;
+}

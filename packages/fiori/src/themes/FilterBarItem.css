@@ -7,6 +7,12 @@
 	flex-direction: column;
 }
 
+:host([_adapt_filters_item]) .ui5-filterbar-item-root {
+	flex-direction: row;
+	align-items: center;
+	gap: 0.5rem;
+}
+
 ::slotted(*) {
 	width: 100%;
 }

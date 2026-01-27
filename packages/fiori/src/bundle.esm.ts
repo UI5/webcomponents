@@ -9,6 +9,7 @@ import "./Assets.js";
 import "./illustrations/AllIllustrations.js";
 
 // FIORI components
+import AdaptFiltersDialog from "./AdaptFiltersDialog.js";
 import BarcodeScannerDialog from "./BarcodeScannerDialog.js";
 import DynamicPage from "./DynamicPage.js";
 import DynamicPageHeader from "./DynamicPageHeader.js";
