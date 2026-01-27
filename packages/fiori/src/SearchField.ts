@@ -1,6 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -181,7 +181,7 @@ class SearchField extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, invalidateOnChildChange: true })
-	scopes!: Array<ISearchScope>;
+	scopes!: Slot<Array<ISearchScope>>;
 
 	/**
 	 * Defines the filter button slot, used to display an additional filtering button.
@@ -192,7 +192,7 @@ class SearchField extends UI5Element {
 	 * @since 2.11.0
 	 */
 	@slot()
-	filterButton!: Array<Button>;
+	filterButton!: Slot<Array<Button>>;
 
 	/**
 	 * @private

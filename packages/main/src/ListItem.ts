@@ -10,7 +10,7 @@ import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableE
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
@@ -38,6 +38,7 @@ import listItemAdditionalTextCss from "./generated/themes/ListItemAdditionalText
 
 // Icons
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 interface IAccessibleListItem {
 	accessibleName?: string;
@@ -210,7 +211,7 @@ abstract class ListItem extends ListItemBase {
 	 * @public
 	*/
 	@slot()
-	deleteButton!: Array<IButton>;
+	deleteButton!: Slot<Array<IButton>>;
 
 	deactivateByKey: (e: KeyboardEvent) => void;
 	deactivate: () => void;

@@ -1,9 +1,9 @@
 /* eslint-disable spaced-comment */
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type {
@@ -586,14 +586,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	suggestionItems!: Array<IInputSuggestionItem>;
+	suggestionItems!: DefaultSlot<Array<IInputSuggestionItem>>;
 
 	/**
 	 * Defines the icon to be displayed in the component.
 	 * @public
 	 */
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<Array<IIcon>>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -613,7 +613,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<Array<HTMLElement>>;
 
 	hasSuggestionItemSelected: boolean;
 	valueBeforeItemSelection: string;

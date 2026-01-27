@@ -2,7 +2,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -39,6 +39,7 @@ import UploadCollectionItemTemplate from "./UploadCollectionItemTemplate.js";
 
 // Styles
 import UploadCollectionItemCss from "./generated/themes/UploadCollectionItem.css.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -225,7 +226,7 @@ class UploadCollectionItem extends ListItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	thumbnail!: Array<HTMLElement>;
+	thumbnail!: Slot<Array<HTMLElement>>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nFioriBundle: I18nBundle;

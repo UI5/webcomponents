@@ -3,7 +3,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type NotificationListGrowingMode from "@ui5/webcomponents/dist/types/NotificationListGrowingMode.js";
@@ -28,6 +28,7 @@ import NotificationListGroupItemTemplate from "./NotificationListGroupItemTempla
 
 // Styles
 import NotificationListGroupItemCss from "./generated/themes/NotificationListGroupItem.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type NotificationListGroupItemToggleEventDetail = {
 	item: NotificationListGroupItem,
@@ -124,7 +125,7 @@ class NotificationListGroupItem extends NotificationListItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: Array<NotificationListItem>
+	items!: DefaultSlot<Array<NotificationListItem>>
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

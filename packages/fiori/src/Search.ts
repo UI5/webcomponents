@@ -1,5 +1,5 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
@@ -38,6 +38,7 @@ import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import type Select from "@ui5/webcomponents/dist/Select.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 interface ISearchSuggestionItem extends UI5Element {
 	selected: boolean;
@@ -132,7 +133,7 @@ class Search extends SearchField {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<SearchItem | SearchItemGroup>;
+	items!: DefaultSlot<Array<SearchItem | SearchItemGroup>>;
 
 	/**
 	 * Defines the popup footer action button.
@@ -140,7 +141,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	action!: Array<Button>;
+	action!: Slot<Array<Button>>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -148,7 +149,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	illustration!: Array<IllustratedMessage>;
+	illustration!: Slot<Array<IllustratedMessage>>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -156,7 +157,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	messageArea!: Array<SearchMessageArea>;
+	messageArea!: Slot<Array<SearchMessageArea>>;
 
 	/**
 	 * Indicates whether the items picker is open.

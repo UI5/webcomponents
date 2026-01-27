@@ -1,6 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, slot, eventStrict as event, property,
+	customElement, slotStrict as slot, eventStrict as event, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -205,7 +205,7 @@ class UserMenu extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	menuItems!: Array<UserMenuItem>;
+	menuItems!: DefaultSlot<Array<UserMenuItem>>;
 
 	/**
 	 * Defines the user accounts.
@@ -221,7 +221,7 @@ class UserMenu extends UI5Element {
 			slots: false,
 		},
 	})
-	accounts!: Array<UserMenuAccount>;
+	accounts!: Slot<Array<UserMenuAccount>>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

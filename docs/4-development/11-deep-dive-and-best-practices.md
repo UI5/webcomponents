@@ -436,12 +436,13 @@ class MyComponent extends UI5Element {}
 
 We can define our slots as class members via the `@slot` decorator as follows: 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import type { Slot} from "@ui5/webcomponents-base/dist/UI5Element.js"
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
 	@slot()
-	items!: Array<HTMLElement>;
+	items!: Slot<Array<HTMLElement>>;;
 }
 ```
 
@@ -540,7 +541,7 @@ export default function () {
 All slots are named if you simply use the `@slot` decorator without any settings, while the default slots must be explicitly marked as such with the `"default"` setting:
 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -554,7 +555,7 @@ class MyComponent extends UI5Element {
 Simply use the `@slot` decorator without any settings:
 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -592,7 +593,7 @@ export default function MyComponentTemplate() {
 ```
 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -614,7 +615,7 @@ The `@slot` decorator provides an option called `individualSlots`, which is of b
 
 First, enable `individualSlots` by setting it to `true`:
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -637,7 +638,7 @@ export default function MyComponentTemplate() {
 
 Here is an example using the `Carousel` web component, which leverages `individualSlots` to wrap each slotted child within the content slot to achieve a specific design:
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("ui5-carousel")
 class Carousel extends UI5Element {
@@ -680,7 +681,7 @@ The simplest way to use this option is to set `invalidateOnChildChange` to `"tru
 
 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -692,7 +693,7 @@ class MyComponent extends UI5Element {
 For more specific scenarios, you can use a more detailed configuration. The following example demonstrates how to invalidate the `"my-component"` web component only when certain properties or slots of the slotted UI5Element instances change. In this case, the component will be invalidated if the "myProp" property or the "mySlot" slot of the child elements are modified.
 
 ```ts
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-component")
 class MyComponent extends UI5Element {
@@ -920,7 +921,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement({
     tag: "my-component",

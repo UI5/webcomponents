@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -139,7 +139,7 @@ class ColorPalettePopover extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
-	colors!: Array<IColorPaletteItem>;
+	colors!: DefaultSlot<Array<IColorPaletteItem>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

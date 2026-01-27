@@ -4,13 +4,13 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import type { CarouselNavigateEventDetail } from "@ui5/webcomponents/dist/Carousel.js";
 import Carousel from "@ui5/webcomponents/dist/Carousel.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import MediaGalleryItem from "./MediaGalleryItem.js";
@@ -215,7 +215,7 @@ class MediaGallery extends UI5Element {
 		invalidateOnChildChange: true,
 		"default": true,
 	})
-	items!: Array<IMediaGalleryItem>;
+	items!: DefaultSlot<Array<IMediaGalleryItem>>;
 
 	_itemNavigation: ItemNavigation;
 	_onResize: () => void;

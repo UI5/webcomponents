@@ -3,7 +3,7 @@ import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import transformDateToSecondaryType from "@ui5/webcomponents-localization/dist/dates/transformDateToSecondaryType.js";
 import convertMonthNumbersToMonthNames from "@ui5/webcomponents-localization/dist/dates/convertMonthNumbersToMonthNames.js";
@@ -36,6 +36,7 @@ import type CalendarLegend from "./CalendarLegend.js";
 import type { CalendarLegendItemSelectionChangeEventDetail } from "./CalendarLegend.js";
 import type SpecialCalendarDate from "./SpecialCalendarDate.js";
 import type CalendarLegendItemType from "./types/CalendarLegendItemType.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Default calendar for bundling
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
@@ -321,7 +322,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	calendarLegend!: Array<CalendarLegend>;
+	calendarLegend!: Slot<Array<CalendarLegend>>;
 
 	/**
 	 * Defines the selected date or dates (depending on the `selectionMode` property)
@@ -330,7 +331,7 @@ class Calendar extends CalendarPart {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	dates!: Array<ICalendarSelectedDates>;
+	dates!: DefaultSlot<Array<ICalendarSelectedDates>>;
 
 	/**
 	 * Defines the special dates, visually emphasized in the calendar.
@@ -338,7 +339,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	specialDates!: Array<SpecialCalendarDate>;
+	specialDates!: Slot<Array<SpecialCalendarDate>>;
 
 	/**
 	 * Defines the disabled date ranges that cannot be selected in the calendar.
@@ -348,7 +349,7 @@ class Calendar extends CalendarPart {
 	 * @since 2.16.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	disabledDates!: Array<CalendarDateRange>;
+	disabledDates!: Slot<Array<CalendarDateRange>>;
 
 	/**
 	 * Defines the selected item type of the calendar legend item (if such exists).

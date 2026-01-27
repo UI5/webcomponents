@@ -1,7 +1,7 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import { isLeft, isRight } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -23,6 +23,7 @@ import TreeItemBaseTemplate from "./TreeItemBaseTemplate.js";
 
 // Styles
 import treeItemCss from "./generated/themes/TreeItem.css.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type TreeItemBaseEventDetail = {
 	item: TreeItemBase,
@@ -215,7 +216,7 @@ class TreeItemBase extends ListItem {
 		},
 		"default": true,
 	})
-	items!: Array<TreeItemBase>;
+	items!: DefaultSlot<Array<TreeItemBase>>;
 
 	/**
 	 * **Note:** While the slot allows option for setting custom avatar, to match the
@@ -227,7 +228,7 @@ class TreeItemBase extends ListItem {
 	 * @public
 	 */
 	@slot()
-	image!: Array<HTMLElement>;
+	image!: Slot<Array<HTMLElement>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

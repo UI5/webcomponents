@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -248,7 +248,7 @@ class IllustratedMessage extends UI5Element {
 	* @since 1.7.0
 	*/
 	@slot({ type: HTMLElement })
-	title!: Array<HTMLElement> & string; // Note: since title collides with HTMLElement's title attribute and it's a String, we're adding the "& string" to the type Array<HTMLElement> to avoid ts complains. In the future we will rename/deprecate this slot name, so that it doesn't collide with HTMLElement's title attribute.
+	title!: Slot<Array<HTMLElement>> & Slot<string> ;
 
 	/**
 	* Defines the subtitle of the component.
@@ -258,7 +258,7 @@ class IllustratedMessage extends UI5Element {
 	* @since 1.0.0-rc.16
 	*/
 	@slot({ type: HTMLElement })
-	subtitle!: Array<HTMLElement>;
+	subtitle!: Slot<Array<HTMLElement>>;
 
 	/**
 	* Defines the component actions.
@@ -267,7 +267,7 @@ class IllustratedMessage extends UI5Element {
 	* @public
 	*/
 	@slot({ type: HTMLElement, "default": true })
-	actions!: Array<IButton>;
+	actions!: DefaultSlot<Array<IButton>>;
 
 	illustrationTitle?: string;
 	illustrationSubtitle?: string;

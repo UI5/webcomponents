@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ClassMap, Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -498,7 +498,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	items!: Array<IMultiComboBoxItem>;
+	items!: DefaultSlot<Array<IMultiComboBoxItem>>;
 
 	/**
 	* Defines the icon to be displayed in the component.
@@ -506,7 +506,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	* @since 1.0.0-rc.9
 	*/
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<Array<IIcon>>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -520,7 +520,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<Array<HTMLElement>>;
 
 	selectedValues: Array<IMultiComboBoxItem>;
 	_inputLastValue: string;

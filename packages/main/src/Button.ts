@@ -1,8 +1,8 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
@@ -377,7 +377,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Array<Node>>;
 
 	/**
 	 * Adds a badge to the button.
@@ -385,7 +385,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	badge!: Array<ButtonBadge>;
+	badge!: Slot<Array<ButtonBadge>>;
 
 	_deactivate: () => void;
 	_onclickBound: (e: MouseEvent) => void;

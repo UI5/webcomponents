@@ -1,9 +1,9 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 import type FormItem from "./FormItem.js";
@@ -99,7 +99,7 @@ class FormGroup extends UI5Element implements IFormItem {
 		type: HTMLElement,
 		"default": true,
 	})
-	items!: Array<FormItem>;
+	items!: DefaultSlot<Array<FormItem>>;
 
 	/**
 	 * @private

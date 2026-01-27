@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import {
 	isTabNext,
 	isTabPrevious,
@@ -15,6 +15,7 @@ import TreeItemCustomTemplate from "./TreeItemCustomTemplate.js";
 
 // Styles
 import treeItemCustomCss from "./generated/themes/TreeItem.css.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -55,7 +56,7 @@ class TreeItemCustom extends TreeItemBase {
 	 * @public
 	 */
 	@slot()
-	content!: Array<HTMLElement>;
+	content!: Slot<Array<HTMLElement>>;
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isDown(e) && this.content?.some(el => el.contains(e.target as Node))) {

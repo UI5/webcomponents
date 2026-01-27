@@ -7,9 +7,10 @@ import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 import {
-	customElement, slot, eventStrict as event,
+	customElement, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type UserSettingsAppearanceViewItemSelectEventDetail = {
 	item: UserSettingsAppearanceViewItem;
@@ -61,7 +62,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem>;
+	items!: DefaultSlot<Array<UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem>>;
 
 	/**
 	 * Defines additional content displayed below the items list.
@@ -71,7 +72,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 	@slot({
 		type: HTMLElement,
 	})
-	additionalContent?: Array<HTMLElement>;
+	additionalContent!: Slot<Array<HTMLElement>>;
 
 	_getAllItems(): Array<UserSettingsAppearanceViewItem> {
 		const allItems: Array<UserSettingsAppearanceViewItem> = [];

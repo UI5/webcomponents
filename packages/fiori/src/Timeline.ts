@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -164,7 +164,7 @@ class Timeline extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, "default": true })
-	items!: Array<ITimelineItem>;
+	items!: DefaultSlot<Array<ITimelineItem>>;
 
 	@query(".ui5-timeline-end-marker")
 	timelineEndMarker!: HTMLElement;

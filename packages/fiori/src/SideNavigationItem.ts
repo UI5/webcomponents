@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
@@ -20,6 +20,7 @@ import {
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
 	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Templates
 import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
@@ -77,7 +78,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<SideNavigationSubItem>;
+	items!: DefaultSlot<Array<SideNavigationSubItem>>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

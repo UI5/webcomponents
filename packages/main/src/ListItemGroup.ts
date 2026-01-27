@@ -1,9 +1,9 @@
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
@@ -108,7 +108,7 @@ class ListItemGroup extends UI5Element {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	items!: Array<ListItemBase>;
+	items!: DefaultSlot<Array<ListItemBase>>;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.
@@ -143,8 +143,8 @@ class ListItemGroup extends UI5Element {
 	* **Note:** Using this slot, the default header text of group and the value of `headerText` property will be overwritten.
 	* @public
 	*/
-	@slot({ type: HTMLElement })
-	header!: Array<ListItemBase>;
+	@slot()
+	header!: Slot<Array<ListItemBase>>;
 
 	_dragAndDropHandler: DragAndDropHandler;
 

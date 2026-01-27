@@ -1,4 +1,4 @@
-import { customElement, property, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, property, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
 import { toggleAttribute } from "./TableUtils.js";
 import TableCellBase from "./TableCellBase.js";
 import TableHeaderCellTemplate from "./TableHeaderCellTemplate.js";
@@ -6,6 +6,7 @@ import TableHeaderCellStyles from "./generated/themes/TableHeaderCell.css.js";
 import SortOrder from "@ui5/webcomponents-base/dist/types/SortOrder.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import type TableHeaderCellActionBase from "./TableHeaderCellActionBase.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -120,7 +121,7 @@ class TableHeaderCell extends TableCellBase {
 	 * @since 2.8.0
 	 */
 	@slot()
-	action!: Array<TableHeaderCellActionBase>;
+	action!: Slot<Array<TableHeaderCellActionBase>>;
 
 	@property({ type: Boolean, noAttribute: true })
 	_popin = false;

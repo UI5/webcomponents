@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -76,7 +76,7 @@ class Text extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Array<Node>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

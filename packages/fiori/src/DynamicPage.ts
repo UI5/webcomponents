@@ -1,7 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -29,6 +29,8 @@ import {
 	DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER,
 	DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER,
 } from "./generated/i18n/i18n-defaults.js";
+
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
 const SCROLL_THRESHOLD = 10; // px
@@ -156,7 +158,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: HTMLElement[];
+	content!: DefaultSlot<HTMLElement[]>;
 
 	/**
 	 * Defines the title HTML Element.
@@ -164,7 +166,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageTitle })
-	titleArea!: Array<DynamicPageTitle>;
+	titleArea!: Slot<Array<DynamicPageTitle>>;
 
 	/**
 	 * Defines the header HTML Element.
@@ -172,7 +174,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageHeader })
-	headerArea!: Array<DynamicPageHeader>;
+	headerArea!: Slot<Array<DynamicPageHeader>>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -180,7 +182,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	footerArea!: HTMLElement[];
+	footerArea!: Slot<HTMLElement[]>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

@@ -1,13 +1,14 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ListItem from "./ListItem.js";
 import type { IAccessibleListItem } from "./ListItem.js";
 import type WrappingType from "./types/WrappingType.js";
 import ListItemStandardTemplate from "./ListItemStandardTemplate.js";
 import type { ExpandableTextTemplateParams } from "./types/ExpandableTextTemplateParams.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * Maximum number of characters to display for small screens (Size S)
@@ -180,7 +181,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	content!: Array<Node>;
+	content!: DefaultSlot<Array<Node>>;
 
 	/**
 	 * **Note:** While the slot allows option for setting custom avatar, to match the
@@ -192,7 +193,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * @public
 	 */
 	@slot()
-	image!: Array<HTMLElement>;
+	image!: Slot<Array<HTMLElement>>;
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

@@ -5,7 +5,7 @@ import merge from "./thirdparty/merge.js";
 import { boot } from "./Boot.js";
 import UI5ElementMetadata from "./UI5ElementMetadata.js";
 import type {
-	Slot,
+	Slot as SlotMetadata,
 	SlotValue,
 	State,
 	PropertyValue,
@@ -169,6 +169,17 @@ type TargetedEventHandler<D, T> = {
 }["asMethod"];
 type Convert<T, K extends UI5Element> = { [Property in keyof T as `on${KebabToPascal<string & Property>}`]: IsAny<T[Property], any, TargetedEventHandler<T[Property], K>> }
 
+
+// Create a unique symbol as a marker
+declare const SlotMarker: unique symbol;
+declare const DefaultSlotMarker: unique symbol;
+
+export type Slot<T> = T & { [SlotMarker]: true };
+export type DefaultSlot<T> = T & { [DefaultSlotMarker]: true };
+
+export type IsSlot<T> = T extends { [SlotMarker]: true } ? true : T extends { [DefaultSlotMarker]: true } ? true : false;
+export type IsDefaultSlot<T> = T extends { [DefaultSlotMarker]: true } ? true : false;
+
 /**
  * @class
  * Base class for all UI5 Web Components
@@ -182,6 +193,8 @@ abstract class UI5Element extends HTMLElement {
 	};
 	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"], this> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"], this>;
 	_jsxProps!: Pick<JSX.AllHTMLAttributes<HTMLElement>, GlobalHTMLAttributeNames> & ElementProps<this> & Partial<this["_jsxEvents"]> & { key?: any };
+    // _jsxSlots!: NotEqual<this, UI5Element> extends true ? Exclude<ExtractSlotNames<this>, undefined> : string;
+	
 	__id?: string;
 	_suppressInvalidation: boolean;
 	_changedState: Array<ChangeInfo>;
@@ -557,7 +570,7 @@ abstract class UI5Element extends HTMLElement {
 	 * Removes all children from the slot and detaches listeners, if any
 	 * @private
 	 */
-	_clearSlot(slotName: string, slotData: Slot) {
+	_clearSlot(slotName: string, slotData: SlotMetadata) {
 		const propertyName = slotData.propertyName || slotName;
 		const children = this._state[propertyName] as Array<SlotValue>;
 

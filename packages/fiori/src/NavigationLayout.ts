@@ -1,11 +1,12 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import NavigationLayoutMode from "./types/NavigationLayoutMode.js";
 import type SideNavigation from "./SideNavigation.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Template
 import NavigationLayoutTemplate from "./NavigationLayoutTemplate.js";
@@ -92,21 +93,21 @@ class NavigationLayout extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<Array<HTMLElement>>;
 
 	/**
 	 * Defines the side content.
 	 * @public
 	 */
 	@slot()
-	sideContent!: Array<SideNavigation>;
+	sideContent!: Slot<Array<SideNavigation>>;
 
 	/**
 	 * Defines the content.
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<Array<HTMLElement>>;
 
 	onBeforeRendering() {
 		this.calcSideCollapsed();

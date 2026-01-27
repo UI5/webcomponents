@@ -1,6 +1,6 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, slot, property, i18n,
+	customElement, slotStrict as slot, property, i18n,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableCellBaseStyles from "./generated/themes/TableCellBase.css.js";
@@ -27,7 +27,7 @@ abstract class TableCellBase extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	content!: Array<Node>;
+	content!: DefaultSlot<Array<Node>>;
 
 	/**
 	 * Determines the horizontal alignment of table cells.

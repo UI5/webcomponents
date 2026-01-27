@@ -1,4 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot, type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -7,7 +7,7 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -522,7 +522,7 @@ class List extends UI5Element {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<ListItemBase | ListItemGroup>;
+	items!: DefaultSlot<Array<ListItemBase | ListItemGroup>>;
 
 	/**
 	 * Defines the component header.
@@ -532,7 +532,7 @@ class List extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<Array<HTMLElement>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

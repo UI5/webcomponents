@@ -1,7 +1,7 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -347,21 +347,21 @@ class FlexibleColumnLayout extends UI5Element {
 	* @public
 	*/
 	@slot()
-	startColumn!: Array<HTMLElement>;
+	startColumn!: Slot<Array<HTMLElement>>;
 
 	/**
 	* Defines the content in the middle column.
 	* @public
 	*/
 	@slot()
-	midColumn!: Array<HTMLElement>;
+	midColumn!: Slot<Array<HTMLElement>>;
 
 	/**
 	* Defines the content in the end column.
 	* @public
 	*/
 	@slot()
-	endColumn!: Array<HTMLElement>;
+	endColumn!: Slot<Array<HTMLElement>>;
 
 	initialRendering: boolean;
 	_handleResize: () => void;

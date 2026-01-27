@@ -1,6 +1,6 @@
-import UI5Element from "../../src/UI5Element.js";
+import UI5Element, { DefaultSlot, Slot } from "../../src/UI5Element.js";
 import customElement from "../../src/decorators/customElement.js";
-import slot from "../../src/decorators/slot.js";
+import slot from "../../src/decorators/slot-strict.js";
 import property from "../../src/decorators/property.js";
 import jsxRenderer from "../../src/renderer/JsxRenderer.js";
 
@@ -28,19 +28,19 @@ class Generic extends UI5Element {
 	defaultValueProp = "Hello";
 
 	@slot({ type: Node, "default": true })
-	content!: Array<Node>
+	content!: DefaultSlot<Array<Node>>;
 
 	@slot({ type: HTMLElement })
-	other!: Array<HTMLElement>
+	other!: Slot<Array<HTMLElement>>
 
 	@slot({ type: HTMLElement, individualSlots: true })
-	individual!: Array<HTMLElement>
+	individual!: Slot<Array<HTMLElement>>
 
 	@slot({ type: HTMLElement, propertyName: "items" })
-	named!: Array<HTMLElement>
+	named!: Slot<Array<HTMLElement>>
 
 	@slot({ type: HTMLElement })
-	"row-header"!: Array<HTMLElement>
+	"row-header"!: Slot<Array<HTMLElement>>
 
 	static get template() {
 		return () => <div>

@@ -1,10 +1,10 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { type DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type SplitButton from "@ui5/webcomponents/dist/SplitButton.js";
@@ -183,7 +183,7 @@ class Button extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	states!: Array<ButtonState>;
+	states!: DefaultSlot<Array<ButtonState>>;
 
 	@query("[ui5-split-button]")
 	_splitButton?: SplitButton;

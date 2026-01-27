@@ -1,4 +1,4 @@
-import { slot, property, customElement } from "@ui5/webcomponents-base/dist/decorators.js";
+import { slotStrict as slot, property, customElement } from "@ui5/webcomponents-base/dist/decorators.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
@@ -15,6 +15,7 @@ import ListItemGroupHeaderTemplate from "./ListItemGroupHeaderTemplate.js";
 import ListItemGroupHeaderCss from "./generated/themes/ListItemGroupHeader.css.js";
 import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 import type WrappingType from "./types/WrappingType.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * Maximum number of characters to display for small screens (Size S)
@@ -98,7 +99,7 @@ class ListItemGroupHeader extends ListItemBase {
 	expandableTextTemplate?: ExpandableTextTemplate;
 
 	@slot()
-	subItems!: Array<HTMLElement>;
+	subItems!: Slot<Array<HTMLElement>>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
