@@ -49,6 +49,7 @@ import type Button from "./Button.js";
 import type List from "./List.js";
 import type DropIndicator from "./DropIndicator.js";
 import type Tab from "./Tab.js";
+import { isInstanceOfTab } from "./Tab.js";
 import type { TabInStrip, TabInOverflow } from "./Tab.js";
 import type { TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
@@ -634,13 +635,14 @@ class TabContainer extends UI5Element {
 		if (e.detail.originalEvent instanceof KeyboardEvent) {
 			const realTabReference = (source.element as TabInOverflow).realTabReference;
 			const siblings = this._findSiblings(realTabReference);
-			// let items = siblings;
+
 			let items: Array<ITab> = siblings;
 
 			if (this.items.includes(realTabReference)) {
 				items = siblings.filter(sibling => {
-					// return ((e.target as List).items as Array<TabInOverflow>).some(el => el.realTabReference === sibling);
-					return (e.target as List).items.some(el => (el as TabInOverflow).realTabReference === sibling);
+					return (e.target as List).items
+						.filter(isInstanceOfTab)
+						.some(el => el.realTabReference === sibling);
 				});
 			}
 
@@ -690,8 +692,9 @@ class TabContainer extends UI5Element {
 
 			if (this.items.includes(realTabReference)) {
 				items = siblings.filter(sibling => {
-					// return ((e.target as List).items as Array<TabInOverflow>).some(el => el.realTabReference === sibling);
-					return (e.target as List).items.some(el => (el as TabInOverflow).realTabReference === sibling);
+					return ((e.target as List).items)
+						.filter(isInstanceOfTab)
+						.some(el => el.realTabReference === sibling);
 				});
 			}
 
@@ -802,7 +805,9 @@ class TabContainer extends UI5Element {
 		}
 
 		const listItems = (this.responsivePopover!.content[0] as List).items;
-		return listItems.find(item => (item as TabInOverflow).realTabReference === realTab);
+		return listItems
+			.filter(isInstanceOfTab)
+			.find(item => item.realTabReference === realTab);
 	}
 
 	_onTabStripKeyDown(e: KeyboardEvent) {

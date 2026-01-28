@@ -1075,8 +1075,8 @@ abstract class UI5Element extends HTMLElement {
 	 * Useful when there are transitive slots in nested component scenarios and you don't want to get a list of the slots, but rather of their content.
 	 * @public
 	 */
-	getSlottedNodes<T = Node>(slotName: string): Array<T> {
-		return getSlottedNodesList((this as unknown as Record<string, Array<SlotValue>>)[slotName]) as Array<T>;
+	getSlottedNodes<T = Node>(slotName: string): Array<T> & { [SlotMarker]: true, [DefaultSlotMarker]: true } {
+		return getSlottedNodesList((this as unknown as Record<string, Array<SlotValue>>)[slotName]) as Array<T> & { [SlotMarker]: true, [DefaultSlotMarker]: true };
 	}
 
 	/**

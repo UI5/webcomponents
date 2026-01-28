@@ -290,7 +290,7 @@ class ColorPalette extends UI5Element {
 	}
 
 	get effectiveColorItems() {
-		let colorItems: Array<IColorPaletteItem> = this.colors;
+		let colorItems = this.colors;
 
 		if (this.popupMode) {
 			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");

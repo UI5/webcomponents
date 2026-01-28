@@ -567,32 +567,30 @@ class SideNavigation extends UI5Element {
 	}
 
 	_getSelectableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationSelectableItemBase> {
-		return items.reduce((result, item) => {
-			return result.concat((item as SideNavigationItem).selectableItems);
+		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+			return result.concat(item.selectableItems);
 		}, new Array<SideNavigationSelectableItemBase>());
 	}
 
 	_getFocusableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
-		return items.reduce((result, item) => {
-			return result.concat((item as SideNavigationItem).focusableItems);
+		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+			return result.concat(item.focusableItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
 	_getAllItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
-		return items.reduce((result, item) => {
-			return result.concat((item as SideNavigationItem).allItems);
+		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+			return result.concat(item.allItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_findSelectedItem(items: Array<SideNavigationItemBase>): SideNavigationSelectableItemBase | undefined {
+	_findSelectedItem(items: Array<SideNavigationItemBase>) : SideNavigationSelectableItemBase | undefined {
 		return this._getSelectableItems(items).find(item => item._selected);
 	}
 
 	get overflowItems() : Array<HTMLElement> {
-		const items = this.items as Array<SideNavigationItemBase>;
-
-		return items.reduce((result, item) => {
-			return result.concat((item as SideNavigationItem).overflowItems);
+		return this.items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+			return result.concat(item.overflowItems);
 		}, new Array<HTMLElement>());
 	}
 
