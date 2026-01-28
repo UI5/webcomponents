@@ -1419,6 +1419,72 @@ describe("Selection and filtering", () => {
 			.should("exist")
 			.and("have.length", 1);
 	});
+
+	it("Filters correctly when typing text that doesn't match typeahead but matches filter", () => {
+		// Bug: typing "k" showed all items because valueBeforeAutoComplete was empty
+		// "k" matches "Kingdom" in StartsWithPerTerm but no item starts with "k"
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("k");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "Kingdom" starting with "k")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
+	});
+
+	it("Filters correctly when continuing to type after typeahead match fails", () => {
+		// Bug: typing "and" showed items matching "a" because valueBeforeAutoComplete stayed "a"
+		// after typeahead matched "Albania" on first keystroke
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("and");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "and")
+		// Not Albania or Argentina (which start with "a" but don't have word starting with "and")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
+	});
 });
 
 describe("Validation & Value State", () => {
