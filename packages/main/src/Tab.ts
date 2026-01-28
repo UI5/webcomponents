@@ -530,7 +530,7 @@ TabContainer.registerTabStyles(overflowCss);
 export default Tab;
 export {
 	isInstanceOfTab,
-}
+};
 export type {
 	TabInStrip,
 	TabInOverflow,
