@@ -396,7 +396,10 @@ const displayDocumentationErrors = () => {
 }
 
 const formatArrays = (typeText) => {
-    return typeText?.replaceAll(/(\S+)\[\]/g, "Array<$1>")
+    return typeText?.replace(/(Default)?Slot<(.+?)\[\]>/g, (match, prefix, innerType) => {
+        const cleanedType = innerType.replace(/^\((.+)\)$/, '$1');
+        return `Array<${cleanedType}>`;
+    }).replaceAll(/(\S+)\[\]/g, "Array<$1>");
 }
 
 export {
