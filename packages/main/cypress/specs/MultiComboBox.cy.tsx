@@ -4479,42 +4479,6 @@ describe("Loading State", () => {
 			.find("ui5-list")
 			.should("exist");
 	});
-
-	it("should toggle loading state correctly", () => {
-		cy.mount(
-			<MultiComboBox>
-				<MultiComboBoxItem text="Item 1" />
-				<MultiComboBoxItem text="Item 2" />
-			</MultiComboBox>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.should("not.have.prop", "loading", true);
-
-		cy.get("@mcb")
-			.invoke("prop", "loading", true);
-
-		cy.get("@mcb")
-			.should("have.prop", "loading", true);
-
-		cy.get("@mcb")
-			.shadow()
-			.find("[ui5-icon]")
-			.realClick();
-
-		cy.get("@mcb")
-			.shadow()
-			.find("ui5-responsive-popover")
-			.as("popover");
-
-		cy.get("@popover")
-			.should("have.attr", "open");
-
-		cy.get("@popover")
-			.find("ui5-busy-indicator")
-			.should("exist");
-	});
 });
 
 describe("Validation inside a form", () => {

@@ -10,6 +10,7 @@ import {
 	isEnter,
 	isEscape,
 	isShift,
+	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
@@ -370,6 +371,9 @@ class Button extends UI5Element implements IButton {
 	@property({ type: Boolean, noAttribute: true })
 	_cancelAction = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_isSpacePressed = false;
+
 	/**
 	 * Defines the text of the component.
 	 *
@@ -393,7 +397,6 @@ class Button extends UI5Element implements IButton {
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
-
 	constructor() {
 		super();
 		this._deactivate = () => {
@@ -543,9 +546,13 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._cancelAction = isShift(e) || isEscape(e);
+		if (isShift(e) || isEscape(e)) {
+			this._cancelAction = true;
+		} else if (isSpace(e)) {
+			this._isSpacePressed = true;
+		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			this._setActiveState(true);
 		} else if (this._cancelAction) {
 			this._setActiveState(false);
@@ -553,11 +560,23 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this._cancelAction) {
-			e.preventDefault();
+		const isSpaceKey = isSpace(e);
+		const isCancelKey = isShift(e) || isEscape(e);
+
+		if (isSpaceKey || isSpaceShift(e)) {
+			if (this._cancelAction) {
+				this._cancelAction = false;
+				this._isSpacePressed = false;
+				e.preventDefault();
+				return;
+			}
+
+			this._isSpacePressed = false;
+		} else if (isCancelKey && !this._isSpacePressed) {
+			this._cancelAction = false;
 		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			if (this.active) {
 				this._setActiveState(false);
 			}
@@ -568,6 +587,9 @@ class Button extends UI5Element implements IButton {
 		if (this.nonInteractive) {
 			return;
 		}
+
+		this._isSpacePressed = false;
+		this._cancelAction = false;
 
 		if (this.active) {
 			this._setActiveState(false);

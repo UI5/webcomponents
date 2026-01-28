@@ -70,6 +70,7 @@ import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSet
 import { _getRegisteredNames as getIconNames, getIconAccessibleName } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import applyDirection from "@ui5/webcomponents-base/dist/locale/applyDirection.js";
 import { attachDirectionChange } from "@ui5/webcomponents-base/dist/locale/directionChange.js";
+import { attachLanguageChange, detachLanguageChange } from "@ui5/webcomponents-base/dist/locale/languageChange.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import { ignoreCustomElements, shouldIgnoreCustomElement } from "@ui5/webcomponents-base/dist/IgnoreCustomElements.js";
@@ -114,6 +115,8 @@ const testAssets = {
 	getLocaleData,
 	applyDirection,
 	attachDirectionChange,
+	attachLanguageChange,
+	detachLanguageChange,
 	ResizeHandler,
 	addCustomCSS,
 	attachThemeLoaded,
