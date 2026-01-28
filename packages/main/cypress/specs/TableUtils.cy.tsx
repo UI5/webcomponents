@@ -1,4 +1,5 @@
-import { isInstanceOfTable, isValidColumnWidth } from "../../src/TableUtils.js";
+import { isValidColumnWidth } from "../../src/TableUtils.js";
+import { isInstanceOfTable } from "../../src/utils/InstanceChecks.js";
 import Table from "../../src/Table.js";
 import TableRow from "../../src/TableRow.js";
 
