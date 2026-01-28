@@ -323,9 +323,7 @@
 	--_ui5-responsive_popover_header_height: 2.5rem;
 
 	/* Slider */
-	--_ui5_slider_handle_height: 1.25rem;
 	--_ui5_slider_handle_width: 1.5rem;
-	--_ui5_slider_handle_top: -.5rem;
 	--_ui5_slider_tooltip_height: 1rem;
 	--_ui5_slider_tooltip_padding: 0.25rem;
 	/* --_ui5_slider_tooltip_bottom: 1.875rem; */
