@@ -8,8 +8,10 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { isUp, isDown } from "@ui5/webcomponents-base/dist/Keys.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -59,8 +61,10 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
- * - The control is not interactive, but can contain of interactive elements
- * - [Tab] - iterates through elements
+ * - [Tab] - focuses the toolbar or the next tabbable element after the toolbar
+ * - [Arrow Left] / [Arrow Right] - navigate between toolbar items
+ * - [Home] - navigate to the first toolbar item
+ * - [End] - navigate to the last toolbar item
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/Toolbar.js";`
@@ -164,6 +168,8 @@ class Toolbar extends UI5Element {
 	itemsToOverflow: Array<ToolbarItem> = [];
 	itemsWidth = 0;
 	minContentWidth = 0;
+	_itemNavigation: ItemNavigation;
+	hasPreviouslyFocusedItem = false;
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -179,6 +185,9 @@ class Toolbar extends UI5Element {
 
 		this._onResize = this.onResize.bind(this);
 		this._onCloseOverflow = this.closeOverflow.bind(this);
+		this._itemNavigation = new ItemNavigation(this, {
+			getItemsCallback: () => this.navigatableItems,
+		});
 	}
 
 	/**
@@ -219,6 +228,67 @@ class Toolbar extends UI5Element {
 
 	get interactiveItems() {
 		return this.items.filter((item: ToolbarItem) => item.isInteractive);
+	}
+
+	get navigatableItems() {
+		return this.items.filter((item: ToolbarItem) => item.isInteractive && !item.disabled);
+	}
+
+	/**
+	 * Keyboard Navigation Handlers
+	 */
+
+	_onkeydown(e: KeyboardEvent) {
+		// If a Select is focused and Up/Down is pressed, don't let ItemNavigation handle it
+		// so the Select can handle its own options navigation
+		const path = e.composedPath();
+		const toolbarItem = path.find(el => this.items.includes(el as ToolbarItem)) as ToolbarItem | undefined;
+
+		if (toolbarItem && toolbarItem.matches && toolbarItem.matches("[ui5-toolbar-select]")) {
+			if (isUp(e) || isDown(e)) {
+				e.stopPropagation();
+			}
+		}
+	}
+
+	_onfocusin(e: FocusEvent) {
+		// Find the toolbar item - it could be the target itself or a parent
+		const target = e.target as HTMLElement;
+		let toolbarItem: ToolbarItem | undefined;
+
+		// Check if target is a toolbar item
+		if (this.items.includes(target as ToolbarItem)) {
+			toolbarItem = target as ToolbarItem;
+		} else {
+			// Find the toolbar item parent by checking composed path
+			const path = e.composedPath();
+			toolbarItem = path.find(el => this.items.includes(el as ToolbarItem)) as ToolbarItem | undefined;
+		}
+
+		if (!toolbarItem || !toolbarItem.isInteractive) {
+			return;
+		}
+
+		// Update ItemNavigation to sync tabindex values
+		if (this.hasPreviouslyFocusedItem) {
+			this._itemNavigation.setCurrentItem(toolbarItem);
+			return;
+		}
+
+		// On first focus, set the focused item as current
+		this._itemNavigation.setCurrentItem(toolbarItem);
+		this.hasPreviouslyFocusedItem = true;
+	}
+
+	_onmousedown(e: MouseEvent) {
+		// Find the toolbar item from the event path
+		const path = e.composedPath();
+		const toolbarItem = path.find(el => this.items.includes(el as ToolbarItem)) as ToolbarItem | undefined;
+
+		if (toolbarItem && toolbarItem.isInteractive && !toolbarItem.disabled) {
+			this._itemNavigation.setCurrentItem(toolbarItem);
+			this.hasPreviouslyFocusedItem = true;
+		}
 	}
 
 	/**
