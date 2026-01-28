@@ -10,6 +10,7 @@ import List from "./List.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import CheckBox from "./CheckBox.js";
+import Title from "./Title.js";
 
 export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 	return (<>
@@ -34,7 +35,13 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			{this._isPhone && <>
 				<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
 					<div class="row">
-						<span>{this._headerTitleText}</span>
+						<Title
+							level="H1"
+							wrappingType="None"
+							class="ui5-responsive-popover-header-text"
+						>
+							{this._headerTitleText}
+						</Title>
 					</div>
 					<div class="row">
 						<Input

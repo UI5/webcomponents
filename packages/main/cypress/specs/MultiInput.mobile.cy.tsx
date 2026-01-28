@@ -4,6 +4,8 @@ import SuggestionItem from "../../src/SuggestionItem.js";
 import Button from "../../src/Button.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import { INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
@@ -124,7 +126,7 @@ describe("Multi Input on mobile device", () => {
 				.find(".ui5-input-inner")
 				.realClick();
 
-		cy.get<ResponsivePopover>("@popover")
+			cy.get<ResponsivePopover>("@popover")
 				.ui5ResponsivePopoverOpened();
 
 			// Assert: Button should be enabled after adding a token
@@ -210,6 +212,186 @@ describe("Multi Input on mobile device", () => {
 			cy.get("@popover")
 				.find("[ui5-li].ui5-suggestion-token-item")
 				.should("have.length", 3);
+		});
+	});
+
+	describe("Accessibility", () => {
+		it("Should test dialog with default title", () => {
+			cy.mount(
+				<MultiInput showSuggestions>
+					<Token slot="tokens" text="Token 1"></Token>
+					<Token slot="tokens" text="Token 2"></Token>
+					<Token slot="tokens" text="Token 3"></Token>
+					<SuggestionItem text="Aute"></SuggestionItem>
+					<SuggestionItem text="ad"></SuggestionItem>
+					<SuggestionItem text="exercitation"></SuggestionItem>
+				</MultiInput>
+			);
+
+			cy.get("[ui5-multi-input]")
+				.as("multiInput");
+
+			cy.get("@multiInput")
+				.shadow()
+				.find(".ui5-input-inner")
+				.realClick();
+
+			cy.get("@multiInput")
+				.shadow()
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
+				.as("popover")
+				.ui5ResponsivePopoverOpened();
+
+			cy.get("@multiInput")
+				.shadow()
+				.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+				.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
+		});
+
+		it("Should test dialog title with accessibleName is present and n-more button of tokenizer is pressed", () => {
+			cy.mount(
+				<MultiInput showSuggestions accessibleName="Custom Title">
+					<Token slot="tokens" text="Token 1"></Token>
+					<Token slot="tokens" text="Token 2"></Token>
+					<Token slot="tokens" text="Token 3"></Token>
+					<SuggestionItem text="Aute"></SuggestionItem>
+					<SuggestionItem text="ad"></SuggestionItem>
+					<SuggestionItem text="exercitation"></SuggestionItem>
+				</MultiInput>
+			);
+
+			cy.get("[ui5-multi-input]")
+				.as("multiInput");
+
+			cy.get("@multiInput")
+				.shadow()
+				.find('.ui5-multi-input-tokenizer')
+				.as("tokenizer")
+				.shadow()
+				.find(".ui5-tokenizer-more-text")
+				.as("moreText")
+				.realClick();
+
+			cy.get("@tokenizer")
+				.shadow()
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
+				.as("popover")
+				.ui5ResponsivePopoverOpened();
+
+			// When accessibleName is present, it should be used as the mobile dialog title
+			cy.get("@multiInput")
+				.shadow()
+				.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+				.should("have.text", "Custom Title");
+		});
+
+		it("Should test dialog title with accessibleName is present and input is focused", () => {
+			cy.mount(
+				<MultiInput showSuggestions accessibleName="Custom Title">
+					<Token slot="tokens" text="Token 1"></Token>
+					<Token slot="tokens" text="Token 2"></Token>
+					<Token slot="tokens" text="Token 3"></Token>
+					<SuggestionItem text="Aute"></SuggestionItem>
+					<SuggestionItem text="ad"></SuggestionItem>
+					<SuggestionItem text="exercitation"></SuggestionItem>
+				</MultiInput>
+			);
+
+			cy.get("[ui5-multi-input]")
+				.as("multiInput");
+
+			cy.get("@multiInput")
+				.shadow()
+				.find(".ui5-input-inner")
+				.realClick();
+
+			cy.get("@multiInput")
+				.shadow()
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
+				.as("popover")
+				.ui5ResponsivePopoverOpened();
+
+			// When accessibleName is present, it should be used as the mobile dialog title
+			cy.get("@multiInput")
+				.shadow()
+				.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+				.should("have.text", "Custom Title");
+		});
+
+		it("Should test dialog title with accessibleNameRef is present and and n-more button of tokenizer is pressed", () => {
+			cy.mount(
+				<>
+					<Label id="test-label">Custom Title</Label>
+					<MultiInput showSuggestions accessibleNameRef="test-label">
+						<Token slot="tokens" text="Token 1"></Token>
+						<Token slot="tokens" text="Token 2"></Token>
+						<Token slot="tokens" text="Token 3"></Token>
+						<SuggestionItem text="Aute"></SuggestionItem>
+						<SuggestionItem text="ad"></SuggestionItem>
+						<SuggestionItem text="exercitation"></SuggestionItem>
+					</MultiInput>
+				</>
+			);
+
+			cy.get("[ui5-multi-input]")
+				.as("multiInput");
+
+			cy.get("@multiInput")
+				.shadow()
+				.find('.ui5-multi-input-tokenizer')
+				.as("tokenizer")
+				.shadow()
+				.find(".ui5-tokenizer-more-text")
+				.as("moreText")
+				.realClick();
+
+			cy.get("@tokenizer")
+				.shadow()
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
+				.as("popover")
+				.ui5ResponsivePopoverOpened();
+
+			// When accessibleNameRef is present, it should be used as the mobile dialog title
+			cy.get("@multiInput")
+				.shadow()
+				.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+				.should("have.text", "Custom Title");
+		});
+
+		it("Should test dialog title with accessibleNameRef is present and input is focused", () => {
+			cy.mount(
+				<>
+					<Label id="test-label">Custom Title</Label>
+					<MultiInput showSuggestions accessibleNameRef="test-label">
+						<Token slot="tokens" text="Token 1"></Token>
+						<Token slot="tokens" text="Token 2"></Token>
+						<Token slot="tokens" text="Token 3"></Token>
+						<SuggestionItem text="Aute"></SuggestionItem>
+						<SuggestionItem text="ad"></SuggestionItem>
+						<SuggestionItem text="exercitation"></SuggestionItem>
+					</MultiInput>
+				</>
+			);
+
+			cy.get("[ui5-multi-input]")
+				.as("multiInput");
+
+			cy.get("@multiInput")
+				.shadow()
+				.find(".ui5-input-inner")
+				.realClick();
+
+			cy.get("@multiInput")
+				.shadow()
+				.find<ResponsivePopover>("[ui5-responsive-popover]")
+				.as("popover")
+				.ui5ResponsivePopoverOpened();
+
+			// When accessibleNameRef is present, it should be used as the mobile dialog title
+			cy.get("@multiInput")
+				.shadow()
+				.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+				.should("have.text", "Custom Title");
 		});
 	});
 });
