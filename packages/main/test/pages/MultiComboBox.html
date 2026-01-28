@@ -62,9 +62,8 @@
 <span>value </span>-->
 
 	<div class="demo-section">
-		<span>Predefined value</span>
+		<ui5-label class="sample-container-title" for="multi1">Validating input and predefined</ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
 			<ui5-mcb-item selected text="Longest word in the whole universe"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
@@ -72,15 +71,12 @@
 			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
 		</ui5-multi-combobox>
-		<br>
-		<br>
 		<ui5-button id="focus-mcb">Focus MultiComboBox</ui5-button>
 	</div>
 
 	<div class="demo-section">
-		<ui5-label id="mcbLabel">Validating input and predefined</ui5-label>
+		<ui5-label class="sample-container-title" for="mcb-predefined-value" id="mcbLabel">Validating input and predefined</ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-predefined-value" value="com" accessible-name-ref="mcbLabel">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -90,9 +86,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>no-validation and predefined value</span>
+		<ui5-label class="sample-container-title" for="multi-acv">no-validation and predefined value</ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="multi-acv" no-validation value="com">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -101,9 +96,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Validating input and placeholder </span>
+		<ui5-label class="sample-container-title" for="mcb-with-placeholder">Validating input and placeholder </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-with-placeholder" placeholder="Some initial text">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -113,10 +107,9 @@
 	</div>
 
 	<div class="demo-section">
-		<span>disabled and placeholder </span>
+		<ui5-label class="sample-container-title" for="mcb-disabled">disabled and placeholder </ui5-label>
 
-		<br>
-		<ui5-multi-combobox no-validation placeholder="Some initial text" disabled>
+		<ui5-multi-combobox id="mcb-disabled" no-validation placeholder="Some initial text" disabled>
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
@@ -125,9 +118,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>value state success </span>
+		<ui5-label class="sample-container-title" for="mcb-success">value state success </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-success" no-validation placeholder="Some initial text" value-state="Positive">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -137,9 +129,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>value state information </span>
+		<ui5-label class="sample-container-title" for="mcb-information">value state information </ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb-information"
 			value-state="Information">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
@@ -153,9 +144,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>value state warning </span>
+		<ui5-label class="sample-container-title" for="mcb-warning">value state warning </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-warning" no-validation placeholder="Some initial text" value-state="Critical">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -165,9 +155,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>value state error </span>
+		<ui5-label class="sample-container-title" for="mcb-error">value state error </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-error" no-validation placeholder="Some initial text" value-state="Negative">
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -177,9 +166,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>readonly </span>
+		<ui5-label class="sample-container-title" for="mcb-ro">readonly </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-ro" no-validation placeholder="Some initial text" readonly>
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -189,9 +177,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Readonly with value state </span>
+		<ui5-label class="sample-container-title" for="readonly-value-state-mcb">Readonly with value state </ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="readonly-value-state-mcb" value-state="Negative" readonly>
 			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -201,9 +188,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Select all</span>
+		<ui5-label class="sample-container-title" for="mcb-select-all-vs">Select all</ui5-label>
 
-		<br>
 		<ui5-multi-combobox show-select-all id="mcb-select-all-vs" value-state="Negative">
 			<ui5-mcb-item text="Qui minim"></ui5-mcb-item>
 			<ui5-mcb-item text="minim amet"></ui5-mcb-item>
@@ -235,12 +221,10 @@
 		</ui5-multi-combobox>
 
 		<ui5-button id="btnAfter">Press</ui5-button>
-		<br>
 
 		<div class="demo-section">
-			<span>Select all with groups</span>
+			<ui5-label class="sample-container-title" for="mcb-select-all-grouping">Select all with groups</ui5-label>
 
-			<br>
 			<ui5-multi-combobox show-select-all id="mcb-select-all-grouping" value-state="Critical">
 				<ui5-mcb-item-group header-text="Asia">
 					<ui5-mcb-item text="Afghanistan"></ui5-mcb-item>
@@ -262,7 +246,6 @@
 				</ui5-mcb-item-group>
 			</ui5-multi-combobox>
 
-			<br>
 
 		<ui5-multi-combobox show-select-all id="mcb-select-all">
 			<ui5-mcb-item text="Qui minim"></ui5-mcb-item>
@@ -294,7 +277,6 @@
 			<ui5-mcb-item text="est"></ui5-mcb-item>
 		</ui5-multi-combobox>
 
-		<br>
 
 		<span id="select-all-event">Selected items count: <span>0</span></span>
 
@@ -314,9 +296,8 @@
 		<h3>MultiComboBox Composition</h3>
 
 		<div class="demo-section">
-			<span>MultiComboBox Composition Korean</span>
+			<ui5-label class="sample-container-title" for="mcb-composition-korean">MultiComboBox Composition Korean</ui5-label>
 
-			<br>
 			<ui5-multi-combobox no-validation placeholder="Type in Korean ..." id="mcb-composition-korean">
 				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
 				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
@@ -326,10 +307,9 @@
 		</div>
 
 		<div class="demo-section">
-			<span>MultiComboBox Composition Korean with Validation</span>
+			<ui5-label class="sample-container-title" for="mcb-composition-korean-val">MultiComboBox Composition Korean with Validation</ui5-label>
 
-			<br>
-			<ui5-multi-combobox placeholder="Type in Korean ..." id="mcb-composition-korean">
+			<ui5-multi-combobox placeholder="Type in Korean ..." id="mcb-composition-korean-val">
 				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
 				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
 				<ui5-mcb-item text="사랑"></ui5-mcb-item>
@@ -338,9 +318,8 @@
 		</div>
 
 		<div class="demo-section">
-			<span>MultiComboBox Composition Japanese</span>
+			<ui5-label class="sample-container-title" for="mcb-composition-japanese">MultiComboBox Composition Japanese</ui5-label>
 
-			<br>
 			<ui5-multi-combobox no-validation placeholder="Type in Japanese ..." id="mcb-composition-japanese">
 				<ui5-mcb-item text="こんにちは"></ui5-mcb-item>
 				<ui5-mcb-item text="ありがとう"></ui5-mcb-item>
@@ -350,9 +329,8 @@
 		</div>
 
 		<div class="demo-section">
-			<span>MultiComboBox Composition Chinese</span>
+			<ui5-label class="sample-container-title" for="mcb-composition-chinese">MultiComboBox Composition Chinese</ui5-label>
 
-			<br>
 			<ui5-multi-combobox no-validation placeholder="Type in Chinese ..." id="mcb-composition-chinese">
 				<ui5-mcb-item text="你好"></ui5-mcb-item>
 				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
@@ -362,10 +340,9 @@
 		</div>
 
 		<div class="demo-section">
-			<span>MultiComboBox Composition Chinese with Validation</span>
+			<ui5-label class="sample-container-title" for="mcb-composition-chinese-val">MultiComboBox Composition Chinese with Validation</ui5-label>
 
-			<br>
-			<ui5-multi-combobox placeholder="Type in Chinese ..." id="mcb-composition-chinese">
+			<ui5-multi-combobox placeholder="Type in Chinese ..." id="mcb-composition-chinese-val">
 				<ui5-mcb-item text="你好"></ui5-mcb-item>
 				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
 				<ui5-mcb-item text="北京"></ui5-mcb-item>
@@ -376,9 +353,8 @@
 	</section>
 
 	<div class="demo-section">
-		<span>MultiComboBox with items</span>
+		<ui5-label class="sample-container-title" for="mcb">MultiComboBox with items</ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb">
 			<ui5-mcb-item text="Cosy" id="first-item"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -390,9 +366,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox without type ahead</span>
+		<ui5-label class="sample-container-title" for="mcb-no-typeahead">MultiComboBox without type ahead</ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation placeholder="Some initial text" no-typeahead id="mcb-no-typeahead">
 			<ui5-mcb-item text="Cosy" id="first-item"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -402,9 +377,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox with more items</span>
+		<ui5-label class="sample-container-title" for="mcb-items">MultiComboBox with more items</ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb-items">
 			<ui5-mcb-item text="Item 0" id="first-item"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Item 1"></ui5-mcb-item>
@@ -422,9 +396,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox with validation</span>
+		<ui5-label class="sample-container-title" for="another-mcb">MultiComboBox with validation</ui5-label>
 
-		<br>
 		<ui5-multi-combobox no-validation placeholder="Some initial text" id="another-mcb">
 			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -434,7 +407,7 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox n more</span> <br />
+		<ui5-label class="sample-container-title" for="more-mcb">MultiComboBox n more</ui5-label> <br />
 
 		<ui5-multi-combobox class="multicombobox3auto" placeholder="Some initial text" id="more-mcb">
 			<ui5-mcb-item text="Cosy" selected></ui5-mcb-item>
@@ -445,9 +418,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox with validation</span>
+		<ui5-label class="sample-container-title" for="mcb-validation">MultiComboBox with validation</ui5-label>
 
-		<br>
 		<ui5-multi-combobox placeholder="Some initial text" id="mcb-validation">
 			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -457,9 +429,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>MultiComboBox with grouping</span>
+		<ui5-label class="sample-container-title" for="mcb-grouping">MultiComboBox with grouping</ui5-label>
 
-		<br>
 		<ui5-multi-combobox id="mcb-grouping" no-validation placeholder="Select a country">
 			<ui5-mcb-item-group header-text="Asia">
 				<ui5-mcb-item text="Afghanistan"></ui5-mcb-item>
@@ -483,10 +454,8 @@
 		<span>SelectionChange events emitted:</span>
 		<span id="selection-change-events-fired"></span>
 	</div>
-	<br>
 	<div class="demo-section">
-		<span>MultiComboBox with Truncated token</span>
-		<br>
+		<ui5-label class="sample-container-title" for="truncated-token">MultiComboBox with Truncated token</ui5-label>
 		<ui5-multi-combobox id="truncated-token">
 			<ui5-mcb-item text="Token 1"></ui5-mcb-item>
 			<ui5-mcb-item selected
@@ -496,24 +465,18 @@
 		<ui5-button id="dummy-btn">dummy button</ui5-button>
 	</div>
 
-	<br>
 	<div class="demo-section">
-		<span>MultiComboBox with N-Items</span>
-		<br>
+		<ui5-label class="sample-container-title" for="mc-items">MultiComboBox with N-Items</ui5-label>
 		<ui5-multi-combobox id="mc-items" style="width: 150px">
 			<ui5-mcb-item selected text="Token 1"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-mcb-item>
 		</ui5-multi-combobox>
-		<br>
-		<span>MultiComboBox with N-More</span>
-		<br>
+		<ui5-label class="sample-container-title" for="mc-more">MultiComboBox with N-More</ui5-label>
 		<ui5-multi-combobox id="mc-more">
 			<ui5-mcb-item selected text="Token 1"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-mcb-item>
 		</ui5-multi-combobox>
-		<br>
-		<span>MultiComboBox with N-More and show wrapping</span>
-		<br>
+		<ui5-label class="sample-container-title" for="mc-more-wrapping">MultiComboBox with N-More and show wrapping</ui5-label>
 		<ui5-multi-combobox id="mc-more-wrapping">
 			<ui5-mcb-item selected text="Item that does not wrap"></ui5-mcb-item>
 			<ui5-mcb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum">></ui5-mcb-item>
@@ -526,27 +489,21 @@
 		<span>Fired event: </span>
 		<input type="text" id="events-input" />
 
-		<br>
-		<br>
 
 		<span>Parameters Count: </span>
 		<input type="text" id="events-parameters" />
 
-		<br>
-		<br>
 
 		<span>Event call count: </span>
 		<input type="text" id="events-call-count" value="0" />
 
-		<br>
-		<br>
 
 		<button id="reset-btn">Reset fields</button>
 	</div>
 
 
 	<section class="ui5-content-density-compact">
-		<h3>MultiComboBox in Compact</h3>
+		<ui5-label class="sample-container-title" for="mcb-compact">MultiComboBox in Compact</ui5-label>
 		<div>
 			<ui5-multi-combobox id="mcb-compact" placeholder="Some initial text">
 				<ui5-mcb-item text="Cosy" selected></ui5-mcb-item>
@@ -558,8 +515,7 @@
 	</section>
 
 	<div class="demo-section">
-		<ui5-label>Two-column items </ui5-label>
-		<br />
+		<ui5-label class="sample-container-title" for="mcb-two-column-layout">Two-column items </ui5-label>
 		<ui5-multi-combobox id="mcb-two-column-layout" class="multicombobox4auto">
 			<ui5-mcb-item text="Algeria" additional-text="DZ"></ui5-mcb-item>
 			<ui5-mcb-item text="Argentina" additional-text="AR"></ui5-mcb-item>
@@ -575,9 +531,8 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Placeholder test</span>
+		<ui5-label class="sample-container-title" for="mcb-init-selected-item">Placeholder test</ui5-label>
 
-		<br>
 		<ui5-button id="sel">Toggle Item</ui5-button>
 		<ui5-multi-combobox id="mcb-init-selected-item" placeholder="Placeholder" style="width: 300px;">
 			<ui5-mcb-item text="Item1"></ui5-mcb-item>
@@ -636,9 +591,7 @@
 			<ui5-mcb-item text="Canada"></ui5-mcb-item>
 			<ui5-mcb-item text="Chile"></ui5-mcb-item>
 		</ui5-multi-combobox>
-		<br>
 		<span>Change event calls: <span id="clear-icon-change-count">0</span></span>
-		<br>
 		<span>Input event calls: <span id="clear-icon-input-count">0</span></span>
 
 		<script>
@@ -658,7 +611,7 @@
 		</script>
 	</div>
 
-	<div class="sample-container">
+	<div class="sample-container column">
 		<form id="form">
 			<ui5-multi-combobox
 			  no-validation
@@ -674,12 +627,11 @@
 			  <ui5-mcb-item text="Portugal"></ui5-mcb-item>
 			</ui5-multi-combobox>
 		</form>
-		<br>
 		<span>Submit event calls: <span id="mcb-form-submit">0</span></span>
 	</div>
 
 	<div class="demo-section">
-		<ui5-title>Form validation</ui5-title>
+		<ui5-label class="sample-container-title" for="mcbInAForm">Form validation</ui5-label>
 		<form id="formValidation">
 			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
 			<ui5-multi-combobox id="mcbInAForm" no-validation required>
@@ -687,7 +639,6 @@
 				<ui5-mcb-item text="Denmark"></ui5-mcb-item>
 				<ui5-mcb-item text="England"></ui5-mcb-item>
 			</ui5-multi-combobox>
-			<br><br>
 			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 		</form>
 		<script>

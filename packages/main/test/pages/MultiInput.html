@@ -21,27 +21,27 @@
 
 		<h1>Basic API</h1>
 
-		<h1 class="sample-container-title">Empty Multi Input</h1>
+		<ui5-label for="empty-mi" class="sample-container-title">Empty Multi Input</ui5-label>
 		<ui5-multi-input id="empty-mi" placeholder="Placeholder"></ui5-multi-input>
 
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with Value Help Icon</h1>
+		<ui5-label for="vh" class="sample-container-title">Multi Input with Value Help Icon</ui5-label>
 		<ui5-multi-input show-value-help-icon id="vh"></ui5-multi-input>
 
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with Value Help Icon and a custom icon</h1>
-		<ui5-multi-input show-value-help-icon>
+		<ui5-label for="mi-custom-icon" class="sample-container-title">Multi Input with Value Help Icon and a custom icon</ui5-label>
+		<ui5-multi-input id="mi-custom-icon" show-value-help-icon>
 			<ui5-icon slot="icon" name="decline"></ui5-icon>
 		</ui5-multi-input>
 
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 1 token</h1>
+		<ui5-label for="one-token" class="sample-container-title">Multi Input with 1 token</ui5-label>
 		<ui5-multi-input id="one-token">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
 		</ui5-multi-input>
@@ -49,7 +49,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Readonly Multi Input with tokens</h1>
+		<ui5-label for="readonly-mi" class="sample-container-title">Readonly Multi Input with tokens</ui5-label>
 		<ui5-multi-input id="readonly-mi" readonly>
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
 			<ui5-token slot="tokens" text="Dolor"></ui5-token>
@@ -61,7 +61,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 11 tokens (overflowing)</h1>
+		<ui5-label for="basic-overflow" class="sample-container-title">Multi Input with 11 tokens (overflowing)</ui5-label>
 		<ui5-multi-input id="basic-overflow">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
 			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
@@ -79,7 +79,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 11 tokens (overflowing) and value help icon</h1>
+		<ui5-label for="basic-overflow-and-icon" class="sample-container-title">Multi Input with 11 tokens (overflowing) and value help icon</ui5-label>
 		<ui5-multi-input show-value-help-icon id="basic-overflow-and-icon">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
 
@@ -97,8 +97,8 @@
 
 		<br>
 		<br>
-		<h1 class="sample-container-title">Multi Input show wrapping</h1>
-		<ui5-multi-input>
+		<ui5-label for="mi-wrapping" class="sample-container-title">Multi Input show wrapping</ui5-label>
+		<ui5-multi-input id="mi-wrapping">
 			<ui5-token slot="tokens" text="Item that does not wrap"></ui5-token>
 			<ui5-token slot="tokens" text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum" slot="tokens"></ui5-token>
 		</ui5-multi-input>
@@ -109,7 +109,7 @@
 	<div class="sample-container">
 		<h1>Value States</h1>
 
-		<h1 class="sample-container-title">Multi Input - Success</h1>
+		<ui5-label for="multiInput-success" class="sample-container-title">Multi Input - Success</ui5-label>
 		<ui5-multi-input id="multiInput-success"
 			value-state="Positive">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
@@ -127,7 +127,7 @@
 
 		<br>
 		<br>
-		<h1 class="sample-container-title">Multi Input - Information</h1>
+		<ui5-label for="multiInput-information" class="sample-container-title">Multi Input - Information</ui5-label>
 		<ui5-multi-input id="multiInput-information"
 			value-state="Information">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
@@ -147,7 +147,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input - Warning</h1>
+		<ui5-label for="multiInput-warning" class="sample-container-title">Multi Input - Warning</ui5-label>
 		<ui5-multi-input id="multiInput-warning"
 			value-state="Critical">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
@@ -166,7 +166,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input - Error</h1>
+		<ui5-label for="multiInput-error" class="sample-container-title">Multi Input - Error</ui5-label>
 		<ui5-multi-input id="multiInput-error"
 			value-state="Negative">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
@@ -189,7 +189,7 @@
 	<div class="sample-container" id="token-samples">
 		<h1>Tokens</h1>
 
-		<h1 class="sample-container-title">Multi Input without tokens</h1>
+		<ui5-label for="no-tokens" class="sample-container-title">Multi Input without tokens</ui5-label>
 		<ui5-multi-input id="no-tokens"></ui5-multi-input>
 		<br>
 		<br>
@@ -199,7 +199,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Add multiple tokens</h1>
+		<ui5-label for="no-tokens2" class="sample-container-title">Add multiple tokens</ui5-label>
 		<ui5-multi-input id="no-tokens2"></ui5-multi-input>
 		<br>
 		<br>
@@ -209,7 +209,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 1 token</h1>
+		<ui5-label for="single-token" class="sample-container-title">Multi Input with 1 token</ui5-label>
 		<ui5-multi-input id="single-token">
 			<ui5-token slot="tokens" text="Amet"></ui5-token>
 		</ui5-multi-input>
@@ -221,7 +221,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 2 tokens</h1>
+		<ui5-label for="two-tokens" class="sample-container-title">Multi Input with 2 tokens</ui5-label>
 		<ui5-multi-input id="two-tokens" value="abc">
 			<ui5-token slot="tokens" id="firstToken" text="aa"></ui5-token>
 			<ui5-token slot="tokens" id="secondToken" text="bb"></ui5-token>
@@ -229,7 +229,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with 5 tokens</h1>
+		<ui5-label for="multiple-token" class="sample-container-title">Multi Input with 5 tokens</ui5-label>
 		<ui5-multi-input id="multiple-token">
 			<ui5-token slot="tokens" text="ea"></ui5-token>
 			<ui5-token slot="tokens" text="eu"></ui5-token>
@@ -246,7 +246,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with Truncated token</h1>
+		<ui5-label for="truncated-token" class="sample-container-title">Multi Input with Truncated token</ui5-label>
 		<ui5-multi-input id="truncated-token">
 			<ui5-token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea." slot="tokens"></ui5-token>
 		</ui5-multi-input>
@@ -258,7 +258,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with N-Items</h1>
+		<ui5-label for="mi-items" class="sample-container-title">Multi Input with N-Items</ui5-label>
 		<ui5-multi-input id="mi-items" style="width: 150px">
 			<ui5-token text="Lorem ipsum" slot="tokens"></ui5-token>
 			<ui5-token text="Lorem ipsum 1" slot="tokens"></ui5-token>
@@ -267,7 +267,7 @@
 		<br>
 		<br>
 
-		<h1 class="sample-container-title">Multi Input with N-More</h1>
+		<ui5-label for="mi-more" class="sample-container-title">Multi Input with N-More</ui5-label>
 		<ui5-multi-input id="mi-more">
 			<ui5-token text="Token 1" slot="tokens"></ui5-token>
 			<ui5-token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea." slot="tokens"></ui5-token>
@@ -277,6 +277,7 @@
 	<div class="sample-container">
 		<h1>Tokens + Suggestions</h1>
 
+		<ui5-label for="suggestion-token" class="sample-container-title">Tokens + Suggestions</ui5-label>
 		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token" value-state="Information">
 			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
 			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
@@ -334,6 +335,7 @@
 	<div class="sample-container">
 		<h1>Suggestions + showing wrapping</h1>
 
+		<ui5-label for="suggestion-wrapping" class="sample-container-title">Suggestions + showing wrapping</ui5-label>
 		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-wrapping">
 			<ui5-suggestion-item text="Lorem ipsum Text"></ui5-suggestion-item>
 			<ui5-suggestion-item text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id justo sed nisl consequat tincidunt. Vivamus tincidunt, sapien a tincidunt consequat, leo libero lacinia justo, a lacinia orci enim vel justo. Integer ultricies ex eu eros luctus, eu cursus nisl volutpat."></ui5-suggestion-item>
@@ -345,6 +347,7 @@
 	<div class="sample-container">
 		<h1>Create tokens on change and on paste</h1>
 
+		<ui5-label for="token-unique" class="sample-container-title">Create tokens on change and on paste</ui5-label>
 		<ui5-multi-input show-suggestions id="token-unique" show-value-help-icon>
 			<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
 			<ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
@@ -354,13 +357,14 @@
 	<div class="sample-container">
 		<h1>Test value-help-trigger with F4 and Alt + ArrowUp/Down</h1>
 
+		<ui5-label for="multi-with-value-help-icon" class="sample-container-title">Test value-help-trigger with F4 and Alt + ArrowUp/Down</ui5-label>
 		<ui5-multi-input id="multi-with-value-help-icon" show-value-help-icon>
 		</ui5-multi-input>
 		<ui5-input id="value-help-trigger-counter" placeholder="event count.."></ui5-input>
 	</div>
 
-	<div>
-		<ui5-title>MultiInput with tokens with custom icon</ui5-title>
+	<div class="sample-container">
+		<ui5-label for="mi-with-tokens-customicon">MultiInput with tokens with custom icon</ui5-label>
 		<ui5-multi-input id="mi-with-tokens-customicon" placeholder="Placeholder" class="multiinput2auto">
 			<ui5-token slot="tokens" text="Menu">
 				<ui5-icon name="menu" accessible-name="Menu here" slot="closeIcon"></ui5-icon>
@@ -372,7 +376,7 @@
 
 	<div class="sample-container">
 
-		<h1 class="sample-container-title">Eventing</h1>
+		<ui5-label for="mi-event" class="sample-container-title">Eventing</ui5-label>
 
 		<ui5-multi-input id="mi-event">
 			<ui5-token slot="tokens" text="ea"></ui5-token>
@@ -399,7 +403,7 @@
 
 	<div class="sample-container">
 
-		<h1 class="sample-container-title">Custom Suggestions</h1>
+		<ui5-label for="mi-custom-suggestions" class="sample-container-title">Custom Suggestions</ui5-label>
 
 		<ui5-multi-input id="mi-custom-suggestions" show-suggestions>
 			<ui5-suggestion-item-custom text="Bulgaria">
@@ -418,29 +422,32 @@
 	</div>
 
 
-	<h1 class="sample-container-title">Token delete</h1>
+	<div class="sample-container">
 
-	<ui5-multi-input show-suggestions id="test-token-delete">
-		<ui5-token slot="tokens" text="Aute"></ui5-token>
-		<ui5-token slot="tokens" text="ad"></ui5-token>
-		<ui5-token slot="tokens" text="exercitation"></ui5-token>
-		<ui5-token slot="tokens" text="esse"></ui5-token>
-		<ui5-token slot="tokens" text="labore"></ui5-token>
-		<ui5-token slot="tokens" text="amet"></ui5-token>
-		<ui5-token slot="tokens" text="aute"></ui5-token>
-		<ui5-token slot="tokens" text="excepteur"></ui5-token>
-	</ui5-multi-input>
+		<ui5-label for="test-token-delete" class="sample-container-title">Token delete</ui5-label>
 
-	<ui5-title>Form validation</ui5-title>
-	<form id="formValidation">
-		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
-		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-inform" required>
-			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
-			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
-			<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+		<ui5-multi-input show-suggestions id="test-token-delete">
+			<ui5-token slot="tokens" text="Aute"></ui5-token>
+			<ui5-token slot="tokens" text="ad"></ui5-token>
+			<ui5-token slot="tokens" text="exercitation"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="labore"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="aute"></ui5-token>
+			<ui5-token slot="tokens" text="excepteur"></ui5-token>
 		</ui5-multi-input>
-		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
-	</form>
+
+		<ui5-label for="suggestion-token-inform" class="sample-container-title">Form validation</ui5-label>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-inform" required>
+				<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
+				<ui5-suggestion-item text="ad"></ui5-suggestion-item>
+				<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+			</ui5-multi-input>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+	</div>
 	<br><br>
 
 	<script>

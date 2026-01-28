@@ -6,9 +6,10 @@ import InputPopoverTemplate from "./InputPopoverTemplate.js";
 
 type TemplateHook = () => JsxTemplateResult;
 
-export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook, mobileHeader?: TemplateHook }) {
+export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook, mobileHeader?: TemplateHook, mobileTitle?: TemplateHook }) {
 	const suggestionsList = hooks?.suggestionsList;
 	const mobileHeader = hooks?.mobileHeader;
+	const mobileTitle = hooks?.mobileTitle;
 	const preContent = hooks?.preContent || defaultPreContent;
 	const postContent = hooks?.postContent || defaultPostContent;
 
@@ -120,7 +121,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 				</div>
 			</div>
 
-			{ InputPopoverTemplate.call(this, { suggestionsList, mobileHeader }) }
+			{ InputPopoverTemplate.call(this, { suggestionsList, mobileHeader, mobileTitle }) }
 		</>
 	);
 }

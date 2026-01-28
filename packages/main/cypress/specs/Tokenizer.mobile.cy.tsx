@@ -2,6 +2,7 @@ import Tokenizer from "../../src/Tokenizer.js";
 import Button from "../../src/Button.js";
 import Token from "../../src/Token.js";
 import { TOKENIZER_DIALOG_OK_BUTTON, TOKENIZER_DIALOG_CANCEL_BUTTON, TOKENIZER_POPOVER_REMOVE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 describe("Phone mode", () => {
     beforeEach(() => {
@@ -213,6 +214,7 @@ describe("Phone mode", () => {
         cy.get("@tokenDeleteSpy")
             .should("not.have.been.called");
     });
+
     it("Should NOT fire the ui5-token-delete event when the 'X' is pressed in the n-more picker and canceled", () => {
         cy.mount(
             <Tokenizer style={{ width: "50%" }}>
@@ -255,4 +257,66 @@ describe("Phone mode", () => {
         cy.get("@tokenDeleteSpy")
             .should("not.have.been.called");
     });
+
+	it("Should test dialog title with default text", () => {
+		cy.mount(
+            <Tokenizer id="countries" style={{ width: "50%" }}>
+                <Token text="Andora"></Token>
+                <Token text="Bulgaria"></Token>
+                <Token text="Canada"></Token>
+            </Tokenizer>
+		);
+
+        cy.get("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .as("nMoreLabel");
+
+        cy.get("@nMoreLabel")
+            .realClick();
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Without label, should use default text from i18n
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", TOKENIZER_POPOVER_REMOVE.defaultText);
+		
+	});
+
+	it("Should test dialog title with label", () => {
+		cy.mount(
+            <>
+                <Label for="countries">Countries</Label>
+                <Tokenizer id="countries" style={{ width: "50%" }}>
+                    <Token text="Andora"></Token>
+                    <Token text="Bulgaria"></Token>
+                    <Token text="Canada"></Token>
+                </Tokenizer>
+			</>
+		);
+
+        cy.get("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .as("nMoreLabel");
+
+        cy.get("@nMoreLabel")
+            .realClick();
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// When label is present, it should be used as the mobile dialog title
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", "Countries");
+	});
 })

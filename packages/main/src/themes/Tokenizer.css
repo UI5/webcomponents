@@ -121,3 +121,7 @@
 	color: var(--sapLink_Active_Color);
 	text-decoration: var(--_ui5_link_active_text_decoration);
 }
+
+.ui5-responsive-popover-header .ui5-responsive-popover-header-text {
+	width: 100%;
+}

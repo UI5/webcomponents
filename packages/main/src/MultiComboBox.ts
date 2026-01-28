@@ -87,7 +87,6 @@ import {
 	VALUE_STATE_LINKS,
 	VALUE_STATE_LINK_MAC,
 	VALUE_STATE_LINKS_MAC,
-	INPUT_SUGGESTIONS_TITLE,
 	SELECT_OPTIONS,
 	SHOW_SELECTED_BUTTON,
 	MULTICOMBOBOX_DIALOG_OK_BUTTON,
@@ -97,6 +96,7 @@ import {
 	MCB_SELECTED_ITEMS,
 	INPUT_CLEAR_ICON_ACC_NAME,
 	FORM_MIXED_TEXTFIELD_REQUIRED,
+	TOKENIZER_POPOVER_REMOVE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Templates
@@ -2190,7 +2190,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || MultiComboBox.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
 	}
 
 	get _iconAccessibleNameText() {

@@ -36,3 +36,7 @@
 	--_ui5_input_tokenizer_min_width: 0px;
 	width: var(--_ui5_input_tokenizer_min_width);
 }
+
+.ui5-responsive-popover-header .ui5-responsive-popover-header-text {
+	width: 100%;
+}

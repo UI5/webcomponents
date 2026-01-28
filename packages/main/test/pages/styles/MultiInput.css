@@ -23,10 +23,11 @@ ui5-multi-input {
 
 .sample-container-title {
     padding: 0;
-    margin: 0;
+	margin: .5rem 0 .2rem 0;
     box-sizing: border-box;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    display: block;
+    font-weight: bold;
 }
 
 .multiinput1auto {

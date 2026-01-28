@@ -10,15 +10,17 @@ import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
-export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult }) {
+export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult, mobileTitle?: (this: Input) => JsxTemplateResult, valueStateMessage?: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon?: (this: Input) => string }) {
 	const suggestionsList = hooks?.suggestionsList;
 	const mobileHeader = hooks?.mobileHeader;
+	const mobileTitle = hooks?.mobileTitle;
 
 	return (
 		<>
 			{this._effectiveShowSuggestions && this.Suggestions?.template.call(this, {
 				suggestionsList,
 				mobileHeader,
+				mobileTitle,
 				valueStateMessage,
 				valueStateMessageInputIcon
 			})}
