@@ -10,6 +10,7 @@ import {
 	customElement, slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import { hasTag } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type UserSettingsAppearanceViewItemSelectEventDetail = {
 	item: UserSettingsAppearanceViewItem;
@@ -77,13 +78,13 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		const allItems: Array<UserSettingsAppearanceViewItem> = [];
 
 		this.items.forEach(item => {
-			if (item.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-GROUP") {
+			if (hasTag(item, "ui5-user-settings-appearance-view-group")) {
 				const group = item as UserSettingsAppearanceViewGroup;
 				const groupItems = Array.from(group.children).filter(
-					child => child.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM",
+					child => hasTag(child, "ui5-user-settings-appearance-view-item"),
 				) as Array<UserSettingsAppearanceViewItem>;
 				allItems.push(...groupItems);
-			} else if (item.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM") {
+			} else if (hasTag(item, "ui5-user-settings-appearance-view-item")) {
 				allItems.push(item as UserSettingsAppearanceViewItem);
 			}
 		});
@@ -93,7 +94,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 
 	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
 		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
-		if (listItem.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM") {
+		if (hasTag(listItem, "ui5-user-settings-appearance-view-item")) {
 			const item = listItem as UserSettingsAppearanceViewItem;
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 				item,
