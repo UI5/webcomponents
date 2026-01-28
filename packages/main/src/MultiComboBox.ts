@@ -371,6 +371,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	required = false;
 
 	/**
+	 * Indicates whether a loading indicator should be shown in the picker.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
+	/**
 	 * Defines the filter type of the component.
 	 * @default "StartsWithPerTerm"
 	 * @public
@@ -1863,8 +1871,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	storeResponsivePopoverWidth() {
-		if (this.open && !this._listWidth) {
-			this._listWidth = this.list!.offsetWidth;
+		if (this.open && !this._listWidth && this.list) {
+			this._listWidth = this.list.offsetWidth;
 		}
 	}
 

@@ -40,3 +40,20 @@
 [ui5-responsive-popover] .ui5-valuestatemessage-header, [ui5-popover] .ui5-valuestatemessage-header  {
 	max-width: inherit;
 }
+
+.ui5-multi-combobox-busy {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	z-index: 42;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: all;
+	width: 100%;
+}
+
+.ui5-multi-combobox-busy:not([active]) {
+	display: none;
+}

@@ -2974,6 +2974,96 @@ describe("ComboBox Composition", () => {
 	});
 });
 
+describe("Loading State", () => {
+	it("should display busy indicator when loading is true", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+
+	it("should hide busy indicator and show items when loading becomes false", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@combo")
+			.invoke("prop", "loading", false);
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("not.exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("exist");
+	});
+
+	it("should toggle loading state correctly", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.should("not.have.prop", "loading", true);
+
+		cy.get("@combo")
+			.invoke("prop", "loading", true);
+
+		cy.get("@combo")
+			.should("have.prop", "loading", true);
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.should("have.attr", "open");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+	});
+});
+
 describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
 		cy.mount(

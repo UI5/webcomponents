@@ -65,7 +65,7 @@
 		<span>Predefined value</span>
 
 		<br>
-		<ui5-multi-combobox no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
+		<ui5-multi-combobox loading no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
 			<ui5-mcb-item selected text="Longest word in the whole universe"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
@@ -75,6 +75,7 @@
 		<br>
 		<br>
 		<ui5-button id="focus-mcb">Focus MultiComboBox</ui5-button>
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
 	</div>
 
 	<div class="demo-section">
@@ -575,21 +576,35 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Placeholder test</span>
+		<ui5-label>Filter selected:</ui5-label>
+		<br />
+		<br />
 
-		<br>
-		<ui5-button id="sel">Toggle Item</ui5-button>
-		<ui5-multi-combobox id="mcb-init-selected-item" placeholder="Placeholder" style="width: 300px;">
-			<ui5-mcb-item text="Item1"></ui5-mcb-item>
-			<ui5-mcb-item selected id="mcb1" text="Initially selected"></ui5-mcb-item>
+		<ui5-multi-combobox show-select-all id="mcb-filter-selected">
+			<ui5-mcb-item text="Argentina"></ui5-mcb-item>
+			<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+			<ui5-mcb-item text="Canada"></ui5-mcb-item>
+			<ui5-mcb-item text="Chile" selected></ui5-mcb-item>
+			<ui5-mcb-item text="Columbia" selected></ui5-mcb-item>
 		</ui5-multi-combobox>
+		<br /><br />
+
+		<ui5-button id="filter-selected">Filter Selected Items</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label>Toggle Loading State:</ui5-label>
 		<br />
 		<br />
-		<ui5-button id="sel2">Toggle Item</ui5-button>
-		<ui5-multi-combobox id="mcb-init-nonselected-item" placeholder="Placeholder" style="width: 300px;">
-			<ui5-mcb-item text="Item1"></ui5-mcb-item>
-			<ui5-mcb-item id="mcb1_2" text="Initially not selected"></ui5-mcb-item>
+
+		<ui5-multi-combobox show-select-all id="toggle-loading-mcb">
+			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
 		</ui5-multi-combobox>
+		<br /><br />
+
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
 	</div>
 
 	<div>
@@ -789,6 +804,11 @@
 
 		btnfocusMCB.addEventListener("click", () => {
 			mcbFocus.focus();
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const mcb = document.getElementById("toggle-loading-mcb");
+			mcb.loading = !mcb.loading;
 		});
 
 		document.getElementById("add").addEventListener("click", event => {
