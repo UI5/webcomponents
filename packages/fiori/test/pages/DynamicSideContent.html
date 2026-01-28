@@ -87,10 +87,12 @@
 
 		hideMainContent.addEventListener("ui5-change", function() {
 			dynamnicSideContent.hideMainContent = !hideMainContent.checked;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		hideSideContent.addEventListener("ui5-change", function() {
 			dynamnicSideContent.hideSideContent = !hideSideContent.checked;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		equalSplit.addEventListener("ui5-change", function() {
@@ -99,14 +101,17 @@
 
 		sideContentPosition.addEventListener("ui5-change", function() {
 			dynamnicSideContent.sideContentPosition = sideContentPosition.checked ? "End" : "Start";
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		sideContentVisibility.addEventListener("ui5-change", function(event) {
 			dynamnicSideContent.sideContentVisibility = event.detail.selectedOption.innerText;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		sideContentFallDown.addEventListener("ui5-change", function(event) {
 			dynamnicSideContent.sideContentFallDown = event.detail.selectedOption.innerText;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		dynamicSideContent.addEventListener("ui5-layout-change", function(event) {
@@ -116,8 +121,7 @@
 			document.querySelectorAll('.breakpointTag').forEach(function(elem) { elem.style.display = "none"; });
 			document.querySelector("#breakpoint" + breakpoint).style.display="block";
 			document.querySelectorAll('.hide-on-S').forEach(function(elem) { elem.style.display = disp; });
-			toggleButton.style.display = breakpoint !== "S" || dynamicSideContent.sideContentVisibility === "AlwaysShow" ? "none" : "block";
-
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
 		});
 
 		dynamicSideContent.addEventListener("ui5-layout-change", function(event) {

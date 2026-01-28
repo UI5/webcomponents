@@ -4,9 +4,5 @@
 	--_ui5_dialog_header_focus_left_offset: 2px;
 	--_ui5_dialog_header_focus_right_offset: 2px;
 	--_ui5_dialog_header_border_radius: 0px;
-	--_ui5_dialog_header_error_state_icon_color: var(--sapNegativeElementColor);
-	--_ui5_dialog_header_information_state_icon_color: var(--sapInformativeElementColor);
-	--_ui5_dialog_header_success_state_icon_color: var(--sapPositiveElementColor);
-	--_ui5_dialog_header_warning_state_icon_color: var(--sapCriticalElementColor);
 	--_ui5_dialog_header_state_line_height: 0.0625rem;
 }

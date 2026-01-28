@@ -1,5 +1,4 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
@@ -50,7 +49,6 @@ import PageCss from "./generated/themes/Page.css.js";
 	renderer: jsxRenderer,
 	styles: [
 		PageCss,
-		getEffectiveScrollbarStyle(),
 	],
 	template: PageTemplate,
 })
@@ -131,17 +129,6 @@ class Page extends UI5Element {
 
 	get _contentTop() {
 		return this.header.length ? "2.75rem" : "0rem";
-	}
-
-	get styles() {
-		return {
-			content: {
-				"padding-bottom": this.footer.length && this._contentPaddingBottom,
-				"scroll-padding-bottom": this.footer.length && this._contentPaddingBottom,
-				"bottom": this.footer.length && this._contentBottom,
-				"top": this._contentTop,
-			},
-		};
 	}
 }
 

@@ -8,7 +8,7 @@
 
 	<script data-ui5-config type="application/json">
 		{
-			"theme": "sap_fiori_3",
+			"theme": "sap_horizon",
 			"language": "EN"
 		}
 	</script>
@@ -943,6 +943,50 @@
 		</ui5-tabcontainer>
 	</section>
 
+	<section>
+		<h2>No Auto Selection</h2>
+		<ui5-tabcontainer no-auto-selection id="tcNoAuto">
+			<ui5-tab text="Products ID">
+				<ui5-button>Button 11</ui5-button>
+				<ui5-button>Button 12</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Availability">
+				<ui5-button>Button 2</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Expiration Date">
+				<ui5-button>Button 3</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Date of Delivery">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Date of Manufacture">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Value">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Price">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Net Profit">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Company Name">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Warehouse Location">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Address">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+			<ui5-tab text="Country">
+				<ui5-button>Button 4</ui5-button>
+			</ui5-tab>
+		</ui5-tabcontainer>
+		<ui5-button id="resetBtn">Reset tab selection</ui5-button>
+	</section>
+
 	<script>
 		document.getElementById("tabContainer1").addEventListener("ui5-tab-select", async function (event) {
 			result.innerHTML = event.detail.tab.text;
@@ -1045,6 +1089,10 @@
 			tab.text = "New Tab";
 			document.getElementById("testFocusedTabAfterInsertion").appendChild(tab);
 			tab.focus();
+		});
+
+		resetBtn.addEventListener("click", () => {
+			tcNoAuto.allItems.forEach(tab => tab.selected = false);
 		});
 
 	</script>

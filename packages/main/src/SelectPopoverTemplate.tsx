@@ -5,12 +5,14 @@ import ResponsivePopover from "./ResponsivePopover.js";
 import Popover from "./Popover.js";
 import Icon from "./Icon.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
+import Title from "./Title.js";
 
 export default function SelectPopoverTemplate(this: Select) {
 	return (
 		<>
 			{this.options.length > 0 &&
 				<ResponsivePopover
+					id={this.responsivePopoverId}
 					class={{
 						"ui5-select-popover": true,
 						...this.classes.popover
@@ -25,11 +27,12 @@ export default function SelectPopoverTemplate(this: Select) {
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}
 					onKeyDown={this._onkeydown}
+					accessibleName={this._isPhone ? this._headerTitleText : undefined}
 				>
 					{this._isPhone &&
 						<div slot="header" class="ui5-responsive-popover-header">
 							<div class="row">
-								<span>{this._headerTitleText}</span>
+								<Title>{this._headerTitleText}</Title>
 								<Button
 									class="ui5-responsive-popover-close-btn"
 									icon={decline}
@@ -64,6 +67,7 @@ export default function SelectPopoverTemplate(this: Select) {
 						separators="None"
 						onMouseDown={this._itemMousedown}
 						onItemClick={this._handleItemPress}
+						accessibleRole="ListBox"
 					>
 						<slot></slot>
 					</List>

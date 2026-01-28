@@ -1,6 +1,7 @@
 @import "./InvisibleTextStyles.css";
 @import "./InputIcon.css";
 @import "./InputSharedStyles.css";
+@import "./FormComponents.css";
 
 :host(:not([hidden])) {
 	display: inline-block;
@@ -41,7 +42,6 @@
 
 :host .ui5-date-picker-input {
 	width: 100%;
-	min-width: 12.5625rem;
 	color: inherit;
 	background-color: inherit;
 	border-radius: inherit;
@@ -52,6 +52,15 @@
 	margin: inherit;
 }
 
+:host([disabled]) .ui5-date-picker-input {
+	background-color: var(--_ui5-input_disabled_background);
+	opacity: var(--_ui5_input_disabled_opacity);
+}
+
 :host(:not([disabled]):not([readonly])) .ui5-date-picker-input[focused] {
 	background-color: var(--_ui5-datepicker-hover-background);
+}
+
+.ui5-date-picker-popover::part(header) {
+	padding: 0;
 }

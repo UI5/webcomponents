@@ -1,8 +1,8 @@
 import directionArrows from "@ui5/webcomponents-icons/dist/direction-arrows.js";
 import type RangeSlider from "./RangeSlider.js";
 import Icon from "./Icon.js";
-import Input from "./Input.js";
 import SliderBaseTemplate from "./SliderBaseTemplate.js";
+import SliderTooltip from "./SliderTooltip.js";
 
 export default function RangeSliderTemplate(this: RangeSlider) {
 	return SliderBaseTemplate.call(this, {
@@ -37,7 +37,7 @@ export function progressBar(this: RangeSlider) {
 				aria-valuemax={this.max}
 				aria-valuenow={this._ariaValueNow}
 				aria-valuetext={`From ${this.startValue} to ${this.endValue}`}
-				aria-labelledby="ui5-slider-sliderDesc"
+				aria-label={this._ariaLabel}
 				aria-disabled={this._ariaDisabled}
 			></div>
 		</div>
@@ -60,7 +60,7 @@ export function handles(this: RangeSlider) {
 				aria-labelledby={this._ariaLabelledByStartHandleText}
 				aria-disabled={this._ariaDisabled}
 				aria-describedby={this._ariaDescribedByHandleText}
-				aria-keyshortcuts="F2"
+				aria-keyshortcuts={this._ariaKeyshortcuts}
 			>
 				<Icon name={directionArrows}
 					mode="Decorative"
@@ -68,25 +68,22 @@ export function handles(this: RangeSlider) {
 				></Icon>
 			</div>
 
-			{this.showTooltip &&
-				<div class="ui5-slider-tooltip ui5-slider-tooltip--start" style={this.styles.tooltip}>
-					{this.editableTooltip ?
-						<Input
-							type="Number"
-							value={this.startValue.toString()}
-							accessibleNameRef="ui5-slider-InputLabel"
-							onFocusOut={this._onInputFocusOut}
-							onKeyDown={this._onInputKeydown}
-							onChange={this._onInputChange}
-							onInput={this._onInputInput}
-							data-sap-ui-start-value
-							tabIndex={-1}
-						></Input>
-						:
-						<span class="ui5-slider-tooltip-value">{this.tooltipStartValue}</span>
-					}
-				</div>
-			}
+			<SliderTooltip
+				open={this._tooltipsOpen}
+				value={this.tooltipStartValue}
+				valueState={this.tooltipStartValueState}
+				min={this.min}
+				max={this.max}
+				data-sap-ui-start-value
+				editable={this.editableTooltip}
+				followRef={this._startHandle}
+				onChange={this._onTooltipChange}
+				onKeyDown={this._onTooltipKeydown}
+				onFocusChange={this._onTooltipFocusChange}
+				onOpen={this._onTooltipOpen}
+				onInput={this._onTooltipInput}
+			>
+			</SliderTooltip>
 		</div>
 		<div class="ui5-slider-handle-container" style={this.styles.endHandle} part="handle-container">
 			<div class="ui5-slider-handle ui5-slider-handle--end"
@@ -110,25 +107,22 @@ export function handles(this: RangeSlider) {
 				></Icon>
 			</div>
 
-			{this.showTooltip &&
-				<div class="ui5-slider-tooltip ui5-slider-tooltip--end" style={this.styles.tooltip}>
-					{this.editableTooltip ?
-						<Input
-							type="Number"
-							value={this.endValue.toString()}
-							accessibleNameRef="ui5-slider-InputLabel"
-							onFocusOut={this._onInputFocusOut}
-							onKeyDown={this._onInputKeydown}
-							onChange={this._onInputChange}
-							onInput={this._onInputInput}
-							data-sap-ui-end-value
-							tabIndex={-1}
-						></Input>
-						:
-						<span class="ui5-slider-tooltip-value">{this.tooltipEndValue}</span>
-					}
-				</div>
-			}
+			<SliderTooltip
+				open={this._tooltipsOpen}
+				value={this.tooltipEndValue}
+				valueState={this.tooltipEndValueState}
+				min={this.min}
+				max={this.max}
+				data-sap-ui-end-value
+				editable={this.editableTooltip}
+				followRef={this._endHandle}
+				onChange={this._onTooltipChange}
+				onKeyDown={this._onTooltipKeydown}
+				onFocusChange={this._onTooltipFocusChange}
+				onOpen={this._onTooltipOpen}
+				onInput={this._onTooltipInput}
+			>
+			</SliderTooltip>
 		</div>
 	</>);
 }

@@ -12,7 +12,16 @@
 	<link rel="stylesheet" type="text/css" href="./styles/Menu.css">
 </head>
 
+<style>
+	.center-content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+
 <body class="bg">
+
 	<ui5-button id="btnOpen">Open Menu</ui5-button> <br/>
 	<ui5-menu id="menu" header-text="My ui5-menu">
 		<ui5-menu-item id="menuItemNewFile" text="New File (selection prevented)" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document"></ui5-menu-item>
@@ -37,6 +46,11 @@
 	</ui5-menu>
 
 	<ui5-menu id="delaymenu" loading-delay="100" loading>
+	</ui5-menu>
+
+	<ui5-menu id="delaymenu2" loading-delay="100" loading>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
 	</ui5-menu>
 
 	<ui5-title level="H5" class="header-title">Clicked menu item text</ui5-title>
@@ -75,7 +89,7 @@
 	</ui5-menu>
 
 	<ui5-title level="H5" class="header-title">Menu with items that have endContent</ui5-title>
-	<ui5-button id="btnOpenEndContent">Open Menu</ui5-button>
+	<ui5-button id="btnOpenEndContent">Open Menu</ui5-button> <br/><br/>
 	<ui5-menu id="menuEndContent" header-text="My ui5-menu">
 		<ui5-menu-item text="New File" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document">
 			<ui5-button id="newLock" slot="endContent" icon="locked" design="Transparent"></ui5-button>
@@ -86,7 +100,7 @@
 		<ui5-menu-separator></ui5-menu-separator>
 		<ui5-menu-item text="Open" icon="open-folder" accessible-name="Choose platform">
 			<ui5-menu-item text="Open Locally" icon="open-folder" additional-text="Ctrl+K">
-				<ui5-menu-item text="Open from C"></ui5-menu-item>
+				<ui5-menu-item text="Open from C" id="menuItemFromC"></ui5-menu-item>
 				<ui5-menu-item text="Open from D"></ui5-menu-item>
 				<ui5-menu-separator></ui5-menu-separator>
 				<ui5-menu-item text="Open from E" disabled></ui5-menu-item>
@@ -107,6 +121,56 @@
 		<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
 	</ui5-menu>
 
+	<ui5-title level="H5" class="header-title">Menu with item groups</ui5-title>
+	<ui5-button id="btnOpenGroups">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menuGroups" header-text="My ui5-menu">
+		<ui5-menu-item text="New Paragraph" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Text">
+			<ui5-menu-item text="Item 1"></ui5-menu-item>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item-group check-mode="Single">
+				<ui5-menu-item text="Item 2" icon="bold-text" checked></ui5-menu-item>
+				<ui5-menu-item text="Item 3"></ui5-menu-item>
+				<ui5-menu-item text="Item 4" icon="add-document"></ui5-menu-item>
+			</ui5-menu-item-group>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item text="New submenu" icon="add-document" checked>
+				<ui5-menu-item-group check-mode="Multiple">
+					<ui5-menu-item text="Item 5" checked></ui5-menu-item>
+					<ui5-menu-item text="Item 6"></ui5-menu-item>
+					<ui5-menu-item text="Item 7"></ui5-menu-item>
+				</ui5-menu-item-group>
+				<ui5-menu-item text="Item 8" checked>
+					<ui5-menu-item-group check-mode="Multiple">
+						<ui5-menu-item text="Item 8.1"></ui5-menu-item>
+						<ui5-menu-item text="Item 8.2"></ui5-menu-item>
+						<ui5-menu-item text="Item 8.3"></ui5-menu-item>
+					</ui5-menu-item-group>
+				</ui5-menu-item>
+			</ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="Multiple">
+			<ui5-menu-item text="Bold" icon="bold-text" checked>
+				<ui5-button id="newLock2" slot="endContent" icon="locked" design="Transparent"></ui5-button>
+			</ui5-menu-item>
+			<ui5-menu-item text="Italic" icon="italic-text" additional-text="Cursive Text" checked></ui5-menu-item>
+			<ui5-menu-item text="Underline" icon="underline-text" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="Single">
+			<ui5-menu-item text="Left Alignment" icon="text-align-left" checked></ui5-menu-item>
+			<ui5-menu-item text="Center Alignment" icon="text-align-center" checked></ui5-menu-item>
+			<ui5-menu-item text="Right Alignment" icon="text-align-right" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="None">
+			<ui5-menu-item text="Item 1"></ui5-menu-item>
+			<ui5-menu-item text="Item 2"></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Exit"></ui5-menu-item>
+	</ui5-menu>
 
 	<ui5-popover id="detailsPopover" initialFocus="detailsLink">
 			<div>
@@ -115,22 +179,47 @@
 			<ui5-link id="detailsLink" href="https://en.wikipedia.org/wiki/Google_logo" target="_blank"></ui5-link>
 	</ui5-popover>
 
-
+	<ui5-title level="H5" class="header-title">Menu with delayed items loading</ui5-title>
 	<ui5-button id="btnAddOpenerDelay">Delayed</ui5-button>
+	<ui5-button id="btnAddOpenerDelay2">Delayed with pre-loaded items</ui5-button>
+	<br/><br/>
+
+	<ui5-title level="H5" class="header-title">Menu with right alignment</ui5-title>
+
+	<div class="center-content">
+		<ui5-button id="btnOpenRight">Open Menu</ui5-button> <br/>
+	</div>
+
+	<ui5-menu id="menuRight" header-text="Menu" horizontal-align="End">
+		<ui5-menu-item text="Open" icon="open-folder"></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Close" additional-text="Ctrl+W" ></ui5-menu-item>
+	</ui5-menu>
 
 	<script>
+
 		btnOpen.accessibilityAttributes = {
 			hasPopup: "menu",
 		};
 
 		btnOpen.addEventListener("click", function() {
 			menu.opener = "btnOpen";
-			menu.open = !menu.open;
+			menu.open = true;
+		});
+
+		btnOpenGroups.addEventListener("click", function() {
+			menuGroups.opener = "btnOpenGroups";
+			menuGroups.open = true;
 		});
 
 		btnOpenEndContent.addEventListener("click", function() {
 			menuEndContent.opener = "btnOpenEndContent";
 			menuEndContent.open = !menu.open;
+		});
+
+		btnOpenRight.addEventListener ("click", function() {
+			menuRight.opener = "btnOpenRight";
+			menuRight.open = !menuRight.open;
 		});
 
 		btnAddOpener.addEventListener("click", function() {
@@ -150,6 +239,11 @@
 			delaymenu.open = !delaymenu.open;
 		});
 
+		btnAddOpenerDelay2.addEventListener("click", function() {
+			delaymenu2.opener = "btnAddOpenerDelay2";
+			delaymenu2.open = !delaymenu2.open;
+		});
+
 		delaymenu.addEventListener("ui5-before-open", function(event) {
 			setTimeout(function() {
 				delaymenu.loading = false;
@@ -160,6 +254,14 @@
 				twoNode.setAttribute("text", "Open from Google Cloud");
 				delaymenu.append(oneNode, twoNode);
 				delaymenu.focus();
+			}, 1000);
+		});
+
+		delaymenu2.addEventListener("ui5-before-open", function(event) {
+			setTimeout(function() {
+				delaymenu2.loading = false;
+				delaymenu2.loadingDelay = 0;
+				delaymenu2.focus();
 			}, 1000);
 		});
 
@@ -273,10 +375,18 @@
 			role: "menuitemcheckbox",
 		};
 
-		menuItemFromD.accessibilityAttributes = {
-			role: "menuitemcheckbox",
-		};
+		menuGroups.addEventListener("ui5-item-click", function(event) {
+			console.warn("Item clicked: " + event.detail.item.text);
+
+		});
+
+		menuGroups.addEventListener("ui5-check", function(event) {
+			console.warn("Check event fired for item: " + event.target.text);
+			console.warn("Checked state: " + event.target.checked);
+			console.warn(event.target);
+		});
 
 	</script>
+
 </body>
 </html>

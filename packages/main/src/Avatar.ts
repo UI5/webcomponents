@@ -5,7 +5,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -17,7 +17,11 @@ import type { IAvatarGroupItem } from "./AvatarGroup.js";
 // Template
 import AvatarTemplate from "./AvatarTemplate.js";
 
-import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
+import {
+	AVATAR_TOOLTIP,
+	AVATAR_TYPE_BUTTON,
+	AVATAR_TYPE_IMAGE,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import AvatarCss from "./generated/themes/Avatar.css.js";
@@ -67,8 +71,8 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  *
  * **Note:** The event will not be fired if the `disabled`
  * property is set to `true`.
- * @private
- * @since 1.0.0-rc.11
+ * @public
+ * @since 2.11.0
  */
 @event("click", {
 	bubbles: true,
@@ -168,17 +172,19 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 
 	/**
 	 * Defines the background color of the desired image.
-	 * @default "Accent6"
+	 * If `colorScheme` is set to `Auto`, the avatar will be displayed with the `Accent6` color.
+	 *
+	 * @default "Auto"
 	 * @public
 	 */
 	@property()
-	colorScheme: `${AvatarColorScheme}` = "Accent6";
+	colorScheme: `${AvatarColorScheme}` = "Auto";
 
 	/**
 	 * @private
 	 */
 	@property()
-	_colorScheme: `${AvatarColorScheme}` = "Accent6";
+	_colorScheme: `${AvatarColorScheme}` = "Auto";
 
 	/**
 	 * Defines the text alternative of the component.
@@ -207,8 +213,17 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	@property({ noAttribute: true })
 	forcedTabIndex?: string;
 
+	/**
+	 * @private
+	 */
 	@property({ type: Boolean })
 	_hasImage = false;
+
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_imageLoadError = false;
 
 	/**
 	 * Receives the desired `<img>` tag
@@ -239,10 +254,20 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	static i18nBundle: I18nBundle;
 
 	_handleResizeBound: ResizeObserverCallback;
+	_onImageLoadBound: (e: Event) => void;
+	_onImageErrorBound: (e: Event) => void;
 
 	constructor() {
 		super();
+
 		this._handleResizeBound = this.handleResize.bind(this);
+		this._onImageLoadBound = this._onImageLoad.bind(this);
+		this._onImageErrorBound = this._onImageError.bind(this);
+	}
+
+	onBeforeRendering() {
+		this._attachImageEventHandlers();
+		this._hasImage = this.hasImage;
 	}
 
 	get tabindex() {
@@ -264,10 +289,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 
 	/**
 	 * Returns the effective background color.
-	 * @default "Accent6"
+	 * @default "Auto"
 	 * @private
 	 */
-	get еffectiveBackgroundColor(): AvatarColorScheme {
+	get effectiveBackgroundColor(): AvatarColorScheme {
 		// we read the attribute, because the "background-color" property will always have a default value
 		return this.getAttribute("color-scheme") as AvatarColorScheme || this._colorScheme;
 	}
@@ -307,8 +332,11 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get hasImage() {
-		this._hasImage = !!this.image.length;
-		return this._hasImage;
+		return !!this.image.length && !this._imageLoadError;
+	}
+
+	get imageEl(): HTMLImageElement | null {
+		return this.image?.[0] instanceof HTMLImageElement ? this.image[0] : null;
 	}
 
 	get initialsContainer(): HTMLObjectElement | null {
@@ -338,6 +366,8 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	onExitDOM() {
 		this.initialsContainer && ResizeHandler.deregister(this.initialsContainer,
 			this._handleResizeBound);
+
+		this._detachImageEventHandlers();
 	}
 
 	handleResize() {
@@ -405,6 +435,76 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		}
 
 		return ariaHaspopup;
+	}
+
+	_attachImageEventHandlers() {
+		const imgEl = this.imageEl;
+		if (!imgEl) {
+			this._imageLoadError = false;
+			return;
+		}
+
+		// Remove previous handlers to avoid duplicates
+		imgEl.removeEventListener("load", this._onImageLoadBound);
+		imgEl.removeEventListener("error", this._onImageErrorBound);
+
+		// Attach new handlers
+		imgEl.addEventListener("load", this._onImageLoadBound);
+		imgEl.addEventListener("error", this._onImageErrorBound);
+
+		// Check existing image state
+		this._checkExistingImageState();
+	}
+
+	_checkExistingImageState() {
+		const imgEl = this.imageEl;
+		if (!imgEl) {
+			this._imageLoadError = false;
+			return;
+		}
+
+		if (imgEl.complete && imgEl.naturalWidth === 0) {
+			this._imageLoadError = true; // Already broken
+		} else if (imgEl.complete && imgEl.naturalWidth > 0) {
+			this._imageLoadError = false; // Already loaded
+		} else {
+			this._imageLoadError = false; // Pending load
+		}
+	}
+
+	_detachImageEventHandlers() {
+		const imgEl = this.imageEl;
+		if (!imgEl) {
+			return;
+		}
+
+		imgEl.removeEventListener("load", this._onImageLoadBound);
+		imgEl.removeEventListener("error", this._onImageErrorBound);
+	}
+
+	_onImageLoad(e: Event) {
+		if (e.target !== this.imageEl) {
+			(e.target as HTMLImageElement)?.removeEventListener("load", this._onImageLoadBound);
+			return;
+		}
+		this._imageLoadError = false;
+	}
+
+	_onImageError(e: Event) {
+		if (e.target !== this.imageEl) {
+			(e.target as HTMLImageElement)?.removeEventListener("error", this._onImageErrorBound);
+			return;
+		}
+		this._imageLoadError = true;
+	}
+
+	get accessibilityInfo() {
+		return {
+			role: this._role as AriaRole,
+			type: this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
+			description: this.accessibleNameText,
+			disabled: this.disabled,
+		};
 	}
 }
 

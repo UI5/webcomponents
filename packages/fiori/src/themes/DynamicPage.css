@@ -2,17 +2,18 @@
     position: sticky;
     top: 0;
      /* We need the z-index to be higher than in the header actions, to avoid overlapping by snap on scroll */
-    z-index: 98;
+    z-index: 3;
 }
 
 :host {
     display: block;
     height: 100%;
     background-color: var(--ui5_dynamic_page_background);
+    isolation: isolate;
 }
 
 .ui5-dynamic-page-root {
-    container-type: size;
+    container-type: inline-size;
     height: inherit;
     overflow-y: hidden;
 }
@@ -44,9 +45,10 @@
 /* Footer  */
 .ui5-dynamic-page-footer {
     position: sticky;
-    bottom: 0.5rem;
+    bottom: 0;
+    padding: 0 0.5rem 0.5rem 0.5rem;
     box-sizing: border-box;
-    z-index: 110;
+    z-index: 2;
     opacity: 0;
     transform: translateY(100%);
     transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
@@ -71,7 +73,6 @@
     background-color: var(--_ui5_dynamic_page_header_background_color);
     box-sizing: content-box;
     width: auto;
-    margin: 0 0.5rem 0.5rem 0.5rem;
 }
 
 

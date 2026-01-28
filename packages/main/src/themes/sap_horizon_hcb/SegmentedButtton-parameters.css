@@ -1,7 +1,1 @@
 @import "../base/SegmentedButtton-parameters.css";
-
-:root {
-	--_ui5_segmented_btn_inner_border: 0.0625rem solid var(--sapButton_Selected_BorderColor);
-	--_ui5_segmented_btn_inner_border_odd_child: 0.0625rem solid transparent;
-	--_ui5_segmented_btn_inner_pressed_border_odd_child: 0.0625rem solid var(--sapButton_Selected_BorderColor);
-}

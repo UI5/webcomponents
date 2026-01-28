@@ -1,9 +1,16 @@
+import { setNoConflict } from "@ui5/webcomponents-base/dist/config/NoConflict.js";
 import Avatar from "../../src/Avatar.js";
 import Button from "../../src/Button.js";
 import Label from "../../src/Label.js";
 import ButtonBadge from "../../src/ButtonBadge.js";
 import download from "@ui5/webcomponents-icons/dist/download.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
+
+import {
+	BUTTON_ARIA_TYPE_EMPHASIZED,
+	BUTTON_ROLE_DESCRIPTION,
+	LINK_ROLE_DESCRIPTION,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Button general interaction", () => {
 	it("tests button's text rendering", () => {
@@ -41,6 +48,7 @@ describe("Button general interaction", () => {
 			.find(".ui5-button-icon")
 			.should("not.exist", "icon is not present");
 	});
+
 	it("tests button's endIon rendering", () => {
 		cy.mount(<Button>Action Bar Button</Button>);
 
@@ -199,6 +207,29 @@ describe("Button general interaction", () => {
 			.should("not.called");
 	});
 
+	it("tests clicking on button with busy indicator", () => {
+		cy.mount(<Button loading></Button>);
+
+		cy.get("[ui5-button]")
+			.as("button");
+
+		cy.get("@button")
+			.then(button => {
+				button.get(0).addEventListener("click", cy.stub().as("clicked"));
+			});
+
+		cy.get("@button")
+			.shadow()
+			.find("[ui5-busy-indicator]")
+			.should("be.visible");
+
+		cy.get("@button")
+			.realClick();
+
+		cy.get("@clicked")
+			.should("not.called");
+	});
+
 	it("tests button with text icon role", () => {
 		cy.mount(<Button design="Attention" icon="message-warning">Warning</Button>);
 
@@ -209,6 +240,69 @@ describe("Button general interaction", () => {
 			.shadow()
 			.find("[ui5-icon]")
 			.should("have.attr", "mode", "Decorative");
+	});
+
+	it("Prevents native behavior when click event is prevented", () => {
+		cy.mount(<a href="#navigation">
+			<Button onClick={e => e.preventDefault()}>Click me</Button>
+		</a>);
+
+		cy.location("hash")
+			.should("not.eq", "#navigation");
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.location("hash")
+			.should("not.eq", "#navigation");
+	});
+
+	it("Allows native behavior when click event is not prevented", () => {
+		cy.mount(<a href="#navigation">
+			<Button>Click me</Button>
+		</a>);
+
+		cy.location("hash")
+			.should("not.eq", "#navigation");
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.location("hash")
+			.should("eq", "#navigation");
+	});
+
+	it("Native event is always fired", () => {
+		cy.mount(<div onClick={cy.stub().as("nativeClick")}>
+			<Button>Click me</Button>
+		</div>);
+
+		cy.wrap({ setNoConflict })
+			.invoke("setNoConflict", true)
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@nativeClick")
+			.should("have.been.calledOnce")
+			.and("be.calledWithMatch", {
+				type: "click"
+			});
+
+		cy.get('@nativeClick')
+			.invoke('resetHistory')
+
+		cy.wrap({ setNoConflict })
+			.invoke("setNoConflict", false)
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@nativeClick")
+			.should("have.been.calledOnce")
+			.and("be.calledWithMatch", {
+				type: "click"
+			});
 	});
 });
 
@@ -235,6 +329,40 @@ describe("Accessibility", () => {
 
 		cy.get("@button")
 			.should("have.attr", "title", "Download");
+	});
+
+	it("tooltip not displayed when there is a text", () => {
+		cy.mount(<Button icon="home">Action</Button>);
+
+		cy.get("[ui5-button]")
+			.should("not.have.attr", "title");
+	});
+
+	it("aria-label is properly applied on the button tag", () => {
+		cy.mount(<Button design="Emphasized">Action</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Action");
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
+	});
+
+	it("aria-label uses accessibleName when both text and accessibleName are provided", () => {
+		cy.mount(<Button accessibleName="Custom Action Label">Button Text</Button>);
+
+		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", "Custom Action Label");
 	});
 
 	it("aria-expanded is properly applied on the button tag", () => {
@@ -292,22 +420,50 @@ describe("Accessibility", () => {
 			.should("have.attr", "role", "button");
 	});
 
-	it("aria-describedby properly applied on the button tag", () => {
-		const hiddenTextTypeId = "ui5-button-hiddenText-type";
-		cy.mount(<Button design="Attention">Content</Button>);
+	it("accessibleDescription in combination with design property applied on the button tag", () => {
+		cy.mount(<Button design="Negative" accessibleDescription="Decline">Content</Button>);
 
 		cy.get("[ui5-button]")
+			.shadow()
+			.find("button")
 			.as("button");
 
 		cy.get("@button")
+			.should("have.attr", "aria-description", "Decline Negative Action");
+	});
+
+
+	it("accessibleName when the button has a ui5-button-badge with more than 1 items", () => {
+		cy.mount(
+			<Button accessibleName="Download">
+				<ButtonBadge design="OverlayText" text="999+" slot="badge"></ButtonBadge>
+			</Button>
+		);
+		cy.get("[ui5-button]")
 			.shadow()
 			.find("button")
-			.should("have.attr", "aria-describedby", hiddenTextTypeId);
+			.as("button");
 
 		cy.get("@button")
+			.should("have.attr", "aria-label", `Download 999+ items`);
+	});
+
+	it("accessibleName when the button has a ui5-button-badge with 1 item", () => {
+		cy.mount(
+			<Button design="Emphasized" accessibleName="Download">
+				<ButtonBadge text="1" design="InlineText" slot="badge"></ButtonBadge>
+			</Button>
+		);
+		cy.get("[ui5-button]")
 			.shadow()
-			.find(`span[id="${hiddenTextTypeId}"]`)
-			.should("exist");
+			.find("button")
+			.as("button");
+
+		cy.get("@button")
+			.should("have.attr", "aria-label", `Download 1 item`);
+
+		cy.get("@button")
+			.should("have.attr", "aria-description", Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
 	});
 
 	it("setting accessible-name-ref on the host is reflected on the button tag", () => {
@@ -352,6 +508,43 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-controls", "registration-dialog");
 	});
 
+	it("aria-label and aria-keyshortcuts are properly applied on the button tag", () => {
+		cy.mount(<Button accessibilityAttributes={{ariaKeyShortcuts: "Alt+G", ariaLabel: "Some text"}}>Show Registration Dialog</Button>);
+
+		cy.get("[ui5-button]")
+			.as("button");
+
+		cy.get<Button>("@button")
+			.then($el => {
+				$el.get(0).accessibilityAttributes = {
+					ariaKeyShortcuts: "Alt+G",
+					ariaLabel: "Some text",
+				};
+			});
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Some text");
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-keyshortcuts", "Alt+G");
+	});
+
+	it("aria-busy is properly applied on the button with busy indicator", () => {
+		cy.mount(<Button loading></Button>);
+
+		cy.get("[ui5-button]")
+			.as("button");
+
+		cy.get("@button")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-busy", "true");
+	});
+
 	it("setting accessible-description is applied to button tag", () => {
 		cy.mount(<Button accessibleDescription="A long description."></Button>);
 
@@ -385,5 +578,64 @@ describe("Accessibility", () => {
 
 		cy.get("@tag")
 			.should("have.text", "999+");
+	});
+
+	it("accessibilityInfo returns correct properties for different button states", () => {
+		cy.mount(<Button design="Emphasized" accessibleDescription="Submit form">Submit</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.description).to.include("Submit form");
+				expect(info.description).to.include(Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
+				expect(info.role).to.equal("button");
+				expect(info.type).to.equal(Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION));
+				expect(info.disabled).to.be.false;
+			});
+	});
+
+	it("accessibilityInfo reflects custom role and disabled state", () => {
+		cy.mount(<Button accessibleRole="Link" disabled>Navigate</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.role).to.equal("link");
+				expect(info.type).to.equal(Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION));
+				expect(info.disabled).to.be.true;
+				expect(info.description).to.be.undefined;
+			});
+	});
+
+	it("accessibilityInfo updates when properties change", () => {
+		cy.mount(<Button>Click me</Button>);
+
+		cy.get<Button>("[ui5-button]")
+			.as("button");
+
+		cy.get<Button>("@button")
+			.then($button => {
+				const button = $button.get(0);
+				expect(button.accessibilityInfo.disabled).to.be.false;
+				expect(button.accessibilityInfo.role).to.equal("button");
+
+				button.disabled = true;
+				button.accessibleRole = "Link";
+				button.design = "Negative";
+			});
+
+		cy.get<Button>("@button")
+			.then($button => {
+				const button = $button.get(0);
+				const info = button.accessibilityInfo;
+
+				expect(info.disabled).to.be.true;
+				expect(info.role).to.equal("link");
+				expect(info.description).to.include("Negative Action");
+			});
 	});
 });

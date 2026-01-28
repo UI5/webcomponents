@@ -1,6 +1,7 @@
 @import "../base/Avatar-parameters.css";
 
 :root {
+	--ui5-avatar-hover-box-shadow-offset: 0px 0px 0px 0.0625rem var(--sapAvatar_Hover_BorderColor);
 	--_ui5_avatar_focus_offset: 0.1875rem;
 	--ui5-avatar-initials-border: 0.0625rem solid var(--sapAvatar_1_BorderColor);
 	--ui5-avatar-border-radius: var(--sapElement_BorderCornerRadius);
@@ -20,7 +21,6 @@
 	--ui5-avatar-accent8: var(--sapAvatar_8_Background);
 	--ui5-avatar-accent9: var(--sapAvatar_9_Background);
 	--ui5-avatar-accent10: var(--sapAvatar_10_Background);
-	--ui5-avatar-placeholder: var(--sapContent_ImagePlaceholderBackground);
 
 	--ui5-avatar-accent1-color: var(--sapAvatar_1_TextColor);
 	--ui5-avatar-accent2-color: var(--sapAvatar_2_TextColor);
@@ -32,7 +32,6 @@
 	--ui5-avatar-accent8-color: var(--sapAvatar_8_TextColor);
 	--ui5-avatar-accent9-color: var(--sapAvatar_9_TextColor);
 	--ui5-avatar-accent10-color:  var(--sapAvatar_10_TextColor);
-	--ui5-avatar-placeholder-color:  var(--sapContent_ImagePlaceholderForegroundColor);
 
 	--ui5-avatar-accent1-border-color: var(--sapAvatar_1_BorderColor);
 	--ui5-avatar-accent2-border-color: var(--sapAvatar_2_BorderColor);
@@ -44,7 +43,6 @@
 	--ui5-avatar-accent8-border-color: var(--sapAvatar_8_BorderColor);
 	--ui5-avatar-accent9-border-color: var(--sapAvatar_9_BorderColor);
 	--ui5-avatar-accent10-border-color: var(--sapAvatar_10_BorderColor);
-	--ui5-avatar-placeholder-border-color: var(--sapContent_ImagePlaceholderBackground);
 
 	--_ui5_avatar_icon_XS: var(--_ui5_avatar_fontsize_XS);
 	--_ui5_avatar_icon_S: var(--_ui5_avatar_fontsize_S);

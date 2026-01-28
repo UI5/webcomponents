@@ -4,7 +4,7 @@
 	--_ui5_input_icon_padding: .625rem .625rem .5625rem .625rem;
 	--_ui5_input_icon_hover_bg: var(--sapField_Focus_Background);
 	--_ui5_input_icon_pressed_color: var(--sapButton_Active_TextColor);
-	--_ui5_input_icon_border_radius: 0.25rem;
+	--_ui5_input_icon_border_radius: var(--sapField_BorderCornerRadius);
 	--_ui5_input_icon_box_shadow: var(--sapField_Hover_Shadow);
 	--_ui5_input_icon_border: none;
 	--_ui5_input_error_icon_box_shadow: var(--sapContent_Negative_Shadow);

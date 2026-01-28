@@ -3,14 +3,14 @@ const path = require('path');
 const PropertiesReader = require('properties-reader');
 const assets = require('../../assets-meta.js');
 
-const generate = async () => {
+const generate = async (argv) => {
 	const defaultLanguage = assets.languages.default;
 
-	const messageBundle = path.normalize(`${process.argv[2]}/messagebundle.properties`);
-	const messageBundleDefaultLanguage = path.normalize(`${process.argv[2]}/messagebundle_${defaultLanguage}.properties`);
+	const messageBundle = path.normalize(`${argv[2]}/messagebundle.properties`);
+	const messageBundleDefaultLanguage = path.normalize(`${argv[2]}/messagebundle_${defaultLanguage}.properties`);
 	const tsMode = process.env.UI5_TS === "true"; // In Typescript mode, we output .ts files and set the required types, otherwise - output pure .js files
 
-	const outputFile = path.normalize(`${process.argv[3]}/i18n-defaults.${tsMode ? "ts": "js"}`);
+	const outputFile = path.normalize(`${argv[3]}/i18n-defaults.${tsMode ? "ts" : "js"}`);
 
 	if (!messageBundle || !outputFile) {
 		return;
@@ -76,8 +76,13 @@ export {${textKeys.join()}};`;
 
 	await fs.mkdir(path.dirname(outputFile), { recursive: true });
 	await fs.writeFile(outputFile, getOutputFileContent(properties, defaultLanguageProperties));
+
+
+	console.log("i18n default file generated.")
 };
 
-generate().then(() => {
-	console.log("i18n default file generated.");
-});
+if (require.main === module) {
+	generate(process.argv)
+}
+
+exports._ui5mainFn = generate;

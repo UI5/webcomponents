@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import assets from "@ui5/webcomponents-tools/assets-meta.js";
+import { pathToFileURL } from "url";
 
 const fileContent = `const assetParameters = ${JSON.stringify(assets)};
 
@@ -19,9 +20,18 @@ export {
 
 const generate = async () => {
 	await fs.mkdir("src/generated/", { recursive: true });
-	return fs.writeFile("src/generated/AssetParameters.ts", fileContent);
+	await fs.writeFile("src/generated/AssetParameters.ts", fileContent);
+
+	console.log("Assets parameters generated.");
 }
 
-generate().then(() => {
-	console.log("Assets parameters generated.");
-});
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	generate()
+}
+
+export default {
+	_ui5mainFn: generate
+}

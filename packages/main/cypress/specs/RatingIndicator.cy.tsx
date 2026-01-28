@@ -1,4 +1,5 @@
 import RatingIndicator from "../../src/RatingIndicator.js";
+import { RATING_INDICATOR_ARIA_DESCRIPTION } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("RatingIndicator", () => {
 	describe("Half Icon appearance", () => {
@@ -99,5 +100,204 @@ describe("RatingIndicator", () => {
 
 			cy.focused().should("contain", "Before");
 		});
+
+		it("Tests ACC attrs", () => {
+			const TOOLTIP = "Rating";
+			const ARIA_LABEL = "Hello World";
+
+			cy.mount(
+				<>
+					<RatingIndicator id="rating-indicator1" accessibleName={ARIA_LABEL}></RatingIndicator>
+					<RatingIndicator id="rating-indicator-readonly" value={1} max={3} readonly></RatingIndicator>
+				</>
+			);
+
+			cy.get("#rating-indicator1").as("ri");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-label", ARIA_LABEL)
+				.and("have.attr", "title", TOOLTIP)
+				.and("not.have.attr", "aria-readonly");
+
+			cy.get("#rating-indicator-readonly")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-readonly", "true");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-valuetext", "0 of 5");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.eq(2)
+				.realClick();
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-valuetext", "3 of 5");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-list")
+				.should("have.attr", "aria-hidden", "true");
+		});
+
+		it("Tests ACC attrs - tooltip property", () => {
+			const TOOLTIP = "Test";
+
+			cy.mount(<RatingIndicator id="rating-indicator-title" tooltip={TOOLTIP}></RatingIndicator>);
+
+			cy.get("#rating-indicator-title")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "title", TOOLTIP);
+		});
+
+		it("Tests ACC attrs - required property add aria-description", () => {
+			cy.mount(<RatingIndicator id="rating-indicator-required" required></RatingIndicator>);
+
+			cy.get("#rating-indicator-required")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-description", RATING_INDICATOR_ARIA_DESCRIPTION.defaultText);
+		});
+
+		it("Tests ACC attrs - accessible-name-ref", () => {
+			const ACCESSIBLE_NAME_REF_TEXT = "Some ACC label";
+			cy.mount(
+				<>
+					<label id="label-acc-name-ref">{ACCESSIBLE_NAME_REF_TEXT}</label>
+					<RatingIndicator id="rating-indicator-acc-name-ref" accessibleNameRef="label-acc-name-ref"></RatingIndicator>
+				</>
+			);
+
+			cy.get("#rating-indicator-acc-name-ref")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "aria-label", ACCESSIBLE_NAME_REF_TEXT);
+		});
+	});
+
+	describe("Rating Indicator general interaction", () => {
+		it("Tests basic rating indicator rendering", () => {
+			cy.mount(<RatingIndicator id="rating-indicator1"></RatingIndicator>);
+
+			cy.get("#rating-indicator1")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.should("have.length", 5);
+		});
+
+		it("Tests max property", () => {
+			cy.mount(<RatingIndicator id="rating-indicator2" value={6} max={10}></RatingIndicator>);
+
+			cy.get("#rating-indicator2")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.should("have.length", 10);
+		});
+
+		it("Tests clicking on star", () => {
+			cy.mount(<RatingIndicator id="rating-indicator3" value={6} max={10}></RatingIndicator>);
+
+			cy.get("#rating-indicator3").as("ri");
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.eq(2)
+				.realClick();
+
+			cy.get("@ri")
+				.should("have.attr", "value", "3");
+		});
+
+		it("Tests change event", () => {
+			cy.mount(
+				<RatingIndicator id="rating-indicator4" value={6} max={8}></RatingIndicator>
+			);
+
+			cy.get("#rating-indicator4").as("ri");
+
+			cy.get("@ri")
+				.then(ratingIndicator => {
+					ratingIndicator.get(0).addEventListener("ui5-change", cy.stub().as("changeEvent"));
+				});
+
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.eq(2)
+				.realClick();
+
+			cy.get("@ri")
+				.should("have.attr", "value", "3");
+
+			cy.get("@ri").realPress("Enter");
+			cy.get("@ri").should("have.attr", "value", "4");
+
+			cy.get("@ri").realPress("Space");
+			cy.get("@ri").should("have.attr", "value", "5");
+
+			cy.get("@ri").realPress("ArrowUp");
+			cy.get("@ri").realPress("ArrowRight");
+			cy.get("@ri").should("have.attr", "value", "7");
+
+			cy.get("@ri").realPress("ArrowLeft");
+			cy.get("@ri").realPress("ArrowLeft");
+			cy.get("@ri").realPress("ArrowDown");
+			cy.get("@ri").realPress("ArrowDown");
+			cy.get("@ri").realPress("ArrowDown");
+			cy.get("@ri").realPress("ArrowDown");
+			cy.get("@ri").realPress("ArrowDown");
+			cy.get("@ri").should("have.attr", "value", "0");
+
+			cy.get("@ri").realPress("End");
+			cy.get("@ri").should("have.attr", "value", "8");
+
+			cy.get("@ri").realPress("Home");
+			cy.get("@ri").should("have.attr", "value", "0");
+
+			cy.get("@ri").realPress("4");
+			cy.get("@ri").should("have.attr", "value", "4");
+
+			cy.get("@ri").realPress("9");
+			cy.get("@ri").should("have.attr", "value", "8");
+
+			cy.get("@ri").realPress("Enter");
+			cy.get("@ri").should("have.attr", "value", "0");
+
+			cy.get("@changeEvent").should("have.callCount", 17);
+		});
+
+		it("Second click on same star clears the RatingIndicator value", () => {
+			cy.mount(
+				<RatingIndicator></RatingIndicator>
+			);
+
+			cy.get("[ui5-rating-indicator")
+				.shadow()
+				.find("li")
+				.eq(3)
+				.as("star");
+
+			cy.get("@star")
+				.realClick();
+
+			cy.get("[ui5-rating-indicator")
+				.should("have.attr", "value", 4);
+
+			cy.get("@star")
+				.realClick();
+
+			cy.get("[ui5-rating-indicator]")
+				.should("have.attr", "value", 0);
+		})
 	});
 });

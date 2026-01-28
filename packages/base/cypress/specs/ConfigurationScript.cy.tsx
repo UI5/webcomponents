@@ -44,20 +44,36 @@ describe("Configuration script", () => {
 	};
 
 	before(() => {
-		cy.mount(<TestGeneric />, {
-			ui5Configuration: configurationObject,
-		});
+		cy.window()
+			.then($el => {
+				const scriptElement = document.createElement("script");
+				scriptElement.type = "application/json";
+				scriptElement.setAttribute("data-ui5-config", "true");
+				scriptElement.innerHTML = JSON.stringify(configurationObject);
+				return $el.document.head.append(scriptElement);
+			})
+
 
 		cy.wrap({ resetConfiguration })
 			.invoke("resetConfiguration", true);
 
+		cy.mount(<TestGeneric />);
 		cy.get("script[data-ui5-config]")
 			.should("exist")
 			.then($el => {
-				return $el.get(0).innerHTML;
+				return $el.get(0)?.innerHTML;
 			})
 			.should("equal", JSON.stringify(configurationObject));
 	});
+
+	after(() => {
+		cy.window()
+			.then($el => {
+				const scriptElement = $el.document.head.querySelector("script[data-ui5-config]");
+
+				scriptElement?.remove();
+			})
+	})
 
 	it("getLanguage", () => {
 		cy.wrap({ getLanguage })

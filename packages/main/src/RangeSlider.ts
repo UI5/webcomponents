@@ -1,17 +1,20 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import {
 	isEscape,
 	isEnter,
 	isHome,
 	isEnd,
+	isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import SliderBase from "./SliderBase.js";
 import RangeSliderTemplate from "./RangeSliderTemplate.js";
-import type Input from "./Input.js";
+import type SliderTooltip from "./SliderTooltip.js";
 
 // Texts
 import {
@@ -102,7 +105,14 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @public
 	 */
 	@property({ type: Number })
-	startValue = 0;
+	set startValue(value: number) {
+		this._startValue = value;
+		this.tooltipStartValue = value.toString();
+	}
+
+	get startValue(): number {
+		return this._startValue;
+	}
 
 	/**
 	 * Defines end point of a selection - position of a second handle on the slider.
@@ -112,7 +122,26 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @public
 	 */
 	@property({ type: Number })
-	endValue = 100;
+	set endValue(value: number) {
+		this._endValue = value;
+		this.tooltipEndValue = value.toString();
+	}
+
+	get endValue(): number {
+		return this._endValue;
+	}
+
+	@property()
+	tooltipStartValue = "";
+
+	@property()
+	tooltipEndValue = "";
+
+	@property()
+	tooltipStartValueState: `${ValueState}` = "None";
+
+	@property()
+	tooltipEndValueState: `${ValueState}` = "None";
 
 	@property({ type: Boolean })
 	rangePressed = false;
@@ -123,6 +152,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Boolean })
 	_isEndValueValid = false;
 
+	_startValue: number = 0;
+	_endValue: number = 100;
 	_startValueInitial?: number;
 	_endValueInitial?: number;
 	_valueAffected?: AffectedValue;
@@ -162,18 +193,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._stateStorage.endValue = undefined;
 		this._lastValidStartValue = this.min.toString();
 		this._lastValidEndValue = this.max.toString();
-	}
-
-	get tooltipStartValue() {
-		const ctor = this.constructor as typeof RangeSlider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		return this.startValue.toFixed(stepPrecision);
-	}
-
-	get tooltipEndValue() {
-		const ctor = this.constructor as typeof RangeSlider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		return this.endValue.toFixed(stepPrecision);
 	}
 
 	get _ariaDisabled() {
@@ -223,10 +242,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this.update(affectedValue, this.startValue, this.endValue);
 		}
 
-		if (this.editableTooltip) {
-			this._saveInputValues();
-		}
-
 		if (!this.isCurrentStateOutdated()) {
 			return;
 		}
@@ -235,6 +250,14 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this.syncUIAndState();
 		this._updateHandlesAndRange(0);
 		this.update(this._valueAffected, this.startValue, this.endValue);
+	}
+
+	onAfterRendering(): void {
+		super.onAfterRendering();
+
+		[...this.getDomRef()!.querySelectorAll("[ui5-slider-tooltip]")].forEach(tooltip => {
+			(tooltip as SliderTooltip).repositionTooltip();
+		});
 	}
 
 	syncUIAndState() {
@@ -281,9 +304,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this._endValueInitial = this.endValue;
 		}
 
-		if (this.showTooltip) {
-			this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.VISIBLE;
-		}
+		this._tooltipsOpen = this.showTooltip;
 	}
 
 	/**
@@ -307,41 +328,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._startValueInitial = undefined;
 		this._endValueInitial = undefined;
 
-		if (this.showTooltip && !(e.relatedTarget as HTMLInputElement)?.hasAttribute("ui5-input")) {
-			this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.HIDDEN;
-		}
-	}
-
-	_onInputFocusOut(e: FocusEvent) {
-		const tooltipInput = e.target as Input;
-		const oppositeTooltipInput: Input = tooltipInput.hasAttribute("data-sap-ui-start-value") ? this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-end-value]")! : this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-start-value]")!;
-		const relatedTarget = e.relatedTarget as HTMLElement;
-
-		if (this.startValue > this.endValue) {
-			this._areInputValuesSwapped = true;
-			oppositeTooltipInput.focus();
-			return;
-		}
-
-		if (tooltipInput.hasAttribute("data-sap-ui-start-value")) {
-			this._setAffectedValue("startValue");
-		} else {
-			this._setAffectedValue("endValue");
-		}
-
-		if (!this._areInputValuesSwapped || !this.shadowRoot!.contains(relatedTarget)) {
-			this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.HIDDEN;
-		}
-
-		this._updateValueFromInput(e);
-		this._updateInputValue();
-		this.update(this._valueAffected, parseFloat(this._lastValidStartValue), parseFloat(this._lastValidEndValue));
-
-		const isTooltipInputValueValid = parseFloat(tooltipInput.value) >= this.min && parseFloat(tooltipInput.value) <= this.max;
-
-		if (!isTooltipInputValueValid) {
-			tooltipInput.value = tooltipInput.hasAttribute("data-sap-ui-start-value") ? this._lastValidStartValue : this._lastValidEndValue;
-			tooltipInput.valueState = "None";
+		if (this.showTooltip && !(e.relatedTarget as HTMLInputElement)?.hasAttribute("ui5-slider-tooltip")) {
+			this._tooltipsOpen = false;
 		}
 	}
 
@@ -409,6 +397,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			const newEndValue = ctor.clipValue(newValueOffset + this.endValue, min, max);
 			this.update(affectedValue, newStartValue, newEndValue);
 		}
+
+		this.tooltipStartValue = this.startValue.toString();
+		this.tooltipEndValue = this.endValue.toString();
 	}
 
 	/**
@@ -487,7 +478,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 		// If step is 0 no interaction is available because there is no constant
 		// (equal for all user environments) quantitative representation of the value
-		if (this.disabled || this._effectiveStep === 0 || (e.target as HTMLElement).hasAttribute("ui5-input")) {
+		if (this.disabled || this._effectiveStep === 0 || (e.target as HTMLElement).hasAttribute("ui5-slider-tooltip")) {
 			return;
 		}
 
@@ -542,7 +533,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		e.preventDefault();
 
 		// If 'step' is 0 no interaction is available as there is no constant quantitative representation of the value
-		if (this.disabled || this._effectiveStep === 0 || (e.target as HTMLElement).hasAttribute("ui5-input")) {
+		if (this.disabled || this._effectiveStep === 0) {
 			return;
 		}
 
@@ -554,6 +545,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 		// Updates UI and state when dragging of the whole selected range
 		this._updateValueOnRangeDrag(e);
+
+		this.tooltipStartValue = this.startValue.toString();
+		this.tooltipEndValue = this.endValue.toString();
 	}
 
 	/**
@@ -583,11 +577,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this.update(undefined, newValues[0], newValues[1]);
 	}
 
-	_handleUp(e: MouseEvent) {
-		if ((e.target as HTMLElement).hasAttribute("ui5-input")) {
-			return;
-		}
-
+	_handleUp() {
 		this._setAffectedValueByFocusedElement();
 		this._setAffectedValue(undefined);
 
@@ -601,31 +591,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this.rangePressed = false;
 		this._startValueAtBeginningOfAction = undefined;
 		this._endValueAtBeginningOfAction = undefined;
-	}
-
-	_updateValueFromInput(e: Event) {
-		if (this._areInputValuesSwapped) {
-			return;
-		}
-
-		const input = e.target as HTMLInputElement;
-		const inputValue = parseFloat(input.value);
-		const isValueValid = inputValue >= this._effectiveMin && inputValue <= this._effectiveMax;
-
-		if (!isValueValid) {
-			return;
-		}
-
-		if (input.hasAttribute("data-sap-ui-start-value")) {
-			this.startValue = inputValue;
-			return;
-		}
-
-		this.endValue = inputValue;
-
-		if (this.startValue > this.endValue) {
-			this._areInputValuesSwapped = true;
-		}
 	}
 
 	/**
@@ -722,10 +687,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @protected
 	 */
 	focusInnerElement() {
-		if (this.editableTooltip && this._tooltipVisibility === SliderBase.TOOLTIP_VISIBILITY.HIDDEN) {
-			return;
-		}
-
 		const isReversed = this._areValuesReversed();
 		const affectedValue = this._valueAffected;
 
@@ -735,10 +696,12 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 		if ((affectedValue === "startValue" && !isReversed) || (affectedValue === "endValue" && isReversed)) {
 			this._startHandle.focus();
+			this.bringToFrontTooltip("start");
 		}
 
 		if ((affectedValue === "endValue" && !isReversed) || (affectedValue === "startValue" && isReversed)) {
 			this._endHandle.focus();
+			this.bringToFrontTooltip("end");
 		}
 	}
 
@@ -841,100 +804,122 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		}
 	}
 
-	_onInputKeydown(e: KeyboardEvent): void {
-		const targetedInput = e.target as Input;
-		const startValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-start-value]") as Input;
-		const endValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-end-value]") as Input;
+	bringToFrontTooltip(handle: "start" | "end") {
+		const tooltipSelector = handle === "start"
+			? "[data-sap-ui-start-value]"
+			: "[data-sap-ui-end-value]";
 
-		const startValue = parseFloat(startValueInput.value);
-		const endValue = parseFloat(endValueInput.value);
-		const affectedValue = targetedInput.hasAttribute("data-sap-ui-start-value") ? "startValue" : "endValue";
+		const tooltip = this.shadowRoot!.querySelector(tooltipSelector) as SliderTooltip;
 
-		super._onInputKeydown(e);
+		if (tooltip?.hidePopover && tooltip?.showPopover) {
+			const frame = requestAnimationFrame(() => {
+				if (tooltip.getDomRef()?.offsetParent === null) {
+					cancelAnimationFrame(frame);
+					return;
+				}
 
-		if (isEnter(e) && startValue > endValue) {
-			const swappedInput = affectedValue === "startValue" ? endValueInput : startValueInput;
-			const isValueValid = parseFloat(targetedInput.value) >= this.min && parseFloat(startValueInput.value) <= this.max;
+				tooltip.hidePopover();
+				tooltip.showPopover();
+			});
+		}
+	}
 
-			if (!isValueValid) {
-				targetedInput.valueState = "Negative";
-				return;
+	_onTooltopForwardFocus(e: CustomEvent) {
+		const tooltip = e.target as SliderTooltip;
+
+		tooltip.followRef?.focus();
+	}
+
+	_onTooltipChange(e: CustomEvent) {
+		const tooltip = e.target as SliderTooltip;
+		const isStart = tooltip.hasAttribute("data-sap-ui-start-value");
+		const inputValue = parseFloat(e.detail.value as string);
+		const isInvalid = inputValue > this._effectiveMax || inputValue < this._effectiveMin;
+
+		if (isInvalid) {
+			if (isStart) {
+				this.tooltipStartValueState = ValueState.Negative;
+				this.tooltipStartValue = e.detail.value;
+			} else {
+				this.tooltipEndValueState = ValueState.Negative;
+				this.tooltipEndValue = e.detail.value;
 			}
+			return;
+		}
 
-			this._isEndValueValid = parseFloat(endValueInput.value) >= this.min && parseFloat(endValueInput.value) <= this.max;
+		const clampedValue = Math.min(this.max, Math.max(this.min, inputValue));
 
+		if (isStart) {
+			this.startValue = clampedValue;
+			this._lastValidStartValue = clampedValue.toString();
+		} else {
+			this.endValue = clampedValue;
+			this._lastValidEndValue = clampedValue.toString();
+		}
+
+		if (this.startValue > this.endValue) {
 			this._areInputValuesSwapped = true;
-			this._setAffectedValue(affectedValue === "startValue" ? "endValue" : "startValue");
 
-			startValueInput.value = this._getFormattedValue(this.endValue.toString());
-			endValueInput.value = this._getFormattedValue(this.startValue.toString());
-			swappedInput.focus();
+			const temp = this.startValue;
+			this.startValue = this.endValue;
+			this.endValue = temp;
 
-			return;
+			const tempValid = this._lastValidStartValue;
+			this._lastValidStartValue = this._lastValidEndValue;
+			this._lastValidEndValue = tempValid;
+
+			const oppositeSelector = isStart
+				? "[data-sap-ui-end-value]"
+				: "[data-sap-ui-start-value]";
+
+			const oppositeInput = this.shadowRoot!.querySelector(oppositeSelector) as SliderTooltip;
+			oppositeInput?.focus();
 		}
 
-		this._setAffectedValue(affectedValue);
+		this.bringToFrontTooltip(isStart ? "start" : "end");
+		this.update("value", this.startValue, this.endValue);
+		this.fireDecoratorEvent("change");
 	}
 
-	_updateInputValue() {
-		const startValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-start-value]") as Input;
-		const endValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-end-value]") as Input;
+	_onTooltipFocusChange(e: CustomEvent) {
+		const tooltip = e.target as SliderTooltip;
+		const isStart = tooltip.hasAttribute("data-sap-ui-start-value");
+		const value = isStart ? this.tooltipStartValue : this.tooltipEndValue;
+		const isInvalid = parseFloat(value) > this._effectiveMax || parseFloat(value) < this._effectiveMin;
 
-		if (!startValueInput && !endValueInput) {
-			return;
+		if (isInvalid) {
+			if (isStart) {
+				this.tooltipStartValueState = ValueState.None;
+				this.tooltipStartValue = this.startValue.toString();
+			} else {
+				this.tooltipEndValueState = ValueState.None;
+				this.tooltipEndValue = this.endValue.toString();
+			}
 		}
-
-		this._isStartValueValid = parseFloat(startValueInput.value) >= this.min && parseFloat(startValueInput.value) <= this.max;
-		this._isEndValueValid = parseFloat(endValueInput.value) >= this.min && parseFloat(endValueInput.value) <= this.max;
-
-		if (!this._isStartValueValid) {
-			startValueInput.valueState = "Negative";
-			return;
-		}
-
-		if (!this._isEndValueValid) {
-			endValueInput.valueState = "Negative";
-			return;
-		}
-
-		this._lastValidStartValue = startValueInput.value;
-		this._lastValidEndValue = endValueInput.value;
-
-		startValueInput.valueState = "None";
-		endValueInput.valueState = "None";
 	}
 
-	_saveInputValues() {
-		const startValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-start-value]") as Input;
-		const endValueInput = this.shadowRoot!.querySelector("[ui5-input][data-sap-ui-end-value]") as Input;
+	_onTooltipOpen() {
+		const ctor = this.constructor as typeof RangeSlider;
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
+		this.tooltipStartValue = this.startValue.toFixed(stepPrecision);
+		this.tooltipEndValue = this.endValue.toFixed(stepPrecision);
+	}
 
-		if (this.editableTooltip && startValueInput && endValueInput) {
-			const inputStartValue = parseFloat(startValueInput.value);
-			const inputEndValue = parseFloat(endValueInput.value);
+	_onTooltipInput(e: CustomEvent) {
+		const tooltip = e.target as SliderTooltip;
+		const isStart = tooltip.hasAttribute("data-sap-ui-start-value");
 
-			const isStartValueValid = inputStartValue >= this.min && inputStartValue <= this.max;
-			const isEndValueValid = inputEndValue >= this.min && inputEndValue <= this.max;
+		if (isStart) {
+			this.tooltipStartValue = e.detail.value;
+		} else {
+			this.tooltipEndValue = e.detail.value;
+		}
+	}
 
-			if (this._isUserInteraction) {
-				startValueInput.value = isStartValueValid ? this._getFormattedValue(this.startValue.toString()) : this._getFormattedValue(this._lastValidStartValue);
-				endValueInput.value = isEndValueValid ? this._getFormattedValue(this.endValue.toString()) : this._getFormattedValue(this._lastValidEndValue);
-
-				this.startValue = parseFloat(this._getFormattedValue(this.startValue.toString()));
-				this.endValue = parseFloat(this._getFormattedValue(this.endValue.toString()));
-
-				this.syncUIAndState();
-				this._updateHandlesAndRange(0);
-				this.update(this._valueAffected, this.startValue, this.endValue);
-				return;
-			}
-
-			this._lastValidStartValue = isStartValueValid ? this._getFormattedValue(inputStartValue.toString()) : this._getFormattedValue(this._lastValidStartValue);
-			this._lastValidEndValue = isEndValueValid ? this._getFormattedValue(inputEndValue.toString()) : this._getFormattedValue(this._lastValidEndValue);
-
-			if (startValueInput.valueState !== "Negative" && endValueInput.valueState !== "Negative") {
-				startValueInput.value = isStartValueValid ? this._getFormattedValue(inputStartValue.toString()) : this._getFormattedValue(this._lastValidStartValue);
-				endValueInput.value = isEndValueValid ? this._getFormattedValue(inputEndValue.toString()) : this._getFormattedValue(this._lastValidEndValue);
-			}
+	_onTooltipKeydown(e: KeyboardEvent) {
+		if (isF2(e)) {
+			e.preventDefault();
+			(e.target as SliderTooltip).followRef?.focus();
 		}
 	}
 
@@ -995,9 +980,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 */
 	_setValuesAreReversed() {
 		this._reversedValues = !this._reversedValues;
-	 }
+	}
 
-	 _areValuesReversed() {
+	_areValuesReversed() {
 		return this._reversedValues;
 	}
 
@@ -1052,23 +1037,13 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			progress: {
 				"width": `${this._selectedRange! * 100}%`,
 				"transform-origin": `${this.directionStart} top`,
-				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,
+				[this.directionStart]: `calc(${this._firstHandlePositionFromStart!}% + var(${getScopedVarName("--_ui5_slider_active_progress_left")}))`,
 			},
 			startHandle: {
 				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,
 			},
 			endHandle: {
 				[this.directionStart]: `${this._secondHandlePositionFromStart!}%`,
-			},
-			label: {
-				"width": `${this._labelWidth}%`,
-			},
-			labelContainer: {
-				"width": `100%`,
-				[this.directionStart]: `-${this._labelWidth / 2}%`,
-			},
-			tooltip: {
-				"visibility": `${this._tooltipVisibility}`,
 			},
 		};
 	}

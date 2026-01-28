@@ -196,6 +196,12 @@ class TreeItemBase extends ListItem {
 	_fixed = false;
 
 	/**
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_hasImage = false;
+
+	/**
 	 * Defines the items of the component.
 	 *
 	 * **Note:** Use `ui5-tree-item` or `ui5-tree-item-custom`
@@ -211,11 +217,24 @@ class TreeItemBase extends ListItem {
 	})
 	items!: Array<TreeItemBase>;
 
+	/**
+	 * **Note:** While the slot allows option for setting custom avatar, to match the
+	 * design guidelines, please use the `ui5-avatar` with size XS.
+	 *
+	 * **Note:** If bigger `ui5-avatar` needs to be used, then the size of the
+	 * `ui5-tree-item` should be customized in order to fit.
+	 * @since 2.10.0
+	 * @public
+	 */
+	@slot()
+	image!: Array<HTMLElement>;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	onBeforeRendering() {
 		this.showToggleButton = this.requiresToggleButton;
+		this._hasImage = this.hasImage;
 	}
 
 	get classes(): ClassMap {
@@ -242,6 +261,10 @@ class TreeItemBase extends ListItem {
 
 	get hasParent() {
 		return this.level > 1;
+	}
+
+	get hasImage(): boolean {
+		return !!this.image.length;
 	}
 
 	get _toggleIconName() {
@@ -290,8 +313,8 @@ class TreeItemBase extends ListItem {
 		this.fireDecoratorEvent("toggle", { item: this });
 	}
 
-	async _onkeydown(e: KeyboardEvent) {
-		await super._onkeydown(e);
+	_onkeydown(e: KeyboardEvent) {
+		super._onkeydown(e);
 
 		if (!this._fixed && this.showToggleButton && isRight(e)) {
 			if (!this.expanded) {

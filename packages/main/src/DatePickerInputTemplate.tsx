@@ -1,6 +1,6 @@
 import type DatePicker from "./DatePicker.js";
+import DateTimeInput from "./DateTimeInput.js";
 import Icon from "./Icon.js";
-import Input from "./Input.js";
 
 export default function DatePickerInputTemplate(this: DatePicker) {
 	return (
@@ -10,25 +10,27 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				width: "100%",
 			}}
 		>
-			<Input
+			<DateTimeInput
 				data-sap-focus-ref
 				id={`${this._id}-inner`}
 				class="ui5-date-picker-input"
+				part="input"
 				placeholder={this._placeholder}
 				type={this.type}
-				value={this.value}
+				value={this.displayValue}
 				disabled={this.disabled}
 				required={this.required}
 				readonly={this.readonly}
 				valueState={this.valueState}
 				_inputAccInfo={this.accInfo}
+				_shouldOpenValueStatePopover={!this.open}
 				onChange={this._onInputChange}
 				onInput={this._onInputInput}
 				onSubmit={this._onInputSubmit}
 				onKeyDown={this._onkeydown}
 			>
 
-				{this.valueStateMessage.length > 0 &&
+				{!this.open && this.valueStateMessage.length > 0 &&
 					<slot name="valueStateMessage" slot="valueStateMessage"></slot>
 				}
 
@@ -48,7 +50,7 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 						onClick={this._togglePicker}
 					/>
 				}
-			</Input>
+			</DateTimeInput>
 		</div>
 	);
 }

@@ -1,9 +1,3 @@
 :root {
-	--_ui5_toggle_button_pressed_focussed: var(--sapButton_Selected_BorderColor);
-	--_ui5_toggle_button_pressed_focussed_hovered: var(--sapButton_Selected_BorderColor);
-	--_ui5_toggle_button_selected_positive_text_color: var(--sapButton_Selected_TextColor);
-	--_ui5_toggle_button_selected_negative_text_color: var(--sapButton_Selected_TextColor);
-	--_ui5_toggle_button_selected_attention_text_color: var(--sapButton_Selected_TextColor);
-	--_ui5_toggle_button_emphasized_pressed_focussed_hovered: var(--sapContent_FocusColor);
 	--_ui5_toggle_button_emphasized_text_shadow: none;
 }

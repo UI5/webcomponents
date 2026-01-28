@@ -1,41 +1,38 @@
-:host {
-	/** Growing Control spans the whole row **/
-	flex-grow: 1;
+@import "./InvisibleTextStyles.css";
+
+#button {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	cursor: pointer;
+	border-bottom: 1px solid var(--sapList_BorderColor);
+	background: var(--sapList_Background);
 }
 
-#growing-button:focus {
-    outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-    outline-offset: calc(-1 * var(--sapContent_FocusWidth));
-}
-
-#growing-button {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
+#button:focus {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
 }
 
 @media (hover: hover) {
-    #growing-button:hover {
-        background: var(--sapButton_Hover_Background);
-    }
+	#button:hover {
+		background: var(--sapButton_Hover_Background);
+	}
 }
 
-#growing-button:active,#growing-button[active] {
-    background: var(--sapList_Active_Background);
+#button:active,
+#button[data-ui5-growing-active="true"] {
+	background: var(--sapList_Active_Background);
 }
 
-#growing-text {
-    padding: 1rem 0 1rem 0;
-    font-size: var(--sapFontSize);
-    color: var(--sapButton_TextColor);
-    font-weight: bold;
+#text {
+	padding: 1rem 0;
+	font-size: var(--sapFontSize);
+	color: var(--sapButton_TextColor);
+	font-weight: bold;
 }
 
-#growing-subtext {
-    padding-bottom: 1rem;
-    color: var(--sapButton_TextColor);
+#subtext {
+	padding-bottom: 1rem;
+	color: var(--sapButton_TextColor);
 }

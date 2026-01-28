@@ -10,6 +10,9 @@ import NoData from "../../../_samples/main/List/NoData/NoData.md";
 import GroupHeaders from "../../../_samples/main/List/GroupHeaders/GroupHeaders.md";
 import SeparationTypes from "../../../_samples/main/List/SeparationTypes/SeparationTypes.md";
 import DragAndDrop from "../../../_samples/main/List/DragAndDrop/DragAndDrop.md";
+import MultipleDrag from "../../../_samples/main/List/MultipleDrag/MultipleDrag.md";
+import WrappingBehavior from "../../../_samples/main/List/WrappingBehavior/WrappingBehavior.md";
+import StickyHeader from "../../../_samples/main/List/StickyHeader/StickyHeader.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -55,3 +58,26 @@ The <b>separators</b> options (<b>All</b>, <b>Inner</b>, <b>None</b>) allows the
 The list items are draggable through the use of the <b>movable</b> property on <b>ListItem</b>.
 
 <DragAndDrop />
+
+### Multiple Item Drag
+You can select and drag multiple items at once when using <b>selection-mode="Multiple"</b>. This sample demonstrates cross-list dragging and the multiple drag ghost feature.
+
+<MultipleDrag />
+
+### Wrapping Behavior
+The standard list item `<ui5-li>` and the list item group `<ui5-li-group>` supports text wrapping through the <b>wrappingType</b> property. When set to "Normal", long text content (title and description) will wrap to multiple lines instead of truncating with an ellipsis. For very long content, the text is displayed with a "Show More/Show Less" mechanism.
+
+The wrapping behavior is responsive:
+- On mobile devices (size S), text is truncated after 100 characters
+- On tablets and desktop (size M and larger), text is truncated after 300 characters
+
+This feature improves readability when displaying lengthy content in lists.
+
+The `<ui5-li-custom>` is intentionally designed as a generic container to provide maximum flexibility. It can be used alongside `ui5-expandable-text` for long text content.
+
+<WrappingBehavior />
+
+### Sticky Header
+Use the <b>stickyHeader</b> property to keep the header visible during scrolling.
+
+<StickyHeader/>

@@ -62,7 +62,7 @@ export default function TableTemplate(this: Table) {
 					<tbody>
 						{
 							this.rows.map(row =>
-								<slot name={row._individualSlot}></slot>
+								<slot name={row._individualSlot} onKeyDown={this.onRowKeyDown}></slot>
 							)}
 
 						{!this.rows.length && !this.hideNoData &&

@@ -1,11 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const collectionName = process.argv[2] || "SAP-icons-v4";
-const collectionVersion = process.argv[3];
-const srcFile = collectionVersion ? path.normalize(`src/${collectionVersion}/${collectionName}.json`) : path.normalize(`src/${collectionName}.json`);
-const destDir = collectionVersion ? path.normalize(`dist/${collectionVersion}/`) : path.normalize("dist/");
-
 const iconTemplate = (name, pathData, ltr, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 const name = "${name}";
@@ -21,8 +16,8 @@ export default "${collection}/${name}";
 export { pathData, ltr, accData };`;
 
 
-const iconAccTemplate = (name, pathData, ltr, accData, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
-import { ${accData.key} } from "../generated/i18n/i18n-defaults.js";
+const iconAccTemplate = (name, pathData, ltr, accData, collection, packageName, versioned) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { ${accData.key} } from "${versioned ? "../" : "./"}generated/i18n/i18n-defaults.js";
 
 const name = "${name}";
 const pathData = "${pathData}";
@@ -71,10 +66,14 @@ const svgTemplate = (pathData) => `<svg xmlns="http://www.w3.org/2000/svg" viewB
 	<path d="${pathData}"/>
 </svg>`;
 
-const createIcons = async (file) => {
+const createIcons = async (argv) => {
+	const collectionName = argv[2] || "SAP-icons-v4";
+	const collectionVersion = argv[3];
+	const srcFile = collectionVersion ? path.normalize(`src/${collectionVersion}/${collectionName}.json`) : path.normalize(`src/${collectionName}.json`);
+	const destDir = collectionVersion ? path.normalize(`dist/${collectionVersion}/`) : path.normalize("dist/");
 	await fs.mkdir(destDir, { recursive: true });
 
-	const json = JSON.parse(await fs.readFile(file));
+	const json = JSON.parse(await fs.readFile(srcFile));
 
 	const promises = [];
 	for (let name in json.data) {
@@ -82,10 +81,11 @@ const createIcons = async (file) => {
 		const pathData = iconData.path;
 		const ltr = !!iconData.ltr;
 		const acc = iconData.acc;
-		const packageName =  json.packageName;
-		const collection =  json.collection;
+		const packageName = json.packageName;
+		const collection = json.collection;
+		const versioned = json.version;
 
-		const content = acc ? iconAccTemplate(name, pathData, ltr, acc, collection, packageName) : iconTemplate(name, pathData, ltr, collection, packageName);
+		const content = acc ? iconAccTemplate(name, pathData, ltr, acc, collection, packageName, versioned) : iconTemplate(name, pathData, ltr, collection, packageName);
 
 		promises.push(fs.writeFile(path.join(destDir, `${name}.js`), content));
 		promises.push(fs.writeFile(path.join(destDir, `${name}.svg`), svgTemplate(pathData)));
@@ -96,21 +96,24 @@ const createIcons = async (file) => {
 		// - "@ui5/ui5-webcomponents-icons/dist/v5/accept.js"
 		// - "@ui5/ui5-webcomponents-icons/dist/v4/accept.js"
 
-		if (json.version) {
+		if (versioned) {
 			// The exported value from the top level (unversioned) icon module depends on whether the collection is the default,
 			// to add or not the collection name to the exported value:
 			// For the default collection (SAPIcons) we export just the icon name - "export default { 'accept' }"
 			// For non-default collections (SAPTNTIcons and SAPBSIcons) we export the full name - "export default { 'tnt/actor' }"
 			const effectiveName = isDefaultCollection(collection) ? name : getUnversionedFullIconName(name, collection);
 			promises.push(fs.writeFile(path.join(path.normalize("dist/"), `${name}.js`), collectionTemplate(name, json.versions, effectiveName)));
-            promises.push(fs.writeFile(path.join(path.normalize("dist/"), `${name}.d.ts`), collectionTypeDefinitionTemplate(effectiveName, acc)));
+			promises.push(fs.writeFile(path.join(path.normalize("dist/"), `${name}.d.ts`), collectionTypeDefinitionTemplate(effectiveName, acc)));
 		}
 	}
 
-	return Promise.all(promises);
+	return Promise.all(promises)
+		.then(() => {
+			console.log("Icons created.");
+		});
 };
 
-const isDefaultCollection = collectionName => collectionName === "SAP-icons-v4"  || collectionName === "SAP-icons-v5";
+const isDefaultCollection = collectionName => collectionName === "SAP-icons-v4" || collectionName === "SAP-icons-v5";
 const getUnversionedFullIconName = (name, collection) => `${getUnversionedCollectionName(collection)}/${name}`;
 const getUnversionedCollectionName = collectionName => CollectionVersionedToUnversionedMap[collectionName] || collectionName;
 
@@ -121,6 +124,8 @@ const CollectionVersionedToUnversionedMap = {
 	"business-suite-v2": "business-suite",
 };
 
-createIcons(srcFile).then(() => {
-	console.log("Icons created.");
-});
+if (require.main === module) {
+	createIcons(process.argv)
+}
+
+exports._ui5mainFn = createIcons;

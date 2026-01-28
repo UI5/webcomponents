@@ -311,7 +311,7 @@ class Link extends UI5Element implements ITabbable {
 			return Number.parseInt(this.forcedTabIndex);
 		}
 
-		return (this.disabled || !this.textContent?.length) ? -1 : 0;
+		return this.disabled ? -1 : 0;
 	}
 
 	get ariaLabelText() {
@@ -374,6 +374,7 @@ class Link extends UI5Element implements ITabbable {
 	_onkeydown(e: KeyboardEvent) {
 		if (isEnter(e) && !this.href) {
 			this._onclick(e);
+			e.preventDefault();
 		} else if (isSpace(e)) {
 			e.preventDefault();
 		}

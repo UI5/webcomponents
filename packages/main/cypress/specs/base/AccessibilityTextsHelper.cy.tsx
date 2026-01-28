@@ -242,6 +242,147 @@ describe("AccessibilityTextsHelper", () => {
 			.should("not.have.attr", "aria-label");
 	});
 
+	it("Input accessibleDescriptionRef Tests", () => {
+		cy.mount(
+			<>
+				<Label id="lblDesc1">FirstDesc</Label>
+				<Label id="lblDesc2">SecondDesc</Label>
+				<Label id="lblDesc3">ThirdDesc</Label>
+				<Input id="inputDescRef" accessibleDescriptionRef="lblDesc1 lblDesc3"></Input>
+			</>
+		);
+
+		// assert
+		cy.get("#inputDescRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "FirstDesc ThirdDesc");
+
+		// act - update text of referenced label
+		cy.get("#lblDesc1")
+			.then($el => {
+				$el.get(0).innerHTML = "First Label Desc";
+			});
+
+		// assert
+		cy.get("#inputDescRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "First Label Desc ThirdDesc");
+
+		// act - update accessible-description-ref
+		cy.get("#inputDescRef")
+			.invoke("attr", "accessible-description-ref", "lblDesc2");
+
+		// assert
+		cy.get("#inputDescRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "SecondDesc");
+
+		// act - update accessible-description-ref
+		cy.get("#inputDescRef")
+			.invoke("attr", "accessible-description-ref", "lblDesc3");
+
+		// assert
+		cy.get("#inputDescRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "ThirdDesc");
+
+		// act - remove accessible-description-ref
+		cy.get("#inputDescRef")
+			.invoke("removeAttr", "accessible-description-ref");
+
+		// assert
+		cy.get("#inputDescRef")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("not.have.text", "");
+	});
+
+	it("Input accessibleDescription Tests", () => {
+		cy.mount(
+			<>
+				<Input id="inputDesc" accessibleDescription="Some description added by accessibleDescription"></Input>
+			</>
+		);
+		// assert
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "Some description added by accessibleDescription");
+
+		// act - update accessible-description
+		cy.get("#inputDesc")
+			.invoke("attr", "accessible-description", "Some description added by accessibleDescription");
+
+		// assert
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "Some description added by accessibleDescription");
+
+		// act - remove accessible-description
+		cy.get("#inputDesc")
+			.invoke("removeAttr", "accessible-description");
+
+		// assert
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("not.have.text", "");
+	});
+
+	// both
+	it("Input accessibleDescriptionRef and accessibleDescription Tests", () => {
+		cy.mount(
+			<>
+				<Label id="lblDesc1">FirstDesc</Label>
+				<Label id="lblDesc2">SecondDesc</Label>
+				<Input id="inputDesc" accessibleDescriptionRef="lblDesc1" accessibleDescription="Some description added by accessibleDescription"></Input>
+			</>
+		);
+
+		// assert - accessibleDescription is used
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "FirstDesc");
+
+		// act - update text of referenced label
+		cy.get("#lblDesc1")
+			.then($el => {
+				$el.get(0).innerHTML = "First Label Desc";
+			});
+
+		// assert - accessibleDescriptionRef is used
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "First Label Desc");
+
+		// act - remove accessible-description-ref
+		cy.get("#inputDesc")
+			.invoke("removeAttr", "accessible-description-ref");
+
+		// assert - accessibleDescription is used
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("have.text", "Some description added by accessibleDescription");
+
+		// act - remove accessible-description
+		cy.get("#inputDesc")
+			.invoke("removeAttr", "accessible-description");
+
+		// assert - accessibleDescriptionRef is used
+		cy.get("#inputDesc")
+			.shadow()
+			.find("#accessibleDescription")
+			.should("not.have.text", "");
+	});
+
 	it("Tests generic html elements with for attribute", () => {
 		cy.mount(
 			<>

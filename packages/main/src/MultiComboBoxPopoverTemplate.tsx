@@ -1,4 +1,3 @@
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import multiSelectAll from "@ui5/webcomponents-icons/dist/multiselect-all.js";
 import type MultiComboBox from "./MultiComboBox.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -8,6 +7,7 @@ import ToggleButton from "./ToggleButton.js";
 import SuggestionItem from "./SuggestionItem.js";
 import Icon from "./Icon.js";
 import List from "./List.js";
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import CheckBox from "./CheckBox.js";
 
@@ -28,20 +28,13 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			onOpen={this._afterOpen}
 			onFocusOut={this._onPopoverFocusOut}
 			accessibleName={this._popupLabel}
-			open={this._open}
+			open={this.open}
 			opener={this}
 		>
 			{this._isPhone && <>
 				<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
 					<div class="row">
 						<span>{this._headerTitleText}</span>
-						<Button
-							class="ui5-responsive-popover-close-btn"
-							icon={decline}
-							design="Transparent"
-							onClick={this.handleCancel}
-						>
-						</Button>
 					</div>
 					<div class="row">
 						<Input
@@ -62,6 +55,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 							icon={multiSelectAll}
 							design="Transparent"
 							pressed={this._showAllItemsButtonPressed}
+							disabled={this._getSelectedItems().length === 0}
 							onClick={this.filterSelectedItems}
 							accessibleName={this._showSelectedButtonAccessibleNameText}
 						></ToggleButton>
@@ -78,7 +72,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 
 			{!this._isPhone && <>
 				{this.hasValueStateMessage &&
-					<div slot="header" onKeyDown={this._onListHeaderKeydown} tabIndex={0} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
+					<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
 						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
 						{this.open && valueStateMessage.call(this)}
 					</div>
@@ -100,9 +94,16 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
 					<Button
-						design="Transparent"
+						design="Emphasized"
 						onClick={this.handleOK}
 					>{this._dialogOkButton}</Button>
+					<Button
+						class="ui5-responsive-popover-close-btn"
+						design="Transparent"
+						onClick={this.handleCancel}
+					>
+						{this._dialogCancelButton}
+					</Button>
 				</div>
 			}
 		</ResponsivePopover>
@@ -115,7 +116,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 				hideArrow={true}
 				class="ui5-valuestatemessage-popover"
 				placement="Bottom"
-				horizontalAlign={this._valueStatePopoverHorizontalAlign}
+				horizontalAlign={PopoverHorizontalAlign.Start}
 				tabIndex={-1}
 				open={this.valueStateOpen}
 				opener={this}

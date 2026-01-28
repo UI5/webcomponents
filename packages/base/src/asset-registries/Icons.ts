@@ -23,18 +23,25 @@ type CollectionData = {
 	}>,
 };
 
-type IconData = {
-	collection: string,
-	packageName: string,
-	pathData: string | Array<string>,
-	ltr?: boolean,
-	accData?: I18nText,
-	customTemplate?: TemplateFunction,
-	viewBox?: string,
+type IconDatabase = {
+	collection: string;
+	packageName?: string;
+	viewBox?: string;
+	ltr?: boolean;
+	accData?: I18nText;
+}
+
+type IconData = IconDatabase & {
+	pathData?: string | string[];
+	customTemplate?: TemplateFunction;
+};
+
+type UnsafeIconData = IconDatabase & {
+	customTemplateAsString: string;
 };
 
 const loaders = new Map<string, IconLoader>();
-const registry = getSharedResource<Map<string, IconData>>("SVGIcons.registry", new Map());
+const registry = getSharedResource<Map<string, IconData | UnsafeIconData>>("SVGIcons.registry", new Map());
 const iconCollectionPromises = getSharedResource<Map<string, Promise<CollectionData| Array<CollectionData>>>>("SVGIcons.promises", new Map());
 
 const ICON_NOT_FOUND = "ICON_NOT_FOUND";
@@ -70,19 +77,63 @@ const _fillRegistry = (bundleData: CollectionData) => {
 	});
 };
 
-// set
+/**
+ * Registers a SVG icon with the given name and associated icon data.
+ *
+ * This method is used to add an icon to the registry, making it available for use
+ * in the application.
+ *
+ * @public
+ * @param { string } name - The name of the icon to register.
+ * @param { IconData } iconData - The data associated with the icon: `collection`, `pathData`, `packageName`
+ * `customTemplate`, `viewBox`, `ltr`, `accData`.
+ *
+ * <b>Note:</b> Properties `pathData` and `customTemplate` are mutually exclusive.
+ * If both are set, `customTemplate` will be used.
+ */
 const registerIcon = (name: string, iconData: IconData) => { // eslint-disable-line
 	const key = `${iconData.collection}/${name}`;
 
-	registry.set(key, {
+	const data: IconData = {
+		collection: iconData.collection,
+		packageName: iconData.packageName,
 		pathData: iconData.pathData,
+		viewBox: iconData.viewBox,
 		ltr: iconData.ltr,
 		accData: iconData.accData,
-		packageName: iconData.packageName,
 		customTemplate: iconData.customTemplate,
-		viewBox: iconData.viewBox,
+	};
+
+	registry.set(key, data);
+};
+
+/**
+ * Registers a SVG icon in the registry with the given name and icon data.
+ *
+ * <b>Note:</b> This method is unsafe as it allows the SVG content to be passed as a string
+ * through the `customTemplateAsString` property of the `iconData`.
+ * Ensure that the SVG content is properly validated.
+ * Improperly sanitized SVG strings can lead to security vulnerabilities such as XSS (Cross-Site Scripting).
+ *
+ * @public
+ * @param { string } name - The name of the icon to register.
+ * @param { UnsafeIconData } iconData - The data for the icon: `collection`, `customTemplateAsString`, `packageName`
+ * `viewBox`, `ltr` and `accData`.
+ * @since 2.14.0
+ */
+const unsafeRegisterIcon = (name: string, iconData: UnsafeIconData) => {
+	const key = `${iconData.collection}/${name}`;
+
+	const data: UnsafeIconData = {
 		collection: iconData.collection,
-	});
+		customTemplateAsString: iconData.customTemplateAsString,
+		packageName: iconData.packageName,
+		viewBox: iconData.viewBox,
+		ltr: iconData.ltr,
+		accData: iconData.accData,
+	};
+
+	registry.set(key, data);
 };
 
 /**
@@ -172,8 +223,11 @@ const getIconAccessibleName = async (name: string | undefined): Promise<string |
 	}
 
 	if (iconData && iconData !== ICON_NOT_FOUND && iconData.accData) {
-		const i18nBundle = await getI18nBundle(iconData.packageName);
-		return i18nBundle.getText(iconData.accData);
+		if (iconData.packageName) {
+			const i18nBundle = await getI18nBundle(iconData.packageName);
+			return i18nBundle.getText(iconData.accData);
+		}
+		return iconData.accData?.defaultText || "";
 	}
 };
 
@@ -192,10 +246,12 @@ export {
 	getIconDataSync,
 	getIconAccessibleName,
 	registerIcon,
+	unsafeRegisterIcon,
 	_getRegisteredNames,
 };
 
 export type {
 	IconData,
+	UnsafeIconData,
 	CollectionData,
 };

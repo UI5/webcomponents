@@ -2,9 +2,15 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import type Timeline from "./Timeline.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
 
+type TimelineListRole = "list" | "tree";
+
 export default function TimelineTemplate(this: Timeline) {
+	const listRole: `${TimelineListRole}` = this.hasGroupItems ? "tree" : "list";
+
 	return (
 		<div class="ui5-timeline-root"
+			role="region"
+			aria-label="Timeline"
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 		>
@@ -16,15 +22,19 @@ export default function TimelineTemplate(this: Timeline) {
 			>
 				<div class="ui5-timeline-scroll-container">
 
-					<ul class="ui5-timeline-list" aria-live="polite" aria-label={this.ariaLabel}>
+					<div class="ui5-timeline-list"
+						role={listRole}
+						aria-live="polite"
+						aria-label={this.ariaLabel}
+					>
 						{this.items.map(item =>
-							<li class="ui5-timeline-list-item">
+							<div class="ui5-timeline-list-item">
 								<slot name={item._individualSlot}></slot>
-							</li>
+							</div>
 						)}
 						{ this.growsWithButton && moreRow.call(this) }
 						{ this.growsOnScroll && endRow.call(this) }
-					</ul>
+					</div>
 				</div>
 			</BusyIndicator>
 		</div>

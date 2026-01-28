@@ -1,5 +1,5 @@
 :host {
-    margin-block: 0.5rem;
+    height: 40px;
 }
 
 :host(:last-of-type) {

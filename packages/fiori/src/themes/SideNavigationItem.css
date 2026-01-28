@@ -2,9 +2,12 @@
 
 :host {
 	color: var(--sapList_TextColor);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--_ui5_side_navigation_item_font_family);
 	font-size: var(--sapFontSize);
-	font-weight: var(--_ui5_side_navigation_group_text_weight);
+}
+
+:host([in-popover]) ::slotted([ui5-side-navigation-sub-item]) {
+	margin-block-start: var(--_ui5_side_navigation_item_bottom_margin);
 }
 
 .ui5-sn-item-level1:not(:has(> .ui5-sn-item-icon)),
@@ -12,16 +15,15 @@
 	padding-inline-start: var(--_ui5_side_navigation_item_padding_left);
 }
 
-:host([in-popover]) .ui5-sn-item-level1 {
-	margin-bottom: var(--_ui5_side_navigation_group_bottom_margin_in_popup);
-}
-
 :host([in-popover]) .ui5-sn-item-level1 .ui5-sn-item-text {
-	margin: 0 1rem 0 0;
-	font-size: var(--_ui5_side_navigation_popup_title_text_size);
+	margin: 0 0.375rem 0 0;
 	line-height: var(--_ui5_side_navigation_popup_title_line_height);
 }
 
 .ui5-sn-item.ui5-sn-item-level1.ui5-sn-item-overflow {
 	margin-top: auto;
+}
+
+.ui5-sn-item-level1 .ui5-sn-item-text {
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
 }

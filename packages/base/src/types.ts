@@ -19,7 +19,10 @@ export type PassiveEventListenerObject = EventListenerObject & { passive: boolea
 
 // Accessibility
 export type AriaRole = JSX.AriaRole;
-export type AriaHasPopup = "dialog" | "grid" | "listbox" | "menu" | "tree";
+export type AriaDisabled = JSX.AriaAttributes["aria-disabled"];
+export type AriaChecked = JSX.AriaAttributes["aria-checked"];
+export type AriaReadonly = JSX.AriaAttributes["aria-readonly"];
+export type AriaHasPopup = "dialog" | "grid" | "listbox" | "menu" | "tree" | "false";
 export type AriaCurrent = "page" | "step" | "location" | "date" | "time" | "true" | "false" | boolean | undefined;
 export type AriaAutoComplete = "list" | "none" | "inline" | "both" | undefined;
 export type AriaLandmarkRole = "none" | "banner" | "main" | "region" | "navigation" | "search" | "complementary" | "form" | "contentinfo"
@@ -28,25 +31,27 @@ export type AccessibilityInfo = {
 	// The WAI-ARIA role of the component.
 	role?: AriaRole,
 
-	// A translated text that represents the component type. Used when several components share same role,
-	// f.e. Select and ComboBox both have role="combobox".
-	type?: LowercaseString<string>,
+	// A translated text that represents the component type.
+	type?: string,
 
-	// A translated text that represents relevant component description/state - value, placeholder, label, etc.
+	// A translated text that represents relevant component description/state - value, placeholder, etc.
 	description?: string,
 
-	 // The component disabled state.
+	// Label of the component, e.g. `accessible-name` or `accessible-name-ref` for form elements.
+	label?: string,
+
+	// Disabled state of the component.
 	disabled?: boolean,
 
-	// The component readonly state.
+	// Readonly state of the component.
 	readonly?: boolean,
 
-	// The component required state.
+	// Required state of the component.
 	required?: boolean,
 
-	// An array of elements, aggregated by the component
-	// <b>Note:</b> Children should only be provided when it is helpful to understand the accessibility context.
-	children?: Array<HTMLElement>,
+	// An array of nodes, aggregated by the component
+	// **Note:** Children should only be provided when it is helpful to understand the accessibility context.
+	children?: Array<Node>,
 }
 
 export type AccessibilityAttributes = {
@@ -61,4 +66,6 @@ export type AccessibilityAttributes = {
 	ariaKeyShortcuts?: string,
 	ariaCurrent?: AriaCurrent,
 	current?: AriaCurrent,
+	roleDescription?: string,
+	title?: string,
 }

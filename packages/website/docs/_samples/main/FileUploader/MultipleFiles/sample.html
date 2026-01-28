@@ -11,9 +11,11 @@
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
 
-    <ui5-file-uploader multiple>
-        <ui5-button icon="upload">Upload Multiple Files</ui5-button>
-    </ui5-file-uploader>
+    <div style="height: 100px">
+        <ui5-label for="multiple-files-uploader">Choose files:</ui5-label>
+        <ui5-file-uploader id="multiple-files-uploader" multiple></ui5-file-uploader>
+    </div>
+
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

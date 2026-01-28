@@ -22,3 +22,17 @@ Cypress.Commands.add("ui5ColorPickerUpdateInput", { prevSubject: true }, (subjec
 		.realType(value)
 		.realPress("Enter");
 });
+
+Cypress.Commands.add("ui5ColorPickerValidateInput", { prevSubject: true }, (subject, name, value) => {
+	cy.wrap(subject)
+		.as("colorPicker")
+		.should("be.visible");
+
+	cy.get("@colorPicker")
+		.shadow()
+		.find(name)
+		.as("input");
+
+	cy.get("@input")
+		.should("have.value", value);
+});

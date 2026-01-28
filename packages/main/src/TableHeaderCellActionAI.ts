@@ -19,13 +19,17 @@ import "@ui5/webcomponents-icons/dist/ai.js";
  * @extends TableHeaderCellActionBase
  * @since 2.8.0
  * @public
- * @experimental
  */
 @customElement({ tag: "ui5-table-header-cell-action-ai" })
 
 class TableHeaderCellActionAI extends TableHeaderCellActionBase {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	onAfterRendering() {
+		super.onAfterRendering();
+		this.toggleAttribute("_popin", !this.parentElement?.hasAttribute("ui5-table-header-cell"));
+	}
 
 	getRenderInfo() {
 		return {

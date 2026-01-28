@@ -5,7 +5,7 @@
 }
 
 :host {
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	background-color: var(--sapGroup_TitleBackground);
 	border-radius: var(--_ui5_panel_border_radius);
 }
@@ -28,7 +28,7 @@
 	outline: none;
 	box-sizing: border-box;
 	padding-right: var(--_ui5_panel_header_padding_right);
-	font-family: "72override", var(--sapFontHeaderFamily);
+	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapGroup_Title_FontSize);
 	font-weight: normal;
 	color: var(--sapGroup_TitleTextColor);

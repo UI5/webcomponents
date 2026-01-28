@@ -10,10 +10,10 @@ export default function DynamicPageTitleTemplate(this: DynamicPageTitle) {
 				tabIndex={this._tabIndex}
 				onKeyDown={this._onkeydown}
 				onClick={this.onTitleClick}
-				role="button"
-				aria-expanded={this._headerExpanded}
+				role={this._role}
+				aria-expanded={this.forAriaExpanded}
 				aria-labelledby={this._ariaLabelledBy}
-				aria-describedby={`${this._id}-toggle-description`}
+				aria-describedby={this._ariaDescribedBy}
 			></span>
 
 			{this.hasSnappedTitleOnMobile ?

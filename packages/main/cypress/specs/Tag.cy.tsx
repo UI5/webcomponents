@@ -95,4 +95,26 @@ describe("Tag", () => {
 			cy.get("#tagWithWrappingNone").shadow().find(".ui5-tag-root").should("have.css", "white-space", "nowrap");
 		});
 	});
+
+	describe("Events", () => {
+		it("tests interactive tag click event", () => {
+			cy.mount(
+				<Tag interactive>Tag</Tag>
+			);
+
+			cy.get("[ui5-tag]")
+				.as("tag");
+
+			cy.get("@tag")
+				.then(tag => {
+					tag.get(0).addEventListener("click", cy.stub().as("clicked"));
+				});
+
+			cy.get("@tag")
+				.realClick();
+
+			cy.get("@clicked")
+				.should("have.been.calledOnce");
+		});
+	});
 });

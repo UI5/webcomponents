@@ -1,11 +1,10 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-if (process.argv.length < 7) {
-	throw new Error("Not enough arguments");
-}
-
-const generate = async () => {
+const generate = async (argv) => {
+	if (argv.length < 7) {
+		throw new Error("Not enough arguments");
+	}
 
 	const ORIGINAL_TEXTS = {
 		UnableToLoad: "UnableToLoad",
@@ -20,7 +19,15 @@ const generate = async () => {
 		SuccessScreen: "SuccessScreen",
 		NoMail: "NoMail",
 		NoSavedItems: "NoSavedItems",
-		NoTasks: "NoTasks"
+		NoTasks: "NoTasks",
+		NoDimensionsSet: "NoDimensionsSet",
+		AddPeople: "AddPeople",
+		AddColumn: "AddColumn",
+		SortColumn: "SortColumn",
+		FilterTable: "FilterTable",
+		ResizeColumn: "ResizeColumn",
+		GroupTable: "GroupTable",
+		UploadCollection: "UploadCollection"
 	};
 
 	const FALLBACK_TEXTS = {
@@ -47,17 +54,27 @@ const generate = async () => {
 		SimpleNotFoundMagnifier: ORIGINAL_TEXTS.NoSearchResults,
 		SimpleReload: ORIGINAL_TEXTS.UnableToLoad,
 		SimpleTask: ORIGINAL_TEXTS.NoTasks,
+		NoChartData: ORIGINAL_TEXTS.NoDimensionsSet,
+		AddingColumns: ORIGINAL_TEXTS.AddColumn,
+		SortingColumns: ORIGINAL_TEXTS.SortColumn,
+		FilteringColumns: ORIGINAL_TEXTS.FilterTable,
+		ResizingColumns: ORIGINAL_TEXTS.ResizeColumn,
+		GroupingColumns: ORIGINAL_TEXTS.GroupTable,
+		AddPeopleToCalendar: ORIGINAL_TEXTS.AddPeople,
+		DragFilesToUpload: ORIGINAL_TEXTS.UploadCollection,
+		KeyTask: ORIGINAL_TEXTS.SuccessScreen,
+		ReceiveAppreciation: ORIGINAL_TEXTS.BalloonSky,
 		SuccessBalloon: ORIGINAL_TEXTS.BalloonSky,
 		SuccessCheckMark: ORIGINAL_TEXTS.SuccessScreen,
 		SuccessHighFive: ORIGINAL_TEXTS.BalloonSky
 	};
 
-	const srcPath = process.argv[2];
-	const defaultText = process.argv[3] === "true";
-	const illustrationsPrefix = process.argv[4];
-	const illustrationSet = process.argv[5];
-	const destPath = process.argv[6];
-	const collection = process.argv[7];
+	const srcPath = argv[2];
+	const defaultText = argv[3] === "true";
+	const illustrationsPrefix = argv[4];
+	const illustrationSet = argv[5];
+	const destPath = argv[6];
+	const collection = argv[7];
 	const fileNamePattern = new RegExp(`${illustrationsPrefix}-.+-(.+).svg`);
 	// collect each illustration name because each one should have Sample.js file
 	const fileNames = new Set();
@@ -104,12 +121,11 @@ const generate = async () => {
 		// If no Dot is present, Spot will be imported as Dot
 		const hasDot = dotIllustrationNames.indexOf(illustrationName) !== -1 ? 'Dot' : 'Spot';
 
-		return `import { registerIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+		return `import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import dialogSvg from "./${illustrationsPrefix}-Dialog-${illustrationName}.js";
 import sceneSvg from "./${illustrationsPrefix}-Scene-${illustrationName}.js";
 import spotSvg from "./${illustrationsPrefix}-Spot-${illustrationName}.js";
-import dotSvg from "./${illustrationsPrefix}-${hasDot}-${illustrationName}.js";${
-	defaultText ? `import {
+import dotSvg from "./${illustrationsPrefix}-${hasDot}-${illustrationName}.js";${defaultText ? `import {
 	IM_TITLE_${illustrationNameUpperCase},
 	IM_SUBTITLE_${illustrationNameUpperCase},
 } from "../generated/i18n/i18n-defaults.js";` : ``}
@@ -120,7 +136,7 @@ const collection = "${collection}";${defaultText ? `
 const title = IM_TITLE_${illustrationNameUpperCase};
 const subtitle = IM_SUBTITLE_${illustrationNameUpperCase};` : ``}
 
-registerIllustration(name, {
+unsafeRegisterIllustration(name, {
 	dialogSvg,
 	sceneSvg,
 	spotSvg,
@@ -166,17 +182,23 @@ export { dialogSvg, sceneSvg, spotSvg, dotSvg };`
 		}
 	});
 
-	return Promise.all(promises).then(() => {
-		const nestedPromises = [];
-		for (let illustrationName of fileNames) {
-			nestedPromises.push(fs.writeFile(path.join(destPath, `${illustrationName}.js`), illustrationImportTemplate(illustrationName)));
-			nestedPromises.push(fs.writeFile(path.join(destPath, `${illustrationName}.d.ts`), illustrationTypeDefinition(illustrationName)));
-		}
+	return Promise.all(promises)
+		.then(() => {
+			const nestedPromises = [];
+			for (let illustrationName of fileNames) {
+				nestedPromises.push(fs.writeFile(path.join(destPath, `${illustrationName}.js`), illustrationImportTemplate(illustrationName)));
+				nestedPromises.push(fs.writeFile(path.join(destPath, `${illustrationName}.d.ts`), illustrationTypeDefinition(illustrationName)));
+			}
 
-		return Promise.all(nestedPromises);
-	});
+			return Promise.all(nestedPromises);
+		})
+		.then(() => {
+			console.log("Illustrations generated.");
+		});
 };
 
-generate().then(() => {
-	console.log("Illustrations generated.");
-});
+if (require.main === module) {
+	generate(process.argv)
+}
+
+exports._ui5mainFn = generate;

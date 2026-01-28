@@ -17,10 +17,11 @@ We designed some components such as Title, Label, Tag, Button, Input, and a few 
     background: purple;
   }
 ```
-You can try this yourself using the Input [sample](https://sap.github.io/ui5-webcomponents/components/Input/#custom-styling/). 
+You can try this yourself using the Input [sample](https://ui5.github.io/webcomponents/components/Input/#custom-styling/). 
 
 Unfortunately, this can't be done for all components because it depends on the complexity of the DOM structure.
 
+**Note:** It’s strongly recommended to apply styles directly at the tag level for basic sizing properties (e.g., margin, padding, width, height) to avoid design inconsistencies across the page. For other style changes, consider using the **UI Theme Designer** to ensure consistency. For details, see the [UI Theme Designer](./12-theming.md) article.
 
 ## Usage of CSS Shadow Parts
 
@@ -31,7 +32,7 @@ For more complex components, the styling on the tag level is not possible, there
 ```html
 <ui5-card>
 	<ui5-card-header
-        title-text="Quick Links"
+		title-text="Quick Links"
 		status="4 of 10"
 		slot="header">
 	</ui5-card-header>
@@ -45,7 +46,6 @@ ui5-card-header::part(status) {
 ```
 
 <b>Note:</b> All available shadow parts are described in the API reference as part of the "Overview" section of each component.
-
 
 ## Changing CSS Variables
 
@@ -63,6 +63,7 @@ ui5-button {
 }
 ```
 
+**Note:** Whenever possible, override CSS variables through the **UI Theme Designer**. This ensures consistent updates across all components where the variable is used, helping maintain a cohesive design. For details, see the [UI Theme Designer](./12-theming.md) article.
 
 ## Custom Theme Schema
 

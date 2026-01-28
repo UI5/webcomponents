@@ -12,11 +12,12 @@
 <body style="background-color: var(--sapBackgroundColor); height: 50rem;">
 	<!-- playground-fold-end -->
 	<ui5-shellbar
-		primary-title="Corporate Portal"
 		logo="../assets/images/sap-logo-svg.svg"
 		show-notifications
 		notifications-count="10"
-	></ui5-shellbar>
+	>
+		<ui5-shellbar-branding slot="branding">Corporate Portal</ui5-shellbar-branding>
+	</ui5-shellbar>
 	<ui5-popover
 		id="popover-with-notifications"
 		placement="Bottom"

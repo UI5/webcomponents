@@ -3,6 +3,666 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **framework:** call `appyTheme` on delayed theme registration after framework `boot` ([#12787](https://github.com/UI5/webcomponents/issues/12787)) ([42611e9](https://github.com/UI5/webcomponents/commit/42611e92c2e06504a2952ce0c6574891c4971d40))
+
+
+### Features
+
+* **framework:** detect dynamically loaded OpenUI5 ([#12235](https://github.com/UI5/webcomponents/issues/12235)) ([2292ffd](https://github.com/UI5/webcomponents/commit/2292ffd404da8a59229abdc24b1edb4bf428f7cf))
+
+
+
+
+
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* **ui5-popover:** render block layers in the correct order ([#12659](https://github.com/UI5/webcomponents/issues/12659)) ([43e545a](https://github.com/UI5/webcomponents/commit/43e545a4a5e486f19fb52ae18fe7c162680cf56e))
+
+
+
+
+
+# [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
+
+
+### Reverts
+
+* Revert "feat(framework): scope theming css variables with component packages (#12491)" (#12775) ([3385623](https://github.com/UI5/webcomponents/commit/33856235e357a3d4d0b9391eab2a83a5b3010556)), closes [#12491](https://github.com/UI5/webcomponents/issues/12491) [#12775](https://github.com/UI5/webcomponents/issues/12775)
+* Revert "feat(framework): introduce loadBaseThemingCSSVariables configuration (#12699)" (#12767) ([db375d3](https://github.com/UI5/webcomponents/commit/db375d30b9f4a7e07961fabbdcefdcdc78a93f46)), closes [#12699](https://github.com/UI5/webcomponents/issues/12699) [#12767](https://github.com/UI5/webcomponents/issues/12767)
+
+
+
+
+
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing of sap.m.Popover with esc key ([#12730](https://github.com/UI5/webcomponents/issues/12730)) ([fae0ab8](https://github.com/UI5/webcomponents/commit/fae0ab8289baa060d5d65024c47fd4dc34c7aac0))
+* **tools:** dependencies usage ([#12716](https://github.com/UI5/webcomponents/issues/12716)) ([89bb0dd](https://github.com/UI5/webcomponents/commit/89bb0dd62322598bd1ea7ce984eaf0618546a6f2))
+
+
+### Features
+
+* **framework:** introduce loadBaseThemingCSSVariables configuration ([#12699](https://github.com/UI5/webcomponents/issues/12699)) ([f01b2eb](https://github.com/UI5/webcomponents/commit/f01b2eb6256f2032bd802d0a60c4625b0d1af5fe))
+
+
+
+
+
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.1-rc.0...v2.17.0-rc.0) (2025-11-06)
+
+
+### Features
+
+* **framework:** Custom Illustrations Documentation & API Enhancement ([#12260](https://github.com/UI5/webcomponents/issues/12260)) ([2ee9b02](https://github.com/UI5/webcomponents/commit/2ee9b024e152029394b39324f2bb7dcb73293dbb))
+
+
+
+
+
+## [2.16.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.16.0...v2.16.1-rc.0) (2025-11-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.16.0](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.3...v2.16.0) (2025-11-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.16.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.2...v2.16.0-rc.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* dev server on windows ([#12565](https://github.com/UI5/webcomponents/issues/12565)) ([af96b2c](https://github.com/UI5/webcomponents/commit/af96b2ce2292e7624c6186c58e002c6337e13847))
+* **OpenUI5Support:** pass all parameters to the onFocusEvent/onsapescape events ([#12492](https://github.com/UI5/webcomponents/issues/12492)) ([8937c4e](https://github.com/UI5/webcomponents/commit/8937c4e777f031f8f45c0f11deb6d99844169dbf))
+
+
+
+
+
+# [2.16.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.1...v2.16.0-rc.2) (2025-10-23)
+
+
+### Bug Fixes
+
+* native scrollbar styles ([#12485](https://github.com/UI5/webcomponents/issues/12485)) ([92a954f](https://github.com/UI5/webcomponents/commit/92a954f9459996a26c9079b3dbbe21e06461b061))
+
+
+
+
+
+# [2.16.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.16.0-rc.0...v2.16.0-rc.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* apply @custom-elements-manifest/analyzer patch ([#12441](https://github.com/UI5/webcomponents/issues/12441)) ([a9ec6e2](https://github.com/UI5/webcomponents/commit/a9ec6e217bb59dbffb0db79c6008cecf77bc0649))
+* **framework:** fromAttribute converter can also return an object ([#12487](https://github.com/UI5/webcomponents/issues/12487)) ([c8a9f96](https://github.com/UI5/webcomponents/commit/c8a9f964ddcaeb71343db82872209157bd2bdbe6))
+
+
+
+
+
+# [2.16.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.15.0...v2.16.0-rc.0) (2025-10-09)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing popups with escape key ([#12278](https://github.com/UI5/webcomponents/issues/12278)) ([f54e8af](https://github.com/UI5/webcomponents/commit/f54e8afe3339a98bbf214523aba17158d7eb505b))
+
+
+
+
+
+# [2.15.0](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.3...v2.15.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* **ui5-table:** custom row announcements are set ([#12117](https://github.com/UI5/webcomponents/issues/12117)) ([dcf014e](https://github.com/UI5/webcomponents/commit/dcf014e9d95bfe36644f300674cec726f3ec5029))
+
+
+
+
+
+# [2.15.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.2...v2.15.0-rc.3) (2025-10-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.15.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.1...v2.15.0-rc.2) (2025-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.15.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.15.0-rc.0...v2.15.0-rc.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** override default [popover] styles ([#12301](https://github.com/UI5/webcomponents/issues/12301)) ([9b1ee59](https://github.com/UI5/webcomponents/commit/9b1ee5916fb987757f37911f8e6934ed9a5fcf5d))
+
+
+
+
+
+# [2.15.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.14.0...v2.15.0-rc.0) (2025-09-11)
+
+
+### Bug Fixes
+
+* **f6navigation:** backward navigation in N level nesting ([#12279](https://github.com/UI5/webcomponents/issues/12279)) ([2fb71a7](https://github.com/UI5/webcomponents/commit/2fb71a779cce8b6671637c4ecfaeac4c15a7be88)), closes [#12268](https://github.com/UI5/webcomponents/issues/12268)
+
+
+
+
+
+# [2.14.0](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.7...v2.14.0) (2025-09-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.7](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.6...v2.14.0-rc.7) (2025-09-04)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** improve focus handling for OpenUI5 and Web Component popups ([#12230](https://github.com/SAP/ui5-webcomponents/issues/12230)) ([6937756](https://github.com/SAP/ui5-webcomponents/commit/6937756e40b3dc5c8fd6ed0db8c2920328e2b6b2))
+* **ScrollbarStyles:** introduce centralized scrollbar styling ([#12207](https://github.com/SAP/ui5-webcomponents/issues/12207)) ([5481bb3](https://github.com/SAP/ui5-webcomponents/commit/5481bb3f1e3f78dc3a0cb13a16c97d19f176ed37))
+* **ui5-form-item:** update host element display ([#12208](https://github.com/SAP/ui5-webcomponents/issues/12208)) ([bd9299e](https://github.com/SAP/ui5-webcomponents/commit/bd9299e884215375b52badca943aae68d1e77d6a)), closes [#12201](https://github.com/SAP/ui5-webcomponents/issues/12201)
+
+
+
+
+
+# [2.14.0-rc.6](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.5...v2.14.0-rc.6) (2025-08-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.5](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.4...v2.14.0-rc.5) (2025-08-28)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.3...v2.14.0-rc.4) (2025-08-25)
+
+
+### Bug Fixes
+
+* **DnD:** fix drag and drop in Shadow DOM ([#11975](https://github.com/SAP/ui5-webcomponents/issues/11975)) ([fb561aa](https://github.com/SAP/ui5-webcomponents/commit/fb561aa92fdc2d9dddfab9d5ec15bf90ff3a979c))
+
+
+
+
+
+# [2.14.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.2...v2.14.0-rc.3) (2025-08-22)
+
+
+### Bug Fixes
+
+* **f6navigation:** skip non-element nodes when resolving groups ([#12174](https://github.com/SAP/ui5-webcomponents/issues/12174)) ([060af95](https://github.com/SAP/ui5-webcomponents/commit/060af95baf3273a8dc09460122e3dc76bf5f5a1c))
+* **framework:** improve CSS variables from OpenUI5 detection ([#12177](https://github.com/SAP/ui5-webcomponents/issues/12177)) ([9199825](https://github.com/SAP/ui5-webcomponents/commit/9199825e6aecb9c407f6e67d8768025233e10f16))
+
+
+
+
+
+# [2.14.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.1...v2.14.0-rc.2) (2025-08-21)
+
+
+### Bug Fixes
+
+* **framework:** use font-face declarations from theming-base-content ([#12144](https://github.com/SAP/ui5-webcomponents/issues/12144)) ([50deee9](https://github.com/SAP/ui5-webcomponents/commit/50deee9b9f512d3bd506de1648d3dc8f145a7d88))
+* **ui5-side-navigation:** expand SideNavigation item activation to Enter with modifier keys ([d660c37](https://github.com/SAP/ui5-webcomponents/commit/d660c37a81c9a6a6c73715ee9889e6ee140d08d2))
+
+
+### Features
+
+* **framework:** adds `unsafeRegisterIcon` base method for custom SVG icons ([#12145](https://github.com/SAP/ui5-webcomponents/issues/12145)) ([3b67132](https://github.com/SAP/ui5-webcomponents/commit/3b67132f6293a76b3bbc10f5fb3080d75fba10e5)), closes [#clip0_2221_23716](https://github.com/SAP/ui5-webcomponents/issues/clip0_2221_23716)
+
+
+
+
+
+# [2.14.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.0...v2.14.0-rc.1) (2025-08-14)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.14.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.13.0...v2.14.0-rc.0) (2025-08-07)
+
+
+### Bug Fixes
+
+* **framework:** copy "base" pkg i18n assets to `dist/prod` ([#12072](https://github.com/SAP/ui5-webcomponents/issues/12072)) ([7460a76](https://github.com/SAP/ui5-webcomponents/commit/7460a76a803dc12ce92574472084a0c202d984a3))
+* **framework:** sap-ui-themeRoot block all origins by defaultTheme root disallow default ([#12035](https://github.com/SAP/ui5-webcomponents/issues/12035)) ([8fa82da](https://github.com/SAP/ui5-webcomponents/commit/8fa82da97756e1eb146cabadd75065a1ba2695f5))
+
+
+
+
+
+# [2.13.0](https://github.com/SAP/ui5-webcomponents/compare/v2.13.0-rc.3...v2.13.0) (2025-08-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.13.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.13.0-rc.2...v2.13.0-rc.3) (2025-07-31)
+
+
+### Bug Fixes
+
+* **f6navigation:** correct navigation order ([#11942](https://github.com/SAP/ui5-webcomponents/issues/11942)) ([9b9ce3a](https://github.com/SAP/ui5-webcomponents/commit/9b9ce3a55ede6fbae7dd51cfe88933796b6dde49)), closes [#11902](https://github.com/SAP/ui5-webcomponents/issues/11902)
+
+
+### Features
+
+* **DragRegistry:** support for multiple drag ([#11780](https://github.com/SAP/ui5-webcomponents/issues/11780)) ([0c7025f](https://github.com/SAP/ui5-webcomponents/commit/0c7025f232e35b3d87837694e233d2f1d44341a8))
+* **ui5-ai-button:** add customizable accessibility attributes to AI Button and SplitButton ([#11929](https://github.com/SAP/ui5-webcomponents/issues/11929)) ([30777dc](https://github.com/SAP/ui5-webcomponents/commit/30777dc9b0548260c2d88094e924efdbed6642c1))
+
+
+
+
+
+# [2.13.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.13.0-rc.1...v2.13.0-rc.2) (2025-07-24)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix sap.m.Select inside a ui5-dialog ([#11939](https://github.com/SAP/ui5-webcomponents/issues/11939)) ([a02011f](https://github.com/SAP/ui5-webcomponents/commit/a02011f8e2f09820ae0141526f9546a07ed089bd))
+* **ui5-checkbox:** make acc configurable ([#11773](https://github.com/SAP/ui5-webcomponents/issues/11773)) ([30fdb8e](https://github.com/SAP/ui5-webcomponents/commit/30fdb8e1850ad92ecbbd34e7d49528e631fd14f0))
+
+
+
+
+
+# [2.13.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.13.0-rc.0...v2.13.0-rc.1) (2025-07-17)
+
+
+### Features
+
+* **ui5-combobox, ui5-multi-combo-box, ui5-input, ui5-multi-input:** link navigation in value state ([#11575](https://github.com/SAP/ui5-webcomponents/issues/11575)) ([3f80faa](https://github.com/SAP/ui5-webcomponents/commit/3f80faa4c3fbacf129b6f3fe3bebb92e3b65759f))
+
+
+
+
+
+# [2.13.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.12.0...v2.13.0-rc.0) (2025-07-10)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.12.0](https://github.com/SAP/ui5-webcomponents/compare/v2.12.0-rc.3...v2.12.0) (2025-07-04)
+
+
+### Features
+
+* enable scoping for components in compat package ([#11822](https://github.com/SAP/ui5-webcomponents/issues/11822)) ([55e1527](https://github.com/SAP/ui5-webcomponents/commit/55e15276755b5a5a8c9b84f705fb04ddb1dc4634))
+
+
+
+
+
+# [2.12.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.12.0-rc.2...v2.12.0-rc.3) (2025-07-03)
+
+
+### Bug Fixes
+
+* **framework:** avoid unnecessary renderings ([#11782](https://github.com/SAP/ui5-webcomponents/issues/11782)) ([e6daa12](https://github.com/SAP/ui5-webcomponents/commit/e6daa1223f745ed6d0080f9cb3c65a245e537aa8))
+
+
+
+
+
+# [2.12.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.12.0-rc.1...v2.12.0-rc.2) (2025-06-26)
+
+
+### Bug Fixes
+
+* **popups:** fix finding initial focus when Tokenizer is placed ([#11761](https://github.com/SAP/ui5-webcomponents/issues/11761)) ([26de583](https://github.com/SAP/ui5-webcomponents/commit/26de583eae0533d7ecd16a0a0aa4b583ec7df6f6))
+
+
+
+
+
+# [2.12.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.12.0-rc.0...v2.12.0-rc.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* **framework:** wait cldr to be loaded ([#11643](https://github.com/SAP/ui5-webcomponents/issues/11643)) ([f8e9cbd](https://github.com/SAP/ui5-webcomponents/commit/f8e9cbdff4e376666aa7589d1dcff1c543711290))
+* **popups:** fix finding correct focusable element ([#11700](https://github.com/SAP/ui5-webcomponents/issues/11700)) ([972fddf](https://github.com/SAP/ui5-webcomponents/commit/972fddf32ff168aef8af0772d6bc4cc5ae4a7044))
+
+
+
+
+
+# [2.12.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0...v2.12.0-rc.0) (2025-06-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.11.0](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0-rc.4...v2.11.0) (2025-06-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.11.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0-rc.3...v2.11.0-rc.4) (2025-06-05)
+
+
+### Bug Fixes
+
+* **ssr-dom-shim:** add `hidePopover` method ([#11636](https://github.com/SAP/ui5-webcomponents/issues/11636)) ([7a17a3e](https://github.com/SAP/ui5-webcomponents/commit/7a17a3e94571f2c2cf2877b3cb6e4bd06cbe5ca1)), closes [#11635](https://github.com/SAP/ui5-webcomponents/issues/11635)
+* **ui5-popover:** don't close popover when click on opener iframe ([#11517](https://github.com/SAP/ui5-webcomponents/issues/11517)) ([ce89e8e](https://github.com/SAP/ui5-webcomponents/commit/ce89e8efda220f9f95d91c9a22c9a847951decc8))
+
+
+
+
+
+# [2.11.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0-rc.2...v2.11.0-rc.3) (2025-05-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.11.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0-rc.1...v2.11.0-rc.2) (2025-05-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.11.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.11.0-rc.0...v2.11.0-rc.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* **f6navigation:** delegate fast navigation to openui5 ([#11505](https://github.com/SAP/ui5-webcomponents/issues/11505)) ([b23ee41](https://github.com/SAP/ui5-webcomponents/commit/b23ee41258835e0561e175150a099e0d9669a977)), closes [#10462](https://github.com/SAP/ui5-webcomponents/issues/10462)
+
+
+### Features
+
+* **f6navigation:** add option to bypass groups ([#11494](https://github.com/SAP/ui5-webcomponents/issues/11494)) ([7039c24](https://github.com/SAP/ui5-webcomponents/commit/7039c24d260406d8b69883fe843de1b5c3cdc819))
+
+
+
+
+
+# [2.11.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.10.0...v2.11.0-rc.0) (2025-05-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.10.0](https://github.com/SAP/ui5-webcomponents/compare/v2.10.0-rc.3...v2.10.0) (2025-05-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.10.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.10.0-rc.2...v2.10.0-rc.3) (2025-05-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.10.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.10.0-rc.1...v2.10.0-rc.2) (2025-04-24)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.10.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.10.0-rc.0...v2.10.0-rc.1) (2025-04-17)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.10.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.9.1-rc.0...v2.10.0-rc.0) (2025-04-14)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+## [2.9.1-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.9.0...v2.9.1-rc.0) (2025-04-10)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.9.0](https://github.com/SAP/ui5-webcomponents/compare/v2.9.0-rc.3...v2.9.0) (2025-04-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.9.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.9.0-rc.2...v2.9.0-rc.3) (2025-04-03)
+
+
+### Bug Fixes
+
+* **framework:** fix fetching "id" (indonesian) language ([#11251](https://github.com/SAP/ui5-webcomponents/issues/11251)) ([9a36df5](https://github.com/SAP/ui5-webcomponents/commit/9a36df5dc2191758abd665d6fb1014d645e322f7)), closes [#11233](https://github.com/SAP/ui5-webcomponents/issues/11233)
+
+
+
+
+
+# [2.9.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.9.0-rc.1...v2.9.0-rc.2) (2025-03-27)
+
+
+### Bug Fixes
+
+* **framework:** .d.ts errors that require skipLibCheck ([#11189](https://github.com/SAP/ui5-webcomponents/issues/11189)) ([92f0e68](https://github.com/SAP/ui5-webcomponents/commit/92f0e68c3b3b71ff27f707621b8b3da2248a2719))
+* **framework:** fix find first focusable element ([#10984](https://github.com/SAP/ui5-webcomponents/issues/10984)) ([40303d5](https://github.com/SAP/ui5-webcomponents/commit/40303d54ce3fcc06ad980e12224be9f13ce8a983))
+
+
+
+
+
+# [2.9.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v2.9.0-rc.0...v2.9.0-rc.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* keep export paths in base in sync ([#11082](https://github.com/SAP/ui5-webcomponents/issues/11082)) ([8620ac8](https://github.com/SAP/ui5-webcomponents/commit/8620ac8823256ecf34ba70b4c06210253a3e5d14))
+
+
+
+
+
+# [2.9.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.8.1-rc.0...v2.9.0-rc.0) (2025-03-13)
+
+
+### Bug Fixes
+
+* **ui5-tabcontainer:** allow browser refresh shortcut to work ([#11035](https://github.com/SAP/ui5-webcomponents/issues/11035)) ([a4a0f02](https://github.com/SAP/ui5-webcomponents/commit/a4a0f028f44a60fd6caea0f4ecdac49b0289270d))
+
+
+
+
+
+## [2.8.1-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v2.8.0...v2.8.1-rc.0) (2025-03-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.8.0](https://github.com/SAP/ui5-webcomponents/compare/v2.8.0-rc.3...v2.8.0) (2025-03-04)
+
+
+### Features
+
+* **framework:** add `.currentTarget` to the type of event handler in TSX and UI5CustomEvent ([#10957](https://github.com/SAP/ui5-webcomponents/issues/10957)) ([f56753c](https://github.com/SAP/ui5-webcomponents/commit/f56753c5142d6e817b05d7e33bd160f09c2d5205))
+
+
+
+
+
+# [2.8.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v2.8.0-rc.2...v2.8.0-rc.3) (2025-02-27)
+
+
+### Bug Fixes
+
+* i18n bundle storage ([#10924](https://github.com/SAP/ui5-webcomponents/issues/10924)) ([e5456fb](https://github.com/SAP/ui5-webcomponents/commit/e5456fba557ab339ddcf6d933284a2b51155fa33)), closes [#10521](https://github.com/SAP/ui5-webcomponents/issues/10521)
+* **ui5-popover, ui5-dialog:** fix finding keyboard focusable scroll containers ([#10891](https://github.com/SAP/ui5-webcomponents/issues/10891)) ([ed26b90](https://github.com/SAP/ui5-webcomponents/commit/ed26b9051ef02772d748de463b9b3084de12ebe8))
+* **ui5-popover, ui5-dialog:** fix preventDefault for before-open and before-close events ([#10883](https://github.com/SAP/ui5-webcomponents/issues/10883)) ([e32e7ba](https://github.com/SAP/ui5-webcomponents/commit/e32e7ba83e4a950a7ad4745c302cc34b57c4cb8e))
+
+
+
+
+
 # [2.8.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v2.8.0-rc.1...v2.8.0-rc.2) (2025-02-20)
 
 

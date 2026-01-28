@@ -10,6 +10,7 @@ import {
 	isEnter,
 	isEscape,
 	isShift,
+	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
@@ -29,10 +30,19 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import ButtonDesign from "./types/ButtonDesign.js";
 import ButtonType from "./types/ButtonType.js";
 import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
-import type ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
+import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
-import { BUTTON_ARIA_TYPE_ACCEPT, BUTTON_ARIA_TYPE_REJECT, BUTTON_ARIA_TYPE_EMPHASIZED } from "./generated/i18n/i18n-defaults.js";
+import {
+	BUTTON_ARIA_TYPE_ACCEPT,
+	BUTTON_ARIA_TYPE_REJECT,
+	BUTTON_ARIA_TYPE_EMPHASIZED,
+	BUTTON_ARIA_TYPE_ATTENTION,
+	BUTTON_BADGE_ONE_ITEM,
+	BUTTON_BADGE_MANY_ITEMS,
+	BUTTON_ROLE_DESCRIPTION,
+	LINK_ROLE_DESCRIPTION,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import buttonCss from "./generated/themes/Button.css.js";
@@ -48,7 +58,15 @@ interface IButton extends HTMLElement, ITabbable {
 let isGlobalHandlerAttached = false;
 let activeButton: Button | null = null;
 
-type ButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "hasPopup" | "controls">;
+type ButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "hasPopup" | "controls" | "ariaKeyShortcuts" | "ariaLabel">;
+
+type ButtonClickEventDetail = {
+	originalEvent: MouseEvent,
+	altKey: boolean;
+	ctrlKey: boolean;
+	metaKey: boolean;
+	shiftKey: boolean;
+}
 
 /**
  * @class
@@ -93,6 +111,23 @@ type ButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | 
 	shadowRootOptions: { delegatesFocus: true },
 })
 /**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.10.0
+ * @public
+ * @param {Event} originalEvent Returns original event that comes from user's **click** interaction
+ * @param {boolean} altKey Returns whether the "ALT" key was pressed when the event was triggered.
+ * @param {boolean} ctrlKey Returns whether the "CTRL" key was pressed when the event was triggered.
+ * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
+ * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
+ */
+@event("click", {
+	bubbles: true,
+	cancelable: true,
+})
+/**
  * Fired whenever the active state of the component changes.
  * @private
  */
@@ -102,6 +137,7 @@ type ButtonAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | 
 })
 class Button extends UI5Element implements IButton {
 	eventDetails!: {
+		"click": ButtonClickEventDetail,
 		"active-state-change": void,
 	};
 
@@ -202,6 +238,11 @@ class Button extends UI5Element implements IButton {
 	 * - **hasPopup**: Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by the button.
 	 * Accepts the following string values: `dialog`, `grid`, `listbox`, `menu` or `tree`.
 	 *
+	 * - **ariaLabel**: Defines the accessible ARIA name of the component.
+	 * Accepts any string value.
+	 *
+	 *  - **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or give focus to the button.
+	 *
 	 * - **controls**: Identifies the element (or elements) whose contents or presence are controlled by the button element.
 	 * Accepts a lowercase string value.
 	 *
@@ -280,7 +321,28 @@ class Button extends UI5Element implements IButton {
 	nonInteractive = false;
 
 	/**
-	 * The current title of the button, either the tooltip property or the icons tooltip. The tooltip property with higher prio.
+	 * Defines whether the button shows a loading indicator.
+	 *
+	 * **Note:** If set to `true`, a busy indicator component will be displayed on the related button.
+	 * @default false
+	 * @public
+	 * @since 2.13.0
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
+	/**
+	 * Specifies the delay in milliseconds before the loading indicator appears within the associated button.
+	 * @default 1000
+	 * @public
+	 * @since 2.13.0
+	 */
+	@property({ type: Number })
+	loadingDelay = 1000;
+
+	/**
+	 * The button's current title is determined by either the `tooltip` property or the icon's tooltip, with the `tooltip`
+	 * property taking precedence if both are set.
 	 * @private
 	 */
 	@property({ noAttribute: true })
@@ -309,6 +371,9 @@ class Button extends UI5Element implements IButton {
 	@property({ type: Boolean, noAttribute: true })
 	_cancelAction = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_isSpacePressed = false;
+
 	/**
 	 * Defines the text of the component.
 	 *
@@ -327,10 +392,11 @@ class Button extends UI5Element implements IButton {
 	badge!: Array<ButtonBadge>;
 
 	_deactivate: () => void;
+	_onclickBound: (e: MouseEvent) => void;
+	_clickHandlerAttached = false;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
-
 	constructor() {
 		super();
 		this._deactivate = () => {
@@ -338,6 +404,19 @@ class Button extends UI5Element implements IButton {
 				activeButton._setActiveState(false);
 			}
 		};
+
+		this._onclickBound = e => {
+			if (e instanceof CustomEvent) {
+				return;
+			}
+
+			this._onclick(e);
+		};
+
+		if (!this._clickHandlerAttached) {
+			this.addEventListener("click", this._onclickBound);
+			this._clickHandlerAttached = true;
+		}
 
 		if (!isGlobalHandlerAttached) {
 			document.addEventListener("mouseup", this._deactivate);
@@ -358,6 +437,22 @@ class Button extends UI5Element implements IButton {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+
+		if (!this._clickHandlerAttached) {
+			this.addEventListener("click", this._onclickBound);
+			this._clickHandlerAttached = true;
+		}
+	}
+
+	onExitDOM() {
+		if (this._clickHandlerAttached) {
+			this.removeEventListener("click", this._onclickBound);
+			this._clickHandlerAttached = false;
+		}
+
+		if (activeButton === this) {
+			activeButton = null;
+		}
 	}
 
 	async onBeforeRendering() {
@@ -367,7 +462,8 @@ class Button extends UI5Element implements IButton {
 		this.hasEndIcon = !!this.endIcon;
 		this.iconOnly = this.isIconOnly;
 
-		this.buttonTitle = this.tooltip || await this.getDefaultTooltip();
+		const defaultTooltip = await this.getDefaultTooltip();
+		this.buttonTitle = this.iconOnly ? this.tooltip ?? defaultTooltip : this.tooltip;
 	}
 
 	_setBadgeOverlayStyle() {
@@ -380,8 +476,35 @@ class Button extends UI5Element implements IButton {
 		}
 	}
 
-	_onclick() {
+	_onclick(e: MouseEvent) {
+		e.stopImmediatePropagation();
+
 		if (this.nonInteractive) {
+			return;
+		}
+
+		if (this.loading) {
+			e.preventDefault();
+			return;
+		}
+
+		const {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		} = e;
+
+		const prevented = !this.fireDecoratorEvent("click", {
+			originalEvent: e,
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		});
+
+		if (prevented) {
+			e.preventDefault();
 			return;
 		}
 
@@ -408,7 +531,7 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_ontouchend(e: TouchEvent) {
-		if (this.disabled) {
+		if (this.disabled || this.loading) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -423,9 +546,13 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._cancelAction = isShift(e) || isEscape(e);
+		if (isShift(e) || isEscape(e)) {
+			this._cancelAction = true;
+		} else if (isSpace(e)) {
+			this._isSpacePressed = true;
+		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			this._setActiveState(true);
 		} else if (this._cancelAction) {
 			this._setActiveState(false);
@@ -433,11 +560,23 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this._cancelAction) {
-			e.preventDefault();
+		const isSpaceKey = isSpace(e);
+		const isCancelKey = isShift(e) || isEscape(e);
+
+		if (isSpaceKey || isSpaceShift(e)) {
+			if (this._cancelAction) {
+				this._cancelAction = false;
+				this._isSpacePressed = false;
+				e.preventDefault();
+				return;
+			}
+
+			this._isSpacePressed = false;
+		} else if (isCancelKey && !this._isSpacePressed) {
+			this._cancelAction = false;
 		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			if (this.active) {
 				this._setActiveState(false);
 			}
@@ -449,6 +588,9 @@ class Button extends UI5Element implements IButton {
 			return;
 		}
 
+		this._isSpacePressed = false;
+		this._cancelAction = false;
+
 		if (this.active) {
 			this._setActiveState(false);
 		}
@@ -457,15 +599,11 @@ class Button extends UI5Element implements IButton {
 	_setActiveState(active: boolean) {
 		const eventPrevented = !this.fireDecoratorEvent("active-state-change");
 
-		if (eventPrevented) {
+		if (eventPrevented || this.loading) {
 			return;
 		}
 
 		this.active = active;
-	}
-
-	get _hasPopup() {
-		return this.accessibilityAttributes.hasPopup;
 	}
 
 	get hasButtonType() {
@@ -481,6 +619,7 @@ class Button extends UI5Element implements IButton {
 			"Positive": BUTTON_ARIA_TYPE_ACCEPT,
 			"Negative": BUTTON_ARIA_TYPE_REJECT,
 			"Emphasized": BUTTON_ARIA_TYPE_EMPHASIZED,
+			"Attention": BUTTON_ARIA_TYPE_ATTENTION,
 		};
 	}
 
@@ -514,20 +653,75 @@ class Button extends UI5Element implements IButton {
 		return this.nonInteractive ? -1 : Number.parseInt(this.forcedTabIndex);
 	}
 
-	get showIconTooltip() {
-		return getEnableDefaultTooltips() && this.iconOnly && !this.tooltip;
-	}
-
 	get ariaLabelText() {
-		return getEffectiveAriaLabelText(this);
-	}
+		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || "";
+		const textContent = this.textContent || "";
+		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
-	get ariaDescribedbyText() {
-		return this.hasButtonType ? "ui5-button-hiddenText-type" : undefined;
+		// Use either the effective aria label text (if accessibleName is provided) or the button's text content
+		const mainLabelText = effectiveAriaLabelText || textContent;
+		const labelParts = [mainLabelText, internalLabelText].filter(part => part);
+		return labelParts.join(" ");
 	}
 
 	get ariaDescriptionText() {
-		return this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const accessibleDescription = this.accessibleDescription === "" ? undefined : this.accessibleDescription;
+		const typeLabelText = this.hasButtonType ? this.buttonTypeText : "";
+
+		const descriptionParts = [accessibleDescription, typeLabelText].filter(part => part);
+		return descriptionParts.length > 0 ? descriptionParts.join(" ") : undefined;
+	}
+
+	get _computedAccessibilityAttributes(): ButtonAccessibilityAttributes {
+		return {
+			expanded: this.accessibilityAttributes.expanded,
+			hasPopup: this.accessibilityAttributes.hasPopup,
+			controls: this.accessibilityAttributes.controls,
+			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
+			ariaLabel: this.accessibilityAttributes.ariaLabel || this.ariaLabelText,
+		};
+	}
+
+	get accessibilityInfo() {
+		return {
+			description: this.ariaDescriptionText,
+			role: this.effectiveAccRole,
+			disabled: this.disabled,
+			children: this.text,
+			type: this.effectiveAccRoleTranslation,
+		};
+	}
+
+	get effectiveAccRoleTranslation(): string {
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Button) {
+			return Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION);
+		}
+
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Link) {
+			return Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION);
+		}
+
+		return "";
+	}
+
+	get effectiveBadgeDescriptionText() {
+		if (!this.shouldRenderBadge) {
+			return "";
+		}
+
+		const badgeEffectiveText = this.badge[0].effectiveText;
+
+		// Use distinct i18n keys for singular and plural badge values to ensure proper localization.
+		// Some languages have different grammatical rules for singular and plural forms,
+		// so separate keys (BUTTON_BADGE_ONE_ITEM and BUTTON_BADGE_MANY_ITEMS) are necessary.
+		switch (badgeEffectiveText) {
+		case "":
+			return badgeEffectiveText;
+		case "1":
+			return Button.i18nBundle.getText(BUTTON_BADGE_ONE_ITEM, badgeEffectiveText);
+		default:
+			return Button.i18nBundle.getText(BUTTON_BADGE_MANY_ITEMS, badgeEffectiveText);
+		}
 	}
 
 	get _isSubmit() {
@@ -548,5 +742,6 @@ Button.define();
 export default Button;
 export type {
 	ButtonAccessibilityAttributes,
+	ButtonClickEventDetail,
 	IButton,
 };

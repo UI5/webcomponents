@@ -13,11 +13,14 @@
 	<!-- playground-fold-end -->
 	<ui5-dynamic-page class="page">
 		<ui5-dynamic-page-header style="height: 9.375rem;">
-			<ui5-shellbar id="shellbar" primary-title="Your Application">
-			<ui5-avatar slot="profile" id="avatar">
-				<img src="https://sap.github.io/ui5-webcomponents/nightly/images/avatars/woman_avatar_3.png" />
-			</ui5-avatar>
-			<img slot="logo" src="https://sap.github.io/ui5-webcomponents/nightly/images/sap-logo-svg.svg" />
+			<ui5-shellbar id="shellbar">
+				<ui5-shellbar-branding slot="branding">
+					Your Application
+					<img slot="logo" src="https://ui5.github.io/webcomponents/nightly/images/sap-logo-svg.svg" alt="SAP Logo"/>
+				</ui5-shellbar-branding>
+				<ui5-avatar slot="profile" id="avatar">
+					<img src="https://ui5.github.io/webcomponents/nightly/images/avatars/woman_avatar_3.png" alt="avatar"/>
+				</ui5-avatar>
 			</ui5-shellbar>
 			<ui5-ai-button
 				id="myAiButton"
@@ -62,15 +65,15 @@
 				</div>
 			</div>
 		</ui5-dynamic-page>
-		
+
 		<ui5-dialog id="dialog" state="Critical" header-text="Warning">
 		<ui5-text>
 			Regenerating will overwrite all fields with AI-generated content.<br>
-			Do you wish to proceed?
+			Do you want to continue?
 		</ui5-text>
-		<ui5-checkbox id="checkbox" style="margin-inline-start: -0.625rem;" text="Don't show this message again"></ui5-checkbox>
+		<ui5-checkbox id="checkbox" style="margin-inline-start: -0.625rem;" text="Don't ask me again"></ui5-checkbox>
 		<div slot="footer" class="dialog-footer">
-			<ui5-button design="Emphasized" id="dialogProceed">Proceed</ui5-button>
+			<ui5-button design="Emphasized" id="dialogProceed">Regenerate</ui5-button>
 			<ui5-button id="dialogCloser">Cancel</ui5-button>
 		</div>
 		</ui5-dialog>

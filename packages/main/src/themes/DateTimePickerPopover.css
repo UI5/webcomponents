@@ -1,3 +1,12 @@
+
+:host .ui5-date-picker-popover {
+	width: auto;
+}
+
+:host .ui5-date-picker-popover:not([on-phone]) .ui5-popover-header {
+	width: 20rem;
+}
+
 .ui5-dt-picker-content {
 	display: flex;
 	flex-direction: row;

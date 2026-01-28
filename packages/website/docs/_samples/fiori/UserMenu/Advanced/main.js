@@ -4,6 +4,7 @@ import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
@@ -54,12 +55,16 @@ menu.addEventListener("manage-account-click", function () {
 	console.log("Manage account clicked");
 });
 
-menu.addEventListener("add-account-click", function () {
-	console.log("Add account clicked");
+menu.addEventListener("edit-accounts-click", function () {
+	console.log("Edit accounts clicked");
 });
 
 menu.addEventListener("change-account", function (event) {
 	console.log("Change account account", event.detail);
+	event.detail.selectedAccount.loading = true;
+	setTimeout(function(){
+		event.detail.selectedAccount.loading = false;
+	}, 1000);
 });
 
 menu.addEventListener("sign-out-click", function (event) {

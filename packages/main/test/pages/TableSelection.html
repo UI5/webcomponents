@@ -94,6 +94,11 @@
 		combobox.addEventListener("change", () => {
 			selection.mode = combobox.value;
 		});
+
+		selection.addEventListener("change", (evt) => {
+			console.log("change event");
+			console.log("-----");
+		})
 	</script>
 </body>
 

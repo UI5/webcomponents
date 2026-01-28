@@ -14,6 +14,7 @@ import tableCellStyles from "./generated/themes/TableCell.css.js";
 import {
 	ARIA_LABEL_EMPTY_CELL,
 } from "./generated/i18n/i18n-defaults.js";
+import { patchScopingSuffix } from "./utils/CompatCustomElementsScope.js";
 
 /**
  * @class
@@ -25,6 +26,7 @@ import {
  * @extends UI5Element
  * @public
  * @csspart cell - Used to style the native `td` element
+ * @deprecated Deprecated as of version 2.12.0, use `@ui5/webcomponents/dist/TableCell.js` instead.
  */
 @customElement({
 	tag: "ui5-table-cell",
@@ -69,6 +71,8 @@ class TableCell extends UI5Element {
 		return TableCell.i18nBundle.getText(ARIA_LABEL_EMPTY_CELL);
 	}
 }
+
+patchScopingSuffix(TableCell);
 
 TableCell.define();
 

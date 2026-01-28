@@ -5,16 +5,17 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import type Button from "@ui5/webcomponents/dist/Button.js";
 import type WizardContentLayout from "./types/WizardContentLayout.js";
 import "./WizardStep.js";
 
@@ -30,6 +31,7 @@ import {
 	WIZARD_STEP_ARIA_LABEL,
 	WIZARD_STEP_ACTIVE,
 	WIZARD_STEP_INACTIVE,
+	WIZARD_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Step in header and content
@@ -178,7 +180,6 @@ type StepInfo = {
 	styles: [
 		WizardCss,
 		WizardPopoverCss,
-		getEffectiveScrollbarStyle(),
 	],
 	template: WizardTemplate,
 })
@@ -602,7 +603,7 @@ class Wizard extends UI5Element {
 		}
 	}
 
-	_onOverflowStepButtonClick(e: MouseEvent) {
+	_onOverflowStepButtonClick(e: UI5CustomEvent<Button, "click">) {
 		const tabs = Array.from(this.stepsInHeaderDOM);
 		const eTarget = e.target as HTMLElement;
 		const stepRefId = eTarget.getAttribute("data-ui5-header-tab-ref-id");
@@ -691,6 +692,10 @@ class Wizard extends UI5Element {
 		});
 
 		return contentHeight;
+	}
+
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
 	}
 
 	getStepAriaLabelText(step: WizardStep, ariaLabel: string) {
@@ -806,6 +811,10 @@ class Wizard extends UI5Element {
 
 	get ariaLabelText() {
 		return Wizard.i18nBundle.getText(WIZARD_NAV_ARIA_ROLE_DESCRIPTION);
+	}
+
+	get _dialogCancelButtonText() {
+		return Wizard.i18nBundle.getText(WIZARD_CANCEL_BUTTON);
 	}
 
 	get effectiveStepSwitchThreshold() {

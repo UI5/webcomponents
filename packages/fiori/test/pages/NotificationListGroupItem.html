@@ -14,11 +14,14 @@
 
 <body class="notificationlistgroupitem1auto">
 
-	<ui5-shellbar id="shellbar" primary-title="Product Title" show-notifications>
+	<ui5-shellbar id="shellbar" show-notifications>
+		<ui5-shellbar-branding slot="branding">Product Title</ui5-shellbar-branding>
 	</ui5-shellbar>
 	<ui5-button id="btnCompact">Toggle sapUiSizeCompact</ui5-button>
 
-	<ui5-shellbar id="shellbarGrowingAndSticky" primary-title="Notifications with Growing and Sticky" show-notifications notifications-count="n"></ui5-shellbar>
+	<ui5-shellbar id="shellbarGrowingAndSticky" show-notifications notifications-count="n">
+		<ui5-shellbar-branding slot="branding">Notifications with Growing and Sticky</ui5-shellbar-branding>
+	</ui5-shellbar>
 	<ui5-popover
 				id="popover-with-notifications"
 				placement="Bottom"

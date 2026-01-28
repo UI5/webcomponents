@@ -1,15 +1,16 @@
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 import Input from "../Input.js";
 import Icon from "../Icon.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 
 import List from "../List.js";
 import ResponsivePopover from "../ResponsivePopover.js";
 import Button from "../Button.js";
 import ListAccessibleRole from "../types/ListAccessibleRole.js";
 
-export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
+export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
 	const suggestionsList = hooks?.suggestionsList || defaultSuggestionsList;
+	// Mobile header hook - intended only for MultiInput design scenario
+	const mobileHeader = hooks?.mobileHeader;
 	const valueStateMessage = hooks?.valueStateMessage;
 	const valueStateMessageInputIcon = hooks?.valueStateMessageInputIcon;
 
@@ -35,13 +36,6 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
 							<span>{this._headerTitleText}</span>
-							<Button
-								class="ui5-responsive-popover-close-btn"
-								icon={decline}
-								design="Transparent"
-								onClick={this._closePicker}
-							>
-							</Button>
 						</div>
 						<div class="row">
 							<div class="input-root-phone native-input-wrapper">
@@ -52,45 +46,51 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 									showClearIcon={this.showClearIcon}
 									placeholder={this.placeholder}
 									onInput={this._handleInput}
-									onChange={this._handleChange}
 								/>
+								{mobileHeader?.call(this)}
 							</div>
 						</div>
-					</div>
 
-					{this.hasValueStateMessage &&
-					<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
-						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon?.call(this)} />
-						{ this.open && valueStateMessage?.call(this) }
+						{this.hasValueStateMessage &&
+							<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
+								<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon?.call(this)} />
+								{this.open && valueStateMessage?.call(this)}
+							</div>
+						}
 					</div>
-					}
 				</>
 			}
 
 			{!this._isPhone && this.hasValueStateMessage &&
-					<div
-						slot="header"
-						class={{
-							"ui5-responsive-popover-header": true,
-							"ui5-responsive-popover-header--focused": this._isValueStateFocused,
-							...this.classes.popoverValueState,
-						}}
-						style={this.styles.suggestionPopoverHeader}
-					>
-						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon?.call(this)} />
-						{ this.open && valueStateMessage?.call(this) }
-					</div>
+				<div
+					slot="header"
+					class={{
+						"ui5-responsive-popover-header": true,
+						...this.classes.popoverValueState,
+					}}
+					style={this.styles.suggestionPopoverHeader}
+				>
+					<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon?.call(this)} />
+					{this.open && valueStateMessage?.call(this)}
+				</div>
 			}
 
-			{ suggestionsList.call(this) }
+			{ this.showSuggestions && suggestionsList.call(this) }
 
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">
 					<Button
-						design="Transparent"
-						onClick={this._closePicker}
+						design="Emphasized"
+						onClick={this._confirmMobileValue}
 					>
-						OK
+						{this._suggestionsOkButtonText}
+					</Button>
+					<Button
+						class="ui5-responsive-popover-close-btn"
+						design="Transparent"
+						onClick={this._cancelMobileValue}
+					>
+						{this._suggestionsCancelButtonText}
 					</Button>
 				</div>
 			}

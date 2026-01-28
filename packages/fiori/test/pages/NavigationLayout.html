@@ -17,9 +17,9 @@
 	<ui5-navigation-layout id="nl1">
 		<ui5-shellbar
 			slot="header"
-			primary-title="UI5 Web Components"
 			secondary-title="The Best Run SAP"
 		>
+			<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
 			<ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
 		</ui5-shellbar>
 		<ui5-side-navigation id="sn1" slot="sideContent">
@@ -156,6 +156,42 @@
 				<p>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</p>
+			</div>
+			<div id="contSubitem3" class="contentItem">
+				<h2>Sub Item 3</h2>
+				<ui5-table id="table">
+					<ui5-table-selection-multi id="selection" slot="features" selected="Row1 Row3"></ui5-table-selection-multi>
+		<!-- playground-fold -->
+					<ui5-table-header-row slot="headerRow">
+						<ui5-table-header-cell id="produtCol" width="1fr"><span>Product</span></ui5-table-header-cell>
+						<ui5-table-header-cell id="supplierCol" width="1fr">Supplier</ui5-table-header-cell>
+						<ui5-table-header-cell id="dimensionsCol" width="1fr">Dimensions</ui5-table-header-cell>
+						<ui5-table-header-cell id="weightCol" width="1fr">Weight</ui5-table-header-cell>
+						<ui5-table-header-cell id="priceCol" width="1fr" horizontal-align="End">Price</ui5-table-header-cell>
+					</ui5-table-header-row>
+					<ui5-table-row row-key="Row1">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br>HT-1000</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+					<ui5-table-row row-key="Row2">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 17</b><br>HT-1001</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>29 x 17 x 3.1 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.5</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+					<ui5-table-row row-key="Row3">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 18</b><br>HT-1002</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>3.7</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+		<!-- playground-fold-end -->
+				</ui5-table>
 			</div>
 		</div>
 	</ui5-navigation-layout>

@@ -7,7 +7,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import type { IInputSuggestionItem, InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
+import type { IInputSuggestionItem } from "@ui5/webcomponents/dist/Input.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import {
 	isEnter,
@@ -21,6 +21,7 @@ import PromptInputTemplate from "./PromptInputTemplate.js";
 
 // Styles
 import PromptInputCss from "./generated/themes/PromptInput.css.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 
 /**
  * @class
@@ -38,6 +39,7 @@ import PromptInputCss from "./generated/themes/PromptInput.css.js";
  * @public
  * @extends UI5Element
  * @experimental The **@ui5/webcomponents-ai** package is under development and considered experimental - components' APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  */
 @customElement({
 	tag: "ui5-ai-prompt-input",
@@ -229,8 +231,8 @@ class PromptInput extends UI5Element {
 		}
 	}
 
-	_onInnerInput(e: CustomEvent<InputEventDetail>) {
-		this.value = (e.target as Input).value;
+	_onInnerInput(e: UI5CustomEvent<Input, "input">) {
+		this.value = e.currentTarget.value;
 
 		this.fireDecoratorEvent("input");
 	}
@@ -243,8 +245,8 @@ class PromptInput extends UI5Element {
 		this.fireDecoratorEvent("submit");
 	}
 
-	_onTypeAhead(e: CustomEvent): void {
-		this.value = (e.target as Input).value;
+	_onTypeAhead(e: UI5CustomEvent<Input, "type-ahead">): void {
+		this.value = e.currentTarget.value;
 	}
 
 	get _exceededText() {

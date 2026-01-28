@@ -77,7 +77,7 @@
 	width: 100%;
 	color: var(--sapTextColor);
 	line-height: 1.2;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 }
 
@@ -211,14 +211,14 @@
 }
 
 :host([design="ColorSet2"]) .ui5-message-strip-close-button,
-:host([design="ColorSet2"]) .ui5-message-strip-root ::slotted([slot="icon"]) { 
+:host([design="ColorSet2"]) .ui5-message-strip-root ::slotted([slot="icon"]) {
 	color: var(--sapContent_IconColor);
 }
 
 :host([design="ColorSet1"]) .ui5-message-strip-close-button:hover {
 	border-color: var(--sapContent_ContrastIconColor);
 	background-color: var(--_ui5_message_strip_close_button_color_set_1_background);
-	color: var(--_ui5_message_strip_close_button_color_set_1_hover_color);
+	color: var(--_ui5_message_strip_close_button_color_set_1_color);
 	text-shadow: var(--sapContent_ContrastTextShadow);
 }
 

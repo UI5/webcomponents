@@ -3,7 +3,6 @@
 :root {
 	--_ui5_panel_focus_border: 0.125rem dotted var(--sapContent_FocusColor);
 	--_ui5_panel_default_header_border: 0.0625rem solid var(--sapGroup_TitleBorderColor);
-	--_ui5_panel_outline_offset: -0.125rem;
 	--_ui5_panel_icon_color: var(--sapButton_Lite_TextColor);
 	--_ui5_panel_content_padding: 0.625rem 1rem;
 	--_ui5_panel_header_background_color: var(--sapGroup_TitleBackground);

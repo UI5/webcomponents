@@ -1,0 +1,27 @@
+:host([value-state="Negative"]:not([readonly]):not([disabled])) {
+	--ui5_value_state-background: var(--sapField_InvalidBackgroundStyle);
+	--ui5_value_state-background-color: var(--sapField_InvalidBackground);
+	--ui5_value_state-box-shadow: var(--sapField_InvalidShadow);
+	--ui5_value_state-focus-outline: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+}
+
+:host([value-state="Critical"]:not([readonly]):not([disabled])) {
+	--ui5_value_state-background: var(--sapField_WarningBackgroundStyle);
+	--ui5_value_state-background-color: var(--sapField_WarningBackground);
+	--ui5_value_state-box-shadow: var(--sapField_WarningShadow);
+	--ui5_value_state-focus-outline: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+}
+
+:host([value-state="Positive"]:not([readonly]):not([disabled])) {
+	--ui5_value_state-background: var(--sapField_SuccessBackgroundStyle);
+	--ui5_value_state-background-color: var(--sapField_SuccessBackground);
+	--ui5_value_state-box-shadow: var(--sapField_SuccessShadow);
+	--ui5_value_state-focus-outline: var(--_ui5_input_focused_value_state_success_focus_outline_color);
+}
+
+:host([value-state="Information"]:not([readonly]):not([disabled])) {
+	--ui5_value_state-background: var(--sapField_InformationBackgroundStyle);
+	--ui5_value_state-background-color: var(--sapField_InformationBackground);
+	--ui5_value_state-box-shadow: var(--sapField_InformationShadow);
+	--ui5_value_state-focus-outline: var(--_ui5_input_focused_value_state_information_focus_outline_color);
+}

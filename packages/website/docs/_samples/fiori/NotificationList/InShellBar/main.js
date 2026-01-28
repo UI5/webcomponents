@@ -15,6 +15,7 @@ import "@ui5/webcomponents-icons/dist/expense-report.js";
 import "@ui5/webcomponents/dist/Link.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
 import "@ui5/webcomponents-fiori/dist/NotificationListItem.js";

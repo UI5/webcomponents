@@ -13,7 +13,7 @@
 @import "./CheckBox-parameters.css";
 @import "./ColorPalette-parameters.css";
 @import "./ColorPicker-parameters.css";
-@import "./DatePicker-parameters.css";
+@import "../base/DatePicker-parameters.css";
 @import "./DayPicker-parameters.css";
 @import "./Dialog-parameters.css";
 @import "./FileUploader-parameters.css";
@@ -44,14 +44,13 @@
 @import "./GrowingButton-parameters.css";
 @import "../base/Text-parameters.css";
 @import "./TextArea-parameters.css";
-@import "./TimePicker-parameters.css";
+@import "../base/TimePicker-parameters.css";
 @import "../base/Toast-parameters.css";
-@import "./ToggleButton-parameters.css";
+@import "../base/ToggleButton-parameters.css";
 @import "./YearPicker-parameters.css";
 @import "./Token-parameters.css";
 @import "../base/Tokenizer-parameters.css";
 @import "./ValueStateMessage-parameters.css";
-@import "../base/MultiComboBox-parameters.css";
 @import "./SliderBase-parameters.css";
 @import "../base/StepInput-parameters.css";
 @import "./sizes-parameters.css";

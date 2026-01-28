@@ -1,6 +1,6 @@
-import { isClickInRect } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import type { Interval } from "@ui5/webcomponents-base/dist/types.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import getParentElement from "@ui5/webcomponents-base/dist/util/getParentElement.js";
 import type Popover from "../Popover.js";
 import { instanceOfPopover } from "../Popover.js";
 import { getOpenedPopups, addOpenedPopup, removeOpenedPopup } from "./OpenedPopupsRegistry.js";
@@ -21,8 +21,23 @@ const repositionPopovers = () => {
 };
 
 const closePopoversIfLostFocus = () => {
-	if (getActiveElement()!.tagName === "IFRAME") {
-		getRegistry().reverse().forEach(popup => popup.instance.closePopup(false, false, true));
+	let activeElement = getActiveElement();
+
+	if (activeElement!.tagName === "IFRAME") {
+		getRegistry().reverse().forEach(popup => {
+			const popover = popup.instance;
+			const opener = popover.getOpenerHTMLElement(popover.opener);
+
+			while (activeElement) {
+				if (activeElement === opener) {
+					return;
+				}
+
+				activeElement = getParentElement(activeElement);
+			}
+
+			popover.closePopup(false, false, true);
+		});
 	}
 };
 
@@ -55,11 +70,11 @@ const detachScrollHandler = (popover: Popover) => {
 };
 
 const attachGlobalClickHandler = () => {
-	document.addEventListener("mousedown", clickHandler);
+	document.addEventListener("mousedown", clickHandler, { capture: true });
 };
 
 const detachGlobalClickHandler = () => {
-	document.removeEventListener("mousedown", clickHandler);
+	document.removeEventListener("mousedown", clickHandler, { capture: true });
 };
 
 const clickHandler = (event: MouseEvent) => {
@@ -76,16 +91,20 @@ const clickHandler = (event: MouseEvent) => {
 	}
 
 	// loop all open popovers
-	for (let i = (openedPopups.length - 1); i !== -1; i--) {
+	for (let i = openedPopups.length - 1; i !== -1; i--) {
 		const popup = openedPopups[i].instance;
 
-		// if popup is modal, opener is clicked, popup is dialog skip closing
-		if (popup.isModal || (popup as Popover).isOpenerClicked(event)) {
+		if (!instanceOfPopover(popup)) {
 			return;
 		}
 
-		if (isClickInRect(event, popup.getBoundingClientRect())) {
-			break;
+		// if popup is modal, opener is clicked, popup is dialog skip closing
+		if (popup.isModal || popup.isOpenerClicked(event)) {
+			return;
+		}
+
+		if (popup.isClicked(event)) {
+			return;
 		}
 
 		popup.closePopup();

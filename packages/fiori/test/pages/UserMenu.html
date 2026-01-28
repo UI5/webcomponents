@@ -21,18 +21,22 @@
 
 <body>
 
-<ui5-shellbar id="shellbar" primary-title="Corporate Portal">
+<ui5-shellbar id="shellbar">
+	<ui5-shellbar-branding slot="branding">
+		Corporate Portal
+		<img slot="logo" src="./img/sap-logo-svg.svg" />
+	</ui5-shellbar-branding>
 	<ui5-avatar slot="profile">
 		<img src="./img/man_avatar_1.png"/>
 	</ui5-avatar>
-	<img slot="logo" src="./img/sap-logo-svg.svg" />
 </ui5-shellbar>
-<ui5-user-menu id="userMenuShellBar" show-manage-account show-other-accounts show-add-account show-edit-button>
+<ui5-user-menu id="userMenuShellBar" show-manage-account show-other-accounts show-edit-accounts show-edit-button>
 	<ui5-user-menu-account slot="accounts"
 						   avatar-src="./img/man_avatar_1.png"
 						   title-text="Alain Chevalier 1"
 						   subtitle-text="alian.chevalier@sap.com"
 						   description="Delivery Manager, SAP SE"
+						   additional-info="Primary Employment"
 						   selected>
 	</ui5-user-menu-account>
 	<ui5-user-menu-account slot="accounts"
@@ -46,11 +50,23 @@
 						   description="Account Manager">
 	</ui5-user-menu-account>
 	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="official-service" text="Legal Information">
+	<ui5-user-menu-item icon="globe" text="Account action" data-id="account-action1"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2">
 		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="official-service" text="Legal Information"></ui5-user-menu-item>
+	<ui5-user-menu-item text="Multiple Select" data-id="multiple-select">
+		<ui5-user-menu-item-group check-mode="Multiple">
+			<ui5-user-menu-item text="Item 1" data-id="multi-select-item1"></ui5-user-menu-item>
+			<ui5-user-menu-item icon="accelerated" text="Item 2" data-id="multi-select-item2"></ui5-user-menu-item>
+		</ui5-user-menu-item-group>
+	</ui5-user-menu-item>
+	<ui5-user-menu-item text="Single Select" data-id="single-select">
+		<ui5-user-menu-item-group check-mode="Single">
+			<ui5-user-menu-item icon="private" text="Item 1" data-id="single-select"></ui5-user-menu-item>
+			<ui5-user-menu-item icon="accelerated" text="Item 2" data-id="single-select-item2"></ui5-user-menu-item>
+		</ui5-user-menu-item-group>
 	</ui5-user-menu-item>
 </ui5-user-menu>
 
@@ -67,10 +83,11 @@
 	</ui5-user-menu-account>
 	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
 	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="official-service" text="Legal Information">
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2">
 		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="official-service" text="Legal Information">
 	</ui5-user-menu-item>
 </ui5-user-menu>
 <ui5-title level="H5" class="header-title">Text Direction</ui5-title>
@@ -136,8 +153,8 @@
 		console.log("Manage account clicked");
 	});
 
-	menu.addEventListener("add-account-click", function () {
-		console.log("Add account clicked");
+	menu.addEventListener("edit-accounts-click", function () {
+		console.log("Edit accounts clicked");
 	});
 
 	menu.addEventListener("open", function (event) {
@@ -182,6 +199,12 @@
 		}
 	});
 
+	menuShellBar.addEventListener("ui5-check", function (event) {
+		console.log("Check event fired for item: " + event.target.text);
+		console.log("Checked state: " + event.target.checked);
+		console.log(event.target);
+	});
+
 	menuShellBar.addEventListener("avatar-click", function () {
 		console.log("Avatar clicked");
 	});
@@ -190,13 +213,16 @@
 		console.log("Manage account clicked");
 	});
 
-	menuShellBar.addEventListener("add-account-click", function () {
-		console.log("Add account clicked");
+	menuShellBar.addEventListener("edit-accounts-click", function () {
+		console.log("Edit accounts clicked");
 	});
 
 	menuShellBar.addEventListener("change-account", function (event) {
 		console.log("Change account account", event.detail);
-	});
+		event.detail.selectedAccount.loading=true;
+		setTimeout(function(){
+			event.detail.selectedAccount.loading=false;
+		}, 1000);	});
 
 	menuShellBar.addEventListener("sign-out-click", function (event) {
 		console.log("Sign Out clicked");

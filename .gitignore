@@ -11,6 +11,9 @@ dist
 coverage
 .nyc_output
 
+# Cypress internal logs
+cypress-logs
+
 # scoping feature generated entry points for vite consumption
 packages/compat/test/pages/scoped
 packages/main/test/pages/scoped
@@ -35,11 +38,19 @@ web.config
 .vscode/
 .idea/
 
-# Ignore yarn files
+# Ignore yarn v1 files
 yarn-error.log*
 yarn-debug.log*
 .yarn-integrity
 
+# yarn 4 non-zero installs
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # Playground
 packages/playground/_site/

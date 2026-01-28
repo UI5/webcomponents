@@ -407,6 +407,9 @@
     "CssCustomProperty": {
       "additionalProperties": false,
       "properties": {
+        "inheritedFrom": {
+          "$ref": "#/definitions/Reference"
+        },
         "default": {
           "type": "string"
         },
@@ -443,6 +446,9 @@
       "additionalProperties": false,
       "description": "The description of a CSS Part",
       "properties": {
+        "inheritedFrom": {
+          "$ref": "#/definitions/Reference"
+        },
         "deprecated": {
           "description": "Whether the CSS shadow part is deprecated.\nIf the value is a string, it's the reason for the deprecation.",
           "type": [
@@ -1222,6 +1228,9 @@
     "Slot": {
       "additionalProperties": false,
       "properties": {
+        "inheritedFrom": {
+          "$ref": "#/definitions/Reference"
+        },
         "_ui5propertyName": {
           "type": "string"
         },

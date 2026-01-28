@@ -2,14 +2,12 @@
 
 :host {
 	font-size: var(--sapFontSmallSize);
-	font-family: var(--sapFontSemiboldFamily);
 	color: var(--sapContent_LabelColor);
 }
 
 .ui5-sn-item.ui5-sn-item-group {
 	min-height: 2rem;
 	padding-inline-start: var(--_ui5_side_navigation_group_padding);;
-	gap: 0.4375rem;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 }

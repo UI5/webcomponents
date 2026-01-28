@@ -55,15 +55,34 @@ class DateComponentBase extends UI5Element {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
+	 * @deprecated Use displayFormat and valueFormat instead
 	 * @public
 	 */
 	@property()
 	formatPattern?: string;
 
 	/**
+	 * Determines the format, displayed in the input field.
+	 * @default undefined
+	 * @since 2.14.0
+	 * @public
+	 */
+	@property()
+	displayFormat?: string;
+
+	/**
+	 * Determines the format, used for the value attribute.
+	 * @default undefined
+	 * @since 2.14.0
+	 * @public
+	 */
+	@property()
+	valueFormat?: string;
+
+	/**
 	 * Determines the minimum date available for selection.
 	 *
-	 * **Note:** If the formatPattern property is not set, the minDate value must be provided in the ISO date format (YYYY-MM-dd).
+	 * **Note:** If the formatPattern property is not set, the minDate value must be provided in the ISO date format (yyyy-MM-dd).
 	 * @default ""
 	 * @since 1.0.0-rc.6
 	 * @public
@@ -74,7 +93,7 @@ class DateComponentBase extends UI5Element {
 	/**
 	 * Determines the maximum date available for selection.
 	 *
-	 * **Note:** If the formatPattern property is not set, the maxDate value must be provided in the ISO date format (YYYY-MM-dd).
+	 * **Note:** If the formatPattern property is not set, the maxDate value must be provided in the ISO date format (yyyy-MM-dd).
 	 * @default ""
 	 * @since 1.0.0-rc.6
 	 * @public
@@ -96,7 +115,7 @@ class DateComponentBase extends UI5Element {
 	static i18nBundle?: I18nBundle;
 
 	/**
-	 * Cached instance of DateFormat with a format pattern of "YYYY-MM-dd".
+	 * Cached instance of DateFormat with a format pattern of "yyyy-MM-dd".
 	 * Used by the getISOFormat method to avoid creating a new DateFormat instance on each call.
 	 * @private
 	 */
@@ -136,11 +155,23 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get _formatPattern() {
-		return this.formatPattern || "medium"; // get from config
+		return this.formatPattern || this.valueFormat || "medium"; // get from config
 	}
 
 	get _isPattern() {
 		return this._formatPattern !== "medium" && this._formatPattern !== "short" && this._formatPattern !== "long";
+	}
+
+	get _isValueFormatPattern() {
+		return this._valueFormat !== "medium" && this._valueFormat !== "short" && this._valueFormat !== "long";
+	}
+
+	get _isDisplayFormatPattern() {
+		return this._displayFormat !== "medium" && this._displayFormat !== "short" && this._displayFormat !== "long";
+	}
+
+	get initialFocusId(): string {
+		return `${this._id}-calendar`;
 	}
 
 	get hasSecondaryCalendarType() {
@@ -159,7 +190,14 @@ class DateComponentBase extends UI5Element {
 	}
 
 	_getCalendarDateFromString(value: string) {
-		const jsDate = this.getFormat().parse(value) as Date;
+		const jsDate = this.getValueFormat().parse(value) as Date;
+		if (jsDate) {
+			return CalendarDate.fromLocalJSDate(jsDate, this._primaryCalendarType);
+		}
+	}
+
+	_getCalendarDateFromStringDisplayValue(value: string) {
+		const jsDate = this.getDisplayFormat().parse(value) as Date;
 		if (jsDate) {
 			return CalendarDate.fromLocalJSDate(jsDate, this._primaryCalendarType);
 		}
@@ -173,8 +211,30 @@ class DateComponentBase extends UI5Element {
 	}
 
 	_getStringFromTimestamp(timestamp: number) {
+		if (!timestamp) {
+			return "";
+		}
+
 		const localDate = UI5Date.getInstance(timestamp);
 		return this.getFormat().format(localDate, true);
+	}
+
+	_getDisplayStringFromTimestamp(timestamp: number) {
+		if (!timestamp) {
+			return "";
+		}
+
+		const localDate = UI5Date.getInstance(timestamp);
+		return this.getDisplayFormat().format(localDate, true);
+	}
+
+	_getValueStringFromTimestamp(timestamp: number) {
+		if (!timestamp) {
+			return "";
+		}
+
+		const localDate = UI5Date.getInstance(timestamp);
+		return this.getValueFormat().format(localDate, true);
 	}
 
 	getFormat() {
@@ -191,11 +251,63 @@ class DateComponentBase extends UI5Element {
 			});
 	}
 
+	get _displayFormat() {
+		if (this.displayFormat) {
+			return this.displayFormat;
+		}
+
+		return this._formatPattern;
+	}
+
+	get _valueFormat() {
+		if (this.valueFormat) {
+			return this.valueFormat;
+		}
+
+		if (this._formatPattern) {
+			return this._formatPattern;
+		}
+
+		return "";
+	}
+
+	getDisplayFormat() {
+		return this._isDisplayFormatPattern
+			? DateFormat.getDateInstance({
+				strictParsing: true,
+				pattern: this._displayFormat,
+				calendarType: this._primaryCalendarType,
+			})
+			: DateFormat.getDateInstance({
+				strictParsing: true,
+				style: this._displayFormat,
+				calendarType: this._primaryCalendarType,
+			});
+	}
+
+	getValueFormat() {
+		if (!this._valueFormat) {
+			return this.getISOFormat();
+		}
+
+		return this._isValueFormatPattern
+			? DateFormat.getDateInstance({
+				strictParsing: true,
+				pattern: this._valueFormat,
+				calendarType: this._primaryCalendarType,
+			})
+			: DateFormat.getDateInstance({
+				strictParsing: true,
+				style: this._valueFormat,
+				calendarType: this._primaryCalendarType,
+			});
+	}
+
 	getISOFormat() {
 		if (!this._isoFormatInstance) {
 			this._isoFormatInstance = DateFormat.getDateInstance({
 				strictParsing: true,
-				pattern: "YYYY-MM-dd",
+				pattern: "yyyy-MM-dd",
 				calendarType: this._primaryCalendarType,
 			});
 		}

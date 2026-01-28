@@ -1,14 +1,17 @@
-# ![UI5 icon](https://raw.githubusercontent.com/SAP/ui5-webcomponents/main/docs/images/UI5_logo_water.png)UI5 Web Components - Compatibility
+# ![UI5 icon](https://raw.githubusercontent.com/UI5/webcomponents/main/docs/images/UI5_logo_water.png)UI5 Web Components - Compatibility
 
 [![npm Package Version](https://badge.fury.io/js/%40ui5%2Fwebcomponents.svg)](https://www.npmjs.com/package/@ui5/webcomponents)
 
-Provides Table web component for compatibility (previously part of the "@ui5/webcomponents" package), while brand new Table web component is being developed and will replace it in the "@ui5/webcomponents" package.
+**DEPRECATED SINCE 2.12.0:** The `@ui5/webcomponents-compat` package has been deprecated as of version `2.12.0`.
+Please use the Table from `@ui5/webcomponents` package instead.
 
-
-**Note:** The package is available since 2.0 and will be available until the next major release (3.0) when it will be removed as the Table "@ui5/webcomponents" will finally replace it.
-
+While `@ui5/webcomponents-compat` will remain available for compatibility purposes (until the next major release),
+migration is strongly recommended, as new development and enhancements will be focused on `@ui5/webcomponents/Table`.
 
 ## Provided components
+
+The package provides Table web component and several subcomopnents as descrived below.
+
 
 | Web Component            | Tag name                    | Module import                                              |
 |--------------------------|-----------------------------|------------------------------------------------------------|
@@ -28,15 +31,15 @@ Provides Table web component for compatibility (previously part of the "@ui5/web
 
 
 ## Resources
-- [UI5 Web Components - README.md](https://github.com/SAP/ui5-webcomponents/blob/main/README.md)
-- [UI5 Web Components - Playground and API Reference](https://sap.github.io/ui5-webcomponents/)
+- [UI5 Web Components - README.md](https://github.com/UI5/webcomponents/blob/main/README.md)
+- [UI5 Web Components - Playground and API Reference](https://ui5.github.io/webcomponents/)
 
 ## Support
-We welcome all comments, suggestions, questions, and bug reports. Please follow our [Support Guidelines](https://github.com/SAP/ui5-webcomponents/blob/main/SUPPORT.md#-content) on how to report an issue, or chat with us in the `#webcomponents` channel of the [OpenUI5 Community Slack](https://ui5-slack-invite.cfapps.eu10.hana.ondemand.com/).
+We welcome all comments, suggestions, questions, and bug reports. Please follow our [Support Guidelines](https://github.com/UI5/webcomponents/blob/main/SUPPORT.md#-content) on how to report an issue, or chat with us in the `#webcomponents` channel of the [OpenUI5 Community Slack](https://ui5-slack-invite.cfapps.eu10.hana.ondemand.com/).
 
 ## Contribute
-Please check our [Contribution Guidelines](https://github.com/SAP/ui5-webcomponents/blob/main/docs/6-contributing/02-conventions-and-guidelines.md).
+Please check our [Contribution Guidelines](https://github.com/UI5/webcomponents/blob/main/docs/6-contributing/02-conventions-and-guidelines.md).
 
 ## License
 Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
-This file is licensed under the Apache Software License, Version 2.0 except as noted otherwise in the [LICENSE](https://github.com/SAP/ui5-webcomponents/blob/main/LICENSE.txt) file.
+This file is licensed under the Apache Software License, Version 2.0 except as noted otherwise in the [LICENSE](https://github.com/UI5/webcomponents/blob/main/LICENSE.txt) file.

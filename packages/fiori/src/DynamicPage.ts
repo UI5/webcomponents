@@ -209,6 +209,19 @@ class DynamicPage extends UI5Element {
 			this.dynamicPageTitle.hasSnappedTitleOnMobile = !!this.hasSnappedTitleOnMobile;
 			this.dynamicPageTitle.removeAttribute("hovered");
 		}
+		if (this.dynamicPageHeader) {
+			this.dynamicPageHeader._snapped = this._headerSnapped;
+		}
+	}
+
+	get endAreaHeight() {
+		return this.showFooter ? this.footerWrapper?.getBoundingClientRect().height || 0 : 0;
+	}
+
+	get topAreaHeight() {
+		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
+		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
+		return this._headerSnapped ? titleHeight : headerHeight + titleHeight;
 	}
 
 	get dynamicPageTitle(): DynamicPageTitle | null {
@@ -217,6 +230,10 @@ class DynamicPage extends UI5Element {
 
 	get dynamicPageHeader(): DynamicPageHeader | null {
 		return this.querySelector<DynamicPageHeader>("[ui5-dynamic-page-header]");
+	}
+
+	get footerWrapper() {
+		return this.shadowRoot?.querySelector(".ui5-dynamic-page-footer");
 	}
 
 	get actionsInTitle(): boolean {
@@ -241,12 +258,6 @@ class DynamicPage extends UI5Element {
 		return !this._headerSnapped;
 	}
 
-	get _accAttributesForHeaderActions() {
-		return {
-			controls: `${this._id}-header` as Lowercase<string>,
-		};
-	}
-
 	get headerTabIndex() {
 		return (this._headerSnapped || this.showHeaderInStickArea) ? -1 : 0;
 	}
@@ -265,6 +276,10 @@ class DynamicPage extends UI5Element {
 
 	get hasSnappedTitleOnMobile() {
 		return isPhone() && this.headerSnapped && this.dynamicPageTitle?.snappedTitleOnMobile.length;
+	}
+
+	get headerAriaLabel() {
+		return this.hasHeading ? this._headerLabel : undefined;
 	}
 
 	/**
@@ -351,6 +366,8 @@ class DynamicPage extends UI5Element {
 		this.headerPinned = !this.headerPinned;
 		if (this.headerPinned) {
 			this.showHeaderInStickArea = true;
+		} else if (this.scrollContainer!.scrollTop === 0) {
+			this.showHeaderInStickArea = false;
 		}
 		this.fireDecoratorEvent("pin-button-toggle");
 		await renderFinished();
@@ -371,6 +388,17 @@ class DynamicPage extends UI5Element {
 	async _toggleHeader() {
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
 		const currentScrollTop = this.scrollContainer!.scrollTop;
+
+		if (!this._headerSnapped && this.headerPinned) {
+			this.headerPinned = false;
+			this.fireDecoratorEvent("pin-button-toggle");
+		}
+
+		if (currentScrollTop <= SCROLL_THRESHOLD) {
+			this._headerSnapped = !this._headerSnapped;
+			this.showHeaderInStickArea = this._headerSnapped;
+			return;
+		}
 
 		if (currentScrollTop > SCROLL_THRESHOLD && currentScrollTop < headerHeight) {
 			if (!this._headerSnapped) {
@@ -399,14 +427,35 @@ class DynamicPage extends UI5Element {
 		}
 	}
 
-	async onExpandHoverIn() {
+	onExpandHoverIn() {
 		this.dynamicPageTitle?.setAttribute("hovered", "");
-		await renderFinished();
 	}
 
-	async onExpandHoverOut() {
+	onExpandHoverOut() {
 		this.dynamicPageTitle?.removeAttribute("hovered");
-		await renderFinished();
+	}
+
+	onContentFocusIn(e: FocusEvent) {
+		const target = e.target as HTMLElement;
+		this.setScrollPadding({ start: this.topAreaHeight, end: this.endAreaHeight });
+		// textareas and similar elements appear "in view" even when partially
+		// hidden behind sticky header/footer.
+		// manual scroll brings them fully into view.
+		// another issue is that browsers do not reflect dynamic changes of scroll-padding
+		requestAnimationFrame(() => {
+			target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+		});
+	}
+
+	onContentFocusOut() {
+		// Reset scroll padding when focus leaves content (e.g., moves to sticky header).
+		// The sticky header is part of the scrollable area, so keeping padding causes unwanted scroll.
+		this.setScrollPadding({ start: 0, end: 0 });
+	}
+
+	setScrollPadding(padding: { start: number, end: number }) {
+		this.scrollContainer?.style.setProperty("scroll-padding-top", `${padding.start}px`);
+		this.scrollContainer?.style.setProperty("scroll-padding-bottom", `${padding.end}px`);
 	}
 }
 

@@ -253,7 +253,8 @@ class Tag extends UI5Element {
 		}
 	}
 
-	_onclick() {
+	_onclick(e: Event) {
+		e.stopPropagation();
 		this.fireDecoratorEvent("click");
 	}
 }

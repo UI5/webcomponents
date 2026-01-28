@@ -8,7 +8,7 @@
 }
 
 :host([ui5-suggestion-item]) .ui5-li-content {
-	padding-bottom: .875rem;
-	padding-top: .875rem;
+	padding-bottom: .5rem;
+	padding-top: .5rem;
 	box-sizing: border-box;
 }

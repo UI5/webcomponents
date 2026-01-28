@@ -9,13 +9,12 @@ Currently, there are two types of slots: "named" and "unnamed". The difference b
 ## Unnamed slots
 
 Use unnamed slots when your component doesn't need to be aware of or interact with the children passed to a specific slot.
-To define an unnamed slot, simply add a `<slot>` element within your `.hbs` template. For example:
+To define an unnamed slot, simply add a `<slot>` element within your template. For example:
 
-```hbs
-{{!-- MyDemoComponent.hbs --}}
-<div>
-   <slot name="mySlot"></slot>
-</div>
+```tsx
+export default function MyDemoComponentTemplate() {
+	return <div><slot name="mySlot"></slot></div>;
+}
 ```
 
 On the consuming side, elements can be passed to this slot using the `slot` attribute:
@@ -118,10 +117,14 @@ class MyDemoComponent extends UI5Element {
 
 To render individual slots, you have to iterate all children in that slot and use the `_individualSlot` property that the framework sets automatically on each child:
 
-```hbs
-{{#each mySlot}}
-    <slot name="{{this._individualSlot}}"></slot>
-{{/each}}
+```tsx
+export default function MyDemoComponentTemplate() {
+	return (
+		<div>
+			{ this.mySlot.map(mySlotEl => <slot name={mySlotEl._individualSlot}></slot>)}
+		</div>
+	);
+}
 ```
 
 **Note:** When this option is set to `true`, the `_individualSlot` property is set to each direct child, where `_individualSlot` returns a string following the pattern `{nameOfTheSlot}-{index}` and the slot attribute is changed based on that pattern.

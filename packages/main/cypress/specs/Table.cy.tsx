@@ -3,6 +3,7 @@ import TableHeaderRow from "../../src/TableHeaderRow.js";
 import TableCell from "../../src/TableCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
+import TableSelectionSingle from "../../src/TableSelectionSingle.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
@@ -16,6 +17,12 @@ import Button from "../../src/Button.js";
 const ROLE_COLUMN_HEADER = "columnheader";
 
 describe("Table - Rendering", () => {
+	function checkWidth(id: string, expectedWidth: number) {
+		cy.get(id).then($cell => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	};
+
 	it("tests if table is rendered", () => {
 		cy.mount(
 			<Table id="table">
@@ -35,6 +42,15 @@ describe("Table - Rendering", () => {
 		cy.get("ui5-table-row").should("exist");
 		cy.get("ui5-table-header-cell").should("have.length", 2);
 		cy.get("ui5-table-header-row").should("have.attr", "aria-roledescription", "Column Header Row");
+		cy.get("ui5-table-header-row").should("have.attr", "aria-rowindex", "1");
+		cy.get("ui5-table-row").should("have.attr", "aria-rowindex", "2");
+		cy.get("ui5-table-header-cell").first().should("have.attr", "aria-colindex", "1");
+		cy.get("ui5-table-header-cell").last().should("have.attr", "aria-colindex", "2");
+
+		cy.get("#table").shadow().find("#table").as("innerTable");
+		cy.get("@innerTable").should("have.attr", "role", "grid");
+		cy.get("@innerTable").should("have.attr", "aria-colcount", "2");
+		cy.get("@innerTable").should("have.attr", "aria-rowcount", "2");
 	});
 
 	it("tests if initial empty table renders without errors", () => {
@@ -56,6 +72,224 @@ describe("Table - Rendering", () => {
 
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(500);
+	});
+
+	it("tests if table is rendered with no data slot", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell></TableHeaderCell>
+				</TableHeaderRow>
+				<div slot="noData" id="noData">
+					<Label>No data found</Label>
+				</div>
+			</Table>
+		);
+
+		cy.get("#table").shadow().find('slot[name=noData]').as("noDataSlot");
+		cy.get("@noDataSlot").should("exist");
+		cy.get("@noDataSlot").then(($noDataSlot) => {
+			const noDataElement = ($noDataSlot[0] as HTMLSlotElement).assignedElements()[0];
+			cy.wrap(noDataElement).should("have.attr", "id", "noData")
+		});
+	});
+
+	it("columns have equal widths width default width", () => {
+		cy.mount(
+			<Table style="width: 400px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		const expectedWidth = 100;
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("columns have width set", () => {
+		cy.mount(
+			<Table style="width: 200px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="100px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell width="100px"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		const expectedWidth = 100;
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("columns have relative width set", () => {
+		cy.mount(
+			<Table style="width: 200px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" width="10%"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell id="colB" width="25%"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell id="colC" width="25%"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell id="colD" width="40%"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		checkWidth("#colA", 48);
+		checkWidth("#colB", 50);
+		checkWidth("#colC", 50);
+		checkWidth("#colD", 80);
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "800px");
+		});
+
+		checkWidth("#colA", 80);
+		checkWidth("#colB", 200);
+		checkWidth("#colC", 200);
+		checkWidth("#colD", 320);
+	});
+
+	it("columns have min-width set", () => {
+		cy.mount(
+			<Table style="width: 800px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell minWidth="100px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell minWidth="100px"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 200;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "400px");
+		});
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 100;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "100px");
+		});
+
+		cy.get("ui5-table-header-cell").each(($cell) => {
+			const expectedWidth = 100;
+			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+		});
+	});
+
+	it("column width settings combined", () => {
+		cy.mount(
+			<Table style="width: 800px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" minWidth="50px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell id="colB" width="300px"><span>ColumnB</span></TableHeaderCell>
+					<TableHeaderCell id="colC" minWidth="200px" width="50%"><span>ColumnC</span></TableHeaderCell>
+					<TableHeaderCell id="colD" width="2fr"><span>ColumnD</span></TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+					<TableCell><Label>Cell C</Label></TableCell>
+					<TableCell><Label>Cell D</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		checkWidth("#colA", 50);
+		checkWidth("#colB", 300);
+		checkWidth("#colC", 400);
+		checkWidth("#colD", 50);
+
+		cy.get("ui5-table").then($table => {
+			$table.css("width", "200px");
+		});
+
+		checkWidth("#colA", 50);
+		checkWidth("#colB", 300);
+		checkWidth("#colC", 200);
+		// 2fr is being ignored
+		checkWidth("#colD", 48);
+	});
+
+	it("should alternate rows", () => {
+		cy.mount(
+			<Table id="table1" alternateRowColors={true}>
+				<TableSelectionSingle id="selection" slot="features"></TableSelectionSingle>
+				<TableHeaderRow id="hr" slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="r1" rowKey="r1" interactive>
+					<TableCell>R1C1</TableCell>
+				</TableRow>
+				<TableRow id="r2" rowKey="r2" interactive>
+					<TableCell>R2C1</TableCell>
+				</TableRow>
+				<TableRow id="r3" rowKey="r3" interactive>
+					<TableCell>R3C1</TableCell>
+				</TableRow>
+				<TableRow id="r4" rowKey="r4" interactive>
+					<TableCell>R4C1</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[0]).to.not.equal(rowBackgrounds[1]);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[2]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[1]).to.equal(rowBackgrounds[3]);
+		});
+
+		cy.get("#selection").invoke("prop", "selected", "r2"); cy.wait(50);
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+		});
 	});
 });
 
@@ -259,12 +493,7 @@ describe("Table - Popin Mode", () => {
 describe("Table - Horizontal alignment of cells", () => {
 	function check(id: string, index: number, alignment: string) {
 		cy.get(id)
-			.should("have.css", "justify-content", alignment)
-			.and($el => {
-				const style = $el.attr("style");
-				const variable = style?.match(/justify-content: ([^;]+)/)?.[1] ?? "";
-				expect(variable).to.equal(`var(--horizontal-align-default-${index})`);
-			});
+			.should("have.css", "justify-content", alignment);
 
 		cy.get("ui5-table-row")
 			.get(`ui5-table-cell:nth-of-type(${index})`)
@@ -296,11 +525,11 @@ describe("Table - Horizontal alignment of cells", () => {
 					<TableCell><Label><b>1249</b> EUR</Label></TableCell>
 				</TableRow>
 				<TableRow>
-					<TableCell><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
-					<TableCell><Label>Technocom</Label></TableCell>
-					<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
-					<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
-					<TableCell><Label><b>29</b> EUR</Label></TableCell>
+					<TableCell class="productCol"><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
+					<TableCell class="supplierCol"><Label>Technocom</Label></TableCell>
+					<TableCell class="dimensionsCol"><Label>32 x 21 x 4 cm</Label></TableCell>
+					<TableCell class="weightCol"><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
+					<TableCell class="priceCol"><Label><b>29</b> EUR</Label></TableCell>
 				</TableRow>
 			</Table>
 		);
@@ -413,8 +642,10 @@ describe("Table - Horizontal alignment of cells", () => {
 
 				if (shouldBePoppedIn) {
 					check(`#${id}`, index + 1, "normal");
+					cy.get(`.${id}`).should("have.css", "justify-content", "normal");
 				} else {
 					check(`#${id}`, index + 1, alignments[id]);
+					cy.get(`.${id}`).should("have.css", "justify-content", alignments[id]);
 				}
 			});
 		});
@@ -605,7 +836,9 @@ describe("Table - Horizontal Scrolling", () => {
 			.shadow()
 			.find("#navigated-cell")
 			.should("have.css", "position", "sticky")
-			.should("have.css", "right", "0px");
+			.should("have.css", "right", "0px")
+			.should("have.attr", "aria-hidden", "true")
+			.should("have.attr", "data-excluded-from-navigation");
 	});
 
 	it("selection column should be fixed to the left", () => {
@@ -653,13 +886,13 @@ describe("Table - Navigated Rows", () => {
 			.shadow()
 			.find("#navigated-cell")
 			.should("exist")
-			.should("have.attr", "excluded-from-navigation", "");
+			.should("have.attr", "data-excluded-from-navigation");
 
 		cy.get("#row2")
 			.shadow()
 			.find("#navigated-cell")
 			.should("exist")
-			.should("have.attr", "excluded-from-navigation", "");
+			.should("have.attr", "data-excluded-from-navigation");
 
 		cy.get("#row1")
 			.shadow()
@@ -743,14 +976,14 @@ describe("Table - Interactive Rows", () => {
 describe("Table - HeaderCell", () => {
 	beforeEach(() => {
 		cy.mount(
-			<Table overflow-mode="Popin">
+			<Table overflowMode="Popin">
 				<TableHeaderRow slot="headerRow">
-					<TableHeaderCell min-width="300px">Column A</TableHeaderCell>
-					<TableHeaderCell min-width="200px" sort-indicator="Ascending">
+					<TableHeaderCell minWidth="300px">Column A</TableHeaderCell>
+					<TableHeaderCell minWidth="200px" sortIndicator="Ascending">
 						<Label required wrappingType="None">Column B</Label>
 						<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
 					</TableHeaderCell>
-					<TableHeaderCell min-width="150px" popin-text="Popin Text">
+					<TableHeaderCell minWidth="150px" popinText="Popin Text">
 						<Label required>Column C</Label>
 					</TableHeaderCell>
 				</TableHeaderRow>
@@ -780,6 +1013,7 @@ describe("Table - HeaderCell", () => {
 		cy.get("@headerCell1").contains("Column A");
 		cy.get("@headerCell2").should("have.attr", "aria-sort", "ascending");
 		cy.get("@headerCell2").find("ui5-table-header-cell-action-ai").as("actionB");
+		cy.get("@actionB").should("not.have.attr", "_popin");
 		cy.get("@actionB").shadow().find("ui5-button").as("actionBbutton");
 		cy.get("@actionBbutton").should("have.attr", "icon", "ai");
 		cy.get("@actionBbutton").should("have.attr", "tooltip", "Generated by AI");
@@ -799,12 +1033,12 @@ describe("Table - HeaderCell", () => {
 		cy.get("@headerCell2").should("not.have.attr", "aria-sort");
 
 		cy.get("@table").invoke("css", "width", "250px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
 		cy.get("@row1").find("ui5-table-cell[_popin]").as("row1popins");
 		cy.get("@row1popins").first().as("row1popinB");
 		cy.get("@row1popinB").shadow().find("ui5-table-header-cell-action-ai").as("row1popinBaction");
+		cy.get("@row1popinBaction").should("have.attr", "_popin");
 		cy.get("@row1popinBaction").shadow().find("ui5-button").as("row1popinBbutton");
 		cy.get("@row1popinBbutton").should("have.attr", "icon", "ai");
 		cy.get("@row1popinBbutton").should("have.attr", "design", "Transparent");

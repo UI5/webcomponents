@@ -28,12 +28,11 @@
 .sapUiSizeCompact {
 	--_ui5_textarea_padding_top: 0.1875rem;
 	--_ui5_textarea_padding_bottom: 0.125rem;
-	--_ui5_checkbox_focus_position: 0.25rem;
+	--_ui5_checkbox_focus_position: 0.125rem;
 
 	/* SplitButton */
 	--_ui5_split_button_middle_separator_top: 0.3125rem;
 	--_ui5_split_button_middle_separator_height: 1rem;
-	--_ui5_slider_handle_top: -.5rem;
 	--_ui5_slider_tooltip_height: 1.375rem;
 
 	/* CheckBox */
@@ -41,9 +40,6 @@
 
 	/* ColorPalette */
 	--_ui5_color-palette-item-height: 1.25rem;
-	--_ui5_color-palette-item-focus-height: 1rem;
-	--_ui5_color-palette-item-container-sides-padding: 0.1875rem;
-	--_ui5_color-palette-item-container-rows-padding: 0.8125rem;
 	--_ui5_color-palette-item-hover-height: 1.625rem;
 	--_ui5_color-palette-item-margin: calc(((var(--_ui5_color-palette-item-hover-height) - var(--_ui5_color-palette-item-height)) / 2) + 0.0625rem);
 	--_ui5_color-palette-row-width: 8.75rem;

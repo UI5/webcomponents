@@ -53,7 +53,7 @@
 			<ui5-menu-item text="Open Folder" icon="open-folder"></ui5-menu-item>
 			<ui5-menu-item text="Save" icon="save"></ui5-menu-item>
 		</ui5-menu>
-  
+
 		<ui5-input id="input" value="0"></ui5-input>
 
 		<br /><br />
@@ -152,6 +152,8 @@
 				<ui5-toolbar-separator></ui5-toolbar-separator>
 				<ui5-toolbar-button icon="employee" text="Call me later" stable-dom-ref="tb-button-employee-d"
 					overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Longer for alignment check"
+					stable-dom-ref="tb-button-employee-d" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
 			</ui5-toolbar>
 		</section>
 
@@ -313,6 +315,31 @@
 				</div>
 			</div>
 		</section>
+
+		<br /><br />
+		<ui5-title level="H3">Toolbar with showOverflowText property</ui5-title>
+		<ui5-label>Resize the viewport to see the overflow behavior. Buttons with showOverflowText show icon-only in the toolbar but display text when overflowed.</ui5-label>
+		<br /><br />
+		<section>
+			<ui5-toolbar id="otb_overflow_text_only">
+				<ui5-toolbar-button icon="save" text="Save" show-overflow-text tooltip="Save Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="edit" text="Edit" show-overflow-text tooltip="Edit Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="copy" text="Copy" show-overflow-text tooltip="Copy Document"></ui5-toolbar-button>
+
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+
+				<ui5-toolbar-button icon="add" text="Add New Item"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Delete Item"></ui5-toolbar-button>
+
+				<ui5-toolbar-spacer></ui5-toolbar-spacer>
+
+				<ui5-toolbar-button icon="download" text="Download" show-overflow-text tooltip="Download File"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="share" text="Share" show-overflow-text tooltip="Share Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="refresh" text="Refresh" show-overflow-text tooltip="Refresh Page"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+
+		<br /><br />
 
 		<section id="testEventpreventClosing">
 			<div style="width: 250px;">

@@ -1,4 +1,5 @@
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
+import WrappingType from "./types/WrappingType.js";
 
 export default function ListItemGroupHeaderTemplate(this: ListItemGroupHeader) {
 	return (
@@ -16,10 +17,27 @@ export default function ListItemGroupHeaderTemplate(this: ListItemGroupHeader) {
 			onKeyDown={this._onkeydown}
 		>
 			<div id={`${this._id}-content`} class="ui5-li-content">
-				<span class="ui5-ghli-title"><slot></slot></span>
+				{renderTitle.call(this)}
 			</div>
 
 			{this.hasSubItems && <slot name="subItems"></slot>}
 		</div>
+	);
+}
+
+function renderTitle(this: ListItemGroupHeader) {
+	if (this.wrappingType === WrappingType.Normal) {
+		return this.expandableTextTemplate?.call(this, {
+			className: "ui5-ghli-title",
+			text: this._textContent,
+			maxCharacters: this._maxCharacters,
+			part: "title",
+		});
+	}
+
+	return (
+		<span part="title" class="ui5-ghli-title">
+			<slot></slot>
+		</span>
 	);
 }

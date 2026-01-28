@@ -56,16 +56,20 @@ the **attribute** will still be the same (`ui5-button` as opposed to the tag nam
 Therefore, the best practice when developing UI5 Web Components is to write CSS selectors for the shadow roots using
 attribute selectors, instead of tag selectors.
 
-For example, if the `Demo.hbs` file looks like this:
+For example, if the `MyComponentTemplate.tsx` file looks like this:
 
-```html
-<div class="my-component">
-	<ui5-button id="openBtn">Open</ui5-button>
-	<div>
-		<slot></slot>
-	</div>
-	<ui5-list></ui5-list>
-</div>
+```tsx
+export default function MyComponentTemplate() {
+    return (
+       <div class="my-component">
+			<Button id="openBtn">Open</Button>
+			<div>
+				<slot></slot>
+			</div>
+			<List></List>
+		</div>
+    );
+}
 ```
 
 you should not write selectors by tag name for other components in the `Demo.css` file:
@@ -234,7 +238,7 @@ Use the `@event` decorator to define the event. If the event name consists of mu
 		valid: { type: Boolean },
 	},
 })
-class MyDemoComponent extends UI5Element {
+class MyComponent extends UI5Element {
 }
 ```
 
@@ -251,7 +255,7 @@ Use the `UI5Element#fireEvent` method to trigger the event:
 		valid: { type: Boolean },
 	},
 })
-class MyDemoComponent extends UI5Element {
+class MyComponent extends UI5Element {
 	onItemSelected(e: Event) {
 		this.fireEvent("selection-change", {
 			valid: true,
@@ -317,24 +321,24 @@ this.fireDecoratorEvent("change");
 ### Describing the Event Detail
 
 When an event includes a detail it's recommended to create a TypeScript type that describes the event detail and use it in the `fireEvent` or `fireDecoratorEvent` (as generic methods) to force static checks ensuring that proper event detail is passed.
-The naming convention for the type is a combination of the component class name ("MyDemoComponent"), the event name ("SelectionChange"), followed by "EventDetail", written in PascalCase, e.g "MyDemoComponentSelectionChangeEventDetail":
+The naming convention for the type is a combination of the component class name ("MyComponent"), the event name ("SelectionChange"), followed by "EventDetail", written in PascalCase, e.g "MyComponentSelectionChangeEventDetail":
 
 
 ```ts
-export type MyDemoComponentSelectionChangeEventDetail = {
+export type MyComponentSelectionChangeEventDetail = {
 	valid: boolean;
 };
 
 
-@event<MyDemoComponentSelectionChangeEventDetail>("selection-change", {
+@event<MyComponentSelectionChangeEventDetail>("selection-change", {
 	detail: {
 		valid: { type: Boolean },
 	},
 })
-class MyDemoComponent extends UI5Element {
+class MyComponent extends UI5Element {
 
 	onItemSelected(e: Event) {
-		this.fireDecoratorEvent<MyDemoComponentSelectionChangeEventDetail>("selection-change", {
+		this.fireDecoratorEvent<MyComponentSelectionChangeEventDetail>("selection-change", {
 			valid: true,
 		});
 	}
@@ -346,13 +350,16 @@ class MyDemoComponent extends UI5Element {
 
 ### Handling Events in Templates
 
- When attaching event handlers within your component's template for events fired by other web components, use the `ui5-` prefix for the event name.
-For example, if a ui5-list component emits a `selection-change` event, handle it using the `ui5-selection-change` event name:
+When attaching event handlers within your component's template for events fired by other web components, use the `on` prefix + the event name in `PascalCase`.
+For example, if a ui5-list component emits a `selection-change` event, in the template attach `onSelectionChange`.
 
-```handlebars
-<div class="my-component">
-	<ui5-list @ui5-selection-change="{{onSelectionChange}}"></ui5-list>
-</div>
+```tsx
+// DemoTemplate.tsx
+export default function MyComponentTemplate() {
+    return <div class="my-component">
+		<List onSelectionChange={this.onSelectionChange}></List>
+	</div>;
+}
 ```
 
 By default, events are fired in pairs: one with the standard name and another prefixed with `ui5-`. While the `ui5-` prefixed event is always emitted, the non-prefixed event can be suppressed if the `noConflict` configuration setting is enabled. In this case, only the prefixed event will be triggered. For more details on the `noConflict` setting, refer to the [Configuration](../2-advanced/01-configuration.md) section.
@@ -390,23 +397,26 @@ class Switch extends UI5Element {
 Web Components offer a `slot` mechanism for component composition, allowing components to render children
 or other components in specific locations within their shadow root.
 
-To enable slotting for your component, simply add a `<slot>` element within your `.hbs` template. 
+To enable slotting for your component, simply add a `<slot>` element within your template. 
 This acts as a placeholder that can be filled with any HTML markup.
 
-```hbs
-{{!-- MyDemoComponent.hbs --}}
-<div class="my-component-root">
-	<slot></slot>
-</div>
+```tsx
+export default function MyComponentTemplate() {
+	return (
+		<div class="my-component-root">
+			<slot></slot>
+		</div>
+	);
+}
 ```
 
 On the consuming side, you can insert HTML elements into your component:
 
 ```html
 <!-- index.html -->
-<my-demo-component>
+<my-component>
 	<span>Hello World</span>
-</my-demo-component>
+</my-component>
 ```
 
 For documentation purposes and to inform component consumers about the available slot,
@@ -419,7 +429,7 @@ we should describe it with a brief JSDoc comment at component class level as sho
 @customElement({
 	tag: "ui5-demo-component",
 })
-class MyDemoComponent extends UI5Element {}
+class MyComponent extends UI5Element {}
 ```
 
 ### Slot as Class Member
@@ -428,8 +438,8 @@ We can define our slots as class members via the `@slot` decorator as follows:
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot()
 	items!: Array<HTMLElement>;
 }
@@ -484,35 +494,44 @@ named slot requires setting the `slot` attribute:
 
 - Default slot
 
-```hbs
-{{!-- MyDemoComponent.hbs --}}
-<div class="my-component-root">
-	<slot></slot>
-</div>
+```tsx
+export default function MyComponentTemplate() {
+	return (
+		<div class="my-component-root">
+			<slot></slot>
+		</div>
+	);
+}
 ```
+
 
 ```html
 <!-- index.html -->
-<my-demo-component>
+<my-component>
 	<span>Hello World</span>
-</my-demo-component>
+</my-component>
 ```
 
 - Named slot
 
 The named slot requires a small change in the component's template. You must pass the `name` attrbite to the `slot` element:
 
-```hbs
-{{!-- MyDemoComponent.hbs --}}
-<div class="my-component-root">
-	<slot name="content"></slot>
-</div>
+```tsx
+// DemoTemplate.tsx
+export default function () {
+	return (
+		<div class="my-component-root">
+			<slot name="content"></slot>
+		</div>
+	);
+}
+```
 
 ```html
 <!-- index.html -->
-<my-demo-component>
+<my-component>
 	<span slot="content">Hello World</span>
-</my-demo-component>
+</my-component>
 ```
 
 
@@ -523,8 +542,8 @@ All slots are named if you simply use the `@slot` decorator without any settings
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot({ type: HTMLElement, "default": true })
 	content!: Array<HTMLElement>;
 }
@@ -537,8 +556,8 @@ Simply use the `@slot` decorator without any settings:
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot()
 	content!: Array<HTMLElement>;
 }
@@ -549,30 +568,34 @@ And, if your component has multiple slots - to pick the most important and used 
 
 For example, here we assume that the "content" slot is more important and we declared it as default.
 
-```hbs
-{{!-- MyDemoComponent.hbs --}}
-<div class="my-component-root">
-	<div class="my-component-heading">
-		<slot name="heading"></slot>
-	</div>
 
-	<slot></slot>
-</div>
+```tsx
+export default function MyComponentTemplate() {
+	return (
+		<div class="my-component-root">
+			<div class="my-component-heading">
+				<slot name="heading"></slot>
+			</div>
+
+			<slot></slot>
+		</div>
+	);
+}
 ```
 
 ```html
 <!-- index.html -->
-<my-demo-component>
+<my-component>
 	<h1 slot="heading">Heading</h1>
 	<span>Hello World</span>
-</my-demo-component>
+</my-component>
 ```
 
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot({ type: HTMLElement, "default": true })
 	content!: Array<HTMLElement>;
 
@@ -593,18 +616,23 @@ First, enable `individualSlots` by setting it to `true`:
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot({ type: HTMLElement, individualSlots: true })
 	content!: Array<HTMLElement>;
 }
 ```
 
 Next, iterate over the child elements in the template, using the `_individualSlot` property in the name attribute of the slot element:
-```hbs
-{{#each mySlot}}
-	<slot name="{{this._individualSlot}}"></slot>
-{{/each}}
+
+```tsx
+export default function MyComponentTemplate() {
+	return (
+		<div>
+			{ this.content.map(contentEl => <slot name={contentEl._individualSlot}></slot>)}
+		</div>
+	);
+}
 ```
 
 Here is an example using the `Carousel` web component, which leverages `individualSlots` to wrap each slotted child within the content slot to achieve a specific design:
@@ -618,22 +646,26 @@ class Carousel extends UI5Element {
 }
 ```
 
-```hbs
-{{!-- Carousel.hbs --}}
-<div>
-	{{#each content}}
-		<div
-			class="ui5-carousel-item"
-			role="option"
-			aria-posinset="{{posinset}}"
-			aria-setsize="{{setsize}}"
-			aria-selected = "{{selected}}"
-		>
-			<slot name="{{this.item._individualSlot}}"></slot>
+```tsx
+export default function CarouselTemplate(this: Carousel) {
+	return (
+		<div>
+			{ this.content.map(contentEl =>
+				<div
+					class="ui5-carousel-item"
+					role="option"
+					aria-posinset={contentEl.posinset}
+					aria-setsize={contentEl.setsize}
+					aria-selected={contentEl.selected}
+				>
+					<slot name={contentEl.item._individualSlot}></slot>
+				</div>
+			)}
 		</div>
-	{{/each}}
-</div>
+	);
+}
 ```
+
 
 **Note**: When `individualSlots` is enabled, the `_individualSlot` property is assigned to each direct child. The value of `_individualSlot` follows the pattern `{nameOfTheSlot}-{index}`, and the slot attribute is updated accordingly.
 
@@ -644,26 +676,26 @@ The `@slot` decorator offers an `invalidateOnChildChange` option, which can be s
 
 By default, if child elements are added or removed from a slot, the component will be invalidated automatically. The `invalidateOnChildChange` option goes a step further by triggering invalidation even when properties or slots of the child elements change. This is useful if the state of parent component depends on the state of its children.
 
-The simplest way to use this option is to set `invalidateOnChildChange` to `"true"`. This configuration ensures that the `my-demo-component` web component will be invalidated whenever any of the UI5Element instances slotted into the content slot are updated, whether due to a property or slot change.
+The simplest way to use this option is to set `invalidateOnChildChange` to `"true"`. This configuration ensures that the `my-component` web component will be invalidated whenever any of the UI5Element instances slotted into the content slot are updated, whether due to a property or slot change.
 
 
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
     @slot({ type: HTMLElement, invalidateOnChildChange: true })
     content!: Array<HTMLElement>;
 }
 ```
 
-For more specific scenarios, you can use a more detailed configuration. The following example demonstrates how to invalidate the `"my-demo-component"` web component only when certain properties or slots of the slotted UI5Element instances change. In this case, the component will be invalidated if the "myProp" property or the "mySlot" slot of the child elements are modified.
+For more specific scenarios, you can use a more detailed configuration. The following example demonstrates how to invalidate the `"my-component"` web component only when certain properties or slots of the slotted UI5Element instances change. In this case, the component will be invalidated if the "myProp" property or the "mySlot" slot of the child elements are modified.
 
 ```ts
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 
-@customElement("my-demo-component")
-class MyDemoComponent extends UI5Element {
+@customElement("my-component")
+class MyComponent extends UI5Element {
 	@slot({ type: HTMLElement, invalidateOnChildChange: { properties: ["myProp"], slots: ["mySlot"] }})
 	content!: Array<HTMLElement>;
 }
@@ -692,17 +724,16 @@ class Wizard extends UI5Element {
 </ui5-wizard>
 ```
 
-```hbs
-{{!-- Wizard.hbs --}}
-<div class="ui5-wizard-root">
-	<nav>
-		{{!-- _steps is a calculated state based on the steps slot --}}
-		{{#each _steps}}
-			<div class="ui5-wiz-step-root">
-			</div>
-		{{/each}}
-	</nav>
-</div>
+```tsx
+export default function WizardTemplate(this: Wizard) {
+	return (
+		<div>
+			{ this._steps.map(step =>
+				<div class="ui5-wiz-step-root"></div>
+			)}
+		</div>
+	);
+}
 ```
 
 **Note**: The `invalidateOnChildChange` option is meant to be used with slots that are UI5Element instances.
@@ -716,14 +747,14 @@ For example:
 
 ```html
 <!-- index.html -->
-<my-demo-component>
+<my-component>
 	<h1 slot="heading">Heading</h1>
 	<span>Hello World</span>
-</my-demo-component>
+</my-component>
 ```
 
 ```css
-/* MyDemoComponent.css */
+/* MyComponent.css */
 ::slotted([slot="heading"]) {
 	width: 200px;
 	height: 100px;
@@ -874,7 +905,7 @@ class MyComponent extends UI5Element {
 
 ### `onBeforeRendering`
 
-Use `onBeforeRendering` to prepare variables to be used in the `.hbs` template.
+Use `onBeforeRendering` to prepare variables to be used in the component's template.
 
 What to do:
  - prepare calculated (derived) state for use in the renderer
@@ -908,7 +939,6 @@ This component has a `filter` property and a `default` slot that we want to call
 Let's imagine we want to only show the items whose `name` property matches the value of our `filter` property - so we filter the items by name.
 
 ```ts
-
 class MyComponent extends UI5Element {
 	@property()
 	filter = "";
@@ -926,16 +956,20 @@ class MyComponent extends UI5Element {
 
 In `onBeforeRendering` we prepare a `_filteredItems` array with some of the component's children (only the ones that have the `this.filter` text as part of their `name` property)
 
-And finally, in the `.hbs` template we have for example:
+And finally, in the components's template we have for example:
 
-```handlebars
-<div class="my-filter-component">
-	{{#each _filteredItems}}
-		<div class="my-filtered-item">
-			<slot name="{{_individualSlot}}"></slot>
+```tsx
+export default function MyComponentTemplate() {
+    return (
+		<div class="my-filter-component">
+			{ this._filteredItems.map(item =>
+				<div class="my-filtered-item">
+					<slot name={item._individualSlot}></slot>
+				</div>
+			)}
 		</div>
-	{{/each}}
-</div>
+	);
+}
 ```
 
 We loop over the `_fiteredItems` array that we prepared in `onBeforeRendering` and for each child we render a `slot` based on the child's `_individualSlot` property,
@@ -953,7 +987,7 @@ The usage of this component would be for example:
 
 The user would only see the first and third items as these are the only ones we rendered an individual slot for (the ones matching the `filter` value of "John").
 
-In summary: `onBeforeRendering` is the best place to prepare all the variables you are going to need in the `.hbs` template.
+In summary: `onBeforeRendering` is the best place to prepare all the variables you are going to need in the component's template.
 
 ### `onAfterRendering`
 

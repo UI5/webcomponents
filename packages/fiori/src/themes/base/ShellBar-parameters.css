@@ -3,17 +3,12 @@
 	--_ui5_shellbar_logo_outline_color: var(--sapContent_ContrastFocusColor);
 	--_ui5_shellbar_logo_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--_ui5_shellbar_logo_outline_color);
 	--_ui5_shellbar_outline_offset: -0.0625rem;
-	--_ui5_shellbar_logo_outline_offset: var(--_ui5_shellbar_outline_offset);
 	--_ui5_shellbar_button_box_shadow: none;
 	--_ui5_shellbar_button_box_shadow_active: none;
 	--_ui5_shellbar_button_border: none;
 	--_ui5_shellbar_button_border_radius: 0.25rem;
 	--_ui5_shellbar_button_focused_border: 0.0625rem dotted var(--sapContent_FocusColor);
 	--_ui5_shellbar_button_active_color: var(--sapShell_Active_TextColor);
-	--_ui5_shellbar_logo_outline_border_radius: 0;
-	--_ui5_shellbar_search_button_size: 2.25rem;
-	--_ui5_shellbar_search_field_height: 2.25rem;
-	--_ui5_shellbar_search_button_border_radius: 0.25rem;
 	--_ui5_shellbar_search_field_background: var(--sapShellColor);
 	--_ui5_shellbar_search_field_border: 0.0625rem solid var(--sapShell_InteractiveBorderColor);
 	--_ui5_shellbar_search_field_box_shadow: none;
@@ -26,4 +21,6 @@
 	--_ui5_shellbar_image_button_border_radius: 50%;
 	--_ui5-shellbar-content-margin-start: 0.5rem;
 	--_ui5-shellbar-overflow-button-margin: 0.5rem;
+	--_ui5-shellbar_separator-color: var(--sapToolbar_SeparatorColor);
+	--_ui5-shellbar_cancel-button-color: var(--sapButton_Lite_TextColor);
 }

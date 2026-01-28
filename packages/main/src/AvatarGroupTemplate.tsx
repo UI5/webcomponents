@@ -19,6 +19,7 @@ export default function AvatarGroupTemplate(this: AvatarGroup) {
 				<slot onClick={this.onAvatarClick} onui5-click={this.onAvatarUI5Click}></slot>
 
 				{this._customOverflowButton ?
+					// @ts-expect-error
 					<slot onClick={this.onOverflowButtonClick} name="overflowButton"></slot>
 					:
 					<Button

@@ -166,7 +166,7 @@ class Breadcrumbs extends UI5Element {
 		super();
 
 		this._itemNavigation = new ItemNavigation(this, {
-			navigationMode: NavigationMode.Horizontal,
+			navigationMode: NavigationMode.Auto,
 			getItemsCallback: () => this._getFocusableItems(),
 		});
 
@@ -225,7 +225,7 @@ class Breadcrumbs extends UI5Element {
 	_initItemNavigation() {
 		if (!this._itemNavigation) {
 			this._itemNavigation = new ItemNavigation(this, {
-				navigationMode: NavigationMode.Horizontal,
+				navigationMode: NavigationMode.Auto,
 				getItemsCallback: () => this._getFocusableItems(),
 			});
 		}
@@ -247,6 +247,10 @@ class Breadcrumbs extends UI5Element {
 		}
 
 		return items;
+	}
+
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
 	}
 
 	/**
@@ -550,6 +554,16 @@ class Breadcrumbs extends UI5Element {
 	get _overflowItemsData() {
 		return this._getItems()
 			.slice(0, this._overflowSize)
+			.filter(item => this._isItemVisible(item))
+			.reverse();
+	}
+
+	/**
+	 * Returns all items that should be displayed in the popover on mobile devices
+	 * @private
+	 */
+	get _mobilePopoverItems() {
+		return this._getItems()
 			.filter(item => this._isItemVisible(item))
 			.reverse();
 	}

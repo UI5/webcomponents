@@ -108,7 +108,7 @@
 	pointer-events: none;
 }
 
-:host([desktop]:not([active])) .ui5-button-root:focus-within:after,
+:host([desktop]:not([loading])) .ui5-button-root:focus-within:after,
 :host(:not([active])) .ui5-button-root:focus-visible:after,
 :host([desktop][active][design="Emphasized"]) .ui5-button-root:focus-within:after,
 :host([active][design="Emphasized"]) .ui5-button-root:focus-visible:after,
@@ -117,6 +117,7 @@
 	content: "";
 	position: absolute;
 	box-sizing: border-box;
+	pointer-events: none;
 	left: 0.0625rem;
 	top: 0.0625rem;
 	right: 0.0625rem;
@@ -231,7 +232,7 @@ bdi {
 	border-color: var(--sapButton_Emphasized_BorderColor);
 	border-width: var(--_ui5_button_emphasized_border_width);
 	color: var(--sapButton_Emphasized_TextColor);
-	font-family: var(--sapFontBoldFamily );
+	font-family: var(--sapButton_Emphasized_FontFamily);
 }
 
 /*The ui5_hovered class is set by FileUploader to indicate hover state of the control*/
@@ -306,7 +307,7 @@ bdi {
 /* Button with badge */
 ::slotted([slot="badge"][design="InlineText"]) {
 	pointer-events: initial;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);
 	padding-inline-start: 0.25rem;
 	--_ui5-tag-height: 0.625rem;
@@ -318,8 +319,8 @@ bdi {
 	top: 0;
 	inset-inline-end: 0;
 	margin: -0.5rem;
-	z-index: 1000;
-	font-family: "72override", var(--sapFontFamily);
+	z-index: 1;
+	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);
 	--_ui5-tag-height: 0.625rem;
 }
@@ -331,10 +332,60 @@ bdi {
 	top: 0;
 	inset-inline-end: 0;
 	margin: -0.25rem;
-	z-index: 1000;
+	z-index: 1;
 }
 
 :host(:state(has-overlay-badge)) {
 	overflow: visible;
-	margin-right: 5px;
+	margin-inline-end: 0.3125rem;
+}
+
+:host([loading]){
+	position: relative;
+	pointer-events: unset;
+}
+
+:host([loading]) .ui5-button-root {
+	opacity: var(--sapContent_DisabledOpacity);
+}
+
+:host([loading][design="Emphasized"]) {
+	background-color: inherit;
+	border: inherit;
+}
+
+:host([design="Emphasized"][loading]:not([active]):not([non-interactive]):not([_is-touch]):not([disabled]):hover),
+:host([design="Emphasized"][loading]:not([active]):not([non-interactive]):not([_is-touch]):not([disabled]).ui5_hovered) {
+	background-color: inherit;
+	border: inherit;
+}
+
+:host([design="Emphasized"][loading]:not([active]):not([non-interactive]):not([_is-touch]):not([disabled]):hover) .ui5-button-root,
+:host([design="Emphasized"][loading]:not([active]):not([non-interactive]):not([_is-touch]):not([disabled]).ui5_hovered) .ui5-button-root {
+	background-color: var(--sapButton_Emphasized_Hover_Background);
+}
+
+:host([loading][design="Emphasized"]) .ui5-button-root {
+	background-color: var(--sapButton_Emphasized_Background);
+	border-color: var(--sapButton_Emphasized_BorderColor);
+}
+
+.ui5-button-busy-indicator {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top:0;
+}
+
+:host([has-end-icon]:not([icon])) .ui5-button-root {
+	justify-content: flex-start;
+}
+
+:host([icon-only]) .ui5-button-root {
+	justify-content: center;
+}
+
+:host([has-end-icon]:not([icon]):not(:empty)) .ui5-button-end-icon {
+	padding-inline-start: var(--_ui5_button_base_icon_margin);
+	margin-inline-start: auto;
 }

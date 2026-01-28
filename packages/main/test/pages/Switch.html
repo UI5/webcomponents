@@ -77,6 +77,14 @@
 		<ui5-button id="switchSubmit" type="Submit">Submit</ui5-button>
 	</form>
 
+	<h3>Form validation</h3>
+	<form id="formValidation">
+		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		<ui5-switch id="switchValidated" required></ui5-switch>
+		<br><br>
+		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+	</form>
+
 	<h3>Custom Switch</h3>
 	<div class="switch2auto">
 		<ui5-switch text-on="Accept" text-off="Reject" class="switch4auto"></ui5-switch>
@@ -103,10 +111,14 @@
 </body>
 
 <script>
-	var counter = 0;
+	let counter = 0;
+	const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+	const formValidationMessage = document.getElementById('formValidationMessage');
+	const validatedSwitch = document.getElementById('switchValidated');
 
 	submitBtn.addEventListener("click", function(e) {
 		if (myForm.checkValidity()) {
+			console.log(myForm);
 			e.preventDefault();
 			alert("Form submitted successfully!");
 		}
@@ -120,5 +132,27 @@
 	switchprevented.addEventListener("ui5-change", function(e) {
 		e.preventDefault();
 	});
+
+	btnCheckFormValidity.addEventListener('click', function() {
+		checkFormValidity('switchValidated');
+	});
+
+	validatedSwitch.addEventListener('ui5-change', function() {
+		setTimeout(() => {
+			checkFormValidity('switchValidated', true);
+		}, 0);
+	});
+
+	function checkFormValidity(elementId, delayed = false) {
+		const element = document.getElementById(elementId);
+		const isValid = element.checkValidity();
+
+		element.reportValidity();
+
+		// Show result
+		formValidationMessage.hidden = false;
+		formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+		formValidationMessage.design = isValid ? "Positive" : "Negative";
+	}
 </script>
 </html>

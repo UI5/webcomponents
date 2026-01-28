@@ -1,11 +1,12 @@
-import { registerFeature } from "../FeaturesRegistry.js";
+import { getFeature, registerFeature } from "../FeaturesRegistry.js";
 import { isF6Next, isF6Previous } from "../Keys.js";
-import { instanceOfUI5Element } from "../UI5Element.js";
 import { getFirstFocusableElement } from "../util/FocusableElements.js";
 import getFastNavigationGroups from "../util/getFastNavigationGroups.js";
 import isElementClickable from "../util/isElementClickable.js";
 import { getCurrentRuntimeIndex, compareRuntimes } from "../Runtimes.js";
 import getSharedResource from "../getSharedResource.js";
+import type OpenUI5Support from "./OpenUI5Support.js";
+import getParentElement from "../util/getParentElement.js";
 
 type F6Registry = {
 	instance?: F6Navigation,
@@ -39,18 +40,12 @@ class F6Navigation {
 	}
 
 	async groupElementToFocus(nextElement: HTMLElement) {
-		let nextElementDomRef = nextElement;
-
-		if (instanceOfUI5Element(nextElement)) {
-			nextElementDomRef = nextElement.getDomRef() || nextElement.firstElementChild as HTMLElement;
-		}
-
-		if (nextElementDomRef) {
-			if (isElementClickable(nextElementDomRef)) {
-				return nextElementDomRef;
+		if (nextElement) {
+			if (isElementClickable(nextElement)) {
+				return nextElement;
 			}
 
-			const elementToFocus = await getFirstFocusableElement(nextElementDomRef);
+			const elementToFocus = await getFirstFocusableElement(nextElement);
 
 			if (elementToFocus) {
 				return elementToFocus;
@@ -105,10 +100,20 @@ class F6Navigation {
 				//     </ui5-list>
 				// </ui5-flexible-column-layout>
 				// Here for both FCL & List the firstFoccusableElement is the same (the ui5-li)
-				const firstFocusable = await this.groupElementToFocus(this.groups[currentIndex - 1]);
-				const shouldSkipParent = firstFocusable === await this.groupElementToFocus(this.groups[currentIndex]);
+				const currentGroupFocusable = await this.groupElementToFocus(this.groups[currentIndex]);
+				let distanceToNextGroup = 1;
 
-				currentIndex = shouldSkipParent ? currentIndex - 2 : currentIndex - 1;
+				for (let distanceIndex = 1; distanceIndex < this.groups.length; distanceIndex++) {
+					const firstFocusable = await this.groupElementToFocus(this.groups[currentIndex - distanceIndex]);
+
+					if (firstFocusable === currentGroupFocusable) {
+						distanceToNextGroup++;
+					} else {
+						break;
+					}
+				}
+
+				currentIndex -= distanceToNextGroup;
 
 				if (currentIndex < 0) {
 					currentIndex = this.groups.length - 1;
@@ -132,6 +137,14 @@ class F6Navigation {
 	}
 
 	async _keydownHandler(event: KeyboardEvent) {
+		const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
+		const isOpenUI5Detected = openUI5Support && openUI5Support.isOpenUI5Detected();
+
+		if (isOpenUI5Detected) {
+			this.destroy();
+			return;
+		}
+
 		const forward = isF6Next(event);
 		const backward = isF6Previous(event);
 		if (!(forward || backward)) {
@@ -189,7 +202,7 @@ class F6Navigation {
 				return closestScopeEl;
 			}
 
-			element = element.parentElement ? element.parentElement : (element.parentNode as ShadowRoot).host;
+			element = getParentElement(element);
 		}
 
 		return document.body;
@@ -197,10 +210,10 @@ class F6Navigation {
 
 	setSelectedGroup(root: DocumentOrShadowRoot = window.document) {
 		const htmlElement = window.document.querySelector("html");
-		let element: Element | null | ParentNode = this.deepActive(root);
+		let element: Element | null = this.deepActive(root);
 
-		while (element && (element as Element).getAttribute("data-sap-ui-fastnavgroup") !== "true" && element !== htmlElement) {
-			element = element.parentElement ? element.parentNode : (element.parentNode as ShadowRoot).host;
+		while (element && element.getAttribute("data-sap-ui-fastnavgroup") !== "true" && element !== htmlElement) {
+			element = getParentElement(element);
 		}
 
 		this.selectedGroup = element as HTMLElement;
@@ -231,6 +244,11 @@ class F6Navigation {
 			f6Registry.instance?.destroy();
 			f6Registry.instance = new F6Navigation();
 		}
+	}
+
+	static destroy() {
+		const f6Registry = getSharedResource<F6Registry>("F6Registry", {});
+		f6Registry.instance?.destroy();
 	}
 }
 

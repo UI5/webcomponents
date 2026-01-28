@@ -4,7 +4,7 @@ export default function GitHubNavBarItem() {
     return (
         <>
             <a 
-                href="https://github.com/SAP/ui5-webcomponents/"
+                href="https://github.com/UI5/webcomponents/"
                 target="_blank" rel="noopener noreferrer" 
                 className="navbar__item navbar__link header-github-link"
                 aria-label="GitHub repository"

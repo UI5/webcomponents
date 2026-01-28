@@ -13,7 +13,7 @@
 	height: var(--_ui5_input_height);
 	color: var(--sapField_TextColor);
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-style: normal;
 	border: var(--_ui5-input-border);
 	border-radius: var(--_ui5_input_border_radius);
@@ -128,8 +128,13 @@
 [inner-input][type="search"]::-webkit-search-decoration,
 [inner-input][type="search"]::-webkit-search-cancel-button,
 [inner-input][type="search"]::-webkit-search-results-button,
-[inner-input][type="search"]::-webkit-search-results-decoration { 
-	display: none; 
+[inner-input][type="search"]::-webkit-search-results-decoration {
+	display: none;
+}
+
+[inner-input]::-ms-reveal,
+[inner-input]::-ms-clear {
+	display: none;
 }
 
 .ui5-input-value-state-icon {
@@ -226,7 +231,7 @@
 }
 
 :host([readonly]:not([disabled])) {
-	border-color: var(--_ui5_input_readonly_border_color);
+	border: var(--_ui5_input_readonly_border);
 	background: var(--sapField_ReadOnly_BackgroundStyle);
 	background-color: var(--_ui5_input_readonly_background);
 }

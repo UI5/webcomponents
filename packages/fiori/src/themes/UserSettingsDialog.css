@@ -1,0 +1,114 @@
+.ui5-user-settings-dialog {
+	max-width: calc(100% - 2px);
+	max-height: calc(100% - 2px);
+	width: 100%;
+	height: 100%;
+}
+
+.ui5-user-settings-dialog::part(content) {
+	padding: 0;
+}
+
+.ui5-user-settings-dialog::part(footer) {
+	padding: 0;
+}
+
+.ui5-user-settings-root {
+	display: flex;
+	height: 100%;
+}
+
+.ui5-user-settings-side {
+	flex: 1;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	max-width: 100%;
+	overflow: hidden;
+}
+
+.ui5-user-settings-side-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+}
+
+.ui5-user-settings-side-search {
+	width: 100%;
+}
+
+.ui5-user-settings-side-items,
+.ui5-user-settings-side-fixedItems {
+	border-top: 0.0625rem solid var(--sapList_BorderColor);
+}
+
+.ui5-user-settings-side-items {
+	flex: 1;
+	min-height: 0;
+}
+
+
+.ui5-user-settings-side-text {
+	align-self: center;
+}
+
+.ui5-user-settings-side-fixedItems :last-child {
+	border-bottom: none;
+}
+
+.ui5-user-settings-content {
+	display: none;
+	flex: 1;
+	background-color: var(--sapGroup_ContentBackground);
+	height: 100%;
+	overflow: hidden;
+}
+
+.ui5-user-settings-dialog[on-phone] {
+	border-radius: 0;
+}
+
+.ui5-user-settings-item-no-icon::part(title) {
+	padding-left: 1.875rem; /* width of icon */
+}
+
+@media screen and (width >= 37.5rem) and (width < 64rem) {
+	.ui5-user-settings-dialog:not([on-phone]) {
+		max-width: min(40rem, 80%);
+		max-height: min(42.5rem, 88%);
+	}
+}
+
+@media screen and (width < 64rem) {
+	:host([_collapsed]) .ui5-user-settings-content {
+		display: block;
+	}
+
+	:host([_collapsed]) .ui5-user-settings-side {
+		display: none;
+	}
+}
+
+@media screen and (width >= 64rem) {
+	.ui5-user-settings-dialog {
+		width: 60rem;
+		max-height: min(42.5rem, 88%);
+	}
+
+	.ui5-user-settings-side {
+		max-width: 20rem;
+	}
+
+	:dir(ltr) .ui5-user-settings-side {
+		border-right: 0.0625rem solid var(--sapList_BorderColor);
+	}
+
+	:dir(rtl) .ui5-user-settings-side {
+		border-left: 0.0625rem solid var(--sapList_BorderColor);
+	}
+
+	.ui5-user-settings-content {
+		display: block;
+	}
+}

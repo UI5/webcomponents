@@ -1,8 +1,13 @@
 @import "./InvisibleTextStyles.css";
 @import "./TapHighlightColor.css";
+@import "./FormComponents.css";
 
 :host(:not([hidden])) {
 	display: inline-block;
+}
+
+:host([required]) {
+	vertical-align: middle;
 }
 
 :host {

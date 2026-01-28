@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,191 +13,131 @@
 		// delete Document.prototype.adoptedStyleSheets
 	</script>
 </head>
-<body>
+<body class="fileuploader1auto">
 
 	<div>
-		<ui5-button id="open-dialog-btn">open</ui5-button>
-		<ui5-dialog id="dialog" opener="open-dialog-btn" header-text="Upload file">
-			<ui5-file-uploader>
+		<div>
+			<ui5-label for="fileSelector1" required>Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector1" style="width: 350px;" multiple required>
 				<ui5-button>Upload</ui5-button>
 			</ui5-file-uploader>
-			<div slot="footer" class="dialogFooter">
-				<ui5-button design="Emphasized">Close</ui5-button>
-			</div>
-		</ui5-dialog>
-	</div>
-
-	<div>
-		<label>Single file upload:</label>
-		<ui5-file-uploader placeholder="upload file">
-			<ui5-button>Upload</ui5-button>
-		</ui5-file-uploader>
-	</div>
-
-	<div>
-		<label>FileUploader with ValueState</label>
-		<ui5-file-uploader placeholder="upload file" value-state="Critical" id="fu-valuestate-test">
-			<ui5-button>Upload</ui5-button>
-		</ui5-file-uploader>
-
-		<ui5-file-uploader placeholder="upload file" value-state="Negative">
-			<ui5-button>Upload</ui5-button>
-			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
-			<div slot="valueStateMessage">Information message 2. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
-		</ui5-file-uploader>
-	</div>
-
-	<div>
-		<label>Multiple files upload:</label>
-		<ui5-file-uploader multiple>
-			<ui5-button>Upload</ui5-button>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>Accept only .txt and .docx files:</label>
-		<ui5-file-uploader accept=".txt,.docx" id="file-uploader-accept">
-			<ui5-button>Upload</ui5-button>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>Value state Error:</label>
-		<ui5-file-uploader value-state="Negative">
-			<ui5-button end-icon="upload">Upload</ui5-button>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>Disabled uploader:</label>
-		<ui5-file-uploader disabled id="disabled"></ui5-file-uploader>
-	</div>
-	<div>
-		<label>Button only:</label>
-		<ui5-file-uploader hide-input id="file-uploader-no-input">
-			<ui5-button end-icon="upload">Upload</ui5-button>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>With Avatar:</label>
-		<ui5-file-uploader hide-input>
-			<ui5-avatar icon="upload"></ui5-avatar>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>With Icons:</label>
-		<ui5-file-uploader hide-input>
-			<ui5-icon name="upload"></ui5-icon>
-			<ui5-icon name="upload"></ui5-icon>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<label>With tag:</label>
-		<ui5-file-uploader hide-input>
-			<ui5-tag>Upload File</ui5-tag>
-		</ui5-file-uploader>
-	</div>
-	<div>
-		<ui5-title>Maximum File Size</ui5-title>
-		<div class="fileuploader1auto">
-			<label>Accepts maximum file size of 1 MB:</label>
-			<div>
-				<ui5-file-uploader 
-					placeholder="Upload"
-					max-file-size="1"
-					multiple
-					id="file-uploader-max-size">
-					<ui5-button>Upload</ui5-button>
-				</ui5-file-uploader>
-			</div>
-			<div>
-				<label>Event "file-size-exceed" thrown count:</label>
-				<span id="file-size-exceed-count">0</span>
-			</div>
-			<div id="file-size-exceed-result"></div>
 		</div>
-	</div>
-	<div>
-		<ui5-title>Form support</ui5-title>
-		<form
-			class="fileuploader1auto"
-			method="POST"
-			action="http://localhost:3000/echo"
-			enctype="multipart/form-data"
-		>
-			<div>
-				<label>Disabled uploader:</label>
-				<ui5-file-uploader disabled name="disabledUploader"></ui5-file-uploader>
-			</div>
-			<div>
-				<label>Normal uploader:</label>
-				<ui5-file-uploader name="enabledUploader"></ui5-file-uploader>
-			</div>
-			<div>
-				<label>Native input type="file":</label>
-				<input name="nativeInput" type="file">
-			</div>
-			<ui5-button submits>Submit</ui5-button>
-		</form>
-	</div>
-	<div>
-		<ui5-title>Upload files async using fetch</ui5-title>
-		<div class="fileuploader1auto">
-			<ui5-file-uploader id="fuFetch"></ui5-file-uploader>
-			<ui5-button id="uploadBtn">Upload</ui5-button>
+
+		<div>
+			<ui5-label>Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector2" style="width: 350px;" accessible-name="Choose Files" multiple value-state="Negative">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
 		</div>
-	</div>
-	<script>
 
-		const dialog = document.getElementById("dialog");
-		document.getElementById("open-dialog-btn").addEventListener("click", function() {
-			dialog.open = !dialog.open;
-		});
+		<div>
+			<ui5-label id="labelForUploader3">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector3" style="width: 350px;" accessible-name-ref="labelForUploader3" multiple value-state="Positive">
+				<ui5-button>Upload</ui5-button>
+				<div slot="valueStateMessage">The selected files are uploaded successfully</div>
+			</ui5-file-uploader>
+		</div>
 
-		document.getElementById("uploadBtn").addEventListener("click", function() {
-			var fu = document.getElementById("fuFetch");
-			var data = new FormData();
+		<div>
+			<ui5-label for="fileSelector4">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector4" style="width: 350px;" multiple value-state="Critical">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
 
-			for (var i = 0; i < fu.files.length; i++) {
-				data.append("file", fu.files[i]);
+		<div>
+			<ui5-label for="fileSelector5">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector5" style="width: 350px;" multiple value-state="Information">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="buttonOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="buttonOnly" multiple hide-input>
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="avatarOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="avatarOnly" multiple hide-input>
+				<ui5-avatar icon="product" interactive shape="Circle" size="XS"></ui5-avatar>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="iconOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="iconOnly" multiple hide-input>
+				<ui5-icon name="value-help" mode="Interactive"></ui5-icon>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="noneFile">Choose files with maximum size of 1 MB:</ui5-label>
+			<ui5-file-uploader id="noneFile" style="width: 350px;" max-file-size="1" value-state="None"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="disabledFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="disabledFile" style="width: 350px;" disabled></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="negativeFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="negativeFile" style="width: 350px;" value-state="Negative"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="positiveFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="positiveFile" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Positive"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="criticalFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="criticalFile" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Critical"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="infoInput">Choose files:</ui5-label>
+			<ui5-file-uploader id="infoInput" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Information"></ui5-file-uploader>
+		</div>
+		<div>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-label for="formFileUploader">Choose files:</ui5-label>
+				<ui5-file-uploader id="formFileUploader" placeholder="Upload your files here" style="width: 350px;" required></ui5-file-uploader>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</div>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const formFileUploader = document.getElementById('formFileUploader');
+
+			btnCheckFormValidity.addEventListener('click', function() {
+				checkFormValidity('formFileUploader');
+			});
+
+			formFileUploader.addEventListener('ui5-change', function() {
+				setTimeout(() => {
+					checkFormValidity('formFileUploader', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
 			}
-
-			fetch("http://localhost:3000/echo", {
-				method: "POST",
-				body: data
-			})
-			.then(function(res) {
-				console.log(`Success! Response status: ${res.status}`);
-			})
-			.catch(function(err) {
-				console.log("Error")
-			})
-		});
-
-		const eventCount = document.getElementById("file-size-exceed-count");
-		const eventResult = document.getElementById("file-size-exceed-result");
-		const maxSizeFileUploader = document.getElementById("file-uploader-max-size")
-		
-		maxSizeFileUploader.addEventListener("file-size-exceed", function (event) {
-			eventCount.innerHTML = parseFloat(eventCount.innerHTML) + 1;
-	
-			const uploaderMaxSize = maxSizeFileUploader.maxFileSize;
-			const filesData = event.detail.filesData;
-
-			filesData.forEach(fileData => {
-				const fileSizeDifference = (fileData.fileSize - uploaderMaxSize).toFixed(2);
-				const errorMessage = "Can't upload file '" + fileData.fileName + "' because it exceeds the maximum upload size by " + fileSizeDifference + " MB.";
-
-				const messageStrip = document.createElement('ui5-message-strip');
-				messageStrip.addEventListener("close", handleMessageClose);
-				eventResult.append(messageStrip);
-
-				messageStrip.design = "Negative";
-				messageStrip.innerHTML = errorMessage;
-			})
-		})
-
-		function handleMessageClose(event) {
-			event.target.remove();
-		}
-
-	</script>
+		</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import TableCellTemplate from "./generated/templates/TableCellTemplate.lit.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
+import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
 import type TableRow from "./TableRow.js";
@@ -22,7 +23,6 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
  * @extends TableCellBase
  * @since 2.0.0
  * @public
- * @experimental This web component is available since 2.0 with an experimental flag and its API and behavior are subject to change.
  */
 @customElement({
 	tag: "ui5-table-cell",
@@ -30,32 +30,47 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 	template: TableCellTemplate,
 })
 class TableCell extends TableCellBase {
+	@query("#popin-header")
+	_popinHeader?: HTMLElement;
+
+	@query("#popin-content")
+	_popinContent?: HTMLElement;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		if (this.horizontalAlign) {
 			this.style.justifyContent = this.horizontalAlign;
-		} else if (this._individualSlot) {
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
+		} else if (this._headerCell) {
+			this.style.justifyContent = `var(--halign-${this._headerCell._id})`;
+		}
+	}
+
+	_injectHeaderNodes(ref: HTMLElement | null) {
+		if (ref && !ref.hasChildNodes()) {
+			ref.replaceChildren(...this._popinHeaderNodes);
 		}
 	}
 
 	get _headerCell() {
-		const row = this.parentElement as TableRow;
-		const table = row.parentElement as Table;
-		const index = row.cells.indexOf(this);
-		return table.headerRow[0].cells[index];
+		const row = this.parentElement as TableRow | null;
+		const table = row?.parentElement as Table | null;
+		const index = row?.cells?.indexOf(this) ?? -1;
+
+		return (index !== -1) ? table?.headerRow?.[0]?.cells?.[index] : null;
 	}
 
 	get _popinHeaderNodes() {
-		const nodes = [];
+		const nodes: Node[] = [];
 		const headerCell = this._headerCell;
-		if (headerCell.popinText) {
-			nodes.push(headerCell.popinText);
-		} else {
-			nodes.push(...this._headerCell.content.map(node => node.cloneNode(true)));
-		}
-		if (headerCell.action[0]) {
-			nodes.push(headerCell.action[0].cloneNode(true));
+		if (headerCell) {
+			if (headerCell.popinText) {
+				nodes.push(document.createTextNode(headerCell.popinText));
+			} else {
+				nodes.push(...headerCell.content.map(node => node.cloneNode(true)));
+			}
+			if (headerCell.action[0]) {
+				nodes.push(headerCell.action[0].cloneNode(true));
+			}
 		}
 		return nodes;
 	}

@@ -28,6 +28,7 @@ export default function TokenTemplate(this: Token) {
 							accessibleName={this.tokenDeletableText}
 							showTooltip={true}
 							onClick={this._delete}
+							onMouseDown={this._onmousedown}
 						/>
 					}
 				</div>

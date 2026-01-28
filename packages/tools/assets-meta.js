@@ -38,7 +38,7 @@ const assetsMeta = {
       "hi",
       "hr",
       "hu",
-      "in",
+      "id",
       "it",
       "iw",
       "ja",

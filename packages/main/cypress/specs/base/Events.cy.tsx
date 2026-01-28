@@ -13,8 +13,16 @@ import Menu from "../../../src/Menu.js";
 import MultiComboBox from "../../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../../src/MultiComboBoxItem.js";
 import CheckBox from "../../../src/CheckBox.js";
+import { setAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
+import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
+import type ResponsivePopover from "../../../src/ResponsivePopover.js";
 
 describe("Event bubbling", () => {
+	before(() => {
+		cy.wrap({ setAnimationMode })
+			.invoke("setAnimationMode", AnimationMode.None);
+	})
+
 	it("test bubbling events", () => {
 		cy.mount(
 			<div id="app">
@@ -50,38 +58,50 @@ describe("Event bubbling", () => {
 
 		cy.get("@app")
 			.then(app => {
-				app.get(0).addEventListener("close", cy.stub().as("appClosed"));
-				app.get(0).addEventListener("toggle", cy.stub().as("appToggled"));
+				app.get(0).addEventListener("ui5-close", cy.stub().as("appClosed"));
+				app.get(0).addEventListener("ui5-toggle", cy.stub().as("appToggled"));
 			});
 
 		cy.get("@dialog")
 			.then(dialog => {
-				dialog.get(0).addEventListener("close", cy.stub().as("dialogClosed"));
+				dialog.get(0).addEventListener("ui5-close", cy.stub().as("dialogClosed"));
 			});
 
 		cy.get("@input")
 			.then(input => {
-				input.get(0).addEventListener("close", cy.stub().as("inpClosed"));
+				input.get(0).addEventListener("ui5-close", cy.stub().as("inpClosed"));
 			});
 
 		cy.get("@messageStrip")
 			.then(messageStrip => {
-				messageStrip.get(0).addEventListener("close", cy.stub().as("msgClosed"));
+				messageStrip.get(0).addEventListener("ui5-close", cy.stub().as("msgClosed"));
 			});
 
 		cy.get("@panel")
 			.then(panel => {
-				panel.get(0).addEventListener("toggle", cy.stub().as("panelToggled"));
+				panel.get(0).addEventListener("ui5-toggle", cy.stub().as("panelToggled"));
 			});
 
 		cy.get("@dialog").invoke("attr", "open", true);
+
+		cy.get<Dialog>("@dialog")
+			.ui5DialogOpened()
+
+		cy.wait(200);
 
 		// act - toggle Input suggestions
 		cy.get("@input")
 			.realClick();
 
 		cy.get("@input")
-			.realType("a");
+			.should("be.focused");
+
+		cy.realType("a");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get("@input")
 			.find("[ui5-suggestion-item]")
@@ -124,7 +144,7 @@ describe("Event bubbling", () => {
 	it("test non-bubbling events", () => {
 		cy.mount(
 			<div id="app">
-				<Dialog id="myDialog" headerText="Dialog">
+				<Dialog id="myDialog" headerText="Dialog" >
 					<Select id="mySelect">
 						<Option>Hello</Option>
 						<Option>World</Option>
@@ -132,7 +152,7 @@ describe("Event bubbling", () => {
 					</Select>
 
 					<Button id="btnOpen">Open Menu</Button>
-					<Menu id="myMenu" header-text="Menu" opener="btnOpen">
+					<Menu id="myMenu" headerText="Menu" opener="btnOpen">
 						<MenuItem text="New File"></MenuItem>
 						<MenuItem text="New Folder"></MenuItem>
 					</Menu>
@@ -197,7 +217,7 @@ describe("Event bubbling", () => {
 
 		cy.get("@multiCombobox")
 			.then(multiCombobox => {
-				multiCombobox.get(0).addEventListener("open", cy.stub().as("mcbOpened"));
+				multiCombobox.get(0).addEventListener("ui5-open", cy.stub().as("mcbOpened"));
 			});
 
 		cy.get("@dialog").invoke("attr", "open", true);

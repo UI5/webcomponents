@@ -84,18 +84,18 @@
 }
 
 :host([state="Negative"]) .ui5-dialog-value-state-icon {
-	color: var(--_ui5_dialog_header_error_state_icon_color);
+	color: var(--sapNegativeElementColor);
 }
 
 :host([state="Information"]) .ui5-dialog-value-state-icon {
-	color: var(--_ui5_dialog_header_information_state_icon_color);
+	color: var(--sapInformativeElementColor);
 }
 :host([state="Positive"]) .ui5-dialog-value-state-icon {
-	color: var(--_ui5_dialog_header_success_state_icon_color);
+	color: var(--sapPositiveElementColor);
 }
 
 :host([state="Critical"]) .ui5-dialog-value-state-icon {
-	color: var(--_ui5_dialog_header_warning_state_icon_color);
+	color: var(--sapCriticalElementColor);
 }
 
 .ui5-popup-header-root {
@@ -137,22 +137,6 @@
 
 .ui5-popup-resize-handle [ui5-icon] {
 	color: var(--sapButton_Lite_TextColor);
-}
-
-::slotted([slot="footer"]) {
-	height: var(--_ui5_dialog_footer_height);
-}
-
-::slotted([slot="footer"][ui5-bar][design="Footer"]) {
-	border-top: none;
-}
-
-::slotted([slot="header"][ui5-bar]) {
-	box-shadow: none;
-}
-
-::slotted([slot="footer"][ui5-toolbar]) {
-	border: 0;
 }
 
 :host::backdrop {

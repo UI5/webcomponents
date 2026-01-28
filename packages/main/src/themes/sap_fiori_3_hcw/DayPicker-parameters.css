@@ -2,7 +2,6 @@
 
 :root {
 	--_ui5_daypicker_item_border: none;
-	--_ui5_daypicker_item_selected_box_shadow: none;
 	--_ui5_daypicker_item_selected_background: var(--sapContent_Selected_Background);
 	--_ui5_daypicker_dayname_color: var(--sapContent_LabelColor);
 	--_ui5_daypicker_weekname_color: var(--sapContent_LabelColor);

@@ -1,0 +1,125 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+	<link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<!-- playground-fold-end -->
+	<ui5-page style="height: 500px">
+		<ui5-shellbar
+			design="Header" slot="header"
+			secondary-title="The Best Run SAP"
+		>
+			<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
+			<ui5-button icon="menu2" slot="startButton" id="menuBtn"></ui5-button>
+		</ui5-shellbar>
+		<ui5-responsive-popover id="respPopover" opener="menuBtn" placement="Bottom" accessible-name="Main Navigation">
+			<ui5-side-navigation id="sideNavigation">
+				<!-- Items -->
+				<ui5-side-navigation-item text="Home" href="#contHome" icon="home" selected></ui5-side-navigation-item>
+				<ui5-side-navigation-group text="Group 1" expanded>
+					<ui5-side-navigation-item text="People" href="#contItem1" icon="group">
+						<ui5-side-navigation-sub-item text="From My Team" href="#contSubitem1"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="From Other Teams" href="#contSubitem2"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Recent Applications for user role" href="#contItem2" icon="history"></ui5-side-navigation-item>
+				</ui5-side-navigation-group>
+				<ui5-side-navigation-group text="Group 2" expanded>
+					<ui5-side-navigation-item text="Locations" href="#contItem3" icon="locate-me"></ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Events" expanded unselectable icon="calendar">
+						<ui5-side-navigation-sub-item text="Local" href="#contSubitem3"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Others" href="#contSubitem4"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+				</ui5-side-navigation-group>
+				<!-- Fixed Items -->
+				<ui5-side-navigation-item slot="fixedItems" id="quickAction" text="Create" design="Action" unselectable icon="write-new"></ui5-side-navigation-item>
+				<ui5-side-navigation-item slot="fixedItems" text="App Finder" href="https://openui5.hana.ondemand.com/demoapps" target="_blank" icon="widgets"></ui5-side-navigation-item>
+				<ui5-side-navigation-item slot="fixedItems" text="Legal" href="https://www.sap.com/about/legal/impressum.html" target="_blank" icon="compare"></ui5-side-navigation-item>
+			</ui5-side-navigation>
+		</ui5-responsive-popover>
+		<div class="content">
+			<div id="contHome" class="contentItem contentItemVisible">
+				<ui5-title>Home</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contItem1" class="contentItem">
+				<ui5-title>People</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contItem2" class="contentItem">
+				<ui5-title>Recent Applications for user role</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contItem3" class="contentItem">
+				<ui5-title>Locations</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contItem6" class="contentItem">
+				<ui5-title>Item 6</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contSubitem1" class="contentItem">
+				<ui5-title>From My Team</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contSubitem2" class="contentItem">
+				<ui5-title>From Other Teams</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contSubitem3" class="contentItem">
+				<ui5-title>Local Events</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+			<div id="contSubitem4" class="contentItem">
+				<ui5-title>Other Events</ui5-title>
+				<br />
+				<ui5-text>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</ui5-text>
+			</div>
+		</div>
+
+		<ui5-dialog header-text="Create New Item" draggable resizable id="quickActionDialog">
+			<ui5-text>Create new item...</ui5-text>
+			<ui5-bar slot="footer" design="Footer">
+				<ui5-button slot="endContent" design="Emphasized">Create</ui5-button>
+				<ui5-button slot="endContent" id="quickActionCloseBtn">Close</ui5-button>
+			</ui5-bar>
+		</ui5-dialog>
+	</ui5-page>
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

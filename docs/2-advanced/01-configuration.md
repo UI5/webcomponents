@@ -270,6 +270,8 @@ Example:
 ### themeRoot
 <a name="themeRoot"></a>
 
+**Deprecated:** Please use the `theme` setting to pass both the theme and theme root, in the `theme@themeRoot` format instead
+
 Allows you to set a URL, from which the framework will fetch the theme styles (CSS variables).
 
 *Note:* This configuration setting is only applicable to custom themes, created with SAP Theme Designer.
@@ -282,6 +284,25 @@ Example:
 }
 </script>
 ```
+
+or, the preferred new format:
+
+```html
+<script data-ui5-config type="application/json">
+{
+	"theme": "sap_horizon@https://my-example-host.com/"
+}
+</script>
+```
+
+*Important:* You must explicitly allow specific origins for this configuration setting to work:
+
+```html
+<head>
+	<meta name="sap-allowed-theme-origins" content="https://my-example-host.com/,https://my-example-host2.com/">
+```
+
+Failing to do so will result in a warning in the console and the theme root will not be set.
 
 ## Configuration Script
 <a name="script"></a>

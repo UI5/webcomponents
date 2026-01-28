@@ -20,7 +20,6 @@ import type SuggestionItemGroup from "../SuggestionItemGroup.js";
 import type { IInputSuggestionItem, IInputSuggestionItemSelectable } from "../Input.js";
 
 interface SuggestionComponent extends UI5Element {
-	_isValueStateFocused: boolean;
 	focused: boolean;
 	hasSuggestionItemSelected: boolean;
 	value: string;
@@ -123,11 +122,6 @@ class Suggestions {
 
 		const isItemIndexValid = this.selectedItemIndex - 10 > -1;
 
-		if (this._hasValueState && !isItemIndexValid) {
-			this._focusValueState();
-			return true;
-		}
-
 		this._moveItemSelection(this.selectedItemIndex,
 			isItemIndexValid ? this.selectedItemIndex -= 10 : this.selectedItemIndex = 0);
 		return true;
@@ -136,14 +130,14 @@ class Suggestions {
 	onPageDown(e: KeyboardEvent) {
 		e.preventDefault();
 
-		const items = this._getItems();
-		const lastItemIndex = items.length - 1;
-		const isItemIndexValid = this.selectedItemIndex + 10 <= lastItemIndex;
+		const items = this.visibleItems;
 
-		if (this._hasValueState && !items) {
-			this._focusValueState();
+		if (!items) {
 			return true;
 		}
+
+		const lastItemIndex = items.length - 1;
+		const isItemIndexValid = this.selectedItemIndex + 10 <= lastItemIndex;
 
 		this._moveItemSelection(this.selectedItemIndex,
 			isItemIndexValid ? this.selectedItemIndex += 10 : this.selectedItemIndex = lastItemIndex);
@@ -152,11 +146,6 @@ class Suggestions {
 
 	onHome(e: KeyboardEvent) {
 		e.preventDefault();
-
-		if (this._hasValueState) {
-			this._focusValueState();
-			return true;
-		}
 
 		this._moveItemSelection(this.selectedItemIndex, this.selectedItemIndex = 0);
 		return true;
@@ -167,8 +156,7 @@ class Suggestions {
 
 		const lastItemIndex = this._getItems().length - 1;
 
-		if (this._hasValueState && !lastItemIndex) {
-			this._focusValueState();
+		if (!lastItemIndex) {
 			return true;
 		}
 
@@ -306,16 +294,6 @@ class Suggestions {
 
 		const previousSelectedIdx = this.selectedItemIndex;
 
-		if (this._hasValueState && previousSelectedIdx === -1 && !this.component._isValueStateFocused) {
-			this._focusValueState();
-			return;
-		}
-
-		if ((previousSelectedIdx === -1 && !this._hasValueState) || this.component._isValueStateFocused) {
-			this._clearValueStateFocus();
-			this.selectedItemIndex = -1;
-		}
-
 		if (previousSelectedIdx !== -1 && previousSelectedIdx + 1 > itemsCount - 1) {
 			return;
 		}
@@ -324,30 +302,8 @@ class Suggestions {
 	}
 
 	_selectPreviousItem() {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const previousSelectedIdx = this.selectedItemIndex;
-
-		if (this._hasValueState && previousSelectedIdx === 0 && !this.component._isValueStateFocused) {
-			this.component.hasSuggestionItemSelected = false;
-			this.component._isValueStateFocused = true;
-			this.selectedItemIndex = 0;
-
-			items[0].focused = false;
-
-			if (items[0].hasAttribute("ui5-suggestion-item")) {
-				(items[0] as SuggestionItem).selected = false;
-			}
-
-			return;
-		}
-
-		if (this.component._isValueStateFocused) {
-			this.component.focused = true;
-			this.component._isValueStateFocused = false;
-			this.selectedItemIndex = 0;
-
-			return;
-		}
 
 		if (previousSelectedIdx === -1 || previousSelectedIdx === null) {
 			return;
@@ -369,21 +325,24 @@ class Suggestions {
 		this._moveItemSelection(previousSelectedIdx, --this.selectedItemIndex);
 	}
 
+	get visibleItems() {
+		return this._getItems().filter(item => !item.hidden);
+	}
+
 	_moveItemSelection(previousIdx: number, nextIdx: number) {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const currentItem = items[nextIdx];
 		const previousItem = items[previousIdx];
 		const nonGroupItems = this._getNonGroupItems();
-		const isGroupItem = currentItem.hasAttribute("ui5-suggestion-item-group");
+		const isGroupItem = currentItem?.hasAttribute("ui5-suggestion-item-group");
 
 		if (!currentItem) {
 			return;
 		}
 
 		this.component.focused = false;
-		this._clearValueStateFocus();
 
-		const selectedItem = this._getItems()[this.selectedItemIndex];
+		const selectedItem = this.visibleItems[this.selectedItemIndex];
 
 		this.accInfo = {
 			isGroup: isGroupItem,
@@ -420,7 +379,7 @@ class Suggestions {
 		this.onItemSelect(currentItem);
 
 		if (!this._isItemIntoView(currentItem)) {
-			const itemRef = this._isGroupItem ? (currentItem.shadowRoot!.querySelector("[ui5-li-group-header]") as ListItemGroupHeader)! : currentItem;
+			const itemRef = this._isGroupItem ? (currentItem.shadowRoot!.querySelector("[ui5-li-group-header]") as ListItemGroupHeader) : currentItem;
 			this._scrollItemIntoView(itemRef);
 		}
 	}
@@ -468,7 +427,7 @@ class Suggestions {
 
 	_getScrollContainer() {
 		if (!this._scrollContainer) {
-			this._scrollContainer = this._getPicker()!.shadowRoot!.querySelector(".ui5-popup-content")!;
+			this._scrollContainer = this._getPicker().shadowRoot!.querySelector(".ui5-popup-content")!;
 		}
 
 		return this._scrollContainer;
@@ -517,7 +476,7 @@ class Suggestions {
 
 		const itemPositionText = Suggestions.i18nBundle.getText(LIST_ITEM_POSITION, this.accInfo.currentPos || 0, this.accInfo.listSize || 0);
 
-		return `${this.accInfo.additionalText} ${itemPositionText}`;
+		return `${this.accInfo.additionalText} ${itemPositionText}`.trim();
 	}
 
 	hightlightInput(text: string, input: string) {
@@ -526,20 +485,6 @@ class Suggestions {
 
 	get _hasValueState() {
 		return this.component.hasValueStateMessage;
-	}
-
-	_focusValueState() {
-		this.component._isValueStateFocused = true;
-		this.component.focused = false;
-		this.component.hasSuggestionItemSelected = false;
-		this.selectedItemIndex = 0;
-		this.component.value = this.component.typedInValue;
-
-		this._deselectItems();
-	}
-
-	_clearValueStateFocus() {
-		this.component._isValueStateFocused = false;
 	}
 
 	_clearSelectedSuggestionAndaccInfo() {

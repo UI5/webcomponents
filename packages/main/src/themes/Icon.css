@@ -80,7 +80,7 @@
  * In this case, we need to explicitly check for it as the global CSS definitions (rtl-parameters.css)
  * is placed in the "head" and won't consider it.
  */
-.ui5-icon-root:not([dir="ltr"]) {
+.ui5-icon-root:not([dir="ltr"]) > g {
 	transform: var(--_ui5_icon_transform_scale);
 	transform-origin: center;
 }

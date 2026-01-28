@@ -1,5 +1,24 @@
 import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import Button from "../../src/Button.js";
+import Bar from "../../src/Bar.js";
+
+class MySimpleComponent extends HTMLElement {
+	constructor() {
+		super();
+		this.attachShadow({ mode: "open", delegatesFocus: true });
+
+		this.shadowRoot.innerHTML = `
+			<!-- HTML Comment -->
+			<button onclick="alert('Hello!')">Click Me</button>
+			<!-- HTML Comment -->
+		`;
+	}
+}
+
+customElements.define("my-simple-component", MySimpleComponent);
+
+// @ts-ignore
+const MySimpleComponentRenderer = () => <my-simple-component id="second" data-sap-ui-fastnavgroup="true">Second focusable</my-simple-component>
 
 describe("F6 navigation", () => {
 	describe("F6 Forward navigation", () => {
@@ -15,8 +34,8 @@ describe("F6 navigation", () => {
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
-					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="second">Second focusable</Button>
+					<div class="section">
+						<MySimpleComponentRenderer />
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
@@ -237,7 +256,9 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="first">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<Button id="first">First focusable</Button>
+							</div>
 						</div>
 					</div>
 					<div class="section">
@@ -245,14 +266,20 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="second">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<div class="section" data-sap-ui-fastnavgroup="true">
+									<div class="section" data-sap-ui-fastnavgroup="true">
+										<Button id="second">Second focusable</Button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Second focusable</Button>
+						<Button id="third">Third focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>
@@ -430,8 +457,8 @@ describe("F6 navigation", () => {
 				<div class="section">
 					<Button>Something focusable</Button>
 				</div>
-				<div class="section" data-sap-ui-fastnavgroup="true">
-					<Button id="second">Second focusable</Button>
+				<div class="section">
+					<MySimpleComponentRenderer />
 				</div>
 				<div class="section">
 					<Button>Something focusable</Button>
@@ -651,7 +678,9 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="first">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<Button id="first">First focusable</Button>
+							</div>
 						</div>
 					</div>
 					<div class="section">
@@ -659,14 +688,20 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="second">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<div class="section" data-sap-ui-fastnavgroup="true">
+									<div class="section" data-sap-ui-fastnavgroup="true">
+										<Button id="second">Second focusable</Button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Second focusable</Button>
+						<Button id="third">Third focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>
@@ -872,18 +907,18 @@ describe("F6 navigation", () => {
 			cy.mount(
 				<div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<ui5-button>Non group focusable</ui5-button>
+						<Button>Non group focusable</Button>
 					</div>
 					<div data-sap-ui-fastnavgroup-container="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<ui5-button id="first">First group focusable</ui5-button>
+							<Button id="first">First group focusable</Button>
 						</div>
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<ui5-button id="second">Second group focusable</ui5-button>
+							<Button id="second">Second group focusable</Button>
 						</div>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<ui5-button>Non group focusable</ui5-button>
+						<Button>Non group focusable</Button>
 					</div>
 				</div>
 			);
@@ -900,6 +935,76 @@ describe("F6 navigation", () => {
 			cy.realPress(["Shift", "F6"]);
 
 			cy.get("#first")
+				.should("be.focused");
+		});
+	});
+
+
+	describe("Bypass groups", () => {
+		it("Custom defined groups", () => {
+			cy.mount(
+				<div>
+					<div class="section">
+						<button id="before">Before element</button>
+					</div>
+					<div class="section" data-sap-ui-fastnavgroup="false">
+						<Button>Skipped element</Button>
+					</div>
+					<div class="section">
+						<Button>Something focusable</Button>
+					</div>
+					<div class="section" data-sap-ui-fastnavgroup="true">
+						<Button id="first">First focusable</Button>
+					</div>
+				</div>
+			);
+
+			// act
+			cy.get("#before").focus();
+			cy.realPress("F6");
+
+			// assert 1st group is focused
+			cy.get("#first")
+				.should("be.focused");
+		});
+
+		it("Built-in groups", () => {
+			cy.mount(
+				<div>
+					<div class="section">
+						<button id="before">Before element</button>
+					</div>
+					<Bar>
+						<Button id="first">First focusable element</Button>
+					</Bar>
+
+					<Bar data-sap-ui-fastnavgroup="false" id="skippedBar">
+						<Button>Skipped element</Button>
+					</Bar>
+					<div class="section">
+						<Button>Something focusable</Button>
+					</div>
+					<div class="section" data-sap-ui-fastnavgroup="true">
+						<Button id="second">Second focusable</Button>
+					</div>
+				</div>
+			);
+
+			// act
+			cy.get("#before").focus();
+			cy.realPress("F6");
+
+			// assert 1st group is focused
+			cy.get("#first")
+				.should("be.focused");
+
+			cy.get("#skippedBar")
+				.should("have.attr", "data-sap-ui-fastnavgroup", "false");
+
+			cy.realPress("F6");
+
+			// assert 2nd group is focused
+			cy.get("#second")
 				.should("be.focused");
 		});
 	});

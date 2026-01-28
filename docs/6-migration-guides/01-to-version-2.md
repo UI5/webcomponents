@@ -908,7 +908,7 @@ Now use the new `mode` property instead:
 | Changed item | Old     | New     | 
 |--------------|---------|---------|
 | Property     | value-state="Error/Warning/Success" | value-state="Negative/Critical/Positive" |
-| Property     | `previewItem`                       |                                          |
+| Property     | `previewItem`                       | Removed                                  |
 | Method       | `openPicker`                        | `open`                                   | 
 | Event        | `suggestion-item-preview`           | `selection-change`                       | 
 | Event        | `suggestion-item-select`            | Removed                                  | 
@@ -1168,9 +1168,13 @@ Now use `noValidation` instead:
 
 | Changed item | Old     | New     | 
 |--------------|---------|---------|
-| Property     | value-state="Error/Warning/Success" | value-state="Negative/Critical/Positive" | 
+| Property     | value-state="Error/Warning/Success" | value-state="Negative/Critical/Positive" |
+| Property     | `previewItem`                       | Removed                                  |
+| Method       | `openPicker`                        | `open`                                   | 
+| Event        | `suggestion-item-preview`           | `selection-change`                       | 
+| Event        | `suggestion-item-select`            | Removed                                  | 
 
-- The `valueState` property values `Error/Warning/Success`  are renamed to `Negative/Critical/Positive`. 
+- The `valueState` property values `Error/Warning/Success`  are renamed to `Negative/Critical/Positive`.
 
 If you previously used it like:
 ```html
@@ -1184,6 +1188,76 @@ Now you have to use it like:
 <ui5-multi-input value-state="Negative"></ui5-multi-input>
 <ui5-multi-input value-state="Critical"></ui5-multi-input>
 <ui5-multi-input value-state="Positive"></ui5-multi-input>
+```
+
+- The `openPicker` method has been removed and replaced by the `open` property.
+
+If you previously used the `openPicker()` method to open the MultiInput suggestions:
+```js
+multiInput.openPicker();
+```
+
+Now, you must use the `open` property
+```js
+multiInput.open = true;
+```
+
+- The `suggestion-item-preview` event has been renamed to `selection-change`
+
+If you previously attached to the `suggestion-item-preview` event:
+```js
+multiInput.addEventListener("suggestion-item-preview", event => { const { item, targetRef } = event.detail;});
+```
+
+Now you should attach to the `selection-change` event: 
+```js
+multiInput.addEventListener("selection-change", event => { const { item, targetRef } = event.detail;});
+```
+
+**Note:** The event details remain the same. The only difference is that `item` and `targetRef` may be null, because the `selection-change` event is also fired when the multiInput value no longer matches a selected suggestion.
+
+- The `suggestion-item-select` event has been removed.
+
+If you previously attached to the `suggestion-item-select` event to detect which suggestion item has been selected by the user: 
+```js
+multiInput.addEventListener("suggestion-item-select", event => { 
+	const suggestionItem = event.detail.item;
+});
+```
+
+Now, attach to the `selection-change` event to get the selected item the `change` event
+to check if the multiInput value matches the selected item: 
+```js
+let suggestionItem;
+
+multiInput.addEventListener("selection-change", (event) => {
+   suggestionItem = event.detail.item; 		 
+});
+
+multiInput.addEventListener("change", (event) => {
+  if(event.target.value && suggestionItem && 
+     (event.target.value === suggestionItem.text)){
+    // do something with the suggestion item
+    console.log(suggestionItem);
+  }
+});
+```
+
+The property **previewItem**, which returned the current suggestion item on preview, is no longer present. The user can listen to the `selection-change` event to understand which suggestion item is on the preview. 
+
+
+- The read-only property `previewItem` has been removed
+
+If you previously used the `previewItem` read-only property to get the suggestion item under preview:
+```js
+const suggestionItemOnPreview = multiInput.previewItem;
+```
+
+Now,  attach to the `selection-change` to get the previewed suggestion item: 
+```js
+multiInput.addEventListener("selection-change", event => { 
+	const suggestionItemOnPreview = event.detail.item;
+});
 ```
 
 ### ui5-menu
@@ -1684,7 +1758,7 @@ import PopoverPlacementType from "@ui5/webcomponents/dist/types/PopoverPlacement
 
 Now use `placement` instead:
 ```html
-<ui5-placement="Bottom"></ui5-popover>
+<ui5-popover placement="Bottom"></ui5-popover>
 ```
 ```js
 import PopoverPlacement from "@ui5/webcomponents/dist/types/PopoverPlacement.js";
@@ -2315,13 +2389,11 @@ toast.addEventListener("close", (event) => {
 If you previously used the `show()` method:
 ```ts
 toast.show();
-});
 ```
 Now, you must use the `open` property:
 
 ```ts
-toast.open=true
-});
+toast.open=true;
 ```
 
 

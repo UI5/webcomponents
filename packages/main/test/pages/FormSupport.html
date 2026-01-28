@@ -70,11 +70,10 @@
     </form>
     <form method="get">
         <ui5-title>ui5-file-uploader</ui5-title>
-        <!-- <ui5-file-uploader id="file_uploader1"></ui5-file-uploader>
-        <ui5-file-uploader id="file_uploader2" value="&quot;Screenshot 2024-04-09 at 12.26.53.png&quot; "></ui5-file-uploader>
-        <ui5-file-uploader id="file_uploader3" name="file_uploader3"></ui5-file-uploader>
-        <ui5-file-uploader id="file_uploader4" name="file_uploader4" value="&quot;Screenshot 2024-04-09 at 12.26.53.png&quot;"></ui5-file-uploader>
-        <ui5-button id="file_uploader_btn1" submits>Submits form</ui5-button> -->
+        <ui5-file-uploader id="file_uploader1"></ui5-file-uploader>
+        <ui5-file-uploader id="file_uploader2" name="file_uploader2"></ui5-file-uploader>
+        <ui5-file-uploader id="file_uploader3" name="file_uploader3" required></ui5-file-uploader>
+        <ui5-button id="file_uploader_btn1" submits>Submits form</ui5-button>
     </form>
     <form method="get">
         <ui5-title>ui5-input</ui5-title>
@@ -145,6 +144,15 @@
             <ui5-token slot="tokens" text="ok"></ui5-token>
         </ui5-multi-input>
         <ui5-button id="multi_input_btn1" submits>Submits form</ui5-button>
+    </form>
+    <form id="myForm" method="get">
+        <ui5-title>ui5-tokenizer</ui5-title>
+        <ui5-tokenizer id="tokenizeraa" name="tokenizer1">
+            <ui5-token text="Token 1"></ui5-token>
+            <ui5-token text="Token 2"></ui5-token>
+            <ui5-token text="Token 3"></ui5-token>
+        </ui5-tokenizer>
+        <ui5-button id="tokenizer_submits_form" submits>Submits form</ui5-button>
     </form>
     <form>
         <ui5-title>ui5-radio-button</ui5-title>
@@ -245,6 +253,7 @@
         <ui5-switch id="switch2" text="ui5-switch without name and value" checked></ui5-switch>
         <ui5-switch id="switch3" name="switch3" text="ui5-switch with name and without value"></ui5-switch>
         <ui5-switch id="switch4" name="switch4" checked text="ui5-switch with name and value"></ui5-switch>
+        <ui5-switch id="switch4" name="switch4" checked value="test" text="ui5-switch with name and value"></ui5-switch>
         <ui5-switch id="switch5" name="switch5" required text="ui5-switch with name, value and required"></ui5-switch>
         <ui5-button id="switch_btn1" submits>Submits form</ui5-button>
     </form>

@@ -2,7 +2,6 @@
 	--_ui5_input_width: 13.125rem;
 	--_ui5_input_min_width: 2.75rem;
 	--_ui5_input_height: var(--sapElement_Height);
-	--_ui5_input_compact_height: 1.625rem;
 	--_ui5_input_margin_top_bottom: 0.25rem;
 	--_ui5_input_hover_border: var(--sapField_BorderWidth) var(--sapField_BorderStyle) var(--sapField_Hover_BorderColor);
 	--_ui5_input_value_state_error_hover_background: var(--sapField_Hover_Background);
@@ -24,10 +23,9 @@
 	--_ui5_input_error_warning_border_style: solid;
 	--_ui5_input_error_warning_font_style: inherit;
 	--_ui5_input_error_warning_text_indent: 0;
-	--_ui5_input_disabled_color: var(--sapContent_DisabledTextColor);
-	--_ui5_input_disabled_font_weight: normal;
 	--_ui5_input_disabled_border_color: var(--sapField_BorderColor);
 	--_ui5-input_disabled_background: var(--sapField_Background);
+	--_ui5_input_readonly_border: none;
 	--_ui5_input_readonly_border_color: var(--sapField_ReadOnly_BorderColor);
 	--_ui5_input_readonly_background: var(--sapField_ReadOnly_Background);
 	--_ui5_input_custom_icon_padding: .5625rem .625rem;
@@ -60,8 +58,6 @@
 	--_ui5_input_value_state_success_border_width: 1px;
 	--_ui5_input_value_state_information_border_color: var(--sapField_InformationColor);
 	--_ui5_input_focused_value_state_information_border_color: var(--sapField_InformationColor);
-	--_ui5-input-value-state-information-border-width: 1px;
-	--_ui5-input-background-image: none;
 	--_ui5_input_focus_offset: 1px;
 	--_ui5_input_readonly_focus_offset: 1px;
 	--ui5_input_focus_pseudo_element_content: '';
@@ -73,7 +69,6 @@
 	--_ui5_input_icon_wrapper_state_height: 100%;
 	--_ui5_input_icon_wrapper_success_state_height: 100%;
 	--_ui5-input-icons-count: 0;
-	--_ui5_input_margin_top_bottom: 0.1875rem;
 	--_ui5_input_tokenizer_min_width: 3.25rem;
 }
 
@@ -91,4 +86,5 @@
 	--_ui5_input_error_warning_custom_focused_icon_padding: .1875rem .5rem;
 	--_ui5_input_information_custom_icon_padding: .1875rem .5rem;
 	--_ui5_input_information_custom_focused_icon_padding: .1875rem .5rem;
+	--_ui5_input_margin_top_bottom: 0.1875rem;
 }

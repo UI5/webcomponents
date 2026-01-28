@@ -42,7 +42,7 @@
 @import "./TabContainer-parameters.css";
 @import "../base/Text-parameters.css";
 @import "../base/TextArea-parameters.css";
-@import "./TimePicker-parameters.css";
+@import "../base/TimePicker-parameters.css";
 @import "../base/Toast-parameters.css";
 @import "../base/ToggleButton-parameters.css";
 @import "./YearPicker-parameters.css";
@@ -52,7 +52,6 @@
 @import "./Token-parameters.css";
 @import "../base/Tokenizer-parameters.css";
 @import "../base/ValueStateMessage-parameters.css";
-@import "./MultiComboBox-parameters.css";
 @import "./SliderBase-parameters.css";
 @import "../base/StepInput-parameters.css";
 @import "../base/rtl-parameters.css";

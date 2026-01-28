@@ -3,35 +3,52 @@ const fs = require("fs");
 const LIB = path.join(__dirname, `../lib/`);
 let websiteBaseUrl = "/";
 
+const isPreview = !!process.env.PR_NUMBER;
+const getPreviewBaseUrl = () => {
+	if (process.env.DEPLOYMENT_TYPE === "netlify_preview") {
+		return "/";
+	}
+	return `/webcomponents/pr-${process.env.PR_NUMBER}/`;
+}
+
 if (process.env.DEPLOY) {
-	websiteBaseUrl = "/ui5-webcomponents/";
+	websiteBaseUrl = "/webcomponents/";
 } else if (process.env.DEPLOY_NIGHTLY) {
-	websiteBaseUrl = "/ui5-webcomponents/nightly/";
+	websiteBaseUrl = "/webcomponents/nightly/";
+} else if (isPreview) {
+	websiteBaseUrl = getPreviewBaseUrl();
 }
 
 const getScripts = (options) => {
-
 	// The script creates all JS modules (dist/illustrations/{illustrationName}.js) out of the existing SVGs
 	const illustrationsData = options.illustrationsData || [];
-	const illustrations = illustrationsData.map(illustration => `node "${LIB}/create-illustrations/index.js" ${illustration.path} ${illustration.defaultText} ${illustration.illustrationsPrefix} ${illustration.set} ${illustration.destinationPath} ${illustration.collection}`);
-	const createIllustrationsJSImportsScript = illustrations.join(" && ");
-
+	const createIllustrationsJSImportsScript = {
+		default: `ui5nps-p ${illustrationsData.map(illustrations => `build.illustrations.build-${illustrations.set}-${illustrations.collection}`).join(" ")}` // concurently,
+	}
+	illustrationsData.forEach((illustration) => {
+		createIllustrationsJSImportsScript[`build-${illustration.set}-${illustration.collection}`] = `ui5nps-script "${LIB}create-illustrations/index.js" ${illustration.path} ${illustration.defaultText} ${illustration.illustrationsPrefix} ${illustration.set} ${illustration.destinationPath} ${illustration.collection}`
+	});
 	// The script creates the "src/generated/js-imports/Illustration.js" file that registers loaders (dynamic JS imports) for each illustration
-    const createIllustrationsLoadersScript = illustrationsData.map(illustrations => `node ${LIB}/generate-js-imports/illustrations.js ${illustrations.destinationPath} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(" ")}`).join(" && ");
+	const createIllustrationsLoadersScript = {
+		default: `ui5nps-p ${illustrationsData.map(illustrations => `build.jsImports.illustrationsLoaders.generate-${illustrations.set}-${illustrations.collection}`).join(" ")}` // concurently,
+	}
+	illustrationsData.forEach((illustrations) => {
+		createIllustrationsLoadersScript[`generate-${illustrations.set}-${illustrations.collection}`] = `ui5nps-script ${LIB}generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`
+	});
 
-	const tsOption = !options.legacy || options.jsx;
+
+	const tsOption = !!(!options.legacy || options.jsx);
 	const tsCommandOld = tsOption ? "tsc" : "";
 	let tsWatchCommandStandalone = tsOption ? "tsc --watch" : "";
 	// this command is only used for standalone projects. monorepo projects get their watch from vite, so opt-out here
 	if (options.noWatchTS) {
 		tsWatchCommandStandalone = "";
 	}
-	const tsCrossEnv = tsOption ? "cross-env UI5_TS=true" : "";
 
 	if (tsOption) {
 		try {
 			require("typescript");
-		} catch(e) {
+		} catch (e) {
 			console.error(`TypeScript is not found. Try to install it by running \`npm install --save-dev typescript\` if you are using npm or by running \`yarn add --dev typescript\` if you are using yarn.`);
 			process.exit(e.code);
 		}
@@ -49,103 +66,108 @@ const getScripts = (options) => {
 		viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-package/vite.config.js")}"`;
 	}
 
-	let eslintConfig;
-	if (fs.existsSync(".eslintrc.js") || fs.existsSync(".eslintrc.cjs")) {
-		// preferred way of custom configuration in root project folder
-		eslintConfig = "";
-	} else {
-		// no custom configuration - use default from tools project
-		eslintConfig = `--config  "${require.resolve("@ui5/webcomponents-tools/components-package/eslint.js")}"`;
-	}
-
 	const scripts = {
-		clean: 'rimraf src/generated && rimraf dist && rimraf .port && nps "scope.testPages.clean"',
-		lint: `eslint . ${eslintConfig}`,
-		lintfix: `eslint . ${eslintConfig} --fix`,
+		__ui5envs: {
+			UI5_CEM_MODE: options.dev,
+			UI5_TS: `${tsOption}`,
+			CSS_VARIABLES_TARGET: options.cssVariablesTarget ?? "root",
+			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
+		},
+		clean: {
+			"default": "ui5nps clean.generated clean.dist scope.testPages.clean",
+			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
+			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
+		},
+		lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
+		lintfix: `ui5nps-script "${LIB}eslint/eslint.js" --fix`,
 		generate: {
-			default: `${tsCrossEnv} nps prepare.all`,
-			all: 'concurrently "nps build.templates" "nps build.i18n" "nps prepare.styleRelated" "nps copyProps" "nps build.illustrations"',
-			styleRelated: "nps build.styles build.jsonImports build.jsImports",
+			default: `ui5nps prepare.all`,
+			all: `ui5nps-p build.templates build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
+			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
-			default: `${tsCrossEnv} nps clean prepare.all ${options.legacy ? "copy" : ""} copyProps prepare.typescript generateAPI`,
-			all: 'concurrently "nps build.templates" "nps build.i18n" "nps prepare.styleRelated" "nps build.illustrations"',
-			styleRelated: "nps build.styles build.jsonImports build.jsImports",
+			default: `ui5nps clean prepare.all copy copyProps prepare.typescript generateAPI`,
+			all: `ui5nps-p build.templates build.i18n prepare.styleRelated build.illustrations`, // concurently
+			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
 		},
 		build: {
-			default: "nps prepare lint build.bundle", // build.bundle2
-			templates: `mkdirp src/generated/templates && ${tsCrossEnv} node "${LIB}/hbs2ui5/index.js" -d src/ -o src/generated/templates`,
+			default: "ui5nps prepare lint build.bundle", // build.bundle2
+			templates: options.legacy ? `node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
 			styles: {
-				default: `concurrently "nps build.styles.themes" "nps build.styles.components"`,
-				themes: `node "${LIB}/css-processors/css-processor-themes.mjs"`,
-				components: `node "${LIB}/css-processors/css-processor-components.mjs"`,
+				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
+				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
+				themesWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs" -w`,
+				components: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs"`,
+				componentsWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs" -w`,
 			},
 			i18n: {
-				default: "nps build.i18n.defaultsjs build.i18n.json",
-				defaultsjs: `node "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
-				json: `node "${LIB}/i18n/toJSON.js" src/i18n dist/generated/assets/i18n`,
+				default: "ui5nps build.i18n.defaultsjs build.i18n.json",
+				defaultsjs: `ui5nps-script "${LIB}i18n/defaults.js" src/i18n src/generated/i18n`,
+				json: `ui5nps-script "${LIB}i18n/toJSON.js" src/i18n dist/generated/assets/i18n`,
 			},
 			jsonImports: {
-				default: "mkdirp src/generated/json-imports && nps build.jsonImports.themes build.jsonImports.i18n",
-				themes: `node "${LIB}/generate-json-imports/themes.js" dist/generated/assets/themes src/generated/json-imports`,
-				i18n: `node "${LIB}/generate-json-imports/i18n.js" dist/generated/assets/i18n src/generated/json-imports`,
+				default: "ui5nps build.jsonImports.themes build.jsonImports.i18n",
+				themes: `ui5nps-script "${LIB}generate-json-imports/themes.js" src/themes src/generated/json-imports`,
+				i18n: `ui5nps-script "${LIB}generate-json-imports/i18n.js" src/i18n src/generated/json-imports`,
 			},
 			jsImports: {
-				default: "mkdirp src/generated/js-imports && nps build.jsImports.illustrationsLoaders",
+				default: "ui5nps build.jsImports.illustrationsLoaders",
 				illustrationsLoaders: createIllustrationsLoadersScript,
 			},
-			bundle: `vite build ${viteConfig} --mode testing  --base ${websiteBaseUrl}`,
+			bundle: `ui5nps-script "${LIB}vite-bundler/vite-bundler.mjs" ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
 			bundle2: ``,
 			illustrations: createIllustrationsJSImportsScript,
 		},
-		copyProps: `node "${LIB}/copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/`,
+		copyProps: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/`,
+		copyPropsWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/ --watch --safe --skip-initial-copy`,
+		copySrcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/ --watch --safe --skip-initial-copy`,
 		copy: {
-			default: "nps copy.src copy.props",
-			src: `node "${LIB}/copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/`,
-			props: `node "${LIB}/copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/`,
+			default: options.legacy ? "ui5nps copy.src copy.props" : "",
+			src: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/` : "",
+			props: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/` : "",
 		},
 		watch: {
-			default: `${tsCrossEnv} concurrently "nps watch.templates" "nps watch.typescript" ${options.legacy ? '"nps watch.src"' : ""} "nps watch.styles" "nps watch.i18n" "nps watch.props"`,
-			devServer: 'concurrently "nps watch.default" "nps watch.bundle"',
-			src: 'nps "copy.src --watch --safe --skip-initial-copy"',
+			default: `ui5nps-p watch.templates watch.typescript watch.src watch.styles watch.i18n watch.props`, // concurently
+			devServer: 'ui5nps-p watch.default watch.bundle', // concurently
+			src: options.legacy ? 'ui5nps copySrcWithWatch' : "",
 			typescript: tsWatchCommandStandalone,
-			props: 'nps "copyProps --watch --safe --skip-initial-copy"',
-			bundle: `node ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
+			props: 'ui5nps copyPropsWithWatch',
+			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 			styles: {
-				default: 'concurrently "nps watch.styles.themes" "nps watch.styles.components"',
-				themes: 'nps "build.styles.themes -w"',
-				components: `nps "build.styles.components -w"`,
+				default: 'ui5nps-p watch.styles.themes watch.styles.components', // concurently
+				themes: 'ui5nps build.styles.themesWithWatch',
+				components: `ui5nps build.styles.componentsWithWatch`,
 			},
-			templates: 'chokidar "src/**/*.hbs" -i "src/generated" -c "nps build.templates"',
-			i18n: 'chokidar "src/i18n/messagebundle.properties" -c "nps build.i18n.defaultsjs"'
+			templates: options.legacy ? `ui5nps-script "${LIB}chokidar/chokidar.js" "src/**/*.hbs" "ui5nps build.templates"` : "",
+			i18n: `ui5nps-script "${LIB}chokidar/chokidar.js" "src/i18n/messagebundle.properties" "ui5nps build.i18n.defaultsjs"`
 		},
-		start: "nps prepare watch.devServer",
-		test: `node "${LIB}/test-runner/test-runner.js"`,
-		"test-cy-ci": `cross-env CYPRESS_COVERAGE=true yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-1": `cross-env CYPRESS_COVERAGE=true TEST_SUITE=SUITE1 yarn cypress run --component --browser chrome`,
-		"test-cy-ci-suite-2": `cross-env CYPRESS_COVERAGE=true TEST_SUITE=SUITE2 yarn cypress run --component --browser chrome`,
-		"test-cy-open": `cross-env CYPRESS_COVERAGE=true yarn cypress open --component --browser chrome`,
-		"test-suite-1": `node "${LIB}/test-runner/test-runner.js" --suite suite1`,
-		"test-suite-2": `node "${LIB}/test-runner/test-runner.js" --suite suite2`,
-		startWithScope: "nps scope.prepare scope.watchWithBundle",
+		start: "ui5nps prepare watch.devServer",
+		test: `ui5nps-script "${LIB}/test-runner/test-runner.js"`,
+		"test-cy-ci": `cypress run --component --browser chrome`,
+		"test-cy-ci-suite-1": `cypress run --component --browser chrome --spec "**/specs/[A-C]*.cy.{js,jsx,ts,tsx},**/specs/[^D-Z]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-2": `cypress run --component --browser chrome --spec "**/specs/[D-L]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-3": `cypress run --component --browser chrome --spec "**/specs/[M-S]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-ci-suite-4": `cypress run --component --browser chrome --spec "**/specs/[T-Z]*.cy.{js,jsx,ts,tsx}"`,
+		"test-cy-open": `cypress open --component --browser chrome`,
+		startWithScope: "ui5nps scope.prepare scope.watchWithBundle",
 		scope: {
-			prepare: "nps scope.lint scope.testPages",
-			lint: `node "${LIB}/scoping/lint-src.js"`,
+			prepare: "ui5nps scope.lint scope.testPages",
+			lint: `ui5nps-script "${LIB}scoping/lint-src.js"`,
 			testPages: {
-				default: "nps scope.testPages.clean scope.testPages.copy scope.testPages.replace",
-				clean: "rimraf test/pages/scoped",
-				copy: `node "${LIB}/copy-and-watch/index.js" --silent "test/pages/**/*" test/pages/scoped`,
-				replace: `node "${LIB}/scoping/scope-test-pages.js" test/pages/scoped demo`,
+				default: "ui5nps scope.testPages.clean scope.testPages.copy scope.testPages.replace",
+				"clean": `ui5nps-script "${LIB}/rimraf/rimraf.js test/pages/scoped`,
+				copy: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "test/pages/**/*" test/pages/scoped`,
+				replace: `ui5nps-script "${LIB}scoping/scope-test-pages.js" test/pages/scoped demo`,
 			},
-			watchWithBundle: 'concurrently "nps scope.watch" "nps scope.bundle" ',
-			watch: 'concurrently "nps watch.templates" "nps watch.props" "nps watch.styles"',
-			bundle: `node ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
+			watchWithBundle: 'ui5nps-p scope.watch scope.bundle', // concurently
+			watch: 'ui5nps-p watch.templates watch.props watch.styles', // concurently
+			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {
-			default: tsOption ? "nps generateAPI.generateCEM generateAPI.validateCEM" : "",
-			generateCEM: `cem analyze --config "${LIB}/cem/custom-elements-manifest.config.mjs" ${ options.dev ? "--dev" : "" }`,
-			validateCEM: `node "${LIB}/cem/validate.js" ${ options.dev ? "--dev" : "" }`,
+			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM" : "",
+			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
+			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
 		},
 	};
 

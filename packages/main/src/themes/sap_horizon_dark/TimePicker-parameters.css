@@ -1,6 +1,5 @@
 @import "../base/TimePicker-parameters.css";
 
 :root {
-	--_ui5_time_picker_border: 0.0625rem solid transparent;
 	--_ui5-time_picker_border_radius: 0.25rem;
 }

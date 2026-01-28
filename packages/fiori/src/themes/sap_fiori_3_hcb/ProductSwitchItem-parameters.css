@@ -1,9 +1,6 @@
 @import "../base/ProductSwitchItem-parameters.css";
 
 :root {
-	--_ui5_product_switch_item_outline_width: .125rem;
-	--_ui5_product_switch_item_outline_color: var(--sapContent_ContrastFocusColor);
-	--_ui5_product_switch_item_outline: var(--_ui5_product_switch_item_outline_width) var(--_ui5_product_switch_item_outline_color) dotted;
 	--_ui5_product_switch_item_outline_offset: -.25rem;
 	--_ui5_product_switch_item_border: 1px solid var(--sapField_BorderColor);
 }

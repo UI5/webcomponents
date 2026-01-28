@@ -7,7 +7,7 @@ export default function ListItemGroupTemplate(this: ListItemGroup) {
 	return (
 		<>
 			{this.hasHeader &&
-				<ListItemGroupHeader focused={this.focused} part="header" accessibleRole={ListItemAccessibleRole.ListItem}>
+				<ListItemGroupHeader wrappingType={this.wrappingType} focused={this.focused} part="header" accessibleRole={ListItemAccessibleRole.ListItem}>
 					{ this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText }
 					<div
 						role="list"

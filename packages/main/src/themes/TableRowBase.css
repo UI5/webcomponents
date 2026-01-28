@@ -3,10 +3,8 @@
 	grid-template-columns: subgrid;
 	grid-column: 1 / -1;
 	min-height: var(--_ui5_list_item_base_height);
-	box-sizing: border-box;
+	box-sizing: content-box;
 	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
-	border-right: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
-	border-left: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
 	overflow: clip;
 }
 
@@ -20,7 +18,21 @@
 	clip-path: inset(var(--sapContent_FocusWidth)); /* focus outline should not overlap sticky cells */
 }
 
+::slotted([ui5-table-cell]:first-of-type),
+::slotted([ui5-table-header-cell]:first-of-type),
+#popin-cell {
+	padding-inline-start: var(--_ui5_first_table_cell_horizontal_padding);
+}
+
+#selection-cell + ::slotted([ui5-table-cell-base]:first-of-type),
+#selection-cell ~ #popin-cell {
+	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
+}
+
 #selection-cell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	padding: 0;
 	left: 0;
 }

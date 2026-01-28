@@ -11,23 +11,23 @@ type Item = {
 const FramaworksList: Array<Item> = [
   {
     Svg: require('@site/static/img/demo-apps/Angular-1920-2560.svg').default,
-    repository: "https://github.com/SAP-samples/ui5-webcomponents-sample-angular",
-    demo: "https://sap-samples.github.io/ui5-webcomponents-sample-angular/",
+    repository: "https://github.com/UI5/sample-webcomponents-angular",
+    demo: "https://ui5.github.io/sample-webcomponents-angular/",
   },
   {
     Svg: require('@site/static/img/demo-apps/React-1920-2560.svg').default,
-    repository: "https://github.com/SAP-samples/ui5-webcomponents-sample-react",
-    demo: "https://sap-samples.github.io/ui5-webcomponents-sample-react/",
+    repository: "https://github.com/UI5/sample-webcomponents-react",
+    demo: "https://ui5.github.io/sample-webcomponents-react/",
   },
   {
    Svg: require('@site/static/img/demo-apps/Vue-1920-2560.svg').default,
-    repository: "https://github.com/SAP-samples/ui5-webcomponents-sample-vue",
-    demo: "https://sap-samples.github.io/ui5-webcomponents-sample-vue/",
+    repository: "https://github.com/UI5/sample-webcomponents-vue",
+    demo: "https://ui5.github.io/sample-webcomponents-vue/",
   },
   {
    Svg: require('@site/static/img/demo-apps/Svelte-1920-2560.svg').default,
-    repository: "https://github.com/SAP-samples/ui5-webcomponents-sample-svelte",
-    demo: "https://sap-samples.github.io/ui5-webcomponents-sample-svelte/",
+    repository: "https://github.com/UI5/sample-webcomponents-svelte",
+    demo: "https://ui5.github.io/sample-webcomponents-svelte/",
   },
 ];
 
@@ -47,7 +47,7 @@ export default function HomepageDemoApps(): JSX.Element {
     <article className="demo-apps mainPageContainer">
         <div className="demo-apps__heading">
           <h2 className="demo-apps__title">Use the web framework of your choice</h2>
-          <p className="demo-apps__desc"> UI5 Web Componnents are framework agnostic, working seamlessly with all popular frameworks,
+          <p className="demo-apps__desc"> UI5 Web Components are framework agnostic, working seamlessly with all popular frameworks,
           including Angular, React, Vue, Svelte, etc.</p>
         </div>
         <div className="demo-apps__frameworks">

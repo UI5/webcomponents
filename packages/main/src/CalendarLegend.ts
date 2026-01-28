@@ -130,6 +130,10 @@ class CalendarLegend extends UI5Element {
 		}
 	}
 
+	getFocusDomRef(): HTMLElement | undefined {
+		return this._itemNavigation._getCurrentItem();
+	}
+
 	_onMouseDown(e: MouseEvent) {
 		e.stopPropagation();
 		const target = e.target as CalendarLegendItem;

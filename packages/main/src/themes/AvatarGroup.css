@@ -22,6 +22,7 @@
 
 .ui5-avatar-group-root {
 	display: flex;
+	padding: var(--_ui5_avatar_group_padding);
 }
 
 .ui5-avatar-group-items {
@@ -35,7 +36,8 @@
 }
 
 :host([type="Group"]) ::slotted([ui5-button]),
-:host([type="Group"]) ::slotted([ui5-avatar]) {
+:host([type="Group"]) ::slotted([ui5-avatar]),
+:host([type="Group"]) .ui5-avatar-group-overflow-btn {
 	pointer-events: none;
 }
 

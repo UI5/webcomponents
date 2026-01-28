@@ -5,70 +5,116 @@ import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
-import { writeFileIfChanged, stripThemingBaseContent, getFileContent } from "./shared.mjs";
+import postcssPlugin from "./postcss-plugin.mjs";
+import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import scopeVariables from "./scope-variables.mjs";
+import { pathToFileURL } from "url";
 
-const tsMode = process.env.UI5_TS === "true";
-const extension = tsMode ? ".css.ts" : ".css.js";
+const generate = async (argv) => {
+    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
+    const tsMode = process.env.UI5_TS === "true";
+    const extension = tsMode ? ".css.ts" : ".css.js";
 
-const packageJSON = JSON.parse(fs.readFileSync("./package.json"))
+    const packageJSON = JSON.parse(fs.readFileSync("./package.json"))
 
-let inputFiles = await globby("src/**/parameters-bundle.css");
-const restArgs = process.argv.slice(2);
+    const inputFiles = await globby([
+        "src/**/parameters-bundle.css",
+    ]);
+    const restArgs = argv.slice(2);
 
-const removeDuplicateSelectors = async (text) => {
-    const result = await postcss(combineDuplicatedSelectors).process(text);
-    return result.css;
-}
+    const saveFiles = async (distPath, css, suffix = "") => {
+        await mkdir(path.dirname(distPath), { recursive: true });
+        writeFile(distPath.replace(".css", suffix + ".css"), css);
 
-let scopingPlugin = {
-    name: 'scoping',
-    setup(build) {
-        build.initialOptions.write = false;
+        // JSON
+        const jsonPath = distPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", suffix + ".css.json");
+        await mkdir(path.dirname(jsonPath), { recursive: true });
+        writeFileIfChanged(jsonPath, JSON.stringify(css));
 
-        build.onEnd(result => {
-            result.outputFiles.forEach(async f => {
-                // remove duplicate selectors
-                let newText = await removeDuplicateSelectors(f.text);
+        // JS/TS
+        const jsPath = distPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", suffix + extension);
+        const jsContent = getFileContent(packageJSON.name, "\`" + css + "\`");
+        writeFileIfChanged(jsPath, jsContent);
+    }
 
-                // strip unnecessary theming-base-content
-                newText = stripThemingBaseContent(newText);
+    const processThemingPackageFile = async (f) => {
+        const selector = ':root';
+        const result = await postcss().process(f.text);
 
-                // scoping
-                newText = scopeVariables(newText, packageJSON, f.path);
-                await mkdir(path.dirname(f.path), {recursive: true});
-                writeFile(f.path, newText);
+        const newRule = postcss.rule({ selector });
 
-                // JSON
-                const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                await mkdir(path.dirname(jsonPath), {recursive: true});
-                writeFileIfChanged(jsonPath, JSON.stringify(newText));
-
-                // JS/TS
-                const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
-                writeFileIfChanged(jsPath, jsContent);
+        result.root.walkRules(selector, rule => {
+            rule.walkDecls(decl => {
+                if (!decl.prop.startsWith('--sapFontUrl')) {
+                    newRule.append(decl.clone());
+                }
             });
-        })
-    },
+        });
+
+        return { css: newRule.toString() };
+    };
+
+    const processComponentPackageFile = async (f) => {
+        if (CSS_VARIABLES_TARGET) {
+            const result = await postcss([
+                combineDuplicatedSelectors,
+                postcssPlugin
+            ]).process(f.text);
+
+            return { css: result.css };
+        }
+
+
+        const combined = await postcss([
+            combineDuplicatedSelectors,
+        ]).process(f.text);
+
+        return { css: scopeVariables(combined.css, packageJSON, f.path) };
+    }
+
+    let scopingPlugin = {
+        name: 'scoping',
+        setup(build) {
+            build.initialOptions.write = false;
+
+            build.onEnd(result => {
+                result.outputFiles.forEach(async f => {
+                    let { css } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
+
+                    saveFiles(f.path, css);
+                });
+            })
+        },
+    }
+
+    const config = {
+        entryPoints: inputFiles,
+        bundle: true,
+        minify: true,
+        outdir: 'dist/css',
+        outbase: 'src',
+        plugins: [
+            scopingPlugin,
+        ],
+        external: ["*.ttf", "*.woff", "*.woff2"],
+    };
+
+    if (restArgs.includes("-w")) {
+        let ctx = await esbuild.context(config);
+        console.log('watching...')
+        await ctx.watch()
+    } else {
+        await esbuild.build(config);
+    }
 }
 
-const config = {
-    entryPoints: inputFiles,
-    bundle: true,
-    minify: true,
-    outdir: 'dist/css',
-    outbase: 'src',
-    plugins: [
-        scopingPlugin,
-    ],
-    external: ["*.ttf", "*.woff", "*.woff2"],
-};
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
 
-if (restArgs.includes("-w")) {
-    let ctx = await esbuild.context(config);
-    await ctx.watch()
-    console.log('watching...')
-} else {
-    const result = await esbuild.build(config);
+if (import.meta.url === fileUrl) {
+    generate(process.argv)
+}
+
+export default {
+    _ui5mainFn: generate
 }

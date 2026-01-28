@@ -20,19 +20,32 @@
 	background: var(--sapButton_Hover_Background);
 }
 
-:host([selected]) {
+:host(:not([readonly])[selected]) {
 	background: var(--sapButton_Selected_Background);
 	border: var(--sapButton_BorderWidth) solid var(--sapButton_Selected_BorderColor);
 	color: var(--sapButton_Selected_TextColor);
 }
 
-:host([selected]) .ui5-token--wrapper {
+:host(:not([readonly])[selected]) .ui5-token--wrapper::before {
+	content: "";
+	position: absolute;
 	border-bottom: var(--_ui5_token_selected_internal_border_bottom);
 	border-bottom-left-radius: var(--_ui5_token_selected_internal_border_bottom_radius);
 	border-bottom-right-radius: var(--_ui5_token_selected_internal_border_bottom_radius);
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	background: transparent;
+	pointer-events: none;
 }
 
-:host([selected]:hover) {
+:host([readonly][selected]) .ui5-token--text {
+	background: var(--sapSelectedColor);
+	color: var(--sapContent_ContrastTextColor);
+}
+
+:host(:not([readonly])[selected]:hover) {
 	background: var(--sapButton_Selected_Hover_Background);
 }
 
@@ -50,13 +63,7 @@
 	outline: var(--_ui5_token_selected_focus_outline);
 }
 
-:host([selected]) .ui5-token--text,
-:host([selected]) .ui5-token--icon {
-	top: var(--_ui5_token_text_icon_top);
-	position: relative;
-}
-
-:host([focused][selected]:not(:hover)) {
+:host(:not([readonly])[focused][selected]:not(:hover)) {
 	background: var(--sapButton_Selected_Background);
 	color: var(--sapButton_Selected_TextColor);
 	border: var(--_ui5_token_focused_selected_border);
@@ -68,10 +75,11 @@
 	height: 100%;
 	width: 100%;
 	cursor: pointer;
+	position: relative;
 	padding-inline-start: var(--_ui5_token_left_padding);
 	box-sizing: border-box;
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	user-select: none;
 }
 .ui5-token--wrapper {
@@ -100,9 +108,6 @@
 	right: var(--_ui5_token_focus_offset);
 }
 
-:host([focused][selected]) .ui5-token--wrapper:focus::after {
-	bottom: var(--_ui5_token_selected_focused_offset_bottom)
-}
 
 .ui5-token--text {
 	white-space: nowrap;

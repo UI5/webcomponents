@@ -1,11 +1,10 @@
 {
   "name": "@ui5/webcomponents-icons-tnt",
-  "version": "2.8.0-rc.2",
+  "version": "2.19.0-rc.2",
   "description": "UI5 Web Components: SAP Fiori Tools icon set",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
   "type": "module",
-  "private": false,
   "keywords": [
     "openui5",
     "sapui5",
@@ -19,18 +18,18 @@
   "scripts": {
     "clean": "wc-dev clean",
     "build": "wc-dev build",
-    "generate": "nps generate",
+    "generate": "wc-dev generate",
     "prepublishOnly": "tsc -b"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/icons-tnt"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "2.8.0-rc.2"
+    "@ui5/webcomponents-base": "2.19.0-rc.2"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.8.0-rc.2"
+    "@ui5/webcomponents-tools": "2.19.0-rc.2"
   }
 }

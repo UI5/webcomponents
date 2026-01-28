@@ -6,7 +6,6 @@
 	--_ui5_shellbar_button_focused_border: 0.125rem dotted var(--sapContent_FocusColor);
 	--_ui5_shellbar_button_badge_border: 1px solid var(--sapGroup_ContentBorderColor);
 	--_ui5_shellbar_outline_offset: -0.1875rem;
-	--_ui5_shellbar_search_field_height: 2.25rem;
 	--_ui5_shellbar_search_field_outline_focused: none;
 	--_ui5_shellbar_menu_button_title_font_size: var(--sapFontHeader5Size);
 }

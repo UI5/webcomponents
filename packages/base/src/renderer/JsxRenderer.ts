@@ -1,4 +1,4 @@
-import { render, createContext } from "../thirdparty/preact/preact.module.js";
+import { hydrate, render, createContext } from "../thirdparty/preact/preact.module.js";
 import { jsx } from "../thirdparty/preact/jsxRuntime.module.js";
 import type UI5Element from "../UI5Element.js";
 import type { Renderer } from "../UI5Element.js";
@@ -13,8 +13,19 @@ const jsxRenderer: Renderer = (instance: UI5Element, container: HTMLElement | Do
 		ctx = createContext(instance);
 		instanceToContextMap.set(instance, ctx);
 	}
+
 	const templateResult = instance.render();
-	render(jsx(ctx.Provider, { value: instance, children: templateResult }), container);
+	const vnode = jsx(ctx.Provider, { value: instance, children: templateResult });
+
+	if (instance.__shouldHydrate) {
+		// Remove all server-generated style elements for component styles
+		// to avoid conflicts or duplication with styles added through adopted style sheets.
+		instance.shadowRoot?.querySelectorAll("style").forEach(style => style.remove());
+		hydrate(vnode, container);
+		instance.__shouldHydrate = false;
+	} else {
+		render(vnode, container);
+	}
 };
 
 export default jsxRenderer;

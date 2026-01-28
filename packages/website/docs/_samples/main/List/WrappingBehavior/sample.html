@@ -1,0 +1,91 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+	<link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<!-- playground-fold-end -->
+	<ui5-list header-text="List Item Wrapping Examples">
+		<!-- Default Behavior (Truncating) -->
+		<ui5-li
+			text="Long list item title that gets truncated when it exceeds the width of the container. This allows users to see the beginning of the text and understand what the item is about. Long list item title that gets truncated when it exceeds the width of the container. This allows users to see the beginning of the text and understand what the item is about."
+			description="This description is truncated by default and shows an ellipsis at the end when the text is too long to fit in a single line. This description is truncated by default and shows an ellipsis at the end when the text is too long to fit in a single line."
+			additional-text="Truncated">
+			<ui5-avatar slot="image">
+				<img src="../assets/images/avatars/man_avatar_1.png" alt="Man image">
+			</ui5-avatar>
+		</ui5-li>
+
+		<!-- Wrapped Behavior -->
+		<ui5-li wrapping-type="Normal"
+			text="Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction."
+			description="This description gets wrapped when the 'wrappingType' property is set to 'Normal', and the content flows to multiple lines instead of being truncated. This allows users to read lengthy descriptions without requiring interaction. This description gets wrapped when the 'wrappingType' property is set to 'Normal', and the content flows to multiple lines instead of being truncated. This allows users to read lengthy descriptions without requiring interaction."
+			additional-text="Wrapped">
+			<ui5-avatar slot="image">
+				<img src="../assets/images/avatars/man_avatar_2.png" alt="Man image">
+			</ui5-avatar>
+		</ui5-li>
+	</ui5-list>
+	
+	<br>
+	<br>
+
+	<ui5-list header-text="Custom List Item with Wrapping">
+		<!-- Custom Behavior with ExpandableText -->
+		<ui5-li-custom>
+			<div class="custom-list-item">
+				<ui5-avatar class="custom-list-item__avatar">
+					<img src="../assets/images/avatars/woman_avatar_1.png" alt="Woman image">
+				</ui5-avatar>
+				<div class="custom-list-item__content">
+					<ui5-title size="H6" class="custom-list-item__title">Product with Expandable Description</ui5-title>
+					<ui5-expandable-text 
+						class="custom-list-item__description"
+						max-characters="120"
+						text="This custom list item uses ExpandableText to provide controlled expansion of lengthy content. Users can choose to read more when they need detailed information, keeping the list compact by default. This approach gives developers full control over the content layout and interaction while maintaining accessibility and user experience standards.">
+					</ui5-expandable-text>
+					<ui5-label class="custom-list-item__additional">Expandable</ui5-label>
+				</div>
+			</div>
+		</ui5-li-custom>
+		<ui5-li-custom>
+			<div class="custom-list-item">
+				<ui5-avatar class="custom-list-item__avatar">
+					<img src="../assets/images/avatars/woman_avatar_2.png" alt="Woman image">
+				</ui5-avatar>
+				<div class="custom-list-item__content">
+					<ui5-title size="H6" class="custom-list-item__title">Product with Expandable Description</ui5-title>
+					<ui5-expandable-text 
+						class="custom-list-item__description"
+						max-characters="120"
+						text="This custom list item uses ExpandableText to provide controlled expansion of lengthy content. Users can choose to read more when they need detailed information, keeping the list compact by default. This approach gives developers full control over the content layout and interaction while maintaining accessibility and user experience standards.">
+					</ui5-expandable-text>
+					<ui5-label class="custom-list-item__additional">Expandable</ui5-label>
+				</div>
+			</div>
+		</ui5-li-custom>
+	
+		<br>
+		<br>
+
+		<ui5-list header-text="List Item Group with Wrapping">
+			<ui5-li-group wrapping-type="Normal" header-text="Long List Item Group header text that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction.">
+				<ui5-li text="regular list item">
+					<ui5-avatar slot="image">
+						<img src="../assets/images/avatars/man_avatar_2.png" alt="Man image">
+					</ui5-avatar>
+				</ui5-li>
+			</ui5-li-group>
+		</ui5-list>
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

@@ -22,10 +22,12 @@ const generate = async () => {
 
 	const mainFiles = await globby(path.join(__dirname, "../../../main/src/themes/**/*.css").replace(/\\/g, "/"));
 	const fioriFiles = await globby(path.join(__dirname, "../../../fiori/src/themes/**/*.css").replace(/\\/g, "/"));
+	const compatFiles = await globby(path.join(__dirname, "../../../compat/src/themes/**/*.css").replace(/\\/g, "/"));
+	const aiFiles = await globby(path.join(__dirname, "../../../ai/src/themes/**/*.css").replace(/\\/g, "/"));
 
-	await Promise.all([...mainFiles.map(processFile), ...fioriFiles.map(processFile)]);
+	await Promise.all([...mainFiles.map(processFile), ...fioriFiles.map(processFile), ...compatFiles.map(processFile), ...aiFiles.map(processFile)]);
 
-	const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+	const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 	const result = Array.from(vars).sort(collator.compare); // natural sort
 
 	return fs.writeFile(path.join(__dirname, "../../css-vars-usage.json"), beautify(result, null, 2, 100));

@@ -1,3 +1,3 @@
-import cypressConfig from "@ui5/webcomponents-tools/components-package/cypress.config.js";
+import cypressConfig from "@ui5/cypress-internal/cypress.config.js";
 
 export default cypressConfig;

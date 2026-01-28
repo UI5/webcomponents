@@ -11,25 +11,21 @@
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
 
-        <ui5-shellbar primary-title="Product name">
-            <ui5-button icon="nav-back" slot="startButton"></ui5-button>
-            <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+        <ui5-shellbar notifications-count="72" show-notifications>
+            <ui5-button icon="menu2" slot="startButton"></ui5-button>
+            <ui5-shellbar-branding slot="branding">
+                Product Identifier
+                <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+            </ui5-shellbar-branding>
+            <ui5-shellbar-search slot="searchField" show-clear-icon placeholder="Search Apps, Products"></ui5-shellbar-search>
 
-            <ui5-tag color-scheme="7" slot="content" design="Information">Trial</ui5-tag>
-            <ui5-text slot="content">EMEA</ui5-text>
-
-            <ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
-
-            <ui5-button slot="content">Edit</ui5-button>
-            <div slot="content" style="display: flex; align-items: center;">
-                <ui5-label>New Version</ui5-label>
-                <ui5-switch checked></ui5-switch>
-            </div>
-
-            <ui5-input placeholder="Instructions" slot="searchField"></ui5-input>
-            <ui5-shellbar-item icon="feedback" text="Button5"></ui5-shellbar-item>
-            <ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+            <ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+            <ui5-toggle-button icon="sap-icon://da" tooltip="Joule" slot="assistant"></ui5-toggle-button>
+            <ui5-avatar slot="profile">
+                <img src="../assets/images/avatars/man_avatar_3.png"/>
+            </ui5-avatar>
         </ui5-shellbar>
+
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

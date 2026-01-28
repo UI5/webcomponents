@@ -1,3 +1,4 @@
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
@@ -6,11 +7,7 @@ import type ButtonDesign from "./types/ButtonDesign.js";
 
 import ToolbarItem from "./ToolbarItem.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
-import ToolbarPopoverButtonTemplate from "./ToolbarPopoverButtonTemplate.js";
-
-import ToolbarButtonPopoverCss from "./generated/themes/ToolbarButtonPopover.css.js";
-
-import { registerToolbarItem } from "./ToolbarRegistry.js";
+import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
 type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 
@@ -31,7 +28,9 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
  */
 @customElement({
 	tag: "ui5-toolbar-button",
-	styles: ToolbarButtonPopoverCss,
+	template: ToolbarButtonTemplate,
+	renderer: jsxRenderer,
+	styles: [ToolbarButtonCss],
 })
 
 /**
@@ -147,6 +146,21 @@ class ToolbarButton extends ToolbarItem {
 	text?: string;
 
 	/**
+	 * Defines whether the button text should only be displayed in the overflow popover.
+	 *
+	 * When set to `true`, the button appears as icon-only in the main toolbar,
+	 * but shows both icon and text when moved to the overflow popover.
+	 *
+	 * **Note:** This property only takes effect when the `text` property is also set.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property({ type: Boolean })
+	showOverflowText = false;
+
+	/**
 	 * Defines the width of the button.
 	 *
 	 * **Note:** all CSS sizes are supported - 'percentage', 'px', 'rem', 'auto', etc.
@@ -163,16 +177,21 @@ class ToolbarButton extends ToolbarItem {
 		};
 	}
 
-	get containsText() {
-		return true;
-	}
-
-	static get toolbarTemplate() {
-		return ToolbarButtonTemplate;
-	}
-
-	static get toolbarPopoverTemplate() {
-		return ToolbarPopoverButtonTemplate;
+	/**
+	 * Returns the effective text to display based on overflow state and showOverflowText property.
+	 *
+	 * When showOverflowText is true:
+	 * - Normal state: returns empty string (icon-only)
+	 * - Overflow state: returns text
+	 *
+	 * When showOverflowText is false:
+	 * - Returns text in both states (normal behavior)
+	 */
+	get effectiveText(): string | undefined {
+		if (this.showOverflowText) {
+			return this.isOverflowed ? this.text : "";
+		}
+		return this.text;
 	}
 
 	onClick(e: Event) {
@@ -182,9 +201,19 @@ class ToolbarButton extends ToolbarItem {
 			this.fireDecoratorEvent("close-overflow");
 		}
 	}
-}
 
-registerToolbarItem(ToolbarButton);
+	/**
+	 * @override
+	 */
+	get classes() {
+		return {
+			root: {
+				...super.classes.root,
+				"ui5-tb-button": true,
+			},
+		};
+	}
+}
 
 ToolbarButton.define();
 

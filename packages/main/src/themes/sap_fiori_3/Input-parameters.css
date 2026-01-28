@@ -2,4 +2,5 @@
 
 :root {
 	--_ui5-input-border: 1px solid var(--sapField_BorderColor);
+	--_ui5_input_readonly_border: var(--sapElement_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);
 }

@@ -6,13 +6,13 @@
 }
 
 .ui5-tab-semantic-icon--positive {
-	color: var(--sapPositiveElementColor);
+	color: var(--sapPositiveTextColor);
 }
 
 .ui5-tab-semantic-icon--negative {
-	color: var(--sapNegativeElementColor);
+	color: var(--sapNegativeTextColor);
 }
 
 .ui5-tab-semantic-icon--critical {
-	color: var(--sapCriticalElementColor);
+	color: var(--sapCriticalTextColor);
 }

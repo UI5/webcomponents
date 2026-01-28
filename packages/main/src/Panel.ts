@@ -6,12 +6,14 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
 import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isSpace, isEnter, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type TitleLevel from "./types/TitleLevel.js";
+import type Button from "./Button.js";
 import type PanelAccessibleRole from "./types/PanelAccessibleRole.js";
 import PanelTemplate from "./PanelTemplate.js";
 import { PANEL_ICON } from "./generated/i18n/i18n-defaults.js";
@@ -168,8 +170,8 @@ class Panel extends UI5Element {
 	 * @public
 	 * @since 1.16.0-rc.1
 	 */
-	 @property({ type: Boolean })
-	 stickyHeader = false;
+	@property({ type: Boolean })
+	stickyHeader = false;
 
 	/**
 	 * When set to `true`, the `accessibleName` property will be
@@ -192,6 +194,9 @@ class Panel extends UI5Element {
 
 	@property({ type: Boolean, noAttribute: true })
 	_animationRunning = false;
+
+	@property({ type: Boolean, noAttribute: true })
+	_pendingToggle = false;
 
 	/**
 	 * Defines the component header area.
@@ -234,8 +239,8 @@ class Panel extends UI5Element {
 		this._toggleOpen();
 	}
 
-	_toggleButtonClick(e: MouseEvent) {
-		if (e.x === 0 && e.y === 0) {
+	_toggleButtonClick(e: UI5CustomEvent<Button, "click">) {
+		if (e.detail.originalEvent.x === 0 && e.detail.originalEvent.y === 0) {
 			e.stopImmediatePropagation();
 		}
 	}
@@ -246,11 +251,18 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			e.preventDefault();
+			this._toggleOpen();
 		}
 
 		if (isSpace(e)) {
 			e.preventDefault();
+			this._pendingToggle = true;
+		}
+
+		// Cancel toggle if Escape is pressed
+		if (isEscape(e) && this._pendingToggle) {
+			e.preventDefault();
+			this._pendingToggle = false;
 		}
 	}
 
@@ -260,11 +272,15 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			this._toggleOpen();
+			e.preventDefault();
 		}
 
 		if (isSpace(e)) {
-			this._toggleOpen();
+			// Only toggle if space was pressed and escape wasn't pressed to cancel
+			if (this._pendingToggle) {
+				this._toggleOpen();
+			}
+			this._pendingToggle = false;
 		}
 	}
 

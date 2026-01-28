@@ -164,6 +164,41 @@
 		<ui5-breadcrumbs-item>Bourgogne-Franche-Comté</ui5-breadcrumbs-item>
 	</ui5-breadcrumbs>
 
+	<h2>Breadcrumbs with hardcoded width: 900px with all links fit</h2>
+	<div style="width: 900px;"></div>
+		<ui5-breadcrumbs>
+			<ui5-breadcrumbs-item href="#">Link1</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>Link2</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<h2>Breadcrumbs with hardcoded width: 300px and long current location</h2>
+	<div style="width: 300px;">
+		<ui5-breadcrumbs design="Standard">
+			<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>This is a very long current location text that should be truncated</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<h2>Breadcrumbs with hardcoded width: 300px and design="NoCurrentPage"</h2>
+	<div style="width: 300px;">
+		<ui5-breadcrumbs design="NoCurrentPage">
+			<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>This is a very long current location text that should be truncated</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
 
 	<script>
 		// HCB button

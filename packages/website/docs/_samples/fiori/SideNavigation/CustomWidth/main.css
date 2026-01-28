@@ -1,0 +1,6 @@
+ui5-side-navigation {
+	/* Specifies the width of the control.  
+		The minimum width is 16rem.  
+		Use this property to set a larger width. */
+	width: 20rem;
+}

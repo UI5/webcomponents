@@ -3,6 +3,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -13,13 +14,15 @@ import type List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-
 import ViewSettingsDialogMode from "./types/ViewSettingsDialogMode.js";
+
 import "@ui5/webcomponents-icons/dist/sort.js";
 import "@ui5/webcomponents-icons/dist/filter.js";
+import "@ui5/webcomponents-icons/dist/group-2.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type SortItem from "./SortItem.js";
 import type FilterItem from "./FilterItem.js";
+import type GroupItem from "./GroupItem.js";
 
 import {
 	VSD_DIALOG_TITLE_SORT,
@@ -28,12 +31,16 @@ import {
 	VSD_RESET_BUTTON,
 	VSD_SORT_ORDER,
 	VSD_SORT_BY,
+	VSD_GROUP_ORDER,
+	VSD_GROUP_BY,
 	VSD_ORDER_ASCENDING,
 	VSD_ORDER_DESCENDING,
 	VSD_FILTER_BY,
 	VSD_SORT_TOOLTIP,
 	VSD_FILTER_TOOLTIP,
+	VSD_GROUP_TOOLTIP,
 	VSD_RESET_BUTTON_ACTION,
+	VSD_FILTER_ITEM_LABEL_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -50,17 +57,23 @@ type VSDSettings = {
 	sortOrder: string,
 	sortBy: string,
 	filters: VSDFilters,
+	groupOrder: string,
+	groupBy: string,
 }
 
 // Events' detail
 type ViewSettingsDialogConfirmEventDetail = VSDSettings & {
 	sortByItem: SortItem,
 	sortDescending: boolean,
+	groupByItem: GroupItem,
+	groupDescending: boolean,
 }
 
 type ViewSettingsDialogCancelEventDetail = VSDSettings & {
 	sortByItem: SortItem,
 	sortDescending: boolean,
+	groupByItem: GroupItem,
+	groupDescending: boolean,
 }
 
 // Common properties for several VSDInternalSettings fields
@@ -71,6 +84,8 @@ type VSDInternalSettings = {
 	sortOrder: Array<VSDItem>,
 	sortBy: Array<VSDItem & {index: number}>,
 	filters: Array<VSDItem & {filterOptions: Array<VSDItem>}>,
+	groupOrder: Array<VSDItem>,
+	groupBy: Array<VSDItem & {index: number}>,
 }
 
 /**
@@ -99,6 +114,7 @@ type VSDInternalSettings = {
  * @extends UI5Element
  * @since 1.0.0-rc.16
  * @public
+ * @csspart header - Used to style the header.
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",
@@ -113,6 +129,10 @@ type VSDInternalSettings = {
  * @param {String} sortBy The currently selected `ui5-sort-item` text attribute.
  * @param {HTMLElement} sortByItem The currently selected `ui5-sort-item`.
  * @param {Boolean} sortDescending The selected sort order (true = descending, false = ascending).
+ * @param {String} groupOrder The current group order selected.
+ * @param {String} groupBy The currently selected `ui5-group-item` text attribute.
+ * @param {HTMLElement} groupByItem The currently selected `ui5-group-item`.
+ * @param {Boolean} groupDescending The selected group order (true = descending, false = ascending).
  * @param {Array} filters The selected filters items.
  * @public
  */
@@ -126,6 +146,10 @@ type VSDInternalSettings = {
  * @param {String} sortBy The currently selected `ui5-sort-item` text attribute.
  * @param {HTMLElement} sortByItem The currently selected `ui5-sort-item`.
  * @param {Boolean} sortDescending The selected sort order (true = descending, false = ascending).
+ * @param {String} groupOrder The current group order selected.
+ * @param {String} groupBy The currently selected `ui5-group-item` text attribute.
+ * @param {HTMLElement} groupByItem The currently selected `ui5-group-item`.
+ * @param {Boolean} groupDescending The selected group order (true = descending, false = ascending).
  * @param {Array} filters The selected filters items.
  * @public
  */
@@ -173,6 +197,15 @@ class ViewSettingsDialog extends UI5Element {
 	sortDescending = false;
 
 	/**
+	 * Defines the initial group order.
+	 * @default false
+	 * @since 2.13.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	groupDescending = false;
+
+	/**
 	 * Indicates if the dialog is open.
 	 * @public
 	 * @default false
@@ -197,6 +230,8 @@ class ViewSettingsDialog extends UI5Element {
 		sortOrder: [],
 		sortBy: [],
 		filters: [],
+		groupOrder: [],
+		groupBy: [],
 	};
 
 	/**
@@ -236,7 +271,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	sortItems!: Array<SortItem>
+	sortItems!: Array<SortItem>;
 
 	/**
 	 * Defines the `filterItems` list.
@@ -247,9 +282,32 @@ class ViewSettingsDialog extends UI5Element {
 	@slot()
 	filterItems!: Array<FilterItem>;
 
+	/**
+	 * Defines the list of items against which the user could group data.
+	 *
+	 * **Note:** If you want to use this slot, you need to import used item: `import "@ui5/webcomponents-fiori/dist/GroupItem.js";`
+	 * @public
+	 */
+	@slot()
+	groupItems!: Array<GroupItem>;
+
+	@query("[ui5-list]")
+	_list!: List;
+
+	@query("[ui5-dialog]")
 	_dialog?: Dialog;
+
+	@query("[ui5-list][sort-order]")
 	_sortOrder?: List;
+
+	@query("[ui5-list][sort-by]")
 	_sortBy?: List;
+
+	@query("[ui5-list][group-order]")
+	_groupOrder?: List;
+
+	@query("[ui5-list][group-by]")
+	_groupBy?: List;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -259,8 +317,17 @@ class ViewSettingsDialog extends UI5Element {
 			this._setAdditionalTexts();
 		}
 
-		if (!this.shouldBuildSort && this.shouldBuildFilter) {
+		if (this.shouldBuildSort) {
+			return;
+		}
+
+		if (this.shouldBuildFilter) {
 			this._currentMode = ViewSettingsDialogMode.Filter;
+			return;
+		}
+
+		if (this.shouldBuildGroup) {
+			this._currentMode = ViewSettingsDialogMode.Group;
 		}
 	}
 
@@ -292,6 +359,12 @@ class ViewSettingsDialog extends UI5Element {
 		}
 	}
 
+	_selectedFiltersLabel(item: FilterItem) {
+		const text = item.text ? `${item.text},` : "";
+		const additionalText = item.additionalText ? `${item.additionalText},` : "";
+		return additionalText ? ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_ITEM_LABEL_TEXT, text, additionalText) : text;
+	}
+
 	get shouldBuildSort() {
 		return !!this.sortItems.length;
 	}
@@ -300,8 +373,13 @@ class ViewSettingsDialog extends UI5Element {
 		return !!this.filterItems.length;
 	}
 
+	get shouldBuildGroup() {
+		return !!this.groupItems.length;
+	}
+
 	get hasPagination() {
-		return this.shouldBuildSort && this.shouldBuildFilter;
+		const buildConditions = [this.shouldBuildSort, this.shouldBuildFilter, this.shouldBuildGroup];
+		return buildConditions.filter(condition => condition).length > 1;
 	}
 
 	get _filterByTitle() {
@@ -337,6 +415,10 @@ class ViewSettingsDialog extends UI5Element {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_ORDER);
 	}
 
+	get _groupOrderLabel() {
+		return ViewSettingsDialog.i18nBundle.getText(VSD_GROUP_ORDER);
+	}
+
 	get _filterByLabel() {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_BY);
 	}
@@ -345,12 +427,20 @@ class ViewSettingsDialog extends UI5Element {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_BY);
 	}
 
+	get _groupByLabel() {
+		return ViewSettingsDialog.i18nBundle.getText(VSD_GROUP_BY);
+	}
+
 	get _sortButtonTooltip() {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_TOOLTIP);
 	}
 
 	get _filterButtonTooltip() {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_TOOLTIP);
+	}
+
+	get _groupButtonTooltip() {
+		return ViewSettingsDialog.i18nBundle.getText(VSD_GROUP_TOOLTIP);
 	}
 
 	get _resetButtonAction() {
@@ -375,14 +465,14 @@ class ViewSettingsDialog extends UI5Element {
 	 * Determines disabled state of the `Reset` button.
 	 */
 	get _disableResetButton() {
-		return this._dialog && this._sortSetttingsAreInitial && this._filteresAreInitial;
+		return this._dialog && this._settingsAreInitial && this._filteresAreInitial;
 	}
 
-	get _sortSetttingsAreInitial() {
+	get _settingsAreInitial() {
 		let settingsAreInitial = true;
-		["sortBy", "sortOrder"].forEach(sortList => {
-			this._currentSettings[sortList as keyof VSDInternalSettings].forEach((item, index) => {
-				if (item.selected !== this._initialSettings[sortList as keyof VSDInternalSettings][index].selected) {
+		["sortBy", "sortOrder", "groupBy", "groupOrder"].forEach(settingsList => {
+			this._currentSettings[settingsList as keyof VSDInternalSettings].forEach((item, index) => {
+				if (item.selected !== this._initialSettings[settingsList as keyof VSDInternalSettings][index].selected) {
 					settingsAreInitial = false;
 				}
 			});
@@ -411,6 +501,8 @@ class ViewSettingsDialog extends UI5Element {
 		return {
 			sortOrder: JSON.parse(JSON.stringify(this.initSortOrderItems)),
 			sortBy: JSON.parse(JSON.stringify(this.initSortByItems)),
+			groupOrder: JSON.parse(JSON.stringify(this.initGroupOrderItems)),
+			groupBy: JSON.parse(JSON.stringify(this.initGroupByItems)),
 			filters: this.filterItems.map(item => {
 				return {
 					text: item.text || "",
@@ -436,6 +528,16 @@ class ViewSettingsDialog extends UI5Element {
 		});
 	}
 
+	get initGroupByItems() {
+		return this.groupItems.map((item, index) => {
+			return {
+				text: item.text,
+				selected: item.selected,
+				index,
+			};
+		});
+	}
+
 	get initSortOrderItems() {
 		return [
 			{
@@ -445,6 +547,19 @@ class ViewSettingsDialog extends UI5Element {
 			{
 				text: this._descendingLabel,
 				selected: this.sortDescending,
+			},
+		];
+	}
+
+	get initGroupOrderItems() {
+		return [
+			{
+				text: this._ascendingLabel,
+				selected: !this.groupDescending,
+			},
+			{
+				text: this._descendingLabel,
+				selected: this.groupDescending,
 			},
 		];
 	}
@@ -461,36 +576,23 @@ class ViewSettingsDialog extends UI5Element {
 		return this._currentMode === ViewSettingsDialogMode.Filter;
 	}
 
+	get isModeGroup() {
+		return this._currentMode === ViewSettingsDialogMode.Group;
+	}
+
 	get showBackButton() {
 		return this.isModeFilter && this._filterStepTwo;
-	}
-
-	get _sortOrderListDomRef() {
-		return this.shadowRoot!.querySelector<List>("[ui5-list][sort-order]")!;
-	}
-
-	get _sortByList() {
-		return this.shadowRoot!.querySelector<List>("[ui5-list][sort-by]")!;
-	}
-
-	get _dialogDomRef() {
-		return this.shadowRoot!.querySelector<Dialog>("[ui5-dialog]")!;
 	}
 
 	/**
 	 * Shows the dialog.
 	 */
 	beforeDialogOpen(): void {
-		if (!this._dialog) {
-			this._sortOrder = this._sortOrderListDomRef;
-			this._sortBy = this._sortByList;
-
-			// Sorting
+		// first time opening - initialize settings
+		if (this._currentSettings.sortOrder.length === 0) {
 			this._initialSettings = this._settings;
 			this._currentSettings = this._settings;
 			this._confirmedSettings = this._settings;
-
-			this._dialog = this._dialogDomRef;
 		} else {
 			this._restoreSettings(this._confirmedSettings);
 		}
@@ -499,7 +601,7 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	afterDialogOpen(): void {
-		this._dialog?.querySelector<List>("[ui5-list]")?.focusFirstItem();
+		this._list?.focusFirstItem();
 
 		this._focusRecentlyUsedControl();
 
@@ -598,17 +700,28 @@ class ViewSettingsDialog extends UI5Element {
 	get eventsParams() {
 		const _currentSortOrderSelected = this._currentSettings.sortOrder.filter(item => item.selected)[0],
 			_currentSortBySelected = this._currentSettings.sortBy.filter(item => item.selected)[0],
+			_currentGroupOrderSelected = this._currentSettings.groupOrder.filter(item => item.selected)[0],
+			_currentGroupBySelected = this._currentSettings.groupBy.filter(item => item.selected)[0],
 			sortOrder = _currentSortOrderSelected && (_currentSortOrderSelected.text || ""),
 			sortDescending = !this._currentSettings.sortOrder[0].selected,
 			sortBy = _currentSortBySelected && (_currentSortBySelected.text || ""),
 			sortByElementIndex = _currentSortBySelected && _currentSortBySelected.index,
 			sortByItem = this.sortItems[sortByElementIndex],
+			groupOrder = _currentGroupOrderSelected && (_currentGroupOrderSelected.text || ""),
+			groupDescending = !this._currentSettings.groupOrder[0].selected,
+			groupBy = _currentGroupBySelected && (_currentGroupBySelected.text || ""),
+			groupByElementIndex = _currentGroupBySelected && _currentGroupBySelected.index,
+			groupByItem = this.groupItems[groupByElementIndex],
 			selectedFilterItems = this.filterItems.filter(filterItem => filterItem.values.some(item => item.selected));
 		return {
 			sortOrder,
 			sortDescending,
 			sortBy,
 			sortByItem,
+			groupOrder,
+			groupDescending,
+			groupBy,
+			groupByItem,
 			filters: this.selectedFilters,
 			filterItems: selectedFilterItems,
 		};
@@ -654,7 +767,7 @@ class ViewSettingsDialog extends UI5Element {
 		this._restoreSettings(this._initialSettings);
 		this._recentlyFocused = this._sortOrder!;
 		this._focusRecentlyUsedControl();
-		announce(this._resetButtonAction, InvisibleMessageMode.Polite);
+		announce(this._resetButtonAction, InvisibleMessageMode.Assertive);
 	}
 
 	/**
@@ -696,6 +809,35 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	/**
+	 * Stores `Group Order` list as recently used control and its selected item in current state.
+	 */
+	_onGroupOrderChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		this._recentlyFocused = this._groupOrder!;
+		this._currentSettings.groupOrder = this.initGroupOrderItems.map(item => {
+			item.selected = item.text === e.detail.targetItem.innerText;
+			return item;
+		});
+
+		// Invalidate
+		this._currentSettings = JSON.parse(JSON.stringify(this._currentSettings));
+	}
+
+	/**
+	 * Stores `Group By` list as recently used control and its selected item in current state.
+	 */
+	_onGroupByChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		const selectedItemIndex = Number(e.detail.targetItem.getAttribute("data-ui5-external-action-item-index"));
+		this._recentlyFocused = this._groupBy!;
+		this._currentSettings.groupBy = this.initGroupByItems.map((item, index) => {
+			item.selected = index === selectedItemIndex;
+			return item;
+		});
+
+		// Invalidate
+		this._currentSettings = JSON.parse(JSON.stringify(this._currentSettings));
+	}
+
+	/**
 	 * Sets a JavaScript object, as settings to the `ui5-view-settings-dialog`.
 	 * This method can be used after the dialog is initially open, as the dialog needs
 	 * to set its initial settings.
@@ -724,6 +866,26 @@ class ViewSettingsDialog extends UI5Element {
 						tempSettings.sortBy[i].selected = true;
 					} else {
 						tempSettings.sortBy[i].selected = false;
+					}
+				}
+			}
+
+			if (settings.groupOrder) {
+				for (let i = 0; i < tempSettings.groupOrder.length; i++) {
+					if (tempSettings.groupOrder[i].text === settings.groupOrder) {
+						tempSettings.groupOrder[i].selected = true;
+					} else {
+						tempSettings.groupOrder[i].selected = false;
+					}
+				}
+			}
+
+			if (settings.groupBy) {
+				for (let i = 0; i < tempSettings.groupBy.length; i++) {
+					if (tempSettings.groupBy[i].text === settings.groupBy) {
+						tempSettings.groupBy[i].selected = true;
+					} else {
+						tempSettings.groupBy[i].selected = false;
 					}
 				}
 			}

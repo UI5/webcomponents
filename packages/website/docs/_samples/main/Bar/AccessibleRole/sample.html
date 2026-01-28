@@ -1,0 +1,27 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor)">
+<!-- playground-fold-end -->
+    <ui5-label>Bar with two or more active items:</ui5-label>
+    <ui5-bar design="Header" accessible-role="Toolbar">
+        <ui5-button icon="home" tooltip="Go home" design="Transparent" slot="startContent"></ui5-button>
+        <ui5-label id="basic-label">Content</ui5-label>
+        <ui5-button icon="action-settings" tooltip="Go to settings" slot="endContent"></ui5-button>
+    </ui5-bar>
+    <br>
+    <ui5-label>Bar with less than two active items:</ui5-label>
+    <ui5-bar design="Header">
+        <ui5-label id="basic-label">Storybook title</ui5-label>
+    </ui5-bar>
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->
+

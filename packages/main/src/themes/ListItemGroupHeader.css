@@ -6,6 +6,10 @@
 	color: var(--sapList_TableGroupHeaderTextColor);
 }
 
+:host([wrapping-type="Normal"]) {
+	height: auto;
+}
+
 :host([has-border]) {
 	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_GroupHeaderBorderColor);
 }

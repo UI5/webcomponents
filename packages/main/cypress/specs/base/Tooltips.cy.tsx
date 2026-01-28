@@ -1,5 +1,4 @@
 import { setEnableDefaultTooltips } from "@ui5/webcomponents-base/dist/config/Tooltips.js";
-
 import Button from "../../../src/Button.js";
 import RatingIndicator from "../../../src/RatingIndicator.js";
 import ToggleButton from "../../../src/ToggleButton.js";
@@ -11,9 +10,12 @@ import settings from "@ui5/webcomponents-icons/dist/settings.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import activate from "@ui5/webcomponents-icons/dist/activate.js";
 
-setEnableDefaultTooltips(false);
-
 describe("Default Tooltips", () => {
+	before(() => {
+		cy.wrap({ setEnableDefaultTooltips })
+			.invoke("setEnableDefaultTooltips", false);
+	})
+
 	it("tests navigation", () => {
 		cy.mount(
 			<>

@@ -11,9 +11,12 @@
 <body style="background-color: var(--sapBackgroundColor); height: 400px;">
     <!-- playground-fold-end -->
 
-    <ui5-shellbar id="shellbar" primary-title="Corporate Portal" secondary-title="home" show-product-switch>
+    <ui5-shellbar id="shellbar" secondary-title="home" show-product-switch>
+        <ui5-shellbar-branding slot="branding">
+            Corporate Portal
+            <img src="../assets/images/sap-logo-svg.svg" alt="SAP Logo" slot="logo" />
+        </ui5-shellbar-branding>
 		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
-        <img src="../assets/images/sap-logo-svg.svg" alt="SAP Logo" slot="logo" />
     </ui5-shellbar>
     <ui5-popover id="productswitch-popover" placement="Bottom">
         <ui5-product-switch>

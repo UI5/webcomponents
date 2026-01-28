@@ -1,3 +1,8 @@
+:host(:not([hidden])) {
+	display: block;
+	width: 100%;
+}
+
 :host([column-span="1"]) {
 	grid-column: span 1;
 }
@@ -23,7 +28,6 @@
 }
 
 .ui5-form-item-root {
-	container-type: inline-size;
 	background-color: inherit;
 	color: inherit;
 }
@@ -90,5 +94,8 @@
 	:host {
 		order: var(--ui5-form-item-order-Xl, unset);
 	}
+}
 
+dd {
+	all: unset;
 }

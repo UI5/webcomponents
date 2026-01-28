@@ -27,7 +27,7 @@
 	background-color: var(--sapField_InvalidBackground);
 }
 
-:host(:not([disabled]):hover) {
+:host(:not([disabled]):not([readonly]):hover) {
 	background: var(--sapField_Hover_Background);
 }
 
@@ -47,6 +47,11 @@
 	word-spacing: inherit;
 	margin: inherit;
 	height: inherit;
+}
+
+:host([disabled]) .ui5-time-picker-input {
+	background-color: var(--_ui5-input_disabled_background);
+	opacity: var(--_ui5_input_disabled_opacity);
 }
 
 .ui5-time-picker-popover::part(header) {

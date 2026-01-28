@@ -1,14 +1,16 @@
 {
-	"extends": "@ui5/webcomponents-tools/tsconfig.json",
 	"include": [
 		"./**/*"
 	],
 	"compilerOptions": {
-		"types": ["@ui5/webcomponents-tools"],
-		"composite": true,
-		"tsBuildInfoFile": "dist/.tsbuildinfobuild",
+		"jsx": "react-jsx",
+		"jsxImportSource": "@ui5/webcomponents-base",
 		"module": "NodeNext",
 		"moduleResolution": "nodenext",
+		"types": [
+			"cypress",
+			"cypress-real-events",
+		],
 		"paths": {
 			"@ui5/webcomponents-base/dist/*": [
 				"../../base/src/*"

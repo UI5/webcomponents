@@ -1,0 +1,9 @@
+@import "../base/TimelineItem-parameters.css";
+
+[data-ui5-compact-size],
+.ui5-content-density-compact,
+.sapUiSizeCompact {
+	--_ui5_timeline_tli_indicator_after_height: 50%;
+	--_ui5_timeline_tli_indicator_after_top: -50%;
+	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
+}

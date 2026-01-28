@@ -7,10 +7,12 @@
 	width: var(--_ui5_side_navigation_width);
 	max-width: 100%;
 	transition: width 0.3s, min-width 0.3s;
-	box-shadow: var(--_ui5_side_navigation_box_shadow);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	background: var(--sapList_Background);
+	box-shadow: var(--_ui5_side_navigation_box_shadow);
+	border-inline-end: var(--_ui5_side_navigation_border_right);
+	box-sizing: border-box;
 }
 
 :host([collapsed]) {
@@ -18,13 +20,19 @@
 	width: var(--_ui5_side_navigation_collapsed_width);
 }
 
+@media (width < 600px) {
+	:host(:not([hidden])) {
+		width: 100%;
+	}
+}
+
+
 .ui5-sn-root {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	box-sizing: border-box;
+	box-sizing: inherit;
 	border-radius: inherit;
-	border-inline-end: var(--_ui5_side_navigation_border_right);
 }
 
 .ui5-sn-flexible {
@@ -62,7 +70,7 @@
 }
 
 :host([in-popover]) .ui5-sn-list {
-	padding: var(--_ui5_side_navigation_parent_popup_padding);
+	padding: var(--_ui5_side_navigation_popup_padding);
 }
 
 .ui5-sn-item-overflow {

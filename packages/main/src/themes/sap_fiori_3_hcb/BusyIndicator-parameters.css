@@ -1,5 +1,0 @@
-@import "../base/BusyIndicator-parameters.css";
-
-:root {
-	--_ui5_busy_indicator_block_layer: color-mix(in oklch, transparent, var(--sapBlockLayer_Background) 30%);
-}

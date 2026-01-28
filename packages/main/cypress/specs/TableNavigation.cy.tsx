@@ -4,12 +4,14 @@ import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableCell from "../../src/TableCell.js";
 import TableGrowing from "../../src/TableGrowing.js";
+import Bar from "../../src/Bar.js";
+import Title from "../../src/Title.js";
 
 describe("Table - Keyboard Navigation", () => {
 	beforeEach(() => {
 		cy.mount(
 			<>
-				<input id="before-table1" type="Number" value="0"/>
+				<input id="before-table1" type="Number" value="0" />
 				<Table id="table0">
 					<TableGrowing id="growing" type="Button" slot="features"></TableGrowing>
 					<TableHeaderRow slot="headerRow">
@@ -20,13 +22,13 @@ describe("Table - Keyboard Navigation", () => {
 					</TableHeaderRow>
 					<TableRow>
 						<TableCell>Row1Cell0</TableCell>
-						<TableCell><input id="row1-input"/></TableCell>
+						<TableCell><input id="row1-input" /></TableCell>
 						<TableCell><button id="row1-button">Button 1</button></TableCell>
 						<TableCell>Row1Cell3</TableCell>
 					</TableRow>
 					<TableRow id="interactive-row" interactive>
 						<TableCell>Row2Cell0</TableCell>
-						<TableCell><input id="row2-input"/></TableCell>
+						<TableCell><input id="row2-input" /></TableCell>
 						<TableCell><button id="row2-button">Button 2</button></TableCell>
 						<TableCell>Row2Cell3</TableCell>
 					</TableRow>
@@ -54,7 +56,7 @@ describe("Table - Keyboard Navigation", () => {
 					<TableRow> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
 					<TableRow> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
 				</Table>
-				<input id="after-table1"/>
+				<input id="after-table1" />
 			</>
 		);
 
@@ -81,7 +83,7 @@ describe("Table - Keyboard Navigation", () => {
 			.eq(cell);
 	}
 
-	function performActions(actions: { element: Cypress.Chainable, click?: string, condition?: string, conditionValue?:string, type?: string, press?: string | string[] }[]) {
+	function performActions(actions: { element: Cypress.Chainable, click?: string, condition?: string, conditionValue?: string, type?: string, press?: string | string[] }[]) {
 		actions.forEach(action => {
 			if (action.click) {
 				// @ts-ignore
@@ -118,11 +120,11 @@ describe("Table - Keyboard Navigation", () => {
 			{ element: cy.get("@rows").eq(1), type: "{pagedown}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(21), type: "{pagedown}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(24), type: "{pagedown}", condition: "be.focused" },
-			{ element: cy.get("#growing").shadow().find("#growing-button"), type: "{pageup}", condition: "be.focused" },
+			{ element: cy.get("#growing").shadow().find("#button"), type: "{pageup}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(5), type: "{pageup}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(0), type: "{end}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(24), type: "{end}", condition: "be.focused" },
-			{ element: cy.get("#growing").shadow().find("#growing-button"), type: "{home}", condition: "be.focused" },
+			{ element: cy.get("#growing").shadow().find("#button"), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(0), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@headerRow"), condition: "be.focused" }
 		]);
@@ -146,7 +148,7 @@ describe("Table - Keyboard Navigation", () => {
 			{ element: getCell(0, 0, true), type: "{pagedown}", condition: "be.focused" },
 			{ element: getCell(19, 0, false), type: "{pagedown}", condition: "be.focused" },
 			{ element: getCell(24, 0, false), type: "{pagedown}", condition: "be.focused" },
-			{ element: cy.get("#growing").shadow().find("#growing-button"), type: "{home}", condition: "be.focused" },
+			{ element: cy.get("#growing").shadow().find("#button"), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(0), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@headerRow"), type: "{downarrow}{rightarrow}", condition: "be.focused" },
 			{ element: getCell(0, 0, false), type: "{downarrow}{rightarrow}", condition: "be.focused" },
@@ -219,5 +221,209 @@ describe("Table - Keyboard Navigation", () => {
 			{ element: cy.get("@row"), type: "{enter}" },
 			{ element: cy.get("@input"), condition: "have.value", conditionValue: "3" }
 		]);
+	});
+});
+
+describe("Table - Keyboard Navigation with Fixed Headers", () => {
+
+	it("scrollable container - focused row should always be below the header", () => {
+		cy.mount(<div style="height:300px; overflow:auto;">
+			<Bar style="position: sticky; top: 0; z-index: 2; height: 50px;">
+				<Title>My Selectable Products (3)</Title>
+			</Bar>
+			<Table overflowMode="Popin" stickyTop="50px">
+				<TableHeaderRow sticky={true} slot="headerRow">
+					<TableHeaderCell minWidth="300px">ColumnA</TableHeaderCell>
+					<TableHeaderCell minWidth="200px">Column B</TableHeaderCell>
+					<TableHeaderCell minWidth="200px">Column C</TableHeaderCell>
+					<TableHeaderCell minWidth="150px">Column D</TableHeaderCell>
+				</TableHeaderRow>
+				{
+					Array.from({ length: 21 }, () => Array(4).fill(0)).map((row, index) => (
+						<TableRow id={`row-${index + 1}`}>
+							{row.map((_, cellIndex) => {
+								return <TableCell>{cellIndex + 1}</TableCell>
+							})}
+						</TableRow>
+					))
+				}
+			</Table>
+		</div>)
+
+		cy.get("#row-21")
+			.as("lastRow")
+			.scrollIntoView();
+
+		cy.get("@lastRow")
+			.realClick();
+
+		cy.get("@lastRow")
+			.should("be.focused");
+
+		cy.get("[ui5-table-header-row]")
+			.as("headerRow");
+
+		// Scroll to the top one by one
+		for (let i = 20; i > 0; i--) {
+			cy.realPress("ArrowUp");
+
+			cy.get(`#row-${i}`)
+				.as("row")
+				.should("be.focused");
+
+			cy.get("@headerRow")
+				.should("be.visible");
+
+			cy.get("@headerRow")
+				.then($headerRow => {
+					return $headerRow[0].getBoundingClientRect().y;
+				})
+				.as("headerRowLocation");
+
+			cy.get("@row")
+				.then($row => {
+					return $row[0].getBoundingClientRect().y;
+				})
+				.as("rowLocation");
+
+			cy.get('@headerRowLocation').then(headerRowLocation => {
+				cy.get('@rowLocation').should(rowLocation => {
+					expect(headerRowLocation as unknown as number).to.be.lessThan(rowLocation as unknown as number);
+				});
+			});
+		}
+	});
+
+	it("scrollable table - focused row should always be below the header", () => {
+		cy.mount(<Table overflowMode="Popin" stickyTop="0" style="height: 300px; overflow: auto;">
+			<TableHeaderRow sticky slot="headerRow">
+				<TableHeaderCell minWidth="300px">Column A</TableHeaderCell>
+				<TableHeaderCell minWidth="200px">Column B</TableHeaderCell>
+				<TableHeaderCell minWidth="200px">Column C</TableHeaderCell>
+				<TableHeaderCell minWidth="150px">Column D</TableHeaderCell>
+			</TableHeaderRow>
+			{
+				Array.from({ length: 21 }, () => Array(4).fill(0)).map((row, index) => (
+					<TableRow id={`row-${index + 1}-1`}>
+						{row.map((_, cellIndex) => {
+							return <TableCell>{cellIndex + 1}</TableCell>
+						})}
+					</TableRow>
+				))
+			}
+		</Table>)
+
+		cy.get("#row-21-1")
+			.as("lastRow")
+			.scrollIntoView();
+
+		cy.get("@lastRow")
+			.realClick();
+
+		cy.get("@lastRow")
+			.should("be.focused");
+
+		cy.get("[ui5-table-header-row]")
+			.as("headerRow");
+
+		// Scroll to the top one by one
+		for (let i = 20; i > 0; i--) {
+			cy.realPress("ArrowUp");
+
+			cy.get(`#row-${i}-1`)
+				.as("row")
+				.should("be.focused");
+
+			cy.get("@headerRow")
+				.should("be.visible");
+
+			cy.get("@headerRow")
+				.then($headerRow => {
+					return $headerRow[0].getBoundingClientRect().y;
+				})
+				.as("headerRowLocation");
+
+			cy.get("@row")
+				.then($row => {
+					return $row[0].getBoundingClientRect().y;
+				})
+				.as("rowLocation");
+
+			cy.get('@headerRowLocation').then(headerRowLocation => {
+				cy.get('@rowLocation').should(rowLocation => {
+					expect(headerRowLocation as unknown as number).to.be.lessThan(rowLocation as unknown as number);
+				});
+			});
+		}
+	});
+
+	it("body as scroll container - focused row should always be below the header", () => {
+		cy.mount(
+			<>
+				<Bar style="position: sticky; top: 0; z-index: 2; height: 50px;">
+					<Title>My Selectable Products (3)</Title>
+				</Bar>
+				<Table overflowMode="Popin" sticky-top="50px">
+					<TableHeaderRow sticky slot="headerRow">
+						<TableHeaderCell minWidth="300px">Column A</TableHeaderCell>
+						<TableHeaderCell minWidth="200px">Column B</TableHeaderCell>
+						<TableHeaderCell minWidth="200px">Column C</TableHeaderCell>
+						<TableHeaderCell minWidth="150px">Column D</TableHeaderCell>
+					</TableHeaderRow>
+					{
+						Array.from({ length: 100 }, () => Array(4).fill(0)).map((row, index) => (
+							<TableRow id={`row-${index + 1}-2`}>
+								{row.map((_, cellIndex) => {
+									return <TableCell>cell-{index + 1}-{cellIndex + 1}</TableCell>
+								})}
+							</TableRow>
+						))
+					}
+				</Table>
+			</>
+		)
+
+		cy.get("#row-100-2")
+			.as("lastRow")
+			.scrollIntoView();
+
+		cy.get("@lastRow")
+			.realClick();
+
+		cy.get("@lastRow")
+			.should("be.focused");
+
+		cy.get("[ui5-table-header-row]")
+			.as("headerRow");
+
+		// Scroll to the top one by one
+		for (let i = 99; i > 0; i--) {
+			cy.realPress("ArrowUp");
+
+			cy.get(`#row-${i}-2`)
+				.as("row")
+				.should("be.focused");
+
+			cy.get("@headerRow")
+				.should("be.visible");
+
+			cy.get("@headerRow")
+				.then($headerRow => {
+					return $headerRow[0].getBoundingClientRect().y;
+				})
+				.as("headerRowLocation");
+
+			cy.get("@row")
+				.then($row => {
+					return $row[0].getBoundingClientRect().y;
+				})
+				.as("rowLocation");
+
+			cy.get('@headerRowLocation').then(headerRowLocation => {
+				cy.get('@rowLocation').should(rowLocation => {
+					expect(headerRowLocation as unknown as number).to.be.lessThan(rowLocation as unknown as number);
+				});
+			});
+		}
 	});
 });

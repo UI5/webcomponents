@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Popup Prevent Events</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+</head>
+
+<body>
+<ui5-button id="dialogOpener">Open Dialog</ui5-button>
+
+<ui5-dialog id="dialog"
+			header-Text="Dialog Title">
+	<div id="content">
+		Dialog Content
+	</div>
+	<ui5-bar slot="footer">
+		<ui5-button slot="endContent" id="close-button">Close</ui5-button>
+	</ui5-bar>
+</ui5-dialog>
+<br />
+<br />
+<br />
+<ui5-button id="popoverOpener">Open Popover</ui5-button>
+
+<ui5-popover id="popover"
+			 opener="popoverOpener"
+			 header-Text="Popover Title">
+	<div>
+		Popover Content
+	</div>
+	<ui5-bar slot="footer">
+		<ui5-button slot="endContent" id="popover-close-button">Close</ui5-button>
+	</ui5-bar>
+</ui5-popover>
+<script>
+
+	function confirmClose() {
+		return confirm("Are you sure?");
+	}
+
+	var dialogOpener = document.getElementById("dialogOpener");
+	var dialog = document.getElementById("dialog");
+	var closeButton = document.getElementById("close-button");
+
+	var popoverOpener = document.getElementById("popoverOpener");
+	var popover = document.getElementById("popover");
+	var popoverCloseButton = document.getElementById("popover-close-button");
+
+	dialogOpener.addEventListener("click", () => {
+		dialog.open = true;
+	});
+
+	closeButton.addEventListener("click", () => {
+		dialog.open = false;
+	});
+
+	dialog.addEventListener("before-open", (event) => {
+		if (!confirmClose()) {
+			event.preventDefault();
+		}
+	});
+
+	dialog.addEventListener("before-close", (event) => {
+		if (!confirmClose()) {
+			event.preventDefault();
+		}
+	});
+
+	popoverOpener.addEventListener("click", () => {
+		popover.open = true;
+	});
+
+	popoverCloseButton.addEventListener("click", () => {
+		popover.open = false;
+	});
+
+	popover.addEventListener("before-open", (event) => {
+		if (!confirmClose()) {
+			event.preventDefault();
+		}
+	});
+
+	popover.addEventListener("before-close", (event) => {
+		if (!confirmClose()) {
+			event.preventDefault();
+		}
+	});
+</script>
+</body>
+
+</html>

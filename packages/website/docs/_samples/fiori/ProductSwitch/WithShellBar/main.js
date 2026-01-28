@@ -2,6 +2,7 @@ import "@ui5/webcomponents/dist/Popover.js";
 import "@ui5/webcomponents/dist/ToggleButton.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 

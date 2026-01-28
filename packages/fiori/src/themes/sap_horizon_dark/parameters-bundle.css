@@ -8,8 +8,11 @@
 @import "./ProductSwitchItem-parameters.css";
 @import "../base/ShellBar-parameters.css";
 @import "./ShellBar-parameters.css";
+@import "../base/SearchField-parameters.css";
+@import "../base/Search-parameters.css";
 @import "./TimelineItem-parameters.css";
 @import "./SideNavigation-parameters.css";
+
 @import "./UploadCollection-parameters.css";
 @import "./Wizard-parameters.css";
 @import "./WizardTab-parameters.css";
@@ -20,3 +23,4 @@
 @import "../base/DynamicPageHeader-parameters.css";
 @import "../sap_horizon/DynamicPageHeaderActions-parameters.css";
 @import "../base/TimelineGroupItem-parameters.css";
+@import "../base/UserSettingsAppearanceViewItem-parameters.css";

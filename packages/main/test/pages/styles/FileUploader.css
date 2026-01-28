@@ -3,6 +3,9 @@ body > div {
 }
 
 .fileuploader1auto {
-    border: 1px solid black;
-    padding: 1rem;
+    background-color: var(--sapBackgroundColor);
+}
+
+form ui5-file-uploader:invalid {
+    outline: 2px solid var(--sapNegativeColor);
 }

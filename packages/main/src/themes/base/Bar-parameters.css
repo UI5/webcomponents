@@ -1,12 +1,8 @@
 :root {
 	--_ui5_bar_base_height: 2.75rem;
 	--_ui5_bar_subheader_height: 3rem;
-	--_ui5_bar-start-container-padding-start: 2rem;
+	--_ui5_bar-start-container-padding-start: 1rem;
 	--_ui5_bar-mid-container-padding-start-end: 0.5rem;
-	--_ui5_bar-end-container-padding-end: 2rem;
-	--_ui5_bar-start-container-padding-start_S: 1rem;
-	--_ui5_bar-start-container-padding-start_XL: 3rem;
-	--_ui5_bar-end-container-padding-end_S: 1rem;
-	--_ui5_bar-end-container-padding-end_XL: 3rem;
+	--_ui5_bar-end-container-padding-end: 1rem;
 	--_ui5_bar_subheader_margin-top: -0.0625rem;
 }

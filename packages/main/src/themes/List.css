@@ -17,7 +17,8 @@
 }
 
 .ui5-list-root,
-.ui5-list-busy-indicator {
+.ui5-list-busy-indicator,
+.ui5-list-container {
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -50,7 +51,7 @@
 	text-overflow: ellipsis;
 	box-sizing: border-box;
 	font-size: var(--sapFontHeader4Size); 
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	color: var(--sapGroup_TitleTextColor);
 	height: 3rem;
 	line-height: 3rem;
@@ -64,7 +65,7 @@
 	box-sizing: border-box;
 	-webkit-text-size-adjust: none;	/* To improve readability Mobile Safari automatically increases the size of small text so let's disable this */
 	font-size: var(--sapFontSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	line-height: 2rem;
 	background-color: var(--sapList_FooterBackground);
 	color: var(--ui5_list_footer_text_color);
@@ -87,9 +88,9 @@
 	border-bottom: 1px solid var(--sapList_BorderColor);
 	padding: 0 1rem !important;
 	outline: none;
-	height: var(--_ui5_list_no_data_height);
+    min-height: var(--_ui5_list_no_data_height);
 	font-size: var(--_ui5_list_no_data_font_size);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	position: relative;
 }
 
@@ -104,10 +105,18 @@
 .ui5-list-nodata-text {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	white-space: normal;
+    margin: var(--_ui5_list_item_content_vertical_offset) 0;
 }
 
 :host([growing="Scroll"]) .ui5-list-end-marker {
 	/* Ensure the list-end-marker has a block property to always be stretched and "visible" on the screen */
 	display: inline-block;
+}
+
+:host([sticky-header]) ::slotted([slot="header"]),
+:host([sticky-header]) .ui5-list-header {
+	position: sticky;
+    top: 0;
+    z-index: 100;
 }

@@ -11,7 +11,9 @@ import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { PopupScrollEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
@@ -25,8 +27,11 @@ import {
 	USER_MENU_SIGN_OUT_BUTTON_TXT,
 	USER_MENU_POPOVER_ACCESSIBLE_NAME,
 	USER_MENU_EDIT_AVATAR_TXT,
-	USER_MENU_ADD_ACCOUNT_TXT,
+	USER_MENU_EDIT_ACCOUNTS_TXT,
 	USER_MENU_CLOSE_DIALOG_BUTTON,
+	USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT,
+	USER_MENU_CURRENT_INFORMATION_TXT,
+	USER_MENU_ACTIONS_TXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserMenuItemClickEventDetail = {
@@ -78,10 +83,10 @@ type UserMenuOtherAccountClickEventDetail = {
 @event("manage-account-click")
 
 /**
- * Fired when the "Add Account" button is selected.
+ * Fired when the "Edit Accounts" button is selected.
  * @public
  */
-@event("add-account-click")
+@event("edit-accounts-click")
 
 /**
  * Fired when the account is switched to a different one.
@@ -128,7 +133,7 @@ class UserMenu extends UI5Element {
 	eventDetails!: {
 		"avatar-click": void;
 		"manage-account-click": void;
-		"add-account-click": void;
+		"edit-accounts-click": void;
 		"change-account": UserMenuOtherAccountClickEventDetail;
 		"item-click": UserMenuItemClickEventDetail;
 		"sign-out-click": void;
@@ -153,7 +158,7 @@ class UserMenu extends UI5Element {
 	 * @default undefined
 	 */
 	@property({ converter: DOMReferenceConverter })
-	opener?: HTMLElement | string;
+	opener?: HTMLElement | string | null;
 
 	/**
 	 * Defines if the User Menu shows the Manage Account option.
@@ -174,13 +179,13 @@ class UserMenu extends UI5Element {
 	showOtherAccounts = false;
 
 	/**
-	 * Defines if the User Menu shows the Add Account option.
+	 * Defines if the User Menu shows the Edit Accounts option.
 	 *
 	 * @default false
 	 * @public
 	 */
 	@property({ type: Boolean })
-	showAddAccount = false;
+	showEditAccounts = false;
 
 	/**
 	 * Defines if the User menu shows edit button.
@@ -233,7 +238,7 @@ class UserMenu extends UI5Element {
 	 * @private
 	 */
 	@property({ type: Boolean })
-	_manageAccountMovedToHeader = false;
+	_isScrolled = false;
 
 	/**
 	 * @private
@@ -265,10 +270,15 @@ class UserMenu extends UI5Element {
 
 	onBeforeRendering() {
 		this._selectedAccount = this.accounts.find(account => account.selected) || this.accounts[0];
+		const siblingsWithIcon = this._menuItems.some(menuItem => !!menuItem.icon);
+
+		this._menuItems.forEach(item => {
+			item._siblingsWithIcon = siblingsWithIcon;
+		});
 	}
 
 	onAfterRendering(): void {
-		if (this._isPhone && this._responsivePopover) {
+		if (this._responsivePopover) {
 			const observerOptions = {
 				threshold: [0.15],
 			};
@@ -290,22 +300,21 @@ class UserMenu extends UI5Element {
 		return isPhone();
 	}
 
+	_handleScroll(e: CustomEvent<PopupScrollEventDetail>) {
+		this._isScrolled = e.detail.scrollTop > 0;
+	}
+
 	_handleIntersection(entries: IntersectionObserverEntry[]) {
 		entries.forEach(entry => {
 			if (entry.isIntersecting) {
 				if (entry.target.id === "selected-account-title") {
 					this._titleMovedToHeader = false;
-				} else if (entry.target.id === "selected-account-manage-btn") {
-					this._manageAccountMovedToHeader = false;
 				}
-
 				return;
 			}
 
 			if (entry.target.id === "selected-account-title") {
 				this._titleMovedToHeader = true;
-			} else if (entry.target.id === "selected-account-manage-btn") {
-				this._manageAccountMovedToHeader = true;
 			}
 		}, this);
 	}
@@ -321,8 +330,8 @@ class UserMenu extends UI5Element {
 		this.fireDecoratorEvent("manage-account-click");
 	}
 
-	_handleAddAccountClick() {
-		this.fireDecoratorEvent("add-account-click");
+	_handleEditAccountsClick() {
+		this.fireDecoratorEvent("edit-accounts-click");
 	}
 
 	_handleAccountSwitch(e: CustomEvent<ListItemClickEventDetail>) {
@@ -350,6 +359,8 @@ class UserMenu extends UI5Element {
 
 	_handleMenuItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const item = e.detail.item as UserMenuItem; // imrove: improve this ideally without "as" cating
+
+		item._updateCheckedState();
 
 		if (!item._popover) {
 			const eventPrevented = !this.fireDecoratorEvent("item-click", {
@@ -391,12 +402,8 @@ class UserMenu extends UI5Element {
 		this.open = false;
 	}
 
-	get _manageAccountVisibleInHeader() {
-		return this.showManageAccount && this._manageAccountMovedToHeader;
-	}
-
 	get _otherAccounts() {
-		return this.accounts.filter(account => account !== this._selectedAccount);
+		return this.accounts;
 	}
 
 	get _manageAccountButtonText() {
@@ -415,8 +422,8 @@ class UserMenu extends UI5Element {
 		return UserMenu.i18nBundle.getText(USER_MENU_EDIT_AVATAR_TXT);
 	}
 
-	get _addAccountTooltip() {
-		return UserMenu.i18nBundle.getText(USER_MENU_ADD_ACCOUNT_TXT);
+	get _editAccountsTooltip() {
+		return UserMenu.i18nBundle.getText(USER_MENU_EDIT_ACCOUNTS_TXT);
 	}
 
 	get _closeDialogAriaLabel() {
@@ -430,6 +437,18 @@ class UserMenu extends UI5Element {
 		return `${UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_NAME)} ${this._selectedAccount.titleText}`;
 	}
 
+	get _ariaLabelledByAccountInformationText() {
+		return UserMenu.i18nBundle.getText(USER_MENU_CURRENT_INFORMATION_TXT);
+	}
+
+	get _ariaLabelledByActions() {
+		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
+	}
+
+	getAccountDescriptionText(account: UserMenuAccount) {
+		return `${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
+	}
+
 	getAccountByRefId(refId: string) {
 		return this.accounts.find(account => account._id === refId)!;
 	}
@@ -438,6 +457,10 @@ class UserMenu extends UI5Element {
 		if (ref) {
 			ref.associatedAccount = this;
 		}
+	}
+
+	get _menuItems() {
+		return this.menuItems.filter(isInstanceOfMenuItem);
 	}
 }
 

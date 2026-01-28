@@ -16,6 +16,14 @@
 	ui5-avatar img {
 		object-fit: contain;
 	}
+
+	#listWithWrapping ui5-li:nth-child(1)::part(title) {
+		color: rgb(214, 20, 20);
+	}
+
+	#listWithWrapping ui5-li:nth-child(2)::part(description) {
+		color: rgb(79, 128, 6);
+	}
 </style>
 </head>
 
@@ -81,6 +89,46 @@
 	</ui5-list>
 
 	<br/><br/>
+	<h2>List with sticky header</h2>
+	<ui5-list class="list6auto" sticky-header>
+		<ui5-bar slot="header">
+			<ui5-title>Sticky Header Bar</ui5-title>
+			<ui5-button slot="endContent" icon="action">Action</ui5-button>
+		</ui5-bar>
+		<ui5-li >Item 1</ui5-li>
+		<ui5-li >Item 2</ui5-li>
+		<ui5-li >Item 3</ui5-li>
+		<ui5-li >Item 4</ui5-li>
+		<ui5-li >Item 5</ui5-li>
+		<ui5-li >Item 6</ui5-li>
+		<ui5-li >Item 7</ui5-li>
+		<ui5-li >Item 8</ui5-li>
+		<ui5-li >Item 9</ui5-li>
+		<ui5-li >Item 10</ui5-li>
+		<ui5-li >Item 11</ui5-li>
+		<ui5-li >Item 12</ui5-li>
+		<ui5-li >Item 13</ui5-li>
+		<ui5-li >Item 14</ui5-li>
+		<ui5-li >Item 15</ui5-li>
+	</ui5-list>
+
+	<ui5-list class="list6auto" header-text="Sticky Header" sticky-header>
+		<ui5-li >Item 1</ui5-li>
+		<ui5-li >Item 2</ui5-li>
+		<ui5-li >Item 3</ui5-li>
+		<ui5-li >Item 4</ui5-li>
+		<ui5-li >Item 5</ui5-li>
+		<ui5-li >Item 6</ui5-li>
+		<ui5-li >Item 7</ui5-li>
+		<ui5-li >Item 8</ui5-li>
+		<ui5-li >Item 9</ui5-li>
+		<ui5-li >Item 10</ui5-li>
+		<ui5-li >Item 11</ui5-li>
+		<ui5-li >Item 12</ui5-li>
+		<ui5-li >Item 13</ui5-li>
+		<ui5-li >Item 14</ui5-li>
+		<ui5-li >Item 15</ui5-li>
+	</ui5-list>
 
 	<h2>List growing="Button" and growing-button-text property used</h2>
 	<ui5-list id="infiniteScrollEx2" growing="Button" growing-button-text="Custom growing-button-text" class="list3auto">
@@ -184,45 +232,25 @@
 	<br/><br/>
 
 	<ui5-list header-text="API: icon">
-		<ui5-li  icon="navigation-right-arrow">Option 1</ui5-li>
+		<ui5-li icon="navigation-right-arrow">Option 1</ui5-li>
 	</ui5-list>
 
 	<br/><br/>
 	<hr />
 	<br/><br/>
 
-	<ui5-list header-text="API: image">
-		<ui5-li>Laptop HP
+	<ui5-list header-text="API: image slot">
+		<ui5-li>Avatar with src inside image slot
 			<ui5-avatar slot="image">
 				<img src="./img/HT-1000.jpg" alt="Woman image">
 			</ui5-avatar>
 		</ui5-li>
-		<ui5-li>laptop Lenovo
-			<ui5-avatar slot="image">
-				<img src="./img/HT-1010.jpg" alt="Woman image">
-			</ui5-avatar>
+		<ui5-li>Icon inside image slot
+			<ui5-icon slot="image" name="bell"> </ui5-icon>
 		</ui5-li>
-		<ui5-li>IPhone 3
-			<ui5-avatar slot="image">
-				<img src="./img/HT-1022.jpg" alt="Woman image">
-			</ui5-avatar>
-		</ui5-li>
-	</ui5-list>
-
-	<br/><br/>
-
-	<ui5-list header-text="API: image">
-		<ui5-li> Avatar inside image slot
-			<div slot="image">
-				<ui5-avatar shape="Square" initials="ABC" color-scheme="Accent2"></ui5-avatar>
-			</div>
-		</ui5-li>
-		<ui5-li> Avatar inside image slot
-			<div slot="image">
-				<ui5-avatar >
-					<img src="./img/woman_avatar_5.png" alt="Woman image">
-				</ui5-avatar>
-			</div>
+		<ui5-li>Icon and Avatar with initials inside image slot
+			<ui5-icon slot="image" name="bell"> </ui5-icon>
+			<ui5-avatar slot="image" initials="AB"></ui5-avatar>
 		</ui5-li>
 	</ui5-list>
 
@@ -418,6 +446,18 @@
 			<ui5-li >Option 3</ui5-li>
 	</ui5-list>
 
+	<h3>Growing Button with Custom ARIA Name and Description</h3>
+	<ui5-list 
+		id="growingButtonAccessibility" 
+		growing="Button" 
+		growing-button-text="Load More Items"
+		header-text="Accessibility Demo">
+		<ui5-li>Product A</ui5-li>
+		<ui5-li>Product B</ui5-li>
+		<ui5-li>Product C</ui5-li>
+	</ui5-list>
+	<br/><br/>
+
 	<ui5-list
 		id="keyboardTestList"
 		selection-mode="Multiple"
@@ -542,6 +582,152 @@
 		</template>
 	</div>
 
+	<br/><br/>
+
+	<ui5-title size="H2">List wrapping behavior</ui5-title>
+
+	<br/>
+
+	<ui5-label for="selectWrapping">Change selectionMode:</ui5-label>
+	<ui5-select id="selectWrapping">
+		<ui5-option selected>None</ui5-option>
+		<ui5-option>Single</ui5-option>
+		<ui5-option>SingleStart</ui5-option>
+		<ui5-option>SingleEnd</ui5-option>
+		<ui5-option>Multiple</ui5-option>
+		<ui5-option>Delete</ui5-option>
+	</ui5-select>
+
+	<ui5-list id="listWithWrapping" header-text="List wrapping behavior (Current selectionMode: None)">
+		<ui5-li wrapping-type="Normal" text="List item with title"></ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title and description" description="Description"></ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title and additional text" additional-text="Additional text content"></ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, description and additional text" description="Description"
+			additional-text="Additional text content"></ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, description and image" description="Description">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, additional text and image" additional-text="Additional text content">
+			<ui5-avatar slot="image" initials="PM" color-scheme="Accent2"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, description, additional text and image" description="Description"
+			additional-text="Additional text content">
+			<ui5-avatar slot="image" initials="GK" color-scheme="Accent7"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, description, additional text and image" description="Description"
+			additional-text="-00005" additional-text-state="Negative">
+			<ui5-avatar slot="image" initials="PI" color-scheme="Accent9"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title, description, additional text and image" description="Description"
+			additional-text="00050000032" additional-text-state="Positive">
+			<ui5-avatar slot="image" initials="IB" color-scheme="Accent8"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal">
+			List item with title (by default it truncates) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima.
+		</ui5-li>
+		<ui5-li>
+			<b>List item with title</b> (by default it truncates) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima.
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title (wrapping enabled)"></ui5-li>
+		<ui5-li wrapping-type="Normal" text="List item with title (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis accusantium voluptatibus quos id aspernatur numquam sequi distinctio nisi iusto! Totam placeat distinctio, iure dolores, porro ducimus cupiditate laboriosam laborum asperiores dolor rerum dolorem eaque assumenda laudantium corrupti sunt odio inventore ratione repellat error? Quod quia reprehenderit odio, nihil libero in."></ui5-li>
+		<ui5-li wrapping-type="Normal"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima."
+			description="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias iure odio unde accusamus nam sed aperiam labore assumenda, repellat inventore deleniti vel, quos ipsum corrupti. Labore dolores reiciendis aut voluptates enim voluptas quod fugiat ad dolorum harum? Velit ex inventore tempore obcaecati, quae similique explicabo consectetur quos? Atque ducimus repudiandae, laborum maiores quidem alias et perferendis voluptatibus sit at. Earum excepturi iusto beatae et. Delectus eos illum consequuntur molestias tempora atque repudiandae, tempore soluta commodi adipisci, a saepe corrupti maxime quia aperiam rem praesentium, facere voluptatem alias quasi. Cumque blanditiis praesentium expedita iure sint totam alias animi sed at illum.">
+		</ui5-li>
+		<ui5-li wrapping-type="Normal"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima."
+			description="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias iure odio unde accusamus nam sed aperiam labore assumenda, repellat inventore deleniti vel, quos ipsum corrupti. Labore dolores reiciendis aut voluptates enim voluptas quod fugiat ad dolorum harum? Velit ex inventore tempore obcaecati, quae similique explicabo consectetur quos? Atque ducimus repudiandae, laborum maiores quidem alias et perferendis voluptatibus sit at. Earum excepturi iusto beatae et. Delectus eos illum consequuntur molestias tempora atque repudiandae, tempore soluta commodi adipisci, a saepe corrupti maxime quia aperiam rem praesentium, facere voluptatem alias quasi. Cumque blanditiis praesentium expedita iure sint totam alias animi sed at illum."
+			additional-text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium harum, voluptatem alias unde doloremque ab quae ipsam! Quisquam aliquid repellendus praesentium nisi sed quod beatae nesciunt consequatur, molestias, asperiores aperiam.">
+		</ui5-li>
+		<ui5-li wrapping-type="Normal"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima."
+			description="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias iure odio unde accusamus nam sed aperiam labore assumenda, repellat inventore deleniti vel, quos ipsum corrupti. Labore dolores reiciendis aut voluptates enim voluptas quod fugiat ad dolorum harum? Velit ex inventore tempore obcaecati, quae similique explicabo consectetur quos? Atque ducimus repudiandae, laborum maiores quidem alias et perferendis voluptatibus sit at. Earum excepturi iusto beatae et. Delectus eos illum consequuntur molestias tempora atque repudiandae, tempore soluta commodi adipisci, a saepe corrupti maxime quia aperiam rem praesentium, facere voluptatem alias quasi. Cumque blanditiis praesentium expedita iure sint totam alias animi sed at illum."
+			additional-text="⚠️ Only few left in stock">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" icon="da" icon-end
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima."
+			description="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias iure odio unde accusamus nam sed aperiam labore assumenda, repellat inventore deleniti vel, quos ipsum corrupti. Labore dolores reiciendis aut voluptates enim voluptas quod fugiat ad dolorum harum? Velit ex inventore tempore obcaecati, quae similique explicabo consectetur quos? Atque ducimus repudiandae, laborum maiores quidem alias et perferendis voluptatibus sit at. Earum excepturi iusto beatae et. Delectus eos illum consequuntur molestias tempora atque repudiandae, tempore soluta commodi adipisci, a saepe corrupti maxime quia aperiam rem praesentium, facere voluptatem alias quasi. Cumque blanditiis praesentium expedita iure sint totam alias animi sed at illum."
+			additional-text="⚠️ Only few left in stock">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima."
+			additional-text="⚠️ Only few left in stock">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima.">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li wrapping-type="Normal" icon="action"
+			text="List item with title and description (wrapping enabled) -- Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium architecto quo impedit laudantium perferendis et alias modi ea eaque. Quibusdam ex ipsa aspernatur tempora quia culpa et facilis labore reiciendis consectetur asperiores rem quis, eveniet autem placeat distinctio reprehenderit veniam magnam! Vitae quis exercitationem repudiandae, ipsum deleniti veritatis doloremque dolor quo labore, qui at omnis! Laborum molestias consequatur modi incidunt quidem natus unde odio voluptatibus debitis fugiat voluptates tempora, ipsam et ducimus suscipit magni, voluptate iste. Omnis modi dolor voluptatibus soluta nobis, enim repudiandae accusantium adipisci, eaque suscipit nemo? Iure ab maiores eius quos qui iusto hic neque, a minima.">
+		</ui5-li>
+		<ui5-li text="List item with title and navigated" navigated>
+		</ui5-li>
+		<ui5-li text="List item with title and negative highlight" highlight="Negative">
+		</ui5-li>
+		<ui5-li text="List item with title and selected" selected>
+		</ui5-li>
+		<ui5-li text="List item with title and icon" icon="home">
+		</ui5-li>
+		<ui5-li text="List item with title, icon and description" icon="home" description="Description">
+		</ui5-li>
+		<ui5-li text="List item with title, icon and additional text" icon="home" additional-text="Additional text content">
+		</ui5-li>
+		<ui5-li text="List item with title, icon, description and additional text" icon="home" description="Description"
+			additional-text="Additional text content">
+		</ui5-li>
+		<ui5-li text="List item with title, icon, description and image" icon="home" description="Description">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li text="List item with title, icon, additional text and image" icon="home" icon-end description="Description"
+			additional-text="Additional text content">
+			<ui5-avatar slot="image" initials="PM" color-scheme="Accent2"></ui5-avatar>
+		</ui5-li>
+		<ui5-li text="List item with title and wrapping" wrapping-type="Normal" additional-text="Additional text content" additional-text-state="Critical">
+		</ui5-li>
+		<ui5-li text="List item with title and wrapping" wrapping-type="Normal" additional-text="Additional text content" additional-text-state="Negative">
+		</ui5-li>
+		<ui5-li text="List item with title and wrapping" wrapping-type="Normal" additional-text="Additional text content" additional-text-state="Positive">
+		</ui5-li>
+		<ui5-li text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet. Quibusdam voluptas est obcaecati harum neque nobis sapiente ipsum dolorum porro alias, illum facilis! Consequuntur perspiciatis vel quae eum error necessitatibus ut illo hic vero ab odio impedit sit adipisci et, doloremque dolore porro dolorem officia. Molestias atque, soluta minus architecto quia cumque fuga veniam fugit minima mollitia facere esse, eveniet ad amet iusto modi iure rerum? Ipsa eligendi numquam ducimus quam reprehenderit aperiam sapiente adipisci debitis, illo, rerum optio eveniet ipsum vel nemo." wrapping-type="Normal" additional-text="Additional text content" additional-text-state="Information">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet. Quibusdam voluptas est obcaecati harum neque nobis sapiente ipsum dolorum porro alias, illum facilis! Consequuntur perspiciatis vel quae eum error necessitatibus ut illo hic vero ab odio impedit sit adipisci et, doloremque dolore porro dolorem officia. Molestias atque, soluta minus architecto quia cumque fuga veniam fugit minima mollitia facere esse, eveniet ad amet iusto modi iure rerum? Ipsa eligendi numquam ducimus quam reprehenderit aperiam sapiente adipisci debitis, illo, rerum optio eveniet ipsum vel nemo." wrapping-type="Normal" additional-text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet." additional-text-state="Positive" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet. Quibusdam voluptas est obcaecati harum neque nobis sapiente ipsum dolorum porro alias, illum facilis!">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+		<ui5-li text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet. Quibusdam voluptas est obcaecati harum neque nobis sapiente ipsum dolorum porro alias, illum facilis! Consequuntur perspiciatis vel quae eum error necessitatibus ut illo hic vero ab odio impedit sit adipisci et, doloremque dolore porro dolorem officia. Molestias atque, soluta minus architecto quia cumque fuga veniam fugit minima mollitia facere esse, eveniet ad amet iusto modi iure rerum? Ipsa eligendi numquam ducimus quam reprehenderit aperiam sapiente adipisci debitis, illo, rerum optio eveniet ipsum vel nemo." wrapping-type="Normal" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam qui in dolorem! In, repellat. Esse nesciunt deserunt veritatis magnam delectus a? Fugiat sit est dolore eveniet. Quibusdam voluptas est obcaecati harum neque nobis sapiente ipsum dolorum porro alias, illum facilis! Consequuntur perspiciatis vel quae eum error necessitatibus ut illo hic vero ab odio impedit sit adipisci et, doloremque dolore porro dolorem officia. Molestias atque, soluta minus architecto quia cumque fuga veniam fugit minima mollitia facere esse, eveniet ad amet iusto modi iure rerum? Ipsa eligendi numquam ducimus quam reprehenderit aperiam sapiente adipisci debitis, illo, rerum optio eveniet ipsum vel nemo.">
+			<ui5-avatar slot="image" initials="JD" color-scheme="Accent1"></ui5-avatar>
+		</ui5-li>
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-title size="H2">ListItemCustom with ExpandableText for Wrapping</ui5-title>
+
+	<br/>
+
+	<ui5-list header-text="Custom wrapping with ExpandableText component">
+		<ui5-li-custom>
+			<div class="product-item">
+				<ui5-avatar initials="JD" color-scheme="Accent1"></ui5-avatar>
+				<div class="product-details">
+					<ui5-title size="H5">Product with Long Description</ui5-title>
+					<ui5-expandable-text 
+						max-characters="200"
+						text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.">
+					</ui5-expandable-text>
+					<ui5-label>Product ID: #12345</ui5-label>
+				</div>
+				<div class="product-price">
+					<ui5-label>€1,299.00</ui5-label>
+					<ui5-label>In Stock</ui5-label>
+				</div>
+			</div>
+		</ui5-li-custom>
+	</ui5-list>
+
 	<script>
 		'use strict';
 
@@ -550,6 +736,7 @@
 		var singleSelectEndList = document.getElementById('myList2');
 		var multiSelectList = document.getElementById('myList4');
 		var singleSelectListPrevent = document.getElementById('listPrevent');
+		var listWithWrapping = document.getElementById('listWithWrapping');
 
 		var list = document.getElementById('myList5');
 		var resetBtn = document.getElementById('resetBtn');
@@ -562,6 +749,9 @@
 		var lblSelectionChange2 = document.getElementById('selectionChange2');
 		var visualizationList = document.getElementById('myList6');
 		var select = document.getElementById('select');
+		var selectWrapping = document.getElementById('selectWrapping');
+		var growingButtonTest = document.getElementById('growingButtonAccessibility');
+
 		var selectionModes = {
 			"None": undefined,
 			"Single": "Single",
@@ -575,11 +765,25 @@
 			0: "0/3", 1: "1/3", 2: "2/3", 3: "3/3"
 		};
 
+		growingButtonTest.accessibilityAttributes = {
+			growingButton: {
+				name: "Load more products",
+				description: "This button will load additional products to the list. Click or press Enter to see more items."
+			}
+		};
+
 		select.addEventListener("ui5-change", function (event) {
 			var value = event.detail.selectedOption.textContent;
 
-			visualizationList.selectionModes = selectionModes[value];
+			visualizationList.selectionMode = selectionModes[value];
 			visualizationList.headerText = visualizationList.headerText.replace(/\(.+\)/, "(Current selectionMode: " + value + ")");
+		});
+
+		selectWrapping.addEventListener("ui5-change", function (event) {
+			var value = event.detail.selectedOption.textContent;
+
+			listWithWrapping.selectionMode = selectionModes[value];
+			listWithWrapping.headerText = listWithWrapping.headerText.replace(/\(.+\)/, "(Current selectionMode: " + value + ")");
 		});
 
 		var getItems = function getItems(items) {

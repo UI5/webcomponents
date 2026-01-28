@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-website",
-  "version": "2.8.0-rc.2",
+  "version": "2.19.0-rc.2",
   "private": true,
   "scripts": {
     "generate-local-cdn": "rimraf ./local-cdn && node ./build-scripts/local-cdn.mjs",
@@ -24,8 +24,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "ci:build": "dotenv -e .env.latest -- yarn build",
-    "ci:build:nightly": "dotenv -e .env -- yarn build:with:cdn"
+    "ci:build": "yarn build",
+    "ci:build:nightly": "yarn build:with:cdn",
+    "ci:build:preview": "yarn build:with:cdn"
   },
   "dependencies": {
     "@docusaurus/core": "3.1.1",
@@ -34,12 +35,11 @@
     "clsx": "^2.0.0",
     "docusaurus-lunr-search": "^3.3.2",
     "dotenv": "^16.4.5",
-    "playground-elements": "^0.18.1",
+    "playground-elements": "patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch",
     "prism-react-renderer": "^2.3.0",
     "raw-loader": "^4.0.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-splitter-light": "^1.0.3",
     "rimraf": "^3.0.2",
     "tarts": "^2.0.1"
   },
@@ -49,6 +49,7 @@
     "@docusaurus/types": "3.1.1",
     "copy-and-watch": "^0.1.5",
     "dotenv-cli": "^7.4.1",
+    "pako": "^2.1.0",
     "typescript": "~5.6.2"
   },
   "browserslist": {

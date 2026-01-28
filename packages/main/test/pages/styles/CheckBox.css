@@ -15,3 +15,7 @@ ui5-checkbox:not(.ui5-cb-testing-wrap) {
     flex-direction: column;
     width: 250px
 }
+
+form ui5-checkbox:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}

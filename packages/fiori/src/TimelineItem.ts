@@ -23,6 +23,8 @@ import {
 
 import TimelineItemCss from "./generated/themes/TimelineItem.css.js";
 
+type TimelineItemRole = "listitem" | "treeitem";
+
 /**
  * @class
  *
@@ -164,14 +166,20 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	hidden = false;
 
 	/**
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	effectiveRole: `${TimelineItemRole}` = "listitem";
+
+	/**
 	 * Defines the position of the item in a group.
 	 * @private
 	 */
 	@property({ type: Number })
 	positionInGroup?: number;
 
-	@i18n("@ui5/webcomponents")
-	static i18nBundle: I18nBundle;
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundleFiori: I18nBundle;
 
 	constructor() {
 		super();
@@ -198,11 +206,33 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	}
 
 	get timelineItemStateText() {
-		return this.state !== "None" ? TimelineItem.i18nBundle.getText(TimelineItem.typeTextMappings()[this.state]) : undefined;
+		return this.state !== "None" ? TimelineItem.i18nBundleFiori.getText(TimelineItem.typeTextMappings()[this.state]) : undefined;
 	}
 
 	get isGroupItem() {
 		return false;
+	}
+
+	get _getAccessibleLabel() {
+		const parts = [];
+
+		if (this.name) {
+			parts.push(this.name);
+		}
+
+		if (this.titleText) {
+			parts.push(this.titleText);
+		}
+
+		if (this.subtitleText) {
+			parts.push(this.subtitleText);
+		}
+
+		if (this.timelineItemStateText) {
+			parts.push(this.timelineItemStateText);
+		}
+
+		return parts.join(", ");
 	}
 }
 

@@ -113,6 +113,11 @@
 		<h2>Link opens a dialog</h2>
 		<ui5-link accessible-role="button" id="signInLink">Sign in</ui5-link>
 		<ui5-dialog id="signInDialog" header-text="Sign in form">
+			<ui5-bar slot="header" design="Header">
+				<ui5-title level="H5" slot="startContent">Bar used in Header and Footer</ui5-title>
+				<ui5-button class="dialogCloser" design="Transparent" id="closeDialogButton" slot="endContent"
+					icon="decline"></ui5-button>
+			</ui5-bar>
 			<section class="login-form">
 				<div>
 					<ui5-label for="email" type="Email" required>Email: </ui5-label>

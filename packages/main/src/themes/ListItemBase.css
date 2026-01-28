@@ -27,19 +27,19 @@
 :host([selected]) {
 	background-color: var(--sapList_SelectionBackgroundColor);
 	border-bottom: var(--ui5-listitem-selected-border-bottom);
+}
 
-	.ui5-li-additional-text {
-		text-shadow: var(--sapContent_TextShadow);
-	}
+:host([selected]) .ui5-li-additional-text {
+	text-shadow: var(--sapContent_TextShadow);
 }
 
 /* hovered */
 :host([actionable]:not([active]):not([selected]):not([ui5-li-group-header]):hover) {
     background-color: var(--sapList_Hover_Background);
+}
 
-	.ui5-li-additional-text {
-		text-shadow: var(--sapContent_TextShadow);
-	}
+:host([actionable]:not([active]):not([selected]):not([ui5-li-group-header]):hover) .ui5-li-additional-text {
+	text-shadow: var(--sapContent_TextShadow);
 }
 
 /* selected and hovered */
@@ -88,7 +88,7 @@
 	flex: auto;
 	overflow: hidden;
 	max-width: 100%;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	color: var(--sapList_TextColor);
 }
 

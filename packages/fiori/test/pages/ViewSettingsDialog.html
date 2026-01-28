@@ -12,12 +12,27 @@
 		}
 	</script>
 
+	<style>
+		#vsd::part(header) {
+			--sapButton_Lite_TextColor: pink;
+		}
+	</style>
+
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
 <link rel="stylesheet" type="text/css" href="./styles/ViewSettingsDialog.css">
 </head>
 
 <body class="viewsettingsdialog1auto">
+
+	<ui5-button id="btnOpenGroup">Show VSD with group option</ui5-button>
+	<ui5-view-settings-dialog id="vsdGroup">
+		<ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
+		<ui5-group-item slot="groupItems" text="Title"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Author"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
+	</ui5-view-settings-dialog>
 
 	<h3> ViewSettingsDialog</h3>
 	<ui5-button id="btnOpenDialog">Show ViewSettingsDialog</ui5-button>
@@ -114,6 +129,23 @@
 	</ui5-view-settings-dialog>
 
 	<script>
+		btnOpenGroup.addEventListener("click", function () {
+			vsdGroup.open = true;
+		});
+
+		vsdGroup.addEventListener("ui5-confirm", function (e) {
+			const groupByItem = e.detail.groupByItem;
+			const groupOrder = e.detail.groupDescending ? "Descending" : "Ascending";
+
+			const sortByItem = e.detail.sortByItem;
+			const sortOrder = e.detail.sortDescending ? "Descending" : "Ascending";
+
+			console.log("Group By Item: ", groupByItem);
+			console.log("Group Order: ", groupOrder);
+			console.log("Sort By Item: ", sortByItem);
+			console.log("Sort Order: ", sortOrder);
+		});
+
 		btnOpenDialogWithDataSet.addEventListener("click", function () {
 			vsdWithDataSet.open = true;
 		});
@@ -142,6 +174,7 @@
 			sortOrder.value = `${evt.detail.sortDescending}`;
 			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
 		});
+
 		btnOpenDialogSort.addEventListener("click", function () {
 			vsdSort.open = true;
 		});

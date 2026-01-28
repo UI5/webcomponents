@@ -1,0 +1,138 @@
+.ua-name{
+	display:inline;
+	margin:0.5rem
+}
+.container{
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 3rem;
+}
+
+.language-region-container{
+	display: flex;
+	min-height: 2.5rem;
+	align-item:flex-start;
+	flex-direction: column;
+	gap: 0.563rem;
+}
+
+.language-region-label{
+	display: flex;
+	flex: 1 0 0;
+	width: 100%;
+}
+
+.language-region-control{
+	display: flex;
+	gap: 0.188rem;
+	width: 100%;
+}
+
+.ua-info-item{
+	display: grid;
+	grid-template-columns: 50px 1fr;
+	align-items: center;
+	gap: 16px;
+}
+
+.ua-panel{
+	border-top: 2px solid lightgrey;
+	margin: 1rem 0;
+}
+
+.save-btn{
+	position: absolute;
+	bottom: 1rem;
+}
+
+.lr-item{
+	display: grid;
+	grid-template-columns: 150px 1fr;
+	align-items: center;
+	gap: 16px;
+}
+
+.lt-time-format{
+	display: flex;
+	align-items: center;
+	margin: 0 1rem 0 1rem;
+}
+
+ ui5-list {
+	 width: 100%;
+ }
+
+.list-header{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	box-sizing: border-box;
+	font-size: var(--sapFontHeader4Size);
+	font-family: "72override", var(--sapFontFamily);
+	color: var(--sapGroup_TitleTextColor);
+	height: 3rem;
+	line-height: 3rem;
+	padding: 0 1rem;
+	background-color: var(--sapGroup_TitleBackground);
+}
+
+.list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.25rem;
+	width: 100%;
+}
+
+.ui5-list-secondary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.25rem;
+	width: 100%;
+	color: var(--sapContent_LabelColor);
+}
+
+.item-left {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex: 1;
+}
+.item-texts {
+	display: flex;
+	flex-direction: column;
+}
+
+.item-title {
+	font-weight: 600;
+	font-size: 1rem;
+	color: var(--sapList_TextColor);
+	margin:0.5rem;
+
+}
+
+.item-subtitle {
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSize);
+	margin:0.5rem;
+
+}
+
+.item-right {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+ui5-icon.nav-icon {
+	cursor: pointer;
+	color: var(--sapContent_NonInteractiveIconColor);
+	flex-shrink: 0;
+}
+
+.push-notifications{
+	border-bottom:  1px solid lightgrey;
+	border-top: 1px solid lightgrey;
+}

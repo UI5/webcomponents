@@ -109,26 +109,6 @@ class MyDemoComponent extends UI5Element {
 
 **Note:** The build scripts automatically transpile your `.css` files to JavaScript files. For example, your `my-package/src/theme/MyDemoComponent.css` will be transpiled to `my-package/src/generated/themes/MyDemoComponent.css.ts`, which, in addition to your component's CSS, also contains definitions for all CSS variables for the default theme.
 
-### dependencies
-This option accepts an array of dependencies, which are all other web components used inside the `.hbs` template file. Without this, the internally used web components won't be defined.
-
-Furthermore, to utilize the Scoping feature, you must list all the internally used web components in the `dependencies` static getter. The framework reads the dependencies and scopes the tag names of the listed web components.
-
-For example, if the `ui5-icon` tag (or any other standard or custom UI5 Web Component) is used inside the template, you must import the `Icon` web component and add it to the `dependencies` static getter as shown:
-
-```ts
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import Icon from "@ui5/webcomponents/dist/Icon.js";
-
-@customElement({
-    dependencies: [Icon]
-})
-class MyDemoComponent extends UI5Element {
-    // class implementation
-}
-```
-
 ### languageAware
 This option accepts a boolean value and determines if the component should be re-rendered whenever the language changes. Use this setting if your component has translatable texts and needs to be re-rendered when the app changes the language.
 

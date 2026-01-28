@@ -1,79 +1,72 @@
-import type UI5Element from "../../UI5Element.js";
 import type MovePlacement from "../../types/MovePlacement.js";
+import MultipleDragGhostCss from "../../generated/css/MultipleDragGhost.css.js";
+
+import { getI18nBundle } from "../../i18nBundle.js";
+
+import {
+	DRAG_DROP_MULTIPLE_TEXT,
+} from "../../generated/i18n/i18n-defaults.js";
+
+const MIN_MULTI_DRAG_COUNT = 2;
 
 let draggedElement: HTMLElement | null = null;
-let globalHandlersAttached = false;
-const subscribers = new Set<UI5Element>();
-const selfManagedDragAreas = new Set<HTMLElement | ShadowRoot>();
-
-const ondragstart = (e: DragEvent) => {
-	if (!e.dataTransfer || !(e.target instanceof HTMLElement)) {
-		return;
-	}
-
-	if (!selfManagedDragAreas.has(e.target)) {
-		draggedElement = e.target;
-	}
-};
-
-const ondragend = () => {
-	draggedElement = null;
-};
-
-const ondrop = () => {
-	draggedElement = null;
-};
 
 const setDraggedElement = (element: HTMLElement | null) => {
 	draggedElement = element;
 };
-type SetDraggedElementFunction = typeof setDraggedElement;
+
+const clearDraggedElement = () => {
+	draggedElement = null;
+};
 
 const getDraggedElement = () => {
 	return draggedElement;
 };
 
-const attachGlobalHandlers = () => {
-	if (globalHandlersAttached) {
+const createDefaultMultiDragElement = async (count: number): Promise<HTMLElement> => {
+	const dragElement = document.createElement("div");
+	const i18nBundle = await getI18nBundle("@ui5/webcomponents-base");
+
+	const dragElementShadow = dragElement.attachShadow({ mode: "open" });
+
+	const styles = new CSSStyleSheet();
+	styles.replaceSync(MultipleDragGhostCss);
+
+	dragElementShadow.adoptedStyleSheets = [styles];
+	dragElementShadow.textContent = i18nBundle.getText(DRAG_DROP_MULTIPLE_TEXT, count);
+
+	return dragElement;
+};
+
+/**
+ * Starts a multiple drag operation by creating a drag ghost element.
+ * The drag ghost will be displayed when dragging multiple items.
+ *
+ * @param {number} count - The number of items being dragged.
+ * @param {DragEvent} e - The drag event that triggered the operation.
+ * @public
+ */
+const startMultipleDrag = async (count: number, e: DragEvent) => {
+	if (count < MIN_MULTI_DRAG_COUNT) {
+		console.warn(`Cannot start multiple drag with count ${count}. Minimum is ${MIN_MULTI_DRAG_COUNT}.`); // eslint-disable-line
 		return;
 	}
 
-	document.body.addEventListener("dragstart", ondragstart);
-	document.body.addEventListener("dragend", ondragend);
-	document.body.addEventListener("drop", ondrop);
-};
-
-const detachGlobalHandlers = () => {
-	document.body.removeEventListener("dragstart", ondragstart);
-	document.body.removeEventListener("dragend", ondragend);
-	document.body.removeEventListener("drop", ondrop);
-	globalHandlersAttached = false;
-};
-
-const subscribe = (subscriber: UI5Element) => {
-	subscribers.add(subscriber);
-
-	if (!globalHandlersAttached) {
-		attachGlobalHandlers();
+	if (!e.dataTransfer) {
+		return;
 	}
-};
 
-const unsubscribe = (subscriber: UI5Element) => {
-	subscribers.delete(subscriber);
+	const customDragElement = await createDefaultMultiDragElement(count);
 
-	if (subscribers.size === 0 && globalHandlersAttached) {
-		detachGlobalHandlers();
-	}
-};
+	// Add to document body temporarily
+	document.body.appendChild(customDragElement);
 
-const addSelfManagedArea = (area: HTMLElement | ShadowRoot) => {
-	selfManagedDragAreas.add(area);
+	e.dataTransfer.setDragImage(customDragElement, 0, 0);
 
-	return setDraggedElement;
-};
-
-const removeSelfManagedArea = (area: HTMLElement | ShadowRoot) => {
-	selfManagedDragAreas.delete(area);
+	// Clean up the temporary element after the drag operation starts
+	requestAnimationFrame(() => {
+		customDragElement.remove();
+	});
 };
 
 type DragAndDropSettings = {
@@ -99,16 +92,18 @@ type MoveEventDetail = {
 };
 
 const DragRegistry = {
-	subscribe,
-	unsubscribe,
-	addSelfManagedArea,
-	removeSelfManagedArea,
+	setDraggedElement,
+	clearDraggedElement,
 	getDraggedElement,
+	startMultipleDrag,
 };
 
 export default DragRegistry;
+export {
+	startMultipleDrag,
+};
+
 export type {
-	SetDraggedElementFunction,
 	DragAndDropSettings,
 	MoveEventDetail,
 };

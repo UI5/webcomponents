@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SideNavigation Overlay</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+
+		#respPopover::part(content) {
+			padding: 0;
+			overflow-x: visible;
+			overflow-y: hidden
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<ui5-shellbar
+			class="header"
+			slot="header"
+			secondary-title="The Best Run SAP"
+		>
+			<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
+			<ui5-button icon="menu" id="menuBtn" slot="startButton"></ui5-button>
+		</ui5-shellbar>
+		<ui5-responsive-popover id="respPopover" opener="menuBtn" placement="Bottom" accessible-name="Main Navigation">
+			<ui5-side-navigation id="nl1">
+				<!-- Items -->
+				<ui5-side-navigation-item text="Home" href="#home" icon="home"></ui5-side-navigation-item>
+				<ui5-side-navigation-group text="Group 1" expanded>
+					<ui5-side-navigation-item text="Item 1" text="Item 1" expanded href="#item1" icon="locate-me">
+						<ui5-side-navigation-sub-item text="Sub Item 1" href="#subitem1" unselectable></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 2" href="#subitem2"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Item 2" href="#item2" icon="calendar" unselectable expanded>
+						<ui5-side-navigation-sub-item text="Sub Item 3" href="#subitem3"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 4" href="#subitem4"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Item 3" href="#item3" icon="activity-assigned-to-goal" unselectable></ui5-side-navigation-item>
+				</ui5-side-navigation-group>
+				<ui5-side-navigation-item text="Home2" href="#home2" icon="home"></ui5-side-navigation-item>
+				<ui5-side-navigation-group text="Group 2" expanded>
+					<ui5-side-navigation-item text="Item 4" href="#item4" icon="history" expanded>
+						<ui5-side-navigation-sub-item text="Sub Item 5" href="#subitem5"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 6" href="#subitem6"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Item 5" href="#item5" icon="source-code" expanded>
+						<ui5-side-navigation-sub-item text="Sub Item 7" href="#subitem7"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 8" href="#subitem8"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Item 6" href="#item6" icon="background" expanded>
+						<ui5-side-navigation-sub-item text="Sub Item 9" href="#subitem9"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 10" href="#subitem10"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+					<ui5-side-navigation-item text="Item 7" href="#item7" icon="background" expanded>
+						<ui5-side-navigation-sub-item text="Sub Item 11" href="#subitem11"></ui5-side-navigation-sub-item>
+						<ui5-side-navigation-sub-item text="Sub Item 12" href="#subitem12"></ui5-side-navigation-sub-item>
+					</ui5-side-navigation-item>
+				</ui5-side-navigation-group>
+				<!-- Fixed Items -->
+				<ui5-side-navigation-item slot="fixedItems"
+										text="Legal"
+										href="https://www.sap.com/about/legal/impressum.html"
+										target="_blank"
+										icon="compare"></ui5-side-navigation-item>
+				<ui5-side-navigation-item slot="fixedItems"
+										text="Privacy"
+										href="https://www.sap.com/about/legal/privacy.html"
+										target="_blank"
+										icon="locked"></ui5-side-navigation-item>
+				<ui5-side-navigation-item slot="fixedItems"
+										text="Terms of Use"
+										href="https://www.sap.com/terms-of-use"
+										target="_blank"
+										icon="document-text"></ui5-side-navigation-item>
+			</ui5-side-navigation>
+		</ui5-responsive-popover>
+	</div>
+
+	<script>
+		menuBtn.addEventListener("click", function (event) {
+			respPopover.open = !respPopover.open;
+		});
+
+		nl1.addEventListener("selection-change", function (event) {
+			respPopover.open=false;
+		});
+
+	</script>
+</body>
+</html>

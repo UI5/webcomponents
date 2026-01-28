@@ -19,6 +19,7 @@
 	--_ui5_textarea_padding_right_and_left: 0.5rem;
 	--_ui5_textarea_padding_right_and_left_information: 0.5625rem;
 	--_ui5_textarea_padding_right_and_left_readonly: 0.5rem;
+	--_ui5_textarea_inner_width: 100%;
 }
 
 [data-ui5-compact-size],

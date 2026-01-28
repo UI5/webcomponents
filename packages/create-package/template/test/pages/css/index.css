@@ -3,6 +3,7 @@ body {
 	background-color: var(--sapBackgroundColor);
 	font-size: var(--sapFontSize);
 	font-family: var(--sapFontFamily);
+	padding: 2rem;
 }
 
 h1 {
@@ -11,31 +12,78 @@ h1 {
 }
 
 h2 {
-	font-size: var(--sapFontHeader3Size);
-	margin-bottom: 0.5rem;
-}
-
-.app, .app-settings, .app-docs, .app-first-component  {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-
-.app-logo {
-	height: 230px;
-	width: 230px;
-}
-
-.app-first-component {
-	margin-bottom: 3rem;
-}
-
-.app-docs {
-	margin-top: 3rem;
+	font-size: var(--sapFontHeader4Size);
 }
 
 a {
 	margin: 0.25rem;
+	padding: 0.5rem;
+}
+
+a.link {
 	color: var(--sapLinkColor);
+}
+
+a.theme-link {
+	color: var(--sapButton_Emphasized_TextColor);
+	background-color: var(--sapButton_Emphasized_Background);
+	text-decoration: none;
+	border-radius: 0.25rem;
+}
+
+a.lang-link {
+	color: var(--sapButton_Attention_TextColor);
+	background-color: var(--sapButton_Attention_Background);
+	text-decoration: none;
+	border-radius: 0.25rem;
+}
+
+.app {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.app-nav {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.app-logo {
+	height: 5rem;
+	width: 5rem;
+}
+
+.app-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.app-main {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	padding-top: 2rem;
+}
+
+.app-main-demo {
+	padding: 2rem;
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	background-color: var(--sapTile_Background);
+}
+
+.app-main-settings  {
+	display: flex;
+	flex-direction: column;
+	padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+	.app-main {
+		flex-direction: column;
+	}
 }

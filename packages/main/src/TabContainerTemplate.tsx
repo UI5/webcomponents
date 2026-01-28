@@ -45,6 +45,7 @@ export default function TabContainerTemplate(this: TabContainer, injectedPartial
 				"ui5-tc--textOnly": this.textOnly,
 				"ui5-tc--withAdditionalText": this.withAdditionalText,
 				"ui5-tc--standardTabLayout": this.standardTabLayout,
+				"ui5-tc--noTabSelected": !this._selectedTab,
 			}}
 		>
 			{this.tabsAtTheBottom && partials.contentArea.call(this)}
@@ -72,7 +73,6 @@ export default function TabContainerTemplate(this: TabContainer, injectedPartial
 						<Button
 							endIcon={this.overflowMenuIcon}
 							data-ui5-stable="overflow-start"
-							tabindex={ -1 }
 							tooltip={this.overflowMenuTitle}
 							accessibilityAttributes={this.overflowBtnAccessibilityAttributes}
 						>
@@ -107,7 +107,6 @@ export default function TabContainerTemplate(this: TabContainer, injectedPartial
 						<Button
 							endIcon={this.overflowMenuIcon}
 							data-ui5-stable="overflow-end"
-							tabindex={ -1 }
 							tooltip={this.overflowMenuTitle}
 							accessibilityAttributes={this.overflowBtnAccessibilityAttributes}
 						>

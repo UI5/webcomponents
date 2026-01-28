@@ -2,25 +2,21 @@
 
 :root {
 	/* handle */
-	--_ui5_slider_handle_height: 1.5rem;
-	--_ui5_slider_handle_width: 2rem;
 	--_ui5_slider_handle_icon_display: inline-block;
 	--_ui5_range_slider_root_hover_handle_icon_display: inline-block;
-	--_ui5_slider_handle_border_radius: 0.5rem;
-	--_ui5_slider_handle_hover_background: var(--sapButton_Hover_Background);
-	--_ui5_slider_handle_border: 0.0625rem solid var(--sapField_BorderColor);
 	--_ui5_slider_handle_hover_border: var(--_ui5_slider_handle_border);
-	--_ui5_slider_handle_top: -.5625rem;
 	--_ui5_slider_handle_background_focus: var(--sapSlider_Active_RangeHandleBackground);
 	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapField_BorderColor);
 	--_ui5_slider_handle_outline: none;
 	--_ui5_slider_handle_box_sizing: border-box;
+	--_ui5_slider_start_end_point_top: -0.125rem;
 	--_ui5_range_slider_handle_background: var(--sapSlider_RangeHandleBackground);
 	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
 	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
-	--_ui5_slider_inner_height: 0.25rem;
-	--_ui5_slider_progress_border: solid 0.0625rem var(--sapContent_MeasureIndicatorColor);
-	--_ui5_slider_progress_border_radius: 0.25rem;
+	--_ui5_slider_inner_height: 0.375rem;
+	--_ui5_slider_track_total_height: var(--_ui5_slider_inner_height);
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
 	--_ui5_slider_progress_background: var(--sapSlider_Selected_Background);
 	--_ui5_slider_progress_container_background: var(--sapSlider_Background);
 	--_ui5_slider_progress_container_dot_display: block;
@@ -28,31 +24,23 @@
 	--_ui5_slider_progress_after_background: var(--sapContent_MeasureIndicatorColor);
 	--_ui5_slider_progress_after_border: solid 0.0625rem var(--sapContent_Selected_MeasureIndicatorColor);
 	--_ui5_slider_progress_before_border: solid 0.0625rem var(--sapContent_MeasureIndicatorColor);
-	--_ui5_slider_start_end_point_top: -3px;
 	--_ui5_slider_progress_outline_offset: -14px;
 	--_ui5_slider_outer_height: calc(var(--_ui5_slider_handle_height) + 9px);
 	--_ui5_slider_progress_outline_offset_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 6px);
 	--_ui5_slider_progress_outline: var(--sapContent_FocusWidth) dotted var(--sapContent_FocusColor);
 	--_ui5_range_slider_focus_outline_width: calc(100% + var(--_ui5_slider_handle_width) + 12px);
 	--_ui5_range_slider_focus_outline_radius: .5rem;
-	--_ui5_slider_tickmark_height: .5rem;
-	--_ui5_slider_tickmark_top: -.125rem;
-	--_ui5_slider_progress_box_sizing: border-box;
 
-	--_ui5_slider_progress_container_top: .0625rem;
+	--_ui5_slider_progress_container_top: 0;
 	--_ui5_slider_progress_height: .375rem;
-	--_ui5_slider_active_progress_border: .0625rem solid var(--sapSlider_Selected_BorderColor);
-	--_ui5_slider_active_progress_left: -.0625rem;
-	--_ui5_slider_active_progress_top: -.15625rem;
+	--_ui5_slider_active_progress_border: solid 0.0625rem var(--sapSlider_Selected_BorderColor);
+	--_ui5_slider_active_progress_top: -.0625rem;
 
 	--_ui5_slider_no_tickmarks_progress_container_top: 0;
-	--_ui5_slider_no_tickmarks_progress_height: 100%;
 	--_ui5_slider_no_tickmarks_active_progress_border: none;
 	--_ui5_slider_no_tickmarks_active_progress_left: 0;
 	--_ui5_slider_no_tickmarks_active_progress_top: 0;
 
-	--_ui5_slider_tooltip_fontsize: var(--sapFontSmallSize);
-	--_ui5_slider_tooltip_color: var(--sapContent_LabelColor);
 	--_ui5_slider_tooltip_background: var(--sapField_Background);
 	--_ui5_slider_tooltip_border_radius: var(--sapElement_BorderCornerRadius);
 	--_ui5_slider_tooltip_border_color: var(--sapField_BorderColor);
@@ -60,17 +48,22 @@
 	--_ui5_slider_tooltip_box_shadow: none;
 	--_ui5_slider_tooltip_padding: 0.25rem;
 	--_ui5_slider_tooltip_height: 1.375rem;
-	--_ui5_slider_tooltip_min_width: 2rem;
-	--_ui5_slider_tooltip_bottom: 2rem;
 	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - 1px);
 	--_ui5_slider_tooltip_border_box: border-box;
 	--_ui5_slider_handle_focus_visibility: block;
+
+	--_ui5_range_slider_legacy_progress_focus_display: none;
+	--_ui5_range_slider_progress_focus_display: block;
+	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 0.375rem);
+	--_ui5_range_slider_progress_focus_top: calc(-1 * ((var(--_ui5_slider_handle_height) / 2) + 0.1875rem) + 2 * var(--_ui5_slider_progress_border_width));
+	--_ui5_range_slider_progress_focus_left: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
+	--_ui5_range_slider_progress_focus_right: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
 }
 
 [data-ui5-compact-size],
 .ui5-content-density-compact,
 .sapUiSizeCompact {
-	--_ui5_slider_handle_width: 1.5rem;
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
 	--_ui5_range_slider_focus_outline_width: calc(100% + var(--_ui5_slider_handle_width) + 12px);
 	--_ui5_slider_outer_height: calc(var(--_ui5_slider_handle_height) + 10px);
 	--_ui5_slider_progress_outline_offset: calc((-1 * var(--_ui5_slider_outer_height)) + 1rem);

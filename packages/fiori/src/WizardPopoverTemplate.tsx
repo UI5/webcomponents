@@ -35,7 +35,7 @@ export default function WizardPopoverTemplate(this: Wizard) {
 				<Button
 					design="Transparent"
 					onClick={this._closeRespPopover}
-				>Cancel</Button>
+				>{this._dialogCancelButtonText}</Button>
 			</div>
 		</ResponsivePopover>
 	);

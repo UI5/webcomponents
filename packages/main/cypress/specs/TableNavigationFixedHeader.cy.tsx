@@ -24,17 +24,17 @@ describe("Table - Keyboard Navigation with Fixed Headers", () => {
 	it("scrollable container - focused row should always be below the header", () => {
 		cy.mount(
 			<div style="height:300px; overflow:auto;">
-				<Bar id="toolbar" design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 50px;">
+				<Bar id="toolbar" design="Header" style="position: sticky; top: 0; z-index: 2; height: 50px;">
 					<Title tabindex={0} level="H3" id="title" slot="startContent">My Selectable Products (3)</Title>
 					<Slider id="slider" min={0} max={100} step={1} value={100}
 						label-interval="0"/>
 				</Bar>
-				<Table id="table0" overflow-mode="Popin" sticky-top="50px" accessible-name-ref="title" no-data-text="No data found">
+				<Table id="table0" overflowMode="Popin" stickyTop="50px" accessibleNameRef="title" noDataText="No data found">
 					<TableHeaderRow sticky slot="headerRow">
-						<TableHeaderCell id="colA" min-width="300px"><span>ColumnA</span></TableHeaderCell>
-						<TableHeaderCell id="colB" min-width="200px">Column B</TableHeaderCell>
-						<TableHeaderCell id="colC" min-width="200px">Column C</TableHeaderCell>
-						<TableHeaderCell id="colD" min-width="150px">Column D</TableHeaderCell>
+						<TableHeaderCell id="colA" minWidth="300px"><span>ColumnA</span></TableHeaderCell>
+						<TableHeaderCell id="colB" minWidth="200px">Column B</TableHeaderCell>
+						<TableHeaderCell id="colC" minWidth="200px">Column C</TableHeaderCell>
+						<TableHeaderCell id="colD" minWidth="150px">Column D</TableHeaderCell>
 					</TableHeaderRow>
 					<TableRow id="row-1"> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
 					<TableRow id="row-2"> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
@@ -88,12 +88,12 @@ describe("Table - Keyboard Navigation with Fixed Headers", () => {
 
 	it("scrollable table - focused row should always be below the header", () => {
 		cy.mount(
-			<Table id="table1" overflow-mode="Popin" sticky-top="0" accessible-name-ref="title" no-data-text="No data found" style="height: 300px; overflow: auto;">
+			<Table id="table1" overflowMode="Popin" stickyTop="0" accessibleNameRef="title" noDataText="No data found" style="height: 300px; overflow: auto;">
 				<TableHeaderRow sticky slot="headerRow">
-					<TableHeaderCell id="colA" min-width="300px"><span>ColumnA</span></TableHeaderCell>
-					<TableHeaderCell id="colB" min-width="200px">Column B</TableHeaderCell>
-					<TableHeaderCell id="colC" min-width="200px">Column C</TableHeaderCell>
-					<TableHeaderCell id="colD" min-width="150px">Column D</TableHeaderCell>
+					<TableHeaderCell id="colA" minWidth="300px"><span>ColumnA</span></TableHeaderCell>
+					<TableHeaderCell id="colB" minWidth="200px">Column B</TableHeaderCell>
+					<TableHeaderCell id="colC" minWidth="200px">Column C</TableHeaderCell>
+					<TableHeaderCell id="colD" minWidth="150px">Column D</TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow id="row-1-1"> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
 				<TableRow id="row-2-1"> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> <TableCell></TableCell> </TableRow>
@@ -147,17 +147,17 @@ describe("Table - Keyboard Navigation with Fixed Headers", () => {
 	it("body as scroll container - focused row should always be below the header", () => {
 		cy.mount(
 			<>
-				<Bar id="toolbar2" design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 50px;">
+				<Bar id="toolbar2" design="Header" style="position: sticky; top: 0; z-index: 2; height: 50px;">
 					<Title tabindex={0} level="H3" id="title" slot="startContent">My Selectable Products (3)</Title>
 					<Slider id="slider" min={0} max={100} step={1} value={100}
 						label-interval="0"></Slider>
 				</Bar>
-				<Table id="table2" overflow-mode="Popin" sticky-top="50px" accessible-name-ref="title" no-data-text="No data found">
+				<Table id="table2" overflowMode="Popin" stickyTop="50px" accessibleNameRef="title" noDataText="No data found">
 					<TableHeaderRow sticky slot="headerRow">
-						<TableHeaderCell id="colA" min-width="300px"><span>ColumnA</span></TableHeaderCell>
-						<TableHeaderCell id="colB" min-width="200px">Column B</TableHeaderCell>
-						<TableHeaderCell id="colC" min-width="200px">Column C</TableHeaderCell>
-						<TableHeaderCell id="colD" min-width="150px">Column D</TableHeaderCell>
+						<TableHeaderCell id="colA" minWidth="300px"><span>ColumnA</span></TableHeaderCell>
+						<TableHeaderCell id="colB" minWidth="200px">Column B</TableHeaderCell>
+						<TableHeaderCell id="colC" minWidth="200px">Column C</TableHeaderCell>
+						<TableHeaderCell id="colD" minWidth="150px">Column D</TableHeaderCell>
 					</TableHeaderRow>
 					${Array.from({ length: 100 }).map((row, index) =>
 						<TableRow id={`row-${index + 1}-2`}>

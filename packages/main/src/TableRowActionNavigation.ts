@@ -1,8 +1,8 @@
 import { customElement, property, i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableRowActionBase from "./TableRowActionBase.js";
-import { TABLE_NAVIGATION } from "./generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { TABLE_NAVIGATION } from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -19,7 +19,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
  * @extends TableRowActionBase
  * @since 2.7.0
  * @public
- * @experimental
  */
 @customElement({ tag: "ui5-table-row-action-navigation" })
 
@@ -36,16 +35,16 @@ class TableRowActionNavigation extends TableRowActionBase {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
+	isFixedAction() {
+		return true;
+	}
+
 	getRenderInfo() {
 		return {
 			text: this._i18nNavigation,
 			icon: "navigation-right-arrow",
 			interactive: this.interactive,
 		};
-	}
-
-	isFixedAction() {
-		return true;
 	}
 
 	get _i18nNavigation() {

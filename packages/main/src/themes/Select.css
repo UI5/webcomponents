@@ -2,6 +2,20 @@
 @import "./InputIcon.css";
 @import "./Input.css";
 
+:host([icon]) {
+	min-width: var(--_ui5_button_base_min_width);
+	width: var(--_ui5_button_base_min_width);
+}
+
+:host([icon]) .ui5-select-root {
+	min-width: var(--_ui5_button_base_min_width);
+}
+
+:host([icon]) .ui5-select-label-root {
+	min-width: 0;
+	padding-inline-start: 0;
+}
+
 .ui5-select-root {
 	min-width: calc(var(--_ui5_input_min_width) + (var(--_ui5-input-icons-count)*var(--_ui5_input_icon_width)));
 	width: 100%;
@@ -25,7 +39,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	color: var(--_ui5_select_label_color);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 }
@@ -38,4 +52,23 @@
 
 :host(:not([disabled])) {
 	cursor: pointer;
+}
+
+.ui5-select-icon-root {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	width: var(--_ui5_select_icon_width);
+	min-width: var(--_ui5_select_icon_width);
+	height: var(--_ui5_select_icon_wrapper_height);
+	padding: 0;
+}
+
+.ui5-select-icon {
+	color: inherit;
+}
+
+:host([value-state]:not([value-state="None"], [value-state="Positive"])) .ui5-select-icon-root {
+	height: var(--_ui5_select_icon_wrapper_state_height);
 }

@@ -2,12 +2,12 @@ import Icon from "./Icon.js";
 import Button from "./Button.js";
 import List from "./List.js";
 import Input from "./Input.js";
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type ComboBox from "./ComboBox.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
 	return (
@@ -38,13 +38,6 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
 							<span>{this._headerTitleText}</span>
-							<Button
-								class="ui5-responsive-popover-close-btn"
-								icon={declineIcon}
-								design="Transparent"
-								onClick={this._closeRespPopover}
-							>
-							</Button>
 						</div>
 
 						<div class="row">
@@ -77,7 +70,6 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					slot="header"
 					class={{
 						"ui5-responsive-popover-header": true,
-						"ui5-responsive-popover-header--focused": this._isValueStateFocused,
 						...this.classes.popoverValueState,
 					}}
 					style={this.styles.suggestionPopoverHeader}
@@ -87,6 +79,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				</div>
 				}
 
+				{!!this._filteredItems.length &&
 				<List
 					class="ui5-combobox-items-list"
 					separators="None"
@@ -98,13 +91,21 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				>
 					{ this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
 				</List>
+				}
 
 				{this._isPhone &&
 			<div slot="footer" class="ui5-responsive-popover-footer">
 				<Button
+					design="Emphasized"
+					onClick={this._closeRespPopover}
+				>{this._dialogOkButtonText}</Button>
+				<Button
+					class="ui5-responsive-popover-close-btn"
 					design="Transparent"
 					onClick={this._closeRespPopover}
-				>OK</Button>
+				>
+					{this._dialogCancelButtonText}
+				</Button>
 			</div>
 				}
 			</ResponsivePopover>
@@ -116,14 +117,14 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 			hideArrow={true}
 			tabindex={-1}
 			class="ui5-valuestatemessage-popover"
-			horizontalAlign={this._valueStatePopoverHorizontalAlign}
+			horizontalAlign={PopoverHorizontalAlign.Start}
 			placement="Bottom"
 			opener={this}
 			open={this.valueStateOpen}
 			onClose={this._handleValueStatePopoverAfterClose}
 			onFocusOut={this._handleValueStatePopoverFocusout}
 		>
-			<div slot="header" class={this.classes.popoverValueState} style={this.styles.popoverHeader}>
+			<div slot="header" class={this.classes.popoverValueState}>
 				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
 				{ valueStateMessage.call(this) }
 			</div>

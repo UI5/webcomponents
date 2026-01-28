@@ -1,6 +1,6 @@
 :host {
 	display: table-cell;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: 0.875rem;
 	height: var(--ui5_table_row_height);
 	box-sizing: border-box;

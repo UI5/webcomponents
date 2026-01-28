@@ -1,6 +1,10 @@
 import getSharedResource from "@ui5/webcomponents-base/dist/getSharedResource.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
+import isEventMarked from "@ui5/webcomponents-base/dist/util/isEventMarked.js";
+import type OpenUI5Support from "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import type Popup from "../Popup.js";
+import type { PopupInfo } from "@ui5/webcomponents-base/dist/features/patchPopup.js";
 
 type RegisteredPopup = {
 	instance: Popup;
@@ -8,12 +12,26 @@ type RegisteredPopup = {
 }
 
 const OpenedPopupsRegistry = getSharedResource<{ openedRegistry: Array<RegisteredPopup> }>("OpenedPopupsRegistry", { openedRegistry: [] });
+const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
+
+function registerPopupWithOpenUI5Support(popupInfo: PopupInfo) {
+	openUI5Support?.addOpenedPopup(popupInfo);
+}
+
+function unregisterPopupWithOpenUI5Support(popup: object) {
+	openUI5Support?.removeOpenedPopup(popup);
+}
 
 const addOpenedPopup = (instance: Popup, parentPopovers: Array<Popup> = []) => {
 	if (!OpenedPopupsRegistry.openedRegistry.some(popup => popup.instance === instance)) {
 		OpenedPopupsRegistry.openedRegistry.push({
 			instance,
 			parentPopovers,
+		});
+
+		registerPopupWithOpenUI5Support({
+			type: "WebComponent",
+			instance,
 		});
 	}
 
@@ -28,6 +46,8 @@ const removeOpenedPopup = (instance: Popup) => {
 	OpenedPopupsRegistry.openedRegistry = OpenedPopupsRegistry.openedRegistry.filter(el => {
 		return el.instance !== instance;
 	});
+
+	unregisterPopupWithOpenUI5Support(instance);
 
 	_updateTopModalPopup();
 
@@ -45,9 +65,15 @@ const _keydownListener = (event: KeyboardEvent) => {
 		return;
 	}
 
-	if (isEscape(event)) {
-		event.stopPropagation();
-		OpenedPopupsRegistry.openedRegistry[OpenedPopupsRegistry.openedRegistry.length - 1].instance.closePopup(true);
+	if (isEscape(event) && !isEventMarked(event)) {
+		const topmostPopup = OpenedPopupsRegistry.openedRegistry[OpenedPopupsRegistry.openedRegistry.length - 1].instance;
+
+		if (openUI5Support && topmostPopup !== openUI5Support.getTopmostPopup()) {
+			return;
+		}
+
+		event.stopImmediatePropagation();
+		topmostPopup.closePopup(true);
 	}
 };
 

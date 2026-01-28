@@ -1,10 +1,5 @@
 :root {
 	--_ui5_TimelineItem_arrow_size: 1.625rem;
-	--_ui5_TimelineItem_bubble_outline_width: 0.0625rem;
-	--_ui5_TimelineItem_bubble_outline_top: -0.125rem;
-	--_ui5_TimelineItem_bubble_outline_right: -0.125rem;
-	--_ui5_TimelineItem_bubble_outline_bottom: -0.125rem;
-	--_ui5_TimelineItem_bubble_outline_left: -0.625rem;
 	--_ui5_TimelineItem_bubble_rtl_left_offset: -0.125rem;
 	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.625rem;
 }

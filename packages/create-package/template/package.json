@@ -1,0 +1,35 @@
+{
+    "name": "{{INIT_PACKAGE_VAR_NAME}}",
+    "version": "0.0.1",
+    "ui5": {
+        "webComponentsPackage": true
+    },
+    "type": "module",
+    "scripts": {
+        "clean": "wc-dev clean",
+        "lint": "wc-dev lint",
+        "start": "wc-dev start",
+        "watch": "wc-dev watch",
+        "build": "wc-dev build",
+        {{INIT_PACKAGE_CYPRESS_TEST_COMMANDS}}
+        "create-ui5-element": "wc-create-ui5-element",
+        "prepublishOnly": "npm run build"
+    },
+    "exports": {
+        "./src/*": "./src/*",
+        "./dist/*": "./dist/*",
+        "./package.json": "./package.json",
+        "./bundle.js": "./bundle.js",
+        "./*": "./dist/*"
+    },
+    "dependencies": {
+        "@ui5/webcomponents-base": "{{INIT_PACKAGE_VERSION}}",
+        "@ui5/webcomponents-theming": "{{INIT_PACKAGE_VERSION}}"
+    },
+    "devDependencies": {
+        {{INIT_PACKAGE_CYPRESS_DEV_DEPS}}
+        "@ui5/webcomponents-tools": "{{INIT_PACKAGE_VERSION}}",
+        "chromedriver": "*",
+        "typescript": "^5.6.2"
+    }
+}

@@ -22,26 +22,30 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
 <!-- playground-fold-end -->
-<ui5-shellbar id="shellbar" primary-title="Corporate Portal">
+<ui5-shellbar id="shellbar">
+	<ui5-shellbar-branding slot="branding">
+		Corporate Portal
+		<img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+	</ui5-shellbar-branding>
 	<ui5-avatar slot="profile">
-		<img src="../assets/images/avatars/woman_avatar_3.png"/>
+		<img src="../assets/images/avatars/man_avatar_3.png"/>
 	</ui5-avatar>
-	<img slot="logo" src="../assets/images/sap-logo-svg.svg" />
 </ui5-shellbar>
 <ui5-user-menu id="userMenu" opener="btnOpenUserMenu">
 	<ui5-user-menu-account slot="accounts"
-		avatar-src="../assets/images/avatars/woman_avatar_3.png"
-		title-text="Alaina Chevalier"
-		subtitle-text="aliana.chevalier@sap.com"
-		description="Delivery Manager, SAP SE"
-		selected>
+						   avatar-src="../assets/images/avatars/man_avatar_3.png"
+						   title-text="Alaina Chevalier"
+						   subtitle-text="aliana.chevalier@sap.com"
+						   description="Delivery Manager"
+						   selected>
 	</ui5-user-menu-account>
 	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
-	<ui5-user-menu-item icon="official-service" text="Legal Information">
-		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
-		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="product-action">
+		<ui5-user-menu-item text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+		<ui5-user-menu-item text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
 	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="official-service" text="Legal Information"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="message-information" text="About" data-id="about"></ui5-user-menu-item>
 </ui5-user-menu>
 
 <!-- playground-fold -->

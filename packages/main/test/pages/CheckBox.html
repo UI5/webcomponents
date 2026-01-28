@@ -62,6 +62,9 @@
 	<ui5-checkbox value-state="Positive" text="Long long long text" indeterminate checked></ui5-checkbox>
 	<ui5-checkbox value-state="Information" text="Long long long text" indeterminate checked></ui5-checkbox>
 
+	<ui5-title id="cb-label">ACC Test - custom acc</ui5-title>
+	<ui5-checkbox id="accCustomAria"></ui5-checkbox>
+
 	<br />
 	<ui5-checkbox id="checkboxChecked" checked></ui5-checkbox>
 
@@ -71,12 +74,22 @@
 	<ui5-checkbox class="defaultPreventedCb" indeterminate></ui5-checkbox>
 	<ui5-checkbox class="defaultPreventedCb" indeterminate checked></ui5-checkbox>
 
-	<br />
+	<section>
+		<ui5-title>Form validation:</ui5-title>
+		<form method="get">
+			<ui5-checkbox id="cbItem" text="I agree to the terms (required)" required value="agreement" name="agreement"></ui5-checkbox>
+			<br/><br/>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		</form>
+	</section>
+
+	<br/><br/>
 	<ui5-title>Form submission</ui5-title>
-	<form id="cbForm">
-		<ui5-checkbox id="cbItem1" text="Option 1" checked></ui5-checkbox>
-		<ui5-checkbox id="cbItem2" text="Option 2" checked></ui5-checkbox>
-		<ui5-checkbox id="cbItem3" text="Option 3" required></ui5-checkbox>
+	<form id="cbForm" method="get">
+		<ui5-checkbox id="cbItem1" text="Option 1" checked value="option1" name="option"></ui5-checkbox>
+		<ui5-checkbox id="cbItem2" text="Option 2" checked value="option2" name="option"></ui5-checkbox>
+		<ui5-checkbox id="cbItem3" text="Option 3" required value="option3" name="option"></ui5-checkbox>
 		<br><br>
 		<ui5-button id="cbSubmit" type="Submit">Submit</ui5-button>
 		<input type="hidden" id="cbFormSubmitted" value="false" />
@@ -99,9 +112,17 @@
 		var input = document.querySelector("#field");
 		var checkBox1 = document.querySelector("#cb1");
 		var checkBox2 = document.querySelector("#cb2");
+		var checkBoxInAForm = document.querySelector("#cbItem");
 		var displayOnlyCb = document.querySelector("#displayOnlyCb");
 		var cbFormSubmitted = document.querySelector("#cbFormSubmitted");
+		var btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		var formValidationMessage = document.getElementById('formValidationMessage');
+		var cdCustomAria = document.querySelector("#accCustomAria");
 		var counter = 0;
+
+		cdCustomAria._accInfo = {
+			role: "presentation",
+		};
 
 		[checkBox1, checkBox2, displayOnlyCb].forEach(function(el) {
 			el.addEventListener("ui5-change", function(event) {
@@ -121,8 +142,34 @@
 		cbForm.addEventListener("submit", function (event) {
 			event.preventDefault();
 			cbFormSubmitted.value = true;
-			alert("Form submitted!");
+
+			const formData = new FormData(cbForm);
+			const queryString = new URLSearchParams(formData).toString();
+
+			alert("Form submitted with query string: " + queryString);
 		});
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('cbItem');
+		});
+
+		checkBoxInAForm.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('cbItem', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
 	</script>
 </body>
 

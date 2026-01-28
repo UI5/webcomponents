@@ -69,7 +69,7 @@
 			<ui5-cb-item text="Bahrain"></ui5-cb-item>
 			<ui5-cb-item text="Belgium"></ui5-cb-item>
 			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
-			<div slot="valueStateMessage">Custom error value state message with a <a href="#">Link</a>.</div>
+			<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link 1</ui5-link> and <ui5-link href="#">Link 2</ui5-link></div>
 		</ui5-combobox>
 		<ui5-combobox id="vs-warning-default" class="combobox2auto" value-state="Critical">
 			<ui5-cb-item text="Algeria"></ui5-cb-item>
@@ -79,7 +79,8 @@
 			<ui5-cb-item text="Bahrain"></ui5-cb-item>
 			<ui5-cb-item text="Belgium"></ui5-cb-item>
 		</ui5-combobox>
-		<ui5-combobox id="vs-information-default" class="combobox2auto" value-state="Information"></ui5-combobox>
+		<ui5-combobox id="vs-information-default" class="combobox2auto" value-state="Information">
+		</ui5-combobox>
 		<ui5-combobox id="vs-success-default" class="combobox2auto" value-state="Positive"></ui5-combobox>
 	</div>
 
@@ -173,6 +174,22 @@
 		<br />
 		<span id="selection-change-event-result"></span>
 
+	</div>
+
+		<div class="demo-section">
+		<span>SelectionChange event testing</span>
+
+		<ui5-combobox id="selection-change-cb" show-clear-icon="">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+
+		<br>
+
+		Selected item: <span id="selection-change-placeholder"></span><br>
+		SelectionChange call count: <span id="selection-change-count">0</span><br>
 	</div>
 
 	<div class="demo-section">
@@ -291,6 +308,43 @@
 		</ui5-combobox>
 	</div>
 
+	<section>
+		<h3>ComboBox Composition</h3>
+
+		<div class="demo-section">
+			<span>ComboBox - Korean suggestions</span>
+
+			<ui5-combobox class="combobox" id="korean-suggestions-cb">
+				<ui5-cb-item text="안녕하세요"></ui5-cb-item>
+				<ui5-cb-item text="고맙습니다"></ui5-cb-item>
+				<ui5-cb-item text="사랑"></ui5-cb-item>
+				<ui5-cb-item text="한국"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Japanese suggestions</span>
+
+			<ui5-combobox class="combobox" id="japanese-suggestions-cb">
+				<ui5-cb-item text="こんにちは"></ui5-cb-item>
+				<ui5-cb-item text="ありがとう"></ui5-cb-item>
+				<ui5-cb-item text="日本"></ui5-cb-item>
+				<ui5-cb-item text="東京"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Chinese suggestions</span>
+
+			<ui5-combobox class="combobox" id="chinese-suggestions-cb">
+				<ui5-cb-item text="你好"></ui5-cb-item>
+				<ui5-cb-item text="謝謝"></ui5-cb-item>
+				<ui5-cb-item text="北京"></ui5-cb-item>
+				<ui5-cb-item text="上海"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+	</section>
+
 	<div class="demo-section">
 		<ui5-combobox id="value-state-error-text" value-state="Negative">
 			<ui5-cb-item text="Algeria"></ui5-cb-item>
@@ -308,13 +362,13 @@
 		<ui5-combobox id="dynamic-items">
 			<ui5-cb-item text="Hello World"></ui5-cb-item>
 		</ui5-combobox>
-	
+
 		<ui5-button id="add-items-btn">Start adding items</ui5-button>
-	
+
 		<script>
 			const addItemsBtn = document.getElementById("add-items-btn");
 			const dynamicItemsCb = document.getElementById("dynamic-items");
-	
+
 			addItemsBtn.addEventListener("click", () => {
 				setInterval(() => {
 					const item = document.createElement("ui5-cb-item");
@@ -359,6 +413,63 @@
 			});
 		</script>
 	</div>
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-combobox id="comboInAForm" class="combobox2auto" required>
+				<ui5-cb-item text="Algeria"></ui5-cb-item>
+				<ui5-cb-item text="Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+				<ui5-cb-item text="Canada"></ui5-cb-item>
+				<ui5-cb-item text="Chile"></ui5-cb-item>
+			</ui5-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('comboInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('comboInAForm');
+			});
+
+			comboInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('comboInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
+	</div>
+	<div class="demo-section">
+		<span>Open ComboBox on focus</span>
+		<ui5-combobox id="comboFocus" class="combobox2auto" value="Bulgaria" accessible-name-ref="countryLabel">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+		<script>
+			document.getElementById("comboFocus").addEventListener("focusin", () => {
+				document.getElementById("comboFocus").open = true;
+			});
+		</script>
+	</div>
 
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
@@ -389,7 +500,7 @@
 
 			// remove busy state
 			event.target.loading = false;
-			
+
 			// load the items once or turn off filtering
 		}, { once: true });
 	</script>
@@ -474,6 +585,11 @@
 		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {
 			document.getElementById("change-placeholder").innerHTML = event.target.value;
 			document.getElementById("change-count").innerHTML = parseInt(document.getElementById("change-count").innerHTML) + 1;
+		});
+
+		document.getElementById("selection-change-cb").addEventListener("ui5-selection-change", function (event) {
+			document.getElementById("selection-change-placeholder").innerHTML = event.detail.item?.text || "";
+			document.getElementById("selection-change-count").innerHTML = parseInt(document.getElementById("selection-change-count").innerHTML) + 1;
 		});
 
 		document.getElementById("input-cb").addEventListener("ui5-input", function (event) {

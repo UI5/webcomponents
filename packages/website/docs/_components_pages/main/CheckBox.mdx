@@ -6,6 +6,7 @@ import Basic from "../../_samples/main/CheckBox/Basic/Basic.md";
 import TextWrapping from "../../_samples/main/CheckBox/TextWrapping/TextWrapping.md";
 import States from "../../_samples/main/CheckBox/States/States.md";
 import Indeterminate from "../../_samples/main/CheckBox/Indeterminate/Indeterminate.md";
+import Group from "../../_samples/main/CheckBox/Group/Group.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -32,3 +33,7 @@ The CheckBox text wraps by default. To make it truncate - set <b>wrapping-type="
 
 <TextWrapping />
 
+### Group of Checkboxes in a Form
+Checkboxes can be logically grouped using the same name attribute to create a multi-selection form field. When the form is submitted, each checked item will send its individual value to the server, allowing backend processing to identify exactly which options the user selected.
+
+<Group />

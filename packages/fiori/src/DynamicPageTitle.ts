@@ -263,11 +263,23 @@ class DynamicPageTitle extends UI5Element {
 		return !this.snapped;
 	}
 
+	get _role() {
+		return this.interactive ? "button" : undefined;
+	}
+
+	get _ariaDescribedBy() {
+		return this.interactive ? `${this._id}-toggle-description` : undefined;
+	}
+
 	get _ariaDescribedbyText() {
-		return DynamicPageTitle.i18nBundle.getText(DYNAMIC_PAGE_ARIA_DESCR_TOGGLE_HEADER);
+		return this.interactive ? DynamicPageTitle.i18nBundle.getText(DYNAMIC_PAGE_ARIA_DESCR_TOGGLE_HEADER) : undefined;
 	}
 
 	get _ariaLabelledBy() {
+		if (!this.interactive) {
+			return undefined;
+		}
+
 		const hasAnyHeading = this[this.headingSlotName].length;
 		if (hasAnyHeading) {
 			return `${this._id}-heading`;
@@ -276,6 +288,10 @@ class DynamicPageTitle extends UI5Element {
 
 	get _needsSeparator(): boolean {
 		return (this.navigationBar.length > 0 && this.actionsBar.length > 0);
+	}
+
+	get forAriaExpanded() {
+		return this.interactive ? this._headerExpanded : undefined;
 	}
 
 	prepareLayoutActions() {

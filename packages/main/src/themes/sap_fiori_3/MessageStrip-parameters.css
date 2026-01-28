@@ -1,7 +1,6 @@
 @import "../base/MessageStrip-parameters.css";
 
 :root{
-	/* Next two variables below are hardcoded values of sapButton_Lite_Hover_Background parameter with specified opacity*/
-	--_ui5_message_strip_close_button_color_set_1_background: #ebf5fe4d;
-	--_ui5_message_strip_close_button_color_set_2_background: #ebf5fe80;
+	--_ui5_message_strip_close_button_color_set_1_background: var(--sapMessage_Button_Hover_Background);
+	--_ui5_message_strip_close_button_color_set_2_background: var(--sapMessage_Button_Hover_Background);
 }

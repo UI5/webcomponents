@@ -4,6 +4,7 @@ export default function MonthPickerTemplate(this: MonthPicker) {
 	return (
 		<div
 			class="ui5-mp-root"
+			part="month-picker-root"
 			role="grid"
 			aria-roledescription={this.roleDescription}
 			aria-readonly="false"
@@ -12,6 +13,7 @@ export default function MonthPickerTemplate(this: MonthPicker) {
 			onKeyDown={this._onkeydown}
 			onKeyUp={this._onkeyup}
 			onClick={this._selectMonth}
+			onMouseDown={this._onmousedown}
 		>
 			{this._monthsInterval.map(months =>
 				<div role="row" class="ui5-mp-quarter">

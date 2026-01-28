@@ -1,14 +1,14 @@
 // Intentionally not using a relative path to take advantage of
 // the TS version resolution mechanism
-export { Fragment } from './preact.module.d.ts';
+export { Fragment } from './preact.module.js';
 import {
 	ComponentType,
 	ComponentChild,
 	ComponentChildren,
 	VNode,
 	Attributes
-} from './preact.module.d.ts';
-import { JSXInternal } from './jsx.d.ts';
+} from './preact.module.js';
+import { JSXInternal } from './jsx.js';
 
 export function jsx(
 	type: string,

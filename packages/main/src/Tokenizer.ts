@@ -2,7 +2,6 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -13,10 +12,12 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFocusedElement } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
+import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
 	isSpace,
 	isSpaceCtrl,
@@ -56,6 +57,7 @@ import type Token from "./Token.js";
 import type { IToken } from "./MultiInput.js";
 import type { TokenDeleteEventDetail } from "./Token.js";
 import TokenizerTemplate from "./TokenizerTemplate.js";
+import type Button from "./Button.js";
 import {
 	MULTIINPUT_SHOW_MORE_TOKENS,
 	TOKENIZER_ARIA_LABEL,
@@ -65,6 +67,8 @@ import {
 	TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS,
 	TOKENIZER_SHOW_ALL_ITEMS,
 	TOKENIZER_CLEAR_ALL,
+	TOKENIZER_DIALOG_OK_BUTTON,
+	TOKENIZER_DIALOG_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -136,6 +140,7 @@ enum ClipboardDataOperation {
 @customElement({
 	tag: "ui5-tokenizer",
 	languageAware: true,
+	formAssociated: true,
 	renderer: jsxRenderer,
 	template: TokenizerTemplate,
 	styles: [
@@ -143,7 +148,6 @@ enum ClipboardDataOperation {
 		ResponsivePopoverCommonCss,
 		SuggestionsCss,
 		TokenizerPopoverCss,
-		getEffectiveScrollbarStyle(),
 	],
 })
 
@@ -182,7 +186,7 @@ enum ClipboardDataOperation {
 	bubbles: true,
 })
 
-class Tokenizer extends UI5Element {
+class Tokenizer extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		"token-delete": TokenizerTokenDeleteEventDetail,
 		"selection-change": TokenizerSelectionChangeEventDetail,
@@ -211,6 +215,18 @@ class Tokenizer extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	multiLine = false;
+
+	/**
+	 * Determines the name by which the component will be identified upon submission in an HTML form.
+	 *
+	 * **Note:** This property is only applicable within the context of an HTML Form element.
+	 * **Note:** When the component is used inside a form element,
+	 * the value is sent as the first element in the form data, even if it's empty.
+	 * @default undefined
+	 * @public
+	 */
+	@property({ type: String })
+	declare name?: string;
 
 	/**
 	 * Defines whether "Clear All" button is present. Ensure `multiLine` is enabled, otherwise `showClearAll` will have no effect.
@@ -278,7 +294,7 @@ class Tokenizer extends UI5Element {
 	@property({
 		converter: DOMReferenceConverter,
 	})
-	opener?: HTMLElement;
+	opener?: HTMLElement | string | null;
 
 	/**
 	 * Sets the min-width of the nMore Popover.
@@ -290,7 +306,7 @@ class Tokenizer extends UI5Element {
 
 	/**
 	 * Prevents tokens to be part of the tab chain.
-	 * **Note:** Used inside MultiInput and MultiComboBox components.
+	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
 	 * @private
 	 */
@@ -321,10 +337,18 @@ class Tokenizer extends UI5Element {
 	@property({ type: Number })
 	_tokensCount = 0;
 
+	/**
+	 * Defines the tokens to be displayed.
+	 * @public
+	 */
 	@slot({
 		type: HTMLElement,
 		"default": true,
 		individualSlots: true,
+		invalidateOnChildChange: {
+			properties: ["text"],
+			slots: false,
+		},
 	})
 	tokens!: Array<Token>;
 
@@ -340,9 +364,33 @@ class Tokenizer extends UI5Element {
 	_previousToken: Token | null = null;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_deletedDialogItems!: Token[];
+	_lastFocusedToken: Token | null = null;
+	_isFocusSetInternally: boolean = false;
+	/**
+	 * Scroll to end when tokenizer is expanded
+	 * @private
+	 */
+	_scrollToEndOnExpand = false;
 
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
+	}
+
+	get formFormattedValue(): FormData | null {
+		const tokens = this.tokens || [];
+
+		if (this.name && tokens.length) {
+			const formData = new FormData();
+			const name = this.name;
+
+			tokens.forEach(token => {
+				formData.append(name, token.text || "");
+			});
+
+			return formData;
+		}
+
+		return null;
 	}
 
 	constructor() {
@@ -393,7 +441,6 @@ class Tokenizer extends UI5Element {
 
 		if (!this.preventPopoverOpen) {
 			this.open = true;
-			this.scrollToEnd();
 		}
 
 		this._tokens.forEach(token => {
@@ -408,14 +455,13 @@ class Tokenizer extends UI5Element {
 	_onmousedown(e: MouseEvent) {
 		if ((e.target as HTMLElement).hasAttribute("ui5-token")) {
 			const target = e.target as Token;
-			this.expanded = true;
 
 			if (this.open) {
 				this._preventCollapse = true;
 			}
 
 			if (!target.toBeDeleted) {
-				this._itemNav.setCurrentItem(target);
+				this._addTokenToNavigation(target);
 				this._scrollToToken(target);
 			}
 		}
@@ -452,7 +498,7 @@ class Tokenizer extends UI5Element {
 
 		this._nMoreCount = this.overflownTokens.length;
 
-		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex) {
+		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
 		}
 
@@ -464,7 +510,24 @@ class Tokenizer extends UI5Element {
 			this._expandedScrollWidth = this.contentDom.scrollWidth;
 		}
 
+		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
+	}
+
+	/**
+	 * Scrolls the container to the end to ensure very long tokens are visible at their end.
+	 * Otherwise, tokens may appear visually cut off.
+	 * @protected
+	 */
+	_scrollToEndIfNeeded() {
+		// if scroll to end is prevented, skip scroll to the end
+		if (!this._scrollToEndOnExpand) {
+			return;
+		}
+
+		if (this.tokens.length || this.expanded) {
+			this.scrollToEnd();
+		}
 	}
 
 	_delete(e: CustomEvent<TokenDeleteEventDetail>) {
@@ -583,14 +646,6 @@ class Tokenizer extends UI5Element {
 	}
 
 	handleBeforeClose() {
-		const tokensArray = this._tokens;
-
-		if (isPhone()) {
-			tokensArray.forEach(token => {
-				token.selected = false;
-			});
-		}
-
 		if (!this._tokenDeleting && !this._preventCollapse) {
 			this._preventCollapse = false;
 			this.expanded = false;
@@ -599,7 +654,7 @@ class Tokenizer extends UI5Element {
 
 	handleBeforeOpen() {
 		const list = this._getList();
-		const firstListItem = list.querySelectorAll("[ui5-li]")[0]! as ListItem;
+		const firstListItem = list.querySelectorAll("[ui5-li]")[0] as ListItem;
 
 		list._itemNavigation.setCurrentItem(firstListItem);
 
@@ -612,7 +667,7 @@ class Tokenizer extends UI5Element {
 		this._focusedElementBeforeOpen = null;
 	}
 
-	handleDialogButtonPress(e: MouseEvent) {
+	handleDialogButtonPress(e: UI5CustomEvent<Button, "click">) {
 		const isOkButton = (e.target as HTMLElement).hasAttribute("data-ui5-tokenizer-dialog-ok-button");
 		const confirm = !!isOkButton;
 
@@ -893,12 +948,22 @@ class Tokenizer extends UI5Element {
 
 	_onfocusin(e: FocusEvent) {
 		const target = e.target as Token;
-		this.open = false;
-		this._itemNav.setCurrentItem(target);
+		this._lastFocusedToken = target;
 
-		if (!this.expanded) {
-			this.expanded = true;
+		if (target && target.toBeDeleted) {
+			this._tokenDeleting = true;
+
+			return;
 		}
+
+		this.open = false;
+		this.expanded = true;
+		this._addTokenToNavigation(e.target as Token);
+	}
+
+	_addTokenToNavigation(token: Token) {
+		this._scrollToEndOnExpand = false;
+		this._itemNav.setCurrentItem(token);
 	}
 
 	_onfocusout(e: FocusEvent) {
@@ -913,6 +978,7 @@ class Tokenizer extends UI5Element {
 
 		if (!this.contains(relatedTarget)) {
 			this._tokens[0].forcedTabIndex = "0";
+			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
 		}
 
@@ -920,6 +986,22 @@ class Tokenizer extends UI5Element {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
+	}
+
+	/**
+ 	 * Determines the DOM element to focus when the Tokenizer receives focus.
+ 	 * If the last-focused token is not overflown, focus is restored to it.
+ 	 * Otherwise, the focus defaults to the first visible token.
+ 	 */
+	getFocusDomRef(): HTMLElement | undefined {
+		if (this._lastFocusedToken && !this.overflownTokens.includes(this._lastFocusedToken)) {
+			this._itemNav._currentIndex = this.tokens.indexOf(this._lastFocusedToken);
+			this._isFocusSetInternally = true;
+			this.tokens[0].forcedTabIndex = "-1";
+		} else {
+			this._itemNav._currentIndex = 0;
+		}
+		return this._itemNav._getCurrentItem();
 	}
 
 	_toggleTokenSelection(tokens: Array<Token>) {
@@ -965,9 +1047,7 @@ class Tokenizer extends UI5Element {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
 		const cutToClipboard = (e: ClipboardEvent) => {
-			if (e.clipboardData) {
-				e.clipboardData.setData("text/plain", tokensTexts);
-			}
+			navigator.clipboard.writeText(tokensTexts);
 
 			e.preventDefault();
 		};
@@ -1002,7 +1082,8 @@ class Tokenizer extends UI5Element {
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 4 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * For the last token, if its width is more than the needed space, scroll to the end without offset
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
@@ -1012,11 +1093,18 @@ class Tokenizer extends UI5Element {
 
 		const tokenRect = token.getBoundingClientRect();
 		const tokenContainerRect = this.contentDom.getBoundingClientRect();
+		const oneSideBorderAndPaddingOffset = 5;
+
+		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
+		if (isLastToken) {
+			this.scrollToEnd();
+			return;
+		}
 
 		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
 		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
 		}
 	}
 
@@ -1028,7 +1116,7 @@ class Tokenizer extends UI5Element {
 		return this.getSlottedNodes<Token>("tokens");
 	}
 
-	get morePopoverOpener(): HTMLElement {
+	get morePopoverOpener(): HTMLElement | string | null {
 		// return this.opener ? this : this.opener;
 		if (this.opener) {
 			return this.opener;
@@ -1067,6 +1155,14 @@ class Tokenizer extends UI5Element {
 	get tokenizerLabel() {
 		const effectiveLabelText = getEffectiveAriaLabelText(this);
 		return effectiveLabelText || Tokenizer.i18nBundle.getText(TOKENIZER_ARIA_LABEL);
+	}
+
+	get _okButtonText() {
+		return Tokenizer.i18nBundle.getText(TOKENIZER_DIALOG_OK_BUTTON);
+	}
+
+	get _cancelButtonText() {
+		return Tokenizer.i18nBundle.getText(TOKENIZER_DIALOG_CANCEL_BUTTON);
 	}
 
 	get tokenizerAriaDescription() {

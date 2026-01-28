@@ -276,6 +276,52 @@ class MyCompponent {
 
 For native browser events, the most common way is to simply specify `KeyboardEvent` or `MouseEvent`
 
+### Event handler `.currentTarget`
+
+When writing an inline event handler, `e.currentTarget` will be set to the element on which the handler is attached, and it will have the correct type. This removes the necessity to use type assertions which also might be wrong in case the same event handler is attached to a different element.
+
+```tsx
+// Before
+<Input onClick={(e => (e.target as Input))} />
+                     // ^^^^^^^^^^^^^^^^
+                     // Casting the event target to input might be wrong and is not checked
+
+// After
+<Input onClick={(e => e.currentTarget)} />
+                     // ^^^^^^^^^^^^^
+                     // instance of `Input` class
+```
+
+The same typing information is also available via the `UI5CustomEvent` type helper
+
+```ts
+// Before
+handleInput(e: CustomEvent) {
+    console.log(e.target as Input);
+    //          ^^^^^^^^^^^^^^^^^
+    //          this is of type Input, but TypeScript will not check in case the handler is attached to a Slider
+}
+
+// After
+handleInput(e: UI5CustomEvent<Input, "input">) {
+    console.log(e.currentTarget);
+    //          ^^^^^^^^^^^^^^^
+    //          this is of type Input and checked
+}
+```
+
+Typescript will check that the `handleInput` handler can only be attached on an Input element. If the same handler is attached on a Slider, you you will have to add it in the parameters
+```tsx
+handleInput(e: UI5CustomEvent<Input, "input"> | UI5CustomEvent<Slider, "input">) {
+    console.log(e.currentTarget);
+    //          ^^^^^^^^^^^^^^^
+    //          Input | Slider
+    console.log(e.currentTarget.value);
+    //          ^^^^^^^^^^^^^^^^^^^^^
+    //          string | number
+}
+```
+
 ### Event handlers and `this`
 
 UI5 Web Components are authored as classes and event handlers are methods, they usually access the component state via `this.prop`. In order for this to work when event handlers are attached to the DOM, the framework automatically binds all event handlers to the instance that is being rendered, so accessing `this` from the event handlers works as expected without any additional work.

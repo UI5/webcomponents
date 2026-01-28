@@ -43,6 +43,7 @@ import { getI18nBundle } from "./i18nBundle.js";
 import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
+import { getLanguageChangePending } from "./config/Language.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -111,6 +112,15 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 		return;
 	}
 
+	const ctor = this.constructor as typeof UI5Element;
+
+	// Skip re-rendering of language-aware components while language-specific data (e.g., CLDR, language bundles) is still loading.
+	// Once all necessary language data has been loaded, the language change
+	// will trigger a re-render of all language-aware components.
+	if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
+		return;
+	}
+
 	// Call the onInvalidation hook
 	this.onInvalidation(changeInfo);
 
@@ -149,9 +159,15 @@ type KebabToCamel<T extends string> = T extends `${infer H}-${infer J}${infer K}
 	: T;
 type KebabToPascal<T extends string> = Capitalize<KebabToCamel<T>>;
 
-type GlobalHTMLAttributeNames = "accesskey" | "autocapitalize" | "autofocus" | "autocomplete" | "contenteditable" | "contextmenu" | "class" | "dir" | "draggable" | "enterkeyhint" | "hidden" | "id" | "inputmode" | "lang" | "nonce" | "part" | "exportparts" | "pattern" | "slot" | "spellcheck" | "style" | "tabIndex" | "tabindex" | "title" | "translate" | "ref" | "inert";
+type GlobalHTMLAttributeNames = "accesskey" | "autocapitalize" | "autofocus" | "autocomplete" | "contenteditable" | "contextmenu" | "class" | "dir" | "draggable" | "enterkeyhint" | "hidden" | "id" | "inputmode" | "lang" | "nonce" | "part" | "exportparts" | "pattern" | "slot" | "spellcheck" | "style" | "tabIndex" | "tabindex" | "title" | "translate" | "ref" | "inert" | "role";
 type ElementProps<I> = Partial<Omit<I, keyof HTMLElement>>;
-type Convert<T> = { [Property in keyof T as `on${KebabToPascal<string & Property>}`]: IsAny<T[Property], any, (e: CustomEvent<T[Property]>) => void> }
+type TargetedCustomEvent<D, T> = Omit<CustomEvent<D>, "currentTarget"> & { currentTarget: T };
+// define as method and extract the function signature from the method to make it bivariant so that inheritance of event handlers is not checked via strictFunctionTypes
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-6.html#strict-function-types
+type TargetedEventHandler<D, T> = {
+	asMethod(e: TargetedCustomEvent<D, T>): void
+}["asMethod"];
+type Convert<T, K extends UI5Element> = { [Property in keyof T as `on${KebabToPascal<string & Property>}`]: IsAny<T[Property], any, TargetedEventHandler<T[Property], K>> }
 
 /**
  * @class
@@ -164,7 +180,7 @@ abstract class UI5Element extends HTMLElement {
 	eventDetails!: NotEqual<this, UI5Element> extends true ? object : {
 		[k: string]: any
 	};
-	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"]> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"]>
+	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"], this> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"], this>;
 	_jsxProps!: Pick<JSX.AllHTMLAttributes<HTMLElement>, GlobalHTMLAttributeNames> & ElementProps<this> & Partial<this["_jsxEvents"]> & { key?: any };
 	__id?: string;
 	_suppressInvalidation: boolean;
@@ -178,6 +194,7 @@ abstract class UI5Element extends HTMLElement {
 	_slotChangeListeners: Map<string, SlotChangeListener>;
 	_domRefReadyPromise: Promise<void> & { _deferredResolve?: PromiseResolve };
 	_doNotSyncAttributes: Set<string>;
+	__shouldHydrate = false;
 	_state: State;
 	_internals: ElementInternals;
 	_individualSlot?: string;
@@ -234,14 +251,19 @@ abstract class UI5Element extends HTMLElement {
 		const ctor = this.constructor as typeof UI5Element;
 		if (ctor._needsShadowDOM()) {
 			const defaultOptions = { mode: "open" } as ShadowRootInit;
-			this.attachShadow({ ...defaultOptions, ...ctor.getMetadata().getShadowRootOptions() });
+
+			if (!this.shadowRoot) {
+				this.attachShadow({ ...defaultOptions, ...ctor.getMetadata().getShadowRootOptions() });
+			} else {
+				// The shadow root is initially rendered. This applies to case where the component's template
+				// is inserted into the DOM declaratively using a <template> tag.
+				this.__shouldHydrate = true;
+			}
 		}
 	}
 
 	/**
-	 * Returns a unique ID for this UI5 Element
-	 *
-	 * @deprecated - This property is not guaranteed in future releases
+	 * Returns a unique ID for this UI5 Element.
 	 * @protected
 	 */
 	get _id() {
@@ -276,7 +298,7 @@ abstract class UI5Element extends HTMLElement {
 		const ctor = this.constructor as typeof UI5Element;
 
 		this.setAttribute(ctor.getMetadata().getPureTag(), "");
-		if (ctor.getMetadata().supportsF6FastNavigation()) {
+		if (ctor.getMetadata().supportsF6FastNavigation() && !this.hasAttribute("data-sap-ui-fastnavgroup")) {
 			this.setAttribute("data-sap-ui-fastnavgroup", "true");
 		}
 
@@ -290,18 +312,26 @@ abstract class UI5Element extends HTMLElement {
 			await this._processChildren();
 		}
 
-		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
-			return;
+		if (!ctor.asyncFinished) {
+			await ctor._definePromise;
 		}
 
-		if (!ctor.asyncFinished) {
-			await ctor.definePromise;
+		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
+			return;
 		}
 
 		renderImmediately(this);
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+	}
+
+	get definePromise(): Promise<void> {
+		const ctor = this.constructor as typeof UI5Element;
+		if (!ctor.asyncFinished && ctor._definePromise) {
+			return ctor._definePromise;
+		}
+		return Promise.resolve();
 	}
 
 	/**
@@ -944,7 +974,7 @@ abstract class UI5Element extends HTMLElement {
 		await this._waitForDomRef();
 
 		const focusDomRef = this.getFocusDomRef();
-		if (focusDomRef === this) {
+		if (focusDomRef === this || !this.isConnected) {
 			HTMLElement.prototype.focus.call(this, focusOptions);
 		} else if (focusDomRef && typeof focusDomRef.focus === "function") {
 			focusDomRef.focus(focusOptions);
@@ -1096,11 +1126,22 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
-	 * Returns the component accessibility info.
+	 * Provides the accessibility information for the component.
+	 *
+	 * **Note:** The default implementation returns `undefined`, indicating that
+	 * the component does not provide any accessibility metadata by default. In such cases,
+	 * consumers of this API may apply their own fallback if needed.
+	 *
+	 * Subclasses overriding this getter must return an object of type `AccessibilityInfo`
+	 * describing the component's accessible name, role, description, and other relevant properties.
+	 *
+	 * If the component is intentionally decorative and should be ignored by assistive
+	 * technologies, return an empty object `{}`.
+	 *
 	 * @private
 	 */
-	get accessibilityInfo(): AccessibilityInfo {
-		return {};
+	get accessibilityInfo(): AccessibilityInfo | undefined {
+		return undefined;
 	}
 
 	/**
@@ -1191,8 +1232,14 @@ abstract class UI5Element extends HTMLElement {
 						});
 
 						if (this._rendered) {
-							// is already rendered so it is not the constructor - can set the attribute synchronously
-							this._updateAttribute(prop, value);
+							// the component is already rendered, indicating it is not the constructor -
+							// therefore the attribute can be set synchronously.
+
+							// get the effective value of the property,
+							// as it might differ from the provided value
+							const newValue = origGet ? origGet.call(this) : this._state[prop];
+
+							this._updateAttribute(prop, newValue);
 						}
 
 						if (ctor.getMetadata().isFormAssociated()) {
@@ -1298,7 +1345,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	static asyncFinished: boolean;
-	static definePromise: Promise<void> | undefined;
+	static _definePromise: Promise<void> | undefined;
 	static i18nBundleStorage: Record<string, I18nBundle> = {};
 
 	static get i18nBundles(): Record<string, I18nBundle> {
@@ -1324,7 +1371,7 @@ abstract class UI5Element extends HTMLElement {
 			});
 			this.asyncFinished = true;
 		};
-		this.definePromise = defineSequence();
+		this._definePromise = defineSequence();
 
 		const tag = this.getMetadata().getTag();
 

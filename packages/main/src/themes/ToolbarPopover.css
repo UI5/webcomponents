@@ -13,6 +13,11 @@
 	width: 100%;
 }
 
+::slotted([slot^="default"])::part(button) {
+	width: 100%;
+	display: block;
+}
+
 .ui5-tb-popover-item:not(:last-child) {
 	margin-bottom: 0.25rem;
 }

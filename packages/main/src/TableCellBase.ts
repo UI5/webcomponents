@@ -1,11 +1,10 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import {
+	customElement, slot, property, i18n,
+} from "@ui5/webcomponents-base/dist/decorators.js";
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableCellBaseStyles from "./generated/themes/TableCellBase.css.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
 
 /**
@@ -18,12 +17,13 @@ import type TableCellHorizontalAlign from "./types/TableCellHorizontalAlign.js";
  * @public
  */
 @customElement({
-	renderer: litRender,
+	renderer: jsxRenderer,
 	styles: TableCellBaseStyles,
 })
 abstract class TableCellBase extends UI5Element {
 	/**
 	 * Defines the content of the component.
+	 *
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
@@ -44,21 +44,14 @@ abstract class TableCellBase extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_popinHidden = false;
 
-	protected ariaRole: string = "gridcell";
+	ariaRole: string = "gridcell";
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
+		!this.role && this.setAttribute("role", this.ariaRole);
 		this.toggleAttribute("ui5-table-cell-base", true);
-	}
-
-	onBeforeRendering() {
-		if (this._popin) {
-			this.removeAttribute("role");
-		} else {
-			this.setAttribute("role", this.ariaRole);
-		}
 	}
 
 	getFocusDomRef() {

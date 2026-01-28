@@ -13,7 +13,7 @@
 	<!-- playground-fold-end -->
 	<ui5-card>
 		<ui5-card-header slot="header" title-text="Michael Adams" subtitle-text="Senior Sales Executive">
-			<img src="https://sap.github.io/ui5-webcomponents/images/avatars/man_avatar_1.png" slot="avatar">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar">
 		</ui5-card-header>
 		<section class="quickPromptSection">
 			<ui5-label required>To: </ui5-label>
@@ -30,7 +30,9 @@
 					<ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
 				</ui5-ai-button>
 			</div>
-			<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+				<ui5-busy-indicator class="quickPromptBusyIndicator" id="quickPromptBusyIndicator">
+				<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+
 		</section>
 		<div class="quickPromptCardFooter">
 			<ui5-button id="footerBtnSend" design="Emphasized">Send</ui5-button>
@@ -39,7 +41,7 @@
 		<ui5-toast placement="MiddleCenter" id="quickPromptToast" duration="3000">Your message was sent successfully!</ui5-toast>
 	</ui5-card>
 
-	<ui5-menu id="menu1">
+	<ui5-menu id="menu1" horizontal-align="End">
 		<ui5-menu-item text="Regenerate"></ui5-menu-item>
 		<ui5-menu-separator></ui5-menu-separator>
 		<ui5-menu-item text="Fix Spelling and Grammar"></ui5-menu-item>

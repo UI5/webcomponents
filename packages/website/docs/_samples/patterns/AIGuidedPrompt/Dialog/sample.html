@@ -16,9 +16,6 @@
 		opener="openDialogButton"
 		header-text="Improve Text">
 		<div class="content">
-			<ui5-textarea
-				id="dialogOutput"
-				placeholder="Compose text..."></ui5-textarea>
 			<div class="guidedPromptForm">
 				<div class="guidedPromptFormGroup">
 					<ui5-label>Structure:</ui5-label>
@@ -55,30 +52,20 @@
 		</div>
 
 		<div slot="footer" class="guidedPromptDialogFooter">
-			<ui5-ai-button id="aiDialogButton" state="generate" design="Emphasized">
-				<ui5-ai-button-state
-					name="generate"
-					text="Apply"
-					icon="ai"
-					></ui5-ai-button-state>
-				<ui5-ai-button-state
-					name="generating"
-					text="Stop Generating"
-					icon="stop"
-					></ui5-ai-button-state>
-				<ui5-ai-button-state
-					name="revise"
-					text="Revise"
-					icon="ai"
-					></ui5-ai-button-state>
-			</ui5-ai-button>
+			<ui5-button
+				id="applyTextImprovementsButton"
+				design="Emphasized"
+				name="generate"
+				text="Apply"
+				icon="ai">Apply</ui5-button>
+
 			<ui5-button id="closeDialogButton">Close</ui5-button>
 		</div>
 	</ui5-dialog>
 
 	<ui5-card>
 		<ui5-card-header slot="header" title-text="Monique Legrand" subtitle-text="Senior Sales Executive">
-			<img src="https://sap.github.io/ui5-webcomponents/images/avatars/woman_avatar_1.png" slot="avatar">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" slot="avatar">
 		</ui5-card-header>
 		<section class="guidedPromptSection">
 			<ui5-label required>To: </ui5-label>
@@ -87,9 +74,22 @@
 			</div>
 			<div class="guidedPromptLblBtn">
 				<ui5-label style="align-self: flex-end;" required>Offer: </ui5-label>
-				<ui5-button id="openDialogButton" icon="ai"> Generate</ui5-button>
+				<ui5-ai-button id="openDialogButton" state="generate">
+					<ui5-ai-button-state
+						name="generate"
+						text="Compose Text"
+						icon="ai"
+						></ui5-ai-button-state>
+					<ui5-ai-button-state
+						name="generating"
+						text="Stop Generating"
+						icon="stop"
+						></ui5-ai-button-state>
+				</ui5-ai-button>
 			</div>
-			<ui5-textarea id="output" style="height: 100%;" placeholder="Compose text..."></ui5-textarea>
+			<ui5-busy-indicator style="height: 100%;">
+				<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+			</ui5-busy-indicator>
 		</section>
 		<div class="guidedPromptCardFooter">
 			<ui5-button id="sendButton" design="Emphasized">Send</ui5-button>

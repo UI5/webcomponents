@@ -1,11 +1,11 @@
 {
   "name": "@ui5/webcomponents-base",
-  "version": "2.8.0-rc.2",
+  "version": "2.19.0-rc.2",
   "description": "UI5 Web Components: webcomponents.base",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
   "type": "module",
-  "module": "index.js",
+  "module": "./dist/index.js",
   "keywords": [
     "openui5",
     "sapui5",
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/base"
   },
   "exports": {
@@ -25,8 +25,8 @@
       "default": "./dist/ssr-dom.js"
     },
     ".": {
-      "types": "./src/index.d.ts",
-      "default": "./index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./dist/*": {
       "production": "./dist/prod/*",
@@ -35,20 +35,24 @@
     },
     "./package.json": "./package.json",
     "./bundle.esm.js": "./bundle.esm.js",
-    "./*": "./dist/*"
+    "./*": {
+      "production": "./dist/prod/*",
+      "development": "./dist/*",
+      "default": "./dist/*"
+    }
   },
   "types": "./dist",
   "scripts": {
-    "clean": "nps clean",
-    "lint": "nps lint",
-    "start": "nps start",
-    "build": "nps build",
-    "generate": "nps generate",
-    "generateAPI": "nps generateAPI",
-    "generateProd": "nps generateProd",
-    "bundle": "nps build.bundle",
-    "test": "nps test",
-    "test:cypress:open": "nps test.test-cy-open",
+    "clean": "wc-dev clean",
+    "lint": "wc-dev lint",
+    "start": "wc-dev start",
+    "build": "wc-dev build",
+    "generate": "wc-dev generate",
+    "generateAPI": "wc-dev generateAPI",
+    "generateProd": "wc-dev generateProd",
+    "bundle": "wc-dev build.bundle",
+    "test": "wc-dev test",
+    "test:cypress:open": "wc-dev test.test-cy-open",
     "prepublishOnly": "tsc -b"
   },
   "dependencies": {
@@ -56,16 +60,19 @@
     "lit-html": "^2.0.1"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.10",
     "@openui5/sap.ui.core": "1.120.17",
-    "@ui5/webcomponents-tools": "2.8.0-rc.2",
-    "chromedriver": "^132.0.0",
+    "@sap-theming/theming-base-content": "11.29.3",
+    "@ui5/cypress-internal": "0.1.0",
+    "@ui5/webcomponents-tools": "2.19.0-rc.2",
     "clean-css": "^5.2.2",
-    "copy-and-watch": "^0.1.5",
-    "cross-env": "^7.0.3",
-    "eslint": "^7.22.0",
-    "mkdirp": "^1.0.4",
+    "cypress": "^15.3.0",
+    "mocha": "^11.7.2",
     "replace-in-file": "^6.3.5",
     "resolve": "^1.20.0",
-    "touch": "^3.1.0"
-  }
+    "touch": "^3.1.0",
+    "typescript": "^5.6.2",
+    "vite": "5.4.21"
+  },
+  "customElements": "dist/custom-elements.json"
 }

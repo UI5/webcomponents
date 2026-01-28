@@ -10,13 +10,11 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
-
-    <ui5-file-uploader multiple max-file-size="2" id="fileuploader" placeholder="Upload up to 2 MB">
-        <ui5-button icon="upload"></ui5-button>
-    </ui5-file-uploader>
-
-    <div id="file-exceed-result"></div>
-
+    <div style="height: 300px">
+        <ui5-label for="max-file-size-uploader">Upload files up to 2 MB:</ui5-label>
+        <ui5-file-uploader max-file-size="2" id="max-file-size-uploader" multiple></ui5-file-uploader>
+    </div>
+   
     <!-- playground-fold -->
     <script type="module" src="main.js"></script>
 </body>

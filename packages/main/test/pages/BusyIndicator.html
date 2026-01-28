@@ -37,15 +37,28 @@
 	<br />
 	<ui5-busy-indicator size="M" active id="indicator2"></ui5-busy-indicator>
 
-	<ui5-title>ui5-busy-indicator with text</ui5-title>
+	<h2>With Text</h2>
+	<ui5-busy-indicator id="busy-indicator-text-placement-bottom" active text="Loading" class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Loading" text-placement="Top" active class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Very very very very very very very very very long text" active class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Very very very very very very very very very long text" active class="redBorder"></ui5-busy-indicator>
+	<br />
+	<br />
+	<h2>With Text and Content (Not by Design)</h2>
+	<ui5-busy-indicator size="M" active text="Loading">
+		<ui5-checkbox text="Hello World"></ui5-checkbox>
+	</ui5-busy-indicator>
+	<br />
+	<br />
+	<ui5-busy-indicator size="M" active class="busyindicator6auto" text="Custom loading text">
+		<ui5-list class="busyindicator7auto">
+			<ui5-li>Item 1</ui5-li>
+			<ui5-li>Item 2</ui5-li>
+			<ui5-li>Item 3</ui5-li>
+		</ui5-list>
+	</ui5-busy-indicator>
 
-	<br />
-	<br />
-	<ui5-busy-indicator id="busy-indicator-text-placement-bottom" active text="Loading" class="busyindicator2auto"></ui5-busy-indicator>
-	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Loading" text-placement="Top" active class="busyindicator2auto"></ui5-busy-indicator>
-	<br />
-	<br />
-
+	<h2>Tab Chain</h2>
 	<div>
 		<ui5-button id="beforeIndicatorWithBtn">focus stop before</ui5-button>
 		<ui5-busy-indicator id="indicatorWithBtn" size="M" active>
@@ -56,46 +69,8 @@
 
 	<br />
 	<br />
-	<ui5-busy-indicator size="M" active text="Loading">
-		<ui5-checkbox text="Hello World"></ui5-checkbox>
-	</ui5-busy-indicator>
 
-	<br />
-	<br />
-
-	<ui5-button id="fetch-btn" class="busyindicator3auto">Fetch List Data</ui5-button>
-	<br>
-	<br>
-	<ui5-busy-indicator id="busy-container" class="busyindicator4auto" size="M" text="Loading">
-		<ui5-list id="fetch-list" no-data-text="No Data" header-text="Available Items" class="busyindicator5auto"></ui5-list>
-	</ui5-busy-indicator>
-
-
-	<br>
-	<br>
-	<br>
-	<br>
-
-	<ui5-busy-indicator size="M" active class="busyindicator6auto">
-		<ui5-list class="busyindicator7auto">
-			<ui5-li>Item 1</ui5-li>
-			<ui5-li>Item 2</ui5-li>
-			<ui5-li>Item 3</ui5-li>
-		</ui5-list>
-	</ui5-busy-indicator>
-
-	<ui5-busy-indicator size="M" active class="busyindicator6auto" text="Custom loading text">
-		<ui5-list class="busyindicator7auto">
-			<ui5-li>Item 1</ui5-li>
-			<ui5-li>Item 2</ui5-li>
-			<ui5-li>Item 3</ui5-li>
-		</ui5-list>
-	</ui5-busy-indicator>
-
-	 <br>
-	<br>
-	<br>
-
+	<h2>Sizes</h2>
 	<span>Medium (default) </span>
 	<br>
 	<br>
@@ -125,6 +100,16 @@
 	<br>
 	<br>
 
+	<h2>Dynamic Indicator</h2>
+	<ui5-button id="fetch-btn" class="busyindicator3auto">Fetch List Data</ui5-button>
+	<br>
+	<br>
+	<ui5-busy-indicator id="busy-container" class="busyindicator4auto" size="M" text="Loading">
+		<ui5-list id="fetch-list" no-data-text="No Data" header-text="Available Items" class="busyindicator5auto"></ui5-list>
+	</ui5-busy-indicator>
+
+	<br>
+	<br>
 	<ui5-busy-indicator id="busy-tree" class="busyindicator8auto" delay="0">
 		<ui5-tree id="treeDynamic">
 			<div slot="header">
@@ -184,7 +169,7 @@
 
 	<br>
 	<br>
-	<span>Indicator with delay</span>
+	<h2>With Delay</h2>
 	<div></div>
 	<ui5-button id="open-dialog-delayed-indicator">Open dialog</ui5-button>
 	<ui5-dialog id="dialog-delayed-indicator">
@@ -197,6 +182,7 @@
 
 	<br>
 	<br>
+	<h2>Height</h2>
     <div style="display: flex;">
       <div style="border: 1px solid black;">
         <ui5-busy-indicator active style="height: 100%;">

@@ -1,11 +1,17 @@
 import patchPatcher from "./patchPatcher.js";
 import type { OpenUI5Patcher } from "./patchPatcher.js";
-import patchPopup from "./patchPopup.js";
-import type { OpenUI5Popup } from "./patchPopup.js";
+import {
+	patchPopup,
+	addOpenedPopup,
+	removeOpenedPopup,
+	getTopmostPopup,
+} from "./patchPopup.js";
+import type { OpenUI5PopupClass, OpenUI5DialogClass, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
 import type { LegacyDateCalendarCustomizing } from "../features/LegacyDateFormats.js";
+import { secondaryBoot } from "../Boot.js";
 
 type OpenUI5Core = {
 	attachInit: (callback: () => void) => void,
@@ -66,7 +72,11 @@ type Locale = {
 	_get: () => CLDRData,
 };
 
+const OPENUI5_POLLING_INTERVAL = 100;
+
 class OpenUI5Support {
+	static enablePolling = false; // set to true for old OpenUI5 versions
+
 	static isAtLeastVersion116() {
 		if (!window.sap.ui!.version) {
 			return true; // sap.ui.version will be removed in newer OpenUI5 versions
@@ -83,39 +93,68 @@ class OpenUI5Support {
 		return typeof window.sap?.ui?.require === "function";
 	}
 
+	static initPromise?: Promise<void>;
+
+	/**
+	 * Important - if OpenUI5 is loaded after UI5 Web Components, configuration is not synchronized and it's up to the app to initialize OpenUI5 with the same settings as UI5 Web Components for consistency.
+	 */
+	static OpenUI5DelayedInit = async () => {
+		OpenUI5Support.init(); // This ensures patchPopover and patchPatcher are called; and from this point OpenUI5 CSS vars start being detected
+		await secondaryBoot(); // Re-run the parts of boot that were skipped due to OpenUI5 not having been loaded
+	}
+
+	static awaitForOpenUI5() {
+		if (OpenUI5Support.enablePolling) {
+			const interval = setInterval(() => {
+				if (OpenUI5Support.isOpenUI5Detected()) {
+					clearInterval(interval);
+					OpenUI5Support.OpenUI5DelayedInit();
+				}
+			}, OPENUI5_POLLING_INTERVAL);
+		} else {
+			document.addEventListener("sap-ui-core-ready", () => {
+				OpenUI5Support.OpenUI5DelayedInit();
+			});
+		}
+	}
+
 	static init() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return Promise.resolve();
+			return OpenUI5Support.awaitForOpenUI5();
 		}
 
-		return new Promise<void>(resolve => {
-			window.sap.ui.require(["sap/ui/core/Core"], async (Core: OpenUI5Core) => {
-				const callback = () => {
-					let deps: Array<string> = ["sap/ui/core/Popup", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
-					if (OpenUI5Support.isAtLeastVersion116()) { // for versions since 1.116.0 and onward, use the modular core
-						deps = [
-							...deps,
-							"sap/base/i18n/Formatting",
-							"sap/base/i18n/Localization",
-							"sap/ui/core/ControlBehavior",
-							"sap/ui/core/Theming",
-							"sap/ui/core/date/CalendarUtils",
-						];
+		if (!OpenUI5Support.initPromise) {
+			OpenUI5Support.initPromise = new Promise<void>(resolve => {
+				window.sap.ui.require(["sap/ui/core/Core"], async (Core: OpenUI5Core) => {
+					const callback = () => {
+						let deps: Array<string> = ["sap/ui/core/Popup", "sap/m/Dialog", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
+						if (OpenUI5Support.isAtLeastVersion116()) { // for versions since 1.116.0 and onward, use the modular core
+							deps = [
+								...deps,
+								"sap/base/i18n/Formatting",
+								"sap/base/i18n/Localization",
+								"sap/ui/core/ControlBehavior",
+								"sap/ui/core/Theming",
+								"sap/ui/core/date/CalendarUtils",
+							];
+						}
+						window.sap.ui.require(deps, (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass, Patcher: OpenUI5Patcher) => {
+							patchPatcher(Patcher);
+							patchPopup(Popup, Dialog);
+							resolve();
+						});
+					};
+					if (OpenUI5Support.isAtLeastVersion116()) {
+						await Core.ready();
+						callback();
+					} else {
+						Core.attachInit(callback);
 					}
-					window.sap.ui.require(deps, (Popup: OpenUI5Popup, Patcher: OpenUI5Patcher) => {
-						patchPatcher(Patcher);
-						patchPopup(Popup);
-						resolve();
-					});
-				};
-				if (OpenUI5Support.isAtLeastVersion116()) {
-					await Core.ready();
-					callback();
-				} else {
-					Core.attachInit(callback);
-				}
+				});
 			});
-		});
+		}
+
+		return OpenUI5Support.initPromise;
 	}
 
 	static getConfigurationSettingsObject() {
@@ -141,7 +180,7 @@ class OpenUI5Support {
 				formatSettings: {
 					firstDayOfWeek: CalendarUtils.getWeekConfigurationValues().firstDayOfWeek,
 					legacyDateCalendarCustomizing: Formatting.getCustomIslamicCalendarData?.()
-												?? Formatting.getLegacyDateCalendarCustomizing?.(),
+						?? Formatting.getLegacyDateCalendarCustomizing?.(),
 				},
 			};
 		}
@@ -154,9 +193,9 @@ class OpenUI5Support {
 			animationMode: config.getAnimationMode(),
 			language: config.getLanguage(),
 			theme: config.getTheme(),
-			themeRoot: config.getThemeRoot(),
+			themeRoot: typeof config.getThemeRoot === "function" ? config.getThemeRoot() : undefined,
 			rtl: config.getRTL(),
-			timezone: config.getTimezone(),
+			timezone: typeof config.getTimezone === "function" ? config.getTimezone() : undefined,
 			calendarType: config.getCalendarType(),
 			formatSettings: {
 				firstDayOfWeek: LocaleData ? LocaleData.getInstance(config.getLocale()).getFirstDayOfWeek() : undefined,
@@ -199,10 +238,11 @@ class OpenUI5Support {
 
 	static attachListeners() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return;
+			return false;
 		}
 
 		OpenUI5Support._listenForThemeChange();
+		return true;
 	}
 
 	static cssVariablesLoaded() {
@@ -215,7 +255,20 @@ class OpenUI5Support {
 			return false;
 		}
 
-		return !!link.href.match(/\/css(-|_)variables\.css/);
+		// The file name is "css_variables.css" until 1.127 and "library.css" from 1.127 onwards
+		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
+	}
+
+	static addOpenedPopup(popupInfo: PopupInfo) {
+		addOpenedPopup(popupInfo);
+	}
+
+	static removeOpenedPopup(popup: object) {
+		removeOpenedPopup(popup);
+	}
+
+	static getTopmostPopup() {
+		return getTopmostPopup();
 	}
 }
 

@@ -3,13 +3,9 @@
 :root {
 	--_ui5_button_base_min_width: 2.25rem;
 	--_ui5_button_base_padding: 0.5625rem;
-	--_ui5_button_base_icon_only_padding: 0.5625rem;
 	--_ui5_button_base_icon_margin: 0.375rem;
-	--_ui5_button_icon_font_size: 1rem;
 	--_ui5_button_text_shadow: none;
-	--_ui5_button_emphasized_focused_border: 0.0625rem dotted var(--sapContent_ContrastFocusColor);
 	--_ui5_button_emphasized_focused_border_before: unset;
-	--_ui5_button_emphasized_outline: 1px solid var(--sapContent_FocusColor);
 	--_ui5_button_emphasized_focused_border_color: var(--sapContent_ContrastFocusColor);
 	--_ui5_button_emphasized_focused_active_border_color: var(--sapContent_ContrastFocusColor);
 }

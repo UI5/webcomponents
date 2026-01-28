@@ -13,7 +13,7 @@
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
-	font-family: "72override", var(--sapFontHeaderFamily);
+	font-family: var(--sapFontHeaderFamily);
 	font-size: 1rem;
 }
 
@@ -176,4 +176,8 @@
 
 :host([media-range="XL"]) .ui5-tc__content {
 	padding: 1rem 3rem;
+}
+
+.ui5-tc-root.ui5-tc--noTabSelected .ui5-tc__content {
+	padding: 0;
 }

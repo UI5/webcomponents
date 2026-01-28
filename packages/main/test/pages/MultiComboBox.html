@@ -66,6 +66,7 @@
 
 		<br>
 		<ui5-multi-combobox no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
+			<ui5-mcb-item selected text="Longest word in the whole universe"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
@@ -145,7 +146,7 @@
 			<ui5-mcb-item text="Compact"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
-			<div slot="valueStateMessage">Information message. This is a <a href="#" target="_blank">Link</a>. Extra long text used as
+			<div slot="valueStateMessage">Information message. This is a <ui5-link href="#" target="_blank">Link</ui5-link><ui5-link href="#" target="_blank">second Link</ui5-link> Extra long text used as
 				an information message. Extra long text used as an information message - 2. Extra long text used as an
 				information message - 3.</div>
 		</ui5-multi-combobox>
@@ -308,6 +309,71 @@
 			});
 		</script>
 	</div>
+
+	<section>
+		<h3>MultiComboBox Composition</h3>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Korean</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Korean ..." id="mcb-composition-korean">
+				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
+				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
+				<ui5-mcb-item text="사랑"></ui5-mcb-item>
+				<ui5-mcb-item text="한국"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Korean with Validation</span>
+
+			<br>
+			<ui5-multi-combobox placeholder="Type in Korean ..." id="mcb-composition-korean">
+				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
+				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
+				<ui5-mcb-item text="사랑"></ui5-mcb-item>
+				<ui5-mcb-item text="한국"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Japanese</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Japanese ..." id="mcb-composition-japanese">
+				<ui5-mcb-item text="こんにちは"></ui5-mcb-item>
+				<ui5-mcb-item text="ありがとう"></ui5-mcb-item>
+				<ui5-mcb-item text="日本"></ui5-mcb-item>
+				<ui5-mcb-item text="東京"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Chinese</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Chinese ..." id="mcb-composition-chinese">
+				<ui5-mcb-item text="你好"></ui5-mcb-item>
+				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
+				<ui5-mcb-item text="北京"></ui5-mcb-item>
+				<ui5-mcb-item text="上海"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Chinese with Validation</span>
+
+			<br>
+			<ui5-multi-combobox placeholder="Type in Chinese ..." id="mcb-composition-chinese">
+				<ui5-mcb-item text="你好"></ui5-mcb-item>
+				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
+				<ui5-mcb-item text="北京"></ui5-mcb-item>
+				<ui5-mcb-item text="上海"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+	</section>
 
 	<div class="demo-section">
 		<span>MultiComboBox with items</span>
@@ -610,6 +676,47 @@
 		</form>
 		<br>
 		<span>Submit event calls: <span id="mcb-form-submit">0</span></span>
+	</div>
+
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-multi-combobox id="mcbInAForm" no-validation required>
+				<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+				<ui5-mcb-item text="Denmark"></ui5-mcb-item>
+				<ui5-mcb-item text="England"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('mcbInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('mcbInAForm');
+			});
+
+			mcbInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('mcbInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
 	</div>
 
 	<script>

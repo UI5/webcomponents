@@ -143,12 +143,6 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 		this._buildMonths();
 	}
 
-	onAfterRendering() {
-		if (!this._hidden) {
-			this.focus();
-		}
-	}
-
 	get rowSize() {
 		return (this.secondaryCalendarType === CalendarType.Islamic && this.primaryCalendarType !== CalendarType.Islamic)
 			|| (this.secondaryCalendarType === CalendarType.Persian && this.primaryCalendarType !== CalendarType.Persian) ? 2 : 3;
@@ -166,12 +160,20 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 		const calendarDate = this._calendarDate; // store the value of the expensive getter
 		const minDate = this._minDate; // store the value of the expensive getter
 		const maxDate = this._maxDate; // store the value of the expensive getter
-		const tempDate = new CalendarDate(calendarDate, this._primaryCalendarType);
 		let timestamp;
 
 		/* eslint-disable no-loop-func */
 		for (let i = 0; i < 12; i++) {
+			const tempDate = new CalendarDate(calendarDate, this._primaryCalendarType);
 			tempDate.setMonth(i);
+
+			// If the current date of the current month is larger than this month, set the date to the last day of the previous month.
+			// This is needed because the date object will automatically switch to the next month if larger date is set.
+			if (tempDate.getMonth() !== i) {
+				tempDate.setMonth(tempDate.getMonth() - 1);
+				tempDate.setDate(this._calendarDate.getDate() - tempDate.getDate());
+			}
+
 			timestamp = tempDate.valueOf() / 1000;
 
 			const isSelected = this.selectedDates.some(itemTimestamp => {
@@ -319,6 +321,21 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 		const hoveredItem = target.closest(".ui5-mp-item") as HTMLElement;
 		if (hoveredItem && this.selectionMode === CalendarSelectionMode.Range && this.selectedDates.length === 1) {
 			this._secondTimestamp = this._getTimestampFromDom(hoveredItem);
+		}
+	}
+
+	/**
+	 * Sets the focus reference to the month that was clicked with mousedown.
+	 * @param e
+	 * @private
+	 */
+	_onmousedown(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		const clickedItem = target.closest(".ui5-mp-item") as HTMLElement;
+
+		if (clickedItem) {
+			const timestamp = this._getTimestampFromDom(clickedItem);
+			this._setTimestamp(timestamp);
 		}
 	}
 

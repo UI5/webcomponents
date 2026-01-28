@@ -3,24 +3,31 @@
 	--_ui5_slider_progress_container_background: var(--sapField_BorderColor);
 	--_ui5_slider_progress_container_dot_display: none;
 	--_ui5_slider_progress_container_dot_background: var(--sapField_BorderColor);
-	--_ui5_slider_progress_border: none;
+	--_ui5_slider_progress_border_width: 0.0625rem;
+	--_ui5_slider_progress_border: solid var(--_ui5_slider_progress_border_width) var(--sapSlider_BorderColor);
+	--_ui5_slider_progress_before_background: transparent;
+	--_ui5_slider_progress_after_background: transparent;
+	--_ui5_slider_progress_before_border: none;
+	--_ui5_slider_progress_after_border: none;
 	--_ui5_slider_padding: 1.406rem 1.0625rem;
+	--_ui5_slider_root_height: 3.3125rem;
 	--_ui5_slider_inner_height: 0.25rem;
+	--_ui5_slider_inner_min_width: 4rem;
 	--_ui5_slider_outer_height: 1.6875rem;
 	--_ui5_slider_progress_border_radius: 0.25rem;
 	--_ui5_slider_progress_background: var(--sapActiveColor);
 	--_ui5_slider_handle_icon_display: none;
 	--_ui5_range_slider_root_hover_handle_icon_display: none;
-	--_ui5_slider_handle_height: 1.625rem;
-	--_ui5_slider_handle_width: 1.625rem;
-	--_ui5_slider_handle_border: solid 0.125rem var(--sapField_BorderColor);
-	--_ui5_slider_handle_border_radius: 1rem;
+	--_ui5_slider_handle_height: 1.5rem;
+	--_ui5_slider_handle_width: 2rem;
+	--_ui5_slider_handle_border: 0.0625rem solid var(--sapField_BorderColor);
+	--_ui5_slider_handle_border_radius: 0.5rem;
 	--_ui5_slider_handle_background: var(--sapButton_Background);
 	--_ui5_range_slider_handle_background: #FFF;
-	--_ui5_slider_handle_top: -0.825rem;
+	--_ui5_slider_track_total_height: calc(var(--_ui5_slider_inner_height) + (2 * var(--_ui5_slider_progress_border_width)));
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2 - var(--_ui5_slider_progress_border_width));
 	--_ui5_slider_tickmark_bg: var(--sapField_BorderColor);
 	--_ui5_slider_tickmark_in_range_bg: var(--sapButton_Active_Background);
-	--_ui5_slider_handle_margin_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2));
 	--_ui5_slider_handle_hover_background: var(--sapButton_Hover_Background);
 	--_ui5_slider_handle_hover_border: 0.125rem solid var(--sapButton_Hover_BorderColor);
 	--_ui5_slider_handle_outline: 0.0625rem dotted var(--sapContent_FocusColor);
@@ -28,7 +35,7 @@
 	--_ui5_slider_handle_outline_offset: 0.075rem;
 	--_ui5_slider_progress_outline: 0.0625rem dotted var(--sapContent_FocusColor);
 	--_ui5_slider_progress_outline_offset: -0.8125rem;
-	--_ui5_slider_tickmark_top: -0.375rem;
+	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2 - var(--_ui5_slider_progress_border_width));
 	--_ui5_slider_disabled_opacity: 0.4;
 	--_ui5_slider_tooltip_fontsize: var(--sapFontSmallSize);
 	--_ui5_slider_tooltip_color: var(--sapContent_LabelColor);
@@ -50,9 +57,9 @@
 	--_ui5_range_slider_progress_focus_height: 2rem;
 	--_ui5_range_slider_legacy_progress_focus_display: block;
 	--_ui5_slider_handle_focus_width: 0;
-	--_ui5_slider_start_end_point_size: .375rem;
-	--_ui5_slider_start_end_point_left: -0.875rem;
-	--_ui5_slider_start_end_point_top: -.1875rem;
+	--_ui5_slider_start_end_point_size: 0.5rem;
+	--_ui5_slider_start_end_point_left: -.95rem;
+	--_ui5_slider_start_end_point_top: -0.1875rem;
 	--_ui5_slider_handle_background_focus: var(--sapButton_Active_Background);
 	--_ui5_slider_handle_focused_tooltip_distance: var(--_ui5_slider_tooltip_bottom);
 	--_ui5_slider_handle_box_sizing: content-box;
@@ -62,32 +69,39 @@
 	--_ui5_range_slider_handle_background_focus: transparent;
 	--_ui5_range_slider_progress_focus_width: 100%;
 	--_ui5_range_slider_root_active_handle_icon_display: none;
-	--_ui5_slider_tickmark_height: 1rem;
-	--_ui5_slider_tickmark_top: -.3125rem;
-	--_ui5_slider_progress_box_sizing: content-box;
-	--_ui5_slider_tickmark_in_range_bg: var(--sapField_BorderColor);
+	--_ui5_slider_tickmark_height: 0.5rem;
+	--_ui5_slider_progress_box_sizing: border-box;
+	--_ui5_slider_active_progress_box_sizing: content-box;
 	--_ui5_range_slider_focus_outline_width: 100%;
 	--_ui5_slider_progress_outline_offset_left: 0;
 	--_ui5_range_slider_focus_outline_radius: 0;
 
 	--_ui5_slider_progress_container_top: 0;
-	--_ui5_slider_progress_height: 100%;
-	--_ui5_slider_active_progress_border: none;
-	--_ui5_slider_active_progress_left: 0;
-	--_ui5_slider_active_progress_top: 0;
+	--_ui5_slider_progress_height: 0.25rem;
+	--_ui5_slider_active_progress_border: solid 0.0625rem var(--sapSlider_Selected_BorderColor);
+	--_ui5_slider_active_progress_border_radius: 0.25rem;
+	--_ui5_slider_active_progress_left: -0.0625rem;
+	--_ui5_slider_active_progress_top: -0.0625rem;
+	--_ui5_slider_active_progress_padding: 0.125rem;
+	--_ui5_slider_active_progress_height: calc(var(--_ui5_slider_progress_height) - 0.125rem);
 
 	--_ui5_slider_no_tickmarks_progress_container_top: var(--_ui5_slider_progress_container_top);
 	--_ui5_slider_no_tickmarks_progress_height: var(--_ui5_slider_progress_height);
 	--_ui5_slider_no_tickmarks_active_progress_border: var(--_ui5_slider_active_progress_border);
-	--_ui5_slider_no_tickmarks_active_progress_left: var(--_ui5_slider_active_progress_left);
-	--_ui5_slider_no_tickmarks_active_progress_top: var(--_ui5_slider_active_progress_top);
+	--_ui5_slider_no_tickmarks_active_progress_left: -0.0625rem;
+	--_ui5_slider_no_tickmarks_active_progress_top: -0.0625rem;
+	--_ui5_slider_no_tickmarks_active_progress_height: calc(var(--_ui5_slider_no_tickmarks_progress_height) - 0.125rem);
 	--_ui5_slider_handle_focus_visibility: none;
-	--_ui5_slider_handle_icon_size: 1rem;
+	--_ui5_slider_handle_icon_size: 0.875rem;
 }
 
 [data-ui5-compact-size],
 .ui5-content-density-compact,
 .sapUiSizeCompact {
-	--_ui5_slider_handle_icon_size: .875rem;
+	--_ui5_slider_start_end_point_left: -0.75rem;
+	--_ui5_slider_handle_icon_size: 0.875rem;
 	--_ui5_slider_padding: 1rem 1.0625rem;
+	--_ui5_slider_handle_height: 1.25rem;
+	--_ui5_slider_handle_width: 1.5rem;
+	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2 - var(--_ui5_slider_progress_border_width));
 }

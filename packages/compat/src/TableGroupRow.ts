@@ -16,6 +16,7 @@ import {
 
 // Styles
 import tableGroupRowStyles from "./generated/themes/TableGroupRow.css.js";
+import { patchScopingSuffix } from "./utils/CompatCustomElementsScope.js";
 
 /**
  * @class
@@ -32,6 +33,7 @@ import tableGroupRowStyles from "./generated/themes/TableGroupRow.css.js";
  *
  * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
  * @csspart group-row - Used to style the native `tr` element
+ * @deprecated Deprecated as of version 2.12.0, use `@ui5/webcomponents/dist/Table.js` instead.
  */
 @customElement({
 	tag: "ui5-table-group-row",
@@ -107,6 +109,8 @@ class TableGroupRow extends UI5Element implements ITableRow {
 		this.fireDecoratorEvent("_focused", e);
 	}
 }
+
+patchScopingSuffix(TableGroupRow);
 
 TableGroupRow.define();
 

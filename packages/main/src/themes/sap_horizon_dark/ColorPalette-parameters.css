@@ -1,10 +1,6 @@
 @import "../base/ColorPalette-parameters.css";
 
 :root {
-	--_ui5_color-palette-item-container-sides-padding: 0.3125rem;
-	--_ui5_color-palette-item-container-rows-padding: 0.6875rem;
-	--_ui5_color-palette-item-focus-height: 1.5rem;
-	--_ui5_color-palette-item-container-padding: var(--_ui5_color-palette-item-container-sides-padding) var(--_ui5_color-palette-item-container-rows-padding);
 	--_ui5_color-palette-item-hover-margin: 0.0625rem;
 	--_ui5_color-palette-row-height: 9.5rem;
 	--_ui5_color-palette-button-height: 3rem;
@@ -12,7 +8,6 @@
 	--_ui5_color-palette-item-before-focus-inset: -0.3125rem;
 	--_ui5_color-palette-item-before-focus-hover-inset: -0.0625rem;
 	--_ui5_color-palette-item-after-focus-color: 0.0625rem solid var(--sapContent_ContrastFocusColor);
-	--_ui5_color-palette-item-selected-focused-border-after: none;
 	--_ui5_color-palette-item-after-focus-hover-inset: 0.0625rem;
 	--_ui5_color-palette-item-before-focus-border-radius: 0.4375rem;
 	--_ui5_color-palette-item-after-focus-border-radius: 0.3125rem;

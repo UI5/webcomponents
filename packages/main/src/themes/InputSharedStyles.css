@@ -4,18 +4,16 @@
 	- readonly and disabled states
 */
 
+:host([disabled]) {
+	cursor: default;
+	pointer-events: none;
+	background: none;
+}
+
 :host([readonly]:not([disabled])) {
 	border-color: var(--_ui5_input_readonly_border_color);
 	background: var(--sapField_ReadOnly_BackgroundStyle);
 	background-color: var(--_ui5_input_readonly_background);
-}
-
-:host([disabled]) {
-	opacity: var(--_ui5_input_disabled_opacity);
-	cursor: default;
-	pointer-events: none;
-	background-color: var(--_ui5-input_disabled_background);
-	border-color: var(--_ui5_input_disabled_border_color);
 }
 
 :host([value-state="Negative"]) .inputIcon:not(.inputIcon--pressed):not(:active):hover {

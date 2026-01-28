@@ -68,14 +68,21 @@ describe("API", () => {
 		];
 
 		designs.forEach(({ design, btnText }) => {
-		  cy.mount(<MessageStrip class="top" design={design}>{design} design with icon and close button:</MessageStrip>);
+			cy.mount(<MessageStrip class="top" design={design}>{design} design with icon and close button:</MessageStrip>);
 
-		  cy.get("[ui5-message-strip]")
+			cy.get("[ui5-message-strip]")
 				.shadow()
 				.find("ui5-button")
 				.shadow()
 				.find("button")
 				.should("have.attr", "title", btnText);
+
+			cy.get("[ui5-message-strip]")
+				.shadow()
+				.find("ui5-button")
+				.shadow()
+				.find("button")
+				.should("have.attr", "aria-label", btnText);
 		});
 	});
 

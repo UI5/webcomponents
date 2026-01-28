@@ -1,6 +1,6 @@
-// @ts-ignore
+/** @ts-expect-error */
 import sanitizeHTML from "../sap/base/security/sanitizeHTML.js";
-// @ts-ignore
+/** @ts-expect-error */
 import URLListValidator from "../sap/base/security/URLListValidator.js";
 
 export {

@@ -1,0 +1,32 @@
+:root {
+	--_ui5_search_icon_border_radius: 1.125rem;
+	--_ui5_search_input_border_radius: 1.125rem;
+	--_ui5-search-border: none;
+	--_ui5-search-icon-border: none;
+	--_ui5-search-wrapper-background: var(--sapShell_InteractiveBackground);
+	--_ui5_search_separator_background: var(--sapShell_InteractiveBorderColor);
+	--_ui5-search-wrapper-hover-background: var(--sapField_Hover_BackgroundStyle);
+	--_ui5-search-wrapper-hover-background-color: var(--sapField_Hover_Background);
+	--_ui5-search-elements-hover-background: none;
+	--_ui5-search-elements-active-background: none;
+	--_ui5_search_input_scope_margin: 0 0.125rem 0 .5rem;
+	--_ui5-search-elements-background: inherit;
+	--_ui5_search_wrapper_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapField_Active_BorderColor);
+	--_ui5_search_input_outline: none;
+	--_ui5_search_filter_button_border_radius: 1.125rem;
+	--_ui5_seach_filter_button_border_hover: 1px solid var(--sapButton_Hover_BorderColor);
+	--_ui5_search_filter_button_border: none;
+	--_ui5-search-filter_button_background_color: inherit;
+	--ui5_search_filter_button_background_active: inherit;
+	--_ui5_search_icon_size: 1.75rem;
+	--_ui5_search_icon_size_default: 2.25rem;
+	--_ui5_search_icon_padding: 0.375rem;
+	--_ui5_search_icon_hover_padding: 0.3125rem;
+	--_ui5_search_input_start_margin: 0;
+	--_ui5_search_input_end_padding: 0;
+	--_ui5-search-input-start-padding: 0.5rem;
+	--_ui5-search-select-height: 1.625rem;
+	--_ui5-search-loading-overlay-background: var(--sapBackgroundColor);
+	--_ui5-search-loading-overlay-transparency: 0.72;
+	--_ui5-search-field-text-color: var(--sapField_TextColor);
+}

@@ -7,7 +7,6 @@
 }
 
 .ui5-bar-root {
-	container-type: size;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -16,14 +15,35 @@
 	background-color: inherit;
 	box-shadow: inherit;
 	border-radius: inherit;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.ui5-bar-root .ui5-bar-startcontent-container,
+.ui5-bar-root .ui5-bar-endcontent-container,
+.ui5-bar-root .ui5-bar-midcontent-container {
+	display: flex;
+	align-items: center;
+}
+
+.ui5-bar-root .ui5-bar-startcontent-container {
+	flex: 0 1 auto;
+}
+
+.ui5-bar-root .ui5-bar-endcontent-container {
+	flex: 0 0 auto;
+}
+
+.ui5-bar-root .ui5-bar-midcontent-container {
+	justify-content: center;
+	flex: 1 1 auto;
+	padding: 0 var(--_ui5_bar-mid-container-padding-start-end);
+	min-width: 0;
+	overflow: hidden;
 }
 
 .ui5-bar-root .ui5-bar-startcontent-container {
 	padding-inline-start: var(--_ui5_bar-start-container-padding-start);
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: flex-start;
 }
 
 .ui5-bar-root .ui5-bar-content-container {
@@ -40,17 +60,6 @@
 
 .ui5-bar-root .ui5-bar-endcontent-container {
 	padding-inline-end: var(--_ui5_bar-end-container-padding-end);
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: flex-end;
-}
-.ui5-bar-root .ui5-bar-midcontent-container {
-	padding: 0 var(--_ui5_bar-mid-container-padding-start-end);
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
 }
 
 :host([design="Footer"]){
@@ -73,17 +82,10 @@
 
 ::slotted(*) {
 	margin: 0 0.25rem;
-}
-
-@container (width < 600px) {
-	* {
-		--_ui5_bar-start-container-padding-start: var(--_ui5_bar-start-container-padding-start_S);
-		--_ui5_bar-end-container-padding-end: var(--_ui5_bar-end-container-padding-end_S)
-	}
-}
-@container (width > 1439px) {
-	* {
-		--_ui5_bar-start-container-padding-start: var(--_ui5_bar-start-container-padding-start_XL);
-		--_ui5_bar-end-container-padding-end: var(--_ui5_bar-end-container-padding-end_XL);
-	}
+	display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
 }

@@ -13,9 +13,16 @@ import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsF
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getAllAccessibleNameRefTexts,
+	getEffectiveAriaDescriptionText,
+	getAllAccessibleDescriptionRefTexts,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js"; // default calendar for bundling
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import IconMode from "./types/IconMode.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import {
 	isShow,
@@ -45,11 +52,16 @@ import {
 	TIMEPICKER_CANCEL_BUTTON,
 	TIMEPICKER_INPUT_DESCRIPTION,
 	TIMEPICKER_POPOVER_ACCESSIBLE_NAME,
-	FORM_TEXTFIELD_REQUIRED,
+	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_INFORMATION,
 	VALUE_STATE_SUCCESS,
 	VALUE_STATE_WARNING,
+	TIMEPICKER_VALUE_MISSING,
+	TIMEPICKER_PATTERN_MISSMATCH,
+	TIMEPICKER_OPEN_ICON_TITLE_OPENED,
+	TIMEPICKER_OPEN_ICON_TITLE,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -92,7 +104,7 @@ type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
  * the input field, it must fit to the used time format.
  *
  * Supported format options are pattern-based on Unicode LDML Date Format notation.
- * For more information, see [UTS #35: Unicode Locale Data Markup Language](http://unicode.org/reports/tr35/#Date_Field_Symbol_Table).
+ * For more information, see [UTS #35: Unicode Locale Data Markup Language](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
  *
  * For example, if the `format-pattern` is "HH:mm:ss",
  * a valid value string is "11:42:35" and the same is displayed in the input.
@@ -129,6 +141,7 @@ type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
  * @extends UI5Element
  * @public
  * @since 1.0.0-rc.6
+ * @csspart input - Used to style the input element. This part is forwarded to the underlying ui5-input element.
  */
 @customElement({
 	tag: "ui5-time-picker",
@@ -294,6 +307,24 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleNameRef?: string;
 
+	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the input.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
+
 	@property({ type: Boolean, noAttribute: true })
 	_isInputsPopoverOpen = false;
 
@@ -325,11 +356,25 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return TimePicker.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return TimePicker.i18nBundle.getText(TIMEPICKER_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return TimePicker.i18nBundle.getText(TIMEPICKER_PATTERN_MISSMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+
+		return "";
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !this.isValid(this.value),
+		};
 	}
 
 	async formElementAnchor() {
@@ -348,21 +393,26 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		this.tempValue = this.value && this.isValid(this.value) ? this.value : this.getFormat().format(UI5Date.getInstance());
 	}
 
-	get dateAriaDescription() {
+	get roleDescription() {
 		return TimePicker.i18nBundle.getText(TIMEPICKER_INPUT_DESCRIPTION);
 	}
 
 	get pickerAccessibleName() {
-		return TimePicker.i18nBundle.getText(TIMEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return TimePicker.i18nBundle.getText(TIMEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	get accInfo(): InputAccInfo {
 		return {
-			"ariaRoledescription": this.dateAriaDescription,
-			"ariaHasPopup": "dialog",
+			"ariaRoledescription": this.roleDescription,
+			"ariaHasPopup": "grid",
 			"ariaRequired": this.required,
-			"ariaLabel": getEffectiveAriaLabelText(this),
+			"ariaLabel": this.ariaLabelText || undefined,
+			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
 		};
+	}
+
+	get ariaLabelText() {
+		return getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || "";
 	}
 
 	/**
@@ -374,11 +424,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return this.getFormat().parse(this._effectiveValue) as Date;
 	}
 
+	get _lastAvailableTime() {
+		const date = UI5Date.getInstance();
+		date.setHours(23, 59, 59, 999);
+		return this.getFormat().format(date);
+	}
+
 	/**
 	 * @protected
 	 */
 	get _placeholder() {
-		return this.placeholder !== undefined ? this.placeholder : this._displayFormat;
+		if (this.placeholder) {
+			return this.placeholder;
+		}
+
+		// translatable placeholder – for example "e.g. 23:59:59"
+		return `${TimePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastAvailableTime}`;
 	}
 
 	/**
@@ -417,8 +478,24 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return this.hasValueStateText && !this._inputsPopover?.open;
 	}
 
+	/**
+	 * Defines whether the value help icon is hidden
+	 * @private
+	 */
+	get _iconMode() {
+		return isDesktop() ? IconMode.Decorative : IconMode.Interactive;
+	}
+
 	onTimeSelectionChange(e: CustomEvent<TimeSelectionChangeEventDetail>) {
 		this.tempValue = e.detail.value; // every time the user changes the time selection -> update tempValue
+	}
+
+	get openIconTitle() {
+		if (this.open) {
+			return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE_OPENED);
+		}
+
+		return TimePicker.i18nBundle.getText(TIMEPICKER_OPEN_ICON_TITLE);
 	}
 
 	_togglePicker() {
@@ -758,22 +835,20 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		return this.valueStateMessage.length > 0 && !this.open && !this._isMobileDevice;
 	}
 
-	get classes() {
-		return {
-			popover: {
-				"ui5-suggestions-popover": true,
-				"ui5-popover-with-value-state-header-phone": this._isPhone && this.hasValueStateText,
-				"ui5-popover-with-value-state-header": !this._isPhone && this.hasValueStateText,
-			},
-			popoverValueState: {
-				"ui5-valuestatemessage-header": true,
-				"ui5-valuestatemessage-root": true,
-				"ui5-valuestatemessage--success": this.valueState === ValueState.Positive,
-				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
-				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
-				"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
-			},
-		};
+	get _headerTitleText() {
+		return this.ariaLabelText || TimePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get showHeader() {
+		return isPhone();
+	}
+
+	/**
+	 * Defines whether the dialog on mobile should have header
+	 * @private
+	 */
+	get _shouldHideHeader() {
+		return !this.showHeader && !this.hasValueStateText;
 	}
 
 	/**

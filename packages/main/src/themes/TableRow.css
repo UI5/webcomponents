@@ -2,17 +2,13 @@
 	background: var(--sapList_Background);
 }
 
-:host([position]) {
-	height: var(--row-height);
+:host([_alternate]) {
+	background: var(--_ui5_table_row_alternating_background);
 }
 
 :host([aria-selected=true]) {
-	background-color: var(--sapList_SelectionBackgroundColor);
+	background: var(--sapList_SelectionBackgroundColor);
 	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_SelectionBorderColor);
-}
-
-:host([_interactive]) {
-	cursor: pointer;
 }
 
 @media (hover: hover) {
@@ -29,6 +25,14 @@
 :host([_interactive][aria-selected=true]:active),
 :host([_interactive][aria-selected=true][_active]) {
 	background: var(--sapList_Active_Background);
+}
+
+:host([position]) {
+	height: var(--row-height);
+}
+
+:host([_interactive]) {
+	cursor: pointer;
 }
 
 #popin-cell {
@@ -54,7 +58,7 @@
 :host([navigated]) #navigated {
 	position: absolute;
 	inset: 0;
-    background-color: var(--sapList_SelectionBorderColor);
+	background: var(--sapList_SelectionBorderColor);
 }
 
 :host([tabindex]:focus) #navigated {
@@ -77,6 +81,10 @@
 
 :host([navigated]) #popin-cell {
 	grid-column: 1 / -2;
+}
+
+#selection-cell ~ #popin-cell {
+	grid-column-start: 2;
 }
 
 #actions-cell {

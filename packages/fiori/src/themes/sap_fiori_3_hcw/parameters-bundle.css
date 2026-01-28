@@ -12,9 +12,13 @@
 @import "../base/ViewSettingsDialog-parameters.css";
 @import "../base/Wizard-parameters.css";
 @import "./WizardTab-parameters.css";
+@import "./SearchField-parameters.css";
+@import "../base/Search-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "../base/DynamicPage-parameters.css";
 @import "./DynamicPageTitle-parameters.css";
 @import "../base/DynamicPageHeader-parameters.css";
 @import "../sap_fiori_3/DynamicPageHeaderActions-parameters.css";
 @import "../sap_fiori_3/TimelineGroupItem-parameters.css";
+@import "../base/rtl-parameters.css";
+@import "../base/UserSettingsAppearanceViewItem-parameters.css";

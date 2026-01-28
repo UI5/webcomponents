@@ -1,59 +1,43 @@
 :host {
 	display: block;
-    position: relative;
-    color: var(--sapList_TextColor);
-    font: var(--sapFontSize) var(--sapFontFamily);
+	position: relative;
+	color: var(--sapList_TextColor);
+	font: var(--sapFontSize) var(--sapFontFamily);
 }
 
 :host([hidden]) {
-    display: none;
+	display: none;
 }
 
 #table {
-    display: grid;
-    grid-auto-rows: minmax(min-content, max-content);
+	display: grid;
+	grid-auto-rows: minmax(min-content, max-content);
 }
 
 :host([overflow-mode="Scroll"]) #table {
-    overflow-x: auto;
-    height: 100%;
-    height: -webkit-fill-available;
-    height: fill-available;
+	overflow-x: auto;
+	height: 100%;
 }
 
 #rows, #spacer {
-    display: grid;
-    grid-template-rows: min-content;
-    grid-template-columns: subgrid;
-    grid-column: 1 / -1;
+	display: grid;
+	grid-template-rows: min-content;
+	grid-template-columns: subgrid;
+	grid-column: 1 / -1;
 }
 
-#nodata-cell {
-    grid-column: 1 / -1;
-    justify-content: center;
-}
-
-#footer {
-    grid-column: 1 / -1;
-    grid-template-rows: subgrid;
-    height: fit-content;
-}
-
-#growing-cell {
-    grid-column: 1 / -1;
-    justify-content: center;
-    padding: 0;
-    border-top: 1px solid var(--sapList_BorderColor);
-    box-sizing: border-box;
+#no-data-cell {
+	grid-column: 1 / -1;
+	justify-content: center;
 }
 
 #loading {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    z-index: 2;
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	z-index: 2;
 }
 
-#loading[_is-busy] {
-	background-color: var(--_ui5_busy_indicator_block_layer);
+:host([loading]) #table:has(#loading[_is-busy]) ::slotted(*) {
+	opacity: var(--sapContent_DisabledOpacity);
 }

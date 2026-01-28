@@ -125,6 +125,7 @@
 	outline: none;
 	display: flex;
 	align-items: center;
+	transform: scale(1);
 }
 
 [ui5-wizard-tab][data-ui5-wizard-expanded-tab="false"] + [ui5-wizard-tab][data-ui5-wizard-expanded-tab="false"] {

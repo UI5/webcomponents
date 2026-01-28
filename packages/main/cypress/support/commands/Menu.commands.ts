@@ -44,9 +44,69 @@ Cypress.Commands.add("ui5MenuItemClick", { prevSubject: true }, subject => {
 
 Cypress.Commands.add("ui5MenuItemPress", { prevSubject: true }, (subject, key) => {
 	cy.get(subject)
-		.should("have.focused")
+		.should("be.focused")
 		.and("be.visible");
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	cy.realPress(key);
 });
+
+Cypress.Commands.add("ui5MenuItemCheckShiftClickAndPress", { prevSubject: true }, (subject, menuItem, shouldStatement) => {
+	cy.get(subject)
+		.as("menu");
+
+	cy.get("@menu")
+		.find(menuItem)
+		.as("menuItem");
+
+	cy.get("@menu")
+		.ui5MenuOpen();
+
+	cy.get("@menuItem")
+		.should("be.visible")
+		.and("be.focused");
+
+	cy.get("@menuItem")
+		.realClick({ shiftKey: true });
+
+	cy.get("@menu")
+		.should(shouldStatement, "open");
+
+	cy.get("@menu")
+		.ui5MenuOpen();
+
+	cy.get("@menuItem")
+		.should("be.visible")
+		.and("be.focused");
+
+	cy.get("@menuItem")
+		.realPress(["Shift", "Enter"]);
+
+	cy.get("@menu")
+		.should(shouldStatement, "open");
+
+	cy.get("@menu")
+		.ui5MenuOpen();
+
+	cy.get("@menuItem")
+		.should("be.visible")
+		.and("be.focused");
+
+	cy.get("@menuItem")
+		.realPress(["Shift", "Space"]);
+
+	cy.get("@menu")
+		.should(shouldStatement, "open");
+});
+
+declare global {
+	namespace Cypress {
+		interface Chainable {
+			ui5MenuOpen(options?: { opener?: string }): Chainable<void>
+			ui5MenuOpened(): Chainable<void>
+			ui5MenuItemClick(): Chainable<void>
+			ui5MenuItemPress(key: any): Chainable<void>
+			ui5MenuItemCheckShiftClickAndPress(menuItem: string, shouldStatement: string): Chainable<void>
+		}
+	}
+}

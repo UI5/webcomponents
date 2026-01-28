@@ -8,6 +8,7 @@ import "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
 
 import "@ui5/webcomponents-icons/dist/home.js";

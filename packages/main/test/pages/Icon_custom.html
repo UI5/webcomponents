@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 
 	<title>Custom Icon Collection</title>
@@ -11,6 +11,21 @@
 <body>
 	<ui5-icon name="home"></ui5-icon>home<br>
 	<ui5-icon name="tnt/actor"></ui5-icon>tnt/actor<br>
-	<ui5-icon name="my-icons/mark"></ui5-icon>my-icons/mark<br>
+	<ui5-icon name="my-custom-icons/mark"></ui5-icon>my-custom-icons/mark<br>
+
+	<p>Custom icons via JSX template</p>
+	<ui5-icon name="my-custom-icons/pencil"></ui5-icon>
+	<ui5-button icon="my-custom-icons/pencil"></ui5-button>
+	<ui5-avatar icon="my-custom-icons/pencil"></ui5-avatar>
+
+	<p>Custom icons via template string</p>
+	<ui5-icon name="my-custom-icons/pencil2"></ui5-icon>
+	<ui5-button icon="my-custom-icons/pencil2"></ui5-button>
+	<ui5-avatar icon="my-custom-icons/pencil2"></ui5-avatar>
+
+	<p>Custom icons via pathData</p>
+	<ui5-icon name="my-custom-icons/myIcon"></ui5-icon>
+	<ui5-button icon="my-custom-icons/myIcon"></ui5-button>
+	<ui5-avatar icon="my-custom-icons/myIcon"></ui5-avatar>
 </body>
 </html>

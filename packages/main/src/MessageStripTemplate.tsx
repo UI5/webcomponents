@@ -19,7 +19,7 @@ export default function MessageStripTemplate(this: MessageStrip) {
 				[this.designClasses]: true,
 			}}
 			role="note"
-			aria-labelledby={this._id}
+			aria-labelledby="hidden-text content-text"
 		>
 
 			{!this.shouldHideIcon &&
@@ -32,8 +32,8 @@ export default function MessageStripTemplate(this: MessageStrip) {
 				</div>
 			}
 
-			<span class="ui5-hidden-text">{this.hiddenText}</span>
-			<span class="ui5-message-strip-text"><slot></slot></span>
+			<span class="ui5-hidden-text" id="hidden-text">{this.hiddenText}</span>
+			<span class="ui5-message-strip-text" id="content-text"><slot></slot></span>
 
 			{!this.hideCloseButton &&
 				<Button
@@ -41,6 +41,7 @@ export default function MessageStripTemplate(this: MessageStrip) {
 					design="Transparent"
 					class="ui5-message-strip-close-button"
 					tooltip={this._closeButtonText}
+					accessibleName={this._closeButtonText}
 					onClick={this._closeClick}
 				/>
 			}

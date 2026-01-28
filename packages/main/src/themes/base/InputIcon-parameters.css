@@ -1,8 +1,8 @@
 :root {
 	--_ui5_input_icon_padding: .5625rem;
-	--_ui5_input_icon_color: var(--sapContent_IconColor);
+	--_ui5_input_icon_color: var(--sapField_TextColor);
 	--_ui5_input_icon_pressed_color: var(--sapButton_Active_TextColor);
-	--_ui5_input_icon_pressed_bg: var(--sapButton_Selected_Background);
+	--_ui5_input_icon_pressed_bg: var(--sapField_Hover_Background);
 	--_ui5_input_icon_hover_bg: var(--sapButton_Lite_Hover_Background);
 	--_ui5_input_icon_border_radius: 0;
 	--_ui5_input_icon_box_shadow: none;

@@ -15,35 +15,20 @@
 	--_ui5_tc_headerItem_color: var(--sapContent_LabelColor);
 	--_ui5_tc_headerItem_additional_text_color: var(--sapContent_LabelColor);
 	--_ui5_tc_headerItem_text_hover_color: var(--_ui5_tc_headerItem_color);
-	--_ui5_tc_headerItem_text_selected_color: var(--sapSelectedColor);
+	--_ui5_tc_headerItem_text_selected_color: var(--sapTab_Selected_TextColor);
 	--_ui5_tc_headerItem_text_selected_hover_color: var(--sapSelectedColor);
 	--_ui5_tc_headeritem_text_font_weight: normal;
 	--_ui5_tc_headerItem_additional_text_font_weight: normal;
-	--_ui5_tc_headerItem_neutral_color: var(--sapNeutralTextColor);
-	--_ui5_tc_headerItem_positive_color: var(--sapPositiveTextColor);
-	--_ui5_tc_headerItem_negative_color: var(--sapNegativeTextColor);
-	--_ui5_tc_headerItem_critical_color: var(--sapCriticalTextColor);
-	--_ui5_tc_headerItem_neutral_border_color: var(--sapNeutralElementColor);
-	--_ui5_tc_headerItem_positive_border_color: var(--sapPositiveElementColor);
-	--_ui5_tc_headerItem_negative_border_color: var(--sapNegativeElementColor);
-	--_ui5_tc_headerItem_critical_border_color: var(--sapCriticalElementColor);
-	--_ui5_tc_headerItem_neutral_selected_border_color: var(--_ui5_tc_headerItem_neutral_color);
-	--_ui5_tc_headerItem_positive_selected_border_color: var(--_ui5_tc_headerItem_positive_color);
-	--_ui5_tc_headerItem_negative_selected_border_color: var(--_ui5_tc_headerItem_negative_color);
-	--_ui5_tc_headerItem_critical_selected_border_color: var(--_ui5_tc_headerItem_critical_color);
+	--_ui5_tc_headerItem_neutral_border_color: var(--sapTab_Neutral_ForegroundColor);
 	--_ui5_tc_headerItem_transition: none;
-	--_ui5_tc_headerItem_hover_border_visibility: hidden;
-	--_ui5_tc_headerItem_focus_offset: 0px;
 
 	--_ui5_tc_headerItemContent_border_radius: 0.125rem 0.125rem 0 0;
-	--_ui5_tc_headerItemContent_border_bottom: 0.125rem solid var(--sapSelectedColor);
 	--_ui5_tc_headerItemContent_border_bg: transparent;
 	--_ui5_tc_headerItem_neutral_border_bg: transparent;
 	--_ui5_tc_headerItem_positive_border_bg: transparent;
 	--_ui5_tc_headerItem_negative_border_bg: transparent;
 	--_ui5_tc_headerItem_critical_border_bg: transparent;
 	--_ui5_tc_headerItemContent_border_height: 0;
-	--_ui5_tc_headerItemContent_focus_offset: 1rem;
 	--_ui5_tc_headerItem_focus_border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_tc_headerItem_text_focus_border_offset_left: 0px;
 	--_ui5_tc_headerItem_text_focus_border_offset_right: 0px;
@@ -53,7 +38,6 @@
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_right: 	0.625rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_top: 0.75rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_bottom: 0.75rem;
-	--_ui5_tc_headerItemContent_focus_border: none;
 	--_ui5_tc_headerItemContent_default_focus_border: none;
 	--_ui5_tc_headerItemContent_focus_border_radius: 0;
 	--_ui5_tc_headerItemSemanticIcon_display: none;
@@ -79,15 +63,7 @@
 
 	/* Header Item icons */
 	--_ui5_tc_headerItemIcon_border: 1px solid var(--sapHighlightColor);
-	--_ui5_tc_headerItemIcon_color: var(--sapHighlightColor);
-	--_ui5_tc_headerItemIcon_selected_background: var(--sapHighlightColor);
-	--_ui5_tc_headerItemIcon_selected_color: var(--sapGroup_ContentBackground);
-	--_ui5_tc_headerItemIcon_positive_selected_background: var(--sapPositiveColor);
-	--_ui5_tc_headerItemIcon_negative_selected_background: var(--sapNegativeColor);
-	--_ui5_tc_headerItemIcon_critical_selected_background: var(--sapCriticalColor);
-	--_ui5_tc_headerItemIcon_neutral_selected_background: var(--sapNeutralColor);
 	--_ui5_tc_headerItemIcon_semantic_selected_color: var(--sapGroup_ContentBackground);
-	--_ui5_tc_headerItemIcon_background_color: transparent;
 
 	--_ui5_tc_overflowItem_default_color: var(--sapNeutralTextColor);
 	--_ui5_tc_overflowItem_current_color: CurrentColor;

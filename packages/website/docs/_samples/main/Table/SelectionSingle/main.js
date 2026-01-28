@@ -10,4 +10,9 @@ const selectionFeature = document.getElementById("selection");
 selectionFeature.addEventListener("change", (e) => {
 	console.log("Selected key", selectionFeature.selected);
 	console.log("Selected row", selectionFeature.getRowByKey(selectionFeature.selected));
-})
+});
+
+const selectionBehavior = document.getElementById("selectionBehavior");
+selectionBehavior.addEventListener("change", (e) => {
+	selectionFeature.behavior = e.target.text;
+});

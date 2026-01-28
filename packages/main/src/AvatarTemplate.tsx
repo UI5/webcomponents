@@ -14,21 +14,27 @@ export default function AvatarTemplate(this: Avatar) {
 			onKeyDown={this._onkeydown}
 			onClick={this._onclick}
 		>
-			{this.hasImage ?
+			{this._hasImage ?
 				<slot></slot>
-				:
-				<>
-					{ this.icon && <Icon class="ui5-avatar-icon" name={this.icon} accessibleName={this.accessibleName}></Icon> }
+				: <>
+					{this.icon && <Icon class="ui5-avatar-icon" name={this.icon} accessibleName={this.accessibleName}></Icon>}
 
-					{ this.initials &&
-					<>
-						<span class="ui5-avatar-initials ui5-avatar-initials-hidden">{this.validInitials}</span>
+					{this.initials ? (
+						<>
+							{/* Show initials + hidden fallback icon */}
+							<span class="ui5-avatar-initials ui5-avatar-initials-hidden">{this.validInitials}</span>
+							<Icon
+								name={this.fallbackIcon}
+								class="ui5-avatar-icon ui5-avatar-icon-fallback ui5-avatar-fallback-icon-hidden"
+							></Icon>
+						</>
+					) : (
+						// Show fallback icon only
 						<Icon
 							name={this.fallbackIcon}
-							class="ui5-avatar-icon ui5-avatar-icon-fallback ui5-avatar-fallback-icon-hidden"
+							class="ui5-avatar-icon ui5-avatar-icon-fallback"
 						></Icon>
-					</>
-					}
+					)}
 				</>
 			}
 

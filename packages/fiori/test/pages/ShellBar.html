@@ -17,30 +17,36 @@
 
 	<ui5-shellbar
 		class="shellbar-example"
-		primary-title="Product Title"
 		secondary-title="Second Title"
 	>
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		<ui5-shellbar-branding slot="branding" href="https://ui5.github.io/webcomponents/" target="_blank" accessible-name="Branding Label">
+			Product Title
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
 	</ui5-shellbar>
 
 	<ui5-shellbar
 		class="shellbar-example"
-		primary-title="Product Title"
 		secondary-title="Second Title"
 	>
 		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		<ui5-shellbar-branding slot="branding">
+			Product Title
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
 	</ui5-shellbar>
 
 	<ui5-shellbar
 		id="sbAccAttr"
 		class="shellbar-example"
-		primary-title="Product Title"
 		secondary-title="Second Title"
 		show-notifications
 		show-product-switch
 	>
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		<ui5-shellbar-branding slot="branding">
+			Product Title
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
 	</ui5-shellbar>
 
 	<script>
@@ -53,10 +59,10 @@
 
 	<ui5-shellbar
 			class="shellbar-example"
-			primary-title="Custom Actions"
 			secondary-title="Second Title"
 			id="shellbarwithitems"
 	>
+		<ui5-shellbar-branding slot="branding">Custom Actions</ui5-shellbar-branding>
 		<ui5-shellbar-item icon="accelerated" text="Hello World!" title="Schedule" stable-dom-ref="schedule"></ui5-shellbar-item>
 		<ui5-shellbar-item id="accept" icon="accept" text="Hello World!" title="Approve" stable-dom-ref="accept"></ui5-shellbar-item>
 		<ui5-shellbar-item id="warning" icon="alert" text="Hello World!" title="Warning"></ui5-shellbar-item>
@@ -129,7 +135,7 @@
 		<ui5-li slot="menuItems" data-key="key5">Application 5</ui5-li>
 	</ui5-shellbar>
 
-	<ui5-shellbar
+<ui5-shellbar
 		class="shellbar-example"
 		id="shellbarWithStartContent"
 		primary-title="Product Title"
@@ -140,17 +146,16 @@
 		show-product-switch
 		show-search-field
 	>
+		<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"/>
 		<ui5-button slot="content">Button 1</ui5-button>
 		<ui5-button slot="content">Button 2</ui5-button>
  		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 
-		<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"/>
-
-		<ui5-button icon="nav-back" slot="startButton"></ui5-button> 
+		<ui5-button icon="nav-back" slot="startButton"></ui5-button>
 
 		<ui5-shellbar-item icon="disconnected" text="Disconnect"></ui5-shellbar-item>
 		<ui5-shellbar-item icon="incoming-call" text="Incoming Calls"></ui5-shellbar-item>
-	
+
 		<ui5-li slot="menuItems" data-key="key1">Application 1</ui5-li>
 		<ui5-li slot="menuItems" data-key="key2">Application 2</ui5-li>
 		<ui5-li slot="menuItems" data-key="key3">Application 3</ui5-li>
@@ -161,7 +166,8 @@
 	<section class="ui5-content-density-compact">
 		<h3>ShellBar in Compact</h3>
 		<div>
-			<ui5-shellbar id="shelbarCompact" primary-title="Product Title" show-notifications show-product-switch>
+			<ui5-shellbar id="shelbarCompact" show-notifications show-product-switch>
+				<ui5-shellbar-branding slot="branding">Product Title</ui5-shellbar-branding>
 				<ui5-button icon="nav-back" slot="startButton" id="start-button"></ui5-button>
 				<ui5-shellbar-item icon="disconnected" text="Disconnect"></ui5-shellbar-item>
 				<ui5-shellbar-item icon="incoming-call" text="Incoming Calls"></ui5-shellbar-item>
@@ -239,15 +245,17 @@
 
 	<ui5-shellbar
 			id="menuItemsSB"
-			primary-title="Menu Items"
 	>
-		<ui5-li id="mi-1" slot="menuItems" data-key="key1">App 1</ui5-li>
+	<ui5-shellbar-branding slot="branding">Menu Items</ui5-shellbar-branding>
+
+	<ui5-li id="mi-1" slot="menuItems" data-key="key1">App 1</ui5-li>
 		<ui5-li id="mi-2" slot="menuItems" data-key="key2">App 2</ui5-li>
 		<ui5-li id="mi-3" slot="menuItems" data-key="key3">App 3</ui5-li>
 		<ui5-li id="mi-4" slot="menuItems" data-key="key4">App 4</ui5-li>
 	</ui5-shellbar>
 
-	<ui5-shellbar primary-title="UI5 Web Components" id="test-invalidation">
+	<ui5-shellbar id="test-invalidation">
+		<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
 		<ui5-shellbar-item icon="discussion" count="2" id="test-invalidation-item"></ui5-shellbar-item>
 	</ui5-shellbar>
 

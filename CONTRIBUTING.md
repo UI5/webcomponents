@@ -10,7 +10,7 @@ You are welcome to contribute code to the UI5 Web Components in order to fix bug
 There are three important things to know:
 
 1. You must be aware of the Apache License (which describes contributions) and **accept the Developer Certificate of Origin**.
-2. Follow our **[Development Conventions and Guidelines](https://sap.github.io/ui5-webcomponents/docs/contributing/conventions-and-guidelines/)**.
+2. Follow our **[Development Conventions and Guidelines](https://ui5.github.io/webcomponents/docs/contributing/conventions-and-guidelines/)**.
 3. **Not all proposed contributions can be accepted**. Some features may just fit a third-party add-on better. The code must match the overall direction of the UI5 Web Components and improve it. So there should be some "bang for the byte". For most bug fixes this is a given, but a major feature implementation first needs to be discussed with one of the committers. Possibly, one who touched the related code or module recently. The more effort you invest, the better you should clarify in advance whether the contribution will match the project's direction. The best way would be to just open an enhancement ticket in the issue tracker to discuss the feature you plan to implement (make it clear that you intend to contribute). We will then forward the proposal to the respective code owner. This avoids disappointment.
 
 ## Developer Certificate of Origin (DCO)
@@ -21,7 +21,7 @@ Due to legal reasons, contributors will be asked to accept a DCO before they sub
 1. Make sure the change is welcome (see [General Remarks](#general-remarks)).
 1. Create a branch by forking the relevant UI5 Web Components repository and apply your change.
 1. Commit and push your change on that branch.
-    - **Please follow our [Development Conventions and Guidelines](https://sap.github.io/ui5-webcomponents/docs/contributing/conventions-and-guidelines/).**
+    - **Please follow our [Development Conventions and Guidelines](https://ui5.github.io/webcomponents/docs/contributing/conventions-and-guidelines/).**
 1. Create a pull request in the UI5 Web Components repository.
 1. Follow the link posted by the CLA assistant to your pull request and accept it, as described above.
 1. Wait for our code review and approval, possibly enhancing your change on request.

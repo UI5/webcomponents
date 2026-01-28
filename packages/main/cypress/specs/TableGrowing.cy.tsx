@@ -22,7 +22,7 @@ function TableGrowingSample(props: { rowCount: number, overflow: boolean }) {
 	return (
 		<div id="wrapper" style={{ height: "200px", overflow: props.overflow ? "auto" : "" }}>
 			<Table id="table">
-				<TableGrowing slot="features" type="Scroll"></TableGrowing>
+				<TableGrowing slot="features" mode="Scroll"></TableGrowing>
 				<TableHeaderRow slot="headerRow">
 					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
 				</TableHeaderRow>
@@ -43,29 +43,24 @@ describe("TableGrowing - Button", () => {
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("exist")
 				.should("have.attr", "role", "button")
-				.should("have.attr", "aria-labelledby", "growing-text growing-subtext");
-
-			cy.get("[ui5-table")
-				.shadow()
-				.find("#growing-row")
-				.should("exist");
+				.should("have.attr", "aria-labelledby", "text subtext");
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-text")
+				.find("#text")
 				.should("have.text", "More");
 		});
 
 		it("tests correct custom texts are rendered", () => {
-			const growingText = "My Custom Growing Text",
-				growingSubtext = "My Custom Growing Subtext";
+			const text = "My Custom Growing Text",
+				subtext = "My Custom Growing Subtext";
 
 			cy.mount(
 				<Table>
-					<TableGrowing slot="features" growingText={growingText} growingSubText={growingSubtext} />
+					<TableGrowing slot="features" text={text} subtext={subtext} />
 					<TableHeaderRow slot="headerRow">
 						<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
 					</TableHeaderRow>
@@ -77,20 +72,20 @@ describe("TableGrowing - Button", () => {
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("exist")
 				.should("have.attr", "role", "button")
-				.should("have.attr", "aria-labelledby", "growing-text growing-subtext");
+				.should("have.attr", "aria-labelledby", "text subtext");
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-text")
-				.should("have.text", growingText);
+				.find("#text")
+				.should("have.text", text);
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-subtext")
-				.should("have.text", growingSubtext);
+				.find("#subtext")
+				.should("have.text", subtext);
 		});
 
 		it("tests growing button not shown when no data", () => {
@@ -103,10 +98,10 @@ describe("TableGrowing - Button", () => {
 				</Table>
 			);
 
-			cy.get("[ui5-table]")
+			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
+				.find("#button")
+				.should("not.be.visible");
 		});
 	});
 
@@ -130,7 +125,7 @@ describe("TableGrowing - Button", () => {
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("be.visible")
 				.focus();
 
@@ -141,7 +136,7 @@ describe("TableGrowing - Button", () => {
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("be.visible")
 				.focus();
 
@@ -151,7 +146,7 @@ describe("TableGrowing - Button", () => {
 				.should("have.been.calledTwice");
 		});
 
-		it("tests focus is set to first newly added row", () => {
+		it("tests focus is set to first newly added row - click", () => {
 			cy.mount(<TableSample></TableSample>);
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
@@ -165,6 +160,30 @@ describe("TableGrowing - Button", () => {
 					});
 				})
 				.realClick();
+
+			cy.get("[ui5-table]")
+				.children("ui5-table-row")
+				.should("have.length", 2);
+
+			cy.get("#new-row")
+				.should("exist")
+				.should("have.focus");
+		});
+
+		it("tests focus is set to first newly added row - ENTER", () => {
+			cy.mount(<TableSample></TableSample>);
+
+			cy.get<TableGrowing>("[ui5-table-growing]")
+				.then(tableGrowing => {
+					tableGrowing.get(0).addEventListener("load-more", () => {
+						const table = document.getElementById("table");
+						const row = document.createElement("ui5-table-row");
+						row.id = "new-row";
+						row.innerHTML = "<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>";
+						table!.appendChild(row);
+					});
+				})
+				.trigger("keydown", { key: "Enter", code: "Enter", which: 13 });
 
 			cy.get("[ui5-table]")
 				.children("ui5-table-row")
@@ -194,13 +213,8 @@ describe("TableGrowing - Scroll", () => {
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("not.be.visible");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
 		});
 
 		it("tests button shown when not scrollable", () => {
@@ -208,13 +222,8 @@ describe("TableGrowing - Scroll", () => {
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
-				.should("exist");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("exist");
+				.find("#button")
+				.should("be.visible");
 		});
 	});
 
@@ -226,16 +235,34 @@ describe("TableGrowing - Scroll", () => {
 				.should("be.visible");
 
 			cy.get<TableGrowing>("[ui5-table-growing]")
-				.then(tableGrowing => tableGrowing.get(0).addEventListener("load-more", cy.stub().as("loadMore")));
+				.then(tableGrowing => {
+					tableGrowing.get(0).addEventListener("load-more", cy.stub().as("loadMore"));
+					tableGrowing.get(0).addEventListener("load-more", () => {
+						const table = document.getElementById("table");
+						Array.from({ length: 10 }).forEach(() => {
+							const row = document.createElement("ui5-table-row");
+							row.innerHTML = "<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>";
+							table!.appendChild(row);
+						});
+					});
+				});
 
-			cy.get("[ui5-table-row]:last-child")
+			for (let i = 0; i <= 5; i++) {
+				cy.get("[ui5-table-row]:last-child")
 				.scrollIntoView();
 
-			cy.get("[ui5-table-row]:last-child")
-				.should("be.visible");
+				cy.get("[ui5-table-row]:last-child")
+					.should("be.visible");
 
-			cy.get("@loadMore")
-				.should("have.been.calledOnce");
+				cy.get("@loadMore")
+					.should("have.been.calledOnce");
+
+				cy.get("#wrapper")
+					.then($wrapper => {
+						const wrapper = $wrapper.get(0);
+						expect(wrapper.scrollTop).to.be.greaterThan(0);
+					});
+			}
 		});
 
 		it("tests button fires load-more, button vanishes, scroll to end fires load-more", () => {
@@ -264,13 +291,8 @@ describe("TableGrowing - Scroll", () => {
 
 			cy.get("[ui5-table-growing]")
 				.shadow()
-				.find("#growing-button")
+				.find("#button")
 				.should("not.be.visible");
-
-			cy.get("[ui5-table]")
-				.shadow()
-				.find("#growing-row")
-				.should("not.exist");
 
 			for (let i = 2; i <= 6; i++) {
 				cy.get("#wrapper")
@@ -282,6 +304,12 @@ describe("TableGrowing - Scroll", () => {
 				cy.get("[ui5-table]")
 					.children("ui5-table-row")
 					.should("have.length", 1 + 10 * i);
+
+				cy.get("#wrapper")
+					.then($wrapper => {
+						const wrapper = $wrapper.get(0);
+						expect(wrapper.scrollTop).to.be.greaterThan(0);
+					});
 			}
 		});
 	});

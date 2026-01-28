@@ -2,7 +2,12 @@
 	--_ui5_table_cell_valign: center;
 	--_ui5_table_cell_min_width: 2.75rem;
 	--_ui5_table_navigated_cell_width: 0.25rem;
+	--_ui5_first_table_cell_horizontal_padding: 1rem;
 	--_ui5_table_cell_horizontal_padding: 0.5rem;
 	--_ui5_table_cell_vertical_padding: 0.25rem;
 	--_ui5_table_row_actions_gap: 0.25rem;
+	--_ui5_table_row_alternating_background: var(--sapTableRow_AlternatingBackground, var(--sapList_AlternatingBackground));
+	--_ui5_table_row_alternating_hover_background: var(--sapTableRow_AlternatingHoverBackground, var(--sapList_Hover_Background));
+	--_ui5_table_row_alternating_selection_background: var(--sapTableRow_AlternatingSelectionBackground, var(--sapList_SelectionBackgroundColor));
+	--_ui5_table_row_alternating_selection_hover_background: var(--sapTableRow_AlternatingSelectionHoverBackground, var(--sapList_Hover_SelectionBackground));
 }

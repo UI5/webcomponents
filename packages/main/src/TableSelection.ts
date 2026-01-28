@@ -7,11 +7,11 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import TableSelectionMode from "./types/TableSelectionMode.js";
+import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import type Table from "./Table.js";
 import type { ITableFeature } from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowBase from "./TableRowBase.js";
-import { isSelectionCheckbox, isHeaderSelector, findRowInPath } from "./TableUtils.js";
 
 /**
  * @class
@@ -47,8 +47,8 @@ import { isSelectionCheckbox, isHeaderSelector, findRowInPath } from "./TableUti
  * @extends UI5Element
  * @since 2.0.0
  * @public
- * @experimental This web component is available since 2.0 with an experimental flag and its API and behavior are subject to change.
  * @deprecated This component is deprecated and will be removed in future releases. Use the `ui5-table-selection-single` or `ui5-table-selection-multi` components instead.
+ * @experimental This web component is available since 2.0 with an experimental flag and its API and behavior are subject to change.
  */
 @customElement({ tag: "ui5-table-selection" })
 
@@ -88,6 +88,13 @@ class TableSelection extends UI5Element implements ITableFeature {
 	_rowsLength = 0;
 	_rangeSelection?: {selected: boolean, isUp: boolean | null, rows: TableRow[], isMouse: boolean, shiftPressed: boolean} | null;
 
+	onClickCaptureBound: (e: MouseEvent) => void;
+
+	constructor() {
+		super();
+		this.onClickCaptureBound = this._onClickCapture.bind(this);
+	}
+
 	onTableActivate(table: Table) {
 		this._table = table;
 		this._invalidateTableAndRows();
@@ -108,6 +115,12 @@ class TableSelection extends UI5Element implements ITableFeature {
 			this._rowsLength = this._table.rows.length;
 			this._table.headerRow[0]._invalidate++;
 		}
+
+		this._table?.removeEventListener("click", this.onClickCaptureBound);
+	}
+
+	onTableAfterRendering(): void {
+		this._table?.addEventListener("click", this.onClickCaptureBound, { capture: true });
 	}
 
 	isSelectable(): boolean {
@@ -120,6 +133,14 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 	isRowSelectorRequired(): boolean {
 		return this.mode !== TableSelectionMode.None;
+	}
+
+	getAriaDescriptionForTable(): string | undefined {
+		return undefined;
+	}
+
+	getAriaDescriptionForColumnHeader(): string | undefined {
+		return undefined;
 	}
 
 	getRowKey(row: TableRow): string {
@@ -238,14 +259,15 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 		const focusedElement = getActiveElement(); // Assumption: The focused element is always the "next" row after navigation.
 
-		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse || focusedElement?.hasAttribute("ui5-growing-row"))) {
+		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse)) {
 			this._stopRangeSelection();
 			return;
 		}
 
 		if (!this._rangeSelection) {
 			// If no range selection is active, start one
-			this._startRangeSelection(focusedElement as TableRow);
+			const row = focusedElement as TableRow;
+			this._startRangeSelection(row, this.isSelected(row));
 		} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 			const change = isUpShift(e) ? -1 : 1;
 			this._handleRangeSelection(focusedElement as TableRow, change);
@@ -271,17 +293,17 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 	}
 
-	_onclick(e: MouseEvent) {
-		if (!this._table) {
+	_onClickCapture(e: MouseEvent) {
+		if (!this._table || this.mode !== TableSelectionMode.Multiple) {
 			return;
 		}
 
-		if (isHeaderSelector(e)) {
+		if (isHeaderSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}
 
-		if (!isSelectionCheckbox(e)) {
+		if (!isSelectionCell(e)) {
 			this._stopRangeSelection();
 			return;
 		}
@@ -293,10 +315,13 @@ class TableSelection extends UI5Element implements ITableFeature {
 			const startIndex = this._table.rows.indexOf(startRow);
 			const endIndex = this._table.rows.indexOf(row);
 
+			const selectionState = this.isSelected(startRow);
+
 			// When doing a range selection and clicking on an already selected row, the checked status should not change
 			// Therefore, we need to manually set the checked attribute again, as clicking it would deselect it and leads to
 			// a visual inconsistency.
-			row.shadowRoot?.querySelector("#selection-component")?.toggleAttribute("checked", true);
+			row.shadowRoot?.querySelector("#selection-component")?.toggleAttribute("checked", selectionState);
+			e.stopPropagation();
 
 			if (startIndex === -1 || endIndex === -1 || row.rowKey === startRow.rowKey || row.rowKey === this._rangeSelection.rows[this._rangeSelection.rows.length - 1].rowKey) {
 				return;
@@ -305,7 +330,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 			const change = endIndex - startIndex;
 			this._handleRangeSelection(row, change);
 		} else if (row) {
-			this._startRangeSelection(row, true);
+			this._startRangeSelection(row, !this.isSelected(row), true);
 		}
 	}
 
@@ -314,13 +339,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 	 * @param row starting row
 	 * @private
 	 */
-	_startRangeSelection(row: TableRow, isMouse = false) {
-		const selected = this.isSelected(row);
-		if (isMouse && !selected) {
-			// Do not initiate range selection if the row is not selected
-			return;
-		}
-
+	_startRangeSelection(row: TableRow, selected: boolean, isMouse = false) {
 		this._rangeSelection = {
 			selected,
 			isUp: null,

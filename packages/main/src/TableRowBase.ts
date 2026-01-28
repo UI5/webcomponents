@@ -1,15 +1,13 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { customElement, property, i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
-import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type TableCellBase from "./TableCellBase.js";
+import { isInstanceOfTable, toggleAttribute } from "./TableUtils.js";
+import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableRowBaseCss from "./generated/themes/TableRowBase.css.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type TableCellBase from "./TableCellBase.js";
 import type Table from "./Table.js";
-import CheckBox from "./CheckBox.js";
-import { isInstanceOfTable } from "./TableUtils.js";
 import {
 	TABLE_ROW_SELECTOR,
 } from "./generated/i18n/i18n-defaults.js";
@@ -24,12 +22,11 @@ import {
  * @public
  */
 @customElement({
-	renderer: litRender,
+	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
-	dependencies: [CheckBox],
 })
-abstract class TableRowBase extends UI5Element {
-	cells!: Array<TableCellBase>;
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+	cells!: Array<TCell>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
@@ -37,20 +34,28 @@ abstract class TableRowBase extends UI5Element {
 	@property({ type: Number, noAttribute: true })
 	_rowActionCount = 0;
 
+	@property({ type: Boolean, noAttribute: true })
+	_renderNavigated = false;
+
+	@property({ type: Boolean, noAttribute: true })
+	_alternate = false;
+
+	@query("#selection-cell")
+	_selectionCell?: HTMLElement;
+
+	@query("#navigated-cell")
+	_navigatedCell?: HTMLElement;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
-		this.setAttribute("role", "row");
+		!this.role && this.setAttribute("role", "row");
 		this.toggleAttribute("ui5-table-row-base", true);
 	}
 
 	onBeforeRendering() {
-		if (this._isSelectable) {
-			this.setAttribute("aria-selected", `${this._isSelected}`);
-		} else {
-			this.removeAttribute("aria-selected");
-		}
+		toggleAttribute(this, "aria-selected", this._isSelectable, `${this._isSelected}`);
 	}
 
 	getFocusDomRef() {
@@ -96,15 +101,11 @@ abstract class TableRowBase extends UI5Element {
 	}
 
 	get _isMultiSelect() {
-		return this._tableSelection?.isMultiSelectable();
+		return !!this._tableSelection?.isMultiSelectable();
 	}
 
-	get _hasRowSelector() {
-		return this._tableSelection?.isRowSelectorRequired();
-	}
-
-	get _selectionCell() {
-		return this.shadowRoot!.getElementById("selection-cell");
+	get _hasSelector() {
+		return this._table?._isRowSelectorRequired;
 	}
 
 	get _visibleCells() {
@@ -116,11 +117,7 @@ abstract class TableRowBase extends UI5Element {
 	}
 
 	get _stickyCells() {
-		const selectionCell = this.shadowRoot?.querySelector("#selection-cell"),
-			navigatedCell = this.shadowRoot?.querySelector("#navigated-cell");
-
-		// filter out null/undefined
-		return [selectionCell, ...this.cells, navigatedCell].filter(cell => cell?.hasAttribute("fixed"));
+		return [this._selectionCell, ...this.cells, this._navigatedCell].filter(cell => cell?.hasAttribute("fixed"));
 	}
 
 	get _i18nRowSelector(): string {

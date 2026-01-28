@@ -19,13 +19,25 @@
 	<br><br>
 	<ui5-title class="sectionTitle">List-Detail: List View Expanded</ui5-title>
 	<ui5-toggle-button id="switchBtn1" class="testButton">Set to ThreeColumnsMidExpanded</ui5-toggle-button><br>
-	<ui5-input id="layoutChangeRes" placeholder="layout..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes2" placeholder="columns visibility..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes3" placeholder="resize or separator movement..." class="fcl2auto"></ui5-input><br>
-	<ui5-input id="layoutChangeRes4" placeholder="change counter..." class="fcl2auto"></ui5-input><br>
-	<div>
-		<ui5-label show-colon>Switch RTL: </ui5-label>
+	<div class="status">
+		<ui5-label show-colon>Layout</ui5-label>
+		<ui5-input id="layoutChangeRes" placeholder="layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns layout</ui5-label>
+		<ui5-input id="layoutChangeRes1" placeholder="columns layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns visibility</ui5-label>
+		<ui5-input id="layoutChangeRes2" placeholder="columns visibility..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>resize or separator movement</ui5-label>
+		<ui5-input id="layoutChangeRes3" placeholder="resize or separator movement..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes4" placeholder="layout-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-distribution-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes5" placeholder="layout-distribution-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>Switch RTL</ui5-label>
 		<ui5-switch id="swRTL"></ui5-switch>
+	</div>
+	<div>
+		<ui5-label show-colon>Switch Animations: </ui5-label>
+		<ui5-switch id="swAnimations" checked></ui5-switch>
 	</div>
 	<br><br>
 
@@ -136,7 +148,7 @@
 								<ui5-segmented-button id="sb">
 									<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
 									<ui5-toggle-button>Medium</ui5-toggle-button>
-									<ui5-toggle-button>Largr</ui5-toggle-button>
+									<ui5-toggle-button>Large</ui5-toggle-button>
 								</ui5-segmented-button>
 							</div>
 						</div>
@@ -518,7 +530,7 @@
 					<ui5-li>Hello worild!</ui5-li>
 				</ui5-list>
 			</div>
-	
+
 			<!-- mid column -->
 			<div class="fcl4auto" slot="midColumn">
 				<div class="fcl5auto">
@@ -535,13 +547,13 @@
 					<ui5-li>Hello worild!</ui5-li>
 				</ui5-list>
 			</div>
-	
+
 			<!-- end column -->
 			<div class="fcl4auto" slot="endColumn">
 				<div class="fcl5auto">
 					<ui5-title>Column 3</ui5-title>
 				</div>
-	
+
 				<ui5-list>
 					<ui5-li>Hello worild!</ui5-li>
 					<ui5-li>Hello worild!</ui5-li>
@@ -556,11 +568,14 @@
 		<!-- start column -->
 		<div class="col" slot="startColumn">
 			<ui5-shellbar
-				primary-title="Smart Store, New Yorks"
 				notifications-count="4"
 				show-notifications
 				show-product-switch
 			>
+				<ui5-shellbar-branding slot="branding">
+					Smart Store, New York
+					<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				</ui5-shellbar-branding>
 				<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
 				<ui5-shellbar-item icon="disconnected" text="Disconnect"></ui5-shellbar-item>
@@ -769,8 +784,10 @@
 
 		var counter = 0;
 		var counter2 = 0;
+		var layoutConfigurationChangeCounter = 0;
 		fcl1.addEventListener("ui5-layout-change", function(e) {
-			layoutChangeRes.value = "layout ::" + e.detail.layout + " columns ::" + e.detail.columnLayout;
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
 			layoutChangeRes2.value =
 			"startColumnVisible :: " + e.detail.startColumnVisible
 			+ ", midColumnVisible :: " + e.detail.midColumnVisible
@@ -778,6 +795,12 @@
 			layoutChangeRes3.value = "separatorsUsed :: " + e.detail.separatorsUsed + ", resizing :: " + e.detail.resized;
 			layoutChangeRes4.value = `${++counter}`;
 
+		});
+
+		fcl1.addEventListener("ui5-layout-configuration-change", function(e) {
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
+			layoutChangeRes5.value = `${++layoutConfigurationChangeCounter}`;
 		});
 
 		fcl3.addEventListener("ui5-layout-change", function(e) {
@@ -1045,6 +1068,13 @@
 			} else {
 				setDir("ltr");
 			}
+		});
+
+		const animationsSwitch = document.getElementById("swAnimations");
+
+		animationsSwitch.addEventListener("ui5-change", (e) => {
+			const newMode = e.target.checked ? "full" : "none";
+			window["sap-ui-webcomponents-bundle"].configuration.setAnimationMode(newMode);
 		});
 	</script>
 </body>

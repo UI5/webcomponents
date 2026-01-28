@@ -6,20 +6,15 @@
 	--_ui5_token_focus_outline_width: 0.0625rem;
 	--_ui5_token_outline_offset: -0.125rem;
 	--_ui5_token_text_color: var(--sapButton_TextColor);
-	--_ui5_token_hover_border_color: var(--sapButton_Hover_BorderColor);
 	--_ui5_token_right_margin: 0.3125rem;
-	--_ui5_token_padding: 0.25rem 0;
 	--_ui5_token_left_padding: 0.3125rem;
 	--_ui5_token_readonly_padding: 0.25rem 0.375rem;
 	--_ui5_token_selected_focus_outline: var(--_ui5_token_focus_outline_width) dotted var(--sapContent_ContrastFocusColor);
 	--_ui5_token_focus_outline: var(--_ui5_token_focus_outline_width) dotted var(--sapContent_FocusColor);
-	--_ui5_token_selected_hover_border_color: var(--sapButton_Selected_Hover_BorderColor);
 	--_ui5_token_focused_selected_border: 1px solid var(--sapButton_Selected_BorderColor);
 	--ui5_token_focus_pseudo_element_content: none;
 	--_ui5_token_focus_offset: -0.25rem;
-	--_ui5_token_selected_text_font_family: "72override", var(--sapFontFamily);
+	--_ui5_token_selected_text_font_family: var(--sapFontFamily);
 	--_ui5_token_selected_internal_border_bottom: none;
 	--_ui5_token_selected_internal_border_bottom_radius: 0;
-	--_ui5_token_text_icon_top: 0;
-	--_ui5_token_selected_focused_offset_bottom: var(--_ui5_token_focus_offset);
 }

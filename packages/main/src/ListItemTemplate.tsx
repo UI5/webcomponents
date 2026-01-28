@@ -99,8 +99,7 @@ export default function ListItemTemplate(this: ListItem, hooks?: Partial<ListIte
 		<span
 			id={`${this._id}-invisibleText`}
 			class="ui5-hidden-text">
-			{this._accInfo.listItemAriaLabel}
-			{this.accessibleName}
+			{this.ariaLabelledByText}
 		</span>
 		<span
 			id={`${this._id}-invisibleText-describedby`}

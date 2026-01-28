@@ -35,16 +35,15 @@ export default function SliderBaseTemplate(this: SliderBase, hooks?: {
 						</>)}
 					</ul>
 					{!!this.labelInterval &&
-							<ul class={{
-								"ui5-slider-labels": true,
-								"ui5-slider-hidden-labels": this._labelsOverlapping,
-							}}
-							style={this.styles.labelContainer}
-							>
-								{this._labels.map(l =>
-									<li style={this.styles.label}>{l}</li>
-								)}
-							</ul>
+						<ul class={{
+							"ui5-slider-labels": true,
+							"ui5-slider-hidden-labels": this._labelsOverlapping,
+						}}
+						>
+							{this._labels.map(l =>
+								<li data-counter={l}></li>
+							)}
+						</ul>
 					}
 				</>}
 
@@ -52,16 +51,8 @@ export default function SliderBaseTemplate(this: SliderBase, hooks?: {
 
 				{(hooks?.handles || handles).call(this)}
 			</div>
-
-			{this.accessibleName &&
-				<span id="ui5-slider-accName" class="ui5-hidden-text">{this.accessibleName}</span>
-			}
-
-			<span id="ui5-slider-sliderDesc" class="ui5-hidden-text">{this._ariaLabelledByText}</span>
-
 			{this.editableTooltip && <>
 				<span id="ui5-slider-InputDesc" class="ui5-hidden-text">{this._ariaDescribedByInputText}</span>
-				<span id="ui5-slider-InputLabel" class="ui5-hidden-text">{this._ariaLabelledByInputText}</span>
 			</>}
 
 		</div>

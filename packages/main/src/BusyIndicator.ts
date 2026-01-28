@@ -9,6 +9,7 @@ import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import {
 	isDesktop,
 } from "@ui5/webcomponents-base/dist/Device.js";
+import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import type BusyIndicatorSize from "./types/BusyIndicatorSize.js";
 import BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
 
@@ -164,6 +165,10 @@ class BusyIndicator extends UI5Element {
 			top: this.text && this.textPlacement === BusyIndicatorTextPlacement.Top,
 			bottom: this.text && this.textPlacement === BusyIndicatorTextPlacement.Bottom,
 		};
+	}
+
+	get hasContent() {
+		return willShowContent(Array.from(this.children));
 	}
 
 	onBeforeRendering() {

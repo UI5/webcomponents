@@ -6,12 +6,10 @@
 	--_ui5_button_focused_inner_border_radius: 0.375rem;
 	--_ui5_button_base_min_width: 2.25rem;
 	--_ui5_button_base_padding: 0.5625rem;
-	--_ui5_button_base_icon_only_padding: 0.5625rem;
 	--_ui5_button_base_icon_margin: 0.375rem;
-	--_ui5_button_icon_font_size: 1rem;
 	--_ui5_button_text_shadow: none;
 	--_ui5_button_emphasized_border_width: .0625rem;
 	--_ui5_button_pressed_focused_border_color: var(--sapContent_FocusColor);
-	--_ui5_button_fontFamily: var(--sapFontSemiboldDuplexFamily);
+	--_ui5_button_fontFamily: var(--sapButton_FontFamily);
 	--_ui5_button_emphasized_focused_border_color: var(--sapContent_ContrastFocusColor);
 }

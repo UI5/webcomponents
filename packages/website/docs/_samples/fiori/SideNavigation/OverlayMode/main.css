@@ -1,0 +1,23 @@
+#respPopover::part(content) {
+	padding: 0;
+	overflow-x: visible;
+	overflow-y: hidden
+}
+
+.content {
+	padding: 2rem;
+}
+
+.contentItem {
+	display: none;
+}
+
+.contentItemVisible {
+	display: block;
+}
+
+#sideNavigation {
+	width: 18rem;
+	box-shadow: none;
+	border-inline-end: none;
+}

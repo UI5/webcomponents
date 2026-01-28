@@ -48,11 +48,11 @@ class TableSelectionSingle extends TableSelectionBase {
 		return rowKey ? this.selected === rowKey : false;
 	}
 
-	setSelected(row: TableRow, selected: boolean, _fireEvent: boolean = false) {
+	setSelected(row: TableRow, selected: boolean, fireEvent: boolean = false) {
 		const rowKey = this.getRowKey(row);
 		if (rowKey) {
 			this.selected = selected ? rowKey : undefined;
-			_fireEvent && this.fireDecoratorEvent("change");
+			fireEvent && this.fireDecoratorEvent("change");
 		}
 	}
 

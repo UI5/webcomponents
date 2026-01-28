@@ -42,7 +42,6 @@ class NotificationListInternal extends List {
 
 			if (item instanceof NotificationListGroupItem && !item.collapsed && !item.loading) {
 				item.items.forEach(subItem => {
-					// @ts-expect-error strictEvents
 					items.push(subItem);
 					allNavigationItems.push(subItem);
 				});

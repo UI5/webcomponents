@@ -1,11 +1,9 @@
-:root, [dir="ltr"] {
+:root {
 	--_ui5_rotation_90deg: rotate(90deg);
 	--_ui5_rotation_minus_90deg: rotate(-90deg);
 
 	--_ui5_icon_transform_scale: none;
 	--_ui5_panel_toggle_btn_rotation: var(--_ui5_rotation_90deg);
-	--_ui5_li_notification_group_toggle_btn_rotation: var(--_ui5_rotation_90deg);
-	--_ui5_timeline_scroll_container_offset: 0.5rem;
 
 	--_ui5_popover_upward_arrow_margin: 0.1875rem 0 0 0.1875rem;
 	--_ui5_popover_right_arrow_margin: 0.1875rem 0 0 -0.375rem;
@@ -16,18 +14,11 @@
 	--_ui5_progress_indicator_bar_border_radius: 0.5rem 0 0 0.5rem;
 	--_ui5_progress_indicator_remaining_bar_border_radius: 0 0.5rem 0.5rem 0;
 	--_ui5_menu_submenu_margin_offset: -0.25rem 0;
-	--_ui5_menu_submenu_placement_type_left_margin_offset: 0.25rem 0;
-	--_ui5-menu_item_icon_float: right;
-
-	--_ui5-shellbar-notification-btn-count-offset: -0.125rem;
 }
 
-[dir="rtl"],
-[dir="rtl"] :host {
+:dir(rtl) {
 	--_ui5_icon_transform_scale: scale(-1, 1);
 	--_ui5_panel_toggle_btn_rotation: var(--_ui5_rotation_minus_90deg);
-	--_ui5_li_notification_group_toggle_btn_rotation: var(--_ui5_rotation_minus_90deg);
-	--_ui5_timeline_scroll_container_offset: -0.5rem;
 
 	--_ui5_popover_upward_arrow_margin: .1875rem .125rem 0 0;
 	--_ui5_popover_right_arrow_margin: .1875rem .25rem 0 0;
@@ -39,10 +30,7 @@
 	--_ui5_progress_indicator_remaining_bar_border_radius: 0.5rem 0 0 0.5rem;
 
 	--_ui5_menu_submenu_margin_offset: 0 -0.25rem;
-	--_ui5_menu_submenu_placement_type_left_margin_offset: 0 0.25rem;
-	--_ui5-menu_item_icon_float: left;
 
 	--_ui5_segmented_btn_item_border_left: 0.0625rem;
 	--_ui5_segmented_btn_item_border_right: 0px;
-	--_ui5-shellbar-notification-btn-count-offset: auto;
 }

@@ -5,6 +5,7 @@ import FormGroup from "../../src/FormGroup.js";
 import Label from "../../src/Label.js";
 import Text from "../../src/Text.js";
 import Input from "../../src/Input.js";
+import { FORM_GROUP_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("General API", () => {
 	it("tests calculated state of Form with default layout, label-span and empty-span", () => {
@@ -196,6 +197,27 @@ describe("General API", () => {
 			.and("have.prop", "emptySpanM", 0)
 			.and("have.prop", "emptySpanL", 1)
 			.and("have.prop", "emptySpanXl", 1);
+	});
+
+	it("tests calculated state of Form item-spacing='Large'", () => {
+		cy.mount(<Form id="addressForm" item-spacing="Large">
+			<FormGroup id="formGroup">
+				<FormItem id="formItem">
+					<Label slot="labelContent">Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+
+				<FormItem>
+					<Label slot="labelContent">Country:</Label>
+					<Text>Germany</Text>
+				</FormItem>
+			</FormGroup>
+		</Form>);
+
+		cy.get("#formGroup")
+			.should("have.prop", "itemSpacing", "Large");
+		cy.get("#formItem")
+			.should("have.prop", "itemSpacing", "Large");
 	});
 
 	it("tests calculated state of two FormGroups in layout='S1 M2 L3 XL4'", () => {
@@ -702,9 +724,9 @@ describe("Accessibility", () => {
 
 		cy.get("@form")
 			.shadow()
-			.find(".ui5-form-group")
+			.find(".ui5-form-group-layout")
 			.eq(0)
-			.as("firstGroupDOMRef");
+			.as("firstGroupDefinitionList");
 
 		cy.get("@form")
 			.shadow()
@@ -718,11 +740,11 @@ describe("Accessibility", () => {
 		cy.get("@formGroup")
 			.should("have.attr", "data-sap-ui-fastnavgroup", "true");
 
-		cy.get("@firstGroupDOMRef")
-			.should("have.attr", "role", "form");
+		cy.get("@firstGroupDefinitionList")
+			.should("not.have.attr", "role", "form");
 
 		// assert: the form group's aria-labelledby is equal to the form group title's ID
-		cy.get("@firstGroupDOMRef")
+		cy.get("@firstGroupDefinitionList")
 			.invoke("attr", "aria-labelledby")
 			.then(ariaLabelledBy => {
 				cy.get("@firstGroupTitle")
@@ -755,7 +777,8 @@ describe("Accessibility", () => {
 		cy.get("@form")
 			.shadow()
 			.find(".ui5-form-root")
-			.should("have.attr", "role", "form");
+			.should("have.attr", "role", "form")
+			.and("not.have.attr", "aria-label", "Form");
 
 		cy.get("@form")
 			.should("have.attr", "data-sap-ui-fastnavgroup", "true");
@@ -769,6 +792,250 @@ describe("Accessibility", () => {
 						expect(ariaLabelledBy).to.equal(id);
 					});
 			});
+	});
+
+	it("tests 'role' and 'aria-label' of form without header", () => {
+		cy.mount(<Form>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Twitter:</Label>
+				<Text>@sap</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+		</Form>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "role", "form")
+			.and("have.attr", "aria-label", "Form");
+	});
+
+	it("tests 'aria-label' via 'accessibleName'", () => {
+		cy.mount(<Form headerText="Form header text" accessibleName="basic form">
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Twitter:</Label>
+				<Text>@sap</Text>
+			</FormItem>
+			<FormItem>
+				<Label>Name:</Label>
+				<Text>Red Point Stores</Text>
+			</FormItem>
+		</Form>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "aria-label", "basic form");
+	});
+
+	it("tests 'aria-label' via 'accessibleNameRef'", () => {
+		cy.mount(
+		<>
+			<span id="lbl">basic form</span>
+			<Form headerText="Form header text" accessibleNameRef="lbl">
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Twitter:</Label>
+					<Text>@sap</Text>
+				</FormItem>
+				<FormItem>
+					<Label>Name:</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+			</Form>
+		</>);
+
+		cy.get("[ui5-form]")
+			.as("form");
+
+		cy.get("@form")
+			.shadow()
+			.find(".ui5-form-root")
+			.should("have.attr", "aria-label", "basic form");
+	});
+
+	describe("FormGroup accessibility", () => {
+		it("tests 'aria-label' default", () => {
+			cy.mount(<Form>
+				<FormGroup>
+					<FormItem>
+						<Label>Name:</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				.should("have.attr", "aria-label", Form.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, "1"));
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleName'", () => {
+			const EXPECTED_LABEL = "Custom group label";
+			cy.mount(<Form>
+				<FormGroup accessibleName={EXPECTED_LABEL}>
+					<FormItem>
+						<Label>Name:</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleNameRef'", () => {
+			const EXPECTED_LABEL = "Custom group label";
+			cy.mount(<>
+				<span id="lbl">{EXPECTED_LABEL}</span>
+				<Form>
+					<FormGroup accessibleNameRef="lbl">
+						<FormItem>
+							<Label>Name:</Label>
+							<Text>Red Point Stores</Text>
+						</FormItem>
+					</FormGroup>
+				</Form>
+			</>);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' when 'headerText' present", () => {
+			cy.mount(<Form>
+				<FormGroup headerText="Custom header text">
+					<FormItem>
+						<Label>Name:</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				.as("group")
+				.invoke("attr", "aria-labelledby")
+				.then(ariaLabelledBy => {
+					cy.get("@form")
+						.shadow()
+						.find(".ui5-form-group")
+						.eq(0)
+						.find(".ui5-form-group-heading [ui5-title]")
+						.invoke("attr", "id")
+						.should(id => {
+							// aria-labelledby is used pointing to the header title ID
+							expect(ariaLabelledBy).to.equal(id);
+						});
+				});
+
+			// no 'aria-label' when headerText is present, aria-labelledby is used instead
+			cy.get("@group")
+				.should("not.have.attr", "aria-label");
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleName' when 'headerText' present", () => {
+			const EXPECTED_LABEL = "Custom group header";
+			cy.mount(
+				<Form>
+					<FormGroup headerText="Custom header text" accessibleName={EXPECTED_LABEL}>
+						<FormItem>
+							<Label>Name:</Label>
+							<Text>Red Point Stores</Text>
+						</FormItem>
+					</FormGroup>
+				</Form>
+			);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			// accessibleName has higher priority than headerText
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
+
+		it("tests 'aria-label', 'aria-labelledby' via 'accessibleNameRef' when 'headerText' present", () => {
+			const EXPECTED_LABEL = "Custom group header";
+			cy.mount(
+				<>
+					<span id="lbl">{EXPECTED_LABEL}</span>
+					<Form>
+						<FormGroup headerText="Custom header text" accessibleNameRef="lbl">
+							
+							<FormItem>
+								<Label>Name:</Label>
+								<Text>Red Point Stores</Text>
+							</FormItem>
+						</FormGroup>
+					</Form>
+				</>
+			);
+
+			cy.get("[ui5-form]")
+				.as("form");
+
+			// accessibleNameReg has higher priority than headerText
+			cy.get("@form")
+				.shadow()
+				.find(".ui5-form-group-layout")
+				.eq(0)
+				// 'aria-label' is rendered in Shadow DOM when accessibleName or accessibleNameRef is set
+				.should("have.attr", "aria-label", EXPECTED_LABEL)
+				.should("not.have.attr", "aria-labelledby");
+		});
 	});
 
 	it("tests F6 navigation", () => {
@@ -786,21 +1053,21 @@ describe("Accessibility", () => {
 
 						<FormItem>
 							<Label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</Label>
-							<Input id="cityInp" value="411" accessible-name-ref="cityLbl"></Input>
-							<Input value="Maintown" accessible-name-ref="cityLbl"></Input>
+							<Input id="cityInp" value="411" accessibleNameRef="cityLbl"></Input>
+							<Input value="Maintown" accessibleNameRef="cityLbl"></Input>
 						</FormItem>
 					</FormGroup>
 
 					<FormGroup headerText="Contact">
 						<FormItem>
 							<Label id="streetLbl" for="streetInp" slot="labelContent">Street:</Label>
-							<Input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></Input>
-							<Input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></Input>
+							<Input id="streetInp" value="Main St" accessibleNameRef="streetLbl"></Input>
+							<Input id="streetNumberInp" value="1618" accessibleNameRef="streetLbl"></Input>
 						</FormItem>
 
 						<FormItem>
 							<Label id="countryLbl" for="countrySel" slot="labelContent">Country:</Label>
-							<Input id="countrySel" accessible-name-ref="countryLbl"></Input>
+							<Input id="countrySel" accessibleNameRef="countryLbl"></Input>
 						</FormItem>
 					</FormGroup>
 				</Form>
@@ -813,19 +1080,19 @@ describe("Accessibility", () => {
 
 					<FormItem>
 						<Label id="cityLbl2" for="cityInp2" slot="labelContent">ZIP Code/City:</Label>
-						<Input id="cityInp2" value="411" accessible-name-ref="cityLbl2"></Input>
-						<Input value="Maintown" accessible-name-ref="cityLbl2"></Input>
+						<Input id="cityInp2" value="411" accessibleNameRef="cityLbl2"></Input>
+						<Input value="Maintown" accessibleNameRef="cityLbl2"></Input>
 					</FormItem>
 
 					<FormItem>
 						<Label id="streetLbl2" for="streetInp2" slot="labelContent">Street:</Label>
-						<Input id="streetInp2" value="Main St" accessible-name-ref="streetLbl2"></Input>
-						<Input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl2"></Input>
+						<Input id="streetInp2" value="Main St" accessibleNameRef="streetLbl2"></Input>
+						<Input id="streetNumberInp" value="1618" accessibleNameRef="streetLbl2"></Input>
 					</FormItem>
 
 					<FormItem>
 						<Label id="countryLbl2" for="countrySel2" slot="labelContent">Country:</Label>
-						<Input id="countrySel2" accessible-name-ref="countryLbl2"></Input>
+						<Input id="countrySel2" accessibleNameRef="countryLbl2"></Input>
 					</FormItem>
 				</Form>
 			</>);

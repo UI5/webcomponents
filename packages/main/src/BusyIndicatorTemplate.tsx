@@ -6,7 +6,10 @@ export default function BusyIndicatorTemplate(this: BusyIndicator) {
 		<div class="ui5-busy-indicator-root">
 			{this._isBusy && (
 				<div
-					class="ui5-busy-indicator-busy-area"
+					class={{
+						"ui5-busy-indicator-busy-area": true,
+						"ui5-busy-indicator-busy-area-over-content": this.hasContent,
+					}}
 					title={this.ariaTitle}
 					tabindex={0}
 					role="progressbar"
@@ -30,6 +33,7 @@ export default function BusyIndicatorTemplate(this: BusyIndicator) {
 				<span
 					data-ui5-focus-redirect
 					tabindex={0}
+					role="none"
 					onFocusIn={this._redirectFocus}
 				></span>
 			)}

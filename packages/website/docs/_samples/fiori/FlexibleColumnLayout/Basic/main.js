@@ -10,6 +10,7 @@ import "@ui5/webcomponents/dist/TabSeparator.js";
 import "@ui5/webcomponents/dist/ToggleButton.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
 import "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
 

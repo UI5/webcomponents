@@ -5,6 +5,7 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import "@ui5/webcomponents-fiori/dist/Page.js";
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents/dist/BusyIndicator.js";
@@ -29,6 +30,11 @@ const toggleDialog = (dialog, isOpen) => {
 };
 
 dialogCloser.addEventListener("click", () => toggleDialog(dialog, false));
+myAiButton.accessibilityAttributes = {
+	root: {
+		hasPopup: "dialog"
+	}
+};
 
 myAiButton.addEventListener("click", () => {
 	if (myAiButton.state === "generating") {
@@ -88,6 +94,11 @@ const setBusyIndicator = (isActive) => {
 const resetAfterGeneration = (button) => {
 	setBusyIndicator(false);
 	button.state = "regenerate";
+	button.accessibilityAttributes = {
+		root: {
+			hasPopup: "false"
+		}
+	};
 };
 
 const stopTextGeneration = () => {

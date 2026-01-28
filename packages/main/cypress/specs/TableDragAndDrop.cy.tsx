@@ -77,7 +77,7 @@ describe("API & Events", () => {
 					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
 					<TableHeaderCell><span>ColumnB</span></TableHeaderCell>
 				</TableHeaderRow>
-				${Array.from({ length: 10 }).map((_, index) =>
+				{Array.from({ length: 10 }).map((_, index) =>
 					<TableRow rowKey={`${index}`} movable={true}>
 						<TableCell><Label>Cell A</Label></TableCell>
 						<TableCell><Label>Cell B</Label></TableCell>

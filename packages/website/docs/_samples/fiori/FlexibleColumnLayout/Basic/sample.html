@@ -14,14 +14,16 @@
 
     <ui5-flexible-column-layout id="fcl" class="fcl">
         <div class="col" slot="startColumn">
-            <ui5-shellbar primary-title="Smart Store, New Yorks" notifications-count="4" show-notifications
+            <ui5-shellbar notifications-count="4" show-notifications
                 show-product-switch>
+                <ui5-shellbar-branding slot="branding">
+                    Smart Store, New York
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+                </ui5-shellbar-branding>
 				<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
                 <ui5-shellbar-item icon="disconnected" text="Disconnect"></ui5-shellbar-item>
                 <ui5-shellbar-item icon="incoming-call" text="Incoming Calls"></ui5-shellbar-item>
             </ui5-shellbar>
-            <br /><br />
             <ui5-list id="col1list" header-text="Products (13)" selection-mode="Single">
                 <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch
                     Portable DVD</ui5-li>

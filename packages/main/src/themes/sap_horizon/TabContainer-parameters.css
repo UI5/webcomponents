@@ -4,9 +4,8 @@
 	--_ui5_tc_header_border_bottom: 0.0625rem solid var(--sapObjectHeader_Background);
 
 	/* Header Item */
-	--_ui5_tc_headerItemContent_border_bottom: 0.1875rem solid var(--sapSelectedColor);
-	--_ui5_tc_headerItem_color: var(--sapTextColor);
-	--_ui5_tc_overflowItem_default_color: var(--sapTextColor);
+	--_ui5_tc_headerItem_color: var(--sapTab_TextColor);
+	--_ui5_tc_overflowItem_default_color: var(--sapTab_TextColor);
 	--_ui5_tc_overflowItem_current_color: CurrentColor;
 	--_ui5_tc_content_border_bottom: 0.0625rem solid var(--sapObjectHeader_BorderColor);
 	--_ui5_tc_headerItem_expand_button_margin_inline_start: 0rem;
@@ -19,16 +18,10 @@
 	--_ui5_tc_headerItem_focus_border_offset: -5px;
 	--_ui5_tc_headerItemIcon_focus_border_radius: 50%;
 	--_ui5_tc_headerItem_focus_border_radius: 0.375rem;
-	--_ui5_tc_headeritem_text_font_weight: bold;
-	--_ui5_tc_headerItem_focus_offset: 1px;
-	--_ui5_tc_headerItem_text_hover_color: var(--sapContent_Selected_ForegroundColor);
+	--_ui5_tc_headerItem_text_hover_color: var(--sapTab_Selected_TextColor);
 
 	/* Header Item icons */
-	--_ui5_tc_headerItemIcon_border: 0.125rem solid var(--sapContent_Selected_ForegroundColor);
-	--_ui5_tc_headerItemIcon_color: var(--sapContent_Selected_ForegroundColor);
-	--_ui5_tc_headerItemIcon_selected_background: var(--sapContent_Selected_ForegroundColor);
-	--_ui5_tc_headerItemIcon_background_color: var(--sapContent_Selected_Background);
-	--_ui5_tc_headerItemIcon_selected_color: var(--sapContent_ContrastIconColor);
+	--_ui5_tc_headerItemIcon_border: 0.125rem solid var(--sapTab_ForegroundColor);
 
 	/* Mixed Mode */
 	--_ui5_tc_mixedMode_itemText_color: var(--sapTextColor);

@@ -10,6 +10,19 @@
 
 <body style="background-color: var(--sapBackgroundColor)">
     <div class="section">
+		<div style="display: flex; align-items: center;">
+			<ui5-label>Selection Behavior: </ui5-label>
+			<span id="selectionBehavior" role="radiogroup">
+				<ui5-radio-button name="selectionBehavior" text="RowSelector" checked></ui5-radio-button>
+				<ui5-radio-button name="selectionBehavior" text="RowOnly"></ui5-radio-button>
+			</span>
+			<div style="flex-grow: 1;"></div>
+			<ui5-label>Header Selector: </ui5-label>
+			<span id="headerSelector" role="radiogroup">
+				<ui5-radio-button name="headerSelector" text="SelectAll" checked></ui5-radio-button>
+				<ui5-radio-button name="headerSelector" text="ClearAll"></ui5-radio-button>
+			</span>
+		</div>
 <!-- playground-fold-end -->
 		<ui5-table id="table">
 			<ui5-table-selection-multi id="selection" slot="features" selected="Row1 Row3"></ui5-table-selection-multi>

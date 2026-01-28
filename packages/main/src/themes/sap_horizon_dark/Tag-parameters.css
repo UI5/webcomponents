@@ -5,8 +5,38 @@
 	--_ui5-tag-padding-inline-icon-only: 0.313rem;
 	--_ui5-tag-text-transform: none;
 	--_ui5-tag-icon-gap: 0.25rem;
-	--_ui5-tag-font-size: var(--sapFontSize);
-	--_ui5-tag-font: var(--sapFontSemiboldDuplexFamily);
 	--_ui5-tag-font-weight: normal;
 	--_ui5-tag-letter-spacing: normal;
+
+	/* set 2 */
+
+	--ui5-tag-set2-color-scheme-1-color: var(--sapIndicationColor_1b_TextColor);
+	--ui5-tag-set2-color-scheme-1-background: var(--sapIndicationColor_1b_Background);
+
+	--ui5-tag-set2-color-scheme-2-color: var(--sapIndicationColor_2b_TextColor);
+	--ui5-tag-set2-color-scheme-2-background: var(--sapIndicationColor_2b_Background);
+
+	--ui5-tag-set2-color-scheme-3-color: var(--sapIndicationColor_3b_TextColor);
+	--ui5-tag-set2-color-scheme-3-background: var(--sapIndicationColor_3b_Background);
+
+	--ui5-tag-set2-color-scheme-4-color: var(--sapIndicationColor_4b_TextColor);
+	--ui5-tag-set2-color-scheme-4-background: var(--sapIndicationColor_4b_Background);
+
+	--ui5-tag-set2-color-scheme-5-color: var(--sapIndicationColor_5b_TextColor);
+	--ui5-tag-set2-color-scheme-5-background: var(--sapIndicationColor_5b_Background);
+
+	--ui5-tag-set2-color-scheme-6-color: var(--sapIndicationColor_6b_TextColor);
+	--ui5-tag-set2-color-scheme-6-background: var(--sapIndicationColor_6b_Background);
+
+	--ui5-tag-set2-color-scheme-7-color: var(--sapIndicationColor_7b_TextColor);
+	--ui5-tag-set2-color-scheme-7-background: var(--sapIndicationColor_7b_Background);
+
+	--ui5-tag-set2-color-scheme-8-color: var(--sapIndicationColor_8b_TextColor);
+	--ui5-tag-set2-color-scheme-8-background: var(--sapIndicationColor_8b_Background);
+
+	--ui5-tag-set2-color-scheme-9-color: var(--sapIndicationColor_9b_TextColor);
+	--ui5-tag-set2-color-scheme-9-background: var(--sapIndicationColor_9b_Background);
+
+	--ui5-tag-set2-color-scheme-10-color: var(--sapIndicationColor_10b_TextColor);
+	--ui5-tag-set2-color-scheme-10-background: var(--sapIndicationColor_10b_Background);
 }

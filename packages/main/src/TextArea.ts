@@ -7,14 +7,16 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
+import {
+	getEffectiveAriaLabelText,
+	getAssociatedLabelForTexts,
+	getEffectiveAriaDescriptionText,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -30,6 +32,7 @@ import {
 	TEXTAREA_CHARACTERS_LEFT,
 	TEXTAREA_CHARACTERS_EXCEEDED,
 	FORM_TEXTFIELD_REQUIRED,
+	TEXTAREA_EXCEEDS_MAXLENGTH,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -46,6 +49,10 @@ type ExceededText = {
 	exceededText?: string;
 	leftCharactersCount?: number;
 	calcedMaxLength?: number;
+};
+
+type TextAreaInputEventDetail = {
+	escapePressed?: boolean;
 };
 
 /**
@@ -73,7 +80,6 @@ type ExceededText = {
 	styles: [
 		textareaStyles,
 		valueStateMessageStyles,
-		getEffectiveScrollbarStyle(),
 	],
 	renderer: jsxRenderer,
 	template: TextAreaTemplate,
@@ -97,10 +103,12 @@ type ExceededText = {
  * Fired when the value of the component changes at each keystroke or when
  * something is pasted.
  * @since 1.0.0-rc.5
+ * @param {boolean} escapePressed Indicates whether the Escape key was pressed, which triggers a revert to the previous value
  * @public
  */
 @event("input", {
 	bubbles: true,
+	cancelable: true,
 })
 
 /**
@@ -126,7 +134,7 @@ type ExceededText = {
 class TextArea extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		"change": void;
-		"input": void;
+		"input": TextAreaInputEventDetail;
 		"select": void;
 		"scroll": void;
 		"value-changed": void;
@@ -270,6 +278,24 @@ class TextArea extends UI5Element implements IFormInputElement {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that describe the textarea.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleDescriptionRef?: string;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Boolean })
@@ -325,11 +351,20 @@ class TextArea extends UI5Element implements IFormInputElement {
 	static i18nBundle: I18nBundle;
 
 	get formValidityMessage() {
-		return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		if (this.formValidity.valueMissing) {
+			return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		}
+
+		if (this.formValidity.tooLong) {
+			return TextArea.i18nBundle.getText(TEXTAREA_EXCEEDS_MAXLENGTH, this.value.length - (this.maxlength ?? 0));
+		}
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			tooLong: this.showExceededText && (this.value.length > (this.maxlength ?? 0)),
+		};
 	}
 
 	async formElementAnchor() {
@@ -371,7 +406,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	onAfterRendering() {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (this.rows === 1) {
 			nativeTextArea.setAttribute("rows", "1");
@@ -393,9 +428,14 @@ class TextArea extends UI5Element implements IFormInputElement {
 		if (isEscape(e)) {
 			const nativeTextArea = this.getInputDomRef();
 
-			this.value = this.previousValue;
-			nativeTextArea.value = this.value;
-			this.fireDecoratorEvent("input");
+			const prevented = !this.fireDecoratorEvent("input", {
+				escapePressed: true,
+			});
+
+			if (!prevented) {
+				this.value = this.previousValue;
+				nativeTextArea.value = this.value;
+			}
 		}
 	}
 
@@ -433,7 +473,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	_oninput(e: InputEvent) {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (e.target === nativeTextArea) {
 			// stop the native event, as the semantic "input" would be fired.
@@ -492,13 +532,9 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	_tokenizeText(value: string) {
-		const tokenizedText = value.replace(/&/gm, "&amp;").replace(/"/gm, "&quot;").replace(/'/gm, "&apos;").replace(/</gm, "<")
+		const tokenizedText = value.replace(/</gm, "<")
 			.replace(/>/gm, ">")
 			.split("\n");
-
-		if (tokenizedText.length < this.rows) {
-			return this._mapTokenizedTextToObject([...tokenizedText, ...Array(this.rows - tokenizedText.length).fill("")] as TokenizedText);
-		}
 
 		return this._mapTokenizedTextToObject(tokenizedText);
 	}
@@ -542,7 +578,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return {
 			root: {
 				"ui5-textarea-root": true,
-				"ui5-content-custom-scrollbars": !!getEffectiveScrollbarStyle(),
 			},
 			valueStateMsg: {
 				"ui5-valuestatemessage-header": true,
@@ -571,8 +606,21 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return effectiveAriaLabelText;
 	}
 
+	get ariaDescriptionText() {
+		return getEffectiveAriaDescriptionText(this);
+	}
+
+	get ariaDescriptionTextId() {
+		return this.ariaDescriptionText ? "accessibleDescription" : "";
+	}
+
 	get ariaDescribedBy() {
-		return this.hasValueState ? `${this._id}-valueStateDesc` : undefined;
+		const ids = [
+			this.hasValueState ? `${this._id}-valueStateDesc` : "",
+			this.ariaDescriptionTextId,
+		].filter(Boolean).join(" ");
+
+		return ids || undefined;
 	}
 
 	get ariaValueStateHiddenText() {
@@ -619,10 +667,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return this.valueState === ValueState.Negative || this.valueState === ValueState.Critical || this.valueState === ValueState.Information;
 	}
 
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
-	}
-
 	get valueStateTextMappings() {
 		return {
 			"Positive": TextArea.i18nBundle.getText(VALUE_STATE_SUCCESS),
@@ -645,3 +689,5 @@ class TextArea extends UI5Element implements IFormInputElement {
 TextArea.define();
 
 export default TextArea;
+export { TextArea as BaseTextArea };
+export type { TextAreaInputEventDetail };

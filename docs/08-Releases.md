@@ -52,4 +52,4 @@ The UI5 Web Components version 1 is in maintenance until 30 June 2025.
 
 Every start of the month, a new patch of 1.24 version is released - stable and recommended for consumers that still rely on version 1.
 
-**Note:** The changelog of all releases can be found on the [GitHub Release](https://github.com/SAP/ui5-webcomponents/releases) page.
+**Note:** The changelog of all releases can be found on the [GitHub Release](https://github.com/UI5/webcomponents/releases) page.

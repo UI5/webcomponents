@@ -403,8 +403,14 @@ exports.config = {
 	 * @param {Array.<Object>} capabilities list of capabilities details
 	 * @param {<Object>} results object containing test results
 	 */
-	// onComplete: function(exitCode, config, capabilities, results) {
-	// },
+	onComplete: function (exitCode, config, capabilities, results) {
+        // The results object looks like: { finished: 0, passed: 0, retries: 0, failed: 0 }.
+        // If all values are 0, consider that no tests were found or executed.
+        if (exitCode === 1 && Object.values(results).every(result => result === 0)) {
+            console.log("✅ No specs were found or executed – treating as success.");
+            process.exit(0);
+        }
+    }
 	/**
 	 * Gets executed when a refresh happens.
 	 * @param {String} oldSessionId session ID of the old session

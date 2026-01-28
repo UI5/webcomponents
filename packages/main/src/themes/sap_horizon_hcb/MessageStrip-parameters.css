@@ -1,14 +1,11 @@
 @import "../base/MessageStrip-parameters.css";
 
 :root{
-	--_ui5_message_strip_close_button_border: 1px solid var(--sapButton_BorderColor);
-	--_ui5_message_strip_border_width: 0.125rem;
+	--_ui5_message_strip_border_width: var(--sapMessage_BorderWidth);
 	--_ui5_message_strip_icon_top: 0.375rem;
-	--_ui5_message_strip_focus_width: 0.125rem;
-	--_ui5_message_strip_focus_offset: -4px;
 	--_ui5_message_strip_close_button_right: 0.125rem;
-	--_ui5_message_strip_close_button_color_set_1_background: var(--sapButton_Lite_Hover_Background);
-	--_ui5_message_strip_close_button_color_set_2_background: var(--sapButton_Lite_Hover_Background);
+	--_ui5_message_strip_close_button_color_set_1_background: var(--sapMessage_Button_Hover_Background);
+	--_ui5_message_strip_close_button_color_set_2_background: var(--sapMessage_Button_Hover_Background);
 	--_ui5_message_strip_scheme_1_set_2_background: var(--sapIndicationColor_1_Background);
 	--_ui5_message_strip_scheme_1_set_2_border_color:  var(--sapIndicationColor_1_BorderColor);
 	--_ui5_message_strip_scheme_2_set_2_background: var(--sapIndicationColor_2_Background);

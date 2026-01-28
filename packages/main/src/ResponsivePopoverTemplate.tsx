@@ -15,9 +15,12 @@ export default function ResponsivePopoverTemplate(this: ResponsivePopover) {
 			root-element
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
+			accessibleDescription={this.accessibleDescription}
+			accessibleDescriptionRef={this.accessibleDescriptionRef}
 			accessibleRole={this.accessibleRole}
 			stretch={true}
 			preventInitialFocus={this.preventInitialFocus}
+			preventFocusRestore={this.preventFocusRestore}
 			initialFocus={this.initialFocus}
 			onBeforeOpen={this._beforeDialogOpen}
 			onOpen={this._afterDialogOpen}

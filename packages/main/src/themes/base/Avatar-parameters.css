@@ -1,9 +1,10 @@
 :root {
-	--ui5-avatar-hover-box-shadow-offset: 0px 0px 0px 0.0625rem;
+	--ui5-avatar-hover-box-shadow-offset: 0px 0px 0px 0.0625rem var();
 	--ui5-avatar-initials-color: var(--sapContent_ImagePlaceholderForegroundColor);
 	--ui5-avatar-border-radius: .25rem;
 	--ui5-avatar-border-radius-img-deduction: 0.0625rem;
 	--ui5-avatar-initials-border: none;
+	--ui5-avatar-optional-border: .0625rem solid var(--sapGroup_ContentBorderColor);
 	--ui5-avatar-accent1: var(--sapAccentColor1);
 	--ui5-avatar-accent2: var(--sapAccentColor2);
 	--ui5-avatar-accent3: var(--sapAccentColor3);
@@ -38,12 +39,9 @@
 	--ui5-avatar-accent8-border-color: var(--sapField_BorderColor);
 	--ui5-avatar-accent9-border-color: var(--sapField_BorderColor);
 	--ui5-avatar-accent10-border-color: var(--sapField_BorderColor);
-	--ui5-avatar-placeholder-border-color: var(--sapField_BorderColor);
 
 	--_ui5_avatar_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_avatar_focus_offset: 0.0625rem;
-	--_ui5_avatar_focus_width: 0.0625rem;
-	--_ui5_avatar_focus_color: var(--sapContent_FocusColor);
 
 	--_ui5_avatar_overflow_button_focus_offset: 0.0625rem;
 

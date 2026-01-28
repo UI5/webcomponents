@@ -6,6 +6,9 @@ const options = {
 	aiPackage: true,
 	noWatchTS: true,
 	dev: true,
+	internal: {
+		cypress_code_coverage: false,
+	},
 };
 
 const scripts = getScripts(options);

@@ -1,0 +1,19 @@
+{
+    "include": [
+        "./**/*"
+    ],
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "jsx": "react-jsx",
+        "jsxImportSource": "@ui5/webcomponents-base",
+        "types": [
+            "cypress"
+        ]
+    },
+    "references": [
+        {
+            "path": "../"
+        }
+    ]
+}

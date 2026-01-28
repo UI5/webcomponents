@@ -1,0 +1,29 @@
+@import "../base/SearchField-parameters.css";
+
+:root {
+	--_ui5_search_icon_border_radius: 0.375rem;
+	--_ui5_search_input_border_radius: none;
+	--_ui5-search-border: var(--sapField_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);
+	--_ui5-search-wrapper-background: var(--sapShellColor);
+	--_ui5_search_separator_background: none;
+	--_ui5-search-wrapper-hover-background: none;
+	--_ui5-search-wrapper-hover-background-color: none;
+	--_ui5_search_input_scope_margin: 0;
+	--_ui5-search-elements-background: var(--sapShell_InteractiveBackground);
+	--_ui5-search-elements-hover-background: var(--sapShell_Hover_Background);
+	--_ui5-search-elements-active-background: var(--sapShell_Active_Background);
+	--_ui5_search_wrapper_outline: none;
+	--_ui5_search_input_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapField_Active_BorderColor);
+	--_ui5_search_filter_button_border_radius: 0.375rem;
+	--_ui5_seach_filter_button_border_hover: 1px solid var(--sapButton_Hover_BorderColor);
+	--_ui5-search-filter_button_background_color: var(--sapShell_InteractiveBackground);
+	--ui5_search_filter_button_background_active: var(--sapShell_InteractiveBackground);
+	--_ui5_search_icon_size: 2.25rem;
+	--_ui5_search_icon_padding: 0.625rem;
+	--_ui5_search_icon_hover_padding: 0.5625rem;
+	--_ui5_search_input_start_margin: 0.25rem;
+	--_ui5_search_input_end_padding: 0.25rem;
+	--_ui5-search-input-start-padding: 0.625rem;
+	--_ui5-search-select-height: 2.25rem;
+	--_ui5-search-field-text-color: var(--sapShell_InteractiveTextColor);
+}

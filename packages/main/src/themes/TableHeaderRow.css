@@ -1,20 +1,33 @@
 :host {
-    background: var(--sapList_HeaderBackground);
-    border-top: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
-    border-bottom: var(--sapList_BorderWidth) solid var(--sapList_HeaderBorderColor);
+	background: var(--sapList_HeaderBackground);
+	border-top: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_HeaderBorderColor);
+	grid-template-rows: auto 0px;
 }
 
 :host([hidden]) {
-    display: none;
+	display: none;
 }
 
 :host([sticky]) {
-    position: sticky;
-    top: var(--ui5_grid_sticky_top, 0);
-    z-index: 2;
+	position: sticky;
+	top: var(--ui5_grid_sticky_top, 0);
+	z-index: 3;
 }
 
 #popin-cell {
-    padding: 0;
-    width: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+}
+
+#selection-cell [ui5-icon] {
+	width: var(--_ui5_checkbox_inner_width_height);
+	height: var(--_ui5_checkbox_inner_width_height);
+}
+
+#popin-cell-content,
+#actions-cell-content {
+	position: absolute;
+	clip: rect(0, 0, 0, 0);
 }

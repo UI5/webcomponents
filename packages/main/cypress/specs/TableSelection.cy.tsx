@@ -182,7 +182,7 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 		});
 
 		it("select row via SPACE", () => {
-			cy.get("@row0").realClick({ position: "left" });
+			cy.get("@row0").realClick();
 			cy.get("@row0").realPress("Space");
 			checkSelection(testConfigEntry.cases.SPACE.space_0);
 
@@ -215,15 +215,10 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 			cy.get("@row0").shadow().find("#selection-component").realClick();
 			checkSelection(testConfigEntry.cases.RANGE_MOUSE.range_mouse_initial);
 
-			// Need to simulate keydown with SHIFT key to set range selection flag shiftKeyPressed
-			// Cypress does not trigger keydown when just calling realClick with shiftKey: true
-			// That is why selection of the row is not supressed, and we end up with 0 4 1 2 3
-			cy.get("@row4").trigger("keydown", { bubbles: true, key: "Shift", shiftKey: true });
 			cy.get("@row4").shadow().find("#selection-component").realClick({ shiftKey: true });
 			checkSelection(testConfigEntry.cases.RANGE_MOUSE.range_mouse_final);
 
-			cy.get("@row4").trigger("keydown", { bubbles: true, key: "Shift", shiftKey: true });
-			cy.get("@row0").shadow().find("#selection-component").realClick();
+			cy.get("@row0").shadow().find("#selection-component").realClick({ shiftKey: true });
 			checkSelection(testConfigEntry.cases.RANGE_MOUSE.range_mouse_edge);
 		});
 
@@ -275,6 +270,6 @@ describe("TableSelection - Multi", () => {
 		cy.get("@headerRowCheckBox").should("have.attr", "checked");
 		cy.get("#row2").invoke("remove");
 		cy.get("#row1").invoke("remove");
-		cy.get("@headerRowCheckBox").should("not.have.attr", "checked");
+		cy.get("#headerRow").shadow().find("#selection-cell").should("not.exist");
 	});
 });

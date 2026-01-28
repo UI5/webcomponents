@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Search</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+	<style>
+		.container {
+			padding-top: 1rem;
+		}
+
+		.last {
+			padding-bottom: 2rem;
+		}
+	</style>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body class="search sapUiSizeCompact" style="background-color: var(--sapBackgroundColor);">
+
+	<ui5-search>
+		<ui5-search-message-area slot="messageArea" description="Search for example “All my open Objects”" text="Try This!"></ui5-search-message-area>
+
+		<ui5-search-item text="List Item 1"></ui5-search-item>
+		<ui5-search-item text="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna."></ui5-search-item>
+		
+		<ui5-search-item text="List Item 2" description="List Item"></ui5-search-item>
+		<ui5-search-item text="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna." description="Est nostrud aliquip culpa excepteur sunt proident cupidatat sit enim nostrud anim magna sit enim nostrud anim magna."></ui5-search-item>
+
+		<ui5-illustrated-message slot="illustration"></ui5-illustrated-message>
+
+		<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
+
+		<ui5-button design="Transparent" slot="action">Navigate to all results</ui5-button>
+	</ui5-search>
+
+	<div class="container first">
+		<ui5-label>Search with Suggestions - Example No Results, but suggestions</ui5-label>
+		<ui5-search show-clear-icon>
+			<ui5-search-message-area slot="messageArea" description="You can try the following" text="Oh, there are no results"></ui5-search-message-area>
+
+			<ui5-search-item text="List Item Deletable" icon="history" deletable></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item Deletable" icon="history" deletable></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+		</ui5-search>
+	</div>
+
+	<ui5-label>Search with Grouped Suggestions and Show More (N) Item</ui5-label>
+	<ui5-search id="searchShowMore" show-clear-icon placeholder="Placeholder">
+		<ui5-search-message-area slot="messageArea" description="You can try the following"
+			text="Oh, there are no results"></ui5-search-message-area>
+		<ui5-search-item-group id="group1" header-text="Group Header">
+		</ui5-search-item-group>
+		<ui5-search-item-group id="group2" header-text="Group Header">
+			<ui5-search-item text="List Item" icon="history"></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history"></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe"></ui5-search-item>
+		</ui5-search-item-group>
+	</ui5-search>
+
+<script>
+		const allItems = [
+			{ text: "List Item 1", icon: "history" },
+			{ text: "List Item 2", icon: "search" },
+			{ text: "List Item 3", icon: "history" },
+			{ text: "List Item 4", icon: "history" },
+			{ text: "List Item 5", icon: "search" },
+			{ text: "List Item 6", icon: "globe" }
+		];
+
+		const searchShow = document.getElementById("searchShowMore");
+		const group1 = document.getElementById("group1");
+		const visibleCount = 3;
+
+		function createSearchItem({ text, icon }) {
+			const el = document.createElement("ui5-search-item");
+			el.setAttribute("text", text);
+			el.setAttribute("icon", icon);
+			el.addEventListener("ui5-delete", () => el.remove());
+			return el;
+		}
+
+		function renderItemSlice(items, container, insertBefore = null) {
+			return items.map(item => {
+				const el = createSearchItem(item);
+				if (insertBefore) {
+					container.insertBefore(el, insertBefore);
+				} else {
+					container.appendChild(el);
+				}
+				return el;
+			});
+		}
+
+		function renderItems(items) {
+			const visibleItems = items.slice(0, visibleCount);
+			const hiddenItems = items.slice(visibleCount);
+
+			renderItemSlice(visibleItems, group1);
+
+			if (hiddenItems.length) {
+				const showMoreEl = document.createElement("ui5-search-item-show-more");
+				showMoreEl.setAttribute("items-to-show-count", 3);
+				group1.appendChild(showMoreEl);
+
+				function expandHiddenItems({ focusFirst = false } = {}) {
+					const newEls = renderItemSlice(hiddenItems, group1, showMoreEl);
+					showMoreEl.remove();
+					if (focusFirst && newEls.length > 0) {
+						//wait the new items to show
+						setTimeout(() => {
+							newEls[0].focus()
+						}, 0);
+					}
+				}
+
+			showMoreEl.addEventListener("ui5-click", (e) => {
+					expandHiddenItems({ focusFirst: e.detail.fromKeyboard });
+			});
+			}
+		}
+
+		renderItems(allItems);
+</script>
+
+	<div class="container">
+		<ui5-label>Search - Initially collapsed with Busy State</ui5-label>
+		<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
+			<ui5-search id="expanding" loading collapsed></ui5-search>
+		</div>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Illustation Message - Example of no results, no suggestions</ui5-label>
+		<ui5-search show-clear-icon loading>
+			<ui5-search-message-area slot="messageArea" description="Search for example “All my open Objects”" text="Try This!"></ui5-search-message-area>
+
+			<ui5-illustrated-message slot="illustration">
+				<ui5-title slot="title" level="H1">Oh, there are no results</ui5-title>
+				<div slot="subtitle">Change your search query</div>
+			</ui5-illustrated-message>
+
+			<ui5-button design="Transparent" slot="action">Search in other domains</ui5-button>
+		</ui5-search>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Grouped Suggestions and Show More Button</ui5-label>
+		<ui5-search id="search" show-clear-icon placeholder="Placeholder">
+			<ui5-button design="Transparent" slot="action">Show all search results [N]</ui5-button>
+
+			<ui5-search-message-area slot="messageArea" description="You can try the following" text="Oh, there are no results"></ui5-search-message-area>
+			<ui5-search-item-group header-text="Group Header">
+				<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+				<ui5-search-item text="List Item" icon="search" ></ui5-search-item>
+			</ui5-search-item-group>
+			<ui5-search-item-group header-text="Group Header">
+				<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+				<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			</ui5-search-item-group>
+		</ui5-search>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with no initial items</ui5-label>
+		<ui5-search show-clear-icon placeholder="Start typing ..."></ui5-search>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Suggestions - Delete items on delete button click</ui5-label>
+		<ui5-search id="delete-search" show-clear-icon></ui5-search>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Actions - Example of flexible action slot</ui5-label>
+		<ui5-search id="secondary-actions-search" show-clear-icon>
+			<ui5-search-item text="List Item with Favorite Action" icon="history" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="favorite" tooltip="Add to favorites"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Edit Action" icon="search" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="edit" tooltip="Edit item"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Multiple Actions" icon="globe" deletable>
+				<ui5-button slot="actions" design="Transparent" icon="share" tooltip="Share"></ui5-button>
+				<ui5-button slot="actions" design="Transparent" icon="copy" tooltip="Copy"></ui5-button>
+			</ui5-search-item>
+			<ui5-search-item text="List Item with Tag Action" icon="history">
+				<ui5-tag slot="actions" design="Set2" color-scheme="8">Important</ui5-tag>
+			</ui5-search-item>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			Hover over search items to see secondary actions. Use Tab/Shift+Tab to navigate between action buttons and delete button.
+		</ui5-text>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Suggestions - Filter by typing</ui5-label>
+		<ui5-search id="filtering" show-clear-icon placeholder="Start typing ..."></ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows filtering per user input and highlighting user input. Type "a" to see highlighting. Type "t" to see "typeahead"</ui5-text>
+	</div>
+
+	<div class="container">
+		<ui5-label>Search with Scoped Suggestions - Filter by scope</ui5-label>
+		<ui5-search id="search-scope" show-clear-icon scope-value="apps" placeholder="Search Apps, Products">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows scoped search with scoped suggestions. Change scope to filter suggestions.</ui5-text>
+	</div>
+
+
+	<div class="container">
+		<ui5-label>Search with Suggestions - Filters and noTypeAhead</ui5-label>
+		<ui5-search id="filters" show-clear-icon placeholder="Start typing ..." no-type-ahead></ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			Showcasing search with custom filters. Available filters are "scope" and "apps".
+			Type "scope:" or "apps:" to see the popup and choose a suggestion.
+			Press space to close the popup and type the other filter in order to perform multiple filtering.
+		</ui5-text>
+	</div>
+
+	<div class="container">
+		<ui5-label>Byline items</ui5-label>
+		<br />
+		<ui5-search show-clear-icon>
+			<ui5-search-item-group header-text="Suppliers (4)">
+				<ui5-search-item text="Danish Fishing Trading Company (100000043)" icon="customer-and-supplier" description="Byline"></ui5-search-item>
+				<ui5-search-item text="Daily Update Ltd. (290210057)" icon="customer-and-supplier" description="Byline"></ui5-search-item>
+				<ui5-search-item text="Damian United (120001884)" icon="customer-and-supplier" description="Byline"></ui5-search-item>
+				<ui5-search-item text="Troda Tech (100230044)" icon="customer-and-supplier" description="Byline"></ui5-search-item>
+			</ui5-search-item-group>
+
+			<ui5-search-item-group header-text="People (4)">
+				<ui5-search-item text="John Doe" description="Byline">
+					<ui5-avatar slot="image" size="XS">
+						<img src="./img/John_Miller.png" alt="John Miller">
+					</ui5-avatar>
+				</ui5-search-item>
+			</ui5-search-item-group>
+		</ui5-search>
+	</div>
+
+	<div class="container" style="padding-top: 1rem;">
+		<ui5-label>Search with field loading state (type and press Enter)</ui5-label>
+		<ui5-search id="search-with-loading" show-clear-icon placeholder="Search..."></ui5-search>
+	</div>
+
+	<div class="container last">
+		<ui5-label>Search with Suggestions with long group header text (wrapping)</ui5-label>
+		<ui5-search id="search" show-clear-icon placeholder="Placeholder">
+			<ui5-search-item-group header-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.">
+				<ui5-search-item text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit." icon="search" ></ui5-search-item>
+				<ui5-search-item text="List Item" icon="search" ></ui5-search-item>
+			</ui5-search-item-group>
+		</ui5-search>
+	</div>
+
+	<script>
+		const search = document.getElementById('search');
+		const scopedSearch = document.getElementById('scoped-search');
+		search.addEventListener('ui5-search', (event) => {
+			console.log('search', event.target.value);
+			console.log('search', event.detail.item);
+		});
+		search.addEventListener('ui5-input', (event) => {
+			console.log('input', event.target.value);
+		});
+
+		const data = [
+			{ name: 'Red Apple', category: 'Fruit' },
+			{ name: 'Apple', category: 'Fruit' },
+			{ name: 'Apel', category: 'Vegetable' },
+			{ name: 'Cucumber', category: 'Vegetable' },
+			{ name: 'Orange', category: 'Fruit' },
+			{ name: 'Tomato', category: 'Vegetable' },
+		];
+
+		const filtering = document.getElementById('filtering');
+		createItems(filtering, data);
+		filtering.addEventListener('ui5-input', (event) => {
+			const value = event.target.value.toLowerCase();
+			const filteredData = data.filter(item => item.name.toLowerCase().includes(value));
+
+			// clear search items
+			filtering.innerHTML = '';
+
+			filtering.getSlottedNodes("items").forEach(item => {
+				item.remove();
+			});
+
+			// create search items based on search
+			createItems(filtering, filteredData);
+		});
+
+		const scopeData = [
+			{ name: 'Laptop', scope: 'products' },
+			{ name: 'Leave Requests', scope: 'apps' },
+			{ name: 'Log work', scope: 'apps' },
+			{ name: 'Manage Products', scope: 'apps' },
+			{ name: 'Mobile Phones', scope: 'products' },
+			{ name: 'Tablet', scope: 'products' },
+		];
+
+		function createScopeItems(scope) {
+			let filterData = [];
+
+			if (!scope) {
+				filterData = scopeData;
+			} else {
+				filterData = scopeData.filter(item => item.scope === scope);
+			}
+
+			const searchItems = filterData.forEach(item => {
+				const searchItem = document.createElement('ui5-search-item');
+				searchItem.text = item.name;
+				searchItem.scopeName = item.scope;
+				searchScope.appendChild(searchItem);
+			});
+		}
+
+		const searchScope = document.getElementById('search-scope');
+		createScopeItems();
+		searchScope.addEventListener('ui5-scope-change', (event) => {
+			let scope = event.detail.scope.value === "all" ? "" : event.detail.scope.value;
+
+			searchScope.getSlottedNodes("items").forEach(item => {
+				item.remove();
+			});
+
+			createScopeItems(scope);
+		});
+
+
+		const data2 = [
+			{ name: 'scope', items: ["Item-1", "Item-2", "Item-3"] },
+			{ name: 'apps', items: ["Item-4", "Item-5", "Item-6"] }
+		];
+
+		function createFilterItems(parent, data) {
+			data.forEach(item => {
+				item.items.forEach (subItem => {
+					const searchItem = document.createElement('ui5-search-item');
+					searchItem.scopeName = item.name;
+					searchItem.text = subItem;
+					parent.appendChild(searchItem);
+				});
+			});
+		}
+
+		const filters = document.getElementById('filters');
+		filters.addEventListener('ui5-input', (event) => {
+			const value = event.target.value.toLowerCase();
+
+			if (value[value.length - 1] === ":") {
+				const scope = value.match(/(\b\w+)(?=:$)/)[0];
+				const filteredData = data2.filter(item => item.name.toLowerCase() === scope.toLowerCase());
+
+				filters.getSlottedNodes("items").forEach(item => {
+					item.remove();
+				});
+				createFilterItems(filters, filteredData);
+				filters.open = true;
+			}
+
+			if (value[value.length - 1] === " ") {
+				filters.open = false;
+			}
+		});
+
+		filters.addEventListener('ui5-search', (event) => {
+			event.preventDefault();
+
+			if (event.detail.item) {
+				const lastColonIndex = filters.value.lastIndexOf(":");
+				const splicedString = lastColonIndex !== -1 ? filters.value.slice(0, lastColonIndex + 1) : filters.value;
+				filters.value = splicedString + event.detail.item.text;
+
+				filters.focus();
+			}
+		});
+
+		const searchDelete = document.getElementById('delete-search');
+
+		function onDelete(event, parent) {
+			const item = event.target;
+			if (item) {
+				item.remove();
+				parent.focus();
+			}
+		}
+
+		const deleteData = [
+			{ name: 'Red Apple', category: 'Fruit' },
+			{ name: 'Apple', category: 'Fruit' },
+			{ name: 'Apel', category: 'Vegetable' },
+			{ name: 'Cucumber', category: 'Vegetable' },
+			{ name: 'Orange', category: 'Fruit' },
+			{ name: 'Tomato', category: 'Vegetable' },
+		];
+
+		function createItems(parent, deleteData) {
+			deleteData.forEach(item => {
+				const searchItem = document.createElement('ui5-search-item');
+				searchItem.text = item.name;
+				searchItem.icon = 'search';
+				searchItem.deletable = true;
+				searchItem.addEventListener('ui5-delete', (e) => onDelete(e, parent));
+				parent.appendChild(searchItem);
+			});
+		}
+
+		createItems(searchDelete, deleteData);
+
+		document.getElementById('expanding').addEventListener('ui5-search', (e) => {
+			if (e.target.collapsed) {
+				e.target.collapsed = false;
+			} else {
+				if (!e.target.value) {
+					e.target.collapsed = true;
+				}
+			}
+		});
+
+		const searchLazy = document.getElementById('search-lazy');
+		searchLazy.addEventListener('ui5-input', (e) => {
+			setTimeout(() => {
+				// clear search items
+				searchLazy.innerHTML = '';
+
+				searchLazy.getSlottedNodes("items").forEach(item => {
+					item.remove();
+				});
+			}, 100)
+
+
+			if(e.target.value.length){
+				// simulate lazy loading
+				setTimeout(() => {
+					const lazyData = [
+						{ name: `Red Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Apple ${Math.random()}`, category: 'Fruit' },
+						{ name: `Banana ${Math.random()}`, category: 'Fruit' },
+						{ name: `Orange ${Math.random()}`, category: 'Fruit' },
+						{ name: `Grapes ${Math.random()}`, category: 'Fruit' },
+					];
+					createItems(searchLazy, lazyData);
+				}, 300);
+			}
+		});
+
+		const searchWithLoading = document.getElementById('search-with-loading');
+		searchWithLoading.addEventListener('ui5-search', async (e) => {
+			if (e.target.value) {
+				e.target.fieldLoading = true;
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				e.target.fieldLoading = false;
+			}
+		});
+	</script>
+</body>
+</html>

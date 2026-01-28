@@ -15,6 +15,7 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 				onClick={this._onclick}
 				onKeyUp={this._onkeyup}
 				onKeyDown={this._onkeydown}
+				onMouseDown={this._onmousedown}
 			>
 				{this.showDefaultColor &&
 					<div class="ui5-cp-default-color-button-wrapper">

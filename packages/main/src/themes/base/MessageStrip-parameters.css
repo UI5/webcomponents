@@ -1,25 +1,14 @@
 :root{
-	--_ui5_message_strip_icon_width: 2.5rem;
-	--_ui5_message_strip_button_border_width: 0;
-	--_ui5_message_strip_button_border_style: none;
-	--_ui5_message_strip_button_border_color: transparent;
-	--_ui5_message_strip_button_border_radius: 0;
 	--_ui5_message_strip_padding: 0.4375rem 2.5rem 0.4375rem 2.5rem;
 	--_ui5_message_strip_padding_block_no_icon: 0.4375rem 0.4375rem;
 	--_ui5_message_strip_padding_inline_no_icon: 1rem 2.5rem;
-	--_ui5_message_strip_button_height: 1.625rem;
-	--_ui5_message_strip_border_width: 1px;
-	--_ui5_message_strip_close_button_border: none;
+	--_ui5_message_strip_border_width: var(--sapMessage_BorderWidth);
 	--_ui5_message_strip_icon_top: 0.4375rem;
-	--_ui5_message_strip_focus_width: 1px;
-	--_ui5_message_strip_focus_offset: -2px;
 	--_ui5_message_strip_close_button_top: 0.125rem;
 	--_ui5_message_strip_close_button_right: 0.125rem;
-	/* Next two variables below are hardcoded values of sapButton_Lite_Hover_Background parameter with specified opacity*/
-	--_ui5_message_strip_close_button_color_set_1_background: #eaecee4d;
-	--_ui5_message_strip_close_button_color_set_2_background: #eaecee80;
-	--_ui5_message_strip_close_button_color_set_1_color: var(--sapButton_Emphasized_TextColor);
-	--_ui5_message_strip_close_button_color_set_1_hover_color: var(--sapButton_Emphasized_TextColor);
+	--_ui5_message_strip_close_button_color_set_1_background: var(--sapMessage_Button_Hover_Background);
+	--_ui5_message_strip_close_button_color_set_2_background: var(--sapMessage_Button_Hover_Background);
+	--_ui5_message_strip_close_button_color_set_1_color: var(--sapContent_ContrastIconColor);
 	--_ui5_message_strip_scheme_1_set_2_background: var(--sapIndicationColor_1b);
 	--_ui5_message_strip_scheme_1_set_2_border_color: var(--sapIndicationColor_1b_BorderColor);
 	--_ui5_message_strip_scheme_2_set_2_background: var(--sapIndicationColor_2b);

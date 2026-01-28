@@ -1,9 +1,5 @@
 :root {
 	--_ui5_color-palette-item-after-focus-border-radius: 0.125rem;
-	--_ui5_color-palette-item-container-sides-padding: 0.3125rem;
-	--_ui5_color-palette-item-container-rows-padding: 0.6875rem;
-	--_ui5_color-palette-item-focus-height: 1.5rem;
-	--_ui5_color-palette-item-container-padding: var(--_ui5_color-palette-item-container-sides-padding) var(--_ui5_color-palette-item-container-rows-padding);
 	--_ui5_color-palette-item-hover-margin: 0;
 	--_ui5_color-palette-row-height: 9.5rem;
 	--_ui5_color-palette-button-height: 3rem;
@@ -20,11 +16,11 @@
 	--_ui5_color-palette-item-hover-outer-border-radius: 0.25rem;
 	--_ui5_color-palette-item-hover-inner-border-radius: 0.1875rem;
 	--_ui5_color-palette-item-selected-focused-border-before: var(--_ui5_color-palette-item-before-focus-hover-inset);
-	--_ui5_color-palette-item-selected-focused-border-after: var(--_ui5_color-palette-item-after-focus-color);
 	--_ui5_color-palette-item-after-focus-not-selected-border: 0.0625rem dotted black;
 	--_ui5_color-palette-item-after-not-focus-color: 0.0625rem solid var(--sapGroup_ContentBackground);
 	--_ui5_color-palette-item-selected-focused-border: 0.0625rem solid var(--sapGroup_ContentBackground);
 	--_ui5-color-palette-item-mobile-focus-inset: 0.625rem;
 	--_ui5_color-palette-item-mobile-focus-sides-inset: 0.25rem 0.25rem;
 	--_ui5_color-palette-item-after-mobile-focus-border: var(--_ui5_color-palette-item-after-focus-color);
+	--_ui5-color-palette-item-background-color: transparent;
 }

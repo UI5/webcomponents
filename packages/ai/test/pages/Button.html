@@ -82,7 +82,7 @@
 	<ui5-title size="H2">Quick Prompt Pattern</ui5-title>
 	<ui5-card>
 		<ui5-card-header slot="header" title-text="Stoyan Kralimarkov" subtitle-text="Senior Sales Executive">
-			<img src="https://sap.github.io/ui5-webcomponents/images/avatars/man_avatar_1.png" slot="avatar">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar">
 		</ui5-card-header>
 		<section class="quickPromptSection">
 			<ui5-label required>To: </ui5-label>
@@ -145,17 +145,28 @@
 		const predefinedTextsSimplified = data.predefinedTextsSimplified;
 		const predefinedTextsSummarized = data.predefinedTextsSummarized;
 
-		function startGeneration(button) {
+		function startGeneration(button, isSplitButton = false) {
 			console.warn("startGeneration");
 			generationId = setTimeout(function() {
 				console.warn("Generation completed");
 				button.state = "revise";
+				button.accessibilityAttributes = {
+					root: {
+						hasPopup: "menu",
+						roleDescription: isSplitButton  ? undefined : "Menu Button"
+					}
+				};
 			}, 3000);
 		}
 
-		function stopGeneration() {
+		function stopGeneration(button) {
 			console.warn("stopGeneration");
 			clearTimeout(generationId);
+			button.accessibilityAttributes = {
+					root: {
+						hasPopup: "false"
+					}
+				};
 		}
 
 		function aiButtonClickHandler(evt) {
@@ -168,7 +179,7 @@
 					break;
 				case "generating":
 					button.state = "generate";
-					stopGeneration();
+					stopGeneration(button);
 					break;
 				case "revise":
 					menu.opener = button;
@@ -185,17 +196,17 @@
 				case "generate":
 					prevTriggerState = "generate";
 					button.state = "generating";
-					startGeneration(button);
+					startGeneration(button, true);
 					break;
 				case "generating":
 					button.state = prevTriggerState;
-					stopGeneration();
+					stopGeneration(button);
 					break;
 				case "revise":
 					menuReg.open = false;
 					prevTriggerState = "revise";
 					button.state = "generating";
-					startGeneration(button);
+					startGeneration(button, true);
 					break;
 			}
 		}
@@ -235,7 +246,6 @@
 
 			button.arrowButtonPressed = false;
 		});
-
 		myAiButton.addEventListener("click", aiButtonClickHandler);
 		myAiButtonSplit.addEventListener("click", aiButtonSplitClickHandler);
 		myAiButtonSplit.addEventListener("arrow-button-click", aiButtonSplitArrowClickHandler);
@@ -276,15 +286,26 @@
 			generationId = setTimeout(function() {
 				console.warn("Generation completed");
 				button.state = "revise";
+				button.accessibilityAttributes = {
+					root: {
+						hasPopup: "menu",
+						roleDescription: "Menu Button"
+					}
+				};
 			}, 2000);
 		}
 
-		function stopQuickPromptGeneration() {
+		function stopQuickPromptGeneration(button) {
 			console.warn("stopGeneration");
 			clearInterval(generationId);
 			generationStopped = true;
 			sendButton.disabled = false;
 			output.disabled = false;
+			button.accessibilityAttributes = {
+				root: {
+					hasPopup: "false"
+				}
+			};
 		}
 
 		sendButton.addEventListener("click", function() {
@@ -420,6 +441,13 @@
 					if (!generationStopped) {
 						button.state = "revise";
 						output.valueState = "None";
+						button.accessibilityAttributes = {
+							root: {
+								hasPopup: "menu",
+								roleDescription: "Menu Button"
+							}
+						};
+
 					}
 					clearInterval(generationId);
 					sendButton.disabled = false;

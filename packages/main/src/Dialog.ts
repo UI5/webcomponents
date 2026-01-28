@@ -2,7 +2,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import {
 	isUp, isDown, isLeft, isRight,
 	isUpShift, isDownShift, isLeftShift, isRightShift,
@@ -109,7 +108,6 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
 		Popup.styles,
 		PopupsCommonCss,
 		dialogCSS,
-		getEffectiveScrollbarStyle(),
 	],
 })
 class Dialog extends Popup {
@@ -197,6 +195,7 @@ class Dialog extends Popup {
 	_minWidth?: number;
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
+	_dragHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -340,22 +339,6 @@ class Dialog extends Popup {
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
-	onEnterDOM() {
-		super.onEnterDOM();
-		this._attachScreenResizeHandler();
-
-		this.addEventListener("dragstart", this._dragStartHandler);
-
-		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
-	}
-
-	onExitDOM() {
-		super.onExitDOM();
-		this._detachScreenResizeHandler();
-
-		this.removeEventListener("dragstart", this._dragStartHandler);
-	}
-
 	/**
 	 * @override
 	 */
@@ -371,6 +354,16 @@ class Dialog extends Popup {
 		this._center();
 	}
 
+	_attachBrowserEvents() {
+		this._attachScreenResizeHandler();
+		this._registerDragHandler();
+	}
+
+	_detachBrowserEvents() {
+		this._detachScreenResizeHandler();
+		this._deregisterDragHandler();
+	}
+
 	_attachScreenResizeHandler() {
 		if (!this._screenResizeHandlerAttached) {
 			window.addEventListener("resize", this._screenResizeHandler);
@@ -382,6 +375,20 @@ class Dialog extends Popup {
 		if (this._screenResizeHandlerAttached) {
 			window.removeEventListener("resize", this._screenResizeHandler);
 			this._screenResizeHandlerAttached = false; // prevent dialog from repositioning during resizing
+		}
+	}
+
+	_registerDragHandler() {
+		if (!this._dragHandlerRegistered) {
+			this.addEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = true;
+		}
+	}
+
+	_deregisterDragHandler() {
+		if (this._dragHandlerRegistered) {
+			this.removeEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = false;
 		}
 	}
 
@@ -612,10 +619,18 @@ class Dialog extends Popup {
 				this._initialLeft! + this._initialWidth!,
 			);
 
+			// check if width is changed to avoid "left" jumping when max width is reached
+			Object.assign(this.style, {
+				width: `${newWidth}px`,
+			});
+
+			const deltaWidth = newWidth - this.getBoundingClientRect().width;
+			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
+
 			newLeft = clamp(
-				this._initialLeft! + (clientX - this._initialX!),
+				rightEdge - newWidth,
 				0,
-				this._initialX! + this._initialWidth! - this._minWidth!,
+				rightEdge - this._minWidth!,
 			);
 		} else {
 			newWidth = clamp(
@@ -634,7 +649,7 @@ class Dialog extends Popup {
 		Object.assign(this.style, {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
-			left: newLeft ? `${newLeft}px` : undefined,
+			left: this._isRTL ? `${newLeft}px` : undefined,
 		});
 	}
 

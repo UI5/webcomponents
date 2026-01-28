@@ -237,8 +237,7 @@ class RatingIndicator extends UI5Element {
 
 		if (targetValue !== null) {
 			this.value = parseInt(targetValue);
-
-			if (this.value === 1 && this._liveValue === 1) {
+			if (this.value === this._liveValue) {
 				this.value = 0;
 			}
 

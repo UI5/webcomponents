@@ -17,13 +17,25 @@
     <ui5-dialog id="dialog">
         <ui5-bar slot="header" design="Header">
             <ui5-title level="H5" slot="startContent">Bar used in Header and Footer</ui5-title>
-            <ui5-button class="dialogCloser" design="Transparent" id="closeDialogButton" slot="endContent"
+            <ui5-button class="dialogCloser" design="Transparent" slot="endContent"
                 icon="decline"></ui5-button>
         </ui5-bar>
-        <p>Adding styles for the parts to remove the default Dialog's paddings when ui5-bar is used inside Header and
-            Footer</p>
+        <p>Custom styles are applied to remove the default Dialog's paddings when ui5-bar is placed in the header or footer of a dialog.</p>
         <ui5-bar slot="footer" design="Footer">
             <ui5-button class="dialogCloser" design="Emphasized" slot="endContent"
+                style="min-width: 4rem;">OK</ui5-button>
+        </ui5-bar>
+    </ui5-dialog>
+
+     <ui5-button id="dialogStateOpener">Open Dialog with State</ui5-button>
+
+    <ui5-dialog id="dialogState" state="Critical">
+        <ui5-bar id="bar" slot="header" design="Header">
+            <ui5-title level="H5" slot="startContent">Bar used in Header and Footer</ui5-title>
+        </ui5-bar>
+        <p>Custom styles are applied to adjust the paddings when a ui5-bar is placed in the header or footer of a dialog with state.</p>
+        <ui5-bar slot="footer" design="Footer">
+            <ui5-button design="Emphasized" id="closeDialogStateButton" slot="endContent"
                 style="min-width: 4rem;">OK</ui5-button>
         </ui5-bar>
     </ui5-dialog>

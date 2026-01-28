@@ -3,8 +3,6 @@
 	--ui5-listitem-border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
 	--ui5-listitem-selected-border-bottom: 1px solid var(--sapList_SelectionBorderColor);
 	--ui5-listitem-focused-selected-border-bottom: 1px solid var(--sapList_SelectionBorderColor);
-	--ui5-listitem-active-border-color: var(--sapContent_ContrastFocusColor);
-	--_ui5_listitembase_focus_width: 1px;
 	--_ui5-listitembase_disabled_opacity: 0.5;
 	--_ui5_product_switch_item_border: none;
 }

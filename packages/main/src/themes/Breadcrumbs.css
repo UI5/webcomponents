@@ -23,11 +23,15 @@
 }
 
 .ui5-breadcrumbs-current-location {
-    min-width: 1%;
     flex: 1 1 auto;
     /* Fix extra height in ul -> li element */
     font-size: 0;
     align-self: center;
+}
+
+.ui5-breadcrumbs-current-location,
+.ui5-breadcrumbs-link-wrapper:last-child {
+	min-width: 1%;
 }
 
 .ui5-breadcrumbs-current-location > span:focus {
@@ -47,7 +51,7 @@
     color: var(--sapLinkColor);
 }
 
-.ui5-breadcrumbs-dropdown-arrow-link-wrapper [ui5-link][focused] [ui5-icon] {
+.ui5-breadcrumbs-dropdown-arrow-link-wrapper:focus-within [ui5-link] [ui5-icon] {
     color: var(--_ui5_link_focus_color);
 }
 
@@ -94,7 +98,7 @@
 	cursor: auto;
 	color: var(--sapContent_LabelColor);
 	display: inline-block;
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 }
 

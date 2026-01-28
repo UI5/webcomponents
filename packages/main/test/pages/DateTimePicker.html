@@ -18,9 +18,19 @@
 </head>
 
 <body class="datetimepicker1auto">
+
+	<ui5-label for="dtpLabel">Deadline</ui5-label>
+	<ui5-datetime-picker id="dtpLabel"></ui5-datetime-picker>
+
 	<section>
 		<ui5-title>DateTimePicker</ui5-title><br>
 		<ui5-datetime-picker id="dt"></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>with shorter value format</ui5-title>
+		<ui5-datetime-picker value-format='yyyy-MM-dd HH:mm'
+		></ui5-datetime-picker>
 	</section>
 
 	<section>
@@ -41,6 +51,9 @@
 			format-pattern="dd/MM/yyyy, hh:mm a"
 			value="13/04/2020, 09:16 AM"
 		></ui5-datetime-picker>
+
+		<h3>display-fomat='medium' value-fomat='yyyy-MM-dd'</h3>
+		<ui5-datetime-picker id='dp12' display-format='medium' value-format='yyyy-MM-dd HH:mm:ss'></ui5-datetime-picker>
 
 		<br>
 
@@ -143,6 +156,9 @@
 		<ui5-datetime-picker value-state="Critical"></ui5-datetime-picker>
 		<ui5-datetime-picker value-state="Information"></ui5-datetime-picker>
 		<ui5-datetime-picker value-state="Positive"></ui5-datetime-picker>
+		<ui5-datetime-picker value-state="Negative">
+			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-datetime-picker>
 		<br><br>
 		<ui5-datetime-picker readonly></ui5-datetime-picker>
 		<ui5-datetime-picker disabled></ui5-datetime-picker>
@@ -184,8 +200,45 @@
 		</ui5-datetime-picker>
 	</section>
 
+	<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-datetime-picker format-pattern="YYYY-MM-dd hh:mm:ss a" min-date="2022-01-05 08:00:00 am" max-date="2024-01-06 08:00:00 pm" required id="formDateTimePicker"></ui5-datetime-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+
 	<script>
-		var counter = 0;
+		let counter = 0;
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDateRangePicker = document.getElementById('formDateTimePicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDateTimePicker');
+		});
+
+		formDateRangePicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDateTimePicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+
 		dt1.addEventListener("ui5-change", function(event) {
 			input1.value = `${++counter}`;
 			input2.value = "{ value: " + event.detail.value + " , valid: " + event.detail.valid + " }";
@@ -195,13 +248,13 @@
 			event.preventDefault();
 		});
 
-		var counter2 = 0;
+		const counter2 = 0;
 		dt2.addEventListener("ui5-change", function(event) {
 			input3.value = `${++counter2}`;
 			input4.value = "{ value: " + dt2.value + " , valid: " + event.detail.valid + " }";
 		});
 
-		var dtp = document.getElementById('defaultPattern');
+		const dtp = document.getElementById('defaultPattern');
 		document.getElementById('setButton').addEventListener("click", function(e) {
 			dtp.setAttribute("value", dtp.formatValue(new Date(2020, 3, 13, 3, 16, 16)));
 		});

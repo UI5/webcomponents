@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents",
-  "version": "2.8.0-rc.2",
+  "version": "2.19.0-rc.2",
   "description": "UI5 Web Components: webcomponents.main",
   "ui5": {
     "webComponentsPackage": true
@@ -8,8 +8,7 @@
   "type": "module",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
-  "private": false,
-  "customElements": "./dist/custom-elements.json",
+  "customElements": "dist/custom-elements.json",
   "keywords": [
     "openui5",
     "sapui5",
@@ -18,20 +17,20 @@
   "scripts": {
     "clean": "wc-dev clean",
     "lint": "wc-dev lint",
-    "lint:scope": "nps scope.lint",
+    "lint:scope": "wc-dev scope.lint",
     "start": "wc-dev start",
     "watch": "wc-dev watch",
-    "generate": "nps generate",
-    "generateAPI": "nps generateAPI",
+    "generate": "wc-dev generate",
+    "generateAPI": "wc-dev generateAPI",
     "build": "wc-dev build",
-    "bundle": "nps build.bundle",
-    "test": "wc-dev test",
-    "test:suite-1": "wc-dev test-suite-1",
-    "test:suite-2": "wc-dev test-suite-2",
-    "test:cypress": "nps test-cy-ci",
-    "test:cypress:suite-1": "nps test-cy-ci-suite-1",
-    "test:cypress:suite-2": "nps test-cy-ci-suite-2",
-    "test:cypress:open": "nps test-cy-open",
+    "bundle": "wc-dev build.bundle",
+    "test": "yarn test:cypress",
+    "test:cypress": "wc-dev test-cy-ci",
+    "test:cypress:suite-1": "wc-dev test-cy-ci-suite-1",
+    "test:cypress:suite-2": "wc-dev test-cy-ci-suite-2",
+    "test:cypress:suite-3": "wc-dev test-cy-ci-suite-3",
+    "test:cypress:suite-4": "wc-dev test-cy-ci-suite-4",
+    "test:cypress:open": "wc-dev test-cy-open",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:vitest": "yarn vitest run",
     "test:ssr": "node -e \"import('./test/ssr/component-imports.js')\"",
@@ -39,7 +38,6 @@
     "prepublishOnly": "tsc -b"
   },
   "exports": {
-    "./.port": "./.port",
     "./src/*": "./src/*",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json",
@@ -50,22 +48,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/main"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "2.8.0-rc.2",
-    "@ui5/webcomponents-icons": "2.8.0-rc.2",
-    "@ui5/webcomponents-icons-business-suite": "2.8.0-rc.2",
-    "@ui5/webcomponents-icons-tnt": "2.8.0-rc.2",
-    "@ui5/webcomponents-localization": "2.8.0-rc.2",
-    "@ui5/webcomponents-theming": "2.8.0-rc.2"
+    "@ui5/webcomponents-base": "2.19.0-rc.2",
+    "@ui5/webcomponents-icons": "2.19.0-rc.2",
+    "@ui5/webcomponents-icons-business-suite": "2.19.0-rc.2",
+    "@ui5/webcomponents-icons-tnt": "2.19.0-rc.2",
+    "@ui5/webcomponents-localization": "2.19.0-rc.2",
+    "@ui5/webcomponents-theming": "2.19.0-rc.2"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.8.0-rc.2",
-    "chromedriver": "^132.0.0",
+    "@custom-elements-manifest/analyzer": "^0.10.10",
+    "@ui5/cypress-internal": "0.1.0",
+    "@ui5/webcomponents-tools": "2.19.0-rc.2",
+    "cypress": "^15.3.0",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",
+    "vite": "5.4.21",
     "vitest": "^3.0.2"
   }
 }

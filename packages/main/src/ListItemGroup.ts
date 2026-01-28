@@ -4,9 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
-import { findClosestPosition } from "@ui5/webcomponents-base/dist/util/dragAndDrop/findClosestPosition.js";
-import Orientation from "@ui5/webcomponents-base/dist/types/Orientation.js";
+import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
 import type ListItemBase from "./ListItemBase.js";
@@ -17,6 +15,7 @@ import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 // Styles
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
+import WrappingType from "./types/WrappingType.js";
 
 type ListItemGroupMoveEventDetail = {
 	source: {
@@ -112,6 +111,26 @@ class ListItemGroup extends UI5Element {
 	items!: Array<ListItemBase>;
 
 	/**
+	 * Defines if the text of the component should wrap when it's too long.
+	 * When set to "Normal", the content (title, description) will be wrapped
+	 * using the `ui5-expandable-text` component.<br/>
+	 *
+	 * The text can wrap up to 100 characters on small screens (size S) and
+	 * up to 300 characters on larger screens (size M and above). When text exceeds
+	 * these limits, it truncates with an ellipsis followed by a text expansion trigger.
+	 *
+	 * Available options are:
+	 * - `None` (default) - The text will truncate with an ellipsis.
+	 * - `Normal` - The text will wrap (without truncation).
+	 *
+	 * @default "None"
+	 * @public
+	 * @since 2.15.0
+	 */
+	@property()
+	wrappingType: `${WrappingType}` = "None";
+
+	/**
 	 * Indicates whether the header is focused
 	 * @private
 	 */
@@ -127,12 +146,18 @@ class ListItemGroup extends UI5Element {
 	@slot({ type: HTMLElement })
 	header!: Array<ListItemBase>;
 
-	onEnterDOM() {
-		DragRegistry.subscribe(this);
-	}
+	_dragAndDropHandler: DragAndDropHandler;
 
-	onExitDOM() {
-		DragRegistry.unsubscribe(this);
+	constructor() {
+		super();
+
+		// Initialize the DragAndDropHandler with the necessary configurations
+		// The handler will manage the drag and drop operations for the list items.
+		this._dragAndDropHandler = new DragAndDropHandler(this, {
+			getItems: () => this.items,
+			getDropIndicator: () => this.dropIndicatorDOM,
+			filterPlacements: this._filterPlacements.bind(this),
+		});
 	}
 
 	get groupHeaderItem() {
@@ -156,82 +181,34 @@ class ListItemGroup extends UI5Element {
 	}
 
 	_ondragenter(e: DragEvent) {
-		e.preventDefault();
+		this._dragAndDropHandler.ondragenter(e);
 	}
 
 	_ondragleave(e: DragEvent) {
-		if (e.relatedTarget instanceof Node && this.shadowRoot!.contains(e.relatedTarget)) {
-			return;
-		}
-
-		this.dropIndicatorDOM!.targetReference = null;
+		this._dragAndDropHandler.ondragleave(e);
 	}
 
 	_ondragover(e: DragEvent) {
-		const draggedElement = DragRegistry.getDraggedElement();
-
-		if (!(e.target instanceof HTMLElement) || !draggedElement) {
-			return;
-		}
-
-		const closestPosition = findClosestPosition(
-			this.items,
-			e.clientY,
-			Orientation.Vertical,
-		);
-
-		if (!closestPosition) {
-			this.dropIndicatorDOM!.targetReference = null;
-			return;
-		}
-
-		let placements = closestPosition.placements;
-
-		if (closestPosition.element === draggedElement) {
-			placements = placements.filter(placement => placement !== MovePlacement.On);
-		}
-
-		const placementAccepted = placements.some(placement => {
-			const beforeItemMovePrevented = !this.fireDecoratorEvent("move-over", {
-				source: {
-					element: draggedElement,
-				},
-				destination: {
-					element: closestPosition.element,
-					placement,
-				},
-			});
-
-			if (beforeItemMovePrevented) {
-				e.preventDefault();
-				this.dropIndicatorDOM!.targetReference = closestPosition.element;
-				this.dropIndicatorDOM!.placement = placement;
-				return true;
-			}
-
-			return false;
-		});
-
-		if (!placementAccepted) {
-			this.dropIndicatorDOM!.targetReference = null;
-		}
+		this._dragAndDropHandler.ondragover(e);
 	}
 
 	_ondrop(e: DragEvent) {
-		e.preventDefault();
-
-		this.fireDecoratorEvent("move", {
-			source: {
-				element: DragRegistry.getDraggedElement()!,
-			},
-			destination: {
-				element: this.dropIndicatorDOM!.targetReference!,
-				placement: this.dropIndicatorDOM!.placement,
-			},
-		});
-
-		this.dropIndicatorDOM!.targetReference = null;
+		this._dragAndDropHandler.ondrop(e);
 	}
+
+	_filterPlacements(placements: MovePlacement[], draggedElement: HTMLElement, targetElement: HTMLElement): MovePlacement[] {
+		// Filter out MovePlacement.On when dragged element is the same as target
+		if (targetElement === draggedElement) {
+			return placements.filter(placement => placement !== MovePlacement.On);
+		}
+		return placements;
+	}
+
+	getFocusDomRef() {
+		return this.groupHeaderItem || this.items.at(0);
+	}
+
+	getGroupHeaderWrapping(): WrappingType { return WrappingType.None; }
 }
 
 ListItemGroup.define();

@@ -20,10 +20,14 @@ import type {
 import "@ui5/webcomponents-icons/dist/expand.js";
 import ColorValue from "./colorpicker-utils/ColorValue.js";
 import ColorPickerTemplate from "./ColorPickerTemplate.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type Input from "./Input.js";
 import type Slider from "./Slider.js";
 
 import {
+	COLORPICKER_LABEL,
+	COLORPICKER_SLIDER_GROUP,
 	COLORPICKER_ALPHA_SLIDER,
 	COLORPICKER_HUE_SLIDER,
 	COLORPICKER_HEX,
@@ -35,10 +39,13 @@ import {
 	COLORPICKER_LIGHT,
 	COLORPICKER_HUE,
 	COLORPICKER_TOGGLE_MODE_TOOLTIP,
+	COLORPICKER_PERCENTAGE,
+	COLORPICKER_COLOR_MODE_CHANGED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import ColorPickerCss from "./generated/themes/ColorPicker.css.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 
 const PICKER_POINTER_WIDTH = 6.5;
 
@@ -155,6 +162,13 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	 */
 	@property({ type: Number })
 	_alpha = 1;
+
+	/**
+	 * this is the alpha value in the input only while editing, since it can container invalid/empty values temporarily
+	 * @private
+	 */
+	@property()
+	_alphaTemp?: string;
 
 	/**
 	 * @private
@@ -298,8 +312,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		this._changeSelectedColor(e.offsetX, e.offsetY);
 	}
 
-	_handleAlphaInput(e: CustomEvent) {
-		const aphaInputValue: string = (e.target as Input).value;
+	_handleAlphaInput(e: UI5CustomEvent<Input, "input"> | UI5CustomEvent<Slider, "input">) {
+		const aphaInputValue = String(e.currentTarget.value);
+		this._alphaTemp = aphaInputValue;
 		this._alpha = parseFloat(aphaInputValue);
 		if (Number.isNaN(this._alpha)) {
 			this._alpha = 1;
@@ -327,6 +342,10 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		const input: Input = (e.target as Input);
 		let inputValueLowerCase = input.value.toLowerCase();
 
+		if (inputValueLowerCase.startsWith("#")) {
+			inputValueLowerCase = inputValueLowerCase.slice(1);
+		}
+
 		// Shorthand Syntax
 		if (inputValueLowerCase.length === 3) {
 			inputValueLowerCase = `${inputValueLowerCase[0]}${inputValueLowerCase[0]}${inputValueLowerCase[1]}${inputValueLowerCase[1]}${inputValueLowerCase[2]}${inputValueLowerCase[2]}`;
@@ -352,38 +371,49 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	_togglePickerMode() {
 		this._displayHSL = !this._displayHSL;
+
+		// Announce a message to screen readers
+		announce(this.colorFieldsAnnouncementText, InvisibleMessageMode.Polite);
 	}
 
 	_handleColorInputChange(e: Event) {
 		const target = e.target as Input;
 		const targetValue = parseInt(target.value) || 0;
+		let normalizedValue = targetValue;
 
 		switch (target.id) {
 		case "red":
 			this._colorValue.R = targetValue;
+			normalizedValue = this._colorValue.R;
 			break;
 
 		case "green":
 			this._colorValue.G = targetValue;
+			normalizedValue = this._colorValue.G;
 			break;
 
 		case "blue":
 			this._colorValue.B = targetValue;
+			normalizedValue = this._colorValue.B;
 			break;
 
 		case "hue":
 			this._colorValue.H = targetValue;
+			normalizedValue = this._colorValue.H;
 			break;
 
 		case "saturation":
 			this._colorValue.S = targetValue;
+			normalizedValue = this._colorValue.S;
 			break;
 
 		case "light":
 			this._colorValue.L = targetValue;
+			normalizedValue = this._colorValue.L;
 			break;
 		}
 
+		target.value = String(normalizedValue);
 		const color = this._colorValue.toRGBString();
 		this._setValue(color);
 		this._updateColorGrid();
@@ -432,6 +462,14 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	_handleAlphaChange() {
+		// parse the input value if valid or fallback to default
+		this._alpha = this._alphaTemp ? parseFloat(this._alphaTemp) : 1;
+		if (Number.isNaN(this._alpha)) {
+			this._alpha = 1;
+		}
+		// reset input value so _alpha is rendered
+		this._alphaTemp = undefined;
+		// normalize range
 		this._alpha = this._alpha < 0 ? 0 : this._alpha;
 		this._alpha = this._alpha > 1 ? 1 : this._alpha;
 
@@ -518,6 +556,14 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 			&& this._colorValue.B === value.b;
 	}
 
+	get colorPickerLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
+	}
+
+	get sliderGroupLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_SLIDER_GROUP);
+	}
+
 	get hueSliderLabel() {
 		return ColorPicker.i18nBundle.getText(COLORPICKER_HUE_SLIDER);
 	}
@@ -556,6 +602,29 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	get alphaInputLabel() {
 		return ColorPicker.i18nBundle.getText(COLORPICKER_ALPHA);
+	}
+
+	get percentageLabel() {
+		return ColorPicker.i18nBundle.getText(COLORPICKER_PERCENTAGE);
+	}
+
+	get colorFieldsAnnouncementText() {
+		const mode = this._displayHSL ? "HSL" : "RGB";
+		let text = "";
+
+		if (mode === "RGB") {
+			text = `${this.redInputLabel} ${this._colorValue.R}, `
+				+ `${this.greenInputLabel} ${this._colorValue.G}, `
+				+ `${this.blueInputLabel} ${this._colorValue.B}, `
+				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
+		} else {
+			text = `${this.hueInputLabel} ${this._colorValue.H}, `
+				+ `${this.saturationInputLabel} ${this._colorValue.S} ${this.percentageLabel}, `
+				+ `${this.lightInputLabel} ${this._colorValue.L} ${this.percentageLabel}, `
+				+ `${this.alphaInputLabel} ${this._colorValue.Alpha}`;
+		}
+
+		return ColorPicker.i18nBundle.getText(COLORPICKER_COLOR_MODE_CHANGED, mode, text);
 	}
 
 	get toggleModeTooltip() {

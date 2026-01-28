@@ -6,10 +6,8 @@
 	--_ui5_popup_header_footer_padding_m_l: 2rem;
 	--_ui5_popup_header_footer_padding_xl: 3rem;
 	--_ui5_popup_viewport_margin: 10px;
-	--_ui5_popup_header_font_weight: 400;
 	--_ui5_popup_header_prop_header_text_alignment: flex-start;
 	--_ui5_popup_border_radius: var(--sapElement_BorderCornerRadius);
-	--_ui5_popup_header_background: var(--sapPageHeader_Background);
 	--_ui5_popup_header_shadow: var(--sapContent_HeaderShadow);
 	--_ui5_popup_header_border: none;
 }

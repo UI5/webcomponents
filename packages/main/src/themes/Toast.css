@@ -1,6 +1,6 @@
 :host {
-	font-family: "72override", var(--sapFontFamily);
-	color: var(--sapList_TextColor);
+	font-family: var(--sapFontFamily);
+	color: var(--sapContent_ContrastTextColor);
 	font-size: var(--sapFontSize);
 	position: fixed;
 	display: none;
@@ -28,6 +28,10 @@
 	padding: 0;
 	outline: none;
 	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: fit-content;
 }
 
 :host([open]) {

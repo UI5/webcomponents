@@ -1,109 +1,162 @@
-.ui5-pm-rp {
+.ui5-user-menu-rp {
     width: 20rem;
 }
 
-.ui5-pm-rp::part(content),
-.ui5-pm-rp::part(footer) {
+.ui5-user-menu-rp::part(content),
+.ui5-user-menu-rp::part(footer) {
     padding-inline: 0.5rem;
 }
 
-.ui5-pm-rp::part(header) {
+.ui5-user-menu-rp::part(header) {
     box-shadow: none;
     padding: 0;
 }
 
-.ui5-pm-header {
-    width: 100%;
-    padding-block-start: 1rem;
-    padding-inline: 0.5rem;
+.ui5-user-menu-header {
     display: flex;
     flex-direction: column;
 }
 
-[on-phone] .ui5-pm-header {
+[on-phone] .ui5-user-menu-header {
     padding-inline: 0;
 }
 
-.ui5-pm-phone-header::part(startContent),
-.ui5-pm-phone-header::part(endContent) {
+.ui5-user-menu-fixed-header:not(.ui5-user-menu-rp-scrolled) {
+	box-shadow: none;
+}
+
+.ui5-user-menu-fixed-header::part(startContent),
+.ui5-user-menu-fixed-header::part(endContent) {
     padding: 0;
 }
 
-.ui5-pm-phone-header [ui5-button] {
+.ui5-user-menu-fixed-header [ui5-button] {
     margin-inline: 0.5rem;
-    font-family: var(--sapFontSemiboldFamily);
+    font-family: var(--sapFontSemiboldDuplexFamily);
 }
 
-.ui5-pm-rp::part(content) {
+.ui5-user-menu-rp::part(content) {
     padding-top: 0;
     padding-bottom: 0.5rem;
 }
 
-.ui5-pm-rp::part(footer) {
+.ui5-user-menu-rp::part(footer) {
     padding-block: 0.5rem;
 }
 
-.ui5-pm-selected-account {
+.ui5-user-menu-selected-account {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-block-end: 0.5rem;
+    overflow: hidden;
 }
 
-.ui5-pm--selected-account-avatar{
-	margin-block: 0.5rem;
+.ui5-user-menu--selected-account-avatar {
+    margin-block-start: 0.25rem;
+    margin-block-end: 0.5rem;
 }
 
-.ui5-pm-selected-account-title{
-	margin-block: 0.25rem;
-	font-family: var(--sapFontBoldFamily);
-	font-size: var(--sapFontLargeSize);
-	color: var(--sapTextColor)
+.ui5-user-menu-selected-account-title {
+	text-align: center;
+    margin-block: 0.25rem;
+    font-family: var(--sapFontSemiboldDuplexFamily);
+    font-size: var(--sapFontLargeSize);
+    color: var(--sapTextColor);
 }
 
-.ui5-pm-selected-account-subtitleText{
-	margin-block: 0.25rem;
+.ui5-user-menu-selected-account-subtitleText {
+	text-align: center;
+	margin-bottom: 0.25rem;
+    font-family: var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+    color: var(--sapContent_LabelColor);
+}
+
+.ui5-user-menu-selected-account-description {
+	text-align: center;
+    font-family: var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+    color: var(--sapContent_LabelColor);
+}
+
+.ui5-user-menu-selected-account-additional-info {
+	margin-top: 0.25rem;
+	text-align: center;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
-	color: var(--sapContent_LabelColor)
+	color: var(--sapContent_LabelColor);
 }
 
-.ui5-pm-selected-account-description{
-	margin-bottom: 1rem;
-	font-family: var(--sapFontFamily);
-	font-size: var(--sapFontSize);
-	color: var(--sapContent_LabelColor)
+.ui5-user-menu-manage-account-btn {
+    font-family: var(--sapFontSemiboldDuplexFamily);
+    margin-block-start: 1rem;
 }
 
-.ui5-pm-decline-btn {
-	align-self: flex-end;
-	font-family: var(--sapFontSemiboldFamily);
+.ui5-user-menu-sign-out-btn {
+    font-family: var(--sapFontSemiboldDuplexFamily);
 }
 
-.ui5-pm-manage-account-btn {
-	margin-top: 0.5rem;
-	font-family: var(--sapFontSemiboldFamily);
+.ui5-user-menu-other-accounts {
+    margin-block-end: 0.5rem;
 }
 
-
-.ui5-pm-sign-out-btn {
-	font-family: var(--sapFontSemiboldFamily);
+.ui5-user-menu-other-accounts::part(header) {
+	border-bottom-left-radius:0;
+	border-bottom-right-radius:0;
 }
 
-.ui5-pm-other-accounts {
-    margin-bottom: 1rem;
-}
-
-.ui5-pm-other-accounts::part(content) {
+.ui5-user-menu-other-accounts::part(content) {
     padding: 0;
 }
 
-.ui5-pm-other-accounts-content {
-    display: grid;
-    grid-template-columns: auto 1fr;
+.ui5-user-menu-other-accounts-content {
+    display: flex;
     align-items: center;
-    gap: 1rem;
-    padding-block: 1rem;
+    width: 100%;
+    min-height: 4.5rem;
+    gap: 12px;
+}
+
+.ui5-user-menu-other-accounts-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    align-self: stretch;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ui5-user-menu-other-accounts-title {
+    overflow: hidden;
+    color: var(--sapList_TextColor);
+    text-overflow: ellipsis;
+    font-family: var(--sapFontSemiboldDuplexFamily);
+    font-size: var(--sapFontSize);
+    font-style: normal;
+    line-height: normal;
+}
+
+.ui5-user-menu-other-accounts-additional-info {
+    overflow: hidden;
+    color: var(--sapContent_LabelColor);
+    text-overflow: ellipsis;
+    font-family: var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+    font-style: normal;
+    line-height: normal;
+}
+
+.ui5-user-menu-selected-account-icon {
+    display: flex;
+    width: 18px;
+    align-items: center;
+    align-self: stretch;
+    color: var(--sapContent_NonInteractiveIconColor);
+    font-family: var(--_ui5_slider_handle_font_family);
+    font-size: 1.125rem;
 }
 
 .ui5-user-menu-account-header {
@@ -113,7 +166,7 @@
     align-items: center;
 }
 
-.ui5-pm-footer {
+.ui5-user-menu-footer {
     display: flex;
     flex: 1;
     justify-content: flex-end;

@@ -99,7 +99,7 @@
 	min-width: 0; /* fixes Chrome flex issue */
 	width: 100%;
 	padding-inline: var(--_ui5-notification_item-content-padding);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	box-sizing: border-box;
 }
 
@@ -156,7 +156,6 @@
 	font-size: var(--sapFontSize);
 	margin-top: var(--_ui5-notification_item-footer-margin-top);
 	box-sizing: border-box;
-	flex-wrap: wrap;
 	align-items: center;
 }
 
@@ -168,6 +167,7 @@
 
 .ui5-nli-footnotes {
 	display: flex;
+	min-width: 0; /* prevents overflowing footnotes */
 }
 
 .ui5-nli-footer-showMore {

@@ -17,11 +17,17 @@
 <body class="illustratedmessage1auto">
 	Illustration:
 	<ui5-select id="illustrationSelect">
+		<ui5-option>Achievement</ui5-option>
+		<ui5-option>AddingColumns</ui5-option>
+		<ui5-option>AddPeopleToCalendar</ui5-option>
 		<ui5-option>AddColumn</ui5-option>
 		<ui5-option>AddPeople</ui5-option>
 		<ui5-option>AddDimensions</ui5-option>
 		<ui5-option>BalloonSky</ui5-option>
 		<ui5-option>BeforeSearch</ui5-option>
+		<ui5-option>DragFilesToUpload</ui5-option>
+		<ui5-option>FilteringColumns</ui5-option>
+		<ui5-option>GroupingColumns</ui5-option>
 		<ui5-option>Connection</ui5-option>
 		<ui5-option>EmptyCalendar</ui5-option>
 		<ui5-option>EmptyList</ui5-option>
@@ -29,6 +35,8 @@
 		<ui5-option>ErrorScreen</ui5-option>
 		<ui5-option>FilterTable</ui5-option>
 		<ui5-option>GroupTable</ui5-option>
+		<ui5-option>KeyTask</ui5-option>
+		<ui5-option>NoChartData</ui5-option>
 		<ui5-option>NewMail</ui5-option>
 		<ui5-option>NoActivities</ui5-option>
 		<ui5-option>NoColumnsSet</ui5-option>
@@ -47,6 +55,8 @@
 		<ui5-option>PageNotFound</ui5-option>
 		<ui5-option>ReloadScreen</ui5-option>
 		<ui5-option>ResizeColumn</ui5-option>
+		<ui5-option>ResizingColumns</ui5-option>
+		<ui5-option>ReceiveAppreciation</ui5-option>
 		<ui5-option>SearchEarth</ui5-option>
 		<ui5-option>SearchFolder</ui5-option>
 		<ui5-option>SignOut</ui5-option>
@@ -66,6 +76,7 @@
 		<ui5-option>SimpleTask</ui5-option>
 		<ui5-option>SleepingBell</ui5-option>
 		<ui5-option>SortColumn</ui5-option>
+		<ui5-option>SortingColumns</ui5-option>
 		<ui5-option>SuccessBalloon</ui5-option>
 		<ui5-option>SuccessCheckMark</ui5-option>
 		<ui5-option>SuccessHighFive</ui5-option>
@@ -77,6 +88,7 @@
 		<ui5-option>UnableToUpload</ui5-option>
 		<ui5-option>UploadToCloud</ui5-option>
 		<ui5-option>UploadCollection</ui5-option>
+		<ui5-option>UserHasSignedUp</ui5-option>
 		<ui5-option>TntAvatar</ui5-option>
 		<ui5-option>TntCalculator</ui5-option>
 		<ui5-option>TntChartArea</ui5-option>
@@ -94,6 +106,7 @@
 		<ui5-option>TntCompass</ui5-option>
 		<ui5-option>TntComponents</ui5-option>
 		<ui5-option>TntDialog</ui5-option>
+		<ui5-option>TntEmptyContentPane</ui5-option>
 		<ui5-option>TntExternalLink</ui5-option>
 		<ui5-option>TntFaceID</ui5-option>
 		<ui5-option>TntFingerprint</ui5-option>
@@ -126,10 +139,10 @@
 	Designs:
 	<ui5-select id="sizeSelect">
 		<ui5-option>base</ui5-option>
-		<ui5-option>dot</ui5-option>
-		<ui5-option>spot</ui5-option>
-		<ui5-option>dialog</ui5-option>
-		<ui5-option selected>scene</ui5-option>
+		<ui5-option>extrasmall</ui5-option>
+		<ui5-option>small</ui5-option>
+		<ui5-option>medium</ui5-option>
+		<ui5-option selected>large</ui5-option>
 	</ui5-select>
 	<ui5-illustrated-message id="illustratedMsg1" class="border">
 		<ui5-button>Action 1</ui5-button>
@@ -203,13 +216,13 @@
 		const illustratedMessageContainer = document.getElementById("container");
 		const designs = {
 			base: 159,
-			dot: 259,
-			spot: 319,
-			dialog: 679,
-			scene: 1100,
+			extrasmall: 259,
+			small: 319,
+			medium: 679,
+			large: 1100,
 		}
 
-		illustratedMessage.style.width = `${designs.scene}px`;
+		illustratedMessage.style.width = `${designs.large}px`;
 
 		illustrationSelect.addEventListener("ui5-change", (event) => {
 			illustratedMessage.setAttribute("name", event.detail.selectedOption.textContent);

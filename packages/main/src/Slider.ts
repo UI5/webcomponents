@@ -2,14 +2,15 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEscape, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import SliderBase from "./SliderBase.js";
-import type Input from "./Input.js";
+import type SliderTooltip from "./SliderTooltip.js";
 
 // Template
 import SliderTemplate from "./SliderTemplate.js";
+import type { SliderTooltipChangeEventDetails } from "./SliderTooltip.js";
 
 // Texts
 import {
@@ -89,13 +90,17 @@ class Slider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	value = 0;
 
+	@property()
+	tooltipValueState: `${ValueState}` = "None";
+
+	@property()
+	tooltipValue = "";
+
 	_valueInitial?: number;
 	_valueOnInteractionStart?: number;
 	_progressPercentage = 0;
 	_handlePositionFromStart = 0;
 	_lastValidInputValue: string;
-	_tooltipInputValue: string = this.value.toString();
-	_tooltipInputValueState: `${ValueState}` = "None";
 
 	get formFormattedValue() {
 		return this.value.toString();
@@ -122,10 +127,6 @@ class Slider extends SliderBase implements IFormInputElement {
 	 *
 	 */
 	onBeforeRendering() {
-		if (this.editableTooltip) {
-			this._updateInputValue();
-		}
-
 		if (!this.isCurrentStateOutdated()) {
 			return;
 		}
@@ -133,6 +134,12 @@ class Slider extends SliderBase implements IFormInputElement {
 		this.notResized = true;
 		this.syncUIAndState();
 		this._updateHandleAndProgress(this.value);
+	}
+
+	onAfterRendering(): void {
+		super.onAfterRendering();
+
+		this.tooltip?.repositionTooltip();
 	}
 
 	syncUIAndState() {
@@ -172,7 +179,7 @@ class Slider extends SliderBase implements IFormInputElement {
 	_onmousedown(e: TouchEvent | MouseEvent) {
 		// If step is 0 no interaction is available because there is no constant
 		// (equal for all user environments) quantitative representation of the value
-		if (this.disabled || this.step === 0 || (e.target as HTMLElement).hasAttribute("ui5-input")) {
+		if (this.disabled || this.step === 0 || (e.target as HTMLElement).hasAttribute("ui5-slider-tooltip")) {
 			return;
 		}
 
@@ -202,7 +209,7 @@ class Slider extends SliderBase implements IFormInputElement {
 		}
 
 		if (this.showTooltip) {
-			this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.VISIBLE;
+			this._tooltipsOpen = true;
 		}
 	}
 
@@ -218,9 +225,50 @@ class Slider extends SliderBase implements IFormInputElement {
 		// value that was saved when it was first focused in
 		this._valueInitial = undefined;
 
-		if (this.showTooltip && !(e.relatedTarget as HTMLInputElement)?.hasAttribute("ui5-input")) {
-			this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.HIDDEN;
+		if (this.showTooltip && !(e.relatedTarget as HTMLElement)?.hasAttribute("ui5-slider-tooltip")) {
+			this._tooltipsOpen = false;
 		}
+	}
+
+	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
+		const value = parseFloat(e.detail.value);
+		const isInvalid = value < this._effectiveMin || value > this._effectiveMax;
+
+		if (isInvalid) {
+			this.tooltipValueState = "Negative";
+			this.tooltipValue = `${value}`;
+			return;
+		}
+
+		this.value = value;
+		this.fireDecoratorEvent("change");
+	}
+
+	_onTooltipFocusChange() {
+		const value = parseFloat(this.tooltipValue);
+		const isInvalid = value < this._effectiveMin || value > this._effectiveMax;
+
+		if (isInvalid) {
+			this.tooltipValueState = "None";
+			this.tooltipValue = this.value.toString();
+		}
+	}
+
+	_onTooltipKeydown(e: KeyboardEvent) {
+		if (isF2(e)) {
+			e.preventDefault();
+			this._sliderHandle.focus();
+		}
+	}
+
+	_onTooltipOpen() {
+		const ctor = this.constructor as typeof Slider;
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
+		this.tooltipValue = this.value.toFixed(stepPrecision);
+	}
+
+	_onTooltipInput(e: CustomEvent) {
+		this.tooltipValue = e.detail.value;
 	}
 
 	/**
@@ -228,10 +276,6 @@ class Slider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_handleMove(e: TouchEvent | MouseEvent) {
-		if ((e.target as HTMLElement).hasAttribute("ui5-input")) {
-			return;
-		}
-
 		e.preventDefault();
 
 		// If step is 0 no interaction is available because there is no constant
@@ -245,17 +289,14 @@ class Slider extends SliderBase implements IFormInputElement {
 
 		this._updateHandleAndProgress(newValue);
 		this.value = newValue;
+		this.tooltipValue = newValue.toString();
 		this.updateStateStorageAndFireInputEvent("value");
 	}
 
 	/** Called when the user finish interacting with the slider
 	 * @private
 	 */
-	_handleUp(e: TouchEvent | MouseEvent) {
-		if ((e.target as HTMLElement).hasAttribute("ui5-input")) {
-			return;
-		}
-
+	_handleUp() {
 		if (this._valueOnInteractionStart !== this.value) {
 			this.fireDecoratorEvent("change");
 		}
@@ -264,39 +305,16 @@ class Slider extends SliderBase implements IFormInputElement {
 		this._valueOnInteractionStart = undefined;
 	}
 
-	_onInputFocusOut(e: FocusEvent) {
-		const tooltipInput = this.shadowRoot!.querySelector("[ui5-input]") as Input;
+	_onkeyup(e: KeyboardEvent) {
+		const isActionKey = SliderBase._isActionKey(e);
 
-		this._tooltipVisibility = SliderBase.TOOLTIP_VISIBILITY.HIDDEN;
-		this._updateValueFromInput(e);
+		this._onKeyupBase();
 
-		if (!this._isInputValueValid) {
-			tooltipInput.value = this._lastValidInputValue;
-			this._isInputValueValid = true;
-			this._tooltipInputValueState = "None";
-		}
-	}
-
-	_updateInputValue() {
-		const tooltipInput = this.shadowRoot!.querySelector("[ui5-input]") as Input;
-
-		if (!tooltipInput) {
-			return;
+		if (isActionKey && this._valueOnInteractionStart !== this.value) {
+			this.fireDecoratorEvent("change");
 		}
 
-		this._isInputValueValid = parseFloat(tooltipInput.value) >= this.min && parseFloat(tooltipInput.value) <= this.max;
-
-		if (!this._isInputValueValid) {
-			this._tooltipInputValue = this._lastValidInputValue;
-			this._isInputValueValid = true;
-			this._tooltipInputValueState = "Negative";
-
-			return;
-		}
-
-		this._tooltipInputValue = this.value.toString();
-		this._lastValidInputValue = this._tooltipInputValue;
-		this._tooltipInputValueState = "None";
+		this._valueOnInteractionStart = this.value;
 	}
 
 	/** Determines if the press is over the handle
@@ -330,44 +348,39 @@ class Slider extends SliderBase implements IFormInputElement {
 		if (newValue !== currentValue) {
 			this._updateHandleAndProgress(newValue!);
 			this.value = newValue!;
+			this.tooltipValue = this.value.toString();
 			this.updateStateStorageAndFireInputEvent("value");
 		}
+	}
+
+	_onTooltopForwardFocus(e: CustomEvent) {
+		const tooltip = e.target as SliderTooltip;
+
+		tooltip.followRef?.focus();
 	}
 
 	get inputValue() {
 		return this.value.toString();
 	}
 
+	get tooltip() {
+		return this.getDomRef()?.querySelector<SliderTooltip>("[ui5-slider-tooltip]");
+	}
+
 	get styles() {
 		return {
 			progress: {
-				"transform": `scaleX(${this._progressPercentage})`,
-				"transform-origin": `${this.directionStart} top`,
+				"width": `${this._handlePositionFromStart}%`,
+				"border": this._handlePositionFromStart === 0 ? "none" : "",
 			},
 			handle: {
 				[this.directionStart]: `${this._handlePositionFromStart}%`,
 			},
-			label: {
-				"width": `${this._labelWidth}%`,
-			},
-			labelContainer: {
-				"width": `100%`,
-				[this.directionStart]: `-${this._labelWidth / 2}%`,
-			},
-			tooltip: {
-				"visibility": `${this._tooltipVisibility}`,
-			},
 		};
 	}
 
-	get _sliderHandle() {
+	get _sliderHandle() : HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-slider-handle")!;
-	}
-
-	get tooltipValue() {
-		const ctor = this.constructor as typeof Slider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		return this.value.toFixed(stepPrecision);
 	}
 
 	get _ariaDisabled() {

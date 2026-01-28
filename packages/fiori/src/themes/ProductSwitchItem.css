@@ -53,13 +53,9 @@
 	outline: none;
 	box-sizing: border-box;
 	padding: .5rem;
-	padding-top: 4rem;
+	padding-top: .5rem;
 	cursor: pointer;
 	border: var(--_ui5_product_switch_item_border);
-}
-
-:host([icon]) .ui5-product-switch-item-root {
-	padding-top: .5rem;
 }
 
 :host([selected]) .ui5-product-switch-item-root {
@@ -74,6 +70,12 @@
 	box-sizing: border-box;
 	color: var(--sapContent_IconColor);
 	pointer-events: none;
+}
+
+.ui5-product-switch-item-root .ui5-product-switch-item-image-placeholder {
+	width: 3rem;
+	height: 3rem;
+	margin-bottom: .5rem;
 }
 
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content {
@@ -95,7 +97,7 @@
 }
 
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title {
-	font-size:var( --sapFontHeader6Size);
+	font-size:var(--sapFontHeader6Size);
 	color:var(--sapGroup_TitleTextColor);
 }
 
@@ -107,7 +109,7 @@
 }
 
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-subtitle {
-	font-size:var( --sapFontSmallSize);
+	font-size:var(--sapFontSmallSize);
 	color:var(--sapContent_LabelColor);
 }
 
@@ -126,7 +128,7 @@
 		flex-direction: row;
 	}
 
-	:host([icon]) .ui5-product-switch-item-root {
+	.ui5-product-switch-item-root {
 		padding-top: 0;
 	}
 
@@ -136,12 +138,16 @@
 		margin: 0 .75rem 0 0;
 	}
 
+	.ui5-product-switch-item-root .ui5-product-switch-item-image-placeholder {
+		margin: 0 .75rem 0 0;
+	}
+
 	.ui5-product-switch-item-root .ui5-product-switch-item-text-content {
 		align-items: flex-start;
 		max-width: 100%;
 	}
 
-	:host([icon]) .ui5-product-switch-item-root .ui5-product-switch-item-text-content {
+	.ui5-product-switch-item-root .ui5-product-switch-item-text-content {
 		max-width: calc(100% - 3.75rem); /* 100% width - (3rem for the icon + right margin)*/
 	}
 

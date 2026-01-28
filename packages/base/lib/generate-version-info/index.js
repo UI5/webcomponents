@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import { pathToFileURL } from "url";
 
 const generate = async () => {
 	const version = JSON.parse(await fs.readFile("package.json")).version;
@@ -25,8 +26,17 @@ export default VersionInfo;`;
 
 	await fs.mkdir("src/generated/", { recursive: true });
 	await fs.writeFile("src/generated/VersionInfo.ts", fileContent);
+
+	console.log("Version info file generated.");
 }
 
-generate().then(() => {
-	console.log("Version info file generated.");
-});
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	generate()
+}
+
+export default {
+	_ui5mainFn: generate
+}

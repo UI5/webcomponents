@@ -27,7 +27,7 @@
 	justify-content: center;
 	align-items: center;
 	font-size: var(--sapFontSmallSize);
-	font-family: "72override", var(--sapFontFamily);
+	font-family: var(--sapFontFamily);
 	z-index: 2;
 	box-sizing: border-box;
 	pointer-events: none;

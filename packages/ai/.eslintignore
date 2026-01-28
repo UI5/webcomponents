@@ -2,11 +2,11 @@
 target
 dist
 src/generated
+cypress/*
 lib
 test
 bundle.*.js
 rollup.config*.js
-wdio.conf.cjs
 postcss.config.cjs
 cypress.config.js
 package-scripts.cjs

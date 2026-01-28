@@ -1,6 +1,8 @@
 import Basic from "../../../_samples/fiori/SideNavigation/Basic/Basic.md";
 import QuickAction from "../../../_samples/fiori/SideNavigation/QuickAction/QuickAction.md";
 import UnselectableParentItems from "../../../_samples/fiori/SideNavigation/UnselectableParentItems/UnselectableParentItems.md";
+import OverlayMode from "../../../_samples/fiori/SideNavigation/OverlayMode/OverlayMode.md";
+import CustomWidth from "../../../_samples/fiori/SideNavigation/CustomWidth/CustomWidth.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -20,3 +22,13 @@ When a parent item is selected, it will expand or collapse the list of child ite
 Quick action items allow for providing access to frequent functionality.
 
 <QuickAction />
+
+### Overlay Mode
+SideNavigation is enabled to be used inside a responsive popover. This example shows how to achieve overlay mode with correct design and interaction.
+
+<OverlayMode />
+
+### Defining Custom Width
+The width of the side navigation panel can be customized using CSS. The panel must be at least 16 rem wide to maintain readability and layout stability. You can set a larger width as needed, but it cannot be reduced below 16 rem. If the panel does not have sufficient space, long texts will wrap automatically.
+
+<CustomWidth />

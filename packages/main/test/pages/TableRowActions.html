@@ -74,6 +74,12 @@
 		table.addEventListener("row-click", (e) => {
 			console.log(`Row with the row-key ${e.detail.row.rowKey} is clicked`);
 		});
+		for (let element of document.getElementsByTagName("ui5-table-row")) {
+			element.addEventListener("click", (e) => {
+				console.log(`Row  ${e.target.rowKey}  is clicked`);
+			});
+		}
+
 		table.addEventListener("row-action-click", (e) => {
 			const { row, action } = e.detail;
 			console.log(`Row ${row.rowKey}, ${action.text || "navigation"} action is clicked`);
@@ -83,6 +89,12 @@
 		slider.addEventListener("input", (e) => {
 			table.rowActionCount = e.target.value;
 		});
+
+		for (let element of document.getElementsByTagName("ui5-table-row-action")) {
+			element.addEventListener("click", (e) => {
+				console.log(`Row action ${e.target.text} is clicked`);
+			});
+		}
 
 	</script>
 </body>

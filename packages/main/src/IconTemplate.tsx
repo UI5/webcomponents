@@ -22,14 +22,22 @@ export default function IconTemplate(this: Icon) {
 			}
 
 			<g role="presentation">
-				{this.customSvg &&
-                    <g dangerouslySetInnerHTML={{ __html: (this.customSvg as { strings?: string[] }).strings?.join("") ?? "" }}></g>
-				}
-
-				{this.pathData.map(path => (
-					<path d={path}></path>
-				))}
+				{ content.call(this) }
 			</g>
 		</svg>
 	);
+}
+
+function content(this: Icon) {
+	if (this.customTemplate) {
+		return this.customTemplate;
+	}
+
+	if (this.customTemplateAsString) {
+		return <g dangerouslySetInnerHTML={{ __html: this.customTemplateAsString }}></g>;
+	}
+
+	return this.pathData.map(path => (
+		<path d={path}></path>
+	));
 }

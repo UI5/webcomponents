@@ -4,33 +4,13 @@
 	--_ui5_tc_header_border_bottom: 0.125rem solid var(--sapPageHeader_BorderColor);
 
 	/* Header Item */
-	--_ui5_tc_headerItemContent_border_bottom: 0.25rem solid var(--sapPageHeader_BorderColor);
 	--_ui5_tc_headerItem_focus_border: 0.125rem dotted var(--sapContent_FocusColor);
 	--_ui5_tc_headerItem_text_selected_color: var(--sapPageHeader_BorderColor);
 	--_ui5_tc_headerItem_text_selected_hover_color: var(--sapPageHeader_BorderColor);
-	--_ui5_tc_headerItem_neutral_color: var(--sapGroup_TitleTextColor);
-	--_ui5_tc_headerItem_positive_color: var(--sapGroup_TitleTextColor);
-	--_ui5_tc_headerItem_negative_color: var(--sapGroup_TitleTextColor);
-	--_ui5_tc_headerItem_critical_color: var(--sapGroup_TitleTextColor);
-	--_ui5_tc_headerItem_neutral_border_color: var(--_ui5_tc_headerItem_neutral_color);
-	--_ui5_tc_headerItem_positive_border_color: var(--_ui5_tc_headerItem_positive_color);
-	--_ui5_tc_headerItem_negative_border_color: var(--_ui5_tc_headerItem_negative_color);
-	--_ui5_tc_headerItem_critical_border_color: var(--_ui5_tc_headerItem_critical_color);
-	--_ui5_tc_headerItem_neutral_selected_border_color: var(--_ui5_tc_headerItem_neutral_color);
-	--_ui5_tc_headerItem_positive_selected_border_color: var(--_ui5_tc_headerItem_positive_color);
-	--_ui5_tc_headerItem_negative_selected_border_color: var(--_ui5_tc_headerItem_negative_color);
-	--_ui5_tc_headerItem_critical_selected_border_color: var(--_ui5_tc_headerItem_critical_color);
 	--_ui5_tc_headerItemSemanticIcon_display: inline-block;
 
 	/* Header Item icons */
 	--_ui5_tc_headerItemIcon_border: 1px solid var(--sapPageHeader_BorderColor);
-	--_ui5_tc_headerItemIcon_color: var(--sapPageHeader_BorderColor);
-	--_ui5_tc_headerItemIcon_selected_background: var(--sapSelectedColor);
-	--_ui5_tc_headerItemIcon_selected_color: var(--sapContent_IconColor);
-	--_ui5_tc_headerItemIcon_positive_selected_background: var(--sapSelectedColor);
-	--_ui5_tc_headerItemIcon_negative_selected_background: var(--sapSelectedColor);
-	--_ui5_tc_headerItemIcon_critical_selected_background: var(--sapSelectedColor);
-	--_ui5_tc_headerItemIcon_neutral_selected_background: var(--sapSelectedColor);
 	--_ui5_tc_headerItemIcon_semantic_selected_color: var(--sapContent_IconColor);
 
 	/* Overflow Item */

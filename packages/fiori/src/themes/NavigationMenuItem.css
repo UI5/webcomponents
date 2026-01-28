@@ -1,11 +1,7 @@
-:host::part(native-li) {
-	padding-left: 0.5rem;
-	width: auto;
-}
 :host::part(native-li)::after {
 	border-radius: 0.375rem;
 	inset: 0;
- }
+}
 
 :host {
 	display: flex;
@@ -18,8 +14,12 @@
 	border-radius: 0.375rem;
 	transition: var(--_ui5_side_navigation_item_transition);
 	color: var(--sapList_TextColor);
-	font-weight: bold;
 	font-size: var(--sapFontSize);
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
+}
+
+::slotted([ui5-navigation-menu-item]) {
+	font-family: var(--sapFontFamily);
 }
 
 :host([design="Action"]) {
@@ -30,8 +30,15 @@
 	border-bottom: none;
 }
 
+:host([ui5-navigation-menu-item])::part(native-li) {
+	padding-left: var(--_ui5_side_navigation_item_padding_start_in_overflow_popup);
+	width: auto;
+	border-radius: inherit;
+}
+
 :host::part(content) {
 	color: inherit;
+	font-family: inherit;
 }
 
 :host .ui5-navmenu-item-link {
@@ -51,8 +58,16 @@
 	height: 0.875rem;
 }
 
+:host(.ui5-navigation-menu-item-root-parent)::part(content) {
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
+}
+
 :host([design="Action"]) .ui5-sn-item-external-link-icon {
 	color: var(--sapButton_TextColor);
+}
+
+:host([disabled]) .ui5-sn-item-external-link-icon {
+	opacity: var(--sapContent_DisabledOpacity);
 }
 
 :host::part(icon) {
@@ -61,6 +76,18 @@
 	min-height: 1rem;
 }
 
+:host([disabled][active][actionable]) .ui5-li-root .ui5-li-icon {
+	color: inherit;
+}
+
 :host([focused]):not([active]) {
 	background: none;
+}
+
+.ui5-menu-rp {
+	padding: var(--_ui5_side_navigation_popup_padding);
+}
+
+::slotted([ui5-navigation-menu-item]:not(:last-of-type)) {
+	margin-block-end: var(--_ui5_side_navigation_item_bottom_margin);
 }

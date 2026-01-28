@@ -98,7 +98,7 @@ and you would need to update it.
 **7.1.** Specify a new remote upstream repository that will be synced with the fork.
 
 ```sh
-$ git remote add upstream https://github.com/SAP/ui5-webcomponents.git
+$ git remote add upstream https://github.com/UI5/webcomponents.git
 ```
 
 **7.2.** Fetch the branches and their respective commits from the upstream repository.

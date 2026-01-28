@@ -20,7 +20,7 @@
 
 <body class="shellbar1auto">
 
-<ui5-navigation-layout side-collapsed>
+<ui5-navigation-layout mode="Collapsed">
 
 	<ui5-menu id="menuSubsDynamic" opener="btnOpenBasicDynamic">
 		<ui5-menu-item text="New File" icon="add-document"></ui5-menu-item>
@@ -49,13 +49,15 @@
 	<ui5-shellbar
 		id="shellbarDynamicContent"
 		slot="header"
-		primary-title="S/4HANA Cloud"
 		show-notifications
 		>
+		<ui5-shellbar-branding slot="branding">
+			S/4HANA Cloud
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
 		<ui5-button icon="menu2" slot="startButton"></ui5-button>
 		<ui5-button icon="nav-back" slot="startButton"></ui5-button>
-
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
 
 		<ui5-tag design="Set2" color-scheme="10" slot="content">EMEA</ui5-tag>
 		<ui5-button id="btnOpenBasicDynamic" end-icon="slim-arrow-down" slot="content" data-hide-order="9">Deliveries overdue for billing neeed more text because of a bug</ui5-button>
@@ -72,8 +74,7 @@
 		</ui5-input>
 
 		<ui5-toggle-button id="assistantDynamic" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
-		<ui5-avatar slot="profile">
-			<img src="./img/John_Miller.png" alt="John Miller">
+		<ui5-avatar slot="profile" initials="JM"></ui5-avatar>
 		</ui5-avatar>
 	</ui5-shellbar>
 
@@ -105,13 +106,17 @@
 		id="shellbar"
 		class="shellbar-example"
 		data-ui5-static-stable="shellbarWithLogoClickStatic"
-		primary-title="SAP Labs Bulgaria"
 		show-notifications
 		notifications-count="777"
 		show-product-switch
 		show-search-field
 		slot="header"
 	>
+		<ui5-shellbar-branding slot="branding">
+			SAP Labs Bulgaria
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
 		<ui5-button icon="menu2" slot="startButton" id="btnOpenStart"></ui5-button>
 		<ui5-button id="btnOpenBasic" end-icon="slim-arrow-down" slot="content" data-hide-order="10">PR10</ui5-button>
 
@@ -134,12 +139,21 @@
 
 		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
 
-		<ui5-input placeholder="Instructions" slot="searchField" show-suggestions value-state="Information">
-			<div slot="valueStateMessage">Instructions</div>
-		</ui5-input>
+		<ui5-shellbar-search slot="searchField" scope-value="apps">
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
+		</ui5-shellbar-search>
 
 		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
 		<ui5-shellbar-item icon="activities" text="Button4"></ui5-shellbar-item>
 		<ui5-shellbar-item icon="feedback" text="Button5"></ui5-shellbar-item>
 		<ui5-shellbar-item count="12" icon="action-settings" text="Button8"></ui5-shellbar-item>
@@ -151,12 +165,16 @@
 		id="shellbar_hide_search"
 		class="shellbar-example"
 		data-ui5-static-stable="shellbarWithLogoClickStatic"
-		primary-title="SAP Labs Bulgaria"
 		show-notifications
 		notifications-count="777"
 		show-product-switch
 		slot="header"
 	>
+		<ui5-shellbar-branding slot="branding">
+			SAP Labs Bulgaria
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
 		<ui5-button icon="menu2" slot="startButton" id="btnOpenStart"></ui5-button>
 		<ui5-button id="btnOpenBasic" end-icon="slim-arrow-down" slot="content" data-hide-order="10">PR10</ui5-button>
 
@@ -179,14 +197,14 @@
 
 		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
 
-		<ui5-input placeholder="Instructions" slot="searchField" show-suggestions value-state="Information">
-			<div slot="valueStateMessage">Instructions</div>
-		</ui5-input>
+		<div style="width: 100%; display: flex;" slot="searchField" id="customSearch">
+			<input id="customSearchInput" style="width: 100%" type="text">
+			<button id="customSearchClose">x</button>
+		</div>
 
 		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
-		<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
 		<ui5-shellbar-item icon="activities" text="Button4"></ui5-shellbar-item>
-		<ui5-shellbar-item icon="feedback" text="Button5"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="feedback" text="Button5" id="feedbackBtn"></ui5-shellbar-item>
 		<ui5-shellbar-item count="12" icon="action-settings" text="Button8"></ui5-shellbar-item>
 		<ui5-shellbar-item icon="sys-help" text="Button9"></ui5-shellbar-item>
 		<ui5-toggle-button id="assistant_no_search" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
@@ -222,6 +240,14 @@
 		const menuBasic = document.getElementById("menuSubs");
 		const sidenav = document.querySelector("ui5-side-navigation");
 
+		const feedbackBtn = document.getElementById("feedbackBtn");
+
+		const feedbackButtonAcc = {
+			hasPopup: "dialog",
+			expanded: true
+		}
+		feedbackBtn.accessibilityAttributes = feedbackButtonAcc;
+
 		btnOpenBasic.addEventListener("click", function(event) {
 			menuBasic.open = !menuBasic.open;
 		});
@@ -237,7 +263,6 @@
 		shellbar.addEventListener("content-item-visibility-change", (e) => {
 			console.log(e.detail.items);
 		})
-
 
 		const menuSubsDynamic = document.getElementById("menuSubsDynamic");
 		const btnOpenBasicDynamic = document.getElementById("btnOpenBasicDynamic");
@@ -271,6 +296,29 @@
 			displayMenuOpener(hiddenItems.indexOf(btnOpenBasicDynamic) > -1);
 		});
 
+		["focus", "blur", "input"].forEach((event) => {
+			customSearchInput.addEventListener(event, () => {
+				shellbar_hide_search.disableSearchCollapse =
+					customSearchInput.value || customSearchInput === document.activeElement;
+			});
+		});
+
+		shellbar_hide_search.addEventListener('ui5-search-field-toggle', async (e) => {
+			shellbar_hide_search.hideSearchButton = e.detail.expanded;
+		});
+
+		shellbar_hide_search.addEventListener('ui5-search-button-click', async (e) => {
+			shellbar_hide_search.addEventListener('ui5-search-field-toggle', async (e) => {
+				customSearchInput.focus();
+			}, { once: true });
+		});
+
+		customSearchClose.addEventListener('click', async () => {
+			shellbar_hide_search.showSearchField = false;
+			shellbar_hide_search.hideSearchButton = false;
+			const searchButton = await shellbar_hide_search.getSearchButtonDomRef()
+			searchButton.focus();
+		});
 	</script>
 
 </body>

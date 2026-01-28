@@ -14,7 +14,8 @@
 
 <body class="notificationlistitem1auto">
 
-	<ui5-shellbar id="shellbar" primary-title="Product Title" show-notifications>
+	<ui5-shellbar id="shellbar" show-notifications>
+		<ui5-shellbar-branding slot="branding">Product Title</ui5-shellbar-branding>
 	</ui5-shellbar>
 
 	<h2>Notification List with Menu</h2>
@@ -104,6 +105,35 @@
 			<span slot="footnotes">John Doe</span>
 			<span slot="footnotes">2 Days</span>
 			<span slot="footnotes">Other stuff</span>
+			<span slot="footnotes">
+				Very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+				long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+				long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long text
+			</span>
+		</ui5-li-notification>
+
+		<ui5-li-notification
+			show-close
+			state="Negative"
+			title-text="Very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+			long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+			long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+			long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+			long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long title"
+		>Notification with no actions
+
+			<ui5-avatar size="XS" slot="avatar">
+				<img src="./img/man_avatar_1.png" />
+			</ui5-avatar>
+
+			<span slot="footnotes">John Doe</span>
+			<span slot="footnotes">2 Days</span>
+			<span slot="footnotes">Other stuff</span>
+			<span slot="footnotes">
+				Very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+				long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long
+				long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long text
+			</span>
 		</ui5-li-notification>
 	</ui5-notification-list>
 

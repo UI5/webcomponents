@@ -5,6 +5,11 @@ import type Table from "./Table.js";
 import type TableRowBase from "./TableRowBase.js";
 import type TableRow from "./TableRow.js";
 import type { ITableFeature } from "./Table.js";
+import TableSelectionBehavior from "./types/TableSelectionBehavior.js";
+import {
+	TABLE_MULTI_SELECTABLE,
+	TABLE_SINGLE_SELECTABLE,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * Fired when selection is changed by user interaction.
@@ -44,8 +49,19 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	@property()
 	selected?: string;
 
+	/**
+	 * Defines the selection behavior.
+	 *
+	 * @default "RowSelector"
+	 * @public
+	 * @since 2.11
+	 */
+	@property()
+	behavior: `${TableSelectionBehavior}` = "RowSelector";
+
 	readonly identifier = "TableSelection";
 	protected _table?: Table;
+	private _rowsLength = 0;
 
 	onTableActivate(table: Table) {
 		this._table = table;
@@ -64,6 +80,13 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 		this._invalidateTableAndRows();
 	}
 
+	onTableBeforeRendering() {
+		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
+			this._rowsLength = this._table.rows.length;
+			this._table.headerRow[0]._invalidate++;
+		}
+	}
+
 	// this will be removed when the legacy selection component is removed
 	isSelectable(): boolean {
 		return true;
@@ -80,14 +103,32 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 * Determines whether a row selector (for example, `radiobutton` or `checkbox`) is rendered.
 	 */
 	isRowSelectorRequired(): boolean {
-		return true;
+		return this.behavior === TableSelectionBehavior.RowSelector;
+	}
+
+	/**
+	 * Returns the ARIA description of the Table as an alternative to aria-multiselectable.
+	 */
+	getAriaDescriptionForTable(): string | undefined {
+		if (!this._table || !this._table.rows.length) {
+			return undefined;
+		}
+
+		const i18nBundle = (this._table.constructor as typeof Table).i18nBundle;
+		return i18nBundle.getText(this.isMultiSelectable() ? TABLE_MULTI_SELECTABLE : TABLE_SINGLE_SELECTABLE);
+	}
+
+	/**
+	 * Returns the ARIA description of the selection component displayed in the column header.
+	 */
+	getAriaDescriptionForColumnHeader(): string | undefined {
+		return undefined;
 	}
 
 	/**
 	 * Returns the unique key associated with the table row.
 	 *
 	 * @param row The row instance
-	 * @public
 	 */
 	getRowKey(row: TableRow): string {
 		return row.rowKey || "";
@@ -109,7 +150,6 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 * Determines whether the specified table row is currently selected.
 	 *
 	 * @param row The row instance
-	 * @public
 	 */
 	abstract isSelected(row: TableRowBase): boolean;
 
@@ -118,19 +158,18 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 *
 	 * @param row The row instance
 	 * @param selected Whether the row is selected
-	 * @public
+	 * @param fireEvent Whether the change event should be fired
 	 */
-	abstract setSelected(row: TableRowBase, selected: boolean, _fireEvent: boolean): void;
+	abstract setSelected(row: TableRowBase, selected: boolean, fireEvent: boolean): void;
 
 	/**
 	 * Invalidates the table and its rows to re-evaluate the selection.
-	 *
-	 * @protected
 	 */
 	protected _invalidateTableAndRows() {
 		if (this._table) {
 			this._table._invalidate++;
 			this._table.rows.forEach(row => row._invalidate++);
+			this._table.headerRow.forEach(row => row._invalidate++);
 		}
 	}
 }

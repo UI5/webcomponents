@@ -27,6 +27,17 @@ import { generateCustomData } from "cem-plugin-vs-code-custom-data-generator";
 import { customElementJetBrainsPlugin } from "custom-element-jet-brains-integration";
 
 const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+let aliasMap = {};
+
+const devMode = process.env.UI5_CEM_MODE === "dev";
+try {
+	aliasMap = JSON.parse(fs.readFileSync("./.ui5-cem-aliases.json"));
+} catch (e) {
+	if (devMode) {
+		console.warn("No .ui5-cem-aliases.json file found. Continuing without aliases.");
+	}
+}
+
 
 const extractClassNodeJSDoc = node => {
 	const fileContent = node.getFullText();
@@ -129,23 +140,6 @@ function processClass(ts, classNode, moduleDoc) {
 	// Events
 	currClass.events = findAllDecorators(classNode, ["event", "eventStrict"])
 		?.map(event => processEvent(ts, event, classNode, moduleDoc));
-
-	// TODO: remove after changing Button's click to custom event.
-	// Currently, the Button emits a native click that doesn't need and doesn't have an event decorator,
-	// so we add it manually to the events array.
-	if (currClass.tagName === "ui5-button") {
-		currClass.events.push({
-			"name": "click",
-			"_ui5privacy": "public",
-			"type": {
-				"text": "Event"
-			},
-			"description": "Fired when the component is activated either with a\nmouse/tap or by using the Enter or Space key.\n\n**Note:** The event will not be fired if the `disabled`\nproperty is set to `true`.",
-			"_ui5Cancelable": false,
-			"_ui5allowPreventDefault": false,
-			"_ui5Bubbles": true
-		});
-	}
 
 	const filename = classNode.getSourceFile().fileName;
 	const sourceFile = typeProgram.getSourceFile(filename);
@@ -468,14 +462,6 @@ export default {
 				}
 			},
 			moduleLinkPhase({ moduleDoc }) {
-				for (let i = 0; i < moduleDoc.declarations.length; i++) {
-					const shouldRemove = processPublicAPI(moduleDoc.declarations[i]) || ["function", "variable"].includes(moduleDoc.declarations[i].kind)
-					if (shouldRemove) {
-						moduleDoc.declarations.splice(i, 1);
-						i--;
-					}
-				}
-
 				moduleDoc.path = moduleDoc.path?.replace(/^src/, "dist").replace(/\.ts$/, ".js");
 
 				moduleDoc.exports = moduleDoc.exports.
@@ -499,41 +485,57 @@ export default {
 						})
 					}
 				})
+			},
+			packageLinkPhase({ customElementsManifest }) {
+				customElementsManifest.modules.forEach(moduleDoc => {
+					for (let i = 0; i < moduleDoc.declarations.length; i++) {
+						const shouldRemove = processPublicAPI(moduleDoc.declarations[i]) || ["function", "variable"].includes(moduleDoc.declarations[i].kind)
+						if (shouldRemove) {
+							moduleDoc.declarations.splice(i, 1);
+							i--;
+						}
+					}
 
-				const typeReferences = new Set();
-				const registerTypeReference = reference => typeReferences.add(JSON.stringify(reference))
+					moduleDoc.declarations.forEach(declaration => {
+						if (declaration.superclass?.name && aliasMap[declaration.superclass.name]) {
+							declaration.superclass.name = aliasMap[declaration.superclass.name];
+						}
+					})
 
-				moduleDoc.declarations.forEach(declaration => {
-					["events", "slots", "members"].forEach(memberType => {
-						declaration[memberType]?.forEach(member => {
-							if (member.type?.references) {
-								member.type.references.forEach(registerTypeReference)
-							} else if (member._ui5type?.references) {
-								member._ui5type.references.forEach(registerTypeReference)
-							} else if (member.kind === "method") {
-								member.return?.type?.references?.forEach(registerTypeReference)
+					const typeReferences = new Set();
+					const registerTypeReference = reference => typeReferences.add(JSON.stringify(reference))
 
-								member.parameters?.forEach(parameter => {
-									parameter.type?.references?.forEach(registerTypeReference)
-								})
-							}
+					moduleDoc.declarations.forEach(declaration => {
+						["events", "slots", "members"].forEach(memberType => {
+							declaration[memberType]?.forEach(member => {
+								if (member.type?.references) {
+									member.type.references.forEach(registerTypeReference)
+								} else if (member._ui5type?.references) {
+									member._ui5type.references.forEach(registerTypeReference)
+								} else if (member.kind === "method") {
+									member.return?.type?.references?.forEach(registerTypeReference)
+
+									member.parameters?.forEach(parameter => {
+										parameter.type?.references?.forEach(registerTypeReference)
+									})
+								}
+							})
 						})
+					});
+
+					typeReferences.forEach(reference => {
+						reference = JSON.parse(reference);
+						if (reference.package === packageJSON?.name && reference.module === moduleDoc.path) {
+							const hasExport = moduleDoc.exports.some(e => e.declaration?.name === reference.name && e.declaration?.module === reference.module)
+
+							if (!hasExport) {
+								logDocumentationError(moduleDoc.path?.replace(/^dist/, "src").replace(/\.js$/, ".ts"), `Type '${reference.name}' is used to describe a public API but is not exported.`,)
+							}
+						}
 					})
 				});
 
-				typeReferences.forEach(reference => {
-					reference = JSON.parse(reference);
-					if (reference.package === packageJSON?.name && reference.module === moduleDoc.path) {
-						const hasExport = moduleDoc.exports.some(e => e.declaration?.name === reference.name && e.declaration?.module === reference.module)
-
-						if (!hasExport) {
-							logDocumentationError(moduleDoc.path?.replace(/^dist/, "src").replace(/\.js$/, ".ts"), `Type '${reference.name}' is used to describe a public API but is not exported.`,)
-						}
-					}
-				})
-			},
-			packageLinkPhase({ context }) {
-				if (context.dev) {
+				if (devMode) {
 					displayDocumentationErrors();
 				}
 			}

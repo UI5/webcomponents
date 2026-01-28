@@ -1,9 +1,14 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+
 // Template
 import FormTemplate from "./FormTemplate.js";
 
@@ -11,7 +16,11 @@ import FormTemplate from "./FormTemplate.js";
 import FormCss from "./generated/themes/Form.css.js";
 
 import type FormItemSpacing from "./types/FormItemSpacing.js";
+import type FormAccessibleMode from "./types/FormAccessibleMode.js";
 import type FormGroup from "./FormGroup.js";
+import type TitleLevel from "./types/TitleLevel.js";
+
+import { FORM_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
 
 const additionalStylesMap = new Map<string, string>();
 
@@ -41,12 +50,18 @@ interface IFormItem extends UI5Element {
 	colsS?: number;
 	columnSpan?: number;
 	headerText?: string;
+	headerLevel?: `${TitleLevel}`;
+	accessibleMode?: `${FormAccessibleMode}`;
 }
 
 type GroupItemsInfo = {
 	groupItem: IFormItem,
 	items: Array<ItemsInfo>,
-	accessibleNameRef: string | undefined
+	accessibleName: string | undefined,
+	accessibleNameInner: string | undefined,
+	accessibleNameRef: string | undefined,
+	accessibleNameRefInner: string | undefined,
+	role: AriaRole | undefined,
 }
 
 type ItemsInfo = {
@@ -207,6 +222,41 @@ type ItemsInfo = {
 })
 class Form extends UI5Element {
 	/**
+	 * Defines the accessible ARIA name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.10.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Defines id (or many ids) of the element (or elements) that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
+	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
+	 *
+	 * Based on the mode, the component renders different HTML elements and ARIA attributes,
+	 * which are appropriate for the use-case.
+	 *
+	 * **Usage:**
+	 * - Set this property to "Display", when the form consists of non-editable (e.g. texts) form items.
+	 * - Set this property to "Edit", when the form consists of editable (e.g. input fields) form items.
+	 *
+	 * @default "Display"
+	 * @since 2.16.0
+	 * @public
+	 */
+	@property()
+	accessibleMode: `${FormAccessibleMode}` = "Display";
+
+	/**
 	 * Defines the number of columns to distribute the form content by breakpoint.
 	 *
 	 * Supported values:
@@ -266,11 +316,21 @@ class Form extends UI5Element {
 	headerText?: string;
 
 	/**
+	 * Defines the compoennt heading level,
+	 * set by the `headerText`.
+	 * @default "H2"
+	 * @since 2.10.0
+	 * @public
+	*/
+	@property()
+	headerLevel: `${TitleLevel}` = "H2";
+
+	/**
 	 * Defines the vertical spacing between form items.
 	 *
-	 * **Note:** If the Form is meant to be switched between "non-edit" and "edit" modes,
-	 * we recommend using "Large" item spacing in "non-edit" mode, and "Normal" - for "edit" mode,
-	 * to avoid "jumping" effect, caused by the hight difference between texts in "non-edit" mode and the input fields in "edit" mode.
+	 * **Note:** If the Form is meant to be switched between "display"("non-edit") and "edit" modes,
+	 * we recommend using "Large" item spacing in "display"("non-edit") mode, and "Normal" - for "edit" mode,
+	 * to avoid "jumping" effect, caused by the hight difference between texts in "display"("non-edit") mode and the input fields in "edit" mode.
 	 *
 	 * @default "Normal"
 	 * @public
@@ -301,6 +361,9 @@ class Form extends UI5Element {
 		invalidateOnChildChange: true,
 	})
 	items!: Array<IFormItem>;
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
 
 	/**
 	 * @private
@@ -342,6 +405,9 @@ class Form extends UI5Element {
 
 		// Define how many columns a group should take.
 		this.setGroupsColSpan();
+
+		// Set item spacing
+		this.setItemsState();
 	}
 
 	onAfterRendering() {
@@ -489,20 +555,43 @@ class Form extends UI5Element {
 		return index === 0 ? MIN_COL_SPAN + (delta - groups) + 1 : MIN_COL_SPAN + 1;
 	}
 
+	setItemsState() {
+		this.items.forEach((item: IFormItem) => {
+			item.itemSpacing = this.itemSpacing;
+			item.accessibleMode = this.accessibleMode;
+		});
+	}
+
 	get hasGroupItems(): boolean {
 		return this.items.some((item: IFormItem) => item.isGroup);
 	}
 
 	get hasHeader(): boolean {
-		return this.hasCustomHeader || !!this.headerText;
+		return this.hasCustomHeader || this.hasHeaderText;
+	}
+
+	get hasHeaderText(): boolean {
+		return !!this.headerText;
 	}
 
 	get hasCustomHeader(): boolean {
 		return !!this.header.length;
 	}
 
+	get effectiveAccessibleName() {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
+		}
+
+		return this.hasHeader ? undefined : Form.i18nBundle.getText(FORM_ACCESSIBLE_NAME);
+	}
+
 	get effectiveАccessibleNameRef(): string | undefined {
-		return this.hasCustomHeader ? undefined : `${this._id}-header-text`;
+		if (this.accessibleName || this.accessibleNameRef) {
+			return;
+		}
+
+		return this.hasHeaderText && !this.hasCustomHeader ? `${this._id}-header-text` : undefined;
 	}
 
 	get effectiveAccessibleRole() {
@@ -510,7 +599,7 @@ class Form extends UI5Element {
 	}
 
 	get groupItemsInfo(): Array<GroupItemsInfo> {
-		return this.items.map((groupItem: IFormItem) => {
+		return this.items.map((groupItem: IFormItem, index: number) => {
 			const items = this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>));
 			breakpoints.forEach(breakpoint => {
 				const cols = ((groupItem[`cols${breakpoint}` as keyof IFormItem]) as number || 1);
@@ -533,10 +622,16 @@ class Form extends UI5Element {
 				}
 			});
 
+			const accessibleNameRef = (groupItem as FormGroup).effectiveAccessibleNameRef;
+
 			return {
 				groupItem,
-				accessibleNameRef: (groupItem as FormGroup).headerText ? `${groupItem._id}-group-header-text` : undefined,
+				accessibleName: this.accessibleMode === "Edit" ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.accessibleMode === "Edit" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: this.accessibleMode === "Edit" ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.accessibleMode === "Edit" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
+				role: this.accessibleMode === "Edit" ? "form" : undefined,
 			};
 		});
 	}

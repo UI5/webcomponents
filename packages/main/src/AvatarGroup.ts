@@ -3,6 +3,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -35,13 +36,14 @@ import AvatarGroupCss from "./generated/themes/AvatarGroup.css.js";
 
 // Template
 import AvatarGroupTemplate from "./AvatarGroupTemplate.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 /**
  * Interface for components that represent an avatar and may be slotted in numerous higher-order components such as `ui5-avatar-group`
  * @public
  */
 interface IAvatarGroupItem extends HTMLElement, ITabbable {
-	еffectiveBackgroundColor: AvatarColorScheme;
+	effectiveBackgroundColor: AvatarColorScheme;
 	size: `${AvatarSize}`;
 	effectiveSize: AvatarSize;
 	interactive: boolean;
@@ -190,14 +192,34 @@ class AvatarGroup extends UI5Element {
 	 * @since 2.0.0
 	 * @default {}
 	 */
-	 @property({ type: Object })
-	 accessibilityAttributes: AvatarGroupAccessibilityAttributes = {};
+	@property({ type: Object })
+	accessibilityAttributes: AvatarGroupAccessibilityAttributes = {};
 
 	/**
 	 * @private
 	 */
 	@property({ noAttribute: true })
 	_overflowButtonText?: string;
+
+	/**
+ 	* Defines the accessible name of the AvatarGroup.
+ 	* When provided, this will override the default aria-label text.
+ 	* @default undefined
+ 	* @public
+ 	* @since 2.12.0
+ 	*/
+	@property()
+	accessibleName?: string;
+
+	/**
+ 	* Receives id(s) of the elements that describe the AvatarGroup.
+ 	* When provided, this will be used as aria-labelledby instead of aria-label.
+ 	* @default undefined
+ 	* @public
+ 	* @since 2.12.0
+ 	*/
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the items of the component. Use the `ui5-avatar` component as an item.
@@ -256,7 +278,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	get colorScheme(): AvatarColorScheme[] {
-		return this.items.map(avatar => avatar.еffectiveBackgroundColor);
+		return this.items.map(avatar => avatar.effectiveBackgroundColor);
 	}
 
 	get _customOverflowButton() {
@@ -264,6 +286,10 @@ class AvatarGroup extends UI5Element {
 	}
 
 	get _ariaLabelText() {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
+		}
+		// Fallback to existing default behavior
 		const hiddenItemsCount = this.hiddenItems.length;
 		const typeLabelKey = this._isGroup ? AVATAR_GROUP_ARIA_LABEL_GROUP : AVATAR_GROUP_ARIA_LABEL_INDIVIDUAL;
 
@@ -433,7 +459,7 @@ class AvatarGroup extends UI5Element {
 		e.stopPropagation();
 	}
 
-	onOverflowButtonClick(e: MouseEvent) {
+	onOverflowButtonClick(e: UI5CustomEvent<Button, "click">) {
 		e.stopPropagation();
 
 		this.fireDecoratorEvent("click", {
@@ -454,7 +480,7 @@ class AvatarGroup extends UI5Element {
 			const colorIndex = this._getNextBackgroundColor();
 			avatar.interactive = !this._isGroup;
 
-			if (!avatar.getAttribute("_color-scheme")) {
+			if (avatar.getAttribute("_color-scheme") === AvatarColorScheme.Auto) {
 				// AvatarGroup respects colors set to ui5-avatar
 				avatar.setAttribute("_color-scheme", AvatarColorScheme[`Accent${colorIndex}` as keyof typeof AvatarColorScheme]);
 			}
@@ -463,12 +489,18 @@ class AvatarGroup extends UI5Element {
 			if (index !== this._itemsCount - 1 || this._customOverflowButton) {
 				// based on RTL the browser automatically sets left or right margin to avatars
 				avatar.style.marginInlineEnd = offsets[avatar.effectiveSize][this.type];
+			} else {
+				avatar.style.marginInlineEnd = "";
 			}
 		});
 	}
 
 	_onfocusin(e: FocusEvent) {
 		this._itemNavigation.setCurrentItem(e.target as IAvatarGroupItem);
+	}
+
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
 	}
 
 	/**
@@ -504,6 +536,7 @@ class AvatarGroup extends UI5Element {
 	_overflowItems() {
 		if (this.items.length < 2) {
 			// no need to overflow avatars
+			this._setHiddenItems(0);
 			return;
 		}
 
