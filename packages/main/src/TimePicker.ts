@@ -340,7 +340,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Slot<Array<HTMLElement>>;
+	valueStateMessage!: Slot<HTMLElement[]>;
 
 	@query("[ui5-time-selection-clocks]")
 	_timeSelectionClocks?: TimeSelectionClocks;

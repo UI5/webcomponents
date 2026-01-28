@@ -125,7 +125,7 @@ class NotificationListGroupItem extends NotificationListItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: DefaultSlot<Array<NotificationListItem>>
+	items!: DefaultSlot<NotificationListItem[]>
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

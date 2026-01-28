@@ -52,7 +52,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot()
-    mySlot!: Slot<Array<HTMLElement>>;
+    mySlot!: Slot<HTMLElement[]>;
 }
 ```
 
@@ -69,7 +69,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement })
-    mySlot!: Slot<Array<HTMLElement>>;;
+    mySlot!: Slot<HTMLElement[]>;;
 }
 ```
 
@@ -96,7 +96,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, "default": true })
-    mySlot!: Slot<Array<HTMLElement>>;;
+    mySlot!: Slot<HTMLElement[]>;;
 }
 ```
 
@@ -112,7 +112,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, individualSlots: true })
-    mySlot!: Slot<Array<HTMLElement>>;;
+    mySlot!: Slot<HTMLElement[]>;;
 }
 ```
 
@@ -144,12 +144,12 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, invalidateOnChildChange: true })
-    mySlot!: Slot<Array<HTMLElement>>;;
+    mySlot!: Slot<HTMLElement[]>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: true, slots: false }})
-    mySlot2!: Slot<Array<HTMLElement>>;;
+    mySlot2!: Slot<HTMLElement[]>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: ["myProp"], slots: ["anotherSlot"] }})
-    mySlot3!: Slot<Array<HTMLElement>>;;
+    mySlot3!: Slot<HTMLElement[]>;;
 }
 ```

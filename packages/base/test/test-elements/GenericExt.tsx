@@ -13,7 +13,7 @@ class GenericExt extends Generic {
 	strProp = "Ext";
 
 	@slot()
-	extSlot!: Slot<Array<HTMLElement>>;
+	extSlot!: Slot<HTMLElement[]>;
 }
 
 GenericExt.define();

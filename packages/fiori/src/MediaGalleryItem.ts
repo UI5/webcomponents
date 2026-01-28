@@ -126,14 +126,14 @@ class MediaGalleryItem extends UI5Element implements IMediaGalleryItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<Array<HTMLElement>>;
+	content!: DefaultSlot<HTMLElement[]>;
 
 	/**
 	 * Defines the content of the thumbnail.
 	 * @public
 	 */
 	@slot()
-	thumbnail!: Slot<Array<HTMLElement>>;
+	thumbnail!: Slot<HTMLElement[]>;
 
 	_monitoredThumbnail: HTMLElement | null;
 	_monitoredContent: HTMLElement | null;

@@ -238,7 +238,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: DefaultSlot<Array<IAvatarGroupItem>>;
+	items!: DefaultSlot<IAvatarGroupItem[]>;
 
 	/**
 	 * Defines the overflow button of the component.
@@ -250,7 +250,7 @@ class AvatarGroup extends UI5Element {
 	 * @since 1.0.0-rc.13
 	 */
 	@slot()
-	overflowButton!: Slot<Array<IButton>>;
+	overflowButton!: Slot<IButton[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

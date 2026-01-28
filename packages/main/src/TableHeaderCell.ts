@@ -121,7 +121,7 @@ class TableHeaderCell extends TableCellBase {
 	 * @since 2.8.0
 	 */
 	@slot()
-	action!: Slot<Array<TableHeaderCellActionBase>>;
+	action!: Slot<TableHeaderCellActionBase[]>;
 
 	@query("slot:not([name])")
 	_defaultSlot!: HTMLSlotElement;

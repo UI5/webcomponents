@@ -94,7 +94,7 @@ class ToolbarSelect extends ToolbarItem {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	options!: DefaultSlot<Array<ToolbarSelectOption>>;
+	options!: DefaultSlot<ToolbarSelectOption[]>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -103,7 +103,7 @@ class ToolbarSelect extends ToolbarItem {
 	 * @since 2.15.0
 	*/
 	@slot()
-	label!: Slot<Array<HTMLElement>>;
+	label!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines the value state of the component.

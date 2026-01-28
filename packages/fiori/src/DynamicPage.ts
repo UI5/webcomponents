@@ -166,7 +166,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageTitle })
-	titleArea!: Slot<Array<DynamicPageTitle>>;
+	titleArea!: Slot<DynamicPageTitle[]>;
 
 	/**
 	 * Defines the header HTML Element.
@@ -174,7 +174,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageHeader })
-	headerArea!: Slot<Array<DynamicPageHeader>>;
+	headerArea!: Slot<DynamicPageHeader[]>;
 
 	/**
 	 * Defines the footer HTML Element.

@@ -165,7 +165,7 @@ class Timeline extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, "default": true })
-	items!: DefaultSlot<Array<ITimelineItem>>;
+	items!: DefaultSlot<ITimelineItem[]>;
 
 	@query(".ui5-timeline-end-marker")
 	timelineEndMarker!: HTMLElement;

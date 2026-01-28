@@ -115,7 +115,7 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<Array<Node>>;
+	content!: DefaultSlot<Node[]>;
 
 	/**
 	 * @private

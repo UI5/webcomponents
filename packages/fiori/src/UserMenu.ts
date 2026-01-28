@@ -206,7 +206,7 @@ class UserMenu extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	menuItems!: DefaultSlot<Array<UserMenuItem>>;
+	menuItems!: DefaultSlot<UserMenuItem[]>;
 
 	/**
 	 * Defines the user accounts.
@@ -222,7 +222,7 @@ class UserMenu extends UI5Element {
 			slots: false,
 		},
 	})
-	accounts!: Slot<Array<UserMenuAccount>>;
+	accounts!: Slot<UserMenuAccount[]>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

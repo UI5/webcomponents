@@ -64,7 +64,7 @@ class UserSettingsAccountView extends UserSettingsView {
 			slots: false,
 		},
 	})
-	account!: Slot<Array<UserMenuAccount>>;
+	account!: Slot<UserMenuAccount[]>;
 
 	/**
 	 * Defines if the User Menu shows the `Manage Account` option.

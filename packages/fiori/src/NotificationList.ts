@@ -117,7 +117,7 @@ class NotificationList extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: DefaultSlot<Array<NotificationListItemBase>>;
+	items!: DefaultSlot<NotificationListItemBase[]>;
 
 	/**
 	 * Defines the text that is displayed when the component contains no items.

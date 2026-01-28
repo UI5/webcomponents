@@ -150,7 +150,7 @@ class SegmentedButton extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<Array<ISegmentedButtonItem>>;
+	items!: DefaultSlot<ISegmentedButtonItem[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

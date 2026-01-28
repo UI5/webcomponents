@@ -146,7 +146,7 @@ class MessageStrip extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	icon!: Slot<Array<IIcon>>;
+	icon!: Slot<IIcon[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

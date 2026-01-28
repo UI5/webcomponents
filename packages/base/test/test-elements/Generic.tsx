@@ -28,19 +28,19 @@ class Generic extends UI5Element {
 	defaultValueProp = "Hello";
 
 	@slot({ type: Node, "default": true })
-	content!: DefaultSlot<Array<Node>>;
+	content!: DefaultSlot<Node[]>;
 
 	@slot({ type: HTMLElement })
-	other!: Slot<Array<HTMLElement>>
+	other!: Slot<HTMLElement[]>
 
 	@slot({ type: HTMLElement, individualSlots: true })
-	individual!: Slot<Array<HTMLElement>>
+	individual!: Slot<HTMLElement[]>
 
 	@slot({ type: HTMLElement, propertyName: "items" })
-	named!: Slot<Array<HTMLElement>>
+	named!: Slot<HTMLElement[]>
 
 	@slot({ type: HTMLElement })
-	"row-header"!: Slot<Array<HTMLElement>>
+	"row-header"!: Slot<HTMLElement[]>
 
 	static get template() {
 		return () => <div>

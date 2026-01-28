@@ -126,7 +126,7 @@ class SearchItem extends ListItemBase {
 	 * @since 2.12.0
 	 */
 	@slot()
-	image!: Slot<Array<HTMLElement>>;
+	image!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines the actionable elements.
@@ -140,7 +140,7 @@ class SearchItem extends ListItemBase {
 	 * @since 2.16.0
 	 */
 	@slot()
-	actions!: Slot<Array<HTMLElement>>;
+	actions!: Slot<HTMLElement[]>;
 
 	_markupText = "";
 

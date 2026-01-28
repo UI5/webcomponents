@@ -133,7 +133,7 @@ class UserSettingsDialog extends UI5Element {
 			slots: true,
 		},
 	})
-	items!: DefaultSlot<Array<UserSettingsItem>>;
+	items!: DefaultSlot<UserSettingsItem[]>;
 
 	/**
 	 * Defines the fixed user settings items.
@@ -148,7 +148,7 @@ class UserSettingsDialog extends UI5Element {
 			slots: true,
 		},
 	})
-	fixedItems!: Slot<Array<UserSettingsItem>>;
+	fixedItems!: Slot<UserSettingsItem[]>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

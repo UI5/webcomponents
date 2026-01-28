@@ -63,7 +63,7 @@ class BreadcrumbsItem extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: DefaultSlot<Array<Node>>;
+	text!: DefaultSlot<Node[]>;
 
 	_accessibleNameText?: string;
 	_isCurrentPageItem?: boolean;

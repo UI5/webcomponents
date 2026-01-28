@@ -48,7 +48,7 @@ class Option extends ListItemBase implements IOption {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	text!: DefaultSlot<Array<Node>>;
+	text!: DefaultSlot<Node[]>;
 
 	/**
 	 * Defines the value of the `ui5-select` inside an HTML Form element when this component is selected.

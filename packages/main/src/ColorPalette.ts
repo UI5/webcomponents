@@ -184,7 +184,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	colors!: DefaultSlot<Array<IColorPaletteItem>>;
+	colors!: DefaultSlot<IColorPaletteItem[]>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;
@@ -290,7 +290,7 @@ class ColorPalette extends UI5Element {
 	}
 
 	get effectiveColorItems() {
-		let colorItems = this.colors;
+		let colorItems: IColorPaletteItem[] = this.colors;
 
 		if (this.popupMode) {
 			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");

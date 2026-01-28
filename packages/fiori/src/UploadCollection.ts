@@ -170,7 +170,7 @@ class UploadCollection extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: DefaultSlot<Array<UploadCollectionItem>>;
+	items!: DefaultSlot<UploadCollectionItem[]>;
 
 	/**
 	 * Defines the `ui5-upload-collection` header.
@@ -181,7 +181,7 @@ class UploadCollection extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	header!: Slot<Array<HTMLElement>>;
+	header!: Slot<HTMLElement[]>;
 
 	_bodyDnDHandler: DnDEventListener;
 

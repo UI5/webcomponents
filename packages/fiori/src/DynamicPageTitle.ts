@@ -160,7 +160,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @since 2.3.0
 	 */
 	@slot({ type: HTMLElement })
-	snappedTitleOnMobile!: Slot<Array<Title>>;
+	snappedTitleOnMobile!: Slot<Title[]>;
 
 	/**
 	 * Defines the bar with actions in the Dynamic page title.
@@ -176,7 +176,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	navigationBar!: Slot<Array<Toolbar>>;
+	navigationBar!: Slot<Toolbar[]>;
 
 	/**
 	 * Defines the content of the Dynamic page title.

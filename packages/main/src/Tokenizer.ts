@@ -351,7 +351,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			slots: false,
 		},
 	})
-	tokens!: DefaultSlot<Array<Token>>;
+	tokens!: DefaultSlot<Token[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

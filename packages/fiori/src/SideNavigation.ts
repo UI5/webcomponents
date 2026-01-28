@@ -153,7 +153,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<Array<SideNavigationItemBase>>;
+	items!: DefaultSlot<SideNavigationItemBase[]>;
 
 	/**
 	 * Defines the fixed items at the bottom of the component.
@@ -163,7 +163,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	fixedItems!: Slot<Array<SideNavigationItemBase>>;
+	fixedItems!: Slot<SideNavigationItemBase[]>;
 
 	/**
 	 * Defines the header of the `ui5-side-navigation`.
@@ -174,7 +174,7 @@ class SideNavigation extends UI5Element {
 	 * @since 1.0.0-rc.11
 	 */
 	@slot()
-	header!: Slot<Array<HTMLElement>>;
+	header!: Slot<HTMLElement[]>;
 
 	/**
 	 * @private

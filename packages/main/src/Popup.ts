@@ -234,7 +234,7 @@ abstract class Popup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<Array<HTMLElement>>;
+	content!: DefaultSlot<HTMLElement[]>;
 
 	/**
 	 * @private

@@ -69,7 +69,7 @@ class TimelineGroupItem extends UI5Element implements ITimelineItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, "default": true })
-	items!: DefaultSlot<Array<ITimelineItem>>;
+	items!: DefaultSlot<ITimelineItem[]>;
 
 	/**
 	 * Defines the items orientation.

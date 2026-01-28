@@ -109,21 +109,21 @@ class Bar extends UI5Element {
 	* @public
 	*/
 	@slot()
-	startContent!: Slot<Array<HTMLElement>>;
+	startContent!: Slot<HTMLElement[]>;
 
 	/**
 	* Defines the content in the middle of the bar.
 	* @public
 	*/
 	@slot()
-	middleContent!: Slot<Array<HTMLElement>>
+	middleContent!: Slot<HTMLElement[]>
 
 	/**
 	* Defines the content at the end of the bar.
 	* @public
 	*/
 	@slot()
-	endContent!: Slot<Array<HTMLElement>>
+	endContent!: Slot<HTMLElement[]>
 
 	_handleResizeBound: () => void;
 

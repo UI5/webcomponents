@@ -132,7 +132,7 @@ class TextArea extends BaseTextArea {
 	focused = false;
 
 	@slot({ type: HTMLElement })
-	menu!: Slot<Array<HTMLElement>>;
+	menu!: Slot<HTMLElement[]>;
 
 	static i18nBundle: I18nBundle;
 

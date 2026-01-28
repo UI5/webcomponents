@@ -209,7 +209,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<Array<HTMLElement>>;
+	header!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -218,7 +218,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	footer!: Slot<Array<HTMLElement>>;
+	footer!: Slot<HTMLElement[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

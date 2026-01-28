@@ -55,7 +55,7 @@ class NavigationMenu extends Menu {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	declare items: DefaultSlot<Array<NavigationMenuItem>>;
+	declare items: DefaultSlot<NavigationMenuItem[]>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundleFiori: I18nBundle;

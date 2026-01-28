@@ -211,7 +211,7 @@ abstract class ListItem extends ListItemBase {
 	 * @public
 	*/
 	@slot()
-	deleteButton!: Slot<Array<IButton>>;
+	deleteButton!: Slot<IButton[]>;
 
 	deactivateByKey: (e: KeyboardEvent) => void;
 	deactivate: () => void;

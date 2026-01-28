@@ -152,7 +152,7 @@ class MultiInput extends Input implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	tokens!: Slot<Array<IToken>>;
+	tokens!: Slot<IToken[]>;
 
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;

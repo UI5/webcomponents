@@ -271,7 +271,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	sortItems!: Slot<Array<SortItem>>;
+	sortItems!: Slot<SortItem[]>;
 
 	/**
 	 * Defines the `filterItems` list.
@@ -280,7 +280,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	filterItems!: Slot<Array<FilterItem>>;
+	filterItems!: Slot<FilterItem[]>;
 
 	/**
 	 * Defines the list of items against which the user could group data.
@@ -289,7 +289,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	groupItems!: Slot<Array<GroupItem>>;
+	groupItems!: Slot<GroupItem[]>;
 
 	@query("[ui5-list]")
 	_list!: List;

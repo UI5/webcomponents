@@ -63,7 +63,7 @@ class OptionCustom extends ListItemBase implements IOption {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	content!: DefaultSlot<Array<Node>>;
+	content!: DefaultSlot<Node[]>;
 
 	/**
 	 * Defines the tooltip of the option.

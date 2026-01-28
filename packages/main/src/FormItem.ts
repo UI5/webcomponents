@@ -67,7 +67,7 @@ class FormItem extends UI5Element implements IFormItem {
 	 * @public
 	 */
 	@slot()
-	labelContent!: Slot<Array<HTMLElement>>;
+	labelContent!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines the content of the component,
@@ -79,7 +79,7 @@ class FormItem extends UI5Element implements IFormItem {
 		"default": true,
 		individualSlots: true,
 	})
-	content!: DefaultSlot<Array<HTMLElement>>;
+	content!: DefaultSlot<HTMLElement[]>;
 
 	/**
 	 * @private

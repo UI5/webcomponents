@@ -517,7 +517,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	items!: DefaultSlot<Array<IMultiComboBoxItem>>;
+	items!: DefaultSlot<IMultiComboBoxItem[]>;
 
 	/**
 	* Defines the icon to be displayed in the component.
@@ -525,7 +525,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	* @since 1.0.0-rc.9
 	*/
 	@slot()
-	icon!: Slot<Array<IIcon>>;
+	icon!: Slot<IIcon[]>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -539,7 +539,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Slot<Array<HTMLElement>>;
+	valueStateMessage!: Slot<HTMLElement[]>;
 
 	selectedValues: Array<IMultiComboBoxItem>;
 	_inputLastValue: string;

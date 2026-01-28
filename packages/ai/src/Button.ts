@@ -184,7 +184,7 @@ class Button extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	states!: DefaultSlot<Array<ButtonState>>;
+	states!: DefaultSlot<ButtonState[]>;
 
 	@query("[ui5-split-button]")
 	_splitButton?: SplitButton;

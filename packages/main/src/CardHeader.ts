@@ -114,14 +114,14 @@ class CardHeader extends UI5Element {
 	 * @public
 	*/
 	@slot()
-	avatar!: Slot<Array<HTMLElement>>;
+	avatar!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines an action, displayed in the right most part of the header.
 	 * @public
 	*/
 	@slot()
-	action!: Slot<Array<HTMLElement>>;
+	action!: Slot<HTMLElement[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

@@ -182,7 +182,7 @@ class SearchField extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, invalidateOnChildChange: true })
-	scopes!: Slot<Array<ISearchScope>>;
+	scopes!: Slot<ISearchScope[]>;
 
 	/**
 	 * Defines the filter button slot, used to display an additional filtering button.
@@ -193,7 +193,7 @@ class SearchField extends UI5Element {
 	 * @since 2.11.0
 	 */
 	@slot()
-	filterButton!: Slot<Array<Button>>;
+	filterButton!: Slot<Button[]>;
 
 	/**
 	 * @private

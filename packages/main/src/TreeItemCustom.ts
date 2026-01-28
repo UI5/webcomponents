@@ -56,7 +56,7 @@ class TreeItemCustom extends TreeItemBase {
 	 * @public
 	 */
 	@slot()
-	content!: Slot<Array<HTMLElement>>;
+	content!: Slot<HTMLElement[]>;
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isDown(e) && this.content?.some(el => el.contains(e.target as Node))) {

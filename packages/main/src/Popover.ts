@@ -209,14 +209,14 @@ class Popover extends Popup {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<Array<HTMLElement>>;
+	header!: Slot<HTMLElement[]>;
 
 	/**
 	 * Defines the footer HTML Element.
 	 * @public
 	 */
 	@slot()
-	footer!: Slot<Array<HTMLElement>>;
+	footer!: Slot<HTMLElement[]>;
 
 	_opener?: HTMLElement | string | null | undefined;
 	_openerRect?: DOMRect;

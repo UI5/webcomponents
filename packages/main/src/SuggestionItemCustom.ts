@@ -50,7 +50,7 @@ class SuggestionItemCustom extends ListItemBase implements IInputSuggestionItemS
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	content!: DefaultSlot<Array<Node>>;
+	content!: DefaultSlot<Node[]>;
 
 	get _effectiveTabIndex() {
 		return -1;

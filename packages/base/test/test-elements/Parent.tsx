@@ -16,7 +16,7 @@ class Parent extends UI5Element {
 			slots: false,
 		},
 	})
-	content!: Slot<Array<Node>>;
+	content!: Slot<Node[]>;
 
 	@slot({
 		type: HTMLElement,
@@ -25,7 +25,7 @@ class Parent extends UI5Element {
 			slots: false,
 		},
 	})
-	items!: Slot<Array<HTMLElement>>;
+	items!: Slot<HTMLElement[]>;
 
 	static get template() {
 		return () => <div>

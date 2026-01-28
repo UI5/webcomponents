@@ -216,7 +216,7 @@ class TreeItemBase extends ListItem {
 		},
 		"default": true,
 	})
-	items!: DefaultSlot<Array<TreeItemBase>>;
+	items!: DefaultSlot<TreeItemBase[]>;
 
 	/**
 	 * **Note:** While the slot allows option for setting custom avatar, to match the
@@ -228,7 +228,7 @@ class TreeItemBase extends ListItem {
 	 * @public
 	 */
 	@slot()
-	image!: Slot<Array<HTMLElement>>;
+	image!: Slot<HTMLElement[]>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

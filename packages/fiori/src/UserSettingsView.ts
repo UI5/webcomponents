@@ -61,7 +61,7 @@ class UserSettingsView extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	content!: DefaultSlot<Array<HTMLElement>>;
+	content!: DefaultSlot<HTMLElement[]>;
 }
 
 UserSettingsView.define();
