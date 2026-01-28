@@ -24,6 +24,11 @@
 	padding: 0;
 }
 
+/* Header */
+.ui5-adapt-filters-header {
+	padding: 0.5rem 1rem;
+}
+
 /* TabContainer CSS parts */
 .ui5-adapt-filters-content::part(tabstrip) {
 	padding: 0;
@@ -32,6 +37,12 @@
 	padding: 0;
 }
 
+/* List */
+.ui5-adapt-filters-list {
+	padding: 0;
+}
+
+/* Filter item content */
 .ui5-adapt-filter-item-content {
 	flex: 1;
 }
@@ -41,9 +52,69 @@
 	gap: 0.5rem;
 }
 
+/* Grouped items indentation */
+.ui5-adapt-filter-item-grouped {
+	padding-left: 1.5rem;
+}
+
 /* Filter Actions */
 .ui5-adapt-filter-actions {
 	display: flex;
 	gap: 0.125rem;
 	flex-shrink: 0;
+}
+
+/* Group header */
+.ui5-adapt-filter-group-header {
+	background-color: var(--sapList_GroupHeaderBackground);
+	cursor: pointer;
+}
+
+.ui5-adapt-filter-group-header::part(content) {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.ui5-adapt-filter-group-icon {
+	color: var(--sapContent_IconColor);
+}
+
+.ui5-adapt-filter-group-title {
+	font-weight: bold;
+	color: var(--sapGroup_TitleTextColor);
+}
+
+/* Search input */
+.ui5-adapt-filters-search-input {
+	width: 12rem;
+}
+
+.ui5-adapt-filters-search-input-fullwidth {
+	width: 100%;
+}
+
+/* Add filter section */
+.ui5-adapt-filters-add-section {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	border-top: 1px solid var(--sapGroup_ContentBorderColor);
+}
+
+.ui5-adapt-filters-add-label {
+	white-space: nowrap;
+}
+
+.ui5-adapt-filters-add-select {
+	flex: 1;
+}
+
+/* Footer */
+.ui5-adapt-filters-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
 }

@@ -7,10 +7,27 @@
 	flex-direction: column;
 }
 
+.ui5-filterbar-item-label {
+	margin-bottom: 0.25rem;
+}
+
+.ui5-filterbar-item-control {
+	width: 100%;
+}
+
 :host([_adapt_filters_item]) .ui5-filterbar-item-root {
 	flex-direction: row;
 	align-items: center;
 	gap: 0.5rem;
+}
+
+:host([_adapt_filters_item]) .ui5-filterbar-item-label {
+	margin-bottom: 0;
+	flex-shrink: 0;
+}
+
+:host([_adapt_filters_item]) .ui5-filterbar-item-control {
+	flex: 1;
 }
 
 ::slotted(*) {

@@ -693,63 +693,63 @@ class AdaptFiltersDialog extends UI5Element {
 	// ===== i18n TEXTS =====
 
 	get _dialogTitle() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_TITLE as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_TITLE);
 	}
 
 	get _listTabText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_LIST_TAB as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_LIST_TAB);
 	}
 
 	get _groupsTabText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_GROUPS_TAB as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_GROUPS_TAB);
 	}
 
 	get _filterValuesVisibilityText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_FILTER_VALUES_VISIBILITY as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_FILTER_VALUES_VISIBILITY);
 	}
 
 	get _searchPlaceholder() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_SEARCH_PLACEHOLDER as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_SEARCH_PLACEHOLDER);
 	}
 
 	get _editText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_EDIT_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_EDIT_BUTTON);
 	}
 
 	get _sortText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_SORT_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_SORT_BUTTON);
 	}
 
 	get _addFilterText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_ADD_FILTER as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_ADD_FILTER);
 	}
 
 	get _okButtonText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_OK_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_OK_BUTTON);
 	}
 
 	get _filterButtonText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_FILTER_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_FILTER_BUTTON);
 	}
 
 	get _cancelButtonText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_CANCEL_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _resetText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_RESET_BUTTON as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_RESET_BUTTON);
 	}
 
 	get _ungroupedText() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_UNGROUPED as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_UNGROUPED);
 	}
 
 	get _visibilityTooltip() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_VISIBILITY_TOOLTIP as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_VISIBILITY_TOOLTIP);
 	}
 
 	get _reorderTooltip() {
-		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_REORDER_TOOLTIP as unknown as string);
+		return AdaptFiltersDialog.i18nBundle.getText(ADAPT_FILTERS_DIALOG_REORDER_TOOLTIP);
 	}
 }
 

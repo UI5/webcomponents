@@ -21,7 +21,7 @@ export default function FilterBarTemplate(this: FilterBar) {
 					<slot name={item._individualSlot}></slot>
 				</div>)}
 				{ Array.from({ length: spacerCount }).map(() => <div class="ui5-filterbar-spacer"></div>) }
-				<div className="ui5-filterbar-buttons">
+				<div class="ui5-filterbar-buttons">
 					{!this.hideGoOnFB && <Button design="Emphasized" onClick={this._handleGoPress}>{this._goButtonText}</Button>}
 					{this.showClearOnFB && <Button design="Transparent" onClick={this._handleClearPress}>{this._clearButtonText}</Button>}
 					{this.showRestoreOnFB && <Button design="Transparent" onClick={this._handleRestorePress}>{this._restoreButtonText}</Button>}
