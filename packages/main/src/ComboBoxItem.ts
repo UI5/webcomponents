@@ -47,8 +47,10 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 
 	/**
 	 * Defines the value of the `ui5-combobox-item`.
-	 * Used for selection. Check ComboBox' complexValue property for more information.
+	 * Used for selection. Check ComboBox' selectedValue property for more information.
+	 * @default undefined
 	 * @public
+	 * @since 2.19.0
 	 */
 	@property()
 	value?: string;

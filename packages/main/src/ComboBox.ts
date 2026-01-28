@@ -238,12 +238,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	/**
  	 * Defines the selected item value.
- 	 * @default ""
+ 	 * @default undefined
 	 * @public
 	 * @since 2.19.0
  	 */
 	@property()
-	selectedValue = "";
+	selectedValue?: string;
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -468,7 +468,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_selectedItemText = "";
 	_userTypedValue = "";
 	_useSelectedValue: boolean = false;
-	_selectedValue: string = "";
 	_valueStateLinks: Array<HTMLElement> = [];
 	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
@@ -861,14 +860,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
-			this.selectedValue = isGroupItem ? "" : currentItem?.value || "";
+			this.selectedValue = isGroupItem ? "" : currentItem?.value;
 			this.focused = false;
 
 			currentItem.focused = true;
 		} else {
 			this.focused = true;
 			this.value = isGroupItem ? nextItem.text! : currentItem.text!;
-			this.selectedValue = currentItem.value || "";
+			this.selectedValue = currentItem.value;
 			currentItem.focused = false;
 		}
 
@@ -1192,7 +1191,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this.value = value;
 
 		if (this._useSelectedValue) {
-			this.selectedValue = item.value || "";
+			this.selectedValue = item.value;
 		}
 	}
 
@@ -1249,9 +1248,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 
 		if (!itemToBeSelected && this._useSelectedValue) {
-			this.selectedValue = "";
+			this.selectedValue = undefined;
 		} else {
-			this.selectedValue = itemToBeSelected?.value || "";
+			this.selectedValue = itemToBeSelected?.value;
 		}
 
 		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
@@ -1307,7 +1306,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this.value = this._selectedItemText;
 		if (this._useSelectedValue) {
-			this.selectedValue = item.value || "";
+			this.selectedValue = item.value;
 		}
 
 		if (!item.selected) {

@@ -606,7 +606,7 @@ describe("Keyboard navigation", () => {
 		);
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "");
+			.should("not.have.attr", "selected-value");
 
 		cy.get("[ui5-combobox]")
 			.shadow()
@@ -641,7 +641,7 @@ describe("Keyboard navigation", () => {
 		);
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "");
+			.should("not.have.attr", "selected-value");
 
 		cy.get("[ui5-combobox]")
 			.shadow()
@@ -662,8 +662,8 @@ describe("Keyboard navigation", () => {
 			.should("have.prop", "focused");
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "")
-			.should("have.value", "");
+			.should("have.value", "")
+			.should("not.have.attr", "selected-value");
 
 		cy.realPress("ArrowDown");
 
@@ -684,7 +684,7 @@ describe("Keyboard navigation", () => {
 		);
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "");
+			.should("not.have.attr", "selected-value");
 
 		cy.get("[ui5-combobox]")
 			.shadow()
@@ -698,7 +698,7 @@ describe("Keyboard navigation", () => {
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "");
+			.should("not.have.attr", "selected-value");
 
 		cy.realPress("ArrowDown");
 		cy.get("[ui5-combobox]")
@@ -726,7 +726,7 @@ describe("Keyboard navigation", () => {
 		);
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "");
+			.should("not.have.attr", "selected-value");
 
 		cy.get("[ui5-combobox]")
 			.shadow()
@@ -2742,7 +2742,7 @@ describe("Event firing", () => {
 		}));
 	});
 
-		it("fires selection-change when selectedValue changes via keyboard and input", () => {
+	it("fires selection-change when selectedValue changes via keyboard and input", () => {
 		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
 		cy.mount(
 			<ComboBox onSelectionChange={selectionChangeSpy}>
@@ -2770,6 +2770,9 @@ describe("Event firing", () => {
 
 		cy.get("@selectionChangeSpy")
 			.should("be.calledTwice");
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item.text === "Brazil";
+		}));
 
 		cy.get("[ui5-combobox]")
 			.shadow()
@@ -2778,11 +2781,15 @@ describe("Event firing", () => {
 			.realPress("Backspace");
 
 		cy.get("[ui5-combobox]")
-			.should("have.attr", "selected-value", "")
-			.should("have.attr", "value", "Brazi");
+		.should("have.attr", "value", "Brazi")
+			.should("not.have.attr", "selected-value");
 
 		cy.get("@selectionChangeSpy")
 			.should("be.calledThrice");
+
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item === null;
+		}));
 	});
 
 	it("should check clear icon events", () => {
