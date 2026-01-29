@@ -44,6 +44,7 @@ import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
+import createInstanceChecker from "./util/createInstanceChecker.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -327,7 +328,7 @@ abstract class UI5Element extends HTMLElement {
 		}
 
 		if (!ctor.asyncFinished) {
-			await ctor.definePromise;
+			await ctor._definePromise;
 		}
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
@@ -338,6 +339,14 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+	}
+
+	get definePromise(): Promise<void> {
+		const ctor = this.constructor as typeof UI5Element;
+		if (!ctor.asyncFinished && ctor._definePromise) {
+			return ctor._definePromise;
+		}
+		return Promise.resolve();
 	}
 
 	/**
@@ -1329,7 +1338,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	static asyncFinished: boolean;
-	static definePromise: Promise<void> | undefined;
+	static _definePromise: Promise<void> | undefined;
 	static i18nBundleStorage: Record<string, I18nBundle> = {};
 
 	static get i18nBundles(): Record<string, I18nBundle> {
@@ -1355,7 +1364,7 @@ abstract class UI5Element extends HTMLElement {
 			});
 			this.asyncFinished = true;
 		};
-		this.definePromise = defineSequence();
+		this._definePromise = defineSequence();
 
 		const tag = this.getMetadata().getTag();
 
@@ -1404,9 +1413,7 @@ abstract class UI5Element extends HTMLElement {
 /**
  * Always use duck-typing to cover all runtimes on the page.
  */
-const instanceOfUI5Element = (object: any): object is UI5Element => {
-	return "isUI5Element" in object;
-};
+const instanceOfUI5Element = createInstanceChecker<UI5Element>("isUI5Element");
 
 export default UI5Element;
 export {

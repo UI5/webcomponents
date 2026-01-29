@@ -45,6 +45,7 @@ import NumberFormat from "@ui5/webcomponents-localization/dist/NumberFormat.js";
 import StepInputCss from "./generated/themes/StepInput.css.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
+import { attachLanguageChange, detachLanguageChange } from "@ui5/webcomponents-base/dist/locale/languageChange.js";
 
 // Spin variables
 const INITIAL_WAIT_TIMEOUT = 500; // milliseconds
@@ -301,6 +302,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_formatter?: NumberFormat;
 
+	_languageChangeHandler?: (lang: string) => Promise<void>;
+
+	_languageChanged?: boolean = false;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -363,6 +368,11 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _displayValue() {
+		if (this._languageChanged) {
+			this._languageChanged = false;
+			this.valueState = ValueState.None; // to reset the value state visual
+			return this._formatNumber(this.value);
+		}
 		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
 		const value = this.input?.value && !this._isValueWithCorrectPrecision ? this.input.value : this._formatNumber(this.value);
 		if ((this.value === 0) || (Number.isInteger(this.value))) {
@@ -393,6 +403,34 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	onBeforeRendering() {
 		this._setButtonState();
+	}
+	onEnterDOM() {
+		this._setupLanguageChangeHandler();
+	}
+
+	onExitDOM() {
+		this._cleanupLanguageChangeHandler();
+	}
+
+	_setupLanguageChangeHandler() {
+		if (this._languageChangeHandler) {
+			return;
+		}
+
+		this._languageChangeHandler = () => {
+			this._formatter = undefined;
+			this._languageChanged = true;
+
+			return Promise.resolve();
+		};
+		attachLanguageChange(this._languageChangeHandler);
+	}
+
+	_cleanupLanguageChangeHandler() {
+		if (this._languageChangeHandler) {
+			detachLanguageChange(this._languageChangeHandler);
+			this._languageChangeHandler = undefined;
+		}
 	}
 
 	get formatter(): NumberFormat {
@@ -563,16 +601,15 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
+		const delimiter = localeData.getNumberSymbol("decimal") || ".";
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
-		if (this.valuePrecision === 0 && ((this.value === 0) || (Number.isInteger(this.value)))) {
+		if (this.valuePrecision === 0 && !this.input?.value.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
 			// integers and zero will be formatted with toFixed, so thex y're always valid
 			return true;
 		}
-
-		const localeData = getCachedLocaleDataInstance(getLocale());
-		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = localeData?.getNumberSymbol("decimal") || ".";
 		const numberParts = this.input?.value?.split(delimiter);
 		const decimalPartLength = numberParts?.length > 1 ? numberParts[1].length : 0;
 

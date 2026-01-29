@@ -8,6 +8,7 @@ import { setBaseTheme } from "../config/Theme.js";
 import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
+import { updateComponentStyles } from "./componentStyles.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -39,14 +40,18 @@ const deleteThemeBase = () => {
 const loadComponentPackages = async (theme: string, externalThemeName?: string) => {
 	const registeredPackages = getRegisteredPackages();
 
-	const packagesStylesPromises = [...registeredPackages].map(async packageName => {
+	const packagesStylesPromises = [...registeredPackages.entries()].map(async ([packageName, { cssVariablesTarget }]) => {
 		if (packageName === BASE_THEME_PACKAGE) {
 			return;
 		}
 
 		const cssData = await getThemeProperties(packageName, theme, externalThemeName);
 		if (cssData) {
-			createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
+			if (cssVariablesTarget === "root") {
+				createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
+			} else if (cssVariablesTarget === "host") {
+				updateComponentStyles(packageName, cssData);
+			}
 		}
 	});
 

@@ -1043,15 +1043,34 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	/**
 	 * Currently selected date represented as a Local JavaScript Date instance.
+	 * Note: this getter can only be reliably used after the component is fully defined. Use dateValueAsync which resolves only when this condition is met.
 	 * @public
 	 * @default null
+	 * @deprecated Use dateValueAsync instead
 	 */
 	get dateValue(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue) as Date : this.getValueFormat().parse(this.value) as Date;
 	}
 
+	/**
+	 * Promise that resolves to the currently selected date represented as a Local JavaScript Date instance.
+	 * @public
+	 * @default Promise
+	 */
+	get dateValueAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValue;
+		});
+	}
+
 	get dateValueUTC(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue, true) as Date : this.getValueFormat().parse(this.value) as Date;
+	}
+
+	get dateValueUTCAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValueUTC;
+		});
 	}
 
 	get styles() {
