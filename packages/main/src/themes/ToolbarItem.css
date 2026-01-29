@@ -1,0 +1,8 @@
+/* This style we need for the element inside Popover with shrinikInOverflow property to not fire the click event on empty space */
+:host([is-overflowed][shrink-in-overflow]) {
+	display: inline-block;
+}
+
+:host([is-overflowed]) ::slotted(*) {
+	width: 100%;
+}
