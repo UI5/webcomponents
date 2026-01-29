@@ -8,7 +8,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import ColorPalettePopoverTemplate from "./ColorPalettePopoverTemplate.js";
 
 // Styles
@@ -179,7 +178,7 @@ class ColorPalettePopover extends UI5Element {
 		// since height is dynamically determined by padding-block-start
 		colorPalette.allColorsInPalette.forEach((item: IColorPaletteItem) => {
 			const itemHeight = item.offsetHeight + 4; // adding 4px for the offsets on top and bottom
-			item.style.setProperty(getScopedVarName("--_ui5_color_palette_item_height"), `${itemHeight}px`);
+			item.style.setProperty("--_ui5_color_palette_item_height", `${itemHeight}px`);
 		});
 	}
 

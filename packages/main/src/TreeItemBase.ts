@@ -8,7 +8,7 @@ import { isLeft, isRight } from "@ui5/webcomponents-base/dist/Keys.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
+
 import ListItem from "./ListItem.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
@@ -247,7 +247,7 @@ class TreeItemBase extends ListItem {
 	get styles() {
 		return {
 			preContent: {
-				"padding-inline-start": `calc(var(${getScopedVarName("--_ui5-tree-indent-step")}) * ${this.effectiveLevel})`,
+				"padding-inline-start": `calc(var(--_ui5-tree-indent-step) * ${this.effectiveLevel})`,
 			},
 		};
 	}

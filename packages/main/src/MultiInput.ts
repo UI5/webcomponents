@@ -18,7 +18,6 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import {
 	MULTIINPUT_ROLEDESCRIPTION_TEXT,
@@ -363,7 +362,7 @@ class MultiInput extends Input implements IFormInputElement {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 		this.tokenizerAvailable = this.tokens && this.tokens.length > 0;
 
 		if (this.tokenizer) {
