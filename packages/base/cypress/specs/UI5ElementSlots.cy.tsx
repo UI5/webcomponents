@@ -133,4 +133,38 @@ describe("Slots work properly", () => {
 			.invoke("prop", "items")
 			.should("have.length", 3);
 	});
+
+	it("Tests that only changed slot triggers invalidation", () => {
+		cy.mount(
+			<Generic>
+				<span>Default slot content</span>
+				<span slot="other" id="o2">Other slot content 2</span>
+			</Generic>
+		);
+
+		cy.get("[ui5-test-generic]")
+			.as("testGeneric");
+
+		cy.get("@testGeneric")
+			.should("be.visible");
+
+		cy.get<Generic>("@testGeneric")
+			.then($el => {
+				cy.stub($el[0], "onInvalidation").as("invalidation");
+			});
+
+		cy.get("@invalidation")
+			.should("not.have.been.called");
+
+		cy.get("@testGeneric")
+			.then($el => {
+				const newEl = document.createElement("span");
+				newEl.innerText = "New Element";
+
+				$el.append(newEl);
+			});
+
+		cy.get("@invalidation")
+			.should("have.been.calledOnce");
+	});
 });

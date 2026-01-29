@@ -252,6 +252,7 @@ abstract class UI5Element extends HTMLElement {
 		const ctor = this.constructor as typeof UI5Element;
 		if (ctor._needsShadowDOM()) {
 			const defaultOptions = { mode: "open" } as ShadowRootInit;
+
 			if (!this.shadowRoot) {
 				this.attachShadow({ ...defaultOptions, ...ctor.getMetadata().getShadowRootOptions() });
 			} else {
@@ -259,21 +260,6 @@ abstract class UI5Element extends HTMLElement {
 				// is inserted into the DOM declaratively using a <template> tag.
 				this.__shouldHydrate = true;
 			}
-
-			const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
-			if (slotsAreManaged) {
-				this.shadowRoot!.addEventListener("slotchange", this._onShadowRootSlotChange.bind(this));
-			}
-		}
-	}
-
-	/**
-	 * Note: this "slotchange" listener is for slots, rendered in the component's shadow root
-	 */
-	_onShadowRootSlotChange(e: Event) {
-		const targetShadowRoot = (e.target as Node)?.getRootNode(); // the "slotchange" event target is always a slot element
-		if (targetShadowRoot === this.shadowRoot) { // only for slotchange events that originate from slots, belonging to the component's shadow root
-			this._processChildren();
 		}
 	}
 
@@ -410,12 +396,34 @@ abstract class UI5Element extends HTMLElement {
 		}
 
 		const canSlotText = metadata.canSlotText();
-		const mutationObserverOptions = {
+		const mutationObserverOptions: MutationObserverInit = {
 			childList: true,
-			subtree: canSlotText,
+			subtree: true,
 			characterData: canSlotText,
 		};
-		observeDOMNode(this, this._processChildren.bind(this) as MutationCallback, mutationObserverOptions);
+		observeDOMNode(this, this.handleMutationChange.bind(this) as MutationCallback, mutationObserverOptions);
+	}
+
+	handleMutationChange(changes: MutationRecord[]) {
+		let shouldProccessChildren = false;
+
+		changes.forEach(change => {
+			// we observe all changes of the component except its slot attribute
+			if (change.target === this && change.type !== "attributes") {
+				shouldProccessChildren = true;
+			}
+
+			const directChildren = [...this.childNodes].includes(change.target as ChildNode);
+
+			// we observe slot attribute change only on the direct child of the web component
+			if (directChildren && change.type === "attributes" && change.attributeName === "slot") {
+				shouldProccessChildren = true;
+			}
+		});
+
+		if (shouldProccessChildren) {
+			this._processChildren();
+		}
 	}
 
 	/**
