@@ -12,8 +12,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_side_navigation_item_height: 2rem;
-
+		--_ui5_side_navigation_item_height: 2rem;
 	}
 }

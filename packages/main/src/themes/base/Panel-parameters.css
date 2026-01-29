@@ -1,5 +1,5 @@
 :host {
-	--_ui5_panel_focus_border:   var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	--_ui5_panel_focus_border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_panel_header_height: 2.75rem;
 	--_ui5_panel_button_root_width: 2.75rem;
 	--_ui5_panel_button_root_height: 2.75rem;
@@ -18,8 +18,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
-
+		--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
 	}
 }

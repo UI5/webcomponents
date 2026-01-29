@@ -22,9 +22,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_input_information_icon_padding: .25rem .4375rem;
-	--_ui5_input_information_custom_icon_padding: .25rem .5rem;
-
+		--_ui5_input_information_icon_padding: .25rem .4375rem;
+		--_ui5_input_information_custom_icon_padding: .25rem .5rem;
 	}
 }

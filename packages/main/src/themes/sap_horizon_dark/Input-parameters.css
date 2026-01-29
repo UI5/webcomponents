@@ -32,16 +32,14 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_input_information_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_information_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_error_warning_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_error_warning_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_custom_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_error_warning_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_error_warning_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_information_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_information_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-
+		--_ui5_input_information_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_information_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_error_warning_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_error_warning_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_custom_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_error_warning_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_error_warning_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_information_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_information_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
 	}
 }

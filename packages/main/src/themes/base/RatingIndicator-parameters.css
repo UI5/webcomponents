@@ -14,12 +14,10 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_rating_indicator_item_height: 0.67em;
-	--_ui5_rating_indicator_item_width: 0.67em;
-	--_ui5_rating_indicator_readonly_item_height: 0.67em;
-	--_ui5_rating_indicator_readonly_item_width: 0.67em;
-	--_ui5_rating_indicator_component_spacing: 0.8125rem 0px;
-
+		--_ui5_rating_indicator_item_height: 0.67em;
+		--_ui5_rating_indicator_item_width: 0.67em;
+		--_ui5_rating_indicator_readonly_item_height: 0.67em;
+		--_ui5_rating_indicator_readonly_item_width: 0.67em;
+		--_ui5_rating_indicator_component_spacing: 0.8125rem 0px;
 	}
 }

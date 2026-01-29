@@ -23,40 +23,38 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
+		--_ui5_textarea_padding_top: 0.1875rem;
+		--_ui5_textarea_padding_bottom: 0.125rem;
 
-	--_ui5_textarea_padding_top: 0.1875rem;
-	--_ui5_textarea_padding_bottom: 0.125rem;
+		--_ui5_checkbox_focus_position: 0.125rem;
 
-	--_ui5_checkbox_focus_position: 0.125rem;
+		/* SplitButton */
+		--_ui5_split_button_middle_separator_top: 0.3125rem;
+		--_ui5_split_button_middle_separator_height: 1rem;
 
-	/* SplitButton */
-	--_ui5_split_button_middle_separator_top: 0.3125rem;
-	--_ui5_split_button_middle_separator_height: 1rem;
+		/* CheckBox */
+		--_ui5_checkbox_wrapped_focus_inset_block: 0.125rem;
 
-	/* CheckBox */
-	--_ui5_checkbox_wrapped_focus_inset_block: 0.125rem;
+		/* ColorPalette */
+		--_ui5_color-palette-item-height: 1.25rem;
+		--_ui5_color-palette-item-hover-height: 1.625rem;
+		--_ui5_color-palette-item-margin: calc(((var(--_ui5_color-palette-item-hover-height) - var(--_ui5_color-palette-item-height)) / 2) + 0.0625rem);
+		--_ui5_color-palette-row-width: 8.75rem;
+		--_ui5_color-palette-swatch-container-padding: 0.1875rem 0.5rem;
+		--_ui5_color-palette-item-hover-margin: 0.0625rem;
+		--_ui5_color-palette-row-height: 7.5rem;
+		--_ui5_color-palette-button-height: 2rem;
+		--_ui5_color-palette-item-before-focus-inset: -0.25rem;
 
-	/* ColorPalette */
-	--_ui5_color-palette-item-height: 1.25rem;
-	--_ui5_color-palette-item-hover-height: 1.625rem;
-	--_ui5_color-palette-item-margin: calc(((var(--_ui5_color-palette-item-hover-height) - var(--_ui5_color-palette-item-height)) / 2) + 0.0625rem);
-	--_ui5_color-palette-row-width: 8.75rem;
-	--_ui5_color-palette-swatch-container-padding: 0.1875rem 0.5rem;
-	--_ui5_color-palette-item-hover-margin: 0.0625rem;
-	--_ui5_color-palette-row-height: 7.5rem;
-	--_ui5_color-palette-button-height: 2rem;
-	--_ui5_color-palette-item-before-focus-inset: -0.25rem;
-
-	/* DayPicker */
-	--_ui5_daypicker_selected_item_now_special_day_top: 1.5625rem;
-	--_ui5_daypicker_specialday_focused_top: 1.3125rem;
-	--_ui5_daypicker_selected_item_now_special_day_border_bottom_radius_alternate: 0.5rem;
-	--_ui5_daypicker_specialday_focused_border_bottom: 0.25rem;
-	--_ui5_daypicker_item_now_specialday_top: 1.4375rem;
-	--_ui5_dp_two_calendar_item_secondary_text_padding_block: 0 0.375rem;
-	--_ui5_dp_two_calendar_item_secondary_text_padding: 0 0.375rem;
-	--_ui5_daypicker_two_calendar_item_selected_focus_margin_bottom: -0.25rem;
-	--_ui5_daypicker_two_calendar_item_selected_focus_padding_right: 0.4375rem;
-
+		/* DayPicker */
+		--_ui5_daypicker_selected_item_now_special_day_top: 1.5625rem;
+		--_ui5_daypicker_specialday_focused_top: 1.3125rem;
+		--_ui5_daypicker_selected_item_now_special_day_border_bottom_radius_alternate: 0.5rem;
+		--_ui5_daypicker_specialday_focused_border_bottom: 0.25rem;
+		--_ui5_daypicker_item_now_specialday_top: 1.4375rem;
+		--_ui5_dp_two_calendar_item_secondary_text_padding_block: 0 0.375rem;
+		--_ui5_dp_two_calendar_item_secondary_text_padding: 0 0.375rem;
+		--_ui5_daypicker_two_calendar_item_selected_focus_margin_bottom: -0.25rem;
+		--_ui5_daypicker_two_calendar_item_selected_focus_padding_right: 0.4375rem;
 	}
 }

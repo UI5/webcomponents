@@ -2,12 +2,10 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	/* Timeline Item COMPACT - sap_fiori_3 specific values */
-	--_ui5_timeline_tli_indicator_after_height: 50%;
-	--_ui5_timeline_tli_indicator_after_top: -50%;
-	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
-	--_ui5_timeline_tli_icon_horizontal_indicator_after_width: calc(100% - 0.75rem);
-
+		/* Timeline Item COMPACT - sap_fiori_3 specific values */
+		--_ui5_timeline_tli_indicator_after_height: 50%;
+		--_ui5_timeline_tli_indicator_after_top: -50%;
+		--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
+		--_ui5_timeline_tli_icon_horizontal_indicator_after_width: calc(100% - 0.75rem);
 	}
 }

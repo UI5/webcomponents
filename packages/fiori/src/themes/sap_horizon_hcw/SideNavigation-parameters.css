@@ -6,7 +6,7 @@
 
 	--_ui5_side_navigation_navigation_separator_margin: 0.25rem 0.5rem 0.25rem 0.5rem;
 	--_ui5_side_navigation_navigation_separator_margin_collapsed: var(--_ui5_side_navigation_navigation_separator_margin);
-	--_ui5_side_navigation_navigation_separator_height:  0.0625rem;
+	--_ui5_side_navigation_navigation_separator_height: 0.0625rem;
 	--_ui5_side_navigation_border_right: 0;
 	--_ui5_side_navigation_box_shadow: var(--sapContent_Shadow0);
 	--_ui5_side_navigation_triangle_display: none;
@@ -26,7 +26,7 @@
 	--_ui5_side_navigation_hover_border_width: 0.0625rem;
 	--_ui5_side_navigation_selected_border_width: 0.0625rem;
 	--_ui5_side_navigation_collapsed_selected_item_background: 0 100% / 0.188rem 100% no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_SelectionBackgroundColor);
-	--_ui5_side_navigation_collapsed_selected_item_background_hover: 0 100% / 0.188rem 100%  no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_Hover_SelectionBackground);
+	--_ui5_side_navigation_collapsed_selected_item_background_hover: 0 100% / 0.188rem 100% no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_Hover_SelectionBackground);
 	--_ui5_side_navigation_selected_and_focused_border_style_color: none;
 	--_ui5_side_navigation_group_icon_width: 2.5rem;
 	--_ui5_side_navigation_icon_padding_inline_end: 0.5rem;
@@ -48,8 +48,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_side_navigation_item_height: 2rem;
-
+		--_ui5_side_navigation_item_height: 2rem;
 	}
 }

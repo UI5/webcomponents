@@ -10,9 +10,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	/* ColorPicker */
-	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
+		/* ColorPicker */
+		--_ui5_color_picker_slider_handle_container_margin_top: none;
 	}
 }

@@ -8,7 +8,7 @@
 	--_ui5_side_navigation_navigation_separator_margin_collapsed: var(--_ui5_side_navigation_navigation_separator_margin);
 	--_ui5_side_navigation_navigation_separator_background_color: var(--sapToolbar_SeparatorColor);
 	--_ui5_side_navigation_navigation_separator_radius: 0.125rem;
-	--_ui5_side_navigation_navigation_separator_height:  0.0625rem;
+	--_ui5_side_navigation_navigation_separator_height: 0.0625rem;
 	--_ui5_side_navigation_triangle_color: var(--sapContent_NonInteractiveIconColor);
 	--_ui5_side_navigation_border_right: 0;
 	--_ui5_side_navigation_box_shadow: var(--sapContent_Shadow0);
@@ -26,8 +26,8 @@
 	--_ui5_side_navigation_item_padding_left: 1rem;
 	--_ui5_side_navigation_item_focus_border_offset: calc(-1 * var(--sapContent_FocusWidth));
 	--_ui5_side_navigation_item_focus_border_radius: calc(var(--_ui5_side_navigation_item_border_radius) + var(--sapContent_FocusWidth));
-	--_ui5_side_navigation_collapsed_selected_item_background: 0 100% / 0.188rem 100%  no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_SelectionBackgroundColor);
-	--_ui5_side_navigation_collapsed_selected_item_background_hover: 0 100% / 0.188rem 100%  no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_Hover_SelectionBackground);
+	--_ui5_side_navigation_collapsed_selected_item_background: 0 100% / 0.188rem 100% no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_SelectionBackgroundColor);
+	--_ui5_side_navigation_collapsed_selected_item_background_hover: 0 100% / 0.188rem 100% no-repeat linear-gradient(0deg, var(--sapHighlightColor), var(--sapHighlightColor)), var(--sapList_Hover_SelectionBackground);
 	--_ui5_side_navigation_selected_border_style_color: none;
 	--_ui5_side_navigation_selected_and_focused_border_style_color: var(--_ui5_side_navigation_selected_border_style_color);
 	--_ui5_side_navigation_group_icon_width: 2.5rem;
@@ -50,8 +50,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_side_navigation_item_height: 2rem;
-
+		--_ui5_side_navigation_item_height: 2rem;
 	}
 }

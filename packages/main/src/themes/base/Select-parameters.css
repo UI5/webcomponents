@@ -7,8 +7,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_select_icon_width: 2rem;
-
+		--_ui5_select_icon_width: 2rem;
 	}
 }

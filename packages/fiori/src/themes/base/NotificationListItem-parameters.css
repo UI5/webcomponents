@@ -25,11 +25,9 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5-notification_item-description-margin-top: 0.5rem;
-	--_ui5-notification_item-footer-margin-top: 0.5rem;
-	--_ui5-notification_item-title-padding-end-two-buttons: 3.875rem;
-	--_ui5-notification_item-title-padding-end-one-button: 1.875rem;
-
+		--_ui5-notification_item-description-margin-top: 0.5rem;
+		--_ui5-notification_item-footer-margin-top: 0.5rem;
+		--_ui5-notification_item-title-padding-end-two-buttons: 3.875rem;
+		--_ui5-notification_item-title-padding-end-one-button: 1.875rem;
 	}
 }

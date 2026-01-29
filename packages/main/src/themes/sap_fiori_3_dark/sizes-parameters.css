@@ -2,17 +2,15 @@
 
 :host {
 	/* CalendarLegend */
-    --_ui5-calendar-legend-item-root-focus-offset: -0.0625rem;
+	--_ui5-calendar-legend-item-root-focus-offset: -0.0625rem;
 
-    /* ColorPicker */
+	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: 0.1875rem;
 }
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-    /* ColorPicker */
-	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
+		/* ColorPicker */
+		--_ui5_color_picker_slider_handle_container_margin_top: none;
 	}
 }

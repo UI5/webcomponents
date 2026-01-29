@@ -44,9 +44,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_slider_tooltip_bottom: 1.75rem;
-	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
-
+		--_ui5_slider_tooltip_bottom: 1.75rem;
+		--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
 	}
 }

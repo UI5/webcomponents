@@ -8,12 +8,10 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_rating_indicator_item_height: 1em;
-	--_ui5_rating_indicator_item_width: 1em;
-	--_ui5_rating_indicator_readonly_item_height: 0.75em;
-	--_ui5_rating_indicator_readonly_item_width: 0.75em;
-	--_ui5_rating_indicator_component_spacing: 0.5rem 0;
-
+		--_ui5_rating_indicator_item_height: 1em;
+		--_ui5_rating_indicator_item_width: 1em;
+		--_ui5_rating_indicator_readonly_item_height: 0.75em;
+		--_ui5_rating_indicator_readonly_item_width: 0.75em;
+		--_ui5_rating_indicator_component_spacing: 0.5rem 0;
 	}
 }

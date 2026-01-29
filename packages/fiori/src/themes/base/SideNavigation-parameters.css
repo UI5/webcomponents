@@ -69,11 +69,9 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
-	--_ui5_side_navigation_item_height: 2rem;
-	--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
-	--_ui5_side_navigation_item_margin: 0.5rem;
-
+		--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
+		--_ui5_side_navigation_item_height: 2rem;
+		--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
+		--_ui5_side_navigation_item_margin: 0.5rem;
 	}
 }

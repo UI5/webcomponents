@@ -5,8 +5,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_search_item_vertical_padding: 0.5rem;
-
+		--_ui5_search_item_vertical_padding: 0.5rem;
 	}
 }

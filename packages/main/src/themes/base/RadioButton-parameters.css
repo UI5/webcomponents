@@ -37,10 +37,8 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_radio_button_min_width: 2rem;
-	--_ui5_radio_button_focus_dist: 0.375rem;
-	--_ui5_radio_button_outer_ring_padding_with_label: 0 0.5rem;
-
+		--_ui5_radio_button_min_width: 2rem;
+		--_ui5_radio_button_focus_dist: 0.375rem;
+		--_ui5_radio_button_outer_ring_padding_with_label: 0 0.5rem;
 	}
 }

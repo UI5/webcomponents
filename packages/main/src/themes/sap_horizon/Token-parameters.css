@@ -18,8 +18,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_token_outline_offset: 0;
-
+		--_ui5_token_outline_offset: 0;
 	}
 }

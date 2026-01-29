@@ -62,13 +62,11 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_slider_track_total_height: var(--_ui5_slider_inner_height);
-	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
-	--_ui5_range_slider_focus_outline_width: calc(100% + var(--_ui5_slider_handle_width) + 12px);
-	--_ui5_slider_outer_height: calc(var(--_ui5_slider_handle_height) + 10px);
-	--_ui5_slider_progress_outline_offset: calc((-1 * var(--_ui5_slider_outer_height)) + 1rem);
-	--_ui5_slider_progress_outline_offset_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 6px);
-
+		--_ui5_slider_track_total_height: var(--_ui5_slider_inner_height);
+		--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+		--_ui5_range_slider_focus_outline_width: calc(100% + var(--_ui5_slider_handle_width) + 12px);
+		--_ui5_slider_outer_height: calc(var(--_ui5_slider_handle_height) + 10px);
+		--_ui5_slider_progress_outline_offset: calc((-1 * var(--_ui5_slider_outer_height)) + 1rem);
+		--_ui5_slider_progress_outline_offset_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 6px);
 	}
 }

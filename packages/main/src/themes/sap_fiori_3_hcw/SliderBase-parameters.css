@@ -28,12 +28,10 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_slider_handle_width: 1.5rem;
-	--_ui5_slider_handle_height: 1.5rem;
-	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
-	--_ui5_slider_tickmark_height: 0.75rem;
-	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
-
+		--_ui5_slider_handle_width: 1.5rem;
+		--_ui5_slider_handle_height: 1.5rem;
+		--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+		--_ui5_slider_tickmark_height: 0.75rem;
+		--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
 	}
 }

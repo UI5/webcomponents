@@ -24,18 +24,16 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_textarea_padding_top: 0.0625rem;
-	--_ui5_textarea_padding_bottom: 0.0625rem;
-	--_ui5_textarea_padding_top_readonly: 0.0625rem;
-	--_ui5_textarea_padding_bottom_readonly: 0.0625rem;
-	--_ui5_textarea_padding_top_error_warning: 0.0625rem;
-	--_ui5_textarea_padding_bottom_error_warning: 0.0625rem;
-	--_ui5_textarea_padding_top_information: 0.125rem;
-	--_ui5_textarea_padding_bottom_information: 0.125rem;
-	--_ui5_textarea_padding_right_and_left: 0.375rem;
-	--_ui5_textarea_padding_right_and_left_information: 0.4375rem;
-	--_ui5_textarea_padding_right_and_left_readonly: 0.375rem;
-
+		--_ui5_textarea_padding_top: 0.0625rem;
+		--_ui5_textarea_padding_bottom: 0.0625rem;
+		--_ui5_textarea_padding_top_readonly: 0.0625rem;
+		--_ui5_textarea_padding_bottom_readonly: 0.0625rem;
+		--_ui5_textarea_padding_top_error_warning: 0.0625rem;
+		--_ui5_textarea_padding_bottom_error_warning: 0.0625rem;
+		--_ui5_textarea_padding_top_information: 0.125rem;
+		--_ui5_textarea_padding_bottom_information: 0.125rem;
+		--_ui5_textarea_padding_right_and_left: 0.375rem;
+		--_ui5_textarea_padding_right_and_left_information: 0.4375rem;
+		--_ui5_textarea_padding_right_and_left_readonly: 0.375rem;
 	}
 }

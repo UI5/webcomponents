@@ -7,9 +7,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_tokenizer_gap: 0.375em 0.25rem;
-	--_ui5_tokenizer-popover_offset: .1875rem;
-
+		--_ui5_tokenizer_gap: 0.375em 0.25rem;
+		--_ui5_tokenizer-popover_offset: .1875rem;
 	}
 }

@@ -1,4 +1,5 @@
 @import "../base/sizes-parameters.css";
+
 :host {
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: -0.125rem;
@@ -6,13 +7,11 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
+		/* CheckBox */
+		--_ui5_checkbox_focus_position: 0.3125rem;
+		--_ui5_checkbox_wrapped_focus_inset_block: 0.1875rem;
 
-	/* CheckBox */
-	--_ui5_checkbox_focus_position: 0.3125rem;
-	--_ui5_checkbox_wrapped_focus_inset_block: 0.1875rem;
-
-	/* ColorPicker */
-	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
+		/* ColorPicker */
+		--_ui5_color_picker_slider_handle_container_margin_top: none;
 	}
 }

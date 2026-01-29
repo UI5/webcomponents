@@ -24,9 +24,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-
-	--_ui5_radio_button_outer_ring_padding: 0 0.5rem;
-	--_ui5_radio_button_focus_dist: 0.1875rem;
-
+		--_ui5_radio_button_outer_ring_padding: 0 0.5rem;
+		--_ui5_radio_button_focus_dist: 0.1875rem;
 	}
 }
