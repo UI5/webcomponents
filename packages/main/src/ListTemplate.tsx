@@ -53,7 +53,7 @@ export default function ListTemplate(this: List) {
 							role={this.listAccessibleRole}
 							aria-label={this.ariaLabelTxt}
 							aria-labelledby={this.ariaLabelledBy}
-							aria-description={this.ariaDescriptionText}
+							aria-description={this.ariaDescriptionText || undefined}
 						>
 							<slot></slot>
 

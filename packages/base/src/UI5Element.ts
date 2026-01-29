@@ -44,6 +44,7 @@ import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
+import createInstanceChecker from "./util/createInstanceChecker.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -1412,9 +1413,7 @@ abstract class UI5Element extends HTMLElement {
 /**
  * Always use duck-typing to cover all runtimes on the page.
  */
-const instanceOfUI5Element = (object: any): object is UI5Element => {
-	return "isUI5Element" in object;
-};
+const instanceOfUI5Element = createInstanceChecker<UI5Element>("isUI5Element");
 
 export default UI5Element;
 export {
