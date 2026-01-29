@@ -562,24 +562,24 @@ class SideNavigation extends UI5Element {
 		this._flexibleItemNavigation._init();
 	}
 
-	_findFocusedItem(items: Array<SideNavigationItem | SideNavigationGroup>) : SideNavigationItemBase | undefined {
+	_findFocusedItem(items: Array<SideNavigationItemBase>) : SideNavigationItemBase | undefined {
 		return this._getFocusableItems(items).find(item => item.forcedTabIndex === "0");
 	}
 
 	_getSelectableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationSelectableItemBase> {
-		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.selectableItems);
 		}, new Array<SideNavigationSelectableItemBase>());
 	}
 
 	_getFocusableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
-		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.focusableItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
 	_getAllItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
-		return items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.allItems);
 		}, new Array<SideNavigationItemBase>());
 	}
@@ -589,7 +589,7 @@ class SideNavigation extends UI5Element {
 	}
 
 	get overflowItems() : Array<HTMLElement> {
-		return this.items.filter(isInstanceOfSideNavigationItem).reduce((result, item) => {
+		return this.items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.overflowItems);
 		}, new Array<HTMLElement>());
 	}
@@ -717,6 +717,10 @@ class SideNavigation extends UI5Element {
 		}
 	}
 }
+
+const instanceOfItemOrGroup = (item: SideNavigationItemBase): item is SideNavigationItem | SideNavigationGroup => {
+	return isInstanceOfSideNavigationItem(item) || isInstanceOfSideNavigationGroup(item);
+};
 
 SideNavigation.define();
 
