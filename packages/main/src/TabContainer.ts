@@ -1,6 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { Slot, DefaultSlot, AccessibilityAttributes } from "@ui5/webcomponents-base";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -49,7 +49,6 @@ import type Button from "./Button.js";
 import type List from "./List.js";
 import type DropIndicator from "./DropIndicator.js";
 import type Tab from "./Tab.js";
-import { isInstanceOfTab } from "./Tab.js";
 import type { TabInStrip, TabInOverflow } from "./Tab.js";
 import type { TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
@@ -1561,6 +1560,7 @@ const walk = (items: Array<ITab>, callback: (arg0: ITab, arg1: number) => void) 
 TabContainer.define();
 
 export default TabContainer;
+export const isInstanceOfTab = createInstanceChecker<TabInOverflow>("realTabReference");
 export type {
 	TabContainerTabSelectEventDetail,
 	TabContainerMoveEventDetail,

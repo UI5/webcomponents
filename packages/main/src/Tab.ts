@@ -517,10 +517,6 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	}
 }
 
-const isInstanceOfTab = (object: any): object is TabInOverflow => {
-	return "realTabReference" in object;
-};
-
 Tab.define();
 
 TabContainer.registerTabStyles(stripCss);
@@ -528,9 +524,6 @@ TabContainer.registerTabStyles(draggableElementStyles);
 TabContainer.registerTabStyles(overflowCss);
 
 export default Tab;
-export {
-	isInstanceOfTab,
-};
 export type {
 	TabInStrip,
 	TabInOverflow,
