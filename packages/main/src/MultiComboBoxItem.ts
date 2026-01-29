@@ -47,6 +47,9 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	@property({ type: Boolean })
 	declare selected: boolean;
 
+	@property()
+	value?: string;	// remove when cmb PR is reviewed
+
 	/**
 	 * Defines whether the item is filtered
 	 * @private
