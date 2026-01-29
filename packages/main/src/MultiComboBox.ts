@@ -1812,7 +1812,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (this._shouldFilterItems) {
-			this._filteredItems = this._filterItems(this._shouldAutocomplete || !!autoCompletedChars ? this.valueBeforeAutoComplete : value);
+			this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
 		} else {
 			this._filteredItems = this._getItems();
 		}
