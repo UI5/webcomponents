@@ -1,5 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -718,9 +719,7 @@ class SideNavigation extends UI5Element {
 	}
 }
 
-const instanceOfItemOrGroup = (item: SideNavigationItemBase): item is SideNavigationItem | SideNavigationGroup => {
-	return isInstanceOfSideNavigationItem(item) || isInstanceOfSideNavigationGroup(item);
-};
+const instanceOfItemOrGroup = createMultiInstanceChecker<SideNavigationItem | SideNavigationGroup>(["isSideNavigationItem", "isSideNavigationGroup"]);
 
 SideNavigation.define();
 

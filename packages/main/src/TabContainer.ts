@@ -1,6 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, DefaultSlot, AccessibilityAttributes } from "@ui5/webcomponents-base";
-import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -1560,7 +1559,13 @@ const walk = (items: Array<ITab>, callback: (arg0: ITab, arg1: number) => void) 
 TabContainer.define();
 
 export default TabContainer;
-export const isInstanceOfTab = createInstanceChecker<TabInOverflow>("realTabReference");
+
+// TBD: currently, the createInstanceChecker could not be used
+// as it expects the checked property to be a boolean and true - (object[prop] === true);
+const isInstanceOfTab = (object: any): object is TabInOverflow => {
+	return object !== undefined && "realTabReference" in object;
+};
+
 export type {
 	TabContainerTabSelectEventDetail,
 	TabContainerMoveEventDetail,
