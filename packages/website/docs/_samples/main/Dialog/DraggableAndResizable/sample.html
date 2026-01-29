@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample</title>
-    <link rel="stylesheet" href="./main.css">
 </head>
 
 <body style="background-color: var(--sapBackgroundColor); height: 450px;">
@@ -15,9 +14,9 @@
     <ui5-button id="dialogOpener">Open Dialog</ui5-button>
 
     <ui5-dialog id="dialog" header-text="Draggable/Resizable dialog" draggable resizable>
-        <p class="dialogsContent">Move this dialog around the screen by dragging it by its header.</p>
-        <p class="dialogsContent">Resize this dialog by dragging it by its resize handle.</p>
-        <p class="dialogsContent">These features are available only on Desktop.</p>
+        <div>Move this dialog around the screen by dragging it by its header.</div>
+        <div>Resize this dialog by dragging it by its resize handle.</div>
+        <div>These features are available only on Desktop.</div>
         <ui5-toolbar slot="footer">
             <ui5-toolbar-button class="dialogCloser" design="Emphasized" text="OK"></ui5-toolbar-button>
         </ui5-toolbar>

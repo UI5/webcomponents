@@ -13,8 +13,3 @@
 #bar::part(startContent) {
     padding-inline-start: 0;
 }
-
-/* remove default margins */
-.dialogsContent {
-    margin: 0;
-}
