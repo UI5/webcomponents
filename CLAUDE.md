@@ -140,12 +140,20 @@ if (element instanceof Button) { }
 
 // BAD - the tag name could be scoped like `UI5-BUTTON-F5331039` and won't match
 if (element.tagName === "UI5-BUTTON") { }
+```
 
-// GOOD - use the `hasTag` helper that checks the pure tag
-// use instance check like
-const isInstanceOfComboBoxItemGroup = (object: any): object is ComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
+``` typescript
+// GOOD - use the `createInstanceChecker` helper that checks for instances via duck-typing
+// ComboBoxItemGroup.ts
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+class ComboBoxItemGroup {
+  readonly isGroupItem = true;
+}
+export const isInstanceOfComboBoxItemGroup = createInstanceChecker<ComboBoxItemGroup>("isGroupItem");
+// ComboBox.ts
+if (isInstanceOfComboBoxItemGroup(element)) {
+  // element has the correct type now
+}
 ```
 
 ### Property/Event Conventions
