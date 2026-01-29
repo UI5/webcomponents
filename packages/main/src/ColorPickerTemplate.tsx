@@ -6,7 +6,7 @@ import Button from "./Button.js";
 
 export default function ColorPickerTemplate(this: ColorPicker) {
 	return (
-		<section
+		<div
 			class="ui5-color-picker-root"
 			role="group"
 			aria-label={this.colorPickerLabel}
@@ -132,6 +132,6 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 					</div>
 				</div>
 			}
-		</section>
+		</div>
 	);
 }
