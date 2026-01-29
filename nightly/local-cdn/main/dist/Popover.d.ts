@@ -268,7 +268,8 @@ declare class Popover extends Popup {
     get _showResizeHandle(): boolean;
     get resizeHandlePlacement(): "TopLeft" | "TopRight" | "BottomLeft" | "BottomRight" | undefined;
     _onResizeMouseDown(e: MouseEvent): void;
+    readonly isPopover = true;
 }
-declare const instanceOfPopover: (object: any) => object is Popover;
 export default Popover;
-export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
+export declare const instanceOfPopover: (object: any) => object is Popover;
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };

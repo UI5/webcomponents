@@ -8,6 +8,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import ListItemGroup from "./ListItemGroup.js";
 import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  * The `ui5-cb-group-item` is type of suggestion item,
@@ -42,9 +43,6 @@ ComboBoxItemGroup = __decorate([
     })
 ], ComboBoxItemGroup);
 ComboBoxItemGroup.define();
-const isInstanceOfComboBoxItemGroup = (object) => {
-    return "isGroupItem" in object;
-};
-export { isInstanceOfComboBoxItemGroup };
+export const isInstanceOfComboBoxItemGroup = createInstanceChecker("isGroupItem");
 export default ComboBoxItemGroup;
 //# sourceMappingURL=ComboBoxItemGroup.js.map

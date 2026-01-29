@@ -26,6 +26,7 @@ import MenuItemTemplate from "./MenuItemTemplate.js";
 import { MENU_BACK_BUTTON_ARIA_LABEL, MENU_CANCEL_BUTTON_TEXT, MENU_POPOVER_ACCESSIBLE_NAME, } from "./generated/i18n/i18n-defaults.js";
 // Styles
 import menuItemCss from "./generated/themes/MenuItem.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  *
@@ -481,9 +482,6 @@ MenuItem = MenuItem_1 = __decorate([
     })
 ], MenuItem);
 MenuItem.define();
-const isInstanceOfMenuItem = (object) => {
-    return "isMenuItem" in object;
-};
 export default MenuItem;
-export { isInstanceOfMenuItem, };
+export const isInstanceOfMenuItem = createInstanceChecker("isMenuItem");
 //# sourceMappingURL=MenuItem.js.map

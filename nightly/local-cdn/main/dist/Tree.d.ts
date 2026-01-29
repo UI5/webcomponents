@@ -209,7 +209,6 @@ declare class Tree extends UI5Element {
     _transformElement(element: HTMLElement): HTMLElement;
     _validateDraggedElement(draggedElement: HTMLElement, targetElement: HTMLElement): boolean;
     _filterPlacements(placements: MovePlacement[], draggedElement: HTMLElement, targetElement: HTMLElement): MovePlacement[];
-    _isInstanceOfTreeItemBase(object: any): object is TreeItemBase;
 }
 export default Tree;
 export type { TreeMoveEventDetail, TreeItemToggleEventDetail, TreeItemMouseoverEventDetail, TreeItemMouseoutEventDetail, TreeItemClickEventDetail, TreeItemDeleteEventDetail, TreeItemFocusEventDetail, TreeSelectionChangeEventDetail, WalkCallback, };

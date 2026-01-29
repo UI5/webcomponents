@@ -22,6 +22,5 @@ declare class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
     get isGroupItem(): boolean;
     get _isVisible(): boolean;
 }
-declare const isInstanceOfComboBoxItemGroup: (object: any) => object is ComboBoxItemGroup;
-export { isInstanceOfComboBoxItemGroup };
+export declare const isInstanceOfComboBoxItemGroup: (object: any) => object is ComboBoxItemGroup;
 export default ComboBoxItemGroup;

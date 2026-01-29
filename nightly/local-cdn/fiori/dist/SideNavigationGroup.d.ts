@@ -51,6 +51,5 @@ declare class SideNavigationGroup extends SideNavigationItemBase {
     _toggle(): void;
     get isSideNavigationGroup(): boolean;
 }
-declare const isInstanceOfSideNavigationGroup: (object: any) => object is SideNavigationGroup;
+export declare const isInstanceOfSideNavigationGroup: (object: any) => object is SideNavigationGroup;
 export default SideNavigationGroup;
-export { isInstanceOfSideNavigationGroup };

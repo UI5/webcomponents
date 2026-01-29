@@ -19,6 +19,7 @@ import ListAccessibleRole from "./types/ListAccessibleRole.js";
 import TreeTemplate from "./TreeTemplate.js";
 // Styles
 import TreeCss from "./generated/themes/Tree.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  *
@@ -153,13 +154,13 @@ let Tree = class Tree extends UI5Element {
     }
     _onListItemMouseOver(e) {
         const target = e.target;
-        if (this._isInstanceOfTreeItemBase(target)) {
+        if (_isInstanceOfTreeItemBase(target)) {
             this.fireDecoratorEvent("item-mouseover", { item: target });
         }
     }
     _onListItemMouseOut(e) {
         const target = e.target;
-        if (this._isInstanceOfTreeItemBase(target)) {
+        if (_isInstanceOfTreeItemBase(target)) {
             this.fireDecoratorEvent("item-mouseout", { item: target });
         }
     }
@@ -246,9 +247,6 @@ let Tree = class Tree extends UI5Element {
             return placements.filter(placement => placement !== MovePlacement.On);
         }
         return placements;
-    }
-    _isInstanceOfTreeItemBase(object) {
-        return "isTreeItem" in object;
     }
 };
 __decorate([
@@ -391,6 +389,7 @@ Tree = __decorate([
         cancelable: true,
     })
 ], Tree);
+const _isInstanceOfTreeItemBase = createInstanceChecker("isTreeItem");
 const walkTree = (el, level, callback) => {
     (el.items).forEach((item, index) => {
         callback(item, level, index);

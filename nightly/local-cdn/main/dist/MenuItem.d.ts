@@ -254,7 +254,6 @@ declare class MenuItem extends ListItem implements IMenuItem {
     get isMenuItem(): boolean;
     _updateCheckedState(): void;
 }
-declare const isInstanceOfMenuItem: (object: any) => object is MenuItem;
 export default MenuItem;
 export type { MenuBeforeCloseEventDetail, MenuBeforeOpenEventDetail, MenuItemAccessibilityAttributes, };
-export { isInstanceOfMenuItem, };
+export declare const isInstanceOfMenuItem: (object: any) => object is MenuItem;

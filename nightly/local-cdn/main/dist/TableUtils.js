@@ -1,6 +1,5 @@
-const isInstanceOfTable = (obj) => {
-    return !!obj && "isTable" in obj && !!obj.isTable;
-};
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+const isInstanceOfTable = createInstanceChecker("isTable");
 const isSelectionCell = (e) => {
     return e.composedPath().some((el) => el.hasAttribute?.("data-ui5-table-selection-cell"));
 };

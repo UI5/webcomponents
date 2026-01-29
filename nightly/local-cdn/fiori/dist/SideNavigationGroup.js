@@ -16,6 +16,7 @@ import SideNavigationGroupTemplate from "./SideNavigationGroupTemplate.js";
 import { SIDE_NAVIGATION_ICON_COLLAPSE, SIDE_NAVIGATION_ICON_EXPAND, } from "./generated/i18n/i18n-defaults.js";
 // Styles
 import SideNavigationGroupCss from "./generated/themes/SideNavigationGroup.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  *
@@ -160,9 +161,6 @@ SideNavigationGroup = SideNavigationGroup_1 = __decorate([
     })
 ], SideNavigationGroup);
 SideNavigationGroup.define();
-const isInstanceOfSideNavigationGroup = (object) => {
-    return "isSideNavigationGroup" in object;
-};
+export const isInstanceOfSideNavigationGroup = createInstanceChecker("isSideNavigationGroup");
 export default SideNavigationGroup;
-export { isInstanceOfSideNavigationGroup };
 //# sourceMappingURL=SideNavigationGroup.js.map

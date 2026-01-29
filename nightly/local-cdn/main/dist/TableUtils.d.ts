@@ -1,6 +1,6 @@
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
-declare const isInstanceOfTable: (obj: any) => obj is Table;
+declare const isInstanceOfTable: (object: any) => object is Table;
 declare const isSelectionCell: (e: Event) => boolean;
 declare const isHeaderSelectionCell: (e: Event) => boolean;
 declare const findRowInPath: (composedPath: Array<EventTarget>) => TableRow;

@@ -76,7 +76,6 @@ declare class SideNavigationItemBase extends UI5Element implements ITabbable {
      */
     applyInitialFocusInPopover(): void;
 }
-declare const isInstanceOfSideNavigationItemBase: (object: any) => object is SideNavigationItemBase;
 export default SideNavigationItemBase;
 export type { SideNavigationItemClickEventDetail, };
-export { isInstanceOfSideNavigationItemBase };
+export declare const isInstanceOfSideNavigationItemBase: (object: any) => object is SideNavigationItemBase;

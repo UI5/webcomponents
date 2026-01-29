@@ -96,7 +96,6 @@ declare class ListItemGroup extends UI5Element {
     getFocusDomRef(): ListItemGroupHeader;
     getGroupHeaderWrapping(): WrappingType;
 }
-declare const isInstanceOfListItemGroup: (object: any) => object is ListItemGroup;
 export default ListItemGroup;
-export { isInstanceOfListItemGroup };
+export declare const isInstanceOfListItemGroup: (object: any) => object is ListItemGroup;
 export type { ListItemGroupMoveEventDetail };

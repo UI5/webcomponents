@@ -8,6 +8,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import MultiComboBoxItemGroupTemplate from "./MultiComboBoxItemGroupTemplate.js";
 import ComboBoxItemGroup from "./ComboBoxItemGroup.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  * The `ui5-mcb-item-group` is type of suggestion item,
@@ -51,9 +52,6 @@ MultiComboBoxItemGroup = __decorate([
     })
 ], MultiComboBoxItemGroup);
 MultiComboBoxItemGroup.define();
-const isInstanceOfMultiComboBoxItemGroup = (object) => {
-    return "isGroupItem" in object;
-};
 export default MultiComboBoxItemGroup;
-export { isInstanceOfMultiComboBoxItemGroup };
+export const isInstanceOfMultiComboBoxItemGroup = createInstanceChecker("isGroupItem");
 //# sourceMappingURL=MultiComboBoxItemGroup.js.map

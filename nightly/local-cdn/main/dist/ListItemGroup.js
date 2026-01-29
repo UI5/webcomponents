@@ -17,6 +17,7 @@ import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 // Styles
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
 import WrappingType from "./types/WrappingType.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  * ### Overview
@@ -164,9 +165,6 @@ ListItemGroup = __decorate([
     })
 ], ListItemGroup);
 ListItemGroup.define();
-const isInstanceOfListItemGroup = (object) => {
-    return "isListItemGroup" in object;
-};
 export default ListItemGroup;
-export { isInstanceOfListItemGroup };
+export const isInstanceOfListItemGroup = createInstanceChecker("isListItemGroup");
 //# sourceMappingURL=ListItemGroup.js.map

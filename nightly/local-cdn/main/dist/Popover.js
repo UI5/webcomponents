@@ -25,6 +25,7 @@ import PopoverTemplate from "./PopoverTemplate.js";
 // Styles
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 const ARROW_SIZE = 8;
 var PopoverActualHorizontalAlign;
 (function (PopoverActualHorizontalAlign) {
@@ -144,6 +145,8 @@ let Popover = Popover_1 = class Popover extends Popup {
          * @private
          */
         this.actualPlacement = "Right";
+        // for instance checks
+        this.isPopover = true;
         this._popoverResize = new PopoverResize(this);
     }
     /**
@@ -793,10 +796,8 @@ Popover = Popover_1 = __decorate([
         template: PopoverTemplate,
     })
 ], Popover);
-const instanceOfPopover = (object) => {
-    return "opener" in object;
-};
 Popover.define();
 export default Popover;
-export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
+export const instanceOfPopover = createInstanceChecker("isPopover");
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };
 //# sourceMappingURL=Popover.js.map

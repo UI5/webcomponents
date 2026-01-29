@@ -28,6 +28,5 @@ declare class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMulti
     get stableDomRef(): string;
     getFocusDomRef(): ListItemGroupHeader;
 }
-declare const isInstanceOfMultiComboBoxItemGroup: (object: any) => object is MultiComboBoxItemGroup;
 export default MultiComboBoxItemGroup;
-export { isInstanceOfMultiComboBoxItemGroup };
+export declare const isInstanceOfMultiComboBoxItemGroup: (object: any) => object is MultiComboBoxItemGroup;

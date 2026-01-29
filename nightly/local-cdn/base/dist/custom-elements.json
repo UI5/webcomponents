@@ -2159,6 +2159,21 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/util/createInstanceChecker.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "createChecker",
+            "module": "dist/util/createInstanceChecker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/util/createLinkInHead.js",
       "declarations": [],
       "exports": [

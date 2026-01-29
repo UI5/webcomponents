@@ -72,6 +72,5 @@ declare class SideNavigationItem extends SideNavigationSelectableItemBase {
     _toggle(): void;
     get isSideNavigationItem(): boolean;
 }
-declare const isInstanceOfSideNavigationItem: (object: any) => object is SideNavigationItem;
 export default SideNavigationItem;
-export { isInstanceOfSideNavigationItem };
+export declare const isInstanceOfSideNavigationItem: (object: any) => object is SideNavigationItem;

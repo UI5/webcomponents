@@ -9,6 +9,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import { isSpace, isEnter, isEnterShift, isEnterCtrl, isEnterAlt, isLeft, isRight, } from "@ui5/webcomponents-base/dist/Keys.js";
 import SideNavigationItemBase from "./SideNavigationItemBase.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * Fired when the component is activated either with a click/tap or by using the [Enter] or [Space] keys.
  *
@@ -250,9 +251,6 @@ SideNavigationSelectableItemBase = __decorate([
     ,
     customElement()
 ], SideNavigationSelectableItemBase);
-const isInstanceOfSideNavigationSelectableItemBase = (object) => {
-    return "isSideNavigationSelectableItemBase" in object;
-};
 export default SideNavigationSelectableItemBase;
-export { isInstanceOfSideNavigationSelectableItemBase, };
+export const isInstanceOfSideNavigationSelectableItemBase = createInstanceChecker("isSideNavigationSelectableItemBase");
 //# sourceMappingURL=SideNavigationSelectableItemBase.js.map

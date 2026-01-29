@@ -17,6 +17,7 @@ import { SIDE_NAVIGATION_ICON_COLLAPSE, SIDE_NAVIGATION_ICON_EXPAND, SIDE_NAVIGA
 import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
 // Styles
 import SideNavigationItemCss from "./generated/themes/SideNavigationItem.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  *
@@ -272,9 +273,6 @@ SideNavigationItem = SideNavigationItem_1 = __decorate([
     })
 ], SideNavigationItem);
 SideNavigationItem.define();
-const isInstanceOfSideNavigationItem = (object) => {
-    return "isSideNavigationItem" in object;
-};
 export default SideNavigationItem;
-export { isInstanceOfSideNavigationItem };
+export const isInstanceOfSideNavigationItem = createInstanceChecker("isSideNavigationItem");
 //# sourceMappingURL=SideNavigationItem.js.map

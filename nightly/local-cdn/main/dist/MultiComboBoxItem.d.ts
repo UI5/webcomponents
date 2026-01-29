@@ -35,6 +35,5 @@ declare class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxIt
         role: AriaRole;
     };
 }
-declare const isInstanceOfMultiComboBoxItem: (object: any) => object is MultiComboBoxItem;
 export default MultiComboBoxItem;
-export { isInstanceOfMultiComboBoxItem };
+export declare const isInstanceOfMultiComboBoxItem: (object: any) => object is MultiComboBoxItem;

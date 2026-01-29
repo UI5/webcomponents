@@ -73,6 +73,5 @@ declare class MenuItemGroup extends UI5Element implements IMenuItem {
      */
     _handleItemCheck(e: CustomEvent): void;
 }
-declare const isInstanceOfMenuItemGroup: (object: any) => object is MenuItemGroup;
 export default MenuItemGroup;
-export { isInstanceOfMenuItemGroup, };
+export declare const isInstanceOfMenuItemGroup: (object: any) => object is MenuItemGroup;

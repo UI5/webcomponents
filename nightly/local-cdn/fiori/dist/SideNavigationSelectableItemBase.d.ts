@@ -143,7 +143,6 @@ declare class SideNavigationSelectableItemBase extends SideNavigationItemBase {
     _activate(e: KeyboardEvent | MouseEvent): void;
     get isSideNavigationSelectableItemBase(): boolean;
 }
-declare const isInstanceOfSideNavigationSelectableItemBase: (object: any) => object is SideNavigationSelectableItemBase;
 export default SideNavigationSelectableItemBase;
-export { isInstanceOfSideNavigationSelectableItemBase, };
+export declare const isInstanceOfSideNavigationSelectableItemBase: (object: any) => object is SideNavigationSelectableItemBase;
 export type { SideNavigationItemAccessibilityAttributes, };

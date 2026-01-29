@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import { isDesktop, } from "@ui5/webcomponents-base/dist/Device.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  * Base class for the items that are accepted by the `ui5-side-navigation` component.
@@ -116,9 +117,6 @@ __decorate([
 __decorate([
     property({ type: Boolean, noAttribute: true })
 ], SideNavigationItemBase.prototype, "_groupDisabled", void 0);
-const isInstanceOfSideNavigationItemBase = (object) => {
-    return "isSideNavigationItemBase" in object;
-};
 export default SideNavigationItemBase;
-export { isInstanceOfSideNavigationItemBase };
+export const isInstanceOfSideNavigationItemBase = createInstanceChecker("isSideNavigationItemBase");
 //# sourceMappingURL=SideNavigationItemBase.js.map
