@@ -13,7 +13,6 @@ import type {
 	ClassMap,
 } from "@ui5/webcomponents-base/dist/types.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 // @ts-expect-error
 import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
@@ -754,7 +753,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
 		const hasItems = !!this._flattenItems.length;
 		const hasValue = !!this.value;

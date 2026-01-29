@@ -1,6 +1,6 @@
 @import "../base/TextArea-parameters.css";
 
-:root {
+:host {
 	--_ui5_textarea_hover_border: none;
 	--_ui5_textarea_focus_border_radius: 0.25rem;
 	--_ui5_textarea_line_height: 1.5;
@@ -34,9 +34,9 @@
 	--_ui5_textarea_readonly_border_style: dashed;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_textarea_padding_top: 0.1875rem;
 	--_ui5_textarea_padding_bottom: 0.125rem;
 	--_ui5_textarea_padding_bottom_readonly: 0.0625rem;
@@ -47,4 +47,6 @@
 	--_ui5_textarea_padding_right_and_left: 0.5rem;
 	--_ui5_textarea_padding_right_and_left_error_warning: 0.5rem;
 	--_ui5_textarea_padding_right_and_left_information: 0.5rem;
+
+	}
 }

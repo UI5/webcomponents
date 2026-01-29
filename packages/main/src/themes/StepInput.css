@@ -11,7 +11,6 @@
 }
 
 :host {
-	--ui5_input_focus_pseudo_element_content: none;
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
 	border: var(--_ui5_step_input_border_style);
@@ -26,6 +25,10 @@
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+}
+
+[ui5-input] {
+	--ui5_input_focus_pseudo_element_content: none;
 }
 
 :host .ui5-step-input-input {

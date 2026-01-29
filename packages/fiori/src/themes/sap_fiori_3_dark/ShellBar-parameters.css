@@ -1,5 +1,5 @@
 @import "../base/ShellBar-parameters.css";
 
-:root {
+:host {
 	--_ui5_shellbar_logo_outline_color: var(--sapContent_FocusColor);
 }

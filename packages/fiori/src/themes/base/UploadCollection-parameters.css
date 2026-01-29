@@ -1,4 +1,4 @@
-:root {
+:host {
 	--ui5_upload_collection_drag_overlay_border: 0.125rem dashed var(--sapContent_ForegroundBorderColor);
 	--ui5_upload_collection_drop_overlay_border: 0.125rem solid var(--sapContent_DragAndDropActiveColor);
 	--ui5_upload_collection_drop_overlay_background: transparent;

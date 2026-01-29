@@ -1,5 +1,5 @@
 @import "../base/DynamicPageHeaderActions-parameters.css";
 
-:root {
+:host {
 	--_ui5_dynamic_page_actions-lines-color: var(--sapHighlightColor);
 }

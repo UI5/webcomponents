@@ -1,6 +1,6 @@
 @import "../base/Card-parameters.css";
 
-:root {
+:host {
 	--_ui5_card_box_shadow: none;
 	--_ui5_card_header_focus_border: 0.125rem dotted var(--sapContent_FocusColor);
 	--_ui5_card_header_border: none;

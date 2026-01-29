@@ -1,5 +1,5 @@
 @import "../base/Switch-parameters.css";
-:root {
+:host {
 	/* Switch */
 	--_ui5_switch_width: 2.5rem;
 	--_ui5_switch_min_width: none;
@@ -123,9 +123,9 @@
 	--_ui5_switch_icon_height: 1rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_switch_width: 2.75rem;
 	--_ui5_switch_min_width: none;
 	--_ui5_switch_with_label_width: 2.75rem;
@@ -147,4 +147,6 @@
 	--_ui5_switch_text_width: 1rem;
 	--_ui5_switch_text_active_left: 0.1875rem;
 	--_ui5_switch_text_active_left_alternate: 0.0625rem;
+
+	}
 }

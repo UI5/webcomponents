@@ -74,7 +74,6 @@
 
 /* scope select */
 [ui5-select] {
-	--_ui5_content_density: compact;
 	outline: none;
 	margin: var(--_ui5_search_input_scope_margin);
 	max-width: 10rem;
@@ -106,12 +105,9 @@
 	background-color: var(--sapShellColor);
 }
 
-.ui5-filter-wrapper {
-	--_ui5_button_focused_border_radius: var(--_ui5_search_filter_button_border_radius);
-}
-
 /*filter button slot */
 ::slotted([slot="filterButton"]) {
+	--_ui5_button_focused_border_radius: var(--_ui5_search_filter_button_border_radius);
 	min-width: var(--_ui5_search_icon_size);
 	height: var(--_ui5_search_icon_size);
 	border: var(--_ui5_search_filter_button_border);

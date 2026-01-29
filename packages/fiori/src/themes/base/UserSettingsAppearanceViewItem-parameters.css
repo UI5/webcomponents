@@ -1,13 +1,15 @@
-:root {
+:host {
 	--_ui5_user_settings_avatar_cozy_display: inline-block;
 	--_ui5_user_settings_avatar_compact_display: none;
 	--_ui5_user_settings_item_title_font_size: var(--sapFontSize);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_user_settings_avatar_cozy_display: none;
 	--_ui5_user_settings_avatar_compact_display: inline-block;
 	--_ui5_user_settings_item_title_font_size: var(--sapFontLargeSize);
+
+	}
 }

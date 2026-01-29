@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_button_focused_border: 0.0625rem dotted var(--sapContent_FocusColor);
 	--_ui5_button_focused_border_radius: 0.25rem;
 	--_ui5_button_focused_inner_border_radius: 0;

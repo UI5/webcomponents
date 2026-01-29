@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_vsd_header_container: 2.75rem;
 	--_ui5_vsd_sub_header_container_height: 2.75rem;
 	--_ui5_vsd_content_li_padding: 0.375rem;
@@ -6,10 +6,12 @@
 	--_ui5_vsd_expand_content_height: 26.1875rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_vsd_header_container: 2.5rem;
 	--_ui5_vsd_sub_header_container_height: 2rem;
 	--_ui5_vsd_expand_content_height: 25.4375rem;
+
+	}
 }

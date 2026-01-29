@@ -13,7 +13,6 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import {
 	isSpace,
 	isEnter,
@@ -187,7 +186,7 @@ class SegmentedButton extends UI5Element {
 		this.normalizeSelection();
 
 		if (!this.itemsFitContent) {
-			this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+			this.style.setProperty("--_ui5_segmented_btn_items_count", `${visibleItems.length}`);
 		}
 	}
 

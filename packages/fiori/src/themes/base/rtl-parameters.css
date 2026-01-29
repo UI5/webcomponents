@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_timeline_scroll_container_offset: 0.5rem;
 	--_ui5_shellbar_notification_btn_count_offset: 0.125rem;
 	--_ui5_side_navigation_item_expand_icon_hover_left: auto;

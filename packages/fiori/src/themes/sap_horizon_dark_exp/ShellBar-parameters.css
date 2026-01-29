@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_shellbar_root_height: 3.25rem;
 	--_ui5_shellbar_logo_outline_color: var(--sapContent_FocusColor);
 	--_ui5_shellbar_logo_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--_ui5_shellbar_logo_outline_color);

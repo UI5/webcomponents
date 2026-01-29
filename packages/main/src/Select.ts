@@ -36,7 +36,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import List from "./List.js";
 import type { ListItemClickEventDetail } from "./List.js";
@@ -469,7 +468,7 @@ class Select extends UI5Element implements IFormInputElement {
 	onBeforeRendering() {
 		this._applySelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
 	onAfterRendering() {

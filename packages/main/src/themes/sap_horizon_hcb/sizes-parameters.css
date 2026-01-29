@@ -1,8 +1,8 @@
 @import "../base/sizes-parameters.css";
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: 0.0625rem;
 
@@ -16,4 +16,6 @@
 	--_ui5_daypicker_selected_item_now_special_day_border_bottom_radius_alternate: 0.5rem;
 	--_ui5_daypicker_specialday_focused_border_bottom: 0.25rem;
 	--_ui5_daypicker_item_now_specialday_top: 1.4375rem;
+
+	}
 }

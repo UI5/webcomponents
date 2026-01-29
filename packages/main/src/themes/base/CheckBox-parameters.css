@@ -1,4 +1,4 @@
-:root {
+:host {
 --_ui5_checkbox_wrapper_padding: .8125rem;
 --_ui5_checkbox_width_height: 3rem;
 --_ui5_checkbox_transition: unset;
@@ -46,8 +46,10 @@
 --_ui5_checkbox_right_focus_distance: 0;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_checkbox_label_offset: var(--_ui5_checkbox_compact_wrapper_padding);
+
+	}
 }

@@ -1,10 +1,12 @@
-:root {
+:host {
 	--_ui5_search_item_vertical_padding: 1rem;
 	--_ui5_search_byline_vertical_padding: .5rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_search_item_vertical_padding: 0.5rem;
+
+	}
 }

@@ -1,4 +1,4 @@
-:root {
+:host {
 	/* Header */
 	--_ui5_tc_header_height: var(--_ui5_tc_item_height);
 	--_ui5_tc_header_height_text_only: var(--_ui5_tc_item_text_only_height);
@@ -76,8 +76,10 @@
 	--_ui5_tc_overflow_text_color: var(--sapButton_TextColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_tc_header_height: var(--_ui5_tc_item_height);
+
+	}
 }

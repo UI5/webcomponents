@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_media_gallery_thumbnail_border: 1px solid var(--sapContent_ForegroundColor);
 	--_ui5_media_gallery_thumbnail_selected_border: 2px solid var(--sapSelectedColor);
 	--_ui5_media_gallery_thumbnail_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);

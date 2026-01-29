@@ -1,7 +1,3 @@
-.ui5-suggestions-popover .ui5-multi-combobox-all-items-list {
-	--_ui5_checkbox_width_height: var(--_ui5_list_item_dropdown_base_height);
-}
-
 .ui5-mcb-select-all-header {
 	width: 100%;
 	height: 44px;
@@ -39,4 +35,8 @@
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header, [ui5-popover] .ui5-valuestatemessage-header  {
 	max-width: inherit;
+}
+
+[ui5-responsive-popover] [ui5-input] {
+	width: 100%;
 }

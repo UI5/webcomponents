@@ -1,6 +1,6 @@
 @import "../base/Wizard-parameters.css";
 
-:root {
+:host {
     --_ui5_wiz_content_item_wrapper_padding: 1rem;
     --_ui5_wiz_content_item_wrapper_bg: var(--sapGroup_ContentBackground);
 }

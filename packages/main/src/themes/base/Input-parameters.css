@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_input_width: 13.125rem;
 	--_ui5_input_min_width: 2.75rem;
 	--_ui5_input_height: var(--sapElement_Height);
@@ -72,9 +72,9 @@
 	--_ui5_input_tokenizer_min_width: 3.25rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_input_min_width: 2rem;
 	--_ui5_input_icon_width: 2rem;
 	--_ui5_input_error_warning_icon_padding: .1875rem .375rem .1875rem .4375rem;
@@ -87,4 +87,6 @@
 	--_ui5_input_information_custom_icon_padding: .1875rem .5rem;
 	--_ui5_input_information_custom_focused_icon_padding: .1875rem .5rem;
 	--_ui5_input_margin_top_bottom: 0.1875rem;
+
+	}
 }
