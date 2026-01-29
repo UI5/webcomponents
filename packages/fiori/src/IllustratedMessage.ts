@@ -387,21 +387,25 @@ class IllustratedMessage extends UI5Element {
 		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
 	}
 
-	_applyMedia(heightChange?: boolean) {
+	_applyMedia() {
 		const currOffsetWidth = this.offsetWidth,
 			currOffsetHeight = this.offsetHeight;
 
-		const design = heightChange ? currOffsetHeight : currOffsetWidth,
-			oBreakpounts = heightChange ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
+		const designHeight = currOffsetHeight,
+			designWidth = currOffsetWidth;
+
+		const hasHeightChanged = ((this.media && this._lastKnownOffsetHeightForMedia[this.media] !== designHeight)
+		|| this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight);
+		const shouldRespectHeight = hasHeightChanged;
 		let newMedia = "";
 
-		if (design <= oBreakpounts.BASE) {
+		if (designWidth <= IllustratedMessage.BREAKPOINTS.BASE || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.BASE)) {
 			newMedia = IllustratedMessage.MEDIA.BASE;
-		} else if (design <= oBreakpounts.DOT) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.DOT || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DOT)) {
 			newMedia = IllustratedMessage.MEDIA.DOT;
-		} else if (design <= oBreakpounts.SPOT) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.SPOT || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.SPOT)) {
 			newMedia = IllustratedMessage.MEDIA.SPOT;
-		} else if (design <= oBreakpounts.DIALOG) {
+		} else if (designWidth <= IllustratedMessage.BREAKPOINTS.DIALOG || (shouldRespectHeight && designHeight <= IllustratedMessage.BREAKPOINTS_HEIGHT.DIALOG)) {
 			newMedia = IllustratedMessage.MEDIA.DIALOG;
 		} else {
 			newMedia = IllustratedMessage.MEDIA.SCENE;
@@ -453,7 +457,7 @@ class IllustratedMessage extends UI5Element {
 			illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", false);
 			if (this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight) {
 				illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", true);
-				this._applyMedia(true /* height change */);
+				this._applyMedia();
 			}
 		}
 	}
