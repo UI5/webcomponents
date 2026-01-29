@@ -1,8 +1,6 @@
 import type RatingIndicator from "./RatingIndicator.js";
 import type { Star } from "./RatingIndicator.js";
 import Icon from "./Icon.js";
-import favorite from "@ui5/webcomponents-icons/dist/favorite.js";
-import unfavorite from "@ui5/webcomponents-icons/dist/unfavorite.js";
 
 export default function RatingIndicatorTemplate(this: RatingIndicator) {
 	return (
@@ -37,7 +35,7 @@ function starLi(this: RatingIndicator, star: Star) {
 	if (star.selected) {
 		return (
 			<li data-ui5-value={star.index} class="ui5-rating-indicator-item ui5-rating-indicator-item-sel">
-				<Icon data-ui5-value={star.index} name={favorite} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
 			</li>
 		);
 	} if (star.halfStar) {
@@ -45,30 +43,30 @@ function starLi(this: RatingIndicator, star: Star) {
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-half">
 				<Icon data-ui5-value={star.index} name={halfStarIconName.call(this)} />
 				<div class="ui5-rating-indicator-half-icon-wrapper">
-					<Icon data-ui5-value={star.index} name={favorite} class="ui5-rating-indicator-half-icon" />
+					<Icon data-ui5-value={star.index} name={this.effectiveIcon} class="ui5-rating-indicator-half-icon" />
 				</div>
 			</li>
 		);
 	} if (this.readonly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={favorite} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
 			</li>
 		);
 	} if (this.disabled) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={favorite} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
 			</li>
 		);
 	}
 	return (
 		<li data-ui5-value={star.index} class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-			<Icon data-ui5-value={star.index} name={unfavorite}/>
+			<Icon data-ui5-value={star.index} name={this.effectiveUnselectedIcon}/>
 		</li>
 	);
 }
 
 function halfStarIconName(this: RatingIndicator) {
-	return this.disabled || this.readonly ? favorite : unfavorite;
+	return this.disabled || this.readonly ? this.effectiveIcon : this.effectiveUnselectedIcon;
 }
