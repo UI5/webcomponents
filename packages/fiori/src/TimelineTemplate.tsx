@@ -10,7 +10,7 @@ export default function TimelineTemplate(this: Timeline) {
 	return (
 		<div class="ui5-timeline-root"
 			role="region"
-			aria-label="Timeline"
+			aria-label={this.ariaLabel}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 		>
@@ -55,6 +55,7 @@ function moreRow(this: Timeline) {
 					onClick={this._onLoadMoreClick}
 					onKeyDown={this._onLoadMoreKeydown}
 					onKeyUp={this._onLoadMoreKeyup}
+					accessibleName={this.growingButtonText}
 				></Button>
 			</div>
 			{this.loading &&
