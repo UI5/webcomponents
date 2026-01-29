@@ -24,6 +24,7 @@ import {
 
 // Styles
 import SideNavigationGroupCss from "./generated/themes/SideNavigationGroup.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -197,9 +198,5 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 SideNavigationGroup.define();
 
-const isInstanceOfSideNavigationGroup = (object: any): object is SideNavigationGroup => {
-	return "isSideNavigationGroup" in object;
-};
-
+export const isInstanceOfSideNavigationGroup = createInstanceChecker<SideNavigationGroup>("isSideNavigationGroup");
 export default SideNavigationGroup;
-export { isInstanceOfSideNavigationGroup };

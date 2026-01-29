@@ -17,6 +17,7 @@ import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
 import WrappingType from "./types/WrappingType.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type ListItemGroupMoveEventDetail = {
 	source: {
@@ -214,10 +215,6 @@ class ListItemGroup extends UI5Element {
 
 ListItemGroup.define();
 
-const isInstanceOfListItemGroup = (object: any): object is ListItemGroup => {
-	return "isListItemGroup" in object;
-};
-
 export default ListItemGroup;
-export { isInstanceOfListItemGroup };
+export const isInstanceOfListItemGroup = createInstanceChecker<ListItemGroup>("isListItemGroup");
 export type { ListItemGroupMoveEventDetail };

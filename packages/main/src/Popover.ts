@@ -22,6 +22,7 @@ import PopoverTemplate from "./PopoverTemplate.js";
 // Styles
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 const ARROW_SIZE = 8;
 
@@ -970,14 +971,13 @@ class Popover extends Popup {
 		this._popoverResize.onResizeMouseDown(e);
 		this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
 	}
-}
 
-const instanceOfPopover = (object: any): object is Popover => {
-	return "opener" in object;
-};
+	// for instance checks
+	readonly isPopover = true;
+}
 
 Popover.define();
 
 export default Popover;
-
-export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
+export const instanceOfPopover = createInstanceChecker<Popover>("isPopover");
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };

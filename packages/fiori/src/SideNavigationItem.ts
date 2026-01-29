@@ -27,6 +27,7 @@ import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
 
 // Styles
 import SideNavigationItemCss from "./generated/themes/SideNavigationItem.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -338,9 +339,5 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 SideNavigationItem.define();
 
-const isInstanceOfSideNavigationItem = (object: any): object is SideNavigationItem => {
-	return "isSideNavigationItem" in object;
-};
-
 export default SideNavigationItem;
-export { isInstanceOfSideNavigationItem };
+export const isInstanceOfSideNavigationItem = createInstanceChecker<SideNavigationItem>("isSideNavigationItem");

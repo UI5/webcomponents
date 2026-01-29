@@ -1,6 +1,7 @@
 import ListItemGroup from "@ui5/webcomponents/dist/ListItemGroup.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
@@ -35,7 +36,13 @@ class UserSettingsAppearanceViewGroup extends ListItemGroup {
 		type: HTMLElement,
 	})
 	declare items: DefaultSlot<UserSettingsAppearanceViewItem[]>;
+
+	get isUserSettingsAppearanceViewGroup(): boolean {
+		return true;
+	}
 }
 
 UserSettingsAppearanceViewGroup.define();
+
+export const isInstanceOfUserSettingsAppearanceViewGroup = createInstanceChecker<UserSettingsAppearanceViewGroup>("isUserSettingsAppearanceViewGroup");
 export default UserSettingsAppearanceViewGroup;

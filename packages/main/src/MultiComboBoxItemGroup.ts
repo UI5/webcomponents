@@ -1,11 +1,12 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import type MultiComboBoxItem from "./MultiComboBoxItem.js";
 import MultiComboBoxItemGroupTemplate from "./MultiComboBoxItemGroupTemplate.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
 import ComboBoxItemGroup from "./ComboBoxItemGroup.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -58,10 +59,6 @@ class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBox
 
 MultiComboBoxItemGroup.define();
 
-const isInstanceOfMultiComboBoxItemGroup = (object: any): object is MultiComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
-
 export default MultiComboBoxItemGroup;
 
-export { isInstanceOfMultiComboBoxItemGroup };
+export const isInstanceOfMultiComboBoxItemGroup = createInstanceChecker<MultiComboBoxItemGroup>("isGroupItem");

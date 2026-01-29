@@ -16,6 +16,7 @@ import {
 	MENU_ITEM_GROUP_SINGLE_ACCESSIBLE_NAME,
 	MENU_ITEM_GROUP_MULTI_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -149,14 +150,8 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	}
 }
 
-const isInstanceOfMenuItemGroup = (object: any): object is MenuItemGroup => {
-	return "isGroup" in object;
-};
-
 MenuItemGroup.define();
 
 export default MenuItemGroup;
 
-export {
-	isInstanceOfMenuItemGroup,
-};
+export const isInstanceOfMenuItemGroup = createInstanceChecker<MenuItemGroup>("isGroup");

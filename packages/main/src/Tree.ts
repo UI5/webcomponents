@@ -31,6 +31,7 @@ import TreeTemplate from "./TreeTemplate.js";
 
 // Styles
 import TreeCss from "./generated/themes/Tree.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type TreeMoveEventDetail = {
 	source: {
@@ -413,7 +414,7 @@ class Tree extends UI5Element {
 	_onListItemMouseOver(e: MouseEvent) {
 		const target = e.target;
 
-		if (this._isInstanceOfTreeItemBase(target)) {
+		if (_isInstanceOfTreeItemBase(target)) {
 			this.fireDecoratorEvent("item-mouseover", { item: target });
 		}
 	}
@@ -421,7 +422,7 @@ class Tree extends UI5Element {
 	_onListItemMouseOut(e: MouseEvent) {
 		const target = e.target;
 
-		if (this._isInstanceOfTreeItemBase(target)) {
+		if (_isInstanceOfTreeItemBase(target)) {
 			this.fireDecoratorEvent("item-mouseout", { item: target });
 		}
 	}
@@ -524,11 +525,9 @@ class Tree extends UI5Element {
 		}
 		return placements;
 	}
-
-	_isInstanceOfTreeItemBase(object: any): object is TreeItemBase {
-		return "isTreeItem" in object;
-	}
 }
+
+const _isInstanceOfTreeItemBase = createInstanceChecker<TreeItemBase>("isTreeItem");
 
 const walkTree = (el: Tree | TreeItemBase, level: number, callback: WalkCallback) => {
 	(el.items).forEach((item, index) => {
