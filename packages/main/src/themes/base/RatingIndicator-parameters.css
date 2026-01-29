@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_rating_indicator_border_radius: 0.5rem;
 	--_ui5_rating_indicator_outline_offset: -0.125rem;
 	--_ui5_rating_indicator_item_height: 1em;
@@ -12,12 +12,14 @@
 	--_ui5_rating_indicator_item_size_l: 2rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_rating_indicator_item_height: 0.67em;
 	--_ui5_rating_indicator_item_width: 0.67em;
 	--_ui5_rating_indicator_readonly_item_height: 0.67em;
 	--_ui5_rating_indicator_readonly_item_width: 0.67em;
 	--_ui5_rating_indicator_component_spacing: 0.8125rem 0px;
+
+	}
 }

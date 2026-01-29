@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_TimelineItem_arrow_size: 1.625rem;
 	--_ui5_TimelineItem_bubble_border_width: 0.0625rem;
 	--_ui5_TimelineItem_bubble_border_style: dotted;
@@ -42,9 +42,9 @@
 	--_ui5_timeline_tli_horizontal_indicator_short_after_width: 100%;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	/* Timeline (container) */
 	--_ui5_tl_bubble_padding: .5rem;
 	--_ui5_tl_padding: .5rem;
@@ -67,4 +67,6 @@
 	--_ui5_timeline_tli_horizontal_indicator_after_left: 1.8625rem;
 	--_ui5_timeline_tli_horizontal_indicator_short_after_width: calc(100% - 1rem);
 	--_ui5_timeline_tli_without_icon_horizontal_indicator_before_width: calc(100% - 0.625rem);
+
+	}
 }

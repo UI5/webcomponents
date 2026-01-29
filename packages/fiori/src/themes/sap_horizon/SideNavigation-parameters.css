@@ -1,6 +1,6 @@
 @import "../base/SideNavigation-parameters.css";
 
-:root {
+:host {
 	--_ui5_side_navigation_width: 16rem;
 	--_ui5_side_navigation_collapsed_width: 4rem;
 
@@ -48,8 +48,10 @@
 	--_ui5_side_navigation_item_collapsed_padding: 3rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_side_navigation_item_height: 2rem;
+
+	}
 }

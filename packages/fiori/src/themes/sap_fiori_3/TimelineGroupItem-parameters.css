@@ -1,12 +1,14 @@
 @import "../base/TimelineGroupItem-parameters.css";
 
-:root {
+:host {
 	--_ui5_timeline_tlgi_line_horizontal_height: 16.375rem;
 	--_ui5_timeline_tlgi_root_horizontal_height: 21.53125rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_timeline_tlgi_root_horizontal_height: 20.90625rem;
+
+	}
 }

@@ -1,6 +1,6 @@
 @import "../base/SliderBase-parameters.css";
 
-:root {
+:host {
 	--_ui5_slider_progress_container_background: var(--sapSlider_Background);
 	--_ui5_slider_progress_container_dot_display: block;
 	--_ui5_slider_progress_background: var(--sapSlider_Selected_Background);
@@ -42,9 +42,11 @@
 	--_ui5_range_slider_handle_background: var(--sapSlider_RangeHandleBackground);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_slider_tooltip_bottom: 1.75rem;
 	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
+
+	}
 }

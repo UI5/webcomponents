@@ -1,6 +1,6 @@
 @import "../base/Token-parameters.css";
 
-:root {
+:host {
 	--_ui5_token_focus_outline_width: 0.0625rem;
 	--_ui5_token_selected_focus_outline: none;
 	--_ui5_token_focus_outline: none;
@@ -16,8 +16,10 @@
 	--_ui5_token_readonly_padding: 0.25rem 0.3125rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_token_outline_offset: 0;
+
+	}
 }

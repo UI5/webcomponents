@@ -1,6 +1,6 @@
 @import "../base/RadioButton-parameters.css";
 
-:root {
+:host {
 	--_ui5_radio_button_checked_fill: var(--sapContent_IconColor);
 	--_ui5_radio_button_hover_fill: var(--sapField_Selector_Hover_Background);
 	--_ui5_radio_button_hover_fill_error: var(--sapField_Selector_Hover_InvalidBackground);
@@ -22,9 +22,11 @@
 	--_ui5_radio_button_focus_dist: 0.375rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_radio_button_outer_ring_padding: 0 0.5rem;
 	--_ui5_radio_button_focus_dist: 0.1875rem;
+
+	}
 }

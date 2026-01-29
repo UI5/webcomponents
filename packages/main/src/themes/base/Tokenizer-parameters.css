@@ -1,13 +1,15 @@
-:root {
+:host {
 	--_ui5_tokenizer_padding: 0.3125rem;
 	--_ui5_tokenizer_gap: 0.625rem 0.25rem;
 	--_ui5_tokenizer_n_more_text_color: var(--sapField_TextColor);
 	--_ui5_tokenizer-popover_offset: .3125rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
+@container style(--ui5_content_density: compact) {
+	:host {
+
 	--_ui5_tokenizer_gap: 0.375em 0.25rem;
 	--_ui5_tokenizer-popover_offset: .1875rem;
+
+	}
 }
