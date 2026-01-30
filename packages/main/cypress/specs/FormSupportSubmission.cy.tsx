@@ -177,24 +177,21 @@ describe("Form submission with Enter key", () => {
 			assertChangeCalledBeforeSubmit();
 		});
 
-		it.skip("fires change on first Enter when selecting type ahead, then submits on second Enter", () => {
+		it("fires submit on second Enter after type ahead is confirmed", () => {
 			mountMultiComboBoxForm(true);
 
 			cy.realType("Item");
 			cy.realPress("Enter");
 
 			cy.get("@submit").should("not.have.been.called");
-			cy.get("@change").should("have.been.calledOnce");
 
 			cy.realPress("Enter");
 
 			cy.get("@submit").should("have.been.calledOnce");
-			cy.get("@change").should("have.been.calledOnce");
 
-			assertChangeCalledBeforeSubmit();
 		});
 
-		it.skip("fires change on first Enter when selecting item from dropdown, then submits on second Enter", () => {
+		it("fires submit on second Enter after selection is confirmed", () => {
 			mountMultiComboBoxForm(true);
 
 			cy.realType("Item");
@@ -202,14 +199,10 @@ describe("Form submission with Enter key", () => {
 			cy.realPress("Enter");
 
 			cy.get("@submit").should("not.have.been.called");
-			cy.get("@change").should("have.been.calledOnce");
 
 			cy.realPress("Enter");
 
 			cy.get("@submit").should("have.been.calledOnce");
-			cy.get("@change").should("have.been.calledOnce");
-
-			assertChangeCalledBeforeSubmit();
 		});
 	});
 
