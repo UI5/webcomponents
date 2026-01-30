@@ -259,6 +259,21 @@ abstract class UI5Element extends HTMLElement {
 				// is inserted into the DOM declaratively using a <template> tag.
 				this.__shouldHydrate = true;
 			}
+
+			const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
+			if (slotsAreManaged) {
+				this.shadowRoot!.addEventListener("slotchange", this._onShadowRootSlotChange.bind(this));
+			}
+		}
+	}
+
+	/**
+	 * Note: this "slotchange" listener is for slots, rendered in the component's shadow root
+	 */
+	_onShadowRootSlotChange(e: Event) {
+		const targetShadowRoot = (e.target as Node)?.getRootNode(); // the "slotchange" event target is always a slot element
+		if (targetShadowRoot === this.shadowRoot) { // only for slotchange events that originate from slots, belonging to the component's shadow root
+			this._processChildren();
 		}
 	}
 
