@@ -9,7 +9,7 @@ export default function ColorPalettePopoverTemplate(this: ColorPalettePopover) {
 		<ResponsivePopover
 			hideArrow={true}
 			contentOnlyOnDesktop={true}
-			placement="Bottom"
+			placement={this.placement}
 			opener={this.opener}
 			open={this._open}
 			onClose={this.onAfterClose}

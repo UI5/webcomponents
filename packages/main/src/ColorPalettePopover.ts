@@ -8,6 +8,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import ColorPalettePopoverTemplate from "./ColorPalettePopoverTemplate.js";
+import PopoverPlacement from "./types/PopoverPlacement.js";
 
 // Styles
 import ColorPalettePopoverCss from "./generated/themes/ColorPalettePopover.css.js";
@@ -132,6 +133,14 @@ class ColorPalettePopover extends UI5Element {
 	 */
 	@property({ converter: DOMReferenceConverter })
 	opener?: HTMLElement | string | null;
+
+	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 */
+	@property()
+	placement: `${PopoverPlacement}` = "Bottom";
 
 	/**
 	 * Defines the content of the component.
