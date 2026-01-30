@@ -137,6 +137,15 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	simplified = false;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the current main color which is selected via the hue slider and is shown in the main color square.
 	 * @private
 	 */
@@ -556,7 +565,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	get colorPickerLabel() {
-		return ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
+		return this.accessibleName
+			? `${ColorPicker.i18nBundle.getText(COLORPICKER_LABEL)} ${this.accessibleName}`
+			: ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
 	}
 
 	get sliderGroupLabel() {
