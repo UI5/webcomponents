@@ -180,23 +180,18 @@ class RatingIndicator extends UI5Element {
 	/**
 	 * Defines the icon to be displayed for the selected (filled) rating symbol.
 	 *
-	 * **Note:** SAP-icons font provides numerous options.
-	 * See all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).
 	 * @default "favorite"
 	 * @public
-	 * @since 2.8.0
+	 * @since 2.20
 	 */
 	@property()
 	icon?: string;
 
 	/**
 	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
-	 *
-	 * **Note:** SAP-icons font provides numerous options.
-	 * See all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).
 	 * @default "unfavorite"
 	 * @public
-	 * @since 2.8.0
+	 * @since 2.20
 	 */
 	@property()
 	unselectedIcon?: string;
