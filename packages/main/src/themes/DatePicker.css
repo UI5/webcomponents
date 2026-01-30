@@ -61,6 +61,11 @@
 	background-color: var(--_ui5-datepicker-hover-background);
 }
 
+:host([show-clear-icon]) .ui5-date-picker-input:not([value]),
+:host([show-clear-icon]) .ui5-date-picker-input[value=""] {
+	width: calc(100% + 36px);
+}
+
 .ui5-date-picker-popover::part(header) {
 	padding: 0;
 }
