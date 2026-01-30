@@ -307,7 +307,7 @@ class TabContainer extends UI5Element {
 	@property({ noAttribute: true })
 	_endOverflowText = "More";
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_popoverItemsFlat: Array<ITab> = [];
 
 	@property({ type: Number, noAttribute: true })

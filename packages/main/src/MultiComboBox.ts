@@ -294,6 +294,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	@property()
 	value = "";
 
+	/**
+ 	 * Defines the values of the selected items.
+ 	 * @default []
+	 * @public
+	 * @since 2.19.0
+ 	 */
 	@property({ type: Array })
 	selectionValues:Array<string> = [];
 
