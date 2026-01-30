@@ -55,6 +55,7 @@ function moreRow(this: Timeline) {
 					onClick={this._onLoadMoreClick}
 					onKeyDown={this._onLoadMoreKeydown}
 					onKeyUp={this._onLoadMoreKeyup}
+					tooltip={this.growingButtonText}
 					accessibleName={this.growingButtonText}
 				></Button>
 			</div>
