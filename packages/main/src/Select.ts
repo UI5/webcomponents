@@ -378,6 +378,14 @@ class Select extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean })
 	focused = false;
 
+	/**
+	 * Defines the tabindex of the component.
+	 * @private
+	 * @since 2.16.0
+	 */
+	@property()
+	forcedTabIndex?: string;
+
 	_selectedIndexBeforeOpen = -1;
 	_escapePressed = false;
 	_lastSelectedOption: IOption | null = null;;
@@ -1044,9 +1052,13 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _effectiveTabIndex() {
-		return this.disabled
+		if (this.disabled
 		|| (this.responsivePopover // Handles focus on Tab/Shift + Tab when the popover is opened
-		&& this.responsivePopover.open) ? -1 : 0;
+		&& this.responsivePopover.open)) {
+			return -1;
+		}
+
+		return this.forcedTabIndex !== undefined ? parseInt(this.forcedTabIndex) : 0;
 	}
 
 	 /**

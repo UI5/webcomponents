@@ -13,6 +13,7 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 			disabled={this.disabled}
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
+			forcedTabIndex={this.forcedTabIndex}
 			onClick={(...args) => this.onClick(...args)}
 			onClose={(...args) => this.onClose(...args)}
 			onOpen={(...args) => this.onOpen(...args)}
