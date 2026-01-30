@@ -243,6 +243,14 @@ class Icon extends UI5Element implements IIcon {
 			this.fireDecoratorEvent("click");
 		}
 	}
+	_onclick(e : MouseEvent) {
+		if (this.mode !== IconMode.Interactive) {
+			return;
+		}
+		e.preventDefault();
+
+		this.fireDecoratorEvent("click");
+	}
 
 	/**
 	* Enforce "ltr" direction, based on the icons collection metadata.
