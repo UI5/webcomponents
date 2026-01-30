@@ -133,6 +133,15 @@ class ColorPalette extends UI5Element {
 	defaultColor?: string;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the selected color, only valid CSS color values accepted
 	 * @private
 	 */
@@ -883,7 +892,9 @@ class ColorPalette extends UI5Element {
 	}
 
 	get colorContainerLabel() {
-		return ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
+		return this.accessibleName
+			? `${ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL)} ${this.accessibleName}`
+			: ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
 	}
 
 	get colorPaletteMoreColorsText() {
