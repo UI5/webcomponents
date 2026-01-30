@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_popover_background: var(--sapGroup_ContentBackground);
 	--_ui5_popover_box_shadow: var(--sapContent_Shadow2);
 	--_ui5_popover_no_arrow_box_shadow: var(--sapContent_Shadow1);

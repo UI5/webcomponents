@@ -15,7 +15,6 @@ import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.j
 import {
 	findVerticalScrollContainer, scrollElementIntoView, isFeature, isValidColumnWidth,
 } from "./TableUtils.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type DropIndicator from "./DropIndicator.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
@@ -170,7 +169,7 @@ type TableRowActionClickEventDetail = {
  * This can only be achieved through a custom accessibility announcement.
  * To support this, UI5 Web Components expose its own accessibility metadata via the `accessibilityInfo` property.
  * The `ui5-table` uses this information to create the required custom announcements dynamically.
- * If you include custom web components inside table cells that are not part of the standard UI5 Web Components set, their accessibility information can be provided using the `data-ui5-table-acc-text` attribute.
+ * If you include custom web components inside table cells that are not part of the standard UI5 Web Components set, their accessibility information can be provided using the `data-ui5-acc-text` attribute.
  *
  * ### ES6 Module Import
  *
@@ -359,11 +358,11 @@ class Table extends UI5Element {
 	loading = false;
 
 	/**
-     * Defines the delay in milliseconds, after which the loading indicator will show up for this component.
+	 * Defines the delay in milliseconds, after which the loading indicator will show up for this component.
 	 *
-     * @default 1000
-     * @public
-     */
+	 * @default 1000
+	 * @public
+	 */
 	@property({ type: Number })
 	loadingDelay = 1000;
 
@@ -431,7 +430,7 @@ class Table extends UI5Element {
 	_tableNavigation?: TableNavigation;
 	_tableDragAndDrop?: TableDragAndDrop;
 	_tableCustomAnnouncement?: TableCustomAnnouncement;
-	_poppedIn: Array<{col: TableHeaderCell, width: number}> = [];
+	_poppedIn: Array<{ col: TableHeaderCell, width: number }> = [];
 	_containerWidth = 0;
 
 	constructor() {
@@ -462,7 +461,7 @@ class Table extends UI5Element {
 			row._alternate = this.alternateRowColors && index % 2 === 0;
 		});
 
-		this.style.setProperty(getScopedVarName("--ui5_grid_sticky_top"), this.stickyTop);
+		this.style.setProperty("--ui5_grid_sticky_top", this.stickyTop);
 		this._refreshPopinState();
 		this.features.forEach(feature => feature.onTableBeforeRendering?.(this));
 
@@ -651,12 +650,12 @@ class Table extends UI5Element {
 
 		// Row Action Cell Width
 		if (this.rowActionCount > 0) {
-			widths.push(`calc(var(${getScopedVarName("--_ui5_button_base_min_width")}) * ${this.rowActionCount} + var(${getScopedVarName("--_ui5_table_row_actions_gap")}) * ${this.rowActionCount - 1} + var(${getScopedVarName("--_ui5_table_cell_horizontal_padding")}) * 2)`);
+			widths.push(`calc(var(--_ui5_button_base_min_width) * ${this.rowActionCount} + var(--_ui5_table_row_actions_gap) * ${this.rowActionCount - 1} + var(--_ui5_table_cell_horizontal_padding) * 2)`);
 		}
 
 		// Navigated Cell Width
 		if (this._renderNavigated) {
-			widths.push(`var(${getScopedVarName("--_ui5_table_navigated_cell_width")})`);
+			widths.push(`var(--_ui5_table_navigated_cell_width)`);
 		}
 
 		return widths.join(" ");

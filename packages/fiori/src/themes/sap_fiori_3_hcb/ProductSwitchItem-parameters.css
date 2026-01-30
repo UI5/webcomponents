@@ -1,6 +1,6 @@
 @import "../base/ProductSwitchItem-parameters.css";
 
-:root {
+:host {
 	--_ui5_product_switch_item_outline_offset: -.25rem;
 	--_ui5_product_switch_item_border: 1px solid var(--sapField_BorderColor);
 }
