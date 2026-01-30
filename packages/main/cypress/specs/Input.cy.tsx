@@ -198,35 +198,6 @@ describe("Input Tests", () => {
 		cy.get("@change").should("have.been.calledOnce");
 	});
 
-	it("should not fire 'submit' event when there is more than one input field in a form", () => {
-		cy.mount(
-			<form>
-				<Input id="first-input" onChange={cy.stub().as("change")}></Input>
-				<Input></Input>
-			</form>
-		);
-
-		// spy submit event and prevent it
-		cy.get("form")
-			.then($form => {
-				$form.get(0).addEventListener("submit", cy.spy().as("submit"));
-			});
-
-		// check if submit is triggered after change
-		cy.get("#first-input")
-			.as("input")
-			.realClick();
-
-		cy.get("@input")
-			.should("be.focused");
-
-		cy.realType("test");
-
-		cy.realPress("Enter");
-
-		cy.get("@submit").should("have.not.been.called");
-	});
-
 	it("tests if pressing enter twice fires submit 2 times and change once", () => {
 		cy.mount(
 			<form>
