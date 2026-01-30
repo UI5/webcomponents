@@ -13,6 +13,7 @@ import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTempla
 import type { IButton } from "@ui5/webcomponents/dist/Button.js";
 import IllustrationMessageDesign from "./types/IllustrationMessageDesign.js";
 import IllustrationMessageType from "./types/IllustrationMessageType.js";
+import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
 import "./illustrations/BeforeSearch.js";
 
 // Styles
@@ -278,6 +279,7 @@ class IllustratedMessage extends UI5Element {
 	_lastKnownOffsetHeightForMedia: Record<string, number>;
 	_lastKnownMedia: string;
 	_handleResize: ResizeObserverCallback;
+	_throttledApplyMedia: (() => void);
 
 	constructor() {
 		super();
@@ -288,6 +290,7 @@ class IllustratedMessage extends UI5Element {
 		this._lastKnownOffsetHeightForMedia = {};
 		// this will store the last known media, in order to detect if IllustratedMessage has been hidden by expand/collapse container
 		this._lastKnownMedia = "base";
+		this._throttledApplyMedia = () => {};
 	}
 
 	static get BREAKPOINTS() {
@@ -383,7 +386,7 @@ class IllustratedMessage extends UI5Element {
 			return;
 		}
 
-		this._applyMedia();
+		this._applyMediaThrottled();
 		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
 	}
 
@@ -445,6 +448,15 @@ class IllustratedMessage extends UI5Element {
 		}
 	}
 
+	_applyMediaThrottled(heightChange?: boolean) {
+		this._throttledApplyMedia = throttle(() => {
+			this._applyMedia(heightChange);
+		}, 1000); // Adjust the delay (in milliseconds) as needed
+
+		// Call the throttled version
+		this._throttledApplyMedia();
+	}
+
 	_adjustHeightToFitContainer() {
 		const illustrationWrapper = <HTMLElement> this.shadowRoot!.querySelector(".ui5-illustrated-message-illustration"),
 			illustration = illustrationWrapper.querySelector("svg");
@@ -453,7 +465,9 @@ class IllustratedMessage extends UI5Element {
 			illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", false);
 			if (this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight) {
 				illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", true);
-				this._applyMedia(true /* height change */);
+
+				// Use the throttled version of _applyMedia
+				this._applyMediaThrottled(true /* height change */);
 			}
 		}
 	}
