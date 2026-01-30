@@ -1,10 +1,11 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Template
 import DynamicPageHeaderTemplate from "./DynamicPageHeaderTemplate.js";
@@ -63,7 +64,7 @@ class DynamicPageHeader extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: HTMLElement[];
+	content!: DefaultSlot<HTMLElement[]>;
 
 	/**
 	 * Defines if the header is snapped.
