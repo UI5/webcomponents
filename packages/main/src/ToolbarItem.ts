@@ -17,10 +17,14 @@ type ToolbarItemEventDetail = {
 }
 
 interface IOverflowToolbarItem extends HTMLElement {
-	eventsToCloseOverflow?: string[] | undefined;
+	overflowCloseEvents?: string[] | undefined;
 	hasOverflow?: boolean | undefined;
 }
-
+/**
+ * Fired when the overflow popover is closed.
+ * @public
+ * @since 1.17.0
+ */
 @event("close-overflow", {
 	bubbles: true,
 	cancelable: true,
@@ -77,27 +81,15 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
 
-	/**
-	 * Defines if the component, wrapped in the toolbar item, should be expanded in the overflow popover.
-	 * @default false
-	 * @public
-	 * @since 2.19.0
-	 */
-
-	@property({ type: Boolean })
-	shrinkInOverflow: boolean = false;
-
 	_isRendering = true;
 	_maxWidth = 0;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
-
-	overflowCloseEvents: string[] = [];
 
 	closeOverflowSet = {
 		"ui5-button": ["click"],
 		"ui5-select": ["change"],
 		"ui5-combobox": ["change"],
-		"ui5-multi-combobox": ["change"],
+		"ui5-multi-combobox": ["selection-change"],
 		"ui5-date-picker": ["change"],
 		"ui5-switch": ["change"],
 	}
@@ -145,7 +137,15 @@ class ToolbarItem extends UI5Element {
 
 	// We want to close the overflow popover, when closing event is being executed
 	getClosingEvents(): string[] {
-		return [...(this.closeOverflowSet[this.itemTagName as keyof typeof this.closeOverflowSet] || []), ...this.overflowCloseEvents];
+		const item = Array.isArray(this.item) ? this.item[0] : this.item;
+
+		const closeEvents = this.closeOverflowSet[this.itemTagName as keyof typeof this.closeOverflowSet] || [];
+		if (!item) {
+			return [...closeEvents];
+		}
+		const overflowCloseEvents = Array.isArray(item.overflowCloseEvents) ? item.overflowCloseEvents : [];
+
+		return [...closeEvents, ...overflowCloseEvents];
 	}
 
 	attachCloseOverflowHandlers() {

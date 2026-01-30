@@ -41,8 +41,8 @@
 		<br />
 		<section>
 			<ui5-toolbar>
-				<ui5-toolbar-item shrink-in-overflow><ui5-button icon="add" stable-dom-ref="otb_button_1">Left 1 (long)</ui5-button></ui5-toolbar-item>
-				<ui5-toolbar-item shrink-in-overflow><ui5-button icon="decline">Left 2</ui5-button></ui5-toolbar-item>
+				<ui5-toolbar-item><ui5-button icon="add" stable-dom-ref="otb_button_1">Left 1 (long)</ui5-button></ui5-toolbar-item>
+				<ui5-toolbar-item><ui5-button icon="decline">Left 2</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="employee">Left 3</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="decline">Left 4</ui5-button></ui5-toolbar-item>
 				<ui5-toolbar-item><ui5-button icon="add">Mid 1</ui5-button></ui5-toolbar-item>
@@ -156,17 +156,25 @@
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Input Field -->
-            <ui5-toolbar-item shrink-in-overflow>
+            <ui5-toolbar-item>
                 <ui5-input placeholder="Enter text"></ui5-input>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with ComboBox -->
-            <ui5-toolbar-item shrink-in-overflow>
+            <ui5-toolbar-item>
                 <ui5-combobox placeholder="Select an option">
                     <ui5-cb-item text="Option 1"></ui5-cb-item>
                     <ui5-cb-item text="Option 2"></ui5-cb-item>
                     <ui5-cb-item text="Option 3"></ui5-cb-item>
                 </ui5-combobox>
+            </ui5-toolbar-item>
+
+			<ui5-toolbar-item>
+                <ui5-multi-combobox placeholder="Select an option">
+                    <ui5-mcb-item text="Option 1"></ui5-mcb-item>
+                    <ui5-mcb-item text="Option 2"></ui5-mcb-item>
+                    <ui5-mcb-item text="Option 3"></ui5-mcb-item>
+                </ui5-multi-combobox>
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Switch -->
@@ -175,7 +183,7 @@
             </ui5-toolbar-item>
 
             <!-- Toolbar Item with Date Picker -->
-            <ui5-toolbar-item shrink-in-overflow>
+            <ui5-toolbar-item>
                 <ui5-date-picker placeholder="Select a date"></ui5-date-picker>
             </ui5-toolbar-item>
         </ui5-toolbar>
