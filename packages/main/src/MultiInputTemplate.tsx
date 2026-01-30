@@ -38,6 +38,8 @@ function preContent(this: MultiInput) {
 				onTokenDelete={this.tokenDelete}
 				onFocusOut={this._tokenizerFocusOut}
 				onShowMoreItemsPress={this._showMoreItemsPress}
+				accessibleName={this.accessibleName}
+				accessibleNameRef={this.accessibleNameRef}
 			>
 				{ this.tokens.map(token => <slot name={token._individualSlot}></slot>)}
 			</Tokenizer>

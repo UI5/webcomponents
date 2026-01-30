@@ -51,6 +51,7 @@ import {
 	deregisterUI5Element,
 	getEffectiveAriaDescriptionText,
 	getAllAccessibleDescriptionRefTexts,
+	getEffectiveAriaLabelText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import { getCaretPosition, setCaretPosition } from "@ui5/webcomponents-base/dist/util/Caret.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
@@ -1731,7 +1732,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get _headerTitleText() {
-		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getEffectiveAriaLabelText(this) || Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _suggestionsOkButtonText() {
