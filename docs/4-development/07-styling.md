@@ -101,7 +101,7 @@ Practically speaking, the theming setup appears as follows:
 - Component-specific variables (for example `sap_horizon`):
 ```css
 /* src/themes/sap_horizon/parameters-bundle.css */
-:root {
+:host {
     --my-component-border-color: blue;
 }
 ```
@@ -109,7 +109,7 @@ Practically speaking, the theming setup appears as follows:
 - Component-specific variables (for example `sap_horizon_dark`):
 ```css
 /* src/themes/sap_horizon_dark/parameters-bundle.css */
-:root {
+:host {
     --my-component-border-color: lightblue;
 }
 ```
@@ -173,7 +173,25 @@ If your styles are symmetric, the same from both sides, the result will be the s
 }
 ```
 
-**Conclusion**: To support the `RTL` text direction, use the CSS logical properties as they are automatically mirrored by the browser, based on the text direction (LTR or RTL).
+### Using `:dir()` Selector for Advanced RTL Cases
+
+While CSS logical properties cover most RTL scenarios, there are cases where they don't provide a solution. For example, when using transforms, rotations, or other CSS properties that don't have logical equivalents, you'll need to use the `:dir()` pseudo-class selector.
+
+The `:host(:dir(rtl))` and `:host(:dir(ltr))` selectors allow you to apply specific styles based on the text direction:
+
+```css
+:host {
+	/* Default LTR styles */
+	transform: rotate(45deg);
+}
+
+:host(:dir(rtl)) {
+	/* RTL-specific styles */
+	transform: rotate(-45deg);
+}
+```
+
+**Conclusion**: To support the `RTL` text direction, use the CSS logical properties as they are automatically mirrored by the browser, based on the text direction (LTR or RTL). For cases where logical properties don't help, use the `:dir(rtl)` or `:dir(ltr)` selectors to apply direction-specific styles.
 
 
 ## Content Density
@@ -190,7 +208,7 @@ By default, when writing web component styles and defining CSS variables, they a
 
 If you defined the following variables:
 ```css
-:root {
+:host {
 	--my-component-width: 2.75rem;
 	--my-component-padding: 1rem;
 }
@@ -206,18 +224,32 @@ And, your web component is used normally:
 
 As expected, the `--my-component-width` variable will be `2.75rem` and the `--my-component-padding` variable  will be `1rem`.
 
-
-To write `Compact` styles and define `Compact` CSS variables, you must target the `data-ui5-compact-size` attribute and the `.ui5-content-density-compact` class:
+To write `Compact` styles and define `Compact` CSS variables, use CSS container queries:
 
 ```css
-[data-ui5-compact-size],
-.ui5-content-density-compact {
-	--my-component-width: 1rem;
-	--my-component-padding: 0.5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--my-component-width: 1rem;
+		--my-component-padding: 0.5rem;
+	}
 }
 ```
 
-The `data-ui5-compact-size` attribute and `.ui5-content-density-compact` class are the UI5 Web Components contract with consumers.
+**Important:** To use container queries for content density, you must configure `cssVariablesTarget: "host"` in the `package-scripts.cjs` options for your package:
+
+```js
+// package-scripts.cjs
+module.exports = {
+	build: {
+		options: {
+			cssVariablesTarget: "host"
+		}
+	}
+};
+```
+
+This approach provides better encapsulation and follows the CSS container queries specification.
+
 To enable `Compact` content density mode, consumers or app developers can use the CSS class:
 
 ```html
@@ -228,8 +260,7 @@ To enable `Compact` content density mode, consumers or app developers can use th
 
 Then, `--my-component-width` will have `1rem` and `--my-component-padding` will be `0.5rem`, making the `my-component` appear smaller, e.g compact.
 
-
-**Conclusion**: To support the `Compact` density mode, define CSS variables, targeting the `data-ui5-compact-size` attribute and the `.ui5-content-density-compact` class.
+**Conclusion**: To support the `Compact` density mode, use container queries to define `Compact` CSS variables with `@container style(--ui5_content_density: compact)` and configure `cssVariablesTarget: "host"` in your package-scripts.
 
 ## Theming Assets
 
