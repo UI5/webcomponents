@@ -1,0 +1,69 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor);height: 250px;">
+    <!-- playground-fold-end -->
+
+<ui5-toolbar>
+    <!-- ToolbarItem wrapping Radio Buttons -->
+    <ui5-toolbar-item>
+        <div>
+            <ui5-radio-button name="group1" text="Option 1" checked></ui5-radio-button>
+            <ui5-radio-button name="group1" text="Option 2"></ui5-radio-button>
+            <ui5-radio-button name="group1" text="Option 3"></ui5-radio-button>
+        </div>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping Checkboxes -->
+    <ui5-toolbar-item>
+        </iv>
+            <ui5-checkbox text="Checkbox 1"></ui5-checkbox>
+            <ui5-checkbox text="Checkbox 2" checked></ui5-checkbox>
+            <ui5-checkbox text="Checkbox 3"></ui5-checkbox>
+        </div>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping an Input Field -->
+    <ui5-toolbar-item>
+        <ui5-input placeholder="Enter text"></ui5-input>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping a ComboBox -->
+    <ui5-toolbar-item>
+        <ui5-combobox placeholder="Select an option">
+            <ui5-cb-item text="Option 1"></ui5-cb-item>
+            <ui5-cb-item text="Option 2"></ui5-cb-item>
+            <ui5-cb-item text="Option 3"></ui5-cb-item>
+        </ui5-combobox>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping a MultiComboBox -->
+    <ui5-toolbar-item>
+        <ui5-multi-combobox placeholder="Select options">
+            <ui5-mcb-item text="Item 1"></ui5-mcb-item>
+            <ui5-mcb-item text="Item 2"></ui5-mcb-item>
+            <ui5-mcb-item text="Item 3"></ui5-mcb-item>
+        </ui5-multi-combobox>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping a Switch -->
+    <ui5-toolbar-item>
+        <ui5-switch text-on="On" text-off="Off"></ui5-switch>
+    </ui5-toolbar-item>
+
+    <!-- ToolbarItem wrapping a DatePicker -->
+    <ui5-toolbar-item>
+        <ui5-date-picker placeholder="Select a date"></ui5-date-picker>
+    </ui5-toolbar-item>
+</ui5-toolbar>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->

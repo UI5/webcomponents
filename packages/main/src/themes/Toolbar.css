@@ -28,11 +28,19 @@
 
 .ui5-tb-item {
 	flex-shrink: 0;
-}
-
-.ui5-tb-item {
 	margin-inline-end: var(--_ui5-toolbar-item-margin-right);
 	margin-inline-start: var(--_ui5-toolbar-item-margin-left);
+}
+
+.ui5-tb-self-overflow {
+	min-width:  2.5rem;
+	flex-shrink: 1;
+	flex-grow: 1;
+
+}
+
+.ui5-tb-self-overflow-grow {
+	position: absolute;
 }
 
 /* Last visible element should not have margins.

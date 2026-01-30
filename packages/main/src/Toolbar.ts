@@ -5,7 +5,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -299,12 +298,28 @@ class Toolbar extends UI5Element {
 
 	async onAfterRendering() {
 		await renderFinished();
-
 		this.storeItemsWidth();
 		this.processOverflowLayout();
 		this.items.forEach(item => {
-			item.isOverflowed = this.overflowItems.map(overflowItem => overflowItem).indexOf(item) !== -1;
+			this.addItemsAdditionalProperties(item);
 		});
+	}
+
+	addItemsAdditionalProperties(item: ToolbarItem) {
+		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
+		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
+		if (item.hasOverflow && !item.isOverflowed && itemWrapper) {
+			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
+			// since, unlike the other items, it is allowed to grow and shrink
+			// We need to set the max-width to none and its position to absolute to allow the item to grow and measure its width,
+			// then when set, the max-width will be cached and we will set its highest value to not cut it when the Toolbar shrinks it
+			// on rendering and then we resize it manually.
+			itemWrapper.style.maxWidth = `none`;
+			itemWrapper?.classList.add("ui5-tb-self-overflow-grow");
+			item._maxWidth = Math.max(this.getItemWidth(item), item._maxWidth);
+			itemWrapper.style.maxWidth = `${item._maxWidth}px`;
+			itemWrapper?.classList.remove("ui5-tb-self-overflow-grow");
+		}
 	}
 
 	/**
@@ -459,16 +474,13 @@ class Toolbar extends UI5Element {
 		this.popoverOpen = false;
 	}
 
-	onBeforeClose(e: UI5CustomEvent<Popover, "before-close">) {
-		e.preventDefault();
-	}
-
 	onOverflowPopoverOpened() {
 		this.popoverOpen = true;
 	}
 
 	onResize() {
 		this.closeOverflow();
+		this.storeItemsWidth();
 		this.processOverflowLayout();
 	}
 

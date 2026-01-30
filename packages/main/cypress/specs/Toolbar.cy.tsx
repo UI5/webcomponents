@@ -4,7 +4,7 @@ import ToolbarSelect from "../../src/ToolbarSelect.js";
 import ToolbarSelectOption from "../../src/ToolbarSelectOption.js";
 import ToolbarSeparator from "../../src/ToolbarSeparator.js";
 import ToolbarSpacer from "../../src/ToolbarSpacer.js";
-import type ToolbarItem from "../../src/ToolbarItem.js";
+import ToolbarItem from "../../src/ToolbarItem.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
@@ -123,7 +123,7 @@ describe("Toolbar general interaction", () => {
 			.should("exist", "hidden class attached to tb button, meaning it's not shown as expected");
 	});
 
-	it("Should call event handlers on abstract item", () => {
+	it("Should call event handlers on item", () => {
 		cy.mount(
 			<Toolbar>
 				<ToolbarButton text="Button 1"></ToolbarButton>
@@ -575,6 +575,7 @@ describe("ToolbarButton", () => {
 		cy.get("@toolbar").then($toolbar => {
 			const toolbar = $toolbar[0] as Toolbar;
 			const addButton = document.getElementById("add-btn") as ToolbarButton;
+
 			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
 
 			const initialOverflowCount = toolbar.itemsToOverflow.length;
@@ -664,3 +665,4 @@ describe("ToolbarButton", () => {
 			.should("contain.text", "Decline Item");
 	});
 });
+
