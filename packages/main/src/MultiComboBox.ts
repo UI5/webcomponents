@@ -120,6 +120,7 @@ import type InputComposition from "./features/InputComposition.js";
  */
 interface IMultiComboBoxItem extends UI5Element {
 	text?: string,
+	value?: string,
 	additionalText?: string,
 	headerText?: string,
 	selected: boolean,
@@ -293,6 +294,15 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	value = "";
 
 	/**
+ 	 * Defines the values of the selected items.
+ 	 * @default []
+	 * @public
+	 * @since 2.19.0
+ 	 */
+	@property({ type: Array })
+	selectionValues:Array<string> = [];
+
+	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
 	 *
 	 * **Note:** This property is only applicable within the context of an HTML Form element.
@@ -439,10 +449,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	@property()
 	_valueBeforeOpen = this.value;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_filteredItems!: Array<IMultiComboBoxItem>;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_previouslySelectedItems!: Array<IMultiComboBoxItem>;
 
 	@property({ type: Boolean })
@@ -797,6 +807,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		deletingItems.forEach(item => {
 			item.selected = false;
 		});
+
+		if (this.selectionValues) {
+			const valuesToDelete = deletingItems.map(item => item.value);
+			this.selectionValues = this.selectionValues.filter(value => !valuesToDelete.includes(value));
+		}
 
 		this._deleting = true;
 		this._preventTokenizerToggle = true;
@@ -1578,6 +1593,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (!isPhone()) {
 			changePrevented = this.fireSelectionChange();
 
+			if (this.selectionValues) {
+				this.selectionValues = e.detail.selectedItems.map(i => (i as MultiComboBoxItem).value || "");
+			}
 			if (changePrevented) {
 				e.preventDefault();
 				this._revertSelection();
@@ -1767,6 +1785,17 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
+	_syncSelection() {
+		const selectedValues = this.selectionValues;
+
+		// set selected property of the items based on the selection value
+		this._getItems().forEach(item => {
+			if (isInstanceOfMultiComboBoxItem(item) && item.value) {
+				item.selected = selectedValues.includes(item.value);
+			}
+		});
+	}
+
 	onBeforeRendering() {
 		const input = this._innerInput;
 		const autoCompletedChars = input && (input.selectionEnd || 0) - (input.selectionStart || 0);
@@ -1783,6 +1812,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (input && !input.value) {
 			this.valueBeforeAutoComplete = "";
 			this._filteredItems = this._getItems();
+		}
+
+		if (this.selectionValues) {
+			this._syncSelection();
 		}
 
 		this.tokenizerAvailable = this._getSelectedItems().length > 0;

@@ -365,7 +365,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_iconPressed = false;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_filteredItems: Array<IComboBoxItem> = [];
 
 	@property({ type: Number, noAttribute: true })
