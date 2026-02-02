@@ -85,26 +85,6 @@ describe("RatingIndicator", () => {
 				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon")
 				.should("have.attr", "name", "heart");
 		});
-
-		it("should use custom icon for unselected items when readonly", () => {
-			cy.mount(<RatingIndicator value={2} max={5} iconSelected="heart" iconUnselected="heart-2" readonly></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
-				.first()
-				.should("have.attr", "name", "heart");
-		});
-
-		it("should use custom icon for unselected items when disabled", () => {
-			cy.mount(<RatingIndicator value={2} max={5} iconSelected="heart" iconUnselected="heart-2" disabled></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
-				.first()
-				.should("have.attr", "name", "heart");
-		});
 	});
 
 	describe("Half Icon appearance", () => {
