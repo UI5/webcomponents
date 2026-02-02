@@ -107,7 +107,8 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * Defines the mode of the component.
 	 *
 	 * **Note:** When set to `Decorative`, the avatar will be purely decorative,
-	 * with `role="presentation"` and `aria-hidden="true"`, regardless of the `interactive` property.
+	 * with `role="presentation"` and `aria-hidden="true"`. However, this property won't have effect
+	 * if the `interactive` property is set to `true`.
 	 * @default "Image"
 	 * @public
 	 */
@@ -285,11 +286,15 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		if (this.forcedTabIndex) {
 			return parseInt(this.forcedTabIndex);
 		}
-		// Decorative mode should never be tabbable
+		// Interactive property takes precedence over decorative mode
+		if (this._interactive) {
+			return 0;
+		}
+		// Decorative mode should not be tabbable
 		if (this.mode === AvatarMode.Decorative) {
 			return undefined;
 		}
-		return this._interactive ? 0 : undefined;
+		return undefined;
 	}
 
 	/**
@@ -313,13 +318,21 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _role() {
+		// Interactive property takes precedence over decorative mode
+		if (this._interactive) {
+			return "button";
+		}
 		if (this.mode === AvatarMode.Decorative) {
 			return "presentation";
 		}
-		return this._interactive ? "button" : "img";
+		return "img";
 	}
 
 	get effectiveAriaHidden() {
+		// Interactive property takes precedence over decorative mode
+		if (this._interactive) {
+			return undefined;
+		}
 		return this.mode === AvatarMode.Decorative ? "true" : undefined;
 	}
 

@@ -139,7 +139,7 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "tabindex");
 	});
 
-	it("should override interactive when mode is Decorative", () => {
+	it("should allow interactive to override Decorative mode", () => {
 		cy.mount(
 			<Avatar 
 				id="decorative-interactive" 
@@ -149,13 +149,13 @@ describe("Accessibility", () => {
 			></Avatar>
 		);
 
-		// Even with interactive=true, Decorative mode should win
+		// Interactive property takes precedence over Decorative mode
 		cy.get("#decorative-interactive")
 			.shadow()
 			.find(".ui5-avatar-root")
-			.should("have.attr", "role", "presentation")
-			.should("have.attr", "aria-hidden", "true")
-			.should("not.have.attr", "tabindex");
+			.should("have.attr", "role", "button")
+			.should("not.have.attr", "aria-hidden")
+			.should("have.attr", "tabindex", "0");
 	});
 
 	it("should use role='img' in Image mode when not interactive", () => {
