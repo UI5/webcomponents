@@ -91,6 +91,10 @@ export default function SelectTemplate(this: Select) {
 						{this.ariaDescriptionText}
 					</span>
 				}
+				{/* Hidden element for ariaActiveDescendantElement reference */}
+				<span id={`${this._id}-selectedOptionText`} class="ui5-hidden-text" role="option" aria-selected="true">
+					{this.text}
+				</span>
 			</div>
 			{SelectPopoverTemplate.call(this)}
 		</>
