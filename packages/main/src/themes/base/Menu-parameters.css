@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_menu_popover_border_radius: var(--sapElement_BorderCornerRadius);
 	--_ui5_menu_item_padding: 0 1rem 0 0.75rem;
 	--_ui5_menu_item_submenu_icon_right: 1rem;

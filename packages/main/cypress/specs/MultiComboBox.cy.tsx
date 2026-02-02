@@ -641,66 +641,6 @@ describe("General", () => {
 			}));
 	});
 
-	it("Select All functionality + N-more integration", () => {
-		cy.mount(
-			<><MultiComboBox style="width: 100px" noValidation={true} showSelectAll={true}>
-				<MultiComboBoxItem selected={true} text="Very Very Very Very long Item 1"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
-				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
-				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button>Dummy Button</Button></>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.realClick();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("be.focused");
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find(".inputIcon")
-			.as("icon");
-
-		cy.get("@icon")
-			.realClick();
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find<ResponsivePopover>("ui5-responsive-popover")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@popover")
-			.find(".ui5-mcb-select-all-checkbox")
-			.should("not.have.attr", "checked");
-
-		// focus the dummy button to close the popover
-		cy.realPress("Tab");
-		cy.realPress("Tab");
-
-		cy.get<ResponsivePopover>("@popover")
-			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer-more-text")
-			.as("moreButton");
-
-		cy.get("@moreButton")
-			.realClick();
-
-		cy.get<ResponsivePopover>("@popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@popover")
-			.find(".ui5-mcb-select-all-checkbox")
-			.should("have.attr", "checked");
-	});
-
 	it("Tokenizer expansion on dynamically added tokens", () => {
 		const addTokens = () => {
 			const mcb = document.getElementById("mcb");
@@ -1289,6 +1229,11 @@ describe("Selection and filtering", () => {
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("have.attr", "checked");
+
 		cy.get("@popover")
 			.find("[ui5-list] slot")
 			.should("have.length", 2);
@@ -1314,6 +1259,10 @@ describe("Selection and filtering", () => {
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("not.have.attr", "checked");
 
 		cy.get("@popover")
 			.find("[ui5-list] slot")
@@ -1418,6 +1367,72 @@ describe("Selection and filtering", () => {
 			.find("[ui5-token]")
 			.should("exist")
 			.and("have.length", 1);
+	});
+
+	it("Filters correctly when typing text that doesn't match typeahead but matches filter", () => {
+		// Bug: typing "k" showed all items because valueBeforeAutoComplete was empty
+		// "k" matches "Kingdom" in StartsWithPerTerm but no item starts with "k"
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("k");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "Kingdom" starting with "k")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
+	});
+
+	it("Filters correctly when continuing to type after typeahead match fails", () => {
+		// Bug: typing "and" showed items matching "a" because valueBeforeAutoComplete stayed "a"
+		// after typeahead matched "Albania" on first keystroke
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("and");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "and")
+		// Not Albania or Argentina (which start with "a" but don't have word starting with "and")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
 	});
 });
 

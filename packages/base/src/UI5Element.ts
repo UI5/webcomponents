@@ -44,6 +44,7 @@ import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
+import createInstanceChecker from "./util/createInstanceChecker.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -458,7 +459,7 @@ abstract class UI5Element extends HTMLElement {
 		const autoIncrementMap = new Map<string, number>();
 		const slottedChildrenMap = new Map<string, Array<{ child: Node, idx: number }>>();
 
-		const allChildrenUpgraded = domChildren.map(async (child, idx) => {
+		domChildren.forEach((child, idx) => {
 			// Determine the type of the child (mainly by the slot attribute)
 			const slotName = getSlotName(child);
 			const slotData = slotsMap[slotName];
@@ -470,6 +471,32 @@ abstract class UI5Element extends HTMLElement {
 					console.warn(`Unknown slotName: ${slotName}, ignoring`, child, `Valid values are: ${validValues}`); // eslint-disable-line
 				}
 
+				return;
+			}
+
+			const propertyName = slotData.propertyName || slotName;
+
+			if (slottedChildrenMap.has(propertyName)) {
+				slottedChildrenMap.get(propertyName)!.push({ child, idx });
+			} else {
+				slottedChildrenMap.set(propertyName, [{ child, idx }]);
+			}
+		});
+
+		// Distribute the child in the _state object, keeping the Light DOM order,
+		// not the order elements are defined.
+		slottedChildrenMap.forEach((children, propertyName) => {
+			this._state[propertyName] = children.sort((a, b) => a.idx - b.idx).map(_ => _.child);
+			this._state[kebabToCamelCase(propertyName)] = this._state[propertyName];
+		});
+
+		const allChildrenUpgraded = domChildren.map(async child => {
+			// Determine the type of the child (mainly by the slot attribute)
+			const slotName = getSlotName(child);
+			const slotData = slotsMap[slotName];
+
+			// Check if the slotName is supported
+			if (slotData === undefined) {
 				return;
 			}
 
@@ -512,24 +539,9 @@ abstract class UI5Element extends HTMLElement {
 			if (child instanceof HTMLSlotElement) {
 				this._attachSlotChange(child, slotName, !!slotData.invalidateOnChildChange);
 			}
-
-			const propertyName = slotData.propertyName || slotName;
-
-			if (slottedChildrenMap.has(propertyName)) {
-				slottedChildrenMap.get(propertyName)!.push({ child, idx });
-			} else {
-				slottedChildrenMap.set(propertyName, [{ child, idx }]);
-			}
 		});
 
 		await Promise.all(allChildrenUpgraded);
-
-		// Distribute the child in the _state object, keeping the Light DOM order,
-		// not the order elements are defined.
-		slottedChildrenMap.forEach((children, propertyName) => {
-			this._state[propertyName] = children.sort((a, b) => a.idx - b.idx).map(_ => _.child);
-			this._state[kebabToCamelCase(propertyName)] = this._state[propertyName];
-		});
 
 		// Compare the content of each slot with the cached values and invalidate for the ones that changed
 		let invalidated = false;
@@ -1412,9 +1424,7 @@ abstract class UI5Element extends HTMLElement {
 /**
  * Always use duck-typing to cover all runtimes on the page.
  */
-const instanceOfUI5Element = (object: any): object is UI5Element => {
-	return "isUI5Element" in object;
-};
+const instanceOfUI5Element = createInstanceChecker<UI5Element>("isUI5Element");
 
 export default UI5Element;
 export {

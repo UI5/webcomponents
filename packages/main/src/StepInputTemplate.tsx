@@ -51,6 +51,7 @@ export default function StepInputTemplate(this: StepInput) {
 				disabled={this.disabled}
 				required={this.required}
 				readonly={this.readonly}
+				onui5-_request-submit={this._onInputRequestSubmit}
 				valueState={this.valueState}
 				_inputAccInfo={this.accInfo}
 				_nativeInputAttributes={this.inputAttributes}

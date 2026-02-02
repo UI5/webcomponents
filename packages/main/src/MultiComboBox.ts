@@ -55,7 +55,6 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import { getAssociatedLabelForTexts, getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBoxItem.js";
@@ -1445,8 +1444,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			innerInput.setSelectionRange(matchingItem.text!.length, matchingItem.text!.length);
 			this.open = false;
-		} else if (this._internals?.form) {
-			submitForm(this);
+		} else {
+			if (this._lastValue !== this.value) {
+				this._inputChange();
+			}
+
+			if (this._internals?.form) {
+				submitForm(this);
+			}
 		}
 	}
 
@@ -1795,7 +1800,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.tokenizerAvailable = this._getSelectedItems().length > 0;
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
 		if (!input || !value) {
 			this._getItems().forEach(item => {
@@ -1820,7 +1825,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (this._shouldFilterItems) {
-			this._filteredItems = this._filterItems(this._shouldAutocomplete || !!autoCompletedChars ? this.valueBeforeAutoComplete : value);
+			this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
 		} else {
 			this._filteredItems = this._getItems();
 		}

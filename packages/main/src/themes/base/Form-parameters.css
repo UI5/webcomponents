@@ -1,4 +1,4 @@
-:root {
+:host {
 	--ui5-form-item-layout: 4fr 8fr 0fr;
 	--ui5-form-item-label-justify: end;
 	--ui5-form-item-label-justify-span12: start;
