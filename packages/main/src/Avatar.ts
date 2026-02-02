@@ -242,8 +242,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * Defines the optional badge that will be used for visual affordance.
 	 *
 	 * **Note:** While the slot allows for custom badges, to achieve
-	 * the Fiori design, you can use the `ui5-tag` with `ui5-icon`
-	 * in the corresponding `icon` slot, without text nodes.
+	 * the Fiori design, use the `ui5-avatar-badge` component.
 	 * @public
 	 * @since 1.7.0
 	 */

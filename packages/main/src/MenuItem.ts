@@ -35,13 +35,14 @@ import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import MenuItemTemplate from "./MenuItemTemplate.js";
 import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
-	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 import type { IMenuItem } from "./Menu.js";
 
 // Styles
 import menuItemCss from "./generated/themes/MenuItem.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type MenuBeforeOpenEventDetail = { item?: MenuItem };
 type MenuBeforeCloseEventDetail = { escPressed: boolean };
@@ -388,8 +389,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		return MenuItem.i18nBundle.getText(MENU_BACK_BUTTON_ARIA_LABEL);
 	}
 
-	get labelClose() {
-		return MenuItem.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
+	get labelCancel() {
+		return MenuItem.i18nBundle.getText(MENU_CANCEL_BUTTON_TEXT);
 	}
 
 	get accessibleNameText() {
@@ -663,10 +664,6 @@ class MenuItem extends ListItem implements IMenuItem {
 
 MenuItem.define();
 
-const isInstanceOfMenuItem = (object: any): object is MenuItem => {
-	return "isMenuItem" in object;
-};
-
 export default MenuItem;
 
 export type {
@@ -675,6 +672,4 @@ export type {
 	MenuItemAccessibilityAttributes,
 };
 
-export {
-	isInstanceOfMenuItem,
-};
+export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem");

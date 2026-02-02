@@ -5,7 +5,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import type { IColorPaletteItem } from "./ColorPalette.js";
 import ColorPaletteItemTemplate from "./ColorPaletteItemTemplate.js";
 import {
@@ -99,9 +98,9 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 		// since height is dynamically determined by padding-block-start
 		const itemHeight = this.offsetHeight + 4; // adding 4px for the offsets on top and bottom
-		this.style.setProperty(getScopedVarName("--_ui5_color_palette_item_height"), `${itemHeight}px`);
+		this.style.setProperty("--_ui5_color_palette_item_height", `${itemHeight}px`);
 
-		this.style.setProperty(getScopedVarName("--_ui5-color-palette-item-background-color"), `${this.value}`);
+		this.style.setProperty("--_ui5-color-palette-item-background-color", `${this.value}`);
 	}
 
 	get colorLabel() {

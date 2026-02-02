@@ -253,9 +253,19 @@
 		</ui5-search>
 	</div>
 
-	<div class="container last" style="padding-top: 1rem;">
-		<ui5-label>Search with lazy loaded Suggestions - Autocomplete and highlighting</ui5-label>
-		<ui5-search id="search-lazy" show-clear-icon placeholder="Type 'a'..."></ui5-search>
+	<div class="container" style="padding-top: 1rem;">
+		<ui5-label>Search with field loading state (type and press Enter)</ui5-label>
+		<ui5-search id="search-with-loading" show-clear-icon placeholder="Search..."></ui5-search>
+	</div>
+
+	<div class="container last">
+		<ui5-label>Search with Suggestions with long group header text (wrapping)</ui5-label>
+		<ui5-search id="search" show-clear-icon placeholder="Placeholder">
+			<ui5-search-item-group header-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.">
+				<ui5-search-item text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit." icon="search" ></ui5-search-item>
+				<ui5-search-item text="List Item" icon="search" ></ui5-search-item>
+			</ui5-search-item-group>
+		</ui5-search>
 	</div>
 
 	<script>
@@ -448,6 +458,15 @@
 					];
 					createItems(searchLazy, lazyData);
 				}, 300);
+			}
+		});
+
+		const searchWithLoading = document.getElementById('search-with-loading');
+		searchWithLoading.addEventListener('ui5-search', async (e) => {
+			if (e.target.value) {
+				e.target.fieldLoading = true;
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				e.target.fieldLoading = false;
 			}
 		});
 	</script>

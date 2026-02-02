@@ -1,9 +1,8 @@
 @import "../base/SliderBase-parameters.css";
 
-:root {
+:host {
 	--_ui5_slider_progress_container_background: var(--sapSlider_Background);
 	--_ui5_slider_progress_container_dot_display: block;
-	--_ui5_slider_inner_min_width: 4rem;
 	--_ui5_slider_progress_background: var(--sapSlider_Selected_Background);
 	--_ui5_slider_progress_before_background: var(--sapSlider_Selected_Background);
 	--_ui5_slider_progress_after_background: var(--sapContent_MeasureIndicatorColor);
@@ -11,9 +10,6 @@
 	--_ui5_slider_handle_icon_display: inline-block;
 	--_ui5_slider_handle_border: 0.0625rem solid var(--sapSlider_HandleBorderColor);
 	--_ui5_slider_handle_border_radius: 0.5rem;
-	--_ui5_slider_handle_height: 1.5rem;
-	--_ui5_slider_handle_width: 2rem;
-	--_ui5_slider_handle_top: -0.625rem;
 	--_ui5_slider_handle_font_family: "SAP-icons";
 	--_ui5_slider_handle_hover_border: 0.0625rem solid var(--sapSlider_Hover_HandleBorderColor);
 	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapContent_FocusColor);
@@ -27,45 +23,28 @@
 	--_ui5_range_slider_legacy_progress_focus_display: none;
 	--_ui5_range_slider_progress_focus_display: block;
 	--_ui5_slider_tickmark_in_range_bg: var(--sapSlider_Selected_BorderColor);
-	--_ui5_slider_label_fontsize: var(--sapFontSmallSize);
-	--_ui5_slider_label_color: var(--sapContent_LabelColor);
-	--_ui5_slider_tooltip_min_width: 2rem;
 	--_ui5_slider_tooltip_padding: 0.25rem;
-	--_ui5_slider_tooltip_fontsize: var(--sapFontSmallSize);
-	--_ui5_slider_tooltip_color: var(--sapContent_LabelColor);
 	--_ui5_slider_tooltip_height: 1.375rem;
 	--_ui5_slider_handle_focus_width: 1px;
-	--_ui5_slider_start_end_point_size: .5rem;
-	--_ui5_slider_start_end_point_left: -.75rem;
-	--_ui5_slider_start_end_point_top: -0.125rem;
 	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
 	--_ui5_slider_tooltip_border_box: border-box;
-
 	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
 	--_ui5_range_slider_active_handle_icon_display: none;
-	--_ui5_range_slider_progress_focus_top: -1.063rem;
-	--_ui5_range_slider_progress_focus_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 5px);
+	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 0.375rem);
+	--_ui5_range_slider_progress_focus_top: calc(-1 * ((var(--_ui5_slider_handle_height) / 2) + 0.1875rem) + var(--_ui5_slider_progress_border_width));
+	--_ui5_range_slider_progress_focus_left: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
+	--_ui5_range_slider_progress_focus_right: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
 	--_ui5_range_slider_progress_focus_padding: 0 1rem 0 1rem;
-	--_ui5_range_slider_progress_focus_width: calc(100% + var(--_ui5_slider_handle_width) + 10px);
-	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 10px);
 	--_ui5_range_slider_root_hover_handle_icon_display: inline-block;
 	--_ui5_range_slider_root_hover_handle_bg: var(--_ui5_slider_handle_hover_background);
 	--_ui5_range_slider_root_active_handle_icon_display: none;
-	--_ui5_slider_tickmark_height: .5rem;
-	--_ui5_slider_tickmark_top: -2px;
 	--_ui5_slider_handle_box_sizing: border-box;
 	--_ui5_range_slider_handle_background: var(--sapSlider_RangeHandleBackground);
-	--_ui5_slider_tooltip_bottom: 2rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_slider_handle_width: 1.5rem;
-	--_ui5_range_slider_progress_focus_width: calc(100% + var(--_ui5_slider_handle_width) + 10px);
-	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 10px);
-	--_ui5_range_slider_progress_focus_top: -.938rem;
-	--_ui5_slider_tooltip_bottom: 1.75rem;
-	--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
-	--_ui5_range_slider_progress_focus_left: calc(-1 * (var(--_ui5_slider_handle_width) / 2) - 5px);
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_tooltip_bottom: 1.75rem;
+		--_ui5_slider_handle_focused_tooltip_distance: calc(var(--_ui5_slider_tooltip_bottom) - var(--_ui5_slider_handle_focus_width));
+	}
 }

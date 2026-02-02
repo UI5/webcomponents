@@ -1036,7 +1036,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			progress: {
 				"width": `${this._selectedRange! * 100}%`,
 				"transform-origin": `${this.directionStart} top`,
-				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,
+				[this.directionStart]: `calc(${this._firstHandlePositionFromStart!}% + var(--_ui5_slider_active_progress_left))`,
 			},
 			startHandle: {
 				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,

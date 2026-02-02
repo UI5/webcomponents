@@ -112,7 +112,7 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 							id="alpha"
 							disabled={this.inputsDisabled}
 							class="ui5-color-channel-input"
-							value={String(this._alpha)}
+							value={this._alphaTemp ?? String(this._alpha)}
 							accessibleName={this.alphaInputLabel}
 							onChange={this._handleAlphaChange}
 							onInput={this._handleAlphaInput}
