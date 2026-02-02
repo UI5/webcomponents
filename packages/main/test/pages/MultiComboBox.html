@@ -596,7 +596,7 @@
 		<br />
 		<br />
 
-		<ui5-multi-combobox show-select-all id="toggle-loading-mcb">
+		<ui5-multi-combobox id="toggle-loading-mcb">
 			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
 			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
 			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
@@ -773,33 +773,9 @@
 			closeCounter = 0;
 		});
 
-		// Placeholders test
-		const btn = document.getElementById("sel");
-		const mcb1 = document.getElementById("mcb1");
-		const btn2 = document.getElementById("sel2");
-		const mcb1_2 = document.getElementById("mcb1_2");
+		// Focus button
 		const btnfocusMCB = document.getElementById("focus-mcb");
 		const mcbFocus = document.getElementById("multi1");
-
-		let selected = mcb1.hasAttribute("selected");
-		btn.addEventListener("click", () => {
-			if (!selected) {
-				mcb1.setAttribute("selected", selected);
-			} else {
-				mcb1.removeAttribute("selected");
-			}
-			selected = !selected;
-		});
-
-		let selected2 = mcb1_2.hasAttribute("selected");
-		btn2.addEventListener("click", () => {
-			if (!selected2) {
-				mcb1_2.setAttribute("selected", selected2);
-			} else {
-				mcb1_2.removeAttribute("selected");
-			}
-			selected2 = !selected2;
-		});
 
 		btnfocusMCB.addEventListener("click", () => {
 			mcbFocus.focus();
