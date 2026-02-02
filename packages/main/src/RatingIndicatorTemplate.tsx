@@ -35,7 +35,7 @@ function starLi(this: RatingIndicator, star: Star) {
 	if (star.selected) {
 		return (
 			<li data-ui5-value={star.index} class="ui5-rating-indicator-item ui5-rating-indicator-item-sel">
-				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} />
 			</li>
 		);
 	} if (star.halfStar) {
@@ -43,30 +43,30 @@ function starLi(this: RatingIndicator, star: Star) {
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-half">
 				<Icon data-ui5-value={star.index} name={halfStarIconName.call(this)} />
 				<div class="ui5-rating-indicator-half-icon-wrapper">
-					<Icon data-ui5-value={star.index} name={this.effectiveIcon} class="ui5-rating-indicator-half-icon" />
+					<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} class="ui5-rating-indicator-half-icon" />
 				</div>
 			</li>
 		);
 	} if (this.readonly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} />
 			</li>
 		);
 	} if (this.disabled) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.effectiveIcon} />
+				<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} />
 			</li>
 		);
 	}
 	return (
 		<li data-ui5-value={star.index} class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-			<Icon data-ui5-value={star.index} name={this.effectiveUnselectedIcon}/>
+			<Icon data-ui5-value={star.index} name={this.effectiveIconUnselected}/>
 		</li>
 	);
 }
 
 function halfStarIconName(this: RatingIndicator) {
-	return this.disabled || this.readonly ? this.effectiveIcon : this.effectiveUnselectedIcon;
+	return this.disabled || this.readonly ? this.effectiveIconSelected : this.effectiveIconUnselected;
 }

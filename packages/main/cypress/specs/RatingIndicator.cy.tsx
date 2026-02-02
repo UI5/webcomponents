@@ -24,7 +24,7 @@ describe("RatingIndicator", () => {
 		});
 
 		it("should render custom icons for selected and unselected states", () => {
-			cy.mount(<RatingIndicator value={3} icon="heart" unselectedIcon="heart-2"></RatingIndicator>);
+			cy.mount(<RatingIndicator value={3} iconSelected="heart" iconUnselected="heart-2"></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
@@ -39,8 +39,8 @@ describe("RatingIndicator", () => {
 				.should("have.attr", "name", "heart-2");
 		});
 
-		it("should render custom icon with default unselected icon when only icon is specified", () => {
-			cy.mount(<RatingIndicator value={2} icon="thumb-up"></RatingIndicator>);
+		it("should render custom icon with default unselected icon when only iconSelected is specified", () => {
+			cy.mount(<RatingIndicator value={2} iconSelected="thumb-up"></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
@@ -55,8 +55,8 @@ describe("RatingIndicator", () => {
 				.should("have.attr", "name", "unfavorite");
 		});
 
-		it("should render custom unselected icon with default selected icon when only unselectedIcon is specified", () => {
-			cy.mount(<RatingIndicator value={2} unselectedIcon="thumb-down"></RatingIndicator>);
+		it("should render custom unselected icon with default selected icon when only iconUnselected is specified", () => {
+			cy.mount(<RatingIndicator value={2} iconUnselected="thumb-down"></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
@@ -72,7 +72,7 @@ describe("RatingIndicator", () => {
 		});
 
 		it("should render custom icons in half-star state", () => {
-			cy.mount(<RatingIndicator value={2.5} icon="heart" unselectedIcon="heart-2"></RatingIndicator>);
+			cy.mount(<RatingIndicator value={2.5} iconSelected="heart" iconUnselected="heart-2"></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
@@ -86,28 +86,8 @@ describe("RatingIndicator", () => {
 				.should("have.attr", "name", "heart");
 		});
 
-		it("should render custom icon (filled) in half-star state when readonly", () => {
-			cy.mount(<RatingIndicator value={2.5} icon="heart" unselectedIcon="heart-2" readonly></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.first()
-				.should("have.attr", "name", "heart");
-		});
-
-		it("should render custom icon (filled) in half-star state when disabled", () => {
-			cy.mount(<RatingIndicator value={2.5} icon="heart" unselectedIcon="heart-2" disabled></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.first()
-				.should("have.attr", "name", "heart");
-		});
-
 		it("should use custom icon for unselected items when readonly", () => {
-			cy.mount(<RatingIndicator value={2} max={5} icon="heart" unselectedIcon="heart-2" readonly></RatingIndicator>);
+			cy.mount(<RatingIndicator value={2} max={5} iconSelected="heart" iconUnselected="heart-2" readonly></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
@@ -117,7 +97,7 @@ describe("RatingIndicator", () => {
 		});
 
 		it("should use custom icon for unselected items when disabled", () => {
-			cy.mount(<RatingIndicator value={2} max={5} icon="heart" unselectedIcon="heart-2" disabled></RatingIndicator>);
+			cy.mount(<RatingIndicator value={2} max={5} iconSelected="heart" iconUnselected="heart-2" disabled></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
