@@ -8,7 +8,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import ColorPalettePopoverTemplate from "./ColorPalettePopoverTemplate.js";
-import PopoverPlacement from "./types/PopoverPlacement.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 
 // Styles
 import ColorPalettePopoverCss from "./generated/themes/ColorPalettePopover.css.js";
