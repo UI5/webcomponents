@@ -1,5 +1,5 @@
 @import "../base/DynamicPageHeaderActions-parameters.css";
-:root {
+:host {
 	--_ui5_dynamic_page_actions-lines-color: var(--sapObjectHeader_BorderColor);
 	--_ui5_dynamic_page_header-actions-background-pressed: var(--_ui5_dynamic_page_header-actions-background);
 	--_ui5_dynamic_page_header-actions-color-pressed: var(--_ui5_dynamic_page_header-actions-color);

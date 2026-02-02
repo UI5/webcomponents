@@ -13,7 +13,8 @@ UI5 Web Components is an enterprise-grade, framework-agnostic web components lib
 Root folder commands:
 ```bash
 # Building
-yarn ts                 # TypeScript compilation, always run in the root folder as the monorepo uses typescript workspaces too
+yarn generate           # Processes .css and .properties files and generates `.ts` files
+yarn ts                 # TypeScript compilation, always run in the root folder as the monorepo uses typescript workspaces
 
 # Linting
 yarn lint               # Lint all packages
@@ -26,6 +27,28 @@ cd pacakges/main
 yarn test:cypress              # Run all Cypress tests
 yarn test:cypress:single cypress/specs/Button.cy.tsx  # Run single test file
 ```
+
+## Understanding the build and test process for development
+
+### Build steps
+There are 2 build steps relevant for development. They are alywas executed in the root folder, never in the package folders.
+1. `yarn generate` in the root folder - generates `.ts` files (usually in `src/generated`) accessed by components. These files contain content from `.css` and `.properties` files for the runtime. Needs to run once (in a clean state), or when there are `.css` or `.properties` files changes. If the dev server is running, the files will be auto updated, but a `yarn generate` will fix any errors concerning `generated` imports.
+2. `yarn ts` in the root folder - populates the dist folder with `.js` and `.d.ts` files that are published. Can be used to check for TypeScript errors. The submitted `.ts` files contain imports to the generated `.ts` files, so step 1 
+
+Always make sure TypeScript is passing without errors before running a test.
+
+### Test steps
+Unless instructed specifically, never run all tests locally. Run single component tests relevant to the change being implemented. Tests commands are alywas executed in the package folder, never in the root folder.
+
+```bash
+cd packages/main # or fiori, etc.
+yarn test:cypress:single cypress/specs/<Component>.cy.tsx  # Run single test file
+```
+
+The test will consume the `.ts` files directly and will detect TypeScript errors, there is no need to run the `yarn ts` command before running a test.
+
+### Dev server
+When agents are running the above commands, there could be a dev server running, which will be running the `yarn generate` command in watch mode. This will not interfere with running commands from the agent.
 
 ## Monorepo Structure
 
@@ -140,12 +163,20 @@ if (element instanceof Button) { }
 
 // BAD - the tag name could be scoped like `UI5-BUTTON-F5331039` and won't match
 if (element.tagName === "UI5-BUTTON") { }
+```
 
-// GOOD - use the `hasTag` helper that checks the pure tag
-// use instance check like
-const isInstanceOfComboBoxItemGroup = (object: any): object is ComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
+``` typescript
+// GOOD - use the `createInstanceChecker` helper that checks for instances via duck-typing
+// ComboBoxItemGroup.ts
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+class ComboBoxItemGroup {
+  readonly isGroupItem = true;
+}
+export const isInstanceOfComboBoxItemGroup = createInstanceChecker<ComboBoxItemGroup>("isGroupItem");
+// ComboBox.ts
+if (isInstanceOfComboBoxItemGroup(element)) {
+  // element has the correct type now
+}
 ```
 
 ### Property/Event Conventions
