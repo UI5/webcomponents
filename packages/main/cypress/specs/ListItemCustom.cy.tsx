@@ -123,7 +123,7 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
                 cy.get("#li-custom-ui5")
                     .shadow()
                     .find(`#${itemId}-invisibleTextContent`)
-                    .should("have.text", "List Item Button Click me Checkbox Check option Not checked required");
+                    .should("have.text", "List Item Button Click me Checkbox Check option Not checked Required");
                 
                 // Check that aria-labelledby on the internal li element includes the invisibleTextContent span id
                 cy.get("#li-custom-ui5")
