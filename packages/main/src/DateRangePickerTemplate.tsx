@@ -29,6 +29,7 @@ function content(this: DateRangePicker) {
 			hideWeekNumbers={this.hideWeekNumbers}
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
+			monthsToShow={2}
 		>
 			<CalendarDateRange startValue={this.startValue} endValue={this.endValue} />
 		</Calendar>

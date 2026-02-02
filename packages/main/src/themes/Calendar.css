@@ -2,6 +2,10 @@
     display: inline-block;
 }
 
+:host([months-to-show="2"]) {
+    width: auto;
+}
+
 .ui5-cal-root .ui5-calheader {
     display: block;
     height: var(--_ui5_calendar_header_height);
@@ -19,6 +23,56 @@
     overflow: hidden;
 }
 
+.ui5-cal-root:has(.ui5-cal-content-multiple) {
+    width: auto;
+    min-width: calc(var(--_ui5_calendar_width) * 2 + 1rem + var(--_ui5_calendar_left_right_padding) * 2);
+    overflow: visible;
+}
+
 .ui5-cal-root .ui5-cal-content {
     padding: 0 var(--_ui5_calendar_left_right_padding) var(--_ui5_calendar_top_bottom_padding);
+}
+
+.ui5-cal-root .ui5-cal-content-multiple {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    overflow: visible;
+}
+
+.ui5-cal-root .ui5-cal-content-multiple > * {
+    flex: 0 0 auto;
+    width: var(--_ui5_calendar_width);
+    min-width: var(--_ui5_calendar_width);
+}
+
+.ui5-cal-month-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ui5-calheader-multiple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--_ui5_calendar_header_height);
+    padding: var(--_ui5_calendar_header_padding);
+    box-sizing: border-box;
+}
+
+.ui5-calheader-multiple .ui5-calheader-midcontainer {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+    padding: 0;
+}
+
+.ui5-calheader-multiple .ui5-calheader-arrowbtn {
+    flex-shrink: 0;
+}
+
+.ui5-calheader-spacer {
+    width: var(--_ui5_calendar_header_arrow_button_width);
+    flex-shrink: 0;
 }

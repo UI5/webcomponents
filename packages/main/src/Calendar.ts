@@ -281,6 +281,16 @@ class Calendar extends CalendarPart {
 	hideWeekNumbers = false;
 
 	/**
+	 * Defines the number of months to display side by side in day picker view.
+	 * Only applicable when selection mode is "Range".
+	 * @default 1
+	 * @public
+	 * @since 2.0.0
+	 */
+	@property({ type: Number })
+	monthsToShow = 1;
+
+	/**
 	 * Which picker is currently visible to the user: day/month/year/yearRange
 	 * @private
 	 */
@@ -364,6 +374,69 @@ class Calendar extends CalendarPart {
 		super();
 
 		this._valueIsProcessed = false;
+	}
+
+	/**
+	 * Returns the timestamp for a specific month index when displaying multiple months
+	 * @private
+	 */
+	_getMonthTimestamp(monthIndex: number): number {
+		if (monthIndex === 0) {
+			return this._timestamp;
+		}
+		
+		const calendarDate = CalendarDateComponent.fromTimestamp(this._timestamp * 1000, this._primaryCalendarType);
+		
+		// Set day to 1 to avoid day-of-month overflow issues
+		// (e.g., Jan 31 + 1 month would overflow to March if Feb doesn't have 31 days)
+		calendarDate.setDate(1);
+		
+		// Add months one by one to handle month boundaries correctly
+		for (let i = 0; i < monthIndex; i++) {
+			const currentMonth = calendarDate.getMonth();
+			const currentYear = calendarDate.getYear();
+			
+			if (currentMonth === 11) {
+				// December -> January of next year
+				calendarDate.setYear(currentYear + 1);
+				calendarDate.setMonth(0);
+			} else {
+				// Just increment the month
+				calendarDate.setMonth(currentMonth + 1);
+			}
+		}
+		
+		return calendarDate.valueOf() / 1000;
+	}
+
+	/**
+	 * Generates header button text (month and year) for a specific month timestamp
+	 * @private
+	 */
+	_getHeaderTextForMonth(monthTimestamp: number): { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } {
+		const calendarDate = CalendarDateComponent.fromTimestamp(monthTimestamp * 1000, this._primaryCalendarType);
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
+		
+		const monthText = localeData.getMonthsStandAlone("wide", this.primaryCalendarType)[calendarDate.getMonth()];
+		const localDate = calendarDate.toLocalJSDate();
+		const yearText = String(yearFormat.format(localDate, true));
+		
+		const result: { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } = {
+			monthText,
+			yearText,
+		};
+		
+		if (this.hasSecondaryCalendarType) {
+			const secondaryDate = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, monthTimestamp, true);
+			const secondaryCalendarDate = secondaryDate.firstDate || secondaryDate.lastDate;
+			const secondaryLocaleData = getCachedLocaleDataInstance(getLocale());
+			result.secondMonthText = secondaryLocaleData.getMonthsStandAlone("wide", this._secondaryCalendarType)[secondaryCalendarDate.getMonth()];
+			const secondaryYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+			result.secondYearText = String(secondaryYearFormat.format(secondaryCalendarDate.toLocalJSDate(), true));
+		}
+
+		return result;
 	}
 
 	/**
