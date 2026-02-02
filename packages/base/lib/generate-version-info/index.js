@@ -27,7 +27,9 @@ export default VersionInfo;`;
 	await fs.mkdir("src/generated/", { recursive: true });
 	await fs.writeFile("src/generated/VersionInfo.ts", fileContent);
 
-	console.log("Version info file generated.");
+	if (process.env.UI5_VERBOSE === "true") {
+		console.log("Version info file generated.");
+	}
 }
 
 const filePath = process.argv[1];
