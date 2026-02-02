@@ -8,6 +8,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import {
 	getRGBColor,
@@ -145,6 +146,15 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the current main color which is selected via the hue slider and is shown in the main color square.
@@ -566,8 +576,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	get colorPickerLabel() {
-		return this.accessibleName
-			? `${ColorPicker.i18nBundle.getText(COLORPICKER_LABEL)} ${this.accessibleName}`
+		const effectiveLabel = getEffectiveAriaLabelText(this);
+		return effectiveLabel
+			? `${ColorPicker.i18nBundle.getText(COLORPICKER_LABEL)} ${effectiveLabel}`
 			: ColorPicker.i18nBundle.getText(COLORPICKER_LABEL);
 	}
 
