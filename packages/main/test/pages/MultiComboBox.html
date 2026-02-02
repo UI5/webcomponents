@@ -575,23 +575,6 @@
 	</div>
 
 	<div class="demo-section">
-		<ui5-label>Filter selected:</ui5-label>
-		<br />
-		<br />
-
-		<ui5-multi-combobox show-select-all id="mcb-filter-selected">
-			<ui5-mcb-item text="Argentina"></ui5-mcb-item>
-			<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
-			<ui5-mcb-item text="Canada"></ui5-mcb-item>
-			<ui5-mcb-item text="Chile" selected></ui5-mcb-item>
-			<ui5-mcb-item text="Columbia" selected></ui5-mcb-item>
-		</ui5-multi-combobox>
-		<br /><br />
-
-		<ui5-button id="filter-selected">Filter Selected Items</ui5-button>
-	</div>
-
-	<div class="demo-section">
 		<ui5-label>Toggle Loading State:</ui5-label>
 		<br />
 		<br />
@@ -604,6 +587,24 @@
 		<br /><br />
 
 		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<span>Placeholder test</span>
+
+		<br>
+		<ui5-button id="sel">Toggle Item</ui5-button>
+		<ui5-multi-combobox id="mcb-init-selected-item" placeholder="Placeholder" style="width: 300px;">
+			<ui5-mcb-item text="Item1"></ui5-mcb-item>
+			<ui5-mcb-item selected id="mcb1" text="Initially selected"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br />
+		<br />
+		<ui5-button id="sel2">Toggle Item</ui5-button>
+		<ui5-multi-combobox id="mcb-init-nonselected-item" placeholder="Placeholder" style="width: 300px;">
+			<ui5-mcb-item text="Item1"></ui5-mcb-item>
+			<ui5-mcb-item id="mcb1_2" text="Initially not selected"></ui5-mcb-item>
+		</ui5-multi-combobox>
 	</div>
 
 	<div>
@@ -773,17 +774,36 @@
 			closeCounter = 0;
 		});
 
-		// Focus button
+		// Placeholders test
+		const btn = document.getElementById("sel");
+		const mcb1 = document.getElementById("mcb1");
+		const btn2 = document.getElementById("sel2");
+		const mcb1_2 = document.getElementById("mcb1_2");
 		const btnfocusMCB = document.getElementById("focus-mcb");
 		const mcbFocus = document.getElementById("multi1");
 
-		btnfocusMCB.addEventListener("click", () => {
-			mcbFocus.focus();
+		let selected = mcb1.hasAttribute("selected");
+		btn.addEventListener("click", () => {
+			if (!selected) {
+				mcb1.setAttribute("selected", selected);
+			} else {
+				mcb1.removeAttribute("selected");
+			}
+			selected = !selected;
 		});
 
-		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
-			const mcb = document.getElementById("toggle-loading-mcb");
-			mcb.loading = !mcb.loading;
+		let selected2 = mcb1_2.hasAttribute("selected");
+		btn2.addEventListener("click", () => {
+			if (!selected2) {
+				mcb1_2.setAttribute("selected", selected2);
+			} else {
+				mcb1_2.removeAttribute("selected");
+			}
+			selected2 = !selected2;
+		});
+
+		btnfocusMCB.addEventListener("click", () => {
+			mcbFocus.focus();
 		});
 
 		document.getElementById("add").addEventListener("click", event => {
@@ -810,6 +830,11 @@
 		document.getElementById('form').addEventListener('submit', (e) => {
 			e.preventDefault();
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const mcb = document.getElementById("toggle-loading-mcb");
+			mcb.loading = !mcb.loading;
 		});
 	</script>
 
