@@ -702,4 +702,32 @@ describe("Carousel general interaction", () => {
 			.find(".ui5-carousel-navigation-dot")
 			.should("have.length", 3);
 	});
+
+	it("navigateTo method should NOT move the focus", () => {
+		cy.mount(
+			<>
+				<Button id="outsideButton">Outside Button</Button>
+				<Carousel id="carousel">
+					<div>item 1</div>
+					<div>item 2</div>
+					<div>item 3</div>
+				</Carousel>
+			</>
+		);
+
+		cy.get("#outsideButton").realClick();
+		cy.get("#outsideButton").should("be.focused");
+
+		cy.get<Carousel>("#carousel")
+			.then($carousel => {
+				$carousel[0].navigateTo(2);
+			});
+
+		cy.get("#carousel")
+			.shadow()
+			.find(".ui5-carousel-item[aria-posinset='3'][data-sap-focus-ref]")
+			.should("exist")
+
+		cy.get("#outsideButton").should("be.focused");
+	});
 });

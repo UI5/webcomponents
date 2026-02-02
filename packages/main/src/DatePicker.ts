@@ -32,7 +32,6 @@ import {
 	isPageDownShiftCtrl,
 	isShow,
 	isF4,
-	isEnter,
 	isTabNext,
 	isTabPrevious,
 	isF6Next,
@@ -532,11 +531,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return;
 		}
 
-		if (isEnter(e)) {
-			if (this._internals.form) {
-				submitForm(this);
-			}
-		} else if (isPageUpShiftCtrl(e)) {
+		if (isPageUpShiftCtrl(e)) {
 			e.preventDefault();
 			this._modifyDateValue(1, "year");
 		} else if (isPageUpShift(e)) {
@@ -641,7 +636,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "submit" event handler - fire change event when the user presses enter
 	 * @protected
 	 */
-	_onInputSubmit() {}
+	_onInputRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
+	}
 
 	/**
 	 * The ui5-input "change" event handler - fire change event when the user focuses out of the input
@@ -1043,15 +1042,34 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	/**
 	 * Currently selected date represented as a Local JavaScript Date instance.
+	 * Note: this getter can only be reliably used after the component is fully defined. Use dateValueAsync which resolves only when this condition is met.
 	 * @public
 	 * @default null
+	 * @deprecated Use dateValueAsync instead
 	 */
 	get dateValue(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue) as Date : this.getValueFormat().parse(this.value) as Date;
 	}
 
+	/**
+	 * Promise that resolves to the currently selected date represented as a Local JavaScript Date instance.
+	 * @public
+	 * @default Promise
+	 */
+	get dateValueAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValue;
+		});
+	}
+
 	get dateValueUTC(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue, true) as Date : this.getValueFormat().parse(this.value) as Date;
+	}
+
+	get dateValueUTCAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValueUTC;
+		});
 	}
 
 	get styles() {
