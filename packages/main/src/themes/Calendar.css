@@ -40,6 +40,24 @@
     overflow: visible;
 }
 
+/* Portrait mode: Stack calendars vertically in mobile view */
+:host(.ui5-dt-cal--mobile) .ui5-cal-content-multiple {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+:host(.ui5-dt-cal--mobile) .ui5-cal-root:has(.ui5-cal-content-multiple) {
+    min-width: var(--_ui5_calendar_width);
+    width: 100%;
+}
+
+:host(.ui5-dt-cal--mobile) .ui5-cal-content-multiple > * {
+    width: 100%;
+    min-width: auto;
+    max-width: 100%;
+}
+
+
 .ui5-cal-root .ui5-cal-content-multiple > * {
     flex: 0 0 auto;
     width: var(--_ui5_calendar_width);
@@ -51,7 +69,7 @@
     flex-direction: column;
 }
 
-.ui5-calheader-multiple {
+.ui5-cal-root .ui5-calheader.ui5-calheader-multiple {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -66,10 +84,12 @@
     flex: 1;
     justify-content: center;
     padding: 0;
+    height: 100%;
 }
 
 .ui5-calheader-multiple .ui5-calheader-arrowbtn {
     flex-shrink: 0;
+    height: 100%;
 }
 
 .ui5-calheader-spacer {

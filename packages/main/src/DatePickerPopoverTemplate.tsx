@@ -31,6 +31,7 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 			horizontalAlign="Start"
 			accessibleName={this.pickerAccessibleName}
 			hideArrow={true}
+			stretch={this.stretch}
 			_hideHeader={this._shouldHideHeader}
 			initialFocus={initialFocus}
 			onKeyDown={this._onkeydown}
@@ -83,6 +84,7 @@ function defaultContent(this: DatePicker) {
 			hideWeekNumbers={this.hideWeekNumbers}
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
+			stretch={this.stretch}
 		>
 			{ this._calendarSelectedDates.map(date => <CalendarDate value={date}/>)}
 		</Calendar>

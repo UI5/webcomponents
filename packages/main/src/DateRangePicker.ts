@@ -27,8 +27,13 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
+import { isPhone } from "@ui5/webcomponents-base";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 
 const DEFAULT_DELIMITER = "-";
+
+const PHONE_MODE_BREAKPOINT = 640; // px
 
 /**
  * @class
@@ -84,6 +89,19 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	@property()
 	_tempValue?: string;
 
+	/**
+	 * Defines if the `DateTimePicker` should be displayed in phone mode.
+	 * The phone mode turns on when the component is used on small screens or phone devices.
+	 * In phone mode the user can see either the calendar view, or the time view
+	 * and can switch between the views via toggle buttons.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_phoneMode = false;
+
+	_handleResizeBound: ResizeObserverCallback;
+
 	private _prevDelimiter: string | null;
 
 	get formValidityMessage() {
@@ -134,6 +152,15 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	constructor() {
 		super();
 		this._prevDelimiter = null;
+		this._handleResizeBound = this._handleResize.bind(this);
+	}
+
+	onEnterDOM() {
+		ResizeHandler.register(document.body, this._handleResizeBound);
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(document.body, this._handleResizeBound);
 	}
 
 	/**
@@ -195,6 +222,24 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		}
 		return [];
 	}
+
+	get _phoneView() {
+		return isPhone() || this._phoneMode;
+	}
+
+	/**
+	 * Handles document resize to switch between `phoneMode` and normal appearance.
+	 */
+	_handleResize() {
+		const documentWidth = document.body.offsetWidth;
+		const toPhoneMode = documentWidth <= PHONE_MODE_BREAKPOINT;
+		const modeChange = (toPhoneMode && !this._phoneMode) || (!toPhoneMode && this._phoneMode); // XOR not allowed by lint
+
+		if (modeChange) {
+			this._phoneMode = toPhoneMode;
+		}
+	}
+
 
 	/**
 	 * Returns the start date of the currently selected range as JavaScript Date instance.

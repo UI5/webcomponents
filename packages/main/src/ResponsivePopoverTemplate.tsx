@@ -18,7 +18,7 @@ export default function ResponsivePopoverTemplate(this: ResponsivePopover) {
 			accessibleDescription={this.accessibleDescription}
 			accessibleDescriptionRef={this.accessibleDescriptionRef}
 			accessibleRole={this.accessibleRole}
-			stretch={true}
+			stretch={this.stretch}
 			preventInitialFocus={this.preventInitialFocus}
 			preventFocusRestore={this.preventFocusRestore}
 			initialFocus={this.initialFocus}

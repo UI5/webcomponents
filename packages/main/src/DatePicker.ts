@@ -366,6 +366,14 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property()
 	accessibleDescriptionRef?: string;
 
+	@property({ type: Boolean })
+	stretch = false;
+
+	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 */
 	@property({ type: Object })
 	_respPopoverConfig?: object;
 

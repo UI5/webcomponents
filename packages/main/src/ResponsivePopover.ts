@@ -51,6 +51,10 @@ class ResponsivePopover extends Popover {
 	@property({ type: Boolean })
 	contentOnlyOnDesktop = false;
 
+	
+	@property({ type: Boolean })
+	stretch = false;
+
 	/**
 	 * Used internaly for controls which must not have header.
 	 * @private

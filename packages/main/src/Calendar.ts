@@ -290,6 +290,9 @@ class Calendar extends CalendarPart {
 	@property({ type: Number })
 	monthsToShow = 1;
 
+	@property({ type: Boolean })
+	stretch = false;
+
 	/**
 	 * Which picker is currently visible to the user: day/month/year/yearRange
 	 * @private
