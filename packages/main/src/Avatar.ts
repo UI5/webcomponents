@@ -30,6 +30,7 @@ import type Icon from "./Icon.js";
 import AvatarSize from "./types/AvatarSize.js";
 import type AvatarShape from "./types/AvatarShape.js";
 import type AvatarColorScheme from "./types/AvatarColorScheme.js";
+import AvatarMode from "./types/AvatarMode.js";
 
 // Icon
 import "@ui5/webcomponents-icons/dist/employee.js";
@@ -101,6 +102,17 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 */
 	@property({ type: Boolean })
 	interactive = false;
+
+	/**
+	 * Defines the mode of the component.
+	 *
+	 * **Note:** When set to `Decorative`, the avatar will be purely decorative,
+	 * with `role="presentation"` and `aria-hidden="true"`, regardless of the `interactive` property.
+	 * @default "Image"
+	 * @public
+	 */
+	@property()
+	mode: `${AvatarMode}` = "Image";
 
 	/**
 	 * Defines the name of the UI5 Icon, that will be displayed.
@@ -273,6 +285,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		if (this.forcedTabIndex) {
 			return parseInt(this.forcedTabIndex);
 		}
+		// Decorative mode should never be tabbable
+		if (this.mode === AvatarMode.Decorative) {
+			return undefined;
+		}
 		return this._interactive ? 0 : undefined;
 	}
 
@@ -297,7 +313,14 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _role() {
+		if (this.mode === AvatarMode.Decorative) {
+			return "presentation";
+		}
 		return this._interactive ? "button" : "img";
+	}
+
+	get effectiveAriaHidden() {
+		return this.mode === AvatarMode.Decorative ? "true" : undefined;
 	}
 
 	get _ariaHasPopup() {

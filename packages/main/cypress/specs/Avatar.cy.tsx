@@ -121,6 +121,76 @@ describe("Accessibility", () => {
 		cy.get("#disabled-avatar").realClick();
 		cy.get("#click-event").should("have.value", "0");
 	});
+
+	it("should support mode='Decorative' with aria-hidden and role='presentation'", () => {
+		cy.mount(
+			<Avatar 
+				id="decorative-avatar" 
+				initials="AB"
+				mode="Decorative"
+			></Avatar>
+		);
+
+		cy.get("#decorative-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "presentation")
+			.should("have.attr", "aria-hidden", "true")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("should override interactive when mode is Decorative", () => {
+		cy.mount(
+			<Avatar 
+				id="decorative-interactive" 
+				initials="CD"
+				mode="Decorative"
+				interactive
+			></Avatar>
+		);
+
+		// Even with interactive=true, Decorative mode should win
+		cy.get("#decorative-interactive")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "presentation")
+			.should("have.attr", "aria-hidden", "true")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("should use role='img' in Image mode when not interactive", () => {
+		cy.mount(
+			<Avatar 
+				id="image-mode-avatar" 
+				initials="EF"
+				mode="Image"
+			></Avatar>
+		);
+
+		cy.get("#image-mode-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "aria-hidden");
+	});
+
+	it("should use role='button' in Image mode when interactive", () => {
+		cy.mount(
+			<Avatar 
+				id="interactive-image-mode" 
+				initials="GH"
+				mode="Image"
+				interactive
+			></Avatar>
+		);
+
+		cy.get("#interactive-image-mode")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+	});
 });
 
 describe("Fallback Logic", () => {

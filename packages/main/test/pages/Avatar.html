@@ -172,6 +172,25 @@
 	</section>
 
 	<section>
+		<h3>Avatar - mode="Decorative"</h3>
+		<p>Decorative avatars are purely visual with role="presentation" and aria-hidden="true"</p>
+		<ui5-avatar mode="Decorative" initials="AB" size="S"></ui5-avatar>
+		<ui5-avatar mode="Decorative" icon="employee" size="S"></ui5-avatar>
+		<ui5-avatar mode="Decorative" size="S">
+			<img src="./img/John_Miller.png" alt="John Miller">
+		</ui5-avatar>
+		
+		<h3>Avatar - mode="Image" (default)</h3>
+		<p>Image mode avatars have role="img" or role="button" when interactive</p>
+		<ui5-avatar mode="Image" initials="CD" size="S"></ui5-avatar>
+		<ui5-avatar mode="Image" initials="EF" size="S" interactive></ui5-avatar>
+		
+		<h3>Avatar - Decorative mode overrides interactive</h3>
+		<p>Even with interactive=true, decorative mode makes it non-interactive</p>
+		<ui5-avatar mode="Decorative" interactive initials="GH" size="S"></ui5-avatar>
+	</section>
+
+	<section>
 		<h3>Avatar Badge - All Sizes</h3>
 		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
 			<ui5-avatar size="XS">
