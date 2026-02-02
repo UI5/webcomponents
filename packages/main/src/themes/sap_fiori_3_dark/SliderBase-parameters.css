@@ -1,6 +1,6 @@
 @import "../base/SliderBase-parameters.css";
 
-:root {
+:host {
 	--_ui5_slider_inner_min_width: 4rem;
 	--_ui5_slider_track_total_height: var(--_ui5_slider_inner_height);
 	--_ui5_range_slider_handle_background: transparent;
@@ -15,12 +15,12 @@
 	--_ui5_slider_tickmark_height: 1rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_slider_handle_width: 1.5rem;
-	--_ui5_slider_handle_height: 1.5rem;
-	--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
-	--_ui5_slider_tickmark_height: 0.75rem;
-	--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_handle_width: 1.5rem;
+		--_ui5_slider_handle_height: 1.5rem;
+		--_ui5_slider_handle_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_handle_height)) / 2);
+		--_ui5_slider_tickmark_height: 0.75rem;
+		--_ui5_slider_tickmark_top: calc((var(--_ui5_slider_track_total_height) - var(--_ui5_slider_tickmark_height)) / 2);
+	}
 }

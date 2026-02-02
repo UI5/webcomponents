@@ -1,6 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import MenuItemGroup from "@ui5/webcomponents/dist/MenuItemGroup.js";
 import UserMenuItemGroupTemplate from "./UserMenuItemGroupTemplate.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -39,14 +40,8 @@ import UserMenuItemGroupTemplate from "./UserMenuItemGroupTemplate.js";
 class UserMenuItemGroup extends MenuItemGroup {
 }
 
-const isInstanceOfUserMenuItemGroup = (object: any): object is UserMenuItemGroup => {
-	return "isGroup" in object;
-};
-
 UserMenuItemGroup.define();
 
 export default UserMenuItemGroup;
 
-export {
-	isInstanceOfUserMenuItemGroup,
-};
+export const isInstanceOfUserMenuItemGroup = createInstanceChecker<UserMenuItemGroup>("isGroup");

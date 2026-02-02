@@ -1,6 +1,6 @@
 @import "../base/Token-parameters.css";
 
-:root {
+:host {
 	--_ui5_token_focus_outline_width: 0.0625rem;
 	--_ui5_token_text_color: var(--sapTextColor);
 	--_ui5_token_icon_padding: 0.325rem 0.25rem;
