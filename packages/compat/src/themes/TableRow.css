@@ -11,7 +11,7 @@
 .ui5-table-row-root {
 	/* Workaround for known issue with Firefox where table row or cell has position: relative;
 	https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
-	background: linear-gradient(180deg, var(--sapList_BorderColor) 1px, var(--sapList_Background) 1px);
+	background-image: linear-gradient(180deg, var(--sapList_BorderColor) 1px, var(--sapList_Background) 1px);
 	color: var(--sapList_TextColor);
 	position: relative;
 }

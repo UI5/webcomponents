@@ -32,7 +32,7 @@ table {
 	vertical-align: middle;
 	/* Workaround for known issue with Firefox where table row or cell has position: relative;
 	https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
-	background: linear-gradient(180deg,
+	background-image: linear-gradient(180deg,
 			var(--sapList_HeaderBackground) calc(100% - var(--ui5_table_header_row_border_width)),
 			var(--ui5_table_header_row_border_bottom_color) calc(100% - var(--ui5_table_header_row_border_width)));
 }
@@ -45,7 +45,7 @@ table {
 	font-weight: var(--ui5_table_header_row_font_weight);
 	/* Workaround for known issue with Firefox where table row or cell has position: relative;
 	https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
-	background: linear-gradient(180deg,
+	background-image: linear-gradient(180deg,
 			var(--sapList_HeaderBackground) calc(100% - var(--ui5_table_header_row_border_width)),
 			var(--ui5_table_header_row_border_bottom_color) calc(100% - var(--ui5_table_header_row_border_width)));
 }
