@@ -7,6 +7,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
@@ -140,6 +141,15 @@ class ColorPalette extends UI5Element {
 	 */
 	@property()
 	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the selected color, only valid CSS color values accepted
@@ -892,8 +902,9 @@ class ColorPalette extends UI5Element {
 	}
 
 	get colorContainerLabel() {
-		return this.accessibleName
-			? `${ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL)} ${this.accessibleName}`
+		const effectiveLabel = getEffectiveAriaLabelText(this);
+		return effectiveLabel
+			? `${ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL)} ${effectiveLabel}`
 			: ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
 	}
 

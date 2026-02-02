@@ -28,6 +28,8 @@ export default function ColorPalettePopoverTemplate(this: ColorPalettePopover) {
 					showRecentColors={this.showRecentColors}
 					showDefaultColor={this.showDefaultColor}
 					defaultColor={this.defaultColor}
+					accessibleName={this.accessibleName}
+					accessibleNameRef={this.accessibleNameRef}
 					popupMode={true}
 					onItemClick={this.onSelectedColor}
 				>
