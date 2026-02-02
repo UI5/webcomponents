@@ -1,6 +1,6 @@
-:root {
+:host {
 	--_ui5_fcl_solid_bg: var(--sapBackgroundColor);
 	--_ui5_fcl_column_border: solid 0.0625rem var(--sapGroup_ContentBorderColor);
-	--_ui5_fcl_decoration_top: linear-gradient(to top, var(--sapObjectHeader_BorderColor), #000); 
-	--_ui5_fcl_decoration_bottom: linear-gradient(to bottom, var(--sapObjectHeader_BorderColor), #000); 
+	--_ui5_fcl_decoration_top: linear-gradient(to top, var(--sapObjectHeader_BorderColor), #000);
+	--_ui5_fcl_decoration_bottom: linear-gradient(to bottom, var(--sapObjectHeader_BorderColor), #000);
 }

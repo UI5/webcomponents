@@ -1,6 +1,6 @@
 @import "../base/TabContainer-parameters.css";
 
-:root {
+:host {
 	--_ui5_tc_header_border_bottom: 0.0625rem solid var(--sapObjectHeader_Background);
 
 	--_ui5_tc_overflowItem_default_color: var(--sapNeutralTextColor);

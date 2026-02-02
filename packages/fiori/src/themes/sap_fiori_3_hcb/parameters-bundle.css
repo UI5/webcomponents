@@ -20,3 +20,5 @@
 @import "../base/DynamicPageHeader-parameters.css";
 @import "../sap_fiori_3/DynamicPageHeaderActions-parameters.css";
 @import "../sap_fiori_3/TimelineGroupItem-parameters.css";
+@import "../base/rtl-parameters.css";
+@import "../base/UserSettingsAppearanceViewItem-parameters.css";

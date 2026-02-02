@@ -1,10 +1,10 @@
 @import "../base/SearchField-parameters.css";
 
-:root {
+:host {
 	--_ui5_search_icon_border_radius: 0.375rem;
 	--_ui5_search_input_border_radius: none;
 	--_ui5-search-border: var(--sapField_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);
-	--_ui5-search-wrapper-background: none;
+	--_ui5-search-wrapper-background: var(--sapShellColor);
 	--_ui5_search_separator_background: none;
 	--_ui5-search-wrapper-hover-background: none;
 	--_ui5-search-wrapper-hover-background-color: none;
@@ -24,4 +24,5 @@
 	--_ui5_search_input_end_padding: 0.25rem;
 	--_ui5-search-input-start-padding: 0.625rem;
 	--_ui5-search-select-height: 2.25rem;
+	--_ui5-search-field-text-color: var(--sapShell_InteractiveTextColor);
 }

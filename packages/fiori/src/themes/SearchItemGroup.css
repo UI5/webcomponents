@@ -14,6 +14,10 @@
 	list-style-type: none;
 }
 
+[ui5-li-group-header]::part(native-li) {
+	line-height: normal;
+	padding-bottom: 0.5rem;
+}
 
 [ui5-li-group-header] {
 	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_GroupHeaderBorderColor);

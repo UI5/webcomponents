@@ -13,12 +13,12 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import {
 	isSpace,
 	isEnter,
 	isShift,
 	isEscape,
+	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { SEGMENTEDBUTTON_ARIA_DESCRIPTION, SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "./generated/i18n/i18n-defaults.js";
 import "./SegmentedButtonItem.js";
@@ -159,7 +159,8 @@ class SegmentedButton extends UI5Element {
 
 	_selectedItem?: ISegmentedButtonItem;
 
-	_actionCanceled: boolean;
+	_cancelAction: boolean;
+	_isSpacePressed: boolean;
 
 	constructor() {
 		super();
@@ -168,7 +169,8 @@ class SegmentedButton extends UI5Element {
 			getItemsCallback: () => this.navigatableItems,
 		});
 		this.hasPreviouslyFocusedItem = false;
-		this._actionCanceled = false;
+		this._cancelAction = false;
+		this._isSpacePressed = false;
 	}
 
 	onBeforeRendering() {
@@ -184,7 +186,7 @@ class SegmentedButton extends UI5Element {
 		this.normalizeSelection();
 
 		if (!this.itemsFitContent) {
-			this.style.setProperty(getScopedVarName("--_ui5_segmented_btn_items_count"), `${visibleItems.length}`);
+			this.style.setProperty("--_ui5_segmented_btn_items_count", `${visibleItems.length}`);
 		}
 	}
 
@@ -256,19 +258,31 @@ class SegmentedButton extends UI5Element {
 			this._selectItem(e); // Enter key behavior remains unaffected
 		} else if (isSpace(e)) {
 			e.preventDefault(); // Prevent scrolling
-			this._actionCanceled = false; // Reset the action cancellation flag
+			this._isSpacePressed = true;
 		} else if (isShift(e) || isEscape(e)) {
-			this._actionCanceled = true; // Set the flag to cancel the action
+			this._cancelAction = true; // Set the flag to cancel the action
 		}
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (isSpace(e)) {
-			// Only select if the action was not canceled
-			if (!this._actionCanceled) {
-				this._selectItem(e);
+		const isSpaceKey = isSpace(e);
+		const isCancelKey = isShift(e) || isEscape(e);
+
+		if (isSpaceKey || isSpaceShift(e)) {
+			if (this._cancelAction) {
+				this._cancelAction = false;
+				this._isSpacePressed = false;
+				e.preventDefault();
+				return;
 			}
-			this._actionCanceled = false; // Reset the flag after handling
+
+			this._isSpacePressed = false;
+		} else if (isCancelKey && !this._isSpacePressed) {
+			this._cancelAction = false;
+		}
+
+		if (isSpaceKey) {
+			this._selectItem(e);
 		}
 	}
 
