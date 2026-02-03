@@ -876,9 +876,9 @@ describe("General", () => {
 			})
 	});
 
-	it("preselects items based on selectionValues property", () => {
+	it("preselects items based on selectedValues property", () => {
 		cy.mount(
-			<MultiComboBox style="width: 300px" selectionValues={["al", "en"]}>
+			<MultiComboBox style="width: 300px" selectedValues={["al", "en"]}>
 				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Denmark" value="dk"></MultiComboBoxItem>
 				<MultiComboBoxItem text="England" value="en"></MultiComboBoxItem>
@@ -886,7 +886,7 @@ describe("General", () => {
 		);
 
 		cy.get("ui5-multi-combobox")
-			.should("have.attr", "selection-values",'["al","en"]');
+			.should("have.attr", "selected-values",'["al","en"]');
 
 		cy.get("[ui5-mcb-item]")
 			.eq(0)
@@ -907,9 +907,9 @@ describe("General", () => {
 			.should("have.length", "2");
 	});
 
-	it("updates selectionValues when a token is deleted", () => {
+	it("updates selectedValues when a token is deleted", () => {
 		cy.mount(
-			<MultiComboBox style="width: 300px" selectionValues={["dk", "en"]}>
+			<MultiComboBox style="width: 300px" selectedValues={["dk", "en"]}>
 				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Denmark" value="dk"></MultiComboBoxItem>
 				<MultiComboBoxItem text="England" value="en"></MultiComboBoxItem>
@@ -942,7 +942,7 @@ describe("General", () => {
 			.should("have.length", "1");
 
 		cy.get("[ui5-multi-combobox]")
-			.should("have.attr", "selection-values", '["dk"]');
+			.should("have.attr", "selected-values", '["dk"]');
 	});
 });
 
@@ -2280,10 +2280,10 @@ describe("Event firing", () => {
 			.should("have.been.calledTwice");
 	});
 
-	it("fires selection-change and updates selectionValues on token deletion", () => {
+	it("fires selection-change and updates selectedValues on token deletion", () => {
 		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
 		cy.mount(
-			<MultiComboBox style="width: 300px" selectionValues={["1", "3"]} onSelectionChange={selectionChangeSpy}>
+			<MultiComboBox style="width: 300px" selectedValues={["1", "3"]} onSelectionChange={selectionChangeSpy}>
 				<MultiComboBoxItem text="Item 1" value="1"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 1" value="2"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Item 1" value="3"></MultiComboBoxItem>
@@ -2319,7 +2319,7 @@ describe("Event firing", () => {
 			return event.detail.item === undefined;
 		}));
 		cy.get("[ui5-multi-combobox]")
-			.should("have.attr", "selection-values", '[]');
+			.should("have.attr", "selected-values", '[]');
 	});
 });
 
