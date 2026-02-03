@@ -596,6 +596,54 @@ describe("Keyboard navigation", () => {
 
 		cy.get("@input").should("have.value", "b");
 	});
+
+	it("should focus the only one item when focus was in the input and Arrow Down is pressed (no grouping)", () => {
+		cy.mount(
+			<ComboBox value="Bulgaria">
+				<ComboBoxItem text="Bulgaria" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bul");
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
+
+	it("should focus the only one item when focus was in the input and Arrow Down is pressed (with grouping)", () => {
+		cy.mount(
+			<ComboBox value="Bulgaria">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Bulgaria" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bul");
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
 });
 
 describe("Grouping", () => {
