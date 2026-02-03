@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Shell Bar V2 MVP Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor);">
+	<h1 style="color: var(--sapTextColor);">ShellBar MVP Test</h1>
+	<p style="color: var(--sapTextColor);">Testing modular architecture with Actions feature.</p>
+
+	<h2 style="color: var(--sapTextColor);">Full Features (with All Actions + Overflow)</h2>
+	<ui5-shellbar id="shellbar-1" show-notifications notifications-count="5" show-product-switch show-search-field>
+		<ui5-button slot="startButton" icon="menu"></ui5-button>
+		<ui5-shellbar-branding slot="branding">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" style="height: 2rem;" />
+			My Application
+		</ui5-shellbar-branding>
+		<ui5-shellbar-search slot="searchField" placeholder="Search..." collapsed></ui5-shellbar-search>
+		<ui5-button slot="content" data-hide-order="1">Action 1</ui5-button>
+		<ui5-button slot="content" data-hide-order="2">Action 2</ui5-button>
+		<ui5-button slot="content" data-hide-order="3">Action 3</ui5-button>
+		<ui5-button slot="content" data-hide-order="4">Action 4</ui5-button>
+		<ui5-button slot="content" data-hide-order="5">Action 5</ui5-button>
+		<ui5-shellbar-item icon="favorite" text="Favorites" count="3"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="activities" text="Activities"></ui5-shellbar-item>
+		<ui5-button slot="assistant" icon="da" design="Transparent" accessible-name="AI Assistant"></ui5-button>
+		<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+	</ui5-shellbar>
+	<p style="color: var(--sapTextColor);"><em>Resize window to see overflow in action. Items hide based on data-hide-order. Profile and Product Switch never hide.</em></p>
+	<p style="color: var(--sapTextColor);"><strong>Keyboard navigation:</strong> Use Arrow Left/Right to navigate between items. Home/End to jump to first/last item.</p>
+	<p style="color: var(--sapTextColor);"><strong>Full-screen search:</strong> When overflow happens and search is visible, full-screen search overlay appears. Click Cancel to close.</p>
+
+	<!-- <h2 style="color: var(--sapTextColor);">Search Collapsed by Default</h2>
+	<ui5-shellbar id="shellbar-2">
+		<ui5-button slot="startButton" icon="menu"></ui5-button>
+		<ui5-shellbar-branding slot="branding">
+			Dashboard
+		</ui5-shellbar-branding>
+		<ui5-shellbar-search slot="searchField" placeholder="Search..." collapsed></ui5-shellbar-search>
+		<ui5-button slot="content" design="Transparent">Reports</ui5-button>
+		<ui5-button slot="content" design="Transparent">Settings</ui5-button>
+		<ui5-avatar slot="profile" initials="JD" color-scheme="Accent1" size="XS"></ui5-avatar>
+	</ui5-shellbar>
+
+	<h2 style="color: var(--sapTextColor);">With Notifications</h2>
+	<ui5-shellbar id="shellbar-3" show-notifications notifications-count="12">
+		<ui5-button slot="startButton" icon="navigation-left-arrow"></ui5-button>
+		<ui5-shellbar-branding slot="branding">
+			Notifications Demo
+		</ui5-shellbar-branding>
+		<ui5-button slot="content" design="Transparent">Reports</ui5-button>
+		<ui5-button slot="content" design="Transparent">Settings</ui5-button>
+	</ui5-shellbar>
+
+	<h2 style="color: var(--sapTextColor);">Product Switch & Assistant</h2>
+	<ui5-shellbar id="shellbar-4" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Product Switcher Demo
+		</ui5-shellbar-branding>
+		<ui5-button slot="content" design="Transparent">Home</ui5-button>
+		<ui5-button slot="content" design="Transparent">Products</ui5-button>
+		<ui5-button slot="assistant" icon="da" design="Transparent" accessible-name="Copilot"></ui5-button>
+	</ui5-shellbar>
+
+	<h2 style="color: var(--sapTextColor);">Minimal - No Actions</h2>
+	<ui5-shellbar id="shellbar-5">
+		<ui5-shellbar-branding slot="branding">
+			Clean Interface
+		</ui5-shellbar-branding>
+		<ui5-button slot="content" icon="add"></ui5-button>
+		<ui5-button slot="content" icon="edit"></ui5-button>
+	</ui5-shellbar>
+
+	<div id="log" style="margin-top: 2rem; padding: 1rem; border-radius: 0.25rem;">
+		<h3 style="color: var(--sapTextColor);">Event Log</h3>
+		<div id="log-content"></div>
+	</div>
+
+	<script>
+		const logContent = document.getElementById('log-content');
+		
+		function log(message) {
+			const entry = document.createElement('div');
+			entry.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+			entry.style.padding = '0.25rem 0';
+			logContent.insertBefore(entry, logContent.firstChild);
+		}
+
+		document.querySelectorAll('ui5-shellbar').forEach(shellbar => {
+			shellbar.addEventListener('menu-button-click', (e) => {
+				log('Menu button clicked');
+				console.log('Menu button clicked:', e.detail);
+			});
+
+			shellbar.addEventListener('notifications-click', (e) => {
+				const count = shellbar.getAttribute('notifications-count');
+				log(`Notifications clicked (count: ${count})`);
+				console.log('Notifications clicked:', e.detail);
+			});
+
+			shellbar.addEventListener('product-switch-click', (e) => {
+				log('Product Switch clicked');
+				console.log('Product Switch clicked:', e.detail);
+			});
+
+			shellbar.addEventListener('profile-click', (e) => {
+				log('Profile clicked');
+				console.log('Profile clicked:', e.detail);
+			});
+
+			shellbar.addEventListener('search-button-click', (e) => {
+				log(`Search button clicked (visible: ${e.detail.searchFieldVisible})`);
+				console.log('Search button clicked:', e.detail);
+			});
+
+		shellbar.addEventListener('search-field-toggle', (e) => {
+			log(`Search field ${e.detail.expanded ? 'expanded' : 'collapsed'}`);
+			console.log('Search field toggle:', e.detail);
+		});
+
+		shellbar.addEventListener('search-field-clear', (e) => {
+			log('Search field cleared (full-screen cancel clicked)');
+			console.log('Search field clear:', e.detail);
+		});
+	});
+
+	// Listen for custom item clicks
+	document.querySelectorAll('ui5-shellbar-item').forEach(item => {
+		item.addEventListener('click', (e) => {
+			const text = item.getAttribute('text');
+			log(`Custom item clicked: ${text}`);
+			console.log('Custom item clicked:', e.detail);
+		});
+	});
+	</script> -->
+</body>
+
+</html>

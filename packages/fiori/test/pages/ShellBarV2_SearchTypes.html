@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar - Search Types Demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+	<style>
+		body {
+			background-color: var(--sapBackgroundColor);
+			padding: 1rem;
+			font-family: var(--sapFontFamily);
+		}
+		h1, h2, p {
+			color: var(--sapTextColor);
+		}
+		.shellbar-section {
+			margin-bottom: 3rem;
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			padding: 1rem;
+			border-radius: 0.5rem;
+		}
+		.description {
+			background: var(--sapInfobar_Background);
+			padding: 0.75rem;
+			border-radius: 0.25rem;
+			margin: 0.5rem 0 1rem 0;
+		}
+		.custom-search-wrapper {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		.custom-search-input {
+			flex: 1;
+			padding: 0.25rem 0.5rem;
+			border: 1px solid var(--sapField_BorderColor);
+			border-radius: 0.25rem;
+			background: var(--sapField_Background);
+			color: var(--sapField_TextColor);
+		}
+		.custom-search-button {
+			padding: 0.25rem 0.5rem;
+			border: none;
+			background: var(--sapButton_Background);
+			color: var(--sapButton_TextColor);
+			border-radius: 0.25rem;
+			cursor: pointer;
+		}
+		.custom-search-button:hover {
+			background: var(--sapButton_Hover_Background);
+		}
+		#log {
+			margin-top: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			border-radius: 0.5rem;
+			background: var(--sapGroup_ContentBackground);
+		}
+		#log-content {
+			max-height: 200px;
+			overflow-y: auto;
+			font-family: monospace;
+			font-size: 0.875rem;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>ShellBar - Search Types Demonstration</h1>
+	<p>This page demonstrates all 3 supported search field types and legacy properties.</p>
+
+	<!-- Type 1: Self-Collapsible Search (ui5-shellbar-search) -->
+	<div class="shellbar-section">
+		<h2>1. Self-Collapsible Search (ui5-shellbar-search) ✅</h2>
+		<div class="description">
+			<strong>Type:</strong> ui5-shellbar-search<br>
+			<strong>Features:</strong> Auto-expands/collapses, search suggestions, scopes<br>
+			<strong>Properties:</strong> collapsed, open (managed by component)<br>
+			<strong>Controller:</strong> ShellBarSearch
+		</div>
+		<ui5-shellbar id="shellbar-self-collapsible" show-search-field>
+			<ui5-shellbar-branding slot="branding">
+				Self-Collapsible Search
+			</ui5-shellbar-branding>
+			<ui5-shellbar-search slot="searchField" placeholder="Search with suggestions...">
+				<ui5-search-item text="MacBook Pro" icon="laptop"></ui5-search-item>
+				<ui5-search-item text="iPhone 15" icon="iphone"></ui5-search-item>
+				<ui5-search-item text="iPad Air" icon="ipad"></ui5-search-item>
+			</ui5-shellbar-search>
+			<ui5-button slot="content">Reports</ui5-button>
+			<ui5-button slot="content">Analytics</ui5-button>
+			<ui5-avatar slot="profile" icon="employee" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Click the search icon to toggle. Supports auto-collapse when space is tight (except when focused or has value).</em></p>
+	</div>
+
+	<!-- Type 2: ui5-input (Legacy) -->
+	<div class="shellbar-section">
+		<h2>2. ui5-input (Legacy) ✅</h2>
+		<div class="description">
+			<strong>Type:</strong> ui5-input<br>
+			<strong>Features:</strong> Basic input field, shows search button<br>
+			<strong>Properties:</strong> hideSearchButton, disableSearchCollapse supported<br>
+			<strong>Controller:</strong> ShellBarSearchLegacy
+		</div>
+		<ui5-shellbar id="shellbar-ui5-input" show-search-field>
+			<ui5-shellbar-branding slot="branding">
+				ui5-input Search
+			</ui5-shellbar-branding>
+			<ui5-input slot="searchField" placeholder="Type to search..." value-state="Information">
+				<div slot="valueStateMessage">Search for products, customers, or orders</div>
+			</ui5-input>
+			<ui5-button slot="content">Products</ui5-button>
+			<ui5-button slot="content">Customers</ui5-button>
+			<ui5-button slot="content">Orders</ui5-button>
+			<ui5-avatar slot="profile" initials="AB" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Separate search button appears. Auto-collapse works based on focus and value.</em></p>
+	</div>
+
+	<!-- Type 3: Custom DIV (Legacy) -->
+	<div class="shellbar-section">
+		<h2>3. Custom DIV with Input (Legacy) ✅</h2>
+		<div class="description">
+			<strong>Type:</strong> Custom HTML (div with input)<br>
+			<strong>Features:</strong> Full control over markup, shows search button<br>
+			<strong>Properties:</strong> hideSearchButton, disableSearchCollapse supported<br>
+			<strong>Controller:</strong> ShellBarSearchLegacy
+		</div>
+		<ui5-shellbar id="shellbar-custom-div" show-search-field>
+			<ui5-shellbar-branding slot="branding">
+				Custom Search
+			</ui5-shellbar-branding>
+			<div class="custom-search-wrapper" slot="searchField" id="customSearch">
+				<input 
+					id="customSearchInput" 
+					class="custom-search-input"
+					type="text" 
+					placeholder="Custom search input">
+				<button id="customSearchClose" class="custom-search-button">✕</button>
+			</div>
+			<ui5-button slot="content">Dashboard</ui5-button>
+			<ui5-button slot="content">Settings</ui5-button>
+			<ui5-avatar slot="profile" icon="customer" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Custom HTML allows full control. Search button provided by ShellBar. Custom close button included.</em></p>
+	</div>
+
+	<!-- Type 2 with disableSearchCollapse -->
+	<div class="shellbar-section">
+		<h2>4. ui5-input with disableSearchCollapse</h2>
+		<div class="description">
+			<strong>Type:</strong> ui5-input<br>
+			<strong>Properties:</strong> disableSearchCollapse=true<br>
+			<strong>Behavior:</strong> Search field always stays expanded, never auto-collapses
+		</div>
+		<ui5-shellbar id="shellbar-no-collapse" show-search-field disable-search-collapse>
+			<ui5-shellbar-branding slot="branding">
+				Always Expanded
+			</ui5-shellbar-branding>
+			<ui5-input slot="searchField" placeholder="Always visible..."></ui5-input>
+			<ui5-button slot="content" data-hide-order="1">Action 1</ui5-button>
+			<ui5-button slot="content" data-hide-order="2">Action 2</ui5-button>
+			<ui5-button slot="content" data-hide-order="3">Action 3</ui5-button>
+			<ui5-button slot="content" data-hide-order="4">Action 4</ui5-button>
+			<ui5-button slot="content" data-hide-order="5">Action 5</ui5-button>
+			<ui5-avatar slot="profile" initials="CD" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Resize window - search stays expanded even when items overflow.</em></p>
+	</div>
+
+	<!-- Type 3 with hideSearchButton -->
+	<div class="shellbar-section">
+		<h2>5. Custom DIV with hideSearchButton</h2>
+		<div class="description">
+			<strong>Type:</strong> Custom div<br>
+			<strong>Properties:</strong> hideSearchButton=true<br>
+			<strong>Behavior:</strong> No search button shown, field always visible
+		</div>
+		<ui5-shellbar id="shellbar-hide-button" show-search-field hide-search-button>
+			<ui5-shellbar-branding slot="branding">
+				No Search Button
+			</ui5-shellbar-branding>
+			<div class="custom-search-wrapper" slot="searchField">
+				<input class="custom-search-input" type="text" placeholder="Search (no toggle button)">
+			</div>
+			<ui5-button slot="content">Home</ui5-button>
+			<ui5-button slot="content">About</ui5-button>
+			<ui5-avatar slot="profile" initials="EF" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Search button hidden. Field is always visible (useful when managing state externally).</em></p>
+	</div>
+
+	<!-- Combined demo with overflow -->
+	<div class="shellbar-section">
+		<h2>6. With Overflow + Auto-Collapse</h2>
+		<div class="description">
+			<strong>Type:</strong> ui5-input<br>
+			<strong>Behavior:</strong> Search auto-collapses when content overflows (unless focused/has value)
+		</div>
+		<ui5-shellbar id="shellbar-overflow" show-search-field show-notifications notifications-count="12">
+			<ui5-shellbar-branding slot="branding">
+				Overflow Demo
+			</ui5-shellbar-branding>
+			<ui5-input slot="searchField" placeholder="Auto-collapse demo..." id="overflowSearchInput"></ui5-input>
+			<ui5-button slot="content" data-hide-order="1">Reports</ui5-button>
+			<ui5-button slot="content" data-hide-order="2">Analytics</ui5-button>
+			<ui5-button slot="content" data-hide-order="3">Dashboard</ui5-button>
+			<ui5-button slot="content" data-hide-order="4">Settings</ui5-button>
+			<ui5-button slot="content" data-hide-order="5">Help</ui5-button>
+			<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+			<ui5-button slot="content" data-hide-order="6">Export</ui5-button>
+			<ui5-button slot="content" data-hide-order="7">Import</ui5-button>
+			<ui5-button slot="content" data-hide-order="8">Print</ui5-button>
+			<ui5-avatar slot="profile" icon="manager" size="XS"></ui5-avatar>
+		</ui5-shellbar>
+		<p><em>Resize window to see auto-collapse. Type something or focus the field to prevent collapse.</em></p>
+	</div>
+
+	<!-- Event log -->
+	<div id="log">
+		<h3>Event Log</h3>
+		<div id="log-content"></div>
+	</div>
+
+	<script>
+		const logContent = document.getElementById('log-content');
+		
+		function log(message) {
+			const entry = document.createElement('div');
+			entry.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+			entry.style.padding = '0.25rem 0';
+			entry.style.color = 'var(--sapTextColor)';
+			logContent.insertBefore(entry, logContent.firstChild);
+			// Keep only last 20 entries
+			while (logContent.children.length > 20) {
+				logContent.removeChild(logContent.lastChild);
+			}
+		}
+
+		// Setup event listeners for all shellbars
+		document.querySelectorAll('ui5-shellbar').forEach(shellbar => {
+			const id = shellbar.id;
+
+			shellbar.addEventListener('search-button-click', (e) => {
+				log(`[${id}] Search button clicked (visible: ${e.detail.searchFieldVisible})`);
+			});
+
+			shellbar.addEventListener('search-field-toggle', (e) => {
+				log(`[${id}] Search field ${e.detail.expanded ? 'expanded' : 'collapsed'}`);
+			});
+
+			shellbar.addEventListener('search-field-clear', (e) => {
+				log(`[${id}] Search field cleared (cancel clicked)`);
+			});
+
+			shellbar.addEventListener('notifications-click', () => {
+				log(`[${id}] Notifications clicked`);
+			});
+
+			shellbar.addEventListener('profile-click', () => {
+				log(`[${id}] Profile clicked`);
+			});
+		});
+
+		// Custom search close button handler
+		const customSearchClose = document.getElementById('customSearchClose');
+		const customSearchInput = document.getElementById('customSearchInput');
+		const shellbarCustomDiv = document.getElementById('shellbar-custom-div');
+
+		if (customSearchClose) {
+			customSearchClose.addEventListener('click', () => {
+				customSearchInput.value = '';
+				log('[shellbar-custom-div] Custom close button clicked');
+			});
+		}
+
+		// Manage disableSearchCollapse for custom search (based on V0 pattern)
+		if (customSearchInput && shellbarCustomDiv) {
+			['focus', 'blur', 'input'].forEach((event) => {
+				customSearchInput.addEventListener(event, () => {
+					shellbarCustomDiv.disableSearchCollapse =
+						customSearchInput.value || customSearchInput === document.activeElement;
+					log(`[shellbar-custom-div] disableSearchCollapse = ${shellbarCustomDiv.disableSearchCollapse}`);
+				});
+			});
+		}
+
+		// Test getSearchButtonDomRef() API
+		async function testSearchButtonAPI() {
+			const shellbar = document.getElementById('shellbar-ui5-input');
+			const searchBtn = await shellbar.getSearchButtonDomRef();
+			if (searchBtn) {
+				log('[API Test] getSearchButtonDomRef() returned search button ✓');
+			} else {
+				log('[API Test] getSearchButtonDomRef() returned null');
+			}
+		}
+
+		// Run API test after a delay
+		setTimeout(testSearchButtonAPI, 2000);
+
+		// Log initial state
+		log('Page loaded - All 3 search types demonstrated');
+		log('Type 1: ui5-shellbar-search (self-collapsible)');
+		log('Type 2: ui5-input (legacy with search button)');
+		log('Type 3: Custom div (legacy with search button)');
+	</script>
+</body>
+</html>
+

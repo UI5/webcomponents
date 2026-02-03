@@ -1,0 +1,44 @@
+/* Legacy Search Styles - ONLY for ui5-input and custom div search fields */
+
+/* CSS variable overrides for ui5-input component */
+:host {
+	--_ui5_input_placeholder_color: var(--sapShell_InteractiveTextColor);
+	--_ui5_input_border_radius: var(--_ui5_shellbar_input_border_radius);
+	--_ui5_input_focus_border_radius: var(--_ui5_shellbar_input_focus_border_radius);
+	--_ui5_input_background_color: var(--_ui5_shellbar_input_background_color);
+	--_ui5_input_focus_outline_color: var(--_ui5_shellbar_input_focus_outline_color);
+	--_ui5_input_margin_top_bottom: 0;
+}
+
+/* ui5-input specific styles */
+::slotted([ui5-input]) {
+	background: var(--_ui5_shellbar_search_field_background);
+	border: var(--_ui5_shellbar_search_field_border);
+	box-shadow: var(--_ui5_shellbar_search_field_box_shadow);
+	color: var(--_ui5_shellbar_search_field_color);
+	height: 2.25rem;
+	width: 100%;
+	min-width: var(--_ui5_shellbar_search_field_width);
+}
+
+/* ui5-input breakpoint adjustments */
+:host([breakpoint-size="M"]) ::slotted([ui5-input]),
+:host([breakpoint-size="S"]) ::slotted([ui5-input]) {
+	min-width: 1rem;
+}
+
+:host([breakpoint-size="M"][show-search-field]) .ui5-shellbar-overflow-container-right-child {
+	flex-grow: 1;
+}
+
+/* ui5-input hover */
+::slotted([ui5-input]:hover) {
+	background: var(--_ui5_shellbar_search_field_background_hover);
+	box-shadow: var(--_ui5_shellbar_search_field_box_shadow_hover);
+}
+
+/* ui5-input focus */
+::slotted([ui5-input][focused]) {
+	outline: var(--_ui5_shellbar_search_field_outline_focused);
+}
+
