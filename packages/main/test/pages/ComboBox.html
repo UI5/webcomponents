@@ -27,7 +27,7 @@
 
 	<div class="demo-section">
 		<ui5-label id="countryLabel">Select country: </ui5-label>
-		<ui5-combobox id="combo" class="combobox2auto" value="Bulgaria" accessible-name-ref="countryLabel">
+		<ui5-combobox id="combo" class="combobox2auto" accessible-name-ref="countryLabel">
 			<ui5-cb-item text="Algeria"></ui5-cb-item>
 			<ui5-cb-item text="Argentina"></ui5-cb-item>
 			<ui5-cb-item text="Australia"></ui5-cb-item>
@@ -319,6 +319,17 @@
 		<ui5-combobox class="combobox" id="same-name-suggestions-cb">
 			<ui5-cb-item text="Item that does not wrap"></ui5-cb-item>
 			<ui5-cb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - items with same text but different values</span>
+		<ui5-combobox id="same-items" value="Item 1" selected-value="2">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
 		</ui5-combobox>
 	</div>
 

@@ -99,6 +99,7 @@ const SKIP_ITEMS_SIZE = 10;
 interface IComboBoxItem extends UI5Element {
 	text?: string,
 	headerText?: string,
+	value?: string,
 	focused: boolean,
 	isGroupItem?: boolean,
 	selected?: boolean,
@@ -233,6 +234,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	value = "";
+
+	/**
+ 	 * Defines the selected item value.
+ 	 * @default undefined
+	 * @public
+	 * @since 2.19.0
+ 	 */
+	@property()
+	selectedValue?: string;
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -456,6 +466,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
+	_useSelectedValue: boolean = false;
 	_valueStateLinks: Array<HTMLElement> = [];
 	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
@@ -509,6 +520,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.valueStateOpen = true;
 		} else {
 			this.valueStateOpen = false;
+		}
+
+		if (this.selectedValue) {
+			this._useSelectedValue = true;
 		}
 
 		this._selectMatchingItem();
@@ -844,12 +859,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
+			this.selectedValue = isGroupItem ? "" : currentItem?.value;
 			this.focused = false;
 
 			currentItem.focused = true;
 		} else {
 			this.focused = true;
 			this.value = isGroupItem ? nextItem.text! : currentItem.text!;
+			this.selectedValue = currentItem.value;
 			currentItem.focused = false;
 		}
 
@@ -1154,7 +1171,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const matchingItems: Array<IComboBoxItem> = this._startsWithMatchingItems(current);
 
 		if (matchingItems.length) {
-			const exactMatch = matchingItems.find(item => item.text === current);
+			let exactMatch;
+			if (this._useSelectedValue) {
+				exactMatch = matchingItems.find(item => item.value === (currentlyFocusedItem?.value || this.selectedValue) && item.text === current);
+			} else {
+				exactMatch = matchingItems.find(item => item.text === current);
+			}
+
 			return exactMatch ?? matchingItems[0];
 		}
 	}
@@ -1165,11 +1188,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this.inner.value = value;
 		this.inner.setSelectionRange(filterValue.length, value.length);
 		this.value = value;
+
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value;
+		}
 	}
 
 	_selectMatchingItem() {
 		const currentlyFocusedItem = this.items.find(item => item.focused);
 		const shouldSelectionBeCleared = currentlyFocusedItem && currentlyFocusedItem.isGroupItem;
+		const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
 		let itemToBeSelected: IComboBoxItem | undefined;
 		let previouslySelectedItem: IComboBoxItem | undefined;
 
@@ -1189,7 +1217,19 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._filteredItems.forEach(item => {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
-				itemToBeSelected = ((!item.isGroupItem && (item.text === this.value)) ? item : item?.items?.find(i => i.text === this.value));
+				if (isInstanceOfComboBoxItemGroup(item)) {
+					if (this._useSelectedValue) {
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch && this.value === i.text);
+					} else {
+						itemToBeSelected = item.items?.find(i => i.text === this.value);
+					}
+				} else {
+					if (this._useSelectedValue) {
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch && this.value === i.text);
+						return;
+					}
+					itemToBeSelected = item.text === this.value ? item : undefined;
+				}
 			}
 		});
 
@@ -1205,6 +1245,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 			return item;
 		});
+
+		if (!itemToBeSelected && this._useSelectedValue) {
+			this.selectedValue = undefined;
+		} else {
+			this.selectedValue = itemToBeSelected?.value;
+		}
 
 		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
 		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
@@ -1258,6 +1304,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value;
+		}
 
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {
