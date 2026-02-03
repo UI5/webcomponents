@@ -8,6 +8,8 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import Icon from "./Icon.js";
 import slimArrowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
+import ResponsivePopover from "./ResponsivePopover.js";
+import Dialog from "./Dialog.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this.monthsToShow > 1 && !this._isDayPickerHidden;
@@ -104,32 +106,35 @@ export default function CalendarTemplate(this: Calendar) {
 											)}
 											{!isLast && <div class="ui5-calheader-spacer"></div>}
 										</div>
-										<DayPicker
-											id={`${this._id}-daypicker-${index}`}
-											hidden={this._isDayPickerHidden}
-											formatPattern={this._formatPattern}
-											selectedDates={this._selectedDatesTimestamps}
-											specialCalendarDates={this._specialCalendarDates}
-											disabledDates={this._disabledDates}
-											_hidden={this._isDayPickerHidden}
-											primaryCalendarType={this._primaryCalendarType}
-											secondaryCalendarType={this._secondaryCalendarType}
-											selectionMode={this.selectionMode}
-											minDate={this.minDate}
-											maxDate={this.maxDate}
-											calendarWeekNumbering={this.calendarWeekNumbering}
-											timestamp={monthTimestamp}
-											hideWeekNumbers={this.hideWeekNumbers}
-											onChange={this.onSelectedDatesChange}
-											onNavigate={this.onNavigate}
-											exportparts="day-cell, day-cell-selected, day-cell-selected-between"
-										/>
+										<div class="ui5-cal-daypicker-wrapper">
+											<DayPicker
+												id={`${this._id}-daypicker-${index}`}
+												//hidden={this._isDayPickerHidden}
+												formatPattern={this._formatPattern}
+												selectedDates={this._selectedDatesTimestamps}
+												specialCalendarDates={this._specialCalendarDates}
+												disabledDates={this._disabledDates}
+												//_hidden={this._isDayPickerHidden}
+												primaryCalendarType={this._primaryCalendarType}
+												secondaryCalendarType={this._secondaryCalendarType}
+												selectionMode={this.selectionMode}
+												minDate={this.minDate}
+												maxDate={this.maxDate}
+												calendarWeekNumbering={this.calendarWeekNumbering}
+												timestamp={monthTimestamp}
+												hideWeekNumbers={this.hideWeekNumbers}
+												onChange={this.onSelectedDatesChange}
+												onNavigate={this.onNavigate}
+												exportparts="day-cell, day-cell-selected, day-cell-selected-between"
+											/>
+											<div class="ui5-cal-daypicker-overlay"></div>
+										</div>
 									</div>
 								);
 							})}
 						</>
 					) : (
-						<DayPicker
+						<><DayPicker
 							id={`${this._id}-daypicker`}
 							hidden={this._isDayPickerHidden}
 							formatPattern={this._formatPattern}
@@ -149,9 +154,7 @@ export default function CalendarTemplate(this: Calendar) {
 							onNavigate={this.onNavigate}
 							exportparts="day-cell, day-cell-selected, day-cell-selected-between"
 						/>
-					)}
-
-					<MonthPicker
+						<MonthPicker
 						id={`${this._id}-MP`}
 						hidden={this._isMonthPickerHidden}
 						formatPattern={this._formatPattern}
@@ -202,8 +205,31 @@ export default function CalendarTemplate(this: Calendar) {
 						onChange={this.onSelectedYearRangeChange}
 						onNavigate={this.onNavigate}
 						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
-					/>
+					/></>
+					)}
 				</div>
+
+				{/* {showMultipleMonths && (
+					<div class={{
+						"ui5-cal-overlay-container": true,
+						//"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
+					}}>
+						<MonthPicker
+							id={`${this._id}-MP`}
+							formatPattern={this._formatPattern}
+							selectedDates={this._selectedDatesTimestamps}
+							primaryCalendarType={this._primaryCalendarType}
+							secondaryCalendarType={this._secondaryCalendarType}
+							selectionMode={this.selectionMode}
+							minDate={this.minDate}
+							maxDate={this.maxDate}
+							timestamp={this._timestamp}
+							onChange={this.onSelectedMonthChange}
+							onNavigate={this.onNavigate}
+							exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
+						/>
+					</div>
+				)} */}
 			</div>
 
 			<div

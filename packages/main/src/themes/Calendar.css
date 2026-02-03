@@ -21,12 +21,15 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
 }
 
 .ui5-cal-root:has(.ui5-cal-content-multiple) {
     width: auto;
+	height: auto;
     min-width: calc(var(--_ui5_calendar_width) * 2 + 1rem + var(--_ui5_calendar_left_right_padding) * 2);
     overflow: visible;
+
 }
 
 .ui5-cal-root .ui5-cal-content {
@@ -38,6 +41,7 @@
     gap: 1rem;
     flex-wrap: nowrap;
     overflow: visible;
+	padding: 0;
 }
 
 /* Portrait mode: Stack calendars vertically in mobile view */
@@ -95,4 +99,61 @@
 .ui5-calheader-spacer {
     width: var(--_ui5_calendar_header_arrow_button_width);
     flex-shrink: 0;
+}
+
+.ui5-cal-daypicker-wrapper {
+    position: relative;
+}
+
+.ui5-cal-daypicker-overlay {
+    background-color: var(--sapBlockLayer_Background);
+    opacity: var(--sapBlockLayer_Opacity);
+    top: 0;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: 0;
+    position: absolute;
+    outline: 0 none;
+    z-index: 11;
+    pointer-events: none;
+    display: none;
+}
+
+.ui5-cal-content-multiple:has(~ .ui5-cal-overlay-container:not(.ui5-cal-overlay-hidden)) .ui5-cal-daypicker-overlay {
+    display: block;
+}
+
+.ui5-cal-overlay-container {
+	z-index: 13 !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: all;
+  width: 400px;
+  background: var(--sapGroup_ContentBackground);
+  border-radius: var(--_ui5_popup_border_radius);
+  min-height: 2rem;
+    box-sizing: border-box;
+}
+
+.ui5-cal-overlay-hidden {
+  display: none;
+}
+
+/* Overlay effect on DayPickers when MonthPicker is visible in multi-month mode */
+.ui5-cal-content-multiple:has(~ .ui5-cal-overlay-container:not(.ui5-cal-overlay-hidden)) .ui5-cal-month-container::part(day-picker-root) {
+  background-color: var(--sapBlockLayer_Background);
+  opacity: var(--sapBlockLayer_Opacity);
+  top: 0;
+  left: -0.5rem;
+  right: -0.5rem;
+  bottom: 0;
+  position: absolute;
+  outline: 0 none;
+  z-index: 11;
 }
