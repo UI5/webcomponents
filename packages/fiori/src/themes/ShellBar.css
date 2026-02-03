@@ -230,6 +230,7 @@ of the search field container in the bar even when the search is in full mode. *
 	letter-spacing: inherit;
 	word-spacing: inherit;
 	width: 2.25rem;
+	height: 2.25rem;
 	box-sizing: border-box;
 }
 
