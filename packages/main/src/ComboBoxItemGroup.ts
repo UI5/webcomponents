@@ -4,6 +4,7 @@ import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemGroup from "./ListItemGroup.js";
 import type ComboBoxItem from "./ComboBoxItem.js";
 import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -45,9 +46,5 @@ class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
 
 ComboBoxItemGroup.define();
 
-const isInstanceOfComboBoxItemGroup = (object: any): object is ComboBoxItemGroup => {
-	return "isGroupItem" in object;
-};
-
-export { isInstanceOfComboBoxItemGroup };
+export const isInstanceOfComboBoxItemGroup = createInstanceChecker<ComboBoxItemGroup>("isGroupItem");
 export default ComboBoxItemGroup;

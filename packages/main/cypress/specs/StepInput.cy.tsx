@@ -1,4 +1,6 @@
 import StepInput from "../../src/StepInput.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import "../../src/Assets.js";
 
 const decreaseValue = true;
 
@@ -650,6 +652,44 @@ describe("StepInput thousand separator formatting", () => {
             	expect(num).to.equal(12345);
         });
     });
+
+	it("should update input value when language is changed", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+
+		cy.mount(
+			<StepInput value={10000.56} valuePrecision={2}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+				const val = $input.val() as string;
+				expect(val).to.equal("10,000.56");
+		});
+
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("de");
+			})
+			.then(() => {
+				cy.get<StepInput>("@stepInput")
+				.ui5StepInputGetInnerInput()
+				.should($input => {
+					const val = $input.val() as string;
+					expect(val).to.equal("10.000,56");
+				});
+			});
+		
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
 });
 
 describe("StepInput property propagation", () => {

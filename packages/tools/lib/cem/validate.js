@@ -5,6 +5,7 @@ const path = require('path');
 const extenalSchema = require('./schema.json');
 const internalSchema = require('./schema-internal.json');
 
+const isVerbose = () => process.env.UI5_VERBOSE === "true";
 
 const validateFn = async () => {
 	// Load your JSON data from the input file
@@ -49,7 +50,9 @@ const validateFn = async () => {
 	// Validate the JSON data against the schema
 	if (devMode) {
 		if (validate(inputDataInternal)) {
-			console.log('Internal custom  element manifest is validated successfully');
+			if (isVerbose()) {
+				console.log('Internal custom element manifest is validated successfully');
+			}
 		} else {
 			console.log(validate.errors)
 			throw new Error(`Validation of internal custom elements manifest failed: ${validate.errors}`);
@@ -61,7 +64,9 @@ const validateFn = async () => {
 
 	// Validate the JSON data against the schema
 	if (validate(inputDataExternal)) {
-		console.log('Custom element manifest is validated successfully');
+		if (isVerbose()) {
+			console.log('Custom element manifest is validated successfully');
+		}
 		fs.writeFileSync(inputFilePath, JSON.stringify(inputDataExternal, null, 2), 'utf8');
 		fs.writeFileSync(inputFilePath.replace("custom-elements", "custom-elements-internal"), JSON.stringify(inputDataInternal, null, 2), 'utf8');
 	} else if (devMode) {

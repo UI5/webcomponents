@@ -84,11 +84,15 @@ const generate = async (argv) => {
 	try {
 		await fs.access(srcPath);
 	} catch (error) {
-		console.log(`The path ${srcPath} does not exist.`);
+		if (process.env.UI5_VERBOSE === "true") {
+			console.log(`The path ${srcPath} does not exist.`);
+		}
 		return Promise.resolve(null);
 	}
 
-	console.log(`Generating illustrations from ${srcPath} to ${destPath}`)
+	if (process.env.UI5_VERBOSE === "true") {
+		console.log(`Generating illustrations from ${srcPath} to ${destPath}`);
+	}
 
 	const svgImportTemplate = svgContent => {
 		return `export default \`${svgContent}\`;`
@@ -193,7 +197,9 @@ export { dialogSvg, sceneSvg, spotSvg, dotSvg };`
 			return Promise.all(nestedPromises);
 		})
 		.then(() => {
-			console.log("Illustrations generated.");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("Illustrations generated.");
+			}
 		});
 };
 

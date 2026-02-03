@@ -1,6 +1,6 @@
 @import "../base/ValueStateMessage-parameters.css";
 
-:root {
+:host {
 	--_ui5_input_value_state_icon_display: inline-block;
 	--_ui5_value_state_message_padding: 0.5rem 0.5rem 0.5rem 1.875rem;
 	--_ui5_value_state_header_padding: .5rem .5rem .5rem 1.875rem;

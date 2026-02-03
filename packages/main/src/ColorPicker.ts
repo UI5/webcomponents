@@ -7,7 +7,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import {
 	getRGBColor,
@@ -164,6 +163,13 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	_alpha = 1;
 
 	/**
+	 * this is the alpha value in the input only while editing, since it can container invalid/empty values temporarily
+	 * @private
+	 */
+	@property()
+	_alphaTemp?: string;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Number })
@@ -245,7 +251,7 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		}
 		const tempColor = this._colorValue.toRGBString();
 		this._updateColorGrid();
-		this.style.setProperty(getScopedVarName("--ui5_Color_Picker_Progress_Container_Color"), tempColor);
+		this.style.setProperty("--ui5_Color_Picker_Progress_Container_Color", tempColor);
 	}
 
 	_handleMouseDown(e: MouseEvent) {
@@ -307,6 +313,7 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	_handleAlphaInput(e: UI5CustomEvent<Input, "input"> | UI5CustomEvent<Slider, "input">) {
 		const aphaInputValue = String(e.currentTarget.value);
+		this._alphaTemp = aphaInputValue;
 		this._alpha = parseFloat(aphaInputValue);
 		if (Number.isNaN(this._alpha)) {
 			this._alpha = 1;
@@ -454,6 +461,14 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	_handleAlphaChange() {
+		// parse the input value if valid or fallback to default
+		this._alpha = this._alphaTemp ? parseFloat(this._alphaTemp) : 1;
+		if (Number.isNaN(this._alpha)) {
+			this._alpha = 1;
+		}
+		// reset input value so _alpha is rendered
+		this._alphaTemp = undefined;
+		// normalize range
 		this._alpha = this._alpha < 0 ? 0 : this._alpha;
 		this._alpha = this._alpha > 1 ? 1 : this._alpha;
 

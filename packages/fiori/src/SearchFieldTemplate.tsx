@@ -37,7 +37,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 							<>
 								<Select
 									onChange={this._handleScopeChange}
-									class="sapUiSizeCompact ui5-search-field-select"
+									class="ui5-search-field-select"
 									accessibleName={this._translations.scope}
 									tooltip={this._translations.scope}
 									value={this.scopeValue}
