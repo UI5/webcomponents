@@ -138,6 +138,7 @@ class ColorPalettePopover extends UI5Element {
 	 * Determines on which side the component is placed at.
 	 * @default "Bottom"
 	 * @public
+	 * @since 2.19.0
 	 */
 	@property()
 	placement: `${PopoverPlacement}` = "Bottom";
