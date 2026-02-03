@@ -21,10 +21,10 @@ export default function DayPickerTemplate(this: DayPicker) {
 					{this._dayNames.map(day =>
 						<div
 							role="columnheader"
-							aria-label={day.name}
+							aria-label={day.ultraShortName ? day.name : undefined}
 							class={day.classes}
 						>
-							{day.ultraShortName}
+							{day.ultraShortName ? day.ultraShortName : <span aria-hidden="true" class="ui5-hidden-text">{day.name}</span>}
 						</div>
 					)}
 				</div>

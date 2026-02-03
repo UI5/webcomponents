@@ -259,15 +259,6 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
-	async _onInputSubmit() {
-		const caretPos = this._dateTimeInput.getCaretPosition();
-		await renderFinished();
-		this._dateTimeInput.setCaretPosition(caretPos); // Return the caret on the previous position after rendering
-	}
-
-	/**
-	 * @override
-	 */
 	 onResponsivePopoverAfterClose() {
 		this._tempValue = ""; // reset _tempValue on popover close
 		super.onResponsivePopoverAfterClose();

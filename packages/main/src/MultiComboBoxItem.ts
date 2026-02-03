@@ -16,6 +16,7 @@ import styles from "./generated/themes/MultiComboBoxItem.css.js";
 import MultiComboBoxItemTemplate from "./MultiComboBoxItemTemplate.js";
 import type { SelectionRequestEventDetail } from "./ListItem.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -86,11 +87,7 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	}
 }
 
-const isInstanceOfMultiComboBoxItem = (object: any): object is MultiComboBoxItem => {
-	return "isMultiComboBoxItem" in object;
-};
-
 MultiComboBoxItem.define();
 
 export default MultiComboBoxItem;
-export { isInstanceOfMultiComboBoxItem };
+export const isInstanceOfMultiComboBoxItem = createInstanceChecker<MultiComboBoxItem>("isMultiComboBoxItem");

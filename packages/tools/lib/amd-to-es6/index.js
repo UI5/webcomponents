@@ -96,7 +96,9 @@ const transformAmdToES6Modules = async (argv) => {
 	const fileNames = await globby(basePath.replace(/\\/g, "/") + "**/*.js");
 	return Promise.all(fileNames.map(fileName => transformAmdToES6Module(fileName, basePath)).filter(x => !!x))
 		.then(() => {
-			console.log("Success: all amd modules are transformed to es6!");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("Success: all amd modules are transformed to es6!");
+			}
 		});
 };
 

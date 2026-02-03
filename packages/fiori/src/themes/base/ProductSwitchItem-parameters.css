@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_product_switch_item_width: 11.25rem;
 	--_ui5_product_switch_item_height: 7rem;
 	--_ui5_product_switch_item_active_outline_color: var(--sapContent_ContrastFocusColor);
