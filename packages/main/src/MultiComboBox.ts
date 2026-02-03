@@ -1787,7 +1787,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_syncSelection() {
-
 		// set selected property of the items based on the selection value
 		this._getItems().forEach(item => {
 			if (isInstanceOfMultiComboBoxItem(item) && item.value) {
