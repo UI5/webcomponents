@@ -1,6 +1,6 @@
 @import "../base/TimelineItem-parameters.css";
 
-:root {
+:host {
 	--_ui5_TimelineItem_bubble_border_width: 0.125rem;
 	--_ui5_TimelineItem_bubble_border_style: solid;
 	--_ui5_TimelineItem_bubble_border_radius: var(--sapElement_BorderCornerRadius);

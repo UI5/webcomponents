@@ -1,6 +1,6 @@
 @import "../base/ColorPalette-parameters.css";
 
-:root {
+:host {
 	--_ui5_color-palette-item-hover-margin: 0.0625rem;
 	--_ui5_color-palette-row-height: 9.5rem;
 	--_ui5_color-palette-button-height: 3rem;

@@ -1,4 +1,4 @@
-:root {
+:host {
 	/* Header */
 	--_ui5_tc_header_height: var(--_ui5_tc_item_height);
 	--_ui5_tc_header_height_text_only: var(--_ui5_tc_item_text_only_height);
@@ -35,7 +35,7 @@
 	--_ui5_tc_headerItem_text_focus_border_offset_top: 0px;
 	--_ui5_tc_headerItem_text_focus_border_offset_bottom: 0px;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_left: 0.75rem;
-	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_right: 	0.625rem;
+	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_right: 0.625rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_top: 0.75rem;
 	--_ui5_tc_headerItem_mixed_mode_focus_border_offset_bottom: 0.75rem;
 	--_ui5_tc_headerItemContent_default_focus_border: none;
@@ -45,7 +45,7 @@
 	--_ui5_tc_headerItem_focus_border_radius: 0px;
 	--_ui5_tc_mixedMode_itemText_color: var(--sapContent_LabelColor);
 	--_ui5_tc_mixedMode_itemText_font_family: var(--sapFontFamily);
-	--_ui5_tc_mixedMode_itemText_font_size:  var(--sapFontSmallSize);
+	--_ui5_tc_mixedMode_itemText_font_size: var(--sapFontSmallSize);
 	--_ui5_tc_mixedMode_itemText_font_weight: normal;
 	--_ui5_tc_headerItem_expand_button_margin_inline_start: 0.625rem;
 	--_ui5_tc_headerItem_single_click_expand_button_margin_inline_start: 0.875rem;
@@ -76,8 +76,8 @@
 	--_ui5_tc_overflow_text_color: var(--sapButton_TextColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_tc_header_height: var(--_ui5_tc_item_height);
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_tc_header_height: var(--_ui5_tc_item_height);
+	}
 }

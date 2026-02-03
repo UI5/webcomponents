@@ -271,7 +271,7 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		}
 		const tempColor = this._colorValue.toRGBString();
 		this._updateColorGrid();
-		this.style.setProperty(getScopedVarName("--ui5_Color_Picker_Progress_Container_Color"), tempColor);
+		this.style.setProperty("--ui5_Color_Picker_Progress_Container_Color", tempColor);
 	}
 
 	_handleMouseDown(e: MouseEvent) {

@@ -5,6 +5,7 @@ import menuSeparatorTemplate from "./MenuSeparatorTemplate.js";
 import menuSeparatorCss from "./generated/themes/MenuSeparator.css.js";
 import ListItemBase from "./ListItemBase.js";
 import type { IMenuItem } from "./Menu.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 /**
  * @class
  * The `ui5-menu-separator` represents a horizontal line to separate menu items inside a `ui5-menu`.
@@ -51,14 +52,8 @@ class MenuSeparator extends ListItemBase implements IMenuItem {
 	}
 }
 
-const isInstanceOfMenuSeparator = (object: any): object is MenuSeparator => {
-	return "isSeparator" in object;
-};
-
 MenuSeparator.define();
 
 export default MenuSeparator;
 
-export {
-	isInstanceOfMenuSeparator,
-};
+export const isInstanceOfMenuSeparator = createInstanceChecker<MenuSeparator>("isSeparator");
