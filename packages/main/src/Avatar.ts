@@ -49,7 +49,7 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  *
  * ### Keyboard Handling
  *
- * - [Space] / [Enter] or [Return] - Fires the `click` event if the `interactive` property is set to true.
+ * - [Space] / [Enter] or [Return] - Fires the `click` event if the `mode` is set to `Interactive` or the deprecated `interactive` property is set to true.
  * - [Shift] - If [Space] is pressed, pressing [Shift] releases the component without triggering the click event.
  *
  * ### ES6 Module Import
@@ -93,12 +93,20 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	disabled = false;
 
 	/**
-	 * Defines if the avatar is interactive (focusable and pressable).
+	 * Defines if the avatar fires click events.
+	 *
+	 * **Note:** This property only controls event firing behavior.
+	 * It does not affect the component's accessibility attributes.
+	 * To make the avatar interactive with proper accessibility (role="button", focusable),
+	 * use `mode="Interactive"` instead.
 	 *
 	 * **Note:** This property won't have effect if the `disabled`
 	 * property is set to `true`.
 	 * @default false
 	 * @public
+	 * @deprecated Since version 2.19. Use the `mode` property with value `Interactive` instead.
+	 * For accessibility and visual affordance (role="button", focusable), set `mode="Interactive"`.
+	 * This property now only controls whether click events are fired.
 	 */
 	@property({ type: Boolean })
 	interactive = false;
@@ -106,11 +114,13 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the mode of the component.
 	 *
-	 * **Note:** When set to `Decorative`, the avatar will be purely decorative,
-	 * with `role="presentation"` and `aria-hidden="true"`. However, this property won't have effect
-	 * if the `interactive` property is set to `true`.
+	 * **Note:**
+	 * - `Image` (default) - renders with role="img"
+	 * - `Decorative` - renders with role="presentation" and aria-hidden="true", making it purely decorative
+	 * - `Interactive` - renders with role="button", focusable (tabindex="0"), and supports keyboard interaction
 	 * @default "Image"
 	 * @public
+	 * @since 2.19
 	 */
 	@property()
 	mode: `${AvatarMode}` = "Image";
@@ -286,13 +296,9 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		if (this.forcedTabIndex) {
 			return parseInt(this.forcedTabIndex);
 		}
-		// Interactive property takes precedence over decorative mode
-		if (this._interactive) {
+		// Interactive mode makes the avatar focusable
+		if (this.mode === AvatarMode.Interactive) {
 			return 0;
-		}
-		// Decorative mode should not be tabbable
-		if (this.mode === AvatarMode.Decorative) {
-			return undefined;
 		}
 		return undefined;
 	}
@@ -318,21 +324,17 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _role() {
-		// Interactive property takes precedence over decorative mode
-		if (this._interactive) {
+		switch (this.mode) {
+		case AvatarMode.Interactive:
 			return "button";
-		}
-		if (this.mode === AvatarMode.Decorative) {
+		case AvatarMode.Decorative:
 			return "presentation";
+		default:
+			return "img";
 		}
-		return "img";
 	}
 
 	get effectiveAriaHidden() {
-		// Interactive property takes precedence over decorative mode
-		if (this._interactive) {
-			return undefined;
-		}
 		return this.mode === AvatarMode.Decorative ? "true" : undefined;
 	}
 
@@ -465,7 +467,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	_getAriaHasPopup() {
 		const ariaHaspopup = this.accessibilityAttributes.hasPopup;
 
-		if (!this._interactive || !ariaHaspopup) {
+		if (this.mode !== AvatarMode.Interactive || !ariaHaspopup) {
 			return;
 		}
 
@@ -536,7 +538,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	get accessibilityInfo() {
 		return {
 			role: this._role as AriaRole,
-			type: this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
+			type: this.mode === AvatarMode.Interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
 			description: this.accessibleNameText,
 			disabled: this.disabled,
 		};

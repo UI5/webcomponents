@@ -13,7 +13,7 @@ describe("Accessibility", () => {
 	it("checks if initials of avatar are correctly announced", () => {
 		const INITIALS = "XS";
 
-		cy.mount(<Avatar id="interactive-avatar" initials={INITIALS} interactive></Avatar>);
+		cy.mount(<Avatar id="interactive-avatar" initials={INITIALS} mode="Interactive"></Avatar>);
 
 		// Store the expected label to compare against
 		const expectedLabel = `Avatar ${INITIALS}`;
@@ -34,7 +34,7 @@ describe("Accessibility", () => {
 			<Avatar 
 				id="interactive-info" 
 				initials={INITIALS} 
-				interactive 
+				mode="Interactive"
 				accessibleName={customLabel}
 				accessibilityAttributes={{hasPopup}}
 			></Avatar>
@@ -77,7 +77,7 @@ describe("Accessibility", () => {
 			<Avatar 
 				id="default-label-info" 
 				initials={INITIALS}
-				interactive
+				mode="Interactive"
 			></Avatar>
 		);
 
@@ -139,23 +139,46 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "tabindex");
 	});
 
-	it("should allow interactive to override Decorative mode", () => {
+	it("should support mode='Interactive' with role='button' and focusable", () => {
 		cy.mount(
 			<Avatar 
-				id="decorative-interactive" 
-				initials="CD"
-				mode="Decorative"
-				interactive
+				id="interactive-mode-avatar" 
+				initials="IJ"
+				mode="Interactive"
 			></Avatar>
 		);
 
-		// Interactive property takes precedence over Decorative mode
-		cy.get("#decorative-interactive")
+		cy.get("#interactive-mode-avatar")
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "role", "button")
-			.should("not.have.attr", "aria-hidden")
-			.should("have.attr", "tabindex", "0");
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+	});
+
+	it("deprecated interactive property still allows click events but doesn't affect accessibility", () => {
+		cy.mount(
+			<div>
+				<Avatar interactive initials="JD" id="deprecated-interactive" onClick={increment}></Avatar>
+				<input value="0" id="click-event-deprecated" />
+			</div>
+		);
+
+		function increment() {
+			const input = document.getElementById("click-event-deprecated") as HTMLInputElement;
+			input.value = "1";
+		}
+
+		// Should have role="img" (not button) since mode is not Interactive
+		cy.get("#deprecated-interactive")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+
+		// But should still fire click event
+		cy.get("#deprecated-interactive").realClick();
+		cy.get("#click-event-deprecated").should("have.value", "1");
 	});
 
 	it("should use role='img' in Image mode when not interactive", () => {
@@ -174,17 +197,16 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "aria-hidden");
 	});
 
-	it("should use role='button' in Image mode when interactive", () => {
+	it("should use role='button' in Interactive mode", () => {
 		cy.mount(
 			<Avatar 
-				id="interactive-image-mode" 
+				id="interactive-mode" 
 				initials="GH"
-				mode="Image"
-				interactive
+				mode="Interactive"
 			></Avatar>
 		);
 
-		cy.get("#interactive-image-mode")
+		cy.get("#interactive-mode")
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "role", "button")

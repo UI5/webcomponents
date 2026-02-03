@@ -167,7 +167,7 @@
 		<ui5-input id="click-event" value="0"></ui5-input>
 
 		<br>
-		<ui5-avatar id="myInteractiveAvatar" interactive initials="L" size="L"></ui5-avatar>
+		<ui5-avatar id="myInteractiveAvatar" mode="Interactive" initials="L" size="L"></ui5-avatar>
 		<ui5-input id="click-event-2"></ui5-input>
 	</section>
 
@@ -181,13 +181,18 @@
 		</ui5-avatar>
 		
 		<h3>Avatar - mode="Image" (default)</h3>
-		<p>Image mode avatars have role="img" or role="button" when interactive</p>
+		<p>Image mode avatars have role="img"</p>
 		<ui5-avatar mode="Image" initials="CD" size="S"></ui5-avatar>
-		<ui5-avatar mode="Image" initials="EF" size="S" interactive></ui5-avatar>
 		
-		<h3>Avatar - Interactive property overrides Decorative mode</h3>
-		<p>When interactive=true, it takes precedence over decorative mode (becomes interactive)</p>
-		<ui5-avatar mode="Decorative" interactive initials="GH" size="S"></ui5-avatar>
+		<h3>Avatar - mode="Interactive"</h3>
+		<p>Interactive mode avatars have role="button", are focusable, and support keyboard interaction</p>
+		<ui5-avatar mode="Interactive" initials="EF" size="S"></ui5-avatar>
+		
+		<h3>Avatar - Deprecated interactive property</h3>
+		<p>The interactive property (deprecated) fires events but doesn't affect accessibility</p>
+		<ui5-avatar interactive initials="GH" size="S"></ui5-avatar>
+		<p>For proper accessibility, use mode="Interactive" instead</p>
+		<ui5-avatar mode="Interactive" initials="IJ" size="S"></ui5-avatar>
 	</section>
 
 	<section>
