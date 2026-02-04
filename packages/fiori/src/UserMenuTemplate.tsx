@@ -95,7 +95,7 @@ function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
-				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} fallbackIcon={personPlaceholder} class="ui5-user-menu--selected-account-avatar" interactive>
+				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
 					{this._selectedAccount.avatarSrc &&
 						<img src={this._selectedAccount.avatarSrc} title={this.showEditButton ? this._editAvatarTooltip : undefined	}/>
 					}
