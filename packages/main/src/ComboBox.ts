@@ -9,7 +9,6 @@ import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.j
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -515,7 +514,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._selectMatchingItem();
 		this._initialRendering = false;
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
 	get iconsCount() {
@@ -811,10 +810,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (allItems.length - 1 === indexOfItem && isDown(e)) {
-			return;
-		}
-
 		this._isKeyNavigation = true;
 
 		if (
@@ -883,7 +878,18 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.focused = false;
 		}
 
-		this._handleItemNavigation(e, ++indexOfItem, true /* isForward */);
+		const allItems = this._getItems();
+		const currentItem = allItems[indexOfItem];
+		const isLastItem = indexOfItem === allItems.length - 1;
+
+		// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
+		if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
+			return;
+		}
+
+		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
+
+		this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {

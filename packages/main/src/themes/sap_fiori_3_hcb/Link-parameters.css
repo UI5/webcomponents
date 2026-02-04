@@ -1,6 +1,6 @@
 @import "../base/Link-parameters.css";
 
-:root {
+:host {
 	--_ui5_link_text_decoration: underline;
 	--_ui5_link_hover_text_decoration: none;
 	--_ui5_link_active_text_decoration: none;

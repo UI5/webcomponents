@@ -25,7 +25,6 @@ import {
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-up.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
@@ -967,8 +966,8 @@ class TabContainer extends UI5Element {
 					return this._findTabInOverflow(item);
 				},
 				style: {
-					[getScopedVarName("--_ui5-tab-indentation-level")]: level,
-					[getScopedVarName("--_ui5-tab-level-has-icon")]: semanticIcons ? "1" : "0",
+					"--_ui5-tab-indentation-level": level,
+					"--_ui5-tab-level-has-icon": semanticIcons ? "1" : "0",
 				},
 			});
 		});

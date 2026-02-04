@@ -80,7 +80,9 @@ const generate = async (argv) => {
 		fs.writeFile(outputFileFetchMetaResolve, contentFetchMetaResolve),
 		fs.writeFile(outputFileDynamicImportJSONImport, contentDynamicImportJSONAttr),
 	]).then(() => {
-		console.log("Generated i18n JSON imports.");
+		if (process.env.UI5_VERBOSE === "true") {
+			console.log("Generated i18n JSON imports.");
+		}
 	});
 }
 
