@@ -4,8 +4,6 @@ import SuggestionItem from "../../src/SuggestionItem.js";
 import Button from "../../src/Button.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
-import { INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
-import Label from "../../src/Label.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
