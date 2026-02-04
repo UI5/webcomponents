@@ -27,7 +27,6 @@ import IconMode from "./types/IconMode.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import {
 	isShow,
-	isEnter,
 	isPageUp,
 	isPageDown,
 	isPageUpShift,
@@ -633,6 +632,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		this._updateValueAndFireEvents(target.value, true, ["change", "value-changed"]);
 	}
 
+	_onInputRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
+	}
+
 	_handleInputLiveChange(e: CustomEvent) {
 		if (this._isPhone) {
 			e.preventDefault();
@@ -673,11 +678,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (isEnter(e)) {
-			if (this._internals.form) {
-				submitForm(this);
-			}
-		} else if (isPageUpShiftCtrl(e)) {
+		if (isPageUpShiftCtrl(e)) {
 			e.preventDefault();
 			this._modifyValueBy(1, "second");
 		} else if (isPageUpShift(e)) {

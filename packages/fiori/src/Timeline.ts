@@ -21,7 +21,7 @@ import type ToggleButton from "@ui5/webcomponents/dist/ToggleButton.js";
 import "./TimelineItem.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
-import { TIMELINE_ARIA_LABEL } from "./generated/i18n/i18n-defaults.js";
+import { TIMELINE_ARIA_LABEL, TIMELINE_LOAD_MORE_BUTTON_TEXT } from "./generated/i18n/i18n-defaults.js";
 import TimelineTemplate from "./TimelineTemplate.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
@@ -205,6 +205,10 @@ class Timeline extends UI5Element {
 
 	get growingButtonIcon() {
 		return this.layout === TimelineLayout.Horizontal ? process : drillDown;
+	}
+
+	get growingButtonText() {
+		return Timeline.i18nBundle.getText(TIMELINE_LOAD_MORE_BUTTON_TEXT);
 	}
 
 	get growsWithButton(): boolean {

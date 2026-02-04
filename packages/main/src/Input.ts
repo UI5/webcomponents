@@ -224,6 +224,10 @@ type InputSuggestionScrollEventDetail = {
 	bubbles: true,
 })
 
+@event("_request-submit", {
+	bubbles: true,
+})
+
 /**
  * Fired when the value of the component changes at each keystroke,
  * and when a suggestion item has been selected.
@@ -296,6 +300,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		"change": InputEventDetail,
 		"input": InputEventDetail,
 		"select": void,
+		"_request-submit": void,
 		"selection-change": InputSelectionChangeEventDetail,
 		"type-ahead": void,
 		"suggestion-scroll": InputSuggestionScrollEventDetail,
@@ -877,12 +882,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (isEnter(e)) {
 			const isValueUnchanged = this.previousValue === this.getInputDOMRefSync()!.value;
-			const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
 
 			this._enterKeyDown = true;
-
-			if (isValueUnchanged && shouldSubmit) {
+			if (isValueUnchanged) {
+				this.fireDecoratorEvent("_request-submit");
 				submitForm(this);
+				return;
 			}
 
 			return this._handleEnter(e);
@@ -1180,8 +1185,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_handleChange() {
-		const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
-
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
@@ -1203,7 +1206,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			} else {
 				fireChange();
 
-				if (this._enterKeyDown && shouldSubmit) {
+				if (this._enterKeyDown) {
+					this.fireDecoratorEvent("_request-submit");
 					submitForm(this);
 				}
 			}
