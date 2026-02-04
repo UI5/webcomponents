@@ -430,6 +430,73 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").find("[ui5-tag]").should("exist");
 		cy.get("@avatar").find("[ui5-tag]").should("have.length", 1);
 	});
+
+	it("tests avatarColorScheme default value", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "color-scheme", "Auto");
+	});
+
+	it("tests avatarColorScheme with custom value", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						avatarColorScheme="Accent3"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "color-scheme", "Accent3");
+	});
+
+	it("tests avatarColorScheme on other accounts", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						avatarColorScheme="Accent1"
+						titleText="Alain Chevalier 1"
+						selected={true}>
+					</UserMenuAccount>
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="JD"
+						avatarColorScheme="Accent5"
+						titleText="John Doe">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-selected-account-avatar").as("selectedAvatar");
+		cy.get("@selectedAvatar").should("have.attr", "color-scheme", "Accent1");
+		cy.get("@userMenu").shadow().find("[ui5-panel]").shadow().find("[ui5-button]").click();
+		cy.get("@userMenu").shadow().find("[ui5-panel]").find("[ui5-avatar]").as("otherAvatars");
+		cy.get("@otherAvatars").eq(0).should("have.attr", "color-scheme", "Accent1");
+		cy.get("@otherAvatars").eq(1).should("have.attr", "color-scheme", "Accent5");
+	});
 });
 
 describe("Events", () => {
