@@ -370,6 +370,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	required = false;
 
 	/**
+	 * Indicates whether a loading indicator should be shown in the picker.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
+	/**
 	 * Defines the filter type of the component.
 	 * @default "StartsWithPerTerm"
 	 * @public
@@ -1436,8 +1444,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			innerInput.setSelectionRange(matchingItem.text!.length, matchingItem.text!.length);
 			this.open = false;
-		} else if (this._internals?.form) {
-			submitForm(this);
+		} else {
+			if (this._lastValue !== this.value) {
+				this._inputChange();
+			}
+
+			if (this._internals?.form) {
+				submitForm(this);
+			}
 		}
 	}
 
@@ -1811,7 +1825,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (this._shouldFilterItems) {
-			this._filteredItems = this._filterItems(this._shouldAutocomplete || !!autoCompletedChars ? this.valueBeforeAutoComplete : value);
+			this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
 		} else {
 			this._filteredItems = this._getItems();
 		}
@@ -1862,8 +1876,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	storeResponsivePopoverWidth() {
-		if (this.open && !this._listWidth) {
-			this._listWidth = this.list!.offsetWidth;
+		if (this.open && !this._listWidth && this.list) {
+			this._listWidth = this.list.offsetWidth;
 		}
 	}
 

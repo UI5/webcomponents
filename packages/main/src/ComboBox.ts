@@ -810,10 +810,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (allItems.length - 1 === indexOfItem && isDown(e)) {
-			return;
-		}
-
 		this._isKeyNavigation = true;
 
 		if (
@@ -882,7 +878,18 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.focused = false;
 		}
 
-		this._handleItemNavigation(e, ++indexOfItem, true /* isForward */);
+		const allItems = this._getItems();
+		const currentItem = allItems[indexOfItem];
+		const isLastItem = indexOfItem === allItems.length - 1;
+
+		// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
+		if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
+			return;
+		}
+
+		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
+
+		this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
