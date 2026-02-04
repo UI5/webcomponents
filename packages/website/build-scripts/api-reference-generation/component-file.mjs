@@ -31,6 +31,11 @@ const getEnumLink = (enumRef) => {
     if (!folder) {
         return null;
     }
+    // Skip base package enums - they don't have documentation pages
+    // (base package doesn't have a manifest, only shared types)
+    if (folder === "base") {
+        return null;
+    }
     // Use absolute paths from docs root to avoid issues with varying component slug depths
     // Main package enums are at /components/enums/ (not /components/main/enums/)
     // Other packages keep their folder in the path
