@@ -1,5 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -115,8 +115,8 @@ class Bar extends UI5Element {
 	* Defines the content in the middle of the bar.
 	* @public
 	*/
-	@slot()
-	middleContent!: Slot<HTMLElement>
+	@slot({ type: HTMLElement, "default": true })
+	middleContent!: DefaultSlot<HTMLElement>
 
 	/**
 	* Defines the content at the end of the bar.
