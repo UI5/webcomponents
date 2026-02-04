@@ -5,12 +5,14 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 const generate = async () => {
     const themeBasePackage = JSON.parse(await readFile(fileURLToPath(import.meta.resolve("@sap-theming/theming-base-content/package.json", "utf-8"))));
+	const CDN_URL = `https://cdn.jsdelivr.net/npm/@sap-theming/theming-base-content@${themeBasePackage.version}/content/Base/baseLib/baseTheme/fonts`;
+	const NPM_URL = `@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts`;
 
     const processFontFace = (text) => {
         const declarationExpr = /@font-face\s*{[^}]*}/g;
 
         // change font-face src
-        text = text.replaceAll("../baseTheme/fonts", `https://cdn.jsdelivr.net/npm/@sap-theming/theming-base-content@${themeBasePackage.version}/content/Base/baseLib/baseTheme/fonts`);
+        text = text.replaceAll("../baseTheme/fonts", CDN_URL);
 
         // extract declarations for separate usage
         let fontFaceDeclarations = [...text.matchAll(declarationExpr)].map(x => x[0]);
@@ -35,10 +37,15 @@ const generate = async () => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText = processFontFace(f.text);
                     const tsPath = path.join(process.cwd(), "src/generated/css/FontFace.css.ts");
-                    const tsContent = `export default \`${newText}\``;
+                    const tsText = processFontFace(f.text);
+                    const tsContent = `export default \`${tsText}\``;
+
+                    const cssPath = path.join(process.cwd(), "src/generated/css/FontFace.css");
+                    const cssContent = tsText.replaceAll(CDN_URL, NPM_URL);
+
                     await writeFile(tsPath, tsContent);
+                    await writeFile(cssPath, cssContent);
                 });
             })
         },
