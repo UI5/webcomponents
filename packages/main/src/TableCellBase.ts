@@ -28,7 +28,7 @@ abstract class TableCellBase extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	content!: DefaultSlot<Node[]>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * Determines the horizontal alignment of table cells.

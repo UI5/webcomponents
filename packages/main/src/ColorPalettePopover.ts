@@ -139,7 +139,7 @@ class ColorPalettePopover extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
-	colors!: DefaultSlot<IColorPaletteItem[]>;
+	colors!: DefaultSlot<IColorPaletteItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

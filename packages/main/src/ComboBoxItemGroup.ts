@@ -34,7 +34,7 @@ class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
 		individualSlots: true,
 		type: HTMLElement,
 	})
-	items!: DefaultSlot<ComboBoxItem[]>;
+	items!: DefaultSlot<ComboBoxItem>;
 
 	get isGroupItem(): boolean {
 		return true;

@@ -28,7 +28,7 @@ class SuggestionItemGroup extends ListItemGroup {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	items!: DefaultSlot<SuggestionListItem[]>;
+	items!: DefaultSlot<SuggestionListItem>;
 }
 
 SuggestionItemGroup.define();

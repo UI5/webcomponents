@@ -136,7 +136,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	heading!: Slot<HTMLElement[]>;
+	heading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the heading that is shown only when the header is snapped.
@@ -144,7 +144,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	snappedHeading!: Slot<HTMLElement[]>;
+	snappedHeading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the snapped title on mobile devices.
@@ -160,7 +160,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @since 2.3.0
 	 */
 	@slot({ type: HTMLElement })
-	snappedTitleOnMobile!: Slot<Title[]>;
+	snappedTitleOnMobile!: Slot<Title>;
 
 	/**
 	 * Defines the bar with actions in the Dynamic page title.
@@ -168,7 +168,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	actionsBar!: Slot<HTMLElement[]>;
+	actionsBar!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the bar with navigation actions in the Dynamic page title.
@@ -176,7 +176,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	navigationBar!: Slot<Toolbar[]>;
+	navigationBar!: Slot<Toolbar>;
 
 	/**
 	 * Defines the content of the Dynamic page title.
@@ -184,7 +184,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the content of the title that is shown only when the header is not snapped.
@@ -192,7 +192,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	subheading!: Slot<HTMLElement[]>;
+	subheading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the title that is shown only when the header is snapped.
@@ -200,7 +200,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	snappedSubheading!: Slot<HTMLElement[]>;
+	snappedSubheading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the breadcrumbs inside Dynamic Page Title.
@@ -208,7 +208,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	breadcrumbs!: Slot<HTMLElement[]>;
+	breadcrumbs!: Slot<HTMLElement>;
 
 	/**
 	 * @private

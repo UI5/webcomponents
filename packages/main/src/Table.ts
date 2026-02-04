@@ -278,7 +278,7 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	rows!: DefaultSlot<TableRow[]>;
+	rows!: DefaultSlot<TableRow>;
 
 	/**
 	 * Defines the header row of the component.
@@ -288,7 +288,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: { properties: false, slots: true } })
-	headerRow!: Slot<TableHeaderRow[]>;
+	headerRow!: Slot<TableHeaderRow>;
 
 	/**
 	 * Defines the custom visualization if there is no data available.
@@ -296,7 +296,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	noData!: Slot<HTMLElement[]>;
+	noData!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the features of the component.
@@ -304,7 +304,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	features!: Slot<ITableFeature[]>;
+	features!: Slot<ITableFeature>;
 
 	/**
 	 * Defines the accessible ARIA name of the component.

@@ -321,7 +321,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	calendarLegend!: Slot<CalendarLegend[]>;
+	calendarLegend!: Slot<CalendarLegend>;
 
 	/**
 	 * Defines the selected date or dates (depending on the `selectionMode` property)
@@ -330,7 +330,7 @@ class Calendar extends CalendarPart {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	dates!: DefaultSlot<ICalendarSelectedDates[]>;
+	dates!: DefaultSlot<ICalendarSelectedDates>;
 
 	/**
 	 * Defines the special dates, visually emphasized in the calendar.
@@ -338,7 +338,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	specialDates!: Slot<SpecialCalendarDate[]>;
+	specialDates!: Slot<SpecialCalendarDate>;
 
 	/**
 	 * Defines the disabled date ranges that cannot be selected in the calendar.
@@ -348,7 +348,7 @@ class Calendar extends CalendarPart {
 	 * @since 2.16.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	disabledDates!: Slot<CalendarDateRange[]>;
+	disabledDates!: Slot<CalendarDateRange>;
 
 	/**
 	 * Defines the selected item type of the calendar legend item (if such exists).

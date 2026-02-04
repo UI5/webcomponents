@@ -59,7 +59,7 @@ class TableCell extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

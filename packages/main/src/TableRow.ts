@@ -53,7 +53,7 @@ class TableRow extends TableRowBase<TableCell> {
 			slots: false,
 		},
 	})
-	cells!: DefaultSlot<TableCell[]>;
+	cells!: DefaultSlot<TableCell>;
 
 	/**
 	 * Defines the actions of the component.
@@ -67,7 +67,7 @@ class TableRow extends TableRowBase<TableCell> {
 		type: HTMLElement,
 		individualSlots: true,
 	})
-	actions!: Slot<TableRowActionBase[]>;
+	actions!: Slot<TableRowActionBase>;
 
 	/**
 	 * Unique identifier of the row.

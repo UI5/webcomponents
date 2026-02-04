@@ -255,7 +255,7 @@ class Menu extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: DefaultSlot<IMenuItem[]>;
+	items!: DefaultSlot<IMenuItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

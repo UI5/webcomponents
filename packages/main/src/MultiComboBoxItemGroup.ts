@@ -34,7 +34,7 @@ class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBox
 		individualSlots: true,
 		type: HTMLElement,
 	})
-	items!: DefaultSlot<MultiComboBoxItem[]>;
+	items!: DefaultSlot<MultiComboBoxItem>;
 
 	/**
 	 * Used to avoid tag name checks

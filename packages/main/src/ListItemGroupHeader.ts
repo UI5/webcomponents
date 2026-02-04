@@ -99,7 +99,7 @@ class ListItemGroupHeader extends ListItemBase {
 	expandableTextTemplate?: ExpandableTextTemplate;
 
 	@slot()
-	subItems!: Slot<HTMLElement[]>;
+	subItems!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

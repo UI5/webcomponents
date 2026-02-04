@@ -174,8 +174,8 @@ type Convert<T, K extends UI5Element> = { [Property in keyof T as `on${KebabToPa
 declare const SlotMarker: unique symbol;
 declare const DefaultSlotMarker: unique symbol;
 
-export type Slot<T> = T & { [SlotMarker]: true };
-export type DefaultSlot<T> = T & { [DefaultSlotMarker]: true };
+export type Slot<T> = T[] & { [SlotMarker]: true };
+export type DefaultSlot<T> = T[] & { [DefaultSlotMarker]: true };
 
 export type IsSlot<T> = T extends { [SlotMarker]: true } ? true : T extends { [DefaultSlotMarker]: true } ? true : false;
 export type IsDefaultSlot<T> = T extends { [DefaultSlotMarker]: true } ? true : false;

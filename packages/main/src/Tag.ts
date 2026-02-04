@@ -160,14 +160,14 @@ class Tag extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: DefaultSlot<Node[]>;
+	text!: DefaultSlot<Node>;
 
 	/**
 	 * Defines the icon to be displayed in the component.
 	 * @public
 	 */
 	@slot()
-	icon!: Slot<IIcon[]>;
+	icon!: Slot<IIcon>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

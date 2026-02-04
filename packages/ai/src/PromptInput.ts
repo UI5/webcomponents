@@ -203,7 +203,7 @@ class PromptInput extends UI5Element {
 	 * @public
 	 */
 		@slot({ type: HTMLElement, "default": true })
-		suggestionItems!: DefaultSlot<IInputSuggestionItem[]>;
+		suggestionItems!: DefaultSlot<IInputSuggestionItem>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -221,7 +221,7 @@ class PromptInput extends UI5Element {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-ai")
 	static i18nBundle: I18nBundle;

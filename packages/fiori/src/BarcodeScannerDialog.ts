@@ -124,7 +124,7 @@ class BarcodeScannerDialog extends UI5Element {
 	 * @since 2.4.0
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -140,7 +140,7 @@ class BarcodeScannerDialog extends UI5Element {
 	 * @since 2.4.0
 	 */
 	@slot()
-	footer!: Slot<HTMLElement[]>;
+	footer!: Slot<HTMLElement>;
 
 	/**
 	 * Indicates whether the dialog is open.

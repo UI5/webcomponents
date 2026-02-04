@@ -165,7 +165,7 @@ class Input extends BaseInput {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	actions!: Slot<HTMLElement[]>;
+	actions!: Slot<HTMLElement>;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;

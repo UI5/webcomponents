@@ -329,7 +329,7 @@ class TabContainer extends UI5Element {
 			slots: true,
 		},
 	})
-	items!: DefaultSlot<ITab[]>;
+	items!: DefaultSlot<ITab>;
 
 	/**
 	 * Defines the button which will open the overflow menu. If nothing is provided to this slot,
@@ -338,7 +338,7 @@ class TabContainer extends UI5Element {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	overflowButton!: Slot<IButton[]>;
+	overflowButton!: Slot<IButton>;
 
 	/**
 	 * Defines the button which will open the start overflow menu if available. If nothing is provided to this slot,
@@ -347,7 +347,7 @@ class TabContainer extends UI5Element {
 	 * @since 1.1.0
 	 */
 	@slot()
-	startOverflowButton!: Slot<IButton[]>;
+	startOverflowButton!: Slot<IButton>;
 
 	_itemNavigation: ItemNavigation;
 	_itemsFlat: Array<ITab> = [];

@@ -260,7 +260,7 @@ class Wizard extends UI5Element {
 		"individualSlots": true,
 		invalidateOnChildChange: true,
 	})
-	steps!: DefaultSlot<WizardStep[]>;
+	steps!: DefaultSlot<WizardStep>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

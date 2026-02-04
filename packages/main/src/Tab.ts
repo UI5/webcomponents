@@ -163,7 +163,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 			slots: false,
 		},
 	})
-	content!: DefaultSlot<Node[]>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * Defines hierarchies with nested sub tabs.
@@ -179,7 +179,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 			slots: false,
 		},
 	})
-	items!: Slot<ITab[]>;
+	items!: Slot<ITab>;
 
 	_isInline?: boolean;
 	_forcedMixedMode?: boolean;

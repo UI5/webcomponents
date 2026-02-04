@@ -168,7 +168,7 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	pages!: DefaultSlot<UserSettingsView[]>;
+	pages!: DefaultSlot<UserSettingsView>;
 
 	/**
 	 * Defines the tab views of the user settings item.
@@ -183,7 +183,7 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	tabs!: Slot<UserSettingsView[]>;
+	tabs!: Slot<UserSettingsView>;
 
 	/**
 	 * Indicates whether any of the element siblings have icon.

@@ -348,21 +348,21 @@ class FlexibleColumnLayout extends UI5Element {
 	* @public
 	*/
 	@slot()
-	startColumn!: Slot<HTMLElement[]>;
+	startColumn!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content in the middle column.
 	* @public
 	*/
 	@slot()
-	midColumn!: Slot<HTMLElement[]>;
+	midColumn!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content in the end column.
 	* @public
 	*/
 	@slot()
-	endColumn!: Slot<HTMLElement[]>;
+	endColumn!: Slot<HTMLElement>;
 
 	initialRendering: boolean;
 	_handleResize: () => void;

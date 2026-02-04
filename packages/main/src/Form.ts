@@ -345,7 +345,7 @@ class Form extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the component content - FormGroups or FormItems.
@@ -360,7 +360,7 @@ class Form extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: DefaultSlot<IFormItem[]>;
+	items!: DefaultSlot<IFormItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

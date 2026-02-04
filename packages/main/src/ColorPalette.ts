@@ -184,7 +184,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	colors!: DefaultSlot<IColorPaletteItem[]>;
+	colors!: DefaultSlot<IColorPaletteItem>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;

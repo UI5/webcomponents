@@ -249,7 +249,7 @@ class IllustratedMessage extends UI5Element {
 	* @since 1.7.0
 	*/
 	@slot({ type: HTMLElement })
-	title!: Slot<HTMLElement[]> & string;
+	title!: Slot<HTMLElement> & string;
 
 	/**
 	* Defines the subtitle of the component.
@@ -259,7 +259,7 @@ class IllustratedMessage extends UI5Element {
 	* @since 1.0.0-rc.16
 	*/
 	@slot({ type: HTMLElement })
-	subtitle!: Slot<HTMLElement[]>;
+	subtitle!: Slot<HTMLElement>;
 
 	/**
 	* Defines the component actions.
@@ -268,7 +268,7 @@ class IllustratedMessage extends UI5Element {
 	* @public
 	*/
 	@slot({ type: HTMLElement, "default": true })
-	actions!: DefaultSlot<IButton[]>;
+	actions!: DefaultSlot<IButton>;
 
 	illustrationTitle?: string;
 	illustrationSubtitle?: string;

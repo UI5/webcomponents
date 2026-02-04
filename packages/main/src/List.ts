@@ -523,7 +523,7 @@ class List extends UI5Element {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: DefaultSlot<(ListItemBase | ListItemGroup)[]>;
+	items!: DefaultSlot<ListItemBase | ListItemGroup>;
 
 	/**
 	 * Defines the component header.
@@ -533,7 +533,7 @@ class List extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

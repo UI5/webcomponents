@@ -382,7 +382,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: DefaultSlot<Node[]>;
+	text!: DefaultSlot<Node>;
 
 	/**
 	 * Adds a badge to the button.
@@ -390,7 +390,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	badge!: Slot<ButtonBadge[]>;
+	badge!: Slot<ButtonBadge>;
 
 	_deactivate: () => void;
 	_onclickBound: (e: MouseEvent) => void;

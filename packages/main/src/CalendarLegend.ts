@@ -104,7 +104,7 @@ class CalendarLegend extends UI5Element {
 		individualSlots: true,
 		"default": true,
 	 })
-	items!: DefaultSlot<CalendarLegendItem[]>;
+	items!: DefaultSlot<CalendarLegendItem>;
 
 	_itemNavigation!: ItemNavigation;
 	_lastFocusedItemIndex: number | null;

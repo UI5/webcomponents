@@ -133,7 +133,7 @@ class Search extends SearchField {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: DefaultSlot<(SearchItem | SearchItemGroup)[]>;
+	items!: DefaultSlot<SearchItem | SearchItemGroup>;
 
 	/**
 	 * Defines the popup footer action button.
@@ -141,7 +141,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	action!: Slot<Button[]>;
+	action!: Slot<Button>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -149,7 +149,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	illustration!: Slot<IllustratedMessage[]>;
+	illustration!: Slot<IllustratedMessage>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -157,7 +157,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	messageArea!: Slot<SearchMessageArea[]>;
+	messageArea!: Slot<SearchMessageArea>;
 
 	/**
 	 * Indicates whether the items picker is open.

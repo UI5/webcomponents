@@ -272,7 +272,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -285,7 +285,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	@query(".ui5-file-uploader-form")
 	_form!: HTMLFormElement;

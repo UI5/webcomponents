@@ -442,7 +442,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-component")
 class MyComponent extends UI5Element {
 	@slot()
-	items!: Slot<HTMLElement[]>;;
+	items!: Slot<HTMLElement>;;
 }
 ```
 

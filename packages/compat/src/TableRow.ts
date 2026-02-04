@@ -190,7 +190,7 @@ class TableRow extends UI5Element implements ITableRow {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true, individualSlots: true })
-	cells!: DefaultSlot<TableCell[]>;
+	cells!: DefaultSlot<TableCell>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

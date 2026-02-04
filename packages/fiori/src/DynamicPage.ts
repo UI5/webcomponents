@@ -158,7 +158,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the title HTML Element.
@@ -166,7 +166,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageTitle })
-	titleArea!: Slot<DynamicPageTitle[]>;
+	titleArea!: Slot<DynamicPageTitle>;
 
 	/**
 	 * Defines the header HTML Element.
@@ -174,7 +174,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageHeader })
-	headerArea!: Slot<DynamicPageHeader[]>;
+	headerArea!: Slot<DynamicPageHeader>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -182,7 +182,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	footerArea!: Slot<HTMLElement[]>;
+	footerArea!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

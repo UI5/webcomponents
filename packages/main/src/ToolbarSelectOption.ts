@@ -59,7 +59,7 @@ class ToolbarSelectOption extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	text!: DefaultSlot<Node[]>;
+	text!: DefaultSlot<Node>;
 }
 
 ToolbarSelectOption.define();

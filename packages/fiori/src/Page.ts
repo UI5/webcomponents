@@ -95,21 +95,21 @@ class Page extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content HTML Element.
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	content!: DefaultSlot<Node[]>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * Defines the footer HTML Element.
 	 * @public
 	 */
 	@slot()
-	footer!: Slot<HTMLElement[]>;
+	footer!: Slot<HTMLElement>;
 
 	constructor() {
 		super();

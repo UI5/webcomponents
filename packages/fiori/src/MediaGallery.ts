@@ -216,7 +216,7 @@ class MediaGallery extends UI5Element {
 		invalidateOnChildChange: true,
 		"default": true,
 	})
-	items!: DefaultSlot<IMediaGalleryItem[]>;
+	items!: DefaultSlot<IMediaGalleryItem>;
 
 	_itemNavigation: ItemNavigation;
 	_onResize: () => void;

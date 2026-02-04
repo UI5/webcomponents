@@ -28,14 +28,14 @@ class SuggestionListItem extends ListItemStandard {
 	 * @public
 	 */
 	@slot()
-	richDescription!: Slot<HTMLElement[]>;
+	richDescription!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the title text of the suggestion item.
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	titleText!: DefaultSlot<Node[]>;
+	titleText!: DefaultSlot<Node>;
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

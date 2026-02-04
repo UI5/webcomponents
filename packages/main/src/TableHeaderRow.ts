@@ -63,7 +63,7 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 		},
 		individualSlots: true,
 	})
-	cells!: DefaultSlot<TableHeaderCell[]>;
+	cells!: DefaultSlot<TableHeaderCell>;
 
 	/**
 	 * Sticks the `ui5-table-header-row` to the top of a table.

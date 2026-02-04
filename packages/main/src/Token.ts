@@ -141,7 +141,7 @@ class Token extends UI5Element implements IToken {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	closeIcon!: Slot<IIcon[]>;
+	closeIcon!: Slot<IIcon>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

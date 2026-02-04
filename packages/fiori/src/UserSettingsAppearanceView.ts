@@ -64,7 +64,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: DefaultSlot<(UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem)[]>;
+	items!: DefaultSlot<UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem>;
 
 	/**
 	 * Defines additional content displayed below the items list.
@@ -74,7 +74,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 	@slot({
 		type: HTMLElement,
 	})
-	additionalContent!: Slot<HTMLElement[]>;
+	additionalContent!: Slot<HTMLElement>;
 
 	_getAllItems(): Array<UserSettingsAppearanceViewItem> {
 		const allItems: Array<UserSettingsAppearanceViewItem> = [];

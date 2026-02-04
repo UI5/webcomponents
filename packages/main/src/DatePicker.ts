@@ -388,7 +388,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	responsivePopover?: ResponsivePopover;
 

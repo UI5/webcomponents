@@ -156,7 +156,7 @@ class Toolbar extends UI5Element {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true, individualSlots: true,
 	})
-	items!: DefaultSlot<ToolbarItem[]>
+	items!: DefaultSlot<ToolbarItem>
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;

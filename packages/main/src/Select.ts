@@ -399,7 +399,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	options!: DefaultSlot<IOption[]>;
+	options!: DefaultSlot<IOption>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -414,7 +414,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	*/
 	@slot()
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -429,7 +429,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @since 1.17.0
 	*/
 	@slot()
-	label!: Slot<HTMLElement[]>;
+	label!: Slot<HTMLElement>;
 
 	get formValidityMessage() {
 		return Select.i18nBundle.getText(FORM_SELECTABLE_REQUIRED);

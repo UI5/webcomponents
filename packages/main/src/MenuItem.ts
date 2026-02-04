@@ -292,7 +292,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: DefaultSlot<IMenuItem[]>;
+	items!: DefaultSlot<IMenuItem>;
 
 	/**
 	 * Defines the components that should be displayed at the end of the menu item.
@@ -312,7 +312,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	 * @since 2.0.0
 	 */
 	@slot()
-	endContent!: Slot<HTMLElement[]>;
+	endContent!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

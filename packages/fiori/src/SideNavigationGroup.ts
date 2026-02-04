@@ -68,7 +68,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<SideNavigationItem[]>;
+	items!: DefaultSlot<SideNavigationItem>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

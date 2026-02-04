@@ -400,7 +400,7 @@ class Table extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	rows!: DefaultSlot<ITableRow[]>;
+	rows!: DefaultSlot<ITableRow>;
 
 	/**
 	 * Defines the configuration for the columns of the component.
@@ -416,7 +416,7 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	columns!: Slot<TableColumn[]>;
+	columns!: Slot<TableColumn>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

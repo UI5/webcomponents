@@ -145,7 +145,7 @@ class ProductSwitchItem extends UI5Element implements IProductSwitchItem {
 	 * @since 2.14.0
 	 */
 	@slot({ type: HTMLElement })
-	image!: Slot<HTMLElement[]>;
+	image!: Slot<HTMLElement>;
 
 	_deactivate: () => void;
 

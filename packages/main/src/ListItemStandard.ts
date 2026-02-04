@@ -181,7 +181,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	content!: DefaultSlot<Node[]>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * **Note:** While the slot allows option for setting custom avatar, to match the
@@ -193,7 +193,7 @@ class ListItemStandard extends ListItem implements IAccessibleListItem {
 	 * @public
 	 */
 	@slot()
-	image!: Slot<HTMLElement[]>;
+	image!: Slot<HTMLElement>;
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

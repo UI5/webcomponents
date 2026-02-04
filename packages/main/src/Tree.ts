@@ -297,7 +297,7 @@ class Tree extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<TreeItemBase[]>;
+	items!: DefaultSlot<TreeItemBase>;
 
 	/**
 	 * Defines the component header.
@@ -307,7 +307,7 @@ class Tree extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	_dragAndDropHandler: DragAndDropHandler;
 

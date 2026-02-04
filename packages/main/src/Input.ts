@@ -586,14 +586,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	suggestionItems!: DefaultSlot<IInputSuggestionItem[]>;
+	suggestionItems!: DefaultSlot<IInputSuggestionItem>;
 
 	/**
 	 * Defines the icon to be displayed in the component.
 	 * @public
 	 */
 	@slot()
-	icon!: Slot<IIcon[]>;
+	icon!: Slot<IIcon>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -613,7 +613,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	hasSuggestionItemSelected: boolean;
 	valueBeforeItemSelection: string;

@@ -237,7 +237,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.0.0-rc.15
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	image!: DefaultSlot<HTMLElement[]>;
+	image!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the optional badge that will be used for visual affordance.
@@ -248,7 +248,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.7.0
 	 */
 	@slot()
-	badge!: Slot<HTMLElement[]>;
+	badge!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

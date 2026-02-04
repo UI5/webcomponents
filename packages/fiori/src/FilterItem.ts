@@ -50,7 +50,7 @@ class FilterItem extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	values!: Slot<FilterItemOption[]>;
+	values!: Slot<FilterItemOption>;
 }
 
 FilterItem.define();

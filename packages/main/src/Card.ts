@@ -73,7 +73,7 @@ class Card extends UI5Element {
 	 * @public
 	*/
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the header of the component.
@@ -83,7 +83,7 @@ class Card extends UI5Element {
 	 * @public
 	*/
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	header!: Slot<CardHeader[]>;
+	header!: Slot<CardHeader>;
 
 	/**
 	 * Defines if a loading indicator would be displayed over the card.

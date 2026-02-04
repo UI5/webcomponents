@@ -148,7 +148,7 @@ class Breadcrumbs extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<BreadcrumbsItem[]>;
+	items!: DefaultSlot<BreadcrumbsItem>;
 
 	_itemNavigation: ItemNavigation
 	_onResizeHandler: ResizeObserverCallback;

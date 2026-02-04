@@ -226,7 +226,7 @@ class UploadCollectionItem extends ListItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	thumbnail!: Slot<HTMLElement[]>;
+	thumbnail!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nFioriBundle: I18nBundle;

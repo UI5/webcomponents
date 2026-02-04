@@ -234,7 +234,7 @@ class DynamicSideContent extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	sideContent!: Slot<HTMLElement[]>;
+	sideContent!: Slot<HTMLElement>;
 
 	@query(".ui5-dsc-main")
 	_mainContent!: HTMLElement;

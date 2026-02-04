@@ -52,7 +52,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot()
-    mySlot!: Slot<HTMLElement[]>;
+    mySlot!: Slot<HTMLElement>;
 }
 ```
 
@@ -69,7 +69,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement })
-    mySlot!: Slot<HTMLElement[]>;;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
 
@@ -96,9 +96,12 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, "default": true })
-    mySlot!: Slot<HTMLElement[]>;;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
+
+**Note:** The `Slot<T>` and `DefaultSlot<T>` marker types were introduced in version 2.20. In previous versions, slots were typed as `Array<T>` (e.g., `mySlot!: Array<HTMLElement>`). The new types enable better slot discoverability in TypeScript environments while the array is now part of the type itself.
+
 
 ### Individual Slots
 
@@ -112,7 +115,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, individualSlots: true })
-    mySlot!: Slot<HTMLElement[]>;;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
 
@@ -144,12 +147,12 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, invalidateOnChildChange: true })
-    mySlot!: Slot<HTMLElement[]>;;
+    mySlot!: Slot<HTMLElement>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: true, slots: false }})
-    mySlot2!: Slot<HTMLElement[]>;;
+    mySlot2!: Slot<HTMLElement>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: ["myProp"], slots: ["anotherSlot"] }})
-    mySlot3!: Slot<HTMLElement[]>;;
+    mySlot3!: Slot<HTMLElement>;;
 }
 ```

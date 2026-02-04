@@ -110,7 +110,7 @@ class ListItemGroup extends UI5Element {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	items!: DefaultSlot<ListItemBase[]>;
+	items!: DefaultSlot<ListItemBase>;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.
@@ -146,7 +146,7 @@ class ListItemGroup extends UI5Element {
 	* @public
 	*/
 	@slot()
-	header!: Slot<ListItemBase[]>;
+	header!: Slot<ListItemBase>;
 
 	_dragAndDropHandler: DragAndDropHandler;
 

@@ -93,21 +93,21 @@ class NavigationLayout extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the side content.
 	 * @public
 	 */
 	@slot()
-	sideContent!: Slot<SideNavigation[]>;
+	sideContent!: Slot<SideNavigation>;
 
 	/**
 	 * Defines the content.
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	onBeforeRendering() {
 		this.calcSideCollapsed();

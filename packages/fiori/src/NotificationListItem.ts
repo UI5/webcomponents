@@ -226,7 +226,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	avatar!: Slot<HTMLElement[]>;
+	avatar!: Slot<HTMLElement>;
 
 	/**
 	* Defines the menu, displayed in the `ui5-li-notification`.
@@ -237,14 +237,14 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	menu!: Slot<HTMLElement[]>;
+	menu!: Slot<HTMLElement>;
 
 	/**
 	* Defines the elements, displayed in the footer of the of the component.
 	* @public
 	*/
 	@slot({ type: HTMLElement, individualSlots: true })
-	footnotes!: Slot<HTMLElement[]>;
+	footnotes!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content of the `ui5-li-notification`,
@@ -254,7 +254,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot({ type: Node, "default": true })
-	description!: DefaultSlot<Node[]>;
+	description!: DefaultSlot<Node>;
 
 	@query(".ui5-nli-title-text")
 	titleTextDOM?: HTMLElement;

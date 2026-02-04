@@ -424,7 +424,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: DefaultSlot<IComboBoxItem[]>;
+	items!: DefaultSlot<IComboBoxItem>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -438,7 +438,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Slot<HTMLElement[]>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the icon to be displayed in the input field.
@@ -446,7 +446,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	icon!: Slot<IIcon[]>;
+	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
 	_itemFocused = false;

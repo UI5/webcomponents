@@ -176,7 +176,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: DefaultSlot<Node[]>;
+	text!: DefaultSlot<Node>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

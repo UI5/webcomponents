@@ -43,7 +43,7 @@ class UserMenuItem extends MenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	declare items: DefaultSlot<UserMenuItem[]>;
+	declare items: DefaultSlot<UserMenuItem>;
 
 	get _menuItems() {
 		return this.items.filter(isInstanceOfMenuItem);

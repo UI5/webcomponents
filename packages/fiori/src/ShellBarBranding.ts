@@ -103,7 +103,7 @@ class ShellBarBranding extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement[]>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the logo of the `ui5-shellbar`.
@@ -111,7 +111,7 @@ class ShellBarBranding extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	logo!: Slot<HTMLElement[]>;
+	logo!: Slot<HTMLElement>;
 
 	get parsedRef() {
 		return (this.href && this.href.length > 0) ? this.href : undefined;

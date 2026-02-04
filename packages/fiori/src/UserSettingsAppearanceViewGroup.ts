@@ -35,7 +35,7 @@ class UserSettingsAppearanceViewGroup extends ListItemGroup {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	declare items: DefaultSlot<UserSettingsAppearanceViewItem[]>;
+	declare items: DefaultSlot<UserSettingsAppearanceViewItem>;
 
 	get isUserSettingsAppearanceViewGroup(): boolean {
 		return true;

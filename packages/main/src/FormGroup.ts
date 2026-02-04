@@ -100,7 +100,7 @@ class FormGroup extends UI5Element implements IFormItem {
 		type: HTMLElement,
 		"default": true,
 	})
-	items!: DefaultSlot<FormItem[]>;
+	items!: DefaultSlot<FormItem>;
 
 	/**
 	 * @private

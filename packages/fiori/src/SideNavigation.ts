@@ -1,6 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createMultiInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -154,7 +154,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: DefaultSlot<SideNavigationItemBase[]>;
+	items!: DefaultSlot<SideNavigationItemBase>;
 
 	/**
 	 * Defines the fixed items at the bottom of the component.
@@ -164,7 +164,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	fixedItems!: Slot<SideNavigationItemBase[]>;
+	fixedItems!: Slot<SideNavigationItemBase>;
 
 	/**
 	 * Defines the header of the `ui5-side-navigation`.
@@ -175,7 +175,7 @@ class SideNavigation extends UI5Element {
 	 * @since 1.0.0-rc.11
 	 */
 	@slot()
-	header!: Slot<HTMLElement[]>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * @private
