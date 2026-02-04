@@ -396,10 +396,12 @@ const displayDocumentationErrors = () => {
 }
 
 const formatArrays = (typeText) => {
-    return typeText?.replace(/(Default)?Slot<(.+?)\[\]>/g, (match, prefix, innerType) => {
-        const cleanedType = innerType.replace(/^\((.+)\)$/, '$1');
-        return `Array<${cleanedType}>`;
-    }).replaceAll(/(\S+)\[\]/g, "Array<$1>");
+    return typeText?.replaceAll(/(\S+)\[\]/g, "Array<$1>");
+}
+
+// Convert Slot<T> and DefaultSlot<T> to Array<T> (the array is built into these types)
+const formatSlotTypes = (typeText) => {
+	return typeText?.replace(/(Default)?Slot<(.+?)>/g, 'Array<$2>');
 }
 
 export {
@@ -418,6 +420,7 @@ export {
     getTypeRefs,
     normalizeDescription,
     formatArrays,
+    formatSlotTypes,
     isClass,
     normalizeTagType,
     displayDocumentationErrors,
