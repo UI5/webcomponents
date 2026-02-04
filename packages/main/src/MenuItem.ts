@@ -535,7 +535,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		if (!isInstanceOfMenuItem(item)) {
 			return;
 		}
-		item.focus();
+
+		item.getFocusDomRef()?.focus();
 
 		this._closeOtherSubMenus(item);
 	}

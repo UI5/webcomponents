@@ -377,7 +377,7 @@ class Menu extends UI5Element {
 			return;
 		}
 
-		item.focus();
+		item.getFocusDomRef()?.focus();
 
 		// Opens submenu with 300ms delay
 		this._startOpenTimeout(item);
