@@ -60,7 +60,7 @@ const processType = (type) => {
             .join(", ");
 
         if (enumLinks) {
-            return `${typeText} (${enumLinks})`;
+            return `${typeText} (See: ${enumLinks})`;
         }
     }
 
