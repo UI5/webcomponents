@@ -2190,7 +2190,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return getEffectiveAriaLabelText(this) || MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {
