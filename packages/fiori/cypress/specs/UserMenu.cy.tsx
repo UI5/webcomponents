@@ -581,7 +581,7 @@ describe("Events", () => {
 		cy.get("@avatar").find("img").as("image");
 		cy.get("@image").should("have.length", 1);
 		cy.get("@image").should("have.attr", "src", "./../../test/pages/img/man_avatar_1.png");
-		cy.get("@avatar").should("have.class", "ui5-user-menu--selected-account-avatar");
+		cy.get("@avatar").should("have.class", "ui5-user-menu-selected-account-avatar");
 	});
 
 	it("tests item-click event", () => {
