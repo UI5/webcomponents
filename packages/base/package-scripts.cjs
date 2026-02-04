@@ -25,8 +25,8 @@ const scripts = {
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
 	lint: `ui5nps-script "${LIB}/eslint/eslint.js"`,
-	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace copy.fontFaceCss build.jsonImports",
-	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace copy.fontFaceCss typescript integrate.no-remaining-require build.jsonImports",
+	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
+	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
 	integrate: {
 		default: "ui5nps integrate.copy-used-modules integrate.amd-to-es6 integrate.third-party",
@@ -56,7 +56,6 @@ const scripts = {
 		default: "ui5nps copy.src",
 		src: `ui5nps-script "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/`,
 		srcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" "src/**/*.{js,css,d.ts}" dist/ --watch --skip-initial-copy`,
-		fontFaceCss: `ui5nps-script "${LIB}copy-and-watch/index.js" "src/generated/css/FontFace.css" dist/`,
 	},
 	generateAssetParameters: `ui5nps-script "${assetParametersScript}"`,
 	generateVersionInfo: `ui5nps-script "${versionScript}"`,

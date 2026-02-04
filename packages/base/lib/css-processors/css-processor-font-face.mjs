@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild'
 import * as path from "path";
-import { readFile, writeFile } from "fs/promises";
+import { readFile, writeFile, mkdir } from "fs/promises";
 import { fileURLToPath, pathToFileURL } from "url";
 
 const generate = async () => {
@@ -41,9 +41,11 @@ const generate = async () => {
                     const tsText = processFontFace(f.text);
                     const tsContent = `export default \`${tsText}\``;
 
-                    const cssPath = path.join(process.cwd(), "src/generated/css/FontFace.css");
+                    const distPath = path.join(process.cwd(), "dist");
+                    const cssPath = path.join(distPath, "FontFace.css");
                     const cssContent = tsText.replaceAll(CDN_URL, NPM_URL);
 
+                    await mkdir(distPath, { recursive: true });
                     await writeFile(tsPath, tsContent);
                     await writeFile(cssPath, cssContent);
                 });
