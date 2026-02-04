@@ -116,14 +116,14 @@ class Bar extends UI5Element {
 	* @public
 	*/
 	@slot({ type: HTMLElement, "default": true })
-	middleContent!: DefaultSlot<HTMLElement>
+	middleContent!: DefaultSlot<HTMLElement>;
 
 	/**
 	* Defines the content at the end of the bar.
 	* @public
 	*/
 	@slot()
-	endContent!: Slot<HTMLElement>
+	endContent!: Slot<HTMLElement>;
 
 	_handleResizeBound: () => void;
 
