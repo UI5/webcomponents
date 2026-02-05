@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
@@ -102,7 +103,7 @@ class ShellBarBranding extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the logo of the `ui5-shellbar`.
@@ -110,7 +111,7 @@ class ShellBarBranding extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	logo!: Array<HTMLElement>;
+	logo!: Slot<HTMLElement>;
 
 	get parsedRef() {
 		return (this.href && this.href.length > 0) ? this.href : undefined;

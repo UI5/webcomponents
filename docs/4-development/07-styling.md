@@ -75,14 +75,14 @@ The theming setup is based on having a single web component CSS file, containing
 
 In addition, you can define your own CSS Variables and provide different values for them for the different themes. Set these CSS Variables in the `parameters-bundle.css` file for each theme. These files are the entry points for the styles build. Once you define them, the framework will be responsible for applying the respective CSS Variables according to the configured theme.
 
-| File  | Purpose  |
-|-------|----------|
-| `src/themes/MyComponent.css`                   | The web component CSS file with all CSS rules, used in all themes and inserted in the shadow root.             |
-| `src/themes/sap_horizon/parameters-bundle.css`      | Values for the component-specific CSS Variables for the `sap_horizon` theme                                       |
-| `src/themes/sap_horizon_dark/parameters-bundle.css` | Values for the component-specific CSS Variables for the `sap_horizon_dark` theme                    |
-| `src/themes/sap_horizon_hcb/parameters-bundle.css`  | Values for the component-specific CSS Variables for the `sap_horizon_hcb` theme                     |
-| `src/themes/sap_horizon_hcw/parameters-bundle.css`  | Values for the component-specific CSS Variables for the `sap_horizon_hcw` theme                     |
-| `src/themes/sap_fiori_3/parameters-bundle.css`      | Values for the component-specific CSS Variables for the `sap_fiori_3` theme                                       |
+| File                                                | Purpose                                                                                            |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `src/themes/MyComponent.css`                        | The web component CSS file with all CSS rules, used in all themes and inserted in the shadow root. |
+| `src/themes/sap_horizon/parameters-bundle.css`      | Values for the component-specific CSS Variables for the `sap_horizon` theme                        |
+| `src/themes/sap_horizon_dark/parameters-bundle.css` | Values for the component-specific CSS Variables for the `sap_horizon_dark` theme                   |
+| `src/themes/sap_horizon_hcb/parameters-bundle.css`  | Values for the component-specific CSS Variables for the `sap_horizon_hcb` theme                    |
+| `src/themes/sap_horizon_hcw/parameters-bundle.css`  | Values for the component-specific CSS Variables for the `sap_horizon_hcw` theme                    |
+| `src/themes/sap_fiori_3/parameters-bundle.css`      | Values for the component-specific CSS Variables for the `sap_fiori_3` theme                        |
 
 **Note:** It's up to you whether to put the CSS Variables directly in the `parameters-bundle.css` files for the different themes or to import them from separate `.css` files. 
 
@@ -101,7 +101,7 @@ Practically speaking, the theming setup appears as follows:
 - Component-specific variables (for example `sap_horizon`):
 ```css
 /* src/themes/sap_horizon/parameters-bundle.css */
-:root {
+:host {
     --my-component-border-color: blue;
 }
 ```
@@ -109,10 +109,12 @@ Practically speaking, the theming setup appears as follows:
 - Component-specific variables (for example `sap_horizon_dark`):
 ```css
 /* src/themes/sap_horizon_dark/parameters-bundle.css */
-:root {
+:host {
     --my-component-border-color: lightblue;
 }
 ```
+
+**Note:** Variables should be defined on `:host` only if `cssVariablesTarget: "host"` is configured in `package-scripts.cjs`. If using `cssVariablesTarget: "root"` (or no configuration), define variables on `:root` instead.
 
 The last piece is to connect the web component styles (the main file used in all themes) via the [@customElement](./02-component.md) decorator:
 
@@ -133,6 +135,35 @@ class MyComponent extends UI5Element {
 
 
 **That's it! The framework will connect the styles with the web component and automatically apply the appropriate CSS variables for the `sap_horizon` and `sap_horizon_dark` themes**. This allows developers to focus on writing CSS without worrying about building, fetching, or loading these styles.
+
+## CSS Variables Target
+
+The `cssVariablesTarget` configuration in `package-scripts.cjs` determines where your component-specific CSS variables (defined in `parameters-bundle.css`) are injected:
+
+- **`cssVariablesTarget: "host"`** - CSS variables are added to each component's shadow root. This provides better encapsulation as variables are scoped to each component instance.
+
+- **`cssVariablesTarget: "root"`** (or omitted) - CSS variables are added to the global `:root` selector. This makes variables available globally across the entire document.
+
+```js
+// package-scripts.cjs
+module.exports = {
+	build: {
+		options: {
+			cssVariablesTarget: "host" // or "root"
+		}
+	}
+};
+```
+
+When using `cssVariablesTarget: "host"`, component-specific variables are injected into each shadow root, enabling customization via `--sap*` variables on a component or specific scope level. This allows for more granular theming control, where different instances of the same component can be styled differently based on their context.
+
+```html
+<!-- Example: customizing specific component instances -->
+<my-component style="--sapBrandColor: red;"></my-component>
+<my-component style="--sapBrandColor: blue;"></my-component>
+```
+
+When using `cssVariablesTarget: "root"`, all variables are placed globally, which may limit instance-level customization but can be simpler for certain use cases.
 
 
 ## RTL
@@ -173,7 +204,25 @@ If your styles are symmetric, the same from both sides, the result will be the s
 }
 ```
 
-**Conclusion**: To support the `RTL` text direction, use the CSS logical properties as they are automatically mirrored by the browser, based on the text direction (LTR or RTL).
+### Using `:dir()` Selector for Advanced RTL Cases
+
+While CSS logical properties cover most RTL scenarios, there are cases where they don't provide a solution. For example, when using transforms, rotations, or other CSS properties that don't have logical equivalents, you'll need to use the `:dir()` pseudo-class selector.
+
+The `:host(:dir(rtl))` and `:host(:dir(ltr))` selectors allow you to apply specific styles based on the text direction:
+
+```css
+:host {
+	/* Default LTR styles */
+	transform: rotate(45deg);
+}
+
+:host(:dir(rtl)) {
+	/* RTL-specific styles */
+	transform: rotate(-45deg);
+}
+```
+
+**Conclusion**: To support the `RTL` text direction, use the CSS logical properties as they are automatically mirrored by the browser, based on the text direction (LTR or RTL). For cases where logical properties don't help, use the `:dir(rtl)` or `:dir(ltr)` selectors to apply direction-specific styles.
 
 
 ## Content Density
@@ -190,7 +239,7 @@ By default, when writing web component styles and defining CSS variables, they a
 
 If you defined the following variables:
 ```css
-:root {
+:host {
 	--my-component-width: 2.75rem;
 	--my-component-padding: 1rem;
 }
@@ -206,18 +255,60 @@ And, your web component is used normally:
 
 As expected, the `--my-component-width` variable will be `2.75rem` and the `--my-component-padding` variable  will be `1rem`.
 
-
-To write `Compact` styles and define `Compact` CSS variables, you must target the `data-ui5-compact-size` attribute and the `.ui5-content-density-compact` class:
+To write `Compact` styles and define `Compact` CSS variables, use CSS container queries:
 
 ```css
-[data-ui5-compact-size],
-.ui5-content-density-compact {
-	--my-component-width: 1rem;
-	--my-component-padding: 0.5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--my-component-width: 1rem;
+		--my-component-padding: 0.5rem;
+	}
 }
 ```
 
-The `data-ui5-compact-size` attribute and `.ui5-content-density-compact` class are the UI5 Web Components contract with consumers.
+**Important:** To use container queries for content density, you must configure `cssVariablesTarget: "host"` in the `package-scripts.cjs` options for your package:
+
+```js
+// package-scripts.cjs
+module.exports = {
+	build: {
+		options: {
+			cssVariablesTarget: "host"
+		}
+	}
+};
+```
+
+This approach provides better encapsulation and follows the CSS container queries specification.
+
+Alternatively, you can define density variables using selectors `[data-ui5-compact-size], .ui5-content-density-compact {}` for compact and `:root` for cozy(this is the old approach). When using these selectors, the `cssVariablesTarget` configuration should either not be set or should be set to `"root"`:
+
+```css
+.ui5-content-density-compact,
+[data-ui5-compact-size] {
+	--my-component-width: 1rem;
+	--my-component-padding: 0.5rem;
+}
+
+:root {
+	--my-component-width: 2rem;
+	--my-component-padding: 1rem;
+}
+```
+
+```js
+// package-scripts.cjs
+module.exports = {
+	build: {
+		options: {
+			cssVariablesTarget: "root" // or omit this configuration
+		}
+	}
+};
+```
+
+**Note:** The `cssVariablesTarget` configuration is per package, allowing each package to choose the approach that best fits its needs.
+
 To enable `Compact` content density mode, consumers or app developers can use the CSS class:
 
 ```html
@@ -228,8 +319,7 @@ To enable `Compact` content density mode, consumers or app developers can use th
 
 Then, `--my-component-width` will have `1rem` and `--my-component-padding` will be `0.5rem`, making the `my-component` appear smaller, e.g compact.
 
-
-**Conclusion**: To support the `Compact` density mode, define CSS variables, targeting the `data-ui5-compact-size` attribute and the `.ui5-content-density-compact` class.
+**Conclusion**: To support the `Compact` density mode, use container queries to define `Compact` CSS variables with `@container style(--ui5_content_density: compact)` and configure `cssVariablesTarget: "host"` in your package-scripts. Alternatively, use traditional selectors like `[data-ui5-compact-size]`, `.ui5-content-density-compact`, or `:root` with `cssVariablesTarget: "root"` or no configuration.
 
 ## Theming Assets
 

@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, property, slot, eventStrict as event,
+	customElement, property, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
@@ -131,7 +132,7 @@ class UserSettingsDialog extends UI5Element {
 			slots: true,
 		},
 	})
-	items!: Array<UserSettingsItem>;
+	items!: DefaultSlot<UserSettingsItem>;
 
 	/**
 	 * Defines the fixed user settings items.
@@ -146,7 +147,7 @@ class UserSettingsDialog extends UI5Element {
 			slots: true,
 		},
 	})
-	fixedItems!: Array<UserSettingsItem>;
+	fixedItems!: Slot<UserSettingsItem>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
