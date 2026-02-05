@@ -278,6 +278,8 @@ class IllustratedMessage extends UI5Element {
 	_lastKnownOffsetHeightForMedia: Record<string, number>;
 	_lastKnownMedia: string;
 	_handleResize: ResizeObserverCallback;
+	_isHeightConstrained: boolean;
+	_pendingHeightAdjustment: number | null;
 
 	constructor() {
 		super();
@@ -288,6 +290,10 @@ class IllustratedMessage extends UI5Element {
 		this._lastKnownOffsetHeightForMedia = {};
 		// this will store the last known media, in order to detect if IllustratedMessage has been hidden by expand/collapse container
 		this._lastKnownMedia = "base";
+		// tracks whether we're in height-constrained mode to prevent oscillation
+		this._isHeightConstrained = false;
+		// tracks pending rAF callback to prevent multiple scheduled updates
+		this._pendingHeightAdjustment = null;
 	}
 
 	static get BREAKPOINTS() {
@@ -384,15 +390,32 @@ class IllustratedMessage extends UI5Element {
 		}
 
 		this._applyMedia();
-		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
+
+		if (this._pendingHeightAdjustment !== null) {
+			window.cancelAnimationFrame(this._pendingHeightAdjustment);
+		}
+
+		this._pendingHeightAdjustment = window.requestAnimationFrame(() => {
+			this._adjustHeightToFitContainer();
+			this._pendingHeightAdjustment = null;
+		});
 	}
 
 	_applyMedia(heightChange?: boolean) {
 		const currOffsetWidth = this.offsetWidth,
 			currOffsetHeight = this.offsetHeight;
 
-		const design = heightChange ? currOffsetHeight : currOffsetWidth,
-			oBreakpounts = heightChange ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
+		if (this._isHeightConstrained && !heightChange) {
+			const lastHeight = this._lastKnownOffsetHeightForMedia[this._lastKnownMedia];
+			if (lastHeight && currOffsetHeight > lastHeight + 10) {
+				this._isHeightConstrained = false;
+			}
+		}
+
+		const useHeightCalculation = heightChange || this._isHeightConstrained;
+
+		const design = useHeightCalculation ? currOffsetHeight : currOffsetWidth,
+			oBreakpounts = useHeightCalculation ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
 		let newMedia = "";
 
 		if (design <= oBreakpounts.BASE) {
@@ -406,14 +429,33 @@ class IllustratedMessage extends UI5Element {
 		} else {
 			newMedia = IllustratedMessage.MEDIA.SCENE;
 		}
-		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia],
-			lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
-		 // prevents infinite resizing, when same width is detected for the same media,
-		 // excluding the case in which, the control is placed inside expand/collapse container
-		if (!(lastKnownOffsetWidth && currOffsetWidth === lastKnownOffsetWidth
-			&& lastKnownOffsetHeight && currOffsetHeight === lastKnownOffsetHeight)
-			|| this._lastKnownOffsetWidthForMedia[this._lastKnownMedia] === 0
-			|| this._lastKnownOffsetHeightForMedia[this._lastKnownMedia] === 0) {
+
+		if (heightChange) {
+			this._isHeightConstrained = true;
+		}
+
+		if (newMedia === this.media) {
+			this._lastKnownOffsetWidthForMedia[newMedia] = currOffsetWidth;
+			this._lastKnownOffsetHeightForMedia[newMedia] = currOffsetHeight;
+			return;
+		}
+
+		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia];
+		const lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
+
+		if (lastKnownOffsetWidth
+			&& lastKnownOffsetHeight
+			&& Math.abs(currOffsetWidth - lastKnownOffsetWidth) <= 1
+			&& Math.abs(currOffsetHeight - lastKnownOffsetHeight) <= 1) {
+			return;
+		}
+
+		if (!lastKnownOffsetWidth
+			|| !lastKnownOffsetHeight
+			|| lastKnownOffsetWidth === 0
+			|| lastKnownOffsetHeight === 0
+			|| Math.abs(currOffsetWidth - lastKnownOffsetWidth) > 1
+			|| Math.abs(currOffsetHeight - lastKnownOffsetHeight) > 1) {
 			this.media = newMedia;
 			this._lastKnownOffsetWidthForMedia[newMedia] = currOffsetWidth;
 			this._lastKnownOffsetHeightForMedia[newMedia] = currOffsetHeight;
