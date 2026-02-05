@@ -1,0 +1,15 @@
+@import "../base/SliderScale-parameters.css";
+
+:host {
+	--_ui5_slider_scale_root_box_sizing: content-box;
+	--_ui5_slider_scale_progress_border: 1px solid var(--sapSlider_Selected_BorderColor);
+	--_ui5_slider_scale_border: 1px solid var(--sapSlider_Selected_BorderColor);
+	--_ui5_slider_scale_progress_height: 0.375rem;
+	--_ui5_slider_scale_progress_top: -1px;
+	--_ui5_slider_scale_dots_display: inline-block;
+	--ui5_slider_scale_background: var(--sapField_BorderColor);
+
+	/* Fiori 3 specific */
+	--_ui5_slider_scale_dots_display: none;
+	--_ui5_slider_scale_tickmark_height: 1rem;
+}

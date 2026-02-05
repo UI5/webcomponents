@@ -53,6 +53,8 @@
 @import "../base/Tokenizer-parameters.css";
 @import "../base/ValueStateMessage-parameters.css";
 @import "./SliderBase-parameters.css";
+@import "./SliderHandle-parameters.css";
+@import "./SliderScale-parameters.css";
 @import "../base/StepInput-parameters.css";
 @import "../base/rtl-parameters.css";
 @import "./sizes-parameters.css";

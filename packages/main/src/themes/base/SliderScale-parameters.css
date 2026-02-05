@@ -1,0 +1,13 @@
+:host {
+	--ui5_slider_scale_background: var(--sapSlider_Background);
+	--_ui5_slider_scale_border: var(--sapSlider_Background);
+
+	--_ui5_slider_scale_dots_distance: -1rem;
+	--_ui5_slider_scale_tickmark_height: .5rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_scale_dots_distance: -.75rem;
+	}
+}
