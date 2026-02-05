@@ -51,21 +51,34 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
-          yarn lerna version ${{ github.event.inputs.new_version || '' }}  \
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} \
             --conventional-graduate \
             --force-conventional-graduate \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git push origin HEAD
+          git push origin --tags
+          NEW_VERSION=$(node -p "require('./lerna.json').version")
+          # Extract changelog section for this version
+          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --notes "${CHANGELOG_BODY}"
 
       - name: Publish
         run: |
@@ -135,9 +148,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -149,7 +159,24 @@ jobs:
             --force-publish \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git push origin HEAD
+          git push origin --tags
+          NEW_VERSION=$(node -p "require('./lerna.json').version")
+          # Extract changelog section for this version
+          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --notes "${CHANGELOG_BODY}" \
+            --prerelease
 
       - name: Publish
         run: |
@@ -203,9 +230,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -217,7 +241,23 @@ jobs:
             --force-conventional-graduate \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          git push origin HEAD
+          git push origin --tags
+          NEW_VERSION=$(node -p "require('./lerna.json').version")
+          # Extract changelog section for this version
+          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --notes "${CHANGELOG_BODY}"
 
       - name: Publish
         run:  |
@@ -247,9 +287,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -265,6 +302,9 @@ jobs:
             --ignore-changes @ui5/webcomponents-website \
             --ignore-changes @ui5/webcomponents-cypress-internal \
             --ignore-changes @ui5/webcomponents-cypress-ct
+
+      - name: Build
+        run: yarn ci:releasebuild
 
       - name: Publish
         run: |
