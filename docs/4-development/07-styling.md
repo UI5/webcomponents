@@ -114,6 +114,8 @@ Practically speaking, the theming setup appears as follows:
 }
 ```
 
+**Note:** Variables should be defined on `:host` only if `cssVariablesTarget: "host"` is configured in `package-scripts.cjs`. If using `cssVariablesTarget: "root"` (or no configuration), define variables on `:root` instead.
+
 The last piece is to connect the web component styles (the main file used in all themes) via the [@customElement](./02-component.md) decorator:
 
 ```ts
