@@ -563,32 +563,50 @@ describe("Slots", () => {
 
 		it("Test search toggle in overflow expands search when clicked", () => {
 			cy.mount(
-				<ShellBar 
-					id="shellbar" 
-					primaryTitle="Product Title"
+				<ShellBar
+					id="shellbar"
+					primaryTitle="Product Title With Long Name"
 					showNotifications={true}
 					showProductSwitch={true}
+					showSearchField={false}
 				>
 					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
-					<Button slot="content">Start Button 1</Button>
+					<Button slot="content">Button 1</Button>
+					<Button slot="content">Button 2</Button>
+					<Button slot="content">Button 3</Button>
+					<Button slot="content">Button 4</Button>
+					<Button slot="content">Button 5</Button>
+					<Button slot="content">Button 6</Button>
+					<Button slot="content">Button 7</Button>
+					<Button slot="content">Button 8</Button>
 					<ShellBarSearch slot="searchField" placeholder="Search"></ShellBarSearch>
 					<ShellBarItem icon={activities} text="Action 1"></ShellBarItem>
 					<ShellBarItem icon={activities} text="Action 2"></ShellBarItem>
 					<ShellBarItem icon={activities} text="Action 3"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 4"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 5"></ShellBarItem>
 					<Avatar slot="profile">
 						<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
 					</Avatar>
 				</ShellBar>
 			);
 
-			// Use narrow viewport to force items into overflow
-			cy.viewport(320, 800);
+			// Use narrow viewport to force search into overflow
+			// 280px is needed because search button only overflows after all other items
+			cy.viewport(280, 800);
 			cy.wait(RESIZE_THROTTLE_RATE);
 
 			cy.get("#shellbar").as("shellbar");
 
 			// Verify overflow button exists (search should be in overflow when closed)
 			cy.get("@shellbar").should("have.prop", "breakpointSize", "S");
+
+			// Verify search is collapsed and in overflow
+			cy.get("@shellbar").should("have.prop", "showSearchField", false);
+			cy.get("@shellbar").then(($shellbar) => {
+				const shellbar = $shellbar[0] as any;
+				expect(shellbar.hiddenItemsIds, "search should be hidden").to.include("search");
+			});
 
 			// Open overflow popover
 			cy.get("@shellbar").invoke("prop", "overflowPopoverOpen", true);
