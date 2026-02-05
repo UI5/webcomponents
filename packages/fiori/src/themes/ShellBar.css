@@ -161,7 +161,9 @@
 	/* goes to the most right when no content is present */
 }
 
-:host([show-search-field]) ::slotted([slot="searchField"]),
+/* this width is only applied when not in full screen mode as 
+in full screen the search fills the available space */
+:host([show-search-field]:not([show-full-width-search])) ::slotted([slot="searchField"]),
 /* Search field displays in full mode if there's not enough space in bar.
 Once in full screen mode the search field is rendered in another DOM. 
 To account for correct measurements in overflow, we should keep the min width 
