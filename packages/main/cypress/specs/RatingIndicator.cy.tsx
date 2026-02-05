@@ -76,49 +76,41 @@ describe("RatingIndicator", () => {
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.first()
-				.should("have.attr", "name", "heart-2");
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
+				.should("have.attr", "name", "heart");
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
-				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon")
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
+				.should("have.attr", "name", "heart-2");
+		});
+
+		it("should render custom icon (filled) in half-star state when readonly", () => {
+			cy.mount(<RatingIndicator value={2.5} iconSelected="heart" iconUnselected="heart-2" readonly></RatingIndicator>);
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
+				.should("have.attr", "name", "heart");
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
 				.should("have.attr", "name", "heart");
 		});
-	});
 
-	describe("Half Icon appearance", () => {
-		it("Half icon should be filled when rating indicator is disabled", () => {
-			const attributeValue = "favorite";
-
-			cy.mount(<RatingIndicator value={2.5} disabled={true}></RatingIndicator>);
+		it("should render custom icon (filled) in half-star state when disabled", () => {
+			cy.mount(<RatingIndicator value={2.5} iconSelected="heart" iconUnselected="heart-2" disabled></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.should("have.attr", "name", attributeValue);
-		});
-
-		it("Half icon should be filled when rating indicator is readonly", () => {
-			const attributeValue = "favorite";
-
-			cy.mount(<RatingIndicator value={2.5} readonly={true}></RatingIndicator>);
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
+				.should("have.attr", "name", "heart");
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.should("have.attr", "name", attributeValue);
-		});
-
-		it("Half icon should be border only when rating indicator is regular", () => {
-			const attributeValue = "unfavorite";
-
-			cy.mount(<RatingIndicator value={2.5}></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half [ui5-icon]")
-				.should("have.attr", "name", attributeValue);
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
+				.should("have.attr", "name", "heart");
 		});
 	});
 

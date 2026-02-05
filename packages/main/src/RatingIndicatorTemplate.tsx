@@ -41,9 +41,11 @@ function starLi(this: RatingIndicator, star: Star) {
 	} if (star.halfStar) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-half">
-				<Icon data-ui5-value={star.index} name={halfStarIconName.call(this)} />
-				<div class="ui5-rating-indicator-half-icon-wrapper">
-					<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} class="ui5-rating-indicator-half-icon" />
+				<div class="ui5-rating-indicator-half-icon-wrapper ui5-rating-indicator-half-icon-left">
+					<Icon data-ui5-value={star.index} name={this.effectiveIconSelected} />
+				</div>
+				<div class="ui5-rating-indicator-half-icon-wrapper ui5-rating-indicator-half-icon-right">
+					<Icon data-ui5-value={star.index} name={halfStarIconName.call(this)} />
 				</div>
 			</li>
 		);
