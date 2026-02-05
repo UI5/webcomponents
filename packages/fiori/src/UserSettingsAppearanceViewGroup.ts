@@ -17,7 +17,6 @@ import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewIte
  *
  * @constructor
  * @extends ListItemGroup
- * @experimental
  * @public
  * @since 2.17.0
  */

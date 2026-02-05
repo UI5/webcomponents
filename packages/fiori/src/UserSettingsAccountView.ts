@@ -42,7 +42,6 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
  *
  * @constructor
  * @extends UserSettingsView
- * @experimental
  * @public
  * @since 2.17.0
  */

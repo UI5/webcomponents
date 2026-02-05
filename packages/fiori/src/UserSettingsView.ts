@@ -12,7 +12,6 @@ import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.8.0
  */

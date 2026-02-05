@@ -32,7 +32,6 @@ import "@ui5/webcomponents-icons/dist/product.js";
  *
  * @constructor
  * @extends ListItemCustom
- * @experimental
  * @public
  * @since 2.17.0
  */
