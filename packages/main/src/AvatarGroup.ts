@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -7,7 +8,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
@@ -68,7 +69,7 @@ const offsets = {
 	},
 	[AvatarSize.L]: {
 		[AvatarGroupType.Individual]: "0.125rem",
-		[AvatarGroupType.Group]: " -2rem",
+		[AvatarGroupType.Group]: "-2rem",
 	},
 	[AvatarSize.XL]: {
 		[AvatarGroupType.Individual]: "0.25rem",
@@ -173,6 +174,12 @@ class AvatarGroup extends UI5Element {
 		"click": AvatarGroupClickEventDetail
 		"overflow": void
 	}
+
+	slotDetails!: {
+		overflowButton: IButton;
+		items: IAvatarGroupItem;
+	}
+
 	/**
 	 * Defines the mode of the `AvatarGroup`.
 	 * @default "Group"
@@ -231,7 +238,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: Array<IAvatarGroupItem>;
+	items!: DefaultSlot<IAvatarGroupItem>;
 
 	/**
 	 * Defines the overflow button of the component.
@@ -243,7 +250,7 @@ class AvatarGroup extends UI5Element {
 	 * @since 1.0.0-rc.13
 	 */
 	@slot()
-	overflowButton!: Array<IButton>;
+	overflowButton!: Slot<IButton>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

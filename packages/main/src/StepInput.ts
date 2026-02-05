@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
@@ -25,6 +26,7 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
+import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import StepInputTemplate from "./StepInputTemplate.js";
 import {
 	STEPINPUT_DEC_ICON_TITLE,
@@ -296,7 +298,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	_initialValueState?: `${ValueState}`;
 
@@ -662,6 +664,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_onfocusout() {
 		this.focused = false;
 		this._previousValue = undefined;
+	}
+
+	_onInputRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {

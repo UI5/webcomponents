@@ -1,9 +1,10 @@
 /* eslint-disable spaced-comment */
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type {
@@ -223,6 +224,10 @@ type InputSuggestionScrollEventDetail = {
 	bubbles: true,
 })
 
+@event("_request-submit", {
+	bubbles: true,
+})
+
 /**
  * Fired when the value of the component changes at each keystroke,
  * and when a suggestion item has been selected.
@@ -295,6 +300,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		"change": InputEventDetail,
 		"input": InputEventDetail,
 		"select": void,
+		"_request-submit": void,
 		"selection-change": InputSelectionChangeEventDetail,
 		"type-ahead": void,
 		"suggestion-scroll": InputSuggestionScrollEventDetail,
@@ -585,14 +591,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	suggestionItems!: Array<IInputSuggestionItem>;
+	suggestionItems!: DefaultSlot<IInputSuggestionItem>;
 
 	/**
 	 * Defines the icon to be displayed in the component.
 	 * @public
 	 */
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<IIcon>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -612,7 +618,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	hasSuggestionItemSelected: boolean;
 	valueBeforeItemSelection: string;
@@ -876,12 +882,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (isEnter(e)) {
 			const isValueUnchanged = this.previousValue === this.getInputDOMRefSync()!.value;
-			const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
 
 			this._enterKeyDown = true;
-
-			if (isValueUnchanged && shouldSubmit) {
+			if (isValueUnchanged) {
+				this.fireDecoratorEvent("_request-submit");
 				submitForm(this);
+				return;
 			}
 
 			return this._handleEnter(e);
@@ -1179,8 +1185,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	_handleChange() {
-		const shouldSubmit = this._internals.form && this._internals.form.querySelectorAll("[ui5-input]").length === 1;
-
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
@@ -1202,7 +1206,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			} else {
 				fireChange();
 
-				if (this._enterKeyDown && shouldSubmit) {
+				if (this._enterKeyDown) {
+					this.fireDecoratorEvent("_request-submit");
 					submitForm(this);
 				}
 			}
