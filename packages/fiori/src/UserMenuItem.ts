@@ -25,7 +25,6 @@ import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
  * `import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";`
  * @constructor
  * @extends MenuItem
- * @experimental
  * @public
  * @since 2.5.0
  */
