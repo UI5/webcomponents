@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **For component developers:** If you're building components using `@ui5/webcomponents-base` as a dependency, see [`packages/base/CLAUDE.md`](./packages/base/CLAUDE.md) for reusable development patterns and best practices that apply to any component library built on this framework.
+
 ## Project Overview
 
 UI5 Web Components is an enterprise-grade, framework-agnostic web components library implementing SAP Fiori design. It's a Yarn-based monorepo using Lerna and Yarn Workspaces.
@@ -47,6 +49,21 @@ yarn test:cypress:single cypress/specs/<Component>.cy.tsx  # Run single test fil
 
 The test will consume the `.ts` files directly and will detect TypeScript errors, there is no need to run the `yarn ts` command before running a test.
 
+### Running single test case from a test file
+When fixing a failing test, check the fix by running just the failing test case instead of all tests in the file.
+
+Example of failing test case:
+```tsx
+	it("should set correct tooltip to right text button", () => {
+```
+
+Use `.only` to verify the fix faster
+```tsx
+	it.only("should set correct tooltip to right text button", () => {
+```
+
+Do this for each failing test case, remove `.only` when all cases are fixed and run the full test file or suite for final verification
+
 ### Dev server
 When agents are running the above commands, there could be a dev server running, which will be running the `yarn generate` command in watch mode. This will not interfere with running commands from the agent.
 
@@ -61,171 +78,6 @@ Key packages in `/packages/`:
 - **localization**: i18n and CLDR assets
 - **icons**, **icons-tnt**, **icons-business-suite**: Icon collections
 - **tools**: Build tools, dev server, CLI
-
-## Component Architecture
-
-Components use decorator-based definitions with Preact JSX templates:
-
-```typescript
-@customElement({
-  tag: "ui5-button",
-  renderer: jsxRenderer,
-  template: ButtonTemplate,
-  styles: buttonCss,
-  languageAware: true,
-})
-class Button extends UI5Element {
-  @property() design: `${ButtonDesign}` = "Default";
-  @property({ type: Boolean }) disabled = false;
-}
-```
-
-**File structure for a component:**
-- `src/ComponentName.ts` - Component class with decorators
-- `src/ComponentNameTemplate.tsx` - JSX template
-- `src/themes/ComponentName.css` - Styles (works across all themes via CSS variables)
-- `src/i18n/messagebundle*.properties` - Translations
-- `cypress/specs/<Component>.cy.tsx` - the test file for the component
-
-## Critical Development Rules
-
-### DOM manipulation anti-pattern
-this is a common pattern for accessing DOM elements:
-```typescript
-	@query("[component-selector]")
-	_domRefToComponent!: SomeComponent;
-```
-
-another way for accessing DOM elements is:
-```typescript
-const _domRefToComponent = this.shadowRoot!.querySelector<SomeComponent>("[component-selector]")!;
-```
-
-Using the reference is only allowed for calling `.focus()` like this:
-```typescript
-_domRefToComponent?.focus();
-```
-
-Modifying properties is strictly forbidden and should be done in the template instead.
-```typescript
-// BAD - don't modify the dom directly
-_domRefToComponent?.value = `don't do this`;
-```
-
-```tsx
-// GOOD - use the template
-<SomeComponent value={'do this instead'}>
-```
-
-### Always use template literal types for enums
-Imports:
-```typescript
-// BAD - don't import the enum object from the JS file
-import ButtonDesign from "./types/ButtonDesign.js";
-
-// GOOD - import the type of the enum only - no runtime overhead
-import type ButtonDesign from "./types/ButtonDesign.js";
-```
-
-Property types:
-```typescript
-  // BAD - don't use the type directy and don't assign values from the enum object
-	design: ButtonDesign = ButtonDesign.Default;
-
-  // GOOD - Awalys use template literal for the enum and always assign the string values
-  design: `${ButtonDesign}` = "Default";
-```
-
-Enum value usage:
-```typescript
-// BAD - don't use enum values from the object in the runtime (having a type import enforces this)
-this.design !== ButtonDesign.Transparent
-
-// GOOD - use strings (IDE will autocomplete, TS will force the enum correctness, no runtime overhead from enum)
-this.design !== "Transparent";
-```
-
-### Scoping-Safe Code (Required for Micro-Frontend Support)
-```typescript
-// BAD - hard-coded tag names break scoping
-this.shadowRoot.querySelector("ui5-popover")
-ui5-button.accept-btn { color: green; }
-
-// GOOD - use attribute notation
-this.shadowRoot.querySelector("[ui5-popover]")
-[ui5-button].accept-btn { color: green; }
-```
-
-### No instanceof Checks, no direct `.tagName` comparison
-```typescript
-// BAD - fails with multiple framework versions
-if (element instanceof Button) { }
-
-// BAD - the tag name could be scoped like `UI5-BUTTON-F5331039` and won't match
-if (element.tagName === "UI5-BUTTON") { }
-```
-
-``` typescript
-// GOOD - use the `createInstanceChecker` helper that checks for instances via duck-typing
-// ComboBoxItemGroup.ts
-import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
-class ComboBoxItemGroup {
-  readonly isGroupItem = true;
-}
-export const isInstanceOfComboBoxItemGroup = createInstanceChecker<ComboBoxItemGroup>("isGroupItem");
-// ComboBox.ts
-if (isInstanceOfComboBoxItemGroup(element)) {
-  // element has the correct type now
-}
-```
-
-### Property/Event Conventions
-- Never change public properties without user interaction
-- Set `noAttribute: true` for private properties not used in CSS
-- Fire events upon every user interaction to notify applications
-- Import all icons explicitly (test bundle imports all, but real apps don't)
-
-## Testing with Cypress
-
-Tests use component testing with JSX mounting:
-
-```typescript
-import Button from "../../src/Button.js";
-
-describe("Button", () => {
-  it("tests click event", () => {
-    cy.mount(<Button>Click me</Button>);
-
-    cy.get("[ui5-button]").then(($btn) => {
-      cy.spy($btn[0], "click").as("clicked");
-    });
-
-    cy.get("[ui5-button]").realClick();  // Use realClick, not click
-    cy.get("@clicked").should("have.been.called");
-  });
-});
-```
-
-**Key testing patterns:**
-- Use `cypress-real-events`: `realClick()`, `realPress()`, `realType()` instead of simulated events
-- Use `cy.ui5SimulateDevice("phone")` for mobile testing
-- For language testing: `cy.wrap({ setLanguage }).invoke("setLanguage", "bg")` (must await)
-- Import `Assets.js` when testing with non-default languages
-
-**Running single test case from a test file**
-When fixing a failing test, check the fix by running just the failing test case instead of all tests in the file.
-
-Example of failing test case:
-```tsx
-	it("should set correct tooltip to right text button", () => {
-```
-
-Use `.only` to verify the fix faster
-```tsx
-	it.only("should set correct tooltip to right text button", () => {
-```
-
-Do this for each failing test case, remove `.only` when all cases are fixed and run the full test file or suite for final verification
 
 ## Commit Message Format
 

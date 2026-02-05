@@ -30,7 +30,7 @@ const setFormValue = (element: IFormInputElement) => {
 };
 
 const setFormValidity = async (element: IFormInputElement) => {
-	if (!element._internals?.form) {
+	if (!element.isUI5Element || !element._internals?.form) {
 		return;
 	}
 
@@ -45,7 +45,11 @@ const setFormValidity = async (element: IFormInputElement) => {
 	}
 };
 
-const submitForm = (element: UI5Element) => {
+const submitForm = async (element: UI5Element) => {
+	const elements = [...(element._internals?.form?.elements ?? [])] as Array<IFormInputElement | UI5Element>;
+
+	await Promise.all(elements.map(el => { return isInputElement(el) ? setFormValidity(el) : Promise.resolve(); }));
+
 	element._internals?.form?.requestSubmit();
 };
 

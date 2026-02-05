@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **ui5-search-field:** correct bg and text colors ([#12732](https://github.com/UI5/webcomponents/issues/12732)) ([4870903](https://github.com/UI5/webcomponents/commit/487090343e47e6015f2a40883f9e205945e0fdd0)), closes [#12578](https://github.com/UI5/webcomponents/issues/12578)
+* **ui5-timeline:** add correct `accessibleName` to growing button ([#12963](https://github.com/UI5/webcomponents/issues/12963)) ([83901bf](https://github.com/UI5/webcomponents/commit/83901bf1d2209e9b65733e6de5aa0facdb518c68))
+* **ui5-user-menu:** avatar fix for vertical pictures ([#13017](https://github.com/UI5/webcomponents/issues/13017)) ([d28a19a](https://github.com/UI5/webcomponents/commit/d28a19aab0e9b6e8e90fb5ff2696510d8454b838))
+* **ui5-user-settings:** correct usage with scoping ([#12983](https://github.com/UI5/webcomponents/issues/12983)) ([a0c20d0](https://github.com/UI5/webcomponents/commit/a0c20d0b3674221d9aa704d34a4ba449ded8e90e))
+
+
+### Features
+
+* **framework:** move CSS variables to host element ([#12984](https://github.com/UI5/webcomponents/issues/12984)) ([3bd2b4a](https://github.com/UI5/webcomponents/commit/3bd2b4a78e1520c35029d001719186f3a0e3801d))
+* **ui5-user-menu:** add support for avatar schema color ([#13020](https://github.com/UI5/webcomponents/issues/13020)) ([65564f4](https://github.com/UI5/webcomponents/commit/65564f4e9599e6d5e50f4111a2cea60d5d764155))
+
+
+
+
+
 # [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
 
 
