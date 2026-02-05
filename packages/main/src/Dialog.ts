@@ -1,5 +1,6 @@
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import {
@@ -112,6 +113,7 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
 })
 class Dialog extends Popup {
 	eventDetails!: Popup["eventDetails"];
+
 	/**
 	 * Defines the header text.
 	 *
@@ -207,7 +209,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -216,7 +218,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	footer!: Array<HTMLElement>;
+	footer!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
