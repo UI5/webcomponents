@@ -6,13 +6,13 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
 import type Select from "./Select.js";
+import type { SelectChangeEventDetail } from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
 import ToolbarItem from "./ToolbarItem.js";
 import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
-import type { SelectChangeEventDetail } from "./Select.js";
 
 type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail;
 
@@ -213,6 +213,11 @@ class ToolbarSelect extends ToolbarItem {
 
 	get hasCustomLabel() {
 		return !!this.label.length;
+	}
+
+	getFocusDomRef(): HTMLElement | undefined {
+		const select = this.shadowRoot?.querySelector("[ui5-select]") as Select | null;
+		return select?.getFocusDomRef();
 	}
 }
 

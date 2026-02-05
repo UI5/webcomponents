@@ -60,6 +60,14 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	isOverflowed: boolean = false;
 
+	/**
+	 * Defines the tabindex of the toolbar item.
+	 * Used by ItemNavigation for keyboard navigation.
+	 * @private
+	 */
+	@property()
+	forcedTabIndex?: string;
+
 	_isRendering = true;
 
 	onAfterRendering(): void {
@@ -91,6 +99,12 @@ class ToolbarItem extends UI5Element {
 	get isInteractive(): boolean {
 		return true;
 	}
+
+	/**
+	 * Returns if the item is disabled.
+	 * @protected
+	 */
+	disabled = false;
 
 	/**
 	 * Returns if the item is separator.
