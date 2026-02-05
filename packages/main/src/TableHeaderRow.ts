@@ -1,4 +1,4 @@
-import { customElement, slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableRowBase from "./TableRowBase.js";
 import TableHeaderRowTemplate from "./TableHeaderRowTemplate.js";
 import TableHeaderRowStyles from "./generated/themes/TableHeaderRow.css.js";
@@ -12,6 +12,7 @@ import {
 	TABLE_SELECT_ALL_ROWS,
 	TABLE_DESELECT_ALL_ROWS,
 } from "./generated/i18n/i18n-defaults.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -62,7 +63,7 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 		},
 		individualSlots: true,
 	})
-	cells!: Array<TableHeaderCell>;
+	cells!: DefaultSlot<TableHeaderCell>;
 
 	/**
 	 * Sticks the `ui5-table-header-row` to the top of a table.

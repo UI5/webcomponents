@@ -1,5 +1,5 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import SearchItemTemplate from "./SearchItemTemplate.js";
@@ -25,6 +25,7 @@ import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 // @ts-expect-error
 import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 /**
  * @class
  *
@@ -125,7 +126,7 @@ class SearchItem extends ListItemBase {
 	 * @since 2.12.0
 	 */
 	@slot()
-	image!: Array<HTMLElement>;
+	image!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the actionable elements.
@@ -139,7 +140,7 @@ class SearchItem extends ListItemBase {
 	 * @since 2.16.0
 	 */
 	@slot()
-	actions!: Array<HTMLElement>;
+	actions!: Slot<HTMLElement>;
 
 	_markupText = "";
 
