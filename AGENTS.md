@@ -65,7 +65,19 @@ Remove `.only` before committing and run the full test file for final verificati
 
 ## Component Development
 
-For component architecture, development rules, and testing patterns, see [`packages/base/AGENTS.md`](./packages/base/AGENTS.md).
+For detailed component architecture, development rules, and testing patterns, see [`packages/base/AGENTS.md`](./packages/base/AGENTS.md).
+
+### Quick Reference
+
+| Rule | Bad | Good |
+|------|-----|------|
+| Enum imports | `import Enum from "..."` | `import type Enum from "..."` |
+| Enum types | `prop: Enum` | `prop: \`${Enum}\`` |
+| Enum values | `Enum.Value` | `"Value"` |
+| DOM queries | `querySelector("ui5-tag")` | `querySelector("[ui5-tag]")` |
+| CSS selectors | `ui5-tag { }` | `[ui5-tag] { }` |
+| Type checks | `instanceof Component` | `isInstanceOfComponent(el)` |
+| DOM mutation | `this._ref.value = x` | Template: `<Comp value={x} />` |
 
 ## Commit Message Format
 
