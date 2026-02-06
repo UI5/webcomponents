@@ -21,7 +21,7 @@ import type { Slot as SlotMetadata } from "../UI5ElementMetadata.js";
  * header!: Slot<HTMLElement>;
  *
  * @slot({ type: HTMLElement, default: true })
- * defaultSlot!: DefaultSlot<HTMLElement>;
+ * items!: DefaultSlot<HTMLElement>;
  * }
  * ```
  */
