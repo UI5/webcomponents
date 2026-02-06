@@ -13,7 +13,7 @@ import type { Slot as SlotMetadata } from "../UI5ElementMetadata.js";
  * Example usage:
  * ```ts
  * import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
- * import { slot } from "@ui5/ot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+ * import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  *
  * class MyComponent extends UI5Element {
  *
