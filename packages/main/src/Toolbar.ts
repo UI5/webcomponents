@@ -9,6 +9,8 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
+import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -58,8 +60,10 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
- * - The control is not interactive, but can contain of interactive elements
- * - [Tab] - iterates through elements
+ * - [Left Arrow] / [Right Arrow] - navigates between toolbar items
+ * - [Home] - moves focus to the first toolbar item
+ * - [End] - moves focus to the last toolbar item
+ * - [Tab] - moves focus out of the toolbar to the next focusable element
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/Toolbar.js";`
@@ -160,6 +164,7 @@ class Toolbar extends UI5Element {
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;
+	_itemNavigation: ItemNavigation;
 	itemsToOverflow: Array<ToolbarItem> = [];
 	itemsWidth = 0;
 	minContentWidth = 0;
@@ -178,6 +183,10 @@ class Toolbar extends UI5Element {
 
 		this._onResize = this.onResize.bind(this);
 		this._onCloseOverflow = this.closeOverflow.bind(this);
+		this._itemNavigation = new ItemNavigation(this, {
+			navigationMode: NavigationMode.Horizontal,
+			getItemsCallback: () => this.navigatableItems,
+		});
 	}
 
 	/**
@@ -218,6 +227,10 @@ class Toolbar extends UI5Element {
 
 	get interactiveItems() {
 		return this.items.filter((item: ToolbarItem) => item.isInteractive);
+	}
+
+	get navigatableItems() {
+		return this.standardItems.filter((item: ToolbarItem) => item.isInteractive);
 	}
 
 	/**
@@ -470,6 +483,13 @@ class Toolbar extends UI5Element {
 	onResize() {
 		this.closeOverflow();
 		this.processOverflowLayout();
+	}
+
+	_onfocusin(e: FocusEvent) {
+		const target = e.target as ToolbarItem;
+		if (this.navigatableItems.includes(target)) {
+			this._itemNavigation.setCurrentItem(target);
+		}
 	}
 
 	/**
