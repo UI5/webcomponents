@@ -7559,7 +7559,7 @@ __metadata:
   dependencies:
     "@cypress/code-coverage": "npm:^3.14.6"
     "@ui5/cypress-ct-ui5-webc": "npm:0.0.4"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     cypress-real-events: "npm:^1.15.0"
     eslint-plugin-cypress: "npm:^3.4.0"
     rimraf: "npm:^3.0.2"
@@ -7580,7 +7580,7 @@ __metadata:
     "@ui5/webcomponents-icons": "npm:2.19.0"
     "@ui5/webcomponents-theming": "npm:2.19.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
@@ -7596,7 +7596,7 @@ __metadata:
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
     clean-css: "npm:^5.2.2"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     lit-html: "npm:^2.0.1"
     mocha: "npm:^11.7.2"
     replace-in-file: "npm:^6.3.5"
@@ -7618,7 +7618,7 @@ __metadata:
     "@ui5/webcomponents-icons": "npm:2.19.0"
     "@ui5/webcomponents-theming": "npm:2.19.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     vite: "npm:5.4.21"
   languageName: unknown
   linkType: soft
@@ -7635,7 +7635,7 @@ __metadata:
     "@ui5/webcomponents-theming": "npm:2.19.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
     "@zxing/library": "npm:^0.21.3"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     lit: "npm:^2.0.0"
     vite: "npm:5.4.21"
     yarn: "npm:^1.22.22"
@@ -7804,7 +7804,7 @@ __metadata:
     "@ui5/webcomponents-localization": "npm:2.19.0"
     "@ui5/webcomponents-theming": "npm:2.19.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:15.3.0"
     jsdom: "npm:^26.0.0"
     lit: "npm:^2.0.0"
     vite: "npm:5.4.21"
@@ -11530,59 +11530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^13.11.0":
-  version: 13.11.0
-  resolution: "cypress@npm:13.11.0"
-  dependencies:
-    "@cypress/request": "npm:^3.0.0"
-    "@cypress/xvfb": "npm:^1.2.4"
-    "@types/sinonjs__fake-timers": "npm:8.1.1"
-    "@types/sizzle": "npm:^2.3.2"
-    arch: "npm:^2.2.0"
-    blob-util: "npm:^2.0.2"
-    bluebird: "npm:^3.7.2"
-    buffer: "npm:^5.7.1"
-    cachedir: "npm:^2.3.0"
-    chalk: "npm:^4.1.0"
-    check-more-types: "npm:^2.24.0"
-    cli-cursor: "npm:^3.1.0"
-    cli-table3: "npm:~0.6.1"
-    commander: "npm:^6.2.1"
-    common-tags: "npm:^1.8.0"
-    dayjs: "npm:^1.10.4"
-    debug: "npm:^4.3.4"
-    enquirer: "npm:^2.3.6"
-    eventemitter2: "npm:6.4.7"
-    execa: "npm:4.1.0"
-    executable: "npm:^4.1.1"
-    extract-zip: "npm:2.0.1"
-    figures: "npm:^3.2.0"
-    fs-extra: "npm:^9.1.0"
-    getos: "npm:^3.2.1"
-    is-ci: "npm:^3.0.1"
-    is-installed-globally: "npm:~0.4.0"
-    lazy-ass: "npm:^1.6.0"
-    listr2: "npm:^3.8.3"
-    lodash: "npm:^4.17.21"
-    log-symbols: "npm:^4.0.0"
-    minimist: "npm:^1.2.8"
-    ospath: "npm:^1.2.2"
-    pretty-bytes: "npm:^5.6.0"
-    process: "npm:^0.11.10"
-    proxy-from-env: "npm:1.0.0"
-    request-progress: "npm:^3.0.0"
-    semver: "npm:^7.5.3"
-    supports-color: "npm:^8.1.1"
-    tmp: "npm:~0.2.1"
-    untildify: "npm:^4.0.0"
-    yauzl: "npm:^2.10.0"
-  bin:
-    cypress: bin/cypress
-  checksum: 10c0/a78eca7c26279928a86110d136a8ffcb339e81a04345eff155b0bc1b58f39bcce669f72f9d4e8303d038daf477525e727be2e1814ae04c100a3700c5f6f922f2
-  languageName: node
-  linkType: hard
-
-"cypress@npm:^15.3.0":
+"cypress@npm:15.3.0, cypress@npm:^15.3.0":
   version: 15.3.0
   resolution: "cypress@npm:15.3.0"
   dependencies:
@@ -11632,6 +11580,58 @@ __metadata:
   bin:
     cypress: bin/cypress
   checksum: 10c0/41a422526ba851a68dbe0121d0897a1ce73ad85462d28432756e43b92d5e7df7335ba5c5d776e81a9a0b4730de316b69b9ab88f32d8c149a5ccb011eec8a4d2a
+  languageName: node
+  linkType: hard
+
+"cypress@npm:^13.11.0":
+  version: 13.11.0
+  resolution: "cypress@npm:13.11.0"
+  dependencies:
+    "@cypress/request": "npm:^3.0.0"
+    "@cypress/xvfb": "npm:^1.2.4"
+    "@types/sinonjs__fake-timers": "npm:8.1.1"
+    "@types/sizzle": "npm:^2.3.2"
+    arch: "npm:^2.2.0"
+    blob-util: "npm:^2.0.2"
+    bluebird: "npm:^3.7.2"
+    buffer: "npm:^5.7.1"
+    cachedir: "npm:^2.3.0"
+    chalk: "npm:^4.1.0"
+    check-more-types: "npm:^2.24.0"
+    cli-cursor: "npm:^3.1.0"
+    cli-table3: "npm:~0.6.1"
+    commander: "npm:^6.2.1"
+    common-tags: "npm:^1.8.0"
+    dayjs: "npm:^1.10.4"
+    debug: "npm:^4.3.4"
+    enquirer: "npm:^2.3.6"
+    eventemitter2: "npm:6.4.7"
+    execa: "npm:4.1.0"
+    executable: "npm:^4.1.1"
+    extract-zip: "npm:2.0.1"
+    figures: "npm:^3.2.0"
+    fs-extra: "npm:^9.1.0"
+    getos: "npm:^3.2.1"
+    is-ci: "npm:^3.0.1"
+    is-installed-globally: "npm:~0.4.0"
+    lazy-ass: "npm:^1.6.0"
+    listr2: "npm:^3.8.3"
+    lodash: "npm:^4.17.21"
+    log-symbols: "npm:^4.0.0"
+    minimist: "npm:^1.2.8"
+    ospath: "npm:^1.2.2"
+    pretty-bytes: "npm:^5.6.0"
+    process: "npm:^0.11.10"
+    proxy-from-env: "npm:1.0.0"
+    request-progress: "npm:^3.0.0"
+    semver: "npm:^7.5.3"
+    supports-color: "npm:^8.1.1"
+    tmp: "npm:~0.2.1"
+    untildify: "npm:^4.0.0"
+    yauzl: "npm:^2.10.0"
+  bin:
+    cypress: bin/cypress
+  checksum: 10c0/a78eca7c26279928a86110d136a8ffcb339e81a04345eff155b0bc1b58f39bcce669f72f9d4e8303d038daf477525e727be2e1814ae04c100a3700c5f6f922f2
   languageName: node
   linkType: hard
 
