@@ -6,6 +6,7 @@ import List from "../List.js";
 import ResponsivePopover from "../ResponsivePopover.js";
 import Button from "../Button.js";
 import ListAccessibleRole from "../types/ListAccessibleRole.js";
+import Title from "../Title.js";
 
 export default function InputSuggestionsTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult, valueStateMessage: (this: Input) => JsxTemplateResult, valueStateMessageInputIcon: (this: Input) => string }) {
 	const suggestionsList = hooks?.suggestionsList || defaultSuggestionsList;
@@ -35,7 +36,13 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
-							<span>{this._headerTitleText}</span>
+							<Title
+								level="H1"
+								wrappingType="None"
+								class="ui5-responsive-popover-header-text"
+							>
+								{this._headerTitleText}
+							</Title>
 						</div>
 						<div class="row">
 							<div class="input-root-phone native-input-wrapper">
@@ -75,7 +82,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 				</div>
 			}
 
-			{ this.showSuggestions && suggestionsList.call(this) }
+			{this.showSuggestions && suggestionsList.call(this)}
 
 			{this._isPhone &&
 				<div slot="footer" class="ui5-responsive-popover-footer">

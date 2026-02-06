@@ -51,21 +51,44 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
-          yarn lerna version ${{ github.event.inputs.new_version || '' }}  \
+          yarn lerna version ${{ github.event.inputs.new_version || '' }} \
             --conventional-graduate \
             --force-conventional-graduate \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Push Changes
+        run: |
+          git push origin HEAD
+          git push origin --tags
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+          github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          script: |
+            const extractChangelog = (await import('${{ github.workspace }}/.github/actions/extractChangelog.mjs')).default;
+            const changelog = await extractChangelog();
+            const version = require('./lerna.json').version;
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${version}`,
+              name: `v${version}`,
+              body: changelog,
+            });
 
       - name: Publish
         run: |
@@ -135,9 +158,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -149,7 +169,34 @@ jobs:
             --force-publish \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Push Changes
+        run: |
+          git push origin HEAD
+          git push origin --tags
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+          github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          script: |
+            const extractChangelog = (await import('${{ github.workspace }}/.github/actions/extractChangelog.mjs')).default;
+            const changelog = await extractChangelog();
+            const version = require('./lerna.json').version;
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${version}`,
+              name: `v${version}`,
+              body: changelog,
+              prerelease: true,
+            });
 
       - name: Publish
         run: |
@@ -203,9 +250,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -217,7 +261,33 @@ jobs:
             --force-conventional-graduate \
             --yes \
             --exact \
-            --create-release github
+            --no-push
+
+      - name: Build
+        run: yarn ci:releasebuild
+
+      - name: Push Changes
+        run: |
+          git push origin HEAD
+          git push origin --tags
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        with:
+          github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          script: |
+            const extractChangelog = (await import('${{ github.workspace }}/.github/actions/extractChangelog.mjs')).default;
+            const changelog = await extractChangelog();
+            const version = require('./lerna.json').version;
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${version}`,
+              name: `v${version}`,
+              body: changelog,
+            });
 
       - name: Publish
         run:  |
@@ -247,9 +317,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -265,6 +332,9 @@ jobs:
             --ignore-changes @ui5/webcomponents-website \
             --ignore-changes @ui5/webcomponents-cypress-internal \
             --ignore-changes @ui5/webcomponents-cypress-ct
+
+      - name: Build
+        run: yarn ci:releasebuild
 
       - name: Publish
         run: |
