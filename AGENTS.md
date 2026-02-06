@@ -29,7 +29,6 @@ packages/
 ```bash
 yarn start       # Start dev server with watch mode (recommended for development)
 yarn build       # Full production build
-yarn test        # Test all packages
 yarn lint        # Lint all packages
 ```
 
@@ -40,9 +39,27 @@ yarn test:cypress:single cypress/specs/Button.cy.tsx  # Single test file
 ```
 
 ### Build & Test Flow
-1. `yarn start` - Starts dev server with file watching (auto-rebuilds on changes)
-2. Make your code changes
-3. `cd packages/<pkg> && yarn test:cypress:single ...` - Run relevant tests
+
+**Build steps** (always run from root folder):
+1. `yarn generate` - Generates `.ts` files (in `src/generated`) from `.css` and `.properties` files. Run once on clean state, or when these files change. The dev server runs this in watch mode automatically.
+2. `yarn ts` - TypeScript compilation, populates `dist/` with `.js` and `.d.ts` files. Use to check for TypeScript errors.
+
+**Test steps** (run from package folder):
+```bash
+cd packages/main  # or fiori, etc.
+yarn test:cypress:single cypress/specs/<Component>.cy.tsx
+```
+
+Tests consume `.ts` files directly and detect TypeScript errors - no need to run `yarn ts` first.
+
+**Running a single test case:**
+When fixing a failing test, use `.only` to run just that case:
+```tsx
+it.only("should set correct tooltip", () => {  // Add .only
+```
+Remove `.only` before committing and run the full test file for final verification.
+
+**Dev server:** When running, the dev server executes `yarn generate` in watch mode. This won't interfere with running other commands.
 
 **Important:** Never run all tests locally. Only run tests for the component being modified.
 
