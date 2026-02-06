@@ -74,8 +74,7 @@ jobs:
           git push origin HEAD
           git push origin --tags
           NEW_VERSION=$(node -p "require('./lerna.json').version")
-          # Extract changelog section for this version
-          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          CHANGELOG_BODY=$(node .github/actions/extractChangelog.mjs "${NEW_VERSION}")
           gh release create "v${NEW_VERSION}" \
             --title "v${NEW_VERSION}" \
             --notes "${CHANGELOG_BODY}"
@@ -171,8 +170,7 @@ jobs:
           git push origin HEAD
           git push origin --tags
           NEW_VERSION=$(node -p "require('./lerna.json').version")
-          # Extract changelog section for this version
-          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          CHANGELOG_BODY=$(node .github/actions/extractChangelog.mjs "${NEW_VERSION}")
           gh release create "v${NEW_VERSION}" \
             --title "v${NEW_VERSION}" \
             --notes "${CHANGELOG_BODY}" \
@@ -253,8 +251,7 @@ jobs:
           git push origin HEAD
           git push origin --tags
           NEW_VERSION=$(node -p "require('./lerna.json').version")
-          # Extract changelog section for this version
-          CHANGELOG_BODY=$(sed -n "/^# \[${NEW_VERSION}\]/,/^# \[/p" CHANGELOG.md | sed '1d;$d')
+          CHANGELOG_BODY=$(node .github/actions/extractChangelog.mjs "${NEW_VERSION}")
           gh release create "v${NEW_VERSION}" \
             --title "v${NEW_VERSION}" \
             --notes "${CHANGELOG_BODY}"
