@@ -62,7 +62,6 @@ import type Button from "./Button.js";
 import {
 	MULTIINPUT_SHOW_MORE_TOKENS,
 	TOKENIZER_ARIA_LABEL,
-	TOKENIZER_POPOVER_REMOVE,
 	TOKENIZER_ARIA_CONTAIN_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_ONE_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS,
@@ -70,6 +69,7 @@ import {
 	TOKENIZER_CLEAR_ALL,
 	TOKENIZER_DIALOG_OK_BUTTON,
 	TOKENIZER_DIALOG_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -1179,7 +1179,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
+		return getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

@@ -178,6 +178,25 @@ class RatingIndicator extends UI5Element {
 	tooltip?: string;
 
 	/**
+	 * Defines the icon to be displayed for the selected (filled) rating symbol.
+	 *
+	 * @default "favorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	iconSelected?: string;
+
+	/**
+	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
+	 * @default "unfavorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	iconUnselected?: string;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Array })
@@ -340,6 +359,14 @@ class RatingIndicator extends UI5Element {
 
 	get ariaReadonly() {
 		return this.readonly ? "true" : undefined;
+	}
+
+	get effectiveIconSelected() {
+		return this.iconSelected || "favorite";
+	}
+
+	get effectiveIconUnselected() {
+		return this.iconUnselected || "unfavorite";
 	}
 }
 
