@@ -223,7 +223,6 @@ class UserMenu extends UI5Element {
 	})
 	accounts!: Slot<UserMenuAccount>;
 
-
 	/**
 	 * Defines custom footer content.
 	 *
@@ -457,11 +456,11 @@ class UserMenu extends UI5Element {
 	}
 
 	get _hasCustomFooter(): boolean {
-        return this.footer.length > 0 && this.footer[0]?.innerHTML.trim() !== "";
-  	}
+		return this.footer.length > 0 && this.footer[0]?.innerHTML.trim() !== "";
+	}
 
 	get _showDefaultFooter(): boolean {
-			return this.footer.length === 0;
+		return this.footer.length === 0;
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
