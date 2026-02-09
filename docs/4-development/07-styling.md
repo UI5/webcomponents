@@ -146,12 +146,14 @@ The `cssVariablesTarget` configuration in `package-scripts.cjs` determines where
 
 ```js
 // package-scripts.cjs
+const options = {
+	cssVariablesTarget: "host",
+};
+
+const scripts = getScripts(options);
+
 module.exports = {
-	build: {
-		options: {
-			cssVariablesTarget: "host" // or "root"
-		}
-	}
+	scripts
 };
 ```
 
@@ -270,12 +272,14 @@ To write `Compact` styles and define `Compact` CSS variables, use CSS container 
 
 ```js
 // package-scripts.cjs
+const options = {
+	cssVariablesTarget: "host",
+};
+
+const scripts = getScripts(options);
+
 module.exports = {
-	build: {
-		options: {
-			cssVariablesTarget: "host"
-		}
-	}
+	scripts
 };
 ```
 
@@ -298,12 +302,14 @@ Alternatively, you can define density variables using selectors `[data-ui5-compa
 
 ```js
 // package-scripts.cjs
+const options = {
+	cssVariablesTarget: "host",
+};
+
+const scripts = getScripts(options);
+
 module.exports = {
-	build: {
-		options: {
-			cssVariablesTarget: "root" // or omit this configuration
-		}
-	}
+	scripts
 };
 ```
 
