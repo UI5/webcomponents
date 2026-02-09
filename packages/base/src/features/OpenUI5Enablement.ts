@@ -1,4 +1,3 @@
-import type { TemplateResult } from "lit-html";
 import { registerFeature } from "../FeaturesRegistry.js";
 import BusyIndicatorStyles from "../generated/css/BusyIndicator.css.js";
 import merge from "../thirdparty/merge.js";
