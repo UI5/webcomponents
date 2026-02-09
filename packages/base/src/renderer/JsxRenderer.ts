@@ -2,6 +2,9 @@ import { hydrate, render, createContext } from "../thirdparty/preact/preact.modu
 import { jsx } from "../thirdparty/preact/jsxRuntime.module.js";
 import type UI5Element from "../UI5Element.js";
 import type { Renderer } from "../UI5Element.js";
+import { getFeature } from "../FeaturesRegistry.js";
+import type OpenUI5Enablement from "../features/OpenUI5Enablement.js";
+import BusyIndicatorWrapperTemplate from "../features/BusyIndicatorWrapperTemplate.js";
 
 const instanceToContextMap = new WeakMap<UI5Element, ReturnType<typeof createContext<UI5Element>>>();
 
@@ -14,7 +17,13 @@ const jsxRenderer: Renderer = (instance: UI5Element, container: HTMLElement | Do
 		instanceToContextMap.set(instance, ctx);
 	}
 
-	const templateResult = instance.render();
+	let templateResult = instance.render();
+
+	const openUI5Enablement = getFeature<typeof OpenUI5Enablement>("OpenUI5Enablement");
+	if (openUI5Enablement) {
+		templateResult = BusyIndicatorWrapperTemplate.call(instance, templateResult) as object;
+	}
+
 	const vnode = jsx(ctx.Provider, { value: instance, children: templateResult });
 
 	if (instance.__shouldHydrate) {
