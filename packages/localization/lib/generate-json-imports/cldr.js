@@ -42,7 +42,9 @@ const generate = async () => {
 		fs.writeFile("src/generated/json-imports/LocaleData-node.ts", contentDynamic(caseDynamicImportJSONAttr)),
 	])
 		.then(() => {
-			console.log("CLDR files generated.");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("CLDR files generated.");
+			}
 		});
 }
 

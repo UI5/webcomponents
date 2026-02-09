@@ -19,6 +19,7 @@ import {
 	DYNAMIC_DATE_RANGE_SELECTED_TEXT,
 	DYNAMIC_DATE_RANGE_EMPTY_SELECTED_TEXT,
 	DYNAMIC_DATE_RANGE_NAVIGATION_ICON_TOOLTIP,
+	DYNAMIC_DATE_RANGE_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 
 // default calendar for bundling
@@ -286,6 +287,10 @@ class DynamicDateRange extends UI5Element {
 
 	get tooltipNavigationIcon() {
 		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_NAVIGATION_ICON_TOOLTIP);
+	}
+
+	get popoverAccessibleName() {
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_POPOVER_ACCESSIBLE_NAME);
 	}
 
 	_togglePicker(): void {

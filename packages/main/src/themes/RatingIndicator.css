@@ -91,21 +91,35 @@
 }
 
 .ui5-rating-indicator-item.ui5-rating-indicator-item-half {
-	color: var(--sapContent_UnratedColor);
-}
-
-.ui5-rating-indicator-item [ui5-icon].ui5-rating-indicator-half-icon {
-	position: absolute;
-	inset-inline-start: 50%;
-	color: var(--sapContent_RatedColor);
+	display: flex;
+	flex-direction: row;
 }
 
 .ui5-rating-indicator-half-icon-wrapper {
-	width: 100%;
+	width: 50%;
 	height: 100%;
-	position: absolute;
-	inset-inline-start: -50%;
-	top: 0;
-	z-index: 32;
 	overflow: hidden;
+	position: relative;
+}
+
+.ui5-rating-indicator-half-icon-wrapper [ui5-icon] {
+	position: absolute;
+	width: var(--_ui5_rating_indicator_item_width);
+	height: var(--_ui5_rating_indicator_item_height);
+}
+
+.ui5-rating-indicator-half-icon-left {
+	color: var(--sapContent_RatedColor);
+}
+
+.ui5-rating-indicator-half-icon-left [ui5-icon] {
+	inset-inline-start: 0;
+}
+
+.ui5-rating-indicator-half-icon-right {
+	color: var(--sapContent_UnratedColor);
+}
+
+.ui5-rating-indicator-half-icon-right [ui5-icon] {
+	inset-inline-end: 0;
 }

@@ -14,6 +14,24 @@ const SCRIPT_NAMES = [
 ]
 
 /**
+ * Check if verbose mode is enabled via CLI flag or environment variable.
+ * @returns {boolean}
+ */
+function isVerbose() {
+	return process.env.UI5_VERBOSE === "true";
+}
+
+/**
+ * Log a message only in verbose mode.
+ * @param  {...any} args - Arguments to pass to console.log
+ */
+function verboseLog(...args) {
+	if (isVerbose()) {
+		console.log(...args);
+	}
+}
+
+/**
  * Parser for UI5 package scripts with support for parallel and sequential execution
  */
 class Parser {
@@ -183,7 +201,7 @@ class Parser {
 						return reject(new Error(`No valid _ui5mainFn function exported from ${importPath} tried to be executed with ui5nps-script. Either provide a valid _ui5mainFn function or use another way to execute the script (via node).`));
 					}
 
-					console.log(` |  Executing command ${commandName} as module.`);
+					verboseLog(` |  Executing command ${commandName} as module.`);
 					const result = _ui5mainFn(argv);
 
 					if (result instanceof Promise) {
@@ -193,11 +211,11 @@ class Parser {
 					}
 				}
 
-				console.log(` |  Executing command ${commandName} as command.\n    Running: ${command}`);
+				verboseLog(` |  Executing command ${commandName} as command.\n    Running: ${command}`);
 				const child = exec(command, { stdio: "inherit", env: { ...process.env, ...this.envs } });
 
 				child.stdout.on("data", (data) => {
-					console.log(data);
+					verboseLog(data);
 				});
 
 				child.stderr.on("data", (data) => {
@@ -246,16 +264,25 @@ class Parser {
 const parser = new Parser();
 
 // Basic input validation
-const commands = process.argv.slice(2);
+const commands = process.argv.slice(2).filter(arg => arg !== "--verbose" && arg !== "-v");
+const verbose = process.argv.includes("--verbose") || process.argv.includes("-v");
+
+// Set verbose environment variable for child scripts
+if (verbose) {
+	process.env.UI5_VERBOSE = "true";
+}
+
 if (commands.length === 0) {
-	console.error("Usage: ui5nps <command> [command2] [command3] ...");
+	console.error("Usage: ui5nps [--verbose|-v] <command> [command2] [command3] ...");
 	console.error("No commands provided.");
 	process.exit(1);
 }
 
 if (commands.includes("--help") || commands.includes("-h")) {
-	console.log("Usage: ui5nps <command> [command2] [command3] ...");
-	console.log("Available commands:");
+	console.log("Usage: ui5nps [--verbose|-v] <command> [command2] [command3] ...");
+	console.log("\nOptions:");
+	console.log("  --verbose, -v    Show detailed output (default: quiet, errors only)");
+	console.log("\nAvailable commands:");
 	for (const [key, value] of parser.parsedScripts.entries()) {
 		console.log(`  - ${key}: ${value}`);
 	}

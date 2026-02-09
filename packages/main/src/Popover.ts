@@ -1,8 +1,9 @@
 import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
 import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
@@ -208,15 +209,15 @@ class Popover extends Popup {
 	 * Defines the header HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	footer!: Array<HTMLElement>;
+	@slot()
+	footer!: Slot<HTMLElement>;
 
 	_opener?: HTMLElement | string | null | undefined;
 	_openerRect?: DOMRect;

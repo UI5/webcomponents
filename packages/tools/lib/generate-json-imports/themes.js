@@ -62,7 +62,9 @@ ${availableThemesArray}
 		fs.writeFile(outputFileFetchMetaResolve, contentDynamic(fetchMetaResolveLines)),
 	]).
 		then(() => {
-			console.log("Generated themes JSON imports.");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("Generated themes JSON imports.");
+			}
 		})
 };
 
