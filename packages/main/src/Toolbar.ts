@@ -1,6 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import type { ChangeInfo, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -156,7 +156,7 @@ class Toolbar extends UI5Element {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true, individualSlots: true,
 	})
-	items!: Array<ToolbarItem>
+	items!: DefaultSlot<ToolbarItem>
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;

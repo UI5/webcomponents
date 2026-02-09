@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -259,7 +260,7 @@ class Wizard extends UI5Element {
 		"individualSlots": true,
 		invalidateOnChildChange: true,
 	})
-	steps!: Array<WizardStep>
+	steps!: DefaultSlot<WizardStep>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;

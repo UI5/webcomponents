@@ -38,7 +38,7 @@
     "dev": "npm-run-all --sequential generate ci:test:prepare start:all",
     "start": "yarn dev",
     "build": "yarn ci:releasebuild && yarn ci:test:prepare",
-    "test": "yarn yarn workspaces foreach --all --parallel run test",
+    "test": "yarn workspaces foreach --all --parallel run test",
     "test:prepare": "yarn ci:test:prepare && yarn generate",
     "ci:test:prepare": "yarn workspace @ui5/cypress-ct-ui5-webc build && yarn workspace @ui5/cypress-internal build",
     "ci:releasebuild": "npm-run-all --sequential generate ts generateProd generateAPI",

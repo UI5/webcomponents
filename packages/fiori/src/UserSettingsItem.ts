@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
-	customElement, property, slot, eventStrict as event,
+	customElement, property, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
@@ -167,7 +168,7 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	pages!: Array<UserSettingsView>;
+	pages!: DefaultSlot<UserSettingsView>;
 
 	/**
 	 * Defines the tab views of the user settings item.
@@ -182,7 +183,7 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	tabs!: Array<UserSettingsView>;
+	tabs!: Slot<UserSettingsView>;
 
 	/**
 	 * Indicates whether any of the element siblings have icon.

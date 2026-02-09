@@ -1,5 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { customElement, property, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { customElement, property, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UserSettingsViewTemplate from "./UserSettingsViewTemplate.js";
 import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
@@ -60,7 +61,7 @@ class UserSettingsView extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 }
 
 UserSettingsView.define();
