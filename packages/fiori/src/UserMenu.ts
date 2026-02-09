@@ -224,6 +224,12 @@ class UserMenu extends UI5Element {
 	})
 	accounts!: Slot<UserMenuAccount>;
 
+	/**
+	 * Defines the custom footer.
+	 */
+	@slot()
+	footer!: Slot<HTMLElement>;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 

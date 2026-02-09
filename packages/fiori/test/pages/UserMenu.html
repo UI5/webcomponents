@@ -16,6 +16,9 @@
 		#btnOpenUserMenu {
 			float: right;
 		}
+		#btnOpenUserMenuCustomFooter {
+			float: right;
+		}
 	</style>
 </head>
 
@@ -89,11 +92,36 @@
 	</ui5-user-menu-item>
 	<ui5-user-menu-item icon="official-service" text="Legal Information">
 	</ui5-user-menu-item>
+	<div slot="footer"></div>
+</ui5-user-menu>
+
+<ui5-button id="btnOpenUserMenuCustomFooter">User menu custom footer</ui5-button>
+<ui5-user-menu id="userMenuCustomFooter" opener="btnOpenUserMenuCustomFooter">
+	<ui5-user-menu-account slot="accounts"
+						   avatar-src="./img/man_avatar_1.png"
+						   title-text="Alain Chevalier 1"
+						   subtitle-text="alian.chevalier@sap.com"
+						   description="Delivery Manager, SAP SE"
+						   selected>
+	</ui5-user-menu-account>
+	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="globe" text="Product-specific account action" data-id="account-action1"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="collaborate" text="Product-specific account action" data-id="account-action2">
+		<ui5-user-menu-item icon="private" text="Private Policy" data-id="privacy-policy"></ui5-user-menu-item>
+		<ui5-user-menu-item icon="accelerated" text="Terms of Use" data-id="terms-of-use"></ui5-user-menu-item>
+	</ui5-user-menu-item>
+	<ui5-user-menu-item icon="official-service" text="Legal Information">
+	</ui5-user-menu-item>
+	<div slot="footer">
+		<ui5-button icon="add"  design="Transparent"></ui5-button>
+		<ui5-button design="Transparent" icon="log">Sign Out</ui5-button>
+	</div>
 </ui5-user-menu>
 <ui5-title level="H5" class="header-title">Text Direction</ui5-title>
 <ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
-
+s
 <script>
+
 	const direction = document.getElementById("direction");
 
 	direction.addEventListener("ui5-change", function() {
@@ -101,11 +129,20 @@
 		window["sap-ui-webcomponents-bundle"].applyDirection();
 	});
 	const menu = document.getElementById("userMenu");
+	const menuCustomFooter = document.getElementById("userMenuCustomFooter");
 	document.getElementById("btnOpenUserMenu").addEventListener("click", function () {
 		if(menu.open){
 			menu.open = false;
 		} else {
 			menu.open = true;
+		}
+	});
+
+	document.getElementById("btnOpenUserMenuCustomFooter").addEventListener("click", function () {
+		if(menuCustomFooter.open){
+			menuCustomFooter.open = false;
+		} else {
+			menuCustomFooter.open = true;
 		}
 	});
 
