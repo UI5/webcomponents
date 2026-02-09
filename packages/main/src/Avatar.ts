@@ -105,7 +105,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * property is set to `true`.
 	 * @default false
 	 * @public
-	 * @deprecated Since version 2.19. Use the `mode` property with value `Interactive` instead.
+	 * @deprecated Since version 2.20. Use the `mode` property with value `Interactive` instead.
 	 * For accessibility and visual affordance (role="button", focusable), set `mode="Interactive"`.
 	 * This property now only controls whether click events are fired.
 	 */
@@ -121,7 +121,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * - `Interactive` - renders with role="button", focusable (tabindex="0"), and supports keyboard interaction
 	 * @default "Image"
 	 * @public
-	 * @since 2.19
+	 * @since 2.20
 	 */
 	@property()
 	mode: `${AvatarMode}` = "Image";
