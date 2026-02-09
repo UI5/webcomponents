@@ -1,9 +1,15 @@
 import type { JSX } from "./jsx-runtime.d.ts";
+import type { Slot, DefaultSlot } from "./UI5Element.js";
 
 // General utils
 export type LowercaseString<T> = T extends string ? Lowercase<T> : never;
 
 // Core Framework types
+export type {
+	Slot,
+	DefaultSlot,
+};
+
 export type PromiseResolve = (value: void | PromiseLike<void>) => void;
 export type Timeout = ReturnType<typeof setTimeout>;
 export type Interval = ReturnType<typeof setInterval>;

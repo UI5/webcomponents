@@ -1,10 +1,11 @@
-import { customElement, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
 import MenuItem, { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
 
 import UserMenuItemTemplate from "./UserMenuItemTemplate.js";
 
 // Styles
 import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -25,7 +26,6 @@ import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
  * `import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";`
  * @constructor
  * @extends MenuItem
- * @experimental
  * @public
  * @since 2.5.0
  */
@@ -42,7 +42,7 @@ class UserMenuItem extends MenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	declare items: Array<UserMenuItem>;
+	declare items: DefaultSlot<UserMenuItem>;
 
 	get _menuItems() {
 		return this.items.filter(isInstanceOfMenuItem);
