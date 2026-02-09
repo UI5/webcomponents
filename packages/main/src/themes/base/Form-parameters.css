@@ -1,8 +1,1 @@
-:host {
-	--ui5-form-item-layout: 4fr 8fr 0fr;
-	--ui5-form-item-label-justify: end;
-	--ui5-form-item-label-justify-span12: start;
-	--ui5-form-item-label-padding: 0.125rem 0;
-	--ui5-form-item-label-padding-end: 0.85rem;
-	--ui5-form-item-label-padding-span12: 0.625rem 0.25rem 0 0.25rem;
-}
+:host {}

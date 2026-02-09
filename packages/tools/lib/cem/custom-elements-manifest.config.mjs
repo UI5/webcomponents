@@ -17,6 +17,7 @@ import {
 	getTypeRefs,
 	normalizeDescription,
 	formatArrays,
+	formatSlotTypes,
 	isClass,
 	normalizeTagType,
 	logDocumentationError,
@@ -195,6 +196,7 @@ function processClass(ts, classNode, moduleDoc) {
 
 			if (member.type?.text) {
 				member.type.text = formatArrays(member.type.text);
+				member.type.text = formatSlotTypes(member.type.text);
 			}
 
 			if (member.type && typeRefs.length) {

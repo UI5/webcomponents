@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import {
 	getEffectiveAriaLabelText,
 	getAssociatedLabelForTexts,
@@ -148,7 +149,7 @@ class SegmentedButton extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<ISegmentedButtonItem>;
+	items!: DefaultSlot<ISegmentedButtonItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
