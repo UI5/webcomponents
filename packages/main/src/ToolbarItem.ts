@@ -45,6 +45,7 @@ interface IOverflowToolbarItem extends HTMLElement {
  * @constructor
  * @extends UI5Element
  * @public
+ * @experimental This module is experimental and its API might change significantly in future.
  * @since 1.17.0
  */
 class ToolbarItem extends UI5Element {
@@ -83,6 +84,7 @@ class ToolbarItem extends UI5Element {
 
 	_isRendering = true;
 	_maxWidth = 0;
+	_wrapperChecked = false;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 
 	closeOverflowSet = {
@@ -115,7 +117,7 @@ class ToolbarItem extends UI5Element {
 	/**
 	 * Wrapped component slot.
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 
 	@slot({
@@ -125,6 +127,11 @@ class ToolbarItem extends UI5Element {
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
+		if (this._wrapperChecked) {
+			return;
+		}
+		this._wrapperChecked = true;
+
 		const tagName = this.itemTagName as keyof typeof this.predefinedWrapperSet;
 		const ctor = this.constructor as typeof UI5Element;
 		const wrapperName = ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.tagName;
