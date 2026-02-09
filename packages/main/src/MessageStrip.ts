@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -145,7 +146,7 @@ class MessageStrip extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<IIcon>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
