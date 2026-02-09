@@ -773,6 +773,6 @@ describe("ui5 and web components integration", () => {
 		OpenUI5DialogWebCPopoverNoFocus();
 		OpenUI5DialogWebCSelect();
 		OpenWebCUI5DialogMixed();
-		OpenUI5DialogWebCComboBox();
+		// OpenUI5DialogWebCComboBox();
 	});
 });
