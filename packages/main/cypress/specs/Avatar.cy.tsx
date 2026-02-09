@@ -572,7 +572,7 @@ describe("Avatar Rendering and Interaction", () => {
 
 	it("Tests noConflict 'ui5-click' event for interactive avatars", () => {
 		cy.mount(
-			<Avatar interactive initials="XS" size="XS"></Avatar>
+			<Avatar mode="Interactive" initials="XS" size="XS"></Avatar>
 		);
 
 		cy.get("[ui5-avatar]")

@@ -344,7 +344,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _interactive() {
-		return this.interactive && !this.disabled;
+		// Support both the new mode="Interactive" and deprecated interactive property for backward compatibility
+		const isInteractiveMode = this.mode === AvatarMode.Interactive;
+		const isDeprecatedInteractive = this.interactive && !this.disabled;
+		return isInteractiveMode || isDeprecatedInteractive;
 	}
 
 	get validInitials() {
