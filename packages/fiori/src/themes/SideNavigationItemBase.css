@@ -303,11 +303,6 @@ and there is an additional border that appears on hover. */
 	padding-inline-end: var(--_ui5_side_navigation_action_item_collapsed_padding);
 }
 
-:host([side-nav-collapsed]) .ui5-sn-item.ui5-sn-item-selected:hover,
-:host([side-nav-collapsed]) .ui5-sn-item.ui5-sn-item-selected:focus {
-	background: var(--sapList_SelectionBackgroundColor);
-}
-
 :host([side-nav-collapsed]) div.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):hover:not(.ui5-sn-item-with-expander),
 :host([side-nav-collapsed]) div.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):focus:not(.ui5-sn-item-with-expander),
 :host([side-nav-collapsed]) a.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):hover:not(.ui5-sn-item-with-expander):not([target="_blank"]),
