@@ -2,14 +2,17 @@ import UserSettingsView from "./UserSettingsView.js";
 import UserSettingsAppearanceViewTemplate from "./UserSettingsAppearanceViewTemplate.js";
 import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
 import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js";
+import { isInstanceOfUserSettingsAppearanceViewItem } from "./UserSettingsAppearanceViewItem.js";
 import type UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
+import { isInstanceOfUserSettingsAppearanceViewGroup } from "./UserSettingsAppearanceViewGroup.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 import {
-	customElement, slot, eventStrict as event,
+	customElement, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type UserSettingsAppearanceViewItemSelectEventDetail = {
 	item: UserSettingsAppearanceViewItem;
@@ -61,7 +64,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem>;
+	items!: DefaultSlot<UserSettingsAppearanceViewGroup | UserSettingsAppearanceViewItem>;
 
 	/**
 	 * Defines additional content displayed below the items list.
@@ -71,20 +74,17 @@ class UserSettingsAppearanceView extends UserSettingsView {
 	@slot({
 		type: HTMLElement,
 	})
-	additionalContent?: Array<HTMLElement>;
+	additionalContent!: Slot<HTMLElement>;
 
 	_getAllItems(): Array<UserSettingsAppearanceViewItem> {
 		const allItems: Array<UserSettingsAppearanceViewItem> = [];
 
 		this.items.forEach(item => {
-			if (item.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-GROUP") {
-				const group = item as UserSettingsAppearanceViewGroup;
-				const groupItems = Array.from(group.children).filter(
-					child => child.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM",
-				) as Array<UserSettingsAppearanceViewItem>;
+			if (isInstanceOfUserSettingsAppearanceViewGroup(item)) {
+				const groupItems = Array.from(item.children).filter(isInstanceOfUserSettingsAppearanceViewItem);
 				allItems.push(...groupItems);
-			} else if (item.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM") {
-				allItems.push(item as UserSettingsAppearanceViewItem);
+			} else if (isInstanceOfUserSettingsAppearanceViewItem(item)) {
+				allItems.push(item);
 			}
 		});
 
@@ -93,17 +93,16 @@ class UserSettingsAppearanceView extends UserSettingsView {
 
 	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
 		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
-		if (listItem.tagName === "UI5-USER-SETTINGS-APPEARANCE-VIEW-ITEM") {
-			const item = listItem as UserSettingsAppearanceViewItem;
+		if (isInstanceOfUserSettingsAppearanceViewItem(listItem)) {
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
-				item,
+				item: listItem,
 			});
 
 			if (!eventPrevented) {
 				this._getAllItems().forEach(viewItem => {
 					viewItem.selected = false;
 				});
-				item.selected = true;
+				listItem.selected = true;
 			}
 		}
 	};

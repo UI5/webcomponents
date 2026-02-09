@@ -5,11 +5,13 @@ import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
+import postcssPlugin from "./postcss-plugin.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import scopeVariables from "./scope-variables.mjs";
 import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
+    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
@@ -20,9 +22,24 @@ const generate = async (argv) => {
     ]);
     const restArgs = argv.slice(2);
 
+    const saveFiles = async (distPath, css, suffix = "") => {
+        await mkdir(path.dirname(distPath), { recursive: true });
+        writeFile(distPath.replace(".css", suffix + ".css"), css);
+
+        // JSON
+        const jsonPath = distPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", suffix + ".css.json");
+        await mkdir(path.dirname(jsonPath), { recursive: true });
+        writeFileIfChanged(jsonPath, JSON.stringify(css));
+
+        // JS/TS
+        const jsPath = distPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", suffix + extension);
+        const jsContent = getFileContent(packageJSON.name, "\`" + css + "\`");
+        writeFileIfChanged(jsPath, jsContent);
+    }
+
     const processThemingPackageFile = async (f) => {
         const selector = ':root';
-        const result = await postcss().process(f.text);
+        const result = await postcss().process(f.text, { from: undefined });
 
         const newRule = postcss.rule({ selector });
 
@@ -34,13 +51,25 @@ const generate = async (argv) => {
             });
         });
 
-        return newRule.toString();
+        return { css: newRule.toString() };
     };
 
     const processComponentPackageFile = async (f) => {
-        const result = await postcss(combineDuplicatedSelectors).process(f.text);
+        if (CSS_VARIABLES_TARGET) {
+            const result = await postcss([
+                combineDuplicatedSelectors,
+                postcssPlugin
+            ]).process(f.text, { from: undefined });
 
-        return scopeVariables(result.css, packageJSON, f.path);
+            return { css: result.css };
+        }
+
+
+        const combined = await postcss([
+            combineDuplicatedSelectors,
+        ]).process(f.text, { from: undefined });
+
+        return { css: scopeVariables(combined.css, packageJSON, f.path) };
     }
 
     let scopingPlugin = {
@@ -50,20 +79,9 @@ const generate = async (argv) => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
+                    let { css } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
 
-                    await mkdir(path.dirname(f.path), { recursive: true });
-                    writeFile(f.path, newText);
-
-                    // JSON
-                    const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                    await mkdir(path.dirname(jsonPath), { recursive: true });
-                    writeFileIfChanged(jsonPath, JSON.stringify(newText));
-
-                    // JS/TS
-                    const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                    const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
-                    writeFileIfChanged(jsPath, jsContent);
+                    saveFiles(f.path, css);
                 });
             })
         },
@@ -75,6 +93,7 @@ const generate = async (argv) => {
         minify: true,
         outdir: 'dist/css',
         outbase: 'src',
+        logLevel: process.env.UI5_VERBOSE === "true" ? "warning" : "error",
         plugins: [
             scopingPlugin,
         ],

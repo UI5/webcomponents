@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -15,6 +16,7 @@ import {
 	MENU_ITEM_GROUP_SINGLE_ACCESSIBLE_NAME,
 	MENU_ITEM_GROUP_MULTI_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -67,7 +69,7 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: Array<IMenuItem>;
+	items!: DefaultSlot<IMenuItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -148,14 +150,8 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	}
 }
 
-const isInstanceOfMenuItemGroup = (object: any): object is MenuItemGroup => {
-	return "isGroup" in object;
-};
-
 MenuItemGroup.define();
 
 export default MenuItemGroup;
 
-export {
-	isInstanceOfMenuItemGroup,
-};
+export const isInstanceOfMenuItemGroup = createInstanceChecker<MenuItemGroup>("isGroup");

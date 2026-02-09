@@ -1,6 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import type { ChangeInfo, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -13,7 +13,6 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 
 import {
 	TOOLBAR_OVERFLOW_BUTTON_ARIA_LABEL,
@@ -157,7 +156,7 @@ class Toolbar extends UI5Element {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true, individualSlots: true,
 	})
-	items!: Array<ToolbarItem>
+	items!: DefaultSlot<ToolbarItem>
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;
@@ -191,8 +190,8 @@ class Toolbar extends UI5Element {
 
 	get padding(): number {
 		const toolbarComputedStyle = getComputedStyle(this.getDomRef()!);
-		return calculateCSSREMValue(toolbarComputedStyle, getScopedVarName("--_ui5-toolbar-padding-left"))
-			+ calculateCSSREMValue(toolbarComputedStyle, getScopedVarName("--_ui5-toolbar-padding-right"));
+		return calculateCSSREMValue(toolbarComputedStyle, "--_ui5-toolbar-padding-left")
+			+ calculateCSSREMValue(toolbarComputedStyle, "--_ui5-toolbar-padding-right");
 	}
 
 	get alwaysOverflowItems() {
@@ -498,7 +497,7 @@ class Toolbar extends UI5Element {
 		}
 		const id: string = item._id;
 		// Measure rendered width for spacers with width, and for normal items
-		const renderedItem = this.shadowRoot!.querySelector<HTMLElement>(`#${item.slot}`);
+		const renderedItem = this.shadowRoot!.querySelector<HTMLElement>(`#${item._individualSlot}`);
 
 		let itemWidth = 0;
 

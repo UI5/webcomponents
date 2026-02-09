@@ -1,8 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
@@ -344,8 +344,8 @@ class Form extends UI5Element {
 	 * **Note:** When a `header` is provided, the `headerText` property is ignored.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the component content - FormGroups or FormItems.
@@ -360,7 +360,7 @@ class Form extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<IFormItem>;
+	items!: DefaultSlot<IFormItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -485,11 +485,11 @@ class Form extends UI5Element {
 		].forEach(layout => {
 			if (this.isValidFormItemLayout(layout.labelSpan, layout.emptySpan)) {
 				const formItemLayout = layout.labelSpan === MAX_FORM_ITEM_CELLS ? `1fr` : `${layout.labelSpan}fr ${MAX_FORM_ITEM_CELLS - (layout.labelSpan + layout.emptySpan)}fr ${layout.emptySpan}fr`;
-				this.style.setProperty(getScopedVarName(`--ui5-form-item-layout-${layout.breakpoint}`), formItemLayout);
+				this.style.setProperty(`--ui5-form-item-layout-${layout.breakpoint}`, formItemLayout);
 			} else {
 				// eslint-disable-next-line
 				console.warn(`Form :: invalid usage of emptySpan and/or labelSpan in ${layout.breakpoint} size. The labelSpan must be <=12 and when emptySpace is used - their combined values must not exceed 11.`)
-				this.style.setProperty(getScopedVarName(`--ui5-form-item-layout-${layout.breakpoint}`), layout.breakpoint === "S" ? DEFAULT_FORM_ITEM_LAYOUT_S : DEFAULT_FORM_ITEM_LAYOUT);
+				this.style.setProperty(`--ui5-form-item-layout-${layout.breakpoint}`, layout.breakpoint === "S" ? DEFAULT_FORM_ITEM_LAYOUT_S : DEFAULT_FORM_ITEM_LAYOUT);
 			}
 		});
 	}
@@ -617,7 +617,7 @@ class Form extends UI5Element {
 						continue;
 					}
 
-					items[currentItem].item.style.setProperty(getScopedVarName(`--ui5-form-item-order-${breakpoint}`), `${column + row * cols}`);
+					items[currentItem].item.style.setProperty(`--ui5-form-item-order-${breakpoint}`, `${column + row * cols}`);
 					currentItem++;
 				}
 			});

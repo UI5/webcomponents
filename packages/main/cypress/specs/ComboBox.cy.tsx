@@ -596,6 +596,54 @@ describe("Keyboard navigation", () => {
 
 		cy.get("@input").should("have.value", "b");
 	});
+
+	it("should focus the only one item when focus was in the input and Arrow Down is pressed (no grouping)", () => {
+		cy.mount(
+			<ComboBox value="Bulgaria">
+				<ComboBoxItem text="Bulgaria" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bul");
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
+
+	it("should focus the only one item when focus was in the input and Arrow Down is pressed (with grouping)", () => {
+		cy.mount(
+			<ComboBox value="Bulgaria">
+				<ComboBoxItemGroup headerText="Group 1">
+					<ComboBoxItem text="Bulgaria" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("Bul");
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@comboBox")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
 });
 
 describe("Grouping", () => {
@@ -2971,6 +3019,60 @@ describe("ComboBox Composition", () => {
 
 		cy.get("@combobox")
 			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("Loading State", () => {
+	it("should display busy indicator when loading is true", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+
+	it("should hide busy indicator and show items when loading becomes false", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@combo")
+			.invoke("prop", "loading", false);
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("not.exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("exist");
 	});
 });
 

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Features
+
+* **framework:** move CSS variables to host element ([#12984](https://github.com/UI5/webcomponents/issues/12984)) ([3bd2b4a](https://github.com/UI5/webcomponents/commit/3bd2b4a78e1520c35029d001719186f3a0e3801d))
+
+
+
+
+
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
 # [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
 
 **Note:** Version bump only for package @ui5/webcomponents-ai

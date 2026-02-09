@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -32,7 +32,6 @@ import {
 	isPageDownShiftCtrl,
 	isShow,
 	isF4,
-	isEnter,
 	isTabNext,
 	isTabPrevious,
 	isF6Next,
@@ -77,6 +76,7 @@ import datePickerCss from "./generated/themes/DatePicker.css.js";
 import datePickerPopoverCss from "./generated/themes/DatePickerPopover.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 
@@ -386,8 +386,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * @since 1.0.0-rc.7
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	valueStateMessage!: Array<HTMLElement>;
+	@slot()
+	valueStateMessage!: Slot<HTMLElement>;
 
 	responsivePopover?: ResponsivePopover;
 
@@ -532,11 +532,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 			return;
 		}
 
-		if (isEnter(e)) {
-			if (this._internals.form) {
-				submitForm(this);
-			}
-		} else if (isPageUpShiftCtrl(e)) {
+		if (isPageUpShiftCtrl(e)) {
 			e.preventDefault();
 			this._modifyDateValue(1, "year");
 		} else if (isPageUpShift(e)) {
@@ -641,7 +637,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "submit" event handler - fire change event when the user presses enter
 	 * @protected
 	 */
-	_onInputSubmit() {}
+	_onInputRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
+	}
 
 	/**
 	 * The ui5-input "change" event handler - fire change event when the user focuses out of the input
@@ -1043,15 +1043,34 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	/**
 	 * Currently selected date represented as a Local JavaScript Date instance.
+	 * Note: this getter can only be reliably used after the component is fully defined. Use dateValueAsync which resolves only when this condition is met.
 	 * @public
 	 * @default null
+	 * @deprecated Use dateValueAsync instead
 	 */
 	get dateValue(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue) as Date : this.getValueFormat().parse(this.value) as Date;
 	}
 
+	/**
+	 * Promise that resolves to the currently selected date represented as a Local JavaScript Date instance.
+	 * @public
+	 * @default Promise
+	 */
+	get dateValueAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValue;
+		});
+	}
+
 	get dateValueUTC(): Date | null {
 		return this.liveValue ? this.getValueFormat().parse(this.liveValue, true) as Date : this.getValueFormat().parse(this.value) as Date;
+	}
+
+	get dateValueUTCAsync(): Promise<Date | null> {
+		return this.definePromise.then(() => {
+			return this.dateValueUTC;
+		});
 	}
 
 	get styles() {

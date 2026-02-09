@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Features
+
+* **ui5-avatar-badge:** add new AvatarBadge component ([#12938](https://github.com/UI5/webcomponents/issues/12938)) ([0b96d25](https://github.com/UI5/webcomponents/commit/0b96d25bd3d5c71552ab33e90a11b8c7dab8964a)), closes [#12396](https://github.com/UI5/webcomponents/issues/12396)
+
+
+
+
+
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+
+### Features
+
+* **ui5-input/ui5-multi-input:** provide built-in filtering ([#12836](https://github.com/UI5/webcomponents/issues/12836)) ([39c019b](https://github.com/UI5/webcomponents/commit/39c019b38584a2218e3c1e3a3e186b5be07ad888))
+* **ui5-step-input:** add thousands separator & scrolling ([6143dfc](https://github.com/UI5/webcomponents/commit/6143dfc968cb2d0509db1e8a41775bc70837afd8))
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **ui5-list:** correct sample for stickyHeader ([#12876](https://github.com/UI5/webcomponents/issues/12876)) ([461c29b](https://github.com/UI5/webcomponents/commit/461c29b2097dcf84cf25dae7e451dab63d4121b7))
+
+
+### Features
+
+* **ui5-popover:** implement resizable popover ([#12623](https://github.com/UI5/webcomponents/issues/12623)) ([50f11ec](https://github.com/UI5/webcomponents/commit/50f11ec98a67b4dcbba8a6412f76d3d096c7ec9d))
+* **ui5-search:** add new property fieldLoading ([#12846](https://github.com/UI5/webcomponents/issues/12846)) ([b7e185f](https://github.com/UI5/webcomponents/commit/b7e185fe4ff99951245a6d2589b3a4e525d4f77c))
+
+
+
+
+
 # [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
 
 

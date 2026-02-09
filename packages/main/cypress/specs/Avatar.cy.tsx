@@ -1,9 +1,13 @@
 import Avatar from "../../src/Avatar.js";
-import Tag from "../../src/Tag.js";
-import Icon from "../../src/Icon.js";
+import AvatarBadge from "../../src/AvatarBadge.js";
 import "@ui5/webcomponents-icons/dist/supplier.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+import "@ui5/webcomponents-icons/dist/accelerated.js";
+import "@ui5/webcomponents-icons/dist/accept.js";
+import "@ui5/webcomponents-icons/dist/message-error.js";
+import "@ui5/webcomponents-icons/dist/information.js";
+import "@ui5/webcomponents-icons/dist/ai.js";
 
 describe("Accessibility", () => {
 	it("checks if initials of avatar are correctly announced", () => {
@@ -103,10 +107,8 @@ describe("Accessibility", () => {
 	it("doesn't fire ui5-click event, when disabled property is set", () => {
 		cy.mount(
 			<div>
-				<Avatar interactive disabled initials="JD" id="diabled-avatar" onClick={increment}>
-					<Tag slot="badge">
-						<Icon slot="icon" name="accelerated"></Icon>
-					</Tag>
+				<Avatar interactive disabled initials="JD" id="disabled-avatar" onClick={increment}>
+					<AvatarBadge slot="badge" icon="accelerated"></AvatarBadge>
 				</Avatar>
 				<input value="0" id="click-event" />
 			</div>
@@ -116,7 +118,7 @@ describe("Accessibility", () => {
 			const input = document.getElementById("click-event") as HTMLInputElement;
 			input.value = "1";
 		}
-		cy.get("#diabled-avatar").realClick();
+		cy.get("#disabled-avatar").realClick();
 		cy.get("#click-event").should("have.value", "0");
 	});
 });
@@ -564,5 +566,203 @@ describe("Avatar Rendering and Interaction", () => {
 		
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("Avatar with Badge", () => {
+	it("renders badge with icon", () => {
+		cy.mount(
+			<Avatar id="avatar-with-badge-icon" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
+			</Avatar>
+		);
+
+		// Verify badge is rendered
+		cy.get("#avatar-with-badge-icon")
+			.find("[ui5-avatar-badge]")
+			.should("exist");
+
+		// Verify icon inside badge is rendered
+		cy.get("#avatar-with-badge-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("exist")
+			.and("have.attr", "name", "accept");
+	});
+
+	it("renders badge with different states", () => {
+		cy.mount(
+			<>
+				<Avatar id="badge-none" initials="AB" size="M">
+					<AvatarBadge slot="badge" icon="ai" state="None"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-positive" initials="CD" size="M">
+					<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-critical" initials="EF" size="M">
+					<AvatarBadge slot="badge" icon="alert" state="Critical"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-negative" initials="GH" size="M">
+					<AvatarBadge slot="badge" icon="message-error" state="Negative"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-information" initials="IJ" size="M">
+					<AvatarBadge slot="badge" icon="information" state="Information"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Check that all badges are rendered in badge slot
+		cy.get("#badge-none").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-positive").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-critical").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-negative").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-information").find("[ui5-avatar-badge]").should("exist");
+
+		// Verify states are applied
+		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "state", "None");
+		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "state", "Positive");
+		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "state", "Critical");
+		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "state", "Negative");
+		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "state", "Information");
+	});
+
+	it("badge has correct size for each avatar size", () => {
+		cy.mount(
+			<>
+				<Avatar id="avatar-xs" initials="XS" size="XS">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-s" initials="S" size="S">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-m" initials="M" size="M">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-l" initials="L" size="L">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-xl" initials="XL" size="XL">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Check that badges are rendered for all avatar sizes
+		cy.get("#avatar-xs [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-s [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-m [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-l [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-xl [ui5-avatar-badge]").should("exist");
+
+		// Verify XS/S/M size (default badge size: 1.125rem = 18px)
+		cy.get("#avatar-xs [ui5-avatar-badge]").should("have.css", "width", "18px");
+		cy.get("#avatar-s [ui5-avatar-badge]").should("have.css", "width", "18px");
+		cy.get("#avatar-m [ui5-avatar-badge]").should("have.css", "width", "18px");
+
+		// Verify L size (1.25rem = 20px)
+		cy.get("#avatar-l [ui5-avatar-badge]").should("have.css", "width", "20px");
+
+		// Verify XL size (1.75rem = 28px)
+		cy.get("#avatar-xl [ui5-avatar-badge]").should("have.css", "width", "28px");
+	});
+
+	it("badge icon has correct size for each avatar size", () => {
+		cy.mount(
+			<>
+				<Avatar id="avatar-xs-icon" initials="XS" size="XS">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-s-icon" initials="S" size="S">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-m-icon" initials="M" size="M">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-l-icon" initials="L" size="L">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-xl-icon" initials="XL" size="XL">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Verify XS/S/M icon size (default: 0.75rem = 12px)
+		cy.get("#avatar-xs-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+		cy.get("#avatar-s-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+		cy.get("#avatar-m-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+
+		// Verify L icon size (0.875rem = 14px)
+		cy.get("#avatar-l-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "14px");
+
+		// Verify XL icon size (1rem = 16px)
+		cy.get("#avatar-xl-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "16px");
+	});
+
+	it("hides badge when icon is invalid and shows when valid", () => {
+		// Test all invalid cases and valid case in one test using direct DOM manipulation
+		cy.document().then(doc => {
+			// Create and test empty icon badge
+			const badgeEmpty = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeEmpty.icon = "";
+			doc.body.appendChild(badgeEmpty);
+
+			// Create and test invalid icon badge
+			const badgeInvalid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeInvalid.icon = "non-existent-icon-xyz";
+			doc.body.appendChild(badgeInvalid);
+
+			// Create and test no icon badge
+			const badgeNoIcon = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			doc.body.appendChild(badgeNoIcon);
+
+			// Create and test valid icon badge
+			const badgeValid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeValid.icon = "accept";
+			doc.body.appendChild(badgeValid);
+
+			// Wait for components to render
+			cy.wait(200).then(() => {
+				// Test empty icon
+				expect(badgeEmpty.hasAttribute("invalid"), "empty icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeEmpty).display, "empty icon should be hidden").to.equal("none");
+
+				// Test invalid icon
+				expect(badgeInvalid.hasAttribute("invalid"), "invalid icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeInvalid).display, "invalid icon should be hidden").to.equal("none");
+
+				// Test no icon
+				expect(badgeNoIcon.hasAttribute("invalid"), "no icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeNoIcon).display, "no icon should be hidden").to.equal("none");
+
+				// Test valid icon
+				expect(badgeValid.hasAttribute("invalid"), "valid icon should NOT have invalid attr").to.be.false;
+				expect(getComputedStyle(badgeValid).display, "valid icon should be visible").to.not.equal("none");
+				const icon = badgeValid.shadowRoot?.querySelector(".ui5-avatar-badge-icon");
+				expect(icon, "valid icon should have icon in shadow DOM").to.exist;
+				expect(icon?.getAttribute("name")).to.equal("accept");
+
+				// Cleanup: remove elements from DOM
+				badgeEmpty.remove();
+				badgeInvalid.remove();
+				badgeNoIcon.remove();
+				badgeValid.remove();
+			});
+		});
 	});
 });

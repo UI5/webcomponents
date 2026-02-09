@@ -1,53 +1,53 @@
-:root {
---_ui5_checkbox_wrapper_padding: .8125rem;
---_ui5_checkbox_width_height: 3rem;
---_ui5_checkbox_transition: unset;
---_ui5_checkbox_disabled_opacity: .5;
---_ui5_checkbox_border_radius: 0;
---_ui5_checkbox_hover_background: var(--sapField_Hover_Background);
---_ui5_checkbox_active_background: var(--sapField_Hover_Background);
---_ui5_checkbox_checkmark_warning_color: var(--sapField_TextColor);
---_ui5_checkbox_inner_warning_color: var(--sapField_WarningColor);
---_ui5_checkbox_inner_information_color: currentColor;
---_ui5_checkbox_checkmark_color: var(--sapSelectedColor);
---_ui5_checkbox_focus_position: .5625rem;
---_ui5_checkbox_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
---_ui5_checkbox_focus_border_radius: 0;
---_ui5_checkbox_outer_hover_background: transparent;
---_ui5_checkbox_inner_width_height: 1.375rem;
---_ui5_checkbox_inner_border: solid .125rem var(--sapField_BorderColor);
---_ui5_checkbox_inner_hover_border_color: var(--sapField_HoverBorderColor);
---_ui5_checkbox_inner_hover_checked_border_color: var(--sapField_HoverBorderColor);
---_ui5_checkbox_inner_selected_border_color: var(--sapField_BorderColor);
---_ui5_checkbox_inner_disabled_border_color: var(--sapField_BorderColor);
---_ui5_checkbox_inner_active_border_color: var(--sapField_BorderColor);
---_ui5_checkbox_inner_border_radius: 0;
---_ui5_checkbox_inner_error_border: 0.125rem solid var(--sapField_InvalidColor);
---_ui5_checkbox_inner_warning_border: 0.125rem solid var(--sapField_WarningColor);
---_ui5_checkbox_inner_information_border: 0.125rem solid var(--sapField_InformationColor);
---_ui5_checkbox_inner_warning_background_hover: var(--sapField_WarningBackground);
---_ui5_checkbox_inner_error_background_hover: var(--sapField_InvalidBackground);
---_ui5_checkbox_inner_success_background_hover: var(--sapField_SuccessBackground);
---_ui5_checkbox_inner_information_background_hover: var(--sapField_InformationBackground);
---_ui5_checkbox_inner_success_border: var(--sapField_BorderWidth) solid var(--sapField_SuccessColor);
---_ui5_checkbox_inner_readonly_border: 0.125rem solid var(--sapField_ReadOnly_BorderColor);
---_ui5_checkbox_inner_background: var(--sapField_Background);
---_ui5_checkbox_wrapped_focus_padding: .5rem;
---_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
---_ui5_checkbox_compact_wrapper_padding: .5rem;
---_ui5_checkbox_compact_width_height: 2rem;
---_ui5_checkbox_compact_inner_size: 1rem;
---_ui5_checkbox_compact_focus_position: .375rem;
---_ui5_checkbox_label_color: var(--sapContent_LabelColor);
---_ui5_checkbox_label_offset: var(--_ui5_checkbox_wrapper_padding);
---_ui5_checkbox_disabled_label_color: var(--sapContent_LabelColor);
---_ui5_checkbox_default_focus_border: none;
---_ui5_checkbox_focus_outline_display: block;
---_ui5_checkbox_right_focus_distance: 0;
+:host {
+	--_ui5_checkbox_wrapper_padding: .8125rem;
+	--_ui5_checkbox_width_height: 3rem;
+	--_ui5_checkbox_transition: unset;
+	--_ui5_checkbox_disabled_opacity: .5;
+	--_ui5_checkbox_border_radius: 0;
+	--_ui5_checkbox_hover_background: var(--sapField_Hover_Background);
+	--_ui5_checkbox_active_background: var(--sapField_Hover_Background);
+	--_ui5_checkbox_checkmark_warning_color: var(--sapField_TextColor);
+	--_ui5_checkbox_inner_warning_color: var(--sapField_WarningColor);
+	--_ui5_checkbox_inner_information_color: currentColor;
+	--_ui5_checkbox_checkmark_color: var(--sapSelectedColor);
+	--_ui5_checkbox_focus_position: .5625rem;
+	--_ui5_checkbox_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	--_ui5_checkbox_focus_border_radius: 0;
+	--_ui5_checkbox_outer_hover_background: transparent;
+	--_ui5_checkbox_inner_width_height: 1.375rem;
+	--_ui5_checkbox_inner_border: solid .125rem var(--sapField_BorderColor);
+	--_ui5_checkbox_inner_hover_border_color: var(--sapField_HoverBorderColor);
+	--_ui5_checkbox_inner_hover_checked_border_color: var(--sapField_HoverBorderColor);
+	--_ui5_checkbox_inner_selected_border_color: var(--sapField_BorderColor);
+	--_ui5_checkbox_inner_disabled_border_color: var(--sapField_BorderColor);
+	--_ui5_checkbox_inner_active_border_color: var(--sapField_BorderColor);
+	--_ui5_checkbox_inner_border_radius: 0;
+	--_ui5_checkbox_inner_error_border: 0.125rem solid var(--sapField_InvalidColor);
+	--_ui5_checkbox_inner_warning_border: 0.125rem solid var(--sapField_WarningColor);
+	--_ui5_checkbox_inner_information_border: 0.125rem solid var(--sapField_InformationColor);
+	--_ui5_checkbox_inner_warning_background_hover: var(--sapField_WarningBackground);
+	--_ui5_checkbox_inner_error_background_hover: var(--sapField_InvalidBackground);
+	--_ui5_checkbox_inner_success_background_hover: var(--sapField_SuccessBackground);
+	--_ui5_checkbox_inner_information_background_hover: var(--sapField_InformationBackground);
+	--_ui5_checkbox_inner_success_border: var(--sapField_BorderWidth) solid var(--sapField_SuccessColor);
+	--_ui5_checkbox_inner_readonly_border: 0.125rem solid var(--sapField_ReadOnly_BorderColor);
+	--_ui5_checkbox_inner_background: var(--sapField_Background);
+	--_ui5_checkbox_wrapped_focus_padding: .5rem;
+	--_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
+	--_ui5_checkbox_compact_wrapper_padding: .5rem;
+	--_ui5_checkbox_compact_width_height: 2rem;
+	--_ui5_checkbox_compact_inner_size: 1rem;
+	--_ui5_checkbox_compact_focus_position: .375rem;
+	--_ui5_checkbox_label_color: var(--sapContent_LabelColor);
+	--_ui5_checkbox_label_offset: var(--_ui5_checkbox_wrapper_padding);
+	--_ui5_checkbox_disabled_label_color: var(--sapContent_LabelColor);
+	--_ui5_checkbox_default_focus_border: none;
+	--_ui5_checkbox_focus_outline_display: block;
+	--_ui5_checkbox_right_focus_distance: 0;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_checkbox_label_offset: var(--_ui5_checkbox_compact_wrapper_padding);
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_checkbox_label_offset: var(--_ui5_checkbox_compact_wrapper_padding);
+	}
 }

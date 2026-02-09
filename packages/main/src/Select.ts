@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
 	isSpace,
@@ -36,7 +37,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import List from "./List.js";
 import type { ListItemClickEventDetail } from "./List.js";
@@ -399,7 +399,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	options!: Array<IOption>;
+	options!: DefaultSlot<IOption>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -414,7 +414,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	*/
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -429,7 +429,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @since 1.17.0
 	*/
 	@slot()
-	label!: Array<HTMLElement>;
+	label!: Slot<HTMLElement>;
 
 	get formValidityMessage() {
 		return Select.i18nBundle.getText(FORM_SELECTABLE_REQUIRED);
@@ -469,7 +469,7 @@ class Select extends UI5Element implements IFormInputElement {
 	onBeforeRendering() {
 		this._applySelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
 	onAfterRendering() {

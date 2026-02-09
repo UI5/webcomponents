@@ -13,9 +13,9 @@ function pressKeyNTimes(key: "ArrowDown" | "ArrowUp" | "Space" | "Tab" | "Enter"
 describe("TimePicker Tests", () => {
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-		.then(api => {
-			return api.setLanguage("bg")
-		})
+			.then(api => {
+				return api.setLanguage("bg")
+			})
 
 		cy.mount(<TimePicker value="03:16:16"></TimePicker>);
 
@@ -454,7 +454,7 @@ describe("Accessibility", () => {
 
 describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
-		cy.mount(<form method="get">
+		cy.mount(<form method="get" onSubmit={e => e.preventDefault()}>
 			<TimePicker id="timePicker" required={true}></TimePicker>
 			<button type="submit" id="submitBtn">Submits forms</button>
 		</form>);
@@ -497,7 +497,7 @@ describe("Validation inside a form", () => {
 
 	it("has correct validity for patternMismatch", () => {
 		cy.mount(
-			<form>
+			<form onSubmit={e => e.preventDefault()}>
 				<TimePicker id="timePicker" required format-pattern="HH:mm:ss"></TimePicker>
 				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>

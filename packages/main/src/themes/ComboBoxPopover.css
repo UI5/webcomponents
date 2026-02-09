@@ -14,3 +14,7 @@
 .ui5-combobox-busy:not([active]) {
 	display: none;
 }
+
+[ui5-responsive-popover] [ui5-input] {
+	width: 100%;
+}

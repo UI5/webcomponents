@@ -1,8 +1,9 @@
 import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
 import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
@@ -21,6 +22,7 @@ import PopoverTemplate from "./PopoverTemplate.js";
 // Styles
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 const ARROW_SIZE = 8;
 
@@ -207,15 +209,15 @@ class Popover extends Popup {
 	 * Defines the header HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	footer!: Array<HTMLElement>;
+	@slot()
+	footer!: Slot<HTMLElement>;
 
 	_opener?: HTMLElement | string | null | undefined;
 	_openerRect?: DOMRect;
@@ -969,14 +971,13 @@ class Popover extends Popup {
 		this._popoverResize.onResizeMouseDown(e);
 		this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
 	}
-}
 
-const instanceOfPopover = (object: any): object is Popover => {
-	return "opener" in object;
-};
+	// for instance checks
+	readonly isPopover = true;
+}
 
 Popover.define();
 
 export default Popover;
-
-export { instanceOfPopover, PopoverActualPlacement, PopoverActualHorizontalAlign };
+export const instanceOfPopover = createInstanceChecker<Popover>("isPopover");
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };

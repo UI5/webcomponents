@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -42,7 +43,6 @@ import type {
 } from "@ui5/webcomponents-base";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import throttle from "@ui5/webcomponents-base/dist/util/throttle.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import type ShellBarItem from "./ShellBarItem.js";
 import type { ShellBarItemAccessibilityAttributes } from "./ShellBarItem.js";
@@ -482,7 +482,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	assistant!: Array<IButton>;
+	assistant!: Slot<IButton>;
 
 	/**
 	 * Defines the branding slot.
@@ -495,7 +495,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	branding!: Array<ShellBarBranding>;
+	branding!: Slot<ShellBarBranding>;
 
 	/**
 	 * Defines the `ui5-shellbar` additional items.
@@ -505,7 +505,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true })
-	items!: Array<ShellBarItem>;
+	items!: DefaultSlot<ShellBarItem>;
 
 	/**
 	 * You can pass `ui5-avatar` to set the profile image/icon.
@@ -517,7 +517,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	profile!: Array<HTMLElement>;
+	profile!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the logo of the `ui5-shellbar`.
@@ -526,7 +526,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	logo!: Array<HTMLElement>;
+	logo!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the items displayed in menu after a click on a start button.
@@ -536,7 +536,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	menuItems!: Array<ListItemBase>;
+	menuItems!: Slot<ListItemBase>;
 
 	/**
 	 * Defines the `ui5-input`, that will be used as a search field.
@@ -546,7 +546,7 @@ class ShellBar extends UI5Element {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	searchField!: Array<IShellBarSearchField>;
+	searchField!: Slot<IShellBarSearchField>;
 
 	/**
 	 * Defines a `ui5-button` in the bar that will be placed in the beginning.
@@ -555,7 +555,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	startButton!: Array<IButton>;
+	startButton!: Slot<IButton>;
 
 	/**
 	 * The container is positioned in the center of the `ui5-shellbar` and occupies one-third of the total length of the `ui5-shellbar`.
@@ -564,7 +564,7 @@ class ShellBar extends UI5Element {
 	 * @private
 	 */
 	@slot()
-	midContent!: Array<HTMLElement>;
+	midContent!: Slot<HTMLElement>;
 
 	/**
 	 * Define the items displayed in the content area.
@@ -578,7 +578,7 @@ class ShellBar extends UI5Element {
 	 * @since 2.7.0
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	content!: Array<HTMLElement>;
+	content!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -860,7 +860,7 @@ class ShellBar extends UI5Element {
 
 	domCalculatedValues(cssVar: string): number {
 		const shellbarComputerStyle = getComputedStyle(this.getDomRef()!);
-		return this._calculateCSSREMValue(shellbarComputerStyle, getScopedVarName(cssVar)); // px
+		return this._calculateCSSREMValue(shellbarComputerStyle, cssVar); // px
 	}
 
 	onBeforeRendering() {
