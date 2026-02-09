@@ -52,9 +52,13 @@
     overflow: hidden;
 }
 
-.ui5-user-menu--selected-account-avatar {
+.ui5-user-menu-selected-account-avatar {
     margin-block-start: 0.25rem;
     margin-block-end: 0.5rem;
+}
+
+.ui5-user-menu-avatar-img {
+	object-fit: cover;
 }
 
 .ui5-user-menu-selected-account-title {
