@@ -1,5 +1,5 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -8,7 +8,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import type List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -271,7 +271,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	sortItems!: Array<SortItem>;
+	sortItems!: Slot<SortItem>;
 
 	/**
 	 * Defines the `filterItems` list.
@@ -280,7 +280,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	filterItems!: Array<FilterItem>;
+	filterItems!: Slot<FilterItem>;
 
 	/**
 	 * Defines the list of items against which the user could group data.
@@ -289,7 +289,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	groupItems!: Array<GroupItem>;
+	groupItems!: Slot<GroupItem>;
 
 	@query("[ui5-list]")
 	_list!: List;

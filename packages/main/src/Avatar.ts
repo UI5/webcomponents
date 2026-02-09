@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -259,7 +260,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.0.0-rc.15
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	image!: Array<HTMLElement>;
+	image!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the optional badge that will be used for visual affordance.
@@ -270,7 +271,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.7.0
 	 */
 	@slot()
-	badge!: Array<HTMLElement>;
+	badge!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

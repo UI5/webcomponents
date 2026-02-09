@@ -124,7 +124,7 @@ describe("Multi Input on mobile device", () => {
 				.find(".ui5-input-inner")
 				.realClick();
 
-		cy.get<ResponsivePopover>("@popover")
+			cy.get<ResponsivePopover>("@popover")
 				.ui5ResponsivePopoverOpened();
 
 			// Assert: Button should be enabled after adding a token

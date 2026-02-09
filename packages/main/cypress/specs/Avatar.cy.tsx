@@ -665,7 +665,7 @@ describe("Avatar with Badge", () => {
 	it("renders badge with icon", () => {
 		cy.mount(
 			<Avatar id="avatar-with-badge-icon" initials="AB" size="M">
-				<AvatarBadge slot="badge" icon="accept" valueState="Positive"></AvatarBadge>
+				<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
 			</Avatar>
 		);
 
@@ -682,23 +682,23 @@ describe("Avatar with Badge", () => {
 			.and("have.attr", "name", "accept");
 	});
 
-	it("renders badge with different value states", () => {
+	it("renders badge with different states", () => {
 		cy.mount(
 			<>
 				<Avatar id="badge-none" initials="AB" size="M">
-					<AvatarBadge slot="badge" icon="ai" valueState="None"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="ai" state="None"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-positive" initials="CD" size="M">
-					<AvatarBadge slot="badge" icon="accept" valueState="Positive"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-critical" initials="EF" size="M">
-					<AvatarBadge slot="badge" icon="alert" valueState="Critical"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="alert" state="Critical"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-negative" initials="GH" size="M">
-					<AvatarBadge slot="badge" icon="message-error" valueState="Negative"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="message-error" state="Negative"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-information" initials="IJ" size="M">
-					<AvatarBadge slot="badge" icon="information" valueState="Information"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="information" state="Information"></AvatarBadge>
 				</Avatar>
 			</>
 		);
@@ -710,12 +710,12 @@ describe("Avatar with Badge", () => {
 		cy.get("#badge-negative").find("[ui5-avatar-badge]").should("exist");
 		cy.get("#badge-information").find("[ui5-avatar-badge]").should("exist");
 
-		// Verify value states are applied
-		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "value-state", "None");
-		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "value-state", "Positive");
-		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "value-state", "Critical");
-		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "value-state", "Negative");
-		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "value-state", "Information");
+		// Verify states are applied
+		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "state", "None");
+		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "state", "Positive");
+		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "state", "Critical");
+		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "state", "Negative");
+		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "state", "Information");
 	});
 
 	it("badge has correct size for each avatar size", () => {

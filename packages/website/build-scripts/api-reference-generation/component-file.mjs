@@ -18,12 +18,53 @@ const processDescription = (description) => {
         .replaceAll(/\n/g, " ");
 }
 
+const packageToFolder = {
+    "@ui5/webcomponents": "main",
+    "@ui5/webcomponents-fiori": "fiori",
+    "@ui5/webcomponents-compat": "compat",
+    "@ui5/webcomponents-ai": "ai",
+    "@ui5/webcomponents-base": "base",
+};
+
+const getEnumLink = (enumRef) => {
+    const folder = packageToFolder[enumRef.package];
+    if (!folder) {
+        return null;
+    }
+    // Skip base package enums - they don't have documentation pages
+    // (base package doesn't have a manifest, only shared types)
+    if (folder === "base") {
+        return null;
+    }
+    // Use absolute paths from docs root to avoid issues with varying component slug depths
+    // Main package enums are at /components/enums/ (not /components/main/enums/)
+    // Other packages keep their folder in the path
+    if (folder === "main") {
+        return `[${enumRef.name}](/components/enums/${enumRef.name})`;
+    }
+    return `[${enumRef.name}](/components/${folder}/enums/${enumRef.name})`;
+}
+
 const processType = (type) => {
     if (!type || !type.text) {
         return " - "
     }
 
-    return `\`${type?.text?.replaceAll("|", "\\|")}\``
+    const typeText = `\`${type?.text?.replaceAll("|", "\\|")}\``;
+
+    // Add links to enum types if available
+    if (type._enumReferences?.length) {
+        const enumLinks = type._enumReferences
+            .map(getEnumLink)
+            .filter(Boolean)
+            .join(", ");
+
+        if (enumLinks) {
+            return `${typeText} (value descriptions in: ${enumLinks})`;
+        }
+    }
+
+    return typeText;
 }
 
 const getPropsTables = (declaration) => {
