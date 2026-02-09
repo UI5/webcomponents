@@ -26,7 +26,6 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  * `import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";`
  * @constructor
  * @extends MenuItem
- * @experimental
  * @public
  * @since 2.5.0
  */
