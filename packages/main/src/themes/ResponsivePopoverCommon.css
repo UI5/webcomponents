@@ -169,7 +169,7 @@
 }
 
 .ui5-responsive-popover-header-text {
-	width: calc(100% - var(--_ui5_button_base_min_width));
+	width: 100%;
 }
 
 /* Header and footer layout */

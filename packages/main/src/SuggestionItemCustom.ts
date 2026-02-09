@@ -1,6 +1,6 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type { IInputSuggestionItemSelectable } from "./Input.js";
 import ListItemBase from "./ListItemBase.js";
 
@@ -9,6 +9,7 @@ import SuggestionItemCustomTemplate from "./SuggestionItemCustomTemplate.js";
 
 // styles
 import styles from "./generated/themes/SuggestionItemCustom.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -49,7 +50,7 @@ class SuggestionItemCustom extends ListItemBase implements IInputSuggestionItemS
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	content!: Array<Node>;
+	content!: DefaultSlot<Node>;
 
 	get _effectiveTabIndex() {
 		return -1;

@@ -1,7 +1,7 @@
-// eslint-disable-next-line max-classes-per-file
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -141,7 +141,7 @@ class Token extends UI5Element implements IToken {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	closeIcon!: Array<IIcon>;
+	closeIcon!: Slot<IIcon>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

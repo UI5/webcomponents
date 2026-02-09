@@ -1,5 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import type { IOption } from "./Select.js";
 import ListItemBase from "./ListItemBase.js";
@@ -9,6 +9,7 @@ import OptionCustomTemplate from "./OptionCustomTemplate.js";
 
 // Styles
 import optionBaseCss from "./generated/themes/OptionBase.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -62,7 +63,7 @@ class OptionCustom extends ListItemBase implements IOption {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	content!: Array<Node>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * Defines the tooltip of the option.
