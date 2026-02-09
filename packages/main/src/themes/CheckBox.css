@@ -7,6 +7,7 @@
 }
 
 :host(:not([text])) {
+	font-size: 1.375rem;
 	padding: 0.6875rem;
 	width: fit-content;
 	height: fit-content;
@@ -148,7 +149,6 @@
 :host([text]) .ui5-checkbox-root {
 	min-height: var(--_ui5_checkbox_width_height);
 	min-width: var(--_ui5_checkbox_width_height);
-	padding: 0.6875rem;
 	padding: 0 var(--_ui5_checkbox_wrapper_padding);
 }
 
@@ -268,7 +268,6 @@
 .ui5-checkbox-icon {
 	width: var(--_ui5_checkbox_icon_size);
 	height: var(--_ui5_checkbox_icon_size);
-	font-size: var(--_ui5_checkbox_icon_size);
 	color: currentColor;
 	cursor: inherit;
 	position: absolute;
@@ -277,11 +276,9 @@
 	transform: translate(-50%, -50%);
 }
 
-/* Override icon size for checkboxes without text to enable font-size scaling */
 :host(:not([text])) .ui5-checkbox-icon {
-	width: 1em;
-	height: 1em;
-	font-size: 1em;
+	width: 0.75em;
+	height: 0.75em;
 }
 
 /* Display only mode */
@@ -290,23 +287,13 @@
 }
 
 :host([display-only]:not([text])) {
-	width: var(--_ui5_checkbox_icon_size);
-	height: var(--_ui5_checkbox_icon_size);
-	padding: 0.6875rem;
-	overflow: visible;
-	line-height: 0;
 	font-size: 1rem;
-	--_ui5_checkbox_inner_width_height: 1em;
-	--_ui5_checkbox_icon_size: 1em;
-	--_ui5_checkbox_partially_icon_size: .55em;
-}
-
-
-/* Override icon size for display-only checkboxes without text to enable font-size scaling */
-:host([display-only]:not([text])) .ui5-checkbox-display-only-icon-inner [ui5-icon] {
 	width: 1em;
 	height: 1em;
-	font-size: 1em;
+}
+
+:host([display-only]) .ui5-checkbox-display-only-icon-inner [ui5-icon] {
+	color: var(--sapTextColor);
 }
 
 :host([display-only]) .ui5-checkbox-display-only-icon-inner {
@@ -317,4 +304,9 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+:host([display-only]:not([text])) .ui5-checkbox-display-only-icon-inner [ui5-icon] {
+	width: 1em;
+	height: 1em;
 }
