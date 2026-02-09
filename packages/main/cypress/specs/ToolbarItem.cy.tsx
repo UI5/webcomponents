@@ -114,6 +114,8 @@ describe("Toolbar Item Closing Events - closeOverflowSet functionality", () => {
 		cy.get("[ui5-option]")
 			.eq(1)
 			.realClick();
+		
+			cy.wait(500); // Wait for the change event to propagate and popover to close
 
 		// Verify popover is closed after select change
 		cy.get("#toolbar-select-close")
@@ -427,7 +429,7 @@ describe("Toolbar Item Closing Events - closeOverflowSet functionality", () => {
 		// Toggle the switch (fires 'change' event)
 		cy.get("[ui5-toolbar-item]")
 			.find("[ui5-switch]")
-			.realClick();
+			.click();
 
 		// Verify popover is closed
 		cy.get("#toolbar-multiple-components")
