@@ -431,6 +431,8 @@ describe("Toolbar Item Closing Events - closeOverflowSet functionality", () => {
 		// Toggle the switch (fires 'change' event)
 		cy.get("[ui5-toolbar-item]")
 			.find("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
 			.realClick();
 
 		// Verify popover is closed
