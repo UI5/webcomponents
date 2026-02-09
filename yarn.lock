@@ -5993,10 +5993,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sap-theming/theming-base-content@npm:11.29.3":
-  version: 11.29.3
-  resolution: "@sap-theming/theming-base-content@npm:11.29.3"
-  checksum: 10c0/8da4e8c0dafce793fb410832534eebf1f35eb1eb15f55f030810cfd32a15d45778ead2b89b04418f4e187f62f4af5afacf9a8191a7b2d5b91253715878be058e
+"@sap-theming/theming-base-content@npm:11.33.0":
+  version: 11.33.0
+  resolution: "@sap-theming/theming-base-content@npm:11.33.0"
+  checksum: 10c0/3b1ff0383cd0159e9c7b0544339f4b9bba9ae01ef6595d9370f4cd1eb1a879d62b5de963669c54d4148337bf63d86d32de66cb6346380a1e9a517a1fea68a1ab
   languageName: node
   linkType: hard
 
@@ -7618,7 +7618,7 @@ __metadata:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@lit-labs/ssr-dom-shim": "npm:^1.1.2"
     "@openui5/sap.ui.core": "npm:1.120.17"
-    "@sap-theming/theming-base-content": "npm:11.29.3"
+    "@sap-theming/theming-base-content": "npm:11.33.0"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
     clean-css: "npm:^5.2.2"
@@ -7716,7 +7716,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ui5/webcomponents-theming@workspace:packages/theming"
   dependencies:
-    "@sap-theming/theming-base-content": "npm:11.29.3"
+    "@sap-theming/theming-base-content": "npm:11.33.0"
     "@ui5/webcomponents-base": "npm:2.19.0"
     "@ui5/webcomponents-tools": "npm:2.19.0"
     globby: "npm:^13.1.1"
