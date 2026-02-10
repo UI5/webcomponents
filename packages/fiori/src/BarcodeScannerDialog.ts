@@ -1,5 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
@@ -9,6 +9,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Result, Exception } from "@zxing/library";
 import type { Interval } from "@ui5/webcomponents-base/dist/types.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ZXing from "@ui5/webcomponents-fiori/dist/ssr-zxing.js";
 
@@ -123,7 +124,7 @@ class BarcodeScannerDialog extends UI5Element {
 	 * @since 2.4.0
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -139,7 +140,7 @@ class BarcodeScannerDialog extends UI5Element {
 	 * @since 2.4.0
 	 */
 	@slot()
-	footer!: Array<HTMLElement>;
+	footer!: Slot<HTMLElement>;
 
 	/**
 	 * Indicates whether the dialog is open.

@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -327,7 +328,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	startButton!: Array<IButton>;
+	startButton!: Slot<IButton>;
 
 	/**
 	 * Defines the branding slot.
@@ -340,7 +341,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	branding!: Array<ShellBarBranding>;
+	branding!: Slot<ShellBarBranding>;
 
 	/**
 	 * Define the items displayed in the content area.
@@ -354,14 +355,14 @@ class ShellBar extends UI5Element {
 	 * @since 2.7.0
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	content!: Array<HTMLElement>;
+	content!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the `ui5-input`, that will be used as a search field.
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	searchField!: Array<IShellBarSearchField>;
+	searchField!: Slot<IShellBarSearchField>;
 
 	/**
 	 * Defines the assistant slot.
@@ -370,7 +371,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	assistant!: Array<IButton>;
+	assistant!: Slot<IButton>;
 
 	/**
 	 * Defines the `ui5-shellbar` additional items.
@@ -380,7 +381,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true, individualSlots: true })
-	items!: Array<ShellBarItem>;
+	items!: DefaultSlot<ShellBarItem>;
 
 	/**
 	 * You can pass `ui5-avatar` to set the profile image/icon.
@@ -392,7 +393,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	profile!: Array<HTMLElement>;
+	profile!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the `notificationsCount`,
@@ -606,7 +607,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	logo!: Array<HTMLElement>;
+	logo!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the items displayed in menu after a click on a start button.
@@ -616,7 +617,7 @@ class ShellBar extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	menuItems!: Array<ListItemBase>;
+	menuItems!: Slot<ListItemBase>;
 
 	/**
 	 * Open state of the menu popover (legacy).
@@ -632,7 +633,7 @@ class ShellBar extends UI5Element {
 	 * @private
 	 */
 	@slot()
-	midContent!: Array<HTMLElement>;
+	midContent!: Slot<HTMLElement>;
 
 	legacyAdaptor?: ShellBarLegacy;
 

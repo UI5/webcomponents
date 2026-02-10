@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
@@ -107,22 +108,22 @@ class Bar extends UI5Element {
 	* Defines the content at the start of the bar.
 	* @public
 	*/
-	@slot({ type: HTMLElement })
-	startContent!: Array<HTMLElement>;
+	@slot()
+	startContent!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content in the middle of the bar.
 	* @public
 	*/
 	@slot({ type: HTMLElement, "default": true })
-	middleContent!: Array<HTMLElement>
+	middleContent!: DefaultSlot<HTMLElement>;
 
 	/**
 	* Defines the content at the end of the bar.
 	* @public
 	*/
-	@slot({ type: HTMLElement })
-	endContent!: Array<HTMLElement>
+	@slot()
+	endContent!: Slot<HTMLElement>;
 
 	_handleResizeBound: () => void;
 
