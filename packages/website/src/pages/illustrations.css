@@ -1,3 +1,5 @@
+@import "./shared.css";
+
 :root {
 	--sapIllus_BrandColorPrimary: var(--sapContent_Illustrative_Color1);
 	--sapIllus_BrandColorSecondary: var(--sapContent_Illustrative_Color2);
@@ -206,51 +208,8 @@
   color: var(--ifm-color-primary);
 }
 
-/* Search input */
-.illustrations__search {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	background: var(--ifm-navbar-search-input-background-color) var(--ifm-navbar-search-input-icon) no-repeat 0.75rem center / 1rem 1rem;
-	border: none;
-	border-radius: 2rem;
-	color: var(--ifm-navbar-search-input-color);
-	cursor: text;
-	display: inline-block;
-	font-size: 0.9rem;
-	height: 2.5rem;
-	padding: 0 0.5rem 0 2.25rem;
-	width: 12.5rem;
-}
-
-/* Segmented button */
-.segmented__button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	background-color: var(--ifm-background-color);
-	padding: 0.5rem;
-	border-radius: 0.5rem;
-}
-
-.segmented__button__item {
-	padding: 0.5rem 1rem;
-	margin: 0 0.125rem;
-	border-radius: 0.5rem;
-	color: var(--ifm-navbar-link-color);
-	font-weight: 500;
-}
-
-.segmented__button__item:hover {
-	cursor: pointer;
-	transition: all 0.2s;
-	background-color: var(--ifm-menu-color-background-hover);
-}
-
-.segmented__button__item--active {
-	color: var(--ifm-menu-color-active);
-	background-color: var(--ifm-menu-color-background-active);
-}
+/* Segmented button styles moved to shared.css */
+/* Search input styles moved to shared.css */
 
 /* Responsive: Stack panes on mobile */
 @media (max-width: 996px) {

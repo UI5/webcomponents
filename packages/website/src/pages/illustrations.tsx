@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clsx from "clsx";
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
+import "./shared.css";
 import "./illustrations.css";
 
 // Import generated components and data
@@ -227,7 +228,7 @@ function IllustrationsContent() {
         </div>
 
         <input
-          className="illustrations__search"
+          className="page__search"
           type="search"
           placeholder="Filter illustrations..."
           aria-label="Filter illustrations"

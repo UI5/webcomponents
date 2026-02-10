@@ -1,6 +1,72 @@
+@import "./shared.css";
+
+/* Main container */
+.icons__container {
+  width: 100%;
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header with collection switcher and search */
+.icons__header {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-background-surface-color);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Collection metadata (title + package link) */
+.icons__header__metadata {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+  min-width: 200px;
+}
+
+/* Collection metadata (title + package link) */
+.icons__header__separator {
+  flex: 1;
+}
+
+.icons__header__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+.icons__header__package {
+  font-size: 0.875rem;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.icons__header__package:hover {
+  text-decoration: underline;
+}
+
+/* Responsive: Stack header elements on mobile */
+@media (max-width: 996px) {
+  .icons__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .icons__header__metadata {
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
 .icon__grid {
 	display: grid;
-	padding: 2rem 0;
+	padding: 2rem;
 	gap: 2rem;
 	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
@@ -15,21 +81,7 @@
 	justify-content: center;
 }
 
-.icons__search {
-		-webkit-appearance: none;
-		-moz-appearance: none;
-		appearance: none;
-		background: var(--ifm-navbar-search-input-background-color) var(--ifm-navbar-search-input-icon) no-repeat 0.75rem center / 1rem 1rem;
-		border: none;
-		border-radius: 2rem;
-		color: var(--ifm-navbar-search-input-color);
-		cursor: text;
-		display: inline-block;
-		font-size: 0.9rem;
-		height: 2.5rem;
-		padding: 0 0.5rem 0 2.25rem;
-		width: 12.5rem;
-}
+/* Search input styles moved to shared.css */
 
 .icon__wrapper {
 	position: relative;
@@ -81,7 +133,7 @@
 [data-theme='dark'] .icon__svg--picture {
 	fill: var(--ifm-color-primary);
 }
-	
+
 
 .icon__wrapper__title {
 	color: var(--ifm-font-color-base);
@@ -119,30 +171,4 @@
 	background-color: var(--ifm-background-surface-color);
 }
 
-
-
-.segmented__button {
-	display: inline-flex;
-    align-items: center;
-	justify-content: center;
-    background-color: var(--ifm-background-surface-color);
-	padding: 0.5rem;
-}
-
-.segmented__button__item {
-	padding: 0.25rem 0.5rem;
-	margin: 0 0.125rem;
-	border-radius: 0.5rem;
-	color: var(--ifm-navbar-link-color);
-}
-
-.segmented__button__item:hover {
-	cursor: pointer;
-	transition: all 0.5s;
-	background-color: var(--ifm-menu-color-background-active);
-}
-
-.segmented__button__item--active {
-	color: var(--ifm-menu-color-active);
-	background-color: var(--ifm-menu-color-background-active);
-}
+/* Segmented button styles moved to shared.css */
