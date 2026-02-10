@@ -218,7 +218,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "daterange_picker3=&daterange_picker4=Jul 16, 2020 &daterange_picker4= Jul 29, 2020&daterange_picker5=Jul 16, 2020 &daterange_picker5= 2020-07-29");
+			.should("be.equal", "daterange_picker3=&daterange_picker4=Jul 16, 2020 &daterange_picker4= Jul 29, 2020&daterange_picker5=2020-07-16 &daterange_picker5= 2020-07-29");
 	});
 
 	it("ui5-datetime-picker in form", () => {
