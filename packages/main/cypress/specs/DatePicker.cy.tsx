@@ -184,7 +184,37 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "test placeholder");
 	});
 
+	it("clear icon", () => {
+		cy.mount(<DatePicker showClearIcon={true} value="Jan 1, 2020" formatPattern="MMM d, y"></DatePicker>);
 
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("exist");
+
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.click();
+		
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("not.exist");
+			
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "");
+	});
 
 	it("Selected date from daypicker is the same as datepicker date", () => {
 		cy.mount(<DatePicker value="Jan 29, 2019" formatPattern="MMM d, y"></DatePicker>);
