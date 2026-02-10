@@ -3,7 +3,6 @@ import clsx from "clsx";
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import "./illustrations.css";
-import "@sap-theming/theming-base-content/content/Base/baseLib/sap_horizon/css_variables.css";
 
 // Import generated components and data
 import SAPIllustrations, { illustrationsData as sapData } from "../../illustrations/index.js";
