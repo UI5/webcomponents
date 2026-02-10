@@ -197,21 +197,20 @@ describe("Date Picker Tests", () => {
 			.find(".ui5-input-clear-icon")
 			.should("exist");
 
-
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-datetime-input")
 			.shadow()
 			.find(".ui5-input-clear-icon-wrapper")
 			.click();
-		
+
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-datetime-input")
 			.shadow()
 			.find(".ui5-input-clear-icon")
 			.should("not.exist");
-			
+
 		cy.get<DatePicker>("@datePicker")
 			.should("have.value", "");
 	});
