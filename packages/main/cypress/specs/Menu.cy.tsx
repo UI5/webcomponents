@@ -1055,8 +1055,6 @@ describe("Menu interaction", () => {
 				.should("have.attr", "accessible-name", "Select an option from the menu");
 		});
 
-		/* The test is valid, but currently it is not stable. It will be reviewed further and stabilized afterwards. */
-
 		it("Menu items - navigation in endContent", () => {
 			cy.mount(
 				<>
@@ -1071,6 +1069,10 @@ describe("Menu interaction", () => {
 				</>
 			);
 
+			// Move mouse to opener button to avoid interference with menu item hover behavior
+			cy.get("[ui5-button]")
+				.realHover();
+
 			cy.get("[ui5-menu]")
 				.ui5MenuOpen();
 
@@ -1079,24 +1081,34 @@ describe("Menu interaction", () => {
 
 			cy.get("@items")
 				.first()
-				.should("be.focused");
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").last().should("be.focused");
+			cy.get("@buttons")
+				.last()
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").last().should("be.focused");
+			cy.get("@buttons")
+				.last()
+				.should("be.focused")
+				.realPress("ArrowLeft");
 
-			cy.realPress("ArrowLeft");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowLeft");
 
-			cy.realPress("ArrowLeft");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowDown");
 
-			cy.realPress("ArrowDown");
 			cy.get("@items").last().should("be.focused");
 		});
 	});
