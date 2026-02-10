@@ -48,7 +48,7 @@ describe("ShellBarItem getFocusDomRef", () => {
 		cy.get("#shellbar-overflow-test")
 			.shadow()
 			.find(".ui5-shellbar-overflow-popover")
-			.should("be.visible");
+			.should("have.attr", "open");
 
 		// Test when items are in overflow popover
 		cy.get<ShellBarItem>("#overflow-item1")

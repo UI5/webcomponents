@@ -10,6 +10,7 @@ export default function ShellBarItemTemplate(this: ShellBarItem) {
 				icon={this.icon ? `sap-icon://${this.icon}` : ""}
 				type="Active"
 				data-count={this.count}
+				data-ui5-stable={this.stableDomRef}
 				accessibilityAttributes={this.accessibilityAttributes}
 			>
 				{this.text}
@@ -23,6 +24,7 @@ export default function ShellBarItemTemplate(this: ShellBarItem) {
 			icon={this.icon}
 			design="Transparent"
 			accessibleName={this.text}
+			data-ui5-stable={this.stableDomRef}
 			accessibilityAttributes={this.accessibilityAttributes}
 			onClick={this.fireClickEvent}
 		>
