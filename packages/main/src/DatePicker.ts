@@ -56,6 +56,7 @@ import {
 	DATEPICKER_PATTERN_MISSMATCH,
 	DATEPICKER_RANGE_UNDERFLOW,
 	DATEPICKER_RANGE_OVERFLOW,
+	TIMEPICKER_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateComponentBase from "./DateComponentBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -938,6 +939,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get pickerAccessibleName() {
 		return DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
+	}
+
+	get btnCancelLabel() {
+		return DatePicker.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON);
 	}
 
 	/**
