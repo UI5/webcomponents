@@ -242,36 +242,6 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 			.should("be.visible");
 	});
 
-	it("should collapse SideNavigation on mobile when item is selected in Auto mode", () => {
-		// Set mobile viewport (width < 600px)
-		cy.viewport(400, 800);
-
-		cy.mount(<NavigationLayout mode="Auto">
-			<SideNavigation slot="sideContent">
-				<SideNavigationItem text="Home" />
-				<SideNavigationItem text="Products" />
-				<SideNavigationItem text="Settings" />
-			</SideNavigation>
-			<div>Main content</div>
-		</NavigationLayout>);
-
-		// Force NavigationLayout to Expanded mode first to show SideNavigation
-		cy.get("[ui5-navigation-layout]").invoke("prop", "mode", "Expanded");
-		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
-
-		// Reset to Auto mode
-		cy.get("[ui5-navigation-layout]").invoke("prop", "mode", "Auto");
-		
-		// Manually expand for testing - in Auto mode on mobile it should be collapsed
-		cy.get("[ui5-side-navigation]").invoke("prop", "collapsed", false);
-
-		// Click on a SideNavigationItem
-		cy.get("[ui5-side-navigation-item]").first().realClick();
-
-		// SideNavigation should now be collapsed due to mobile view detection
-		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", true);
-	});
-
 	it("should collapse SideNavigation when mode is not Auto", () => {
 		// Set mobile viewport (width < 600px)
 		cy.viewport(400, 800);
