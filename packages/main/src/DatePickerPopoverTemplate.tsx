@@ -5,7 +5,6 @@ import Icon from "./Icon.js";
 import CalendarDate from "./CalendarDate.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import error from "@ui5/webcomponents-icons/dist/error.js";
 import alert from "@ui5/webcomponents-icons/dist/alert.js";
@@ -23,7 +22,7 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 	return (
 		<ResponsivePopover
 			id={`${this._id}-responsive-popover`}
-			class="ui5-date-picker-popover"
+			class="ui5-date-picker-popover ui5-popover-with-value-state-header-phone"
 			opener={this}
 			open={this.open}
 			allowTargetOverlap
@@ -54,13 +53,6 @@ function defaultHeader(this: DatePicker) {
 		<div slot="header" class="ui5-responsive-popover-header">
 			<div class="row">
 				<span>{this._headerTitleText}</span>
-				<Button
-					class="ui5-responsive-popover-close-btn"
-					icon={decline}
-					design="Transparent"
-					onClick={this._togglePicker}
-				>
-				</Button>
 			</div>
 		</div>
 	);
@@ -130,4 +122,23 @@ function valueStateMessageInputIcon(this: DatePicker) {
 	return this.valueState !== ValueState.None ? iconPerValueState[this.valueState] : "";
 }
 
-function defaultFooter() {}
+function defaultFooter(this: DatePicker) {
+	return (
+		<div
+			slot="footer"
+			class={{
+				"ui5-dt-picker-footer": true,
+				"ui5-dt-picker-footer-time-hidden": isPhone()
+			}}>
+
+			<Button
+				id="cancel"
+				class="ui5-dt-picker-action"
+				design="Transparent"
+				onClick={this._togglePicker}
+			>
+				{this.btnCancelLabel}
+			</Button>
+		</div>
+	);
+}
