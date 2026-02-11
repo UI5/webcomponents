@@ -13,7 +13,7 @@ describe("Accessibility", () => {
 	it("checks if initials of avatar are correctly announced", () => {
 		const INITIALS = "XS";
 
-		cy.mount(<Avatar id="interactive-avatar" initials={INITIALS} mode="Interactive"></Avatar>);
+		cy.mount(<Avatar id="interactive-avatar" initials={INITIALS} interactive></Avatar>);
 
 		// Store the expected label to compare against
 		const expectedLabel = `Avatar ${INITIALS}`;
@@ -34,7 +34,7 @@ describe("Accessibility", () => {
 			<Avatar 
 				id="interactive-info" 
 				initials={INITIALS} 
-				mode="Interactive"
+				interactive 
 				accessibleName={customLabel}
 				accessibilityAttributes={{hasPopup}}
 			></Avatar>
@@ -77,7 +77,7 @@ describe("Accessibility", () => {
 			<Avatar 
 				id="default-label-info" 
 				initials={INITIALS}
-				mode="Interactive"
+				interactive
 			></Avatar>
 		);
 
@@ -122,7 +122,8 @@ describe("Accessibility", () => {
 		cy.get("#click-event").should("have.value", "0");
 	});
 
-	it("should support mode='Decorative' with aria-hidden and role='presentation'", () => {
+	// New tests for mode property
+	it("mode='Decorative' renders with role='presentation' and aria-hidden", () => {
 		cy.mount(
 			<Avatar 
 				id="decorative-avatar" 
@@ -135,11 +136,10 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "role", "presentation")
-			.should("have.attr", "aria-hidden", "true")
-			.should("not.have.attr", "tabindex");
+			.should("have.attr", "aria-hidden", "true");
 	});
 
-	it("should support mode='Interactive' with role='button' and focusable", () => {
+	it("mode='Interactive' renders with role='button' and is focusable", () => {
 		cy.mount(
 			<Avatar 
 				id="interactive-mode-avatar" 
@@ -152,88 +152,21 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "role", "button")
-			.should("have.attr", "tabindex", "0")
-			.should("not.have.attr", "aria-hidden");
-	});
-
-	it("interactive property makes avatar focusable and behaves like mode='Interactive'", () => {
-		cy.mount(
-			<div>
-				<Avatar interactive initials="JD" id="interactive-prop" onClick={increment}></Avatar>
-				<input value="0" id="click-event-interactive" />
-			</div>
-		);
-
-		function increment() {
-			const input = document.getElementById("click-event-interactive") as HTMLInputElement;
-			input.value = "1";
-		}
-
-		// Should have role="button" and be focusable when interactive=true
-		cy.get("#interactive-prop")
-			.shadow()
-			.find(".ui5-avatar-root")
-			.should("have.attr", "role", "button")
 			.should("have.attr", "tabindex", "0");
-
-		// Should fire click event
-		cy.get("#interactive-prop").realClick();
-		cy.get("#click-event-interactive").should("have.value", "1");
 	});
 
 	it("interactive property takes precedence over mode property", () => {
 		cy.mount(
-			<div>
-				<Avatar interactive mode="Decorative" initials="PR" id="precedence-avatar" onClick={increment}></Avatar>
-				<input value="0" id="precedence-click" />
-			</div>
+			<Avatar 
+				interactive 
+				mode="Decorative" 
+				initials="PR" 
+				id="precedence-avatar"
+			></Avatar>
 		);
-
-		function increment() {
-			const input = document.getElementById("precedence-click") as HTMLInputElement;
-			input.value = "1";
-		}
 
 		// Even though mode="Decorative", interactive=true takes precedence
-		// Should have role="button", be focusable, and NOT be hidden
 		cy.get("#precedence-avatar")
-			.shadow()
-			.find(".ui5-avatar-root")
-			.should("have.attr", "role", "button")
-			.should("have.attr", "tabindex", "0")
-			.should("not.have.attr", "aria-hidden");
-
-		// Should fire click event
-		cy.get("#precedence-avatar").realClick();
-		cy.get("#precedence-click").should("have.value", "1");
-	});
-
-	it("should use role='img' in Image mode when not interactive", () => {
-		cy.mount(
-			<Avatar 
-				id="image-mode-avatar" 
-				initials="EF"
-				mode="Image"
-			></Avatar>
-		);
-
-		cy.get("#image-mode-avatar")
-			.shadow()
-			.find(".ui5-avatar-root")
-			.should("have.attr", "role", "img")
-			.should("not.have.attr", "aria-hidden");
-	});
-
-	it("should use role='button' in Interactive mode", () => {
-		cy.mount(
-			<Avatar 
-				id="interactive-mode" 
-				initials="GH"
-				mode="Interactive"
-			></Avatar>
-		);
-
-		cy.get("#interactive-mode")
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "role", "button")

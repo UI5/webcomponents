@@ -103,6 +103,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * property is set to `true`.
 	 * @default false
 	 * @public
+	 * @deprecated Set `mode="Interactive"` instead for the same functionality with proper accessibility.
 	 */
 	@property({ type: Boolean })
 	interactive = false;
