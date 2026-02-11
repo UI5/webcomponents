@@ -33,7 +33,11 @@ The Avatar comes in several sizes (S to XL).
 <Sizes />
 
 ### Interactive Mode
-The Avatar can be set to interactive mode with `mode="Interactive"`, making it focusable with role="button" and enabling keyboard interaction. This is the recommended way to make an avatar interactive.
+The Avatar can be made interactive in two ways:
+- `mode="Interactive"` - Sets the avatar to interactive mode with role="button", making it focusable and enabling keyboard interaction
+- `interactive` property - A boolean property that also makes the avatar interactive
+
+**Note:** The `interactive` property takes precedence over the `mode` property. When `interactive=true`, the `mode` property value is ignored, and the avatar behaves as interactive.
 
 <Interactive />
 

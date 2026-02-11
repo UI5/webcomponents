@@ -188,11 +188,14 @@
 		<p>Interactive mode avatars have role="button", are focusable, and support keyboard interaction</p>
 		<ui5-avatar mode="Interactive" initials="EF" size="S"></ui5-avatar>
 		
-		<h3>Avatar - Deprecated interactive property</h3>
-		<p>The interactive property (deprecated) fires events but doesn't affect accessibility</p>
+		<h3>Avatar - interactive property</h3>
+		<p>The interactive property makes the avatar focusable with role="button" and supports keyboard interaction</p>
 		<ui5-avatar interactive initials="GH" size="S"></ui5-avatar>
-		<p>For proper accessibility, use mode="Interactive" instead</p>
-		<ui5-avatar mode="Interactive" initials="IJ" size="S"></ui5-avatar>
+		
+		<h3>Avatar - interactive property precedence</h3>
+		<p>When interactive=true, it takes precedence over mode property (this avatar has mode="Decorative" but interactive=true)</p>
+		<ui5-avatar interactive mode="Decorative" initials="PR" size="S"></ui5-avatar>
+		<p>Should be interactive with role="button", not decorative</p>
 	</section>
 
 	<section>

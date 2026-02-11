@@ -156,29 +156,56 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "aria-hidden");
 	});
 
-	it("deprecated interactive property still allows click events but doesn't affect accessibility", () => {
+	it("interactive property makes avatar focusable and behaves like mode='Interactive'", () => {
 		cy.mount(
 			<div>
-				<Avatar interactive initials="JD" id="deprecated-interactive" onClick={increment}></Avatar>
-				<input value="0" id="click-event-deprecated" />
+				<Avatar interactive initials="JD" id="interactive-prop" onClick={increment}></Avatar>
+				<input value="0" id="click-event-interactive" />
 			</div>
 		);
 
 		function increment() {
-			const input = document.getElementById("click-event-deprecated") as HTMLInputElement;
+			const input = document.getElementById("click-event-interactive") as HTMLInputElement;
 			input.value = "1";
 		}
 
-		// Should have role="img" (not button) since mode is not Interactive
-		cy.get("#deprecated-interactive")
+		// Should have role="button" and be focusable when interactive=true
+		cy.get("#interactive-prop")
 			.shadow()
 			.find(".ui5-avatar-root")
-			.should("have.attr", "role", "img")
-			.should("not.have.attr", "tabindex");
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0");
 
-		// But should still fire click event
-		cy.get("#deprecated-interactive").realClick();
-		cy.get("#click-event-deprecated").should("have.value", "1");
+		// Should fire click event
+		cy.get("#interactive-prop").realClick();
+		cy.get("#click-event-interactive").should("have.value", "1");
+	});
+
+	it("interactive property takes precedence over mode property", () => {
+		cy.mount(
+			<div>
+				<Avatar interactive mode="Decorative" initials="PR" id="precedence-avatar" onClick={increment}></Avatar>
+				<input value="0" id="precedence-click" />
+			</div>
+		);
+
+		function increment() {
+			const input = document.getElementById("precedence-click") as HTMLInputElement;
+			input.value = "1";
+		}
+
+		// Even though mode="Decorative", interactive=true takes precedence
+		// Should have role="button", be focusable, and NOT be hidden
+		cy.get("#precedence-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+
+		// Should fire click event
+		cy.get("#precedence-avatar").realClick();
+		cy.get("#precedence-click").should("have.value", "1");
 	});
 
 	it("should use role='img' in Image mode when not interactive", () => {
