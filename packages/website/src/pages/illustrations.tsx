@@ -47,7 +47,7 @@ function IllustrationPreview({ name, displayName, collection }) {
         <div className="illustration__preview-size">
           <h3>Extra Small (Dot)</h3>
           <ui5-illustrated-message
-            name={name}
+            name={collection === "TNT" ? `Tnt${name}`: name}
             design="Dot"
           />
         </div>
@@ -55,7 +55,7 @@ function IllustrationPreview({ name, displayName, collection }) {
         <div className="illustration__preview-size">
           <h3>Small (Spot)</h3>
           <ui5-illustrated-message
-            name={name}
+            name={collection === "TNT" ? `Tnt${name}`: name}
             design="Spot"
           />
         </div>
@@ -63,7 +63,7 @@ function IllustrationPreview({ name, displayName, collection }) {
         <div className="illustration__preview-size">
           <h3>Medium (Dialog)</h3>
           <ui5-illustrated-message
-            name={name}
+            name={collection === "TNT" ? `Tnt${name}`: name}
             design="Dialog"
           />
         </div>
@@ -71,7 +71,7 @@ function IllustrationPreview({ name, displayName, collection }) {
         <div className="illustration__preview-size">
           <h3>Large (Scene)</h3>
           <ui5-illustrated-message
-            name={name}
+            name={collection === "TNT" ? `Tnt${name}`: name}
             design="Scene"
           />
         </div>
