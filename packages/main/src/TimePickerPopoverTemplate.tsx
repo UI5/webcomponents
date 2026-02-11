@@ -5,7 +5,6 @@ import Icon from "./Icon.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import TimeSelectionClocks from "./TimeSelectionClocks.js";
 import TimeSelectionInputs from "./TimeSelectionInputs.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import error from "@ui5/webcomponents-icons/dist/error.js";
 import alert from "@ui5/webcomponents-icons/dist/alert.js";
@@ -17,7 +16,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 		<>
 			<ResponsivePopover
 				id={`${this._id}-responsive-popover`}
-				class="ui5-time-picker-popover"
+				class="ui5-time-picker-popover ui5-popover-with-value-state-header-phone"
 				placement="Bottom"
 				horizontalAlign="Start"
 				opener={this}
@@ -91,13 +90,6 @@ function defaultHeader(this: TimePicker) {
 		<div slot="header" class="ui5-responsive-popover-header">
 			<div class="row">
 				<span>{this._headerTitleText}</span>
-				<Button
-					class="ui5-responsive-popover-close-btn"
-					icon={decline}
-					design="Transparent"
-					onClick={this._togglePicker}
-				>
-				</Button>
 			</div>
 		</div>
 	);

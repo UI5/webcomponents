@@ -5,6 +5,13 @@
 	}
 }
 
+.ui5-date-picker-popover .ui5-responsive-popover-header .row {
+	justify-content: flex-start;
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader5Size);
+	color: var(--sapPageHeader_TextColor);
+}
+
 [ui5-calendar] {
 	width: 100%;
 	display: flex;
@@ -12,5 +19,21 @@
 }
 
 [ui5-responsive-popover]::part(content) {
-    padding: 0;
+	padding: 0;
+}
+
+.ui5-dt-picker-footer {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	height: 2.75rem;
+	width: 100%;
+}
+
+.ui5-dt-picker-footer.ui5-dt-picker-footer-time-hidden {
+	padding: 0;
+}
+
+.ui5-dt-picker-action {
+	margin: 0.25rem;
 }

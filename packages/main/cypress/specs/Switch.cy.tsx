@@ -227,3 +227,21 @@ describe("General interactions in form", () => {
 	});
 
 });
+
+describe("Accessibility", () => {
+	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
+		const labelText = "Enable notifications";
+
+		cy.mount(
+			<>
+				<Label for="switch">{labelText}</Label>
+				<Switch id="switch"></Switch>
+			</>
+		);
+
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("have.attr", "aria-label", labelText);
+	});
+});
