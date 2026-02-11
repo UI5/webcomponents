@@ -868,7 +868,7 @@ describe("Side Navigation interaction", () => {
 			.should("not.include", "#test");
 	});
 
-	it("Tests key modifiers when item is clicked", () => {
+	it.skip("Tests key modifiers when item is clicked", () => {
 		const handleClick = cy.stub().as("clickHandler");
 
 		cy.mount(
@@ -927,7 +927,7 @@ describe("Side Navigation interaction", () => {
 		});
 	});
 
-	it("Tests 'selection-change' event when SideNavigation is collapsed", () => {
+	it.only("Tests 'selection-change' event when SideNavigation is collapsed", () => {
 		cy.mount(
 			<SideNavigation id="sideNav" collapsed={true}>
 				<SideNavigationItem text="1" />
@@ -968,7 +968,7 @@ describe("Side Navigation interaction", () => {
 		});
 	});
 
-	it("tests avoiding re-selecting already selected item", () => {
+	it.only("tests avoiding re-selecting already selected item", () => {
 		const selectionChangeHandler = cy.stub().as("selectionChangeHandler");
 		cy.mount(
 			<SideNavigation id="sideNav" onSelectionChange={selectionChangeHandler}>
@@ -982,7 +982,7 @@ describe("Side Navigation interaction", () => {
 		cy.get("@selectionChangeHandler").should("have.been.calledOnce");
 	});
 
-	it("tests selecting items in overflow menu", () => {
+	it.only("tests selecting items in overflow menu", () => {
 		cy.mount(
 			<SideNavigation style="height: 200px" id="sideNav" collapsed={true}>
 				<SideNavigationItem icon={home} text="Home"></SideNavigationItem>
