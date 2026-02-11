@@ -80,7 +80,7 @@
 	border: none;
 }
 
-::slotted(*) {
+::slotted(*:not([hidden])) {
 	margin: 0 0.25rem;
 	display: inline-block;
     max-width: 100%;
