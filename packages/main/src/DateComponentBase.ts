@@ -155,7 +155,7 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get _formatPattern() {
-		return this.formatPattern || this.valueFormat || "medium"; // get from config
+		return this.formatPattern || this.valueFormat; // get from config
 	}
 
 	get _isPattern() {
