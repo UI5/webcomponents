@@ -2,6 +2,7 @@
 	border: none;
 	overflow: visible;
 	margin: 0;
+	height: auto; /* fixes issue in Safari */
 }
 
 .sapUiBLy[popover] {
