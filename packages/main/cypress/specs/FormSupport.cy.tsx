@@ -177,7 +177,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "date_picker3=&date_picker4=Jan 29, 2019&date_picker5=Jan 29, 2019");
+			.should("be.equal", "date_picker3=&date_picker4=Jan 29, 2019&date_picker5=2019-01-29");
 	});
 
 	it("ui5-daterange-picker in form", () => {
@@ -218,7 +218,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "daterange_picker3=&daterange_picker4=Jul 16, 2020 &daterange_picker4= Jul 29, 2020&daterange_picker5=Jul 16, 2020 &daterange_picker5= Jul 29, 2020");
+			.should("be.equal", "daterange_picker3=&daterange_picker4=Jul 16, 2020 &daterange_picker4= Jul 29, 2020&daterange_picker5=2020-07-16 &daterange_picker5= 2020-07-29");
 	});
 
 	it("ui5-datetime-picker in form", () => {
@@ -1028,6 +1028,6 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "input=ok&sel=condensed&ta=ok&dp=Apr 10, 2019&cb=on&radio=b&si=5");
+			.should("be.equal", "input=ok&sel=condensed&ta=ok&dp=2019-04-10&cb=on&radio=b&si=5");
 	});
 });
