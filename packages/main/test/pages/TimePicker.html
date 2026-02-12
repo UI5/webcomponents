@@ -14,26 +14,26 @@
 	</head>
 	<body class="timepicker1auto" lang="en">
 
-		<ui5-label for="tpLabel">Deadline</ui5-label>
-		<ui5-time-picker id="tpLabel"></ui5-time-picker>
+		<!-- <ui5-label for="tpLabel">Deadline</ui5-label>
+		<ui5-time-picker id="tpLabel"></ui5-time-picker> -->
 
 		<div class="samples">
 			<div class="sample-box-1">
-				<ui5-time-picker id="timepicker" format-pattern="HH:mm:ss"></ui5-time-picker>
+				<ui5-time-picker id="timepicker" display-format="hh:mm:ss a" value-format="HH:mm:ss" value="12:00"></ui5-time-picker>
 				<ui5-time-picker></ui5-time-picker>
-				<ui5-time-picker id="timepicker2" format-pattern="hh:mm:ss" value=""></ui5-time-picker>
+				<!-- <ui5-time-picker id="timepicker2" format-pattern="hh:mm:ss" value=""></ui5-time-picker>
 				<ui5-time-picker id="timepicker3" format-pattern="hh:mm:ss a"></ui5-time-picker>
 				<ui5-time-picker id="timepicker4" format-pattern="HH:mm" value="12:05"></ui5-time-picker>
-				<ui5-time-picker id="timepicker5" format-pattern="hh:mm:ss" value="12:00:01"></ui5-time-picker>
+				<ui5-time-picker id="timepicker5" format-pattern="hh:mm:ss" value="12:00:01"></ui5-time-picker> -->
 				<br>
 			</div>
 
-			<div class="sample-box-2">
+			<!-- <div class="sample-box-2">
 				<ui5-time-picker class="timepicker2auto"></ui5-time-picker>
-			</div>
+			</div> -->
 		</div>
 
-		<br /><br />
+		<!-- <br /><br />
 		<ui5-title>Test "change" event</ui5-title>
 		<ui5-time-picker id="timepickerChange" format-pattern="HH:mm" value="12:00"></ui5-time-picker>
 		<ui5-input id="changeResult" value="0"></ui5-input>
@@ -103,9 +103,9 @@
 				<ui5-time-picker required id="formTimepicker" format-pattern="HH:mm"></ui5-time-picker>
 				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 			</form>
-		</section>
+		</section> -->
 
-		<script>
+		<!-- <script>
 				var counter = 0;
 				timepickerChange.addEventListener("ui5-change", function() {
 					changeResult.value = `${++counter}`;
@@ -146,6 +146,6 @@
 					formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
 					formValidationMessage.design = isValid ? "Positive" : "Negative";
 				}
-		</script>
+		</script> -->
 	</body>
 </html>
