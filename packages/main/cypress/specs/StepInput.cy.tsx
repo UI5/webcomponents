@@ -1,4 +1,5 @@
 import StepInput from "../../src/StepInput.js";
+import Label from "../../src/Label.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import "../../src/Assets.js";
 
@@ -949,5 +950,25 @@ describe("Validation inside form", () => {
 
 		cy.get("#stepInput:invalid")
 			.should("not.exist", "StepInput with value lower than max should not have :invalid CSS class");
+	});
+});
+
+describe("Accessibility", () => {
+	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
+		const labelText = "Quantity";
+
+		cy.mount(
+			<>
+				<Label for="stepInput">{labelText}</Label>
+				<StepInput id="stepInput"></StepInput>
+			</>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-label", labelText);
 	});
 });
