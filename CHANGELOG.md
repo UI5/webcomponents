@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+
+### Bug Fixes
+
+* **ui5-avatar-group:** use getSlottedNodes for transitive slot support ([#13049](https://github.com/UI5/webcomponents/issues/13049)) ([1d17d50](https://github.com/UI5/webcomponents/commit/1d17d50b71a504c9f35b22105339964c1d13dab6))
+* **ui5-bar:** allow hiding slots ([#13051](https://github.com/UI5/webcomponents/issues/13051)) ([f9fe667](https://github.com/UI5/webcomponents/commit/f9fe6671afc873123ffc2512df50055d1c736328)), closes [#13036](https://github.com/UI5/webcomponents/issues/13036)
+* **ui5-date-picker:** move cancel button to footer ([#13053](https://github.com/UI5/webcomponents/issues/13053)) ([90d24f0](https://github.com/UI5/webcomponents/commit/90d24f06523802259199159df4251fff32631654))
+* **ui5-multi-input:** include 'select-all' icon in the template ([#13024](https://github.com/UI5/webcomponents/issues/13024)) ([a46ae2f](https://github.com/UI5/webcomponents/commit/a46ae2f40bf7018107f3f7ed129fe736db141e0d)), closes [#13022](https://github.com/UI5/webcomponents/issues/13022)
+* **ui5-step-input, ui5-switch:** support label 'for' attribute in aria-label ([#13057](https://github.com/UI5/webcomponents/issues/13057)) ([1ea6d5e](https://github.com/UI5/webcomponents/commit/1ea6d5e1c71e95b1329f1195daae108cdede4ac5)), closes [#10710](https://github.com/UI5/webcomponents/issues/10710)
+
+
+### Features
+
+* **ui5-color-palette*:** resolve landmark uniqueness and missing dialog label ([#12967](https://github.com/UI5/webcomponents/issues/12967)) ([34df574](https://github.com/UI5/webcomponents/commit/34df574b97bb034da2903e4fd41e8ff46310b602))
+* **ui5-color-picker:** add `accessibleName` property for unique landmarks ([#12968](https://github.com/UI5/webcomponents/issues/12968)) ([3e10f22](https://github.com/UI5/webcomponents/commit/3e10f2251889a5b738fce97f962d9d01816a09ee))
+* **ui5-li-custom:** improve accessibility announcements ([#12696](https://github.com/UI5/webcomponents/issues/12696)) ([f6e6981](https://github.com/UI5/webcomponents/commit/f6e698175d28052616b4f711151d49acb1b91907))
+* **ui5-rating-indicator:** custom rating icon implemantation ([#12985](https://github.com/UI5/webcomponents/issues/12985)) ([874db06](https://github.com/UI5/webcomponents/commit/874db06aa9dbbfe2fd96f6fb3d9fc754fbfef12b))
+* **ui5-tokenizer:** align mobile popover title with spec ([#12979](https://github.com/UI5/webcomponents/issues/12979)) ([e305108](https://github.com/UI5/webcomponents/commit/e30510884f6a689a3cae669b963328b5197775d3))
+* **website:** introduce illustration explorer ([#13058](https://github.com/UI5/webcomponents/issues/13058)) ([495e5e8](https://github.com/UI5/webcomponents/commit/495e5e8bbb799bcf7a30c11e61adefe8c8776287))
+
+
+
+
+
 # [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
 
 **Note:** Version bump only for package webcomponents
