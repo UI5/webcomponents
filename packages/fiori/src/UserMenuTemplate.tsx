@@ -84,9 +84,17 @@ export default function UserMenuTemplate(this: UserMenu) {
 					</List>
 			}
 
-			<div slot="footer" class="ui5-user-menu-footer">
-				<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
-			</div>
+			{this._hasCustomFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<slot name="footer"></slot>
+				</div>
+			}
+
+			{this._showDefaultFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
+				</div>
+			}
 		</ResponsivePopover>
 	);
 }
