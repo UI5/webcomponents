@@ -43,7 +43,6 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.8.0
  */
