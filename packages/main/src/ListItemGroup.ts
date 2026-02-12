@@ -39,6 +39,7 @@ type ListItemGroupMoveEventDetail = {
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/ListItemGroup.js";`
  * @csspart header - Used to style the header item of the group
+ * @csspart title - Used to style the title of the group header
  * @constructor
  * @extends UI5Element
  * @public
