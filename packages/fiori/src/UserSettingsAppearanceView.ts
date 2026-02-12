@@ -45,7 +45,6 @@ type UserSettingsAppearanceViewItemSelectEventDetail = {
  *
  * @constructor
  * @extends UserSettingsView
- * @experimental
  * @public
  * @since 2.17.0
  */
