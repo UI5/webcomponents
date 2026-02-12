@@ -275,7 +275,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
-	 * @since 2.16.0
+	 * @since 2.21.0
 	 * @public
 	 */
 	@property()
@@ -284,7 +284,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	/**
 	 * Determines the format, used for the value attribute.
 	 * @default undefined
-	 * @since 2.16.0
+	 * @since 2.21.0
 	 * @public
 	 */
 	@property()
@@ -418,7 +418,25 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			this.value = this.normalizeValue(this.value) || this.value;
 		}
 
-		this.tempValue = this.value && this.isValid(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
+		// tempValue should always be in valueFormat and valid
+		// Synchronize tempValue with value when value is set and valid
+		if (this.value) {
+			let parsedValue = this.getValueFormat().parse(this.value, true);
+			if (!parsedValue) {
+				// If it doesn't parse as valueFormat, try displayFormat
+				parsedValue = this.getDisplayFormat().parse(this.value, true);
+			}
+
+			if (parsedValue) {
+				this.tempValue = this.getValueFormat().format(parsedValue, true);
+			} else if (!this.tempValue) {
+				// Only fallback to current time if tempValue was never set and value is invalid
+				this.tempValue = this.getValueFormat().format(UI5Date.getInstance());
+			}
+		} else if (!this.tempValue) {
+			// No value and no tempValue - use current time
+			this.tempValue = this.getValueFormat().format(UI5Date.getInstance());
+		}
 	}
 
 	get roleDescription() {
@@ -499,6 +517,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return this.valueFormat;
 		}
 
+		// If displayFormat is explicitly set but valueFormat is not, default to ISO format
+		if (this.displayFormat) {
+			return "";
+		}
+
+		// For backward compatibility: when using deprecated formatPattern, use it for both display and value
 		if (this._formatPattern) {
 			return this._formatPattern;
 		}
@@ -646,21 +670,30 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_updateValueAndFireEvents(value: string, normalizeValue: boolean, eventsNames: Array<"input" | "change" | "value-changed">) {
-		
-
 		const valid = this.isValidDisplayValue(value);
 		this.isLiveUpdate = eventsNames.includes("input");
+
 		if (value !== undefined && valid && normalizeValue && !this.isLiveUpdate) { // if value === undefined, valid is guaranteed to be falsy
 			value = this.normalizeValue(value); // transform valid values (in any format) to the correct format
 		}
+
+		// Store the previous value to check if it actually changed
+		const previousValue = this.value;
+
 		if (!eventsNames.includes("input")) {
 			this.value = ""; // Do not remove! DurationPicker (an external component extending TimePicker) use case -> value is 05:10, user tries 05:12, after normalization value is changed back to 05:10 so no invalidation happens, but the input still shows 05:12. Thus we enforce invalidation with the ""
 			this.value = value;
 		} else {
 			this.value = value;
 		}
-		this.tempValue = value; // if the picker is open, sync it
-		this._updateValueState(); // Change the value state to Error/None, but only if needed
+
+		this.tempValue = value; // if the picker is open, sync it (must be done before early return)
+		this._updateValueState(); // Change the value state to Error/None, but only if needed (must be called before early return)
+
+		if (previousValue === this.value) {
+			return;
+		}
+
 		eventsNames.forEach(eventName => {
 			this.fireDecoratorEvent(eventName, { value, valid });
 		});
@@ -760,12 +793,16 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get displayValue() {
-		if (!this.getValueFormat().parse(this.value, true) || this.isLiveUpdate) {
+		if (!this.getValueFormat().parse(this.value, true)) {
 			return this.value;
 		}
 
 		if (!this.value) {
 			return "";
+		}
+
+		if (this.isLiveUpdate) {
+			return this.value;
 		}
 
 		return this.getDisplayFormat().format(this.getValueFormat().parse(this.value, true), true);
@@ -776,10 +813,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 		if (this._isPattern) {
 			dateFormat = DateFormat.getDateInstance({
+				strictParsing: true,
 				pattern: this._formatPattern,
 			});
 		} else {
 			dateFormat = DateFormat.getDateInstance({
+				strictParsing: true,
 				style: this._formatPattern,
 			});
 		}
@@ -800,11 +839,13 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	getDisplayFormat() {
 		if (this._isDisplayFormatPattern) {
 			return DateFormat.getTimeInstance({
+				strictParsing: true,
 				pattern: this._displayFormat,
 			});
 		}
 
 		return DateFormat.getTimeInstance({
+			strictParsing: true,
 			style: this._displayFormat,
 		});
 	}
@@ -816,11 +857,13 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 		if (this._isValueFormatPattern) {
 			return DateFormat.getTimeInstance({
+				strictParsing: true,
 				pattern: this._valueFormat,
 			});
 		}
 
 		return DateFormat.getTimeInstance({
+			strictParsing: true,
 			style: this._valueFormat,
 		});
 	}
@@ -847,7 +890,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		if (value === "") {
 			return true;
 		}
-		return !!this.getFormat().parse(value as string);
+		return !!this.getFormat().parse(value as string, true);
 	}
 
 	isValidDisplayValue(value: string | undefined): boolean {
@@ -855,14 +898,53 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return true;
 		}
 
-		return !!this.getDisplayFormat().parse(value as string);
+		return !!this.getDisplayFormat().parse(value as string, true);
+	}
+
+	/**
+	 * Converts a value from displayFormat to valueFormat
+	 * @param value Value in displayFormat
+	 * @returns Value in valueFormat
+	 * @private
+	 */
+	getValueFromDisplayValue(value: string): string {
+		if (!this.getDisplayFormat().parse(value, true)) {
+			return value;
+		}
+
+		return this.getValueFormat().format(this.getDisplayFormat().parse(value, true), true);
+	}
+
+	/**
+	 * Converts a value from valueFormat to displayFormat
+	 * @param value Value in valueFormat
+	 * @returns Value in displayFormat
+	 * @private
+	 */
+	getDisplayValueFromValue(value: string): string {
+		if (!this.getValueFormat().parse(value, true)) {
+			return value;
+		}
+
+		return this.getDisplayFormat().format(this.getValueFormat().parse(value, true), true);
 	}
 
 	normalizeValue(value: string) {
 		if (value === "") {
 			return value;
 		}
-		return this.getDisplayFormat().format(this.getValueFormat().parse(value));
+
+		const parsedFromDisplay = this.getDisplayFormat().parse(value, true);
+		if (parsedFromDisplay) {
+			return this.getValueFormat().format(parsedFromDisplay, true);
+		}
+
+		const parsedFromValue = this.getValueFormat().parse(value, true);
+		if (parsedFromValue) {
+			return this.getValueFormat().format(parsedFromValue, true);
+		}
+
+		return value;
 	}
 
 	_modifyValueBy(amount: number, unit: string) {
