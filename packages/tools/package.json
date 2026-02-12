@@ -40,7 +40,7 @@
     "custom-element-jet-brains-integration": "^1.4.4",
     "dotenv": "^16.5.0",
     "escodegen": "^2.0.0",
-    "eslint": "^7.22.0",
+    "eslint": "^9.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-no-leaked-values": "^0.1.24",
