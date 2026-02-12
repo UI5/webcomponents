@@ -14,11 +14,11 @@ The following command will **create a new directory** and initialize your projec
 
  - With **npm**:
 
-	`npm init @ui5/webcomponents-package`
-   
+	`npm create @ui5/webcomponents-package@latest`
+
 	or
-   
-    `npm init @ui5/webcomponents-package <NEW-PACKAGE-NAME>`
+
+    `npm create @ui5/webcomponents-package@latest <NEW-PACKAGE-NAME>`
 
 
  - With **yarn**:
@@ -31,15 +31,17 @@ The following command will **create a new directory** and initialize your projec
 
 **Note:** The `<NEW-PACKAGE-NAME>` is the name of the directory/project to be created, but also the NPM package name, used in the `package.json`.
 
+**Note:** Using `@latest` with npm ensures you always get the most recent version, bypassing any locally cached versions.
+
 For example:
 
 ```sh
-npm init @ui5/webcomponents-package myComponents
+npm create @ui5/webcomponents-package@latest myComponents
 ```
 
 will create a `myComponents` directory and initialize the project inside.
 
-### 2. Follow the prompts
+### 2A. Follow the prompts
 
 The initialization script will ask you to choose:
  - The **name** of your NPM package (if you did not already pass a name when running the command above);
@@ -47,6 +49,36 @@ The initialization script will ask you to choose:
  - The **componentName** of the sample web component that will be created (`MyComponent` by default - just press Enter to select this).
 
 **That's it! Your package is ready!**
+
+### 2B. Non-Interactive Usage
+
+For CI/CD pipelines or scripted setups, you can skip the interactive prompts by using command-line options.
+
+Run `npm create @ui5/webcomponents-package@latest -- --help` to see all available options:
+
+| Option           | Type    | Description                                            | Default      |
+|------------------|---------|--------------------------------------------------------|--------------|
+| `--name`         | string  | Package name (npm-compatible)                          | `my-package` |
+| `--tag`          | string  | Component tag name (e.g., `my-button`)                 | auto-generated |
+| `--testSetup`    | string  | Test setup: `cypress` or `manual`                      | `manual`     |
+| `--skip`         | boolean | Skip interactive prompts and use defaults/provided values | `false`   |
+| `--skipSubfolder`| boolean | Create files in current directory instead of a subfolder | `false`   |
+
+**Examples:**
+
+```sh
+# Create package with default settings (non-interactive)
+npm create @ui5/webcomponents-package@latest -- --skip
+
+# Create package with custom name
+npm create @ui5/webcomponents-package@latest -- --name my-components --skip
+
+# Create scoped package with Cypress test setup
+npm create @ui5/webcomponents-package@latest -- --name @myorg/ui5-components --testSetup cypress --skip
+
+# Create package in current directory (no subfolder)
+npm create @ui5/webcomponents-package@latest -- --name my-components --skipSubfolder --skip
+```
 
 ### 3. Run the project
 
