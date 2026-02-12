@@ -1563,4 +1563,36 @@ describe("Component Behavior", () => {
 				.should("have.been.calledOnce");
 		});
 	});
+
+	it("Test disabled slotted button does not show hover styles", () => {
+		cy.mount(
+			<ShellBar>
+				<Button icon={navBack} slot="startButton" disabled></Button>
+				<Button icon={navBack} slot="content"></Button>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar] [ui5-button][slot='startButton']").then($disabledBtn => {
+			const initialBackground = window.getComputedStyle($disabledBtn[0]).backgroundColor;
+			const initialBorderColor = window.getComputedStyle($disabledBtn[0]).borderColor;
+			const cursor = window.getComputedStyle($disabledBtn[0]).cursor;
+
+			expect(cursor).to.not.equal("pointer");
+
+			cy.get("[ui5-shellbar] [ui5-button][slot='startButton']").realHover();
+
+			cy.get("[ui5-shellbar] [ui5-button][slot='startButton']").then($btn => {
+				const hoverBackground = window.getComputedStyle($btn[0]).backgroundColor;
+				const hoverBorderColor = window.getComputedStyle($btn[0]).borderColor;
+
+				expect(hoverBackground).to.equal(initialBackground);
+				expect(hoverBorderColor).to.equal(initialBorderColor);
+			});
+		});
+
+		cy.get("[ui5-shellbar] [ui5-button][slot^='content']").then($enabledBtn => {
+			const cursor = window.getComputedStyle($enabledBtn[0]).cursor;
+			expect(cursor).to.equal("pointer");
+		});
+	});
 });

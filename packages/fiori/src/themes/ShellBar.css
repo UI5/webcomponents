@@ -57,7 +57,6 @@
 	outline-color: var(--_ui5_shellbar_logo_outline_color);
 	color: var(--sapShell_TextColor);
 	box-sizing: border-box;
-	cursor: pointer;
 	border-radius: var(--_ui5_shellbar_button_border_radius);
 	position: relative;
 	font-weight: bold;
@@ -81,12 +80,20 @@
 	margin-inline-start: 0;
 }
 
-::slotted([ui5-toggle-button]:hover),
-::slotted([ui5-button]:hover),
+.ui5-shellbar-menu-button,
+.ui5-shellbar-button,
+.ui5-shellbar-image-button,
+::slotted([ui5-toggle-button]:not([slot^="content"]):not([disabled])),
+::slotted([ui5-button]:not([slot^="content"]):not([disabled])) {
+	cursor: pointer;
+}
+
+::slotted([ui5-toggle-button]:not([disabled]):hover),
+::slotted([ui5-button]:not([disabled]):hover),
 .ui5-shellbar-menu-button.ui5-shellbar-menu-button--interactive:hover,
 .ui5-shellbar-button:hover,
 .ui5-shellbar-image-button:hover,
-::slotted([ui5-button][slot="midContent"]:hover) {
+::slotted([ui5-button][slot="midContent"]:not([disabled]):hover) {
 	background: var(--sapShell_Hover_Background);
 	border-color: var(--sapButton_Lite_Hover_BorderColor);
 	color: var(--sapShell_TextColor);
@@ -97,8 +104,8 @@
 	color: var(--sapShell_Assistant_ForegroundColor);
 }
 
-::slotted([ui5-toggle-button][active]),
-::slotted([ui5-button][active]),
+::slotted([ui5-toggle-button]:not([disabled])[active]),
+::slotted([ui5-button]:not([disabled])[active]),
 .ui5-shellbar-menu-button.ui5-shellbar-menu-button--interactive:active,
 .ui5-shellbar-button[active],
 .ui5-shellbar-image-button:active {
