@@ -44,9 +44,6 @@ const getProjectFromPool = () => {
     return projectPool.pop();
   } else {
     const plProject = document.createElement("playground-project");
-    if (process.env.NODE_ENV === "development") {
-      plProject.sandboxBaseUrl = window.location.origin + "/";
-    }
     return plProject;
   }
 }
@@ -391,6 +388,9 @@ export default function Editor({ html, js, css, mainFile = "main.js", canShare =
 
   useEffect(() => {
     projectRef.current = getProjectFromPool();
+    // Always use local static resources instead of unpkg.com CDN
+    // This avoids issues with webpack's import.meta.url handling
+    projectRef.current.sandboxBaseUrl = new URL(baseUrl, window.location.origin).href;
 
     const activeExample = getActiveExampleContent();
     let _html = activeExample.html || html;
