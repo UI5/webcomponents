@@ -6,6 +6,18 @@
 	display: inline-block;
 }
 
+:host(:not([text])) {
+	font-size: 1.375rem;
+	padding: 0.6875rem;
+	width: fit-content;
+	height: fit-content;
+	overflow: visible;
+	line-height: 0;
+	--_ui5_checkbox_inner_width_height: 1em;
+	--_ui5_checkbox_icon_size: 1em;
+	--_ui5_checkbox_partially_icon_size: .55em;
+}
+
 :host([required]) {
 	vertical-align: middle;
 }
@@ -121,15 +133,23 @@
 	display: inline-flex;
 	align-items: center;
 	max-width: 100%;
-	min-height: var(--_ui5_checkbox_width_height);
-	min-width: var(--_ui5_checkbox_width_height);
-	padding: 0 var(--_ui5_checkbox_wrapper_padding);
 	box-sizing: border-box;
 	outline: none;
 	transition: var(--_ui5_checkbox_transition);
 	border: var(--_ui5_checkbox_default_focus_border);
 	border-radius: var(--_ui5_checkbox_border_radius);
-	box-sizing: border-box;
+}
+
+:host(:not([text])) .ui5-checkbox-root {
+	width: 1em;
+	height: 1em;
+	padding: 0;
+}
+
+:host([text]) .ui5-checkbox-root {
+	min-height: var(--_ui5_checkbox_width_height);
+	min-width: var(--_ui5_checkbox_width_height);
+	padding: 0 var(--_ui5_checkbox_wrapper_padding);
 }
 
 /* focused */
@@ -142,6 +162,12 @@
 	inset-block: var(--_ui5_checkbox_focus_position);
 	border: var(--_ui5_checkbox_focus_outline);
 	border-radius: var(--_ui5_checkbox_focus_border_radius);
+}
+
+:host(:not([text])[desktop]) .ui5-checkbox-root:focus::before,
+:host(:not([text])) .ui5-checkbox-root:focus-visible::before {
+	inset-inline: -0.425rem;
+	inset-block: -0.425rem;
 }
 
 :host([text]) .ui5-checkbox-root {
@@ -250,9 +276,20 @@
 	transform: translate(-50%, -50%);
 }
 
+:host(:not([text])) .ui5-checkbox-icon {
+	width: 0.75em;
+	height: 0.75em;
+}
+
 /* Display only mode */
 :host([display-only]) {
 	cursor: default;
+}
+
+:host([display-only]:not([text])) {
+	font-size: 1rem;
+	width: 1em;
+	height: 1em;
 }
 
 :host([display-only]) .ui5-checkbox-display-only-icon-inner [ui5-icon] {
@@ -267,4 +304,9 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+:host([display-only]:not([text])) .ui5-checkbox-display-only-icon-inner [ui5-icon] {
+	width: 1em;
+	height: 1em;
 }
