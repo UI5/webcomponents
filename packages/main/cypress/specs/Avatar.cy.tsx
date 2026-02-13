@@ -121,6 +121,58 @@ describe("Accessibility", () => {
 		cy.get("#disabled-avatar").realClick();
 		cy.get("#click-event").should("have.value", "0");
 	});
+
+	// New tests for mode property
+	it("mode='Decorative' renders with role='presentation' and aria-hidden", () => {
+		cy.mount(
+			<Avatar 
+				id="decorative-avatar" 
+				initials="AB"
+				mode="Decorative"
+			></Avatar>
+		);
+
+		cy.get("#decorative-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "presentation")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("mode='Interactive' renders with role='button' and is focusable", () => {
+		cy.mount(
+			<Avatar 
+				id="interactive-mode-avatar" 
+				initials="IJ"
+				mode="Interactive"
+			></Avatar>
+		);
+
+		cy.get("#interactive-mode-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("interactive property takes precedence over mode property", () => {
+		cy.mount(
+			<Avatar 
+				interactive 
+				mode="Decorative" 
+				initials="PR" 
+				id="precedence-avatar"
+			></Avatar>
+		);
+
+		// Even though mode="Decorative", interactive=true takes precedence
+		cy.get("#precedence-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+	});
 });
 
 describe("Fallback Logic", () => {
@@ -480,7 +532,7 @@ describe("Avatar Rendering and Interaction", () => {
 
 	it("Tests noConflict 'ui5-click' event for interactive avatars", () => {
 		cy.mount(
-			<Avatar interactive initials="XS" size="XS"></Avatar>
+			<Avatar mode="Interactive" initials="XS" size="XS"></Avatar>
 		);
 
 		cy.get("[ui5-avatar]")
