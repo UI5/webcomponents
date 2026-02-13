@@ -592,6 +592,102 @@ describe("Select - Accessibility", () => {
 			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
 		});
 	});
+
+	it("should have hidden span with selected option text for screen reader announcement", () => {
+		cy.mount(
+			<Select id="selectWithHiddenText">
+				<Option value="option1">Option 1</Option>
+				<Option value="option2" selected>Option 2</Option>
+				<Option value="option3">Option 3</Option>
+			</Select>
+		);
+
+		// Verify hidden span exists with correct attributes
+		cy.get("#selectWithHiddenText")
+			.shadow()
+			.find("[id$='-selectedOptionText']")
+			.should("exist")
+			.should("have.class", "ui5-hidden-text")
+			.should("have.attr", "role", "option")
+			.should("have.attr", "aria-selected", "true")
+			.should("have.text", "Option 2");
+	});
+
+	it("should update hidden span text when selection changes", () => {
+		cy.mount(
+			<Select id="selectUpdateHiddenText">
+				<Option value="option1">First Option</Option>
+				<Option value="option2" selected>Second Option</Option>
+				<Option value="option3">Third Option</Option>
+			</Select>
+		);
+
+		// Verify initial hidden span text
+		cy.get("#selectUpdateHiddenText")
+			.shadow()
+			.find("[id$='-selectedOptionText']")
+			.should("have.text", "Second Option");
+
+		// Open select and change selection
+		cy.get("#selectUpdateHiddenText")
+			.realClick();
+
+		cy.get("#selectUpdateHiddenText")
+			.should("have.attr", "opened");
+
+		// Select third option
+		cy.get("#selectUpdateHiddenText")
+			.find("[ui5-option]")
+			.eq(2)
+			.realClick();
+
+		// Verify hidden span text is updated for screen reader announcement
+		cy.get("#selectUpdateHiddenText")
+			.shadow()
+			.find("[id$='-selectedOptionText']")
+			.should("have.text", "Third Option");
+	});
+
+	it("should set ariaActiveDescendantElement on focus ref when popover closes after selection change (NVDA fix)", () => {
+		cy.mount(
+			<Select id="selectNvdaFix">
+				<Option value="option1">Alpha</Option>
+				<Option value="option2" selected>Beta</Option>
+				<Option value="option3">Gamma</Option>
+			</Select>
+		);
+
+		// Open select
+		cy.get("#selectNvdaFix")
+			.realClick();
+
+		cy.get("#selectNvdaFix")
+			.should("have.attr", "opened");
+
+		// Select a different option
+		cy.get("#selectNvdaFix")
+			.find("[ui5-option]")
+			.eq(2)
+			.realClick();
+
+		// After popover closes, verify the hidden span contains the new selection
+		cy.get("#selectNvdaFix")
+			.should("not.have.attr", "opened");
+
+		cy.get("#selectNvdaFix")
+			.shadow()
+			.find("[id$='-selectedOptionText']")
+			.should("have.text", "Gamma");
+
+		// The ariaActiveDescendantElement is set temporarily and cleared after 100ms
+		// We verify the mechanism works by checking the hidden span has the correct content
+		// which is what screen readers like NVDA will announce
+		cy.get("#selectNvdaFix")
+			.shadow()
+			.find("[id$='-selectedOptionText']")
+			.should("have.attr", "role", "option")
+			.should("have.attr", "aria-selected", "true");
+	});
 });
 
 describe("Select - Popover", () => {

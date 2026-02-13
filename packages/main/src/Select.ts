@@ -954,12 +954,28 @@ class Select extends UI5Element implements IFormInputElement {
 		this._iconPressed = false;
 		this._listWidth = 0;
 
+		const selectionChanged = this._lastSelectedOption !== this.options[this._selectedIndex];
+
 		if (this._escapePressed) {
 			this._select(this._selectedIndexBeforeOpen);
 			this._escapePressed = false;
-		} else if (this._lastSelectedOption !== this.options[this._selectedIndex]) {
+		} else if (selectionChanged) {
 			this._fireChangeEvent(this.options[this._selectedIndex]);
 			this._lastSelectedOption = this.options[this._selectedIndex];
+		}
+
+		// Use ariaActiveDescendantElement to trigger screen readers to read the updated value
+		// Reference the hidden span in our shadow root that contains the selected text
+		if (selectionChanged) {
+			const focusRef = this.getFocusDomRef() as HTMLElement;
+			const hiddenOptionSpan = this.shadowRoot?.querySelector(`#${this._id}-selectedOptionText`);
+			if (focusRef && hiddenOptionSpan && !this._isPickerOpen) {
+				(focusRef as any).ariaActiveDescendantElement = hiddenOptionSpan;
+				// Clear it after a short delay to avoid JAWS VPC mode
+				setTimeout(() => {
+					(focusRef as any).ariaActiveDescendantElement = null;
+				}, 100);
+			}
 		}
 		this.fireDecoratorEvent("close");
 	}
