@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.2](https://github.com/UI5/webcomponents/compare/v2.19.1...v2.19.2) (2026-02-13)
+
+
+### Bug Fixes
+
+* **framework:** apply correct system css variables ([#13085](https://github.com/UI5/webcomponents/issues/13085)) ([0af0ba4](https://github.com/UI5/webcomponents/commit/0af0ba476f73cb6139fd00fd690eedace8221b79))
+
+
+
+
+
 ## [2.19.1](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.19.1) (2026-02-06)
 
 **Note:** Version bump only for package webcomponents
