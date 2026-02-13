@@ -8,9 +8,10 @@ import type { TemplateResult } from "lit-html";
 
 import { getFeature } from "../FeaturesRegistry.js";
 import type { LitStatic } from "../CustomElementsScope.js";
-import type OpenUI5Enablement from "../features/OpenUI5Enablement.js";
+import BusyIndicatorWrapperTemplateLit from "../features/BusyIndicatorWrapperTemplateLit.js";
 import type UI5Element from "../UI5Element.js";
 import type { Renderer } from "../UI5Element.js";
+import type OpenUI5Enablement from "../features/OpenUI5Enablement.js";
 
 const effectiveHtml = (strings: TemplateStringsArray, ...values: Array<unknown>) => {
 	const litStatic = getFeature<typeof LitStatic>("LitStatic");
@@ -26,9 +27,10 @@ const effectiveSvg = (strings: TemplateStringsArray, ...values: Array<unknown>) 
 
 const litRender: Renderer = (instance: UI5Element, container: HTMLElement | DocumentFragment) => {
 	let templateResult = instance.render();
+
 	const openUI5Enablement = getFeature<typeof OpenUI5Enablement>("OpenUI5Enablement");
 	if (openUI5Enablement) {
-		templateResult = openUI5Enablement.wrapTemplateResultInBusyMarkup(effectiveHtml, instance, templateResult as TemplateResult);
+		templateResult = BusyIndicatorWrapperTemplateLit(instance, templateResult as TemplateResult);
 	}
 
 	render(templateResult as TemplateResult, container, { host: instance });
