@@ -1,5 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -491,6 +492,10 @@ class SplitButton extends UI5Element {
 		return SplitButton.i18nBundle.getText(SPLIT_BUTTON_ARROW_BUTTON_TOOLTIP);
 	}
 
+	get isSplitButton(): boolean {
+		return true;
+	}
+
 	get ariaLabelText() {
 		return [SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION), SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT)].join(" ");
 	}
@@ -502,3 +507,6 @@ export default SplitButton;
 export type {
 	SplitButtonAccessibilityAttributes,
 };
+
+// Todo - change it to isInstanceOfMenuButton and change the function to check for the presence of opensMenu getter?
+export const isInstanceOfSplitButton = createInstanceChecker<SplitButton>("isSplitButton");

@@ -10,6 +10,7 @@ import {
 	isEnter,
 	isTabNext,
 	isTabPrevious,
+	isShow,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import {
 	isPhone,
@@ -29,6 +30,7 @@ import type MenuItem from "./MenuItem.js";
 import { isInstanceOfMenuItem } from "./MenuItem.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
+import { isInstanceOfSplitButton } from "./SplitButton.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {
@@ -280,6 +282,10 @@ class Menu extends UI5Element {
 		return this.shadowRoot!.querySelector<List>("[ui5-list]");
 	}
 
+	get _opener() {
+		return typeof this.opener === "string" ? document.getElementById(this.opener) : this.opener;
+	}
+
 	/** Returns menu item groups */
 	get _menuItemGroups() {
 		return this.items.filter(isInstanceOfMenuItemGroup);
@@ -438,6 +444,7 @@ class Menu extends UI5Element {
 
 	_itemKeyDown(e: KeyboardEvent) {
 		const isTabNextPrevious = isTabNext(e) || isTabPrevious(e);
+		const isShowKey = isShow(e);
 		const item = e.target as MenuItem;
 
 		if (!isInstanceOfMenuItem(item)) {
@@ -447,7 +454,7 @@ class Menu extends UI5Element {
 		const isEndContentNavigation = isRight(e) || isLeft(e);
 		const shouldOpenMenu = this.isRtl ? isLeft(e) : isRight(e);
 
-		if (isEnter(e) || isTabNextPrevious) {
+		if (isEnter(e) || isTabNextPrevious || isShowKey) {
 			e.preventDefault();
 		}
 
@@ -457,7 +464,7 @@ class Menu extends UI5Element {
 
 		if (shouldOpenMenu) {
 			this._openItemSubMenu(item, false);
-		} else if (isTabNextPrevious) {
+		} else if (isTabNextPrevious || (isShowKey && this._opener && isInstanceOfSplitButton(this._opener))) {
 			this._close();
 		}
 	}
