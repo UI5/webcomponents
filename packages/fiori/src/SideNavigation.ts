@@ -67,7 +67,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * It consists of three containers: header (top-aligned), main navigation section (top-aligned) and the secondary section (bottom-aligned).
  *
  *  - The header is meant for displaying user related information - profile data, avatar, etc.
- *  - The main navigation section is related to the user's current work context
+ *  - The main navigation section is related to the user's current work context.
  *  - The secondary section is mostly used to link additional information that may be of interest (legal information, developer communities, external help, contact information and so on).
  *
  * ### Usage
@@ -114,9 +114,9 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
 /**
- * Fired when the selection has changed via user interaction
+ * Fired when the selection has changed via user interaction.
  *
- * @param {SideNavigationSelectableItemBase} item the clicked item.
+ * @param {SideNavigationSelectableItemBase} item The selected item.
  * @public
  */
 @event("selection-change", {
@@ -124,9 +124,9 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	cancelable: true,
 })
 /**
- * Fired when an item is clicked
+ * Fired when an item is clicked.
  *
- * @param {SideNavigationSelectableItemBase} item the clicked item.
+ * @param {SideNavigationSelectableItemBase} item The clicked item.
  * @public
  */
 @event("item-click", {
