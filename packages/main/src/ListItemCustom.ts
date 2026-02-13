@@ -3,13 +3,13 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap, AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ListItem from "./ListItem.js";
 import ListItemCustomTemplate from "./ListItemCustomTemplate.js";
-import { getCustomAnnouncement } from "./CustomAnnouncement.js";
+import { getCustomAnnouncement, applyCustomAnnouncement } from "./CustomAnnouncement.js";
 import {
 	LISTITEMCUSTOM_TYPE_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
@@ -89,19 +89,13 @@ class ListItemCustom extends ListItem {
 	}
 
 	get _accessibleNameRef(): string {
-		if (this.accessibleName) {
-			// accessibleName is set - return labels excluding content
-			return `${this._id}-invisibleText`;
-		}
-
-		// accessibleName is not set - return _accInfo.listItemAriaLabel including custom content announcements
-		return `${this._id}-invisibleTextContent ${this._id}-invisibleText`;
+		return `${this._id}-invisibleText`;
 	}
 
 	_onfocusin(e: FocusEvent) {
 		super._onfocusin(e);
 		// Skip updating invisible text during drag operations
-		if (!this._isDragging()) {
+		if (!this._isDragging() && !this.accessibleName) {
 			this._updateInvisibleTextContent();
 		}
 	}
@@ -109,7 +103,7 @@ class ListItemCustom extends ListItem {
 	_onfocusout(e: FocusEvent) {
 		super._onfocusout(e);
 		// Skip clearing invisible text during drag operations
-		if (!this._isDragging()) {
+		if (!this._isDragging() && !this.accessibleName) {
 			this._clearInvisibleTextContent();
 		}
 	}
@@ -124,79 +118,27 @@ class ListItemCustom extends ListItem {
 		return this.hasAttribute("data-moving");
 	}
 
-	onAfterRendering() {
-		// This will run after the component is rendered
-		if (this.shadowRoot && !this.shadowRoot.querySelector(`#${this._id}-invisibleTextContent`)) {
-			const span = document.createElement("span");
-			span.id = `${this._id}-invisibleTextContent`;
-			span.className = "ui5-hidden-text";
-			// Empty content as requested
-			this.shadowRoot.appendChild(span);
-		}
-	}
-
-	/**
-	 * Returns the invisible text span element used for accessibility announcements
-	 * @returns {HTMLElement | null} The HTMLElement representing the invisible text span used for accessibility announcements, or null if the element is not found in the shadow DOM
-	 * @private
-	 */
-	private get _invisibleTextSpan(): HTMLElement | null {
-		return this.shadowRoot?.querySelector(`#${this._id}-invisibleTextContent`) as HTMLElement;
-	}
-
 	private _updateInvisibleTextContent() {
-		const invisibleTextSpan = this._invisibleTextSpan;
-		if (!invisibleTextSpan) {
+		const listItem = this._listItem;
+		if (!listItem) {
 			return;
 		}
 
-		// Get accessibility descriptions
-		const accessibilityTexts = this._getAccessibilityDescription();
+		// Get accessibility announcements
+		const accessibilityText = getCustomAnnouncement(this);
 
-		// Create a new array with the type text at the beginning
-		const allTexts = [ListItemCustom.i18nBundle.getText(LISTITEMCUSTOM_TYPE_TEXT), ...accessibilityTexts];
-
-		// Update the span content
-		invisibleTextSpan.textContent = allTexts.join(" ");
+		// Apply the announcement using the shared invisible text element from CustomAnnouncement
+		applyCustomAnnouncement(listItem, accessibilityText);
 	}
 
 	private _clearInvisibleTextContent() {
-		const invisibleTextSpan = this._invisibleTextSpan;
-		if (invisibleTextSpan) {
-			invisibleTextSpan.textContent = "";
-		}
-	}
-
-	/**
-	 * Gets accessibility description by processing content nodes and delete buttons
-	 * @returns {string[]} Array of accessibility text strings
-	 * @private
-	 */
-	private _getAccessibilityDescription(): string[] {
-		const accessibilityTexts: string[] = [];
-
-		// Process slotted content elements (default slot)
-		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])");
-		if (defaultSlot) {
-			const assignedNodes = (defaultSlot as HTMLSlotElement).assignedNodes({ flatten: true });
-			assignedNodes.forEach(child => {
-				const text = getCustomAnnouncement(child, { lessDetails: false }, false);
-				if (text) {
-					accessibilityTexts.push(text);
-				}
-			});
+		const listItem = this._listItem;
+		if (!listItem) {
+			return;
 		}
 
-		// Process delete button in delete mode
-		const deleteButtonNodes = this._getDeleteButtonNodes();
-		deleteButtonNodes.forEach(button => {
-			const text = getCustomAnnouncement(button, { lessDetails: false }, false);
-			if (text) {
-				accessibilityTexts.push(text);
-			}
-		});
-
-		return accessibilityTexts;
+		// Clear the announcement by passing empty text
+		applyCustomAnnouncement(listItem, "");
 	}
 
 	/**
@@ -225,6 +167,26 @@ class ListItemCustom extends ListItem {
 		result.main["ui5-custom-li-root"] = true;
 
 		return result;
+	}
+
+	get accessibilityInfo(): AccessibilityInfo {
+		const children: Array<Node> = [];
+
+		// Get slotted content elements (default slot)
+		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])");
+		if (defaultSlot) {
+			const assignedNodes = (defaultSlot as HTMLSlotElement).assignedNodes({ flatten: true });
+			children.push(...assignedNodes);
+		}
+
+		// Get delete button nodes
+		const deleteButtonNodes = this._getDeleteButtonNodes();
+		children.push(...deleteButtonNodes);
+
+		return {
+			type: ListItemCustom.i18nBundle.getText(LISTITEMCUSTOM_TYPE_TEXT),
+			children,
+		};
 	}
 }
 
