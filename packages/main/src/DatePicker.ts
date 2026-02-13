@@ -367,6 +367,15 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property()
 	accessibleDescriptionRef?: string;
 
+	/**
+	 * Defines whether the clear icon of the input will be shown.
+	 * @default false
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property({ type: Boolean })
+	showClearIcon = false;
+
 	@property({ type: Object })
 	_respPopoverConfig?: object;
 
@@ -656,8 +665,24 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "input" event handler - fire input even when the user types
 	 * @protected
 	 */
-	_onInputInput(e: Event) {
+	_onInputInput(e: CustomEvent) {
+		const inputValue = (e.target as DatePicker).value;
+		if (this.showClearIcon && inputValue === "" && e.detail.inputType === "") {
+			this._handleClearIconClick();
+
+			return;
+		}
+
 		this._updateValueAndFireEvents((e.target as DatePicker).value, false, ["input"], false);
+	}
+
+	_handleClearIconClick() {
+		this.value = "";
+		this._dateTimeInput.value = "";
+		this._updateValueState();
+		this._dateTimeInput.focus();
+		this.fireDecoratorEvent("change", { value: this.value, valid: true });
+		this.fireDecoratorEvent("value-changed", { value: this.value, valid: true });
 	}
 
 	/**

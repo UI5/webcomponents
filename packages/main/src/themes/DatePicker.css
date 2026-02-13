@@ -64,3 +64,8 @@
 .ui5-date-picker-popover::part(header) {
 	padding: 0;
 }
+
+:host([show-clear-icon]) .ui5-date-picker-input:not([value]),
+:host([show-clear-icon]) .ui5-date-picker-input[value=""] {
+	width: calc(100% + 36px);
+}
