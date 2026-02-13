@@ -306,11 +306,7 @@ describe("TimePicker Tests", () => {
 			.should("be.focused")
 			.realType("02:30 PM");
 
-		// Blur to trigger change event and normalization
-		cy.get("body").realClick();
-
-		// Wait a bit for the change to process
-		cy.wait(100);
+		cy.realPress("Tab");
 
 		// Value should default to ISO format (HH:mm:ss)
 		cy.get<TimePicker>("@timePicker")

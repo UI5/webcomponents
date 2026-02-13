@@ -377,8 +377,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	_isoFormatInstance?: DateFormat;
+	_displayFormatInstance?: DateFormat;
+	_valueFormatInstance?: DateFormat;
+	_lastDisplayFormatPattern?: string;
+	_lastValueFormatPattern?: string;
 
-	isLiveUpdate?: boolean;
+	_isLiveUpdate?: boolean;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -414,12 +418,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	onBeforeRendering() {
-		if (this.value && !this.isLiveUpdate) {
-			this.value = this.normalizeValue(this.value) || this.value;
-		}
-
-		// tempValue should always be in valueFormat and valid
-		// Synchronize tempValue with value when value is set and valid
 		if (this.value) {
 			let parsedValue = this.getValueFormat().parse(this.value, true);
 			if (!parsedValue) {
@@ -671,23 +669,25 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	_updateValueAndFireEvents(value: string, normalizeValue: boolean, eventsNames: Array<"input" | "change" | "value-changed">) {
 		const valid = this.isValidDisplayValue(value);
-		this.isLiveUpdate = eventsNames.includes("input");
+		const isInputEvent = eventsNames.includes("input");
+		this._isLiveUpdate = isInputEvent;
 
-		if (value !== undefined && valid && normalizeValue && !this.isLiveUpdate) { // if value === undefined, valid is guaranteed to be falsy
-			value = this.normalizeValue(value); // transform valid values (in any format) to the correct format
+		let normalizedValue = value;
+		if (value !== undefined && valid && normalizeValue && !isInputEvent) {
+			normalizedValue = this.normalizeValue(value); // transform valid values (in any format) to the correct format
 		}
 
 		// Store the previous value to check if it actually changed
 		const previousValue = this.value;
 
-		if (!eventsNames.includes("input")) {
-			this.value = ""; // Do not remove! DurationPicker (an external component extending TimePicker) use case -> value is 05:10, user tries 05:12, after normalization value is changed back to 05:10 so no invalidation happens, but the input still shows 05:12. Thus we enforce invalidation with the ""
-			this.value = value;
-		} else {
-			this.value = value;
+		// During input events (live typing), only update tempValue, not the public value property
+		if (!isInputEvent) {
+			this.value = ""; // Do not remove! DurationPicker (an external component extending TimePicker) use case
+			this.value = normalizedValue;
 		}
-
-		this.tempValue = value; // if the picker is open, sync it (must be done before early return)
+		
+		// Always sync tempValue for the picker
+		this.tempValue = isInputEvent ? value : normalizedValue;
 		this._updateValueState(); // Change the value state to Error/None, but only if needed (must be called before early return)
 
 		if (previousValue === this.value) {
@@ -793,19 +793,23 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get displayValue() {
-		if (!this.getValueFormat().parse(this.value, true)) {
-			return this.value;
+		// During live typing (input event), show what's in tempValue
+		if (this._isLiveUpdate) {
+			return this.tempValue || "";
 		}
 
 		if (!this.value) {
 			return "";
 		}
 
-		if (this.isLiveUpdate) {
-			return this.value;
+		// Try to parse as valueFormat and display in displayFormat
+		const parsedValue = this.getValueFormat().parse(this.value, true);
+		if (parsedValue) {
+			return this.getDisplayFormat().format(parsedValue, true);
 		}
 
-		return this.getDisplayFormat().format(this.getValueFormat().parse(this.value, true), true);
+		// If parsing fails, return the raw value (could be invalid input)
+		return this.value;
 	}
 
 	getFormat() {
@@ -837,17 +841,28 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	getDisplayFormat() {
+		const pattern = this._displayFormat;
+		
+		// Return cached instance if pattern hasn't changed
+		if (this._displayFormatInstance && this._lastDisplayFormatPattern === pattern) {
+			return this._displayFormatInstance;
+		}
+
+		this._lastDisplayFormatPattern = pattern;
+
 		if (this._isDisplayFormatPattern) {
-			return DateFormat.getTimeInstance({
+			this._displayFormatInstance = DateFormat.getTimeInstance({
 				strictParsing: true,
 				pattern: this._displayFormat,
 			});
+		} else {
+			this._displayFormatInstance = DateFormat.getTimeInstance({
+				strictParsing: true,
+				style: this._displayFormat,
+			});
 		}
 
-		return DateFormat.getTimeInstance({
-			strictParsing: true,
-			style: this._displayFormat,
-		});
+		return this._displayFormatInstance;
 	}
 
 	getValueFormat() {
@@ -855,17 +870,28 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return this.getISOFormat();
 		}
 
+		const pattern = this._valueFormat;
+		
+		// Return cached instance if pattern hasn't changed
+		if (this._valueFormatInstance && this._lastValueFormatPattern === pattern) {
+			return this._valueFormatInstance;
+		}
+
+		this._lastValueFormatPattern = pattern;
+
 		if (this._isValueFormatPattern) {
-			return DateFormat.getTimeInstance({
+			this._valueFormatInstance = DateFormat.getTimeInstance({
 				strictParsing: true,
 				pattern: this._valueFormat,
 			});
+		} else {
+			this._valueFormatInstance = DateFormat.getTimeInstance({
+				strictParsing: true,
+				style: this._valueFormat,
+			});
 		}
 
-		return DateFormat.getTimeInstance({
-			strictParsing: true,
-			style: this._valueFormat,
-		});
+		return this._valueFormatInstance;
 	}
 
 	/**
