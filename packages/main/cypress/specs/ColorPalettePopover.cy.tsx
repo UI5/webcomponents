@@ -543,7 +543,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
 });
 
 describe("Color Popover Palette Home and End keyboard navigation", () => {
-    it.skip("should navigate with Home/End when showDefaultColor is set", () => {
+    it("should navigate with Home/End when showDefaultColor is set", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} />
         );
@@ -640,7 +640,7 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
             .should("have.attr", "aria-label", "More Colors...");
     });
 
-    it.skip("should navigate with Home/End when showDefaultColor & showMoreColors are set", () => {
+    it("should navigate with Home/End when showDefaultColor & showMoreColors are set", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} showMoreColors={true} />
         );

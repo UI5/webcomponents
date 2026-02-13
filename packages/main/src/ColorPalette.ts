@@ -725,8 +725,11 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusDefaultColor(): boolean {
 		if (this.showDefaultColor && this._defaultColorButton) {
-			this._defaultColorButton.focus();
-			return true;
+			const focusDomRef = this._defaultColorButton.getFocusDomRef();
+			if (focusDomRef) {
+				focusDomRef.focus();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -737,8 +740,11 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusMoreColors(): boolean {
 		if (this.showMoreColors && this._moreColorsButton) {
-			this._moreColorsButton.focus();
-			return true;
+			const focusDomRef = this._moreColorsButton.getFocusDomRef();
+			if (focusDomRef) {
+				focusDomRef.focus();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -817,9 +823,29 @@ class ColorPalette extends UI5Element {
 		return false;
 	}
 
-	focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
+	async focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
 		itemNavigation.setCurrentItem(element);
+		// Wait for DOM to reflect property changes before focusing
+		await this._waitForTabindexReady(element);
 		itemNavigation._focusCurrentItem();
+	}
+
+	/**
+	 * Waits for an element's tabindex attribute to update to "0" in the DOM.
+	 * Uses frame-synchronized polling to detect when property changes have rendered.
+	 *
+	 * @private
+	 */
+	private async _waitForTabindexReady(element: ColorPaletteNavigationItem, maxAttempts = 30): Promise<void> {
+		// eslint-disable-next-line no-await-in-loop
+		for (let i = 0; i < maxAttempts; i++) {
+			const focusRef = element.getDomRef()?.querySelector("[data-sap-focus-ref]") as HTMLElement;
+			if (focusRef && focusRef.getAttribute("tabindex") === "0") {
+				return; // Ready!
+			}
+			// eslint-disable-next-line no-await-in-loop
+			await new Promise(resolve => requestAnimationFrame(resolve));
+		}
 	}
 
 	onColorPickerChange(e: Event) {
