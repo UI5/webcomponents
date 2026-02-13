@@ -1,0 +1,9 @@
+:host {
+	--_slider_root_side_padding: 0 1rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_slider_root_side_padding: 0 .5rem;
+	}
+}

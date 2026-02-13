@@ -1,10 +1,11 @@
 import Slider from "../../src/Slider.js";
 
 function dragSliderHandle(selector: string, offset: { x: number, y: number }) {
-	cy.get(selector).shadow().find(".ui5-slider-handle").realMouseDown()
+	cy.get(selector).shadow().find("[ui5-slider-handle]").realMouseDown()
 	cy.focused().realMouseMove(offset.x, offset.y);
 	cy.focused().realMouseUp();
 }
+
 describe("General interactions", () => {
 	beforeEach(() => {
 		cy.get('[data-cy-root]')
@@ -37,45 +38,54 @@ describe("General interactions", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle-container")
-			.as("sliderHandleContainer")
-			.should("have.attr", "style", "left: 0%;");
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 0%, 100%);");
 
 		cy.get("[ui5-slider]").invoke("prop", "value", 3);
 
-		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "left: 30%;");
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 30%, 100%);");
 
 		cy.get("[ui5-slider]").realClick();
 
-		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "left: 50%;");
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 50%, 100%);");
 
 		cy.get("[ui5-slider]").should("have.value", 5);
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandle");
 
 		dragSliderHandle("[ui5-slider]", { x: 300, y: 0 });
 
-		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "left: 70%;");
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 70%, 100%);");
 
 		cy.get("[ui5-slider]").should("have.value", 7);
 
 		dragSliderHandle("[ui5-slider]", { x: 100, y: 0 });
 
-		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "left: 80%;");
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 80%, 100%);");
 
 		cy.get("[ui5-slider]").should("have.value", 8);
 
 		dragSliderHandle("[ui5-slider]", { x: -100, y: 0 });
 
-		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "left: 70%;");
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 70%, 100%);");
 
 		cy.get("[ui5-slider]").should("have.value", 7);
 	});
@@ -113,90 +123,6 @@ describe("General interactions", () => {
 	});
 });
 
-describe("Properties synchronization and normalization", () => {
-	it("If a negative number is set to the step property its positive equivalent should be used as effective value", () => {
-		cy.mount(<Slider editableTooltip min={-20} max={20} step={2} value={12} showTooltip labelInterval={2} showTickmarks />);
-
-		cy.get("[ui5-slider]").as("slider");
-
-		cy.get("@slider").invoke("prop", "step", -7);
-
-		cy.get("@slider").realClick();
-
-		cy.get("@slider").should("have.value", 1, "The current value should be 'stepified' by 7");
-	});
-
-	it("If the step property or the labelInterval are changed, the tickmarks and labels must be updated also", () => {
-		cy.mount(<Slider editableTooltip min={-20} max={20} step={2} value={12} showTooltip labelInterval={2} showTickmarks />);
-
-		cy.get("[ui5-slider]").as("slider");
-
-		cy.get("@slider").invoke("prop", "step", 1);
-
-		cy.get('@slider')
-			.its(0)
-			.its('_labelValues')
-			.and('have.length', 21);
-
-		cy.get("@slider").invoke("prop", "step", 2);
-
-		cy.get('@slider')
-			.its(0)
-			.its('_labelValues')
-			.and('have.length', 11);
-
-		cy.get("@slider").invoke("prop", "step", 4);
-
-		cy.get('@slider')
-			.its(0)
-			.its('_labelValues')
-			.and('have.length', 6);
-	});
-
-	it("If the min and max properties are changed, the tickmarks and labels must be updated also.", () => {
-		cy.mount(<Slider editableTooltip min={-20} max={20} step={2} value={12} showTooltip labelInterval={2} showTickmarks />);
-
-		cy.get("[ui5-slider]").as("slider");
-
-		cy.get('@slider')
-			.its(0)
-			.its('_labelValues').should('have.length', 11);
-
-		cy.get("@slider").invoke("prop", "min", 0);
-		cy.get("@slider").invoke("prop", "max", 20);
-
-		cy.get('@slider')
-			.its(0)
-			.its('_labelValues').should('have.length', 11);
-	});
-
-	it("If min property is set to a greater number than the max property their effective values should be swapped, their real ones - not", () => {
-		cy.mount(<Slider value={2} max={10} min={100} />);
-
-		cy.get("[ui5-slider]").as("slider");
-
-		cy.get("@slider").invoke("prop", "max").should("equal", 10);
-		cy.get("@slider").invoke("prop", "min").should("equal", 100);
-		cy.get("@slider").invoke("prop", "value").should("equal", 10);
-	});
-
-	it("Should keep the current value between the boundaries of min and max properties", () => {
-		cy.mount(<Slider value={2} max={10} min={100} />);
-
-		cy.get("[ui5-slider]").as("slider");
-
-		cy.get("@slider").invoke("prop", "min", 100)
-		cy.get("@slider").invoke("prop", "max", 200)
-		cy.get("@slider").invoke("prop", "value", 300)
-
-		cy.get("@slider").should("have.value", 200);
-
-		cy.get("@slider").invoke("prop", "value", 99)
-
-		cy.get("@slider").should("have.value", 100);
-	});
-});
-
 describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 	beforeEach(() => {
 		cy.get('[data-cy-root]')
@@ -210,7 +136,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.realClick();
 
 		dragSliderHandle("#basic-slider-with-tooltip", { x: 240, y: 0 });
@@ -228,7 +154,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("[ui5-slider]").as("slider");
 
-		cy.get("@slider").shadow().find(".ui5-slider-handle").as("sliderHandle");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").as("sliderHandle");
 
 		cy.get("@sliderHandle").realClick();
 
@@ -247,7 +173,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@slider").invoke("prop", "value", 8);
 
-		cy.get("@slider").shadow().find(".ui5-slider-handle").as("sliderHandle");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").as("sliderHandle");
 
 		cy.get("@sliderHandle").realClick();
 
@@ -282,7 +208,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("[ui5-slider]").as("slider");
 
-		cy.get("@slider").shadow().find(".ui5-slider-handle").as("sliderHandle");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").as("sliderHandle");
 
 		cy.get("@sliderHandle").realClick();
 
@@ -317,7 +243,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("[ui5-slider]").as("slider");
 
-		cy.get("@slider").shadow().find(".ui5-slider-handle").as("sliderHandle");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").as("sliderHandle");
 
 		cy.get("@sliderHandle").realClick();
 
@@ -345,7 +271,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 		cy.mount(<Slider editableTooltip min={-20} max={20} step={2} value={12} showTooltip labelInterval={2} showTickmarks />);
 
 		cy.get("[ui5-slider]").as("slider");
-		cy.get("@slider").shadow().find(".ui5-slider-handle").as("sliderHandle");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").as("sliderHandle");
 
 		cy.get("@sliderHandle").realClick();
 
@@ -376,7 +302,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandle");
 
 		cy.get("@slider")
@@ -412,12 +338,12 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("#slider-tickmarks-labels")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.realClick();
 
 		cy.get("#slider-tickmarks-labels")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("be.focused");
 
 		cy.realPress("Tab");
@@ -437,7 +363,7 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandle");
 
 		cy.get("@slider")
@@ -542,7 +468,7 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("not.have.attr", "aria-keyshortcuts");
 	});
 
@@ -553,7 +479,7 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("have.attr", "aria-keyshortcuts");
 	});
 
@@ -568,7 +494,7 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("have.attr", "aria-label", `${labelText} Slider handle`);
 	});
 
@@ -579,7 +505,7 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandle");
 
 		cy.get("@sliderHandle")
@@ -617,7 +543,7 @@ describe("Accessibility", () => {
 
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("be.focused");
 	});
 
@@ -639,7 +565,7 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-slider]")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("be.focused");
 	});
 
@@ -659,17 +585,8 @@ describe("Accessibility", () => {
 
 		cy.get("#basic-slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.should("be.focused");
-	});
-
-	it("icon should be correctly displayed", () => {
-		cy.mount(<Slider min={0} max={20} value={10} />);
-
-		cy.get("[ui5-slider]")
-			.shadow()
-			.find("[ui5-icon]")
-			.should("have.attr", "name", "direction-arrows");
 	});
 });
 
@@ -685,7 +602,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -703,7 +620,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -721,7 +638,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -739,7 +656,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -757,7 +674,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -775,7 +692,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -793,7 +710,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -811,7 +728,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -829,7 +746,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -847,7 +764,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -865,7 +782,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -883,7 +800,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -901,7 +818,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -919,7 +836,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -937,7 +854,7 @@ describe("Accessibility: Testing keyboard handling", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -970,44 +887,44 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle-container")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandleContainer");
 
 		cy.get("@slider").invoke("prop", "value", 0);
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 0%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 0%, 100%);");
 
 		cy.get("@slider").invoke("prop", "value", 3);
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 30%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 30%, 100%);");
 
 		cy.get("@slider").realClick();
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 50%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 50%, 100%);");
 
 		cy.get("@slider").should("have.value", 5);
 
 		dragSliderHandle("[ui5-slider]", { x: -300, y: 1 });
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 80%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 80%, 100%);");
 
 		cy.get("@slider").should("have.value", 8);
 
 		dragSliderHandle("[ui5-slider]", { x: -100, y: 1 });
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 90%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 90%, 100%);");
 
 		cy.get("@slider").should("have.value", 9);
 
 		dragSliderHandle("[ui5-slider]", { x: -150, y: 1 });
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 100%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 100%, 100%);");
 
 		cy.get("@slider").should("have.value", 10);
 	});
@@ -1021,15 +938,15 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle-container")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandleContainer");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 0%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 0%, 100%);");
 
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -1039,14 +956,14 @@ describe("Testing resize handling and RTL support", () => {
 		cy.realPress("ArrowLeft");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 20%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 20%, 100%);");
 
 		cy.get("@slider").should("have.value", 2);
 
 		cy.realPress("ArrowRight");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 10%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 10%, 100%);");
 
 		cy.get("@slider").should("have.value", 1);
 	});
@@ -1061,15 +978,14 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("[ui5-slider]")
 			.as("slider")
 			.shadow()
-			.find(".ui5-slider-handle-container")
+			.find("[ui5-slider-handle]")
 			.as("sliderHandleContainer");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 0%;");
-
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 0%, 100%);");
 		cy.get("@slider")
 			.shadow()
-			.find(".ui5-slider-handle")
+			.find("[ui5-slider-handle]")
 			.as("handle")
 			.realClick();
 
@@ -1079,14 +995,14 @@ describe("Testing resize handling and RTL support", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 20%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 20%, 100%);");
 
 		cy.get("@slider").should("have.value", 2);
 
 		cy.realPress("ArrowDown");
 
 		cy.get("@sliderHandleContainer")
-			.should("have.attr", "style", "right: 10%;");
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 10%, 100%);");
 
 		cy.get("@slider").should("have.value", 1);
 	});

@@ -1,0 +1,14 @@
+@import "../base/SliderScale-parameters.css";
+
+:host {
+	--_ui5_slider_scale_root_box_sizing: border-box;
+	--_ui5_slider_scale_progress_border: none;
+	--_ui5_slider_scale_border: none;
+	--_ui5_slider_scale_progress_height: 100%;
+	--_ui5_slider_scale_progress_top: 0;
+	--_ui5_slider_scale_dots_display: inline-block;
+
+	/* Fiori 3 specific */
+	--_ui5_slider_scale_dots_display: none;
+	--_ui5_slider_scale_tickmark_height: 1rem;
+}

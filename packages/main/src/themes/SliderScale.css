@@ -1,0 +1,148 @@
+:host {
+	height: 2rem;
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	user-select: none;
+}
+
+.ui5-slider-scale-root {
+	height: .25rem;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.ui5-slider-scale-root {
+	box-sizing: var(--_ui5_slider_scale_root_box_sizing);
+	border-radius: 0.25rem;
+	width: 100%;
+	position: relative;
+	background: var(--ui5_slider_scale_background);
+	border: var(--_ui5_slider_scale_border);
+}
+
+.ui5-slider-scale-tickmarks-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	z-index: 5;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ui5-slider-scale-tickmark {
+	position: absolute;
+	height: var(--_ui5_slider_scale_tickmark_height);
+	border-left: 0.0625rem solid var(--sapField_BorderColor);
+}
+
+.ui5-slider-scale-tickmark-in-range {
+	border-left-color: var(--sapSlider_Selected_BorderColor);
+}
+
+.ui5-slider-scale-tickmark-label {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: 0.875rem;
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapContent_LabelColor);
+	white-space: nowrap;
+}
+
+.ui5-slider-scale-progress {
+	position: absolute;
+	top: var(--_ui5_slider_scale_progress_top);
+	height: var(--_ui5_slider_scale_progress_height);
+	background-color: var(--sapSlider_Selected_Background);
+	border: var(--_ui5_slider_scale_progress_border);
+	border-left: none;
+	box-sizing: border-box;
+	z-index: 4;
+	border-radius: .25rem;
+}
+
+.ui5-slider-scale-root::before {
+	content: "";
+	position: absolute;
+	width: .5rem;
+	height: .5rem;
+	background-color: var(--sapSlider_Selected_Background);
+	border: solid 0.0625rem var(--sapContent_Selected_MeasureIndicatorColor);
+	box-sizing: border-box;
+	border-radius: 50%;
+	inset-inline-start: var(--_ui5_slider_scale_dots_distance);
+	top: 50%;
+	transform: translateY(-50%);
+	display: var(--_ui5_slider_scale_dots_display);
+}
+
+.ui5-slider-scale-root::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0;
+	width: .5rem;
+	height: .5rem;
+	background-color: var(--sapContent_MeasureIndicatorColor);
+	border-radius: 50%;
+	border: solid 0.0625rem var(--sapContent_MeasureIndicatorColor);
+	box-sizing: border-box;
+	inset-inline-end: var(--_ui5_slider_scale_dots_distance);
+	top: 50%;
+	transform: translateY(-50%);
+	display: var(--_ui5_slider_scale_dots_display);
+}
+
+:host([orientation="Vertical"]) {
+	width: 2rem;
+	height: 100%;
+
+	.ui5-slider-scale-root {
+		box-sizing: border-box;
+		height: 100%;
+		width: 0.25rem;
+		background-color: var(--sapSlider_Background);
+		position: relative;
+	}
+
+	.ui5-slider-scale-progress {
+		width: 100%;
+		height: auto;
+	}
+
+	.ui5-slider-scale-root:before {
+		left: 50%;
+		top: -1rem;
+		right: auto;
+		transform: translateX(-50%);
+	}
+
+	.ui5-slider-scale-root:after {
+		left: 50%;
+		right: auto;
+		top: auto;
+		bottom: -1rem;
+		transform: translateX(-50%);
+	}
+
+	.ui5-slider-scale-tickmark-label {
+		margin-top: 0;
+		margin-left: 14px;
+		top: 50%;
+		left: 100%;
+		transform: translateY(-50%);
+	}
+
+	.ui5-slider-scale-tickmark {
+		height: auto;
+		width: .5rem;
+		margin-top: 0;
+		margin-left: 0;
+		border-left: none;
+		border-top: 0.0625rem solid var(--sapField_BorderColor);
+	}
+}
