@@ -149,6 +149,7 @@ and there is an additional border that appears on hover. */
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected.ui5-sn-item-active,
 :host(:not([ui5-side-navigation-item][in-popover][unselectable])) .ui5-sn-item:not(.ui5-sn-item-disabled):active,
 .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-active,
+:host(.ui5-sn-item-overflow.ui5-sn-item-active) .ui5-sn-item,
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected:active,
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-disabled).ui5-sn-item-selected.ui5-sn-item-active {
 	background: var(--sapList_Active_Background);
@@ -300,11 +301,6 @@ and there is an additional border that appears on hover. */
 :host([unselectable][side-nav-collapsed]) div.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):not(.ui5-sn-item-with-expander):hover,
 :host([unselectable][side-nav-collapsed]) div.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):not(.ui5-sn-item-with-expander):focus {
 	padding-inline-end: var(--_ui5_side_navigation_action_item_collapsed_padding);
-}
-
-:host([side-nav-collapsed]) .ui5-sn-item.ui5-sn-item-selected:hover,
-:host([side-nav-collapsed]) .ui5-sn-item.ui5-sn-item-selected:focus {
-	background: var(--sapList_SelectionBackgroundColor);
 }
 
 :host([side-nav-collapsed]) div.ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):hover:not(.ui5-sn-item-with-expander),

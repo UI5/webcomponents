@@ -52,6 +52,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 		<ResponsivePopover
 			verticalAlign="Top"
 			class="ui5-side-navigation-popover"
+			hideArrow={true}
 			accessibleNameRef={`${this._id}-sideNavigationPopoverText`}
 			onOpen={this._onAfterPopoverOpen}
 			onBeforeOpen={this._onBeforePopoverOpen}

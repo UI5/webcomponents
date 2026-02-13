@@ -13,6 +13,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -51,6 +52,10 @@ type SideNavigationSelectionChangeEventDetail = {
 	item: SideNavigationItemBase,
 };
 
+type SideNavigationItemClickEventDetail = {
+	item: SideNavigationSelectableItemBase,
+};
+
 type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNavigationSelectableItemBase };
 
 /**
@@ -62,7 +67,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * It consists of three containers: header (top-aligned), main navigation section (top-aligned) and the secondary section (bottom-aligned).
  *
  *  - The header is meant for displaying user related information - profile data, avatar, etc.
- *  - The main navigation section is related to the user’s current work context
+ *  - The main navigation section is related to the user's current work context.
  *  - The secondary section is mostly used to link additional information that may be of interest (legal information, developer communities, external help, contact information and so on).
  *
  * ### Usage
@@ -109,18 +114,29 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
 /**
- * Fired when the selection has changed via user interaction
+ * Fired when the selection has changed via user interaction.
  *
- * @param {SideNavigationSelectableItemBase} item the clicked item.
+ * @param {SideNavigationSelectableItemBase} item The selected item.
  * @public
  */
 @event("selection-change", {
 	bubbles: true,
 	cancelable: true,
 })
+/**
+ * Fired when an item is clicked.
+ *
+ * @param {SideNavigationSelectableItemBase} item The clicked item.
+ * @public
+ */
+@event("item-click", {
+	bubbles: true,
+	cancelable: true,
+})
 class SideNavigation extends UI5Element {
 	eventDetails!: {
-		"selection-change": SideNavigationSelectionChangeEventDetail
+		"selection-change": SideNavigationSelectionChangeEventDetail,
+		"item-click": SideNavigationItemClickEventDetail
 	}
 
 	/**
@@ -595,7 +611,13 @@ class SideNavigation extends UI5Element {
 		}, new Array<HTMLElement>());
 	}
 
+	private _isSmallScreen(): boolean {
+		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
 	_handleItemClick(e: KeyboardEvent | MouseEvent, item: SideNavigationSelectableItemBase) {
+		this.fireDecoratorEvent("item-click", { item });
+
 		if (item.effectiveDisabled) {
 			e.stopPropagation();
 			e.preventDefault();
@@ -624,7 +646,7 @@ class SideNavigation extends UI5Element {
 			return;
 		}
 
-		if (this.collapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
+		if (!this._isSmallScreen() && this.collapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
 			e.preventDefault();
 			this._isOverflow = false;
 
@@ -727,4 +749,5 @@ export default SideNavigation;
 
 export type {
 	SideNavigationSelectionChangeEventDetail,
+	SideNavigationItemClickEventDetail,
 };
