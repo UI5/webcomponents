@@ -367,6 +367,15 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property()
 	accessibleDescriptionRef?: string;
 
+	/**
+	 * Defines whether the clear icon of the input will be shown.
+	 * @default false
+	 * @public
+	 * @since 1.16.0
+	 */
+	@property({ type: Boolean })
+	showClearIcon = false;
+
 	@property({ type: Object })
 	_respPopoverConfig?: object;
 
@@ -878,6 +887,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 		return this.getDisplayFormat().format(this.getValueFormat().parse(this.value, true), true);
 	}
+
+	// get hasValue(): boolean {
+	// 	return !!this.value;
+	// }
 
 	get accInfo(): InputAccInfo {
 		return {
