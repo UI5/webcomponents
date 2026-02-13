@@ -405,7 +405,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	get formValidity(): ValidityStateFlags {
 		return {
 			valueMissing: this.required && !this.value,
-			patternMismatch: !this.isValid(this.value),
+			patternMismatch: !this.isValidValue(this.value),
 		};
 	}
 
@@ -603,7 +603,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * @returns Resolves when the Inputs popover is open
 	 */
 	openInputsPopover() {
-		this.tempValue = this.value && this.isValid(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
+		this.tempValue = this.value && this.isValidValue(this.value) ? this.value : this.getValueFormat().format(UI5Date.getInstance());
 		const popover = this._inputsPopover;
 		popover.opener = this;
 		popover.open = true;
@@ -685,7 +685,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			this.value = ""; // Do not remove! DurationPicker (an external component extending TimePicker) use case
 			this.value = normalizedValue;
 		}
-		
+
 		// Always sync tempValue for the picker
 		this.tempValue = isInputEvent ? value : normalizedValue;
 		this._updateValueState(); // Change the value state to Error/None, but only if needed (must be called before early return)
@@ -700,7 +700,8 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_updateValueState() {
-		const isValid = this.isValidDisplayValue(this.value);
+		// During live typing, validate against displayFormat, otherwise validate against valueFormat
+		const isValid = this._isLiveUpdate ? this.isValidDisplayValue(this.value) : this.isValidValue(this.value);
 		if (!isValid) { // If not valid - always set Error regardless of the current value state
 			this.valueState = ValueState.Negative;
 		} else if (isValid && this.valueState === ValueState.Negative) { // However if valid, change only Error (but not the others) to None
@@ -842,7 +843,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	getDisplayFormat() {
 		const pattern = this._displayFormat;
-		
+
 		// Return cached instance if pattern hasn't changed
 		if (this._displayFormatInstance && this._lastDisplayFormatPattern === pattern) {
 			return this._displayFormatInstance;
@@ -871,7 +872,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		}
 
 		const pattern = this._valueFormat;
-		
+
 		// Return cached instance if pattern hasn't changed
 		if (this._valueFormatInstance && this._lastValueFormatPattern === pattern) {
 			return this._valueFormatInstance;
@@ -925,6 +926,21 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		}
 
 		return !!this.getDisplayFormat().parse(value as string, true);
+	}
+
+	/**
+	 * Checks if a value is valid against the current `valueFormat` value.
+	 *
+	 * **Note:** an empty string is considered as valid value.
+	 * @param value The value to be tested against the value format
+	 * @public
+	 */
+	isValidValue(value: string | undefined): boolean {
+		if (value === "") {
+			return true;
+		}
+
+		return !!this.getValueFormat().parse(value as string, true);
 	}
 
 	/**
