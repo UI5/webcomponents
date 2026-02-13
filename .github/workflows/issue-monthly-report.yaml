@@ -133,7 +133,7 @@ jobs:
 
             // Bugs table
             report += `### Bugs\n\n`;
-            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) Time to Close |\n`;
             report += `|-------|--------|--------|---------------|\n`;
 
             let totalBugsOpened = 0, totalBugsClosed = 0;
@@ -153,7 +153,7 @@ jobs:
 
             // Feature Requests table
             report += `### Feature Requests\n\n`;
-            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) Time to Close |\n`;
             report += `|-------|--------|--------|---------------|\n`;
 
             let totalFRsOpened = 0, totalFRsClosed = 0;
@@ -173,7 +173,7 @@ jobs:
 
             // Other table
             report += `### Other\n\n`;
-            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) Time to Close |\n`;
             report += `|-------|--------|--------|---------------|\n`;
 
             let totalOtherOpened = 0, totalOtherClosed = 0;
@@ -193,7 +193,7 @@ jobs:
 
             // Summary
             report += `### Summary\n\n`;
-            report += `| Type | Opened | Closed | Avg (Median) |\n`;
+            report += `| Type | Opened | Closed | Avg (Median) Time to Close |\n`;
             report += `|------|--------|--------|---------------|\n`;
             report += `| Bugs | ${totalBugsOpened} | ${totalBugsClosed} | ${formatTime(bugsTotalAvg, bugsTotalMedian)} |\n`;
             report += `| Feature Requests | ${totalFRsOpened} | ${totalFRsClosed} | ${formatTime(frsTotalAvg, frsTotalMedian)} |\n`;
