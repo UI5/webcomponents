@@ -1,0 +1,217 @@
+name: Monthly Issue Report
+
+on:
+  schedule:
+    # Run on the 1st of every month at 9:00 AM UTC
+    - cron: "0 9 1 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (print report without updating issue)'
+        type: boolean
+        default: false
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          script: |
+            const REPORT_ISSUE_NUMBER = 13080; // Monthly Issues Report tracking issue
+            const isDryRun = context.eventName === 'workflow_dispatch' && ${{ inputs.dry_run || false }};
+
+            // All TOPIC labels to track (team labels)
+            const topics = [
+              'TOPIC B',
+              'TOPIC Core',
+              'TOPIC P',
+              'TOPIC RD',
+              'TOPIC RL',
+              'TOPIC SKR',
+              'TOPIC TBL'
+            ];
+
+            // Helper to check if issue is a bug (by label OR issue type)
+            const isBug = (issue) => {
+              const labels = issue.labels.map(l => l.name.toLowerCase());
+              const typeName = issue.type?.name?.toLowerCase() || '';
+              return labels.includes('bug') || typeName === 'bug';
+            };
+
+            // Helper to check if issue is a feature request (by label OR issue type)
+            const isFeatureRequest = (issue) => {
+              const labels = issue.labels.map(l => l.name.toLowerCase());
+              const typeName = issue.type?.name?.toLowerCase() || '';
+              return labels.includes('feature request') || labels.includes('enhancement') || typeName === 'feature';
+            };
+
+            // Calculate date range for last month
+            const now = new Date();
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+            const monthName = lastMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+            const sinceDate = lastMonth.toISOString();
+            const untilDate = lastMonthEnd.toISOString();
+
+            console.log(`Generating report for ${monthName}`);
+            console.log(`Date range: ${sinceDate} to ${untilDate}`);
+
+            const results = [];
+
+            for (const topic of topics) {
+              // Get issues with this label using raw API to include 'type' field
+              const allIssues = await github.paginate('GET /repos/{owner}/{repo}/issues', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: topic,
+                state: 'all',
+                since: sinceDate,
+                per_page: 100
+              });
+
+              // Filter to issues created within the date range (exclude PRs)
+              const opened = allIssues.filter(issue => {
+                const created = new Date(issue.created_at);
+                return created >= lastMonth && created <= lastMonthEnd && !issue.pull_request;
+              });
+
+              // Get closed issues - filter those closed in the period
+              const closed = allIssues.filter(issue => {
+                if (!issue.closed_at || issue.pull_request) return false;
+                const closedDate = new Date(issue.closed_at);
+                return closedDate >= lastMonth && closedDate <= lastMonthEnd;
+              });
+
+              // Split by type
+              const openedBugs = opened.filter(isBug);
+              const openedFRs = opened.filter(isFeatureRequest);
+              const openedOther = opened.filter(i => !isBug(i) && !isFeatureRequest(i));
+
+              const closedBugs = closed.filter(isBug);
+              const closedFRs = closed.filter(isFeatureRequest);
+              const closedOther = closed.filter(i => !isBug(i) && !isFeatureRequest(i));
+
+              // Calculate average time to close (in days) for each type
+              const calcAvg = (issues) => {
+                if (issues.length === 0) return null;
+                const totalDays = issues.reduce((sum, issue) => {
+                  const created = new Date(issue.created_at);
+                  const closedDate = new Date(issue.closed_at);
+                  const days = (closedDate - created) / (1000 * 60 * 60 * 24);
+                  return sum + days;
+                }, 0);
+                return (totalDays / issues.length).toFixed(1);
+              };
+
+              results.push({
+                topic: topic,
+                bugs: { opened: openedBugs.length, closed: closedBugs.length, avg: calcAvg(closedBugs) },
+                frs: { opened: openedFRs.length, closed: closedFRs.length, avg: calcAvg(closedFRs) },
+                other: { opened: openedOther.length, closed: closedOther.length, avg: calcAvg(closedOther) },
+                total: { opened: opened.length, closed: closed.length, avg: calcAvg(closed) }
+              });
+            }
+
+            // Build markdown report
+            let report = `## ${monthName} Issue Report\n\n`;
+
+            // Bugs table
+            report += `### Bugs\n\n`;
+            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
+            report += `|-------|--------|--------|-------------------|\n`;
+
+            let totalBugsOpened = 0, totalBugsClosed = 0, totalBugsDays = 0, totalBugsForAvg = 0;
+            for (const r of results) {
+              const avgStr = r.bugs.avg ? `${r.bugs.avg} days` : '-';
+              report += `| ${r.topic} | ${r.bugs.opened} | ${r.bugs.closed} | ${avgStr} |\n`;
+              totalBugsOpened += r.bugs.opened;
+              totalBugsClosed += r.bugs.closed;
+              if (r.bugs.avg && r.bugs.closed > 0) {
+                totalBugsDays += parseFloat(r.bugs.avg) * r.bugs.closed;
+                totalBugsForAvg += r.bugs.closed;
+              }
+            }
+            const bugsAvgStr = totalBugsForAvg > 0 ? `${(totalBugsDays / totalBugsForAvg).toFixed(1)} days` : '-';
+            report += `| **Total** | **${totalBugsOpened}** | **${totalBugsClosed}** | **${bugsAvgStr}** |\n\n`;
+
+            // Feature Requests table
+            report += `### Feature Requests\n\n`;
+            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
+            report += `|-------|--------|--------|-------------------|\n`;
+
+            let totalFRsOpened = 0, totalFRsClosed = 0, totalFRsDays = 0, totalFRsForAvg = 0;
+            for (const r of results) {
+              const avgStr = r.frs.avg ? `${r.frs.avg} days` : '-';
+              report += `| ${r.topic} | ${r.frs.opened} | ${r.frs.closed} | ${avgStr} |\n`;
+              totalFRsOpened += r.frs.opened;
+              totalFRsClosed += r.frs.closed;
+              if (r.frs.avg && r.frs.closed > 0) {
+                totalFRsDays += parseFloat(r.frs.avg) * r.frs.closed;
+                totalFRsForAvg += r.frs.closed;
+              }
+            }
+            const frsAvgStr = totalFRsForAvg > 0 ? `${(totalFRsDays / totalFRsForAvg).toFixed(1)} days` : '-';
+            report += `| **Total** | **${totalFRsOpened}** | **${totalFRsClosed}** | **${frsAvgStr}** |\n\n`;
+
+            // Other (unlabeled) table
+            report += `### Other\n\n`;
+            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
+            report += `|-------|--------|--------|-------------------|\n`;
+
+            let totalOtherOpened = 0, totalOtherClosed = 0, totalOtherDays = 0, totalOtherForAvg = 0;
+            for (const r of results) {
+              const avgStr = r.other.avg ? `${r.other.avg} days` : '-';
+              report += `| ${r.topic} | ${r.other.opened} | ${r.other.closed} | ${avgStr} |\n`;
+              totalOtherOpened += r.other.opened;
+              totalOtherClosed += r.other.closed;
+              if (r.other.avg && r.other.closed > 0) {
+                totalOtherDays += parseFloat(r.other.avg) * r.other.closed;
+                totalOtherForAvg += r.other.closed;
+              }
+            }
+            const otherAvgStr = totalOtherForAvg > 0 ? `${(totalOtherDays / totalOtherForAvg).toFixed(1)} days` : '-';
+            report += `| **Total** | **${totalOtherOpened}** | **${totalOtherClosed}** | **${otherAvgStr}** |\n\n`;
+
+            // Summary
+            report += `### Summary\n\n`;
+            report += `| Type | Opened | Closed | Avg Time to Close |\n`;
+            report += `|------|--------|--------|-------------------|\n`;
+            report += `| Bugs | ${totalBugsOpened} | ${totalBugsClosed} | ${bugsAvgStr} |\n`;
+            report += `| Feature Requests | ${totalFRsOpened} | ${totalFRsClosed} | ${frsAvgStr} |\n`;
+            report += `| Other | ${totalOtherOpened} | ${totalOtherClosed} | ${otherAvgStr} |\n`;
+            const grandOpened = totalBugsOpened + totalFRsOpened + totalOtherOpened;
+            const grandClosed = totalBugsClosed + totalFRsClosed + totalOtherClosed;
+            const grandDays = totalBugsDays + totalFRsDays + totalOtherDays;
+            const grandForAvg = totalBugsForAvg + totalFRsForAvg + totalOtherForAvg;
+            const grandAvgStr = grandForAvg > 0 ? `${(grandDays / grandForAvg).toFixed(1)} days` : '-';
+            report += `| **Total** | **${grandOpened}** | **${grandClosed}** | **${grandAvgStr}** |\n`;
+
+            report += `\n_Report generated: ${now.toISOString()}_\n`;
+
+            console.log('\n' + report);
+
+            if (isDryRun) {
+              console.log('\nDry run - not updating issue');
+              return;
+            }
+
+            if (REPORT_ISSUE_NUMBER === 0) {
+              console.log('\nREPORT_ISSUE_NUMBER not set - skipping issue update');
+              console.log('Create a tracking issue and set REPORT_ISSUE_NUMBER to its number');
+              return;
+            }
+
+            // Add report as a comment on the tracking issue
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: REPORT_ISSUE_NUMBER,
+              body: report
+            });
+
+            console.log(`\nAdded comment to issue #${REPORT_ISSUE_NUMBER} with new report`);
