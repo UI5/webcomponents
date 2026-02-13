@@ -96,100 +96,116 @@ jobs:
               const closedFRs = closed.filter(isFeatureRequest);
               const closedOther = closed.filter(i => !isBug(i) && !isFeatureRequest(i));
 
-              // Calculate average time to close (in days) for each type
-              const calcAvg = (issues) => {
-                if (issues.length === 0) return null;
-                const totalDays = issues.reduce((sum, issue) => {
+              // Calculate stats (average and median) for time to close
+              const calcStats = (issues) => {
+                if (issues.length === 0) return { avg: null, median: null, days: [] };
+                const days = issues.map(issue => {
                   const created = new Date(issue.created_at);
                   const closedDate = new Date(issue.closed_at);
-                  const days = (closedDate - created) / (1000 * 60 * 60 * 24);
-                  return sum + days;
-                }, 0);
-                return (totalDays / issues.length).toFixed(1);
+                  return (closedDate - created) / (1000 * 60 * 60 * 24);
+                });
+                const sorted = [...days].sort((a, b) => a - b);
+                const mid = Math.floor(sorted.length / 2);
+                const median = sorted.length % 2 === 0
+                  ? (sorted[mid - 1] + sorted[mid]) / 2
+                  : sorted[mid];
+                const avg = days.reduce((a, b) => a + b, 0) / days.length;
+                return { avg: avg.toFixed(1), median: median.toFixed(1), days };
               };
 
               results.push({
                 topic: topic,
-                bugs: { opened: openedBugs.length, closed: closedBugs.length, avg: calcAvg(closedBugs) },
-                frs: { opened: openedFRs.length, closed: closedFRs.length, avg: calcAvg(closedFRs) },
-                other: { opened: openedOther.length, closed: closedOther.length, avg: calcAvg(closedOther) },
-                total: { opened: opened.length, closed: closed.length, avg: calcAvg(closed) }
+                bugs: { opened: openedBugs.length, closed: closedBugs.length, ...calcStats(closedBugs) },
+                frs: { opened: openedFRs.length, closed: closedFRs.length, ...calcStats(closedFRs) },
+                other: { opened: openedOther.length, closed: closedOther.length, ...calcStats(closedOther) },
+                total: { opened: opened.length, closed: closed.length, ...calcStats(closed) }
               });
             }
 
             // Build markdown report
             let report = `## ${monthName} Issue Report\n\n`;
 
+            // Helper to format avg/median
+            const formatTime = (avg, median) => {
+              if (!avg) return '-';
+              return `${avg} (${median})`;
+            };
+
             // Bugs table
             report += `### Bugs\n\n`;
-            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
-            report += `|-------|--------|--------|-------------------|\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `|-------|--------|--------|---------------|\n`;
 
-            let totalBugsOpened = 0, totalBugsClosed = 0, totalBugsDays = 0, totalBugsForAvg = 0;
+            let totalBugsOpened = 0, totalBugsClosed = 0;
+            let allBugsDays = [];
             for (const r of results) {
-              const avgStr = r.bugs.avg ? `${r.bugs.avg} days` : '-';
-              report += `| ${r.topic} | ${r.bugs.opened} | ${r.bugs.closed} | ${avgStr} |\n`;
+              const timeStr = formatTime(r.bugs.avg, r.bugs.median);
+              report += `| ${r.topic} | ${r.bugs.opened} | ${r.bugs.closed} | ${timeStr} |\n`;
               totalBugsOpened += r.bugs.opened;
               totalBugsClosed += r.bugs.closed;
-              if (r.bugs.avg && r.bugs.closed > 0) {
-                totalBugsDays += parseFloat(r.bugs.avg) * r.bugs.closed;
-                totalBugsForAvg += r.bugs.closed;
-              }
+              allBugsDays = allBugsDays.concat(r.bugs.days || []);
             }
-            const bugsAvgStr = totalBugsForAvg > 0 ? `${(totalBugsDays / totalBugsForAvg).toFixed(1)} days` : '-';
-            report += `| **Total** | **${totalBugsOpened}** | **${totalBugsClosed}** | **${bugsAvgStr}** |\n\n`;
+            const bugsTotalAvg = allBugsDays.length > 0 ? (allBugsDays.reduce((a, b) => a + b, 0) / allBugsDays.length).toFixed(1) : null;
+            const bugsSorted = [...allBugsDays].sort((a, b) => a - b);
+            const bugsMid = Math.floor(bugsSorted.length / 2);
+            const bugsTotalMedian = bugsSorted.length > 0 ? (bugsSorted.length % 2 === 0 ? ((bugsSorted[bugsMid - 1] + bugsSorted[bugsMid]) / 2).toFixed(1) : bugsSorted[bugsMid].toFixed(1)) : null;
+            report += `| **Total** | **${totalBugsOpened}** | **${totalBugsClosed}** | **${formatTime(bugsTotalAvg, bugsTotalMedian)}** |\n\n`;
 
             // Feature Requests table
             report += `### Feature Requests\n\n`;
-            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
-            report += `|-------|--------|--------|-------------------|\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `|-------|--------|--------|---------------|\n`;
 
-            let totalFRsOpened = 0, totalFRsClosed = 0, totalFRsDays = 0, totalFRsForAvg = 0;
+            let totalFRsOpened = 0, totalFRsClosed = 0;
+            let allFRsDays = [];
             for (const r of results) {
-              const avgStr = r.frs.avg ? `${r.frs.avg} days` : '-';
-              report += `| ${r.topic} | ${r.frs.opened} | ${r.frs.closed} | ${avgStr} |\n`;
+              const timeStr = formatTime(r.frs.avg, r.frs.median);
+              report += `| ${r.topic} | ${r.frs.opened} | ${r.frs.closed} | ${timeStr} |\n`;
               totalFRsOpened += r.frs.opened;
               totalFRsClosed += r.frs.closed;
-              if (r.frs.avg && r.frs.closed > 0) {
-                totalFRsDays += parseFloat(r.frs.avg) * r.frs.closed;
-                totalFRsForAvg += r.frs.closed;
-              }
+              allFRsDays = allFRsDays.concat(r.frs.days || []);
             }
-            const frsAvgStr = totalFRsForAvg > 0 ? `${(totalFRsDays / totalFRsForAvg).toFixed(1)} days` : '-';
-            report += `| **Total** | **${totalFRsOpened}** | **${totalFRsClosed}** | **${frsAvgStr}** |\n\n`;
+            const frsTotalAvg = allFRsDays.length > 0 ? (allFRsDays.reduce((a, b) => a + b, 0) / allFRsDays.length).toFixed(1) : null;
+            const frsSorted = [...allFRsDays].sort((a, b) => a - b);
+            const frsMid = Math.floor(frsSorted.length / 2);
+            const frsTotalMedian = frsSorted.length > 0 ? (frsSorted.length % 2 === 0 ? ((frsSorted[frsMid - 1] + frsSorted[frsMid]) / 2).toFixed(1) : frsSorted[frsMid].toFixed(1)) : null;
+            report += `| **Total** | **${totalFRsOpened}** | **${totalFRsClosed}** | **${formatTime(frsTotalAvg, frsTotalMedian)}** |\n\n`;
 
-            // Other (unlabeled) table
+            // Other table
             report += `### Other\n\n`;
-            report += `| Topic | Opened | Closed | Avg Time to Close |\n`;
-            report += `|-------|--------|--------|-------------------|\n`;
+            report += `| Topic | Opened | Closed | Avg (Median) |\n`;
+            report += `|-------|--------|--------|---------------|\n`;
 
-            let totalOtherOpened = 0, totalOtherClosed = 0, totalOtherDays = 0, totalOtherForAvg = 0;
+            let totalOtherOpened = 0, totalOtherClosed = 0;
+            let allOtherDays = [];
             for (const r of results) {
-              const avgStr = r.other.avg ? `${r.other.avg} days` : '-';
-              report += `| ${r.topic} | ${r.other.opened} | ${r.other.closed} | ${avgStr} |\n`;
+              const timeStr = formatTime(r.other.avg, r.other.median);
+              report += `| ${r.topic} | ${r.other.opened} | ${r.other.closed} | ${timeStr} |\n`;
               totalOtherOpened += r.other.opened;
               totalOtherClosed += r.other.closed;
-              if (r.other.avg && r.other.closed > 0) {
-                totalOtherDays += parseFloat(r.other.avg) * r.other.closed;
-                totalOtherForAvg += r.other.closed;
-              }
+              allOtherDays = allOtherDays.concat(r.other.days || []);
             }
-            const otherAvgStr = totalOtherForAvg > 0 ? `${(totalOtherDays / totalOtherForAvg).toFixed(1)} days` : '-';
-            report += `| **Total** | **${totalOtherOpened}** | **${totalOtherClosed}** | **${otherAvgStr}** |\n\n`;
+            const otherTotalAvg = allOtherDays.length > 0 ? (allOtherDays.reduce((a, b) => a + b, 0) / allOtherDays.length).toFixed(1) : null;
+            const otherSorted = [...allOtherDays].sort((a, b) => a - b);
+            const otherMid = Math.floor(otherSorted.length / 2);
+            const otherTotalMedian = otherSorted.length > 0 ? (otherSorted.length % 2 === 0 ? ((otherSorted[otherMid - 1] + otherSorted[otherMid]) / 2).toFixed(1) : otherSorted[otherMid].toFixed(1)) : null;
+            report += `| **Total** | **${totalOtherOpened}** | **${totalOtherClosed}** | **${formatTime(otherTotalAvg, otherTotalMedian)}** |\n\n`;
 
             // Summary
             report += `### Summary\n\n`;
-            report += `| Type | Opened | Closed | Avg Time to Close |\n`;
-            report += `|------|--------|--------|-------------------|\n`;
-            report += `| Bugs | ${totalBugsOpened} | ${totalBugsClosed} | ${bugsAvgStr} |\n`;
-            report += `| Feature Requests | ${totalFRsOpened} | ${totalFRsClosed} | ${frsAvgStr} |\n`;
-            report += `| Other | ${totalOtherOpened} | ${totalOtherClosed} | ${otherAvgStr} |\n`;
+            report += `| Type | Opened | Closed | Avg (Median) |\n`;
+            report += `|------|--------|--------|---------------|\n`;
+            report += `| Bugs | ${totalBugsOpened} | ${totalBugsClosed} | ${formatTime(bugsTotalAvg, bugsTotalMedian)} |\n`;
+            report += `| Feature Requests | ${totalFRsOpened} | ${totalFRsClosed} | ${formatTime(frsTotalAvg, frsTotalMedian)} |\n`;
+            report += `| Other | ${totalOtherOpened} | ${totalOtherClosed} | ${formatTime(otherTotalAvg, otherTotalMedian)} |\n`;
             const grandOpened = totalBugsOpened + totalFRsOpened + totalOtherOpened;
             const grandClosed = totalBugsClosed + totalFRsClosed + totalOtherClosed;
-            const grandDays = totalBugsDays + totalFRsDays + totalOtherDays;
-            const grandForAvg = totalBugsForAvg + totalFRsForAvg + totalOtherForAvg;
-            const grandAvgStr = grandForAvg > 0 ? `${(grandDays / grandForAvg).toFixed(1)} days` : '-';
-            report += `| **Total** | **${grandOpened}** | **${grandClosed}** | **${grandAvgStr}** |\n`;
+            const allDays = [...allBugsDays, ...allFRsDays, ...allOtherDays];
+            const grandAvg = allDays.length > 0 ? (allDays.reduce((a, b) => a + b, 0) / allDays.length).toFixed(1) : null;
+            const grandSorted = [...allDays].sort((a, b) => a - b);
+            const grandMid = Math.floor(grandSorted.length / 2);
+            const grandMedian = grandSorted.length > 0 ? (grandSorted.length % 2 === 0 ? ((grandSorted[grandMid - 1] + grandSorted[grandMid]) / 2).toFixed(1) : grandSorted[grandMid].toFixed(1)) : null;
+            report += `| **Total** | **${grandOpened}** | **${grandClosed}** | **${formatTime(grandAvg, grandMedian)}** |\n`;
 
             report += `\n_Report generated: ${now.toISOString()}_\n`;
 
