@@ -70,12 +70,12 @@ const scripts = {
 			"ui5": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/sap/**/*" dist/prod/sap/`,
 			"preact": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/`,
 			"assets": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
-	}
-},
+		}
+	},
 	generateAPI: {
-		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
 		generateCEM: `ui5nps-script "${LIB}/cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 		validateCEM: `ui5nps-script "${LIB}/cem/validate.js"`,
+		mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
 	},
 	watch: {
 		default: 'ui5nps-p watch.src watch.styles', // concurently
