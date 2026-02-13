@@ -95,11 +95,13 @@ const getScripts = (options) => {
 			default: "ui5nps prepare lint build.bundle", // build.bundle2
 			templates: options.legacy ? `node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
 			styles: {
-				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
+				default: `ui5nps-p build.styles.themes build.styles.components build.styles.parameters`, // concurently
 				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
 				themesWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs" -w`,
 				components: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs"`,
 				componentsWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs" -w`,
+				parameters: `ui5nps-script "${LIB}css-processors/css-processor-parameters.mjs"`,
+				parametersWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-parameters.mjs" -w`,
 			},
 			i18n: {
 				default: "ui5nps build.i18n.defaultsjs build.i18n.json",
@@ -135,9 +137,10 @@ const getScripts = (options) => {
 			props: 'ui5nps copyPropsWithWatch',
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 			styles: {
-				default: 'ui5nps-p watch.styles.themes watch.styles.components', // concurently
+				default: 'ui5nps-p watch.styles.themes watch.styles.components watch.styles.parameters', // concurently
 				themes: 'ui5nps build.styles.themesWithWatch',
 				components: `ui5nps build.styles.componentsWithWatch`,
+				parameters: `ui5nps build.styles.parametersWithWatch`,
 			},
 			templates: options.legacy ? `ui5nps-script "${LIB}chokidar/chokidar.js" "src/**/*.hbs" "ui5nps build.templates"` : "",
 			i18n: `ui5nps-script "${LIB}chokidar/chokidar.js" "src/i18n/messagebundle.properties" "ui5nps build.i18n.defaultsjs"`

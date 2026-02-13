@@ -1,5 +1,6 @@
 import getConstructableStyle from "./theming/getConstructableStyle.js";
 import { getComponentStyles } from "./theming/componentStyles.js";
+import { getParametersSheets } from "./theming/ThemeManager.js";
 import type UI5Element from "./UI5Element.js";
 
 /**
@@ -15,7 +16,10 @@ const updateShadowRoot = (element: UI5Element) => {
 		return;
 	}
 
-	shadowRoot.adoptedStyleSheets = [getComponentStyles(), ...getConstructableStyle(ctor)];
+	const tagName = ctor.getMetadata().getTag();
+	const parametersSheets = getParametersSheets(tagName);
+	element._parametersStyleSheet = parametersSheets;
+	shadowRoot.adoptedStyleSheets = [getComponentStyles(), ...parametersSheets, ...getConstructableStyle(ctor)];
 	ctor.renderer(element, shadowRoot);
 };
 

@@ -38,24 +38,25 @@ const deleteThemeBase = () => {
 };
 
 const loadComponentPackages = async (theme: string, externalThemeName?: string) => {
-	const registeredPackages = getRegisteredPackages();
+	// const registeredPackages = getRegisteredPackages();
 
-	const packagesStylesPromises = [...registeredPackages.entries()].map(async ([packageName, { cssVariablesTarget }]) => {
-		if (packageName === BASE_THEME_PACKAGE) {
-			return;
-		}
+	// const packagesStylesPromises = [...registeredPackages.entries()].map(async ([packageName, { cssVariablesTarget }]) => {
+	// 	if (packageName === BASE_THEME_PACKAGE) {
+	// 		return;
+	// 	}
 
-		const cssData = await getThemeProperties(packageName, theme, externalThemeName);
-		if (cssData) {
-			if (cssVariablesTarget === "root") {
-				createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
-			} else if (cssVariablesTarget === "host") {
-				updateComponentStyles(packageName, cssData);
-			}
-		}
-	});
+	// 	const cssData = await getThemeProperties(packageName, theme, externalThemeName);
+	// 	if (cssData) {
+	// 		if (cssVariablesTarget === "root") {
+	// 			createOrUpdateStyle(cssData, `data-ui5-component-properties-${getCurrentRuntimeIndex()}`, packageName);
+	// 		} else if (cssVariablesTarget === "host") {
+	// 			updateComponentStyles(packageName, cssData);
+	// 		}
+	// 	}
+	// });
 
-	return Promise.all(packagesStylesPromises);
+	// return Promise.all(packagesStylesPromises);
+	return Promise.resolve();
 };
 
 const detectExternalTheme = async (theme: string) => {

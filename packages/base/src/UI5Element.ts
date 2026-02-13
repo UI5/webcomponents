@@ -45,6 +45,7 @@ import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
 import createInstanceChecker from "./util/createInstanceChecker.js";
+import { registerThemeInstance, unregisterThemeInstance } from "./theming/ThemeManager.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -211,6 +212,7 @@ abstract class UI5Element extends HTMLElement {
 	_internals: ElementInternals;
 	_individualSlot?: string;
 	_getRealDomRef?: () => HTMLElement;
+	_parametersStyleSheet?: Array<CSSStyleSheet>;
 
 	static template?: TemplateFunction;
 	static _metadata: UI5ElementMetadata;
@@ -331,6 +333,7 @@ abstract class UI5Element extends HTMLElement {
 		const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
 
 		this._inDOM = true;
+		registerThemeInstance(this);
 
 		if (slotsAreManaged) {
 			// always register the observer before yielding control to the main thread (await)
@@ -369,6 +372,7 @@ abstract class UI5Element extends HTMLElement {
 		const slotsAreManaged = ctor.getMetadata().slotsAreManaged();
 
 		this._inDOM = false;
+		unregisterThemeInstance(this);
 
 		if (slotsAreManaged) {
 			this._stopObservingDOMChildren();

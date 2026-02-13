@@ -7,6 +7,8 @@ import ToggleButtonTemplate from "./ToggleButtonTemplate.js";
 
 // Styles
 import toggleBtnCss from "./generated/themes/ToggleButton.css.js";
+import buttonParameters from "./generated/themes/parameters/Button-parameters.css.js";
+import toggleButtonParameters from "./generated/themes/parameters/ToggleButton-parameters.css.js";
 
 /**
  * @class
@@ -33,6 +35,7 @@ import toggleBtnCss from "./generated/themes/ToggleButton.css.js";
 	tag: "ui5-toggle-button",
 	template: ToggleButtonTemplate,
 	styles: [Button.styles, toggleBtnCss],
+	cssParameters: [buttonParameters, toggleButtonParameters],
 })
 class ToggleButton extends Button {
 	/**
