@@ -260,6 +260,24 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Determines the format, displayed in the input field.
+	 * @default undefined
+	 * @since 2.20.0
+	 * @public
+	 */
+	@property()
+	displayFormat?: string;
+
+	/**
+	 * Determines the format, used for the value attribute.
+	 * @default undefined
+	 * @since 2.20.0
+	 * @public
+	 */
+	@property()
+	valueFormat?: string;
+
+	/**
+	 * Determines the format, displayed in the input field.
 	 *
 	 * Example:
 	 * HH:mm:ss -> 11:42:35
@@ -271,24 +289,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	formatPattern?: string;
-
-	/**
-	 * Determines the format, displayed in the input field.
-	 * @default undefined
-	 * @since 2.21.0
-	 * @public
-	 */
-	@property()
-	displayFormat?: string;
-
-	/**
-	 * Determines the format, used for the value attribute.
-	 * @default undefined
-	 * @since 2.21.0
-	 * @public
-	 */
-	@property()
-	valueFormat?: string;
 
 	/**
 	 * Defines the open or closed state of the popover.
