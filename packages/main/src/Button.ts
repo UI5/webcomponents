@@ -47,6 +47,7 @@ import {
 
 // Styles
 import buttonCss from "./generated/themes/Button.css.js";
+import buttonParameters from "./generated/themes/parameters/Button-parameters.css.js";
 
 /**
  * Interface for components that may be used as a button inside numerous higher-order components
@@ -109,6 +110,7 @@ type ButtonClickEventDetail = {
 	renderer: jsxRenderer,
 	template: ButtonTemplate,
 	styles: buttonCss,
+	cssParameters: buttonParameters,
 	shadowRootOptions: { delegatesFocus: true },
 })
 /**

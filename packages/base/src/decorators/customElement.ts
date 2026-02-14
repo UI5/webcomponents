@@ -2,6 +2,9 @@ import type UI5Element from "../UI5Element.js";
 import type { Renderer } from "../UI5Element.js";
 import type { TemplateFunction as Template } from "../renderer/executeTemplate.js";
 import type { ComponentStylesData as Styles } from "../types.js";
+import { registerParametersLoadersForTag } from "../theming/ThemeManager.js";
+
+type ParametersLoader = (themeName: string) => Promise<string>;
 
 /**
  * Returns a custom element class decorator.
@@ -22,6 +25,10 @@ const customElement = (tagNameOrComponentSettings: string | {
 	 * The styles to be injected into the shadow root of the custom element.
 	 */
 	styles?: Styles,
+	/**
+	 * The theme parameters loaders to be registered for this custom element.
+	 */
+	cssParameters?: ParametersLoader | Array<ParametersLoader>,
 	/**
 	 * The template function of the custom element - must match the renderer.
 	 */
@@ -79,9 +86,14 @@ const customElement = (tagNameOrComponentSettings: string | {
 			fastNavigation,
 			formAssociated,
 			shadowRootOptions,
+			cssParameters,
 		 } = tagNameOrComponentSettings;
 
 		target.metadata.tag = tag;
+		if (tag && cssParameters) {
+			const loaders = Array.isArray(cssParameters) ? cssParameters : [cssParameters];
+			registerParametersLoadersForTag(tag, loaders);
+		}
 		if (languageAware) {
 			target.metadata.languageAware = languageAware;
 		}
