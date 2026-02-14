@@ -13,7 +13,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					id={`${this._id}-inner`}
 					class="ui5-time-picker-input"
 					part="input"
-					value={this.value}
+					value={this.displayValue}
 					placeholder={this._placeholder}
 					disabled={this.disabled}
 					readonly={this.readonly}

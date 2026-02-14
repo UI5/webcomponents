@@ -186,6 +186,138 @@ describe("TimePicker Tests", () => {
 		cy.get("@changeStub").should("have.been.calledThrice");
 	});
 
+	it("tests displayFormat and valueFormat - typing and blur", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm:ss a" 
+				valueFormat="HH:mm:ss"
+				value="14:30:00"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Check that display shows 12-hour format with AM/PM
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "02:30:00 PM");
+
+		// Check that value attribute is in 24-hour format
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "14:30:00");
+
+		// Type a new time in display format
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.clear()
+			.realType("03:45:30 PM");
+
+		// While typing, value should show what user typed
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "03:45:30 PM");
+
+		// Blur the input
+		cy.get("body").realClick();
+
+		// After blur, value attribute should be normalized to valueFormat (24-hour)
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "15:45:30");
+
+		// Display should still show in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "03:45:30 PM");
+	});
+
+	it("tests displayFormat and valueFormat - invalid input shows error", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a" 
+				valueFormat="HH:mm:ss"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Type invalid time
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("99:99");
+
+		// Blur to trigger validation
+		cy.realPress("Tab");
+
+		// Should show error state
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "value-state", "Negative");
+
+		// Value should remain invalid
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "99:99");
+	});
+
+	it("tests displayFormat and valueFormat - programmatic value setting", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a" 
+				valueFormat="HH:mm:ss"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Set value programmatically in valueFormat
+		cy.get<TimePicker>("@timePicker")
+			.invoke("prop", "value", "16:45:00");
+
+		// Display should show in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "04:45 PM");
+
+		// Value attribute should remain in valueFormat
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "16:45:00");
+	});
+
+	it("tests valueFormat defaults to ISO format when not specified", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Type in display format
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("02:30 PM");
+
+		cy.realPress("Tab");
+
+		// Value should default to ISO format (HH:mm:ss)
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "14:30:00");
+
+		// But display should still be in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "02:30 PM");
+	});
+
 	it("tests value state", () => {
 		cy.mount(<TimePicker></TimePicker>);
 
