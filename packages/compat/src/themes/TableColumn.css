@@ -3,7 +3,6 @@
 }
 
 th {
-	background: var(--sapList_HeaderBackground);
 	width: inherit;
 	font-weight: var(--ui5_table_header_row_font_weight);
 	font-size: var(--sapFontMediumSize);
