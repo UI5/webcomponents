@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Dynamic Side Content</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/DynamicSideContent-BucF0VgI.css">
+</head>
+
+<body class="page1auto">
+
+	<ui5-page id="page" show-footer>
+		<ui5-dynamic-side-content
+			id="dynamicSideContent"
+			class="content-padding">
+			<div>
+				<h1>Main Content</h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ex mi, elementum et ante commodo, semper sollicitudin magna. Sed dapibus ut tortor quis varius. Sed luctus sem at nunc porta vulputate. Suspendisse lobortis arcu est, quis ultrices ipsum fermentum a. Vestibulum a ipsum placerat ligula gravida fringilla at id ex. Etiam pellentesque lorem sed sagittis aliquam. Quisque semper orci risus, vel efficitur dui euismod aliquet. Morbi sapien sapien, rhoncus et rutrum nec, rhoncus id nisl. Cras non tincidunt enim, id eleifend neque.</p>
+				<p>Sed mauris nunc, sollicitudin eget mi nec, tincidunt molestie diam. Aliquam orci dui, vestibulum quis blandit et, interdum vel arcu. Vestibulum sit amet quam ut sapien pulvinar consequat ac sed turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus quam diam, mattis vitae condimentum ac, ornare vel dui. Pellentesque orci tellus, tempor vel ex eget, luctus vehicula massa. Nullam laoreet, lacus ut vulputate maximus, quam sem molestie nunc, vitae convallis sem nisi nec magna.</p>
+				<p>Nullam a felis odio. Curabitur quis tellus nec risus suscipit dictum vitae eget augue. Maecenas faucibus felis a arcu ultricies, sed tempor ante pellentesque. Ut hendrerit ipsum sit amet ligula bibendum, sit amet vehicula lacus condimentum. Morbi lacinia nibh eu placerat sollicitudin. Praesent accumsan pulvinar massa, eget finibus odio lacinia ullamcorper. Integer neque quam, pretium sed accumsan id, euismod non nibh.</p>
+				<p>Quisque luctus non mi in mollis. Suspendisse id lectus felis. Aliquam elementum nibh nibh. Nullam eget condimentum dolor. Suspendisse id dui non lorem imperdiet iaculis. Pellentesque ex turpis, vehicula a arcu quis, mattis auctor tellus. In ornare, libero ac rhoncus eleifend, felis orci sagittis felis, ac molestie est lacus fermentum odio. Mauris et porta nibh. Integer tellus leo, laoreet nec odio non, rutrum bibendum magna.</p>
+			</div>
+			<div slot="sideContent">
+				<h1>Side Content</h1>
+				<p>Morbi lorem libero, imperdiet id condimentum ac, tempor ut velit. Integer a laoreet sem. Nunc at sagittis nisi. Sed placerat diam eu porttitor dignissim. Maecenas nec fringilla tortor. Pellentesque ut elit est. Curabitur quis elit at mauris ullamcorper fringilla. Nullam diam mi, porttitor dictum orci nec, molestie luctus metus. Nunc ut ex blandit, elementum erat eget, pulvinar sapien. Donec nec lorem eu nunc eleifend tempor at non tortor. In quam velit, ornare at rutrum ac, porta ac augue. Suspendisse venenatis semper lacus at venenatis. Praesent vestibulum ligula nulla, at tempus lorem consequat suscipit. Aenean consequat dapibus dui, at bibendum mauris porta a.</p>
+				<p>Vivamus ut efficitur massa, ac porttitor dolor. Nullam nec elit quis urna convallis tincidunt. Suspendisse potenti. Phasellus dignissim eget mauris eu egestas. Phasellus accumsan pulvinar pharetra. Pellentesque egestas viverra ipsum. Maecenas a dapibus neque. Morbi tincidunt ultricies enim, ac vehicula elit dapibus sit amet. Donec vel felis at felis elementum sodales id id erat. Pellentesque rutrum placerat mollis. In hac habitasse platea dictumst. Sed eget quam aliquet, pretium ligula vitae, lobortis mauris. Aenean eget ipsum auctor, dapibus quam at, pharetra nunc.</p>
+			</div>
+		</ui5-dynamic-side-content>
+
+		<div slot="footer">
+			<ui5-bar design="FloatingFooter">
+				<ui5-tag class="breakpointTag" id="breakpointS" color-scheme="5" slot="startContent">S</ui5-tag>
+				<ui5-tag class="breakpointTag" id="breakpointM" color-scheme="6" slot="startContent">M</ui5-tag>
+				<ui5-tag class="breakpointTag" id="breakpointL" color-scheme="7" slot="startContent">L</ui5-tag>
+				<ui5-tag class="breakpointTag" id="breakpointXL" color-scheme="8" slot="startContent">XL</ui5-tag>
+				<ui5-switch id="hideMainContent" class="hide-on-S" text-on="M +" text-off="M -" title="MainContent" checked></ui5-switch>
+				<ui5-switch id="hideSideContent" class="hide-on-S" text-on="S +" text-off="S -" title="SideContent" checked></ui5-switch>
+				<ui5-switch id="equalSplit" class="hide-on-S" text-on="EQ" text-off="! EQ" title="equalSplit"></ui5-switch>
+				<ui5-switch id="sideContentPosition" class="hide-on-S" text-on="END" text-off="STA" title="sideContentPosition" checked></ui5-switch>
+				<ui5-select id="sideContentVisibility" class="hide-on-S smaller-select" title="sideContentVisibility">
+					<ui5-option>NeverShow</ui5-option>
+					<ui5-option selected>ShowAboveS</ui5-option>
+					<ui5-option>ShowAboveM</ui5-option>
+					<ui5-option>ShowAboveL</ui5-option>
+					<ui5-option>AlwaysShow</ui5-option>
+				</ui5-select>
+				<ui5-select id="sideContentFallDown" class="hide-on-S smaller-select" title="sideContentFallDown">
+					<ui5-option>BelowXL</ui5-option>
+					<ui5-option>BelowL</ui5-option>
+					<ui5-option>BelowM</ui5-option>
+					<ui5-option selected>OnMinimumWidth</ui5-option>
+				</ui5-select>
+				<ui5-button id="toggleButton" design="Positive" slot="endContent">Toggle</ui5-button>
+			</ui5-bar>
+		</div>
+
+	</ui5-page>
+	<ui5-input id="currentBreakpoint" class="invisible"></ui5-input>
+	<ui5-input id="previousBreakpoint" class="invisible"></ui5-input>
+	<ui5-input id="mainVisible" class="invisible"></ui5-input>
+	<ui5-input id="sideVisible" class="invisible"></ui5-input>
+
+	<script>
+		var toggleButton = document.getElementById("toggleButton"),
+			sideContentPosition = document.getElementById("sideContentPosition"),
+			sideContentVisibility = document.getElementById("sideContentVisibility"),
+			sideContentFallDown = document.getElementById("sideContentFallDown"),
+			equalSplit = document.getElementById("equalSplit"),
+			dynamnicSideContent = document.getElementById("dynamicSideContent"),
+			currentBreakpoint =  document.getElementById("currentBreakpoint"),
+			previousBreakpoint =  document.getElementById("previousBreakpoint"),
+			mainVisible =  document.getElementById("mainVisible"),
+			sideVisible =  document.getElementById("sideVisible");
+
+		toggleButton.addEventListener("click", function() {
+			dynamnicSideContent.toggleContents();
+		});
+
+		hideMainContent.addEventListener("ui5-change", function() {
+			dynamnicSideContent.hideMainContent = !hideMainContent.checked;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		hideSideContent.addEventListener("ui5-change", function() {
+			dynamnicSideContent.hideSideContent = !hideSideContent.checked;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		equalSplit.addEventListener("ui5-change", function() {
+			dynamnicSideContent.equalSplit = equalSplit.checked;
+		});
+
+		sideContentPosition.addEventListener("ui5-change", function() {
+			dynamnicSideContent.sideContentPosition = sideContentPosition.checked ? "End" : "Start";
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		sideContentVisibility.addEventListener("ui5-change", function(event) {
+			dynamnicSideContent.sideContentVisibility = event.detail.selectedOption.innerText;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		sideContentFallDown.addEventListener("ui5-change", function(event) {
+			dynamnicSideContent.sideContentFallDown = event.detail.selectedOption.innerText;
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		dynamicSideContent.addEventListener("ui5-layout-change", function(event) {
+			var breakpoint = event.detail.currentBreakpoint,
+				disp = breakpoint === "S" ? "none" : "block";
+
+			document.querySelectorAll('.breakpointTag').forEach(function(elem) { elem.style.display = "none"; });
+			document.querySelector("#breakpoint" + breakpoint).style.display="block";
+			document.querySelectorAll('.hide-on-S').forEach(function(elem) { elem.style.display = disp; });
+			toggleButton.style.display = dynamnicSideContent._isToggleEnabled ? "block" : "none";
+		});
+
+		dynamicSideContent.addEventListener("ui5-layout-change", function(event) {
+			currentBreakpoint.value = event.detail.currentBreakpoint?.toString();
+			previousBreakpoint.value = event.detail.previousBreakpoint?.toString();
+			mainVisible.value = event.detail.mainContentVisible ? "1" : "0"
+			sideVisible.value = event.detail.sideContentVisible ? "1" : "0"
+		});
+
+		dynamicSideContent.accessibilityAttributes = {
+			mainContent: {
+				ariaLabel: "Main Content Area",
+			},
+			sideContent: {
+				ariaLabel: "Side Content Area",
+			}
+		};
+	</script>
+
+</body>
+</html>

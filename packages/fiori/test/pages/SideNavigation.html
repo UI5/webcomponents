@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/SideNavigation-DIVfNUAT.css">
+</head>
+
+<body class="sidenavigation1auto">
+	<ui5-shellbar
+		secondary-title="The Best Run SAP"
+	>
+		<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
+		<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
+		<ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
+	</ui5-shellbar>
+
+	<div class="content">
+		<ui5-side-navigation id="sn1" accessible-name="Main">
+
+			<!-- Header -->
+			<div slot="header" class="header">
+				<ui5-avatar size="L">
+					<img src="/webcomponents/assets/man_avatar_1-NFeJdB17.png" />
+				</ui5-avatar>
+
+				<br>
+				<ui5-title>William Brown</ui5-title>
+				<ui5-label>UX expert</ui5-label>
+			</div>
+
+			<!-- Items -->
+			<ui5-side-navigation-item slot="fixedItems" text="External Link _top" icon="chain-link" href="https://sap.com" target="_top"></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="item1" text="Home" icon="home" tooltip="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="item2" text="People" expanded icon="group">
+				<ui5-side-navigation-sub-item id="item21" text="From My Team" icon="employee-approvals" tooltip="From My Team tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item id="item22" text="From Other Teams" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="item3" text="Events lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="calendar">
+				<ui5-side-navigation-sub-item text="Local" href="https://sap.com" target="_blank"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item id="externalLinkItem" text="External Link Unselectable" icon="chain-link" href="https://sap.com" unselectable target="_blank"></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="externalLinkItem2" text="External Link" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+
+			<ui5-side-navigation-item id="item4" text="Home 1" icon="home" tooltip="Home 1 tooltip">
+				<ui5-side-navigation-sub-item text="Local 1" href="https://sap.com" target="_blank"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others 1"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+
+			<ui5-side-navigation-item disabled id="item1-disabled" text="Home 2" icon="home" tooltip="Home 2 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Home (unselectable)" icon="home" unselectable></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Home parent (unselectable)" icon="home" unselectable>
+				<ui5-side-navigation-sub-item text="Local 2"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others 3"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Home parent (selectable)" icon="home">
+				<ui5-side-navigation-sub-item text="Local 2"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Others 3"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Home 3" icon="chain-link" tooltip="Home 3 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item design="Action" text="Quick Create parent test" icon="write-new" unselectable>
+				<ui5-side-navigation-sub-item design="Action" text="Quick Create child test" unselectable></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item design="Action" text="Quick Create Disabled" icon="write-new" disabled unselectable></ui5-side-navigation-item>
+			<ui5-side-navigation-item design="Action" href="https://sap.com" target="_blank" text="Quick Create link test" icon="write-new" unselectable></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="externalLinkItem3" text="External Link Unselectable" icon="chain-link" href="https://sap.com" unselectable target="_blank"></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="externalLinkItem4" text="External Link" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+
+			<!-- Fixed Items -->
+			<ui5-side-navigation-item id="fixedItem1" slot="fixedItems" text="Useful Links" icon="chain-link" tooltip="Useful links tooltip">
+				<ui5-side-navigation-sub-item id="fixedItem11" text="Vacation Tool" tooltip="Vacation Tool tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item id="fixedItem12" text="HR tool"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="External Link (unselectable)" href="https://sap.com" target="_blank" unselectable></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Quick Create" design="Action" unselectable></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems" text="History" icon="history"></ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems" text="External Link 2" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems" text="Quick Create" icon="write-new" design="Action" unselectable id="quickCreate"></ui5-side-navigation-item>
+		</ui5-side-navigation>
+		<div class="inner-content">
+			<div class="form-field">
+				<ui5-label show-colon>selection-change event</ui5-label>
+				<ui5-input disabled="" id="counter" value="0"></ui5-input>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>click event</ui5-label>
+				<ui5-input disabled id="click-counter" value="0"></ui5-input>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>click event info</ui5-label>
+				<ui5-list id="click-info-list" style="width: 40%;">
+					<ui5-li id="altKeyInfo">altKey</ui5-li>
+					<ui5-li id="ctrlKeyInfo">ctrlKey</ui5-li>
+					<ui5-li id="metaKeyInfo">metaKey</ui5-li>
+					<ui5-li id="shiftKeyInfo">shiftKey</ui5-li>
+				</ui5-list>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>prevent selection-change event</ui5-label>
+				<ui5-checkbox id="prevent-selection"></ui5-checkbox>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>prevent click event</ui5-label>
+				<ui5-checkbox id="prevent-click"></ui5-checkbox>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>ensure overflow</ui5-label>
+				<ui5-checkbox id="ensure-overflow"></ui5-checkbox>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>disable first item</ui5-label>
+				<ui5-checkbox id="disable-item"></ui5-checkbox>
+			</div>
+			<div class="form-field">
+				<ui5-label show-colon>Compact Density</ui5-label>
+				<ui5-checkbox id="compact-density"></ui5-checkbox>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var sideNavigation = document.querySelector("ui5-side-navigation"),
+			input = document.querySelector("#counter"),
+			clickInput = document.querySelector("#click-counter"),
+			preventDefaultCb = document.querySelector("#prevent-selection"),
+			preventClickCb = document.querySelector("#prevent-click"),
+			disableItemCb = document.querySelector("#disable-item"),
+			preventSelectionChange = false,
+			preventClick = false,
+			counter = 0,
+			clickCounter = 0;
+
+		document.querySelector("#startButton").addEventListener("click", function (event) {
+			sideNavigation.collapsed = !sideNavigation.collapsed;
+		});
+
+		document.querySelectorAll("ui5-side-navigation-item").forEach(function (item) {
+			item.addEventListener("ui5-click", function (event) {
+				["altKey", "ctrlKey", "metaKey", "shiftKey"].forEach(key => {
+					const listItem = document.getElementById(`${key}Info`);
+					listItem?.setAttribute("additional-text", event.detail?.[key]);
+					listItem?.setAttribute("additional-text-state", event.detail?.[key] ? "Positive" : "Negative");
+				});
+
+				if (preventClick) {
+					event.preventDefault();
+					return;
+				}
+
+				clickInput.value = `${++clickCounter}`;
+			});
+		});
+
+		preventDefaultCb.addEventListener("ui5-change", function (event) {
+			preventSelectionChange = event.target.checked;
+		});
+
+		preventClickCb.addEventListener("ui5-change", function (event) {
+			preventClick = event.target.checked;
+			const list = document.getElementById("click-info-list");
+			preventClick ? list.style.opacity = 0.5 : list.style.opacity = 1;
+		});
+
+		document.getElementById("ensure-overflow").addEventListener("ui5-change", function (event) {
+			document.getElementById("sn1").classList.toggle("ensure-overflow", event.target.checked);
+		});
+
+		document.getElementById("compact-density").addEventListener("ui5-change", function (event) {
+			document.body.classList.toggle("sapUiSizeCompact", event.target.checked);
+		});
+
+		disableItemCb.addEventListener("ui5-change", function (event) {
+			const item = document.getElementById("item2");
+			item.disabled = event.target.checked;
+		});
+
+		sideNavigation.addEventListener("ui5-selection-change", function (event) {
+			if (preventSelectionChange) {
+				event.preventDefault();
+				return;
+			}
+
+			input.value = `${++counter}`;
+		});
+
+		document.getElementById("quickCreate").accessibilityAttributes = {
+			hasPopup: "dialog"
+		};
+
+	</script>
+</body>
+</html>

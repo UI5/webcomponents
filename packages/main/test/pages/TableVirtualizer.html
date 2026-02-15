@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Table (in development)</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<style>
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)" class="ui5-content-density-compact">
+    <div class="section">
+		<ui5-table id="table" loading-delay="100" style="height: 150px;">
+			<ui5-table-virtualizer id="virtualizer" slot="features" row-count="1000" row-height="32"></ui5-table-virtualizer>
+			<ui5-table-selection slot="features"></ui5-table-selection>
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell width="300px">Product Name</ui5-table-header-cell>
+				<ui5-table-header-cell>Dimensions</ui5-table-header-cell>
+				<ui5-table-header-cell>Weight</ui5-table-header-cell>
+				<ui5-table-header-cell horizontal-align="Right">Price</ui5-table-header-cell>
+			</ui5-table-header-row>
+		</ui5-table>
+		<template id="rowTemplate">
+			<ui5-table-row position="-1" row-key="-1">
+				<ui5-table-cell data="name"></ui5-table-cell>
+				<ui5-table-cell data="height"></ui5-table-cell>
+				<ui5-table-cell data="weight"></ui5-table-cell>
+				<ui5-table-cell data="price"></ui5-table-cell>
+			</ui5-table-row>
+		</template>
+	</div>
+
+	<script>
+
+		class ProductStore {
+			constructor() {
+				this.products = [];
+			}
+
+			async fetchProducts(first, last) {
+				const products = [];
+				for (let i = first; i < last; i++) {
+					this.products[i] ??= await this.fetchProduct(i);
+					products.push(this.products[i]);
+				}
+				return products;
+			}
+
+			async fetchProduct(index) {
+				return new Promise(resolve => {
+					setTimeout(() => {
+						resolve({
+							key: `P${index}`,
+							name: `Product ${index}`,
+							height: `${(Math.random() * 100).toFixed(0)} cm`,
+							weight: `${(Math.random() * 100).toFixed(1)} KG`,
+							price: `${(Math.random() * 1000).toFixed(2)} EUR`
+						});
+					}, Math.random() * 10); // Simulate network delay
+				});
+			}
+		}
+
+		const productStore = new ProductStore();
+		const table = document.getElementById("table");
+		const rowTemplate = document.getElementById("rowTemplate");
+		const virtualizer = document.getElementById("virtualizer");
+
+		virtualizer.addEventListener("range-change", async (e) => {
+			const { first, last } = e.detail;
+			const products = await productStore.fetchProducts(first, last);
+			for (let i = first; i < last; i++) {
+				const rowIndex = i - first;
+				const product = products[rowIndex];
+				const row = table.rows[rowIndex] || table.appendChild(rowTemplate.content.firstElementChild.cloneNode(true));
+				row.setAttribute("position", i);
+				row.setAttribute("row-key", product.key);
+				row.querySelectorAll("[data]").forEach(el => {
+					el.textContent = product[el.getAttribute("data")];
+				});
+			}
+			for (let i = last; i < table.rows.length; i++) {
+				table.rows[i].remove();
+			}
+		});
+
+	</script>
+
+</body>
+
+</html>

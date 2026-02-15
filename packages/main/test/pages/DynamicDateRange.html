@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>DynamicDateRange test page</title>
+
+
+		<script data-ui5-config type="application/json">
+			{
+				"language": "EN"
+			}
+		</script>
+		<link rel="stylesheet" type="text/css" />
+		<script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+	</head>
+	<body>
+		<div>
+			<h3>Basic Options</h3>
+			<p>
+				Standard date options (Today, Yesterday, Tomorrow, Single Date,
+				Date Range, From Date Time):
+			</p>
+			<ui5-dynamic-date-range
+				id="basic"
+				options="TODAY, TOMORROW, YESTERDAY, DATE, FROMDATETIME, DATERANGE, DATETIMERANGE"
+			></ui5-dynamic-date-range>
+		</div>
+
+		<div>
+			<h3>Last/Next Options</h3>
+			<p>
+				Last/Next options (Last Days, Next Days, Last Weeks, Next Weeks,
+				Last Months, Next Months, Last Quarters, Next Quarters, Last
+				Years, Next Years):
+			</p>
+			<ui5-dynamic-date-range
+				id="last-next"
+				options="LASTDAYS, NEXTDAYS, LASTWEEKS, NEXTWEEKS, LASTMONTHS, NEXTMONTHS, LASTQUARTERS, NEXTQUARTERS, LASTYEARS, NEXTYEARS"
+			></ui5-dynamic-date-range>
+		</div>
+
+		<div>
+			<h3>Single Last/Next Options</h3>
+			<ui5-dynamic-date-range
+				id="single-last-next"
+				options="LASTDAYS, NEXTDAYS"
+			></ui5-dynamic-date-range>
+		</div>
+
+		<script>
+			const lastNext = document.getElementById("last-next");
+			lastNext.addEventListener("ui5-change", (event) => {
+				const selectedValue = event.target.value;
+
+				const dates = lastNext.toDates(selectedValue);
+
+				alert(dates);
+			});
+		</script>
+	</body>
+</html>

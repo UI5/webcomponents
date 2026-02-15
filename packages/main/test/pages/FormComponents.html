@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Form Components test page</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormComponents-DbD1Vj25.css">
+</head>
+<body>
+	<div class="demo-section">
+		<ui5-label>ui5-button</ui5-label>
+		<ui5-button design="Default">Default</ui5-button>
+		<ui5-label>ui5-toggle-button</ui5-label>
+		<ui5-toggle-button>ToggleButton</ui5-toggle-button>
+		<ui5-label>ui5-segmented-button</ui5-label>
+		<ui5-segmented-button accessible-name="Geographic location">
+			<ui5-segmented-button-item>Map</ui5-segmented-button-item>
+			<ui5-segmented-button-item selected>Satellite</ui5-segmented-button-item>
+			<ui5-segmented-button-item>Terrain</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<ui5-label>ui5-split-button</ui5-label>
+		<ui5-split-button>Default</ui5-split-button>
+		<ui5-label>Native button</ui5-label>
+		<button class="nativebutton">Text</button>
+		<ui5-label>ui5-input</ui5-label>
+		<ui5-input show-clear-icon value="Input"></ui5-input>
+		<ui5-label>ui5-multi-input</ui5-label>
+		<ui5-multi-input value="multi input"></ui5-multi-input>
+		<ui5-label>ui5-select</ui5-label>
+		<ui5-select>
+			<ui5-option icon="iphone">Phone</ui5-option>
+			<ui5-option icon="ipad">Tablet</ui5-option>
+			<ui5-option icon="laptop" selected>Desktop</ui5-option>
+		</ui5-select>
+		<ui5-label>ui5-combobox</ui5-label>
+		<ui5-combobox placeholder="Enter value">
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-label>ui5-multi-combobox</ui5-label>
+		<ui5-multi-combobox placeholder="Type your value">
+			<ui5-mcb-item selected text="UI5"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<ui5-label>ui5-textarea</ui5-label>
+		<ui5-textarea class="textarea" placeholder="Type your value"></ui5-textarea>
+		<ui5-label>ui5-time-picker</ui5-label>
+		<ui5-time-picker id="timepicker1"></ui5-time-picker>
+		<ui5-label>ui5-date-picker</ui5-label>
+		<ui5-date-picker id="timepicker1"></ui5-date-picker>
+		<ui5-label>ui5-daterange-picker</ui5-label>
+		<ui5-daterange-picker id="daterange-picker1"></ui5-daterange-picker>
+		<ui5-label>ui5-step-input</ui5-label>
+		<ui5-step-input class="stepinput" value="5"></ui5-step-input>
+		<label>Native input</label>
+		<input class="nativeinput"/>
+		<ui5-label>ui5-file-uploader</ui5-label>
+		<ui5-file-uploader>
+			<ui5-button icon="upload">Upload Images</ui5-button>
+		</ui5-file-uploader>
+	</div>
+</body>
+
+</html>

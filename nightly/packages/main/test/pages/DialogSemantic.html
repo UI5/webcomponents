@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DialogSemantic-D7inMzRP.css">
+</head>
+
+<body>
+	<ui5-button id="btnWarning">Open Warning Dialog</ui5-button>
+
+	<ui5-dialog class="warning-dialog" id="dialogWarning">
+
+		<div slot="header" class="semantic-header">
+			<ui5-icon name="message-warning"></ui5-icon>
+			<ui5-title>Warning!</ui5-title>
+		</div>
+
+		<div class="txt">The project schedule was last updated over a year ago.</div>
+
+		<div slot="footer" class="semantic-footer">
+			<ui5-button id="btnWarningClose" design="Emphasized" class="dialogsemantic1auto">Dismiss</ui5-button>
+		</div>
+	</ui5-dialog>
+
+
+
+	<script>
+		btnWarning.addEventListener("click", function () {
+			dialogWarning.open = true;
+		});
+		btnWarningClose.addEventListener("click", function () {
+			dialogWarning.open = false;
+		});
+	</script>
+</body>
+
+</html>

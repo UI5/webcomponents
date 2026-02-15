@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-input</title>
+
+
+
+
+	<style>
+		ui5-ai-prompt-input {
+			margin-top: 1rem;
+		}
+
+		.body {
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.vs-wrapper {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: .5rem;
+		}
+
+		.icons-group {
+			display: flex;
+    	align-items: center;
+		}
+
+		.icons-group > ui5-icon {
+			width: .75rem;
+			margin-right: 2px;
+		}
+
+		.icons-group > ui5-label {
+			font-size: .75rem;
+		}
+
+		.icons-group > ui5-label:not(:last-child){
+			margin-right: .5rem;
+		}
+
+		.token-sample-container {
+			width: 270px;
+		}
+
+		ui5-badge {
+			margin-top: .25rem;
+		}
+	</style>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-duVXihU4.js"></script>
+</head>
+
+<body class="body sapUiSizeCompact">
+	<ui5-ai-prompt-input></ui5-ai-prompt-input>
+	<ui5-ai-prompt-input value="Typed in text" readonly></ui5-ai-prompt-input>
+	<ui5-ai-prompt-input value="Typed in text" disabled></ui5-ai-prompt-input>
+	<ui5-ai-prompt-input value-state="Information" placeholder="Ask my anything..."></ui5-ai-prompt-input>
+	<ui5-ai-prompt-input value-state="Critical" show-clear-icon placeholder="Ask my anything..." label="User prompt:">
+		<div slot="valueStateMessage">Custom warning value state message</div>
+	</ui5-ai-prompt-input>
+	<ui5-ai-prompt-input show-clear-icon placeholder="Ask my anything..." label="User prompt:" maxlength="180"></ui5-ai-prompt-input>
+	
+	<hr>
+	<ui5-ai-prompt-input id="test" value-state="Information" show-clear-icon placeholder="Ask my anything..." label="User prompt:" maxlength="10">
+	</ui5-ai-prompt-input>
+
+	<ui5-ai-prompt-input value-state="Negative" show-clear-icon placeholder="Ask my anything..." label="User prompt:" maxlength="10" show-exceeded-text>
+	</ui5-ai-prompt-input>
+
+	<ui5-ai-prompt-input label="Let me suggest you" show-clear-icon show-suggestions maxlength="180" >
+		<ui5-suggestion-item text="Brazil"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Belgium"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Bangladesh"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Bulgaria"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Bahamas"></ui5-suggestion-item>
+	</ui5-ai-prompt-input>
+
+	<script>
+		const input = document.getElementById('test');
+		input.addEventListener('ui5-change', (event) => {
+			console.log('change', event.target.value);
+		});
+		input.addEventListener('ui5-input', (event) => {
+			console.log('input', event.target.value);
+		});
+		input.addEventListener('ui5-submit', (event) => {
+			console.log('submit', event.target.value);
+		});
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Tag</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/test/pages/Tag.html-TYQG0dNQ.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/assets/bundle.esm-BoxG8SM3.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Tag-jHwwNxuN.css">
+</head>
+
+<body class="tag1auto">
+	<ui5-title level="H1">Tags</ui5-title>
+	<ui5-checkbox text="Interactive" id="checkboxId"></ui5-checkbox>
+	<section class="group gaps">
+		<ui5-title level="H2">Custom Tags</ui5-title>
+		<ui5-tag class="width200px" wrapping-type="None">
+			Default color truncate truncate truncate
+		</ui5-tag>
+		<br>
+		<ui5-tag id="tagWithTextAndIcon" class="width300px" color-scheme="1" design="Set1">
+			<ui5-icon name="accept" slot="icon"></ui5-icon>bigger width
+		</ui5-tag>
+		<br>
+		<ui5-tag design="Positive" id="noninteractiveTag">
+			Noninteractive
+		</ui5-tag>
+		<br>
+		<ui5-tag design="Positive" id="interactiveTag" interactive>
+			Interactive
+		</ui5-tag>
+		<br>
+		<ui5-tag id="tagIconOnly" design="Positive" title="Step Completed" color-scheme="3" wrapping-type="None">
+			<ui5-icon name="sap-ui5" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<br>
+		<ui5-tag design="Set1" color-scheme="1">
+			In Process 1
+		</ui5-tag>
+		<ui5-tag design="Set1">
+			In Process 0
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="7">
+			In Process 7
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="2">
+			In Process 2
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="3">
+			In Process 3
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="4">
+			<ui5-icon name="lab" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="5">
+			<ui5-icon name="email-read" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="6">
+			<ui5-icon name="pending" slot="icon"></ui5-icon>Pending
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="6"><ui5-icon name="pending" slot="icon"></ui5-icon>same line</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="7">
+			<ui5-icon name="lightbulb" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="8">
+			<ui5-icon name="locked" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<br>
+		<ui5-tag design="Set1" color-scheme="6">
+			<ui5-icon name="pending" slot="icon"></ui5-icon>Pending
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="6">
+			<ui5-icon name="pending" slot="icon"></ui5-icon>P wrapping-type="Normal"
+		</ui5-tag>
+		<ui5-tag>
+			wrapping-type="Normal"
+		</ui5-tag>
+		<ui5-tag id="tagWithWrappingDefault" design="Set2" class="width200px" color-scheme="6">
+			<ui5-icon name="email-read" slot="icon"></ui5-icon>Some long text with more lines text wrapping-type="Normal"
+		</ui5-tag>
+		<ui5-tag id="tagWithWrappingNormal" design="Set2" class="width200px" color-scheme="6">
+			<ui5-icon name="email-read" slot="icon"></ui5-icon>Some long text with more lines text wrapping-type="Normal"
+		</ui5-tag>
+		<ui5-tag id="tagWithWrappingNone" design="Set2" wrapping-type="None" class="width200px" color-scheme="6">
+			<ui5-icon name="email-read" slot="icon"></ui5-icon>Some long text with more lines text wrapping-type="None"
+		</ui5-tag>
+		<ui5-tag>
+			<ui5-icon name="email-read" slot="icon"></ui5-icon>
+		</ui5-tag>
+	</section>
+	<section class="group gaps">
+		<ui5-title level="H2">Large Tags</ui5-title>
+		<ui5-tag id="tagIconOnlyL" size="L" design="Negative" wrapping-type="None">
+		</ui5-tag>
+		<ui5-tag design="Neutral" size="L" wrapping-type="None">
+			Planned
+		</ui5-tag>
+		<ui5-tag hide-state-icon design="Neutral" size="L" wrapping-type="None">
+			Planned
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="3" size="L" wrapping-type="None">
+			<ui5-icon name="error" slot="icon"></ui5-icon>
+		</ui5-tag>
+		<ui5-tag design="Set1" color-scheme="3" size="L" class="width200px">
+			<ui5-icon name="error" slot="icon"></ui5-icon>
+			Some big text that will wrap in multiple lines
+		</ui5-tag>
+	</section>
+	<section class="group gaps">
+		<ui5-title level="H2">Set 1</ui5-title>
+		<div id="set1Content">
+		</div>
+	</section>
+	<section class="group gaps">
+		<ui5-title level="H2">Set 2</ui5-title>
+		<div id="set2Content">
+		</div>
+	</section>
+	<section class="group gaps">
+		<ui5-title level="H2">Value states</ui5-title>
+		<div>
+			<ui5-tag design="Neutral" wrapping-type="None">
+				Neutral
+			</ui5-tag>
+			<ui5-tag design="Information" wrapping-type="None">
+				Information
+			</ui5-tag>
+			<ui5-tag design="Positive" wrapping-type="None">
+				Positive
+			</ui5-tag>
+			<ui5-tag design="Negative" wrapping-type="None">
+				Negative
+			</ui5-tag>
+			<ui5-tag design="Critical" wrapping-type="None">
+				Critical
+			</ui5-tag>
+			<br />
+			<br />
+			<ui5-tag hide-state-icon design="Neutral" wrapping-type="None">
+				Neutral - No icon
+			</ui5-tag>
+			<ui5-tag hide-state-icon design="Information" wrapping-type="None">
+				Information - No icon
+			</ui5-tag>
+			<ui5-tag hide-state-icon design="Positive" wrapping-type="None">
+				Positive - No icon
+			</ui5-tag>
+			<ui5-tag hide-state-icon design="Negative" wrapping-type="None">
+				Negative - No icon
+			</ui5-tag>
+			<ui5-tag hide-state-icon design="Critical" wrapping-type="None">
+				Critical - No icon
+			</ui5-tag>
+			<br />
+			<br />
+			<ui5-tag design="Neutral" wrapping-type="None">
+				<ui5-icon name="email-read" slot="icon"></ui5-icon>Neutral - Custom icon
+			</ui5-tag>
+			<ui5-tag design="Information" wrapping-type="None">
+				<ui5-icon name="email-read" slot="icon"></ui5-icon>Information - Custom icon
+			</ui5-tag>
+			<ui5-tag design="Positive">
+				<ui5-icon name="email-read" slot="icon"></ui5-icon>Positive - Custom icon
+			</ui5-tag>
+			<ui5-tag design="Negative" wrapping-type="None">
+				<ui5-icon name="email-read" slot="icon"></ui5-icon>Negative - Custom icon
+			</ui5-tag>
+			<ui5-tag design="Critical" wrapping-type="None">
+				<ui5-icon name="email-read" slot="icon"></ui5-icon>Critical - Custom icon
+			</ui5-tag>
+		</div>
+	</section>
+</body>
+</html>

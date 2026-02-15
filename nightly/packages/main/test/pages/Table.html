@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Table (in development)</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<style>
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<!-- toolbar with ui5-bar -->
+	<ui5-bar design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 46px;">
+		<ui5-title tabindex="0" level="H3" id="title" slot="startContent">My Selectable Products (3)</ui5-title>
+		<ui5-segmented-button id="sizeBtn" accessible-name="Switch Table Size">
+			<ui5-segmented-button-item>25%</ui5-segmented-button-item>
+			<ui5-segmented-button-item>50%</ui5-segmented-button-item>
+			<ui5-segmented-button-item>75%</ui5-segmented-button-item>
+			<ui5-segmented-button-item selected>100%</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<ui5-segmented-button id="showHideDetails" slot="endContent">
+			<ui5-segmented-button-item tooltip="Show Details" icon="detail-more"></ui5-segmented-button-item>
+			<ui5-segmented-button-item tooltip="Hide Details" icon="detail-less" selected></ui5-segmented-button-item>
+		</ui5-segmented-button>
+	</ui5-bar>
+
+	<ui5-table id="table" overflow-mode="Popin" accessible-name-ref="title" style="height: 400px" row-action-count="3" alternate-row-colors>
+		<ui5-table-growing id="growing" mode="Scroll" slot="features"></ui5-table-growing>
+		<ui5-table-selection-multi id="selection" selected="1 3" slot="features"></ui5-table-selection-multi>
+		<!-- <ui5-table-selection-single id="selection" selected="1" slot="features"></ui5-table-selection-single> -->
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell id="produtCol" width="300px" sort-indicator="Descending" horizontal-align="Center">
+				<ui5-label required>Product</ui5-label>
+				<ui5-table-header-cell-action-ai slot="action" id="ai1"></ui5-table-header-cell-action-ai>
+			</ui5-table-header-cell>
+			<ui5-table-header-cell id="supplierCol" width="400px">Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell id="dimensionsCol" importance="-1" min-width="300px" popin-hidden><div style="display: flex; flex-direction: column;"><span>Dimensions</span><span>in cm</span></div></ui5-table-header-cell>
+			<ui5-table-header-cell id="weightCol" popin-text="Weight" popin-hidden>Weight</ui5-table-header-cell>
+			<ui5-table-header-cell id="priceCol"  min-width="220px" horizontal-align="End" popin-text="Price" sort-indicator="Ascending">
+				<ui5-label wrapping-type="None">This is a long column header for the Price column</ui5-label>
+				<ui5-table-header-cell-action-ai slot="action" id="ai2"></ui5-table-header-cell-action-ai>
+			</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><div style="display: flex; flex-direction: row;"><ui5-label>30 x 18 x 3 cm</ui5-label><ui5-button>Calculate</ui5-button></div></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell horizontal-align="End"><ui5-label><b>956</b> EUR</ui5-label><ui5-checkbox></ui5-checkbox></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1" navigated interactive>
+			<ui5-table-cell><ui5-label><b>Notebook Basic 16</b><br><a href="#">HT-1001</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-input value="29 x 17 x 3.1 cm" accessible-name-ref="dimensionsCol"></ui5-input></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.5</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+			<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="add" text="Add"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="disconnected" text="Disconnect"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="share" text="Share"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="heart" text="TestAction2"></ui5-table-row-action>
+			<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+		</ui5-table-row>
+	</ui5-table>
+
+	<ui5-input value="after table" data-sap-ui-fastnavgroup="true"></ui5-input>
+	<script>
+		document.getElementById("ai1").addEventListener("click", (e) => {
+			console.log("ai1 clicked");
+		});
+		document.getElementById("ai2").addEventListener("click", (e) => {
+			console.log("ai2 clicked");
+		});
+
+		const sizeBtn = document.getElementById("sizeBtn");
+		const table = document.getElementById("table");
+		sizeBtn.addEventListener("selection-change", (e) => {
+			const selectedItem = e.detail.selectedItems[0];
+			table.style.width = selectedItem.textContent;
+		});
+		table.addEventListener("row-click", (e) => {
+			console.log(`${Date.now()}: Row with the row-key ${e.detail.row.rowKey} is clicked`);
+		});
+
+		const growing = document.getElementById("growing");
+		growing.addEventListener("load-more", (e) => {
+			table.loading = true;
+			table.disabled = true;
+			// add 10 more additional rows to the ui5-table element by utilizing a loop
+			for (let i = 0; i < 10; i++) {
+				const newRow = document.createElement("ui5-table-row");
+				newRow.setAttribute("row-key", table.rows.length + i);
+				newRow.innerHTML = `
+					<ui5-table-cell><ui5-label><b>Notebook Basic ${15 + table.rows.length + i}</b><br><a href="#">HT-100${table.rows.length + i}</a></ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>3.7</b> KG</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+				`;
+				table.appendChild(newRow);
+			}
+			setTimeout(() => {
+				table.loading = false;
+			}, 500);
+		});
+
+		const selection = document.getElementById("selection");
+		selection.addEventListener("change", (e) => {
+			console.log(e.target.selected);
+		});
+
+		const HIDDEN_COLUMNS = ["dimensionsCol", "weightCol"];
+		function setPopinState(hideDetails) {
+			HIDDEN_COLUMNS.forEach((columnId) => {
+				const headerCell = document.getElementById(columnId);
+				headerCell.popinHidden = hideDetails;
+			});
+		}
+
+		const showHideDetails = document.getElementById("showHideDetails");
+		showHideDetails.addEventListener("selection-change", (e) => {
+			const selectedItem = e.detail.selectedItems[0];
+			setPopinState(selectedItem.tooltip === "Hide Details");
+		});
+	</script>
+</body>
+
+</html>

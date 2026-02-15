@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>InvisibleMessage</title>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor);">
+    <style>
+        ui5-textarea {
+            margin: 1rem 0;
+        }
+    </style>
+
+	<section class="group">
+		<ui5-title>InvisibleMessage announcement</ui5-title>
+		<ui5-textarea id="announce-textarea" placeholder="Enter text to be announced by the screen reader."></ui5-textarea>
+        <ui5-checkbox id="announce-checkbox" text="Assertive announcement"></ui5-checkbox>
+	    <ui5-button id="announce-button" design="Emphasized" aria-expanded="true">Press me to announce.</ui5-button>
+	</section>
+
+    <script>
+		const button = document.querySelector("#announce-button");
+        const textarea = document.querySelector("#announce-textarea");
+        const checkbox = document.querySelector("#announce-checkbox");
+        let invisibleMessage;
+
+        button.addEventListener("click", function(event) {
+            invisibleMessage =  window["sap-ui-webcomponents-bundle"].invisibleMessage;
+
+            if (checkbox.checked) {
+                invisibleMessage.announce(textarea.value, "Assertive")
+            } else {
+                invisibleMessage.announce(textarea.value)
+            }
+		});
+    </script>
+</body>
+</html>

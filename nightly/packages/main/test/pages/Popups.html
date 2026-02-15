@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Popups</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/Popups.html-I5aMkSrA.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Popups-DBASjjFh.css">
+</head>
+<body class="popups1auto">
+
+	<div class="popups2auto">
+		<content id="popover"></content>
+	</div>
+
+	<ui5-popover placement="Bottom" horizontal-align="Stretch" hide-arrow initial-focus="input1" class="wcPopoverWithList">
+		<ui5-list id="myList" indent separators="Inner" selection-mode="Multiple" footer-text="Copyright" no-data-text="No data">
+			<!-- Header -->
+			<div class="popups3auto" slot="header">
+				<ui5-title>Countries:</ui5-title>
+				<ui5-button design="Accept">OK</ui5-button>
+			</div>
+			<!-- Items -->
+			<ui5-li>Argentina</ui5-li>
+			<ui5-li>Bulgaria</ui5-li>
+			<ui5-li-custom><ui5-label>China</ui5-label><ui5-checkbox text="Checkbox"></ui5-checkbox></ui5-li-custom>
+			<ui5-li-custom><ui5-button>Click me</ui5-button></ui5-li-custom>
+		</ui5-list>
+	</ui5-popover>
+
+	<header class="header">
+		<h2 class="header-title">Popups</h2>
+	</header>
+
+	<!-- Input with Popover -->
+	<section class="group_colored">
+		<h3 class="group-title">Popover</h3>
+		<h5>JS Components</h5>
+		<!--<content id="input1"></content>-->
+		<!--<content id="inputPopover"></content>-->
+		<h5>Web Component</h5>
+	</section>
+
+	<!-- Dialog -->
+	<section class="group">
+		<h3 class="group-title">Dialog</h3>
+		<h5>JS Components</h5>
+		<!--<content id="btnOpenDialog"></content>-->
+		<!--<content id="dialog"></content>-->
+		<h5>Web Component</h5>
+
+		<ui5-button class="wcBtnOpenDialog">Open Dialog</ui5-button>
+
+			<ui5-dialog class="wcDialog" initial-focus="focusButton" header-text="Web Component Dialog">
+
+				<div slot="header" id="head1" class="popups4auto">
+					<div class="popups5auto">Custom Header</div>
+					<ui5-button icon="decline"></ui5-button>
+				</div>
+
+				<div slot="footer" class="popups4auto">
+					<div class="popups5auto">Custom Footer</div>
+					<ui5-button id="focusButton">Accept</ui5-button>
+				</div>
+				<ui5-date-picker></ui5-date-picker>
+				<ui5-button class="wcBtnOpenNewDialog">Open New Dialog</ui5-button>
+				<ui5-button class="wcBtnCloseDialog">Close Dialog</ui5-button>
+
+				<ui5-popover placement="End" class="wcNewDialogPopover" header-text="Second Popover">
+					<ui5-button class="wcBtnOpenNewPopoverDialog1">Open New Popover </ui5-button>
+					<ui5-button class="wcBtnClosePopoverDialog1">Popover Button</ui5-button>
+				</ui5-popover>
+				<ui5-button class="wcBtnOpenNewDialogPopover">Open New Popover</ui5-button>
+				<ui5-dialog class="wcNewDialog" header-text="Second Dialog">
+					<ui5-button class="wcNewDialog1">Open New Dialog</ui5-button>
+					<ui5-button class="wcBtnCloseDialog1">Dialog Button</ui5-button>
+				</ui5-dialog>
+			</ui5-dialog>
+	</section>
+	<!-- Popover -->
+	<section class="group group_colored">
+		<h3 class="group-title">Popover</h3>
+		<h5>JS Components</h5>
+		<!--<div class="popups6auto">-->
+			<!--<content class="popups7auto" id="btnOpenPopover"></content>-->
+		<!--</div>-->
+		<h5>Web Component</h5>
+		<ui5-button class="wcBtnOpenPopover">Open Popover</ui5-button>
+		<ui5-popover placement="Top" class="wcPopover" header-text="Web Component Popover">
+			<div slot="header" class="popups4auto">
+				<div class="popups5auto">Custom Header</div>
+				<ui5-button icon="decline"></ui5-button>
+			</div>
+			<div slot="footer" class="popups4auto">
+				<div class="popups5auto">Custom Footer</div>
+				<ui5-button>Accept</ui5-button>
+			</div>
+			<ui5-date-picker></ui5-date-picker>
+			<ui5-popover placement="End" class="wcNewPopover" header-text="Second Popover">
+				<ui5-button class="wcBtnOpenNewPopover1">Open New Popover </ui5-button>
+				<ui5-button class="wcBtnClosePopover1">Popover Button</ui5-button>
+			</ui5-popover>
+			<ui5-button class="wcBtnOpenNewPopover">Open New Popover </ui5-button>
+			<ui5-button class="wcBtnClosePopover">Close Popover</ui5-button>
+			<ui5-button class="wcBtnOpenNewPopoverDialog11">Open New Dialog</ui5-button>
+			<ui5-dialog class="wcNewPopoverDialog11" header-text="Second Dialog">
+				<ui5-button class="wcNewPopoverDialog1">Open New Dialog</ui5-button>
+				<ui5-button class="wcBtnClosePopoverDialog1">Dialog Button</ui5-button>
+			</ui5-dialog>
+		</ui5-popover>
+	</section>
+</body>
+</html>

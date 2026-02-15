@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form with Multiple Columns</title>
+
+	<!-- <script>
+		delete Document.prototype.adoptedStyleSheets
+	</script> -->
+<script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+<link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+
+<body>
+
+<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
+	
+<section id="container">
+	<div class="banner"><div class="banner-inner"></div></div>
+
+	<div class="controls">
+		<ui5-label>Column Layout:</ui5-label>
+		<ui5-select id="selLayout">
+			<ui5-option value="S1 M3 L4 XL4">S1 M3 L4 XL4</ui5-option>
+			<ui5-option value="S2 M3 L5 XL5">S2 M3 L5 XL5</ui5-option>
+			<ui5-option value="S2 M3 L5 XL6">S2 M3 L5 XL6</ui5-option>
+			<ui5-option selected value="S2 M4 L5 XL7">S2 M4 L5 XL7</ui5-option>
+			<ui5-option value="S2 M3 L6 XL8">S2 M3 L6 XL8</ui5-option>
+			<ui5-option value="S3 M4 L6 XL8">S3 M4 L6 XL8</ui5-option>
+			<ui5-option value="S3 M4 L7 XL9">S3 M4 L7 XL9</ui5-option>
+			<ui5-option value="S3 M4 L10 XL12">S3 M4 L10 XL12</ui5-option>
+		</ui5-select>
+
+		<ui5-label>Label span:</ui5-label>
+		<ui5-select id="selLabelSpan">
+			<ui5-option value="S1 M1 L2 XL3">S1 M1 L2 XL3</ui5-option>
+			<ui5-option value="S1 M1 L2 XL4">S1 M1 L2 XL4</ui5-option>
+			<ui5-option selected value="S12 M4 L4 XL4">S12 M4 L4 XL4</ui5-option>
+			<ui5-option value="S5 M5 L5 XL5">S5 M5 L5 XL5</ui5-option>
+			<ui5-option value="S6 M6 L6 XL6">S6 M6 L6 XL6</ui5-option>
+			<ui5-option value="S12 M12 L12 XL12">S12 M12 L12 XL12</ui5-option>
+		</ui5-select>
+	</div>
+
+	<section>
+		<ui5-form id="formMultipleCols" class="addressForm" header-text="Address" layout="S2 M4 L5 XL7">
+
+				<ui5-form-group id="testFormGroup1" header-text="Address">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<span class="text">Red Point Stores</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<span class="text">411 Maintown</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<span class="text">Main St 1618</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<span class="text">Germany</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group id="testFormGroup2" header-text="Contact">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Twitter:</ui5-label>
+						<span class="text">@sap</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Email:</ui5-label>
+						<span class="text">john.smith@sap.com</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Tel:</ui5-label>
+						<span class="text">+49 6227 747474</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">SMS:</ui5-label>
+						<span class="text">+49 6227 747474</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Mobile:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Pager:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Fax:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			
+				<ui5-form-group id="testFormGroup3" header-text="Other info">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<span class="text">Red Point Stores</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<span class="text">411 Maintown</span>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<span class="text">Main St 1618</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<span class="text">Germany</span>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+		</ui5-form>
+	</section>
+
+
+	<script>
+		slider.addEventListener("ui5-input", function (event) {
+			container.style.width = event.target.value + '%';
+		});
+
+		selLabelSpan.addEventListener("ui5-change", function (event) {
+			formMultipleCols.labelSpan = event.detail.selectedOption.value;
+		});
+		
+		selLayout.addEventListener("ui5-change", function (event) {
+			formMultipleCols.layout = event.detail.selectedOption.value;
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Tokenizer</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Tokenizer-BhtHyoJU.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1 class="sample-container-title">Expanded tokenizer</h1>
+		<div>
+			<ui5-tokenizer id="expanded-tokenizer" accessible-name="Test label" expanded>
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+		</div>
+		<h1 class="sample-container-title">Only nItems tokenizer</h1>
+		<ui5-label id="n-items-label">Tokenizer with 2 items</ui5-label>
+		<ui5-tokenizer id="basic-tokenizer" accessible-name-ref="n-items-label">
+			<ui5-token text="Your name and email address were configured automatically based
+			on your username and hostname. Please check that they are accurate."></ui5-token>
+			<ui5-token text="Your name and email address were configured automatically based
+			on your username and hostname. Please check that they are accurate."></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Tokenizer with n-more items</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="nmore-tokenizer">
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+		</div>
+
+		<h1 class="sample-container-title">Tokenizer with selected token</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="selected-tokenizer" accessible-name="Selected Token Example">
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token selected text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+		</div>
+
+		<h1 class="sample-container-title">Tokenizer with long items</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="long-tokenizer">
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="So close no matter how far"></ui5-token>
+				<ui5-token text="Lose yourself in the music bum bam tupturup"></ui5-token>
+			</ui5-tokenizer>
+		</div>
+
+		<h1 class="sample-container-title">Readonly tokenizer</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="readonly-tokenizer" readonly>
+				<ui5-token text="Andora" readonly></ui5-token>
+				<ui5-token text="Bulgaria" readonly></ui5-token>
+				<ui5-token text="Canada" readonly></ui5-token>
+				<ui5-token text="Denmark" readonly></ui5-token>
+				<ui5-token text="Estonia" readonly></ui5-token>
+			</ui5-tokenizer>
+		</div>
+
+		<h1 class="sample-container-title">Disabled tokenizer</h1>
+
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="disabled-tokenizer" disabled>
+				<ui5-token text="Andora"></ui5-token> </ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+		</div>
+
+		<h1 class="sample-container-title">Deletable tokens</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="delete-tokenizer">
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+			<br/>
+			<br/>
+			<ui5-label id="deletedTokensLabel">Event [token-delete] :: N/A</ui5-label>
+			<br/>
+			<ui5-label id="deleteFiredLabel">Event [token-delete] counter :: N/A</ui5-label>
+		</div>
+
+		<h1 class="sample-container-title">Single token</h1>
+		<div class="tokenizer-container">
+			<ui5-tokenizer id="single-token-tokenizer">
+				<ui5-token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-token>
+			</ui5-tokenizer>
+		</div>
+	</div>
+
+	<h1>Basic API</h1>
+	<div class="wrapper">
+		<ui5-segmented-button id="theme-switch">
+			<ui5-segmented-button-item data-ui5-theme-name="sap_horizon" selected>Morning</ui5-segmented-button-item>
+			<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_dark">Evening</ui5-segmented-button-item>
+			<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcb">HCB</ui5-segmented-button-item>
+			<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcw">HCW</ui5-segmented-button-item>
+		</ui5-segmented-button>
+
+		<div class="row">
+			<div class="col"></div>
+			<div class="col">Compact</div>
+			<div class="col">Cozy</div>
+		</div>
+
+		<div class="row">
+			<div class="col">Regular</div>
+			<div class="col sapUiSizeCompact">
+				<ui5-tokenizer>
+					<ui5-token text="Token"></ui5-token>
+					<ui5-token text="Token 2"></ui5-token>
+					<ui5-token text="Token 3"></ui5-token>
+					<ui5-token text="Token 4"></ui5-token>
+					<ui5-token text="Token 5"></ui5-token>
+				</ui5-tokenizer>
+			</div>
+			<div class="col">
+				<ui5-tokenizer>
+					<ui5-token text="Token"></ui5-token>
+					<ui5-token text="Token 2"></ui5-token>
+					<ui5-token text="Token 3"></ui5-token>
+					<ui5-token text="Token 4"></ui5-token>
+					<ui5-token text="Token 5"></ui5-token>
+				</ui5-tokenizer>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">Selected on First Token</div>
+			<div class="col sapUiSizeCompact">
+				<ui5-tokenizer>
+					<ui5-token selected text="Token"></ui5-token>
+					<ui5-token text="Token 2"></ui5-token>
+					<ui5-token text="Token 3"></ui5-token>
+					<ui5-token text="Token 4"></ui5-token>
+					<ui5-token text="Token 5"></ui5-token>
+				</ui5-tokenizer>
+			</div>
+			<div class="col">
+				<ui5-tokenizer>
+					<ui5-token selected text="Token"></ui5-token>
+					<ui5-token text="Token 2"></ui5-token>
+					<ui5-token text="Token 3"></ui5-token>
+					<ui5-token text="Token 4"></ui5-token>
+					<ui5-token text="Token 5"></ui5-token>
+				</ui5-tokenizer>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const deleteTokenizer = document.getElementById("delete-tokenizer");
+		let tokensToShowMoreItemsPress = [];
+		const deletedTokensLabel = document.getElementById("deletedTokensLabel");
+		const deleteFiredLabel = document.getElementById("deleteFiredLabel");
+		let deleteCounter = 0;
+
+		document.getElementById("theme-switch").addEventListener("ui5-selection-change", event => {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.detail.selectedItems[0].getAttribute("data-ui5-theme-name"));
+		});
+
+		deleteTokenizer.addEventListener("ui5-token-delete", event => {
+			const tokens = event.detail?.tokens;
+
+			if (tokens) {
+				tokens.forEach(token => {
+					token.remove()
+				});
+
+				deleteCounter += 1;
+				deletedTokensLabel.innerHTML = "Event [token-delete] :: " + tokens.map(token => token.text).join(", ");
+				deleteFiredLabel.innerHTML = "Event [token-delete] counter :: " + deleteCounter;
+			}
+		});
+
+		document.getElementById("readonly-tokenizer").addEventListener("ui5-token-delete", event => {
+			const tokens = event.detail?.tokens;
+
+			if (tokens) {
+				tokens.forEach(token => token.remove());
+			}
+		});
+	</script>
+</body>
+
+</html>

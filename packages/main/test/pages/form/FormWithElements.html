@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form Basic</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body>
+	<ui5-form-group>
+		<ui5-form-item>
+			<span slot="labelContent">Without DIV</span>
+			<ui5-input></ui5-input>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">With DIV</span>
+			<div>
+				<ui5-input></ui5-input>
+			</div>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">Input with hint</span>
+			<div style="display: flex; flex-direction: column;">
+				<ui5-input></ui5-input>
+				<ui5-message-strip>Hint for the user</ui5-message-strip>
+			</div>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-toolbar</span>
+			<ui5-toolbar>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+				<ui5-toolbar-button></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-avatar-group</span>
+			<ui5-avatar-group type="Individual">
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+			</ui5-avatar-group>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-avatar-group</span>
+			<ui5-avatar-group type="Group">
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+				<ui5-avatar interactive size="M" initials="JD"></ui5-avatar>
+			</ui5-avatar-group>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-checkbox</span>
+			<ui5-checkbox></ui5-checkbox>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-switch</span>
+			<ui5-switch></ui5-switch>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-radio-button</span>
+			<ui5-radio-button name="proba" text="tests"></ui5-radio-button>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-radio-button</span>
+			<ui5-radio-button name="proba"></ui5-radio-button>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-combobox</span>
+			<ui5-combobox></ui5-combobox>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-date-picker</span>
+			<ui5-date-picker value="now"></ui5-date-picker>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-daterange-picker</span>
+			<ui5-daterange-picker value="now"></ui5-daterange-picker>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-datetime-picker</span>
+			<ui5-datetime-picker value="now"></ui5-datetime-picker>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-file-uploader</span>
+			<ui5-file-uploader>
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-input</span>
+			<ui5-input
+				value="Very long long long long long long long long long long long long long long long long long long value"></ui5-input>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-multi-combobox</span>
+			<ui5-multi-combobox style="width: 100%;">
+				<ui5-mcb-item-group header-text="Asia">
+					<ui5-mcb-item selected text="Afghanistan"></ui5-mcb-item>
+					<ui5-mcb-item selected text="China"></ui5-mcb-item>
+					<ui5-mcb-item selected text="India"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Indonesia"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="Europe">
+					<ui5-mcb-item selected text="Austria"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Bulgaria"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Germany"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Italy"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="North America">
+					<ui5-mcb-item selected text="Canada"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Granada"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Haiti"></ui5-mcb-item>
+					<ui5-mcb-item selected text="United States"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="Asia">
+					<ui5-mcb-item selected text="Afghanistan"></ui5-mcb-item>
+					<ui5-mcb-item selected text="China"></ui5-mcb-item>
+					<ui5-mcb-item selected text="India"></ui5-mcb-item>
+					<ui5-mcb-item selected text="Indonesia"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="Europe">
+					<ui5-mcb-item text="Austria"></ui5-mcb-item>
+					<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+					<ui5-mcb-item text="Germany"></ui5-mcb-item>
+					<ui5-mcb-item text="Italy"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="North America">
+					<ui5-mcb-item text="Canada"></ui5-mcb-item>
+					<ui5-mcb-item text="Granada"></ui5-mcb-item>
+					<ui5-mcb-item text="Haiti"></ui5-mcb-item>
+					<ui5-mcb-item text="United States"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+			</ui5-multi-combobox>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-multi-input</span>
+			<ui5-multi-input>
+				<ui5-token slot="tokens" text="Andora"></ui5-token>
+				<ui5-token slot="tokens" text="Bulgaria"></ui5-token>
+				<ui5-token slot="tokens" text="Canada"></ui5-token>
+				<ui5-token slot="tokens" text="Denmark"></ui5-token>
+				<ui5-token slot="tokens" text="Estonia"></ui5-token>
+				<ui5-token slot="tokens" text="Andora"></ui5-token>
+				<ui5-token slot="tokens" text="Bulgaria"></ui5-token>
+				<ui5-token slot="tokens" text="Canada"></ui5-token>
+				<ui5-token slot="tokens" text="Denmark"></ui5-token>
+				<ui5-token slot="tokens" text="Estonia"></ui5-token>
+				<ui5-token slot="tokens" text="Andora"></ui5-token>
+				<ui5-token slot="tokens" text="Bulgaria"></ui5-token>
+				<ui5-token slot="tokens" text="Canada"></ui5-token>
+				<ui5-token slot="tokens" text="Denmark"></ui5-token>
+				<ui5-token slot="tokens" text="Estonia"></ui5-token>
+			</ui5-multi-input>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-range-slider</span>
+			<ui5-range-slider></ui5-range-slider>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-select</span>
+			<ui5-select>
+				<ui5-option>Very long long long long long long long long long long long long long long long long long
+					long value</ui5-option>
+			</ui5-select>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-slider</span>
+			<ui5-slider></ui5-slider>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-step-input</span>
+			<ui5-step-input></ui5-step-input>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-textarea</span>
+			<ui5-textarea></ui5-textarea>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-time-picker></span>
+			<ui5-time-picker value="now"></ui5-time-picker>
+		</ui5-form-item>
+		<ui5-form-item>
+			<span slot="labelContent">ui5-tokenizer</span>
+			<ui5-tokenizer style="width: 100%;">
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+				<ui5-token text="Andora"></ui5-token>
+				<ui5-token text="Bulgaria"></ui5-token>
+				<ui5-token text="Canada"></ui5-token>
+				<ui5-token text="Denmark"></ui5-token>
+				<ui5-token text="Estonia"></ui5-token>
+			</ui5-tokenizer>
+		</ui5-form-item>
+	</ui5-form-group>
+	</ui5-form>
+</body>
+
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Shell Bar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ShellBar-BRTo017q.css">
+</head>
+
+<body class="shellbar1auto">
+
+<ui5-navigation-layout mode="Collapsed">
+
+	<ui5-menu id="menuSubsDynamic" opener="btnOpenBasicDynamic">
+		<ui5-menu-item text="New File" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Folder" icon="add-folder" disabled></ui5-menu-item>
+		<ui5-menu-item text="Open" icon="open-folder" starts-section>
+			<ui5-menu-item text="Open Locally" icon="open-folder">
+				<ui5-menu-item text="Open from C"></ui5-menu-item>
+				<ui5-menu-item text="Open from D"></ui5-menu-item>
+				<ui5-menu-item text="Open from E"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Open from Cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Save" icon="save">
+			<ui5-menu-item text="Save Locally" icon="save">
+				<ui5-menu-item text="Save on C" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on D" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on E" icon="save"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Save on Cloud" icon="upload-to-cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Close"></ui5-menu-item>
+		<ui5-menu-item text="Preferences" icon="action-settings" starts-section></ui5-menu-item>
+		<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-shellbar
+		id="shellbarDynamicContent"
+		slot="header"
+		show-notifications
+		>
+		<ui5-shellbar-branding slot="branding">
+			S/4HANA Cloud
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
+		<ui5-button icon="menu2" slot="startButton"></ui5-button>
+		<ui5-button icon="nav-back" slot="startButton"></ui5-button>
+
+		<ui5-tag design="Set2" color-scheme="10" slot="content">EMEA</ui5-tag>
+		<ui5-button id="btnOpenBasicDynamic" end-icon="slim-arrow-down" slot="content" data-hide-order="9">Deliveries overdue for billing neeed more text because of a bug</ui5-button>
+
+		<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+		<div slot="content" style="display: flex; align-items: center;">
+			<ui5-label>New Version</ui5-label>
+			<ui5-switch checked></ui5-switch>
+		</div>
+
+		<ui5-input placeholder="Instructions" slot="searchField" show-suggestions value-state="Information">
+			<div slot="valueStateMessage">Instructions</div>
+		</ui5-input>
+
+		<ui5-toggle-button id="assistantDynamic" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
+		<ui5-avatar slot="profile" initials="JM"></ui5-avatar>
+		</ui5-avatar>
+	</ui5-shellbar>
+
+	<ui5-menu id="menuSubs" opener="btnOpenBasic" data-hide-order="10">
+		<ui5-menu-item text="New File" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Folder" icon="add-folder" disabled></ui5-menu-item>
+		<ui5-menu-item text="Open" icon="open-folder" starts-section>
+			<ui5-menu-item text="Open Locally" icon="open-folder">
+				<ui5-menu-item text="Open from C"></ui5-menu-item>
+				<ui5-menu-item text="Open from D"></ui5-menu-item>
+				<ui5-menu-item text="Open from E"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Open from Cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Save" icon="save">
+			<ui5-menu-item text="Save Locally" icon="save">
+				<ui5-menu-item text="Save on C" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on D" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on E" icon="save"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Save on Cloud" icon="upload-to-cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Close"></ui5-menu-item>
+		<ui5-menu-item text="Preferences" icon="action-settings" starts-section></ui5-menu-item>
+		<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-shellbar
+		id="shellbar"
+		class="shellbar-example"
+		data-ui5-static-stable="shellbarWithLogoClickStatic"
+		show-notifications
+		notifications-count="777"
+		show-product-switch
+		show-search-field
+		slot="header"
+	>
+		<ui5-shellbar-branding slot="branding">
+			SAP Labs Bulgaria
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
+		<ui5-button icon="menu2" slot="startButton" id="btnOpenStart"></ui5-button>
+		<ui5-button id="btnOpenBasic" end-icon="slim-arrow-down" slot="content" data-hide-order="10">PR10</ui5-button>
+
+		<ui5-tag color-scheme="7" slot="content" data-hide-order="4">PR 4</ui5-tag>
+		<ui5-text slot="content" data-hide-order="3">PR3</ui5-text>
+
+		<ui5-switch design="Textual" text-on="PR0" text-off="PR0" slot="content"></ui5-switch>
+
+		<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+		<ui5-toggle-button  slot="content" text="PR2" data-hide-order="2">PR2</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR1" data-hide-order="1">PR1</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR6" data-hide-order="6">PR6</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR7" data-hide-order="7">PR7</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR8" data-hide-order="8">PR8</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
+
+		<ui5-shellbar-search slot="searchField" scope-value="apps">
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="history" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+			<ui5-search-item text="List Item" icon="globe" ></ui5-search-item>
+
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
+		</ui5-shellbar-search>
+
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+		<ui5-shellbar-item icon="activities" text="Button4"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="feedback" text="Button5"></ui5-shellbar-item>
+		<ui5-shellbar-item count="12" icon="action-settings" text="Button8"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="sys-help" text="Button9"></ui5-shellbar-item>
+		<ui5-toggle-button id="assistant" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
+
+	</ui5-shellbar>
+	<ui5-shellbar
+		id="shellbar_hide_search"
+		class="shellbar-example"
+		data-ui5-static-stable="shellbarWithLogoClickStatic"
+		show-notifications
+		notifications-count="777"
+		show-product-switch
+		slot="header"
+	>
+		<ui5-shellbar-branding slot="branding">
+			SAP Labs Bulgaria
+			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+		</ui5-shellbar-branding>
+
+		<ui5-button icon="menu2" slot="startButton" id="btnOpenStart"></ui5-button>
+		<ui5-button id="btnOpenBasic" end-icon="slim-arrow-down" slot="content" data-hide-order="10">PR10</ui5-button>
+
+		<ui5-tag color-scheme="7" slot="content" data-hide-order="4">PR 4</ui5-tag>
+		<ui5-text slot="content" data-hide-order="3">PR3</ui5-text>
+
+		<ui5-switch design="Textual" text-on="PR0" text-off="PR0" slot="content"></ui5-switch>
+
+		<ui5-shellbar-spacer slot="content"></ui5-shellbar-spacer>
+
+		<ui5-toggle-button  slot="content" text="PR2" data-hide-order="2">PR2</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR1" data-hide-order="1">PR1</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR6" data-hide-order="6">PR6</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR7" data-hide-order="7">PR7</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR8" data-hide-order="8">PR8</ui5-toggle-button>
+
+		<ui5-toggle-button  slot="content" text="PR9" data-hide-order="9">PR9</ui5-toggle-button>
+
+		<div style="width: 100%; display: flex;" slot="searchField" id="customSearch">
+			<input id="customSearchInput" style="width: 100%" type="text">
+			<button id="customSearchClose">x</button>
+		</div>
+
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+		<ui5-shellbar-item icon="activities" text="Button4"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="feedback" text="Button5" id="feedbackBtn"></ui5-shellbar-item>
+		<ui5-shellbar-item count="12" icon="action-settings" text="Button8"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="sys-help" text="Button9"></ui5-shellbar-item>
+		<ui5-toggle-button id="assistant_no_search" icon="sap-icon://da" slot="assistant" text="Assitant" title="Assitant"></ui5-toggle-button>
+
+	</ui5-shellbar>
+	<ui5-side-navigation slot="sideContent">
+		<ui5-side-navigation-item text="Home" icon="home"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="People" expanded icon="group">
+			<ui5-side-navigation-sub-item text="From My Team"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="From Other Team"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Events" icon="calendar">
+			<ui5-side-navigation-sub-item text="Local"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
+			</ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link">
+			<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank">
+			</ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history">
+		</ui5-side-navigation-item>
+	</ui5-side-navigation>
+</ui5-navigation-layout>
+
+	<div class="content"></div>
+	<script>
+		const btnOpenBasic = document.getElementById("btnOpenBasic");
+		const btnOpenStart = document.getElementById("btnOpenStart");
+
+		const menuBasic = document.getElementById("menuSubs");
+		const sidenav = document.querySelector("ui5-side-navigation");
+
+		const feedbackBtn = document.getElementById("feedbackBtn");
+
+		const feedbackButtonAcc = {
+			hasPopup: "dialog",
+			expanded: true
+		}
+		feedbackBtn.accessibilityAttributes = feedbackButtonAcc;
+
+		btnOpenBasic.addEventListener("click", function(event) {
+			menuBasic.open = !menuBasic.open;
+		});
+		btnOpenStart.addEventListener("click", () => {
+			sidenav.toggleAttribute("collapsed");
+		});
+
+		assistant.addEventListener("click", event => {
+			const toggleButton = event.target;
+			toggleButton.icon = toggleButton.pressed ? "sap-icon://da-2" : "sap-icon://da";
+		});
+
+		shellbar.addEventListener("content-item-visibility-change", (e) => {
+			console.log(e.detail.items);
+		})
+
+		const menuSubsDynamic = document.getElementById("menuSubsDynamic");
+		const btnOpenBasicDynamic = document.getElementById("btnOpenBasicDynamic");
+
+		btnOpenBasicDynamic.addEventListener("click", () => {
+			menuSubsDynamic.open = true;
+		});
+
+		const shellbarDynamicContent = document.getElementById("shellbarDynamicContent");
+		const arrowButtonOnly = document.createElement("ui5-button");
+		arrowButtonOnly.id = "arrowButtonOnly";
+		arrowButtonOnly.endIcon = "slim-arrow-down";
+		arrowButtonOnly.slot = "content";
+		arrowButtonOnly.setAttribute("data-hide-order", "10");
+		arrowButtonOnly.addEventListener("click", () => {
+			menuSubsDynamic.open = true;
+		});
+
+		function displayMenuOpener(compact) {
+			if (compact) {
+				menuSubsDynamic.setAttribute("opener", "arrowButtonOnly");
+				shellbarDynamicContent.insertBefore(arrowButtonOnly, shellbarDynamicContent.querySelector("ui5-tag"));
+			} else {
+				menuSubsDynamic.setAttribute("opener", "btnOpenBasicDynamic");
+				arrowButtonOnly.remove();
+			}
+		}
+
+		shellbarDynamicContent.addEventListener("content-item-visibility-change", (event) => {
+			const hiddenItems = event.detail.items;
+			displayMenuOpener(hiddenItems.indexOf(btnOpenBasicDynamic) > -1);
+		});
+
+		["focus", "blur", "input"].forEach((event) => {
+			customSearchInput.addEventListener(event, () => {
+				shellbar_hide_search.disableSearchCollapse =
+					customSearchInput.value || customSearchInput === document.activeElement;
+			});
+		});
+
+		shellbar_hide_search.addEventListener('ui5-search-field-toggle', async (e) => {
+			shellbar_hide_search.hideSearchButton = e.detail.expanded;
+		});
+
+		shellbar_hide_search.addEventListener('ui5-search-button-click', async (e) => {
+			shellbar_hide_search.addEventListener('ui5-search-field-toggle', async (e) => {
+				customSearchInput.focus();
+			}, { once: true });
+		});
+
+		customSearchClose.addEventListener('click', async () => {
+			shellbar_hide_search.showSearchField = false;
+			shellbar_hide_search.hideSearchButton = false;
+			const searchButton = await shellbar_hide_search.getSearchButtonDomRef()
+			searchButton.focus();
+		});
+	</script>
+
+</body>
+</html>

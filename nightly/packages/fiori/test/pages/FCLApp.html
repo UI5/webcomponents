@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Flexible Column Layout</title>
+
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/FCLApp-Bsmmv3x8.css">
+</head>
+
+<body class="fclapp1auto">
+
+<!-- COMPANIES LIST -->
+<template id="companiesTemplate">
+	<div class="header">
+		<ui5-title>Companies list</ui5-title>
+	</div>
+	<ui5-list>
+		<ui5-li data-cid="1">Company 1</ui5-li>
+		<ui5-li data-cid="2">Company 2</ui5-li>
+		<ui5-li data-cid="3">Company 3</ui5-li>
+		<ui5-li data-cid="4">Company 4</ui5-li>
+		<ui5-li data-cid="5">Company 5</ui5-li>
+		<ui5-li data-cid="6">Company 6</ui5-li>
+		<ui5-li data-cid="7">Company 7</ui5-li>
+		<ui5-li data-cid="8">Company 8</ui5-li>
+		<ui5-li data-cid="9">Company 9</ui5-li>
+		<ui5-li data-cid="10">Company 10</ui5-li>
+	</ui5-list>
+</template>
+
+<!-- PROD LIST -->
+<template id="productsTemplate">
+	<div class="header">
+		<ui5-title></ui5-title>
+		<div class="separator"></div>
+		<ui5-button design="Transparent" icon="decline"></ui5-button>
+	</div>
+	<ui5-list>
+		<ui5-li data-pid="1">Product 1</ui5-li>
+		<ui5-li data-pid="2">Product 2</ui5-li>
+		<ui5-li data-pid="3">Product 3</ui5-li>
+		<ui5-li data-pid="4">Product 4</ui5-li>
+		<ui5-li data-pid="5">Product 5</ui5-li>
+		<ui5-li data-pid="6">Product 6</ui5-li>
+		<ui5-li data-pid="7">Product 7</ui5-li>
+		<ui5-li data-pid="8">Product 8</ui5-li>
+		<ui5-li data-pid="9">Product 9</ui5-li>
+		<ui5-li data-pid="10">Product 10</ui5-li>
+	</ui5-list>
+</template>
+
+<!-- PROD INFO -->
+<template id="productTemplate">
+	<div class="header">
+		<ui5-title></ui5-title>
+		<div class="separator"></div>
+		<ui5-button design="Transparent" icon="decline"></ui5-button>
+	</div>
+	<ui5-tabcontainer>
+		<ui5-tab text="Product info" additional-text="200EUR">
+			This is the best product
+		</ui5-tab>
+		<ui5-tab-separator></ui5-tab-separator>
+		<ui5-tab icon="sap-icon://menu2" text="Specification" design="Positive" additional-text="25">
+			Width: 100cm
+			<br>
+			Height: 200cm
+			<br>
+			Length: 500cm
+		</ui5-tab>
+		<ui5-tab icon="sap-icon://menu" text="User manual" selected design="Critical" additional-text="45">
+			Read the manual
+		</ui5-tab>
+		<ui5-tab icon="sap-icon://menu2" text="Reviews" design="Negative" additional-text="15">
+			<ui5-rating-indicator class="fclapp2auto"></ui5-rating-indicator>
+		</ui5-tab>
+		<ui5-tab icon="sap-icon://menu2" disabled text="Buy (Not available)" design="Negative" additional-text="40">
+
+		</ui5-tab>
+		<ui5-tab icon="sap-icon://menu2" text="Comments" design="Neutral" additional-text="40">
+			<ui5-taxtarea></ui5-taxtarea>
+		</ui5-tab>
+		<ui5-tab icon="sap-icon://menu2" text="Related products" additional-text="3">
+			See more
+		</ui5-tab>
+	</ui5-tabcontainer>
+</template>
+
+<template id="emptyPage">
+	<div class="ui5-message-page">
+		<ui5-icon class="ui5-message-page-icon" name="filter"></ui5-icon>
+		<div class="ui5-message-page-title">No matching items found.</div>
+		<div class="ui5-message-page-description">Check the filter settings.</div>
+	</div>
+</template>
+
+<!-- SHELLBAR -->
+<ui5-shellbar
+		class="shellbar-example"
+		secondary-title="Second Title"
+		id="shellbarwithitems"
+>
+	<ui5-shellbar-branding slot="branding">Custom Actions</ui5-shellbar-branding>
+	<ui5-avatar initials="GG" slot="logo" size="M"></ui5-avatar>
+	<ui5-shellbar-item icon="accelerated" text="Hello World!"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="accept" text="Hello World!"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="alert" text="Hello World!"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="discussion" text="Hello World!" count="42"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="error" text="Hello World!"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="hello-world" text="UI5 Webcomponents"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="laptop" text="UI5 Webcomponents"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="nutrition-activity" text="UI5 Webcomponents"></ui5-shellbar-item>
+	<ui5-shellbar-item icon="sound-loud" text="UI5 Webcomponents"></ui5-shellbar-item>
+</ui5-shellbar>
+
+<!--- FLEXIBLE COLUMN LAYOUT -->
+<ui5-flexible-column-layout
+	id="fcl"
+>
+	<div class="column" id="startColumn" slot="startColumn">
+		<ui5-busy-indicator id="startBusy">
+			<div class="ui5-message-page">
+				<ui5-icon class="ui5-message-page-icon" name="filter"></ui5-icon>
+				<div class="ui5-message-page-title">Loading companies.</div>
+				<div class="ui5-message-page-description">Please wait...</div>
+			</div>
+		</ui5-busy-indicator>
+	</div>
+	<div class="column" id="midColumn" slot="midColumn"></div>
+	<div class="column" id="endColumn" slot="endColumn"></div>
+</ui5-flexible-column-layout>
+
+<script>
+
+	var companiesLoaded = false;
+	var currentCid;
+	var currentPid;
+
+	window.addEventListener("hashchange", function(){
+		routing();
+	});
+
+	function $(sel) {
+		return document.getElementById(sel);
+	}
+
+	function loadCompanies() {
+		$("startBusy").active = true;
+		setTimeout(function() {
+			var companies = $("companiesTemplate").content.cloneNode(true);
+			$("startColumn").appendChild(companies);
+			$("startColumn").querySelector("ui5-list").addEventListener("ui5-item-click", function(e) {
+				window.location = "#" + e.detail.item.getAttribute("data-cid");
+			});
+			$("startBusy").active = false;
+			$("startBusy").style.display = "none";
+		}, 1000);
+	}
+
+	function loadCompany(cid) {
+		setTimeout(function() {
+			var products = $("productsTemplate").content.cloneNode(true);
+			products.querySelector("ui5-title").textContent = "Company " + cid + " products";
+			Array.prototype.slice.call($("midColumn").children).forEach(function(child) {
+				$("midColumn").removeChild(child);
+			});
+			$("midColumn").appendChild(products);
+			$("midColumn").querySelector("ui5-list").addEventListener("ui5-item-click", function(e) {
+				window.location = "#" + cid + "-" + e.detail.item.getAttribute("data-pid");
+			});
+			$("midColumn").querySelector("ui5-button").addEventListener("click", function(e) {
+				window.location = "#";
+			});
+		}, 1000);
+	}
+
+	function loadProduct(cid, pid) {
+		setTimeout(function() {
+			var product = $("productTemplate").content.cloneNode(true);
+			product.querySelector("ui5-title").textContent = "Company " + cid + " product " + pid;
+			Array.prototype.slice.call($("endColumn").children).forEach(function(child) {
+				$("endColumn").removeChild(child);
+			});
+			$("endColumn").appendChild(product);
+			$("endColumn").querySelector("ui5-button").addEventListener("click", function(e) {
+				window.location = "#" + cid;
+			});
+		}, 1000);
+	}
+
+
+	function routing() {
+		var val = window.location.hash.substr(1);
+		var arr = val.split("-");
+		var cid = arr[0];
+		var pid = arr[1];
+
+
+		if (!companiesLoaded) {
+			loadCompanies();
+			companiesLoaded = true;
+		}
+
+		if (!cid) {
+			$("fcl").layout = "OneColumn";
+		} else {
+			if (cid !== currentCid) {
+				loadCompany(cid);
+				$("fcl").layout = "TwoColumnsMidExpanded";
+				currentCid = cid;
+			}
+
+			if (!pid) {
+				$("fcl").layout = "TwoColumnsMidExpanded";
+			} else {
+				if (pid !== currentPid) {
+					loadProduct(cid, pid);
+					$("fcl").layout = "ThreeColumnsEndExpanded";
+					currentPid = pid;
+				}
+			}
+		}
+	}
+
+	routing();
+</script>
+
+</body>
+</html>

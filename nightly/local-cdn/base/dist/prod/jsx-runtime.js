@@ -1,0 +1,2 @@
+"use strict";import{jsx as a,jsxs as p,Fragment as d}from"./thirdparty/preact/jsxRuntime.module.js";import{options as s}from"./thirdparty/preact/preact.module.js";import{preprocess as o}from"./jsx-utils.js";const i=s.vnode;s.vnode=t=>{const e=t.props;e!==null&&typeof e=="object"&&e.class&&e.class,i&&i(t)};export function Fragment(t,e){return d(t,e)}export function jsx(t,e,n){const r=o(t,e,n);return a(r,e,n)}export function jsxs(t,e,n){const r=o(t,e,n);return p(r,e,n)}export{};export{};
+//# sourceMappingURL=jsx-runtime.js.map

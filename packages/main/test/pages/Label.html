@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Label</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/test/pages/Label.html-BC02EthQ.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/assets/bundle.esm-BoxG8SM3.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Label-BGlVKvTR.css">
+</head>
+
+<body class="label1auto">
+	<section class="group vertical">
+		<h2>Basic labels</h2>
+		<ui5-label id="basic-label">Basic Label</ui5-label>
+		<ui5-label show-colon id="basic-label2">Basic Label</ui5-label>
+		<ui5-label required id="basic-label3">Basic Label</ui5-label>
+		<ui5-label show-colon required id="basic-label3">Basic Label</ui5-label>
+
+		<h2>Basic long labels</h2>
+		<ui5-label id="basic-label4">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label show-colon id="basic-label5">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label required id="basic-label6">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label show-colon required id="basic-label7">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+
+		<h2>Basic long labels  with predefined width</h2>
+		<ui5-label class="label2auto" id="basic-label7">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label class="label2auto" show-colon id="basic-label8">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label class="label2auto" required id="basic-label8">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+		<ui5-label class="label2auto" show-colon required id="basic-label9">Start The quick brown fox jumps over the lazy sheep End</ui5-label>
+
+		<h2>Required labels</h2>
+		<ui5-label id="required-label" required>Required</ui5-label><span>native span</span>
+		<ui5-label class="label2auto" id="required-label-3" required show-colon>Required semi-colon</ui5-label><span>native span</span>
+		<ui5-label class="label2auto" id="required-label-2" required show-colon wrapping-type="None">Required semi-colon truncated</ui5-label><span>native span</span>
+	</section>
+
+	<section class="group vertical more-space">
+		<h2>Wrapping</h2>
+		<ui5-label class="label3auto" id="wrapping-label-1">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label3auto" id="wrapping-label-2" show-colon>Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+		<ui5-label class="label3auto" id="wrapping-label-3" required>Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label3auto" id="wrapping-label-4" show-colon required>Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label2auto" id="truncated-label-1" wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label2auto" id="truncated-label-2" show-colon wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label2auto" id="truncated-label-3" required wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<ui5-label class="label2auto" id="truncated-label-4" show-colon required wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur.</ui5-label>
+		<div>
+			<ui5-label class="label4auto" id="wrapping-label-4" wrapping-type="Normal">Must be right-aligned using `text-align: right` and wrapping-type="Normal".</ui5-label>
+		</div>
+		<h2>Test show-colon not forcing truncation</h2>
+		<div>
+			<ui5-label id="showColon-false">Basic Label</ui5-label>
+			<ui5-label show-colon id="showColon-true">Basic Label</ui5-label>
+		</div>
+	</section>
+	<section class="group">
+		<h2>label + input</h2>
+		<div class="label5auto">
+			<ui5-label id="label-for-ui5-input" for="form-ui5-input" class="label2auto" required wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+			<ui5-input class="label6auto" id="form-ui5-input"></ui5-input>
+		</div>
+
+		<br>
+
+		<div class="label5auto">
+			<ui5-label id="label-for-native-input" for="native-input" class="label2auto" show-colon required>Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+			<input class="label6auto" id="native-input"/>
+		</div>
+
+		<br>
+
+		<div class="label5auto">
+			<ui5-label id="label-for-ui5-textarea" for="ui5-textarea" class="label2auto" show-colon wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+			<ui5-textarea class="label6auto" id="ui5-textarea"></ui5-textarea>
+		</div>
+
+		<br>
+
+		<div class="label5auto">
+			<ui5-label id="label-for-native-textarea" for="native-textarea" class="label2auto" required wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+			<textarea class="label6auto" id="native-textarea"></textarea>
+		</div>
+
+		<br>
+
+		<div class="label5auto">
+			<ui5-label id="label-for-ui5-datepicker" for="ui5-datepicker" class="label2auto" show-colon required wrapping-type="None">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+			<ui5-date-picker class="label6auto" id="ui5-datepicker"></ui5-date-picker>
+		</div>
+	</section>
+
+	<section class="group">
+		<h2>Label in ListItemCustom</h2>
+		<ui5-list>
+			<ui5-li-custom>
+				<div class="label7auto">
+					<ui5-label wrapping-type="None" class="label3auto"> Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+					<ui5-label class="label3auto">Reprehenderit amet cillum tempor ex eu dolor adipisicing reprehenderit pariatur</ui5-label>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+	</section>
+
+	<section class="group vertical label3auto">
+		<h2>Italic Label</h2>
+		<ui5-label wrapping-type="None" class="label8auto">Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" class="label8auto">Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" required class="label8auto">Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" required class="label8auto">Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" show-colon class="label8auto">Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" show-colon class="label8auto">Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" required show-colon class="label8auto">Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" required show-colon class="label8auto">Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label class="label8auto">Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label required class="label8auto">Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label show-colon class="label8auto">Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label required show-colon class="label8auto">Long label - Reprehenderit amet cillum temporH</ui5-label>
+	</section>
+
+	<section class="group vertical label3auto">
+		<h2>Standard Label</h2>
+		<ui5-label wrapping-type="None">Short labelH</ui5-label>
+		<ui5-label wrapping-type="None">Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" required>Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" required>Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" show-colon>Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" show-colon>Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label wrapping-type="None" required show-colon>Short labelH</ui5-label>
+		<ui5-label wrapping-type="None" required show-colon>Long label - Reprehenderit amet cillum tempor</ui5-label>
+		<ui5-label>Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label required>Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label show-colon>Long label - Reprehenderit amet cillum temporH</ui5-label>
+		<ui5-label required show-colon>Long label - Reprehenderit amet cillum temporH</ui5-label>
+	</section>
+
+	<section class="group">
+		<h2>Using a Label inside Shadow Root</h2>
+		<label-page-custom-element id="custom-element-with-label"></label-page-custom-element>
+	</section>
+	<div>
+		<ui5-label>Short labelH</ui5-label>
+		<ui5-label>Short labelH</ui5-label>
+		<ui5-label>Short labelH</ui5-label>
+		<ui5-label>Short labelH</ui5-label>
+		<ui5-label>Short labelH</ui5-label>
+	</div>
+
+	<section class="group" id="differentLanguages">
+		<h2>Labels in different languages</h2>
+		<ui5-select id="languageSelect">
+			<ui5-option id="en" selected>en</ui5-option>
+			<ui5-option id="fr">fr</ui5-option>
+			<ui5-option id="zh-CN">zh-CN (Simplified Chinese)</ui5-option>
+			<ui5-option id="zh-Hans">zh-Hans (Simplified Chinese)</ui5-option>
+			<ui5-option id="zh-TW">zh-TW (Traditional Chinese)</ui5-option>
+			<ui5-option id="zh-Hant">zh-Hant (Traditional Chinese)</ui5-option>
+		</ui5-select>
+		<div>
+			<ui5-label wrapping-type="None" show-colon></ui5-label>
+			<ui5-input></ui5-input>
+		</div>
+		<div>
+			<ui5-label wrapping-type="None" show-colon required></ui5-label>
+			<ui5-input></ui5-input>
+		</div>
+		<div>
+			<ui5-label wrapping-type="None" show-colon class="width50px"></ui5-label>
+			<ui5-input></ui5-input>
+		</div>
+		<div>
+			<ui5-label wrapping-type="None" show-colon required class="width50px"></ui5-label>
+			<ui5-input></ui5-input>
+		</div>
+	</section>
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>UI5 Slider</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Slider-BVfofBtz.css">
+</head>
+
+	<body class="slider1auto">
+		<div class="control-panel">
+			<div class="control-group">
+				<label>Theme:</label>
+				<div class="theme-buttons">
+					<button data-theme="sap_horizon" class="active">Morning Horizon</button>
+					<button data-theme="sap_horizon_dark">Evening Horizon</button>
+					<button data-theme="sap_horizon_hcb">HCB</button>
+					<button data-theme="sap_horizon_hcw">HCW</button>
+					<button data-theme="sap_fiori_3">Quartz Light</button>
+					<button data-theme="sap_fiori_3_dark">Quartz Dark</button>
+					<button data-theme="sap_fiori_3_hcb">Quartz HCB</button>
+					<button data-theme="sap_fiori_3_hcw">Quartz HCW</button>
+				</div>
+			</div>
+			<div class="control-group">
+				<label>Density:</label>
+				<div class="density-buttons">
+					<button data-density="cozy" class="active">Cozy</button>
+					<button data-density="compact">Compact</button>
+				</div>
+			</div>
+		</div>
+
+		<section class="group">
+			<h2>Basic Slider</h2>
+			<ui5-slider id="basic-slider" accessible-name="Basic Slider" min="0" max="10"></ui5-slider>
+
+			<h2>Basic Slider with tooltip</h2>
+			<ui5-slider id="basic-slider-with-tooltip" min="0" max="20" show-tooltip></ui5-slider>
+
+			<h2>Disabled Slider with tickmarks and labels</h2>
+			<ui5-slider id="disabled-slider-with-tickmarks" min="20" max="100" value="30" label-interval="5" disabled show-tickmarks></ui5-slider>
+
+			<h2>Slider with tickmarks</h2>
+			<ui5-slider id="tickmarks-slider" min="0" max="100" step="2" show-tickmarks value="12"></ui5-slider>
+
+			<h2>Slider with many steps and small width</h2>
+			<ui5-slider id="small-slider" min="0" max="100" step="1" class="slider2auto"></ui5-slider>
+			<ui5-slider id="small-slider-two" min="0" max="200" step="1" class="slider3auto" show-tooltip></ui5-slider>
+
+			<h2>Inactive slider with no steps and tooltip</h2>
+			<ui5-slider id="inactive-slider" min="-10" max="90" step="0" show-tooltip></ui5-slider>
+
+			<h2 class="slider4auto">Slider with steps, input tooltips, tickmarks and labels</h2>
+			<ui5-slider id="slider-tickmarks-labels" editable-tooltip min="-20" max="20" step="2" value="12" show-tooltip label-interval="2" show-tickmarks class="slider5auto"></ui5-slider>
+
+			<h2>Slider with float number step (1.25), tooltips, tickmarks and labels between 3 steps (3.75 value)</h2>
+			<ui5-slider id="slider-tickmarks-tooltips-labels" min="-12.5" max="47.5" step="1.25" value="10" show-tooltip label-interval="3" show-tickmarks></ui5-slider>
+
+			<h2>Basic RTL Slider</h2>
+			<ui5-slider id="basic-slider-rtl" min="0" max="10" dir="rtl"></ui5-slider>
+		</section>
+
+		<section class="group">
+			<h2>Event Testing Slider</h2>
+			<ui5-slider id="test-slider" min="0" max="10"></ui5-slider>
+			<h2>Event Testing Result Slider</h2>
+			<ui5-slider id="test-result-slider" value="1"></ui5-slider>
+		</section>
+
+		<script>
+			const eventTargetSlider = document.getElementById("test-slider");
+			const eventResultSlider = document.getElementById("test-result-slider");
+			const inputTooltipSlider = document.getElementById("slider-tickmarks-labels");
+
+			eventTargetSlider.addEventListener("ui5-input", () => {
+				eventResultSlider.setAttribute("value", parseInt(eventResultSlider.getAttribute("value")) + 1);
+			});
+
+			eventTargetSlider.addEventListener("ui5-change", () => {
+				eventResultSlider.setAttribute("value", parseInt(eventResultSlider.getAttribute("value")) + 1);
+			});
+
+			inputTooltipSlider.addEventListener("ui5-input", () => {
+				eventResultSlider.setAttribute("value", parseInt(eventResultSlider.getAttribute("value")) + 1);
+			});
+
+			inputTooltipSlider.addEventListener("ui5-change", () => {
+				eventResultSlider.setAttribute("value", parseInt(eventResultSlider.getAttribute("value")) + 1);
+			});
+
+			// Theme switcher
+			const themeButtons = document.querySelectorAll('.theme-buttons button');
+			themeButtons.forEach(button => {
+				button.addEventListener('click', async () => {
+					const theme = button.getAttribute('data-theme');
+					await window["sap-ui-webcomponents-bundle"].configuration.setTheme(theme);
+					document.body.setAttribute('sap-ui-theme', theme);
+					
+					// Update active state
+					themeButtons.forEach(btn => btn.classList.remove('active'));
+					button.classList.add('active');
+				});
+			});
+
+			// Density mode switcher
+			const densityButtons = document.querySelectorAll('.density-buttons button');
+			densityButtons.forEach(button => {
+				button.addEventListener('click', () => {
+					const density = button.getAttribute('data-density');
+					
+					if (density === 'compact') {
+						document.body.classList.add('ui5-content-density-compact');
+					} else {
+						document.body.classList.remove('ui5-content-density-compact');
+					}
+					
+					// Update active state
+					densityButtons.forEach(btn => btn.classList.remove('active'));
+					button.classList.add('active');
+				});
+			});
+		</script>
+	</body>
+</html>

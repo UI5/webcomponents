@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Rating Indicator</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<style>
+		.link{
+			display: inline-block;
+			margin-right: 20px;
+		}
+
+		body{
+			margin: 0;
+		}
+	</style>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/RatingIndicator-BIooUXww.css">
+</head>
+
+<body class="ratingindicator1auto">
+
+	<div style="display: flex; flex-direction: row;">
+		<a class="link" href="?sap-ui-theme=sap_horizon">Horizon</a>
+		<a class="link" href="?sap-ui-theme=sap_horizon_dark">Horizon Dark</a>
+		<a class="link" href="?sap-ui-theme=sap_horizon_hcb">Horizon HCB</a>
+		<a class="link" href="?sap-ui-theme=sap_horizon_hcw">Horizon HCW</a>
+		<a class="link" href="?sap-ui-theme=sap_fiori_3">Quartz</a>
+		<a class="link" href="?sap-ui-theme=sap_fiori_3_dark">Quartz Dark</a>
+		<a class="link" href="?sap-ui-theme=sap_fiori_3_hcb">Quartz HCB</a>
+		<a class="link" href="?sap-ui-theme=sap_fiori_3_hcw">Quartz HCW</a>
+	</div>
+	<br />
+
+	<ui5-button id="btnToggle">Toggle 'Compact'</ui5-button>
+	<br />
+	<br />
+	<ui5-rating-indicator id="rating-indicator1" accessible-name="Hello World"></ui5-rating-indicator>
+	<br />
+	<ui5-rating-indicator id="rating-indicator-test" value="3.7" readonly></ui5-rating-indicator>
+	<br />
+	<br />
+
+	<ui5-rating-indicator id="rating-indicator2" max="10" value="6" accessible-name="Hello World"></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<ui5-rating-indicator id="rating-indicator3" max="10" value="6" accessible-name="Hello World"></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>test change event</h3>
+	<ui5-rating-indicator id="rating-indicator4" max="8" value="6"></ui5-rating-indicator>
+	<ui5-input value="0" id="change-event"></ui5-input>
+	<br>
+	<br>
+	<br>
+
+	<ui5-rating-indicator id="rating-indicator1" value="3.7"></ui5-rating-indicator>
+	<br />
+	<br />
+
+
+	<h3>readonly</h3>
+	<ui5-rating-indicator id="rating-indicator-readonly" value="1" max="3" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>disabled</h3>
+	<ui5-rating-indicator value="3" disabled></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<ui5-rating-indicator value="3" max="3"></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>RatingIndicator with title</h3>
+	<ui5-rating-indicator id="rating-indicator-title" tooltip="Test" accessible-name="Hello World"></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>RatingIndicator with required</h3>
+	<ui5-label id="label-required" for="rating-indicator-required" required="true">Required label</ui5-label>
+	<ui5-rating-indicator id="rating-indicator-required" required="true"></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>RatingIndicator with accessibleName</h3>
+	<ui5-rating-indicator id="rating-indicator-acc-name" accessible-name="RatingIndicator with accessible name" stretch></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>RatingIndicator with accessibleNameRef</h3>
+	<ui5-label id="label-acc-name-ref" for="rating-indicator-acc-name-ref">Some ACC label</ui5-label>
+	<ui5-rating-indicator id="rating-indicator-acc-name-ref" accessible-name-ref="label-acc-name-ref" stretch></ui5-rating-indicator>
+	<br>
+	<br>
+	<br>
+
+	<h3>Different sizes due to size property</h3>
+		<ui5-rating-indicator size="S"></ui5-rating-indicator>
+		<br>
+		<ui5-rating-indicator size="M" value="4" disabled></ui5-rating-indicator>
+		<br>
+		<ui5-rating-indicator size="L" value="3.5" readonly></ui5-rating-indicator>
+		<br>
+
+	<h3>sizes</h3>
+	<section>
+		<ui5-rating-indicator class="ratingindicator2auto"></ui5-rating-indicator>
+		<br>
+		<ui5-rating-indicator class="ratingindicator3auto"></ui5-rating-indicator>
+		<br>
+		<ui5-rating-indicator class="ratingindicator4auto"></ui5-rating-indicator>
+		<br>
+		<ui5-rating-indicator class="ratingindicator5auto"></ui5-rating-indicator>
+		<br>
+
+	</section>
+
+	<h3>Custom Icons - Hearts</h3>
+	<ui5-rating-indicator id="rating-hearts" value="3" icon-selected="heart" icon-unselected="heart-2"></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Custom Icons - Thumbs Up</h3>
+	<ui5-rating-indicator id="rating-thumbs" value="2.5" icon-selected="thumb-up" icon-unselected="border"></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Custom Icons - Hearts (readonly)</h3>
+	<ui5-rating-indicator id="rating-hearts-readonly" value="2.5" icon-selected="heart" icon-unselected="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Custom Icons - Hearts (disabled)</h3>
+	<ui5-rating-indicator id="rating-hearts-disabled" value="3" icon-selected="heart" icon-unselected="heart-2" disabled></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Custom Icons - Only selected icon (circles)</h3>
+	<ui5-rating-indicator id="rating-circle" value="2" icon-selected="circle-task-2"></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<script>
+		var changeCount = 0;
+		var ratingIndicator4 = document.getElementById("rating-indicator4");
+		var changeEventInput = document.getElementById("change-event");
+
+		ratingIndicator4.addEventListener("ui5-change", event => {
+			changeEventInput.value = `${++changeCount}`;
+		});
+
+		document.getElementById("btnToggle").addEventListener("click",  () => {
+			document.getElementsByTagName("body")[0].classList.toggle("sapUiSizeCompact");
+		});
+	</script>
+</body>
+
+</html>

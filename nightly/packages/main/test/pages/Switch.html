@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>ui5-switch</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Switch-Cacr4ulR.css">
+</head>
+
+<body class="switch1auto">
+	<h3>Default Switch</h3>
+	<div class="switch2auto">
+		<ui5-switch class="switch3auto" text-on="On" text-off="Off"></ui5-switch>
+	</div>
+
+	<div class="switch2auto">
+		<ui5-switch id="switchTooltip" tooltip="Use GPS location" class="switch3auto" text-on="Yes" text-off="No"></ui5-switch>
+		<ui5-switch id="switchAccName" accessible-name="Geographical location" class="switch3auto" text-on="Yes" text-off="No"></ui5-switch>
+		<ui5-label id="descriptionText">Use GPS location</ui5-label>
+		<ui5-switch id="switchAccNameRef" accessible-name-ref="descriptionText" class="switch3auto" text-on="Yes" text-off="No"></ui5-switch>
+	</div>
+
+	<h3>No Label</h3>
+	<div class="switch2auto">
+		<ui5-switch id="noLabel"></ui5-switch>
+		<ui5-switch checked></ui5-switch>
+	</div>
+
+	<h3>Default Switch</h3>
+	<div class="switch2auto">
+		<ui5-switch id="sw" text-on="On" text-off="Off"></ui5-switch>
+		<ui5-switch id="sw2" checked text-on="Yes" text-off="No"></ui5-switch>
+		<ui5-switch disabled text-on="On" text-off="Off"></ui5-switch>
+		<ui5-switch checked disabled text-on="Yes" text-off="No"></ui5-switch>
+	</div>
+	<ui5-label id="lbl"></ui5-label>
+
+	<h3>Change prevented Switch</h3>
+	<div class="switch2auto">
+		<ui5-switch id="switchprevented" text-on="On" text-off="Off"></ui5-switch>
+	</div>
+
+	<h3>Graphical Switch</h3>
+	<div class="switch2auto">
+		<ui5-switch design="Graphical" text-on="On" text-off="Off"></ui5-switch>
+		<ui5-switch design="Graphical" checked text-on="Yes" text-off="No"></ui5-switch>
+		<ui5-switch design="Graphical" text-on="On" text-off="Off" disabled></ui5-switch>
+		<ui5-switch design="Graphical" checked text-on="Yes" text-off="No" disabled></ui5-switch>
+	</div>
+
+	<div class="switch2auto">
+		<form id="myForm" class="switch-form">
+			<h3 style="margin: 0 0 1rem 0">Switch in Registration form example</h3>
+			<div style="display: flex; flex-direction: column;">
+				<ui5-input required type="Email" placeholder="Email" value="your@email.com"></ui5-input>
+				<ui5-input required type="Password" placeholder="Password" value="your@email.com"></ui5-input>
+			</div>
+			<p style="margin: 1rem 0 0 0">Please accept the terms and conditions, in order to proceed.</p>
+			<ui5-switch id="requiredSwitch" style="margin: 0" name="switch" text-on="Yes" text-off="No" required></ui5-switch>
+			<br />
+			<ui5-button type="Submit" id="submitBtn">Submit Form</ui5-button>
+		</form>
+	</div>
+
+	<h3>Switch in form test</h3>
+	<form id="switchForm">
+		<ui5-switch id="switch1" checked></ui5-switch>
+		<ui5-switch id="requiredTestSwitch" required></ui5-switch>
+		<br><br>
+		<ui5-button id="switchSubmit" type="Submit">Submit</ui5-button>
+	</form>
+
+	<h3>Form validation</h3>
+	<form id="formValidation">
+		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		<ui5-switch id="switchValidated" required></ui5-switch>
+		<br><br>
+		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+	</form>
+
+	<h3>Custom Switch</h3>
+	<div class="switch2auto">
+		<ui5-switch text-on="Accept" text-off="Reject" class="switch4auto"></ui5-switch>
+		<ui5-switch checked  text-on="Turned On" text-off="Turned Off" class="switch5auto"></ui5-switch>
+		<ui5-switch text-on="Enabled" text-off="disabled" class="switch6auto"></ui5-switch>
+		<ui5-switch checked  text-on="Allowed" text-off="Prohibitted" class="switch7auto"></ui5-switch>
+	</div>
+
+    <h3>Switch styled with shadow parts</h3>
+    <div class="switch2auto">
+        <ui5-switch id="styled1" text-on="On" text-off="Off"></ui5-switch>
+        <ui5-switch class="styled2" checked text-on="Yes" text-off="No"></ui5-switch>
+    </div>
+
+	<ui5-input id="field"></ui5-input>
+
+	<h3>sap_horizon</h3>
+    <div class="switch2auto">
+        <ui5-switch disabled></ui5-switch>
+        <ui5-switch disabled checked></ui5-switch>
+        <ui5-switch></ui5-switch>
+		<ui5-switch checked></ui5-switch>
+    </div>
+
+	<h3>Accessibility</h3>
+	<section>
+		<ui5-label for="switchLabel">Do you Agree?</ui5-label>
+		<ui5-switch id="switchLabel"
+			text-on="Yes"
+			text-off="No"
+		></ui5-switch>
+	</section>
+</body>
+
+<script>
+	let counter = 0;
+	const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+	const formValidationMessage = document.getElementById('formValidationMessage');
+	const validatedSwitch = document.getElementById('switchValidated');
+
+	submitBtn.addEventListener("click", function(e) {
+		if (myForm.checkValidity()) {
+			console.log(myForm);
+			e.preventDefault();
+			alert("Form submitted successfully!");
+		}
+	});
+
+	sw.addEventListener("ui5-change", function(e) {
+		lbl.innerHTML = e.target.checked + " : " + (++counter);
+		field.value = `${counter}`;
+	});
+
+	switchprevented.addEventListener("ui5-change", function(e) {
+		e.preventDefault();
+	});
+
+	btnCheckFormValidity.addEventListener('click', function() {
+		checkFormValidity('switchValidated');
+	});
+
+	validatedSwitch.addEventListener('ui5-change', function() {
+		setTimeout(() => {
+			checkFormValidity('switchValidated', true);
+		}, 0);
+	});
+
+	function checkFormValidity(elementId, delayed = false) {
+		const element = document.getElementById(elementId);
+		const isValid = element.checkValidity();
+
+		element.reportValidity();
+
+		// Show result
+		formValidationMessage.hidden = false;
+		formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+		formValidationMessage.design = isValid ? "Positive" : "Negative";
+	}
+</script>
+</html>

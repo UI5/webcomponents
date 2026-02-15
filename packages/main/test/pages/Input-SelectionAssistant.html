@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		#btn,
+		#custom-opener {
+			display: none;
+			position: absolute;
+		}
+
+		#custom-opener {
+			width: 5px;
+			height: 5px;
+			background-color: transparent;
+		}
+	</style>
+	<title>Input-SelectionAssisstant</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body class="sapUiSizeCompact">
+	<ui5-label for="ai-input">Input with selection assistant.</ui5-label>
+	<br>
+	<ui5-input id="ai-input"
+		value="Ipsum enim esse ipsum cupidatat ex veniam labore quis irure. Eiusmod labore anim anim nulla aute ut."></ui5-input>
+	<br>
+	<br>
+
+	<ui5-label for="ai-native-input">Input with native API.</ui5-label>
+	<br>
+	<ui5-input id="ai-native-input"
+		value="Ipsum enim esse ipsum cupidatat ex veniam labore quis irure. Eiusmod labore anim anim nulla aute ut."></ui5-input>
+
+	<ui5-button id="btn" icon="ai"></ui5-button>
+	<ui5-toast id="toast"></ui5-toast>
+
+	<script>
+		const nativeInput = document.getElementById('ai-native-input');
+		const input = document.getElementById('ai-input');
+		const button = document.getElementById('btn');
+		const toast = [...document.getElementsByTagName("ui5-toast")][0];
+
+		const repositionButtonAtSelection = (rect) => {
+			button.style.left = `${rect.left + rect.width}px`;
+			button.style.top = `${rect.top + rect.height}px`;
+			showButton();
+		};
+
+		const repositionButtonAtInput = (rect) => {
+			button.style.left = `${rect.left + rect.width + 4}px`;
+			button.style.top = `${rect.top}px`;
+			showButton();
+		};
+
+		const showButton = () => {
+			button.style.zIndex = '100';
+			button.style.display = 'inline-block';
+		};
+
+		const hideButton = () => {
+			button.style.display = 'none';
+		};
+
+		input.addEventListener('ui5-select', (e) => {
+			const selectionRect = window["sap-ui-webcomponents-bundle"].getElementSelection(input);
+			const inputRect = input.getBoundingClientRect();
+
+			if (selectionRect.bottom > inputRect.bottom || selectionRect.right > inputRect.right) {
+				repositionButtonAtInput(inputRect);
+			} else {
+				repositionButtonAtSelection(selectionRect);
+			}
+		});
+
+		input.addEventListener('mousedown', (e) => {
+			hideButton();
+		});
+
+		input.addEventListener('ui5-scroll', (e) => {
+			hideButton();
+		});
+
+		input.addEventListener('focusout', (e) => {
+			if (e.relatedTarget !== button) {
+				hideButton();
+			}
+		});
+
+		nativeInput.addEventListener('ui5-select', (e) => {
+			const inputRect = nativeInput.getBoundingClientRect();
+			repositionButtonAtInput(inputRect);
+		});
+
+		nativeInput.addEventListener('click', (e) => {
+			hideButton();
+		});
+
+		nativeInput.addEventListener('ui5-scroll', (e) => {
+			hideButton();
+		});
+
+		nativeInput.addEventListener('focusout', (e) => {
+			if (e.relatedTarget !== button) {
+				hideButton();
+			}
+		});
+
+		button.addEventListener('focusout', (e) => {
+			hideButton();
+		});
+
+		button.addEventListener('click', (e) => {
+			const selectedText = document.getSelection().toString();
+			const message = `The selected text equals to: "${selectedText}"`;
+
+			toast.textContent = message;
+			toast.open = true;
+		});
+
+	</script>
+</body>
+
+</html>

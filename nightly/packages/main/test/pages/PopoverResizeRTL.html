@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="popover1auto" dir="rtl">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Popover Resize in RTL mode</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN",
+			"libs": "sap.ui.webc.main"
+		}
+	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			buttonId.onclick = function () {
+				popoverId.open = true;
+			};
+
+			placementSwitch.addEventListener("ui5-selection-change", event => {
+				popoverId.placement = event.detail.selectedItems[0].getAttribute("data-ui5-value");
+			});
+
+			hAlignSwitch.addEventListener("ui5-selection-change", event => {
+				popoverId.horizontalAlign = event.detail.selectedItems[0].getAttribute("data-ui5-value");
+			});
+
+			vAlignSwitch.addEventListener("ui5-selection-change", event => {
+				popoverId.verticalAlign = event.detail.selectedItems[0].getAttribute("data-ui5-value");
+			});
+
+			hideArrowSwitch.addEventListener("ui5-change", event => {
+				popoverId.hideArrow = hideArrowSwitch.checked;
+			})
+		});
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/PopoverResize-c9zYZvge.css">
+</head>
+
+<body class="sapUiSizeCompact">
+	<div class="pageContainer">
+		<ui5-title level="H1">Popover Resize</ui5-title>
+		<div class="popoverSettings">
+			<div>
+				<ui5-label for="placementSwitch" show-colon>Placement</ui5-label>
+				<ui5-segmented-button id="placementSwitch">
+					<ui5-segmented-button-item data-ui5-value="Start">Start</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="End" selected>End</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Top">Top</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Bottom">Bottom</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+			<div>
+				<ui5-label for="hAlignSwitch" show-colon>Horizontal Align</ui5-label>
+				<ui5-segmented-button id="hAlignSwitch">
+					<ui5-segmented-button-item data-ui5-value="Center" selected>Center</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Start">Start</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="End">End</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Stretch">Stretch</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+			<div>
+				<ui5-label for="vAlignSwitch" show-colon>Vertical Align</ui5-label>
+				<ui5-segmented-button id="vAlignSwitch">
+					<ui5-segmented-button-item data-ui5-value="Center" selected>Center</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Top">Top</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Bottom">Bottom</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-ui5-value="Stretch">Stretch</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+			<div>
+				<ui5-label for="hideArrowSwitch" show-colon>Hide Arrow</ui5-label>
+				<ui5-switch id="hideArrowSwitch"></ui5-switch>
+			</div>
+		</div>
+		<div class="popoverOpenerContainer">
+			<ui5-button id="buttonId">Open Popover</ui5-button>
+			<ui5-popover id="popoverId"
+						 resizable
+						 opener="buttonId"
+						 header-text="Popover">
+				<div>
+					This is a Popover control.
+				</div>
+				<ui5-bar slot="footer" design="Footer">
+					<ui5-button design="Emphasized" id="closeDialogStateButton" slot="endContent">OK</ui5-button>
+				</ui5-bar>
+			</ui5-popover>
+		</div>
+	</div>
+</body>
+</html>

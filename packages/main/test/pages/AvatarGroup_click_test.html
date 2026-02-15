@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>avatar-group</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/AvatarGroup-BeOuIWz8.css">
+</head>
+
+<body class="avatargroup1auto">
+		<ui5-avatar id="avatarInteractive" size="M" initials="Y" interactive></ui5-avatar>
+		<ui5-avatar id="avatarNonInteractive" size="M" initials="N"></ui5-avatar>
+
+		<ui5-avatar-group type="Individual" id="avatar-group-individual">
+			<ui5-avatar interactive size="XL" icon="home" initials="XL" id="avatar-1"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home">
+				<img src="/webcomponents/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<!-- overflow button -->
+			<!-- <ui5-button slot="overflowButton" icon="overflow"></ui5-button> -->
+		</ui5-avatar-group>
+		<br>
+		<ui5-avatar-group type="Group" id="avatar-group-group">
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/assets/Lamp_avatar_01-BpbHFHYw.jpg" alt="Lamp 1">
+			</ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home">
+				<img src="/webcomponents/assets/John%20Miller-CXQXuWG-.png" alt="John Miller">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/assets/Lamp_avatar_01-BpbHFHYw.jpg" alt="Lamp 1">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<!-- overflow button -->
+			<ui5-button slot="overflowButton" icon="overflow"></ui5-button>
+		</ui5-avatar-group>
+		
+
+<script>
+	var avatarGroupIndividual = document.getElementById("avatar-group-individual");
+	var avatarGroupGroup = document.getElementById("avatar-group-group");
+
+	avatarGroupIndividual.addEventListener("click", function (event) {
+		console.log("avatarGroupIndividual click", event.detail);
+	});
+	avatarGroupIndividual.addEventListener("ui5-click", function (event) {
+		console.log("avatarGroupIndividual ui5-click", event.detail);
+	});
+
+	avatarGroupGroup.addEventListener("ui5-click", function (event) {
+		console.log("avatarGroupGroup ui5-click", event.detail);
+	});
+	avatarGroupGroup.addEventListener("click", function (event) {
+		console.log("avatarGroupGroup click", event.detail);
+	});
+
+
+	avatarInteractive.addEventListener("ui5-click", function (event) {
+		console.log("avatarInteractive ui5-click");
+	});
+	avatarInteractive.addEventListener("click", function (event) {
+		console.log("avatarInteractive click");
+	});
+
+	avatarNonInteractive.addEventListener("ui5-click", function (event) {
+		console.log("avatarNonInteractive ui5-click");
+	});
+	avatarNonInteractive.addEventListener("click", function (event) {
+		console.log("avatarNonInteractive click");
+	});
+</script>
+</body>
+</html>

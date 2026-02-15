@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form Header Text Wrapping</title>
+		
+	<script id='sap-ui-bootstrap'
+		src='https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js'
+		data-sap-ui-theme='sap_horizon'
+		data-sap-ui-libs='sap.m, sap.ui.core, sap.ui.layout'
+		data-sap-ui-preload="async"
+	></script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body class="bg">
+	<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
+	
+	<section id="container">
+		<div class="banner"><div class="banner-inner"></div></div>
+
+		<section>
+			<ui5-form class="addressForm" header-text="Very Very Very Very  Very  Very  Very  Very  Very  Very long long long long long long long long text text text text text text text text text text text text text text text text text for a heading of a Form and it is wrapping">
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Name:</ui5-label>
+					<span class="text">Red Point Stores</span>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+					<span class="text">411 Maintown</span>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Street:</ui5-label>
+					<span class="text">Main St 1618</span>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Country:</ui5-label>
+					<span class="text">Germany</span>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+	</section>
+		
+	<script>
+		slider.addEventListener("ui5-input", function (event) {
+			container.style.width = event.target.value + '%';
+		});
+	</script>
+</body>
+</html>

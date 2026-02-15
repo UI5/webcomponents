@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Flexible Column Layout</title>
+
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FCL-BwxEBihj.css">
+</head>
+
+<body class="fcl1auto">
+	<!-- ex1 -->
+	<br><br>
+	<ui5-title class="sectionTitle">List-Detail: List View Expanded</ui5-title>
+	<ui5-toggle-button id="switchBtn1" class="testButton">Set to ThreeColumnsMidExpanded</ui5-toggle-button><br>
+	<div class="status">
+		<ui5-label show-colon>Layout</ui5-label>
+		<ui5-input id="layoutChangeRes" placeholder="layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns layout</ui5-label>
+		<ui5-input id="layoutChangeRes1" placeholder="columns layout..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>columns visibility</ui5-label>
+		<ui5-input id="layoutChangeRes2" placeholder="columns visibility..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>resize or separator movement</ui5-label>
+		<ui5-input id="layoutChangeRes3" placeholder="resize or separator movement..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes4" placeholder="layout-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>layout-distribution-change counter</ui5-label>
+		<ui5-input id="layoutChangeRes5" placeholder="layout-distribution-change counter..." class="fcl2auto"></ui5-input>
+		<ui5-label show-colon>Switch RTL</ui5-label>
+		<ui5-switch id="swRTL"></ui5-switch>
+	</div>
+	<div>
+		<ui5-label show-colon>Switch Animations: </ui5-label>
+		<ui5-switch id="swAnimations" checked></ui5-switch>
+	</div>
+	<br><br>
+
+	<ui5-flexible-column-layout id="fcl1" class="fcl3auto" layout="TwoColumnsStartExpanded">
+
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fcl6auto" slot="midColumn">
+			<ui5-wizard id="wiz">
+				<ui5-wizard-step icon="sap-icon://home" title-text="Product type">
+					<div class="fcl7auto">
+						<ui5-title>1. Product Type</ui5-title><br>
+
+						<ui5-message-strip>
+							The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+						</ui5-message-strip><br>
+
+						<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+						</ui5-label>
+						<ui5-button id="btnOpenDialog" class="fcl8auto">Open Wizard Dialog</ui5-button>
+					</div>
+
+					<ui5-button id="toStep2" design="Emphasized">Step 2</ui5-button>
+				</ui5-wizard-step>
+
+				<ui5-wizard-step title-text="Product Information">
+					<div class="fcl9auto">
+						<ui5-title>2. Product Information</ui5-title><br>
+						<ui5-label>
+							Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+						</ui5-label>
+
+						<div class="fcl10auto">
+							<div class="fcl11auto">
+								<ui5-label>Name</ui5-label>
+								<ui5-input placeholder="product name..."></ui5-input>
+							</div>
+
+							<div class="fcl12auto">
+								<ui5-label>Weight</ui5-label>
+								<ui5-input value="3.65"></ui5-input>
+							</div>
+
+							<div class="fcl12auto">
+								<ui5-label>Manifacturer</ui5-label>
+								<ui5-select>
+									<ui5-option selected>Apple</ui5-option>
+									<ui5-option>Samsung</ui5-option>
+									<ui5-option>Huawei</ui5-option>
+								</ui5-select>
+							</div>
+
+							<div class="fcl12auto">
+								<ui5-label>5 years guarantee included</ui5-label>
+								<ui5-switch id="sw"></ui5-switch>
+							</div>
+						</div>
+					</div>
+
+					<ui5-button id="toStep3" design="Emphasized" hidden>Step 3</ui5-button>
+				</ui5-wizard-step>
+
+				<ui5-wizard-step title-text="Options">
+					<div class="fcl10auto">
+						<ui5-title>3. Options</ui5-title><br>
+
+						<ui5-label>
+							Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+						</ui5-label>
+						<ui5-message-strip>
+							The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+						</ui5-message-strip><br>
+
+						<div class="fcl10auto">
+							<div class="fcl11auto">
+								<ui5-label>Manifacture date</ui5-label>
+								<ui5-date-picker></ui5-date-picker>
+							</div>
+
+							<div class="fcl11auto">
+								<ui5-label>Availability</ui5-label>
+								<ui5-segmented-button id="segButton1">
+									<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+									<ui5-toggle-button>In depot</ui5-toggle-button>
+									<ui5-toggle-button>Damaged</ui5-toggle-button>
+									<ui5-toggle-button>Out of stock</ui5-toggle-button>
+								</ui5-segmented-button>
+							</div>
+
+							<div class="fcl11auto">
+								<ui5-label>Size</ui5-label>
+								<ui5-segmented-button id="sb">
+									<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+									<ui5-toggle-button>Medium</ui5-toggle-button>
+									<ui5-toggle-button>Large</ui5-toggle-button>
+								</ui5-segmented-button>
+							</div>
+						</div>
+					</div>
+
+					<ui5-button id="toStep4" design="Emphasized" hidden>Step 4</ui5-button>
+				</ui5-wizard-step>
+
+				<ui5-wizard-step title-text="Pricing">
+					<div class="fcl10auto">
+						<ui5-title>4. Pricing</ui5-title><br>
+						<ui5-label>
+							Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+						</ui5-label>
+						<ui5-message-strip>
+							The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+						</ui5-message-strip><br>
+
+						<div class="fcl10auto">
+							<div class="fcl11auto">
+								<ui5-label>Price</ui5-label>
+								<ui5-input placeholder="product price..."></ui5-input>
+							</div>
+
+							<div class="fcl11auto">
+								<ui5-label>Quantity</ui5-label>
+								<ui5-input placeholder="product quantity..."></ui5-input>
+							</div>
+
+							<div class="fcl12auto">
+								<ui5-label>Vat included</ui5-label>
+								<ui5-switch checked></ui5-switch>
+							</div>
+						</div>
+					</div>
+
+					<ui5-button id="finalize" design="Emphasized">Finalize</ui5-button>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+
+		<!-- end column -->
+		<div class="fcl4auto" slot="endColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 3</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex2 -->
+	<br><br>
+	<ui5-title class="sectionTitle">List-Detail: Detail expanded + disable-resizing</ui5-title>
+	<ui5-toggle-button id="switchBtn2" class="testButton">Set to TwoColumnsMidExpanded</ui5-toggle-button>
+	<br><br>
+
+	<ui5-flexible-column-layout id="fcl2" layout="TwoColumnsMidExpanded" disable-resizing>
+			<!-- start column -->
+			<div class="fcl4auto" slot="startColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 1</ui5-title>
+				</div>
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+
+			<!-- mid column -->
+			<div class="fcl4auto" slot="midColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 2</ui5-title>
+				</div>
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+
+			<!-- end column -->
+			<div class="fcl4auto" slot="endColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 3</ui5-title>
+				</div>
+
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex3 -->
+	<br><br>
+	<ui5-title class="sectionTitle">List-Detail-Detail: Detail Expanded</ui5-title>
+	<ui5-input id="testLayoutChange" placeholder="change counter..." class="fcl2auto"></ui5-input><br>
+	<br><br>
+
+	<ui5-flexible-column-layout id="fcl3" layout="ThreeColumnsMidExpanded">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fcl4auto" slot="midColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 2</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- end column -->
+		<div class="fcl4auto" slot="endColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 3</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex4 -->
+	<br><br>
+	<ui5-title class="sectionTitle">List-Detail-Detail: Detail-Detail expanded</ui5-title>
+	<br><br>
+
+	<ui5-flexible-column-layout layout="ThreeColumnsEndExpanded">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fcl4auto" slot="midColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 2</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- end column -->
+		<div class="fcl4auto" slot="endColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 3</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex5 -->
+	<br><br>
+	<ui5-title class="sectionTitle">List-Detail-Detail: Detail expanded, Detail-Detail hidden</ui5-title>
+	<br><br>
+
+	<ui5-flexible-column-layout id="fclAcc" layout="ThreeColumnsMidExpandedEndHidden">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+			<div class="fcl5auto">
+				<ui5-title>Products list</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fcl4auto" slot="midColumn">
+			<div class="fcl5auto">
+				<ui5-title>Product information</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- end column -->
+		<div class="fcl4auto" slot="endColumn">
+			<div class="fcl5auto">
+				<ui5-title>Product detailed information</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<ui5-flexible-column-layout id="fclAccRoles" layout="ThreeColumnsMidExpanded">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+		</div>
+
+		<!-- mid column -->
+		<div class="fcl4auto" slot="midColumn">
+
+		</div>
+
+		<!-- end column -->
+		<div class="fcl4auto" slot="endColumn">
+
+		</div>
+	</ui5-flexible-column-layout>
+
+	<ui5-flexible-column-layout id="fclAccAttrs">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+		</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex6 -->
+	<br><br>
+	<ui5-title class="sectionTitle">Default OneColumn</ui5-title>
+	<br><br>
+
+	<ui5-flexible-column-layout id="fcl6">
+		<!-- start column -->
+		<div class="fcl4auto" slot="startColumn">
+			<div class="fcl5auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list id="list">
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<div class="fcl4auto" slot="midColumn">
+			<div class="fcl13auto">
+				<ui5-title>Column 2</ui5-title>
+
+				<div>
+					<ui5-toggle-button id="expandMidColumn" icon="full-screen" design="Transparent"></ui5-toggle-button>
+					<ui5-button id="closeMidColumn" icon="decline" design="Transparent"></ui5-button>
+				</div>
+			</div>
+			<ui5-list id="list2">
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+				<ui5-li>Detail item</ui5-li>
+			</ui5-list>
+		</div>
+
+		<div class="fcl4auto" slot="endColumn">
+			<div class="fcl13auto">
+				<ui5-title>Column 3</ui5-title>
+				<div>
+					<ui5-toggle-button id="expandEndColumn" icon="full-screen" design="Transparent"></ui5-toggle-button>
+					<ui5-button id="closeEndColumn" icon="decline" design="Transparent"></ui5-button>
+				</div>
+			</div>
+			<ui5-list id="list3">
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+				<ui5-li>Detail - Detail</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<!-- ex7 -->
+	<br><br>
+	<ui5-title class="sectionTitle">Arrow Icon: Start Column Hidden by Default</ui5-title>
+	<br><br>
+
+		<ui5-flexible-column-layout id="fcl10" layout="ThreeColumnsStartHiddenMidExpanded">
+			<!-- start column -->
+			<div class="fcl4auto" slot="startColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 1</ui5-title>
+				</div>
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+
+			<!-- mid column -->
+			<div class="fcl4auto" slot="midColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 2</ui5-title>
+				</div>
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+
+			<!-- end column -->
+			<div class="fcl4auto" slot="endColumn">
+				<div class="fcl5auto">
+					<ui5-title>Column 3</ui5-title>
+				</div>
+
+				<ui5-list>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+					<ui5-li>Hello worild!</ui5-li>
+				</ui5-list>
+			</div>
+		</ui5-flexible-column-layout>
+
+	<br><br>
+	<!-- ex8 -->
+	<ui5-flexible-column-layout id="fclApp" class="fcl14auto">
+		<!-- start column -->
+		<div class="col" slot="startColumn">
+			<ui5-shellbar
+				notifications-count="4"
+				show-notifications
+				show-product-switch
+			>
+				<ui5-shellbar-branding slot="branding">
+					Smart Store, New York
+					<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				</ui5-shellbar-branding>
+				<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+				<ui5-shellbar-item icon="disconnected" text="Disconnect"></ui5-shellbar-item>
+				<ui5-shellbar-item icon="incoming-call" text="Incoming Calls"></ui5-shellbar-item>
+			</ui5-shellbar>
+
+			<br><br>
+			<ui5-list id="col1list" header-text="Products (13)" selection-mode="Single">
+				<ui5-li description=HT-2001 icon='slim-arrow-right' icon-end additional-text="47.00 EUR">10 inch Portable DVD
+				</ui5-li>
+				<ui5-li description=HT-2001 icon='slim-arrow-right' icon-end additional-text="249.00 EUR">7 inch Widescreen
+					Portable DVD Player w MP3</ui5-li>
+				<ui5-li description=HT-1251 icon='slim-arrow-right' icon-end additional-text="947.00 EUR">Astro Laptop 1516
+				</ui5-li>
+				<ui5-li description=HT-1251 icon='slim-arrow-right' icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+				<ui5-li description=HT-1252 icon='slim-arrow-right' icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m
+				</ui5-li>
+				<ui5-li description=HT-6001 icon='slim-arrow-right' icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+				<ui5-li description=HT-6001 icon='slim-arrow-right' icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+				<ui5-li description=HT-6001 icon='slim-arrow-right' icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+				<ui5-li description=HT-2001 icon='slim-arrow-right' icon-end additional-text="1,250.00 EUR">Beam Breaker B-4
+				</ui5-li>
+				<ui5-li description=HT-8001 icon='slim-arrow-right' icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+				<ui5-li description=HT-2001 icon='slim-arrow-right' icon-end additional-text="996.00 EUR">Benda Laptop 1408
+				</ui5-li>
+				<ui5-li description=HT-0003 icon='slim-arrow-right' icon-end additional-text="147.00 EUR">Cepat Tablet 10.5
+				</ui5-li>
+				<ui5-li description=HT-1001 icon='slim-arrow-right' icon-end additional-text="87.90 EUR">Gladiator MX</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="col" slot="midColumn">
+			<div class="colHeader">
+				<ui5-title id="col2title" level="H2" class="fcl15auto"></ui5-title>
+
+				<div class="colSubHeader">
+					<ui5-button design="Emphasized">Edit</ui5-button>
+					<ui5-button design="Transparent" icon="add"></ui5-button>
+					<ui5-button id="fullscreenMidColumn" design="Transparent" icon="full-screen"></ui5-button>
+					<ui5-button id="_closeMidColumn" icon="decline" design="Transparent"></ui5-button>
+				</div>
+			</div>
+			<br>
+
+			<section class="fcl16auto">
+				<ui5-title level="H3">General Information</ui5-title>
+				<br>
+
+				<div class="fcl17auto">
+					<div class="fcl18auto">
+						<ui5-avatar id="avatar" icon="laptop" background-color="Accent5" size="XL" class="fcl19auto">
+						</ui5-avatar>
+
+						<div>
+							<div class="productInfo">
+								<ui5-title level="H5">Product:</ui5-title>
+								<ui5-title level="H5" id="lblName"></ui5-title>
+							</div>
+							<br>
+
+							<div class="productInfo">
+								<ui5-title level="H5">Description:</ui5-title>
+								<ui5-title level="H5" id="lblDesc"></ui5-title>
+							</div>
+							<br>
+
+							<div class="productInfo">
+								<ui5-title level="H5">Supplier:</ui5-title>
+								<ui5-title level="H5" id="lblSupplier"><b>Titanium</b></ui5-title>
+							</div>
+						</div>
+					</div>
+
+					<div class="productInfo fcl20auto" >
+						<ui5-title level="H5">Rating:</ui5-title>
+						<ui5-rating-indicator
+							id="productRating"
+							accessible-name="Hello World"
+							value="3.5"
+						></ui5-rating-indicator>
+					</div>
+
+					<span></span>
+				</div>
+
+				<br><br><br>
+
+				<ui5-title level="H3">Suppliers</ui5-title>
+				<br>
+				<ui5-list id="col2list">
+					<ui5-li icon='slim-arrow-right' icon-end>Titanium</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Technocom</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end> Red Point Stores</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end> Very Best Screens</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Smartcards</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Alpha Printers</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Printer for All</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Oxynum</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Fasttech</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Ultrasonic United</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Speaker Experts</ui5-li>
+					<ui5-li icon='slim-arrow-right' icon-end>Brainsoft</ui5-li>
+				</ui5-list>
+			</section>
+		</div>
+
+		<!-- end column -->
+		<div class="col" slot="endColumn">
+			<div class="colHeader">
+				<ui5-title id="col3title" class="fcl15auto"></ui5-title>
+
+				<div class="colSubHeader">
+					<ui5-button design="Emphasized">Edit</ui5-button>
+					<ui5-button design="Transparent" icon="add"></ui5-button>
+					<ui5-button id="fullscreenEndColumn" design="Transparent" icon="full-screen"></ui5-button>
+					<ui5-button id="_closeEndColumn" icon="decline" design="Transparent"></ui5-button>
+				</div>
+			</div>
+			<br><br>
+
+			<ui5-tabcontainer id="tabContainer1" collapsed>
+				<ui5-tab text="Products" additional-text="125">
+				</ui5-tab>
+				<ui5-tab-separator></ui5-tab-separator>
+				<ui5-tab icon="sap-icon://menu2" text="Laptops" design="Positive" additional-text="25">
+				</ui5-tab>
+				<ui5-tab icon="sap-icon://menu" text="Monitors" selected design="Critical" additional-text="45">
+				</ui5-tab>
+				<ui5-tab icon="sap-icon://menu2" text="Keyboards" design="Negative" additional-text="15">
+				</ui5-tab>
+				<ui5-tab icon="sap-icon://menu2" disabled text="Disabled" design="Negative" additional-text="40">
+				</ui5-tab>
+				<ui5-tab icon="sap-icon://menu2" text="Neutral" design="Neutral" additional-text="40">
+				</ui5-tab>
+				<ui5-tab icon="sap-icon://menu2" text="Default" additional-text="40">
+				</ui5-tab>
+			</ui5-tabcontainer>
+
+			<section class="fcl21auto">
+				<p>
+					<ui5-title level="H5">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+					aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+					culpa qui officia deserunt mollit anim id est laborum.
+					</ui5-title>
+				</p>
+				<p>
+					<ui5-title level="H5">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+					aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+					culpa qui officia deserunt mollit anim id est laborum.
+					</ui5-title>
+				</p>
+				<p>
+					<ui5-title level="H5">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+					aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+					culpa qui officia deserunt mollit anim id est laborum.
+					</ui5-title>
+				</p>
+			</section>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<script>
+
+		fclAcc.accessibilityAttributes = {
+			startColumn: {
+				name: "Products list",
+			},
+			midColumn: {
+				name: "Product information",
+			},
+			endColumn: {
+				name: "Product detailed information",
+			},
+			startSeparator: {
+				name: "Start Draggable Splitter",
+			},
+			endSeparator: {
+				name: "End Draggable Splitter",
+			},
+		};
+
+		fclAccRoles.accessibilityAttributes = {
+			startColumn: {
+				role: "complementary"
+			},
+			startSeparator: {
+				role: "navigation"
+			},
+			midColumn:{
+				role: "main"
+			},
+			endSeparator: {
+				role: "navigation"
+			},
+			endColumn: {
+				role: "complementary"
+			},
+		};
+
+		var counter = 0;
+		var counter2 = 0;
+		var layoutConfigurationChangeCounter = 0;
+		fcl1.addEventListener("ui5-layout-change", function(e) {
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
+			layoutChangeRes2.value =
+			"startColumnVisible :: " + e.detail.startColumnVisible
+			+ ", midColumnVisible :: " + e.detail.midColumnVisible
+			+ ", endColumnVisible :: " + e.detail.endColumnVisible;
+			layoutChangeRes3.value = "separatorsUsed :: " + e.detail.separatorsUsed + ", resizing :: " + e.detail.resized;
+			layoutChangeRes4.value = `${++counter}`;
+
+		});
+
+		fcl1.addEventListener("ui5-layout-configuration-change", function(e) {
+			layoutChangeRes.value = e.detail.layout;
+			layoutChangeRes1.value = e.detail.columnLayout;
+			layoutChangeRes5.value = `${++layoutConfigurationChangeCounter}`;
+		});
+
+		fcl3.addEventListener("ui5-layout-change", function(e) {
+			testLayoutChange.value = `${++counter2}`;
+		});
+
+		switchBtn1.addEventListener("click", function(e) {
+			fcl1.layout = e.target.pressed ? "ThreeColumnsMidExpanded" : "TwoColumnsStartExpanded";
+		});
+
+		switchBtn2.addEventListener("click", function(e) {
+			fcl2.layout = e.target.pressed ? "TwoColumnsStartExpanded" : "TwoColumnsMidExpanded";
+		});
+
+		list.addEventListener("ui5-item-click", function(e) {
+			fcl6.layout = "TwoColumnsMidExpanded";
+		});
+
+		list2.addEventListener("ui5-item-click", function(e) {
+			fcl6.layout = "ThreeColumnsMidExpanded";
+		});
+
+		closeMidColumn.addEventListener("click", function(e) {
+			fcl6.layout = "OneColumn";
+
+			expandMidColumn.pressed = false;
+			expandEndColumn.pressed = false;
+		});
+
+		expandMidColumn.addEventListener("click", function(e) {
+			var tb = e.target;
+			if (tb.pressed) {
+				tb.icon = "exit-full-screen";
+				fcl6.layout = "MidColumnFullScreen";
+			} else {
+				fcl6.layout = "TwoColumnsMidExpanded";
+				tb.icon = "full-screen";
+			}
+		});
+
+		closeEndColumn.addEventListener("click", function(e) {
+			fcl6.layout = "TwoColumnsMidExpanded";
+
+			expandEndColumn.pressed = false;
+		});
+
+		expandEndColumn.addEventListener("click", function(e) {
+			var tb = e.target;
+
+			if (tb.pressed) {
+				tb.icon = "exit-full-screen";
+				fcl6.layout = "EndColumnFullScreen";
+			} else {
+				tb.icon = "full-screen";
+				fcl6.layout = "ThreeColumnsMidExpanded";
+			}
+		});
+
+		var midFullScreen = false;
+		var endFullScreen = false;
+		var avatars = [
+			"camera",
+			"laptop",
+			"desktop-mobile",
+			"responsive",
+			"print",
+			"iphone",
+			"ipad",
+		];
+		var avatarsBG = [
+			"Accent1",
+			"Accent2",
+			"Accent3",
+			"Accent4",
+			"Accent5",
+			"Accent6",
+			"Accent7",
+			"Accent8",
+			"Accent9",
+			"Accent10",
+		];
+		var suppliers = [
+			"Titanium", "Technocom", " Red Point Stores", " Very Best Screens", "Smartcards", "Alpha Printers",
+			"Printer for All", "Oxynum", "Fasttech", "Ultrasonic United", "Speaker Experts", "Brainsoft"
+		];
+
+		function updateProductInfo(item) {
+			avatar.icon = avatars[getRandomInt(6)];
+			avatar.backgroundColor = avatarsBG[getRandomInt(9) + 1];
+			productRating.value = getRandomInt(4) + 1;
+			col2title.textContent = item.textContent;
+			lblName.innerHTML = "<b>" + item.textContent + "</b>";
+			lblDesc.innerHTML = "<b>" + item.description + "</b>";
+			lblSupplier.innerHTML = "<b>" + suppliers[getRandomInt(11)] + "</b>";
+		}
+
+		function updateDetailInfo(item) {
+			col3title.textContent = item.textContent;
+		}
+
+		function nextLayout(target) {
+			var layout = fclApp.layout;
+
+			if (target === "col1") {
+				exitFullScreen();
+				return "TwoColumnsMidExpanded";
+			}
+
+			if (target === "col2") {
+				if (midFullScreen) {
+					enterFullScreen();
+					return "EndColumnFullScreen";
+				}
+				exitFullScreen();
+				return "ThreeColumnsMidExpanded";
+			}
+
+			if (target === "col2close") {
+				exitFullScreen();
+				return "OneColumn";
+			}
+
+			if (target === "col3close") {
+				if (fclApp.media === "phone") {
+					endFullScreen = true;
+				}
+				if (endFullScreen) {
+					enterFullScreen();
+					return "MidColumnFullScreen";
+				}
+				exitFullScreen();
+				return "ThreeColumnsMidExpandedEndHidden";
+			}
+
+			if (target === "col2fullscreen") {
+
+				if (!midFullScreen) {
+					enterFullScreen();
+					return "MidColumnFullScreen";
+				}
+
+				exitFullScreen();
+				return "ThreeColumnsMidExpandedEndHidden";
+			}
+
+			if (target === "col3fullscreen") {
+
+				if (!endFullScreen) {
+					enterFullScreen();
+					return "EndColumnFullScreen";
+				}
+
+				exitFullScreen();
+				return "ThreeColumnsEndExpanded";
+			}
+		}
+
+		function getRandomInt(max) {
+			return Math.floor(Math.random() * Math.floor(max));
+		}
+
+		function enterFullScreen() {
+			endFullScreen = true;
+			midFullScreen = true;
+			fullscreenMidColumn.icon = "exit-full-screen";
+			fullscreenEndColumn.icon = "exit-full-screen";
+		}
+
+		function exitFullScreen() {
+			endFullScreen = false;
+			midFullScreen = false;
+			fullscreenMidColumn.icon = "full-screen";
+			fullscreenEndColumn.icon = "full-screen";
+		}
+
+		// Event handlers
+		col1list.addEventListener("ui5-item-click", function (e) {
+			updateProductInfo(e.detail.item);
+			fclApp.layout = nextLayout("col1");
+		});
+
+		col2list.addEventListener("ui5-item-click", function (e) {
+			updateDetailInfo(e.detail.item);
+			fclApp.layout = nextLayout("col2");
+		});
+
+		_closeMidColumn.addEventListener("click", function (e) {
+			fclApp.layout = nextLayout("col2close");
+		});
+
+		_closeEndColumn.addEventListener("click", function (e) {
+			fclApp.layout = nextLayout("col3close");
+		});
+
+		fullscreenMidColumn.addEventListener("click", function (e) {
+			fclApp.layout = nextLayout("col2fullscreen");
+		});
+
+		fullscreenEndColumn.addEventListener("click", function (e) {
+			fclApp.layout = nextLayout("col3fullscreen");
+		});
+
+		// Wizard
+		var wiz = document.getElementById("wiz");
+
+		wiz.addEventListener("ui5-selection-change", function () {
+			console.log(event.detail.selectedStep);
+		});
+
+		sw.addEventListener("ui5-change", function () {
+			toStep3.removeAttribute("hidden");
+		});
+
+		sb.addEventListener("ui5-selection-change", function () {
+			toStep4.removeAttribute("hidden");
+		});
+
+		toStep2.addEventListener("click", function () {
+			deselectAll();
+			setStep(1);
+			toStep2.setAttribute("hidden", true);
+		});
+
+		toStep3.addEventListener("click", function () {
+			deselectAll(wiz);
+			setStep(2);
+			toStep3.setAttribute("hidden", true);
+		});
+
+		toStep4.addEventListener("click", function () {
+			deselectAll(wiz);
+			setStep(3);
+			toStep4.setAttribute("hidden", true);
+		});
+
+		finalize.addEventListener("click", function () {
+			alert("Finalize")
+		});
+
+		function deselectAll() {
+			Array.from(wiz.children).forEach(function(step) {
+				step.selected = false;
+			});
+		}
+
+		function setStep(idx) {
+			const step = getStep(idx);
+			step.selected = true;
+			step.disabled = false;
+		}
+
+		function getStep(idx) {
+			return Array.from(wiz.children)[idx];
+		}
+
+		// Utility function to change RTL and apply the changes
+		function setDir(dir) {
+			document.body.dir = dir;
+			window['sap-ui-webcomponents-bundle'].applyDirection();
+		}
+
+		document.getElementById("swRTL").addEventListener("ui5-change", (e) => {
+			if (e.target.checked) {
+				setDir("rtl");
+			} else {
+				setDir("ltr");
+			}
+		});
+
+		const animationsSwitch = document.getElementById("swAnimations");
+
+		animationsSwitch.addEventListener("ui5-change", (e) => {
+			const newMode = e.target.checked ? "full" : "none";
+			window["sap-ui-webcomponents-bundle"].configuration.setAnimationMode(newMode);
+		});
+	</script>
+</body>
+</html>

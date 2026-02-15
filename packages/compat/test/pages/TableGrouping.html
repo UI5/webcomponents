@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Web components Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script data-ui5-config type="application/json">
+        {
+            "language": "EN"
+        }
+    </script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CmNrHCeo.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/TableGrouping-BRvcWkOa.css">
+</head>
+
+<body class="tablegrouping1auto">
+
+	<ui5-title>Table with grouping:</ui5-title>
+	<ui5-table class="demo-table-single" id="groupedSingleTable">
+		<ui5-table-column id="column-1" slot="columns">
+			<ui5-label>City</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column id="column-2" slot="columns" min-width="500" popin-text="Supplier">
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column id="column-3" slot="columns" min-width="500" popin-text="Country" demand-popin>
+			<div class="column-content">
+				<ui5-label>Country</ui5-label>
+			</div>
+		</ui5-table-column>
+
+		<ui5-table-group-row>Country: Bulgaria</ui5-table-group-row>
+
+		<ui5-table-row>
+			<ui5-table-cell><span>Sofia</span></ui5-table-cell>
+			<ui5-table-cell><span>Sirenje EOOD</span></ui5-table-cell>
+			<ui5-table-cell><span>Bulgaria</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Plovdiv</span></ui5-table-cell>
+			<ui5-table-cell><span>Kashkavali AD</span></ui5-table-cell>
+			<ui5-table-cell><span>Bulgaria</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-group-row><span>Country: USA</span></ui5-table-group-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Dublin</span></ui5-table-cell>
+			<ui5-table-cell><span>J.M. Brothers</span></ui5-table-cell>
+			<ui5-table-cell><span>USA</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Boston</span></ui5-table-cell>
+			<ui5-table-cell><span>J.M. Brothers</span></ui5-table-cell>
+			<ui5-table-cell><span>USA</span></ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br>
+	<hr>
+	<br>
+
+	<ui5-title>MultiSelect Table with grouping:</ui5-title>
+	<ui5-table class="demo-table-multi" id="groupedMultiTable" mode="MultiSelect">
+		<ui5-table-column id="column-1" slot="columns">
+			<ui5-label>City</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column id="column-2" slot="columns" min-width="500" popin-text="Supplier">
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column id="column-3" slot="columns" min-width="500" popin-text="Country" demand-popin>
+			<div class="column-content">
+				<ui5-label>Country</ui5-label>
+			</div>
+		</ui5-table-column>
+
+		<ui5-table-group-row>Country: Bulgaria</ui5-table-group-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Sofia</span></ui5-table-cell>
+			<ui5-table-cell><span>Sirenje EOOD</span></ui5-table-cell>
+			<ui5-table-cell><span>Bulgaria</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Plovdiv</span></ui5-table-cell>
+			<ui5-table-cell><span>Kashkavali AD</span></ui5-table-cell>
+			<ui5-table-cell><span>Bulgaria</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-group-row>Country: USA</ui5-table-group-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Dublin</span></ui5-table-cell>
+			<ui5-table-cell><span>J.M. Brothers</span></ui5-table-cell>
+			<ui5-table-cell><span>USA</span></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row>
+			<ui5-table-cell><span>Boston</span></ui5-table-cell>
+			<ui5-table-cell><span>J.M. Brothers</span></ui5-table-cell>
+			<ui5-table-cell><span>USA</span></ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+
+</body>
+
+</html>

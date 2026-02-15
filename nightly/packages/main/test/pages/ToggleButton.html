@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>ToggleButton</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ToggleButton-DM9kQUN9.css">
+</head>
+
+<body class="togglebutton1auto">
+
+<header class="header">
+	<h1 class="header-title">ui5-toggle-button</h1>
+</header>
+
+<section class="main">
+	<div class="samples">
+		<h2>ToggleButton states</h2>
+		<div class="sample" id="main-sample">
+			<ui5-toggle-button class="toggleButton" id="toggle-button">ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" pressed>Pressed ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" disabled id="disabled-toggle-button">Disabled ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" disabled pressed>Disabled ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Positive">Accept ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Positive" pressed>Accept ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Negative">Reject ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Negative" pressed>Reject ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Transparent">Transparent ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Transparent" pressed>Transparent ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Emphasized">Emphasized ToggleButton</ui5-toggle-button>
+			<ui5-toggle-button class="toggleButton" design="Emphasized" pressed>Emphasized ToggleButton</ui5-toggle-button>
+		</div>
+	</div>
+	<div class="result">
+		<h2>Result</h2>
+		<span id="click-result"></span>
+	</div>
+</section>
+
+<script>
+	var clickResult = document.getElementById("click-result");
+
+	Array.prototype.slice.call(document.querySelectorAll(".toggleButton")).forEach(function (el) {
+		el.addEventListener("ui5-click", function (event) {
+			clickResult.innerHTML = event.target.textContent + ": " + (event.target.pressed);
+		});
+	});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Table (in development)</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+	<input id="error"></input>
+	<script>
+		const error = document.getElementById("error");
+
+		window.addEventListener("unhandledrejection", function (event) {
+			error.value = "Exception was thrown!";
+		});
+
+		const table = document.createElement("ui5-table");
+		document.body.appendChild(table);
+		// an error will the thrown after this step
+		setTimeout(() => {
+			const row = document.createElement("ui5-table-header-row");
+			table.appendChild(row);
+		}, 100);
+	</script>
+</body>
+
+</html>

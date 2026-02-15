@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Illustrated Message Custom</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 1.5rem;
+			font-family: "72", "72full", Arial, sans-serif;
+			background: var(--sapBackgroundColor, #f7f7f7);
+			color: var(--sapTextColor, #1a1a1a);
+		}
+
+		.grid-container {
+			display: grid;
+			gap: 2rem;
+			grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		}
+
+		section {
+			display: flex;
+			flex-direction: column;
+			background: var(--sapTile_Background, #fff);
+			border-radius: 0.75rem;
+			box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+			padding: 1.5rem;
+		}
+
+		section h2 {
+			margin-top: 0;
+			margin-bottom: 0.5rem;
+			font-size: 1.25rem;
+		}
+
+		section p {
+			margin-top: 0;
+			margin-bottom: 1.5rem;
+			color: var(--sapContent_LabelColor, #6a6d70);
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/IllustratedMessageCustom.html-CSb7-Z90.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js">
+</head>
+
+<body>
+	<h1>Custom Illustration Playground</h1>
+	<p>
+		This page showcases both safe (<code>registerIllustration</code>) and unsafe
+		(<code>unsafeRegisterIllustration</code>) APIs for registering custom illustrations with
+		<code>ui5-illustrated-message</code>.
+	</p>
+
+	<div class="grid-container">
+		<section>
+			<h2>Safe registration (templates)</h2>
+			<p>SVG rendered via JSX templates registered through <code>registerIllustration</code>.</p>
+			<ui5-illustrated-message name="custom/CustomFigure" design="Auto" title-text="Templates keep you safe"
+				subtitle-text="No raw strings were harmed.">
+				<ui5-button design="Emphasized">Primary Action</ui5-button>
+				<ui5-button>Secondary Action</ui5-button>
+			</ui5-illustrated-message>
+		</section>
+
+		<section>
+			<h2>Unsafe registration (raw strings)</h2>
+			<p>SVG sourced from <code>assets/</code> via <code>unsafeRegisterIllustration</code>.</p>
+			<ui5-illustrated-message name="custom/EmptyCart" design="Auto" title-text="Handle with care"
+				subtitle-text="Raw SVG strings require your validation." decorative>
+				<ui5-button design="Transparent">Learn more</ui5-button>
+			</ui5-illustrated-message>
+		</section>
+	</div>
+
+</body>
+
+</html>

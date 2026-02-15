@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>i18n Demo</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/i18n-demo-C6XzCp-w.css">
+</head>
+
+
+<body>
+
+
+	<div class="snippet">
+
+		<ui5-title level="H1" class="i18n-demo1auto">i18n and CLDR demo</ui5-title>
+
+		<br>
+		<br>
+		<br>
+		<br>
+
+		<ui5-date-picker></ui5-date-picker>
+
+		<br>
+		<br>
+
+		<!-- <ui5-daypicker></ui5-daypicker> -->
+
+
+		<br>
+		<br>
+
+		<ui5-textarea maxlength="20" show-exceeded-text></ui5-textarea>
+
+		<br>
+		<br>
+
+		<span>Available languages: </span>
+
+		<hr>
+		ar, bg, ca, cs, da, de, el, en, es, et, fi, fr, hi, hr, hu, it, iw, ja, kk, ko, lt, lv, ms, nl, no, pl, pt, ro, ru,
+		sh, sk, sl, sv, th, tr, uk, vi, zh_CN, zh_TW
+
+		<br>
+		<br>
+
+		<span>Cheat sheet: </span>
+
+		<hr>
+
+		in 2 wochen, in 42 tagen
+		<br>
+		mañana, ayer,
+		<br>
+		今天, 明天,
+
+	</div>
+
+	<script>
+
+		setTimeout(function() {
+			document.body.setAttribute("dir", window["sap-ui-webcomponents-bundle"].configuration.getRTL() ? "rtl" : "ltr");
+		}, 100);
+	</script>
+</body>
+
+</html>

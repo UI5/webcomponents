@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form</title>
+
+	<script id='sap-ui-bootstrap'
+		src='https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js'
+		data-sap-ui-theme='sap_horizon'
+		data-sap-ui-libs='sap.m, sap.ui.core, sap.ui.layout'
+		data-sap-ui-preload="async"
+	></script>
+
+	<script>
+		
+        sap.ui.getCore().attachInit(function() {
+			const displayFormContainer = new sap.ui.layout.form.FormContainer("C1",{
+				formElements: [
+					new sap.ui.layout.form.FormElement({
+						label: new sap.m.Label({text:"Name"}),
+						fields: [new sap.m.Text({text: "Red Point Stores"})]
+					}),
+					new sap.ui.layout.form.FormElement({
+						label: "ZIP Code/City",
+						fields: [new sap.m.Text({text: "411 Maintown"})]
+					}),
+					new sap.ui.layout.form.FormElement({
+						label: new sap.m.Label({text:"Street"}),
+						fields: [new sap.m.Text({text: "Main St 1618"})]
+					}),
+					new sap.ui.layout.form.FormElement({
+						label: "Country",
+						fields: [new sap.m.Text({text: "Germany"})]
+					}),
+					new sap.ui.layout.form.FormElement({
+						label: "WebSite",
+						fields: [new sap.m.Link({text: "sap.com"})]
+					}),
+					new sap.ui.layout.form.FormElement({
+						label: "Delivery address",
+						fields: [new sap.m.Text({text: "Newtown"})]
+					}),
+				]
+			});
+
+			const editFormContainer = new sap.ui.layout.form.FormContainer("C2",{
+			formElements: [
+				new sap.ui.layout.form.FormElement({
+					label: new sap.m.Label({text:"Name"}),
+					fields: [new sap.m.Input({value: "Red Point Stores"})]
+				}),
+				new sap.ui.layout.form.FormElement({
+					label: "ZIP Code/City",
+					fields: [new sap.m.Input({value: "411"}), new sap.m.Input({value: "Maintown"})]
+				}),
+				new sap.ui.layout.form.FormElement({
+					label: new sap.m.Label({text:"Street"}),
+					fields: [new sap.m.Input({value: "Main St", layoutData: new sap.ui.layout.form.ColumnElementData({cellsSmall: 6, cellsLarge: 2})}), new sap.m.Input({value: "1618"})]
+				}),
+				new sap.ui.layout.form.FormElement({
+					label: "Country",
+					fields: [new sap.m.Select({selectedKey: "DE",
+						items: [new sap.ui.core.ListItem({key: "GB", text: "England"}),
+										new sap.ui.core.ListItem({key: "US", text: "USA"}),
+										new sap.ui.core.ListItem({key: "DE", text: "Germany"})]
+					})]
+				}),
+				new sap.ui.layout.form.FormElement({
+					label: "WebSite",
+					fields: [new sap.m.Input({value: "sap.com"})]
+				}),
+				new sap.ui.layout.form.FormElement({
+					label: "Delivery address",
+					fields: [new sap.m.Input({value: "Newtown"})]
+				}),
+			]
+		});
+
+			var oLayout1 = new sap.ui.layout.form.ColumnLayout("L1");
+			var oForm1 = new sap.ui.layout.form.Form("F1",{
+				title: "SAPUI5 Form :: Display",
+				editable: true,
+				layout: oLayout1,
+				formContainers: [
+					displayFormContainer,
+				]
+			});
+			oForm1.placeAt("sapui5content");
+
+			window.oLayout1 = oLayout1;
+			window.oForm1 = oForm1;
+			window.displayFormContainer = displayFormContainer;
+			window.editFormContainer = editFormContainer;
+        });
+    </script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body>
+	<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
+	
+	<section id="container">
+		<div class="banner"><div class="banner-inner"></div></div>
+
+		<div class="controls"> 
+			Item Spacing Large/Normal:<ui5-switch id="swEditable" checked></ui5-switch>
+			<ui5-toggle-button id="toggleEditable" icon="edit">Edit</ui5-toggle-button>
+		</div>
+		
+		<section>
+			<ui5-form id="addressForm" header-text="WebC Form :: Display" item-spacing="Large">
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Name:</ui5-label>
+					<span class="text">Red Point Stores</span>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Country:</ui5-label>
+					<span class="text">Germany</span>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+					<span class="text">411 Maintown</span>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+					<ui5-link href="sap.com">sap.com</ui5-link>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Street:</ui5-label>
+					<span class="text">Main St 1618</span>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+					<span class="text">Newtown</span>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+
+		<section id="sapui5content"></section>
+
+	</section>
+
+<script>
+
+	const wcDisplayTemplate = `
+	<ui5-form-item>
+		<ui5-label slot="labelContent">Name:</ui5-label>
+		<span class="text">Red Point Stores</span>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label slot="labelContent">Country:</ui5-label>
+		<span class="text">Germany</span>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+		<span class="text">411 Maintown</span>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+		<ui5-link href="sap.com">sap.com</ui5-link>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label slot="labelContent">Street:</ui5-label>
+		<span class="text">Main St 1618</span>
+	</ui5-form-item>
+
+	<ui5-form-item>
+		<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+		<span class="text">Newtown</span>
+	</ui5-form-item>
+`;
+
+	const wcEditTemplate = `
+		<ui5-form-item>
+			<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+			<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+		</ui5-form-item>
+		
+		<ui5-form-item>
+			<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+			<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+				<ui5-option>Australia</ui5-option>
+				<ui5-option selected>Germany</ui5-option>
+				<ui5-option>England</ui5-option>
+			</ui5-select>
+		</ui5-form-item>
+
+		<ui5-form-item>
+			<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+			<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+			<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+		</ui5-form-item>
+	
+		<ui5-form-item>
+			<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+			<ui5-input value="sap.com" id="wsInp"></ui5-input>
+		</ui5-form-item>
+
+		<ui5-form-item>
+			<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+			<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+			<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+		</ui5-form-item>
+
+		<ui5-form-item>
+			<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+			<ui5-input value="Newtown" id="delInp"></ui5-input>
+		</ui5-form-item>
+	`;
+
+	const changeWCFormContent = (edit) => {
+		const template = edit ? wcEditTemplate : wcDisplayTemplate;
+		const itemSpacing = edit ? "Normal" : "Large";
+		const headerText = edit ? "WebC Form :: Edit" : "WebC Form :: Display";
+
+		while (addressForm.firstChild) {
+			addressForm.removeChild(addressForm.firstChild);
+		}
+		addressForm.headerText = headerText;
+		addressForm.itemSpacing = itemSpacing;
+		addressForm.insertAdjacentHTML("afterbegin", template);
+		swEditable.checked = !edit;
+	}
+
+	const changeSAPUI5FormContent = (edit) => {
+		const headerText = edit ? "SAPUI5 Form :: Edit" : "SAPUI5 Form :: Display";
+
+		oForm1.removeAllFormContainers();
+		oForm1.addFormContainer(edit ? editFormContainer : displayFormContainer);
+		oForm1.setTitle(headerText);
+	}
+
+	toggleEditable.addEventListener("click", function (event) {
+		const pressed = event.target.pressed;
+		changeWCFormContent(pressed);
+		changeSAPUI5FormContent(pressed);
+	});
+
+	swEditable.addEventListener("ui5-change", function (event) {
+		const checked = event.target.checked;
+		addressForm.itemSpacing = checked ?  "Large" : "Normal";
+		oForm1.setEditable(checked);
+	});
+
+	slider.addEventListener("ui5-input", function (event) {
+			container.style.width = event.target.value + '%';
+		});
+</script>
+</body>
+</html>

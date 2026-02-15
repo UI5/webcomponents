@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_ui5_webcomponents_website=self.webpackChunk_ui5_webcomponents_website||[]).push([[2602],{30852:e=>{e.exports=JSON.parse('{"permalink":"/webcomponents/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":6,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Test Page - Table Navigation</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+<body>
+	<div class="section">
+		<input id="before-table1" type="number" value="0">
+		<ui5-table id="table0">
+			<ui5-table-growing id="growing" type="Button" slot="features"></ui5-table-growing>
+			<ui5-table-header-row slot="headerRow">
+				<ui5-table-header-cell><a id="row0-link" href="test.html">Link</a></ui5-table-header-cell>
+				<ui5-table-header-cell>Header2</ui5-table-header-cell>
+				<ui5-table-header-cell>Header3</ui5-table-header-cell>
+				<ui5-table-header-cell>Header4</ui5-table-header-cell>
+			</ui5-table-header-row>
+			<ui5-table-row>
+				<ui5-table-cell>Row1Cell0</ui5-table-cell>
+				<ui5-table-cell><input id="row1-input"></ui5-table-cell>
+				<ui5-table-cell><button id="row1-button">Button 1</button></ui5-table-cell>
+				<ui5-table-cell>Row1Cell3</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="interactive-row" interactive>
+				<ui5-table-cell>Row2Cell0</ui5-table-cell>
+				<ui5-table-cell><input id="row2-input"></ui5-table-cell>
+				<ui5-table-cell><button id="row2-button">Button 2</button></ui5-table-cell>
+				<ui5-table-cell>Row2Cell3</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="notinteractive-row"> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell> Here the table structure is broken. There is only one cell in row 5. </ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+			<ui5-table-row> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> <ui5-table-cell></ui5-table-cell> </ui5-table-row>
+		</ui5-table>
+		<input id="after-table1">
+	</div>
+	<script>
+		const table = document.getElementById("table0");
+		const input = document.getElementById("before-table1");
+		table.addEventListener("ui5-row-click", () => {
+			input.valueAsNumber++;
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Tokenizer - multi-line</title>
+	<meta name="viewport" content="width=device-width">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Tokenizer-BhtHyoJU.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1 class="sample-container-title">Multi Line</h1>
+		<ui5-tokenizer multi-line style="width: 320px;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line with long token</h1>
+		<ui5-tokenizer multi-line style="width: 320px;" dir="rtl">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Mexico Mexico Mexico Mexico Mexico Mexico Mexico"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+			<ui5-token text="Mexico Mexico Mexico Mexico Mexico Mexico Mexico"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line with long token and restricted height</h1>
+		<ui5-tokenizer multi-line style="height: 100px; width: 320px;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+			<ui5-token text="Mexico Mexico Mexico Mexico Mexico Mexico Mexico"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line with clear all</h1>
+		<ui5-tokenizer id='clear-all' class="deletable-tokenizer" show-clear-all multi-line style="width: 320px;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line with restricted height and clear all</h1>
+		<ui5-tokenizer class="deletable-tokenizer" show-clear-all multi-line
+			style="width: 320px; height:100px; border: solid 1px grey;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+		</ui5-tokenizer>
+
+
+		<h1 class="sample-container-title">Multi Line with clear all - single token</h1>
+		<ui5-tokenizer show-clear-all multi-line style="width: 320px;">
+			<ui5-token text="Bulgaria"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line in readonly mode</h1>
+		<ui5-tokenizer class="deletable-tokenizer" multi-line show-clear-all readonly style="width: 320px;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+		</ui5-tokenizer>
+
+		<h1 class="sample-container-title">Multi Line in disabled mode</h1>
+		<ui5-tokenizer class="deletable-tokenizer" multi-line show-clear-all disabled style="width: 320px;">
+			<ui5-token text="Andora"></ui5-token>
+			<ui5-token text="Bulgaria"></ui5-token>
+			<ui5-token text="Canada"></ui5-token>
+			<ui5-token text="Denmark"></ui5-token>
+			<ui5-token text="Estonia"></ui5-token>
+			<ui5-token text="Finland"></ui5-token>
+			<ui5-token text="Germany"></ui5-token>
+			<ui5-token text="Hungary"></ui5-token>
+			<ui5-token text="Ireland"></ui5-token>
+			<ui5-token text="Japan"></ui5-token>
+			<ui5-token text="Korea"></ui5-token>
+			<ui5-token text="Latvia"></ui5-token>
+		</ui5-tokenizer>
+	</div>
+
+
+	<script>
+		const deletableTokenizers = document.querySelectorAll('.deletable-tokenizer');
+
+		deletableTokenizers.forEach(tokenizer => {
+			tokenizer.addEventListener('token-delete', () => {
+				const tokens = event.detail?.tokens;
+
+				if (tokens) {
+					tokens.forEach(token => token.remove());
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

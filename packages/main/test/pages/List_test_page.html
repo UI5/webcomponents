@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>ui5-list / ui5-li</title>
+
+
+
+
+
+	<style>
+		[ui5-avatar] img {
+			object-fit: contain;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/List_test_page-kUZOXwBS.css">
+</head>
+
+<body class="list_test_page1auto">
+	<ui5-title>List  growing="Scroll"</ui5-title>
+	<ui5-button id="btnTrigger">scroll</ui5-button>
+	<ui5-list id="infiniteScrollEx" class="list_test_page2auto" growing="Scroll">
+		<ui5-li>Laptop Lenovo</ui5-li>
+		<ui5-li>IPhone 3</ui5-li>
+		<ui5-li>HP Monitor 24</ui5-li>
+		<ui5-li>Audio cabel</ui5-li>
+		<ui5-li>DVD set</ui5-li>
+		<ui5-li>HP Monitor 24</ui5-li>
+		<ui5-li>Audio cabel</ui5-li>
+		<ui5-li id="lastItem">Last Item</ui5-li>
+	</ui5-list>
+	<input id="loadMoreResult" value="0"/>
+	<br><br><br>
+
+	<ui5-title>List growing="Scroll" items don't overflow initially</ui5-title>
+
+	<ui5-input id="growingScrollTestCounter" value="0"></ui5-input>
+	<section class="list_test_page3auto">
+		<ui5-list id="growingScrollTest" growing="Scroll">
+			<ui5-li-group header-text="New Items"></ui5-li-group>
+		</ui5-list>
+	</section>
+
+	<br><br><br>
+
+	<ui5-list id="infiniteScrollEx2" class="list_test_page2auto" growing="Button" growing-button-text="Custom text">
+		<ui5-li>Laptop Lenovo</ui5-li>
+		<ui5-li>IPhone 3</ui5-li>
+		<ui5-li>HP Monitor 24</ui5-li>
+		<ui5-li>Audio cabel</ui5-li>
+		<ui5-li>DVD set</ui5-li>
+		<ui5-li>HP Monitor 24</ui5-li>
+		<ui5-li>Audio cabel</ui5-li>
+		<ui5-li id="lastItem">Last Item</ui5-li>
+	</ui5-list>
+
+	<br/>
+	<ui5-list id="listEvents" selection-mode="SingleEnd">
+		<ui5-li id="country1">Argentina</ui5-li>
+		<ui5-li id="country2" selected >Bulgaria</ui5-li>
+		<ui5-li id="country3">China</ui5-li>
+		<ui5-li id="country4" type="Inactive">Portugal</ui5-li>
+	</ui5-list>
+	<ui5-input id="itemClickResultField" placeholder="itemClick result"></ui5-input>
+	<ui5-input id="selectionChangeResultField" placeholder="selectionChange result"></ui5-input>
+	<ui5-input id="selectionChangeResultFieldRadio" placeholder="selectionComponentPressed result "></ui5-input>
+	<ui5-input id="selectionChangeResultPreviousItemsParameter" placeholder="selectionChange previousSelection result"></ui5-input>
+
+	<br><br><br>
+
+	<br>
+	<ui5-list id="listPreventSelectionChangeSingleSelect" selection-mode="Single" header-text="Prevent ui5-selection-change on Single">
+		<ui5-li id="country1" >Argentina</ui5-li>
+		<ui5-li id="country2" >Bulgaria</ui5-li>
+		<ui5-li id="country3" selected >China</ui5-li>
+	</ui5-list>
+
+	<br/>
+	<ui5-list id="listPreventSelectionChangeMultiple" selection-mode="Multiple" header-text="Prevent ui5-selection-change on Multiple">
+		<ui5-li id="country1" >Argentina</ui5-li>
+		<ui5-li id="country2" selected >Bulgaria</ui5-li>
+		<ui5-li id="country3" selected >China</ui5-li>
+	</ui5-list>
+
+	<br><br><br>
+
+	<br/>
+	<ui5-list id="listPreventClickEvent" selection-mode="Single">
+		<ui5-li id="country1">Argentina</ui5-li>
+		<ui5-li id="country2" selected >Bulgaria</ui5-li>
+	</ui5-list>
+	<ui5-input id="itemClickPreventedResultField" placeholder="itemClick prevented result"></ui5-input>
+
+	<br><br><br>
+	<ui5-list id="justList">
+		<ui5-li id="justList-country">Argentina</ui5-li>
+	</ui5-list>
+	<ui5-list id="listDelete" selection-mode="Delete">
+		<ui5-li>Argentina</ui5-li>
+	</ui5-list>
+	<ui5-list id="emptyListDelete" selection-mode="Delete">
+	</ui5-list>
+	<ui5-list id="listMultiple" selection-mode="Multiple">
+		<ui5-li>Argentina</ui5-li>
+	</ui5-list>
+	<ui5-list id="listSingleSelect" selection-mode="Single">
+		<ui5-li>Argentina</ui5-li>
+	</ui5-list>
+	<ui5-list id="listSelectedItem" selection-mode="Multiple">
+		<ui5-li-group id="group" header-text="New Items">
+			<ui5-li id="not-selected-country">Argentina</ui5-li>
+			<ui5-li id="selected-country" selected >Bulgaria</ui5-li>
+		</ui5-li-group>
+	</ui5-list>
+	<br><br><br>
+	<ui5-list id="listEvents2" selection-mode="Multiple">
+		<ui5-li id="country11">Argentina</ui5-li>
+		<ui5-li id="country22" selected >Bulgaria</ui5-li>
+		<ui5-li id="country33">China</ui5-li>
+		<ui5-li id="country44">Portugal</ui5-li>
+	</ui5-list>
+	<ui5-input id="itemClickResultField2" placeholder="itemClick result"></ui5-input>
+	<ui5-input id="selectionChangeResultField2" placeholder="selectionChange result"></ui5-input>
+
+	<br><br><br>
+	<ui5-list id="list1" header-text="API: ListItemGroupHeader">
+		<ui5-li-group header-text="New Items">
+			<ui5-li >Laptop HP</ui5-li>
+			<ui5-li >Laptop Lenovo</ui5-li>
+			<ui5-li >IPhone 3</ui5-li>
+		</ui5-li-group>
+
+		<ui5-li-group header-text="Discounted Items">
+			<ui5-li icon="navigation-right-arrow">HP Monitor 24</ui5-li>
+			<ui5-li icon="navigation-right-arrow">Audio cabel</ui5-li>
+			<ui5-li icon="navigation-right-arrow">DVD set</ui5-li>
+		</ui5-li-group>
+	</ui5-list>
+
+	<label id="lblResult">0</label>
+
+	<ui5-list id="listWithDesc">
+		<ui5-li description="2GB RAM, Intel i7 4.5 GHz">Laptop HP
+			<ui5-avatar slot="image" shape="Square">
+				<img src="/webcomponents/assets/HT-1000-BiqZozDV.jpg" alt="Woman image">
+			</ui5-avatar>
+		</ui5-li>
+		<ui5-li description="2GB RAM, Intel i7 4.5 GHz">Audio cabel
+			<ui5-avatar slot="image" shape="Square">
+				<img src="/webcomponents/assets/HT-2026-Bts79zak.jpg" alt="Woman image">
+			</ui5-avatar>
+		</ui5-li>
+		<ui5-li description="2GB RAM, Intel i7 4.5 GHz">DVD set
+			<ui5-avatar slot="image" shape="Square">
+				<img src="/webcomponents/assets/HT-2002-F2pD6qrf.jpg" alt="Woman image">
+			</ui5-avatar>
+		</ui5-li>
+	</ui5-list>
+
+	<ui5-list id="listMultiSel" selection-mode="Multiple">
+		<ui5-li id="option1">Option #1</ui5-li>
+		<ui5-li>Option #2</ui5-li>
+		<ui5-li>Option #3</ui5-li>
+	</ui5-list>
+
+	<ui5-list id="inactiveMultiSelect" selection-mode="Multiple">
+		<ui5-li type="Inactive">Option #1</ui5-li>
+		<ui5-li type="Inactive">Option #2</ui5-li>
+	</ui5-list>
+
+	<ui5-list id="default-slot-test" selection-mode="Single">
+		<ui5-li>Option #1</ui5-li>
+		<ui5-li>Option #2</ui5-li>
+		<ui5-li>Option #3</ui5-li>
+	</ui5-list>
+
+	<ui5-input id="fieldMultiSelResult"></ui5-input>
+
+	<ui5-button id="beforeBtn">Before button</ui5-button>
+	<ui5-list id="keyboardTestList" growing="Button">
+		<div slot="header" class="header"><ui5-button id="headerBtn" design="Accept">Export</ui5-button></div>
+
+		<ui5-li class="firstItem">Argentina</ui5-li>
+		<ui5-li-custom selected class="item">
+				<ui5-button class="itemBtn">Click me</ui5-button>
+				<ui5-link href="https://www.google.bg" target="_blank" class="itemLink">UI5 link</ui5-link>
+				<ui5-button class="itemBtn" disabled>Disabled</ui5-button>
+				<ui5-radio-button text="Option B" class="itemRadio"></ui5-radio-button>
+		</ui5-li-custom>
+		<ui5-li>China</ui5-li>
+		<ui5-li-custom selected>
+				<ui5-radio-button text="Option C" disabled="disabled"></ui5-radio-button>
+		</ui5-li-custom>
+	</ui5-list>
+	<ui5-button id="afterBtn">After button</ui5-button>
+
+	<ui5-list id="focusAfterList">
+		<ui5-li>Test</ui5-li>
+		<ui5-li class="breadcrumbsItem">
+			<div style="max-width: 20px">
+				<ui5-breadcrumbs>
+					<ui5-breadcrumbs-item href="#">Link1</ui5-breadcrumbs-item>
+					<ui5-breadcrumbs-item>Location</ui5-breadcrumbs-item>
+				</ui5-breadcrumbs>
+			</div>
+		</ui5-li>
+	</ui5-list>
+	<ui5-button id="afterFocusListBtn">After button</ui5-button>
+
+	<ui5-list id="no-data-list" header-text="API: noDataText" separators="None" no-data-text="No Data Available"></ui5-list>
+
+	<ui5-list
+		id="header-slot-list"
+		selection-mode="Multiple"
+		header-text="Text when no header provided"
+		footer-text="Copyright"
+		no-data-text="No data">
+
+		<div slot="header" class="header">
+			<ui5-title id="header-slot-title">List Title Here</ui5-title>
+		</div>
+
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list>
+		<ui5-li id="image-slot-li2"> Avatar inside image slot
+			<ui5-avatar id="image-slot-img" slot="image">
+				<img src="/webcomponents/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman image">
+			</ui5-avatar>
+		</ui5-li>
+
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list>
+		<ui5-li id="image-slot-li"> Img tag inside image slot
+			<img slot="image" src="/webcomponents/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman image">
+		</ui5-li>
+
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list id="inactiveMultiple" header-text="API: ListItem type='Inactive'" selection-mode="Multiple">
+		<ui5-li type="Inactive">Inactive item</ui5-li>
+		<ui5-li type="Inactive">Inactive item</ui5-li>
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list id="inactiveSingleSelect" header-text="API: ListItem type='Inactive'" selection-mode="SingleStart">
+		<ui5-li type="Inactive">Inactive item</ui5-li>
+		<ui5-li type="Inactive">Inactive item</ui5-li>
+	</ui5-list>
+
+	<br/><br/>
+	<span id="detailPressCounter">0</span>
+	<ui5-list header-text="API: ListItem type='Detail'">
+		<ui5-li id="detailListItem" type="Detail">Detail item</ui5-li>
+		<ui5-li >Normal item</ui5-li>
+	</ui5-list>
+	<br/><br/>
+
+	<ui5-list id="listWithInternalHeader" header-text="Test aria">
+		<ui5-li>item</ui5-li>
+		<ui5-li >item</ui5-li>
+	</ui5-list>
+	<br/><br/>
+
+	<ui5-list id="listWithCustomHeader" accessible-name-ref="testHeader">
+		<div slot="header" class="header">
+			<h2 id="testHeader">Test aria</h2>
+		</div>
+
+		<ui5-li>item</ui5-li>
+		<ui5-li >item</ui5-li>
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list id="myList7" header-text="API: ListItem tooltip">
+		<ui5-li tooltip="Option #1">Option 1</ui5-li>
+		<ui5-li tooltip="Option #2">Option 2</ui5-li>
+		<ui5-li tooltip="Option #3">Option 3</ui5-li>
+	</ui5-list>
+
+	<br/><br/>
+
+	<ui5-list id="listWithEmptyItem">
+		<ui5-li id="emptyItem"></ui5-li>
+		<ui5-li>IPhone 3</ui5-li>
+		<ui5-li>HP Monitor 24</ui5-li>
+	</ui5-list>
+	<ui5-button id="changeEmptyItem">Change empty item text</ui5-button>
+	<br>
+	<ui5-title>Events within ui5-li-custom</ui5-title>
+	<br>
+
+	<ui5-list id="customList" separators="Inner">
+		<ui5-li-custom>
+			<ui5-button id="liBtn1" design="Transparent">List Button 1</ui5-button>
+			<br />
+		</ui5-li-custom>
+		<ui5-li-custom>
+			<ui5-button design="Transparent">List Button 2</ui5-button>
+			<br />
+		</ui5-li-custom>
+		<ui5-li-custom>
+			<ui5-button design="Transparent">List Button 2</ui5-button>
+			<br />
+		</ui5-li-custom>
+	</ui5-list>
+
+	<ui5-input value="0" id="customListItemEvents"></ui5-input>
+	<br />
+	<br />
+	<ui5-button id="btnOpenPopup">Open popup with List</ui5-button>
+	<ui5-responsive-popover id="popup" placement="Bottom" class="list_test_page5auto">
+		<ui5-list>
+			<div slot="header">
+				<ui5-button id="btnInHeader" icon="refresh"></ui5-button>
+			</div>
+		</ui5-list>
+
+		<ui5-list class="list_test_page6auto" growing="Scroll" no-data-text="No data">
+			<ui5-li>Test</ui5-li>
+		</ui5-list>
+	</ui5-responsive-popover>
+
+	<ui5-list id="basicList">
+		<ui5-li>Laptop HP</ui5-li>
+		<ui5-li>Audio cabel</ui5-li>
+		<ui5-li>DVD set</ui5-li>
+	</ui5-list>
+
+	<ui5-list id="listWithAnchorTag">
+		<ui5-li>
+			<a id="linkInListItem" tabindex="-1" href="https://ui5.github.io/webcomponents/playground/components" rel="noopener" target="_self">
+				Link1</a>
+		</ui5-li>
+	</ui5-list>
+
+	<ui5-list id="listWithCustomItems">
+		<ui5-li-custom id="liCustomWithSelect">
+			<ui5-select id="selectInLiCustom">
+				<ui5-option icon="iphone">Phone</ui5-option>
+				<ui5-option icon="ipad">Tablet</ui5-option>
+				<ui5-option icon="laptop" selected>Desktop</ui5-option>
+			</ui5-select>
+		</ui5-li-custom>
+	</ui5-list>
+
+	<ui5-list id="highlight">
+		<ui5-li highlight="Negative">Laptop HP</ui5-li>
+		<ui5-li highlight="Information">laptop Lenovo</ui5-li>
+		<ui5-li highlight="Positive">IPhone 3</ui5-li>
+		<ui5-li highlight="Critical">DVD set</ui5-li>
+	</ui5-list>
+
+	<input id="customListItemSelectResult" value="0"/>
+
+	<script>
+		'use strict';
+
+		var itemDeleteCounter = 0;
+		var itemClickCounter = 0;
+		var itemClickCounter2 = 0;
+		var selectionChangeCounter = 0;
+		var selectionChangeCounter2 = 0;
+
+		function deleteItemHandler(e) {
+			document.querySelector("#lblResult").innerHTML = e.detail.item.innerHTML + ": " + ++itemDeleteCounter;
+		}
+
+		list1.addEventListener("ui5-item-delete", deleteItemHandler);
+
+		listEvents.addEventListener("ui5-item-click", function (event) {
+			itemClickCounter += 1;
+			itemClickResultField.value = `${itemClickCounter}`;
+		});
+
+		listEvents.addEventListener("ui5-selection-change", function (event) {
+			selectionChangeCounter += 1;
+			selectionChangeResultField.value = `${selectionChangeCounter}`;
+			selectionChangeResultFieldRadio.value = `${event.detail.selectionComponentPressed}`;
+		});
+
+		listEvents.addEventListener("ui5-selection-change", function(event) {
+			selectionChangeResultPreviousItemsParameter.value = event.detail.previouslySelectedItems[0].id;
+		})
+
+		listEvents2.addEventListener("ui5-item-click", function (event) {
+			itemClickCounter2 += 1;
+			itemClickResultField2.value = `${itemClickCounter2}`;
+		});
+
+		listEvents2.addEventListener("ui5-selection-change", function (event) {
+			selectionChangeCounter2 += 1;
+			selectionChangeResultField2.value = `${selectionChangeCounter2}`;
+		});
+
+
+		listMultiSel.addEventListener("ui5-selection-change", function(event) {
+			fieldMultiSelResult.value = event.detail.selectionComponentPressed;
+		})
+
+		btnTrigger.addEventListener("click", function(e) {
+			var scrollableContiner = infiniteScrollEx.shadowRoot.querySelector(".ui5-list-scroll-container");
+			scrollableContiner.scroll(0, scrollableContiner.scrollHeight);
+		});
+
+		changeEmptyItem.addEventListener("click", function(e) {
+			emptyItem.textContent = "updated";
+		});
+
+		listPreventClickEvent.addEventListener("ui5-item-click", function (event) {
+			event.preventDefault();
+			itemClickPreventedResultField.value = event.detail.item.id;
+		});
+
+		listPreventSelectionChangeSingleSelect.addEventListener("ui5-selection-change", function (event) {
+			event.preventDefault();
+		});
+
+		listPreventSelectionChangeMultiple.addEventListener("ui5-selection-change", function (event) {
+			event.preventDefault();
+		});
+
+		var loadMoreCounter = 0;
+		infiniteScrollEx.addEventListener("ui5-loadMore", function(e) {
+			for(var i = 0; i < 3; i++) {
+				var li = document.createElement("ui5-li");
+				li.textContent = "Title" + i;
+				infiniteScrollEx.appendChild(li);
+			}
+			loadMoreResult.value= ++loadMoreCounter;
+		});
+
+		infiniteScrollEx2.addEventListener("ui5-loadMore", function(e) {
+			for(var i = 0; i < 3; i++) {
+				var li = document.createElement("ui5-li");
+				li.textContent = "Title" + i;
+				infiniteScrollEx2.appendChild(li);
+			}
+			loadMoreResult.value= ++loadMoreCounter;
+		});
+
+		detailListItem.addEventListener("ui5-detail-click", function(e) {
+			detailPressCounter.innerHTML = parseInt(detailPressCounter.innerHTML) + 1;
+		});
+
+		var ui5List = document.getElementById("customList"),
+			liBtn1 = document.getElementById("liBtn1"),
+			customListItemEventsValue = 0,
+			customListItemEventsInput = document.getElementById("customListItemEvents");
+
+		ui5List.addEventListener("ui5-item-click", function(event) {
+			customListItemEventsInput.value = `${++customListItemEventsValue}`;
+		});
+
+		btnOpenPopup.addEventListener("click", function() {
+			popup.opener = btnOpenPopup;
+			popup.open = true;
+		});
+
+
+		var groiwngScrollTestCounter = 0;
+		growingScrollTest.addEventListener("ui5-loadMore", function(e) {
+			growingScrollTestCounter.value= ++groiwngScrollTestCounter;
+		});
+
+		listWithCustomItems.addEventListener("ui5-item-close", function(e) {
+			customListItemSelectResult.value = `${++customListItemSelectResult.value}`;
+		});
+
+	</script>
+
+	<ui5-list growing="Scroll">
+		<ui5-li-group header-text="New Items">
+			<ui5-li icon="navigation-right-arrow" additional-text="Available">Voluptate do eu cupidatat elit est culpa.</ui5-li>
+			<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131" additional-text-state="Negative">Laptop Lenovo</ui5-li>
+			<ui5-li id="listItem" icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131"  additional-text-state="Information">IPhone 3</ui5-li>
+		</ui5-li-group>
+		<ui5-li-group header-text="Discounted Items">
+			<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Required" additional-text-state="Negative">HP Monitor 24</ui5-li>
+			<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Available" additional-text-state="Positive">Audio cabel</ui5-li>
+			<ui5-li icon-end icon="navigation-right-arrow" additional-text="Required" additional-text-state="Critical">DVD set</ui5-li>
+		</ui5-li-group>
+	</ui5-list>
+
+	<script>
+		listItem.accessibilityAttributes = {
+			ariaSetsize: 200,
+			ariaPosinset: 3,
+		};
+	</script>
+
+	<ui5-list id="effectiveTabindexChange">
+		<ui5-li-custom>
+			<button>Inner Element</button>
+		</ui5-li-custom>
+		<ui5-li-custom id="country11">
+			<button>Inner Element</button>
+		</ui5-li-custom>
+		<!-- Other list items here -->
+	</ui5-list>
+	<div id="tabIndexChangeResult"></div>
+</body>
+</html>

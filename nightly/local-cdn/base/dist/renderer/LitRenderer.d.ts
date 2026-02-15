@@ -1,0 +1,14 @@
+import type { TemplateResult } from "lit-html";
+import type { Renderer } from "../UI5Element.js";
+declare const effectiveHtml: (strings: TemplateStringsArray, ...values: Array<unknown>) => TemplateResult;
+declare const effectiveSvg: (strings: TemplateStringsArray, ...values: Array<unknown>) => TemplateResult;
+declare const litRender: Renderer;
+declare const scopeTag: (tag: string, tags: Array<string>, suffix: string) => object | undefined;
+export { effectiveHtml as html, effectiveSvg as svg, };
+export { scopeTag };
+export { repeat } from "lit-html/directives/repeat.js";
+export { classMap } from "lit-html/directives/class-map.js";
+export { styleMap } from "./directives/style-map.js";
+export { ifDefined } from "lit-html/directives/if-defined.js";
+export { unsafeHTML } from "lit-html/directives/unsafe-html.js";
+export default litRender;

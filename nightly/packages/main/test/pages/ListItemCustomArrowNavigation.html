@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List Item Custom Arrow Navigation Test</title>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			overscroll-behavior: none;
+		}
+
+		body {
+			padding: 2rem;
+			font-family: "72", "72full", Arial, sans-serif;
+		}
+
+		.instructions {
+			padding: 1rem;
+			margin-bottom: 2rem;
+			border: 1px solid #ccc;
+			background: #f9f9f9;
+		}
+
+		.flex-box {
+			display: flex;
+			gap: 0.75rem;
+			align-items: center;
+		}
+
+		.list-example {
+			width: 30rem;
+			margin-bottom: 2rem;
+		}
+
+		.section {
+			margin-bottom: 3rem;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<div class="instructions">
+		<h2>List Item Custom Arrow Navigation Test</h2>
+		<p><strong>Feature:</strong> Navigate between same-index focusable elements across list items.</p>
+
+		<p><strong>How to Test:</strong></p>
+		<ol>
+			<li>Use F7 to enter internal navigation mode (focus on first focusable element)</li>
+			<li>Press <strong>Arrow Down</strong> → should move to the same element position in the next item</li>
+			<li>Press <strong>Arrow Up</strong> → should move to the same element position in the previous item</li>
+			<li>If target item has fewer elements, focuses the last available element at that position</li>
+			<li>At boundaries (first/last item), arrow keys do nothing</li>
+		</ol>
+
+		<p><strong>Expected Behavior:</strong></p>
+		<ul>
+			<li>✅ Arrow navigation works across custom list items with focusable content</li>
+			<li>✅ Automatically skips standard list items (no focusable elements)</li>
+			<li>✅ Works across group boundaries (navigates into/out of groups)</li>
+			<li>✅ Maintains element index position across items</li>
+			<li>✅ Does nothing at list boundaries (first item + Up, last item + Down)</li>
+			<li>✅ Browser scroll works when navigation doesn't handle the key</li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h3>Example 1: Basic Column Navigation</h3>
+		<ui5-list class="list-example" header-text="Simple Custom Items">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link 1</ui5-link>
+					<ui5-button>Button 1</ui5-button>
+					<ui5-input placeholder="Input 1" style="width: 100px;"></ui5-input>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link 2</ui5-link>
+					<ui5-button>Button 2</ui5-button>
+					<ui5-input placeholder="Input 2" style="width: 100px;"></ui5-input>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link 3</ui5-link>
+					<ui5-button>Button 3</ui5-button>
+					<ui5-input placeholder="Input 3" style="width: 100px;"></ui5-input>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Focus Link 1 → Arrow Down → should focus Link 2 (same column)</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 2: Mixed Items (Skip Standard Items)</h3>
+		<ui5-list class="list-example" header-text="Mixed Custom and Standard">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Custom Link 1</ui5-link>
+					<ui5-button>Custom Button 1</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li>Standard Item 1 (no focusable content)</ui5-li>
+			<ui5-li>Standard Item 2 (no focusable content)</ui5-li>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Custom Link 2</ui5-link>
+					<ui5-button>Custom Button 2</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Custom Link 3</ui5-link>
+					<ui5-button>Custom Button 3</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Focus Custom Link 1 → Arrow Down → should skip standard items and focus Custom Link 2</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 3: Navigation Across Groups</h3>
+		<ui5-list class="list-example" header-text="Items with Groups">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Before Group</ui5-link>
+					<ui5-button>Button</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-group header-text="Group 1">
+				<ui5-li-custom>
+					<div class="flex-box">
+						<ui5-link>Group 1 Link 1</ui5-link>
+						<ui5-button>Group 1 Button 1</ui5-button>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="flex-box">
+						<ui5-link>Group 1 Link 2</ui5-link>
+						<ui5-button>Group 1 Button 2</ui5-button>
+					</div>
+				</ui5-li-custom>
+			</ui5-li-group>
+			<ui5-li-group header-text="Group 2">
+				<ui5-li-custom>
+					<div class="flex-box">
+						<ui5-link>Group 2 Link 1</ui5-link>
+						<ui5-button>Group 2 Button 1</ui5-button>
+					</div>
+				</ui5-li-custom>
+			</ui5-li-group>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>After Group</ui5-link>
+					<ui5-button>Button</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Arrow navigation should work seamlessly across group boundaries</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 4: Different Number of Elements</h3>
+		<ui5-list class="list-example" header-text="Varying Element Counts">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link A</ui5-link>
+					<ui5-button>Button A</ui5-button>
+					<ui5-input placeholder="Input A" style="width: 80px;"></ui5-input>
+					<ui5-button>Extra A</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link B</ui5-link>
+					<ui5-button>Button B</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Link C</ui5-link>
+					<ui5-button>Button C</ui5-button>
+					<ui5-input placeholder="Input C" style="width: 80px;"></ui5-input>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Focus "Extra A" (4th element) → Arrow Down → should focus "Button B" (last available element)</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 5: Boundary Conditions</h3>
+		<ui5-list class="list-example" header-text="Edge Cases">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>First Item Link</ui5-link>
+					<ui5-button>First Item Button</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Middle Item Link</ui5-link>
+					<ui5-button>Middle Item Button</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Last Item Link</ui5-link>
+					<ui5-button>Last Item Button</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Focus "First Item Link" → Arrow Up → should do nothing (at top boundary)</em></p>
+		<p><em>Test: Focus "Last Item Button" → Arrow Down → should do nothing (at bottom boundary)</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 6: Complex Real-World Scenario</h3>
+		<ui5-list class="list-example" header-text="Opportunity List">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Opportunity 1</ui5-link>
+					<ui5-label>Status: Open</ui5-label>
+					<ui5-button>Edit</ui5-button>
+					<ui5-button>Delete</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li>Standard separator</ui5-li>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Opportunity 2</ui5-link>
+					<ui5-label>Status: Closed</ui5-label>
+					<ui5-button>Edit</ui5-button>
+					<ui5-button>Delete</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-group header-text="Archived">
+				<ui5-li-custom>
+					<div class="flex-box">
+						<ui5-link>Opportunity 3</ui5-link>
+						<ui5-label>Status: Archived</ui5-label>
+						<ui5-button>Restore</ui5-button>
+					</div>
+				</ui5-li-custom>
+			</ui5-li-group>
+		</ui5-list>
+		<p><em>Test: Focus "Edit" button in Opportunity 1 → Arrow Down → should skip standard item and focus "Edit" in Opportunity 2</em></p>
+	</div>
+
+	<div class="section">
+		<h3>Example 7: Selection Modes</h3>
+		<div style="margin-bottom: 1rem;">
+			<ui5-label for="selection-mode">Selection Mode:</ui5-label>
+			<ui5-select id="selection-mode" style="margin-left: 0.5rem;">
+				<ui5-option>None</ui5-option>
+				<ui5-option>Single</ui5-option>
+				<ui5-option>SingleStart</ui5-option>
+				<ui5-option>SingleEnd</ui5-option>
+				<ui5-option selected>Multiple</ui5-option>
+				<ui5-option>Delete</ui5-option>
+			</ui5-select>
+		</div>
+		<ui5-list id="selection-list" class="list-example" header-text="Items with Selection" selection-mode="Multiple">
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Product A</ui5-link>
+					<ui5-label>Price: $100</ui5-label>
+					<ui5-button>View</ui5-button>
+					<ui5-button>Add to Cart</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Product B</ui5-link>
+					<ui5-label>Price: $200</ui5-label>
+					<ui5-button>View</ui5-button>
+					<ui5-button>Add to Cart</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="flex-box">
+					<ui5-link>Product C</ui5-link>
+					<ui5-label>Price: $150</ui5-label>
+					<ui5-button>View</ui5-button>
+					<ui5-button>Add to Cart</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<p><em>Test: Arrow navigation should work regardless of selection mode</em></p>
+		<p><em>Test: In Multiple mode, checkbox doesn't interfere with column navigation</em></p>
+		<p><em>Test: In Delete mode, delete button doesn't interfere with navigation</em></p>
+	</div>
+
+	<script>
+		const selectionModeSelect = document.getElementById('selection-mode');
+		const selectionList = document.getElementById('selection-list');
+
+		selectionModeSelect.addEventListener('change', function (e) {
+			const selectedMode = e.detail.selectedOption.textContent;
+			selectionList.setAttribute('selection-mode', selectedMode);
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+	<script>
+		function init() {
+			const dialog = document.createElement("ui5-dialog");
+			dialog.id = "dialogOpen";
+			dialog.headerText = "Dialog Header";
+			dialog.open = true;
+
+			const content = document.createElement("div");
+			content.innerHTML = "<button>button</button>";
+			dialog.appendChild(content);
+
+			document.body.appendChild(dialog);
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body onload="init()">
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>UI5 Range Slider</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/RangeSlider-BeG9WnSL.css">
+</head>
+
+	<body class="rangeslider1auto">
+		<section class="group">
+			<h2>Basic Range Slider</h2>
+			<ui5-range-slider id="basic-range-slider" accessible-name="Basic Range Slider" end-value="20"></ui5-range-slider>
+
+			<h2>Range Slider with custom min and max properties and tooltip</h2>
+			<ui5-range-slider id="basic-range-slider-with-tooltip" min="50" max="200" show-tooltip></ui5-range-slider>
+
+			<h2>Range Slider with small step and tooltip</h2>
+			<ui5-range-slider id="range-slider-small-step-tooltips" min="0" max="44" step="0.0001" start-value="2" end-value="12" show-tooltip></ui5-range-slider>
+
+			<h2>Range Slider with tickmarks</h2>
+			<ui5-range-slider id="range-slider-tickmarks" min="0" max="40" step="1" end-value="20" show-tickmarks></ui5-range-slider>
+
+			<h2>Disabled Range Slider</h2>
+			<ui5-range-slider id="disabled-range-slider" disabled min="0" max="30" step="0" start-value="3" end-value="13" show-tooltip></ui5-range-slider>
+
+			<h2 class="rangeslider2auto">Range Slider with steps, input tooltips, tickmarks and labels</h2>
+			<ui5-range-slider id="range-slider-tickmarks-labels" editable-tooltip min="0" max="44" step="2" start-value="2" end-value="12" show-tooltip label-interval="2" show-tickmarks class="rangeslider3auto"></ui5-range-slider>
+		</section>
+
+		<section class="group">
+			<h2>Event Testing Slider</h2>
+			<ui5-range-slider id="test-slider" min="0" max="10"  start-value="1" end-value="2"></ui5-range-slider>
+			<div>
+				<span>startValue in the change event: </span>
+				<span id="change-event-startValue"></span>
+			</div>
+			<div>
+				<span>endValue in the change event: </span>
+				<span id="change-event-endValue"></span>
+			</div>
+			<div>
+				<span>startValue in the input event: </span>
+				<span id="input-event-startValue"></span>
+			</div>
+			<div>
+				<span>endValue in the input event: </span>
+				<span id="input-event-endValue"></span>
+			</div>
+			<h2>Event Testing Result Slider</h2>
+			<ui5-range-slider id="test-result-slider" start-value="1" end-value="2"></ui5-range-slider>
+		</section>
+
+		<script>
+			const eventTargetSlider = document.getElementById("test-slider");
+			const eventResultSlider = document.getElementById("test-result-slider");
+			const inputTooltipSlider = document.getElementById("range-slider-tickmarks-labels");
+
+			eventTargetSlider.addEventListener("ui5-input", () => {
+				eventResultSlider.setAttribute("end-value", parseInt(eventResultSlider.getAttribute("end-value")) + 1);
+			});
+
+			eventTargetSlider.addEventListener("ui5-change", () => {
+				eventResultSlider.setAttribute("end-value", parseInt(eventResultSlider.getAttribute("end-value")) + 1);
+			});
+
+			eventTargetSlider.addEventListener("ui5-change", (e) => {
+				document.getElementById("change-event-startValue").innerText = e.target.startValue;
+				document.getElementById("change-event-endValue").innerText = e.target.endValue;
+			});
+
+			eventTargetSlider.addEventListener("ui5-input", (e) => {
+				document.getElementById("input-event-startValue").innerText = e.target.startValue;
+				document.getElementById("input-event-endValue").innerText = e.target.endValue;
+			});
+
+			inputTooltipSlider.addEventListener("ui5-input", () => {
+				eventResultSlider.setAttribute("end-value", parseInt(eventResultSlider.getAttribute("end-value")) + 1);
+			});
+
+			inputTooltipSlider.addEventListener("ui5-change", () => {
+				eventResultSlider.setAttribute("end-value", parseInt(eventResultSlider.getAttribute("end-value")) + 1);
+			});
+		</script>
+	</body>
+</html>

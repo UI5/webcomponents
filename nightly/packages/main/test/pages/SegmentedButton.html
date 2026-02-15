@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>ui5-segmented-button</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/SegmentedButton-Dy5wVW1q.css">
+</head>
+
+<body>
+	<header class="header">
+		<h1 class="header-title">ui5-segmented-button</h1>
+	</header>
+
+	<section class="main">
+		<div class="samples">
+			<h2>Segmentedbutton example</h2>
+			<ui5-button>Default button</ui5-button>
+			<br />
+			<br />
+			<ui5-segmented-button>
+				<ui5-segmented-button-item>First</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Second</ui5-segmented-button-item>
+			</ui5-segmented-button>
+			<br />
+			<br />
+			<ui5-segmented-button>
+				<ui5-segmented-button-item>First</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Second</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Third</ui5-segmented-button-item>
+			</ui5-segmented-button>
+			<br />
+			<br />
+			<ui5-segmented-button>
+				<ui5-segmented-button-item>First</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Second</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Third</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Fourth</ui5-segmented-button-item>
+			</ui5-segmented-button>
+			<br />
+			<br />
+			<ui5-segmented-button>
+				<ui5-segmented-button-item>First</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Second</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Third</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Fourth</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Fifth</ui5-segmented-button-item>
+			</ui5-segmented-button>
+			<br />
+			<br />
+			<ui5-segmented-button>
+				<ui5-segmented-button-item>First</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Second</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Third</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Fourth</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Fifth</ui5-segmented-button-item>
+				<ui5-segmented-button-item>Sixth</ui5-segmented-button-item>
+			</ui5-segmented-button>
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<div class="sample" id="main-sample">
+				<ui5-segmented-button id="segButtonSingle">
+					<ui5-segmented-button-item>Item</ui5-segmented-button-item>
+				</ui5-segmented-button>
+
+				<section>
+					<ui5-segmented-button id="segButton1">
+						<ui5-segmented-button-item tooltip="Employee" icon="employee" selected></ui5-segmented-button-item>
+						<ui5-segmented-button-item>SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item>Item</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>Example with 4 items</h1>
+
+					<ui5-segmented-button id="segButtonMulti" selection-mode="Multiple">
+						<ui5-segmented-button-item>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item>Click</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>Example with 5 items</h1>
+
+					<ui5-segmented-button id="segButton2">
+						<ui5-segmented-button-item selected>Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>A</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>Example with Icons and custom width</h1>
+
+					<ui5-segmented-button class="segmentedbutton1auto">
+						<ui5-segmented-button-item icon="employee"></ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="menu" selected></ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="factory"></ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>SegmentedButton with 100% width</h1>
+
+					<ui5-segmented-button class="segmentedbutton2auto">
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item>SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item>SegmentedButtonItem</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>SegmentedButton wrapped in a container with set width</h1>
+					<div class="segmentedbutton1auto">
+						<ui5-segmented-button class="segmentedbutton2auto">
+							<ui5-segmented-button-item icon="employee" selected></ui5-segmented-button-item>
+							<ui5-segmented-button-item icon="menu"></ui5-segmented-button-item>
+							<ui5-segmented-button-item icon="accept"></ui5-segmented-button-item>
+						</ui5-segmented-button>
+					</div>
+				</section>
+
+				<section>
+					<h1>SegmentedButton with itemsFitContent property</h1>
+
+					<ui5-segmented-button items-fit-content  selection-mode="Multiple">
+						<ui5-segmented-button-item icon="employee" selected></ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Word Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>A</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>SegmentedButton with itemsFitContent property - LONG TEXT</h1>
+
+					<ui5-segmented-button items-fit-content  selection-mode="Multiple">
+						<ui5-segmented-button-item selected>Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem With Bigger Text selected SegmentedButtonItem With Bigger Text selected SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>A</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>SegmentedButton with itemsFitContent property with set width</h1>
+
+					<ui5-segmented-button items-fit-content  selection-mode="Multiple" class="segmentedbutton2auto">
+						<ui5-segmented-button-item icon="employee" selected></ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>A</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+				<section>
+					<h1>SegmentedButton with itemsFitContent property with set width (truncation)</h1>
+
+					<ui5-segmented-button items-fit-content  selection-mode="Multiple" class="segmentedbutton1auto">
+						<ui5-segmented-button-item selected>Word</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>Item</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>selected SegmentedButtonItem</ui5-segmented-button-item>
+						<ui5-segmented-button-item selected>A</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+
+
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h3>Initial focus test</h3>
+		<p>the focus should go to the first item</p>
+		<ui5-button id="button1">Press</ui5-button>
+		<ui5-segmented-button id="testSB1">
+			<ui5-segmented-button-item id="testSB1ToggleBtn" icon="employee"></ui5-segmented-button-item>
+			<ui5-segmented-button-item disabled icon="menu"></ui5-segmented-button-item>
+			<ui5-segmented-button-item disabled icon="accept"></ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<ui5-button id="button2">Press</ui5-button>
+		<ui5-segmented-button id="testSB2">
+			<ui5-segmented-button-item icon="employee">1</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="testSB2ToggleBtn" icon="menu" selected>2</ui5-segmented-button-item>
+			<ui5-segmented-button-item icon="accept"></ui5-segmented-button-item>
+		</ui5-segmented-button>
+	</section>
+
+	<section>
+		<h3>Programatical change test</h3>
+		<ui5-segmented-button id="segButtonProg">
+			<ui5-segmented-button-item id="sbpItem1" selected>First</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="sbpItem2">Second</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="sbpItem3">Third</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<ui5-button id="progSetButton1">Press second item</ui5-button>
+		<ui5-button id="progSetButton2">Press multiple items</ui5-button>
+		<ui5-button id="progSetButton3">Press selected item</ui5-button>
+		<ui5-button id="progSetButton4">Press first item</ui5-button>
+	</section>
+
+	<section>
+		<h3>Accessibility</h3>
+		<ui5-segmented-button>
+			<ui5-segmented-button-item  id="accBtn1" accessible-name="accessible text">First</ui5-segmented-button-item>
+			<ui5-segmented-button-item  id="accBtn2" accessible-name-ref="accRefText">Second</ui5-segmented-button-item>
+			<ui5-segmented-button-item>Third</ui5-segmented-button-item>
+		</ui5-segmented-button>
+
+		<span id="accRefText">accessible ref text</span>
+	</section>
+
+	<script>
+
+		progSetButton1.addEventListener("click", function() {
+			segButtonProg.items[1].selected = true;
+		});
+
+		progSetButton2.addEventListener("click", function() {
+			segButtonProg.items[0].selected = true;
+			segButtonProg.items[2].selected = true;
+		});
+
+		progSetButton3.addEventListener("click", function() {
+			segButtonProg.selectedItems[0].selected = true;
+			segButtonProg.selected = true;
+		});
+
+		progSetButton4.addEventListener("click", function() {
+			segButtonProg.items[0].selected = true;
+		});
+
+	</script>
+
+</body>
+</html>

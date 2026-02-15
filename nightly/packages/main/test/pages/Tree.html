@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>ui5-tree</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Tree-CgWbrEXB.css">
+</head>
+
+<body class="tree1auto">
+
+	<ui5-segmented-button id="density">
+		<ui5-toggle-button pressed>Cozy</ui5-toggle-button>
+		<ui5-toggle-button>Compact</ui5-toggle-button>
+	</ui5-segmented-button>
+
+	<br><br>
+	<ui5-tree id="tree" no-data-text="No data" selection-mode="Multiple" accessible-name="Tree with accessibleName">
+		<div slot="header" class="hdr">
+			<ui5-title>My tree</ui5-title>
+			<div class="spacer"></div>
+			<ui5-select id="modeSelect">
+				<ui5-option>None</ui5-option>
+				<ui5-option>Single</ui5-option>
+				<ui5-option>SingleStart</ui5-option>
+				<ui5-option>SingleEnd</ui5-option>
+				<ui5-option selected>Multiple</ui5-option>
+
+				<ui5-option>Delete</ui5-option>
+			</ui5-select>
+			<ui5-button id="expandLevel1" icon="expand">Expand Level 1</ui5-button>
+			<ui5-button id="expandLevel2" icon="expand">Expand Level 2</ui5-button>
+			<ui5-button id="expandAll" icon="expand-all">Expand All</ui5-button>
+			<ui5-button id="collapseAll" icon="collapse-all">Collapse All</ui5-button>
+		</div>
+
+		<ui5-tree-item expanded text="Tree 1" icon="paste" additional-text="Available" indeterminate selected additional-text-state="Information" accessible-name="Tree item with accessibleName">
+			<ui5-title slot="content">
+				<ui5-label>Tree 1</ui5-label>
+				<ui5-label>Tree 1</ui5-label>
+			</ui5-title>
+
+			<ui5-tree-item expanded text="Tree 1.1" additional-text="Re-stock" additional-text-state="Negative" indeterminate selected>
+				<ui5-tree-item text="Tree 1.1.1" additional-text="Required" additional-text-state="Critical" selected></ui5-tree-item>
+				<ui5-tree-item text="Tree 1.1.2" additional-text="Available" additional-text-state="Positive"></ui5-tree-item>
+			</ui5-tree-item>
+		</ui5-tree-item>
+
+		<ui5-tree-item text="Tree 2" icon="copy">
+			<ui5-tree-item id="firstCollapsedItem" text="Tree 2.1">
+				<ui5-tree-item text="Tree 2.1.1"></ui5-tree-item>
+				<ui5-tree-item text="Tree 2.1.2">
+					<ui5-tree-item text="Tree 2.1.2.1"></ui5-tree-item>
+					<ui5-tree-item text="Tree 2.1.2.2"></ui5-tree-item>
+					<ui5-tree-item text="Tree 2.1.2.3"></ui5-tree-item>
+					<ui5-tree-item text="Tree 2.1.2.5"></ui5-tree-item>
+				</ui5-tree-item>
+			</ui5-tree-item>
+			<ui5-tree-item text="Tree 2.2"></ui5-tree-item>
+		</ui5-tree-item>
+
+		<ui5-tree-item expanded text="Tree 3 (no icon)">
+		</ui5-tree-item>
+
+	</ui5-tree>
+
+	<ui5-button id="btn">Add</ui5-button>
+	<ui5-tree>
+		<div slot="header">
+			<ui5-title>Add item on deeper level</ui5-title>
+		</div>
+		<ui5-tree-item text="1-0-0" expanded>
+			<ui5-tree-item id="treeItem" text="1-1-0" expanded>
+				<ui5-tree-item text="1-1-1"></ui5-tree-item>
+			</ui5-tree-item>
+			<ui5-tree-item text="1-2-0"></ui5-tree-item>
+			<ui5-tree-item text="1-3-0"></ui5-tree-item>
+		</ui5-tree-item>
+	</ui5-tree>
+	Mouseover counter
+	<ui5-input id="mouseover-counter" value="0"></ui5-input>
+	Mouseout counter
+	<ui5-input id="mouseout-counter" value="0"></ui5-input>
+
+	<br><br>
+
+	<ui5-busy-indicator id="busy" class="full-width">
+		<ui5-tree id="treeDynamic" class="full-width">
+			<div slot="header" class="hdr">
+				<ui5-title>Dynamic tree</ui5-title>
+			</div>
+
+			<ui5-tree-item text="Has preloaded children">
+				<ui5-tree-item text="Child 1"></ui5-tree-item>
+				<ui5-tree-item text="Child 2"></ui5-tree-item>
+			</ui5-tree-item>
+
+			<ui5-tree-item text="Has no children at all"></ui5-tree-item>
+
+			<ui5-tree-item id="dynamicNode" text="Has children, but not yet loaded" has-children></ui5-tree-item>
+		</ui5-tree>
+	</ui5-busy-indicator>
+
+	<br><br>
+
+	<ui5-label id="tree-label">Tree with accessibleNameRef</ui5-label>
+	<ui5-tree id="preventable-click-event" class="full-width" selection-mode="Multiple" accessible-name-ref="tree-label">
+		<div slot="header" class="hdr">
+			<ui5-title>Prevent item-click Events</ui5-title>
+		</div>
+		<ui5-tree-item expanded text="Tree 1" >
+			<ui5-tree-item text="Tree 1.1" ></ui5-tree-item>
+		</ui5-tree-item>
+	</ui5-tree>
+	Prevented events counter
+	<ui5-input id="prevented-counter" value="0"></ui5-input>
+
+	<ui5-tree id="treeIndeterminate" selection-mode="Multiple">
+		<div slot="header" class="hdr">
+			<ui5-title>Tree with indeterminate items</ui5-title>
+		</div>
+		<ui5-tree-item id="item1" text="Item 1" indeterminate selected></ui5-tree-item>
+		<ui5-tree-item id="item2" text="Item 2" indeterminate selected></ui5-tree-item>
+		<ui5-tree-item id="item3" text="Item 3"></ui5-tree-item>
+		<ui5-tree-item id="item4" text="Item 4" indeterminate selected></ui5-tree-item>
+	</ui5-tree>
+	<ui5-input id="selectionChangeTargetItemResult" placeholder="selectionChange targetItem result"></ui5-input>
+
+	<br><br>
+
+	<ui5-label id="tree-navigated items">Tree with navigated items</ui5-label>
+	<ui5-tree>
+		<ui5-tree-item type="Navigation" navigated text="Tree 1 - this item is already navigated" >
+			<ui5-tree-item navigated text="Tree 1.1" ></ui5-tree-item>
+		</ui5-tree-item>
+		<ui5-tree-item navigated text="Tree 2 - this item is already navigated" >
+			<ui5-tree-item navigated text="Tree 2.1" ></ui5-tree-item>
+		</ui5-tree-item>
+		<ui5-tree-item  text="Tree 3" >
+			<ui5-tree-item text="Tree 3.1" ></ui5-tree-item>
+		</ui5-tree-item>
+	</ui5-tree>
+
+	<ui5-tree selection-mode="Multiple">
+		<div slot="header" class="hdr">
+			<ui5-title>Tree with custom items</ui5-title>
+		</div>
+		<ui5-tree-item-custom
+			expanded="true"
+			show-toggle-button
+			hide-selection-element
+			type="Active"
+			level="1"
+		>
+			<ui5-button slot="content">Level 1</ui5-button>
+
+			<ui5-tree-item-custom
+				type="Active"
+				show-toggle-button
+				level="2"
+				expanded="true"
+			>
+				<ui5-select slot="content">
+					<ui5-option>Level 2</ui5-option>
+					<ui5-option>Option 2.1</ui5-option>
+					<ui5-option>Option 2.3</ui5-option>
+				</ui5-select>
+
+				<ui5-tree-item-custom
+					hide-selection-element
+					type="Active"
+					level="3"
+					class="item"
+				>
+					<ui5-button slot="content" class="itemBtn">Level 3</ui5-button>
+				</ui5-tree-item-custom>
+			</ui5-tree-item-custom>
+		</ui5-tree-item-custom>
+	</ui5-tree>
+
+	<ui5-tree selection-mode="Multiple" id="allItemsMultiple">
+		<ui5-tree-item text="Should have checkbox">
+			<ui5-tree-item text="Should have checkbox">
+				<ui5-tree-item
+					class="lastItem"
+					text="Should have checkbox"
+				></ui5-tree-item>
+				<ui5-tree-item text="Should have checkbox"></ui5-tree-item>
+			</ui5-tree-item>
+			<ui5-tree-item text="Should have checkbox"></ui5-tree-item>
+		</ui5-tree-item>
+	</ui5-tree>
+
+	<br><br>
+
+	<h2>With accessible description ref</h2>
+	<ui5-label id="description">Tree with accessible description ref</ui5-label>
+	<ui5-tree accessible-description-ref="description">
+		<ui5-tree-item text="Item 1"></ui5-tree-item>
+		<ui5-tree-item text="Item 2"></ui5-tree-item>
+		<ui5-tree-item text="Item 3"></ui5-tree-item>
+	</ui5-tree>
+
+	<br><br>
+	<h2>With accessible description</h2>
+	<ui5-tree accessible-description="This is a tree with accessible description">
+		<ui5-tree-item text="Item 1"></ui5-tree-item>
+		<ui5-tree-item text="Item 2"></ui5-tree-item>
+		<ui5-tree-item text="Item 3"></ui5-tree-item>
+	</ui5-tree>
+
+	<br><br>
+
+	<h2>API: image slot</h2>
+	<ui5-label id="description">Tree items with image slot used</ui5-label>
+	<ui5-tree accessible-description-ref="description">
+		<ui5-tree-item text="Icon inside image slot">
+			<ui5-icon slot="image" name="bell"> </ui5-icon>
+		</ui5-tree-item>
+		<ui5-tree-item text="Avatar inside image slot">
+			<ui5-avatar slot="image" size="XS" initials="BL"> </ui5-avatar>
+		</ui5-tree-item>
+		<ui5-tree-item text="Avatar and Icon inside image slot">
+			<ui5-avatar slot="image" size="XS" initials="BL"> </ui5-avatar>
+			<ui5-icon slot="image" name="bell"> </ui5-icon>
+		</ui5-tree-item>
+	</ui5-tree>
+
+	<script>
+		const mouseOverInput = document.getElementById("mouseover-counter");
+		const mouseOutInput = document.getElementById("mouseout-counter");
+
+		document.getElementById("density").addEventListener("ui5-selection-change", function(event) {
+			var selectedButton = event.detail.selectedButton;
+			if (selectedButton.textContent === "Compact") {
+				document.body.classList.add("sapUiSizeCompact");
+			} else {
+				document.body.classList.remove("sapUiSizeCompact");
+			}
+		});
+
+		document.getElementById("tree").addEventListener("ui5-item-mouseover", function(event) {
+			console.log("Item mouseover: ", event.detail.item);
+			mouseOverInput.value = `${parseInt(mouseOverInput.value) + 1}`;
+		});
+		document.getElementById("tree").addEventListener("ui5-item-mouseout", function(event) {
+			console.log("Item mouseout: ", event.detail.item);
+			mouseOutInput.value = `${parseInt(mouseOutInput.value) + 1}`;
+		});
+
+		document.getElementById("tree").addEventListener("ui5-item-click", function(event) {
+			console.log("Item clicked: ", event.detail.item);
+		});
+
+		document.getElementById("tree").addEventListener("ui5-item-toggle", function(event) {
+			console.log("Item toggled: ", event.detail.item);
+		});
+
+		document.getElementById("tree").addEventListener("ui5-item-delete", function(event) {
+			console.log("Item delete button pressed: ", event.detail.item);
+			var node = event.detail.item;
+			node.parentElement.removeChild(node);
+		});
+
+		document.getElementById("tree").addEventListener("ui5-selection-change", function(event) {
+			console.log("Selection changed from: ", event.detail.previouslySelectedItems, "to: ", event.detail.selectedItems);
+			console.log("Selection change target item is: ", event.detail.targetItem);
+		});
+
+		document.getElementById("modeSelect").addEventListener("ui5-change", function(event) {
+			var newMode = event.detail.selectedOption.textContent;
+			var tree = document.getElementById("tree");
+			tree.selectionMode = newMode;
+		});
+
+		document.getElementById("expandAll").addEventListener("click", function(event) {
+			var trees = Array.prototype.slice.call(document.getElementsByTagName("ui5-tree"));
+			var tree = document.getElementById("tree");
+			tree.walk(function(node) {
+				node.expanded = true;
+			});
+		});
+
+		document.getElementById("collapseAll").addEventListener("click", function(event) {
+			var tree = document.getElementById("tree");
+			tree.walk(function(node) {
+				node.expanded = false;
+			});
+		});
+
+		document.getElementById("expandLevel1").addEventListener("click", function(event) {
+			var tree = document.getElementById("tree");
+			tree.walk(function(node, level) {
+				node.expanded = (level === 1);
+			});
+		});
+
+		document.getElementById("expandLevel2").addEventListener("click", function(event) {
+			var tree = document.getElementById("tree");
+			tree.walk(function(node, level) {
+				node.expanded = (level <= 2);
+			});
+		});
+
+		var dynamicTree = document.getElementById("treeDynamic");
+		var busyIndicator = document.getElementById("busy");
+		dynamicTree.addEventListener("ui5-item-toggle", function(event) {
+			var item = event.detail.item; // get the node that is toggled
+
+			// Only for the dynamic node, only when it's empty
+			if (item.id === "dynamicNode" && item.children.length === 0) {
+				busyIndicator.active = true;
+				event.preventDefault(); // do not let the toggle button switch yet
+				setTimeout(function() {
+					var newItem = document.createElement("ui5-tree-item"); // Fetching from db....
+					newItem.text = "Node fetched from DB after 2 sec";
+					item.appendChild(newItem);
+					item.toggle(); // now manually switch
+					busyIndicator.active = false;
+				}, 2000);
+			}
+		});
+
+		var preventableClickTree = document.getElementById("preventable-click-event");
+		var preventedCounter = document.getElementById("prevented-counter");
+		preventableClickTree.addEventListener("ui5-item-click", function (event) {
+			event.preventDefault();
+			preventedCounter.value = `${parseInt(preventedCounter.value) + 1}`;
+		});
+
+		var indetereminateTree = document.getElementById("treeIndeterminate");
+		indetereminateTree.addEventListener("ui5-selection-change", function(event) {
+			selectionChangeTargetItemResult.value = event.detail.targetItem.id;
+		});
+
+		const btn = document.getElementById("btn");
+		const treeItem = document.getElementById("treeItem");
+
+		btn.addEventListener("click", () => {
+			const newTreeItem = document.createElement("ui5-tree-item");
+			newTreeItem.text = `1-1-${treeItem.querySelectorAll("[ui5-tree-item]").length + 1}`
+
+			treeItem.appendChild(newTreeItem);
+		})
+
+	</script>
+</body>
+
+</html>

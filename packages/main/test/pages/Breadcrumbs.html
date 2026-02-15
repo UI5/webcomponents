@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Breadcrumbs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Breadcrumbs-CF0YMxHf.css">
+</head>
+
+<body class="breadcrumbs1auto">
+
+	<ui5-toggle-button id="myBtn">turn lights</ui5-toggle-button>
+	<div class="breadcrumbs2auto"><label for="size">Resize last container: </label>
+		<div class="breadcrumbs3auto">
+
+			<ui5-button id="extendSizeBtn"
+			class="breadcrumbs4auto"
+			icon="slim-arrow-up" ></ui5-button>
+
+			<ui5-button id="shrinkSizeBtn"
+			class="breadcrumbs4auto"
+			icon="slim-arrow-down"></ui5-button>
+		</div>
+
+	</div>
+	<div class="breadcrumbs2auto">
+		<label for="size">Resize last link: </label>
+		<div class="breadcrumbs5auto">
+
+			<ui5-button id="extendLinkTextBtn"
+			class="breadcrumbs4auto"
+			icon="slim-arrow-up"></ui5-button>
+
+			<ui5-button id="shortenLinkTextBtn"
+			class="breadcrumbs4auto"
+			icon="slim-arrow-down"></ui5-button>
+		</div>
+	</div>
+
+	<h2>Breadcrumbs with current location</h2>
+
+	<ui5-breadcrumbs id="breadcrumbs2">
+		<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Location</ui5-breadcrumbs-item>
+	</ui5-breadcrumbs>
+
+	<h2>Breadcrumbs with no current location</h2>
+
+	<ui5-breadcrumbs id="breadcrumbs3" design="NoCurrentPage">
+		<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+	</ui5-breadcrumbs>
+
+	<h2>Breadcrumbs with specific separators</h2>
+	<ui5-select id="selectSeparator">
+		<ui5-option>Slash</ui5-option>
+		<ui5-option>BackSlash</ui5-option>
+		<ui5-option>DoubleBackSlash</ui5-option>
+		<ui5-option>DoubleGreaterThan</ui5-option>
+		<ui5-option>DoubleSlash</ui5-option>
+		<ui5-option>GreaterThan</ui5-option>
+	</ui5-select>
+	<div class="breadcrumbs7auto">
+		<ui5-breadcrumbs id="breadcrumbs4">
+			<ui5-breadcrumbs-item href="#">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Location</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<div class="breadcrumbs8auto">
+
+		<h2>Breadcrumb items with accessible name</h2>
+
+		<ui5-breadcrumbs id="breadcrumbsWithAccName" design="NoCurrentPage">
+			<ui5-breadcrumbs-item href="#" id="firstItemWithACCName" accessible-name="first link acc name">
+				Link1
+			</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#" id="lastItemWithACCName" accessible-name="last link acc name">
+				Link5
+			</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<div id="wrapper" class="breadcrumbs9auto">
+
+		<h2>Breadcrumbs with overflowing links</h2>
+
+		<ui5-breadcrumbs id="breadcrumbs1">
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item id="item7" href="#">aaaa</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>Location</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<div class="breadcrumbs9auto">
+
+		<h2>Breadcrumbs with links and preventDefault</h2>
+
+		<ui5-breadcrumbs id="breadcrumbsPreventDefault" separator-class="Slash">
+			<ui5-breadcrumbs-item href="#shouldnotbehere">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="..">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#shouldnotbehere">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#shouldnotbehere">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>Location</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<div class="breadcrumbs9auto">
+		<h2>Empty Breadcrumbs</h2>
+		<ui5-breadcrumbs></ui5-breadcrumbs>
+	</div>
+
+	<div class="breadcrumbs9auto">
+		<h2>Empty Breadcrumbs with Location only</h2>
+		<ui5-breadcrumbs id="breadcrumbsWithSingleItem">
+			<ui5-breadcrumbs-item href="#someHref">Location</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	Last pressed link: <span id="result"></span>
+
+	<h2>Breadcrumbs with hardcoded width</h2>
+
+	<ui5-breadcrumbs id="breadcrumbsWithStyleWidth">
+		<ui5-breadcrumbs-item>(all)</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item>Bourgogne-Franche-Comté</ui5-breadcrumbs-item>
+	</ui5-breadcrumbs>
+
+	<h2>Breadcrumbs with hardcoded width: 900px with all links fit</h2>
+	<div style="width: 900px;"></div>
+		<ui5-breadcrumbs>
+			<ui5-breadcrumbs-item href="#">Link1</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>Link2</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<h2>Breadcrumbs with hardcoded width: 300px and long current location</h2>
+	<div style="width: 300px;">
+		<ui5-breadcrumbs design="Standard">
+			<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>This is a very long current location text that should be truncated</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<h2>Breadcrumbs with hardcoded width: 300px and design="NoCurrentPage"</h2>
+	<div style="width: 300px;">
+		<ui5-breadcrumbs design="NoCurrentPage">
+			<ui5-breadcrumbs-item href="https://www.sap.com">Link1 </ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Link2</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+			<ui5-breadcrumbs-item>This is a very long current location text that should be truncated</ui5-breadcrumbs-item>
+		</ui5-breadcrumbs>
+	</div>
+
+	<script>
+		// HCB button
+		var btn = document.getElementById('myBtn');
+		btn.addEventListener("click", function(event) {
+			var hcb = event.target.pressed;
+			var styles = hcb ? "background:#333;color:palegoldenrod;" : "background:#fff;color:#333;";
+			var theme = hcb ? "sap_horizon_hcb" : "sap_horizon";
+
+			document.body.setAttribute("style", styles);
+			var Conf = window["sap-ui-webcomponents-bundle"].configuration;
+			Conf.setTheme(theme);
+		});
+
+		// log events
+		breadcrumbs1.addEventListener("ui5-item-click", (event) => {result.innerText = event.detail.item.innerText});
+
+		var breadcrumbsPreventDefault = document.querySelector("#breadcrumbsPreventDefault");
+		breadcrumbsPreventDefault.addEventListener("ui5-item-click", (event) => {
+			let keyText ='';
+
+			if(event.detail.ctrlKey) {
+				keyText += 'CTRL:';
+			}
+			if(event.detail.altKey) {
+				keyText += 'ALT:';
+			}
+			if(event.detail.shiftKey) {
+				keyText += 'SHIFT:';
+			}
+			if(event.detail.metaKey) {
+				keyText += 'META:';
+			}
+			event.preventDefault();
+			result.innerText = keyText + event.detail.item.innerText;
+		});
+
+		extendSizeBtn.addEventListener("click", () => resizeContainer(true));
+		shrinkSizeBtn.addEventListener("click", () => resizeContainer());
+
+		extendLinkTextBtn.addEventListener("click", () => updateLinkContent(true));
+		shortenLinkTextBtn.addEventListener("click", () => updateLinkContent());
+
+		// resize breadcrumbs container
+		function resizeContainer(extendSize) {
+			let wrapperWidth = wrapper.clientWidth,
+				step = 50,
+				amount = extendSize ?  step: -step,
+				newWidth = Math.max(wrapperWidth + amount, 0);
+				wrapper.style.width = newWidth + "px";
+		}
+
+		// cause resize of the breadcrumbs last link
+		function updateLinkContent(extendSize) {
+			let link = item7,
+				step = 5,
+				content = link.innerText,
+				newContent;
+
+			if (extendSize) {
+				newContent = content + new Array(step + 1).join( "a" );
+			} else {
+				newContent = content.substring(step);
+			}
+
+			link.innerText = newContent;
+		}
+
+		selectSeparator.addEventListener("ui5-change", function(e) {
+			let separator = e.detail.selectedOption.textContent;
+			breadcrumbs4.setAttribute("separators", separator);
+		});
+
+	</script>
+
+</body>
+
+</html>

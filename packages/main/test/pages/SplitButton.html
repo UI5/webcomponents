@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>ui5-split-button</title>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/SplitButton-Db4NijzG.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor);">
+	<header class="header">
+		<h3 class="header-title">Wrapped Split Buttons</h3>
+	</header>
+
+	<div style="border: 1px solid red; display: inline-block; width: 80px; height: 70px">
+		<ui5-split-button style="width: 100%;" icon="picture">Random Text</ui5-split-button>
+	</div>
+
+	<div style="border: 1px solid red; display: inline-block; width: 80px">
+		<ui5-split-button style="width: 100%" icon="picture">Random Text</ui5-split-button>
+	</div>
+
+	<div style="border: 1px solid red; display: inline-block; width: 120px">
+		<ui5-split-button style="width: 100%" icon="picture">Random Text</ui5-split-button>
+	</div>
+
+	<div style="border: 1px solid red; display: inline-block; width: 160px">
+		<ui5-split-button style="width: 100%" icon="picture">Random Text</ui5-split-button>
+	</div>
+
+	<header class="header">
+		<h3 class="header-title">Button Types</h3>
+	</header>
+	<div class="samples-margin">
+		<ui5-split-button id="sbDefault" design="Default">Default</ui5-split-button>
+		<ui5-split-button id="sbEmphasized" design="Emphasized">Emphasized</ui5-split-button>
+		<ui5-split-button id="sbPositive" design="Positive">Positive</ui5-split-button>
+		<ui5-split-button id="sbNegative" design="Negative">Negative</ui5-split-button>
+		<ui5-split-button id="sbAttention" design="Attention">Attention</ui5-split-button>
+		<ui5-split-button id="sbTransparent" design="Transparent">Transparent</ui5-split-button>
+	</div>
+
+	<header class="header">
+		<h3 class="header-title">Disabled Buttons</h3>
+	</header>
+	<div class="samples-margin">
+		<ui5-split-button id="sbDisabled" design="Default" disabled>Default</ui5-split-button>
+		<ui5-split-button design="Emphasized" disabled>Emphasized</ui5-split-button>
+		<ui5-split-button design="Positive" disabled>Positive</ui5-split-button>
+		<ui5-split-button design="Negative" disabled>Negative</ui5-split-button>
+		<ui5-split-button design="Attention" disabled>Attention</ui5-split-button>
+		<ui5-split-button design="Transparent" disabled>Transparent</ui5-split-button>
+	</div>
+
+	<header class="header">
+		<h3 class="header-title">Icons</h3>
+	</header>
+	<div class="samples-margin">
+		<ui5-split-button id="sbTextIcon" icon="add">Icon</ui5-split-button>
+		<ui5-split-button icon="text-color"></ui5-split-button>
+	</div>
+
+	<header class="header">
+		<h3 class="header-title">Event Display</h3>
+	</header>
+	<div class="samples-margin">
+		<ui5-input id="displayEvent" style="width: 100px"></ui5-input> on <ui5-input id="displayElement" style="width: 100px"></ui5-input>
+	</div>
+
+	<header class="header">
+		<h3 class="header-title">Text Direction</h3>
+	</header>
+	<div class="samples-margin">
+		<ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
+	</div>
+
+	<h3>Test textContent</h3>
+	<ui5-split-button id="emptySpBtn" design="Default"></ui5-split-button>
+	<ui5-split-button id="defaultSpBtn" design="Default">Default</ui5-split-button>
+
+	<ui5-split-button id="splitBtnWithMenuDefaultActionDefaultAction" style="width:300px">openMenu</ui5-split-button>
+	<ui5-menu id="menu">
+		<ui5-menu-item text="New File" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Folder with very long title for a menu item" additional-text="Ctrl+F" icon="add-folder" disabled></ui5-menu-item>
+		<ui5-menu-item text="Open" icon="open-folder" starts-section="">
+			<ui5-menu-item text="Open Locally" icon="open-folder"></ui5-menu-item>
+			<ui5-menu-item text="Open from Cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-split-button id="splitBtnWithMenuWithAssociatedLastAction" design="Default">openMenu</ui5-split-button>
+	<ui5-menu id="menuInSplitBtnAssociatedLastAction">
+		<ui5-menu-item text="Edit" icon="add"></ui5-menu-item>
+		<ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+		<ui5-menu-item text="Delete" icon="delete"></ui5-menu-item>
+	</ui5-menu>
+
+	<h3>Split Buttons with fixed width</h3>
+	<ui5-split-button icon="add" style="width:300px">Fixed width</ui5-split-button>
+	<ui5-split-button style="width:300px">Fixed width</ui5-split-button>
+	<ui5-split-button icon="add" style="width:300px"></ui5-split-button>
+</body>
+<script>
+	const splitBtn = document.getElementById("splitBtnWithMenuDefaultActionDefaultAction");
+	const menu = document.getElementById("menu");
+
+	splitBtn.addEventListener("ui5-arrow-click", function() {
+		menu.opener = splitBtn;
+		menu.open = !menu.open;
+		splitBtn.activeArrowButton = !splitBtn.activeArrowButton;
+	});
+
+	menu.addEventListener("close", function() {
+		splitBtn.activeArrowButton = false;
+	});
+
+	var displayEvent = document.getElementById("displayEvent"),
+		displayElement = document.getElementById("displayElement"),
+		directionSwitch =  document.getElementById("direction");
+
+	document.querySelectorAll("ui5-split-button").forEach(function(item) {
+		item.addEventListener("ui5-click", displayEventDetails);
+		item.addEventListener("ui5-arrow-click", displayEventDetails);
+	});
+
+
+	splitBtnWithMenuWithAssociatedLastAction.addEventListener("ui5-arrow-click", function() {
+		menuInSplitBtnAssociatedLastAction.opener = splitBtnWithMenuWithAssociatedLastAction;
+		menuInSplitBtnAssociatedLastAction.menuInSplitBtnAssociatedLastAction = !menu.open;
+	})
+
+	menuInSplitBtnAssociatedLastAction.addEventListener("ui5-item-click", function(event) {
+		splitBtnWithMenuWithAssociatedLastAction.innerText = event.detail.text;
+	});
+
+	direction.addEventListener("ui5-change", function() {
+		document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
+		window["sap-ui-webcomponents-bundle"].applyDirection();
+	});
+
+	function displayEventDetails(event) {
+		displayEvent.value = event.type;
+		displayElement.value = event.target.textContent;
+		setTimeout(function() {
+			displayEvent.value = "";
+			displayElement.value = "";
+		}, 1000);
+	}
+</script>
+</html>

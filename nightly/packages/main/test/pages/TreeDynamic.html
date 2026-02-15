@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>ui5-tree</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Tree-CgWbrEXB.css">
+</head>
+
+<body class="tree1auto">
+
+	<ui5-tree id="tree" selection-mode="Multiple">
+		<ui5-tree-item text="Tree 2" id="item" has-children></ui5-tree-item>
+	</ui5-tree>
+
+	<script>
+		const tree = document.getElementById("tree");
+
+		const template = `<ui5-tree-item text="Tree 2.1">
+  <ui5-tree-item text="Tree 2.1.1"></ui5-tree-item>
+  <ui5-tree-item text="Tree 2.1.2">
+    <ui5-tree-item text="Tree 2.1.2.1"></ui5-tree-item>
+    <ui5-tree-item text="Tree 2.1.2.2"></ui5-tree-item>
+    <ui5-tree-item text="Tree 2.1.2.3"></ui5-tree-item>
+    <ui5-tree-item text="Tree 2.1.2.5"></ui5-tree-item>
+  </ui5-tree-item>
+</ui5-tree-item>
+<ui5-tree-item text="Tree 2.2"></ui5-tree-item>`;
+
+		tree.addEventListener("item-toggle", (e) => {
+			if (e.detail.item.getAttribute("text") === "Tree 2") {
+				e.detail.item.innerHTML = template;
+			}
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Wizard</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_fiori_3",
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Wizard-NakQESOL.css">
+</head>
+
+<body class="wizard1auto">
+	<h2>Wizard</h2>
+	<ui5-wizard id="wiz" class="wizard2auto">
+		<ui5-wizard-step title-text="Product type" icon="sap-icon://product" disabled>
+			<div class="wizard3auto">
+				<ui5-title>1. Product Type</ui5-title><br>
+
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+				</ui5-label>
+				<ui5-button id="btnOpenDialog" class="wizard4auto">Open Wizard Dialog</ui5-button>
+			</div>
+
+			<ui5-button id="toStep2" design="Emphasized">Step 2</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Product Information" subtitle-text="(Optional)" disabled>
+			<div class="wizard5auto">
+				<ui5-title>2. Product Information</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Name</ui5-label>
+						<ui5-input placeholder="product name..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Weight</ui5-label>
+						<ui5-input value="3.65"></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Manifacturer</ui5-label>
+						<ui5-select>
+							<ui5-option selected>Apple</ui5-option>
+							<ui5-option>Samsung</ui5-option>
+							<ui5-option>Huawei</ui5-option>
+						</ui5-select>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>5 years guarantee included</ui5-label>
+						<ui5-switch id="sw"></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button id="toStep3" design="Emphasized" hidden>Step 3</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Options" disabled>
+			<div class="wizard6auto">
+				<ui5-title>3. Options</ui5-title><br>
+
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Manifacture date</ui5-label>
+						<ui5-date-picker></ui5-date-picker>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Availability</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+							<ui5-toggle-button>In depot</ui5-toggle-button>
+							<ui5-toggle-button>Damaged</ui5-toggle-button>
+							<ui5-toggle-button>Out of stock</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Size</ui5-label>
+						<ui5-segmented-button id="sb">
+							<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+							<ui5-toggle-button>Medium</ui5-toggle-button>
+							<ui5-toggle-button>Large</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button id="toStep4" design="Emphasized" hidden>Step 4</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Pricing" selected>
+			<div class="wizard6auto">
+				<ui5-title>4. Pricing</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Price</ui5-label>
+						<ui5-input placeholder="product price..."></ui5-input>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Quantity</ui5-label>
+						<ui5-input placeholder="product quantity..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Vat included</ui5-label>
+						<ui5-switch checked></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button id="finalize" design="Emphasized">Finalize</ui5-button>
+		</ui5-wizard-step>
+	</ui5-wizard>
+
+	<h2>Wizard non-standard</h2>
+	<ui5-wizard class="wizard2auto">
+		<ui5-wizard-step title-text="Product type" icon="sap-icon://product" selected>
+			<div class="wizard3auto">
+				<ui5-title>1. Product Type</ui5-title><br>
+
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+				</ui5-label>
+				<ui5-button class="wizard4auto">Open Wizard Dialog</ui5-button>
+			</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Product Information" subtitle-text="(Optional)" disabled>
+			<div class="wizard5auto">
+				<ui5-title>2. Product Information</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Name</ui5-label>
+						<ui5-input placeholder="product name..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Weight</ui5-label>
+						<ui5-input value="3.65"></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Manifacturer</ui5-label>
+						<ui5-select>
+							<ui5-option selected>Apple</ui5-option>
+							<ui5-option>Samsung</ui5-option>
+							<ui5-option>Huawei</ui5-option>
+						</ui5-select>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>5 years guarantee included</ui5-label>
+						<ui5-switch></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Options" selected>
+			<div class="wizard6auto">
+				<ui5-title>3. Options</ui5-title><br>
+
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Manifacture date</ui5-label>
+						<ui5-date-picker></ui5-date-picker>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Availability</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+							<ui5-toggle-button>In depot</ui5-toggle-button>
+							<ui5-toggle-button>Damaged</ui5-toggle-button>
+							<ui5-toggle-button>Out of stock</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Size</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+							<ui5-toggle-button>Medium</ui5-toggle-button>
+							<ui5-toggle-button>Large</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button design="Emphasized" hidden>Step 4</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Pricing" disabled>
+			<div class="wizard6auto">
+				<ui5-title>4. Pricing</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Price</ui5-label>
+						<ui5-input placeholder="product price..."></ui5-input>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Quantity</ui5-label>
+						<ui5-input placeholder="product quantity..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Vat included</ui5-label>
+						<ui5-switch checked></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Final" selected disabled>
+			<div class="wizard6auto">
+				<ui5-title>5. Final</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Price</ui5-label>
+						<ui5-input placeholder="product price..."></ui5-input>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Quantity</ui5-label>
+						<ui5-input placeholder="product quantity..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Vat included</ui5-label>
+						<ui5-switch checked></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+		</ui5-wizard-step>
+	</ui5-wizard>
+
+	<h2>Wizard non-standard 2</h2>
+	<ui5-wizard class="wizard2auto">
+		<ui5-wizard-step title-text="Product type" icon="sap-icon://product" selected disabled>
+			<div class="wizard3auto">
+				<ui5-title>1. Product Type</ui5-title><br>
+
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+				</ui5-label>
+				<ui5-button class="wizard4auto">Open Wizard Dialog</ui5-button>
+			</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Product Information" subtitle-text="(Optional)" selected disabled>
+			<div class="wizard5auto">
+				<ui5-title>2. Product Information</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Name</ui5-label>
+						<ui5-input placeholder="product name..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Weight</ui5-label>
+						<ui5-input value="3.65"></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Manifacturer</ui5-label>
+						<ui5-select>
+							<ui5-option selected>Apple</ui5-option>
+							<ui5-option>Samsung</ui5-option>
+							<ui5-option>Huawei</ui5-option>
+						</ui5-select>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>5 years guarantee included</ui5-label>
+						<ui5-switch></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button design="Emphasized" hidden>Step 3</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Options" selected>
+			<div class="wizard6auto">
+				<ui5-title>3. Options</ui5-title><br>
+
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Manifacture date</ui5-label>
+						<ui5-date-picker></ui5-date-picker>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Availability</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+							<ui5-toggle-button>In depot</ui5-toggle-button>
+							<ui5-toggle-button>Damaged</ui5-toggle-button>
+							<ui5-toggle-button>Out of stock</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Size</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+							<ui5-toggle-button>Medium</ui5-toggle-button>
+							<ui5-toggle-button>Large</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button design="Emphasized" hidden>Step 4</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Pricing" selected disabled>
+			<div class="wizard6auto">
+				<ui5-title>4. Pricing</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Price</ui5-label>
+						<ui5-input placeholder="product price..."></ui5-input>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Quantity</ui5-label>
+						<ui5-input placeholder="product quantity..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Vat included</ui5-label>
+						<ui5-switch checked></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+		</ui5-wizard-step>
+	</ui5-wizard>
+
+	<h2>Wizard non-standard 3</h2>
+	<ui5-wizard class="wizard2auto">
+		<ui5-wizard-step title-text="Product type" icon="sap-icon://product" selected disabled>
+			<div class="wizard3auto">
+				<ui5-title>1. Product Type</ui5-title><br>
+
+				<ui5-message-strip>
+					The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+				</ui5-message-strip><br>
+
+				<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+				</ui5-label>
+			</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Product Information" subtitle-text="(Optional)" selected>
+			<div class="wizard5auto">
+				<ui5-title>2. Product Information</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Name</ui5-label>
+						<ui5-input placeholder="product name..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Weight</ui5-label>
+						<ui5-input value="3.65"></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Manifacturer</ui5-label>
+						<ui5-select>
+							<ui5-option selected>Apple</ui5-option>
+							<ui5-option>Samsung</ui5-option>
+							<ui5-option>Huawei</ui5-option>
+						</ui5-select>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>5 years guarantee included</ui5-label>
+						<ui5-switch></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button design="Emphasized" hidden>Step 3</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Options" selected disabled>
+			<div class="wizard6auto">
+				<ui5-title>3. Options</ui5-title><br>
+
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Manifacture date</ui5-label>
+						<ui5-date-picker></ui5-date-picker>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Availability</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+							<ui5-toggle-button>In depot</ui5-toggle-button>
+							<ui5-toggle-button>Damaged</ui5-toggle-button>
+							<ui5-toggle-button>Out of stock</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Size</ui5-label>
+						<ui5-segmented-button>
+							<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+							<ui5-toggle-button>Medium</ui5-toggle-button>
+							<ui5-toggle-button>Large</ui5-toggle-button>
+						</ui5-segmented-button>
+					</div>
+				</div>
+			</div>
+
+			<ui5-button design="Emphasized" hidden>Step 4</ui5-button>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step title-text="Pricing" selected disabled>
+			<div class="wizard6auto">
+				<ui5-title>4. Pricing</ui5-title><br>
+				<ui5-label>
+					Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+				</ui5-label>
+
+				<div class="wizard6auto">
+					<div class="wizard7auto">
+						<ui5-label>Price</ui5-label>
+						<ui5-input placeholder="product price..."></ui5-input>
+					</div>
+
+					<div class="wizard7auto">
+						<ui5-label>Quantity</ui5-label>
+						<ui5-input placeholder="product quantity..."></ui5-input>
+					</div>
+
+					<div class="wizard8auto">
+						<ui5-label>Vat included</ui5-label>
+						<ui5-switch checked></ui5-switch>
+					</div>
+				</div>
+			</div>
+
+		</ui5-wizard-step>
+	</ui5-wizard>
+
+	<ui5-dialog id="dialog" stretch header-heading="Wizard">
+		<ui5-wizard id="wiz2">
+			<ui5-wizard-step icon="sap-icon://home" title-text="Product type">
+				<div class="wizard3auto">
+					<ui5-title>1. Product Type</ui5-title><br>
+
+					<ui5-message-strip>
+						The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+					</ui5-message-strip><br>
+
+					<ui5-label>Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet, feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor, nec dignissim quam convallis ut. Praesent vitae commodo felis, ut iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh. Suspendisse est velit, scelerisque ut commodo eget, dignissim quis metus. Cras faucibus consequat gravida. Curabitur vitae quam felis. Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam erat volutpat.
+					</ui5-label>
+				</div>
+
+				<ui5-button id="toStep22" design="Emphasized">Step 2</ui5-button>
+			</ui5-wizard-step>
+
+			<ui5-wizard-step title-text="Product Information" selected>
+				<div class="wizard5auto">
+					<ui5-title>2. Product Information</ui5-title><br>
+					<ui5-label>
+						Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+					</ui5-label>
+
+					<div class="wizard6auto">
+						<div class="wizard7auto">
+							<ui5-label>Name</ui5-label>
+							<ui5-input placeholder="product name..."></ui5-input>
+						</div>
+
+						<div class="wizard8auto">
+							<ui5-label>Weight</ui5-label>
+							<ui5-input value="3.65"></ui5-input>
+						</div>
+
+						<div class="wizard8auto">
+							<ui5-label>Manifacturer</ui5-label>
+							<ui5-select>
+								<ui5-option selected>Apple</ui5-option>
+								<ui5-option>Samsung</ui5-option>
+								<ui5-option>Huawei</ui5-option>
+							</ui5-select>
+						</div>
+
+						<div class="wizard8auto">
+							<ui5-label>5 years guarantee included</ui5-label>
+							<ui5-switch id="sw2"></ui5-switch>
+						</div>
+					</div>
+				</div>
+
+				<ui5-button id="toStep32" design="Emphasized" hidden>Step 3</ui5-button>
+			</ui5-wizard-step>
+
+			<ui5-wizard-step title-text="Options" disabled>
+				<div class="wizard6auto">
+					<ui5-title>3. Options</ui5-title><br>
+
+					<ui5-label>
+						Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+					</ui5-label>
+					<ui5-message-strip>
+						The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+					</ui5-message-strip><br>
+
+					<div class="wizard6auto">
+						<div class="wizard7auto">
+							<ui5-label>Manifacture date</ui5-label>
+							<ui5-date-picker></ui5-date-picker>
+						</div>
+
+						<div class="wizard7auto">
+							<ui5-label>Availability</ui5-label>
+							<ui5-segmented-button>
+								<ui5-toggle-button icon="employee" pressed>In stock</ui5-toggle-button>
+								<ui5-toggle-button>In depot</ui5-toggle-button>
+								<ui5-toggle-button>Damaged</ui5-toggle-button>
+								<ui5-toggle-button>Out of stock</ui5-toggle-button>
+							</ui5-segmented-button>
+						</div>
+
+						<div class="wizard7auto">
+							<ui5-label>Size</ui5-label>
+							<ui5-segmented-button id="sb2">
+								<ui5-toggle-button icon="employee" pressed>Small</ui5-toggle-button>
+								<ui5-toggle-button>Medium</ui5-toggle-button>
+								<ui5-toggle-button>Large</ui5-toggle-button>
+							</ui5-segmented-button>
+						</div>
+					</div>
+				</div>
+
+				<ui5-button id="toStep42" design="Emphasized" hidden>Step 4</ui5-button>
+			</ui5-wizard-step>
+
+			<ui5-wizard-step title-text="Pricing" disabled>
+				<div class="wizard6auto">
+					<ui5-title>4. Pricing</ui5-title><br>
+					<ui5-label>
+						Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien
+					</ui5-label>
+					<ui5-message-strip>
+						The Wizard control is supposed to break down large tasks, into smaller steps, easier for the user to work with.
+					</ui5-message-strip><br>
+
+					<div class="wizard6auto">
+						<div class="wizard7auto">
+							<ui5-label>Price</ui5-label>
+							<ui5-input placeholder="product price..."></ui5-input>
+						</div>
+
+						<div class="wizard7auto">
+							<ui5-label>Quantity</ui5-label>
+							<ui5-input placeholder="product quantity..."></ui5-input>
+						</div>
+
+						<div class="wizard8auto">
+							<ui5-label>Vat included</ui5-label>
+							<ui5-switch checked></ui5-switch>
+						</div>
+					</div>
+				</div>
+
+				<ui5-button id="finalize2" design="Emphasized">Finalize</ui5-button>
+			</ui5-wizard-step>
+		</ui5-wizard>
+	</ui5-dialog>
+
+	<h2>Wizard steps with long titles</h2>
+	<ui5-wizard id="wiz3">
+		<ui5-wizard-step icon="product" title-text="Product type">
+		  <div>
+			Sed fermentum, mi et tristique ullamcorper, sapien sapien faucibus
+			sem, quis pretium nibh lorem malesuada diam. Nulla quis arcu aliquet,
+			feugiat massa semper, volutpat diam. Nam vitae ante posuere, molestie
+			neque sit amet, dapibus velit. Maecenas eleifend tempor lorem. Mauris
+			vitae elementum mi, sed eleifend ligula. Nulla tempor vulputate dolor,
+			nec dignissim quam convallis ut. Praesent vitae commodo felis, ut
+			iaculis felis. Fusce quis eleifend sapien, eget facilisis nibh.
+			Suspendisse est velit, scelerisque ut commodo eget, dignissim quis
+			metus. Cras faucibus consequat gravida. Curabitur vitae quam felis.
+			Phasellus ac leo eleifend, commodo tortor et, varius quam. Aliquam
+			erat volutpat.
+		  </div>
+		</ui5-wizard-step>
+		<ui5-wizard-step icon="product" title-text="Overview">
+		  <div>Content for Overview step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step icon="product" title-text="Details">
+		  <div>Content for Details step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step
+		  icon="product"
+		  title-text="Specifications and Requirements"
+		  subtitle-text="(Optional)"
+		>
+		  <div>Content for Specifications and Requirements step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step
+		  icon="product"
+		  title-text="User Instructions and Guidelines for Installation"
+		>
+		  <div>
+			Content for User Instructions and Guidelines for Installation step.
+		  </div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step icon="product" title-text="Testing">
+		  <div>Content for Testing step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step icon="product" title-text="Validation">
+		  <div>Content for Validation step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step icon="product" title-text="Deployment Plan">
+		  <div>Content for Deployment Plan step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step
+		  icon="product"
+		  title-text="Maintenance and Support Overview"
+		>
+		  <div>Content for Maintenance and Support Overview step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step icon="product" title-text="Feedback and Improvements">
+		  <div>Content for Feedback and Improvements step.</div>
+		</ui5-wizard-step>
+
+		<ui5-wizard-step
+		  icon="product"
+		  title-text="Final Review and Conclusion for the Entire Process"
+		>
+		  <div>
+			Content for Final Review and Conclusion for the Entire Process step.
+		  </div>
+		</ui5-wizard-step>
+	  </ui5-wizard>
+	<script>
+		var wiz = document.getElementById("wiz");
+
+		wiz.addEventListener("ui5-step-change", function () {
+			console.log(event.detail.step);
+		});
+
+		sw.addEventListener("ui5-change", function () {
+			toStep3.removeAttribute("hidden");
+		});
+
+		sb.addEventListener("ui5-step-change", function () {
+			toStep4.removeAttribute("hidden");
+		});
+
+		toStep2.addEventListener("click", function () {
+			deselectAll(wiz);
+			setStep(wiz, 1);
+			toStep2.setAttribute("hidden", true);
+		});
+
+		toStep3.addEventListener("click", function () {
+			deselectAll(wiz);
+			setStep(wiz, 2);
+			toStep3.setAttribute("hidden", true);
+		});
+
+		toStep4.addEventListener("click", function () {
+			deselectAll(wiz);
+			setStep(wiz, 3);
+			toStep4.setAttribute("hidden", true);
+		});
+
+		finalize.addEventListener("click", function () {
+			alert("Finalize")
+		});
+
+		// Wizard in Dialog
+		var wiz2 = document.getElementById("wiz2");
+
+		btnOpenDialog.addEventListener("click", function () {
+			dialog.open = true;
+		});
+
+		wiz2.addEventListener("ui5-step-change", function () {
+			console.log(event.detail.step);
+		});
+
+		sw2.addEventListener("ui5-change", function () {
+			toStep32.removeAttribute("hidden");
+		});
+
+		sb2.addEventListener("ui5-step-change", function () {
+			toStep42.removeAttribute("hidden");
+		});
+
+		toStep22.addEventListener("click", function () {
+			deselectAll(wiz2);
+			setStep(wiz2, 1);
+			toStep22.setAttribute("hidden", true);
+		});
+
+		toStep32.addEventListener("click", function () {
+			deselectAll(wiz2);
+			setStep(wiz2, 2);
+			toStep32.setAttribute("hidden", true);
+		});
+
+		toStep42.addEventListener("click", function () {
+			deselectAll(wiz2);
+			setStep(wiz2, 3);
+			toStep42.setAttribute("hidden", true);
+		});
+
+		finalize2.addEventListener("click", function () {
+			alert("Finalize");
+			dialog.open = false;
+		});
+
+		function deselectAll(wizard) {
+			Array.from(wizard.children).forEach(function(step) {
+				step.selected = false;
+			});
+		}
+
+		function setStep(wizard, idx) {
+			const step = getStep(wizard, idx);
+			step.selected = true;
+			step.disabled = false;
+		}
+
+		function getStep(wizard, idx) {
+			return Array.from(wizard.children)[idx];
+		}
+	</script>
+</body>
+</html>

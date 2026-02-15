@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>DateRangePicker test page</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DateRangePicker-DcR-02Ty.css">
+</head>
+<body class="daterangepicker1auto">
+	<div style='width:500px;'>
+		<ui5-label for="drpLabel">Deadline</ui5-label>
+		<ui5-daterange-picker id="drpLabel"></ui5-daterange-picker>
+
+		<div>
+			<label id='labelChange'>0</label>
+			<label id='labelDate'></label>
+		</div>
+		<ui5-daterange-picker id="daterange-picker1"></ui5-daterange-picker>
+		<h3>daterange-picker with delimiter @</h3>
+		<ui5-daterange-picker id="daterange-picker2" delimiter="@"></ui5-daterange-picker>
+		<h3>display-fomat='medium' value-fomat='yyyy-MM-dd'</h3>
+		<ui5-daterange-picker id='dp12' display-format='dd/MM/yyyy' value-format='yyyy-MM-dd'></ui5-daterange-picker>
+		<h3>daterange-picker with format pattern dd/MM/yyyy</h3>
+		<ui5-daterange-picker id="daterange-picker3" format-pattern="dd/MM/yyyy"></ui5-daterange-picker>
+		<h3>daterange-picker with minDate 01/09/2019 and maxDate 01/11/2019</h3>
+		<ui5-daterange-picker id="daterange-picker4" format-pattern="dd/MM/yyyy" min-date="01/09/2019" max-date="01/11/2019"></ui5-daterange-picker>
+		<section class="ui5-content-density-compact">
+			<h3>daterange-picker in Compact</h3>
+			<div>
+				<ui5-daterange-picker id="daterange-picker5" delimiter="@"></ui5-daterange-picker>
+			</div>
+		</section>
+		<h3>daterange-picker with format pattern yyyy-MM-ddy</h3>
+		<ui5-daterange-picker id="daterange-picker6" format-pattern="yyyy-MM-dd"></ui5-daterange-picker>
+		<h3>DateRange Picker with one date selected as first & last</h3>
+		<ui5-daterange-picker id="daterange-picker7" value="Aug 20, 2020 - Aug 20, 2020"></ui5-daterange-picker>
+		<h3>DateRange Picker with no format pattern & min-max dates in ISO format</h3>
+		<ui5-daterange-picker id="daterange-picker8" min-date="2023-02-10" max-date="2023-07-22"></ui5-daterange-picker>
+
+		<h3>daterange-picker with format pattern MM.yyyy</h3>
+		<ui5-daterange-picker id="daterange-picker9" format-pattern="MM.yyyy"></ui5-daterange-picker>
+		<h3>daterange-picker with format pattern yyyy</h3>
+		<ui5-daterange-picker id="daterange-picker10" format-pattern="yyyy"></ui5-daterange-picker>
+
+		<h3>daterange-picker with format pattern MM.yyyy islamic</h3>
+		<ui5-daterange-picker id="daterange-picker11" secondary-calendar-type="Islamic" format-pattern="MM.yyyy"></ui5-daterange-picker>
+		<h3>daterange-picker with format pattern yyyy islamic</h3>
+		<ui5-daterange-picker id="daterange-picker12" secondary-calendar-type="Islamic" format-pattern="yyyy"></ui5-daterange-picker>
+
+		<section>
+			<ui5-title>DateRangePicker with CalendarWeekNumbering ISO_8601</ui5-title>
+			<ui5-daterange-picker id="daterange-picker13" calendar-week-numbering="ISO_8601"></ui5-daterange-picker>
+
+			<ui5-title>DateRangePicker with CalendarWeekNumbering MiddleEastern</ui5-title>
+			<ui5-daterange-picker id="daterange-picker14" calendar-week-numbering="MiddleEastern"></ui5-daterange-picker>
+
+			<ui5-title>DateRangePicker with CalendarWeekNumbering WesternTraditional</ui5-title>
+			<ui5-daterange-picker id="daterange-picker15" calendar-week-numbering="WesternTraditional"></ui5-daterange-picker>
+		</section>
+
+		<h3>daterange-picker with value state</h3>
+		<ui5-daterange-picker id="daterange-picker16" value-state="Negative">
+			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-daterange-picker>
+
+		<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-daterange-picker min-date="06/01/2020" max-date="05/01/2021" format-pattern="dd/MM/yyyy" required id="formDateRangePicker"></ui5-daterange-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+	</div>
+	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDateRangePicker = document.getElementById('formDateRangePicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDateRangePicker');
+		});
+
+		formDateRangePicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDateRangePicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+		document.getElementById('daterange-picker1').addEventListener('ui5-change', function(e) {
+			document.getElementById("labelChange").innerHTML = Number(document.getElementById("labelChange").innerHTML) + 1;
+		});
+
+		document.getElementById('daterange-picker4').addEventListener('ui5-change', function(e) {
+			document.getElementById("labelDate").innerHTML = e.detail.value;
+		});
+	</script>
+</body>
+</html>

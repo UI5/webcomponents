@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Event Bubbling for Fiori</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<ui5-dialog id="myDialog" header-text="Dialog With Dropdowns" open>
+			<ui5-notification-list id="myNotList" header-text="Notifications">
+				<ui5-li-notification id="myNotItem" show-close
+					title-text="Single line notification."
+					state="Information">
+						<span slot="footnotes">Office Notifications</span>
+						<span slot="footnotes">3 Days</span>
+				</ui5-li-notification>
+			</ui5-notification-list>
+		</ui5-dialog>
+	</div>
+</body>
+
+<script>
+	app.addEventListener("close", function(e) {
+		console.log("[X] App on close")
+	});
+
+		app.addEventListener("item-close", function(e) {
+		console.log("App on item-close")
+	});
+	
+	myDialog.addEventListener("close", function(e) {
+		console.log("[X] Dialog on close")
+	});
+		
+	myDialog.addEventListener("item-close", function(e) {
+		console.log("Dialog on item-close")
+	});
+
+	myNotList.addEventListener("close", function(e) {
+		console.log("[X] Notification List on close")
+	});
+
+	myNotList.addEventListener("item-close", function(e) {
+		console.log("Notification List on item-close")
+	});
+
+	myNotItem.addEventListener("close", function(e) {
+		console.log("Notification Item on close")
+	});
+
+	btnOpen.addEventListener("click", function(e) {
+		myMenu.open = true;
+	});
+</script>
+</html>

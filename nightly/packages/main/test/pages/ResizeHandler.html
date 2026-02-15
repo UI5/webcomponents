@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Button</title>
+
+    <script data-ui5-config type="application/json">
+        {
+            "language": "EN",
+            "noConflict": {
+                "events": ["click"]
+            },
+            "calendarType": "Islamic"
+        }
+    </script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ResizeHandler-D2bhPKnH.css">
+</head>
+
+<body class="resizehandler1auto">
+
+<ui5-title>With media queries</ui5-title>
+
+<div id="media">
+	<div class="demo big red filler"><div ></div></div>
+	<br>
+	<div class="resizehandler2auto">
+		<div class="demo small red filler"><div ></div></div>
+		<div class="demo small red filler"><div ></div></div>
+	</div>
+</div>
+<br><br>
+<ui5-title>With ResizeHandler</ui5-title>
+
+<div id="rh">
+	<div class="demo big green filler"><div ></div></div>
+	<br>
+	<div class="resizehandler2auto">
+		<div class="demo small green filler"><div ></div></div>
+		<div class="demo small green filler"><div ></div></div>
+	</div>
+</div>
+
+<script>
+
+	const RH = window["sap-ui-webcomponents-bundle"].ResizeHandler;
+
+	[...document.querySelectorAll("#rh .demo")].forEach(div => {
+		RH.register(div, () => {
+			const w = div.offsetWidth;
+			if (w <= 640) {
+				div.classList.remove("tablet", "desktop");
+				div.classList.add("phone");
+			} else if (w <= 1024) {
+				div.classList.remove("phone", "desktop");
+				div.classList.add("tablet");
+			} else {
+				div.classList.remove("phone", "tablet");
+				div.classList.add("desktop");
+			}
+		});
+	});
+
+</script>
+
+</body>
+</html>

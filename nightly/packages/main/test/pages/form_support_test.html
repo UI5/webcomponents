@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Button</title>
+    <script>
+    </script>
+    <style>
+        .group {
+            border: 1px solid red;
+            margin: 1rem;
+            padding: 1rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    </style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body class="button1auto">
+    <div class="group">
+        <ui5-title level="4">ui5-button</ui5-title>
+        <ui5-button>Test button</ui5-button>
+        <button>Test button</button>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-checkbox</ui5-title>
+        <ui5-checkbox text="Test checkbox"></ui5-checkbox>
+        <div>
+            <input type="checkbox" id="cb1" /> <label for="cb1">Test checkbox</label>
+        </div>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-color-picker</ui5-title>
+        <ui5-color-picker></ui5-color-picker>
+        <input type="color" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-combobox</ui5-title>
+        <ui5-combobox>
+            <ui5-cb-item text="Test combobox item 1"></ui5-cb-item>
+            <ui5-cb-item text="Test combobox item 2"></ui5-cb-item>
+            <ui5-cb-item text="Test combobox item 3"></ui5-cb-item>
+        </ui5-combobox>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-date-picker</ui5-title>
+        <ui5-date-picker></ui5-date-picker>
+        <input type="date" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-daterange-picker</ui5-title>
+        <ui5-daterange-picker></ui5-daterange-picker>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-datetime-picker</ui5-title>
+        <ui5-datetime-picker></ui5-datetime-picker>
+        <input type="datetime-local" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-file-uploader</ui5-title>
+        <ui5-file-uploader></ui5-file-uploader>
+        <input type="file" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-input</ui5-title>
+        <ui5-input></ui5-input>
+        <input type="text" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-multi-combobox</ui5-title>
+        <ui5-multi-combobox>
+            <ui5-cb-item text="Test multi combobox item 1"></ui5-cb-item>
+            <ui5-cb-item text="Test multi combobox item 2"></ui5-cb-item>
+            <ui5-cb-item text="Test multi combobox item 3"></ui5-cb-item>
+        </ui5-multi-combobox>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-multi-input</ui5-title>
+        <ui5-multi-input>
+			<ui5-token slot="tokens" text="Test token 1"></ui5-token>
+			<ui5-token slot="tokens" text="Test token 2"></ui5-token>
+			<ui5-token slot="tokens" text="Test token 3"></ui5-token>
+        </ui5-multi-input>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-radio-button</ui5-title>
+        <div>
+            <ui5-radio-button name="test" text="Test radio button 1"></ui5-radio-button>
+            <ui5-radio-button name="test" text="Test radio button 2"></ui5-radio-button>
+            <ui5-radio-button name="test" text="Test radio button 3"></ui5-radio-button>
+        </div>
+        <div>
+            <input type="radio" id="radio1" name="test2" /> <label for="radio1">Test radio button 1</label>
+            <input type="radio" id="radio2" name="test2" /> <label for="radio2">Test radio button 2</label>
+            <input type="radio" id="radio3" name="test2" /> <label for="radio3">Test radio button 3</label>
+        </div>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-range-slider</ui5-title>
+        <ui5-range-slider></ui5-range-slider>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-segmented-button</ui5-title>
+        <ui5-segmented-button>
+            <ui5-segmented-button-item>Test radio button 1</ui5-segmented-button-item>
+            <ui5-segmented-button-item>Test radio button 2</ui5-segmented-button-item>
+            <ui5-segmented-button-item>Test radio button 3</ui5-segmented-button-item>
+        </ui5-segmented-button>
+        <div>
+            <input type="radio" id="radio4"  checked name="test4" /> <label for="radio4">Test radio button 1</label>
+            <input type="radio" id="radio5" name="test4" /> <label for="radio5">Test radio button 2</label>
+            <input type="radio" id="radio6" name="test4" /> <label for="radio6">Test radio button 3</label>
+        </div>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-select</ui5-title>
+        <ui5-select>
+            <ui5-option>Option 1</ui5-option>
+            <ui5-option>Option 2</ui5-option>
+            <ui5-option>Option 3</ui5-option>
+        </ui5-select>
+        <select>
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+        </select>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-slider</ui5-title>
+        <ui5-slider></ui5-slider>
+        <input value="50" type="range" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-split-button</ui5-title>
+        <ui5-split-button>Test button</ui5-split-button>
+        <button>Test button</button>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-switch</ui5-title>
+        <ui5-switch></ui5-switch>
+        <div>
+            <input type="checkbox" id="cb2" /> <label for="cb2">Test checkbox</label>
+        </div>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-textarea</ui5-title>
+        <ui5-textarea></ui5-textarea>
+        <textarea></textarea>
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-time-picker</ui5-title>
+        <ui5-time-picker></ui5-time-picker>
+        <input type="time" />
+    </div>
+    <div class="group">
+        <ui5-title level="4">ui5-step-input</ui5-title>
+        <ui5-step-input></ui5-step-input>
+        <input type="number" />
+    </div>
+</body>
+
+</html>

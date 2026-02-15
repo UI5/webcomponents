@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ComboBox test page</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/ComboBox.html-CvP0elQ7.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ComboBox-LkZexEaJ.css">
+</head>
+
+<body class="combobox1auto">
+
+
+	<div class="demo-section">
+		<ui5-label id="countryLabel">Select country: </ui5-label>
+		<ui5-combobox id="combo" class="combobox2auto" value="Bulgaria" accessible-name-ref="countryLabel">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+			<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+			<ui5-cb-item text="Brazil"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-button id="combo-focus">Focus ComboBox</ui5-button>
+		<ui5-button id="value-set-btn">Set value</ui5-button>
+
+		<ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
+			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Brazil"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+
+		<ui5-combobox id="" class="combobox2auto" disabled value="disabled"></ui5-combobox>
+		<ui5-combobox id="placeholder_test" class="combobox2auto" placeholder="Hello World"></ui5-combobox>
+		<ui5-combobox id="" class="combobox2auto" readonly value="readonly"></ui5-combobox>
+		<ui5-combobox id="" class="combobox2auto" required value="required"></ui5-combobox>
+		<ui5-combobox id="value-state-error" class="combobox2auto" value-state="Negative">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+			<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link 1</ui5-link> and <ui5-link href="#">Link 2</ui5-link></div>
+		</ui5-combobox>
+		<ui5-combobox id="vs-warning-default" class="combobox2auto" value-state="Critical">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-combobox id="vs-information-default" class="combobox2auto" value-state="Information">
+		</ui5-combobox>
+		<ui5-combobox id="vs-success-default" class="combobox2auto" value-state="Positive"></ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label id="combo-vs-grouping-label">Items with grouping and value state:</ui5-label>
+
+		<ui5-combobox id="value-state-grouping" value-state="Critical">
+			<ui5-cb-item-group header-text="A">
+				<ui5-cb-item text="Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Australia"></ui5-cb-item>
+				<ui5-cb-item text="Austria"></ui5-cb-item>
+				<ui5-cb-item text="Bolivia"></ui5-cb-item>
+			</ui5-cb-item-group>
+
+			<ui5-cb-item-group header-text="B">
+				<ui5-cb-item text="Bahrain"></ui5-cb-item>
+				<ui5-cb-item text="Belgium"></ui5-cb-item>
+				<ui5-cb-item text="Brazil"></ui5-cb-item>
+			</ui5-cb-item-group>
+
+			<ui5-cb-item-group header-text="C">
+				<ui5-cb-item text="Canada"></ui5-cb-item>
+				<ui5-cb-item text="Chile"></ui5-cb-item>
+			</ui5-cb-item-group>
+		</ui5-combobox>
+	</div>
+
+
+	<div class="demo-section">
+		<ui5-label id="combo-grouping-label">Items with grouping:</ui5-label>
+		<ui5-combobox filter="StartsWith" id="combo-grouping" class="combobox2auto" aria-label="Select destination:">
+			<ui5-cb-item-group header-text="A">
+				<ui5-cb-item text="Algeria"></ui5-cb-item>
+				<ui5-cb-item text="Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Australia"></ui5-cb-item>
+				<ui5-cb-item text="Austria"></ui5-cb-item>
+			</ui5-cb-item-group>
+			<ui5-cb-item-group header-text="Donut">
+				<ui5-cb-item text="Bahrain"></ui5-cb-item>
+				<ui5-cb-item text="Belgium"></ui5-cb-item>
+				<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+				<ui5-cb-item text="Brazil"></ui5-cb-item>
+			</ui5-cb-item-group>
+			<ui5-cb-item-group header-text="C">
+				<ui5-cb-item text="Canada"></ui5-cb-item>
+				<ui5-cb-item text="Chile"></ui5-cb-item>
+			</ui5-cb-item-group>
+			<ui5-cb-item-group header-text="Random Group Item Text">
+				<ui5-cb-item text="Zimbabve"></ui5-cb-item>
+				<ui5-cb-item text="Albania"></ui5-cb-item>
+				<ui5-cb-item text="Madagascar"></ui5-cb-item>
+			</ui5-cb-item-group>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label id="combo-additional-text">Items with additional text:</ui5-label>
+		<ui5-combobox id="combobox-two-column-layout" class="combobox2auto" value="Bulgaria"
+			aria-labelledby="countryLabel">
+			<ui5-cb-item text="Algeria" additional-text="DZ"></ui5-cb-item>
+			<ui5-cb-item text="Argentina" additional-text="AR"></ui5-cb-item>
+			<ui5-cb-item text="Australia" additional-text="AU"></ui5-cb-item>
+			<ui5-cb-item text="Austria" additional-text="AT"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain" additional-text="BH"></ui5-cb-item>
+			<ui5-cb-item text="Belgium" additional-text="BE"></ui5-cb-item>
+			<ui5-cb-item text="Brazil" additional-text="BR"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria" additional-text="BG"></ui5-cb-item>
+			<ui5-cb-item text="Canada" additional-text="CA"></ui5-cb-item>
+			<ui5-cb-item text="Chile" additional-text="CL"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label id="combo-without-type-ahead-text">Without type ahead:</ui5-label>
+		<ui5-combobox id="combo-without-type-ahead" class="combobox2auto" no-typeahead>
+			<ui5-cb-item text="Algeria" additional-text="DZ"></ui5-cb-item>
+			<ui5-cb-item text="Argentina" additional-text="AR"></ui5-cb-item>
+			<ui5-cb-item text="Australia" additional-text="AU"></ui5-cb-item>
+			<ui5-cb-item text="Austria" additional-text="AT"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain" additional-text="BH"></ui5-cb-item>
+			<ui5-cb-item text="Belgium" additional-text="BE"></ui5-cb-item>
+			<ui5-cb-item text="Brazil" additional-text="BR"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria" additional-text="BG"></ui5-cb-item>
+			<ui5-cb-item text="Canada" additional-text="CA"></ui5-cb-item>
+			<ui5-cb-item text="Chile" additional-text="CL"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span id="change-event-result"></span>
+		<br />
+		<span id="selection-change-event-result"></span>
+
+	</div>
+
+		<div class="demo-section">
+		<span>SelectionChange event testing</span>
+
+		<ui5-combobox id="selection-change-cb" show-clear-icon="">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+
+		<br>
+
+		Selected item: <span id="selection-change-placeholder"></span><br>
+		SelectionChange call count: <span id="selection-change-count">0</span><br>
+	</div>
+
+	<div class="demo-section">
+		<span>Toggle Loading State</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<span>Lazy Loading - example does not work on IE11</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="lazy" class="combobox2auto"></ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>Lazy Loading with filter='None'</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="cb-filter-none" filter="None" />
+	</div>
+
+	<div class="demo-section">
+		<span>Change event testing</span>
+
+		<ui5-combobox id="change-cb" class="combobox2auto">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+
+		<br>
+
+		Changed value: <span id="change-placeholder"></span><br>
+		Change call count: <span id="change-count">0</span><br>
+	</div>
+
+	<div class="demo-section">
+		<span>Input event testing</span>
+
+		<ui5-combobox id="input-cb" class="combobox2auto">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+
+		<br>
+
+		Input value: <span id="input-placeholder"></span><br>
+		Input call count: <span id="input-count">0</span><br>
+	</div>
+
+
+	<br>
+	<br>
+
+	<div class="demo-section">
+		<span>Contains filter</span>
+
+		<ui5-combobox class="combobox2auto" filter="Contains" id="contains-cb">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>StartsWith filter</span>
+
+		<ui5-combobox class="combobox2auto" filter="StartsWith" id="startswith-cb">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="United States of America"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<section class="ui5-content-density-compact">
+		<h3>ComboBox in Compact</h3>
+		<div>
+			<ui5-combobox>
+				<ui5-cb-item text="Argentina"></ui5-cb-item>
+				<ui5-cb-item text="United States of America"></ui5-cb-item>
+				<ui5-cb-item text="Canada"></ui5-cb-item>
+				<ui5-cb-item text="Germany"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+	</section>
+
+	<div class="demo-section">
+		<span>Readonly ComboBox with value state</span>
+
+		<ui5-combobox class="combobox" readonly value-state="Negative" id="readonly-value-state-cb">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="United States of America"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - suggestions with same names </span>
+
+		<ui5-combobox class="combobox" id="same-name-suggestions-cb">
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Germany"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - suggestions and show wrapping </span>
+
+		<ui5-combobox class="combobox" id="same-name-suggestions-cb">
+			<ui5-cb-item text="Item that does not wrap"></ui5-cb-item>
+			<ui5-cb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<section>
+		<h3>ComboBox Composition</h3>
+
+		<div class="demo-section">
+			<span>ComboBox - Korean suggestions</span>
+
+			<ui5-combobox class="combobox" id="korean-suggestions-cb">
+				<ui5-cb-item text="안녕하세요"></ui5-cb-item>
+				<ui5-cb-item text="고맙습니다"></ui5-cb-item>
+				<ui5-cb-item text="사랑"></ui5-cb-item>
+				<ui5-cb-item text="한국"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Japanese suggestions</span>
+
+			<ui5-combobox class="combobox" id="japanese-suggestions-cb">
+				<ui5-cb-item text="こんにちは"></ui5-cb-item>
+				<ui5-cb-item text="ありがとう"></ui5-cb-item>
+				<ui5-cb-item text="日本"></ui5-cb-item>
+				<ui5-cb-item text="東京"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>ComboBox - Chinese suggestions</span>
+
+			<ui5-combobox class="combobox" id="chinese-suggestions-cb">
+				<ui5-cb-item text="你好"></ui5-cb-item>
+				<ui5-cb-item text="謝謝"></ui5-cb-item>
+				<ui5-cb-item text="北京"></ui5-cb-item>
+				<ui5-cb-item text="上海"></ui5-cb-item>
+			</ui5-combobox>
+		</div>
+	</section>
+
+	<div class="demo-section">
+		<ui5-combobox id="value-state-error-text" value-state="Negative">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
+			<div slot="valueStateMessage">Please choose a country</div>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<ui5-combobox id="dynamic-items">
+			<ui5-cb-item text="Hello World"></ui5-cb-item>
+		</ui5-combobox>
+
+		<ui5-button id="add-items-btn">Start adding items</ui5-button>
+
+		<script>
+			const addItemsBtn = document.getElementById("add-items-btn");
+			const dynamicItemsCb = document.getElementById("dynamic-items");
+
+			addItemsBtn.addEventListener("click", () => {
+				setInterval(() => {
+					const item = document.createElement("ui5-cb-item");
+					item.text = "test";
+					dynamicItemsCb.appendChild(item);
+				}, 1000);
+			});
+		</script>
+	</div>
+
+	<div class="demo-section">
+		<ui5-combobox id="clear-icon-cb" value="Clear Icon" show-clear-icon>
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+			<ui5-cb-item text="Austria"></ui5-cb-item>
+			<ui5-cb-item text="Bahrain"></ui5-cb-item>
+			<ui5-cb-item text="Belgium"></ui5-cb-item>
+			<ui5-cb-item text="Brazil"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+		<br>
+		<span>Change event calls: <span id="clear-icon-change-count">0</span></span>
+		<br>
+		<span>Input event calls: <span id="clear-icon-input-count">0</span></span>
+
+		<script>
+			const clearIconCb = document.getElementById("clear-icon-cb");
+
+			clearIconCb.addEventListener("ui5-change", () => {
+				const changeCountEl = document.getElementById("clear-icon-change-count");
+
+				changeCountEl.innerText = parseInt(changeCountEl.innerText) + 1;
+			});
+
+			clearIconCb.addEventListener("ui5-input", () => {
+				const inputCountEl = document.getElementById("clear-icon-input-count");
+
+				inputCountEl.innerText = parseInt(inputCountEl.innerText) + 1;
+			});
+		</script>
+	</div>
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-combobox id="comboInAForm" class="combobox2auto" required>
+				<ui5-cb-item text="Algeria"></ui5-cb-item>
+				<ui5-cb-item text="Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+				<ui5-cb-item text="Canada"></ui5-cb-item>
+				<ui5-cb-item text="Chile"></ui5-cb-item>
+			</ui5-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('comboInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('comboInAForm');
+			});
+
+			comboInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('comboInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
+	</div>
+	<div class="demo-section">
+		<span>Open ComboBox on focus</span>
+		<ui5-combobox id="comboFocus" class="combobox2auto" value="Bulgaria" accessible-name-ref="countryLabel">
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+			<ui5-cb-item text="Canada"></ui5-cb-item>
+			<ui5-cb-item text="Chile"></ui5-cb-item>
+		</ui5-combobox>
+		<script>
+			document.getElementById("comboFocus").addEventListener("focusin", () => {
+				document.getElementById("comboFocus").open = true;
+			});
+		</script>
+	</div>
+
+
+
+	<script>
+		document.getElementById("combo").addEventListener("ui5-change", function (event) {
+			document.getElementById("change-event-result").innerHTML = event.target.value;
+		});
+
+		document.getElementById("combo").addEventListener("ui5-selection-change", function (event) {
+			document.getElementById("selection-change-event-result").innerHTML = event.detail.item.text;
+		});
+
+		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {
+			document.getElementById("change-placeholder").innerHTML = event.target.value;
+			document.getElementById("change-count").innerHTML = parseInt(document.getElementById("change-count").innerHTML) + 1;
+		});
+
+		document.getElementById("selection-change-cb").addEventListener("ui5-selection-change", function (event) {
+			document.getElementById("selection-change-placeholder").innerHTML = event.detail.item?.text || "";
+			document.getElementById("selection-change-count").innerHTML = parseInt(document.getElementById("selection-change-count").innerHTML) + 1;
+		});
+
+		document.getElementById("input-cb").addEventListener("ui5-input", function (event) {
+			document.getElementById("input-placeholder").innerHTML = event.target.value;
+			document.getElementById("input-count").innerHTML = parseInt(document.getElementById("input-count").innerHTML) + 1;
+		});
+
+		document.getElementById("value-set-btn").addEventListener("click", function (event) {
+			document.getElementById("combo").value = "new value";
+		});
+
+		document.getElementById("combo-focus").addEventListener("click", function () {
+			document.getElementById("combo").focus();
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const combo = document.getElementById("toggle-loading-cb");
+			combo.loading = !combo.loading;
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>RTL and Language</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/RTL-C8hd6Yqk.css">
+</head>
+
+<body class="rtl1auto">
+	<div class="rtl2auto">
+		<ui5-segmented-button id="tb">
+			<ui5-segmented-button-item selected>EN</ui5-segmented-button-item>
+			<ui5-segmented-button-item>DE</ui5-segmented-button-item>
+			<ui5-segmented-button-item>BG</ui5-segmented-button-item>
+			<ui5-segmented-button-item>ES</ui5-segmented-button-item>
+			<ui5-segmented-button-item>HE</ui5-segmented-button-item>
+			<ui5-segmented-button-item>AR</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<div class="rtl3auto"></div>
+		<ui5-label class="rtl4auto">Manually switch RTL:</ui5-label>
+		<ui5-switch id="sw"></ui5-switch>
+	</div>
+
+	<section>
+		<ui5-textarea maxlength="20" show-exceeded-text class="rtl5auto"></ui5-textarea>
+	</section>
+
+	<section>
+		<ui5-title>This section does not define dir</ui5-title>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+	</section>
+
+	<section dir="ltr">
+		<ui5-title>This section defines dir=LTR</ui5-title>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox text="This checkbox however defines dir=rtl" dir="rtl"></ui5-checkbox>
+	</section>
+
+	<section dir="rtl">
+		<ui5-title>This section defines dir=RTL</ui5-title>
+		<br>
+		<ui5-checkbox id="cbRTL" text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox text="Click me"></ui5-checkbox>
+		<br>
+		<ui5-checkbox id="cbLTR" text="This checkbox however defines dir=ltr" dir="ltr"></ui5-checkbox>
+	</section>
+
+	<ui5-date-picker></ui5-date-picker>
+	<script>
+
+		let listenerAttached = false;
+
+		const attachDirChange = () => {
+			window['sap-ui-webcomponents-bundle'].attachDirectionChange(() => {
+				console.log("Direction changed");
+			});
+		}
+
+		// Utility function to change RTL and apply the changes
+		const setDir = (dir) => {
+			if (!listenerAttached) {
+				attachDirChange();
+				listenerAttached = true;
+			}
+
+			document.body.dir = dir;
+			window['sap-ui-webcomponents-bundle'].applyDirection();
+		}
+
+		const setLanguage = (lang) => {
+			return window['sap-ui-webcomponents-bundle'].configuration.setLanguage(lang);
+		}
+
+		sw.addEventListener("ui5-change", (e) => {
+			setDir(e.target.checked ? "rtl" : "ltr");
+		});
+
+		tb.addEventListener("ui5-selection-change", function(e) {
+			var lang = e.detail.selectedItems[0].textContent.toLowerCase();
+
+			setLanguage(lang).then(function() {
+				const rtlLang = lang === "he" || lang === "ar";
+				setDir(rtlLang ? "rtl" : "ltr");
+			});
+		});
+	</script>
+
+</body>
+</html>

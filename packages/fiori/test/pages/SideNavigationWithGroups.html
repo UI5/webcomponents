@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation with Groups</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<ui5-side-navigation style="height: 90vh; " id="sn1">
+		<ui5-side-navigation-item text="Home"
+								  icon="home"
+								  href="#home"
+								  tooltip="Home tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-group id="group1" expanded text="Group" tooltip="Group tooltip">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1 lorem ipsum dolor sit amet, consectetur adipiscing elit"
+									  icon="home"
+									  href="#home"
+									  tooltip="Home 1 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" expanded icon="group" tooltip="People tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="Disabled item tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People unselectable" href="#people" expanded unselectable icon="group" tooltip="People unselectable tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="Disabled item tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 2" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me" ></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#events" expanded text="Events lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="calendar">
+			<ui5-side-navigation-sub-item href="#page1" target="_self" text="Local lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="Others" selected></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 2" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-group expanded text="Group 2 lorem ipsum dolor sit amet, consectetur adipiscing elit">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1"
+									  icon="home"
+									  href="#home"
+									  title="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People 2" href="#people" expanded icon="group">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="From My Team tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 3" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-group expanded text="Group 2 1">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1"
+									  icon="home"
+									  href="#home"
+									  title="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" expanded icon="group">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="From My Team tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 4" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item href="#locations" text="Locations 3" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 4" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 5" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 6" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 7" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 8" icon="employee-rejections"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 9" icon="home"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 10" icon="employee-approvals"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 11" icon="group"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 12" icon="calendar"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 13" icon="employee-rejections"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 14" icon="save"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 15" icon="male"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 16" icon="female"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 17" icon="action"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 18" icon="employee"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 19" icon="tnt-v3/aggregator"></ui5-side-navigation-item>
+		<ui5-side-navigation-item disabled href="#locations" text="Locations 20" icon="tnt-v3/aggregator"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 21" icon="SAP-icons-v5/navigation-right-arrow"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Locations 22" icon="SAP-icons-v4/slim-arrow-up"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Locations 23" icon="SAP-icons-v4/favorite"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Locations 24" icon="SAP-icons-v4/less"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#page1" target="_self" text="Locations 25" icon="group">
+			<ui5-side-navigation-sub-item icon="home" href="#page1" target="_self" text="Local lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item icon="female" text="Others"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<!-- Fixed Items -->
+		<ui5-side-navigation-item slot="fixedItems" text="Quick Create" icon="write-new" design="Action" unselectable id="quickCreate" tooltip="Quick Create Tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link" title="Useful links tooltip">
+			<ui5-side-navigation-sub-item text="Vacation Tool" title="Vacation Tool tooltip"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="HR tool"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history"></ui5-side-navigation-item>
+		<ui5-side-navigation-group expanded text="Group 3">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 10"
+									  icon="home"
+									  href="#home"
+									  tooltip="Home 10 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" expanded icon="group" tooltip="People tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" tooltip="Disabled item tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 5" icon="employee-rejections"  tooltip="From Other Teams 5 tooltip"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+	</ui5-side-navigation>
+
+	<div style="float: right">
+		<ui5-checkbox id="collapsed" text="Collapsed"></ui5-checkbox>
+		<ui5-checkbox id="disable" text="disable group 1"></ui5-checkbox>
+		<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+		<br>
+		<ui5-label for="slider" show-colon>Change width</ui5-label>
+		<ui5-slider id="slider" value="0" min="0" max="600" step="50" show-tickmarks label-interval="2"></ui5-slider>
+	</div>
+
+	<script>
+		const sn = document.getElementById("sn1");
+
+		const collapsedBtn = document.getElementById("collapsed");
+
+		collapsedBtn.addEventListener("change", e => {
+			sn.toggleAttribute("collapsed", e.target.checked);
+		});
+
+		const densityBtn = document.getElementById("density");
+		density.addEventListener("change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		document.getElementById("disable").addEventListener("change", e => {
+			document.getElementById("group1").toggleAttribute("disabled", e.target.checked);
+		});
+
+		slider.addEventListener("ui5-input", function (event) {
+			sn1.style.width = event.target.value + 'px';
+		});
+	</script>
+</body>
+</html>

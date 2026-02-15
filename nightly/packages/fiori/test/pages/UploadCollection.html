@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>UploadCollection</title>
+    <script>
+		// delete Document.prototype.adoptedStyleSheets
+    </script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/UploadCollection.html-C-hs4Qqy.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/UploadCollection-D9QYL9j0.css">
+</head>
+<body class="uploadcollection1auto">
+	<div class="header">
+		<ui5-label>UC Selection Mode:</ui5-label>
+		<ui5-select id="changeMode">
+			<ui5-option>None</ui5-option>
+			<ui5-option>Single</ui5-option>
+			<ui5-option>SingleStart</ui5-option>
+			<ui5-option>SingleEnd</ui5-option>
+			<ui5-option>SingleAuto</ui5-option>
+			<ui5-option>Multiple</ui5-option>
+		</ui5-select>
+		<ui5-label>UCI Type:</ui5-label>
+		<ui5-select id="changeType">
+			<ui5-option>Active</ui5-option>
+			<ui5-option>Inactive</ui5-option>
+			<ui5-option>Detail</ui5-option>
+		</ui5-select>
+		<ui5-label>Selected items:</ui5-label>
+		<ui5-label id="selectedItems"></ui5-label>
+		<ui5-label>Renamed file index:</ui5-label>
+		<ui5-label id="renamedFileIndex"></ui5-label>
+	</div>
+
+	<p id="draggableElement" draggable="true">This element is draggable</p>
+
+	<ui5-upload-collection id="uploadCollection" accessible-name="Uploaded (4)">
+		<div slot="header" class="header">
+			<ui5-title id="uploadCollectionTitle">Uploaded (4)</ui5-title>
+			<ui5-label>Add new files and press to start uploading pending files:</ui5-label>
+			<ui5-button id="startUploading">Start</ui5-button>
+			<div class="spacer"></div>
+			<ui5-file-uploader id="fileUploader" hide-input multiple>
+				<ui5-button icon="add" design="Transparent"></ui5-button>
+			</ui5-file-uploader>
+		</div>
+		<ui5-upload-collection-item
+			id="firstItem"
+			file-name="LaptopHT-1000.jpg"
+			file-name-clickable
+			upload-state="Complete"
+		>
+			<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+			File name is clickable.
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item file-name="loooongloooongloooooooooonglllloooooooloooongloooongloooooooooongllllooooooooongnamethatkeepsgoingwithoutendloooong.pdf"
+			upload-state="Complete">
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="secondItem"
+			file-name=".gitignore"
+			disable-delete-button
+			upload-state="Complete"
+		>
+			<ui5-icon name="customize" slot="thumbnail"></ui5-icon>
+			You cannot delete this file.
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="latestReportsPdf"
+			file-name="latest.reports.pdf"
+			upload-state="Complete"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			Some description.
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="reportPdf"
+			file-name="report.pdf"
+			upload-state="Complete"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			Some description.
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="disabledPdf"
+			file-name="disabledFile.pdf"
+			upload-state="Complete"
+			disabled
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			Some description.
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="noFileExtension"
+			file-name="noextension"
+			upload-state="Complete"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="keyboardNavigation"
+			file-name="Graph.docx"
+			hide-delete-button
+			upload-state="Complete"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			file-name="Graph.docx"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			<ui5-button slot="deleteButton">custom delete button</ui5-button>
+		</ui5-upload-collection-item>
+	</ui5-upload-collection>
+
+	<button id="tabStop1">Tab stop helper</button>
+
+	<ui5-upload-collection id="uploadCollectionDnD" no-data-header-level="H3">
+		<div class="header" slot="header">
+			<ui5-title>Attachments (0)</ui5-title>
+			<div class="spacer"></div>
+			<ui5-file-uploader id="fileUploader" hide-input multiple>
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+	</ui5-upload-collection>
+
+	<button id="tabStop2">Tab stop helper</button>
+
+	<div class="header">
+		<ui5-label id="uploadStateEvent"></ui5-label>
+	</div>
+	<ui5-upload-collection id="uploadCollectionStates">
+		<div class="header" slot="header">
+			<ui5-title>Upload States</ui5-title>
+		</div>
+		<ui5-upload-collection-item
+			id="completeState"
+			file-name="LaptopHT-1000.jpg"
+			file-name-clickable
+			upload-state="Complete"
+		>
+			<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+			uploadState="Complete"
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="uploadingState"
+			file-name="Laptop.jpg"
+			type="Detail"
+			disable-delete-button
+			upload-state="Uploading"
+			progress="37"
+		>
+			<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+			uploadState="Uploading"
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="hiddenFileName"
+			file-name=".gitignore"
+			type="Detail"
+			hide-terminate-button
+			upload-state="Error"
+			progress="89"
+		>
+			<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+			uploadState="Uploading" with hidden terminate button
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			file-name="Laptop (2).jpg"
+			type="Detail"
+			hide-terminate-button
+			upload-state="Uploading"
+			progress="89"
+		>
+			<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+			uploadState="Uploading" with hidden terminate button
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="errorState"
+			file-name="latest.reports.pdf"
+			type="Detail"
+			upload-state="Error"
+			progress="59"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Error"
+		</ui5-upload-collection-item>
+		<ui5-upload-collection-item
+			id="readyState"
+			file-name="noextension"
+			type="Detail"
+		>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Ready" (default)
+		</ui5-upload-collection-item>
+	</ui5-upload-collection>
+
+
+	<ui5-upload-collection id="uploadCollection3">
+		<div class="header" slot="header">
+			<ui5-title>Hidden buttons</ui5-title>
+		</div>
+
+		<ui5-upload-collection-item id="uc3-default" file-name="File name">
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			Default, delete button always visible
+		</ui5-upload-collection-item>
+
+		<ui5-upload-collection-item id="uc3-default-hidden-delete" file-name="File name" hide-delete-button>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			Default, delete button hidden
+		</ui5-upload-collection-item>
+
+		<ui5-upload-collection-item id="uc3-error" file-name="File name" upload-state="Error">
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Error" with retry button visible by default
+		</ui5-upload-collection-item>
+
+		<ui5-upload-collection-item id="uc3-error-hidden-retry" file-name="File name" upload-state="Error" hide-retry-button>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Error" with hidden retry button
+		</ui5-upload-collection-item>
+
+		<ui5-upload-collection-item id="uc3-uploading" file-name="File name" upload-state="Uploading">
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Uploading" with terminate button visible by default
+		</ui5-upload-collection-item>
+
+		<ui5-upload-collection-item id="uc3-uploading-hidden-terminate" file-name="File name" upload-state="Uploading" hide-terminate-button>
+			<ui5-icon name="document-text" slot="thumbnail"></ui5-icon>
+			uploadState="Uploading" with hidden terminate button
+		</ui5-upload-collection-item>
+
+	</ui5-upload-collection>
+
+	<ui5-upload-collection>
+        <ui5-upload-collection-item file-name="LaptopHT-1000.jpg" upload-state="Complete">
+            uploadState="Complete"
+            <img src="https://ui5.github.io/webcomponents/nightly/images/HT-1000.jpg" slot="thumbnail">
+        </ui5-upload-collection-item>
+    </ui5-upload-collection>
+</body>
+</html>

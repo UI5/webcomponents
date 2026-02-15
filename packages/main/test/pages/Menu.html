@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="height100percent">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Menu</title>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Menu-sPjmkmzl.css">
+</head>
+
+<style>
+	.center-content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+
+<body class="bg">
+
+	<ui5-button id="btnOpen">Open Menu</ui5-button> <br/>
+	<ui5-menu id="menu" header-text="My ui5-menu">
+		<ui5-menu-item id="menuItemNewFile" text="New File (selection prevented)" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Folder with very long title for a menu item" additional-text="Ctrl+F" icon="add-folder" disabled>
+			<ui5-menu-item text="test.txt"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Open" icon="open-folder" accessible-name="Choose platform" loading-delay="100" loading>
+		</ui5-menu-item>
+		<ui5-menu-item text="Save with very long title for a menu item text inside" icon="save">
+			<ui5-menu-item text="Save Locally" icon="save">
+				<ui5-menu-item text="Save on C" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on D" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on E" icon="save"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Save on Cloud" icon="upload-to-cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Close" additional-text="Ctrl+W" loading-delay="100" loading></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Preferences" icon="action-settings" disabled></ui5-menu-item>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-menu id="delaymenu" loading-delay="100" loading>
+	</ui5-menu>
+
+	<ui5-menu id="delaymenu2" loading-delay="100" loading>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-title level="H5" class="header-title">Clicked menu item text</ui5-title>
+	<ui5-input id="selectionInput"></ui5-input>
+
+	<ui5-title level="H5" class="header-title">Text Direction</ui5-title>
+	<ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
+
+	<ui5-title level="H5" class="header-title">Prevent "before-open" event</ui5-title>
+	<ui5-switch id="preventBeforeOpen" text-on="Yes" text-off="No"></ui5-switch>
+
+	<ui5-title level="H5" class="header-title">Prevent "before-close" event</ui5-title>
+	<ui5-switch id="preventBeforeClose" text-on="Yes" text-off="No"></ui5-switch>
+
+	<ui5-title level="H5" class="header-title">open/opener</ui5-title>
+	<ui5-button id="btnAddOpener">Add opener</ui5-button>
+	<ui5-button id="btnRemoveOpener">Remove opener</ui5-button>
+	<ui5-toggle-button id="btnToggleOpen">Toggle open</ui5-toggle-button> <br/>
+	<ui5-input id="openerInput"></ui5-input>
+
+	<ui5-title level="H5" class="header-title">Event logger</ui5-title>
+	<ui5-input id="eventLogger" style="width: 100%;"></ui5-input>
+
+	<ui5-title level="H5" class="header-title">Menu with disabled items that have popovers</ui5-title>
+	<ui5-button id="btnOpen2">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menu2" header-text="My ui5-menu">
+		<ui5-menu-item id="newFolder" text="New Folder" additional-text="Ctrl+F" icon="add-folder" disabled></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Open" icon="open-folder">
+			<ui5-menu-item text="Open Locally" icon="open-folder" additional-text="Ctrl+K"></ui5-menu-item>
+			<ui5-menu-item text="Open from SAP Cloud" additional-text="Ctrl+L" disabled></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item id="preferences" text="Preferences" icon="action-settings" disabled></ui5-menu-item>
+		<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-title level="H5" class="header-title">Menu with items that have endContent</ui5-title>
+	<ui5-button id="btnOpenEndContent">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menuEndContent" header-text="My ui5-menu">
+		<ui5-menu-item text="New File" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document">
+			<ui5-button id="newLock" slot="endContent" icon="locked" design="Transparent"></ui5-button>
+			<ui5-button id="newUnlock" slot="endContent" icon="unlocked" design="Transparent"></ui5-button>
+			<ui5-button id="newFavorite" slot="endContent" icon="favorite" design="Transparent"></ui5-button>
+		</ui5-menu-item>
+		<ui5-menu-item text="New Folder with very long title for a menu item" additional-text="Ctrl+F" icon="add-folder" disabled></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Open" icon="open-folder" accessible-name="Choose platform">
+			<ui5-menu-item text="Open Locally" icon="open-folder" additional-text="Ctrl+K">
+				<ui5-menu-item text="Open from C" id="menuItemFromC"></ui5-menu-item>
+				<ui5-menu-item text="Open from D"></ui5-menu-item>
+				<ui5-menu-separator></ui5-menu-separator>
+				<ui5-menu-item text="Open from E" disabled></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Open from SAP Cloud" additional-text="Ctrl+L"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Save with very long title for a menu item text inside" icon="save">
+			<ui5-menu-item text="Save Locally" icon="save">
+				<ui5-menu-item text="Save on C" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on D" icon="save"></ui5-menu-item>
+				<ui5-menu-item text="Save on E" icon="save"></ui5-menu-item>
+			</ui5-menu-item>
+			<ui5-menu-item text="Save on Cloud" icon="upload-to-cloud"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Close" additional-text="Ctrl+W"></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Preferences" icon="action-settings" disabled></ui5-menu-item>
+		<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-title level="H5" class="header-title">Menu with item groups</ui5-title>
+	<ui5-button id="btnOpenGroups">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menuGroups" header-text="My ui5-menu">
+		<ui5-menu-item text="New Paragraph" icon="add-document"></ui5-menu-item>
+		<ui5-menu-item text="New Text">
+			<ui5-menu-item text="Item 1"></ui5-menu-item>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item-group check-mode="Single">
+				<ui5-menu-item text="Item 2" icon="bold-text" checked></ui5-menu-item>
+				<ui5-menu-item text="Item 3"></ui5-menu-item>
+				<ui5-menu-item text="Item 4" icon="add-document"></ui5-menu-item>
+			</ui5-menu-item-group>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item text="New submenu" icon="add-document" checked>
+				<ui5-menu-item-group check-mode="Multiple">
+					<ui5-menu-item text="Item 5" checked></ui5-menu-item>
+					<ui5-menu-item text="Item 6"></ui5-menu-item>
+					<ui5-menu-item text="Item 7"></ui5-menu-item>
+				</ui5-menu-item-group>
+				<ui5-menu-item text="Item 8" checked>
+					<ui5-menu-item-group check-mode="Multiple">
+						<ui5-menu-item text="Item 8.1"></ui5-menu-item>
+						<ui5-menu-item text="Item 8.2"></ui5-menu-item>
+						<ui5-menu-item text="Item 8.3"></ui5-menu-item>
+					</ui5-menu-item-group>
+				</ui5-menu-item>
+			</ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="Multiple">
+			<ui5-menu-item text="Bold" icon="bold-text" checked>
+				<ui5-button id="newLock2" slot="endContent" icon="locked" design="Transparent"></ui5-button>
+			</ui5-menu-item>
+			<ui5-menu-item text="Italic" icon="italic-text" additional-text="Cursive Text" checked></ui5-menu-item>
+			<ui5-menu-item text="Underline" icon="underline-text" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="Single">
+			<ui5-menu-item text="Left Alignment" icon="text-align-left" checked></ui5-menu-item>
+			<ui5-menu-item text="Center Alignment" icon="text-align-center" checked></ui5-menu-item>
+			<ui5-menu-item text="Right Alignment" icon="text-align-right" checked></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item-group check-mode="None">
+			<ui5-menu-item text="Item 1"></ui5-menu-item>
+			<ui5-menu-item text="Item 2"></ui5-menu-item>
+		</ui5-menu-item-group>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Exit"></ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-popover id="detailsPopover" initialFocus="detailsLink">
+			<div>
+				<ui5-label for="detailsLink">For more information:</ui5-label>
+			</div>
+			<ui5-link id="detailsLink" href="https://en.wikipedia.org/wiki/Google_logo" target="_blank"></ui5-link>
+	</ui5-popover>
+
+	<ui5-title level="H5" class="header-title">Menu with delayed items loading</ui5-title>
+	<ui5-button id="btnAddOpenerDelay">Delayed</ui5-button>
+	<ui5-button id="btnAddOpenerDelay2">Delayed with pre-loaded items</ui5-button>
+	<br/><br/>
+
+	<ui5-title level="H5" class="header-title">Menu with right alignment</ui5-title>
+
+	<div class="center-content">
+		<ui5-button id="btnOpenRight">Open Menu</ui5-button> <br/>
+	</div>
+
+	<ui5-menu id="menuRight" header-text="Menu" horizontal-align="End">
+		<ui5-menu-item text="Open" icon="open-folder"></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Close" additional-text="Ctrl+W" ></ui5-menu-item>
+	</ui5-menu>
+
+	<script>
+
+		btnOpen.accessibilityAttributes = {
+			hasPopup: "menu",
+		};
+
+		btnOpen.addEventListener("click", function() {
+			menu.opener = "btnOpen";
+			menu.open = true;
+		});
+
+		btnOpenGroups.addEventListener("click", function() {
+			menuGroups.opener = "btnOpenGroups";
+			menuGroups.open = true;
+		});
+
+		btnOpenEndContent.addEventListener("click", function() {
+			menuEndContent.opener = "btnOpenEndContent";
+			menuEndContent.open = !menu.open;
+		});
+
+		btnOpenRight.addEventListener ("click", function() {
+			menuRight.opener = "btnOpenRight";
+			menuRight.open = !menuRight.open;
+		});
+
+		btnAddOpener.addEventListener("click", function() {
+			menu.opener="btnToggleOpen";
+		});
+
+		btnRemoveOpener.addEventListener("click", function() {
+			menu.opener = "";
+		});
+
+		btnToggleOpen.addEventListener("click", function() {
+			menu.open = btnToggleOpen.pressed;
+		});
+
+		btnAddOpenerDelay.addEventListener("click", function() {
+			delaymenu.opener = "btnAddOpenerDelay";
+			delaymenu.open = !delaymenu.open;
+		});
+
+		btnAddOpenerDelay2.addEventListener("click", function() {
+			delaymenu2.opener = "btnAddOpenerDelay2";
+			delaymenu2.open = !delaymenu2.open;
+		});
+
+		delaymenu.addEventListener("ui5-before-open", function(event) {
+			setTimeout(function() {
+				delaymenu.loading = false;
+				delaymenu.loadingDelay = 0;
+				let oneNode = document.createElement("ui5-menu-item");
+				oneNode.setAttribute("text", "Open from Amazon Cloud");
+				let twoNode = document.createElement("ui5-menu-item");
+				twoNode.setAttribute("text", "Open from Google Cloud");
+				delaymenu.append(oneNode, twoNode);
+				delaymenu.focus();
+			}, 1000);
+		});
+
+		delaymenu2.addEventListener("ui5-before-open", function(event) {
+			setTimeout(function() {
+				delaymenu2.loading = false;
+				delaymenu2.loadingDelay = 0;
+				delaymenu2.focus();
+			}, 1000);
+		});
+
+		let fetched = false;
+
+		menu.addEventListener("ui5-before-open", function(event) {
+			const item = event.detail.item;
+			if (item && item.text === "Open" && !fetched) {
+				setTimeout(function() {
+					item.loading = false;
+					item.loadingDelay = 0;
+					let oneNode = document.createElement("ui5-menu-item");
+					oneNode.setAttribute("text", "Open from Amazon Cloud");
+					let twoNode = document.createElement("ui5-menu-item");
+					twoNode.setAttribute("text", "Open from Google Cloud");
+					item.append(oneNode, twoNode);
+					fetched = true;
+					item.focus();
+				}, 1000);
+			}
+		});
+
+		menu.addEventListener("ui5-item-click", function(event) {
+			const item = event.detail.item;
+			selectionInput.value = item.text;
+			if (item && item.text === "New File(selection prevented)") {
+				event.preventDefault();
+			}
+		});
+
+		menu.addEventListener("ui5-before-open", function(event) {
+			eventLogger.value = "";
+			preventBeforeOpen.checked && event.preventDefault();
+			eventLogger.value = "* [before-open]" + (preventBeforeOpen.checked ? "[prevented]" : "") + " ";
+		});
+
+		menu.addEventListener("ui5-open", function() {
+			shouldOpenDetailsPopover = true;
+			var opener = menu.opener.id ? menu.opener.id : menu.opener;
+			openerInput.value = opener;
+			eventLogger.value += "* [open] ";
+		});
+
+		menu.addEventListener("ui5-before-close", function(event) {
+			preventBeforeClose.checked && event.preventDefault();
+			eventLogger.value += "* [before-close]" + (event.detail.escPressed ? "[Escape]" : "") + (preventBeforeClose.checked ? "[prevented]" : "") + " ";
+		});
+
+		menu.addEventListener("ui5-close", function() {
+			shouldOpenDetailsPopover = false;
+			openerInput.value = "";
+			btnToggleOpen.pressed = false;
+			eventLogger.value += "* [close]";
+		});
+
+		direction.addEventListener("ui5-change", function() {
+			document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
+			window["sap-ui-webcomponents-bundle"].applyDirection();
+		});
+
+		btnOpen2.accessibilityAttributes = {
+			hasPopup: "menu",
+		};
+
+		btnOpen2.addEventListener("click", function() {
+			menu2.opener = btnOpen2;
+			menu2.open = !menu2.open;
+		});
+
+		menu2.querySelectorAll("& > ui5-menu-item").forEach(function(menuItem) {
+			menuItem.addEventListener("focusin", function(event) {
+				const item = event.target;
+				if (item.id === "newFolder" || item.id === "preferences") {
+					const link = detailsPopover.querySelector("#detailsLink");
+					link.textContent = item.text;
+					detailsPopover.opener = item;
+					detailsPopover.open = true;
+				} else {
+					detailsPopover.open = false;
+				}
+			});
+		});
+
+		newLock.addEventListener("click", function(event) {
+			console.warn("Lock button clicked");
+			event.target.parentElement.disabled = true;
+		});
+
+		newUnlock.addEventListener("click", function(event) {
+			console.warn("Unlock button clicked");
+			event.target.parentElement.disabled = false;
+		});
+
+		newFavorite.addEventListener("click", function(event) {
+			console.warn("Favorite button clicked");
+		});
+
+		menuEndContent.addEventListener("ui5-item-click", function(event) {
+			console.warn("Item clicked: " + event.detail.item.text);
+		});
+
+		menuItemNewFile.accessibilityAttributes = {
+			ariaKeyShortcuts: "Ctrl+Alt+Shift+N",
+		}
+
+		menuItemExit.accessibilityAttributes = {
+			ariaKeyShortcuts: "Ctrl+X",
+		}
+
+		menuItemFromC.accessibilityAttributes = {
+			role: "menuitemcheckbox",
+		};
+
+		menuGroups.addEventListener("ui5-item-click", function(event) {
+			console.warn("Item clicked: " + event.detail.item.text);
+
+		});
+
+		menuGroups.addEventListener("ui5-check", function(event) {
+			console.warn("Check event fired for item: " + event.target.text);
+			console.warn("Checked state: " + event.target.checked);
+			console.warn(event.target);
+		});
+
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ExpandableText</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+	<h1>ExpandableText</h1>
+	<h2>General</h2>
+	<h3>Two Texts Next to Each Other</h3>
+	<ui5-expandable-text text="Simple text"></ui5-expandable-text>
+	<ui5-expandable-text text="Another simple text"></ui5-expandable-text>
+
+	<h3>No "max-characters" Set</h3>
+	<ui5-expandable-text text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+
+	<h3>max-characters=150</h3>
+	<ui5-expandable-text max-characters="150" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+	<br><br>
+
+	<h3>max-characters=9999</h3>
+	<ui5-expandable-text max-characters="9999" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+
+	<h3>max-characters=0</h3>
+	<ui5-expandable-text max-characters="0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+	
+	<h3>max-characters=-1</h3>
+	<ui5-expandable-text max-characters="-1" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+	
+	<h3>overflowMode=Popover</h3>
+	<ui5-expandable-text max-characters="150" overflow-mode="Popover" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+
+	<h2>EmptyIndicatorMode</h2>
+	<h3>On</h3>
+	<ui5-expandable-text empty-indicator-mode="On"></ui5-expandable-text>
+
+	<h3>On, with Text</h3>
+	<ui5-expandable-text  empty-indicator-mode="On" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+
+	<h3>Off</h3>
+	<ui5-expandable-text empty-indicator-mode="Off"></ui5-expandable-text>
+
+	<h3>Off, with Text</h3>
+	<ui5-expandable-text  empty-indicator-mode="Off" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac risus nec lorem pretium fringilla. Sed non eros nec nisl vehicula finibus. Suspendisse potenti. Quisque nec odio et est pharetra semper. Nullam nec ligula in risus laoreet pulvinar. Nullam et turpis ac eros viverra facilisis. Nullam et turpis ac eros viverra facilisis"></ui5-expandable-text>
+
+	<h3>RTL</h3>
+	<ui5-expandable-text dir="rtl" text="וְאָהַבְתָּ אֵת יְיָ | אֱלֹהֶיךָ, בְּכָל-לְבָֽבְךָ, וּבְכָל-נַפְשְׁךָ, וּבְכָל-מְאֹדֶֽךָ. וְהָיוּ הַדְּבָרִים הָאֵלֶּה, אֲשֶׁר | אָֽנֹכִי מְצַוְּךָ" max-characters="50"></ui5-expandable-text>
+</html>

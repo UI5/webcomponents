@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>TimeSelectionClocks test page</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/TimeSelectionClocks--iJ2b9tt.css">
+</head>
+<body>
+
+	<h3>TimeSelectionClocks</h3>
+
+	<ui5-time-selection-clocks
+		id="myClocks"
+		format-pattern="HH:mm:ss"
+		value="12:20:40"
+	></ui5-time-selection-clocks>
+
+	<ui5-time-selection-clocks
+		id="myClocksAmPm"
+		format-pattern="hh:mm:ss a"
+		value="12:20:40 PM"
+	></ui5-time-selection-clocks>
+
+	<div>
+		<h3>'change' event count</h3>
+		<ui5-input id="clocksChangeEvent"></ui5-input>
+	</div>
+
+	<script>
+		var eventCount = 0;
+
+		myClocksAmPm.addEventListener('ui5-change', displayChange);
+
+		function displayChange(event) {
+			eventCount++;
+			clocksChangeEvent.value = `${eventCount}`;
+		}
+
+	</script>
+
+</body>
+</html>

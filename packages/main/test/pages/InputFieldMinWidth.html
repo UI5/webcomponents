@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ui5-input</title>
+	<script>
+
+		// delete Document.prototype.adoptedStyleSheets;
+
+	  </script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		height: 100%;
+		width: 100%;
+	}
+
+	body {
+		padding: 1rem;
+		box-sizing: border-box;
+	}
+
+	.wrapper {
+		padding: .5rem;
+		box-sizing: border-box;
+		border: 1px grey dashed;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.fields {
+		position: relative;
+	}
+
+	.field {
+		margin-top: .25rem;
+		display: block;
+		max-width: 100%;
+	}
+
+	.field,
+	.fields {
+		width: 540px;
+		max-width: 100%;
+	}
+
+	#slider {
+		margin-top: 1rem;
+		width: 540px;
+		max-width: 100%;
+	}
+
+	.header {
+		position: sticky;
+		top:0;
+		left:0;
+		z-index: 1000;
+		background-color: whitesmoke;
+		padding:20px;
+	}
+</style>
+
+<body>
+	<div class="wrapper" id="wrapper">
+		<div class="fields">
+			<div class="header" >
+				<ui5-checkbox id="cbCompact" text="Compact" ></ui5-checkbox>
+				<ui5-label id="label-width2">fields width: 540</ui5-label>
+				<ui5-slider id="slider2" show-tickmarks value="540" min="0" max="540" step="1" label-interval="1"></ui5-slider>
+			</div>
+			<p>Input</p>
+			<ui5-input placeholder="input" class="field"></ui5-input>
+			<ui5-input value="input with clear icon" show-clear-icon class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-input>
+			<ui5-input placeholder="input with custom icon" class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-input>
+			<ui5-input placeholder="input with 4 custom icons" class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-input>
+			<ui5-input value="input with clear icon" show-clear-icon class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-input>
+			<p>Multi Input</p>
+			<ui5-multi-input placeholder="multi-input" class="field"></ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field"></ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" class="field" show-value-help-icon>
+				<ui5-token slot="tokens" text="Token 1"></ui5-token>
+				<ui5-token slot="tokens" text="Token 2"></ui5-token>
+				<ui5-token slot="tokens" text="Token 3"></ui5-token>
+			</ui5-multi-input>
+			<ui5-multi-input  placeholder="multi-input" class="field">
+				<ui5-token slot="tokens" text="a"></ui5-token>
+				<ui5-token slot="tokens" text="b"></ui5-token>
+				<ui5-token slot="tokens" text="c"></ui5-token>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-token slot="tokens" text="Token 1"></ui5-token>
+				<ui5-token slot="tokens" text="Token 2"></ui5-token>
+				<ui5-token slot="tokens" text="Token 3"></ui5-token>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-token slot="tokens" text="Token 1"></ui5-token>
+				<ui5-token slot="tokens" text="Token 222222222222222222"></ui5-token>
+				<ui5-token slot="tokens" text="Token 3"></ui5-token>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-token slot="tokens" text="Token 1111111111111111"></ui5-token>
+				<ui5-token slot="tokens" text="Token 2"></ui5-token>
+				<ui5-token slot="tokens" text="Token 3"></ui5-token>
+				<ui5-token slot="tokens" text="Token 4"></ui5-token>
+				<ui5-token slot="tokens" text="Token 5"></ui5-token>
+				<ui5-token slot="tokens" text="Token 6"></ui5-token>
+			</ui5-multi-input>
+			<ui5-multi-input placeholder="multi-input" show-value-help-icon class="field">
+				<ui5-token slot="tokens" text="Est consequat ea veniam velit do sint duis."></ui5-token>
+			</ui5-multi-input>
+			<p>Combobox</p>
+			<ui5-combobox placeholder="combobox" class="field"></ui5-combobox>
+			<ui5-combobox placeholder="combobox with 3 custom icons" class="field">
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+				<ui5-icon slot="icon" name="accept"></ui5-icon>
+			</ui5-combobox>
+			<p>Multi Combobox</p>
+			<ui5-multi-combobox placeholder="multi-combobox" class="field"></ui5-multi-combobox>
+			<ui5-multi-combobox placeholder="multi-combobox" class="field">
+				<ui5-mcb-item selected text="Item 1"></ui5-mcb-item>
+				<ui5-mcb-item selected text="Item 2"></ui5-mcb-item>
+				<ui5-mcb-item selected text="Item 3"></ui5-mcb-item>
+				<ui5-mcb-item selected text="Item 4"></ui5-mcb-item>
+				<ui5-mcb-item selected text="Item 5"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<ui5-multi-combobox id="mcb-compact" placeholder="Some initial text" class="field">
+				<ui5-mcb-item text="Cosy" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Compact" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+				<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<p>Others</p>
+			<ui5-step-input placeholder="step-input" class="field"></ui5-step-input>
+			<ui5-textarea placeholder="textarea" class="field"></ui5-textarea>
+			<ui5-select placeholder="Select" class="field">
+				<ui5-option selected>Cozy</ui5-option>
+				<ui5-option selected>Compact</ui5-option>
+				<ui5-option selected>Condensed</ui5-option>
+			</ui5-select>
+			<ui5-select placeholder="Select Device" class="field">
+				<ui5-option icon="iphone" selected>Phone</ui5-option>
+				<ui5-option icon="ipad">Tablet</ui5-option>
+				<ui5-option icon="laptop">Desktop</ui5-option>
+			</ui5-select>
+			<ui5-datetime-picker placeholder="datetime-picker" class="field"></ui5-datetime-picker>
+			<ui5-daterange-picker placeholder="daterange-picker" class="field"></ui5-daterange-picker>
+			<ui5-time-picker placeholder="time-picker" class="field"></ui5-time-picker>
+			<ui5-input value="input with clear icon" show-clear-icon class="field">
+			</ui5-input>
+		</div>
+
+
+		<ui5-slider id="slider" show-tickmarks value="540" min="0" max="540" step="1" label-interval="1"></ui5-slider>
+
+		<ui5-label id="label-width">fields width: 540</ui5-label>
+	</div>
+
+	<script>
+		const fields = document.querySelectorAll(".field");
+
+		document.getElementById("slider").addEventListener("ui5-input", event => {
+			Array.from(fields).forEach(el => {
+				el.style.width = `${event.target.value}px`;
+				document.getElementById("label-width").textContent = `Field width: ${event.target.value}px`;
+				document.getElementById("label-width2").textContent = `Field width: ${event.target.value/16}rem`;
+			})
+		});
+
+		document.getElementById("slider2").addEventListener("ui5-input", event => {
+			Array.from(fields).forEach(el => {
+				el.style.width = `${event.target.value}px`;
+				document.getElementById("label-width").textContent = `Field width: ${event.target.value}px`;
+				document.getElementById("label-width2").textContent = `Field width: ${event.target.value/16}rem`;
+			})
+		});
+
+		const cbCompact = document.getElementById('cbCompact');
+		cbCompact.addEventListener('ui5-change', ()=> {
+			var el = document.getElementById('wrapper');
+			el.classList.remove('sapUiSizeCompact');
+			if(cbCompact.checked) {
+				el.classList.add('sapUiSizeCompact');
+			}
+
+
+		});
+	</script>
+</body>
+
+</html>

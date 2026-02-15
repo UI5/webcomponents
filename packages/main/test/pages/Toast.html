@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>ui5-toast</title>
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Toast-B1R4u5BO.css">
+</head>
+
+<body>
+
+	<ui5-title>Toast ( ui5-toast )</ui5-title>
+
+	<!--TopStart-->
+	<ui5-button id="wcBtnShowToastTS">Show TopStart Toast</ui5-button>
+	<ui5-toast id="wcToastTS" placement="TopStart">TopStart</ui5-toast>
+
+	<br>
+
+	<!--TopCenter-->
+	<ui5-button id="wcBtnShowToastTC">Show TopCenter Toast</ui5-button>
+	<ui5-toast id="wcToastTC" placement="TopCenter">TopCenter</ui5-toast>
+
+	<br>
+
+	<!--TopEnd-->
+	<ui5-button id="wcBtnShowToastTE">Show TopEnd Toast</ui5-button>
+	<ui5-toast id="wcToastTE" duration="-1" placement="TopEnd">TopEnd</ui5-toast>
+
+	<br>
+
+	<!--MiddleStart-->
+	<ui5-button id="wcBtnShowToastMS">Show MiddleStart Toast</ui5-button>
+	<ui5-toast id="wcToastMS" duration="500" placement="MiddleStart">MiddleStart</ui5-toast>
+
+	<br>
+
+	<!--MiddleCenter-->
+	<ui5-button id="wcBtnShowToastMC">Show MiddleCenter Toast</ui5-button>
+	<ui5-toast id="wcToastMC" placement="MiddleCenter">MiddleCenter</ui5-toast>
+
+	<br>
+
+	<!--MiddleEnd-->
+	<ui5-button id="wcBtnShowToastME">Show MiddleEnd Toast</ui5-button>
+	<ui5-toast id="wcToastME" duration="1500" placement="MiddleEnd">MiddleEnd</ui5-toast>
+
+	<br>
+
+	<!--BottomStart-->
+	<ui5-button id="wcBtnShowToastBS">Show BottomStart Toast</ui5-button>
+	<ui5-toast id="wcToastBS" duration="10000" placement="BottomStart">BottomStart</ui5-toast>
+
+	<br>
+
+	<!--BottomCenter-->
+	<ui5-button id="wcBtnShowToastBC">Show BottomCenter Toast</ui5-button>
+	<ui5-toast id="wcToastBC">BottomCenter</ui5-toast>
+
+	<br>
+
+	<!--BottomEnd-->
+	<ui5-button id="wcBtnShowToastBE">Show BottomEnd Toast</ui5-button>
+	<ui5-toast id="wcToastBE" placement="BottomEnd">BottomEnd</ui5-toast>
+
+	<br>
+
+		<!--BottomEnd-->
+		<ui5-button id="wcBtnShowToastStyled">Show Styled Toast</ui5-button>
+		<ui5-toast id="wcToastStyled" placement="BottomCenter">
+			<div class="styled-content" tabindex="-1">
+				<span>Styled Toast</span>
+				<div class="actions">
+					<ui5-button design="Transparent">UNDO</ui5-button>
+					<ui5-button design="Transparent">DISMISS</ui5-button>
+				</div>
+			</div>
+		</ui5-toast>
+
+	<!--Toast and Dialog-->
+	<ui5-dialog id="dialog">
+		<div>Hello World</div>
+		<ui5-button id="btnDialog2">Close Dialog</ui5-button>
+
+		<ui5-button id="btnToastInDialog">Open Toast</ui5-button>
+		<ui5-toast id="toastInDialog" placement="BottomEnd">Toast</ui5-toast>
+	</ui5-dialog>
+
+	<h3>Test Dialog and Toast</h3>
+	<ui5-button id="btnDialog">Open Dialog</ui5-button>
+
+	<script>
+
+		// Attaching click listeners to the buttons which show the toasts
+		document.querySelectorAll("ui5-button").forEach(function(button){
+			button.addEventListener('click', function () {
+				document.querySelector("#" + button.id.replace("BtnShow", "")).open = true;
+			});
+		});
+
+		btnDialog.addEventListener('click', function () {
+			dialog.open = true;
+		});
+
+		btnDialog2.addEventListener('click', function () {
+			dialog.open = false;
+		});
+
+		btnToastInDialog.addEventListener('click', function () {
+			toastInDialog.open = true;
+		});
+
+	</script>
+
+</body>
+</html>

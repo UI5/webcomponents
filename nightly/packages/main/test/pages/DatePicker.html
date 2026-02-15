@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>DatePicker test page</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DatePicker-DrlZlN6i.css">
+</head>
+<body class="datepicker1auto">
+	<div style='width:600px;'>
+
+		<ui5-date-picker value-state="Negative">
+			<div slot="valueStateMessage">Hi</div>
+		</ui5-date-picker>
+
+		<ui5-label for="dpLabel">Deadline</ui5-label>
+		<ui5-date-picker id="dpLabel"></ui5-date-picker>
+
+		<h3> DatePicker with value-state-change event prevented </h3>
+		<ui5-date-picker id="dpVsChangePrevented" value-state="Negative"></ui5-date-picker>
+
+		<div>
+			<h3> DatePicker with no format pattern & min-max dates in ISO format</h3>
+			<ui5-date-picker id="dpMinMax-dates" min-date="2019-09-01" max-date="2019-11-01" value="Invalid"></ui5-date-picker>
+		</div>
+
+		<h3>Date picker with placeholder.</h3>
+		<ui5-date-picker id='ui5-datepicker--startDate'
+			placeholder='Delivery Date...'>
+		</ui5-date-picker>
+
+		<ui5-date-picker id='ui5-datepicker-value-state-message'
+		placeholder='Delivery Date...'
+		value-state="Negative">
+			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+			<div slot="valueStateMessage">Information message 2. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-date-picker>
+
+		<h3>placeholder + events</h3>
+		<ui5-date-picker id='dp5'
+			placeholder='Delivery Date...'>
+		</ui5-date-picker>
+		<ui5-label id="lblChange">change: N/A</ui5-label><br/>
+		<ui5-label id="lblLiveChange">input: N/A</ui5-label><br/>
+
+		<h3>placeholder + prevented default events</h3>
+		<ui5-date-picker id='dpPrevent'
+			placeholder='Delivery Date...'>
+		</ui5-date-picker>
+		<ui5-label id="lblChangePrevent">change: N/A</ui5-label><br/>
+		<ui5-label id="lblChangePreventTargetValue">target value on event fire : N/A</ui5-label><br/>
+		<ui5-label id="lblLiveChangePrevent">input: N/A</ui5-label><br/>
+
+		<h3>format-pattern - 'short'</h3>
+		<ui5-date-picker id='dp6' format-pattern='short'></ui5-date-picker>
+
+		<h3>format-pattern - 'long'</h3>
+		<ui5-date-picker id='dp7' format-pattern='long'></ui5-date-picker>
+
+		<h3>format-pattern - 'QQQ yyyy, MMM dd'</h3>
+		<ui5-date-picker id='dp8' format-pattern='QQQ yyyy, MMM dd'></ui5-date-picker>
+
+		<h3>format-pattern - 'EEE, M/d/yyyy'</h3>
+		<ui5-date-picker id='dp9' format-pattern='EEE, M/d/yyyy'></ui5-date-picker>
+
+		<h3>display-fomat='medium' value-fomat='yyyy-MM-dd'</h3>
+		<ui5-date-picker id='dp12' display-format='medium' value-format='yyyy-MM-dd'></ui5-date-picker>
+
+		<h3>Try the value - 'today'</h3>
+		<ui5-date-picker id='dp10'></ui5-date-picker>
+
+		<h3>Value is set using Java Script Date object</h3>
+		<ui5-date-picker id="dp11" value="11/11/2018" format-pattern="long"></ui5-date-picker>
+		<ui5-button id="b1" design="Default">Set date</ui5-button>
+
+		<h3>disabled</h3>
+		<ui5-date-picker id='dp2' value='11/11/2018' disabled></ui5-date-picker>
+
+		<h3>readonly</h3>
+		<ui5-date-picker id='dp3' placeholder='Delivery Date...' readonly></ui5-date-picker>
+
+		<h3>islamic calendar type</h3>
+		<ui5-date-picker primary-calendar-type='Islamic'></ui5-date-picker>
+
+		<h3>buddhist calendar type</h3>
+		<ui5-date-picker primary-calendar-type='Buddhist'></ui5-date-picker>
+
+		<h3>japanese calendar type</h3>
+		<ui5-date-picker primary-calendar-type='Japanese'></ui5-date-picker>
+
+		<h3>Date picker with primary and secondary calendar type</h3>
+		<ui5-date-picker primary-calendar-type='Islamic' secondary-calendar-type='Gregorian'></ui5-date-picker>
+
+		<h3>explicitly set empty placeholder</h3>
+		<ui5-date-picker placeholder=""></ui5-date-picker>
+
+		<h3>Date picker with min and max date 9/1/2019 - 11/1/2019</h3>
+		<ui5-date-picker id="dp33" min-date="9/1/2019" max-date="11/1/2019" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+
+		<h3>Date picker with only min date 1/1/2000</h3>
+		<ui5-date-picker id="dp34" min-date="1/1/2000" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+
+		<h3>Date picker with only max date date 1/1/2100</h3>
+		<ui5-date-picker id="dp35" max-date="1/1/2100" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+
+		<h3>1 months range</h3>
+		<ui5-date-picker id="minMax1" min-date="6/1/2020" max-date="25/1/2020" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+		<h3>2 months range</h3>
+		<ui5-date-picker id="minMax2" min-date="6/1/2020" max-date="25/3/2020" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+		<h3>3 months range</h3>
+		<ui5-date-picker id="minMax3" value="5/6/2020" min-date="6/1/2020" max-date="5/1/2021" format-pattern="dd/MM/yyyy"></ui5-date-picker>
+		<h3>1 year range</h3>
+		<ui5-date-picker id="minMax4" value="Feb 5, 2020" min-date="Jan 5, 2020" max-date="Jan 5, 2021"></ui5-date-picker>
+
+		<section>
+			<h3>Test accessibleName and accessibleNameRef</h3>
+			<ui5-date-picker id="dpAriaLabel" accessible-name="Hello World"></ui5-date-picker>
+			<br>
+			<ui5-label id="infoText">info text</ui5-label>
+			<ui5-date-picker id="dpAriaLabelledBy" accessible-name-ref="infoText"></ui5-date-picker>
+		</section>
+
+		<section class="ui5-content-density-compact">
+			<h3>DatePicker in Compact</h3>
+			<div>
+				<ui5-date-picker></ui5-date-picker>
+			</div>
+		</section>
+
+		<section>
+			<h3>DatePicker with properties given in the wrong format</h3>
+			<ui5-date-picker min-date="1/1/2021" max-date="31/1/2021" value="5/1/2021"></ui5-date-picker>
+		</section>
+
+		<h3>DatePicker with format `yyyy, dd/MM` should open picker on days</h3>
+		<ui5-date-picker id="dpCalendarModeDays" format-pattern="yyyy, dd/MM"></ui5-date-picker>
+
+		<h3>DatePicker with format `MMM y` should open picker on months</h3>
+		<ui5-date-picker id="dpCalendarModeMonths" format-pattern="MMM y"></ui5-date-picker>
+
+		<h3>DatePicker with format `yyyy` should open picker on years</h3>
+		<ui5-date-picker id="dpCalendarModeYears" format-pattern="yyyy"></ui5-date-picker>
+
+		<section>
+			<ui5-title>DatePicker with CalendarWeekNumbering ISO_8601</ui5-title>
+			<ui5-date-picker id="datepicker8" calendar-week-numbering="ISO_8601">
+			</ui5-date-picker>
+
+			<ui5-title>DatePicker with CalendarWeekNumbering MiddleEastern</ui5-title>
+			<ui5-date-picker id="datepicker9" calendar-week-numbering="MiddleEastern">
+			</ui5-date-picker>
+
+			<ui5-title>DatePicker with CalendarWeekNumbering WesternTraditional</ui5-title>
+			<ui5-date-picker id="datepicker10" calendar-week-numbering="WesternTraditional">
+			</ui5-date-picker>
+		</section>
+		<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-date-picker min-date="6/1/2020" max-date="5/1/2021" format-pattern="dd/MM/yyyy" required id="formDatepicker"></ui5-date-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+	</div>
+	<script>
+		const dp = document.getElementById('dp5');
+		const labelChange = document.getElementById('lblChange');
+		const labelLiveChange = document.getElementById('lblLiveChange');
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDatepicker = document.getElementById('formDatepicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDatepicker');
+		});
+
+		formDatepicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDatepicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+		dp.addEventListener('click', function() { console.log('click')});
+		dp.addEventListener('focus', function() {console.log('focus')});
+		dp.addEventListener('dblclick', function() { console.log('dblclick')});
+		dp.addEventListener('keydown', function() { console.log('keydown')});
+		dp.addEventListener('blur', function() { console.log('blur')});
+
+		dp.addEventListener('ui5-change', function(e) {
+			console.log('change: ', e.detail);
+			labelChange.innerHTML = 'change: ' + JSON.stringify(e.detail);
+		});
+		dp.addEventListener('ui5-input', function(e) {
+			console.log('input: ', e.detail);
+			labelLiveChange.innerHTML = 'input: ' + JSON.stringify(e.detail);
+		});
+
+		const dpPrevent = document.getElementById('dpPrevent');
+		const labelChangePrevent = document.getElementById('lblChangePrevent');
+		const labelChangePreventTargetValue = document.getElementById('lblChangePreventTargetValue');
+		const labelLiveChangePrevent = document.getElementById('lblLiveChangePrevent');
+
+		dpPrevent.addEventListener('ui5-change', function(e) {
+			e.preventDefault();
+			console.log('change: ', e.detail);
+			labelChangePreventTargetValue.innerHTML = 'target value on event fire: ' + e.target.value;
+			labelChangePrevent.innerHTML = 'change: ' + JSON.stringify(e.detail);
+		});
+		dpPrevent.addEventListener('ui5-input', function(e) {
+			console.log('input: ', e.detail);
+			labelLiveChangePrevent.innerHTML = 'input: ' + JSON.stringify(e.detail);
+		});
+
+		function datePickerInputChangeHandler(e) {
+			const dp = e.currentTarget;
+			dp.setAttribute('value-state', e.detail.valid ? 'None' : 'Negative');
+		}
+
+		document.getElementById('ui5-datepicker--startDate').addEventListener('ui5-input change', datePickerInputChangeHandler);
+		document.getElementById('ui5-datepicker--startDate').addEventListener('change', datePickerInputChangeHandler);
+
+		const dp11 = document.getElementById('dp11');
+
+		document.getElementById('b1').addEventListener("click", function(e) {
+			dp11.setAttribute("value", dp11.formatValue(new Date(2018, 11, 11)));
+		});
+
+		const datePickerValueStateChangePrevented = document.getElementById("dpVsChangePrevented");
+
+		datePickerValueStateChangePrevented.addEventListener("value-state-change", function(e) {
+			e.preventDefault();
+		});
+
+		dpCalendarModeDays.addEventListener("ui5-open", function(e) {
+			console.log("Picker is opened");
+		});
+
+		dpCalendarModeDays.addEventListener("ui5-close", function(e) {
+			console.log("Picker is closed");
+		});
+
+	</script>
+</body>
+</html>

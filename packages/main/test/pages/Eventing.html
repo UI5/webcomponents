@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Eventing</title>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Eventing-B99gHFIi.css">
+</head>
+
+<body class="eventing1auto">
+
+<ui5-link id="normalLink" href="#new">Normal link</ui5-link>
+<br>
+<ui5-link id="defaultPreventedLink" href="#newPrevented">Default prevented</ui5-link>
+<br>
+
+<script>
+    var link = document.getElementById("defaultPreventedLink");
+    link.addEventListener("ui5-click", function(event) {
+        event.preventDefault();
+    });
+</script>
+
+</body>
+</html>

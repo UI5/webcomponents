@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Inputs Alignment</title>
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/InputsAlignment-CkPlcSvQ.css">
+</head>
+
+<body class="inputsalignment1auto">
+	<h2>The way the components will be rendered out of the box</h2>
+	<ui5-input placeholder="I am ui5-input" value-state="Negative"></ui5-input>
+
+	<ui5-input placeholder="I am ui5-input" show-suggestions>
+		<ui5-icon slot="icon" name="message-error"></ui5-icon>
+		<ui5-li>Cozy</ui5-li>
+		<ui5-li>Compact</ui5-li>
+		<ui5-li>Condensed</ui5-li>
+	</ui5-input>
+
+	<ui5-date-picker></ui5-date-picker>
+
+	<ui5-select >
+		<ui5-option>short option</ui5-option>
+		<ui5-option selected>ui5-select: average long option</ui5-option>
+		<ui5-option>very very very very very long option</ui5-option>
+	</ui5-select>
+
+	<ui5-multi-combobox placeholder="I am multi cbx">
+		<ui5-mcb-item text="Compact"></ui5-mcb-item>
+	</ui5-multi-combobox>
+
+	<ui5-multi-combobox placeholder="I am muli cbx">
+		<ui5-mcb-item text="Compact"></ui5-mcb-item>
+	</ui5-multi-combobox>
+
+	<ui5-combobox placeholder="I am combobox">
+		<ui5-cb-item text="Active"></ui5-cb-item>
+		<ui5-cb-item text="Active"></ui5-cb-item>
+		<ui5-cb-item text="Active"></ui5-cb-item>
+		<ui5-cb-item text="Long sentence Long sentence Long sentence"></ui5-cb-item>
+		<ui5-cb-item text="Some word"></ui5-cb-item>
+	</ui5-combobox>
+	<hr>
+	<h2>Explicitly width:auto set</h2>
+	<section>
+		<ui5-input class="inputsalignment2auto" placeholder="I am ui5-input" value-state="Negative"></ui5-input>
+
+		<ui5-input class="inputsalignment2auto" placeholder="I am ui5-input">
+			<ui5-icon slot="icon" name="message-error"></ui5-icon>
+		</ui5-input>
+
+		<ui5-date-picker class="inputsalignment2auto"></ui5-date-picker>
+
+		<ui5-select class="inputsalignment2auto">
+			<ui5-option>short option</ui5-option>
+			<ui5-option selected>average long option</ui5-option>
+			<ui5-option>very very very very very long option</ui5-option>
+		</ui5-select>
+
+		<ui5-multi-combobox class="inputsalignment2auto" value="com">
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+		</ui5-multi-combobox>
+
+		<ui5-multi-combobox class="inputsalignment2auto" value="com">
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</section>
+
+	<hr>
+	<h2>Explicitly width:100% set</h2>
+	<section>
+		<ui5-input class="inputsalignment3auto" placeholder="I am ui5-input">
+			<ui5-icon slot="icon" name="message-error"></ui5-icon>
+		</ui5-input>
+
+		<ui5-date-picker class="inputsalignment3auto"></ui5-date-picker>
+
+		<ui5-select class="inputsalignment3auto">
+			<ui5-option>short option</ui5-option>
+			<ui5-option selected>average long option</ui5-option>
+			<ui5-option>very very very very very long option</ui5-option>
+		</ui5-select>
+
+		<ui5-multi-combobox class="inputsalignment3auto">
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+		</ui5-multi-combobox>
+
+		<ui5-multi-combobox class="inputsalignment3auto">
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</section>
+
+	<hr>
+	<div id="content"></div>
+
+	<script>
+		var reducer = function(accumulator, tag) {
+			return accumulator + "<br><" + tag + " style='width: 320px'></" + tag + ">" + "<br>";
+		}
+		var markup = ["", "ui5-input", "ui5-select", "ui5-multi-combobox", "ui5-date-picker", "ui5-textarea"].reduce(reducer);
+
+		content.innerHTML = markup
+			+ "<br>"
+			+ "<hr>"
+			+ "<br>"
+			+ "<ui5-select>"
+				+ "<ui5-option>Hello</ui5-option>"
+				+ "<ui5-option>World</ui5-option>"
+				+ "<ui5-option>UI5</ui5-option>"
+				+ "<ui5-option>Components</ui5-option>"
+				+ "</ui5-select>"
+
+				+ "<br>"
+				+ "<br>"
+
+				+ "<ui5-multi-combobox>"
+					+ "<ui5-mcb-item text=\"Compact\"></ui5-mcb-item>"
+					+ "</ui5-multi-combobox>";
+	</script>
+</body>
+
+
+</html>

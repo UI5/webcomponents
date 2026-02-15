@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-multi-input</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/MultiInput_Suggestions-RIz6GZEu.css">
+</head>
+
+<body class="multiinput_suggestions1auto ui5-content-density-compact" >
+
+
+	<div class="sample-container">
+		<h1>Tokens + Suggestions</h1>
+
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token">
+			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
+			<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+			<ui5-suggestion-item text="esse"></ui5-suggestion-item>
+			<ui5-suggestion-item text="labore"></ui5-suggestion-item>
+			<ui5-suggestion-item text="amet"></ui5-suggestion-item>
+			<ui5-suggestion-item text="aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="excepteur"></ui5-suggestion-item>
+		</ui5-multi-input>
+
+		<ui5-dialog id="dialog" header-text="Add Competency">
+
+			<ui5-list id="tokens-list">
+
+			</ui5-list>
+
+			<div slot="footer" class="footer">
+				<ui5-button design="Emphasized">Save</ui5-button>
+				<ui5-button>Cancel</ui5-button>
+			</div>
+		</ui5-dialog>
+	</div>
+
+	<div class="sample-container">
+
+		<h1>Token Creation on enter or focus out</h1>
+
+		<ui5-multi-input show-suggestions id="token-creation"></ui5-multi-input>
+	</div>
+
+	<div class="sample-container">
+
+		<h1>Token Creation onChange (unique)</h1>
+
+		<ui5-multi-input show-suggestions id="token-unique">
+			<div slot="valueStateMessage">Token is already in the list</div>
+		</ui5-multi-input>
+	</div>
+
+	<script>
+
+		var createTokenFromText = function (text) {
+			var token = document.createElement("ui5-token");
+
+			token.setAttribute("text", text);
+			token.setAttribute("slot", "tokens");
+
+			return token;
+		}
+
+		var createTokenFromLI = function (li) {
+			return createTokenFromText(li.text);
+		};
+
+		var addTokenToMI = function (token, id) {
+			document.getElementById(id).appendChild(token);
+		};
+
+		/* ----------------- */
+
+		document.getElementById("suggestion-token").addEventListener("ui5-value-help-trigger", function (event) {
+			var list = document.getElementById("tokens-list");
+
+			list.innerHTML = "";
+
+			event.target.tokens.forEach(function (token) {
+				var li = document.createElement("ui5-li");
+				li.innerHTML = token.text;
+
+				list.appendChild(li);
+			});
+
+			document.getElementById("dialog").open = true;
+		});
+
+		document.getElementById("suggestion-token").addEventListener("ui5-selection-change", function (event) {
+			var item = event.detail.item;
+			var mi = event.target
+			var token = document.createElement("ui5-token");
+
+			token.setAttribute("text", item.text);
+			token.setAttribute("slot", "tokens");
+			event.target.appendChild(token);
+
+			// discuss ?!
+			event.target.value = "";
+		});
+
+		document.getElementById("suggestion-token").addEventListener("ui5-token-delete", function (event) {
+			var mi = event.target;
+
+			event.detail.tokens.forEach(token => {
+				mi.removeChild(token);
+			});
+		});
+
+		document.getElementById("token-creation").addEventListener("ui5-change", function (event) {
+			event.target.appendChild(createTokenFromText(event.target.value));
+
+			event.target.value = "";
+		});
+
+		document.getElementById("token-creation").addEventListener("ui5-token-delete", function (event) {
+			var mi = event.target;
+
+			event.detail.tokens.forEach(token => {
+				mi.removeChild(token);
+			});
+		});
+
+		document.getElementById("token-unique").addEventListener("ui5-change", function (event) {
+			if (!event.target.value) {
+				return;
+			};
+
+			var isDuplicate = event.target.tokens.some(function(token) {
+				return token.text === event.target.value;
+			});
+
+			if (isDuplicate) {
+				event.target.valueState = "Negative";
+
+				setTimeout(function () {
+					event.target.valueState = "None";
+				}, 2000);
+
+				return;
+			}
+
+			event.target.appendChild(createTokenFromText(event.target.value));
+
+			event.target.value = "";
+		});
+
+		document.getElementById("token-unique").addEventListener("ui5-token-delete", function (event) {
+			var mi = event.target;
+			event.detail.tokens.forEach(token => {
+				mi.removeChild(token);
+			});
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,2920 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dist/AssetRegistry.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Assets-fetch.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Assets-node.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Assets.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Boot.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/CustomElementsRegistry.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/CustomElementsScope.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/CustomElementsScopeUtils.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/DOMObserver.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Device.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/DragAndDrop.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/EventProvider.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "EventProvider",
+            "module": "dist/EventProvider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/FeaturesRegistry.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/FontFace.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "insertFontFace",
+            "module": "dist/FontFace.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/IgnoreCustomElements.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/InitialConfiguration.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Keys.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Location.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/ManagedStyles.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/MediaRange.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "MediaRange",
+            "module": "dist/MediaRange.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/PropertiesFileFormat.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "parseProperties",
+            "module": "dist/PropertiesFileFormat.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Render.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/RenderQueue.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "RenderQueue",
+            "module": "dist/RenderQueue.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Runtimes.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/ScrollbarStyles.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "insertScrollbarStyles",
+            "module": "dist/ScrollbarStyles.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/SystemCSSVars.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "insertSystemCSSVars",
+            "module": "dist/SystemCSSVars.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/Theming.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/UI5Element.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Base class for all UI5 Web Components",
+          "name": "UI5Element",
+          "members": [
+            {
+              "kind": "method",
+              "name": "onBeforeRendering",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called every time before the component renders.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onAfterRendering",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called every time after the component renders.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onEnterDOM",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called on connectedCallback - added to the DOM.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onExitDOM",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called on disconnectedCallback - removed from the DOM.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "attachInvalidate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "(param: InvalidationInfo) => void"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Attach a callback that will be executed whenever the component is invalidated",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "detachInvalidate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "(param: InvalidationInfo) => void"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Detach the callback that is executed whenever the component is invalidated",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onInvalidation",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "changeInfo",
+                  "type": {
+                    "text": "ChangeInfo",
+                    "references": [
+                      {
+                        "name": "ChangeInfo",
+                        "package": "@ui5/webcomponents-base",
+                        "module": "dist/UI5Element.js"
+                      }
+                    ]
+                  },
+                  "description": "An object with information about the change that caused invalidation.\nThe object can have the following properties:\n- type: (property|slot) tells what caused the invalidation\n1) property: a property value was changed either directly or as a result of changing the corresponding attribute\n2) slot: a slotted node(nodes) changed in one of several ways (see \"reason\")\n\n- name: the name of the property or slot that caused the invalidation\n\n- reason: (children|textcontent|childchange|slotchange) relevant only for type=\"slot\" only and tells exactly what changed in the slot\n1) children: immediate children (HTML elements or text nodes) were added, removed or reordered in the slot\n2) textcontent: text nodes in the slot changed value (or nested text nodes were added or changed value). Can only trigger for slots of \"type: Node\"\n3) slotchange: a slot element, slotted inside that slot had its \"slotchange\" event listener called. This practically means that transitively slotted children changed.\nCan only trigger if the child of a slot is a slot element itself.\n4) childchange: indicates that a UI5Element child in that slot was invalidated and in turn invalidated the component.\nCan only trigger for slots with \"invalidateOnChildChange\" metadata descriptor\n\n- newValue: the new value of the property (for type=\"property\" only)\n\n- oldValue: the old value of the property (for type=\"property\" only)\n\n- child the child that was changed (for type=\"slot\" and reason=\"childchange\" only)",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "A callback that is executed each time an already rendered component is invalidated (scheduled for re-rendering)",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getDomRef",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Returns the DOM Element inside the Shadow Root that corresponds to the opening tag in the UI5 Web Component's template\n*Note:* For logical (abstract) elements (items, options, etc...), returns the part of the parent's DOM that represents this option\nUse this method instead of \"this.shadowRoot\" to read the Shadow DOM, if ever necessary",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getFocusDomRef",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Returns the DOM Element marked with \"data-sap-focus-ref\" inside the template.\nThis is the element that will receive the focus by default.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getFocusDomRefAsync",
+              "return": {
+                "type": {
+                  "text": "Promise<HTMLElement | undefined>"
+                }
+              },
+              "description": "Waits for dom ref and then returns the DOM Element marked with \"data-sap-focus-ref\" inside the template.\nThis is the element that will receive the focus by default.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "focusOptions",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  },
+                  "description": "additional options for the focus",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Set the focus to the element, returned by \"getFocusDomRef()\" (marked by \"data-sap-focus-ref\")",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "fireEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                },
+                "description": "false, if the event was cancelled (preventDefault called), true otherwise"
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "name of the event",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "data",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  },
+                  "description": "additional data for the event",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "cancelable",
+                  "default": "false",
+                  "description": "true, if the user can call preventDefault on the event object",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "bubbles",
+                  "default": "true",
+                  "description": "true, if the event bubbles",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "privacy": "public",
+              "deprecated": "use fireDecoratorEvent instead"
+            },
+            {
+              "kind": "method",
+              "name": "fireDecoratorEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                },
+                "description": "false, if the event was cancelled (preventDefault called), true otherwise"
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "N"
+                  },
+                  "description": "name of the event",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "data",
+                  "optional": true,
+                  "type": {
+                    "text": "this[\"eventDetails\"][N] | undefined"
+                  },
+                  "description": "additional data for the event",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Fires a custom event, configured via the \"event\" decorator.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getSlottedNodes",
+              "return": {
+                "type": {
+                  "text": "Array<T>"
+                }
+              },
+              "description": "Returns the actual children, associated with a slot.\nUseful when there are transitive slots in nested component scenarios and you don't want to get a list of the slots, but rather of their content.",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "attachComponentStateFinalized",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "() => void"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Attach a callback that will be executed whenever the component's state is finalized",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "detachComponentStateFinalized",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "() => void"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Detach the callback that is executed whenever the component's state is finalized",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "effectiveDir",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Determines whether the component should be rendered in RTL mode or not.\nReturns: \"rtl\", \"ltr\" or undefined",
+              "privacy": "public",
+              "default": "undefined",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isUI5Element",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Used to duck-type UI5 elements without using instanceof",
+              "privacy": "public",
+              "default": "true",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "getUniqueDependencies",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "Array<typeof UI5Element>"
+                }
+              },
+              "description": "Returns a list of the unique dependencies for this UI5 Web Component",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof UI5Element"
+                }
+              },
+              "description": "Registers a UI5 Web Component in the browser window object",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getMetadata",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "UI5ElementMetadata",
+                  "references": [
+                    {
+                      "name": "UI5ElementMetadata",
+                      "package": "@ui5/webcomponents-base",
+                      "module": "dist/UI5ElementMetadata.js"
+                    }
+                  ]
+                }
+              },
+              "description": "Returns an instance of UI5ElementMetadata.js representing this UI5 Web Component's full metadata (its and its parents')\nNote: not to be confused with the \"get metadata()\" method, which returns an object for this class's metadata only",
+              "privacy": "public"
+            }
+          ],
+          "attributes": [
+            {
+              "description": "Determines whether the component should be rendered in RTL mode or not.\nReturns: \"rtl\", \"ltr\" or undefined",
+              "name": "effective-dir",
+              "default": "undefined",
+              "fieldName": "effectiveDir",
+              "type": {
+                "text": "any"
+              }
+            },
+            {
+              "description": "Used to duck-type UI5 elements without using instanceof",
+              "name": "is-ui5-element",
+              "default": "true",
+              "fieldName": "isUI5Element",
+              "type": {
+                "text": "any"
+              }
+            }
+          ],
+          "customElement": true,
+          "_ui5privacy": "public"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "UI5Element",
+            "module": "dist/UI5Element.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/UI5ElementMetadata.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "UI5ElementMetadata",
+          "members": [
+            {
+              "kind": "method",
+              "name": "validateSlotValue",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "Node"
+                }
+              },
+              "description": "Validates the slot's value and returns it if correct\nor throws an exception if not.\n**Note:** Only intended for use by UI5Element.js",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getPureTag",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "Returns the tag of the UI5 Element without the scope",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getTag",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "Returns the tag of the UI5 Element",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "hasAttribute",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "propName",
+                  "type": {
+                    "text": "string"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Determines whether a property should have an attribute counterpart",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getPropertiesList",
+              "return": {
+                "type": {
+                  "text": "Array<string>"
+                }
+              },
+              "description": "Returns an array with the properties of the UI5 Element (in camelCase)",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getAttributesList",
+              "return": {
+                "type": {
+                  "text": "Array<string>"
+                }
+              },
+              "description": "Returns an array with the attributes of the UI5 Element (in kebab-case)",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "hasSlots",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Determines whether this UI5 Element supports any slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "hasIndividualSlots",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Determines whether this UI5 Element supports any slots with \"individualSlots: true\"",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "slotsAreManaged",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Determines whether this UI5 Element needs to invalidate if children are added/removed/changed",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "supportsF6FastNavigation",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Determines whether this control supports F6 fast navigation",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getProperties",
+              "return": {
+                "type": {
+                  "text": "Record<string, Property>",
+                  "references": [
+                    {
+                      "name": "Property",
+                      "package": "@ui5/webcomponents-base",
+                      "module": "dist/UI5ElementMetadata.js"
+                    }
+                  ]
+                }
+              },
+              "description": "Returns an object with key-value pairs of properties and their metadata definitions",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getEvents",
+              "return": {
+                "type": {
+                  "text": "EventData",
+                  "references": [
+                    {
+                      "name": "EventData",
+                      "package": "@ui5/webcomponents-base",
+                      "module": "dist/UI5ElementMetadata.js"
+                    }
+                  ]
+                }
+              },
+              "description": "Returns an object with key-value pairs of events and their metadata definitions",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getSlots",
+              "return": {
+                "type": {
+                  "text": "Record<string, Slot>",
+                  "references": [
+                    {
+                      "name": "Slot",
+                      "package": "@ui5/webcomponents-base",
+                      "module": "dist/UI5ElementMetadata.js"
+                    }
+                  ]
+                }
+              },
+              "description": "Returns an object with key-value pairs of slots and their metadata definitions",
+              "privacy": "public"
+            }
+          ],
+          "_ui5privacy": "public"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "UI5ElementMetadata",
+            "module": "dist/UI5ElementMetadata.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/connectToComponent.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "connectToComponent",
+            "module": "dist/connectToComponent.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/getSharedResource.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getSharedResource",
+            "module": "dist/getSharedResource.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/i18nBundle.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "I18nBundle",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getText",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "textObj",
+                  "type": {
+                    "text": "I18nText | string",
+                    "references": [
+                      {
+                        "name": "I18nText",
+                        "package": "@ui5/webcomponents-base",
+                        "module": "dist/i18nBundle.js"
+                      }
+                    ]
+                  },
+                  "description": "key/defaultText pair or just the key",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "Array<number | string>"
+                  },
+                  "description": "Values for the placeholders",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Returns a text in the currently loaded language",
+              "privacy": "public"
+            }
+          ],
+          "_ui5privacy": "public"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "I18nBundle",
+            "module": "dist/i18nBundle.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "UI5Element",
+            "module": "dist/index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/jsx-dev-runtime.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/jsx-runtime.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/jsx-utils.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/ssr-dom-shim.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/ssr-dom.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/updateShadowRoot.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "updateShadowRoot",
+            "module": "dist/updateShadowRoot.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/validateThemeRoot.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "validateThemeRoot",
+            "module": "dist/validateThemeRoot.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/animations/AnimationQueue.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AnimationQueue",
+            "module": "dist/animations/AnimationQueue.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/animations/animate.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "animate",
+            "module": "dist/animations/animate.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/animations/scroll.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "scroll",
+            "module": "dist/animations/scroll.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/animations/slideDown.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "slideDown",
+            "module": "dist/animations/slideDown.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/animations/slideUp.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "slideUp",
+            "module": "dist/animations/slideUp.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/asset-registries/Icons.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/asset-registries/Illustrations.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/asset-registries/LocaleData.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/asset-registries/Themes.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/asset-registries/i18n.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/AnimationMode.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/CalendarType.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/ConfigurationReset.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Fonts.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/FormatSettings.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Icons.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Language.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/NoConflict.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Theme.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/ThemeRoot.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Timezone.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/config/Tooltips.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/converters/DOMReference.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "DOMReferenceConverter",
+            "module": "dist/converters/DOMReference.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/bound.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "bound",
+            "module": "dist/decorators/bound.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/customElement.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "customElement",
+            "module": "dist/decorators/customElement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/event-strict.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "event",
+            "module": "dist/decorators/event-strict.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/event.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "event",
+            "module": "dist/decorators/event.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/i18n.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "i18n",
+            "module": "dist/decorators/i18n.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/property.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "property",
+            "module": "dist/decorators/property.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/query.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "query",
+            "module": "dist/decorators/query.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/queryAll.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "queryAll",
+            "module": "dist/decorators/queryAll.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/slot-strict.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "slot",
+            "module": "dist/decorators/slot-strict.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/decorators/slot.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "slot",
+            "module": "dist/decorators/slot.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/delegate/ItemNavigation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The ItemNavigation class manages the calculations to determine the correct \"tabindex\" for a group of related items inside a root component.\nImportant: ItemNavigation only does the calculations and does not change \"tabindex\" directly, this is a responsibility of the developer.\n\nThe keys that trigger ItemNavigation are:\n - Up/down\n - Left/right\n - Home/End\n\nUsage:\n1) Use the \"getItemsCallback\" constructor property to pass a callback to ItemNavigation, which, whenever called, will return the list of items to navigate among.\n\nEach item passed to ItemNavigation via \"getItemsCallback\" must be:\n - A) either a UI5Element with a \"forcedTabIndex\" property\n - B) or an Object with \"id\" and \"forcedTabIndex\" properties which represents a part of the root component's shadow DOM.\n   The \"id\" must be a valid ID within the shadow root of the component ItemNavigation operates on.\n   This object must not be a DOM object because, as said, ItemNavigation will not set \"tabindex\" on it. It must be a representation of a DOM object only\n   and the developer has the responsibility to update the \"tabindex\" in the component's DOM.\n - C) a combination of the above\n\nWhenever the user navigates with the keyboard, ItemNavigation will modify the \"forcedTabIndex\" properties of the items.\nIt is the items' responsibilities to re-render themselves and apply the correct value of \"tabindex\" (i.e. to map the \"forcedTabIndex\" ItemNavigation set to them to the \"tabindex\" property).\nIf the items of the ItemNavigation are UI5Elements themselves, this can happen naturally since they will be invalidated by their \"forcedTabIndex\" property.\nIf the items are Objects with \"id\" and \"forcedTabIndex\" however, it is the developer's responsibility to apply these and the easiest way is to have the root component invalidated by ItemNavigation.\nTo do so, set the \"affectedPropertiesNames\" constructor property to point to one or more of the root component's properties that need refreshing when \"forcedTabIndex\" is changed deeply.\n\n2) Call the \"setCurrentItem\" method of ItemNavigation whenever you want to change the current item.\nThis is most commonly required if the user for example clicks on an item and thus selects it directly.\nPass as the only argument to \"setCurrentItem\" the item that becomes current (must be one of the items, returned by \"getItemsCallback\").",
+          "name": "ItemNavigation",
+          "members": [
+            {
+              "kind": "method",
+              "name": "setCurrentItem",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "current",
+                  "type": {
+                    "text": "ITabbable",
+                    "references": [
+                      {
+                        "name": "ITabbable",
+                        "package": "@ui5/webcomponents-base",
+                        "module": "dist/delegate/ItemNavigation.js"
+                      }
+                    ]
+                  },
+                  "description": "the new selected item",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Call this method to set a new \"current\" (selected) item in the item navigation\nNote: the item passed to this function must be one of the items, returned by the getItemsCallback function",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "setRowSize",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "newRowSize",
+                  "type": {
+                    "text": "number"
+                  },
+                  "_ui5privacy": "public"
+                }
+              ],
+              "description": "Call this method to dynamically change the row size",
+              "privacy": "public"
+            }
+          ],
+          "_ui5privacy": "public"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ItemNavigation",
+            "module": "dist/delegate/ItemNavigation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/delegate/ResizeHandler.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Allows to register/deregister resize observers for a DOM element",
+          "name": "ResizeHandler",
+          "members": [
+            {
+              "kind": "method",
+              "name": "register",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  },
+                  "description": "UI5 Web Component or DOM Element to be observed",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "ResizeObserverCallback",
+                    "references": [
+                      {
+                        "name": "ResizeObserverCallback",
+                        "package": "@ui5/webcomponents-base",
+                        "module": "dist/delegate/ResizeHandler.js"
+                      }
+                    ]
+                  },
+                  "description": "Callback to be executed",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "deregister",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  },
+                  "description": "UI5 Web Component or DOM Element to be unobserved",
+                  "_ui5privacy": "public"
+                },
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "ResizeObserverCallback",
+                    "references": [
+                      {
+                        "name": "ResizeObserverCallback",
+                        "package": "@ui5/webcomponents-base",
+                        "module": "dist/delegate/ResizeHandler.js"
+                      }
+                    ]
+                  },
+                  "description": "Callback to be removed",
+                  "_ui5privacy": "public"
+                }
+              ],
+              "privacy": "public"
+            }
+          ],
+          "_ui5privacy": "public"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ResizeHandler",
+            "module": "dist/delegate/ResizeHandler.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/delegate/ScrollEnablement.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ScrollEnablement",
+            "module": "dist/delegate/ScrollEnablement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/F6Navigation.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "F6Navigation",
+            "module": "dist/features/F6Navigation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/InputElementsFormSupport.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/LegacyDateFormats.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "LegacyDateFormats",
+            "module": "dist/features/LegacyDateFormats.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/OpenUI5Element.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "OpenUI5Element",
+            "module": "dist/features/OpenUI5Element.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/OpenUI5Enablement.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "OpenUI5Enablement",
+            "module": "dist/features/OpenUI5Enablement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/OpenUI5Support.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "OpenUI5Support",
+            "module": "dist/features/OpenUI5Support.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/insertOpenUI5PopupStyles.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "insertOpenUI5PopupStyles",
+            "module": "dist/features/insertOpenUI5PopupStyles.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/patchPatcher.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "patchPatcher",
+            "module": "dist/features/patchPatcher.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/features/patchPopup.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/Locale.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Locale",
+            "module": "dist/locale/Locale.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/RTLAwareRegistry.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/applyDirection.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "applyDirection",
+            "module": "dist/locale/applyDirection.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/directionChange.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/getEffectiveDir.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getEffectiveDir",
+            "module": "dist/locale/getEffectiveDir.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/getLocale.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getLocale",
+            "module": "dist/locale/getLocale.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/languageChange.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/nextFallbackLocale.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "nextFallbackLocale",
+            "module": "dist/locale/nextFallbackLocale.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/locale/normalizeLocale.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "normalizeLocale",
+            "module": "dist/locale/normalizeLocale.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/renderer/JsxRenderer.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "jsxRenderer",
+            "module": "dist/renderer/JsxRenderer.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/renderer/LitRenderer.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "litRender",
+            "module": "dist/renderer/LitRenderer.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/renderer/executeTemplate.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "executeTemplate",
+            "module": "dist/renderer/executeTemplate.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/CustomStyle.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/ThemeLoaded.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/ThemeRegistered.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/applyTheme.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "applyTheme",
+            "module": "dist/theming/applyTheme.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/componentStyles.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/getConstructableStyle.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getConstructableStyle",
+            "module": "dist/theming/getConstructableStyle.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/getEffectiveStyle.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getEffectiveStyle",
+            "module": "dist/theming/getEffectiveStyle.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/getStylesString.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getStylesString",
+            "module": "dist/theming/getStylesString.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/theming/getThemeDesignerTheme.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getThemeDesignerTheme",
+            "module": "dist/theming/getThemeDesignerTheme.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/thirdparty/_merge.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "fnMerge",
+            "module": "dist/thirdparty/_merge.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/thirdparty/isPlainObject.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "fnIsPlainObject",
+            "module": "dist/thirdparty/isPlainObject.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/thirdparty/merge.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "fnMerge",
+            "module": "dist/thirdparty/merge.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/AnimationMode.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "AnimationMode",
+          "description": "Different types of AnimationMode.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "full",
+              "name": "Full",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "basic",
+              "name": "Basic",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "minimal",
+              "name": "Minimal",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "none",
+              "name": "None",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AnimationMode",
+            "module": "dist/types/AnimationMode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/CalendarType.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "CalendarType",
+          "description": "Different calendar types.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Gregorian",
+              "name": "Gregorian",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Islamic",
+              "name": "Islamic",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Japanese",
+              "name": "Japanese",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Buddhist",
+              "name": "Buddhist",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Persian",
+              "name": "Persian",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CalendarType",
+            "module": "dist/types/CalendarType.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/InvisibleMessageMode.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "InvisibleMessageMode",
+            "module": "dist/types/InvisibleMessageMode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/ItemNavigationBehavior.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "ItemNavigationBehavior",
+          "description": "Different behavior for ItemNavigation.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "description": "Static behavior: navigations stops at the first or last item.",
+              "default": "Static",
+              "name": "Static",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "description": "Cycling behavior: navigating past the last item continues with the first and vice versa.",
+              "default": "Cyclic",
+              "name": "Cyclic",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ItemNavigationBehavior",
+            "module": "dist/types/ItemNavigationBehavior.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/MovePlacement.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "MovePlacement",
+          "description": "Placements of a moved element relative to a target element.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "On",
+              "name": "On",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Before",
+              "name": "Before",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "After",
+              "name": "After",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "MovePlacement",
+            "module": "dist/types/MovePlacement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/NavigationMode.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "NavigationMode",
+          "description": "Different navigation modes for ItemNavigation.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Auto",
+              "name": "Auto",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Vertical",
+              "name": "Vertical",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Horizontal",
+              "name": "Horizontal",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Paging",
+              "name": "Paging",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "NavigationMode",
+            "module": "dist/types/NavigationMode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/Orientation.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Orientation",
+            "module": "dist/types/Orientation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/SortOrder.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "SortOrder",
+          "description": "Defines the sort order.",
+          "_ui5privacy": "public",
+          "_ui5since": "2.8.0",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "description": "Sorting is not applied.",
+              "default": "None",
+              "name": "None",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "description": "Sorting is applied in ascending order.",
+              "default": "Ascending",
+              "name": "Ascending",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "description": "Sorting is applied in descending order.",
+              "default": "Descending",
+              "name": "Descending",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "SortOrder",
+            "module": "dist/types/SortOrder.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/types/ValueState.js",
+      "declarations": [
+        {
+          "kind": "enum",
+          "name": "ValueState",
+          "description": "Different types of ValueStates.",
+          "_ui5privacy": "public",
+          "members": [
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "None",
+              "name": "None",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Positive",
+              "name": "Positive",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Critical",
+              "name": "Critical",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Negative",
+              "name": "Negative",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "privacy": "public",
+              "default": "Information",
+              "name": "Information",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ValueState",
+            "module": "dist/types/ValueState.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/AccessibilityTextsHelper.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/Caret.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/ColorConversion.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/FetchHelper.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/FocusableElements.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/HTMLSanitizer.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/InvisibleMessage.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "announce",
+            "module": "dist/util/InvisibleMessage.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/PopupUtils.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/SelectionAssistant.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getElementSelection",
+            "module": "dist/util/SelectionAssistant.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/SlotsHelper.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/StringHelper.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/TabbableElements.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/arraysAreEqual.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "arraysAreEqual",
+            "module": "dist/util/arraysAreEqual.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/clamp.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "clamp",
+            "module": "dist/util/clamp.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/createInstanceChecker.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "createChecker",
+            "module": "dist/util/createInstanceChecker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/createLinkInHead.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "createLinkInHead",
+            "module": "dist/util/createLinkInHead.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/createMultiInstanceChecker.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "createMultiInstanceChecker",
+            "module": "dist/util/createMultiInstanceChecker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/debounce.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "debounce",
+            "module": "dist/util/debounce.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/detectNavigatorLanguage.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "detectNavigatorLanguage",
+            "module": "dist/util/detectNavigatorLanguage.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/escapeRegex.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "escapeRegex",
+            "module": "dist/util/escapeRegex.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/fixSafariActiveState.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "fixSafariActiveState",
+            "module": "dist/util/fixSafariActiveState.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/formatMessage.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "formatMessage",
+            "module": "dist/util/formatMessage.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/generateHighlightedMarkup.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "generateHighlightedMarkup",
+            "module": "dist/util/generateHighlightedMarkup.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getActiveElement.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getActiveElement",
+            "module": "dist/util/getActiveElement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getClassCopy.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getClassCopy",
+            "module": "dist/util/getClassCopy.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getDesigntimePropertyAsArray.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "designTimePropertyAsArray",
+            "module": "dist/util/getDesigntimePropertyAsArray.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getEffectiveContentDensity.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getEffectiveContentDensity",
+            "module": "dist/util/getEffectiveContentDensity.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getFastNavigationGroups.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getFastNavigationGroups",
+            "module": "dist/util/getFastNavigationGroups.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getFileExtension.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getFileExtension",
+            "module": "dist/util/getFileExtension.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getNormalizedTarget.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getNormalizedTarget",
+            "module": "dist/util/getNormalizedTarget.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getParentElement.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getParentElement",
+            "module": "dist/util/getParentElement.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/getSingletonElementInstance.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "getSingletonElementInstance",
+            "module": "dist/util/getSingletonElementInstance.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/hash2str.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "hash2str",
+            "module": "dist/util/hash2str.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isElementClickable.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isElementClickable",
+            "module": "dist/util/isElementClickable.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isElementHidden.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isElementHidden",
+            "module": "dist/util/isElementHidden.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isElementInView.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isElementInView",
+            "module": "dist/util/isElementInView.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isElementTabbable.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isElementTabbable",
+            "module": "dist/util/isElementTabbable.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isEventMarked.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isEventMarked",
+            "module": "dist/util/isEventMarked.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/isValidPropertyName.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "isValidPropertyName",
+            "module": "dist/util/isValidPropertyName.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/throttle.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "throttle",
+            "module": "dist/util/throttle.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/toLowercaseEnumValue.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "toLowercaseEnumValue",
+            "module": "dist/util/toLowercaseEnumValue.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/valueStateNavigation.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/whenDOMReady.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "whenDOMReady",
+            "module": "dist/util/whenDOMReady.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/util/willShowContent.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "willShowContent",
+            "module": "dist/util/willShowContent.js"
+          }
+        }
+      ]
+    }
+  ]
+}

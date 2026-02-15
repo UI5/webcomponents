@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Avatar Fallback Logic Examples</title>
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<style>
+		.section {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+			gap: 2rem;
+			padding: 2rem;
+		}
+
+		.example-block {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 1rem;
+			border: 1px solid #eee;
+			border-radius: 8px;
+			background: #fafbfc;
+		}
+
+		.full-width-example {
+			/* Span from first to last column in the grid */
+			grid-column: 1 / -1;
+		}
+
+		[ui5-avatar] {
+			margin-top: auto;
+		}
+
+		[ui5-title] {
+			text-align: center;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+	<ui5-title level="H1" size="H4" style="margin-top:2rem;">Avatar Fallback Logic Examples</ui5-title>
+	<div class="section">
+		<div class="example-block">
+			<ui5-title level="H4">1. Image loads successfully</ui5-title>
+			<ui5-text>should show image</ui5-text>
+			<ui5-avatar size="M">
+				<img src="/webcomponents/assets/John%20Miller-CXQXuWG-.png" alt="John Miller">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">2. Image fails to load, no initials, no icon</ui5-title>
+			<ui5-text>should show fallback icon</ui5-text>
+			<ui5-avatar size="M">
+				<img src="./img/John_Miller.pngs" alt="Broken">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">3. Image fails to load, valid initials</ui5-title>
+			<ui5-text>should show initials</ui5-text>
+			<ui5-avatar initials="JM" size="M">
+				<img src="./img/John_Miller.pngs" alt="Broken">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">4. No image, valid initials</ui5-title>
+			<ui5-text>should show initials</ui5-text>
+			<ui5-avatar initials="AB" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">5. No image, invalid initials</ui5-title>
+			<ui5-text>should show fallback icon</ui5-text>
+			<ui5-avatar initials="123" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">6. No image, icon provided</ui5-title>
+			<ui5-text>should show icon</ui5-text>
+			<ui5-avatar icon="ai" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">7. Image fails to load, icon provided</ui5-title>
+			<ui5-text>should show icon</ui5-text>
+			<ui5-avatar icon="alert" size="M">
+				<img src="./img/John_Miller.pngs" alt="Broken">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">8. Image loads, initials provided</ui5-title>
+			<ui5-text>should show image, not initials</ui5-text>
+			<ui5-avatar initials="XY" size="M">
+				<img src="/webcomponents/assets/John%20Miller-CXQXuWG-.png" alt="John Miller">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">9. Image loads, icon provided</ui5-title>
+			<ui5-text>should show image, not icon</ui5-text>
+			<ui5-avatar icon="alert" size="M">
+				<img src="/webcomponents/assets/John%20Miller-CXQXuWG-.png" alt="John Miller">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">10. No image, no initials, no icon</ui5-title>
+			<ui5-text>should show fallback icon</ui5-text>
+			<ui5-avatar size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">11. Initials too wide for small avatar</ui5-title>
+			<ui5-text>should show fallback icon (WWW doesn't fit in M)</ui5-text>
+			<ui5-avatar initials="WWW" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">12. Custom fallback icon</ui5-title>
+			<ui5-text>should show custom fallback icon instead of default</ui5-text>
+			<ui5-avatar fallback-icon="person-placeholder" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">13. Broken image with custom fallback</ui5-title>
+			<ui5-text>should show custom fallback icon when image fails</ui5-text>
+			<ui5-avatar fallback-icon="alert" size="M">
+				<img src="./img/broken.png" alt="Broken">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">14. Non-Latin initials (invalid)</ui5-title>
+			<ui5-text>should show fallback icon for non-Latin characters</ui5-text>
+			<ui5-avatar initials="АБ" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">15. Too many initials (invalid)</ui5-title>
+			<ui5-text>should show fallback icon for >3 characters</ui5-text>
+			<ui5-avatar initials="ABCD" size="M"></ui5-avatar>
+		</div>
+
+		<div class="example-block">
+			<ui5-title level="H4">16. Empty image source</ui5-title>
+			<ui5-text>should show fallback icon</ui5-text>
+			<ui5-avatar size="M">
+				<img src="" alt="Empty source">
+			</ui5-avatar>
+		</div>
+
+		<div class="example-block full-width-example">
+			<ui5-title level="H4">17. Size variations - initials fit test</ui5-title>
+			<ui5-text>Testing initials across all sizes</ui5-text>
+			<div style="display: flex; gap: 0.5rem; align-items: center;">
+				<ui5-avatar initials="WWW" size="XS"></ui5-avatar>
+				<ui5-avatar initials="WWW" size="S"></ui5-avatar>
+				<ui5-avatar initials="WWW" size="M"></ui5-avatar>
+				<ui5-avatar initials="WWW" size="L"></ui5-avatar>
+				<ui5-avatar initials="WWW" size="XL"></ui5-avatar>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

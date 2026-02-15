@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Popover Initially Open</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+	<script>
+		function init() {
+			const popover = document.createElement("ui5-popover");
+			popover.id = "popoverOpen";
+			popover.headerText = "Popover Header";
+
+			popover.open = true;
+			popover.opener = "btn1";
+
+			const content = document.createElement("div");
+			content.innerHTML = "<button id='popoverBtn'>button</button>";
+			popover.appendChild(content);
+
+			document.body.appendChild(popover);
+
+			btn1.onclick = () => {
+				popover.open = true;
+			};
+
+			const ui5button = document.createElement("ui5-button");
+			ui5button.id = "btnCont1";
+			ui5button.textContent = "Open Popover";
+
+			const ui5popover = document.createElement("ui5-popover");
+			ui5popover.id = "popoverCont1";
+			ui5popover.open = true;
+			ui5popover.opener = "btnCont1"
+
+			const popoverContent = document.createElement("div");
+			popoverContent.innerHTML = "<button>button</button>";
+			ui5popover.appendChild(popoverContent);
+
+			document.body.appendChild(ui5button);
+			document.body.appendChild(ui5popover);
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+<body onload="init()">
+	<ui5-button id="btn1">Open Popover</ui5-button>
+
+	<ui5-button id="openPopoverBtn1">Open Popover</ui5-button>
+	<ui5-popover id="popover1" opener="openPopoverBtn1" open>Content</ui5-popover>
+
+	<br />
+	<br />
+	<br />
+
+	<ui5-button id="openPopoverBtn2">Open Popover</ui5-button>
+	<ui5-popover id="popover2" open opener="openPopoverBtn2">Content</ui5-popover>
+
+	<br />
+	<br />
+	<br />
+
+</body>
+</html>

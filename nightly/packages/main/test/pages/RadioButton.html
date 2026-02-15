@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>ui5-radio-button</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/RadioButton-CgOaowMF.css">
+</head>
+
+<body class="radiobutton1auto">
+
+	<ui5-radio-button name="simple" text="Option A"></ui5-radio-button>
+	<ui5-radio-button checked name="simple" text="Option B"></ui5-radio-button>
+	<ui5-radio-button name="simple" text="Option C"></ui5-radio-button>
+
+	<ui5-title level="H1">Radios within a group</ui5-title><br>
+	<div aria-labelledby="radioGroupTitle1" role="radiogroup" class="radio-section">
+		<ui5-title id="radioGroupTitle1">Group1 - None pre-selection</ui5-title>
+		<ui5-radio-button id="testRbtn" text="N/A" disabled name="test"></ui5-radio-button>
+		<ui5-radio-button id="testRbtn1" text="Male" name="test"></ui5-radio-button>
+		<ui5-radio-button id="testRbtn2" text="Female" name="test"></ui5-radio-button>
+	</div>
+
+	<div aria-labelledby="radioGroupTitle2" role="radiogroup" class="radio-section">
+		<ui5-title id="radioGroupTitle2">Group 2</ui5-title>
+		<ui5-radio-button id="testRbtn11" name="test2" checked text="Selected A"></ui5-radio-button>
+		<ui5-radio-button id="testRbtn12" name="test2" disabled text="Disabled B"></ui5-radio-button>
+		<ui5-radio-button id="testRbtn13" name="test2" text="Standard C"></ui5-radio-button>
+		<ui5-radio-button name="test2" readonly text="Read-Only D"></ui5-radio-button>
+		<ui5-radio-button name="test2" readonly text="Read-Only E"></ui5-radio-button>
+		<ui5-radio-button name="test2" text="Standard F"></ui5-radio-button>
+		<ui5-radio-button name="test2" readonly text="Read-Only G"></ui5-radio-button>
+		<ui5-radio-button name="test2" text="Standard H"></ui5-radio-button>
+	</div>
+
+	<div aria-labelledby="radioGroupTitle3" role="radiogroup" class="radio-section">
+		<ui5-title id="radioGroupTitle3">Group 3</ui5-title>
+		<ui5-input id="tabField"></ui5-input>
+		<ui5-radio-button id="groupRb1" name="a" wrapping-type="None" checked text="Option A long long should shrink long long text text text text text text text text"></ui5-radio-button>
+		<ui5-radio-button id="groupRb2" name="a" disabled text="Option C"></ui5-radio-button>
+		<ui5-radio-button id="groupRb3" name="a" text="Option D"></ui5-radio-button>
+		<ui5-radio-button id="groupRbReadOnly" name="a" readonly text="Option E"></ui5-radio-button>
+	</div>
+
+	<div aria-labelledby="radioGroupTitle4" role="radiogroup" class="radio-section">
+		<ui5-title id="radioGroupTitle4">Group 4</ui5-title>
+		<ui5-radio-button id="groupRb4" name="b" wrapping-type="None" checked text="Option A long long should shrink long long text text text text text text text text"></ui5-radio-button>
+		<ui5-radio-button id="groupRb5" name="b" disabled text="Option C"></ui5-radio-button>
+		<ui5-radio-button id="groupRb6" name="b" text="Option D"></ui5-radio-button>
+	</div>
+
+	<div aria-labelledby="radioGroupTitle5" role="radiogroup" id="radioGroup" class="radio-section">
+		<ui5-title id="radioGroupTitle5">Group 5 - Value states</ui5-title>
+		<ui5-label id="lblRadioGroup">N/A</ui5-label>
+		<ui5-label id="lblEventCounter">0</ui5-label>
+		<ui5-radio-button id="groupRb7" text="None selected" value-state="None" name="GroupB"></ui5-radio-button>
+		<ui5-radio-button id="groupRb8" text="Critical" value-state="Critical" checked name="GroupB"></ui5-radio-button>
+		<ui5-radio-button id="groupRb9" text="Negative" value-state="Negative" checked name="GroupB"></ui5-radio-button>
+		<ui5-radio-button text="Positive" value-state="Positive" checked name="GroupB"></ui5-radio-button>
+		<ui5-radio-button text="Information" value-state="Information" checked name="GroupB"></ui5-radio-button>
+		<ui5-radio-button id="groupRb10" text="Default selected" value-state="None" checked name="GroupB"></ui5-radio-button>
+		<ui5-radio-button id="groupRb11" text="Radio From Another Group" value-state="None" checked name="GroupBB"></ui5-radio-button>
+	</div>
+
+	<ui5-title level="H1">Standalone Radios Not Grouped</ui5-title>
+	<div>
+		<ui5-radio-button id="myRb6" checked text="Default"></ui5-radio-button>
+		<ui5-radio-button id="myRb7" readonly text="read only"></ui5-radio-button>
+		<ui5-radio-button id="myRb8" disabled text="disabled"></ui5-radio-button>
+		<ui5-radio-button id="myRb9" readonly text="read only" checked></ui5-radio-button>
+		<ui5-radio-button id="myRb10" disabled text="disabled" checked></ui5-radio-button>
+		<ui5-radio-button id="myRb11" value-state="Critical" text="critical"></ui5-radio-button>
+		<ui5-radio-button id="myRb12" value-state="Negative" text="error"></ui5-radio-button>
+		<ui5-radio-button id="myRb11" value-state="Positive" text="positive"></ui5-radio-button>
+		<ui5-radio-button id="myRb12" value-state="Information" text="information"></ui5-radio-button>
+		<ui5-radio-button id="myRb13" value-state="Critical" checked text="critical"></ui5-radio-button>
+		<ui5-radio-button id="myRb14" value-state="Negative" checked text="negative"></ui5-radio-button>
+		<ui5-radio-button id="myRb13" value-state="Positive" checked text="positive"></ui5-radio-button>
+		<ui5-radio-button id="myRb14" value-state="Information" checked text="information"></ui5-radio-button>
+	</div>
+
+
+	<div class="radio-section">
+		<ui5-radio-button id="rb1"></ui5-radio-button>
+		<ui5-radio-button id="rb2" text="Option B"></ui5-radio-button>
+		<ui5-radio-button id="rb3" wrapping-type="Normal" text="Option C"></ui5-radio-button>
+		<ui5-radio-button id="rb4" disabled text="Option D"></ui5-radio-button>
+		<ui5-radio-button id="truncatingRb" wrapping-type="None" text="Long long long long long long long long long long text that should truncate at some point"></ui5-radio-button>
+		<br/>
+		<ui5-radio-button id="wrappingRb" wrapping-type="Normal" text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s." class="radiobutton2auto"></ui5-radio-button>
+		<ui5-input id="field"></ui5-input>
+	</div>
+
+	<ui5-title level="H2">accessibleName</ui5-title>
+	<div>
+		<ui5-radio-button id="rb-acc-name" accessible-name="Sample Label"></ui5-radio-button>
+		<ui5-radio-button id="rb-acc-name-text" text="Sample Text" accessible-name="Sample Label"></ui5-radio-button>
+	</div>
+
+	<ui5-title level="H2">accessibleNameRef</ui5-title>
+	<div>
+		<div class="radio-section-horizontal">
+			<ui5-label id="lbl-rb-acc-name-ref">Label for this radio button:</ui5-label>
+			<ui5-radio-button id="rb-acc-name-ref" accessible-name-ref="lbl-rb-acc-name-ref"></ui5-radio-button>
+		</div>
+		<div class="radio-section-horizontal">
+			<ui5-label id="lbl-rb-acc-name-ref-with-text">Label for this radio button:</ui5-label>
+			<ui5-radio-button id="rb-acc-name-ref-with-text" accessible-name-ref="lbl-rb-acc-name-ref-with-text" text="Sample Text"></ui5-radio-button>
+		</div>
+		<div class="radio-section-horizontal">
+			<ui5-list>
+				<ui5-li-custom>
+					<ui5-radio-button id="rb-acc-name-ref-wrapped" accessible-name-ref="lbl-rb-acc-name-ref"></ui5-radio-button>
+				</ui5-li-custom>
+			</ui5-list>
+		</div>
+	</div>
+
+	<p>*Params</p>
+	<p>
+		<ui5-label>- for compact add 'ui5-content-density-compact' class to any dom element</ui5-label>
+	</p>
+	<p>
+		<ui5-label>- for Quatz theme use 'sap-ui-theme=sap_fiori_3'</ui5-label>
+	</p>
+
+	<ui5-title level="H2">Navigation in RTL</ui5-title><br>
+	<div dir="rtl">
+		<ui5-radio-button id="rtlOptionA" name="rtlGroup" text="Option A" checked></ui5-radio-button>
+		<ui5-radio-button id="rtlOptionB" name="rtlGroup" text="Option B"></ui5-radio-button>
+		<ui5-radio-button id="rtlOptionC" name="rtlGroup" text="Option C"></ui5-radio-button>
+	</div>
+
+	<ui5-label>add/remove radio buttons in DOM</ui5-label>
+	<ui5-switch id="rbGroupSwitch"></ui5-switch>
+
+	<div id="rbGroupContainer"></div>
+
+	<ui5-title level="H2">Form Support</ui5-title><br>
+	<form id="formWithRequiredRadio">
+		<div aria-labelledby="formRadioGroupTitle1" aria-required="true" role="radiogroup" class="radio-section">
+			<ui5-title id="formRadioGroupTitle1">Select:</ui5-title>
+			<ui5-radio-button id="formRadioBtnRequired" value="optionA" name="formGroup" text="Option A" required></ui5-radio-button>
+			<ui5-radio-button value="optionB" name="formGroup" text="Option B"></ui5-radio-button>
+			<ui5-radio-button value="optionC" name="formGroup" text="Option C"></ui5-radio-button>
+		</div>
+		<input type="submit">
+	</form>
+
+	<ui5-title level="H2">Form Support - native HTML</ui5-title><br>
+	<form>
+		Select:
+		<br/>
+		<label>
+			<input type="radio" name="nativeFormGroup" value="optionA" required>Option A
+		</label>
+		<br/>
+		<label>
+			<input type="radio" name="nativeFormGroup" value="optionB">Option B
+		</label>
+		<br/>
+		<label>
+			<input type="radio" name="nativeFormGroup" value="optionC">Option C
+		</label>
+		<br/>
+		<input type="submit">
+	</form>
+
+	<ui5-title level="H2">Custom styling with css parts</ui5-title>
+	<div class="customStyling">
+		<ui5-radio-button id="customRb1" checked text="Inner ring on hover"></ui5-radio-button>
+		<ui5-radio-button value-state="Negative" text="Outer ring with Negative State"></ui5-radio-button>
+		<ui5-radio-button value-state="Positive" text="Outer ring with Positive State"></ui5-radio-button>
+	</div>
+
+	<script>
+		var counter = 0;
+		var groupEventCounter = 0;
+
+		[window["rb1"], window["rb2"], window["rb3"], window["rb4"]].forEach(function (radio) {
+			radio.addEventListener("ui5-change", function (event) {
+				counter += 1;
+				window["field"].value = `${counter}`;
+			});
+		})
+
+		radioGroup.addEventListener("ui5-change", function (e) {
+			var radio = e.target;
+			lblRadioGroup.innerHTML = radio.text;
+			lblEventCounter.innerHTML = ++groupEventCounter;
+		});
+
+		var rbGroupSwitch = document.getElementById("rbGroupSwitch");
+		var rbGroupContainer = document.getElementById("rbGroupContainer");
+
+		rbGroupSwitch.addEventListener("ui5-change", function (e) {
+			rbGroupContainer.innerHTML = e.target.checked ? createRbGroup() : "";
+		});
+
+		function createRbGroup() {
+			return `
+				<ui5-radio-button name="sameGroup" text="A"></ui5-radio-button>
+				<ui5-radio-button name="sameGroup" text="B"></ui5-radio-button>
+				<ui5-radio-button name="sameGroup" text="C"></ui5-radio-button>
+			`;
+		}
+	</script>
+
+	<ui5-title level="H2">Dynamically Created Buttons</ui5-title>
+	<button id="addBtn">Add</button>
+	<div id="radioContainer"></div>
+	<script>
+		const addBtn = document.querySelector("#addBtn")
+		const div = document.querySelector("div#radioContainer")
+
+		addBtn.addEventListener("click", () => {
+			const old = document.querySelector("#testDRbtn12");
+
+			div.innerHTML = `<ui5-radio-button id="testDRbtn11" name="test2" text="A"></ui5-radio-button>
+				<ui5-radio-button id="testDRbtn12" name="test2" checked text="B"></ui5-radio-button>
+				<ui5-radio-button id="testDRbtn13" name="test2" text="C"></ui5-radio-button>`;
+
+			if (old) {
+				old.checked = true;
+			}
+		});
+	</script>
+</body>
+</html>

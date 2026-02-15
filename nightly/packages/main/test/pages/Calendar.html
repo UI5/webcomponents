@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Calendar Playground</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+	<!-- <script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script> -->
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+
+
+
+
+	<style>
+		/* Shadow Parts Demo Styles */
+		.shadow-parts-demo::part(month-picker-root) {
+			background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+			border: 2px solid #2196f3;
+			border-radius: 8px;
+		}
+
+		.shadow-parts-demo::part(year-picker-root) {
+			background: linear-gradient(135deg, #fff3e0, #ffcc02);
+			border: 2px solid #ff9800;
+			border-radius: 8px;
+		}
+
+		.shadow-parts-demo::part(calendar-header-middle-button) {
+			background: #9c27b0;
+			color: white;
+			border-radius: 6px;
+			border: 2px solid #7b1fa2;
+		}
+
+		.header-parts-demo::part(calendar-header-arrow-button) {
+			color: #354a5f;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			min-width: 36px;
+			min-height: 36px;
+		}
+
+		.header-parts-demo::part(calendar-header-arrow-button):hover {
+			border-color: #9ca3af;
+		}
+
+		.header-parts-demo::part(year-range-picker-root) {
+			padding: 20px 24px;
+			background: #fafbfc;
+			border: 1px solid #e1e5e9;
+			border-radius: 8px;
+			margin: 4px;
+		}
+
+		.header-parts-demo::part(calendar-header-middle-button) {
+			background: #ffffff;
+			border: 1px solid #d1d5db;
+			color: #374151;
+			padding: 8px 16px;
+			border-radius: 6px;
+		}
+
+		.header-parts-demo::part(calendar-header-middle-button):hover {
+			background: #f9fafb;
+			border-color: #9ca3af;
+			color: #111827;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Calendar-UHmB_9L6.css">
+</head>
+<body class="calendar1auto">
+	<section>
+		<ui5-label id="selectLabel" label-for="selectionType">Selection type for the first calendar:</ui5-label>
+		<ui5-select id="selectionType">
+			<ui5-option selected>Single</ui5-option>
+			<ui5-option>Multiple</ui5-option>
+			<ui5-option>Range</ui5-option>
+		</ui5-select>
+		<br>
+		<ui5-label id="toggleButtonLabel" label-for="weekNumbersButton">Show/hide weeknumbers for the first calendar:</ui5-label>
+		<ui5-toggle-button id="weekNumbersButton">hide</ui5-toggle-button>
+
+		<ui5-calendar id="calendar1"></ui5-calendar>
+		<ui5-textarea id="textArea" placeholder="Selected dates..."></ui5-textarea>
+	</section>
+
+	<section>
+		<ui5-calendar data-ui5-compact-size timestamp="1594166400"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-calendar id="calendar2" primary-calendar-type='Islamic'></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-calendar id="calendar11" min-date="tomorrow"></ui5-calendar>
+		<ui5-calendar id="calendar12" max-date="yesterday"></ui5-calendar>
+		<ui5-calendar id="calendar3" min-date="01072020" max-date="21102020" format-pattern="ddMMyyyy">
+			<ui5-special-date slot="specialDates" type="Type01" value="07102020"></ui5-special-date>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with preset dates</ui5-title>
+		<ui5-calendar selection-mode="Multiple">
+			<ui5-date value="Jan 20, 2021"></ui5-date>
+			<ui5-date value="Jan 22, 2021"></ui5-date>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Minimum and Maximum Date & Format Pattern</ui5-title>
+		<ui5-calendar id="calendar4" data-ui5-compact-size min-date="7/7/2020" max-date="20/10/2020" timestamp="1594166400" format-pattern="dd/MM/yyyy">
+			<ui5-date value="08/07/2020"></ui5-date>
+		</ui5-calendar>
+	</section>
+
+	
+
+	<section>
+		<ui5-title> Calendar with no format pattern & ISO min-max dates</ui5-title>
+		<ui5-calendar id="calendar6" min-date="2020-10-20" max-date="2023-10-20"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with primary and secondary calendar type</ui5-title>
+		<ui5-calendar id="calendar5" primary-calendar-type='Islamic' secondary-calendar-type='Gregorian'></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Selection Mode = Range</ui5-title>
+		<ui5-calendar id="calendar7" primary-calendar-type='Gregorian' secondary-calendar-type='Gregorian' selection-mode="Range">
+			<ui5-date-range start-value="Jan 20, 2021" end-value="Jan 30, 2021"></ui5-date-range>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with CalendarWeekNumbering ISO_8601</ui5-title>
+		<ui5-calendar id="calendar8" calendar-week-numbering="ISO_8601">
+			<ui5-date value="Jan 1, 2023"></ui5-date>
+		</ui5-calendar>
+
+		<ui5-title>Calendar with CalendarWeekNumbering MiddleEastern</ui5-title>
+		<ui5-calendar id="calendar9" calendar-week-numbering="MiddleEastern">
+			<ui5-date value="Jan 1, 2023"></ui5-date>
+		</ui5-calendar>
+
+		<ui5-title>Calendar with CalendarWeekNumbering WesternTraditional</ui5-title>
+		<ui5-calendar id="calendar10" calendar-week-numbering="WesternTraditional">
+			<ui5-date value="Jan 1, 2023"></ui5-date>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Shadow Parts Demo - Custom Picker Styling</ui5-title>
+		<p>Use F4 (month view) or Shift+F4 (year view) to see custom picker backgrounds</p>
+		<ui5-calendar class="shadow-parts-demo"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Shadow Parts Demo - Custom Header Buttons</ui5-title>
+		<ui5-calendar class="header-parts-demo"></ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Disabled Dates</ui5-title>
+		<ui5-calendar id="calendar-disabled-dates">
+			<ui5-date-range slot="disabledDates" start-value="15 Nov 2025" end-value="20 Nov 2025"></ui5-date-range>
+			<ui5-date-range slot="disabledDates" start-value="25 Nov 2025" end-value="27 Nov 2025"></ui5-date-range>
+		</ui5-calendar>
+	</section>
+
+	<section>
+		<ui5-title>Calendar with Disabled Dates using a format pattern</ui5-title>
+		<ui5-calendar id="calendar-disabled-dates" format-pattern="dd/MM/yyyy">
+			<ui5-date-range slot="disabledDates" start-value="15/11/2025" end-value="20/11/2025"></ui5-date-range>
+			<ui5-date-range slot="disabledDates" start-value="25/11/2025" end-value="27/11/2025"></ui5-date-range>
+		</ui5-calendar>
+	</section>
+
+</body>
+
+<script>
+	const toggleButton = document.getElementById("weekNumbersButton");
+	const select = document.getElementById("selectionType");
+	const calendar1 = document.getElementById("calendar1");
+	const textArea = document.getElementById("textArea");
+
+	select.addEventListener("ui5-change", function(event) {
+		calendar1.setAttribute("selection-mode", event.detail.selectedOption.textContent)
+	});
+
+	toggleButton.addEventListener("click", function(event) {
+		calendar1.hideWeekNumbers = event.target.pressed ? true : false;
+		toggleButton.innerHTML = event.target.pressed ? "show" : "hide";
+	});
+
+	calendar1.addEventListener("ui5-selection-change", function(event) {
+		textArea.setAttribute("value", event.detail.selectedDates.join(", ") + " / " + event.detail.selectedValues.join(", "));
+	});
+</script>
+
+</html>

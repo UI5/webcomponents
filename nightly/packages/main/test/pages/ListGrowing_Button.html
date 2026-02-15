@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>ui5-list / ui5-li</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<style>
+		[ui5-avatar] img {
+			object-fit: contain;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ListGrowing_Button-CqUHfAIl.css">
+</head>
+
+<body class="listgrowing_button1auto">
+	<ui5-title>List growing="Button"</ui5-title>
+	<br>
+	<ui5-list id="infiniteScrollEx" growing="Button">
+		<ui5-li-group header-text="New Items">
+			<ui5-li icon="navigation-right-arrow" additional-text="Available">Voluptate do eu cupidatat elit est culpa. Reprehenderit eiusmod voluptate ex est dolor nostrud Lorem Lorem do nisi laborum veniam. Sint do non culpa aute occaecat labore ipsum veniam minim tempor est. Duis pariatur aute culpa irure ad excepteur pariatur culpa culpa ea duis occaecat aute irure. Ipsum velit culpa non exercitation ex laboris deserunt in eu non officia in. Laborum sunt aliqua labore cupidatat sunt labore.
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/HT-1000-BiqZozDV.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+			<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131" additional-text-state="Negative">Laptop Lenovo
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/portrait-BnYCO45R.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+			<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131"  additional-text-state="Information">IPhone 3
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/HT-1022-B7LJUf_K.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+		</ui5-li-group>
+		<ui5-li-group header-text="Discounted Items">
+			<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Required" additional-text-state="Negative">HP Monitor 24
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+			<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Available" additional-text-state="Positive">Audio cabel
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/HT-2026-Bts79zak.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+			<ui5-li icon-end icon="navigation-right-arrow" additional-text="Required" additional-text-state="Critical">DVD set
+				<ui5-avatar slot="image" shape="Square">
+					<img src="/webcomponents/nightly/assets/HT-2002-F2pD6qrf.jpg" alt="Woman image">
+				</ui5-avatar>
+			</ui5-li>
+		</ui5-li-group>
+</ui5-list>
+
+	<script>
+		'use strict';
+
+		function template(i) {
+			var li = document.createElement("ui5-li");
+			li.textContent = "Title";
+			li.description = "my description goes here " + i;
+			li.additionalText = "Available";
+			return li;
+		}
+
+		function insertItems(el, num) {
+			for(var i= 0; i<num; i++) {
+				el.appendChild(template(i));
+			}
+		}
+
+		var itemsLoadedTotal = 0;
+		var itemsToLoad = 5;
+		var loadedCount = 0;
+
+		infiniteScrollEx.addEventListener("ui5-load-more", function(e) {
+			var el = infiniteScrollEx;
+			el.busy = true;
+
+			setTimeout(function() {
+				insertItems(el, 3);
+				el.busy = false;
+			}, 1000);
+		});
+	</script>
+</body>
+</html>

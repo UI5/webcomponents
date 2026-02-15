@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <title>ToolbarSelect</title>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta charset="utf-8" />
+
+      <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+    </head>
+    <body>
+        <ui5-label id="title">Add</ui5-label>
+
+        <input type="text" placeholder="Opened">
+        <input type="text" placeholder="Closed">
+        <input type="text" placeholder="Changed">
+        <input type="text" placeholder="Clicked">
+
+        <ui5-toolbar id="toolbar-with-selects">
+            <ui5-toolbar-select value-state="Critical" accessible-name="Add" accessible-name-ref="title" id="toolbar-select">
+                <ui5-option>1</ui5-option>
+                <ui5-option selected>2</ui5-option>
+                <ui5-option>3</ui5-option>
+            </ui5-toolbar-select>
+
+            <!-- disabled -->
+
+            <ui5-toolbar-select disabled>
+                <ui5-option>1</ui5-option>
+                <ui5-option selected>2</ui5-option>
+                <ui5-option>3</ui5-option>
+            </ui5-toolbar-select>
+
+            <!-- with label -->
+
+        </ui5-toolbar>
+        <ui5-toolbar align-content="Start">
+            <ui5-toolbar-select id="labeledSelect" value="15pt">
+                <span slot="label" id="labeledSelectLabel">18pt</span>
+                <ui5-option>12pt</ui5-option>
+                <ui5-option>15pt</ui5-option>
+                <ui5-option>21pt</ui5-option>
+            </ui5-toolbar-select>
+            <ui5-label>Select with value:</ui5-label>
+            <input type="text" id="labeledSelectValue">
+        </ui5-toolbar>
+
+        <script>
+            const select = document.querySelector("ui5-toolbar-select");
+
+            const opened = document.querySelector("input[placeholder='Opened']");
+            const closed = document.querySelector("input[placeholder='Closed']");
+            const changed = document.querySelector("input[placeholder='Changed']");
+            const clicked = document.querySelector("input[placeholder='Clicked']");
+
+            labeledSelectValue.value = labeledSelect.getAttribute("value");
+
+            select.addEventListener("ui5-change", (event) => {
+                changed.value++;
+            });
+
+            select.addEventListener("ui5-close", (event) => {
+                closed.value++;
+            });
+
+            select.addEventListener("ui5-open", (event) => {
+                opened.value++;
+            });
+
+            select.addEventListener("ui5-click", (event) => {
+                clicked.value++;
+            });
+            labeledSelect.addEventListener("ui5-change", (event) => {
+                labeledSelectLabel.textContent = event.detail.selectedOption.textContent;
+                labeledSelectValue.value = event.detail.selectedOption.textContent;
+            });
+        </script>
+    </body>
+</html>

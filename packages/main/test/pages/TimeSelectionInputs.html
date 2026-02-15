@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>TimeSelectionInputs test page</title>
+
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/TimeSelectionClocks--iJ2b9tt.css">
+</head>
+<body>
+
+	<h3>TimeSelectionInput with pattern "hh:mm:ss"</h3>
+
+	<div class="popover-content">
+		<ui5-time-selection-inputs
+			id="myInputs12"
+			format-pattern="hh:mm:ss"
+			value="12:20:40"
+		></ui5-time-selection-inputs>
+	</div>
+
+	<div>
+		<h3>'change' event count</h3>
+		<ui5-input id="myInputs12ChangeEvent" disabled></ui5-input>
+	</div>
+
+	<h3>TimeSelectionInput with pattern "HH:mm:ss"</h3>
+
+	<div class="popover-content">
+		<ui5-time-selection-inputs
+			id="myInputs24"
+			format-pattern="HH:mm:ss"
+			value="12:20:40"
+		></ui5-time-selection-inputs>
+	</div>
+
+	<div>
+		<h3>'change' event count</h3>
+		<ui5-input id="myInputs24ChangeEvent" disabled></ui5-input>
+	</div>
+
+	<h3>TimeSelectionInput with pattern "hh:mm:ss a"</h3>
+
+	<div class="popover-content">
+		<ui5-time-selection-inputs
+			id="myInputsAmPm"
+			format-pattern="hh:mm:ss a"
+			value="12:20:40 PM"
+			></ui5-time-selection-inputs>
+	</div>
+
+	<div>
+		<h3>'change' event count</h3>
+		<ui5-input id="myInputsAmPmChangeEvent" disabled></ui5-input>
+	</div>
+
+	<script>
+		var myInputs12EventCount = 0;
+		var myInputs24EventCount = 0;
+		var myInputsAmPmEventCount = 0;
+
+		myInputs12.addEventListener('ui5-change', displayChange);
+		myInputs24.addEventListener('ui5-change', displayChange);
+		myInputsAmPm.addEventListener('ui5-change', displayChange);
+
+		function displayChange(event) {
+			var id = event.target.id;
+			window[id + "EventCount"]++;
+			document.getElementById(id + "ChangeEvent").value = window[id + "EventCount"];
+		}
+
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-input with icons</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<style>
+	.clear-icon-examples {
+		display: flex;
+		flex-direction: column;
+		border: 1px dashed grey;
+		margin-top: .5rem;
+		padding: .5rem;
+		box-sizing: border-box;
+		background-color: var(--sapBackgroundColor);
+	}
+
+	.clear-icon-examples > * {
+		margin-top: .25rem;
+	}
+
+	.custom-small-size ui5-input {
+		height: 24px;
+	}
+
+	.custom-big-size ui5-input{
+		height: 64px;
+	}
+</style>
+
+<body>
+	<div class="theme-change-wrapper">
+		<ui5-button data-theme-name="sap_fiori_3">Fiori 3</ui5-button>
+		<ui5-button data-theme-name="sap_fiori_3_hcb">Fiori 3 HCB</ui5-button>
+		<ui5-button data-theme-name="sap_horizon">Horizon</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_hcb">Horizon HCB</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_hcw">Horizon HCW</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_dark">Horizon Dark</ui5-button>
+	</div>
+	<div class="clear-icon-examples">
+		<ui5-input show-clear-icon value="Test"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Negative"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Critical"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Positive"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="None"></ui5-input>
+	</div>
+
+	<div class="clear-icon-examples custom-small-size">
+		<ui5-input show-clear-icon value="Test"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Negative"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Critical"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Positive"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="None"></ui5-input>
+	</div>
+
+	<div class="clear-icon-examples custom-big-size">
+		<ui5-input show-clear-icon value="Test"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Negative"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Critical"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="Positive"></ui5-input>
+		<ui5-input show-clear-icon value="Test" value-state="None"></ui5-input>
+	</div>
+
+	<script>
+
+		Array.from(document.querySelectorAll(".theme-change-wrapper ui5-button")).forEach(button => {
+			button.addEventListener("click", event => {
+				window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.target.getAttribute("data-theme-name"));
+			});
+		});
+	</script>
+</body>
+
+</html>

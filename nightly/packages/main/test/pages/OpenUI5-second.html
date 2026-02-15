@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+	<title>OpenUI loaded on demand</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "de",
+		}
+	</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/kitchen-styles-B_3keqft.css">
+</head>
+
+<body>
+
+	<ui5-title>This is a UI5 Web Components date picker</ui5-title>
+	<ui5-date-picker></ui5-date-picker>
+
+	<br><br>
+
+	<ui5-button id="load">Load OpenUI5</ui5-button>
+
+	<br><br>
+
+	<div id="sapMDatePicker">OpenUI5 app (sap.m.DatePicker) to be loaded here...</div>
+
+	<script>
+		document.querySelector("#load").addEventListener("click", () => {
+			// Runs the OpenUI5 app
+			const runApp = () => {
+				new sap.m.DatePicker().placeAt("sapMDatePicker");
+			};
+
+			// Set up the OpenUI5 config
+			window["sap-ui-config"] = {
+				theme: window["sap-ui-webcomponents-bundle"].configuration.getTheme(),
+				language: window["sap-ui-webcomponents-bundle"].configuration.getLanguage(),
+				oninit: runApp
+			};
+
+			// Load OpenUI5
+			const script = document.createElement("script");
+			script.id = "sap-ui-bootstrap";
+			// script.src = "https://sdk.openui5.org/resources/sap-ui-core.js";
+			script.src = "https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js";
+			script.setAttribute("data-sap-ui-libs", "sap.m");
+			document.head.appendChild(script);
+		});
+	</script>
+
+</body>
+</html>

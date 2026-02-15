@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form Basic</title>
+		
+	<script id='sap-ui-bootstrap'
+		src='https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js'
+		data-sap-ui-theme='sap_horizon'
+		data-sap-ui-libs='sap.m, sap.ui.core, sap.ui.layout'
+		data-sap-ui-preload="async"
+	></script>
+
+	<script>
+        sap.ui.getCore().attachInit(function() {
+			var oLayout = new sap.ui.layout.form.ColumnLayout("L");
+			var oForm = new sap.ui.layout.form.Form("F",{
+				title: "SAPUI5 :: Adress (Defaults)",
+				editable: false,
+				layout: oLayout,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C",{
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm.placeAt("sapui5content");
+
+			var oLayout1 = new sap.ui.layout.form.ColumnLayout({
+				columnsM: 2,
+				columnsL: 3,
+				columnsXL: 4
+			}, "L1");
+			var oForm1 = new sap.ui.layout.form.Form("F1",{
+				title: "SAPUI5 :: Adress (S1 M2 L3 XL4)",
+				editable: false,
+				layout: oLayout1,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C1",{
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Delivery address",
+								fields: [new sap.m.Text({text: "Newtown"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm1.placeAt("sapui5content1");
+
+			var oLayout2 = new sap.ui.layout.form.ColumnLayout("L2");
+			var oForm2 = new sap.ui.layout.form.Form("F2",{
+				title: "SAPUI5 :: Edit",
+				editable: true,
+				layout: oLayout2,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C2",{
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Input({value: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Input({value: "411"}), new sap.m.Input({value: "Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Input({value: "Main St", layoutData: new sap.ui.layout.form.ColumnElementData({cellsSmall: 6, cellsLarge: 2})}), new sap.m.Input({value: "1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Select({selectedKey: "DE",
+									items: [new sap.ui.core.ListItem({key: "GB", text: "England"}),
+													new sap.ui.core.ListItem({key: "US", text: "USA"}),
+													new sap.ui.core.ListItem({key: "DE", text: "Germany"})]
+								})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Input({value: "sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Delivery address",
+								fields: [new sap.m.Input({value: "Newtown"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm2.placeAt("sapui5content2");
+
+			var oLayout3 = new sap.ui.layout.form.ColumnLayout("L3", {
+				columnsM: 2,
+				columnsL: 3,
+				columnsXL: 4,
+			});
+			var oForm3 = new sap.ui.layout.form.Form("F3",{
+				title: "SAPUI5 :: Supplier 2gr (S1 M2 L3 XL4)",
+				editable: false,
+				layout: oLayout3,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C31",{
+						title: "Address",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C32",{
+						title: "Contact",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Twitter"}),
+								fields: [new sap.m.Text({text: "@sap"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Email",
+								fields: [new sap.m.Text({text: "john.smith@sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Tel"}),
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "SMS",
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Mobile",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Pager",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Fax",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+						]
+					}),
+				]
+			});
+			oForm3.placeAt("sapui5content3");
+
+			var oLayout4 = new sap.ui.layout.form.ColumnLayout("L4", {
+				columnsM: 2,
+				columnsL: 3,
+				columnsXL: 4,
+			});
+			var oForm4 = new sap.ui.layout.form.Form("F4",{
+				title: "SAPUI5 :: Supplier 3gr (S1 M2 L3 XL4)",
+				editable: false,
+				layout: oLayout4,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C41",{
+						title: "Address",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C42",{
+						title: "Contact",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Twitter"}),
+								fields: [new sap.m.Text({text: "@sap"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Email",
+								fields: [new sap.m.Text({text: "john.smith@sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Tel"}),
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "SMS",
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Mobile",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Pager",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Fax",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C43",{
+						title: "Other Info",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm4.placeAt("sapui5content4");
+			
+
+			var oLayout5 = new sap.ui.layout.form.ColumnLayout("L5", {
+				columnsM: 2,
+				columnsL: 3,
+				columnsXL: 5,
+			});
+			var oForm5 = new sap.ui.layout.form.Form("F5",{
+				title: "SAPUI5 :: Supplier 3gr (S1 M2 L3 XL6)",
+				editable: false,
+				layout: oLayout5,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C51",{
+						title: "Address",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C52",{
+						title: "Contact",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Twitter"}),
+								fields: [new sap.m.Text({text: "@sap"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Email",
+								fields: [new sap.m.Text({text: "john.smith@sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Tel"}),
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "SMS",
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Mobile",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Pager",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Fax",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C53",{
+						title: "Other Info",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm5.placeAt("sapui5content5");
+
+			var oLayout6 = new sap.ui.layout.form.ColumnLayout("L6", {
+				columnsM: 2,
+				columnsL: 3,
+				columnsXL: 6,
+			});
+			var oForm6 = new sap.ui.layout.form.Form("F6",{
+				title: "SAPUI5 :: Supplier 3gr (S1 M2 L3 XL6)",
+				editable: false,
+				layout: oLayout6,
+				formContainers: [
+					new sap.ui.layout.form.FormContainer("C61",{
+						title: "Address",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C62",{
+						title: "Contact",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Twitter"}),
+								fields: [new sap.m.Text({text: "@sap"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Email",
+								fields: [new sap.m.Text({text: "john.smith@sap.com"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Tel"}),
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "SMS",
+								fields: [new sap.m.Text({text: "+49 6227 747474"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Mobile",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Pager",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Fax",
+								fields: [new sap.m.Text({text: "+49 173 123456"})]
+							}),
+						]
+					}),
+					new sap.ui.layout.form.FormContainer("C63",{
+						title: "Other Info",
+						formElements: [
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Name"}),
+								fields: [new sap.m.Text({text: "Red Point Stores"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "ZIP Code/City",
+								fields: [new sap.m.Text({text: "411 Maintown"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: new sap.m.Label({text:"Street"}),
+								fields: [new sap.m.Text({text: "Main St 1618"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "Country",
+								fields: [new sap.m.Text({text: "Germany"})]
+							}),
+							new sap.ui.layout.form.FormElement({
+								label: "WebSite",
+								fields: [new sap.m.Link({text: "sap.com"})]
+							}),
+						]
+					})
+				]
+			});
+			oForm6.placeAt("sapui5content6");
+			
+	
+			window.oForm = oForm;
+			window.oLayout = oLayout;
+
+			window.oForm1 = oForm1;
+			window.oLayout1 = oLayout1;
+
+			window.oForm2 = oForm2;
+			window.oLayout2 = oLayout2;
+
+			window.oForm3 = oForm3;
+			window.oLayout3 = oLayout3;
+
+			window.oForm4 = oForm4;
+			window.oLayout4 = oLayout4;
+
+			window.oForm5 = oForm5;
+			window.oLayout5 = oLayout5;
+        });
+    </script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body class="bg">
+	<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
+	
+	<section id="container">
+		<div class="banner"><div class="banner-inner"></div></div>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Address (Defaults)">
+				<ui5-form-item>
+					<ui5-label id="lblName" slot="labelContent">Name:</ui5-label>
+					<ui5-text aria-labelledby="lblName">Red Point Stores</ui5-text>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="lblCity" slot="labelContent">ZIP Code/City:</ui5-label>
+					<ui5-text aria-labelledby="lblCity">411 Maintown</ui5-text>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="lblStreet" slot="labelContent">Street:</ui5-label>
+					<ui5-text aria-labelledby="lblStreet">Main St 1618</ui5-text>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label id="lblCountry" slot="labelContent">Country:</ui5-label>
+					<ui5-text aria-labelledby="lblCountry">Germany</ui5-text>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+		
+		<section id='sapui5content'></section>
+		<br><br><br>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Edit">
+				<ui5-form-item>
+					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+					<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+						<ui5-option>Australia</ui5-option>
+						<ui5-option selected>Germany</ui5-option>
+						<ui5-option>England</ui5-option>
+					</ui5-select>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+					<ui5-input value="sap.com" id="wsInp"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+					<ui5-input value="Newtown" id="delInp"></ui5-input>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+
+		<section id='sapui5content2'></section>
+		<br><br><br>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Address (S1 M2 L3 XL4)" layout="S1 M2 L3 XL4">
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Name:</ui5-label>
+					<ui5-text>Red Point Stores</ui5-text>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+					<ui5-text>411 Maintown</ui5-text>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Street:</ui5-label>
+					<ui5-text>Main St 1618</ui5-text>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label slot="labelContent">Country:</ui5-label>
+					<ui5-text>Germany</ui5-text>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+					<ui5-link href="sap.com">sap.com</ui5-link>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+					<ui5-text>Newtown</ui5-text>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+
+		<section id='sapui5content1'></section>
+		<br><br><br>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Supplier 2gr (S1 M2 L3 XL4)" layout="S1 M2 L3 XL4">
+
+				<ui5-form-group id="testFormGroup4" header-text="Address">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group id="testFormGroup5" header-text="Contact">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Twitter:</ui5-label>
+						<ui5-text>@sap</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Email:</ui5-label>
+						<ui5-text>john.smith@sap.com</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Tel:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">SMS:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Mobile:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Pager:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Fax:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			</ui5-form>
+		</section>
+		
+		<section id='sapui5content3'></section>
+		<br><br><br>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Supplier 3gr (S1 M2 L3 XL4)" layout="S1 M2 L3 XL4">
+
+				<ui5-form-group id="testFormGroup6" header-text="Address">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group id="testFormGroup7" header-text="Contact">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Twitter:</ui5-label>
+						<ui5-text>@sap</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Email:</ui5-label>
+						<ui5-text>john.smith@sap.com</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Tel:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">SMS:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Mobile:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Pager:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Fax:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			
+				<ui5-form-group id="testFormGroup8" header-text="Other info">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+			</ui5-form>
+		</section>
+
+		<section id='sapui5content4'></section>
+		<br><br><br>
+
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Supplier 3gr (S1 M2 L3 XL5)" layout="S1 M2 L3 XL5">
+
+				<ui5-form-group header-text="Address">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group header-text="Contact">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Twitter:</ui5-label>
+						<ui5-text>@sap</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Email:</ui5-label>
+						<ui5-text>john.smith@sap.com</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Tel:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">SMS:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Mobile:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Pager:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Fax:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			
+				<ui5-form-group header-text="Other info">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+			</ui5-form>
+		</section>
+
+		<section id='sapui5content5'></section>
+		<br><br><br>
+
+		<section>
+			<ui5-form id="testForm1" class="addressForm" header-text="WebC :: Supplier 3gr (S1 M2 L3 XL6)" layout="S1 M2 L3 XL6">
+
+				<ui5-form-group id="testFormGroup1" header-text="Address">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group id="testFormGroup2" header-text="Contact">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Twitter:</ui5-label>
+						<ui5-text>@sap</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Email:</ui5-label>
+						<ui5-text>john.smith@sap.com</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Tel:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">SMS:</ui5-label>
+						<ui5-text>+49 6227 747474</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Mobile:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Pager:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Fax:</ui5-label>
+						<ui5-link href="sap.com">+49 6227 747474</ui5-link>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			
+				<ui5-form-group id="testFormGroup3" header-text="Other info">
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Name:</ui5-label>
+						<ui5-text>Red Point Stores</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-text>411 Maintown</ui5-text>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Street:</ui5-label>
+						<ui5-text>Main St 1618</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">Country:</ui5-label>
+						<ui5-text>Germany</ui5-text>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label slot="labelContent">WebSite:</ui5-label>
+						<ui5-link href="sap.com">sap.com</ui5-link>
+					</ui5-form-item>
+				</ui5-form-group>
+			</ui5-form>
+		</section>
+
+		<section id='sapui5content6'></section>
+
+		<section>
+			<ui5-form id="testForm2" header-text="Labels on top" layout="S1 M2 L2 XL3" label-span="S12 M12 L12 XL12">
+				<ui5-form-item>
+					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+					<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+						<ui5-option>Australia</ui5-option>
+						<ui5-option selected>Germany</ui5-option>
+						<ui5-option>England</ui5-option>
+					</ui5-select>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+					<ui5-input value="sap.com" id="wsInp"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+					<ui5-input value="Newtown" id="delInp"></ui5-input>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+	</section>
+
+
+	<script>
+		slider.addEventListener("ui5-input", function (event) {
+			container.style.width = event.target.value + '%';
+		});
+	</script>
+</body>
+</html>

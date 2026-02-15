@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Web components Table</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+				{
+						"language": "EN"
+				}
+		</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CmNrHCeo.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/TableSelection-BHZL15tw.css">
+</head>
+
+<body class="tableselection1auto">
+	<!-- Header -->
+	<div class="tableselection2auto">
+		<ui5-button id="size-btn-500">Lower tables size to 500px</ui5-button>
+		<ui5-label>Resize your browser to make some columns pop-in</ui5-label>
+	</div>
+
+	<br>
+
+	<ui5-title>Table in SingleSelect mode</ui5-title>
+	<ui5-table mode="SingleSelect" id="single">
+
+		<ui5-table-column slot="columns">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Dimensions</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Price</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Row Type</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-row type="Active" id="firstRowSingleSelect">
+			<ui5-table-cell>
+				<ui5-label id="firstCellFirstRowSSLabel">Notebook Basic 15</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>30 x 18 x 3 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>956 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button id="button1">Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Active" id="secondRowSingleSelect">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 17</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>29 x 17 x 3.1 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.5 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1249 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Inactive" id="thirdRowSingleSelect">
+			<ui5-table-cell>
+				<ui5-label id="firstCellThirdRowSSLabel">Notebook Basic 18</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>28 x 19 x 2.5 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1570 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="forthRowSingleSelect">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 19</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Smartcards</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>32 x 21 x 4 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1650 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+	</ui5-table>
+
+	<br>
+	<br>
+	<ui5-input id="rowClickSSCountField" placeholder="rowClick result"></ui5-input>
+	<ui5-input id="selectionChangeSSCountField" placeholder="selectionChange result"></ui5-input>
+	<ui5-input id="selectionChangeSSSelectedValueField" placeholder="Row selected"></ui5-input>
+	<ui5-input id="selectionChangeSSPreviousRowField" placeholder="selectionChange previousSelection result"></ui5-input>
+	<br>
+	<br>
+	<br>
+	<br>
+	<ui5-title>Table in MultiSelect mode</ui5-title>
+	<ui5-table id="multi" mode="MultiSelect" sticky-column-header>
+
+		<ui5-table-column slot="columns">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Dimensions</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Price</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Row Type</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-row type="Active" id="firstRowMultiSelect">
+			<ui5-table-cell>
+				<ui5-label id="firstCellFirstRowMSLabel">Notebook Basic 15</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>30 x 18 x 3 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>956 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button id="button2">Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Active" id="secondRowMultiSelect">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 17</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>29 x 17 x 3.1 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.5 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1249 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button id="button3">Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Inactive" id="thirdRowMultiSelect">
+			<ui5-table-cell>
+				<ui5-label id="firstCellThirdRowMSLabel">Notebook Basic 18</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>28 x 19 x 2.5 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1570 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="forthRowMultiSelect">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 19</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Smartcards</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>32 x 21 x 4 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1650 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br>
+	<br>
+	<ui5-input id="rowClickMSCountField" placeholder="rowClick result"></ui5-input>
+	<ui5-input id="selectionChangeMSCountField" placeholder="selectionChange result"></ui5-input>
+	<ui5-input id="selectionChangeMSSelectedValueField" placeholder="Row selected"></ui5-input>
+	<ui5-input id="selectionChangeMSPreviousRowField" placeholder="selectionChange previousSelection result"></ui5-input>
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<ui5-title>Table in Default mode</ui5-title>
+	<ui5-table id="default">
+
+		<ui5-table-column slot="columns">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="600" demand-popin>
+			<ui5-label>Dimensions</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Price</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label>Row Type</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-row type="Active" id="firstRowDefaultMode">
+			<ui5-table-cell>
+				<ui5-label id="firstCellFirstRowDefaultLabel">Notebook Basic 15</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>30 x 18 x 3 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>956 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Active" id="secondRowDefaultMode">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 17</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>29 x 17 x 3.1 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.5 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1249 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Active</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row type="Inactive" id="thirdRowDefaultMode">
+			<ui5-table-cell>
+				<ui5-label id="firstCellThirdRowDefaultLabel">Notebook Basic 18</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Very Best Screens</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>28 x 19 x 2.5 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1570 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="forthRowDefaultMode">
+			<ui5-table-cell>
+				<ui5-label>Notebook Basic 19</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>Smartcards</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>32 x 21 x 4 cm</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>4.2 KG</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-label>1650 EUR</ui5-label>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button>Inactive</ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br>
+	<br>
+	<ui5-input id="rowClickDefaultCountField" placeholder="rowClick result"></ui5-input>
+	<ui5-input id="selectionChangeDefaultCountField" placeholder="selectionChange result"></ui5-input>
+
+	<script>
+		const singleModeTable = document.getElementById("single");
+		const multiSelectMode = document.getElementById("multi");
+		const defaultMode = document.getElementById("default");
+		let rowClickCounter = 0;
+		let rowClickCounter1 = 0;
+		let rowClickCounter2 = 0;
+		let selectionChangeCounter = 0;
+		let selectionChangeCounter1 = 0;
+		let selectionChangeCounter2 = 0;
+
+		singleModeTable.addEventListener("ui5-selection-change", function(event) {
+			selectionChangeCounter += 1;
+			selectionChangeSSCountField.value = selectionChangeCounter?.toString();
+
+			selectionChangeSSSelectedValueField.value = event.detail.selectedRows[0].id;
+
+			if (event.detail.previouslySelectedRows.length) {
+				selectionChangeSSPreviousRowField.value = event.detail.previouslySelectedRows[0].id;
+			}
+		});
+
+		singleModeTable.addEventListener("ui5-row-click", function(event) {
+			rowClickCounter += 1;
+			rowClickSSCountField.value = rowClickCounter?.toString();
+		});
+
+		multiSelectMode.addEventListener("ui5-selection-change", function(event) {
+			selectionChangeCounter1 += 1;
+			selectionChangeMSCountField.value = selectionChangeCounter1?.toString();
+			const lastSelectedRow = event.detail.selectedRows.length - 1;
+			const previousSelectedRow = event.detail.previouslySelectedRows.length - 1;
+
+			if (event.detail.selectedRows.length) {
+				selectionChangeMSSelectedValueField.value = event.detail.selectedRows[lastSelectedRow].id;
+			}
+
+			if (event.detail.previouslySelectedRows.length) {
+				selectionChangeMSPreviousRowField.value = event.detail.previouslySelectedRows[previousSelectedRow].id;
+			}
+		});
+
+		multiSelectMode.addEventListener("ui5-row-click", function(event) {
+			rowClickCounter1 += 1;
+			rowClickMSCountField.value = rowClickCounter1?.toString();
+		});
+
+		defaultMode.addEventListener("ui5-selection-change", function(event) {
+			selectionChangeCounter2 += 1;
+			selectionChangeDefaultCountField.value = selectionChangeCounter2.toString();
+		});
+
+		defaultMode.addEventListener("ui5-row-click", function(event) {
+			rowClickCounter2 += 1;
+			rowClickDefaultCountField.value = rowClickCounter2.toString();
+		});
+
+		document.getElementById("size-btn-500").addEventListener("click", function(event) {
+			singleModeTable.style.width = "500px";
+			multiSelectMode.style.width = "500px";
+			defaultMode.style.width = "500px";
+		});
+	</script>
+</body>
+
+</html>

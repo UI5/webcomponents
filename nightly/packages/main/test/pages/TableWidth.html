@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Table (in development)</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<style>
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body style="background: var(--sapBackgroundColor);">
+	<!-- toolbar with ui5-bar -->
+	<ui5-bar design="Header" accessible-name-ref="title" style="height: 60px;">
+		<ui5-title tabindex="0" level="H3" id="title" slot="startContent">My Selectable Products (3)</ui5-title>
+		<ui5-slider id="widthSlider" value="100" min="0" max="100" show-tickmarks label-interval="2"></ui5-slider>
+		<ui5-button id="update" design="Emphasized" slot="endContent">Update Widths</ui5-button>
+		<ui5-button id="popin" design="Emphasized" slot="endContent">Toggle popin</ui5-button>
+	</ui5-bar>
+
+	<div id="tableAutoTextExpected" class="text"></div>
+	<div id="tableAutoTextActual" class="text"></div>
+	<ui5-table id="tableAuto">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell>Column A</ui5-table-header-cell>
+			<ui5-table-header-cell>Column B</ui5-table-header-cell>
+			<ui5-table-header-cell>Column C</ui5-table-header-cell>
+			<ui5-table-header-cell>Column D</ui5-table-header-cell>
+			<ui5-table-header-cell>Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br/>
+
+	<div id="tableWidthChangeTextExpected" class="text"></div>
+	<div id="tableWidthChangeTextActual" class="text"></div>
+	<ui5-table id="tableWidthChange">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell width="100px">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell>Column B</ui5-table-header-cell>
+			<ui5-table-header-cell>Column C</ui5-table-header-cell>
+			<ui5-table-header-cell>Column D</ui5-table-header-cell>
+			<ui5-table-header-cell>Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br/>
+
+	<div id="tableMinWidthTextExpected" class="text"></div>
+	<div id="tableMinWidthTextActual" class="text"></div>
+	<ui5-table id="tableMinWidth">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell min-width="200px">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell>Column B</ui5-table-header-cell>
+			<ui5-table-header-cell>Column C</ui5-table-header-cell>
+			<ui5-table-header-cell min-width="50px">Column D</ui5-table-header-cell>
+			<ui5-table-header-cell>Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br/>
+
+	<div id="tableMinWidthWidthTextExpected" class="text"></div>
+	<div id="tableMinWidthWidthTextActual" class="text"></div>
+	<ui5-table id="tableMinWidthWidth">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell min-width="200px" width="300px">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell>Column B</ui5-table-header-cell>
+			<ui5-table-header-cell>Column C</ui5-table-header-cell>
+			<ui5-table-header-cell>Column D</ui5-table-header-cell>
+			<ui5-table-header-cell>Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br/>
+
+	<div id="tableMinMaxWidthTextExpected" class="text"></div>
+	<div id="tableMinMaxWidthTextActual" class="text"></div>
+	<ui5-table id="tableMinMaxWidth">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell min-width="200px" max-width="400px">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell>Column B</ui5-table-header-cell>
+			<ui5-table-header-cell>Column C</ui5-table-header-cell>
+			<ui5-table-header-cell>Column D</ui5-table-header-cell>
+			<ui5-table-header-cell>Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br/>
+
+	<div id="tableFixedWidthTextExpected" class="text"></div>
+	<div id="tableFixedWidthTextActual" class="text"></div>
+	<ui5-table id="tableFixedWidth">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell width="100px">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell width="100px">Column B</ui5-table-header-cell>
+			<ui5-table-header-cell width="100px">Column C</ui5-table-header-cell>
+			<ui5-table-header-cell width="100px">Column D</ui5-table-header-cell>
+			<ui5-table-header-cell width="100px">Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<br>
+
+	<div id="tablePercentageWidthTextExpected" class="text"></div>
+	<div id="tablePercentageWidthTextActual" class="text"></div>
+	<ui5-table id="tablePercentageWidth">
+		<ui5-table-header-row slot="headerRow" sticky>
+			<ui5-table-header-cell width="20%">Column A</ui5-table-header-cell>
+			<ui5-table-header-cell min-width="200px" width="30%">Column B</ui5-table-header-cell>
+			<ui5-table-header-cell width="10%">Column C</ui5-table-header-cell>
+			<ui5-table-header-cell width="15%">Column D</ui5-table-header-cell>
+			<ui5-table-header-cell width="25%">Column E</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell>Very Very Very Very Very Long Content</ui5-table-cell>
+			<ui5-table-cell>Average Content</ui5-table-cell>
+			<ui5-table-cell>Content</ui5-table-cell>
+			<ui5-table-cell>WoW</ui5-table-cell>
+			<ui5-table-cell>1</ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+	<script>
+		const tables = ["tableAuto", "tableWidthChange", "tableMinWidth", "tableMinWidthWidth", "tableMinMaxWidth", "tableFixedWidth", "tablePercentageWidth"];
+		const slider = document.getElementById("widthSlider");
+
+		function updateActualText(id) {
+			const tableElement = document.getElementById(id);
+			const tableText = document.getElementById(`${id}TextActual`);
+
+			let widths = [];
+			tableElement.querySelectorAll("ui5-table-header-cell").forEach((cell) => {
+				widths.push(`${cell.offsetWidth}px`);
+			});
+
+			tableText.innerHTML = `Table: ${tableElement.offsetWidth}px - Column widths: ${widths.join(" | ")}`;
+		}
+
+		function updateExpectedText(id) {
+			const tableElement = document.getElementById(id);
+			const tableText = document.getElementById(`${id}TextExpected`);
+
+			let widths = [];
+			tableElement.querySelectorAll("ui5-table-header-cell").forEach((cell) => {
+				const total = [];
+				const width = cell.getAttribute("width") ?? "1fr";
+				const minWidth = cell.getAttribute("min-width") ?? "";
+				const maxWidth = cell.getAttribute("max-width") ?? "";
+				total.push(`width: ${width}`);
+				minWidth && total.push(`min-width: ${minWidth}`);
+				maxWidth && total.push(`max-width: ${maxWidth}`);
+
+				widths.push(total.join(", "));
+			});
+
+			tableText.innerHTML = `Table: auto - Column widths: ${widths.join(" | ")}`;
+		}
+
+		slider.addEventListener("change", (evt) => {
+			tables.forEach((id) => {
+				const table = document.getElementById(id);
+				table.style.width = `${evt.target.value}%`;
+				updateActualText(id);
+			});
+		});
+
+		update.addEventListener("click", () => {
+			tables.forEach((id) => {
+				updateActualText(id);
+			});
+		});
+
+		popin.addEventListener("click", () => {
+			tables.forEach((id) => {
+				const table = document.getElementById(id);
+				table.overflowMode = table.overflowMode == "Scroll" ? "Popin" : "Scroll";
+			});
+		})
+
+		tables.forEach((id) => {
+			updateExpectedText(id);
+		});
+	</script>
+</body>
+
+</html>

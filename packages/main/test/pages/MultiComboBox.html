@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>MultiComboBox test page</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/MultiComboBox-C9M7SSL6.css">
+</head>
+
+<body class="multicombobox1auto">
+
+	<!-- <ui5-token>UI5 WebComponents</ui5-token> -->
+
+	<!-- <ui5-token selected>UI5 WebComponents</ui5-token> -->
+
+	<!-- <br />
+	<br />
+
+	<ui5-tokenizer class="multicombobox2auto">
+		<ui5-token>Hello</ui5-token>
+		<ui5-token>UI5</ui5-token>
+		<ui5-token>webcomponents</ui5-token>
+	</ui5-tokenizer>
+
+	<span>value </span>
+
+	<ui5-tokenizer show-more class="multicombobox2auto">
+		<ui5-token>World!</ui5-token>
+		<ui5-token>Martin</ui5-token>
+		<ui5-token>Hristovthelong</ui5-token>
+	</ui5-tokenizer>
+
+	<span>value </span>
+
+	<ui5-tokenizer show-more class="multicombobox2auto">
+		<ui5-token>B</ui5-token>
+		<ui5-token>A</ui5-token>
+		<ui5-token>A</ui5-token>
+		<ui5-token>A</ui5-token>
+		<ui5-token>B</ui5-token>
+		<ui5-token>B</ui5-token>
+		<ui5-token>B</ui5-token>
+	</ui5-tokenizer>
+
+<span>value </span>-->
+
+	<div class="demo-section">
+		<span>Predefined value</span>
+
+		<br>
+		<ui5-multi-combobox no-validation id="multi1" accessible-name="MultiComboBox with predefined values">
+			<ui5-mcb-item selected text="Longest word in the whole universe"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br>
+		<br>
+		<ui5-button id="focus-mcb">Focus MultiComboBox</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label id="mcbLabel">Validating input and predefined</ui5-label>
+
+		<br>
+		<ui5-multi-combobox id="mcb-predefined-value" value="com" accessible-name-ref="mcbLabel">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>no-validation and predefined value</span>
+
+		<br>
+		<ui5-multi-combobox id="multi-acv" no-validation value="com">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>Validating input and placeholder </span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-with-placeholder" placeholder="Some initial text">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>disabled and placeholder </span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" disabled>
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>value state success </span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-success" no-validation placeholder="Some initial text" value-state="Positive">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>value state information </span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb-information"
+			value-state="Information">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+			<div slot="valueStateMessage">Information message. This is a <ui5-link href="#" target="_blank">Link</ui5-link><ui5-link href="#" target="_blank">second Link</ui5-link> Extra long text used as
+				an information message. Extra long text used as an information message - 2. Extra long text used as an
+				information message - 3.</div>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>value state warning </span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-warning" no-validation placeholder="Some initial text" value-state="Critical">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>value state error </span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-error" no-validation placeholder="Some initial text" value-state="Negative">
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>readonly </span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-ro" no-validation placeholder="Some initial text" readonly>
+			<ui5-mcb-item selected text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>Readonly with value state </span>
+
+		<br>
+		<ui5-multi-combobox id="readonly-value-state-mcb" value-state="Negative" readonly>
+			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>Select all</span>
+
+		<br>
+		<ui5-multi-combobox show-select-all id="mcb-select-all-vs" value-state="Negative">
+			<ui5-mcb-item text="Qui minim"></ui5-mcb-item>
+			<ui5-mcb-item text="minim amet"></ui5-mcb-item>
+			<ui5-mcb-item text="amet mollit"></ui5-mcb-item>
+			<ui5-mcb-item text="mollit pariatur"></ui5-mcb-item>
+			<ui5-mcb-item text="pariatur"></ui5-mcb-item>
+			<ui5-mcb-item text="In"></ui5-mcb-item>
+			<ui5-mcb-item text="irure"></ui5-mcb-item>
+			<ui5-mcb-item text="minim"></ui5-mcb-item>
+			<ui5-mcb-item text="tempor"></ui5-mcb-item>
+			<ui5-mcb-item text="ipsum"></ui5-mcb-item>
+			<ui5-mcb-item text="consequat"></ui5-mcb-item>
+			<ui5-mcb-item text="est"></ui5-mcb-item>
+			<ui5-mcb-item text="nostrud"></ui5-mcb-item>
+			<ui5-mcb-item text="dolor"></ui5-mcb-item>
+			<ui5-mcb-item text="Ad"></ui5-mcb-item>
+			<ui5-mcb-item text="minim"></ui5-mcb-item>
+			<ui5-mcb-item text="esse"></ui5-mcb-item>
+			<ui5-mcb-item text="anim"></ui5-mcb-item>
+			<ui5-mcb-item text="veniam"></ui5-mcb-item>
+			<ui5-mcb-item text="veniam"></ui5-mcb-item>
+			<ui5-mcb-item text="non"></ui5-mcb-item>
+			<ui5-mcb-item text="id"></ui5-mcb-item>
+			<ui5-mcb-item text="esse"></ui5-mcb-item>
+			<ui5-mcb-item text="do"></ui5-mcb-item>
+			<ui5-mcb-item text="irure"></ui5-mcb-item>
+			<ui5-mcb-item text="sint"></ui5-mcb-item>
+			<ui5-mcb-item text="est"></ui5-mcb-item>
+		</ui5-multi-combobox>
+
+		<ui5-button id="btnAfter">Press</ui5-button>
+		<br>
+
+		<div class="demo-section">
+			<span>Select all with groups</span>
+
+			<br>
+			<ui5-multi-combobox show-select-all id="mcb-select-all-grouping" value-state="Critical">
+				<ui5-mcb-item-group header-text="Asia">
+					<ui5-mcb-item text="Afghanistan"></ui5-mcb-item>
+					<ui5-mcb-item text="China"></ui5-mcb-item>
+					<ui5-mcb-item text="India"></ui5-mcb-item>
+					<ui5-mcb-item text="Indonesia"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="Europe">
+					<ui5-mcb-item text="Austria"></ui5-mcb-item>
+					<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+					<ui5-mcb-item text="Germany"></ui5-mcb-item>
+					<ui5-mcb-item text="Italy"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+				<ui5-mcb-item-group header-text="North America">
+					<ui5-mcb-item text="Canada"></ui5-mcb-item>
+					<ui5-mcb-item text="Granada"></ui5-mcb-item>
+					<ui5-mcb-item text="Haiti"></ui5-mcb-item>
+					<ui5-mcb-item text="United States"></ui5-mcb-item>
+				</ui5-mcb-item-group>
+			</ui5-multi-combobox>
+
+			<br>
+
+		<ui5-multi-combobox show-select-all id="mcb-select-all">
+			<ui5-mcb-item text="Qui minim"></ui5-mcb-item>
+			<ui5-mcb-item text="minim amet"></ui5-mcb-item>
+			<ui5-mcb-item text="amet mollit"></ui5-mcb-item>
+			<ui5-mcb-item text="mollit pariatur"></ui5-mcb-item>
+			<ui5-mcb-item text="pariatur"></ui5-mcb-item>
+			<ui5-mcb-item text="In"></ui5-mcb-item>
+			<ui5-mcb-item text="irure"></ui5-mcb-item>
+			<ui5-mcb-item text="minim"></ui5-mcb-item>
+			<ui5-mcb-item text="tempor"></ui5-mcb-item>
+			<ui5-mcb-item text="ipsum"></ui5-mcb-item>
+			<ui5-mcb-item text="consequat"></ui5-mcb-item>
+			<ui5-mcb-item text="est"></ui5-mcb-item>
+			<ui5-mcb-item text="nostrud"></ui5-mcb-item>
+			<ui5-mcb-item text="dolor"></ui5-mcb-item>
+			<ui5-mcb-item text="Ad"></ui5-mcb-item>
+			<ui5-mcb-item text="minim"></ui5-mcb-item>
+			<ui5-mcb-item text="esse"></ui5-mcb-item>
+			<ui5-mcb-item text="anim"></ui5-mcb-item>
+			<ui5-mcb-item text="veniam"></ui5-mcb-item>
+			<ui5-mcb-item text="veniam"></ui5-mcb-item>
+			<ui5-mcb-item text="non"></ui5-mcb-item>
+			<ui5-mcb-item text="id"></ui5-mcb-item>
+			<ui5-mcb-item text="esse"></ui5-mcb-item>
+			<ui5-mcb-item text="do"></ui5-mcb-item>
+			<ui5-mcb-item text="irure"></ui5-mcb-item>
+			<ui5-mcb-item text="sint"></ui5-mcb-item>
+			<ui5-mcb-item text="est"></ui5-mcb-item>
+		</ui5-multi-combobox>
+
+		<br>
+
+		<span id="select-all-event">Selected items count: <span>0</span></span>
+
+		<script>
+			document.getElementById("mcb-select-all-vs").addEventListener("ui5-selection-change", e => {
+				console.log("selection change")
+				document.querySelector("#select-all-event span").textContent = e.detail.items.length;
+			});
+
+			document.getElementById("mcb-error").addEventListener("ui5-selection-change", e => {
+				event.target.valueState = "None";
+			});
+		</script>
+	</div>
+
+	<section>
+		<h3>MultiComboBox Composition</h3>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Korean</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Korean ..." id="mcb-composition-korean">
+				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
+				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
+				<ui5-mcb-item text="사랑"></ui5-mcb-item>
+				<ui5-mcb-item text="한국"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Korean with Validation</span>
+
+			<br>
+			<ui5-multi-combobox placeholder="Type in Korean ..." id="mcb-composition-korean">
+				<ui5-mcb-item text="안녕하세요"></ui5-mcb-item>
+				<ui5-mcb-item text="고맙습니다"></ui5-mcb-item>
+				<ui5-mcb-item text="사랑"></ui5-mcb-item>
+				<ui5-mcb-item text="한국"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Japanese</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Japanese ..." id="mcb-composition-japanese">
+				<ui5-mcb-item text="こんにちは"></ui5-mcb-item>
+				<ui5-mcb-item text="ありがとう"></ui5-mcb-item>
+				<ui5-mcb-item text="日本"></ui5-mcb-item>
+				<ui5-mcb-item text="東京"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Chinese</span>
+
+			<br>
+			<ui5-multi-combobox no-validation placeholder="Type in Chinese ..." id="mcb-composition-chinese">
+				<ui5-mcb-item text="你好"></ui5-mcb-item>
+				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
+				<ui5-mcb-item text="北京"></ui5-mcb-item>
+				<ui5-mcb-item text="上海"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+		<div class="demo-section">
+			<span>MultiComboBox Composition Chinese with Validation</span>
+
+			<br>
+			<ui5-multi-combobox placeholder="Type in Chinese ..." id="mcb-composition-chinese">
+				<ui5-mcb-item text="你好"></ui5-mcb-item>
+				<ui5-mcb-item text="謝謝"></ui5-mcb-item>
+				<ui5-mcb-item text="北京"></ui5-mcb-item>
+				<ui5-mcb-item text="上海"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+
+	</section>
+
+	<div class="demo-section">
+		<span>MultiComboBox with items</span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb">
+			<ui5-mcb-item text="Cosy" id="first-item"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world 2"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox without type ahead</span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" no-typeahead id="mcb-no-typeahead">
+			<ui5-mcb-item text="Cosy" id="first-item"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox with more items</span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" id="mcb-items">
+			<ui5-mcb-item text="Item 0" id="first-item"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 3"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 4"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 5"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 0"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 2"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 3"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 4"></ui5-mcb-item>
+			<ui5-mcb-item text="Another Item 5"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox with validation</span>
+
+		<br>
+		<ui5-multi-combobox no-validation placeholder="Some initial text" id="another-mcb">
+			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox n more</span> <br />
+
+		<ui5-multi-combobox class="multicombobox3auto" placeholder="Some initial text" id="more-mcb">
+			<ui5-mcb-item text="Cosy" selected></ui5-mcb-item>
+			<ui5-mcb-item text="Compact" selected></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world" selected></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox with validation</span>
+
+		<br>
+		<ui5-multi-combobox placeholder="Some initial text" id="mcb-validation">
+			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>MultiComboBox with grouping</span>
+
+		<br>
+		<ui5-multi-combobox id="mcb-grouping" no-validation placeholder="Select a country">
+			<ui5-mcb-item-group header-text="Asia">
+				<ui5-mcb-item text="Afghanistan"></ui5-mcb-item>
+				<ui5-mcb-item text="China"></ui5-mcb-item>
+				<ui5-mcb-item text="India"></ui5-mcb-item>
+				<ui5-mcb-item text="Indonesia"></ui5-mcb-item>
+			</ui5-mcb-item-group>
+			<ui5-mcb-item-group header-text="Europe">
+				<ui5-mcb-item text="Austria"></ui5-mcb-item>
+				<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+				<ui5-mcb-item text="Germany"></ui5-mcb-item>
+				<ui5-mcb-item text="Italy"></ui5-mcb-item>
+			</ui5-mcb-item-group>
+			<ui5-mcb-item-group header-text="North America">
+				<ui5-mcb-item text="Canada"></ui5-mcb-item>
+				<ui5-mcb-item text="Granada"></ui5-mcb-item>
+				<ui5-mcb-item text="Haiti"></ui5-mcb-item>
+				<ui5-mcb-item text="United States"></ui5-mcb-item>
+			</ui5-mcb-item-group>
+		</ui5-multi-combobox>
+		<span>SelectionChange events emitted:</span>
+		<span id="selection-change-events-fired"></span>
+	</div>
+	<br>
+	<div class="demo-section">
+		<span>MultiComboBox with Truncated token</span>
+		<br>
+		<ui5-multi-combobox id="truncated-token">
+			<ui5-mcb-item text="Token 1"></ui5-mcb-item>
+			<ui5-mcb-item selected
+				text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-mcb-item>
+		</ui5-multi-combobox>
+
+		<ui5-button id="dummy-btn">dummy button</ui5-button>
+	</div>
+
+	<br>
+	<div class="demo-section">
+		<span>MultiComboBox with N-Items</span>
+		<br>
+		<ui5-multi-combobox id="mc-items" style="width: 150px">
+			<ui5-mcb-item selected text="Token 1"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br>
+		<span>MultiComboBox with N-More</span>
+		<br>
+		<ui5-multi-combobox id="mc-more">
+			<ui5-mcb-item selected text="Token 1"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br>
+		<span>MultiComboBox with N-More and show wrapping</span>
+		<br>
+		<ui5-multi-combobox id="mc-more-wrapping">
+			<ui5-mcb-item selected text="Item that does not wrap"></ui5-mcb-item>
+			<ui5-mcb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum">></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<hr class="demo-section">
+
+	<div class="demo-section">
+		<span>Fired event: </span>
+		<input type="text" id="events-input" />
+
+		<br>
+		<br>
+
+		<span>Parameters Count: </span>
+		<input type="text" id="events-parameters" />
+
+		<br>
+		<br>
+
+		<span>Event call count: </span>
+		<input type="text" id="events-call-count" value="0" />
+
+		<br>
+		<br>
+
+		<button id="reset-btn">Reset fields</button>
+	</div>
+
+
+	<section class="ui5-content-density-compact">
+		<h3>MultiComboBox in Compact</h3>
+		<div>
+			<ui5-multi-combobox id="mcb-compact" placeholder="Some initial text">
+				<ui5-mcb-item text="Cosy" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Compact" selected></ui5-mcb-item>
+				<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+				<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</div>
+	</section>
+
+	<div class="demo-section">
+		<ui5-label>Two-column items </ui5-label>
+		<br />
+		<ui5-multi-combobox id="mcb-two-column-layout" class="multicombobox4auto">
+			<ui5-mcb-item text="Algeria" additional-text="DZ"></ui5-mcb-item>
+			<ui5-mcb-item text="Argentina" additional-text="AR"></ui5-mcb-item>
+			<ui5-mcb-item text="Australia" additional-text="AU"></ui5-mcb-item>
+			<ui5-mcb-item text="Austria" additional-text="AT"></ui5-mcb-item>
+			<ui5-mcb-item text="Bahrain" additional-text="BH"></ui5-mcb-item>
+			<ui5-mcb-item text="Belgium" additional-text="BE"></ui5-mcb-item>
+			<ui5-mcb-item text="Brazil" additional-text="BR"></ui5-mcb-item>
+			<ui5-mcb-item text="Bulgaria" additional-text="BG"></ui5-mcb-item>
+			<ui5-mcb-item text="Canada" additional-text="CA"></ui5-mcb-item>
+			<ui5-mcb-item text="Chile" additional-text="CL"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="demo-section">
+		<ui5-label>Toggle Loading State:</ui5-label>
+		<br />
+		<br />
+
+		<ui5-multi-combobox id="toggle-loading-mcb">
+			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br /><br />
+
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<span>Placeholder test</span>
+
+		<br>
+		<ui5-button id="sel">Toggle Item</ui5-button>
+		<ui5-multi-combobox id="mcb-init-selected-item" placeholder="Placeholder" style="width: 300px;">
+			<ui5-mcb-item text="Item1"></ui5-mcb-item>
+			<ui5-mcb-item selected id="mcb1" text="Initially selected"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br />
+		<br />
+		<ui5-button id="sel2">Toggle Item</ui5-button>
+		<ui5-multi-combobox id="mcb-init-nonselected-item" placeholder="Placeholder" style="width: 300px;">
+			<ui5-mcb-item text="Item1"></ui5-mcb-item>
+			<ui5-mcb-item id="mcb1_2" text="Initially not selected"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div>
+		<ui5-multi-combobox id="mcb-long-token">
+			<ui5-mcb-item selected text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container">
+		<ui5-button id="add">Add Tokens</ui5-button>
+		<ui5-multi-combobox id="mcb-dynamic-selection"></ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container">
+		<ui5-multi-combobox id="n-more-many-items">
+			<ui5-mcb-item selected text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 3"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 4"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 5"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 6"></ui5-mcb-item>
+			<ui5-mcb-item selected text="Item 7"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container">
+		<ui5-multi-combobox id="mcb-prevent">
+			<ui5-mcb-item data-id="mcbi1" text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item selected data-id="mcbi2" text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item data-id="mcbi3" text="Item 3"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container column">
+		<ui5-multi-combobox id="clear-icon-cb" show-clear-icon>
+			<ui5-mcb-item text="Algeria"></ui5-mcb-item>
+			<ui5-mcb-item text="Argentina"></ui5-mcb-item>
+			<ui5-mcb-item text="Australia"></ui5-mcb-item>
+			<ui5-mcb-item text="Austria"></ui5-mcb-item>
+			<ui5-mcb-item text="Bahrain"></ui5-mcb-item>
+			<ui5-mcb-item text="Belgium"></ui5-mcb-item>
+			<ui5-mcb-item text="Brazil"></ui5-mcb-item>
+			<ui5-mcb-item text="Bulgaria" selected></ui5-mcb-item>
+			<ui5-mcb-item text="Canada"></ui5-mcb-item>
+			<ui5-mcb-item text="Chile"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br>
+		<span>Change event calls: <span id="clear-icon-change-count">0</span></span>
+		<br>
+		<span>Input event calls: <span id="clear-icon-input-count">0</span></span>
+
+		<script>
+			const clearIconCb = document.getElementById("clear-icon-cb");
+
+			clearIconCb.addEventListener("ui5-change", () => {
+				const changeCountEl = document.getElementById("clear-icon-change-count");
+
+				changeCountEl.innerText = parseInt(changeCountEl.innerText) + 1;
+			});
+
+			clearIconCb.addEventListener("ui5-input", () => {
+				const inputCountEl = document.getElementById("clear-icon-input-count");
+
+				inputCountEl.innerText = parseInt(inputCountEl.innerText) + 1;
+			});
+		</script>
+	</div>
+
+	<div class="sample-container">
+		<form id="form">
+			<ui5-multi-combobox
+			  no-validation
+			  id="mcb-form"
+			  placeholder="Type your value"
+			>
+			  <ui5-mcb-item text="Albania"></ui5-mcb-item>
+			  <ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+			  <ui5-mcb-item text="Denmark"></ui5-mcb-item>
+			  <ui5-mcb-item text="England"></ui5-mcb-item>
+			  <ui5-mcb-item text="Germany"></ui5-mcb-item>
+			  <ui5-mcb-item text="Philippines"></ui5-mcb-item>
+			  <ui5-mcb-item text="Portugal"></ui5-mcb-item>
+			</ui5-multi-combobox>
+		</form>
+		<br>
+		<span>Submit event calls: <span id="mcb-form-submit">0</span></span>
+	</div>
+
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-multi-combobox id="mcbInAForm" no-validation required>
+				<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+				<ui5-mcb-item text="Denmark"></ui5-mcb-item>
+				<ui5-mcb-item text="England"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('mcbInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('mcbInAForm');
+			});
+
+			mcbInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('mcbInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
+	</div>
+
+	<script>
+		let selectionChangeEventsFired = 0;
+		var eventNameInput = document.getElementById("events-input");
+		var eventParamsInput = document.getElementById("events-parameters");
+		var callCountInput = document.getElementById("events-call-count");
+		var resetBtn = document.getElementById("reset-btn");
+		var selectionChangeCounter = 0;
+		var submitCounter = 0;
+		var openCounter = 0;
+		var closeCounter = 0;
+		const multiComboBox = document.querySelector("#mcb-prevent");
+
+		document.getElementById("mcb").addEventListener("ui5-selection-change", function (event) {
+			selectionChangeCounter += 1;
+			eventNameInput.value = "selectionChange";
+			eventParamsInput.value = event.detail.items.length;
+			callCountInput.value = `${selectionChangeCounter}`;
+		});
+
+		document.getElementById("multi1").addEventListener("ui5-open", function (event) {
+			openCounter += 1;
+			eventNameInput.value = "open";
+			callCountInput.value = `${openCounter}`;
+		});
+
+		document.getElementById("multi1").addEventListener("ui5-close", function (event) {
+			closeCounter += 1;
+			eventNameInput.value = "close";
+			callCountInput.value = `${closeCounter}`;
+		});
+
+		resetBtn.addEventListener("click", function (event) {
+			eventNameInput.value = "";
+			eventParamsInput.value = "";
+			callCountInput.value = "";
+			selectionChangeCounter = 0;
+			openCounter = 0;
+			closeCounter = 0;
+		});
+
+		// Placeholders test
+		const btn = document.getElementById("sel");
+		const mcb1 = document.getElementById("mcb1");
+		const btn2 = document.getElementById("sel2");
+		const mcb1_2 = document.getElementById("mcb1_2");
+		const btnfocusMCB = document.getElementById("focus-mcb");
+		const mcbFocus = document.getElementById("multi1");
+
+		let selected = mcb1.hasAttribute("selected");
+		btn.addEventListener("click", () => {
+			if (!selected) {
+				mcb1.setAttribute("selected", selected);
+			} else {
+				mcb1.removeAttribute("selected");
+			}
+			selected = !selected;
+		});
+
+		let selected2 = mcb1_2.hasAttribute("selected");
+		btn2.addEventListener("click", () => {
+			if (!selected2) {
+				mcb1_2.setAttribute("selected", selected2);
+			} else {
+				mcb1_2.removeAttribute("selected");
+			}
+			selected2 = !selected2;
+		});
+
+		btnfocusMCB.addEventListener("click", () => {
+			mcbFocus.focus();
+		});
+
+		document.getElementById("add").addEventListener("click", event => {
+			const mcb = document.getElementById("mcb-dynamic-selection");
+
+			["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"].forEach(text => {
+				const item = document.createElement("ui5-mcb-item");
+				item.text = text;
+				item.selected = true;
+
+				mcb.appendChild(item);
+			});
+		});
+
+
+		document.getElementById("mcb-grouping").addEventListener("ui5-selection-change", (e) => {
+			document.getElementById("selection-change-events-fired").textContent = ++selectionChangeEventsFired;
+		})
+
+		multiComboBox.addEventListener("ui5-selection-change", function (event) {
+			event.preventDefault();
+		});
+
+		document.getElementById('form').addEventListener('submit', (e) => {
+			e.preventDefault();
+			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const mcb = document.getElementById("toggle-loading-mcb");
+			mcb.loading = !mcb.loading;
+		});
+	</script>
+
+</body>
+
+</html>

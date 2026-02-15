@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html class="responsivepopover1auto">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ResponsivePopover</title>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ResponsivePopover-Dd7Tl60Z.css">
+</head>
+
+<body class="responsivepopover2auto">
+	<ui5-button id="btnOpen" design="Positive">Open me</ui5-button> <br/>
+	<ui5-button id="btnOpen2" design="Negative">Open me</ui5-button> <br/>
+	<ui5-button id="btnOpen3" design="Negative">Header/Footer hidden on Desktop</ui5-button> <br/>
+	<ui5-button id="btnOpen4" >accessibleName</ui5-button>
+
+	<ui5-button id="btnOpenWithAttr">Open with Attribute</ui5-button>
+
+	<!-- with header and footer slots -->
+	<ui5-responsive-popover initial-focus="emailInput" id="respPopover">
+		<div id="respPopoverHeader" slot="header">
+			<ui5-title>Hello World</ui5-title>
+		</div>
+
+		<div class="popover-content">
+			<ui5-label for="emailInput" required>Email: </ui5-label>
+			<ui5-input id="emailInput" class="samples-margin-top responsivepopover3auto"  placeholder="Enter Email"></ui5-input>
+		</div>
+
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="btnClose" design="Emphasized">Subscribe</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<!-- with header-text and footer slot-->
+	<ui5-responsive-popover id="respPopover2"
+							initial-focus="emailInput2"
+							header-text="Newsletter subscription for very long period of time">
+		<div class="popover-content">
+			<ui5-label for="emailInput2" required>Email: </ui5-label>
+			<ui5-input id="emailInput2" class="samples-margin-top responsivepopover3auto" placeholder="Enter Email"></ui5-input>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+			<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+				That´s OpenUI5.</p>
+		</div>
+		<div slot="footer" class="popover-footer">
+			<ui5-label>You are already subscribed.</ui5-label>
+			<ui5-button id="btnClose2">Cancel</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<ui5-responsive-popover id="respPopover3" content-only-on-desktop>
+		<div id="respPopoverHeader3" slot="header">
+			<ui5-title>Hello World</ui5-title>
+		</div>
+
+		<div class="popover-content">
+			<ui5-label for="emailInput3" required>Email: </ui5-label>
+			<ui5-input id="emailInput3" class="samples-margin-top responsivepopover3auto"  placeholder="Enter Email"></ui5-input>
+		</div>
+
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="btnClose3" design="Emphasized">Subscribe</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+
+	<ui5-responsive-popover id="respPopover4" accessible-name="Some label">
+		<div slot="header">
+			<ui5-title>Header</ui5-title>
+		</div>
+		<div class="popover-content">
+			<span>Hello World</span>
+		</div>
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="btnClose4" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<ui5-responsive-popover initial-focus="myInput" id="popoverAttr" opener="btnOpenWithAttr">
+		<ui5-input id="myInput"></ui5-input>
+		<ui5-button id="btnCloseWithMethod">Close with Method</ui5-button>
+		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
+	</ui5-responsive-popover>
+
+	<h2> Inputs based component that opens popover/dialog within dialog</h2>
+	<ui5-button id="btnOpenDialog" design="Emphasized" icon="employee">Open Dialog</ui5-button>
+	<ui5-dialog id="dialog" header-text="Dialog" stretch>
+		<ui5-select id="mySelect">
+			<ui5-option >Cozy</ui5-option>
+			<ui5-option >Compact</ui5-option>
+			<ui5-option selected>Condensed</ui5-option>
+		</ui5-select>
+		<ui5-combobox>
+			<ui5-cb-item text="Algeria"></ui5-cb-item>
+			<ui5-cb-item text="Argentina"></ui5-cb-item>
+			<ui5-cb-item text="Australia"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-multi-combobox>
+			<ui5-mcb-item text="Cosy"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<ui5-date-picker></ui5-date-picker>
+	</ui5-dialog>
+
+	<ui5-button id="btnSimpleRP">Open Simple RP</ui5-button>
+	<ui5-responsive-popover id="simpleRP">
+		Content
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnRpTopWithArrow">RP on Top with downward pointing arrow</ui5-button>
+	<ui5-responsive-popover placement="Top" id="rpTopWithArrow">
+		<div>text</div>
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnInitialFocus">Open RP and Focus</ui5-button>
+	<ui5-responsive-popover id="simpleRPInitialFocus">
+		Content
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnInitialFocusPrevented">Open RP and prevent initial focus</ui5-button>
+	<ui5-responsive-popover id="simpleRPInitialFocusPrevented" prevent-initial-focus>
+		Content
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnRpWithPopover">Open RP that opens a Popover</ui5-button>
+	<ui5-responsive-popover id="btnRpWithPopoverRP">
+		<ui5-button id="btnRpWithPopoverOpener">Open Popover</ui5-button>
+	</ui5-responsive-popover>
+	<ui5-popover id="btnRpWithPopoverInnerPopover">Test popover</ui5-popover>
+
+	<ui5-button id="rPOverDialogBtn">RP over a Dialog</ui5-button>
+	<ui5-dialog id="rPOverDialog1">
+		<div slot="header">
+			<ui5-title level="H2">Header 1</ui5-title>
+		</div>
+		<ui5-button id="rPOverRp1Btn">Open a new RP</ui5-button>
+	</ui5-dialog>
+	<ui5-responsive-popover id="rPOverRp2">
+		<div slot="header">
+			<ui5-title level="H2">Header 2</ui5-title>
+		</div>
+		<ui5-button id="rPOverRp2Btn">Open a new RP</ui5-button>
+	</ui5-responsive-popover>
+	<ui5-responsive-popover id="rPOverRp3">
+		<div slot="header">
+			<ui5-title level="H2">Header 3</ui5-title>
+		</div>
+		<ui5-button id="rPOverRp3Btn">Close</ui5-button>
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnRoleAlert">Role = 'AlertDialog'</ui5-button>
+	<ui5-responsive-popover id="rPAlertRole" accessible-role="AlertDialog">
+		<div slot="header">
+			<ui5-title level="H1">Role 'AlertDialog'</ui5-title>
+		</div>
+		<span>Hello World!</span>
+	</ui5-responsive-popover>
+
+	<ui5-button id="btnRoleNone">Role = 'None'</ui5-button>
+	<ui5-responsive-popover id="rPNoneRole" accessible-role="None">
+		<div slot="header">
+			<ui5-title level="H1">Role 'None'</ui5-title>
+		</div>
+		<span>Hello World!</span>
+	</ui5-responsive-popover>
+
+	<ui5-button id="btn">Open Responsive Popover With Inner Popover</ui5-button>
+
+	<ui5-responsive-popover id="responsivPopover1" opener="btn">
+		<div slot="header">
+			<ui5-bar>
+				<ui5-button id="btnInner">Open inner popover</ui5-button>
+			</ui5-bar>
+		</div>
+		<span>Content</span>
+	</ui5-responsive-popover>
+
+	<ui5-responsive-popover id="responsivPopover2" opener="btnInner">
+		<span>Content Inner</span>
+	</ui5-responsive-popover>
+
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrRefPopover">Accessible Description Ref</ui5-button>
+	<ui5-responsive-popover id="accessibleDescrRefPopover" initial-focus="focusMe" header-text="Popover header"  accessible-description-ref="btnAccessibleDescrRefPopover">
+		<ui5-title level="H3">Hello World!</ui5-title>
+
+		<div slot="footer">
+			<ui5-button id="btnAccessibleDescrRefPopoverSubmit">Close</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrPopover">Accessible Description</ui5-button>
+	<ui5-responsive-popover id="accessibleDescrPopover" initial-focus="focusMe" header-text="Popover header" accessible-description="Accessible Description">
+		<ui5-title level="H3">Hello World!</ui5-title>
+
+		<div slot="footer">
+			<ui5-button id="btnAccessibleDescrPopoverSubmit">Close</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<script>
+		btnOpen.addEventListener("click", function(event) {
+			respPopover.opener = btnOpen;
+			respPopover.open = true;
+		});
+		btnClose.addEventListener("click", function(event) {
+			respPopover.open = false;
+		});
+
+		btnOpen2.addEventListener("click", function(event) {
+			respPopover2.opener = btnOpen2;
+			respPopover2.open = true;
+		});
+		btnClose2.addEventListener("click", function(event) {
+			respPopover2.open = false;
+		});
+
+		btnOpen3.addEventListener("click", function(event) {
+			respPopover3.opener = btnOpen3;
+			respPopover3.open = true;
+		});
+		btnClose3.addEventListener("click", function(event) {
+			respPopover3.open = false;
+		});
+
+		btnOpen4.addEventListener("click", function(event) {
+			respPopover4.opener = btnOpen4;
+			respPopover4.open = true;
+		});
+		btnClose4.addEventListener("click", function(event) {
+			respPopover4.open = false;
+		});
+
+		btnOpenDialog.addEventListener('click', function (event) {
+			dialog.open = true;
+		});
+
+		btnSimpleRP.addEventListener("click", function(event) {
+			simpleRP.opener = btnSimpleRP;
+			simpleRP.open = true;
+		});
+
+		btnRpTopWithArrow.addEventListener("click", function(event) {
+			rpTopWithArrow.opener = btnRpTopWithArrow;
+			rpTopWithArrow.open = true;
+		});
+
+		btnInitialFocus.addEventListener("click", function(event) {
+			simpleRPInitialFocus.opener = event.target;
+			simpleRPInitialFocus.open = true;
+		});
+
+		btnInitialFocusPrevented.addEventListener("click", function(event) {
+			simpleRPInitialFocusPrevented.opener = event.target;
+			simpleRPInitialFocusPrevented.open = true;
+		});
+
+		btnRpWithPopover.addEventListener("click", function () {
+			btnRpWithPopoverRP.opener = btnRpWithPopover;
+			btnRpWithPopoverRP.open = true;
+		});
+
+		btnRpWithPopoverOpener.addEventListener("click", function () {
+			btnRpWithPopoverInnerPopover.opener = btnRpWithPopoverOpener;
+			btnRpWithPopoverInnerPopover.open = true;
+		});
+
+		btnOpenWithAttr.addEventListener("click", function () {
+			popoverAttr.setAttribute("open", "");
+		});
+
+		btnCloseWithMethod.addEventListener("click", function () {
+			popoverAttr.open = false;
+		});
+
+		btnCloseWithAttr.addEventListener("click", function () {
+			popoverAttr.removeAttribute("open");
+		});
+
+		rPOverDialogBtn.addEventListener("click", function () {
+			rPOverDialog1.open = true;
+		});
+
+		rPOverRp1Btn.addEventListener("click", function () {
+			rPOverRp2.opener = "rPOverRp1Btn";
+			rPOverRp2.open = true;
+		});
+
+		rPOverRp2Btn.addEventListener("click", function () {
+			rPOverRp3.opener = "rPOverRp2Btn";
+			rPOverRp3.open = true;
+		});
+
+		rPOverRp3Btn.addEventListener("click", function () {
+			rPOverRp3.open = false;
+		});
+
+		btnRoleAlert.addEventListener("click", function () {
+			rPAlertRole.opener = btnRoleAlert;
+			rPAlertRole.open = true;
+		});
+
+		btnRoleNone.addEventListener("click", function () {
+			rPNoneRole.opener = btnRoleNone;
+			rPNoneRole.open = true;
+		});
+
+		const btn = document.getElementById("btn");
+		const respPopoverNested = document.getElementById("responsivPopover1");;
+		const btnInner = document.getElementById("btnInner");
+		const respPopoverInner2 = document.getElementById("responsivPopover2");
+
+		btn.addEventListener("click", () => {
+			respPopoverNested.open = !respPopoverNested.open;
+		});
+
+		btnInner.addEventListener("click", () => {
+			respPopoverInner2.open = !respPopoverInner2.open;
+		});
+
+		btnAccessibleDescrRefPopover.addEventListener("click", function (event) {
+			accessibleDescrRefPopover.opener = btnAccessibleDescrRefPopover;
+			accessibleDescrRefPopover.open = true;
+		});
+
+		btnAccessibleDescrRefPopoverSubmit.addEventListener("click", function (event) {
+			accessibleDescrRefPopover.open = false;
+		});
+
+		btnAccessibleDescrPopover.addEventListener("click", function (event) {
+			accessibleDescrPopover.opener = btnAccessibleDescrPopover;
+			accessibleDescrPopover.open = true;
+		});
+
+		btnAccessibleDescrPopoverSubmit.addEventListener("click", function (event) {
+			accessibleDescrPopover.open = false;
+		});
+	</script>
+</body>
+</html>

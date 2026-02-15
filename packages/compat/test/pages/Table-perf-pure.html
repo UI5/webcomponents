@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Web components Table</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CmNrHCeo.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Table-perf-pure-KKxpPm8I.css">
+</head>
+
+<!-- Initial - 2200 -->
+<!-- shouldPopin - 2000 -->
+<!-- remove ifDefined - 1850 -->
+
+<body class="table-perf-pure1auto">
+	<table id="tbl">
+		<tr>
+			<th slot="columns">
+				First
+			</th>
+			<th slot="columns">
+				Second
+			</th>
+			<th slot="columns">
+				Third
+			</th>
+			<th slot="columns">
+				Fifth
+			</th>
+			<th slot="columns">
+				Sixth
+			</th>
+		</tr>
+	</table>
+
+
+	<script>
+		var tbl = document.getElementById("tbl");
+
+		for (var i=1; i<=1000; i++) {
+			var row = document.createElement("tr");
+
+			for (var j=1; j<=5; j++) {
+				var cell = document.createElement("td");
+				var span = document.createElement("span");
+				span.innerText = "Hello World!";
+
+				cell.appendChild(span);
+				row.appendChild(cell);
+			}
+
+			tbl.appendChild(row);
+		}
+	</script>
+</body>
+
+</html>

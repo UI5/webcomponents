@@ -1,0 +1,428 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Toolbar</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Toolbar-D_QShqw8.css">
+</head>
+
+<body>
+	<div id="toolbars-container">
+
+		<ui5-toolbar>
+			<ui5-toolbar-button icon="add" text="Plus" design="Default"></ui5-toolbar-button>
+			<ui5-toolbar-button icon="employee" text="Hire"></ui5-toolbar-button>
+			<ui5-toolbar-separator></ui5-toolbar-separator>
+			<ui5-toolbar-button icon="add" text="Add"></ui5-toolbar-button>
+			<ui5-toolbar-button icon="decline" text="Decline"></ui5-toolbar-button>
+			<ui5-toolbar-spacer></ui5-toolbar-spacer>
+			<ui5-toolbar-button icon="add" text="Append"></ui5-toolbar-button>
+		</ui5-toolbar>
+
+		<ui5-title level="H3">Basic</ui5-title>
+		<br /><br />
+		<ui5-toolbar id="clickCountToolbar">
+			<ui5-toolbar-button icon="add" text="Left 1 (long)" id="clickCounter"></ui5-toolbar-button>
+			<ui5-toolbar-button icon="decline" text="Left 2" id="clearCounter"></ui5-toolbar-button>
+			<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+			<ui5-toolbar-separator></ui5-toolbar-separator>
+			<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+			<ui5-toolbar-button id="btnOpenMenu" text="Open Menu" prevent-overflow-closing></ui5-toolbar-button>
+			<ui5-toolbar-button id="btnOpenMenu2" text="Open Menu 2" prevent-overflow-closing></ui5-toolbar-button>
+		</ui5-toolbar>
+		<ui5-menu header-text="Basic Menu with Items" id="menu" opener="btnOpenMenu">
+			<ui5-menu-item text="New File" icon="add-document"></ui5-menu-item>
+			<ui5-menu-item text="New Folder" icon="add-folder" disabled></ui5-menu-item>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item text="Open" icon="open-folder"></ui5-menu-item>
+			<ui5-menu-item text="Close"></ui5-menu-item>
+			<ui5-menu-separator></ui5-menu-separator>
+			<ui5-menu-item text="Preferences" icon="action-settings"></ui5-menu-item>
+			<ui5-menu-item text="Exit" icon="journey-arrive"></ui5-menu-item>
+		</ui5-menu>
+		<ui5-menu header-text="Basic Menu 2 with Items" id="menu2">
+			<ui5-menu-item text="New File" icon="add-document"></ui5-menu-item>
+			<ui5-menu-item text="New Window" icon="add-folder" disabled></ui5-menu-item>
+			<ui5-menu-item text="Open.." icon="open-folder"></ui5-menu-item>
+			<ui5-menu-item text="Open Folder" icon="open-folder"></ui5-menu-item>
+			<ui5-menu-item text="Save" icon="save"></ui5-menu-item>
+		</ui5-menu>
+
+		<ui5-input id="input" value="0"></ui5-input>
+
+		<br /><br />
+
+		<ui5-title level="H3">Standard Toolbar with ToolbarSelect</ui5-title>
+		<br />
+		<section>
+			<ui5-toolbar id="otb_standard">
+				<ui5-toolbar-button icon="add" stable-dom-ref="otb_button_1" text="Left 1 (long)"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+				<ui5-toolbar-select id="toolbar-select">
+					<ui5-toolbar-select-option>1</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option selected>2</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option>3</ui5-toolbar-select-option>
+				</ui5-toolbar-select>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="employee" text="Call me later"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+		<br /><br />
+
+		<ui5-title level="H3">Toolbar with start-aligned items</ui5-title>
+		<br />
+		<section>
+			<ui5-toolbar align-content="Start">
+				<ui5-toolbar-button icon="add" stable-dom-ref="otb_button_1" text="Left 1 (long)"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Call me later"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+		<br /><br />
+		<ui5-title level="H3">Two inline Toolbars with separator (with action on "User Menu" button)</ui5-title>
+		<br />
+		<section id="testSection">
+			<div class="main-wrapper">
+				<div class="first-toolbar-wrapper">
+					<ui5-toolbar id="otb_a">
+						<ui5-toolbar-button icon="add" stable-dom-ref="otb_button_1" text="Left 1 (long)"
+							width="150px"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+						<ui5-toolbar-button id="myOverflowBtn" prevent-overflow-closing icon="employee"
+							text="User Menu"></ui5-toolbar-button>
+					</ui5-toolbar>
+				</div>
+				<div class="second-toolbar-wrapper">
+					<ui5-toolbar id="otb_b">
+						<ui5-toolbar-separator overflow-priority="NeverOverflow"></ui5-toolbar-separator>
+					</ui5-toolbar>
+				</div>
+				<div class="third-toolbar-wrapper">
+					<ui5-toolbar id="otb_c">
+						<ui5-toolbar-button icon="decline" stable-dom-ref="tb-button-decline"
+							overflow-priority="NeverOverflow" text="Left 2"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="employee" overflow-priority="NeverOverflow"
+							text="Left 3"></ui5-toolbar-button>
+					</ui5-toolbar>
+				</div>
+			</div>
+
+		</section>
+		<br /><br />
+
+		<ui5-title level="H3">Toolbar with "AlwaysOverflow" overflow priority item (divided visually by internal
+			separator)</ui5-title>
+		<br />
+
+		<section>
+			<ui5-toolbar id="otb_d">
+				<ui5-toolbar-button icon="add" text="Left 1 (long)" width="150px"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="employee" text="Call me later" stable-dom-ref="tb-button-employee-d"
+					overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Longer for alignment check"
+					stable-dom-ref="tb-button-employee-d" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+
+		<br /><br />
+
+		<ui5-title level="H3">Toolbar with "NeverOverflow" overflow priority item (divided visually by internal
+			separator)</ui5-title>
+		<br />
+
+		<section>
+			<ui5-toolbar id="otb_e">
+				<ui5-toolbar-button icon="add" text="Left 1 (long)" width="150px"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"
+					overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="employee" text="Call me later" stable-dom-ref="tb-button-employee-e"
+					overflow-priority="NeverOverflow"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+		<br /><br />
+
+		<ui5-title level="H3">Toolbar with flexible spacers</ui5-title>
+		<br />
+
+		<section>
+			<ui5-toolbar id="otb_f">
+				<ui5-toolbar-button icon="add" text="Left 1 (long)" width="150px"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-spacer></ui5-toolbar-spacer>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+				<ui5-toolbar-spacer></ui5-toolbar-spacer>
+				<ui5-toolbar-button icon="employee" text="Call me later"
+					stable-dom-ref="tb-button-employee_f"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+		<br /><br />
+
+		<ui5-title level="H3">Toolbar with fixed spacers</ui5-title>
+		<br />
+
+		<section>
+			<ui5-toolbar id="otb_g">
+				<ui5-toolbar-button icon="add" text="Left 1 (long)" width="150px"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-spacer width="100px"></ui5-toolbar-spacer>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Mid 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Right 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Right 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Call me later"
+					stable-dom-ref="tb-button-employee-g"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+
+		<br />
+		<ui5-title level="H3">Toolbar with design="Transparent"</ui5-title>
+
+		<section>
+			<ui5-toolbar design="Transparent">
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-spacer width="100px"></ui5-toolbar-spacer>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Mid 1"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+
+		<br />
+
+		<section>
+			<ui5-title level="H3">Toolbar with many separators</ui5-title>
+			<br /><br />
+			<ui5-toolbar>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="add" text="Left 1 (long)"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="decline" text="Left 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+			</ui5-toolbar>
+		</section>
+
+		<br /><br />
+
+		<ui5-title level="H3">fit-content width</ui5-title>
+		<div style="display:flex;justify-content: center;">
+			<ui5-toolbar style="width:fit-content;max-width:100%;">
+				<ui5-toolbar-button icon="decline">
+				</ui5-toolbar-button>
+
+				<ui5-toolbar-button icon="add">
+				</ui5-toolbar-button>
+
+				<ui5-toolbar-button icon="employee">
+				</ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+		<ui5-title level="H3">Dynamic Title example</ui5-title>
+		<br />
+		<section id="titleRestSection">
+			<div class="dynamic-title-wrapper">
+				<div class="title-wrapper">
+					<ui5-breadcrumbs>
+						<ui5-breadcrumbs-item href="https://www.sap.com" target="_blank">Root Page
+						</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item href="https://www.sap.com">Parent Page</ui5-breadcrumbs-item>
+						<ui5-breadcrumbs-item>Current Page</ui5-breadcrumbs-item>
+					</ui5-breadcrumbs>
+					<ui5-title level="H1" class="main-title">Header Title</ui5-title>
+					<ui5-title level="H4">Header Subtitle</ui5-title>
+				</div>
+				<div class="content-wrapper">
+					<ui5-toolbar align-content="Start">
+						<ui5-toolbar-button icon="employee" text="Left 3"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="decline" text="Left 4"></ui5-toolbar-button>
+
+					</ui5-toolbar>
+				</div>
+				<div class="actions-wrapper">
+					<div class="first-toolbar-wrapper">
+						<ui5-toolbar>
+							<ui5-toolbar-button icon="edit"></ui5-toolbar-button>
+							<ui5-toolbar-button icon="delete"></ui5-toolbar-button>
+							<ui5-toolbar-button icon="copy"></ui5-toolbar-button>
+							<ui5-toolbar-button icon="share"></ui5-toolbar-button>
+						</ui5-toolbar>
+					</div>
+					<div class="second-toolbar-wrapper">
+						<ui5-toolbar>
+							<ui5-toolbar-separator overflow-priority="NeverOverflow"></ui5-toolbar-separator>
+						</ui5-toolbar>
+					</div>
+					<div class="third-toolbar-wrapper">
+						<ui5-toolbar>
+							<ui5-toolbar-button icon="full-screen" stable-dom-ref="tb-button-decline"
+								overflow-priority="NeverOverflow"></ui5-toolbar-button>
+							<ui5-toolbar-button icon="decline" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+						</ui5-toolbar>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<br /><br />
+		<ui5-title level="H3">Toolbar with showOverflowText property</ui5-title>
+		<ui5-label>Resize the viewport to see the overflow behavior. Buttons with showOverflowText show icon-only in the toolbar but display text when overflowed.</ui5-label>
+		<br /><br />
+		<section>
+			<ui5-toolbar id="otb_overflow_text_only">
+				<ui5-toolbar-button icon="save" text="Save" show-overflow-text tooltip="Save Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="edit" text="Edit" show-overflow-text tooltip="Edit Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="copy" text="Copy" show-overflow-text tooltip="Copy Document"></ui5-toolbar-button>
+
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+
+				<ui5-toolbar-button icon="add" text="Add New Item"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="decline" text="Delete Item"></ui5-toolbar-button>
+
+				<ui5-toolbar-spacer></ui5-toolbar-spacer>
+
+				<ui5-toolbar-button icon="download" text="Download" show-overflow-text tooltip="Download File"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="share" text="Share" show-overflow-text tooltip="Share Document"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="refresh" text="Refresh" show-overflow-text tooltip="Refresh Page"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
+
+		<br /><br />
+
+		<section id="testEventpreventClosing">
+			<div style="width: 250px;">
+				<ui5-toolbar id="testEventpreventClosing-toolbar">
+					<ui5-toolbar-button text="Some longer title text">
+
+					</ui5-toolbar-button>
+					<ui5-toolbar-select>
+						<ui5-toolbar-select-option>
+							test
+						</ui5-toolbar-select-option>
+					</ui5-toolbar-select>
+				</ui5-toolbar>
+			</div>
+		</section>
+	</div>
+	<ui5-popover id="myPopup" placement="Bottom">
+		<div slot="header" style="padding: 0.5rem">Hello World</div>
+		<div>
+			<ui5-input placeholder="Hi"></ui5-input>
+
+			<ui5-list>
+				<ui5-li>Hello</ui5-li>
+				<ui5-li>World</ui5-li>
+				<ui5-li>Again</ui5-li>
+			</ui5-list>
+			<br />
+			<ui5-button>Hi!</ui5-button>
+		</div>
+	</ui5-popover>
+	<ui5-slider value="100" id="toolbarSlider"></ui5-slider>
+	<script>
+		const items = document.querySelectorAll("ui5-toolbar-button");
+		const select = document.getElementById("toolbar-select");
+		const toolbarSlider = document.getElementById("toolbarSlider");
+		const input = document.getElementById("input");
+
+		items.forEach(item => {
+			item.addEventListener("ui5-click", e => {
+				console.log("Clicked on " + e.target.getAttribute("text"));
+			});
+		});
+
+		select.addEventListener("ui5-change", e => {
+			console.log("Selected " + e.detail.selectedOption.textContent);
+		});
+
+		select.addEventListener("ui5-open", e => {
+			console.log("Opened", e);
+		});
+
+		select.addEventListener("ui5-close", e => {
+			console.log("Closed", e);
+		});
+
+		clickCountToolbar.addEventListener('click', (e) => {
+			if (e.target.id === "clearCounter") {
+				input.setAttribute("value", "0");
+			} else {
+				let clickCounter = parseInt(input.getAttribute("value"));
+				input.setAttribute("value", `${++clickCounter}`);
+			}
+		});
+
+		toolbarSlider.addEventListener("input", e => {
+			document.getElementById("toolbars-container").setAttribute("style", "width:" + e.target.value + "%");
+		})
+
+		const btnOpenMenu = document.getElementById("btnOpenMenu");
+		const btnOpenMenu2 = document.getElementById("btnOpenMenu2");
+		const menu = document.getElementById("menu");
+		const menu2 = document.getElementById("menu2");
+
+		btnOpenMenu.addEventListener("ui5-click", function(event) {
+			// opener is set as string (the ID of the ui5-toolbar-button#btnOpenMenu)
+			menu.open = !menu.open;
+		});
+
+		btnOpenMenu2.addEventListener("ui5-click", function(event) {
+			// opener is set as property (the DOM reference of the ui5-toolbar-button#btnOpenMenu2)
+			menu2.open = !menu2.open;
+			menu2.opener = btnOpenMenu2;
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="productswitch1auto">
+
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-product-switch</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/ProductSwitch-hrjX8qk4.css">
+</head>
+
+<body class="productswitch2auto">
+	<ui5-product-switch id="productSwitchThreeColumn">
+		<ui5-product-switch-item title-text="Home" subtitle-text="Central Home">
+			<ui5-avatar slot="image" shape="Square" fallback-icon="employee" color-scheme="Transparent" size="S">
+				<img alt="Woman" src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg.adapt.svg/1493030643828.svg" />
+			</ui5-avatar>
+		</ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Analytics Cloud" subtitle-text="Analytics Cloud" icon="business-objects-experience"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Catalog" subtitle-text="Ariba" icon="contacts"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Guided Buying" icon="credit-card"></ui5-product-switch-item>
+	</ui5-product-switch>
+
+	<ui5-product-switch id="productSwitchFourColumn">
+		<ui5-product-switch-item id="firstItem" title-text="Home" subtitle-text="Central Home" icon="home"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Analytics Cloud" subtitle-text="Analytics Cloud" icon="business-objects-experience"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Catalog" subtitle-text="Ariba" icon="contacts"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Guided Buying" icon="credit-card"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Strategic Procurement" icon="cart-3"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Travel & Expense" subtitle-text="Concur" icon="flight"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Vendor Management" subtitle-text="Fieldglass" icon="shipping-status"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Human Capital Management" icon="customer"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Sales Cloud" subtitle-text="Sales Cloud" icon="sales-notification"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Commerce Cloud" subtitle-text="Commerce Cloud" icon="retail-store"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Marketing Cloud" subtitle-text="Marketing Cloud" icon="marketing-campaign"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Service Cloud" icon="family-care"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Customer Data Cloud" icon="customer-briefing"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="S/4HANA" icon="batch-payments"></ui5-product-switch-item>
+	</ui5-product-switch>
+
+	<ui5-product-switch id="productSwitchFlex" style="display: flex; justify-content: center; align-items: center;">
+		<ui5-product-switch-item title-text="Home" subtitle-text="Central Home" icon="home"></ui5-product-switch-item>
+		<ui5-product-switch-item title-text="Analytics Cloud" subtitle-text="Analytics Cloud" icon="business-objects-experience"></ui5-product-switch-item>
+	</ui5-product-switch>
+
+	<ui5-input id="eventTest"></ui5-input>
+
+	<script>
+		var oProductSwitch = document.getElementById("firstItem");
+		var oInput = document.getElementById("eventTest");
+		var pressCount = 0;
+
+		oProductSwitch.addEventListener("ui5-click", function (oEvent) {
+			pressCount += 1;
+			oInput.value = `${pressCount}`;
+		});
+	</script>
+</body>
+
+</html>

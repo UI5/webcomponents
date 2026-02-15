@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>User Settings Dialog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+
+	</script>
+	<style>
+		.ui5-user-settings-appearance-view-additional-content-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 0.5rem;
+			width: 100%;
+		}
+		.ui5-user-settings-appearance-view-additional-content-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSmallSize);
+		}
+	</style>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/UserSettingsDialog-3ad_38EE.css">
+</head>
+
+<body>
+<ui5-shellbar id="shellbar">
+	<ui5-shellbar-branding slot="branding">
+		Corporate Portal
+		<img slot="logo" src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='92'%20height='45'%20viewBox='0%200%2092%2045'%3e%3clinearGradient%20id='a'%20gradientUnits='userSpaceOnUse'%20x1='45.483'%20x2='45.483'%20y2='45.001'%3e%3cstop%20offset='0'%20stop-color='%2300AEEF'/%3e%3cstop%20offset='.212'%20stop-color='%230097DC'/%3e%3cstop%20offset='.519'%20stop-color='%23007CC5'/%3e%3cstop%20offset='.792'%20stop-color='%23006CB8'/%3e%3cstop%20offset='1'%20stop-color='%230066B3'/%3e%3c/linearGradient%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20fill='url(%23a)'%20d='M0%2045h45.974L90.966%200H0v45'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20fill='%23fff'%20d='M53.984%209H45l.03%2021.13-7.823-21.137H29.45l-6.678%2017.653c-.71-4.492-5.354-6.042-9.008-7.203-2.413-.775-4.974-1.915-4.948-3.175.02-1.034%201.37-1.993%204.053-1.85%201.8.097%203.39.242%206.553%201.77l3.11-5.42C19.648%209.3%2015.66%208.373%2012.39%208.37h-.02c-3.813%200-6.988%201.235-8.956%203.27-1.372%201.42-2.112%203.226-2.142%205.223-.05%202.748.957%204.696%203.073%206.253%201.788%201.31%204.075%202.16%206.09%202.784%202.485.77%204.515%201.44%204.49%202.866-.02.52-.216%201.006-.59%201.398-.62.64-1.57.88-2.885.906-2.537.054-4.417-.345-7.413-2.116L1.27%2034.444C4.263%2036.146%207.44%2037%2011.05%2037l.812-.006c3.142-.057%205.692-.81%207.718-2.44.116-.093.22-.187.328-.282l-.34%201.752%207.58-.024%201.36-3.482c1.43.488%203.056.758%204.782.758%201.682%200%203.264-.256%204.667-.716l.948%203.44%2013.6.013.033-7.938h2.894c6.995%200%2011.13-3.56%2011.13-9.53C66.56%2011.896%2062.54%209%2053.984%209zM33.29%2027.062c-1.045%200-2.025-.182-2.868-.502l2.836-8.955h.055l2.79%208.98c-.84.3-1.797.477-2.814.477zm21.22-5.145h-1.974V14.7h1.975c2.63%200%204.73.876%204.73%203.562-.002%202.78-2.1%203.655-4.73%203.655'/%3e%3cpath%20fill='none'%20d='M0%200h92v45H0z'/%3e%3c/svg%3e" />
+	</ui5-shellbar-branding>
+	<ui5-avatar slot="profile">
+		<img src="/webcomponents/assets/man_avatar_1-NFeJdB17.png"/>
+	</ui5-avatar>
+</ui5-shellbar>
+<ui5-user-menu id="userMenuShellBar">
+	<ui5-user-menu-account slot="accounts"
+						   avatar-src="./img/man_avatar_1.png"
+						   title-text="Alain Chevalier"
+						   subtitle-text="alian.chevalier@sap.com"
+						   description="Delivery Manager, SAP SE"
+						   selected>
+	</ui5-user-menu-account>
+	<ui5-user-menu-item icon="action-settings" text="Setting" data-id="setting"></ui5-user-menu-item>
+</ui5-user-menu>
+
+<div style="border:1px solid black"></div>
+<ui5-button id="btnOpenSettings">User settings</ui5-button>
+<ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
+	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
+		<ui5-user-settings-account-view id="account" show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+
+				<ui5-panel fixed class="ua-panel">
+					<ui5-text>
+						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+					</ui5-text>
+				</ui5-panel>
+
+		</ui5-user-settings-account-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
+		<ui5-user-settings-appearance-view text="Themes">
+			<div slot="additionalContent">
+				<div class="ui5-user-settings-appearance-view-additional-content-header">
+					<ui5-text>Optimize for Touch Input</ui5-text>
+					<ui5-switch></ui5-switch>
+				</div>
+				<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+					Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+					This is useful for hybrid devices that combine touch and mouse events.
+				</ui5-text>
+			</div>
+			<ui5-user-settings-appearance-view-item item-key="custom_blue" text="Custom Theme Blue"></ui5-user-settings-appearance-view-item>
+			<ui5-user-settings-appearance-view-item item-key="custom_dark" text="Custom Theme Dark"></ui5-user-settings-appearance-view-item>
+			<ui5-user-settings-appearance-view-group header-text="SAP Horizon">
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="SAP Morning Horizon"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="SAP Evening Horizon"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="SAP Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="SAP Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+			<ui5-user-settings-appearance-view-group header-text="SAP Quartz">
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="SAP Quartz Light"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="SAP Quartz Dark"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="SAP Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="SAP Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+
+		</ui5-user-settings-appearance-view>
+
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
+		<ui5-user-settings-view>
+			<div id="language-region-container" class="language-region-container">
+			<ui5-label class="language-region-label">Display Language:</ui5-label>
+			<ui5-combobox id="language" class="language-region-control" placeholder="Language" value="English (United States)">
+				<ui5-cb-item text="Browser Language" selected additional-text="English"></ui5-cb-item>
+				<ui5-cb-item text="English (United Kingdom)" additional-text="English (United Kingdom)"></ui5-cb-item>
+				<ui5-cb-item text="English (United States)" additional-text="English (United States)"></ui5-cb-item>
+				<ui5-cb-item text="French (France)" additional-text="Français (France)"></ui5-cb-item>
+				<ui5-cb-item text="French (Canada)" additional-text="Français (Canada)"></ui5-cb-item>
+				<ui5-cb-item text="German (Germany)" additional-text="Deutsch (Deutschland)"></ui5-cb-item>
+				<ui5-cb-item text="German (Switzerland)" additional-text="Deutsch (Schweiz)"></ui5-cb-item>
+				<ui5-cb-item text="Japanese" additional-text="日本語 (日本)"></ui5-cb-item>
+				<ui5-cb-item text="Portuguese (Brazil)" additional-text="Português (Brasil)" ></ui5-cb-item>
+				<ui5-cb-item text="Simplified Chinese (China)" additional-text="简体中文（中国)"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Mexico)" additional-text="Español (América Latina)"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Spain)" additional-text="Español (España)"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Region:</ui5-label>
+			<ui5-combobox id="region" class="language-region-control" placeholder="Region" value="United States">
+				<ui5-cb-item text="United Kingdom" additional-text="GB"></ui5-cb-item>
+				<ui5-cb-item text="United States" additional-text="US"></ui5-cb-item>
+				<ui5-cb-item text="French (France)" additional-text="FR"></ui5-cb-item>
+				<ui5-cb-item text="French (Canada)" additional-text="CA"></ui5-cb-item>
+				<ui5-cb-item text="German (Germany)" additional-text="DE"></ui5-cb-item>
+				<ui5-cb-item text="German (Switzerland)" additional-text="CH" ></ui5-cb-item>
+				<ui5-cb-item text="Japanese" additional-text="JP"></ui5-cb-item>
+				<ui5-cb-item text="Portuguese (Brazil)" additional-text="BR"></ui5-cb-item>
+				<ui5-cb-item text="Simplified Chinese (China)" additional-text="CN"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Mexico)" additional-text="MX"></ui5-cb-item>
+				<ui5-cb-item text="Spanish (Spain)" additional-text="ES"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Date Format:</ui5-label>
+			<ui5-combobox  id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
+				<ui5-cb-item text="MM/DD/YYYY" additional-text="e.g. 10/23/2025"></ui5-cb-item>
+				<ui5-cb-item text="MM.DD.YYYY" additional-text="e.g. 10.23.2025"></ui5-cb-item>
+				<ui5-cb-item text="MM-DD-YYYY" additional-text="e.g. 10-23-2025"></ui5-cb-item>
+				<ui5-cb-item text="DD/MM/YYYY" additional-text="e.g. 23/10/2025"></ui5-cb-item>
+				<ui5-cb-item text="DD.MM.YYYY" additional-text="e.g. 23.10.2025"></ui5-cb-item>
+				<ui5-cb-item text="DD-MM-YYYY" additional-text="e.g. 23-10-2025"></ui5-cb-item>
+				<ui5-cb-item text="YYYY/MM/DD" additional-text="e.g. 2025/10/23"></ui5-cb-item>
+				<ui5-cb-item text="YYYY.MM.DD" additional-text="e.g. 2025.10.23"></ui5-cb-item>
+				<ui5-cb-item text="YYYY-MM-DD" additional-text="e.g. 2025-10-23"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Time Format:</ui5-label>
+			<ui5-combobox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
+				<ui5-cb-item text="24 Hour" additional-text="e.g. 12:05:10"></ui5-cb-item>
+				<ui5-cb-item text="12 Hour" additional-text="e.g. 12:05:10 PM"></ui5-cb-item>
+				<ui5-cb-item text="12 Hour (lowercase)" additional-text="e.g. 12:05:10 pm"></ui5-cb-item>
+				<ui5-cb-item text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM"></ui5-cb-item>
+				<ui5-cb-item text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Time Zone:</ui5-label>
+			<ui5-combobox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)">
+				<ui5-cb-item text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States"></ui5-cb-item>
+				<ui5-cb-item text="Mountain Time (UTC -07:00)" additional-text="Denver, United States"></ui5-cb-item>
+				<ui5-cb-item text="Central Time (UTC -06:00)" additional-text="Austin, United States"></ui5-cb-item>
+				<ui5-cb-item text="Eastern Standard Time (UTC -05:00)" additional-text="Washington, United States"></ui5-cb-item>
+				<ui5-cb-item text="Atlantic Time (UTC -04:00)" additional-text="Halifax, Canada"></ui5-cb-item>
+				<ui5-cb-item text="Newfoundland Time (UTC -03:30)" additional-text="St. John's, Canada"></ui5-cb-item>
+				<ui5-cb-item text="Brasilia Time (UTC -03:00)" additional-text="Brasília, Brazil"></ui5-cb-item>
+				<ui5-cb-item text="Argentina Time (UTC -03:00)" additional-text="Buenos Aires, Argentina"></ui5-cb-item>
+				<ui5-cb-item text="Greenwich Mean Time (UTC +00:00)" additional-text="London, United Kingdom"></ui5-cb-item>
+				<ui5-cb-item text="Central European Time (UTC +01:00)" additional-text="Berlin, Germany"></ui5-cb-item>
+				<ui5-cb-item text="Eastern European Time (UTC +02:00)" additional-text="Athens, Greece"></ui5-cb-item>
+				<ui5-cb-item text="Turkey Time (UTC +03:00)" additional-text="Ankara, Türkiye"></ui5-cb-item>
+				<ui5-cb-item text="Arabian Time (UTC +04:00)" additional-text="Abu Dhabi, United Arab Emirates"></ui5-cb-item>
+				<ui5-cb-item text="Pakistan Standard Time (UTC +05:00)" additional-text="Islamabad, Pakistan"></ui5-cb-item>
+				<ui5-cb-item text="India Standard Time (UTC +05:30)" additional-text="New Delhi, India"></ui5-cb-item>
+				<ui5-cb-item text="Bangladesh Standard Time (UTC +06:00)" additional-text="Dhaka, Bangladesh"></ui5-cb-item>
+				<ui5-cb-item text="Indochina Time (UTC +07:00)" additional-text="Bangkok, Thailand"></ui5-cb-item>
+				<ui5-cb-item text="China Standard Time (UTC +08:00)" additional-text="Beijing, China"></ui5-cb-item>
+				<ui5-cb-item text="Singapore Time (UTC +08:00)" additional-text="Singapore, Singapore"></ui5-cb-item>
+				<ui5-cb-item text="Hong Kong Time (UTC +08:00)" additional-text="Hong Kong, China"></ui5-cb-item>
+				<ui5-cb-item text="Japan Standard Time (UTC +09:00)" additional-text="Tokyo, Japan"></ui5-cb-item>
+				<ui5-cb-item text="Korea Standard Time (UTC +09:00)" additional-text="Seoul, South Korea"></ui5-cb-item>
+				<ui5-cb-item text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia"></ui5-cb-item>
+				<ui5-cb-item text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Currency:</ui5-label>
+			<ui5-combobox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar">
+				<ui5-cb-item text="USD - United States Dollar" additional-text="USD" value="USD"></ui5-cb-item>
+				<ui5-cb-item text="Euro" additional-text="EUR"></ui5-cb-item>
+				<ui5-cb-item text="British Pound" additional-text="GBP"></ui5-cb-item>
+				<ui5-cb-item text="Japanese Yen" additional-text="JPY"></ui5-cb-item>
+				<ui5-cb-item text="Swiss Franc" additional-text="CHF"></ui5-cb-item>
+				<ui5-cb-item text="Canadian Dollar" additional-text="CAD"></ui5-cb-item>
+				<ui5-cb-item text="Australian Dollar" additional-text="AUD"></ui5-cb-item>
+				<ui5-cb-item text="New Zealand Dollar" additional-text="NZD"></ui5-cb-item>
+				<ui5-cb-item text="Chinese Yuan Renminbi" additional-text="CNY"></ui5-cb-item>
+				<ui5-cb-item text="Indian Rupee" additional-text="INR"></ui5-cb-item>
+				<ui5-cb-item text="Brazilian Real" additional-text="BRL"></ui5-cb-item>
+				<ui5-cb-item text="South African Rand" additional-text="ZAR"></ui5-cb-item>
+				<ui5-cb-item text="Russian Ruble" additional-text="RUB"></ui5-cb-item>
+				<ui5-cb-item text="Mexican Peso" additional-text="MXN"></ui5-cb-item>
+				<ui5-cb-item text="Singapore Dollar" additional-text="SGD"></ui5-cb-item>
+				<ui5-cb-item text="Hong Kong Dollar" additional-text="HKD"></ui5-cb-item>
+				<ui5-cb-item text="Norwegian Krone" additional-text="NOK"></ui5-cb-item>
+				<ui5-cb-item text="Swedish Krona" additional-text="SEK"></ui5-cb-item>
+				<ui5-cb-item text="South Korean Won" additional-text="KRW"></ui5-cb-item>
+				<ui5-cb-item text="Turkish Lira" additional-text="TRY"></ui5-cb-item>
+			</ui5-combobox>
+			<ui5-label class="language-region-label">Number Format:</ui5-label>
+			<ui5-combobox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56">
+				<ui5-cb-item text="1.234,56" additional-text="Germany"></ui5-cb-item>
+				<ui5-cb-item text="1,234.56" additional-text="US/UK"></ui5-cb-item>
+				<ui5-cb-item text="1 234,56" additional-text="France"></ui5-cb-item>
+				<ui5-cb-item text="1'234.56" additional-text="Switzerland"></ui5-cb-item>
+				<ui5-cb-item text="1234,56" additional-text="SI/SO Format"></ui5-cb-item>
+			</ui5-combobox>
+			</div>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
+		<ui5-user-settings-view >
+			<ui5-button id="mobile1-button">iOS</ui5-button>
+			<ui5-button id="mobile2-button">Android</ui5-button>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
+			<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
+			<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
+			<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
+			<ui5-icon name="qr-code" style="width: 20rem; height: 20rem;"></ui5-icon>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
+		<ui5-user-settings-view>
+			<ui5-list class="custom-list-main">
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" color-scheme="Accent5" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">SuccessFactors</span>
+								<span class="item-subtitle">Compensation | Learning | HR</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">S/4HANA | EMEA</span>
+								<span class="item-subtitle">Finance EMEA</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch"></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
+							<div class="item-texts">
+								<span class="item-title">S/4HANA | AJP</span>
+								<span class="item-subtitle">Finance AJP</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view id="notification-second-page" secondary>
+			<ui5-li-custom class="ui5-list-secondary">
+				<div class="list-item">
+					<div class="item-left">
+						<div class="item-texts">
+							<span>Allow Notifications</span>
+						</div>
+					</div>
+					<div class="item-right">
+						<ui5-switch class="switch" checked></ui5-switch>
+					</div>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+			<ui5-list class="ui5-list-sales-order">
+				<ui5-title class="list-header" size="H3">Sales</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Updates</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Approvals</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="sales-title">Sales Order Release</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+			<ui5-list class="ui5-list-secondary">
+				<ui5-title class="list-header" size="H3">Purchasing</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Approval</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Rejection</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch"></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="purchase-title">Purchase Order Overdue</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view id="sales-order-second-page" secondary>
+			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
+
+			<ui5-list class="ui5-list-secondary" separators="None">
+
+				<ui5-li-custom >
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span>Allow Sales Order Updates</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				</ui5-list>
+			<ui5-list separators="None">
+				<ui5-title class="list-header" size="H3">Choose how you get notified</ui5-title>
+
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">In-App Notification</span>
+								<span class="item-subtitle">Delivered inside the app</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Allow Fly-Inn</span>
+								<span class="item-subtitle">Notifications fly in as banner from the figth se of the application while working</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom class="push-notifications">
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Push Notifications</span>
+								<span class="item-subtitle">Pushed to your device immediately</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">E-Mail</span>
+								<span class="item-subtitle">Send on your primary e-mail</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-switch class="switch" checked></ui5-switch>
+						</div>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom>
+					<div class="list-item">
+						<div class="item-left">
+							<div class="item-texts">
+								<span class="item-text-title">Frequency</span>
+								<span class="item-subtitle">Pushed to your device immedietly</span>
+							</div>
+						</div>
+						<div class="item-right">
+							<ui5-combobox value="Immediate">
+								<ui5-cb-item text="Immediate"></ui5-cb-item>
+								<ui5-cb-item text="After 5 minutes"></ui5-cb-item>
+								<ui5-cb-item text="After 24 hours"></ui5-cb-item>
+							</ui5-combobox>
+						</div>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
+		<ui5-user-settings-view text="Reset Personalization">
+			<ui5-button id="resetPersonalization">Reset Personalization content</ui5-button>
+			<ui5-toast id="toastReset" design="Emphasized">Changes Reset.</ui5-toast>
+		</ui5-user-settings-view>
+		<ui5-user-settings-view text="Reset All Settings">
+			<ui5-button id="resetAll">Reset All Settings content</ui5-button>
+			<ui5-toast id="toastResetAll" design="Emphasized">All changes Reset.</ui5-toast>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+</ui5-user-settings-dialog>
+
+<ui5-dialog id="additionalDialog" state="Information" header-text="Change Display Language">
+	<ui5-text>Changing the display language to [New Language] will update the language across the user interface.</ui5-text>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Emphasized"
+					text="Change Language">
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Transparent"
+					text="Cancel">
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+</ui5-dialog>
+
+<ui5-title level="H5" class="header-title">Text Direction</ui5-title>
+<ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
+<script>
+	const direction = document.getElementById("direction");
+	const menuShellBar = document.getElementById("userMenuShellBar");
+	const settingsDialog = document.getElementById("setting");
+	const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+	const account = document.getElementById("account");
+
+	//Language and Region
+	const languageRegion = document.getElementById("language-region-container");
+	const language = document.getElementById("language");
+	const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
+	const additionalDialog = document.getElementById("additionalDialog");
+	const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
+
+	const mobileSecondPage = document.getElementById("mobile-second-page");
+	const mobile1Button = document.getElementById("mobile1-button");
+	const mobile2Button = document.getElementById("mobile2-button");
+
+	const resetAll = document.getElementById("resetAll");
+	const resetPersonalization = document.getElementById("resetPersonalization");
+	const toast = [...document.getElementsByTagName("ui5-toast")][0];
+	const toastReset =  document.getElementById("toastReset");
+	const toastResetAll =  document.getElementById("toastResetAll");
+	const notificationsItem = document.getElementById("notifications");
+	const notificationNavIcon = document.querySelectorAll(".nav-icon");
+	const notificationSwitch = document.querySelectorAll(".switch");
+	const notificationSecondPage = document.getElementById("notification-second-page");
+	const salesOrderList = document.querySelectorAll(".ui5-list-sales-order");
+
+	const salesOrderSecondPage = document.getElementById("sales-order-second-page");
+
+	const notificationList = document.querySelectorAll(".custom-list-main");
+	menuShellBar.addEventListener("item-click", function (event) {
+		const item = event.detail.item.getAttribute("data-id");
+
+		switch (item) {
+			case "setting":
+				settingsDialog.open = true;
+		}
+	});
+
+	shellbar.addEventListener("ui5-profile-click", (event) => {
+		menuShellBar.opener = event.detail.targetRef;
+		if(menuShellBar.open){
+			menuShellBar.open = false;
+		} else {
+			menuShellBar.open = true;
+		}
+	});
+
+	account.addEventListener("edit-accounts-click", function () {
+		console.log("Avatar clicked");
+	});
+
+	account.addEventListener("manage-account-click", function () {
+		console.log("Manage account clicked");
+	});
+
+
+	//Language and Region
+	language.addEventListener("selection-change",  function (event) {
+		additionalDialog.open = true;
+	});
+
+	dialogClosers.forEach(btn => {
+		btn.addEventListener("click", () => {
+			additionalDialog.open = false;
+		});
+	});
+
+	regionSettings.forEach((settingsItem) => {
+			settingsItem.addEventListener("selection-change",  function (event) {
+			console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
+		});
+	});
+
+	direction.addEventListener("ui5-change", function() {
+		document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
+		window["sap-ui-webcomponents-bundle"].applyDirection();
+	});
+
+	document.getElementById("btnOpenSettings").addEventListener("click", function () {
+		settingsDialog.open = true;
+	});
+
+	mobile1Button.addEventListener("click", function () {
+		mobileSecondPage.selected = true;
+		mobileSecondPage.text = "iOS";
+	});
+
+	mobile2Button.addEventListener("click", function () {
+		mobileSecondPage.selected = true;
+		mobileSecondPage.text = "Android";
+	});
+
+	resetPersonalization.addEventListener("click", function () {
+		toastReset.open = true;
+	});
+
+	resetAll.addEventListener("click", function () {
+		toastResetAll.open = true;
+	});
+
+	settingsDialog.addEventListener("selection-change", function (event) {
+		console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
+		if(event.detail.item?.text ==="Language and Region"){
+			event.detail.item.loading=true;
+			event.detail.item.loadingReason="Language & Region loading data...";
+			setTimeout(function(){
+				event.detail.item.loading=false;
+				}, 500);
+		}
+	});
+
+	settingsDialogItems.forEach((settingsDialogItem) => {
+		settingsDialogItem.addEventListener("selection-change", function (event) {
+			console.log(`Selection change: ${event.detail?.view?.text}`, event.detail);
+		});
+	});
+
+	settingsDialog.addEventListener("open", function (event) {
+		console.log("Settings dialog opened", event);
+	});
+
+	settingsDialog.addEventListener("before-close", function (event) {
+		console.log("Settings dialog before close", event.detail);
+		if (!confirm("Are you sure you want to close the dialog?")) {
+			event.preventDefault();
+		}
+	});
+
+	settingsDialog.addEventListener("close", function (event) {
+		console.log("Settings dialog closed", event);
+	});
+
+	//Language and Region
+
+
+	//Notification Tab
+	notificationNavIcon.forEach(icon => {
+		icon.addEventListener("click", (e) => {
+			const title = e.target.closest(".list-item").querySelector(".item-title").textContent;
+			console.log("Navigate to: " + title +" icon clicked");
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
+	});
+
+	notificationList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
+	});
+
+	salesOrderList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".sales-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = false;
+			salesOrderSecondPage.selected = true;
+			salesOrderSecondPage.text = title;
+		});
+	});
+
+	notificationsItem.addEventListener("selection-change", (e) => {
+		if(e?.detail?.view?.id ==='sales-order-second-page'){
+			e.preventDefault();
+			console.log("Navigate back: " + notificationSecondPage.title);
+			salesOrderSecondPage.selected = false;
+			notificationSecondPage.selected = true;
+		}
+	});
+
+	notificationSwitch.forEach(sw => {
+		sw.addEventListener("change", (e) => {
+			var title = e.target.closest(".list-item").querySelector(".item-title")?.textContent;
+			if(!title){
+				title = e.target?.closest(".list-item").querySelector(".item-text-title")?.textContent;
+			}
+
+			const state = e.target.checked ? "ON" : "OFF";
+			console.log(title + " switch changed to " + state);
+		});
+	});
+
+	notificationList.forEach(item => {
+		item.addEventListener("item-click", (e) => {
+			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
+			console.log("Navigate to: " + title);
+			notificationSecondPage.selected = true;
+			notificationSecondPage.text = title;
+		});
+	});
+
+	// Theme switching functionality
+	const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
+
+	appearanceView.addEventListener("selection-change", (e) => {
+		const selectedItem = e.detail.item;
+				
+		if (selectedItem?.itemKey) {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+		}
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>NotificationListItem and NotificationListGroupItem</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/NotificationList_test_page-6gQ2UF1q.css">
+</head>
+
+<body class="notificationlist_test_page1auto">
+
+	<ui5-title>Test NotificationListItem and NotificationListGroupItem</ui5-title>
+
+	<div class="test-section">
+		<ui5-label>itemClick event:</ui5-label>
+
+		<ui5-input id="clickInput">
+		</ui5-input>
+	</div>
+
+	<div class="test-section">
+		<ui5-label>itemClose event:</ui5-label>
+
+		<ui5-input id="closeInput">
+		</ui5-input>
+	</div>
+
+	<div class="test-section">
+		<ui5-label>itemToggle event:</ui5-label>
+
+		<ui5-input id="toggleInput">
+		</ui5-input>
+	</div>
+
+	<div class="test-section">
+		<ui5-label>custom action click:</ui5-label>
+
+		<ui5-input id="customActionInput">
+		</ui5-input>
+	</div>
+
+	<div class="test-section">
+		<ui5-notification-list
+			id="notificationList"
+			class="notificationlist_test_page2auto">
+			<ui5-li-notification-group
+				id="nlgi1"
+				title-text="Orders"
+			>
+				<ui5-li-notification
+					id="nli1"
+					show-close
+					title-text="New order #2201"
+					state="Positive"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" shape="Square" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+					<ui5-menu slot="menu" id="menuWithActions">
+						<ui5-menu-item icon="accept" text="Accept"></ui5-menu-item>
+						<ui5-menu-item icon="message-error" text="Reject"></ui5-menu-item>
+					</ui5-menu>
+				</ui5-li-notification>
+
+				<ui5-li-notification
+					id="nli2"
+					read
+					show-close
+					title-text="New order #2202"
+					state="Critical"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+					<ui5-menu slot="menu">
+						<ui5-menu-item id="acceptBtn" icon="accept" text="Accept"></ui5-menu-item>
+					</ui5-menu>
+				</ui5-li-notification>
+
+			</ui5-li-notification-group>
+
+			<ui5-li-notification-group
+				id="nlgi2"
+				title-text="Payments"
+			>
+				<ui5-li-notification
+					id="nli3"
+					importance="Important"
+					wrapping-type="Normal"
+					title-text="New payment #2900 and more more more more more more more more more more more more more more more text to make the title truncate"
+					state="Negative"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+				</ui5-li-notification>
+
+				<ui5-li-notification
+					id="nli3a"
+					importance="Important"
+					title-text="New payment #2900 and more more more more more more more more more more more more more more more text to make the title truncate"
+					state="Information"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+				</ui5-li-notification>
+
+				<ui5-li-notification
+					id="nli4"
+					wrapping-type="Normal"
+					loading
+					show-close
+					title-text="New payment #2901"
+					state="None"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+					<ui5-menu slot="menu">
+						<ui5-menu-item icon="accept" text="Accept"></ui5-menu-item>
+					</ui5-menu>
+				</ui5-li-notification>
+			</ui5-li-notification-group>
+
+			<ui5-li-notification-group
+				id="nlgi3"
+				title-text="Collapsed"
+				collapsed
+			>
+				<ui5-li-notification
+					id="nli5"
+					wrapping-type="Normal"
+					show-close
+					title-text="New payment #2900"
+					state="Negative"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+					<ui5-menu slot="menu">
+						<ui5-menu-item icon="accept" text="Accept"></ui5-menu-item>
+						<ui5-menu-item icon="message-error" text="Reject"></ui5-menu-item>
+					</ui5-menu>
+				</ui5-li-notification>
+			</ui5-li-notification-group>
+
+			<ui5-li-notification-group
+				id="nlgi4"
+				title-text="Collapsed loading"
+				collapsed
+				loading
+			>
+				<ui5-li-notification
+					id="nli5"
+					wrapping-type="Normal"
+					show-close
+					title-text="New payment #2900"
+					state="Negative"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+
+					<span slot="footnotes">Office Notifications</span>
+					<span slot="footnotes">3 Days</span>
+
+					<ui5-menu slot="menu">
+						<ui5-menu-item icon="accept" text="Accept"></ui5-menu-item>
+						<ui5-menu-item icon="message-error" text="Reject"></ui5-menu-item>
+					</ui5-menu>
+				</ui5-li-notification>
+			</ui5-li-notification-group>
+
+			<ui5-li-notification-group
+				id="nlgi5"
+				title-text="Expanded loading"
+				loading
+			>
+				<ui5-li-notification
+					wrapping-type="Normal"
+					show-close
+					title-text="New payment #2900"
+					state="Negative"
+				>
+					And with a very long description and long labels of the action buttons - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
+					<ui5-avatar icon="employee" size="XS" slot="avatar"></ui5-avatar>
+				</ui5-li-notification>
+			</ui5-li-notification-group>
+
+		</ui5-notification-list>
+	</div>
+	<br >
+	<br >
+	<ui5-button>Some button</ui5-button>
+	<script>
+		notificationList.addEventListener("ui5-item-click", function(event) {
+			clickInput.value = event.detail.item.titleText;
+		});
+
+		notificationList.addEventListener("ui5-item-close", function(event) {
+			closeInput.value = event.detail.item.titleText;
+		});
+
+		notificationList.addEventListener("ui5-item-toggle", function(event) {
+			toggleInput.value = event.detail.item.titleText;
+		});
+
+		var counter = 0;
+		acceptBtn.addEventListener("ui5-click", function(event) {
+			customActionInput.value = `${++counter}`;
+		});
+
+		menuWithActions.addEventListener("ui5-item-click", function(event) {
+			customActionInput.value = `${++counter}`;
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>avatar-group</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/AvatarGroup-BeOuIWz8.css">
+</head>
+
+<body class="avatargroup1auto">
+	<ul>
+	    <li><a href="?sap-ui-theme=sap_fiori_3">Fiori 3</a></li>
+		<li><a href="?sap-ui-theme=sap_fiori_3_dark">Fiori 3 Dark</a></li>
+		<li><a href="?sap-ui-theme=sap_fiori_3_hcb">Fiori 3 High Contrast Black</a></li>
+		<li><a href="?sap-ui-theme=sap_fiori_3_hcw">Fiori 3 High Contrast White</a></li>
+	</ul>
+    <br>
+    <span>or in the browser console, for example:</span>
+    <code>window['sap-ui-webcomponents-bundle'].configuration.setTheme("sap_horizon_hcb")</code>
+
+    <br><br>
+
+    <a href="?sap-ui-language=en">English</a> |
+    <a href="?sap-ui-language=de">German</a> |
+    <a href="?sap-ui-language=es">Spanish</a> |
+    <a href="?sap-ui-language=fr">French</a>
+
+    <br><br>
+
+	<h1>Test your web components here</h1>
+
+	<ui5-slider id="slider" min="1" max="100" value="60" class="slider"></ui5-slider>
+
+	<div id="avatar-group-wrapper">
+
+		<ui5-popover header-text="My Heading" id="group-pop" class="avatargroup1auto" placement="Bottom" accessible-name="This popover is important">
+			<div slot="header">
+				<h5>Business card</h5>
+			</div>
+
+			<div class="placeholder avatargroup2auto" >
+				<!-- TODO -->
+			</div>
+
+			<div slot="footer">
+				<p>this is footer</p>
+			</div>
+		</ui5-popover>
+
+		<ui5-popover header-text="My Heading" id="individual-pop" class="avatargroup3auto" placement="Bottom" accessible-name="This popover is important" prevent-focus-restore>
+			<div slot="header">
+				<h5>Business card</h5>
+			</div>
+
+			<div class="avatar-slot">
+				<ui5-avatar id="pop-avatar"></ui5-avatar>
+			</div>
+			<div class="title-slot">
+				<ui5-title level="H5">John Doe</ui5-title>
+				<ui5-title level="H5">Software Developer</ui5-title>
+			</div>
+
+			<div slot="footer">
+				<p>this is footer</p>
+			</div>
+		</ui5-popover>
+		<ui5-avatar-group type="Individual" id="avatar-group-individual">
+			<ui5-avatar interactive size="XL" icon="home" initials="XL" id="avatar-1"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home">
+				<img src="/webcomponents/nightly/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home"></ui5-avatar>
+			<ui5-avatar interactive size="XL" icon="home"></ui5-avatar>
+			<ui5-avatar interactive size="XL" initials="XL"></ui5-avatar>
+		</ui5-avatar-group>
+		<br>
+		<ui5-avatar-group type="Group" id="avatar-group-group">
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/nightly/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/nightly/assets/Lamp_avatar_01-BpbHFHYw.jpg" alt="Lamp 1">
+			</ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home">
+				<img src="/webcomponents/nightly/assets/John%20Miller-CXQXuWG-.png" alt="John Miller">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/nightly/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman Avatar 5">
+			</ui5-avatar>
+			<ui5-avatar size="M" icon="home"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M">
+				<img src="/webcomponents/nightly/assets/Lamp_avatar_01-BpbHFHYw.jpg" alt="Lamp 1">
+			</ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+			<ui5-avatar size="M" initials="M"></ui5-avatar>
+		</ui5-avatar-group>
+		<br>
+
+		<h3>Test Fired Events</h3>
+		<br>
+		<div class="avatargroup4auto">
+			<ui5-avatar-group type="Individual" id="avatar-group-individual-events">
+				<ui5-avatar size="XL" interactive icon="home" initials="XL" id="avatar-1-test-events"></ui5-avatar>
+				<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+				<ui5-avatar size="XL" interactive icon="home"></ui5-avatar>
+				<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+			</ui5-avatar-group>
+		</div>
+		<br>
+		<div class="avatargroup4auto">
+			<ui5-avatar-group type="Group" id="avatar-group-group-events">
+				<ui5-avatar size="XL" interactive icon="home" initials="XL"></ui5-avatar>
+				<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+				<ui5-avatar size="XL" interactive icon="home"></ui5-avatar>
+				<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+			</ui5-avatar-group>
+		</div>
+		<br>
+
+		<div class="demo-section">
+			<span>TargetRef Tag Name: </span>
+			<input type="text" id="event-target" />
+
+			<br>
+			<br>
+
+			<span>Event Overflow Button Clicked: </span>
+			<input type="text" id="event-overflow-button-clicked" />
+
+			<br>
+			<br>
+
+			<span>Avatars clicked count: </span>
+			<input type="text" id="event-avatars-clicked" value="0" />
+
+			<br>
+			<br>
+
+			<button id="reset-btn">Reset fields</button>
+		</div>
+		<br>
+		<br>
+
+		<h3>"XS" size</h3>
+		<ui5-avatar-group type="Individual">
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+		</ui5-avatar-group>
+
+		<br>
+		<br>
+
+		<h3>"S" size</h3>
+		<ui5-avatar-group type="Individual">
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+		</ui5-avatar-group>
+
+		<br>
+		<br>
+
+		<h3>Unordinary group</h3>
+		<ui5-avatar-group type="Individual">
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="M" interactive initials="M"></ui5-avatar>
+			<ui5-avatar size="L" interactive initials="L"></ui5-avatar>
+			<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="M" interactive initials="M"></ui5-avatar>
+			<ui5-avatar size="L" interactive initials="L"></ui5-avatar>
+			<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+		</ui5-avatar-group>
+
+		<h3>AvatarGroup with user defined overflow button</h3>
+		<ui5-avatar-group type="Individual" id="group-with-overflow-btn">
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="M" interactive initials="M"></ui5-avatar>
+			<ui5-avatar size="L" interactive initials="L"></ui5-avatar>
+			<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+			<ui5-avatar size="XS" interactive initials="XS"></ui5-avatar>
+			<ui5-avatar size="S" interactive initials="S"></ui5-avatar>
+			<ui5-avatar size="M" interactive initials="M"></ui5-avatar>
+			<ui5-avatar size="L" interactive initials="L"></ui5-avatar>
+			<ui5-avatar size="XL" interactive initials="XL"></ui5-avatar>
+			<ui5-button slot="overflowButton" id="overflowButton" accessible-name="+99 avatars">+99</ui5-button>
+		</ui5-avatar-group>
+	</div>
+
+<script>
+	// document.body.dir = "rtl";
+
+	// ES5
+	var eventName = document.getElementById("event-name");
+	var eventTargetRef = document.getElementById("event-target");
+	var eventOverflowButtonClicked = document.getElementById("event-overflow-button-clicked");
+	var eventAvatarsClicked = document.getElementById("event-avatars-clicked");
+	var eventAvatarsClickedValue = eventAvatarsClicked.value;
+	var avatarGroupIndividual = document.getElementById("avatar-group-individual");
+	var avatarGroupIndividualEvents = document.getElementById("avatar-group-individual-events");
+	var avatarGroupGroupEvents = document.getElementById("avatar-group-group-events");
+	var avatarGroupGroup = document.getElementById("avatar-group-group");
+	var groupPop = document.getElementById("group-pop")
+	var individualPop = document.getElementById("individual-pop")
+	var popAvatar = document.getElementById("pop-avatar")
+	var resetBtn = document.getElementById("reset-btn")
+	var slider = document.getElementById("slider");
+	var avGrWrapper = document.getElementById("avatar-group-wrapper");
+	var groupWithBtn = document.getElementById("group-with-overflow-btn");
+	var customOBtn = document.getElementById("overflowButton");
+
+	slider.style.width = '100%';
+	avGrWrapper.style.width = slider.getAttribute("value") + '%';
+
+	function onButtonClicked(avatarGroup, event) {
+		var hiddenItems = avatarGroup.type === "Group" ? avatarGroup.items : avatarGroup.hiddenItems;
+		var items = avatarGroup.items.slice();
+		var placeholder = groupPop.querySelector(".placeholder");
+		var firstHiddenIndex = avatarGroup.items.length - hiddenItems.length;
+		var color;
+
+		var html = "";
+
+		hiddenItems.forEach(function (avatar, index) {
+			var color = avatarGroup.colorScheme[firstHiddenIndex + index];
+			html += `<div class="avatar-slot avatargroup5auto" >
+						<ui5-avatar interactive icon="${avatar.icon}" initials="${avatar.initials}" background-color="${color}">`;
+			if (avatar.image.length > 0) {
+				html += `<img src="${avatar.image[0].src}">`
+			}
+			html +=`</ui5-avatar></div>`;
+		});
+
+		for (var index = 0; index < hiddenItems; index++) {
+			var avatarRef = items[index];
+
+			html += `<div class="avatar-slot avatargroup5auto" >
+						<ui5-avatar interactive icon="${avatarRef.icon}" initials="${avatarRef.initials}" background-color="${color}">`;
+			if (avatarRef.image.length > 0) {
+				html += `<img src="${avatarRef.image[0].src}">`
+			}
+			html +=`</ui5-avatar></div>`;
+		}
+		placeholder.innerHTML = html;
+
+		groupPop.open = false;
+		groupPop.opener = event.detail.targetRef;
+		groupPop.open = true;
+	}
+
+	function onAvatarClicked(avatarGroup, avatarRef) {
+		while (popAvatar.firstChild) {
+			popAvatar.removeChild(popAvatar.firstChild);
+		}
+
+		for (let i = 0; i < avatarRef.image.length; i++) {
+			popAvatar.appendChild(avatarRef.image[i].cloneNode())
+		}
+		popAvatar.initials = avatarRef.initials;
+		popAvatar.colorScheme = avatarGroup.colorScheme[avatarGroup.items.indexOf(avatarRef)];
+
+		individualPop.open = false;
+		individualPop.opener = avatarRef;
+		individualPop.open = true;
+	}
+
+	avatarGroupGroupEvents.addEventListener("ui5-click", function (event) {
+		eventAvatarsClicked.value= ++eventAvatarsClickedValue;
+	});
+
+	avatarGroupIndividualEvents.addEventListener("ui5-click", function (event) {
+		eventAvatarsClicked.value= ++eventAvatarsClickedValue;
+	});
+
+	avatarGroupIndividual.accessibilityAttributes = { hasPopup: "menu" };
+	avatarGroupIndividual.addEventListener("ui5-click", function (event) {
+		eventTargetRef.value = event.detail.targetRef.tagName;
+		eventOverflowButtonClicked.value = event.detail.overflowButtonClicked;
+
+		if (event.detail.overflowButtonClicked) {
+			onButtonClicked(avatarGroupIndividual, event);
+		} else {
+			onAvatarClicked(avatarGroupIndividual, event.detail.targetRef);
+		}
+	});
+
+	avatarGroupGroup.accessibilityAttributes = { hasPopup: "menu" };
+	avatarGroupGroup.addEventListener("ui5-click", function (event) {
+		eventTargetRef.value = event.detail.targetRef.tagName + '.' + event.detail.targetRef.className;
+		eventOverflowButtonClicked.value = event.detail.overflowButtonClicked;
+
+		onButtonClicked(avatarGroupGroup, event)
+	});
+
+	slider.addEventListener("ui5-input", function (event) {
+		avGrWrapper.style.width = event.target.value + '%';
+	});
+
+	resetBtn.addEventListener("ui5-click", function (event) {
+		eventName.value = "";
+		eventTargetRef.value = "";
+		eventOverflowButtonClicked.value = "";
+		eventAvatarsClicked.value = "";
+	});
+
+	function formatBtnText(group) {
+		var totalAvatars = 90 - group.items.length + group.hiddenItems.length;
+
+		customOBtn.innerHTML = totalAvatars > 99 ? "+99" : "+" + totalAvatars;
+		customOBtn.accessibleName = totalAvatars > 99 ? "+99 avatars" : "+" + totalAvatars + " avatars";
+	};
+
+	groupWithBtn.addEventListener("ui5-overflow", function (event) {
+		formatBtnText(event.target);
+	});
+</script>
+
+</body>
+
+
+</html>

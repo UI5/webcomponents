@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Popover Initially Open</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+	<script>
+		function init() {
+			document.querySelector('[ui5-button]').addEventListener('click', (e) => {
+				e.preventDefault();
+
+				const menu = document.createElement('ui5-menu');
+				menu.setAttribute('header-text', 'Basic Menu with Items');
+				const newFileItem = document.createElement('ui5-menu-item');
+				newFileItem.setAttribute('text', 'New File');
+				const newFolderItem = document.createElement('ui5-menu-item');
+				newFolderItem.setAttribute('text', 'New Folder');
+				menu.appendChild(newFileItem);
+				menu.appendChild(newFolderItem);
+				menu.addEventListener('close', () => {
+					menu.parentNode.removeChild(menu);
+				});
+				document.body.appendChild(menu);
+
+				menu.opener = e.currentTarget.getDomRef();
+				menu.open = true;
+			});
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+<body onload="init()">
+	<ui5-button style="float: right">Menu</ui5-button>
+</body>
+</html>

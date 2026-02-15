@@ -1,0 +1,1 @@
+.checkbox1auto{background-color:var(--sapBackgroundColor)}.checkbox2auto{width:300px}.checkbox3auto{display:flex;flex-direction:column;width:250px}form ui5-checkbox:invalid{outline:2px solid var(--sapNegativeColor)}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Default values test page</title>
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Components-Bal76Igv.css">
+</head>
+
+<body class="components1auto">
+	<ui5-busy-indicator id="busyIndicator"></ui5-busy-indicator>
+	<ui5-button id="btn">Primary button</ui5-button>
+	<ui5-toggle-button id="toggleBtn">Toggle button</ui5-toggle-button>
+	<ui5-input id="inp"></ui5-input>
+	<ui5-date-picker id="dp"></ui5-date-picker>
+	<ui5-radio-button id="radioBtn" text="Option A"></ui5-radio-button>
+	<ui5-checkbox id="cb" text="I agree"></ui5-checkbox>
+	<ui5-switch id="sw"></ui5-switch>
+	<ui5-link id="ln">Press me</ui5-link>
+	<ui5-label id="lbl">Hello world</ui5-label>
+	<ui5-dialog id="dg"></ui5-dialog>
+	<ui5-title id="title">Hello world</ui5-title>
+	<ui5-panel id="panel"></ui5-panel>
+
+	<!-- hidden web components -->
+	<ui5-busy-indicator id="busyIndicator2" hidden></ui5-busy-indicator>
+	<ui5-tag id="tag2" hidden>Required</ui5-tag>
+	<ui5-button id="btn2" hidden>Primary button</ui5-button>
+	<ui5-card id="card2" hidden>
+		<ui5-card-header slot="header" header-text="Primary card">
+		</ui5-card-header>
+	</ui5-card>
+	<ui5-checkbox id="cb2" text="I agree" hidden></ui5-checkbox>
+	<ui5-date-picker id="dp2" hidden></ui5-date-picker>
+	<ui5-icon id="icon2" name="add-equipment" hidden></ui5-icon>
+	<ui5-input id="inp2" hidden></ui5-input>
+	<ui5-label id="lbl2" hidden>Hello world</ui5-label>
+	<ui5-link id="ln2" hidden>Press me</ui5-link>
+
+	<ui5-list id="list2" header-text="API: ListItemGroupHeader" hidden>
+		<ui5-li-group header-text="New Items">
+			<ui5-li icon="navigation-right-arrow" >Laptop HP</ui5-li>
+			<ui5-li-custom>Discounted Items</ui5-li-custom>
+		</ui5-li-group>
+	</ui5-list>
+
+	<ui5-message-strip id="ms2" hidden>Hello world</ui5-message-strip>
+
+	<ui5-multi-combobox id="mcbx2" hidden>
+		<ui5-mcb-item text="Compact"></ui5-mcb-item>
+	</ui5-multi-combobox>
+
+	<ui5-panel id="p2" width="100%" hidden header-text="Both expandable and expanded">
+		<h1 class="content-color">I am a native heading!</h1>
+	</ui5-panel>
+
+	<ui5-radio-button id="radioBtn2" text="Option A" hidden></ui5-radio-button>
+
+	<ui5-select id="select2" hidden>
+		<ui5-option selected>UI5</ui5-option>
+	</ui5-select>
+
+	<ui5-switch id="sw2" hidden></ui5-switch>
+
+	<ui5-textarea id="txtarea2" hidden></ui5-textarea>
+	<ui5-timeline id="timeline2" hidden>
+		<ui5-timeline-item title-text="called"></ui5-timeline-item>
+	</ui5-timeline>
+
+	<ui5-title id="title2" hidden>Hello world</ui5-title>
+	<ui5-toggle-button id="toggleBtn2" hidden>Toggle button</ui5-toggle-button>
+
+	<ui5-table id="tbl2" hidden>
+		<ui5-table-column slot="columns">
+			Product
+		</ui5-table-column>
+
+		<ui5-table-column slot="columns">
+			Supplier
+		</ui5-table-column>
+	</ui5-table>
+
+	<ui5-tabcontainer id="tc2" hidden>
+		<ui5-tab text="Tab 1">
+			<ui5-label>Quibusdam, veniam! Architecto debitis iusto ad et, asperiores quisquam perferendis reprehenderit ipsa voluptate minus minima, perspiciatis cum. Totam harum necessitatibus numquam voluptatum.</ui5-label>
+		</ui5-tab>
+		<ui5-tab text="Tab 2" selected>
+			<ui5-label>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga magni facere error dicta beatae optio repudiandae vero, quidem voluptatibus perferendis eum maiores rem tempore voluptates aperiam eos enim delectus unde.</ui5-label>
+		</ui5-tab>
+	</ui5-tabcontainer>
+</body>
+</html>

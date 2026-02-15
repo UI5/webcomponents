@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-select</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+<style>
+	#selectPopoverMaxHeight[ui5-select]::part(popover) {
+		max-height: 120px;
+	}
+</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Select-DiCxpV2k.css">
+</head>
+
+<body class="select1auto">
+	<ui5-toggle-button id="myBtn">turn lights</ui5-toggle-button>
+	<ui5-button id="add-items-btn">Add new Items</ui5-button>
+	<ui5-button id="restore-items-btn">Restore Items</ui5-button>
+	<ui5-button id="myBtn2">click</ui5-button>
+
+	<h2>Content size</h2>
+	<ui5-label id="lblResult"></ui5-label>
+	<ui5-select id="mySelect">
+		<ui5-option id="firstOption">Cozy</ui5-option>
+		<ui5-option>Compact</ui5-option>
+		<ui5-option selected>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Change prevention</h2>
+	<ui5-select id="selectPrevent">
+		<ui5-option>Cozy</ui5-option>
+		<ui5-option>Compact</ui5-option>
+		<ui5-option selected>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Negative Select</h2>
+	<ui5-select id="errorSelect" value-state="Negative">
+		<ui5-option selected>Cozy</ui5-option>
+		<ui5-option selected>Compact</ui5-option>
+		<ui5-option selected>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Warning Select</h2>
+	<ui5-select id="warningSelect" value-state="Critical">
+		<ui5-option>This option has text bigger than ui5-select's width</ui5-option>
+		<div slot="valueStateMessage">Information message. This is a <a href="#test1">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+
+	</ui5-select>
+
+	<h2>Positive Select</h2>
+	<ui5-select id="successSelect" value-state="Positive">
+		<ui5-option selected>Cozy</ui5-option>
+		<ui5-option selected>Compact</ui5-option>
+		<ui5-option selected>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Information Select</h2>
+	<ui5-select id="infoSelect" value-state="Information">
+		<ui5-option>Cozy</ui5-option>
+		<ui5-option>Compact</ui5-option>
+		<ui5-option selected>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Disabled Select</h2>
+	<ui5-select id="mySelect4" disabled value-state="Positive"></ui5-select>
+
+	<h2>Readonly Select</h2>
+	<ui5-select id="mySelectReadOnly" readonly>
+		<ui5-option>Cozy</ui5-option>
+		<ui5-option selected>Compact</ui5-option>
+		<ui5-option>Condensed</ui5-option>
+	</ui5-select>
+
+	<h2>Select with tooltip for each option</h2>
+	<ui5-select id="selectTooltip">
+		<ui5-option tooltip="Cozy" stable-dom-ref="tooltip-test-option">Cozy</ui5-option>
+		<ui5-option tooltip="Compact">Compact</ui5-option>
+		<ui5-option selected tooltip="Condensed">Condensed</ui5-option>
+	</ui5-select>
+
+	<h2> Input with suggestions</h2>
+	<ui5-input id="myInput" show-suggestions placeholder="Search for a country ..."></ui5-input>
+
+	<h2>Selection not cycling</h2>
+	<ui5-select id="selectionNotCycling">
+		<ui5-option>Opt1</ui5-option>
+		<ui5-option>Opt2</ui5-option>
+		<ui5-option selected>Opt3</ui5-option>
+	</ui5-select>
+
+	<ui5-select id="selectionNotCycling2">
+		<ui5-option selected>Opt1</ui5-option>
+		<ui5-option>Opt2</ui5-option>
+		<ui5-option>Opt3</ui5-option>
+	</ui5-select>
+
+	<ui5-select id="mySelectEsc">
+		<ui5-option>Cozy</ui5-option>
+		<ui5-option selected>Compact</ui5-option>
+		<ui5-option>Condensed</ui5-option>
+	</ui5-select>
+
+	<ui5-select id="keyboardHandling">
+		<ui5-option>Banana</ui5-option>
+		<ui5-option selected>Orange</ui5-option>
+		<ui5-option>Watermelon</ui5-option>
+	</ui5-select>
+
+	<h2> Change event counter holder</h2>
+	<ui5-input id="inputResult"></ui5-input>
+
+	<h2> Open event counter holder</h2>
+	<ui5-input id="inputResultOpen"></ui5-input>
+
+	<h2> Close event counter holder</h2>
+	<ui5-input id="inputResultClose"></ui5-input>
+
+	<section>
+		<h3>Select aria-label and aria-labelledby</h3>
+		<span id="infoText">info text</span>
+		<div>
+			<ui5-select id="textAreaAriaLabel" accessible-name="Hello World">
+				<ui5-option>First</ui5-option>
+				<ui5-option>Second</ui5-option>
+				<ui5-option selected>Third</ui5-option>
+			</ui5-select>
+
+			<ui5-select id="textAreaAriaLabelledBy" accessible-name-ref="infoText">
+				<ui5-option>One</ui5-option>
+				<ui5-option>Two</ui5-option>
+				<ui5-option selected>Three</ui5-option>
+			</ui5-select>
+		</div>
+	</section>
+
+	<section>
+		<h2>Select with accessible description</h2>
+		<ui5-label for="select-with-description">Select your preferred mode:</ui5-label>
+		<ui5-select
+			id="select-with-description"
+			accessible-description="Choose the display density that best suits your needs">
+			<ui5-option>Cozy</ui5-option>
+			<ui5-option selected>Compact</ui5-option>
+			<ui5-option>Condensed</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select with accessible description ref</h2>
+		<ui5-label for="select-with-description-ref">Country:</ui5-label>
+		<p id="country-description">Select your home country from the list below. This information will be used for shipping calculations.</p>
+		<ui5-select
+			id="select-with-description-ref"
+			accessible-description-ref="country-description">
+			<ui5-option>United States</ui5-option>
+			<ui5-option>United Kingdom</ui5-option>
+			<ui5-option selected>Germany</ui5-option>
+			<ui5-option>France</ui5-option>
+			<ui5-option>Italy</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select with multiple description references</h2>
+		<ui5-label for="select-multiple-refs">Product:</ui5-label>
+		<span id="product-info">Available products in your region</span>
+		<span id="product-note">Some products may have shipping restrictions</span>
+		<ui5-select
+			id="select-multiple-refs"
+			accessible-description-ref="product-info product-note">
+			<ui5-option>Laptop</ui5-option>
+			<ui5-option selected>Desktop</ui5-option>
+			<ui5-option>Monitor</ui5-option>
+			<ui5-option>Keyboard</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section class="ui5-content-density-compact">
+		<h3>Select in Compact</h3>
+		<div>
+			<ui5-select>
+				<ui5-option>Cozy</ui5-option>
+				<ui5-option>Compact</ui5-option>
+				<ui5-option selected>Condensed</ui5-option>
+			</ui5-select>
+		</div>
+	</section>
+
+<section>
+	<h2>Select with a disabled option</h2>
+	<ui5-select id="mySelect5">
+		<ui5-option >Cozy</ui5-option>
+		<ui5-option selected>Compact</ui5-option>
+		<ui5-option>Condensed</ui5-option>
+	</ui5-select>
+</section>
+
+	<section>
+		<h2>Select with additional text</h2>
+		<ui5-select id="mySelect6">
+			<ui5-option additional-text="DZ">Algeria</ui5-option>
+			<ui5-option selected additional-text="AR">Argentina</ui5-option>
+			<ui5-option additional-text="AU">Australia</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select "value" property</h2>
+		<ui5-select id="mySelect7">
+			<ui5-option>Item1</ui5-option>
+			<ui5-option>Item2</ui5-option>
+			<ui5-option selected>Item3</ui5-option>
+		</ui5-select>
+		<ui5-button id="btnSetValue">select.value = "Item2"</ui5-button>
+		<ui5-button id="btnSetInvalidValue">select.value = "NAN"</ui5-button>
+	</section>
+
+	<section>
+		<h2>popover max-height changed with 'popover' part (120px)</h2>
+		<ui5-select id="selectPopoverMaxHeight">
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option selected>Condensed</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>icon prop</h2>
+		<ui5-select icon="download" placeholder="Select Device" class="field">
+			<ui5-option icon="iphone" selected>Phone</ui5-option>
+			<ui5-option icon="ipad">Tablet</ui5-option>
+			<ui5-option icon="laptop">Desktop</ui5-option>
+		</ui5-select>
+	</section>
+
+	<section>
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-select id="selectInAForm" name="select2" required>
+				<ui5-option value="">Please choose an option from the list:</ui5-option>
+				<ui5-option value="Cozy">Cozy</ui5-option>
+				<ui5-option value="Compact">Compact</ui5-option>
+				<ui5-option value="Condensed">Condensed</ui5-option>
+			</ui5-select>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+	</section>
+
+	<section>
+		<h3>Separator configuration</h3>
+		<div>
+			<span>Text separator:</span>
+			<ui5-select id="selectSeparators">
+				<ui5-option selected>Dash</ui5-option>
+				<ui5-option>Bullet</ui5-option>
+				<ui5-option>VerticalLine</ui5-option>
+			</ui5-select>
+		</div>
+
+		<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+			<span>Read-only:</span>
+			<ui5-switch id="editableSwitch" checked text-on="Yes" text-off="No"></ui5-switch>
+		</div>
+
+		<ui5-select id="selectWithSeparator" readonly="false" text-separator="VerticalLine">
+			<ui5-option additional-text="DZ">Algeria</ui5-option>
+			<ui5-option selected additional-text="AR">Argentina</ui5-option>
+			<ui5-option additional-text="AU">Australia</ui5-option>
+		</ui5-select>
+	</section>
+
+</body>
+<script>
+	var countries =  [{ key: "Aus", text: "Australia" }, { key: "Aruba", text: "Aruba" }, { key: "Antigua", text: "Antigua and Barbuda" }, { key: "Bel", text: "Belgium" }, { key: "Bg", text: "Bulgaria" }, { key: "Bra", text: "Brazil" }];
+	var new_countries =  [{ key: "Aus", text: "Australia1" }, { key: "Aruba", text: "Aruba1" }, { key: "Antigua", text: "Antigua and Barbuda1" }, { key: "Bel", text: "Belgium1" }, { key: "Bg", text: "Bulgaria1" }, { key: "Bra", text: "Brazil1" }];
+	var sap_database_entries = [{ key: "Afg", text: "Afghanistan" }, { key: "Arg", text: "Argentina" }, { key: "Alb", text: "Albania" }, { key: "Arm", text: "Armenia" }, { key: "Alg", text: "Algeria" }, { key: "And", text: "Andorra" }, { key: "Ang", text: "Angola" }, { key: "Ast", text: "Austria" }, { key: "Aus", text: "Australia" }, { key: "Aze", text: "Azerbaijan" }, { key: "Aruba", text: "Aruba" }, { key: "Antigua", text: "Antigua and Barbuda" }, { key: "Bel", text: "Belarus" }, { key: "Bel", text: "Belgium" }, { key: "Bg", text: "Bulgaria" }, { key: "Bra", text: "Brazil" }, { key: "Ch", text: "China" }, { key: "Cub", text: "Cuba" }, { key: "Chil", text: "Chili" }, { key: "Lat", text: "Latvia" }, { key: "Lit", text: "Litva" }, { key: "Prt", text: "Portugal" }, { key: "Sen", text: "Senegal" }, { key: "Ser", text: "Serbia" }, { key: "Afg", text: "Seychelles" }, { key: "Sierra", text: "Sierra Leone" }, { key: "Sgp", text: "Singapore" }, { key: "Sint", text: "Sint Maarten" }, { key: "Slv", text: "Slovakia" }, { key: "Slo", text: "Slovenia" }];
+
+	var btn = document.getElementById('myBtn');
+	var addItemsBtn = document.getElementById('add-items-btn');
+	var restoreItemsBtn = document.getElementById('restore-items-btn');
+	var input = document.getElementById('myInput');
+	var inputResult = document.getElementById('inputResult');
+	var inputResultOpen = document.getElementById('inputResultOpen');
+	var inputResultClose = document.getElementById('inputResultClose');
+	var select = document.getElementById('mySelect');
+	var select2 = document.getElementById('errorSelect');
+	var select3 = document.getElementById('warningSelect');
+	var selectInAForm = document.getElementById('selectInAForm');
+	var lbl = document.getElementById('lblResult');
+	var btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+	var formValidationMessage = document.getElementById('formValidationMessage');
+	var counter = 0;
+	var counterOpen = 0;
+	var counterClose = 0;
+
+	// Select
+
+	selectPrevent.addEventListener("ui5-change", function(e) {
+		e.preventDefault();
+	});
+
+	select.addEventListener("ui5-change", function(e) {
+		lbl.innerHTML = "selected item :: " + e.detail.selectedOption.textContent + " :: " + (++counter);
+		inputResult.value = `${counter}`;
+	});
+
+	select.addEventListener("change", function(e) {
+		console.log("Select change event fired", e);
+	});
+
+	select.addEventListener("ui5-open", function(e) {
+		++counterOpen;
+		inputResultOpen.value = `${counterOpen}`;
+	});
+
+	select.addEventListener("ui5-close", function(e) {
+		++counterClose;
+		inputResultClose.value = `${counterClose}`;
+	});
+
+	select2.addEventListener("ui5-change", function(e) {
+		++counter;
+		inputResult.value = `${counter}`;
+	});
+
+	// Input with Suggestions
+	input.addEventListener("ui5-input", function (event) {
+		var value = event.target.value;
+		var suggestionItems = [];
+
+		if (value) {
+			suggestionItems = sap_database_entries.filter(function (item) {
+				return item.text.toUpperCase().indexOf(value.toUpperCase()) === 0;
+			});
+		}
+
+		while (input.firstChild) {
+			input.removeChild(input.firstChild);
+		}
+
+		suggestionItems.forEach(function(item) {
+			var li = document.createElement("ui5-li");
+			li.id = item.key;
+			li.textContent = item.text;
+			input.appendChild(li);
+		});
+	});
+
+
+	// HCB button
+	btn.addEventListener("click", function(event) {
+		var hcb = event.target.pressed;
+		var styles = hcb ? "background:#333;color:palegoldenrod;" : "background:#fff;color:#333;";
+		var theme = hcb ? "sap_horizon_hcb" : "sap_horizon";
+
+		document.body.setAttribute("style", styles);
+		var Conf = window["sap-ui-webcomponents-bundle"].configuration;
+		Conf.setTheme(theme);
+	});
+
+	countries.forEach(function(item, idx) {
+		var li = document.createElement("ui5-option");
+		li.id = item.key;
+
+		if (idx === 0) {
+			li.selected = true;
+		}
+
+		li.textContent = item.text;
+		select3.appendChild(li);
+	});
+
+	var initialItemsHTML = "";
+
+	addItemsBtn.addEventListener("click", function(event) {
+		initialItemsHTML = select.innerHTML;
+
+		var li = document.createElement('ui5-option');
+
+		li.textContent = "New";
+
+		select.innerHTML = "";
+		select.appendChild(li);
+	});
+
+	restoreItemsBtn.addEventListener("click", function(event) {
+		select.innerHTML = initialItemsHTML;
+	});
+
+	btnSetValue.addEventListener("click", function(e) {
+		mySelect7.value = "Item2";
+	});
+	btnSetInvalidValue.addEventListener("click", function(e) {
+		mySelect7.value = "NAN";
+	});
+
+	btnCheckFormValidity.addEventListener('click', function() {
+		checkFormValidity('selectInAForm');
+	});
+
+	selectInAForm.addEventListener('ui5-change', function() {
+		setTimeout(() => {
+			checkFormValidity('selectInAForm', true);
+		}, 0);
+	});
+
+	function checkFormValidity(elementId, delayed = false) {
+		const element = document.getElementById(elementId);
+		const isValid = element.checkValidity();
+
+		element.reportValidity();
+
+		// Show result
+		formValidationMessage.hidden = false;
+		formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+		formValidationMessage.design = isValid ? "Positive" : "Negative";
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const selectSeparators = document.getElementById('selectSeparators');
+		const selectWithSeparator = document.getElementById('selectWithSeparator');
+		const editableSwitch = document.getElementById('editableSwitch');
+
+		selectSeparators.addEventListener('ui5-change', function(e) {
+			const selectedSeparator = e.detail.selectedOption.textContent;
+			selectWithSeparator.setAttribute('text-separator', selectedSeparator);
+		});
+
+		editableSwitch.addEventListener('ui5-change', function(e) {
+			const isChecked = e.target.checked;
+
+			if (isChecked) {
+				selectWithSeparator.readonly = true;
+			} else {
+				selectWithSeparator.readonly = false;
+			}
+		});
+	});
+</script>
+</html>

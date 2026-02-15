@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Input Quick View</title>
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Input_quickview-CU6XDvr1.css">
+</head>
+
+<body class="input_quickview1auto">
+	<h1> Quick View sample</h1>
+	<ul>
+		<li>hover on item to see quick view</li>
+		<li>navigate via the arrows to see quick view</li>
+		<li>press [ctrl + shift + 1] to enter the quick view</li>
+	</ul>
+
+	<div class="input_quickview2auto">
+		<ui5-label>focusable element: </ui5-label><ui5-button>before</ui5-button>
+	</div>
+	<br>
+	<br>
+
+	<ui5-input id="inputPreview" show-suggestions class="input_quickview3auto">
+		<ui5-suggestion-item class="suggestionItem" text="Laptop Lenovo"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="HP Monitor 24"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="IPhone 6s"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="Dell"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="IPad Air"></ui5-suggestion-item>
+	</ui5-input>
+
+	<ui5-popover id="quickViewCard"
+				 prevent-initial-focus
+				 hide-arrow placement="Right" height="500px" prevent-focus-restore>
+		<button>hello</button>
+		<ui5-input id="searchInput" class="input_quickview4auto">
+			<ui5-icon id="searchIcon" slot="icon" name="search"></ui5-icon>
+		</ui5-input>
+		<ui5-list class="input_quickview5auto">
+			<ui5-li-group header-text="Actions">
+				<ui5-li>Delete Product</ui5-li>
+				<ui5-li>Audit Log Settings</ui5-li>
+				<ui5-li>OData API Audit</ui5-li>
+			</ui5-li-group>
+			<ui5-li-group header-text="Products">
+				<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131" additional-text-state="Negative">Laptop Lenovo</ui5-li>
+				<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131"  additional-text-state="Negative">IPhone 3</ui5-li>
+				<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Required" additional-text-state="Negative">HP Monitor 24</ui5-li>
+			</ui5-li-group>
+		</ui5-list>
+	</ui5-popover>
+
+	<br>
+	<br>
+	<div class="input_quickview2auto">
+		<ui5-label>focusable element: </ui5-label><ui5-button>after</ui5-button>
+	</div>
+
+	<h1> Test Quick View sample</h1>
+
+	<ui5-input id="inputPreview2" show-suggestions class="input_quickview6auto">
+		<ui5-suggestion-item class="suggestionItem" text="Laptop Lenovo"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="HP Monitor 24"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="IPhone 6s"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="Dell"></ui5-suggestion-item>
+		<ui5-suggestion-item class="suggestionItem" text="IPad Air"></ui5-suggestion-item>
+	</ui5-input>
+	<br><br>
+
+	<div class="input_quickview6auto">Test keyup</div>
+	<ui5-input id="keyupResult" class="input_quickview7auto"></ui5-input>
+	<br><br>
+
+	<div class="input_quickview6auto">Test selection-change</div>
+	<ui5-input id="selectionChangeRes" class="input_quickview8auto"></ui5-input>
+	<br><br>
+
+	<div class="input_quickview6auto">Test mouseover on item</div>
+	<ui5-input id="mouseoverResult" class="input_quickview7auto"></ui5-input>
+
+	<ui5-popover id="quickViewCard2"
+				 prevent-initial-focus
+				 hide-arrow placement="End" height="500px">
+		<ui5-input id="searchInput2" class="input_quickview4auto">
+			<ui5-icon id="searchIcon" slot="icon" name="search"></ui5-icon>
+		</ui5-input>
+		<ui5-list class="input_quickview5auto">
+			<ui5-li-group header-text="Actions">
+				<ui5-li>Delete Product</ui5-li>
+				<ui5-li>Audit Log Settings</ui5-li>
+				<ui5-li>OData API Audit</ui5-li>
+			</ui5-li-group>
+			<ui5-li-group header-text="Products">
+				<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131" additional-text-state="Negative">Laptop Lenovo</ui5-li>
+				<ui5-li icon="navigation-right-arrow" additional-text="Re-stock" description="#12331232131"  additional-text-state="Negative">IPhone 3</ui5-li>
+				<ui5-li icon-end icon="navigation-right-arrow" description="#12331232131"  additional-text="Required" additional-text-state="Negative">HP Monitor 24</ui5-li>
+			</ui5-li-group>
+		</ui5-list>
+	</ui5-popover>
+
+	<script>
+		/*
+		 * QuickviewCard Sample #1
+		 */
+		var focusQuickView = false;
+
+		/*
+		 * Open quickviewCard on selection-change
+		 */
+		inputPreview.addEventListener("ui5-selection-change", function (event) {
+			const item = event.detail.item;
+
+			quickViewCard.open = false;
+			quickViewCard.opener = item;
+			quickViewCard.open = true;
+		});
+
+		/*
+		 * Toggle quickviewCard on mouseover/mouseout
+		 */
+		 [].slice.call(document.querySelectorAll("#inputPreview .suggestionItem")).forEach(function(el) {
+			el.addEventListener("ui5-mouseover", function (event) {
+				const { item } = event.detail;
+
+				quickViewCard.open = false;
+				quickViewCard.opener = item;
+				quickViewCard.open = true;
+			});
+
+			el.addEventListener("ui5-mouseout", function (event) {
+			});
+		});
+
+		/*
+		 * Focus quickviewCard on [ctrl + shift + 1]
+		 */
+		inputPreview.addEventListener("keyup", async event => {
+			const combination = event.key === "1" && event.ctrlKey && event.shiftKey;
+
+			if (combination) {
+				focusQuickView = true;
+				await window["sap-ui-webcomponents-bundle"].renderFinished();
+				quickViewCard.applyFocus();
+			}
+		});
+
+		/*
+		 * Restore the focus to the input on ESC
+		 */
+		quickViewCard.addEventListener("ui5-before-close", async event => {
+			const esc = event.detail.escPressed;
+
+			if (esc) {
+				await window["sap-ui-webcomponents-bundle"].renderFinished();
+				inputPreview.focus();
+			}
+		});
+
+		/*
+		 * QuickviewCard Test markup
+		 */
+		var focusQuickView2 = false;
+
+		inputPreview2.addEventListener("ui5-selection-change", function (event) {
+			var item = event.detail.item;
+			quickViewCard2.open = false;
+			quickViewCard2.opener = item;
+			quickViewCard2.open = true;
+
+			// log info
+			selectionChangeRes.value = item.text;
+		});
+
+		inputPreview2.addEventListener("keyup", async function (event) {
+			const combination = event.key === "1";
+
+			if (combination) {
+				focusQuickView2 = true;
+				await window["sap-ui-webcomponents-bundle"].renderFinished();
+				quickViewCard2.applyFocus();
+			}
+
+			// log info
+			keyupResult.value = event.key + " on suggestion item";
+		});
+
+		[].slice.call(document.querySelectorAll("#inputPreview2 .suggestionItem")).forEach(function(el) {
+			el.addEventListener("mouseover", function (event) {
+				const item = event.currentTarget;
+				quickViewCard2.open = false;
+				quickViewCard2.opener = item;
+				quickViewCard2.open = true;
+
+				// log info
+				mouseoverResult.value = item.text;
+			});
+		});
+
+		quickViewCard2.addEventListener("ui5-before-close", async event => {
+			const esc = event.detail.escPressed;
+
+			if (esc) {
+				await window["sap-ui-webcomponents-bundle"].renderFinished();
+				inputPreview2.focus();
+			}
+		});
+	</script>
+</body>
+</html>

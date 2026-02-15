@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Event Bubbling for Main</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<ui5-dialog id="myDialog" header-text="Dialog With Dropdowns" open>
+			<ui5-select id="mySelect">
+				<ui5-option>Hello</ui5-option>
+				<ui5-option>World</ui5-option>
+				<ui5-option>Hello</ui5-option>
+			</ui5-select>
+	
+			<ui5-input id="myInput" show-suggestions>
+				<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Compact"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Condensed"></ui5-suggestion-item>
+			</ui5-input>
+
+			<ui5-button id="btnOpen">Open Menu</ui5-button>
+			<ui5-menu id="myMenu" header-text="Menu" opener="btnOpen">
+				<ui5-menu-item id="menuItemNewFile" text="New File"></ui5-menu-item>
+				<ui5-menu-item text="New Folder"></ui5-menu-item>
+			</ui5-menu>
+
+			<ui5-multi-combobox id="myMcb">
+				<ui5-mcb-item text="Cosy"></ui5-mcb-item>
+				<ui5-mcb-item selected text="Compact"></ui5-mcb-item>
+			</ui5-multi-combobox>
+
+			<ui5-message-strip id="myMsgStrip">(Information) with default icon and close button:</ui5-message-strip>
+
+			<ui5-panel id="myPanel" header-text="Panel">
+				<ui5-label>
+					Lorem ipsum dolor sit amet, tamquam invidunt cu sed, unum regione mel ea, quo ea alia novum. Ne qui illud zril
+					nostrum, vel ea sint dicant postea.
+				</ui5-label>
+			</ui5-panel>
+		</ui5-dialog>
+	</div>
+</body>
+
+<script>
+	app.addEventListener("close", function(e) {
+		console.log("app on close")
+	});
+	app.addEventListener("toggle", function(e) {
+		console.log("app on toggle")
+	});
+	
+	myDialog.addEventListener("close", function(e) {
+		console.log("Dialog on close")
+	});
+	mySelect.addEventListener("close", function(e) {
+		console.log("Select on close")
+	});
+	myMenu.addEventListener("close", function(e) {
+		console.log("Menu on close")
+	});
+	myMcb.addEventListener("close", function(e) {
+		console.log("Mcb on close")
+	});
+	myInput.addEventListener("close", function(e) {
+		console.log("Input on close")
+	});
+	myPanel.addEventListener("toggle", function(e) {
+		console.log("Panel on toggle")
+	});
+	myMsgStrip.addEventListener("close", function(e) {
+		console.log("MessageStrip on close")
+	});
+
+	btnOpen.addEventListener("click", function(e) {
+		myMenu.open = true;
+	});
+</script>
+</html>

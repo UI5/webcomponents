@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/DatePicker_test_page-BokH4-3i.css">
+</head>
+<body class="datepicker_test_page1auto">
+	<ui5-date-picker id="dp12"></ui5-date-picker>
+	<ui5-date-picker id="dp"></ui5-date-picker>
+	<ui5-date-picker id="dp1" value="11/11/11"></ui5-date-picker>
+	<ui5-date-picker id="dp2" format-pattern="yyyy, dd/MM"></ui5-date-picker>
+	<ui5-date-picker id="dp3"></ui5-date-picker>
+	<ui5-date-picker id="dp4" value="Jan 29, 2019" format-pattern="MMM d, y"></ui5-date-picker>
+	<ui5-date-picker id="dp5"></ui5-date-picker>
+	<ui5-date-picker id="dp6"></ui5-date-picker>
+	<ui5-date-picker id="dp7" format-pattern="MMM d, y" value="Jan 1, 2019"></ui5-date-picker>
+	<ui5-date-picker id="dp7_1" format-pattern="MMM d, y"></ui5-date-picker>
+	<ui5-date-picker id="dp7_2" format-pattern="MMM d, y"></ui5-date-picker>
+	<ui5-date-picker id="dp8" value="Jan 6, 2015"></ui5-date-picker>
+	<ui5-date-picker id="dp9" value="today"></ui5-date-picker>
+	<ui5-date-picker id="dp10" disabled></ui5-date-picker>
+	<ui5-date-picker id='dp-required' required></ui5-date-picker>
+	<ui5-date-picker id="dp11"></ui5-date-picker>
+	<ui5-date-picker id="dp13"></ui5-date-picker>
+	<ui5-date-picker id="dp16" format-pattern="long"></ui5-date-picker>
+	<ui5-date-picker value="Invalid value" id="dp20"></ui5-date-picker>
+	<h3> DatePicker value-state-change event prevented </h3>
+	<ui5-date-picker id="dpVsChangePrevented" value-state="Negative"></ui5-date-picker>
+	<ui5-button id="b1" design="Default">Set date</ui5-button>
+
+
+	<label id='lbl'>0</label>
+	<button id="downThere" class="datepicker_test_page2auto"></button>
+	<label id='lblTomorrow'>0</label>
+	<label id='lblTomorrowDate'></label>
+
+	<h3> Minimum and Maximum Date</h3>
+	<ui5-date-picker id="dp33" format-pattern="MMM d, y" min-date="Jan 1, 2000" max-date="Jan 8, 2100" ></ui5-date-picker>
+	<h3> Minimum and Maximum Date In Smaller Range</h3>
+	<ui5-date-picker id="dp34" format-pattern="MMM d, y" min-date="Jan 12, 2020" max-date="Jan 20, 2020" ></ui5-date-picker>
+	<h3>Test placeholder</h3>
+	<ui5-date-picker id="dp14" format-pattern="MMM d, y"></ui5-date-picker>
+	<ui5-date-picker id="dp15" format-pattern="MMM d, y" placeholder="Delivery date"></ui5-date-picker>
+
+	<h3>DatePicker with valueStateMessage</h3>
+	<ui5-date-picker id="dp17" value-state="Negative">
+		<div slot="valueStateMessage" id="coolValueStateMessage">
+			This date is wrong
+		</div>
+	</ui5-date-picker>
+
+	<h3>DatePicker with hide-week-numbers=true/false</h3>
+	<ui5-date-picker id="dp18"></ui5-date-picker>
+	<ui5-date-picker id="dp19" hide-week-numbers></ui5-date-picker>
+
+	<h3>DatePicker with format `yyyy, dd/MM` should open picker on days</h3>
+	<ui5-date-picker id="dpCalendarModeDays" format-pattern="yyyy, dd/MM"></ui5-date-picker>
+
+	<h3>DatePicker with format `MMM y` should open picker on months</h3>
+	<ui5-date-picker id="dpCalendarModeMonths" format-pattern="MMM y"></ui5-date-picker>
+
+	<h3>DatePicker with format `yyyy` should open picker on years</h3>
+	<ui5-date-picker id="dpCalendarModeYears" format-pattern="yyyy"></ui5-date-picker>
+
+	<h3> DatePicker with no format pattern & min-max dates in ISO format</h3>
+	<ui5-date-picker id="dpISOMinMaxDates" min-date="2019-09-01" max-date="2019-11-01"></ui5-date-picker>
+
+	<section>
+		<h3>Test accessibleName and accessibleNameRef</h3>
+		<ui5-date-picker id="dpAriaLabel" accessible-name="Hello World"></ui5-date-picker>
+		<br>
+		<ui5-label id="infoText">info text</ui5-label>
+		<ui5-date-picker id="dpAriaLabelledBy" accessible-name-ref="infoText"></ui5-date-picker>
+	</section>
+
+	<script>
+		var counter = 0;
+		var counterTomorrow = 0;
+		function increaseCounter() {
+			document.querySelector('#lbl').innerHTML = ++counter;
+		}
+
+		document.querySelector("#dp5").addEventListener("ui5-change", increaseCounter);
+		document.querySelector("#dp8").addEventListener("ui5-change", increaseCounter);
+		document.querySelector("#dp13").addEventListener("ui5-change", function(e) {
+			document.querySelector('#lblTomorrow').innerHTML = ++counterTomorrow;
+			document.querySelector('#lblTomorrowDate').innerHTML = e.target.liveValue;
+		});
+
+		var dp16 = document.getElementById('dp16');
+
+		document.getElementById('b1').addEventListener("click", function(e) {
+			dp16.setAttribute("value", dp16.formatValue(new Date(2018, 11, 11)));
+		});
+
+		const datePickerValueStateChangePrevented = document.getElementById("dpVsChangePrevented");
+
+		datePickerValueStateChangePrevented.addEventListener("value-state-change", function(e) {
+			e.preventDefault();
+		});
+	</script>
+</body>
+</html>

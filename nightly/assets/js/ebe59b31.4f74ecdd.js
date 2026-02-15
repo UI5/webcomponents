@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_ui5_webcomponents_website=self.webpackChunk_ui5_webcomponents_website||[]).push([[18701],{43904:e=>{e.exports=JSON.parse('{"title":"Main components","slug":"/components","permalink":"/webcomponents/nightly/components","navigation":{"next":{"title":"Avatar","permalink":"/webcomponents/nightly/components/main/Avatar"}}}')}}]);

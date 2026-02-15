@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table (horizontal alignment)</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <div class="section">
+		<ui5-table id="table" overflow-mode="Popin" style="width: 1120px;">
+			<ui5-table-header-row slot="headerRow">
+				<ui5-table-header-cell id="productCol" width="300px"><span>Product</span></ui5-table-header-cell>
+				<ui5-table-header-cell id="supplierCol" horizontal-align="Center" width="200px">Supplier</ui5-table-header-cell>
+				<ui5-table-header-cell id="dimensionsCol" horizontal-align="Right" width="300px">Dimensions</ui5-table-header-cell>
+				<ui5-table-header-cell id="weightCol" width="100px">Weight</ui5-table-header-cell>
+				<ui5-table-header-cell id="priceCol" width="220px">Price</ui5-table-header-cell>
+			</ui5-table-header-row>
+			<ui5-table-row>
+				<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br>HT-1000</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row>
+				<ui5-table-cell><ui5-label><b>Notebook Basic 17</b><br>HT-1001</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>29 x 17 x 3.1 cm</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.5</b> KG</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row>
+				<ui5-table-cell><ui5-label><b>Notebook Basic 18</b><br>HT-1002</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>3.7</b> KG</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+		</ui5-table>
+	</div>
+</body>
+
+</html>

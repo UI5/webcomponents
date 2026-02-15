@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Table (in development)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<style>
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+	<!-- toolbar with ui5-bar -->
+	<ui5-bar design="Header" accessible-name-ref="title" style="position: sticky; top: 0; z-index: 2; height: 50px;">
+		<ui5-title tabindex="0" level="H3" id="title" slot="startContent">My Products</ui5-title>
+		<ui5-slider id="slider" min="0" max="5" step="1" value="3" show-tickmarks></ui5-slider>
+	</ui5-bar>
+
+	<ui5-table id="table" row-action-count="3" sticky-top="50px" accessible-name-ref="title" overflow-mode="Popin">
+		<ui5-table-selection id="selection" slot="features"></ui5-table-selection>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell>Product</ui5-table-header-cell>
+			<ui5-table-header-cell>Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell>Dimensions</ui5-table-header-cell>
+			<ui5-table-header-cell>Weight</ui5-table-header-cell>
+			<ui5-table-header-cell horizontal-align="End">Price</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #648564"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>399.99</b> EUR</ui5-label></ui5-table-cell>
+			<ui5-table-row-action-navigation slot="actions"></ui5-table-row-action-navigation>
+		</ui5-table-row>
+		<ui5-table-row row-key="2" interactive>
+			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>399.99</b> EUR</ui5-label></ui5-table-cell>
+			<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="add" text="Add"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="disconnected" text="Disconnect"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="share" text="Share"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="heart" text="TestAction2"></ui5-table-row-action>
+			<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+		</ui5-table-row>
+		<ui5-table-row row-key="3" navigated>
+			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>399.99</b> EUR</ui5-label></ui5-table-cell>
+			<ui5-table-row-action slot="actions" icon="database" text="Delete" disabled></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="disconnected" invisible text="Disconnect"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="detail-more" text="TestAction1"></ui5-table-row-action>
+		</ui5-table-row>
+		<ui5-table-row row-key="4">
+			<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br><a href="#">HT-1000</a></ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>399.99</b> EUR</ui5-label></ui5-table-cell>
+			<ui5-table-row-action slot="actions" icon="database" text="Database"></ui5-table-row-action>
+			<ui5-table-row-action slot="actions" icon="add" text="Add"></ui5-table-row-action>
+		</ui5-table-row>
+	</ui5-table>
+
+	<ui5-input value="after table" data-sap-ui-fastnavgroup="true"></ui5-input>
+	<script>
+		const table = document.getElementById("table");
+		table.addEventListener("row-click", (e) => {
+			console.log(`Row with the row-key ${e.detail.row.rowKey} is clicked`);
+		});
+		for (let element of document.getElementsByTagName("ui5-table-row")) {
+			element.addEventListener("click", (e) => {
+				console.log(`Row  ${e.target.rowKey}  is clicked`);
+			});
+		}
+
+		table.addEventListener("row-action-click", (e) => {
+			const { row, action } = e.detail;
+			console.log(`Row ${row.rowKey}, ${action.text || "navigation"} action is clicked`);
+		});
+
+		const slider = document.getElementById("slider");
+		slider.addEventListener("input", (e) => {
+			table.rowActionCount = e.target.value;
+		});
+
+		for (let element of document.getElementsByTagName("ui5-table-row-action")) {
+			element.addEventListener("click", (e) => {
+				console.log(`Row action ${e.target.text} is clicked`);
+			});
+		}
+
+	</script>
+</body>
+
+</html>

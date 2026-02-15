@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>ui5-checkbox</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/CheckBox-APDwQ0LC.css">
+</head>
+
+<body class="checkbox1auto">
+	<ui5-checkbox text="Option"></ui5-checkbox>
+	<ui5-checkbox id="cbReadonly" readonly text="Option"></ui5-checkbox>
+	<ui5-checkbox id="cbDisabled" disabled text="Option"></ui5-checkbox>
+	<ui5-checkbox id="cbError" value-state="Negative" text="Option"></ui5-checkbox>
+	<ui5-checkbox id="wrappingCb" text="Long long long text that should wrap at some point" class="checkbox2auto"></ui5-checkbox>
+	<ui5-checkbox wrapping-type="None" text="Long long long text that should truncate at some point"></ui5-checkbox>
+
+	<ui5-title>In Container - stretches to the container</ui5-title>
+	<div class="checkbox3auto">
+		<ui5-checkbox text="Option A"></ui5-checkbox>
+		<ui5-checkbox checked text="Option B"></ui5-checkbox>
+		<ui5-checkbox text="Option C"></ui5-checkbox>
+		<ui5-checkbox text="Option D"></ui5-checkbox>
+		<ui5-checkbox display-only text="Display only"></ui5-checkbox>
+		<ui5-checkbox display-only checked text="Display only checked"></ui5-checkbox>
+		<ui5-checkbox display-only checked indeterminate text="Display only partially checked"></ui5-checkbox>
+	</div>
+
+	<br><br>
+	<ui5-title>wrappingType="Normal" (default value)</ui5-title>
+	<ui5-checkbox class="ui5-cb-testing-wrap checkbox2auto" text="Longest ever text written in English that have to wrap because it is so long of course!" ></ui5-checkbox>
+	<ui5-checkbox text="Longest ever text written in English that wraps because it's too long of course!" class="checkbox2auto"></ui5-checkbox>
+
+	<br><br>
+	<ui5-title>wrappingType="None"</ui5-title>
+	<ui5-checkbox id="truncatingCb" wrapping-type="None" class="ui5-cb-testing-wrap checkbox2auto" text="Longest ever text written in English that have to truncate because it is so long of course!" ></ui5-checkbox>
+	<ui5-checkbox wrapping-type="None" text="Longest ever text written in English that truncates because it's too long of course!" class="checkbox2auto"></ui5-checkbox>
+
+	<br><br>
+	<ui5-title>Change Event Test</ui5-title>
+	<ui5-checkbox id="cb1" text="Long long long text"></ui5-checkbox>
+	<ui5-checkbox id="cb2" disabled></ui5-checkbox>
+	<ui5-checkbox id="displayOnlyCb" display-only></ui5-checkbox>
+	<ui5-input id="field"></ui5-input>
+
+	<br>
+	<ui5-title id="cb-label">ACC Test - aria-label</ui5-title>
+	<ui5-checkbox id="accCb" accessible-name="Hello world"></ui5-checkbox>
+	<ui5-checkbox id="accCb1" accessible-name-ref="cb-label"></ui5-checkbox>
+	<br />
+	<ui5-checkbox value-state="Critical" text="Long long long text" indeterminate checked></ui5-checkbox>
+	<ui5-checkbox value-state="Negative" text="Long long long text" indeterminate checked></ui5-checkbox>
+	<ui5-checkbox value-state="None" text="Long long long text" indeterminate checked></ui5-checkbox>
+	<ui5-checkbox value-state="Positive" text="Long long long text" indeterminate checked></ui5-checkbox>
+	<ui5-checkbox value-state="Information" text="Long long long text" indeterminate checked></ui5-checkbox>
+
+	<ui5-title id="cb-label">ACC Test - custom acc</ui5-title>
+	<ui5-checkbox id="accCustomAria"></ui5-checkbox>
+
+	<br />
+	<ui5-checkbox id="checkboxChecked" checked></ui5-checkbox>
+
+	<br>
+	<ui5-checkbox class="defaultPreventedCb"></ui5-checkbox>
+	<ui5-checkbox class="defaultPreventedCb" checked></ui5-checkbox>
+	<ui5-checkbox class="defaultPreventedCb" indeterminate></ui5-checkbox>
+	<ui5-checkbox class="defaultPreventedCb" indeterminate checked></ui5-checkbox>
+
+	<section>
+		<ui5-title>Form validation:</ui5-title>
+		<form method="get">
+			<ui5-checkbox id="cbItem" text="I agree to the terms (required)" required value="agreement" name="agreement"></ui5-checkbox>
+			<br/><br/>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		</form>
+	</section>
+
+	<br/><br/>
+	<ui5-title>Form submission</ui5-title>
+	<form id="cbForm" method="get">
+		<ui5-checkbox id="cbItem1" text="Option 1" checked value="option1" name="option"></ui5-checkbox>
+		<ui5-checkbox id="cbItem2" text="Option 2" checked value="option2" name="option"></ui5-checkbox>
+		<ui5-checkbox id="cbItem3" text="Option 3" required value="option3" name="option"></ui5-checkbox>
+		<br><br>
+		<ui5-button id="cbSubmit" type="Submit">Submit</ui5-button>
+		<input type="hidden" id="cbFormSubmitted" value="false" />
+	</form>
+
+	<br />
+	<div style="width: 300px; border: 1px solid black; padding: 1rem;">
+		<ui5-checkbox style="width: 100%; border: 1px solid red;"></ui5-checkbox>
+		<ui5-radio-button style="width: 100%; border: 1px solid red;"></ui5-radio-button>
+		<ui5-switch style="width: 100%; border: 1px solid red;"></ui5-switch>
+		<hr />
+		<ui5-checkbox style="width: 100%; border: 1px solid red;" text="Some text"></ui5-checkbox>
+		<ui5-radio-button style="width: 100%; border: 1px solid red;" text="Some text"></ui5-radio-button>
+		<ui5-switch style="width: 100%; border: 1px solid red;"></ui5-switch>
+	</div>
+
+	<script>
+		var hcb = false;
+		var cbForm = document.querySelector("#cbForm");
+		var input = document.querySelector("#field");
+		var checkBox1 = document.querySelector("#cb1");
+		var checkBox2 = document.querySelector("#cb2");
+		var checkBoxInAForm = document.querySelector("#cbItem");
+		var displayOnlyCb = document.querySelector("#displayOnlyCb");
+		var cbFormSubmitted = document.querySelector("#cbFormSubmitted");
+		var btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		var formValidationMessage = document.getElementById('formValidationMessage');
+		var cdCustomAria = document.querySelector("#accCustomAria");
+		var counter = 0;
+
+		cdCustomAria._accInfo = {
+			role: "presentation",
+		};
+
+		[checkBox1, checkBox2, displayOnlyCb].forEach(function(el) {
+			el.addEventListener("ui5-change", function(event) {
+				counter += 1;
+				input.value = `${counter}`;
+			});
+		});
+
+		var defaultPreventedCb = document.querySelectorAll(".defaultPreventedCb");
+
+		defaultPreventedCb.forEach(function(el) {
+			el.addEventListener("ui5-change", function(event) {
+				event.preventDefault();
+			});
+		});
+
+		cbForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+			cbFormSubmitted.value = true;
+
+			const formData = new FormData(cbForm);
+			const queryString = new URLSearchParams(formData).toString();
+
+			alert("Form submitted with query string: " + queryString);
+		});
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('cbItem');
+		});
+
+		checkBoxInAForm.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('cbItem', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		#btn,
+		#custom-opener {
+			display: none;
+			position: absolute;
+		}
+
+		#custom-opener {
+			width: 5px;
+			height: 5px;
+			background-color: transparent;
+		}
+	</style>
+	<title>TextArea-SelectionAssisstant</title>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body class="sapUiSizeCompact">
+	<ui5-label for="ai-textarea">TextArea with Selection Assistant.</ui5-label>
+	<br>
+	<ui5-textarea id="ai-textarea" style="height: 100px; width: 400px;"
+		value="Ipsum enim esse ipsum cupidatat ex veniam labore quis irure. Eiusmod labore anim anim nulla aute ut. Aliqua officia non ex cupidatat consequat non magna eiusmod aliquip laborum aliqua excepteur exercitation. Pariatur deserunt dolore aute sint in minim nisi magna proident proident consequat exercitation consectetur nostrud."></ui5-textarea>
+
+	<ui5-button id="btn" icon="ai"></ui5-button>
+	<ui5-toast id="toast"></ui5-toast>
+
+	<script>
+		const textArea = document.getElementById('ai-textarea');
+		const button = document.getElementById('btn');
+		const toast = [...document.getElementsByTagName("ui5-toast")][0];
+
+		const repositionButtonAtSelection = (rect) => {
+			button.style.left = `${rect.left + rect.width}px`;
+			button.style.top = `${rect.top + rect.height}px`;
+			showButton();
+		};
+
+		const repositionButtonAtTextArea = (rect) => {
+			showButton();
+			button.style.left = `${rect.left + rect.width + 4}px`;
+			button.style.top = `${rect.top + rect.height - button.getBoundingClientRect().height}px`;
+		};
+
+		const showButton = () => {
+			button.style.zIndex = '100';
+			button.style.display = 'inline-block';
+		};
+
+		const hideButton = () => {
+			button.style.display = 'none';
+		};
+
+		textArea.addEventListener('ui5-select', (e) => {
+			const selectionRect = window["sap-ui-webcomponents-bundle"].getElementSelection(textArea);
+			const textAreaRect = textArea.getBoundingClientRect();
+
+			if (selectionRect.bottom > textAreaRect.bottom || selectionRect.right > textAreaRect.right) {
+				repositionButtonAtTextArea(textAreaRect);
+			} else {
+				repositionButtonAtSelection(selectionRect);
+			}
+		});
+
+		textArea.addEventListener('mousedown', () => {
+			hideButton();
+		});
+
+		textArea.addEventListener('ui5-scroll', () => {
+			hideButton();
+		});
+
+		textArea.addEventListener('focusout', (e) => {
+			if (e.relatedTarget !== button) {
+				hideButton();
+			}
+		});
+
+		button.addEventListener('focusout', () => {
+			hideButton();
+		});
+
+		button.addEventListener('click', (e) => {
+			const selectedText = document.getSelection().toString();
+			const message = `The selected text equals to: "${selectedText}"`;
+
+			toast.textContent = message;
+			toast.open = true;
+		});
+
+	</script>
+</body>
+
+</html>

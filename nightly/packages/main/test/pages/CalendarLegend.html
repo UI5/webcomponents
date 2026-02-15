@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Calendar Playground</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Calendar-UHmB_9L6.css">
+</head>
+<body class="calendar1auto">
+
+	<ui5-title level="H3">Calendar Legend with All types of Calendar Legend Items</ui5-title>
+
+	<ui5-calendar id="calendar1">
+		<ui5-date value="Mar 31, 2024"></ui5-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+		<ui5-special-date slot="specialDates" value="" type=""></ui5-special-date>
+
+		<ui5-calendar-legend 
+			slot="calendarLegend"
+			id="calendarLegend"
+		>
+			<ui5-calendar-legend-item type="Type01" text="Placeholder 01"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type02" text="Placeholder 02"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type03" text="Placeholder 03"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type04" text="Placeholder 04"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type05" text="Placeholder 05"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type06" text="Placeholder 06"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type07" text="Placeholder 07"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type08" text="Placeholder 08"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type09" text="Placeholder 09"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type10" text="Placeholder 10"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type11" text="Placeholder 11"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type12" text="Placeholder 12"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type13" text="Placeholder 13"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type14" text="Placeholder 14"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type15" text="Placeholder 15"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type16" text="Placeholder 16"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type17" text="Placeholder 17"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type18" text="Placeholder 18"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type19" text="Placeholder 19"></ui5-calendar-legend-item>
+			<ui5-calendar-legend-item type="Type20" text="Placeholder 20"></ui5-calendar-legend-item>
+		</ui5-calendar-legend>
+	</ui5-calendar>
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<script>
+		// Function which maps special dates to the current month
+		function updateSpecialDates() {
+			const currentDate = new Date(2024, 2, 31);
+			const month = currentDate.getMonth() + 1;
+			const year = currentDate.getFullYear();
+	
+			const formattedMonth = month < 10 ? "0" + month : month.toString();
+			const specialDates = document.querySelectorAll("ui5-special-date");
+	
+			specialDates.forEach((specDate, index) => {
+				const day = index + 1;
+				const formattedDay = day < 10 ? "0" + day : day.toString();
+				const newValue = year + "-" + formattedMonth + "-" + formattedDay;
+				specDate.setAttribute("value", newValue);
+				
+				if (day <= 20) {
+					specDate.setAttribute("type", `Type${formattedDay}`);
+				} else {
+					specDate.setAttribute("type", "NonWorking");
+				}
+			});
+		}
+	
+		updateSpecialDates();
+	</script>
+
+</body>
+</html>

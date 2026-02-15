@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Bar test page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Bar-CLD6giUm.css">
+</head>
+
+<body class="bar1auto">
+	<section>
+		<ui5-bar design="Header" accessible-role="None" accessible-name="Header Bar">
+			<ui5-title id="titleElement" slot="startContent">Title</ui5-title>
+			<ui5-label>Title</ui5-label>
+			<ui5-button icon="action-settings" tooltip="Go to settings" slot="endContent"></ui5-button>
+		</ui5-bar>
+		<ui5-bar design="Subheader">
+			<ui5-title id="titleElement" slot="startContent">Title</ui5-title>
+			<ui5-label>Title</ui5-label>
+			<ui5-button icon="action-settings" tooltip="Go to settings" slot="endContent"></ui5-button>
+			</ui5-bar>
+	</section>
+
+	 <section>
+		<ui5-title level="3">Header design</ui5-title>
+		<ui5-bar design="Header">
+			<ui5-title id="titleElement" slot="startContent">Title</ui5-title>
+			<ui5-label>Title</ui5-label>
+			<ui5-button icon="action-settings" tooltip="Go to settings" slot="endContent"></ui5-button>
+		</ui5-bar>
+		<br>
+
+		<ui5-title level="3">Subheader design</ui5-title>
+		<br>
+		<ui5-bar design="Subheader">
+			<div slot="startContent" class="bar2auto">
+				<ui5-button>Start Button</ui5-button>
+				<ui5-label>Basic Label</ui5-label>
+			</div>
+
+			<ui5-button>Middle1 Button</ui5-button>
+			<ui5-button>Middle2 Button</ui5-button>
+
+			<ui5-label slot="endContent">Basic Label</ui5-label>
+			<ui5-button slot="endContent">End Button</ui5-button>
+			<ui5-button design="Positive" slot="endContent">Agree</ui5-button>
+			<ui5-button design="Negative" slot="endContent">Decline</ui5-button>
+			<ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
+		</ui5-bar>
+
+		<br>
+		<ui5-title level="3">Footer design</ui5-title>
+		<ui5-bar design="Footer">
+			<ui5-icon name="home" slot="startContent"></ui5-icon>
+			<ui5-button design="Positive" slot="endContent">Agree</ui5-button>
+			<ui5-button design="Negative" slot="endContent">Decline</ui5-button>
+			<ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
+		</ui5-bar>
+
+		<br>
+		<ui5-title level="3">FloatingFooter design</ui5-title>
+		<ui5-bar design="FloatingFooter">
+			<ui5-button design="Positive" slot="endContent">Agree</ui5-button>
+			<ui5-button design="Negative" slot="endContent">Decline</ui5-button>
+			<ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
+		</ui5-bar>
+	</section>
+
+	<section>
+		<ui5-bar>
+			<ui5-title id="titleElementWithLongText" slot="startContent">...</ui5-title>
+		  </ui5-bar>
+		<ui5-button id="loadButton">Change Title</ui5-button>
+		<script>
+			const loadButton = document.getElementById("loadButton");
+			const titleElementWithLongText = document.getElementById("titleElementWithLongText");
+
+			loadButton.addEventListener("click", () => {
+				titleElementWithLongText.innerHTML = "a very long text message which would get cut off";
+			});
+		</script>
+	</section>
+</body>
+</html>

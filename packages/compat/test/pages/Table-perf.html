@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Web components Table</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CmNrHCeo.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Table-perf-D9ceNgQB.css">
+</head>
+
+<!-- Initial - 2200 -->
+<!-- shouldPopin - 2000 -->
+<!-- remove ifDefined - 1850 -->
+
+<body class="table-perf1auto">
+	<ui5-table id="tbl">
+		<ui5-table-column slot="columns">
+			First
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			Second
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			Third
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			Fifth
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			Sixth
+		</ui5-table-column>
+	</ui5-table>
+
+
+	<script>
+		var tbl = document.getElementById("tbl");
+
+		for (var i=1; i<=1000; i++) {
+			var row = document.createElement("ui5-table-row");
+
+			for (var j=1; j<=5; j++) {
+				var cell = document.createElement("ui5-table-cell");
+				var span = document.createElement("span");
+				if (j !== 1) {
+					span.innerText = "Hello World!";
+				} else {
+					var datepicker = document.createElement("ui5-date-picker");
+					span.appendChild(datepicker);
+				}
+
+				cell.appendChild(span);
+				row.appendChild(cell);
+			}
+
+			tbl.appendChild(row);
+		}
+	</script>
+</body>
+
+</html>

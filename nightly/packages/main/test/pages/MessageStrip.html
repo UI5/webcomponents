@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html role="application">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>MessageStrip</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/MessageStrip-BtWkD4IS.css">
+</head>
+
+<body class="messagestrip1auto">
+	<ui5-message-strip id="messageStrip">Hello World!</ui5-message-strip>
+	<ui5-input id="inputField"></ui5-input>
+
+	<br />
+	<h4> MessageStrip inside ResponsivePopover</h4>
+	<ui5-button id="btnopen">Open ResponsivePopover</ui5-button>
+	<ui5-responsive-popover
+	opener="btnopen"
+	header-text="Newsletter subscription"
+	id="resppopover"
+	placement="Bottom">
+	<div class="popover-content">
+	  <ui5-message-strip design="Information">Information Message</ui5-message-strip>
+	</div>
+	<div slot="footer" class="popover-footer">
+	  <ui5-button id="closePopoverButton" design="Emphasized">Subscribe</ui5-button>
+	</div>
+  </ui5-responsive-popover>
+
+	<ui5-message-strip class="top" design="Information">Default (Information) with default icon and close button:</ui5-message-strip>
+	<ui5-message-strip class="top" design="Negative">Negative with <b>default</b> icon and close button:</ui5-message-strip>
+	<ui5-message-strip class="top" design="Critical">Critical with default icon and close button:</ui5-message-strip>
+	<ui5-message-strip class="top" design="Positive">Positive with default icon and close button:</ui5-message-strip>
+
+	<ui5-message-strip class="top" design="Information">Information with default icon.</ui5-message-strip>
+	<ui5-message-strip class="top" design="Information">Ea mollit nulla laborum et fugiat nulla excepteur ea. Duis et dolor enim Lorem laboris adipisicing cillum quis proident dolor veniam voluptate. Nostrud dolore ipsum anim voluptate enim dolore eiusmod aliqua et. Est eu ex dolor ea ipsum. Adipisicing duis aliquip ullamco culpa dolore exercitation ullamco cillum irure.</ui5-message-strip>
+
+	<ui5-message-strip hide-icon class="top" design="Information">Ea mollit nulla laborum et fugiat nulla excepteur ea. Duis et dolor enim Lorem laboris adipisicing cillum quis proident dolor veniam voluptate. Nostrud dolore ipsum anim voluptate enim dolore eiusmod aliqua et. Est eu ex dolor ea ipsum. Adipisicing duis aliquip ullamco culpa dolore exercitation ullamco cillum irure.</ui5-message-strip>
+	<ui5-message-strip hide-icon hide-close-button class="top" design="Information">Ea mollit nulla laborum et fugiat nulla excepteur ea. Duis et dolor enim Lorem laboris adipisicing cillum quis proident dolor veniam voluptate. Nostrud dolore ipsum anim voluptate enim dolore eiusmod aliqua et. Est eu ex dolor ea ipsum. Adipisicing duis aliquip ullamco culpa dolore exercitation ullamco cillum irure.</ui5-message-strip>
+	<ui5-message-strip hide-close-button class="top" design="Information">Ea mollit nulla laborum et fugiat nulla excepteur ea. Duis et dolor enim Lorem laboris adipisicing cillum quis proident dolor veniam voluptate. Nostrud dolore ipsum anim voluptate enim dolore eiusmod aliqua et. Est eu ex dolor ea ipsum. Adipisicing duis aliquip ullamco culpa dolore exercitation ullamco cillum irure.</ui5-message-strip>
+	<ui5-message-strip design="Critical" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Custom icon</ui5-message-strip>
+	<ui5-message-strip design="Positive" class="top"><img src="/webcomponents/nightly/assets/loading-BD1z68sF.gif" width="16" height="16" slot="icon">Custom icon</ui5-message-strip>
+
+	<ui5-message-strip id="defaultColorScheme" design="ColorSet1" class="top">Color Set 1 - no color-scheme, no icon</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" class="top">Color Set 2 - no color-scheme, no icon</ui5-message-strip>
+	<ui5-message-strip id="colorSet1ColorScheme1" design="ColorSet1" color-scheme="1" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 1</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="2" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 2</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="3" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 3</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="4" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 4</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="5" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 5</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="6" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 6</ui5-message-strip>
+	<ui5-message-strip id="colorScheme7" design="ColorSet1" color-scheme="7" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 7</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="8" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 8</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="9" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 9</ui5-message-strip>
+	<ui5-message-strip design="ColorSet1" color-scheme="10" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 1 - color-scheme 10</ui5-message-strip>
+	<ui5-message-strip id="colorSet1ColorScheme2" design="ColorSet2" color-scheme="1" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 1</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="2" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 2</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="3" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 3</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="4" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 4</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="5" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 5</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="6" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 6</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="7" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 7</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="8" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 8</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="9" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 9</ui5-message-strip>
+	<ui5-message-strip design="ColorSet2" color-scheme="10" class="top"><ui5-icon name="palette" slot="icon"></ui5-icon>Color Set 2 - color-scheme 10</ui5-message-strip>
+
+	<br />
+	<br />
+	<ui5-button id="btn" /> Change design</ui5-button>
+	<br />
+	<br />
+	<ui5-message-strip id="ms">MessageStrip w/ default properties</ui5-message-strip>
+
+	<script>
+		var counter = 0;
+		messageStrip.addEventListener("ui5-close", function() {
+			inputField.value = `${++counter}`;
+		});
+
+		const mStrip = document.getElementById('ms');
+		document.getElementById('btn').addEventListener('click', () => {
+			mStrip.design = 'ColorSet1';
+			mStrip.colorScheme = '1';
+		});
+
+		const btn = document.getElementById("btnopen");
+		const popover = document.getElementById("resppopover");
+		btn.addEventListener("click", () => {
+			popover.open = !popover.open;
+		});
+		popover.addEventListener("close", () => {
+			popover.open = false;
+		});
+	</script>
+</body>
+</html>

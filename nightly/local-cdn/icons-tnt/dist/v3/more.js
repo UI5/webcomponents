@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "more";
+const pathData = "M474.5 301h-422q-13 0-21.5-9t-8.5-21q0-13 8.5-21.5t21.5-8.5h422q12 0 21 8.5t9 21.5q0 12-9 21t-21 9zm-211 210q-5 0-11-1.5t-10-6.5l-91-91q-8-9-8.5-21.5t8.5-20.5q9-9 22-9 12 0 21 9l69 69 69-69q9-9 21-9 14 0 21 9 9 8 9 20.5t-9 21.5l-90 91q-7 8-21 8zm211-451h-422q-13 0-21.5-9t-8.5-21q0-13 8.5-21.5T52.5 0h422q12 0 21 8.5t9 21.5q0 12-9 21t-21 9zm0 120h-422q-13 0-21.5-8.5T22.5 150q0-12 8.5-21t21.5-9h422q12 0 21 9t9 21q0 13-9 21.5t-21 8.5z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/more";
+export { pathData, ltr, accData };

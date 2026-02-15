@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Progress Indicator</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/ProgressIndicator-BqzSbEql.css">
+</head>
+
+<body class="progressindicator1auto">
+	<br />
+	Value is 0
+	<br />
+	<ui5-progress-indicator value="0"></ui5-progress-indicator>
+	<br />
+	Value is 100
+	<br />
+	<ui5-progress-indicator value="100"></ui5-progress-indicator>
+	<br />
+	Value less than 50
+	<br />
+	<ui5-progress-indicator value="25"></ui5-progress-indicator>
+	<br />
+	Value greater than 50
+	<br />
+	<ui5-progress-indicator value="75"></ui5-progress-indicator>
+	<br />
+	Value less than 50 without value
+	<br />
+	<ui5-progress-indicator value="25" hide-value></ui5-progress-indicator>
+	<br />
+	Value greater than 50 without value
+	<br />
+	<ui5-progress-indicator value="75" hide-value></ui5-progress-indicator>
+	<br />
+	ValueState.None
+	<br />
+	<ui5-progress-indicator value-state="None" value="25"></ui5-progress-indicator>
+	<br />
+	ValueState.Negative
+	<br />
+	<ui5-progress-indicator value-state="Negative" value="25"></ui5-progress-indicator>
+	<br />
+	ValueState.Critical
+	<br />
+	<ui5-progress-indicator value-state="Critical" value="25"></ui5-progress-indicator>
+	<br />
+	ValueState.Positive
+	<br />
+	<ui5-progress-indicator value-state="Positive" value="25"></ui5-progress-indicator>
+	<br />
+	ValueState.Information
+	<br />
+	<ui5-progress-indicator value-state="Information" value="25"></ui5-progress-indicator>
+	<br />
+	ValueState.None
+	<br />
+	<ui5-progress-indicator value-state="None" value="60"></ui5-progress-indicator>
+	<br />
+	ValueState.Negative
+	<br />
+	<ui5-progress-indicator value-state="Negative" value="60"></ui5-progress-indicator>
+	<br />
+	ValueState.Critical
+	<br />
+	<ui5-progress-indicator value-state="Critical" value="60"></ui5-progress-indicator>
+	<br />
+	ValueState.Positive
+	<br />
+	<ui5-progress-indicator value-state="Positive" value="60"></ui5-progress-indicator>
+	<br />
+	ValueState.Information
+	<br />
+	<ui5-progress-indicator value-state="Information" value="60"></ui5-progress-indicator>
+	<br />
+	AccessibleName added
+	<ui5-progress-indicator id="PI" value="100" accessible-name="Hello world"></ui5-progress-indicator>
+	<br />
+	Custom Display Value
+	<br />
+	<ui5-progress-indicator value="25" display-value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."></ui5-progress-indicator>
+	<br />
+	Custom Size 1
+	<br />
+	<ui5-progress-indicator value="25" class="progressindicator2auto"></ui5-progress-indicator>
+	<br />
+	Custom Size 2
+	<br />
+	<ui5-progress-indicator value="25" class="progressindicator2auto"></ui5-progress-indicator>
+	<br />
+	Custom Color
+	<br />
+	<ui5-progress-indicator value="25" class="progressindicator3auto"></ui5-progress-indicator>
+	<br />
+	Test progress indicator
+	<br />
+	<ui5-progress-indicator id="test-progress-indicator"></ui5-progress-indicator>
+	<ui5-button id="firstBtn">Set 0 value</ui5-button>
+	<ui5-button id="secondBtn">Set 25 value</ui5-button>
+	<ui5-button id="thirdBtn">Set 50 value</ui5-button>
+	<ui5-button id="fourthBtn">Set 75 value</ui5-button>
+	<ui5-button id="fifthBtn">Set 100 value</ui5-button>
+	<ui5-button id="sixthBtn">Set negative value</ui5-button>
+	<ui5-button id="seventhBtn">Set larger than 100 value</ui5-button>
+
+	<script>
+		var progressIndicator = document.getElementById("test-progress-indicator");
+		var button1 = document.getElementById("firstBtn");
+		var button2 = document.getElementById("secondBtn");
+		var button3 = document.getElementById("thirdBtn");
+		var button4 = document.getElementById("fourthBtn");
+		var button5 = document.getElementById("fifthBtn");
+		var button6 = document.getElementById("sixthBtn");
+		var button7 = document.getElementById("seventhBtn");
+
+		button1.addEventListener("click", function (event) {
+			progressIndicator.value = 0;
+		});
+		button2.addEventListener("click", function (event) {
+			progressIndicator.value = 25;
+		});
+		button3.addEventListener("click", function (event) {
+			progressIndicator.value = 50;
+		});
+		button4.addEventListener("click", function (event) {
+			progressIndicator.value = 75;
+		});
+		button5.addEventListener("click", function (event) {
+			progressIndicator.value = 100;
+		});
+		button6.addEventListener("click", function (event) {
+			progressIndicator.value = -10;
+		});
+		button7.addEventListener("click", function (event) {
+			progressIndicator.value = 110;
+		});
+	</script>
+</body>
+
+</html>

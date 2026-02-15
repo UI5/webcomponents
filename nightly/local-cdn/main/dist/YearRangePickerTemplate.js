@@ -1,0 +1,6 @@
+import { jsx as _jsx, jsxs as _jsxs } from "@ui5/webcomponents-base/jsx-runtime";
+export default function YearRangePickerTemplate() {
+    return (_jsx("div", { class: "ui5-yrp-root", part: "year-range-picker-root", role: "grid", "aria-roledescription": this.roleDescription, "aria-readonly": "false", "aria-multiselectable": "false", onClick: this._selectYearRange, onMouseOver: this._onmouseover, onKeyDown: this._onkeydown, onKeyUp: this._onkeyup, children: this._yearRanges.map(rangeRow => _jsx("div", { role: "row", class: "ui5-yrp-interval-container", children: rangeRow.map(yearRange => _jsxs("div", { "data-sap-timestamp": yearRange.timestamp, tabindex: yearRange._tabIndex, "data-sap-focus-ref": yearRange.focusRef ? "true" : undefined, class: yearRange.classes, part: yearRange.parts, role: "gridcell", "aria-selected": yearRange.ariaSelected, "aria-disabled": yearRange.ariaDisabled, children: [_jsx("span", { class: "ui5-dp-yeartext", children: yearRange.range }), yearRange.rangeInSecType &&
+                        _jsx("span", { class: "ui5-yrp-item-sec-type", children: yearRange.rangeInSecType })] })) })) }));
+}
+//# sourceMappingURL=YearRangePickerTemplate.js.map

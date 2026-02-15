@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Button</title>
+
+
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/MemoryLeak-BqojlFFq.css">
+</head>
+
+<body class="memoryleak1auto">
+
+<div class="memoryleak2auto">
+	<ui5-input id="count" value="100" value-state="Information">
+		<div slot="valueStateMessage">How many date pickers to create</div>
+	</ui5-input>
+	<ui5-button id="everything">Create+Open+Destroy</ui5-button>
+	<ui5-button id="create">Create</ui5-button>
+	<ui5-button id="open">Open</ui5-button>
+	<ui5-button id="destroy">Destroy</ui5-button>
+</div>
+
+<div id="test" class="memoryleak3auto"></div>
+
+<script>
+	const count = document.getElementById("count");
+	const everything = document.getElementById("everything");
+	const create = document.getElementById("create");
+	const open = document.getElementById("open");
+	const destroy = document.getElementById("destroy");
+	const test = document.getElementById("test");
+
+	const createAll = () => {
+		for (let i=0; i<parseInt(count.value); i++) {
+			const d = document.createElement("ui5-date-picker");
+			test.appendChild(d);
+		}
+	};
+
+	const openAll = () => {
+		return Promise.all([...test.children].map(child => {
+			return child.openPicker();
+		}));
+	};
+
+	const destroyAll = () => {
+		[...test.children].forEach(child => {
+			test.removeChild(child);
+		});
+	};
+
+	create.addEventListener("click", createAll);
+
+	open.addEventListener("click", openAll);
+
+	destroy.addEventListener("click", destroyAll);
+
+	everything.addEventListener("click", async () => {
+		createAll();
+		await window["sap-ui-webcomponents-bundle"].renderFinished();
+		await openAll();
+		await window["sap-ui-webcomponents-bundle"].renderFinished();
+		destroyAll();
+	});
+
+</script>
+
+</body>
+</html>

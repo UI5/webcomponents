@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Popover opener null</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+	<script>
+		function init() {
+			const popoverWithoutOpener = document.getElementById("popoverWithoutOpener");
+			const popoverWithoutOpener2 = document.getElementById("popoverWithoutOpener2");
+			popoverWithoutOpener.opener = null;
+			popoverWithoutOpener2.opener = null;
+			setTimeout(() => {
+				popoverWithoutOpener2.opener = "btn1";
+			}, timeout = 1000);
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+<body onload="init()">
+	<ui5-button id="btn1" style="margin-top: 100px">Open Popover</ui5-button>
+	<ui5-popover id="popoverWithoutOpener" open>Popover</ui5-popover>
+	<ui5-popover id="popoverWithoutOpener2" open opener="btn1">Popover open</ui5-popover>
+</body>
+</html>

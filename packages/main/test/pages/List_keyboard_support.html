@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>List</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/List_keyboard_support-D4AvDQqL.css">
+</head>
+
+<body class="list_keyboard_support1auto">
+	<h1>UI5 Table Web Component</h1>
+	<p>The sample shows the keyboard navigation support of the Table</p>
+	<ul>
+		<li>To navigate between items use the [Up] and [Down] arrow keys</li>
+		<li>To navigate within an item use the [Tab] and [SHIFT+TAB] keys</li>
+	</ul>
+
+	<div class="focusable" tabindex="0"></div>
+
+	<ui5-list id="myList" indent separators="Inner"
+		selection-mode="Multiple"
+		header-text="Text when no header provided"
+		footer-text="Copyright"
+		no-data-text="No data">
+
+		<div slot="header" class="header">
+			<div>Countries</div>
+			<ui5-button design="Accept">Export</ui5-button>
+		</div>
+
+		<!-- Items -->
+		<ui5-li>Argentina</ui5-li>
+		<ui5-li-custom>
+			<ui5-checkbox text="Checkbox"></ui5-checkbox>
+		</ui5-li-custom>
+		<ui5-li>Bulgaria</ui5-li>
+		<ui5-li-custom selected>
+				<ui5-button>Click me</ui5-button>
+				<ui5-link href="https://www.google.bg" target="_blank">UI5 link</ui5-link>
+				<ui5-radio-button text="Option B" disabled="disabled"></ui5-radio-button>
+				<ui5-button>Click me</ui5-button>
+		</ui5-li-custom>
+		<ui5-li>China</ui5-li>
+		<ui5-li-custom selected>
+				<ui5-radio-button text="Option C" disabled="disabled"></ui5-radio-button>
+		</ui5-li-custom>
+	</ui5-list>
+
+	<div class="focusable" tabindex="0"></div>
+
+	<ui5-list id="myList" indent separators="Inner"
+		selection-mode="Multiple"
+		header-text="Text when no header provided"
+		footer-text="Copyright"
+		no-data-text="No data">
+
+		<!-- Items -->
+		<ui5-li>Argentina</ui5-li>
+		<ui5-li-custom>
+			<ui5-checkbox text="Checkbox"></ui5-checkbox>
+		</ui5-li-custom>
+		<ui5-li>Bulgaria</ui5-li>
+		<ui5-li-custom selected>
+				<ui5-button>Click me</ui5-button>
+				<ui5-link href="https://www.google.bg" target="_blank">UI5 link</ui5-link>
+				<ui5-radio-button text="Option B" disabled="disabled"></ui5-radio-button>
+				<ui5-button>Click me</ui5-button>
+		</ui5-li-custom>
+		<ui5-li>China</ui5-li>
+		<ui5-li-custom selected>
+				<ui5-radio-button text="Option C" disabled="disabled"></ui5-radio-button>
+		</ui5-li-custom>
+	</ui5-list>
+
+	<div class="focusable" tabindex="0"></div>
+
+	<h1>Test PAGE UP/DOWN</h1>
+	<br><br>
+	<ui5-list>
+		<ui5-li>0</ui5-li>
+		<ui5-li>1</ui5-li>
+		<ui5-li>2</ui5-li>
+		<ui5-li>3</ui5-li>
+		<ui5-li>4</ui5-li>
+		<ui5-li>5</ui5-li>
+		<ui5-li>6</ui5-li>
+		<ui5-li>7</ui5-li>
+		<ui5-li>8</ui5-li>
+		<ui5-li>9</ui5-li>
+		<ui5-li>10</ui5-li>
+
+		<ui5-li>11</ui5-li>
+		<ui5-li>12</ui5-li>
+		<ui5-li>13</ui5-li>
+		<ui5-li>14</ui5-li>
+		<ui5-li>15</ui5-li>
+		<ui5-li>16</ui5-li>
+		<ui5-li>17</ui5-li>
+		<ui5-li>18</ui5-li>
+		<ui5-li>19</ui5-li>
+		<ui5-li>20</ui5-li>
+
+		<ui5-li>21</ui5-li>
+		<ui5-li>22</ui5-li>
+		<ui5-li>23</ui5-li>
+		<ui5-li>24</ui5-li>
+		<ui5-li>25</ui5-li>
+		<ui5-li>26</ui5-li>
+		<ui5-li>27</ui5-li>
+		<ui5-li>28</ui5-li>
+		<ui5-li>29</ui5-li>
+		<ui5-li>30</ui5-li>
+	</ui5-list>
+
+
+</body>
+</html>

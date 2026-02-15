@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-multi-input</title>
+
+
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/MultiInput-ky9oRWpY.css">
+</head>
+
+<body class="multiinput1auto ui5-content-density-compact" >
+
+	<div class="sample-container">
+
+		<h1>Basic API</h1>
+
+		<h1 class="sample-container-title">Empty Multi Input</h1>
+		<ui5-multi-input id="empty-mi" placeholder="Placeholder"></ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with Value Help Icon</h1>
+		<ui5-multi-input show-value-help-icon id="vh"></ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with Value Help Icon and a custom icon</h1>
+		<ui5-multi-input show-value-help-icon>
+			<ui5-icon slot="icon" name="decline"></ui5-icon>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 1 token</h1>
+		<ui5-multi-input id="one-token">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Readonly Multi Input with tokens</h1>
+		<ui5-multi-input id="readonly-mi" readonly>
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Dolor"></ui5-token>
+			<ui5-token slot="tokens" text="Lorem"></ui5-token>
+			<ui5-token slot="tokens" text="Ipsum"></ui5-token>
+		</ui5-multi-input>
+
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 11 tokens (overflowing)</h1>
+		<ui5-multi-input id="basic-overflow">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 11 tokens (overflowing) and value help icon</h1>
+		<ui5-multi-input show-value-help-icon id="basic-overflow-and-icon">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+		<h1 class="sample-container-title">Multi Input show wrapping</h1>
+		<ui5-multi-input>
+			<ui5-token slot="tokens" text="Item that does not wrap"></ui5-token>
+			<ui5-token slot="tokens" text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum" slot="tokens"></ui5-token>
+		</ui5-multi-input>
+
+		<span id="basic-event-listener"></span>
+	</div>
+
+	<div class="sample-container">
+		<h1>Value States</h1>
+
+		<h1 class="sample-container-title">Multi Input - Success</h1>
+		<ui5-multi-input id="multiInput-success"
+			value-state="Positive">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+		<h1 class="sample-container-title">Multi Input - Information</h1>
+		<ui5-multi-input id="multiInput-information"
+			value-state="Information">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<div slot="valueStateMessage">Information message. This is a <ui5-link href="#">Link</ui5-link>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input - Warning</h1>
+		<ui5-multi-input id="multiInput-warning"
+			value-state="Critical">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input - Error</h1>
+		<ui5-multi-input id="multiInput-error"
+			value-state="Negative">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+			<ui5-token slot="tokens" text="esse"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="amet"></ui5-token>
+			<ui5-token slot="tokens" text="do"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+	</div>
+
+	<div class="sample-container" id="token-samples">
+		<h1>Tokens</h1>
+
+		<h1 class="sample-container-title">Multi Input without tokens</h1>
+		<ui5-multi-input id="no-tokens"></ui5-multi-input>
+		<br>
+		<br>
+
+		<ui5-button id="add-tokens">Add more tokens</ui5-button>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Add multiple tokens</h1>
+		<ui5-multi-input id="no-tokens2"></ui5-multi-input>
+		<br>
+		<br>
+
+		<ui5-button id="add-multiple-tokens">Add more tokens</ui5-button>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 1 token</h1>
+		<ui5-multi-input id="single-token">
+			<ui5-token slot="tokens" text="Amet"></ui5-token>
+		</ui5-multi-input>
+		<br>
+		<br>
+
+		<ui5-button id="add-to-single">Add more tokens</ui5-button>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 2 tokens</h1>
+		<ui5-multi-input id="two-tokens" value="abc">
+			<ui5-token slot="tokens" id="firstToken" text="aa"></ui5-token>
+			<ui5-token slot="tokens" id="secondToken" text="bb"></ui5-token>
+		</ui5-multi-input>
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with 5 tokens</h1>
+		<ui5-multi-input id="multiple-token">
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<ui5-button id="add-to-multiple">Add more tokens</ui5-button>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with Truncated token</h1>
+		<ui5-multi-input id="truncated-token">
+			<ui5-token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea." slot="tokens"></ui5-token>
+		</ui5-multi-input>
+
+		<ui5-button id="dummy-btn">dummy button</ui5-button>
+    <br>
+		<ui5-button id="add-single-token">Add MultiInput with single token</ui5-button>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with N-Items</h1>
+		<ui5-multi-input id="mi-items" style="width: 150px">
+			<ui5-token text="Lorem ipsum" slot="tokens"></ui5-token>
+			<ui5-token text="Lorem ipsum 1" slot="tokens"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<br>
+
+		<h1 class="sample-container-title">Multi Input with N-More</h1>
+		<ui5-multi-input id="mi-more">
+			<ui5-token text="Token 1" slot="tokens"></ui5-token>
+			<ui5-token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea." slot="tokens"></ui5-token>
+		</ui5-multi-input>
+	</div>
+
+	<div class="sample-container">
+		<h1>Tokens + Suggestions</h1>
+
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token" value-state="Information">
+			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
+			<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+			<ui5-suggestion-item text="esse"></ui5-suggestion-item>
+			<ui5-suggestion-item text="labore"></ui5-suggestion-item>
+			<ui5-suggestion-item text="amet"></ui5-suggestion-item>
+			<ui5-suggestion-item text="aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="excepteur"></ui5-suggestion-item>
+			<div slot="valueStateMessage">Information message. This is a <ui5-link href="#">Link</ui5-link>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-multi-input>
+
+		<ui5-dialog id="dialog" header-text="Add Competency">
+
+			<ui5-list id="tokens-list">
+
+			</ui5-list>
+
+			<div slot="footer" class="footer">
+				<ui5-button design="Emphasized">Save</ui5-button>
+				<ui5-button>Cancel</ui5-button>
+			</div>
+		</ui5-dialog>
+	</div>
+
+	<div class="sample-container">
+		<h1>Composition</h1>
+
+		<ui5-title>Korean</ui5-title>
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-korean" placeholder="Type in Korean ...">
+			<ui5-suggestion-item text="안녕하세요"></ui5-suggestion-item>
+			<ui5-suggestion-item text="고맙습니다"></ui5-suggestion-item>
+			<ui5-suggestion-item text="사랑"></ui5-suggestion-item>
+			<ui5-suggestion-item text="한국"></ui5-suggestion-item>
+		</ui5-multi-input>
+
+		<ui5-title>Japanese</ui5-title>
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-japanese" placeholder="Type in Japanese ...">
+			<ui5-suggestion-item text="こんにちは"></ui5-suggestion-item>
+			<ui5-suggestion-item text="ありがとう"></ui5-suggestion-item>
+			<ui5-suggestion-item text="日本"></ui5-suggestion-item>
+			<ui5-suggestion-item text="東京"></ui5-suggestion-item>
+		</ui5-multi-input>
+
+		<ui5-title>Chinese</ui5-title>
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-chinese" placeholder="Type in Chinese ...">
+			<ui5-suggestion-item text="你好"></ui5-suggestion-item>
+			<ui5-suggestion-item text="謝謝"></ui5-suggestion-item>
+			<ui5-suggestion-item text="北京"></ui5-suggestion-item>
+			<ui5-suggestion-item text="上海"></ui5-suggestion-item>
+		</ui5-multi-input>
+
+	</div>
+
+	<div class="sample-container">
+		<h1>Suggestions + showing wrapping</h1>
+
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-wrapping">
+			<ui5-suggestion-item text="Lorem ipsum Text"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id justo sed nisl consequat tincidunt. Vivamus tincidunt, sapien a tincidunt consequat, leo libero lacinia justo, a lacinia orci enim vel justo. Integer ultricies ex eu eros luctus, eu cursus nisl volutpat."></ui5-suggestion-item>
+			<ui5-suggestion-item text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-suggestion-item>
+			<ui5-suggestion-item text="Longest text in the world" ></ui5-suggestion-item>
+		</ui5-multi-input>
+	</div>
+
+	<div class="sample-container">
+		<h1>Create tokens on change and on paste</h1>
+
+		<ui5-multi-input show-suggestions id="token-unique" show-value-help-icon>
+			<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
+			<ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
+		</ui5-multi-input>
+	</div>
+
+	<div class="sample-container">
+		<h1>Test value-help-trigger with F4 and Alt + ArrowUp/Down</h1>
+
+		<ui5-multi-input id="multi-with-value-help-icon" show-value-help-icon>
+		</ui5-multi-input>
+		<ui5-input id="value-help-trigger-counter" placeholder="event count.."></ui5-input>
+	</div>
+
+	<div>
+		<ui5-title>MultiInput with tokens with custom icon</ui5-title>
+		<ui5-multi-input id="mi-with-tokens-customicon" placeholder="Placeholder" class="multiinput2auto">
+			<ui5-token slot="tokens" text="Menu">
+				<ui5-icon name="menu" accessible-name="Menu here" slot="closeIcon"></ui5-icon>
+			</ui5-token>
+			<ui5-token slot="tokens" text="Not a menu">
+			</ui5-token>
+		</ui5-multi-input>
+	</div>
+
+	<div class="sample-container">
+
+		<h1 class="sample-container-title">Eventing</h1>
+
+		<ui5-multi-input id="mi-event">
+			<ui5-token slot="tokens" text="ea"></ui5-token>
+			<ui5-token slot="tokens" text="eu"></ui5-token>
+			<ui5-token slot="tokens" text="Incididunt"></ui5-token>
+			<ui5-token slot="tokens" text="laboris"></ui5-token>
+			<ui5-token slot="tokens" text="ipsum"></ui5-token>
+		</ui5-multi-input>
+
+		<br>
+		<span>Event:</span>
+		<br>
+		<input id="event-type">
+		<br>
+		<span>Count:</span>
+		<br>
+		<input id="event-count">
+		<br>
+		<span>Event target text:</span>
+		<br>
+		<input id="event-target-text">
+
+	</div>
+
+	<div class="sample-container">
+
+		<h1 class="sample-container-title">Custom Suggestions</h1>
+
+		<ui5-multi-input id="mi-custom-suggestions" show-suggestions>
+			<ui5-suggestion-item-custom text="Bulgaria">
+				<span>Bulgaria</span>
+			</ui5-suggestion-item-custom>
+			<ui5-suggestion-item-custom text="Germany">
+				<span>Germany</span>
+			</ui5-suggestion-item-custom>
+			<ui5-suggestion-item-custom text="USA">
+				<span>USA</span>
+			</ui5-suggestion-item-custom>
+			<ui5-suggestion-item-custom text="Romania">
+				<span>Romania</span>
+			</ui5-suggestion-item-custom>
+		</ui5-multi-input>
+	</div>
+
+
+	<h1 class="sample-container-title">Token delete</h1>
+
+	<ui5-multi-input show-suggestions id="test-token-delete">
+		<ui5-token slot="tokens" text="Aute"></ui5-token>
+		<ui5-token slot="tokens" text="ad"></ui5-token>
+		<ui5-token slot="tokens" text="exercitation"></ui5-token>
+		<ui5-token slot="tokens" text="esse"></ui5-token>
+		<ui5-token slot="tokens" text="labore"></ui5-token>
+		<ui5-token slot="tokens" text="amet"></ui5-token>
+		<ui5-token slot="tokens" text="aute"></ui5-token>
+		<ui5-token slot="tokens" text="excepteur"></ui5-token>
+	</ui5-multi-input>
+
+	<ui5-title>Form validation</ui5-title>
+	<form id="formValidation">
+		<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token-inform" required>
+			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
+			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
+			<ui5-suggestion-item text="exercitation"></ui5-suggestion-item>
+		</ui5-multi-input>
+		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+	</form>
+	<br><br>
+
+	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const miInForm = document.getElementById('suggestion-token-inform');
+
+		btnCheckFormValidity.addEventListener('click', function () {
+			checkFormValidity('suggestion-token-inform');
+		});
+
+		miInForm.addEventListener('ui5-change', function () {
+			setTimeout(() => {
+				checkFormValidity('suggestion-token-inform', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+		var createTokenFromText = function (text) {
+			var token = document.createElement("ui5-token");
+
+			token.setAttribute("text", text);
+			token.setAttribute("slot", "tokens");
+
+			return token;
+		}
+
+		var createTokenFromLI = function (li) {
+			return createTokenFromText(li.text);
+		};
+
+		var addTokenToMI = function (token, id) {
+			document.getElementById(id).appendChild(token);
+		}
+
+		document.getElementById("add-tokens").addEventListener("click", function(event) {
+			addTokenToMI(createTokenFromText("test"), "no-tokens");
+		});
+
+		document.getElementById("add-multiple-tokens").addEventListener("click", function(event) {
+			addTokenToMI(createTokenFromText("One"), "no-tokens2");
+			addTokenToMI(createTokenFromText("Two"), "no-tokens2");
+		});
+
+		document.getElementById("add-to-single").addEventListener("click", function(event) {
+			addTokenToMI(createTokenFromText("test"), "single-token");
+		});
+
+		document.getElementById("add-to-multiple").addEventListener("click", function(event) {
+			addTokenToMI(createTokenFromText("test"), "multiple-token");
+		});
+
+		/* ----------------- */
+
+		document.getElementById("vh").addEventListener("ui5-value-help-trigger", function (event) {
+			alert("test");
+		});
+
+		document.getElementById("suggestion-token").addEventListener("ui5-value-help-trigger", function (event) {
+			var list = document.getElementById("tokens-list");
+
+			list.innerHTML = "";
+
+			event.target.tokens.forEach(function (token) {
+				var li = document.createElement("ui5-li");
+				li.innerHTML = token.text;
+
+				list.appendChild(li);
+			});
+
+			document.getElementById("dialog").open = true;
+		});
+
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-value-help-trigger", function (event) {
+			var list = document.getElementById("tokens-list");
+
+			list.innerHTML = "";
+
+			event.target.tokens.forEach(function (token) {
+				var li = document.createElement("ui5-li");
+				li.innerHTML = token.text;
+
+				list.appendChild(li);
+			});
+
+			document.getElementById("dialog").open = true;
+		});
+
+		document.getElementById("suggestion-token").addEventListener("ui5-change", function (event) {
+			var text = event.target.value;
+
+			addTokenToMI(createTokenFromText(text), "suggestion-token");
+
+			event.target.value = "";
+		});
+
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-change", function (event) {
+			var text = event.target.value;
+
+			addTokenToMI(createTokenFromText(text), "suggestion-token-inform");
+
+			event.target.value = "";
+		});
+
+		document.getElementById("basic-overflow-and-icon").addEventListener("ui5-value-help-trigger", function (event) {
+			document.getElementById("basic-event-listener").innerHTML = "value help icon press";
+		});
+
+		let valueHelpTriggerCounter = 0;
+		document.getElementById("multi-with-value-help-icon").addEventListener("ui5-value-help-trigger", function (event) {
+			document.getElementById("value-help-trigger-counter").value = `${++valueHelpTriggerCounter}`;
+		});
+
+		const handleTokenDelete = (event) => {
+			var mi = event.target;
+
+			event.detail.tokens.forEach(token => {
+				mi.removeChild(token);
+			});
+		}
+
+		document.getElementById("token-unique").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("test-token-delete").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("suggestion-token").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("suggestion-token-inform").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("two-tokens").addEventListener("ui5-token-delete", handleTokenDelete);
+		document.getElementById("readonly-mi").addEventListener("ui5-token-delete", handleTokenDelete);
+
+		const handleTokenDelete2 = (event) => {
+			const eventType = document.getElementById("event-type");
+			const eventCount = document.getElementById("event-count");
+			const eventTargetText = document.getElementById("event-target-text");
+
+			eventType.value = event.type;
+			eventTargetText.value = event.detail.tokens.map(token => token.text).join(', ');
+
+			if (!eventCount.value || isNaN(eventCount.value)) {
+				eventCount.value = "1";
+			} else {
+				eventCount.value = `${parseInt(eventCount.value) + 1}`;
+			}
+		}
+		document.getElementById("mi-event").addEventListener("ui5-token-delete", handleTokenDelete2);
+
+		document.getElementById("token-unique").addEventListener("paste", function (event) {
+			event.preventDefault();
+
+			let pastedText = (event.clipboardData || window.clipboardData).getData('text/plain');;
+
+			if (!pastedText) {
+				return;
+			}
+
+			let separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter(t => !!t);
+
+			if (separatedTexts.length === 1) {
+				event.target.value = separatedTexts[0];
+				return;
+			}
+
+			separatedTexts.forEach((tokenText) => {
+				if (tokenText) {
+					event.target.appendChild(createTokenFromText(tokenText));
+				}
+			})
+		});
+
+		document.getElementById("token-unique").addEventListener("ui5-change", function (event) {
+			if (!event.target.value) {
+				return;
+			}
+
+			var isDuplicate = event.target.tokens.some(function(token) {
+				return token.text === event.target.value
+			});
+
+			if (isDuplicate) {
+				event.target.valueState = "Negative";
+
+				setTimeout(function () {
+					event.target.valueState = "None";
+				}, 2000);
+
+				return;
+			}
+
+			event.target.appendChild(createTokenFromText(event.target.value));
+
+			event.target.value = "";
+		});
+
+		document
+			.getElementById("token-unique")
+			.addEventListener("ui5-value-help-trigger", function (event) {
+				event.target.open = true;
+			});
+
+		document.getElementById("add-single-token").addEventListener("click", event => {
+			const token = document.createElement('ui5-token');
+			const multiInput = document.createElement('ui5-multi-input');
+
+			multiInput.setAttribute("id", "added-mi");
+
+			token.setAttribute('text', "test");
+			token.setAttribute('slot', 'tokens');
+
+			document.getElementById("token-samples").appendChild(multiInput);
+
+			multiInput.appendChild(token);
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,488 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "@ui5/webcomponents-ai",
+  "version": "2.20.0-rc.0",
+  "description-markup": "markdown",
+  "contributions": {
+    "html": {
+      "elements": [
+        {
+          "name": "ui5-ai-button",
+          "description": "### Overview\n\nThe `ui5-ai-button` component serves as a button for AI-related scenarios. Users can trigger actions by clicking or tapping the `ui5-ai-button`\nor by pressing keyboard keys like [Enter] or [Space].\n\n### Usage\n\nFor the `ui5-ai-button` user interface, you can define one or more button states by placing `ui5-ai-button-state` components in their default slot.\nEach state has a name for identification and can include text, an icon, and an end icon, as needed for its purpose.\nYou can define a split mode for the `ui5-ai-button`, which will results in displaying an arrow button for additional actions.\n\nYou can choose from a set of predefined designs for `ui5-ai-button` (as in `ui5-button`) to match the desired styling.\n\nThe `ui5-ai-button` can be activated by clicking or tapping it. You can change the button state in the click event handler. When the button is\nin split mode, you can activate the default button action by clicking or tapping it, or by pressing keyboard keys like [Enter] or [Space].\nYou can activate the arrow button by clicking or tapping it, or by pressing keyboard keys like [Arrow Up], [Arrow Down], or [F4].\nTo display additional actions, you can attach a menu to the arrow button.\n\n### ES6 Module Import\n\n`import \"@ui5/webcomponents-ai/dist/Button.js\";`\n---\n\n\n### **Events:**\n - **click** - Fired when the component is activated either with a\nmouse/tap or by using the Enter or Space key.\n- **arrow-button-click** - Fired when the component is in split mode and after the arrow button\nis activated either by clicking or tapping it or by using the [Arrow Up] / [Arrow Down],\n[Alt] + [Arrow Up]/ [Arrow Down], or [F4] keyboard keys.\n\n### **Slots:**\n - **default** - Defines the available states of the component.\n**Note:** Although this slot accepts HTML Elements, it is strongly recommended that\nyou only use `ui5-ai-button-state` components in order to preserve the intended design.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "design",
+              "description": "Defines the component design.",
+              "value": {
+                "type": "\"Default\" | \"Positive\" | \"Negative\" | \"Transparent\" | \"Emphasized\" | \"Attention\" | undefined",
+                "default": "\"Default\""
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "Defines whether the component is disabled.\nA disabled component can't be pressed or\nfocused, and it is not in the tab chain.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "state",
+              "description": "Defines the current state of the component.",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "arrow-button-pressed",
+              "description": "Defines the active state of the arrow button in split mode.\nSet to true when the button is in split mode and a menu with additional options\nis opened by the arrow button. Set back to false when the menu is closed.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "accessibility-attributes",
+              "description": "Defines the additional accessibility attributes that will be applied to the component.\n\nThis property allows for fine-tuned control of ARIA attributes for screen reader support.\nIt accepts an object with the following optional fields:\n\n- **root**: Accessibility attributes that will be applied to the root element.\n - **hasPopup**: Indicates the availability and type of interactive popup element (such as a menu or dialog).\n   Accepts string values: `\"dialog\"`, `\"grid\"`, `\"listbox\"`, `\"menu\"`, or `\"tree\"`.\n - **roleDescription**: Defines a human-readable description for the button's role.\n   Accepts any string value.\n - **title**: Specifies a tooltip or description for screen readers.\n   Accepts any string value.\n- **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or focus the button.\n\n- **arrowButton**: Accessibility attributes that will be applied to the arrow (split) button element.\n - **hasPopup**: Indicates the type of popup triggered by the arrow button.\n   Accepts string values: `\"dialog\"`, `\"grid\"`, `\"listbox\"`, `\"menu\"`, or `\"tree\"`.\n - **expanded**: Indicates whether the popup controlled by the arrow button is currently expanded.\n   Accepts boolean values: `true` or `false`.",
+              "value": {
+                "type": "AIButtonAccessibilityAttributes",
+                "default": "{}"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "Defines the available states of the component.\n**Note:** Although this slot accepts HTML Elements, it is strongly recommended that\nyou only use `ui5-ai-button-state` components in order to preserve the intended design."
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "description": "Fired when the component is activated either with a\nmouse/tap or by using the Enter or Space key."
+            },
+            {
+              "name": "arrow-button-click",
+              "description": "Fired when the component is in split mode and after the arrow button\nis activated either by clicking or tapping it or by using the [Arrow Up] / [Arrow Down],\n[Alt] + [Arrow Up]/ [Arrow Down], or [F4] keyboard keys."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "design",
+                "description": "Defines the component design.",
+                "value": {
+                  "type": "\"Default\" | \"Positive\" | \"Negative\" | \"Transparent\" | \"Emphasized\" | \"Attention\" | undefined"
+                }
+              },
+              {
+                "name": "disabled",
+                "description": "Defines whether the component is disabled.\nA disabled component can't be pressed or\nfocused, and it is not in the tab chain.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "state",
+                "description": "Defines the current state of the component.",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "arrow-button-pressed",
+                "description": "Defines the active state of the arrow button in split mode.\nSet to true when the button is in split mode and a menu with additional options\nis opened by the arrow button. Set back to false when the menu is closed.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "accessibility-attributes",
+                "description": "Defines the additional accessibility attributes that will be applied to the component.\n\nThis property allows for fine-tuned control of ARIA attributes for screen reader support.\nIt accepts an object with the following optional fields:\n\n- **root**: Accessibility attributes that will be applied to the root element.\n - **hasPopup**: Indicates the availability and type of interactive popup element (such as a menu or dialog).\n   Accepts string values: `\"dialog\"`, `\"grid\"`, `\"listbox\"`, `\"menu\"`, or `\"tree\"`.\n - **roleDescription**: Defines a human-readable description for the button's role.\n   Accepts any string value.\n - **title**: Specifies a tooltip or description for screen readers.\n   Accepts any string value.\n- **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or focus the button.\n\n- **arrowButton**: Accessibility attributes that will be applied to the arrow (split) button element.\n - **hasPopup**: Indicates the type of popup triggered by the arrow button.\n   Accepts string values: `\"dialog\"`, `\"grid\"`, `\"listbox\"`, `\"menu\"`, or `\"tree\"`.\n - **expanded**: Indicates whether the popup controlled by the arrow button is currently expanded.\n   Accepts boolean values: `true` or `false`.",
+                "value": { "type": "AIButtonAccessibilityAttributes" }
+              }
+            ],
+            "events": [
+              {
+                "name": "click",
+                "description": "Fired when the component is activated either with a\nmouse/tap or by using the Enter or Space key."
+              },
+              {
+                "name": "arrow-button-click",
+                "description": "Fired when the component is in split mode and after the arrow button\nis activated either by clicking or tapping it or by using the [Arrow Up] / [Arrow Down],\n[Alt] + [Arrow Up]/ [Arrow Down], or [F4] keyboard keys."
+              }
+            ]
+          }
+        },
+        {
+          "name": "ui5-ai-button-state",
+          "description": "### Overview\n\n`ui5-ai-button-state` is the item to use for defining states of `ui5-ai-button` components.\n\n### Usage\n\n`ui5-ai-button-state` is an abstract element, representing a state of `ui5-ai-button`. It is meant to be used in the `default` slot\nof `ui5-ai-button` and should not be used as standalone component.\n\n### ES6 Module Import\n\n`import \"@ui5/webcomponents/dist/AiButtonState.js\";`\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "Defines the name of the button state.",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "text",
+              "description": "Defines the text of the button in this state.",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "icon",
+              "description": "Defines the icon to be displayed as graphical element within the component before the text.\nThe SAP-icons font provides numerous options.\n\n**Example:**\n\nSee all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "end-icon",
+              "description": "Defines the icon to be displayed as graphical element within the component after the text.\nThe SAP-icons font provides numerous options.\n\n**Example:**\n\nSee all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "show-arrow-button",
+              "description": "Defines if the component is in split button mode.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "name",
+                "description": "Defines the name of the button state.",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "text",
+                "description": "Defines the text of the button in this state.",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "icon",
+                "description": "Defines the icon to be displayed as graphical element within the component before the text.\nThe SAP-icons font provides numerous options.\n\n**Example:**\n\nSee all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "end-icon",
+                "description": "Defines the icon to be displayed as graphical element within the component after the text.\nThe SAP-icons font provides numerous options.\n\n**Example:**\n\nSee all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "show-arrow-button",
+                "description": "Defines if the component is in split button mode.",
+                "value": { "type": "boolean" }
+              }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "ui5-ai-input",
+          "description": "### Overview\n\nThe `ui5-ai-input` component extends the standard `ui5-input` with **AI Writing Assistant** capabilities.\n\n### Structure\n\nThe `ui5-ai-input` consists of the following main parts:\n\n- **Input Field** – Inherits all standard Input behaviors.\n- **AI Action Button** – Appears when focused or loading, providing access to AI-related actions or stopping generation.\n\nThe component automatically determines which elements to render based on its internal state:\n- The AI Button is only shown when there are available `actions`.\n- The version navigation appears only when `totalVersions > 1`.\n\n### Keyboard Support\n\n- **Shift + F4** — Opens the AI menu.\n- **Ctrl + Shift + Z / Y** — Navigates backward/forward between AI-generated versions.\n\n### ES6 Module Import\n\n`import \"@ui5/webcomponents-ai/dist/Input.js\";`\n---\n\n\n### **Events:**\n - **button-click** - Fired when the user selects the AI button.\n- **item-click** - Fired when an item from the AI actions menu is clicked.\n- **stop-generation** - Fired when the user selects the \"Stop\" button to stop ongoing AI text generation.\n- **version-change** - Fired when the user selects the version navigation buttons.\n\n### **Slots:**\n - **actions** - Defines the items of the menu for the component.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "current-version",
+              "description": "Indicates the index of the currently displayed version.",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "total-versions",
+              "description": "Indicates the total number of result versions available.\n\nWhen not set or set to 0, the versioning will be hidden.",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "loading",
+              "description": "Defines whether the AI Writing Assistant is currently loading.\n\nWhen `true`, indicates that an AI action is in progress.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "actions",
+              "description": "Defines the items of the menu for the component."
+            }
+          ],
+          "events": [
+            {
+              "name": "button-click",
+              "description": "Fired when the user selects the AI button."
+            },
+            {
+              "name": "item-click",
+              "description": "Fired when an item from the AI actions menu is clicked."
+            },
+            {
+              "name": "stop-generation",
+              "description": "Fired when the user selects the \"Stop\" button to stop ongoing AI text generation."
+            },
+            {
+              "name": "version-change",
+              "description": "Fired when the user selects the version navigation buttons."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "current-version",
+                "description": "Indicates the index of the currently displayed version.",
+                "value": { "type": "number" }
+              },
+              {
+                "name": "total-versions",
+                "description": "Indicates the total number of result versions available.\n\nWhen not set or set to 0, the versioning will be hidden.",
+                "value": { "type": "number" }
+              },
+              {
+                "name": "loading",
+                "description": "Defines whether the AI Writing Assistant is currently loading.\n\nWhen `true`, indicates that an AI action is in progress.",
+                "value": { "type": "boolean" }
+              }
+            ],
+            "events": [
+              {
+                "name": "button-click",
+                "description": "Fired when the user selects the AI button."
+              },
+              {
+                "name": "item-click",
+                "description": "Fired when an item from the AI actions menu is clicked."
+              },
+              {
+                "name": "stop-generation",
+                "description": "Fired when the user selects the \"Stop\" button to stop ongoing AI text generation."
+              },
+              {
+                "name": "version-change",
+                "description": "Fired when the user selects the version navigation buttons."
+              }
+            ]
+          }
+        },
+        {
+          "name": "ui5-ai-prompt-input",
+          "description": "### Overview\n\nThe `ui5-ai-prompt-input` component allows the user to write custom instructions in natural language, so that AI is guided to generate content tailored to user needs.\n\n**Note:** The web component is in an experimental state\n\n### ES6 Module Import\n\n`import \"@ui5/webcomponents-ai/dist/PromptInput.js\"`\n---\n\n\n### **Events:**\n - **submit** - Fired when the input operation has finished by pressing Enter\nor AI button is clicked.\n- **input** - Fired when the value of the component changes at each keystroke,\nand when a suggestion item has been selected.\n- **change** - Fired when the input operation has finished by pressing Enter\nor on focusout.\n\n### **Slots:**\n - **default** - Defines the suggestion items.\n\n**Note:** The suggestions would be displayed only if the `showSuggestions`\nproperty is set to `true`.\n\n**Note:** The `<ui5-suggestion-item>`, `<ui5-suggestion-item-group>` and `ui5-suggestion-item-custom` are recommended to be used as suggestion items.\n- **valueStateMessage** - Defines the value state message that will be displayed as pop up under the component.\nThe value state message slot should contain only one root element.\n\n**Note:** If not specified, a default text (in the respective language) will be displayed.\n\n**Note:** The `valueStateMessage` would be displayed,\nwhen the component is in `Information`, `Critical` or `Negative` value state.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "value",
+              "description": "Defines the value of the component.",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "placeholder",
+              "description": "Defines a short hint intended to aid the user with data entry when the\ncomponent has no value.",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "label",
+              "description": "Defines the label of the input field.",
+              "value": { "type": "string | undefined", "default": "undefined" }
+            },
+            {
+              "name": "show-clear-icon",
+              "description": "Defines whether the clear icon of the input will be shown.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "show-exceeded-text",
+              "description": "Determines whether the characters exceeding the maximum allowed character count are visible\nin the component.\n\nIf set to `false`, the user is not allowed to enter more characters than what is set in the\n`maxlength` property.\nIf set to `true` the characters exceeding the `maxlength` value are selected on\npaste and the counter below the component displays their number.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Defines whether the component is in disabled state.\n\n**Note:** A disabled component is completely noninteractive.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "readonly",
+              "description": "Defines whether the component is read-only.\n\n**Note:** A read-only component is not editable,\nbut still provides visual feedback upon user interaction.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "maxlength",
+              "description": "Sets the maximum number of characters available in the input field.",
+              "value": { "type": "number | undefined", "default": "undefined" }
+            },
+            {
+              "name": "value-state",
+              "description": "Defines the value state of the component.",
+              "value": {
+                "type": "\"Positive\" | \"Negative\" | \"None\" | \"Critical\" | \"Information\"",
+                "default": "\"None\""
+              }
+            },
+            {
+              "name": "show-suggestions",
+              "description": "Defines whether the component should show suggestions, if such are present.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "Defines the suggestion items.\n\n**Note:** The suggestions would be displayed only if the `showSuggestions`\nproperty is set to `true`.\n\n**Note:** The `<ui5-suggestion-item>`, `<ui5-suggestion-item-group>` and `ui5-suggestion-item-custom` are recommended to be used as suggestion items."
+            },
+            {
+              "name": "valueStateMessage",
+              "description": "Defines the value state message that will be displayed as pop up under the component.\nThe value state message slot should contain only one root element.\n\n**Note:** If not specified, a default text (in the respective language) will be displayed.\n\n**Note:** The `valueStateMessage` would be displayed,\nwhen the component is in `Information`, `Critical` or `Negative` value state."
+            }
+          ],
+          "events": [
+            {
+              "name": "submit",
+              "description": "Fired when the input operation has finished by pressing Enter\nor AI button is clicked."
+            },
+            {
+              "name": "input",
+              "description": "Fired when the value of the component changes at each keystroke,\nand when a suggestion item has been selected."
+            },
+            {
+              "name": "change",
+              "description": "Fired when the input operation has finished by pressing Enter\nor on focusout."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "value",
+                "description": "Defines the value of the component.",
+                "value": { "type": "string" }
+              },
+              {
+                "name": "placeholder",
+                "description": "Defines a short hint intended to aid the user with data entry when the\ncomponent has no value.",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "label",
+                "description": "Defines the label of the input field.",
+                "value": { "type": "string | undefined" }
+              },
+              {
+                "name": "show-clear-icon",
+                "description": "Defines whether the clear icon of the input will be shown.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "show-exceeded-text",
+                "description": "Determines whether the characters exceeding the maximum allowed character count are visible\nin the component.\n\nIf set to `false`, the user is not allowed to enter more characters than what is set in the\n`maxlength` property.\nIf set to `true` the characters exceeding the `maxlength` value are selected on\npaste and the counter below the component displays their number.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "disabled",
+                "description": "Defines whether the component is in disabled state.\n\n**Note:** A disabled component is completely noninteractive.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "readonly",
+                "description": "Defines whether the component is read-only.\n\n**Note:** A read-only component is not editable,\nbut still provides visual feedback upon user interaction.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "maxlength",
+                "description": "Sets the maximum number of characters available in the input field.",
+                "value": { "type": "number | undefined" }
+              },
+              {
+                "name": "value-state",
+                "description": "Defines the value state of the component.",
+                "value": {
+                  "type": "\"Positive\" | \"Negative\" | \"None\" | \"Critical\" | \"Information\""
+                }
+              },
+              {
+                "name": "show-suggestions",
+                "description": "Defines whether the component should show suggestions, if such are present.",
+                "value": { "type": "boolean" }
+              }
+            ],
+            "events": [
+              {
+                "name": "submit",
+                "description": "Fired when the input operation has finished by pressing Enter\nor AI button is clicked."
+              },
+              {
+                "name": "input",
+                "description": "Fired when the value of the component changes at each keystroke,\nand when a suggestion item has been selected."
+              },
+              {
+                "name": "change",
+                "description": "Fired when the input operation has finished by pressing Enter\nor on focusout."
+              }
+            ]
+          }
+        },
+        {
+          "name": "ui5-ai-textarea",
+          "description": "### Overview\n\nThe `ui5-ai-textarea` component extends the standard TextArea with Writing Assistant capabilities.\nIt provides AI-powered text generation, editing suggestions, and version management functionality.\n\n### Structure\nThe `ui5-ai-textarea` consists of the following elements:\n- TextArea: The main text input area with all standard textarea functionality\n- WritingAssistant: Dedicated toolbar containing:\n  - Versioning: A component with left/right navigation buttons and a label for browsing AI-generated versions\n  - AI Button: Opens a menu that can be extended with custom AI generation options through slotting\n\n### ES6 Module Import\n\n`import \"@ui5/webcomponents-ai/dist/TextArea.js\";`\n---\n\n\n### **Events:**\n - **version-change** - Fired when the user clicks on version navigation buttons.\n- **stop-generation** - Fired when the user requests to stop AI text generation.\n\n### **Slots:**\n - **menu** - Defines a slot for `ui5-menu` integration. This slot allows you to pass a `ui5-menu` instance that will be associated with the assistant.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "loading",
+              "description": "Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "prompt-description",
+              "description": "Defines the prompt description of the current action.",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "current-version",
+              "description": "Indicates the index of the currently displayed version.",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "total-versions",
+              "description": "Indicates the total number of result versions available.\n\nNotes:\nVersioning is hidden if the value is `0`",
+              "value": { "type": "number", "default": "0" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "menu",
+              "description": "Defines a slot for `ui5-menu` integration. This slot allows you to pass a `ui5-menu` instance that will be associated with the assistant."
+            }
+          ],
+          "events": [
+            {
+              "name": "version-change",
+              "description": "Fired when the user clicks on version navigation buttons."
+            },
+            {
+              "name": "stop-generation",
+              "description": "Fired when the user requests to stop AI text generation."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "loading",
+                "description": "Defines whether the `ui5-ai-textarea` is currently in a loading(processing) state.",
+                "value": { "type": "boolean" }
+              },
+              {
+                "name": "prompt-description",
+                "description": "Defines the prompt description of the current action.",
+                "value": { "type": "string" }
+              },
+              {
+                "name": "current-version",
+                "description": "Indicates the index of the currently displayed version.",
+                "value": { "type": "number" }
+              },
+              {
+                "name": "total-versions",
+                "description": "Indicates the total number of result versions available.\n\nNotes:\nVersioning is hidden if the value is `0`",
+                "value": { "type": "number" }
+              }
+            ],
+            "events": [
+              {
+                "name": "version-change",
+                "description": "Fired when the user clicks on version navigation buttons."
+              },
+              {
+                "name": "stop-generation",
+                "description": "Fired when the user requests to stop AI text generation."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "css": {
+      "properties": [],
+      "pseudo-elements": []
+    }
+  }
+}

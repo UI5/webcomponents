@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Button</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN",
+			"noConflict": {
+				"events": ["click"]
+			},
+			"calendarType": "Islamic"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DialogLifecycle-C9elY4IX.css">
+</head>
+
+<body class="dialoglifecycle1auto">
+
+<ui5-button id="openDialogButton">Open Dialog</ui5-button>
+<br />
+
+<template id="dt">
+	<ui5-dialog id="hello-dialog" header-text="Dialogs are easy!">
+		<div class="dialoglifecycle2auto">
+			Hello World!
+			<ui5-button id="closeDialogButton">Dismiss</ui5-button>
+		</div>
+	</ui5-dialog>
+</template>
+
+<script>
+	const openBtn = document.getElementById("openDialogButton");
+	openBtn.addEventListener("click", () => {
+		const clone = document.getElementById("dt").content.cloneNode(true);
+		document.body.appendChild(clone);
+		const dialog = document.getElementById("hello-dialog");
+		const closeBtn = dialog.querySelector("#closeDialogButton");
+		closeBtn.addEventListener("click", () => {
+			dialog.addEventListener("ui5-close", () => {
+				dialog.parentElement.removeChild(dialog);
+			});
+			dialog.open = false;
+		});
+
+		document.body.appendChild(dialog);
+		dialog.open = true;
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tree Drag and Drop</title>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/List-DKC_b0Qb.css">
+</head>
+
+<body class="tree1auto">
+	<ui5-checkbox id="reorder" text="Movable items" checked></ui5-checkbox>
+	<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+	<a id="link" href="http://sap.com" draggable="true">http://sap.com</a>
+
+	<section>
+		<h2>Drag and drop</h2>
+		<ui5-tree id="tree" no-data-text="No data" mode="MultiSelect" accessible-name="Tree with accessibleName">
+	
+			<ui5-tree-item movable text="Tree 1" icon="paste" additional-text="Available" indeterminate selected additional-text-state="Information" accessible-name="Tree item with accessibleName">
+				<ui5-title slot="content"> 
+					<ui5-label>Tree 1</ui5-label>
+					<ui5-label>Tree 1</ui5-label>
+				</ui5-title>
+	
+				<ui5-tree-item movable expanded text="Tree 1.1" additional-text="Re-stock" additional-text-state="Negative" indeterminate selected>
+					<ui5-tree-item movable text="Tree 1.1.1" additional-text="Required" additional-text-state="Critical" selected></ui5-tree-item>
+					<ui5-tree-item movable text="Tree 1.1.2" additional-text="Available" additional-text-state="Positive"></ui5-tree-item>
+				</ui5-tree-item>
+			</ui5-tree-item>
+	
+			<ui5-tree-item movable data-allows-nesting text="Tree 2 ALLOWS NESTING" icon="copy">
+				<ui5-tree-item movable id="firstCollapsedItem" text="Tree 2.1">
+					<ui5-tree-item movable text="Tree 2.1.1"></ui5-tree-item>
+					<ui5-tree-item movable text="Tree 2.1.2">
+						<ui5-tree-item movable text="Tree 2.1.2.1"></ui5-tree-item>
+						<ui5-tree-item movable text="Tree 2.1.2.2"></ui5-tree-item>
+						<ui5-tree-item movable text="Tree 2.1.2.3"></ui5-tree-item>
+						<ui5-tree-item movable text="Tree 2.1.2.5"></ui5-tree-item>
+					</ui5-tree-item>
+				</ui5-tree-item>
+				<ui5-tree-item movable text="Tree 2.2"></ui5-tree-item>
+				<ui5-tree-item movable text="Tree 2.3"></ui5-tree-item>
+			</ui5-tree-item>
+	
+			<ui5-tree-item movable text="Tree 3 (no icon)">
+			</ui5-tree-item>
+	
+		</ui5-tree>
+	</section>
+
+	<script>
+		const tree1 = document.getElementById("tree");
+		const handleBeforeItemMove = (e) => {
+			const { destination, source } = e.detail;
+
+			if (destination.placement === "Before" || destination.placement === "After") {
+				e.preventDefault();
+			}
+
+			if (destination.placement === "On" && "allowsNesting" in destination.element.dataset) {
+				e.preventDefault();
+			}
+
+			console.log(`Moving "${source.element.text}" ${destination.placement.toLowerCase()} "${destination.element.text}"`);
+		};
+	
+		const tree1HandleMoveOver = (e) => {
+			const { destination, source } = e.detail;
+
+			if (!tree1.contains(source.element)) {
+				return;
+			}
+
+			handleBeforeItemMove(e);
+		};
+
+		const handleMove = (e) => {
+			const { destination, source } = e.detail;
+
+			switch (destination.placement) {
+				case "Before":
+					destination.element.before(source.element);
+					break;
+				case "After":
+					destination.element.after(source.element);
+					break;
+				case "On":
+					destination.element.prepend(source.element);
+					break;
+			}
+		};
+
+		tree1.addEventListener("ui5-move-over", tree1HandleMoveOver);
+		tree1.addEventListener("ui5-move", handleMove);
+
+		const densityCb = document.getElementById("density");
+		densityCb.addEventListener("ui5-change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		const reorderCb = document.getElementById("reorder");
+		reorderCb.addEventListener("ui5-change", e => {
+			tree1.items.forEach((item) => item.movable = e.target.checked);
+		});
+	</script>
+</body>
+
+</html>

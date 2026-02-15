@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>StepInput test page</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+                "firstDayOfWeek": 0
+            }
+		}
+	</script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/StepInput-BB4cYkWk.css">
+</head>
+<body class="stepinput1auto">
+	<h3> StepInput</h3>
+	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
+
+	 <div>
+		<h3>StepInput in Cozy</h3>
+		<ui5-step-input id="stepInputCozy"
+			placeholder="Enter number"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div class="sapUiSizeCompact">
+		<h3>StepInput in Compact</h3>
+		<ui5-step-input id="stepInputCompact"
+			placeholder="Enter number"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput in with min=0, max=10 and step=1</h3>
+		<ui5-step-input id="stepInputMinMax"
+			placeholder="Enter number"
+			min="0"
+			max="10"
+			step="1"
+			class="stepinput2auto"
+		>
+			<div slot="valueStateMessage" class="stepinput3auto">Wrong Value</div>
+		</ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput in with min=0, max=10, step=0.05 and valuePrecision=2</h3>
+		<ui5-step-input id="stepInputPrecision"
+			placeholder="Enter number"
+			min="0"
+			max="10"
+			step="0.05"
+			value-precision="2"
+			class="stepinput4auto"
+			>
+			<div slot="valueStateMessage" class="stepinput3auto">Wrong Value</div>
+		</ui5-step-input>
+	</div>
+
+	<div>
+		<h3>Disabled StepInput</h3>
+		<ui5-step-input id="stepInputDisabled"
+			placeholder="Enter number"
+			class="stepinput2auto"
+			disabled
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>Readonly StepInput</h3>
+		<ui5-step-input id="stepInputReadOnly"
+			placeholder="Enter number"
+			class="stepinput2auto"
+			readonly
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueStateChange Prevented</h3>
+		<ui5-step-input id="stepInputValueStateChange"
+			placeholder="Enter number"
+			value-state="Negative"
+			class="stepinput2auto"
+		>
+			<div slot="valueStateMessage" class="stepinput3auto">Tsanislav Gatev wrote this message so it can be long enough so we can test if wraps</div></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueState=None</h3>
+		<ui5-step-input id="stepInputNone"
+			placeholder="Enter number"
+			value-state="None"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueState=Positive</h3>
+		<ui5-step-input id="stepInputSuccess"
+			placeholder="Enter number"
+			value-state="Positive"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueState=Information</h3>
+		<ui5-step-input id="stepInputInformation"
+			placeholder="Enter number"
+			value-state="Information"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueState=Warning</h3>
+		<ui5-step-input id="stepInputWarning"
+			placeholder="Enter number"
+			value-state="Critical"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput with valueState=Negative</h3>
+		<ui5-step-input id="stepInputError"
+			placeholder="Enter number"
+			value-state="Negative"
+			class="stepinput2auto"
+		></ui5-step-input>
+	</div>
+
+	<div>
+		<h3>StepInput change event test</h3>
+		<ui5-step-input id="stepInputChange1"
+			class="stepinput2auto"
+			value="1"
+			min="1"
+			step="1000"
+		></ui5-step-input>
+		<ui5-step-input id="stepInputChange2"
+			class="stepinput2auto"
+			value="1000"
+			min="1"
+			step="1000"
+		></ui5-step-input>
+	</div>
+
+	<h3> 'input' event prevented</h3>
+	<ui5-step-input id="stepInputPreventedInput"
+		class="stepinput2auto"
+	></ui5-step-input>
+
+	<h3> 'change' event result</h3>
+	<ui5-input id="changeResult"></ui5-input>
+	<div>	
+		<h3>StepInput with large value and precision (thousands separator)</h3>
+		<ui5-step-input
+			class="stepinput2auto"
+			value="10000"
+			value-precision="2">
+		</ui5-step-input>
+	</div>
+
+	<section>
+			<h3>Form validation</h3>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-step-input
+					min="5"
+					max="10"
+					step="0.05"
+					value-precision="2"
+					required
+					id="formStepInput"></ui5-step-input>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+
+	<script>
+		const labelChange = document.getElementById('myLabelChange');
+		const siCozy = document.getElementById('stepInputCozy');
+		const siCompact = document.getElementById('stepInputCompact');
+		const siMinMax = document.getElementById('stepInputMinMax');
+		const siPrecision = document.getElementById('stepInputPrecision');
+		const changeResult = document.getElementById('changeResult');
+		const preventedInput = document.getElementById('stepInputPreventedInput');
+		let changeCount = 0;
+		const displayChange = function (event) {
+			labelChange.innerHTML = "Event [change] :: [" + event.target.id + " ] :: " + event.target.value;
+			changeCount++;
+			changeResult.value = `${changeCount}`;
+		};
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formStepInput = document.getElementById('formStepInput');
+
+		siCozy.addEventListener('ui5-change', displayChange);
+		siCompact.addEventListener('ui5-change', displayChange);
+		siMinMax.addEventListener('ui5-change', displayChange);
+		siPrecision.addEventListener('ui5-change', displayChange);
+
+		stepInputChange1.addEventListener('ui5-change', function(e) {
+			const val = Number.parseInt(e.target.value, 10);
+			stepInputChange2.value = val + 999;
+			displayChange(e);
+		});
+
+		stepInputChange2.addEventListener('ui5-change', displayChange);
+
+		stepInputValueStateChange.addEventListener("value-state-change", function(e) {
+			e.preventDefault();
+		});
+
+		preventedInput.addEventListener("input", function(e) {
+			e.preventDefault();
+		});
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formStepInput');
+		});
+
+		formStepInput.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formStepInput', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+	</script>
+
+</body>
+</html>

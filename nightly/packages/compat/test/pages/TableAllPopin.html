@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Web components Table</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+				{
+						"language": "EN"
+				}
+		</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-Dg_UKBlx.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/TableAllPopin-DYObW14S.css">
+</head>
+
+<body class="tableallpopin1auto">
+
+	<ui5-button id="beforeEl">Before element</ui5-button>
+	<ui5-table class="demo-table" id="tbl">
+		<!-- Columns -->
+		<ui5-table-column class="title-column" slot="columns">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="supplier-column" slot="columns" min-width="1024" popin-text="Supplier" demand-popin>
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="dim-column" slot="columns" min-width="800" popin-text="Dimensions" demand-popin>
+			<div class="column-content">
+				<ui5-label>Dimensions</ui5-label>
+			</div>
+		</ui5-table-column>
+
+		<ui5-table-column class="weight-column" slot="columns" min-width="640" popin-text="Weight" demand-popin>
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="price-column" slot="columns">
+			<ui5-label>Price</ui5-label>
+		</ui5-table-column>
+
+
+		<ui5-table-row id="row1">
+			<ui5-table-cell class="title-cell">Notebook Basic 15</ui5-table-cell>
+			<ui5-table-cell><ui5-link href="#" id="focusedEl">I'm focus</ui5-link></ui5-table-cell>
+			<ui5-table-cell>30 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.2 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="row2">
+			<ui5-table-cell class="title-cell">Notebook Basic 17</ui5-table-cell>
+			
+			<ui5-table-cell><ui5-link href="#">I'm focus</ui5-link></ui5-table-cell>
+			<ui5-table-cell>40 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.6 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">1956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="row3">
+			<ui5-table-cell class="title-cell">Notebook Basic 19</ui5-table-cell>
+			
+			<ui5-table-cell><ui5-link href="#">I'm focus</ui5-link></ui5-table-cell>
+			<ui5-table-cell>50 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.9 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">2956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+	</ui5-table>
+	<ui5-button id="afterEl">After element</ui5-button>
+
+	<br>
+	<br>
+	<br>
+
+	<ui5-table class="demo-table" id="tbl2" mode="SingleSelect">
+		<!-- Columns -->
+		<ui5-table-column slot="columns" style="width: 12rem">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" min-width="800" popin-text="Supplier">
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" demand-popin min-width="600" popin-text="Dimensions">
+			<ui5-label>Dimensions</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns" demand-popin min-width="600" popin-text="Weight">
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+		<ui5-table-column slot="columns">
+			<ui5-label></ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-row>
+			<ui5-table-cell>
+				<ui5-input id="interactive"></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input id="input-second-focused"></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button icon="delete" id="btn-focused"></ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-input></ui5-input>
+			</ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-button icon="delete"></ui5-button>
+			</ui5-table-cell>
+		</ui5-table-row>
+
+	</ui5-table>
+
+	<ui5-table class="demo-table" id="tblPopinDisplay">
+		<!-- Columns -->
+		<ui5-table-column class="title-column" slot="columns" min-width="640" popin-text="Product" demand-popin popin-display="Inline">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="supplier-column" slot="columns" min-width="1024" popin-text="Supplier" demand-popin popin-display="Inline">
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-row id="row1_1">
+			<ui5-table-cell><ui5-input show-clear-icon value="Input"></ui5-input></ui5-table-cell>
+			<ui5-table-cell>
+				<ui5-avatar>
+					<img src="/webcomponents/nightly/assets/woman_avatar_5-C3UK-oZV.png" alt="Woman 1">
+				</ui5-avatar></ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="row2_1">
+			<ui5-table-cell><ui5-button design="Default">Default</ui5-button></ui5-table-cell>
+			<ui5-table-cell><ui5-icon name="activate"></ui5-icon></ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+	<br>
+	<br>
+	<br>
+
+	<h2>SingleSelect table (click on an item to set as navigated)</h2>
+	<ui5-table class="demo-table" mode="SingleSelect" id="tbl3">
+		<!-- Columns -->
+		<ui5-table-column class="title-column" slot="columns">
+			<ui5-label>Product</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="supplier-column" slot="columns" min-width="1024" popin-text="Supplier" demand-popin>
+			<ui5-label>Supplier</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="dim-column" slot="columns" min-width="800" popin-text="Dimensions" demand-popin>
+			<div class="column-content">
+				<ui5-label>Dimensions</ui5-label>
+			</div>
+		</ui5-table-column>
+
+		<ui5-table-column class="weight-column" slot="columns" min-width="640" popin-text="Weight" demand-popin>
+			<ui5-label>Weight</ui5-label>
+		</ui5-table-column>
+
+		<ui5-table-column class="price-column" slot="columns">
+			<ui5-label>Price</ui5-label>
+		</ui5-table-column>
+
+
+		<ui5-table-row id="row1">
+			<ui5-table-cell class="title-cell">Notebook Basic 15</ui5-table-cell>
+			<ui5-table-cell>Very Best Screens</ui5-table-cell>
+			<ui5-table-cell>30 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.2 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="row2">
+			<ui5-table-cell class="title-cell">Notebook Basic 17</ui5-table-cell>
+			<ui5-table-cell>Very Best Screens</ui5-table-cell>
+			<ui5-table-cell>40 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.6 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">1956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+		<ui5-table-row id="row3">
+			<ui5-table-cell class="title-cell">Notebook Basic 19</ui5-table-cell>
+			<ui5-table-cell>Very Best Screens</ui5-table-cell>
+			<ui5-table-cell>50 x 18 x 3 cm</ui5-table-cell>
+			<ui5-table-cell>4.9 KG</ui5-table-cell>
+			<ui5-table-cell class="price-cell">2956 EUR</ui5-table-cell>
+		</ui5-table-row>
+
+	</ui5-table>
+
+	<script>
+		document.getElementById("tbl3").addEventListener("ui5-selection-change", function(event) {
+			if (event.detail.previouslySelectedRows.length) {
+				event.detail.previouslySelectedRows[0].removeAttribute("navigated");
+			}
+			event.detail.selectedRows[0].setAttribute("navigated", '');
+		});
+	</script>
+</body>
+
+</html>

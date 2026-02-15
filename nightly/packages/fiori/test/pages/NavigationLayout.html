@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Navigation Layout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/NavigationLayout-BnXYcZt9.css">
+</head>
+
+<body class="sidenavigation1auto">
+	<ui5-navigation-layout id="nl1">
+		<ui5-shellbar
+			slot="header"
+			secondary-title="The Best Run SAP"
+		>
+			<ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
+			<ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
+		</ui5-shellbar>
+		<ui5-side-navigation id="sn1" slot="sideContent">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home" href="#home" icon="home"></ui5-side-navigation-item>
+			<ui5-side-navigation-group text="Group 1" expanded>
+				<ui5-side-navigation-item text="Item 1" expanded href="#item1" icon="locate-me">
+					<ui5-side-navigation-sub-item text="Sub Item 1" href="#subitem1"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 2" href="#subitem2"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Item 2" href="#item2" icon="calendar" expanded>
+					<ui5-side-navigation-sub-item text="Sub Item 3" href="#subitem3"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 4" href="#subitem4"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Item 3" href="#item3" icon="activity-assigned-to-goal"></ui5-side-navigation-item>
+			</ui5-side-navigation-group>
+			<ui5-side-navigation-group text="Group 2" expanded>
+				<ui5-side-navigation-item text="Item 4" href="#item4" icon="history" expanded>
+					<ui5-side-navigation-sub-item text="Sub Item 5" href="#subitem5"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 6" href="#subitem6"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Item 5" href="#item5" icon="source-code" expanded>
+					<ui5-side-navigation-sub-item text="Sub Item 7" href="#subitem7"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 8" href="#subitem8"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Item 6" href="#item6" icon="background" expanded>
+					<ui5-side-navigation-sub-item text="Sub Item 9" href="#subitem9"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 10" href="#subitem10"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Item 7" href="#item7" icon="background" expanded>
+					<ui5-side-navigation-sub-item text="Sub Item 11" href="#subitem11"></ui5-side-navigation-sub-item>
+					<ui5-side-navigation-sub-item text="Sub Item 12" href="#subitem12"></ui5-side-navigation-sub-item>
+				</ui5-side-navigation-item>
+			</ui5-side-navigation-group>
+			<!-- Fixed Items -->
+			<ui5-side-navigation-item slot="fixedItems"
+								text="Legal"
+								href="https://www.sap.com/about/legal/impressum.html"
+								target="_blank"
+								icon="compare"></ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems"
+								text="Privacy"
+								href="https://www.sap.com/about/legal/privacy.html"
+								target="_blank"
+								icon="locked"></ui5-side-navigation-item>
+			<ui5-side-navigation-item slot="fixedItems"
+								text="Terms of Use"
+								href="https://www.sap.com/terms-of-use"
+								target="_blank"
+								icon="document-text"></ui5-side-navigation-item>
+		</ui5-side-navigation>
+		<div class="content">
+			<div id="contHome" class="contentItem contentItemVisible">
+				<ui5-checkbox id="rtlCb" text="rtl"></ui5-checkbox>
+				<h2>Home</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem1" class="contentItem">
+				<h2 >Item 1</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem2" class="contentItem">
+				<h2>Item 2</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem3" class="contentItem">
+				<h2>Item 3</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem4" class="contentItem">
+				<h2>Item 4</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem5" class="contentItem">
+				<h2>Item 5</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem6" class="contentItem">
+				<h2>Item 6</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contItem7" class="contentItem">
+				<h2>Item 7</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contSubitem1" class="contentItem">
+				<h2>Sub Item 1</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contSubitem2" class="contentItem">
+				<h2>Sub Item 2</h2>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			<div id="contSubitem3" class="contentItem">
+				<h2>Sub Item 3</h2>
+				<ui5-table id="table">
+					<ui5-table-selection-multi id="selection" slot="features" selected="Row1 Row3"></ui5-table-selection-multi>
+		<!-- playground-fold -->
+					<ui5-table-header-row slot="headerRow">
+						<ui5-table-header-cell id="produtCol" width="1fr"><span>Product</span></ui5-table-header-cell>
+						<ui5-table-header-cell id="supplierCol" width="1fr">Supplier</ui5-table-header-cell>
+						<ui5-table-header-cell id="dimensionsCol" width="1fr">Dimensions</ui5-table-header-cell>
+						<ui5-table-header-cell id="weightCol" width="1fr">Weight</ui5-table-header-cell>
+						<ui5-table-header-cell id="priceCol" width="1fr" horizontal-align="End">Price</ui5-table-header-cell>
+					</ui5-table-header-row>
+					<ui5-table-row row-key="Row1">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 15</b><br>HT-1000</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.2</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+					<ui5-table-row row-key="Row2">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 17</b><br>HT-1001</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>29 x 17 x 3.1 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>4.5</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+					<ui5-table-row row-key="Row3">
+						<ui5-table-cell><ui5-label><b>Notebook Basic 18</b><br>HT-1002</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>3.7</b> KG</ui5-label></ui5-table-cell>
+						<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+					</ui5-table-row>
+		<!-- playground-fold-end -->
+				</ui5-table>
+			</div>
+		</div>
+	</ui5-navigation-layout>
+
+	<script>
+		document.querySelector("#startButton").addEventListener("click", function (event) {
+			nl1.mode = nl1.isSideCollapsed() ? "Expanded" : "Collapsed";
+		});
+
+		document.querySelector("#sn1").addEventListener("selection-change", function (event) {
+			if (event.detail.item.getAttribute("target")) {
+				return;
+			}
+
+			const contentItems = document.querySelectorAll(".contentItem"),
+			divId = "cont" + event.detail.item.getAttribute("href").replace("#", "").charAt(0).toUpperCase() + event.detail.item.getAttribute("href").replace("#", "").slice(1);
+
+			contentItems.forEach(item => {
+				item.classList.remove("contentItemVisible");
+			});
+			document.getElementById(divId)?.classList.add("contentItemVisible");
+		});
+
+		rtlCb.addEventListener("ui5-change", function (e) {
+			nl1.setAttribute("dir", rtlCb.checked ? "rtl" : "")
+		});
+	</script>
+</body>
+</html>

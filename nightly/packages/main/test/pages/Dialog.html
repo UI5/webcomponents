@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Dialog</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Dialog-BGPpZ3q2.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<div>
+			<ui5-segmented-button id="theme-switch">
+				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon" selected>Morning</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_dark">Evening</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcb">HCB</ui5-segmented-button-item>
+				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcw">HCW</ui5-segmented-button-item>
+			</ui5-segmented-button>
+		</div>
+		<ui5-checkbox text="Compact size" id="cbCompact"></ui5-checkbox>
+		<ui5-checkbox text="Scrollable page" id="cbScrollable"></ui5-checkbox>
+		<br>
+		<br>
+		<ui5-button id="btnOpenDialogWithInput">Open Dialog with Input</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="btnOpenDialog">Open Stretched Dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="btnOpenDialogNoPaddings">Open Stretched Dialog - no paddings</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="btnOpenDialogWithAttr">Open with Attribute</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="message">Open Message Dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="prevent">Open Prevent closing Dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="modals-open">Open Multiple modals</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="empty-open">Open empty dialog (no focusable element)</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="wide-open">Open wide dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="wide-open2">Open wide dialog 2</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="draggable-open">Open draggable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="resizable-open">Open resizable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="resizable-rtl-open">Open resizable dialog in rtl with max-width</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="resizable-custom-header-open">Open resizable dialog with custom header</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="draggable-and-resizable-open">Open draggable & resizable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="rtl-draggable-and-resizable-open">Open RTL draggable & resizable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="rtl-maxwidth-resizable-open">Open RTL max-width resizable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="dynamic-open">Open dialog which is created dynamically</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="multiple-show">Open dialog calling ".open = true" multiple times</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="open-big-content">Open dialog with big content</ui5-button>
+	</div>
+	<ui5-block-layer></ui5-block-layer>
+
+	<ui5-dialog id="dialogInput" header-text="Dialog">
+		<ui5-input></ui5-input>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button design="Emphasized" id="btnCloseDialogWithInput">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="msg-dialog" header-text="Message dialog" class="dialog1auto">
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="dlgAttr">
+		<ui5-input></ui5-input>
+		<ui5-button id="btnCloseWithMethod">Close with Method</ui5-button>
+		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
+	</ui5-dialog>
+
+	<ui5-dialog id="dialog" accessible-name="Resizable" stretch>
+		<div slot="header">
+			<ui5-button id="header-button">focus stop</ui5-button>
+			<ui5-title level="H1" id="tt" level="H1">Resizable</ui5-title>
+
+		</div>
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select id="mySelect">
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea id="area" placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+
+		<div class="dialog3auto">
+			<ui5-title level="H1">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="btnCloseDialog">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="dialogNoPaddings" header-text="No content paddings" stretch class="noContentPaddingsDialog">
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select id="mySelect">
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea id="area" placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+
+		<div class="dialog3auto">
+			<ui5-title level="H3">Hello World!</ui5-title>
+		</div>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<ui5-textarea placeholder="Type some text" max-length="2" show-exceeded-text>
+		</ui5-textarea>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="btnCloseDialogNoPaddings">Close</ui5-button>
+		</div>
+
+	</ui5-dialog>
+
+
+	<ui5-dialog id="prevent-dialog" header-text="Message dialog">
+		<p>Prevent closing the dialog.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="confirm-dialog">
+		<p>Are you sure?</p>
+		<div>
+			<ui5-button id="yes">YES</ui5-button>
+			<ui5-button id="no">NO</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="wide-dialog" header-text="Wide dialog" class="dialog6auto">
+		<p>That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="wide-dialog2" header-text="Wide dialog" stretch class="dialog6auto">
+		<p>That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
+			That´s OpenUI5.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="draggable-dialog" accessible-name="Draggable" draggable>
+		<div id="tlt" slot="header"  class="dialog7auto">Draggable dialog header</div>
+
+		<p>Hint: Move this dialog around the screen by dragging it by its header or use the arrow keys.</p>
+		<p>This feature is available only on Desktop.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="draggable-close" design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="resizable-dialog" header-text="Resizable dialog header" resizable>
+		<p>Hint: Resize this dialog by dragging it by its resize handle or use shift+arrow keys.</p>
+		<p>This feature is available only on Desktop.</p>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="resizable-close" design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<div dir="rtl">
+		<ui5-dialog id="resizable-rtl-dialog" header-text="Resizable dialog header" resizable style="max-width: 300px;">
+			<p>Hint: Resize this dialog by dragging it by its resize handle or use shift+arrow keys.</p>
+			<p>This feature is available only on Desktop.</p>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="resizable-rtl-close" design="Emphasized">OK</ui5-button>
+			</div>
+		</ui5-dialog>
+	</div>
+
+	<ui5-dialog id="resizable-dialog-custom-header" resizable>
+		<div slot="header">
+			<ui5-title level="H1">Resizable dialog with custom Header</ui5-title>
+		</div>
+		<p>Content</p>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="resizable-custom-header-close" design="Emphasized">OK</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="draggable-and-resizable-dialog" header-text="Draggable & resizable dialog header" draggable resizable>
+		<p>Hint: Move this dialog around the screen by dragging it by its header or use the arrow keys.</p>
+		<p>Resize this dialog by dragging it by its resize handle or use shift+arrow keys.</p>
+		<p>This feature is available only on Desktop.</p>
+
+		<div slot="footer" class="dialogFooter tallFooter">
+			<ui5-button id="draggable-and-resizable-close" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<div dir="rtl">
+		<ui5-dialog id="rtl-draggable-and-resizable-dialog" header-text="Draggable/Resizable dialog" draggable resizable>
+			<p>Move this dialog around the screen by dragging it by its header.</p>
+			<p>Resize this dialog by dragging it by its resize handle.</p>
+			<p>These features are available only on Desktop.</p>
+			<ui5-toolbar slot="footer">
+				<ui5-toolbar-button id="rtl-draggable-and-resizable-close" design="Emphasized" text="OK"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-dialog>
+	</div>
+
+	<div dir="rtl">
+		<ui5-dialog  style="max-width: 500px" id="rtl-maxwidth-resizable-dialog" header-text="Draggable/Resizable dialog" draggable resizable>
+			<p>Move this dialog around the screen by dragging it by its header.</p>
+			<p>Resize this dialog by dragging it by its resize handle.</p>
+			<p>These features are available only on Desktop.</p>
+			<ui5-toolbar slot="footer">
+				<ui5-toolbar-button id="rtl-maxwidth-resizable-close" design="Emphasized" text="OK"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-dialog>
+	</div>
+
+	<ui5-popover header-text="My Heading" id="pop" class="dialog8auto" placement="Top">
+		<!-- <div slot="header">
+			Hello World
+		</div> -->
+
+		<ui5-list>
+			<ui5-li>Hello</ui5-li>
+			<ui5-li>World</ui5-li>
+			<ui5-li>Again</ui5-li>
+		</ui5-list>
+
+		<br>
+		<br>
+
+		<ui5-button id="dangerDialogBtn">Open Dialog</ui5-button>
+
+
+
+		<br>
+		<br>
+
+		<ui5-select>
+			<ui5-option>Hello</ui5-option>
+			<ui5-option>World</ui5-option>
+		</ui5-select>
+
+		<br>
+		<br>
+
+		<!-- <ui5-date-picker></ui5-date-picker> -->
+
+		<div slot="footer">
+			Hello World Footer
+		</div>
+	</ui5-popover>
+
+	<ui5-dialog placement="Bottom" id='danger'>
+		<ui5-list>
+			<ui5-li>Hello</ui5-li>
+			<ui5-li>World</ui5-li>
+			<ui5-li>Again</ui5-li>
+		</ui5-list>
+
+		<br>
+		<br>
+
+		<ui5-button id='bigDanger'>Super Danger !</ui5-button>
+
+
+	</ui5-dialog>
+
+	<ui5-popover id='bigDangerPop'>
+		<ui5-list>
+			<ui5-li>Hello</ui5-li>
+			<ui5-li>World</ui5-li>
+			<ui5-li>Again</ui5-li>
+		</ui5-list>
+	</ui5-popover>
+
+	<ui5-dialog id="empty-dialog">Empty</ui5-dialog>
+
+	<br>
+	<br>
+
+	<ui5-button id="btn-acc-name-ref">Dialog with accessibleNameRef</ui5-button>
+	<ui5-label id="label-acc-name-ref">Some label</ui5-label>
+	<ui5-dialog id="dialog-acc-name-ref" accessible-name-ref="label-acc-name-ref" stretch>
+		<div slot="header">
+			<ui5-title level="H1">Header</ui5-title>
+		</div>
+		<span>Hello World!</span>
+	</ui5-dialog>
+	<br>
+	<br>
+	<div>
+		<ui5-label>Focus circularity</ui5-label>
+		<ui5-button id="btn-focus-circ">Dialog focus circularity</ui5-button>
+		<ui5-dialog id="focus-circ">
+			<ui5-busy-indicator slot="header">
+				<ui5-button id="active-btn-1">1</ui5-button>
+			</ui5-busy-indicator>
+			<ui5-busy-indicator slot="footer">
+				<ui5-button id="active-btn-2">2</ui5-button>
+			</ui5-busy-indicator>
+		</ui5-dialog>
+	</div>
+		<div>
+			<ui5-label>Dialog states</ui5-label>
+		</div>
+		<ui5-button id="btn-error-state">Dialog with Error State</ui5-button>
+		<ui5-dialog id="dialog-error-state" state="Negative">
+			<div slot="header">
+				<ui5-title level="H1">Error</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-info-state">Dialog with Information State</ui5-button>
+		<ui5-dialog id="dialog-info-state" state="Information">
+			<div slot="header">
+				<ui5-title level="H1">Information</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-success-state">Dialog with Positive State</ui5-button>
+		<ui5-dialog id="dialog-success-state" state="Positive">
+			<div slot="header">
+				<ui5-title level="H1">Positive</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-warn-state">Dialog with Warning State</ui5-button>
+		<ui5-dialog id="dialog-warn-state" state="Critical">
+			<div slot="header">
+				<ui5-title level="H1">Warning</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+	</div>
+	<br>
+	<div>
+		<div>
+			<ui5-label>Dialog roles</ui5-label>
+		</div>
+		<ui5-button id="btn-role-default">Error State, no role set</ui5-button>
+		<ui5-dialog id="dialog-error-no-role" state="Negative">
+			<div slot="header">
+				<ui5-title level="H1">Error</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-role-alert">No State, 'AlertDialog' role set</ui5-button>
+		<ui5-dialog id="dialog-no-state-alert-role" accessible-role="AlertDialog">
+			<div slot="header">
+				<ui5-title level="H1">No state</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-role-none">Role 'None' set</ui5-button>
+		<ui5-dialog id="dialog-none-role" accessible-role="None">
+			<div slot="header">
+				<ui5-title level="H1">Role 'None'</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+		<ui5-button id="btn-role-alert-success-state">Positive State, 'AlertDialog' role set</ui5-button>
+		<ui5-dialog id="dialog-success-state-alert-role" state="Positive" accessible-role="AlertDialog">
+			<div slot="header">
+				<ui5-title level="H1">Positive</ui5-title>
+			</div>
+			<span>Hello World!</span>
+		</ui5-dialog>
+
+	</div>
+	<br>
+	<ui5-button id="dialogOverDialogBtn">Dialog over a Dialog</ui5-button>
+	<ui5-dialog id="dialogOverDialog1">
+		<div slot="header">
+			<ui5-title level="H1">Header 1</ui5-title>
+		</div>
+		<ui5-button id="dialogOverDialog1Btn">Open a new Dialog</ui5-button>
+	</ui5-dialog>
+	<ui5-dialog id="dialogOverDialog2">
+		<div slot="header">
+			<ui5-title level="H1">Header 2</ui5-title>
+		</div>
+		<ui5-button id="dialogOverDialog2Btn">Open a new Dialog</ui5-button>
+	</ui5-dialog>
+	<ui5-dialog id="dialogOverDialog3">
+		<div slot="header">
+			<ui5-title level="H1">Header 3</ui5-title>
+		</div>
+		<ui5-button id="dialogOverDialog3Btn">Close</ui5-button>
+	</ui5-dialog>
+	<br>
+	<!-- Sample when Dialog is created in order different than "header, content, footer" sequence -->
+	<ui5-button id="dialogFocus">Dialog Focus</ui5-button>
+	<ui5-dialog id="dialogFocus1">
+		<span>Some message</span>
+		<ui5-button id="fistButtonInDialog">Confirm</ui5-button>
+
+		<div slot="header">Header text</div>
+
+		<div slot="footer" class="dialog-footer">
+			<div style="flex: 1"></div>
+			<ui5-button id="closeDialogFocusButton" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button id="btnDialogBackground">Dialog Custom Background</ui5-button>
+	<ui5-dialog class="dialogCustomBackground" id="dialogBackground">
+		Some Dialog
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button id="btnDialogAutofocus">Dialog with autofocus</ui5-button>
+	<ui5-dialog header-text="Dialog" id="dialogAutofocus">
+		Some Dialog
+		<input />
+		<ui5-button autofocus id="btnDialogAutofocusClose">Close</ui5-button>
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button id="btnConfirmationDialog">Confirmation dialog with Toolbar</ui5-button>
+	<ui5-dialog id="confirmationDialog" draggable resizable header-text="Register Form">
+		<section style="display: flex;flex-direction: column;justify-content: space-evenly;	align-items: center;margin: 3rem 6rem;">
+			<div style="display: grid;width: 15rem;margin-bottom: .5rem;">
+				<ui5-label for="username" required show-colon>Username</ui5-label>
+				<ui5-input id="username"></ui5-input>
+			</div>
+			<div style="display: grid;width: 15rem;margin-bottom: .5rem;">
+				<ui5-label for="password" required show-colon>Password</ui5-label>
+				<ui5-input id="password" type="Password" value-state="Negative"></ui5-input>
+			</div>
+			<div style="display: grid;width: 15rem;margin-bottom: .5rem;">
+				<ui5-label for="email" type="Email" required show-colon>Email</ui5-label>
+				<ui5-input id="email"></ui5-input>
+			</div>
+			<div style="display: grid;width: 15rem;margin-bottom: .5rem;">
+				<ui5-label for="address" show-colon>Address</ui5-label>
+				<ui5-input id="address"></ui5-input>
+			</div>
+		</section>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				id="btnConfirmationDialogSubmit"
+				design="Emphasized"
+				text="SubmitSubmitSubmitSubmitSubmit"
+			>
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+				id="btnConfirmationDialogCancel"
+				text="CancelCancelCancelCancelCancelCancel"
+				design="Transparent"
+			>
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrRefDialog">Accessible Description Ref</ui5-button>
+	<ui5-dialog id="accessibleDescrRefDialog" draggable resizable header-text="Accessible dialog" accessible-description-ref="btnAccessibleDescrRefDialog">
+		<ui5-title level="H3">Hello World!</ui5-title>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				id="btnAccessibleDescrRefDialogSubmit"
+				design="Emphasized"
+				text="Close"
+			/>
+		</ui5-toolbar>
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button id="btnAccessibleDescrDialog">Accessible Description</ui5-button>
+	<ui5-dialog id="accessibleDescrDialog" draggable resizable header-text="Accessible dialog" accessible-description="Accessible Description">
+		<ui5-title level="H3">Hello World!</ui5-title>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				id="btnAccessibleDescrDialogSubmit"
+				design="Emphasized"
+				text="Close"
+			/>
+		</ui5-toolbar>
+	</ui5-dialog>
+	<br>
+	<br>
+	<ui5-button onclick="dialogWithTokenizer.open = true;">Open Dialog With Tokenizer</ui5-button>
+	<ui5-dialog id="dialogWithTokenizer" header-text="Tokens">
+		<ui5-tokenizer id="tokenizer">
+			<ui5-token text="Token 1"></ui5-token>
+			<ui5-token text="Token 2"></ui5-token>
+		</ui5-tokenizer>
+	</ui5-dialog>
+	<br>
+	<br>
+	<div>
+		<ui5-title level="H3">Open Dialog from list</ui5-title>
+		<ui5-list id="listContainerId" selection-mode="Single">
+			<ui5-li>Test1</ui5-li>
+			<ui5-li id="listContainerItemId">Test2</ui5-li>
+			<ui5-li>Test3</ui5-li>
+		</ui5-list>
+		<ui5-dialog id="listContainerDialogId">
+			<ui5-button id="listContainerDialogCloseBtnId">Close</ui5-button>
+		</ui5-dialog>
+		<script>
+			const listContainer = document.getElementById("listContainerId");
+			const listContainerDialog = document.getElementById("listContainerDialogId");
+			const listContainerDialogCloseBtn = document.getElementById("listContainerDialogCloseBtnId");
+
+			listContainer.addEventListener("ui5-selection-change", function (event) {
+				listContainerDialog.open = true;
+			});
+
+			listContainerDialogCloseBtn.addEventListener("click", function (event) {
+				listContainerDialog.open = false;
+			});
+		</script>
+	</div>
+
+	<div id="scrollHelper" class="dialog9scrollHelper">
+		<span>Scroll Helper</span>
+		<ui5-button id="scrolledBtn" class="scrolledBtn">open</ui5-button>
+	</div>
+
+	<ui5-dialog id="dlgBigContent" header-text="Register Form">
+		<section class="login-form">
+			<div>
+				<ui5-label for="username" required show-colon>Username</ui5-label>
+				<ui5-input id="username"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="password" required show-colon>Password</ui5-label>
+				<ui5-input id="password" type="Password" value-state="Negative"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="email" type="Email" required show-colon>Email</ui5-label>
+				<ui5-input id="email"></ui5-input>
+			</div>
+			<div>
+				<ui5-label for="address" show-colon>Address</ui5-label>
+				<ui5-input id="address"></ui5-input>
+			</div>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+			<ui5-input></ui5-input>
+			<ui5-button>Button</ui5-button>
+		</section>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+				design="Emphasized"
+				text="Submit"
+			>
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+				design="Transparent"
+				text="Cancel"
+			>
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+	</ui5-dialog>
+
+	<script>
+		cbCompact.addEventListener("ui5-change", function () {
+			document.body.classList.toggle("ui5-content-density-compact", cbCompact.checked);
+		});
+
+		cbScrollable.addEventListener("ui5-change", function () {
+			scrollHelper.style.display = cbScrollable.checked ? "block" : "none";
+		});
+
+		let preventClosing = true;
+
+		btnOpenDialog.addEventListener("click", function () {
+			dialog.open = true;
+		});
+
+		btnOpenDialogWithInput.addEventListener("click", function () {
+			dialogInput.open = true;
+		});
+
+		btnCloseDialogWithInput.addEventListener("click", function () {
+			dialogInput.open = false;
+		});
+
+		const focusCirBtn = document.getElementById("btn-focus-circ");
+		const focusCircDialog = document.getElementById("focus-circ");
+
+		focusCirBtn.addEventListener("click", function () {
+			focusCircDialog.open = true;
+		});
+
+		btnOpenDialogNoPaddings.addEventListener("click", function () {
+			window["dialogNoPaddings"].open = true;
+		});
+
+		btnCloseDialog.addEventListener("click", function () {
+			dialog.open = false;
+		});
+
+		btnOpenDialogWithAttr.addEventListener("click", function () {
+			dlgAttr.setAttribute("open", "");
+		});
+
+		btnCloseWithMethod.addEventListener("click", function () {
+			dlgAttr.open = false;
+		});
+
+		btnCloseWithAttr.addEventListener("click", function () {
+			dlgAttr.removeAttribute("open");
+		});
+
+		btnCloseDialogNoPaddings.addEventListener("click", function () {
+			window["dialogNoPaddings"].open = false;
+		});
+
+		prevent.addEventListener("click", function () {
+			window["prevent-dialog"].open = true;
+		});
+
+		message.addEventListener("click", function () {
+			window["msg-dialog"].open = true;
+		});
+
+		window["prevent-dialog"].addEventListener("ui5-before-close", function (event) {
+			if (preventClosing) {
+				event.preventDefault();
+				window["confirm-dialog"].open = true;
+			}
+
+			if (!preventClosing) {
+				preventClosing = true;
+			}
+		});
+
+		yes.addEventListener("click", function (event) {
+			preventClosing = false;
+			window["confirm-dialog"].open = false;
+			window["prevent-dialog"].open = false;
+		});
+
+		no.addEventListener("click", function (event) {
+			window["confirm-dialog"].open = false;
+			preventClosing = true;
+		});
+
+		window["modals-open"].addEventListener("click", function (event) {
+			pop.opener = event.target;
+			pop.open = true;
+		});
+
+		dangerDialogBtn.addEventListener('click', function (event) {
+			danger.open = true;
+		});
+
+		bigDanger.addEventListener('click', function (event) {
+			bigDangerPop.opener = bigDanger;
+			bigDangerPop.open = true;
+		});
+
+		window["empty-open"].addEventListener("click", function () { window["empty-dialog"].open = true; });
+		window["wide-open"].addEventListener("click", function () { window["wide-dialog"].open = true; });
+		window["wide-open2"].addEventListener("click", function () { window["wide-dialog2"].open = true; });
+		window["draggable-open"].addEventListener("click", function () { window["draggable-dialog"].open = true; });
+		window["draggable-close"].addEventListener("click", function () { window["draggable-dialog"].open = false; });
+		window["resizable-open"].addEventListener("click", function () { window["resizable-dialog"].open = true; });
+		window["resizable-rtl-open"].addEventListener("click", function () { window["resizable-rtl-dialog"].open = true; });
+		window["resizable-close"].addEventListener("click", function () { window["resizable-dialog"].open = false; });
+		window["resizable-rtl-close"].addEventListener("click", function () { window["resizable-rtl-dialog"].open = false; });
+		window["resizable-custom-header-open"].addEventListener("click", function () { window["resizable-dialog-custom-header"].open = true; });
+		window["resizable-custom-header-close"].addEventListener("click", function () { window["resizable-dialog-custom-header"].open = false; });
+		window["draggable-and-resizable-open"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = true; });
+		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = false; });
+		window["rtl-draggable-and-resizable-open"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = true; });
+		window["rtl-draggable-and-resizable-close"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = false; });
+		window["rtl-maxwidth-resizable-open"].addEventListener("click", function () { window["rtl-maxwidth-resizable-dialog"].open = true; });
+		window["rtl-maxwidth-resizable-close"].addEventListener("click", function () { window["rtl-maxwidth-resizable-dialog"].open = false; });
+
+		window["dynamic-open"].addEventListener("click", function () {
+			var dialog = document.createElement("ui5-dialog"),
+				button = document.createElement("ui5-button"),
+				separator = document.createElement("div")
+				input = document.createElement("ui5-input");
+
+			button.setAttribute("id", "dynamic-dialog-close-button");
+			button.appendChild(document.createTextNode("Close"));
+			button.addEventListener("click", function () {
+				dialog.open = false;
+			});
+
+			dialog.setAttribute("id", "dynamic-dialog");
+			dialog.appendChild(button);
+
+			separator.style.height = "200px";
+			dialog.appendChild(separator);
+
+			dialog.appendChild(input);
+
+			document.body.appendChild(dialog);
+
+			dialog.open = true;
+		});
+
+		window["multiple-show"].addEventListener("click", function () {
+			dialog.open = true;
+			dialog.open = true;
+		});
+
+		window["btn-acc-name-ref"].addEventListener("click", function () {
+			window["dialog-acc-name-ref"].open = true;
+		});
+
+		window["scrolledBtn"].addEventListener("click", function () {
+			window["dialog"].open = true;
+		});
+
+		window["btn-error-state"].addEventListener("click", function () {
+			window["dialog-error-state"].open = true;
+		});
+
+		window["btn-info-state"].addEventListener("click", function () {
+			window["dialog-info-state"].open = true;
+		});
+
+		window["btn-success-state"].addEventListener("click", function () {
+			window["dialog-success-state"].open = true;
+		});
+
+		window["btn-warn-state"].addEventListener("click", function () {
+			window["dialog-warn-state"].open = true;
+		});
+
+		window["btn-role-default"].addEventListener("click", function () {
+			window["dialog-error-no-role"].open = true;
+		});
+
+		window["btn-role-alert"].addEventListener("click", function () {
+			window["dialog-no-state-alert-role"].open = true;
+		});
+
+		window["btn-role-none"].addEventListener("click", function () {
+			window["dialog-none-role"].open = true;
+		});
+
+		window["btn-role-alert-success-state"].addEventListener("click", function () {
+			window["dialog-success-state-alert-role"].open = true;
+		});
+
+		window["dialogOverDialogBtn"].addEventListener("click", function () {
+			window["dialogOverDialog1"].open = true;
+		});
+
+		window["dialogOverDialog1Btn"].addEventListener("click", function () {
+			window["dialogOverDialog2"].open = true;
+		});
+
+		window["dialogOverDialog2Btn"].addEventListener("click", function () {
+			window["dialogOverDialog3"].open = true;
+		});
+
+		window["dialogOverDialog3Btn"].addEventListener("click", function () {
+			window["dialogOverDialog3"].open = false;
+		});
+
+		window["dialogFocus"].addEventListener("click", function () {
+			window["dialogFocus1"].open = true;
+		});
+
+		window["btnDialogBackground"].addEventListener("click", function () {
+			window["dialogBackground"].open = true;
+		});
+
+		window["closeDialogFocusButton"].addEventListener("click", function () {
+			window["dialogFocus1"].open = false;
+		});
+
+		window["btnDialogAutofocus"].addEventListener("click", function () {
+			window["dialogAutofocus"].open = true;
+		});
+
+		window["btnDialogAutofocusClose"].addEventListener("click", function () {
+			window["dialogAutofocus"].open = false;
+		});
+
+		window["btnConfirmationDialog"].addEventListener("click", function () {
+			window["confirmationDialog"].open = true;
+		});
+
+		window["btnAccessibleDescrRefDialog"].addEventListener("click", function () {
+			window["accessibleDescrRefDialog"].open = true;
+		});
+
+		window["btnAccessibleDescrRefDialogSubmit"].addEventListener("click", function () {
+			window["accessibleDescrRefDialog"].open = false;
+		});
+
+		window["btnAccessibleDescrDialog"].addEventListener("click", function () {
+			window["accessibleDescrDialog"].open = true;
+		});
+
+		window["btnAccessibleDescrDialogSubmit"].addEventListener("click", function () {
+			window["accessibleDescrDialog"].open = false;
+		});
+
+		window["btnConfirmationDialogSubmit"].addEventListener("click", function () {
+			window["confirmationDialog"].open = false;
+		})
+
+		window["btnConfirmationDialogCancel"].addEventListener("click", function () {
+			window["confirmationDialog"].open = false;
+		})
+
+		document.getElementById("theme-switch").addEventListener("ui5-selection-change", event => {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.detail.selectedItems[0].getAttribute("data-ui5-theme-name"));
+		});
+
+		document.getElementById("open-big-content").addEventListener("click", function () {
+			window["dlgBigContent"].open = true;
+		});
+	</script>
+</body>
+
+</html>

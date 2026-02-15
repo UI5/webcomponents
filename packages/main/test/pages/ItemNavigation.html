@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Item Navigation</title>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/ItemNavigation-swNdGJzW.css">
+</head>
+
+<body class="itemnavigation1auto">
+	<div>
+		<ui5-label show-colon>Manually switch RTL</ui5-label>
+		<ui5-switch id="sw"></ui5-switch>
+	</div>
+
+	<h2>Focus does not cycle</h2>
+	<ui5-list>
+		<ui5-li id="item1">Option 1</ui5-li>
+		<ui5-li id="item2">Option 2</ui5-li>
+	</ui5-list>
+
+	<h2>Vertical navigation only</h2>
+	<ui5-list>
+		<ui5-li id="item3">Option 2.1</ui5-li>
+		<ui5-li id="item4">Option 2.2</ui5-li>
+		<ui5-li id="item5">Option 2.3</ui5-li>
+	</ui5-list>
+
+	<h2>Horizontal navigation only</h2>
+	<ui5-avatar-group type="Individual" id="horizontalNavigation">
+		<ui5-avatar size="S" initials="A"></ui5-avatar>
+		<ui5-avatar size="S" initials="B"></ui5-avatar>
+		<ui5-avatar size="S" initials="C"></ui5-avatar>
+	</ui5-avatar-group>
+
+	<h1>Test PAGE UP/DOWN</h1>
+	<br><br>
+	<ui5-list>
+		<ui5-li id="pageUpDownList_item1">0</ui5-li>
+		<ui5-li>1</ui5-li>
+		<ui5-li>2</ui5-li>
+		<ui5-li id="pageUpDownList_item4">3</ui5-li>
+		<ui5-li>4</ui5-li>
+		<ui5-li id="pageUpDownList_item6">5</ui5-li>
+		<ui5-li>6</ui5-li>
+		<ui5-li>7</ui5-li>
+		<ui5-li>8</ui5-li>
+		<ui5-li>9</ui5-li>
+		<ui5-li id="pageUpDownList_item11">10</ui5-li>
+
+		<ui5-li>11</ui5-li>
+		<ui5-li>12</ui5-li>
+		<ui5-li>13</ui5-li>
+		<ui5-li>14</ui5-li>
+		<ui5-li id="pageUpDownList_item16">15</ui5-li>
+		<ui5-li>16</ui5-li>
+		<ui5-li>17</ui5-li>
+		<ui5-li>18</ui5-li>
+		<ui5-li>19</ui5-li>
+		<ui5-li>20</ui5-li>
+
+		<ui5-li>21</ui5-li>
+		<ui5-li>22</ui5-li>
+		<ui5-li>23</ui5-li>
+		<ui5-li>24</ui5-li>
+		<ui5-li id="pageUpDownList_item26">25</ui5-li>
+		<ui5-li>26</ui5-li>
+		<ui5-li>27</ui5-li>
+		<ui5-li>28</ui5-li>
+		<ui5-li>29</ui5-li>
+		<ui5-li>30</ui5-li>
+	</ui5-list>
+
+	<script>
+		// Utility function to change RTL and apply the changes
+		function setDir(dir) {
+			document.body.dir = dir;
+			window['sap-ui-webcomponents-bundle'].applyDirection();
+		}
+
+		document.getElementById("sw").addEventListener("ui5-change", (e) => {
+			if (e.target.checked) {
+				setDir("rtl");
+			} else {
+				setDir("ltr");
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			panel1.addEventListener("ui5-toggle", function (event) {
+				console.log(event);
+				event.target.headerText = event.target.collapsed ? "Click to expand!" : "Click to collapse!";
+				field1.value = `${parseInt(field1.value) + 1}`;
+			});
+			panel2.addEventListener("ui5-toggle", function (event) {
+				field2.value = `${parseInt(field2.value) + 1}`;
+			});
+
+			var button = document.getElementById("b1");
+			var panel = document.getElementById("p1");
+			var label = document.getElementById("l1");
+
+			button.addEventListener("click", function () {
+				var d = document.createElement("ui5-label");
+				var newText = Math.random().toString();
+				d.innerHTML = newText;
+				label.childNodes[0].nodeValue = newText;
+				panel.appendChild(d);
+			});
+		});
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Panel-B46K_pZ2.css">
+</head>
+
+<body class="panel1auto">
+
+
+	<ui5-panel id="p1" collapsed accessible-role="Complementary" no-animation>
+
+		<!-- Panel header -->
+		<div slot="header" class="header">
+			<ui5-title id="p1-title">Expandable but not expanded</ui5-title>
+			<ui5-button id="b1">Add child </ui5-button>
+			<ui5-label id="l1">No new children added yet.</ui5-label>
+			<ui5-button design="Reject" icon="cancel">Cancel</ui5-button>
+			<ui5-button design="Accept" icon="accept">Done</ui5-button>
+		</div>
+
+		<!-- Content -->
+		This is my panel <!-- fafa --> <br>
+		<ui5-title id="p1-content1">Lorem ipsum!</ui5-title>
+		<ui5-label id="p1-content2" wrapping-type="Normal">
+			<span>
+			Lorem ipsum dolor sit amet, tamquam invidunt cu sed, unum regione mel ea, quo ea alia novum. Ne qui illud zril
+			nostrum, vel ea sint dicant postea. Vel ne facete tritani, neglegentur concludaturque sed te. His animal dolorum ut.
+			Aeterno appareat ei mei, cu sed elit scripserit, an quodsi oportere accusamus quo. Pri ea probo corpora rationibus,
+			soluta incorrupte ex his.
+			Mei ei brute cetero, id duo magna aeque torquatos. Quodsi erroribus mediocritatem his ut, ad pri legere iracundia
+			democritum. Menandri intellegam in mea, ex vero movet qualisque sed. Maiorum verterem perfecto nec ea, est velit
+			elaboraret consequuntur eu, eam ad reque postea admodum. Ne inimicus convenire pri, doctus vidisse te ius.
+			Percipitur contentiones in vis, cu vim propriae phaedrum. Has ad magna errem honestatis, duo vero graeco epicurei
+			no, populo semper sit ne. Vulputate dissentiunt interpretaris ea vis, nec civibus moderatius at. Cu vim stet
+			dissentias, no vidit saperet indoctum nec, et pro magna prima nobis. Vis consul feugiat qualisque in, regione
+			persecuti cotidieque id eos, id ius omnesque vituperata.
+			Pri ex impedit percipit consulatu. Ius iudico feugiat instructior an. Iusto putant eum eu, ubique splendide pri ad,
+			cu qui salutandi assentior percipitur. At esse ceteros salutandi ius. Te dicam reprehendunt nec, ea discere ponderum
+			sensibus duo.
+			Vis cu commodo definiebas, postea dissentias ne vim. Modo homero eos ad. Ut vix equidem temporibus. At duo audire
+			volumus, id volumus rationibus vim. Sit ne diam volumus. Augue labitur mel cu, an eam omnis causae hendrerit.
+			</span>
+		</ui5-label>
+
+	</ui5-panel>
+
+	<br>
+
+	<ui5-panel id="panel-expandable" no-animation accessible-role="Complementary" header-text="Both expandable and expanded with custom color" header-level="H4">
+
+
+		<!-- Content -->
+		<ui5-title>Lorem ipsum!</ui5-title>
+		<ui5-label wrapping-type="Normal">
+			<span>
+			Lorem ipsum dolor sit amet, tamquam invidunt cu sed, unum regione mel ea, quo ea alia novum. Ne qui illud zril
+			nostrum, vel ea sint dicant postea. Vel ne facete tritani, neglegentur concludaturque sed te. His animal dolorum ut.
+			Aeterno appareat ei mei, cu sed elit scripserit, an quodsi oportere accusamus quo. Pri ea probo corpora rationibus,
+			soluta incorrupte ex his.
+			Mei ei brute cetero, id duo magna aeque torquatos. Quodsi erroribus mediocritatem his ut, ad pri legere iracundia
+			democritum. Menandri intellegam in mea, ex vero movet qualisque sed. Maiorum verterem perfecto nec ea, est velit
+			elaboraret consequuntur eu, eam ad reque postea admodum. Ne inimicus convenire pri, doctus vidisse te ius.
+			Percipitur contentiones in vis, cu vim propriae phaedrum. Has ad magna errem honestatis, duo vero graeco epicurei
+			no, populo semper sit ne. Vulputate dissentiunt interpretaris ea vis, nec civibus moderatius at. Cu vim stet
+			dissentias, no vidit saperet indoctum nec, et pro magna prima nobis. Vis consul feugiat qualisque in, regione
+			persecuti cotidieque id eos, id ius omnesque vituperata.
+			Pri ex impedit percipit consulatu. Ius iudico feugiat instructior an. Iusto putant eum eu, ubique splendide pri ad,
+			cu qui salutandi assentior percipitur. At esse ceteros salutandi ius. Te dicam reprehendunt nec, ea discere ponderum
+			sensibus duo.
+			Vis cu commodo definiebas, postea dissentias ne vim. Modo homero eos ad. Ut vix equidem temporibus. At duo audire
+			volumus, id volumus rationibus vim. Sit ne diam volumus. Augue labitur mel cu, an eam omnis causae hendrerit.
+			</span>
+		</ui5-label>
+
+	</ui5-panel>
+
+	<br>
+
+	<ui5-panel id="panel-fixed" fixed accessible-role="Complementary" header-text="Expanded, but not expandable">
+
+		<!-- Content -->
+		<ui5-title>Lorem ipsum!</ui5-title>
+		<br>
+		<ui5-label wrapping-type="Normal">
+			Some short text.
+		</ui5-label>
+
+	</ui5-panel>
+
+	<br>
+
+	<ui5-panel collapsed fixed accessible-role="Complementary" header-text="Neither expandable, nor expanded">
+
+		<!-- Content -->
+		<ui5-title>Lorem ipsum!</ui5-title>
+		<br>
+		<ui5-label wrapping-type="Normal">
+			Some short text.
+		</ui5-label>
+
+	</ui5-panel>
+
+	<br>
+
+	<ui5-panel id="panel-expandable">
+		<!-- Content -->
+		<ui5-title>Panel without header and header text</ui5-title>
+		<ui5-label wrapping-type="Normal">
+			The panel consists only of a content part.
+		</ui5-label>
+	</ui5-panel>
+
+	<br>
+
+	<ui5-panel id="panel-stickyHeader" sticky-header header-text="Panel with sticky header">
+		<!-- Content -->
+		<ui5-title>Lorem ipsum!</ui5-title>
+
+		<ui5-label id="contentSticky" wrapping-type="Normal">
+			<span>
+				Lorem ipsum dolor sit amet, tamquam invidunt cu sed, unum regione mel ea, quo ea alia novum. Ne qui illud zril
+				nostrum, vel ea sint dicant postea. Vel ne facete tritani, neglegentur concludaturque sed te. His animal dolorum ut.
+				Aeterno appareat ei mei, cu sed elit scripserit, an quodsi oportere accusamus quo. Pri ea probo corpora rationibus,
+				soluta incorrupte ex his.
+				Mei ei brute cetero, id duo magna aeque torquatos. Quodsi erroribus mediocritatem his ut, ad pri legere iracundia
+				democritum. Menandri intellegam in mea, ex vero movet qualisque sed. Maiorum verterem perfecto nec ea, est velit
+				elaboraret consequuntur eu, eam ad reque postea admodum. Ne inimicus convenire pri, doctus vidisse te ius.
+				Percipitur contentiones in vis, cu vim propriae phaedrum. Has ad magna errem honestatis, duo vero graeco epicurei
+				no, populo semper sit ne. Vulputate dissentiunt interpretaris ea vis, nec civibus moderatius at. Cu vim stet
+				dissentias, no vidit saperet indoctum nec, et pro magna prima nobis. Vis consul feugiat qualisque in, regione
+				persecuti cotidieque id eos, id ius omnesque vituperata.
+			</span>
+		</ui5-label>
+	</ui5-panel>
+
+	<br>
+	<ui5-panel id="panel1" collapsed header-text="Click to expand!" header-level="H3" accessible-role="Form">
+
+		<!-- Content -->
+		<ui5-title>This is a demo how to use the &quot;expand&quot; event.</ui5-title>
+		<br>
+		<ui5-label wrapping-type="Normal">
+			Some short text.
+		</ui5-label>
+
+	</ui5-panel>
+
+	<ui5-panel id="panel2" collapsed accessible-role="Complementary">
+
+		<!-- Header -->
+		<div slot="header" class="header">
+			<ui5-title>Expandable but not expanded</ui5-title>
+		</div>
+
+		<!-- Content -->
+		<ui5-title>This is a demo how to use the &quot;expand&quot; event.</ui5-title>
+		<br>
+		<ui5-label wrapping-type="Normal">
+			Some short text.
+		</ui5-label>
+	</ui5-panel>
+
+	<br>
+
+	<ui5-input id="field1" value="0"></ui5-input>
+	<ui5-input id="field2" value="0"></ui5-input>
+
+	<section>
+		<!-- accessibleName, useAccessibleNameForToggleButton and header text -->
+		<ui5-panel accessible-role="Complementary" accessible-name="My new panel with header text and button" use-accessible-name-for-toggle-button header-text="Accessible name test 1">
+			<ui5-title>Lorem ipsum!</ui5-title>
+		</ui5-panel>
+
+		<br><br>
+
+		<!-- accessibleName and header text -->
+		<ui5-panel accessible-role="Complementary" accessible-name="My new panel with header text" header-text="Accessible name test 2">
+			<ui5-title>Lorem ipsum!</ui5-title>
+		</ui5-panel>
+
+		<br><br>
+
+		<!-- accessibleName, useAccessibleNameForToggleButton and header SLOT -->
+		<ui5-panel accessible-role="Complementary" accessible-name="My new panel with header SLOT and button" use-accessible-name-for-toggle-button>
+			<div slot="header" class="header">
+				<ui5-title>Accessible name test 3</ui5-title>
+			</div>
+			<ui5-title>Lorem ipsum!</ui5-title>
+		</ui5-panel>
+
+		<br><br>
+
+		<!-- accessibleName and header SLOT -->
+		<ui5-panel accessible-role="Complementary" accessible-name="My new panel with header SLOT">
+			<div slot="header" class="header">
+				<ui5-title>Accessible name test 4</ui5-title>
+			</div>
+			<ui5-title>Lorem ipsum!</ui5-title>
+		</ui5-panel>
+	</section>
+
+</body>
+
+</html>

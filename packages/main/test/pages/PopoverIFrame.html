@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="popover1auto">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Popover</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN",
+			"libs": "sap.ui.webc.main"
+		}
+	</script>
+
+
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body class="popover2auto">
+	<div id="myDiv" style="width: 200px; border: 1px solid red;" tabindex="0">
+		<div id="helloId">Hello</div>
+		<div id="customElId">
+			<template shadowrootmode="open">
+				<iframe
+					sandbox
+					width="200"
+					height="200"
+					srcdoc="<p id='contentId'>IFrame content</p>"
+				></iframe>
+			</template>
+		</div>
+	</div>
+	<ui5-popover opener="myDiv" header-text="Newsletter subscription" prevent-initial-focus>
+		<div>
+			Content
+		</div>
+	</ui5-popover>
+
+	<script>
+		const popover = [...document.getElementsByTagName("ui5-popover")][0];
+		document.getElementById('myDiv').addEventListener("click", () => {
+			popover.open = true;
+		});
+	</script>
+</body>
+
+</html>

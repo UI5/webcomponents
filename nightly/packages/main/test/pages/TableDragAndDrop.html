@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Table (in development)</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<style>
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+  <body style="background-color: var(--sapBackgroundColor)">
+    <ui5-list id="list">
+      <ui5-li movable>Item 1</ui5-li>
+      <ui5-li movable>Item 2</ui5-li>
+      <ui5-li movable>Item 3</ui5-li>
+      <ui5-li movable>Item 4</ui5-li>
+      <ui5-li movable>Test</ui5-li>
+    </ui5-list>
+
+    <ui5-tree id="tree" movable style="margin-top: 1rem">
+      <ui5-tree-item movable text="Tree 1">
+        <ui5-tree-item movable text="Tree 1.1">
+          <ui5-tree-item movable text="Tree 1.1.1"></ui5-tree-item>
+          <ui5-tree-item movable text="Tree 1.1.2"></ui5-tree-item>
+        </ui5-tree-item>
+
+        <ui5-tree-item movable text="Tree 1.2"></ui5-tree-item>
+      </ui5-tree-item>
+
+      <ui5-tree-item movable text="Tree 2">
+        <ui5-tree-item movable text="Tree 2.1">
+          <ui5-tree-item movable text="Tree 2.1.1"></ui5-tree-item>
+          <ui5-tree-item movable text="Tree 2.1.2"></ui5-tree-item>
+          <ui5-tree-item movable text="Tree 2.1.3"></ui5-tree-item>
+        </ui5-tree-item>
+
+        <ui5-tree-item movable text="Tree 2.2">
+          <ui5-tree-item movable text="Tree 2.2.1">
+            <ui5-tree-item movable text="Tree 2.2.1.1"></ui5-tree-item>
+          </ui5-tree-item>
+        </ui5-tree-item>
+
+        <ui5-tree-item movable text="Tree 2.3">
+          <ui5-tree-item movable text="Tree 2.3.1"></ui5-tree-item>
+          <ui5-tree-item movable text="Tree 2.3.2"></ui5-tree-item>
+        </ui5-tree-item>
+      </ui5-tree-item>
+
+      <ui5-tree-item movable text="Tree 3">
+        <ui5-tree-item movable text="Tree 3.1"></ui5-tree-item>
+      </ui5-tree-item>
+    </ui5-tree>
+
+    <ui5-table id="table" overflow-mode="Popin" style="margin-top: 1rem">
+      <ui5-table-selection slot="features"></ui5-table-selection>
+      <ui5-table-header-row slot="headerRow">
+        <ui5-table-header-cell width="400px">Column A</ui5-table-header-cell>
+        <ui5-table-header-cell width="200px">Column B</ui5-table-header-cell>
+        <ui5-table-header-cell min-width="150px">Column C</ui5-table-header-cell>
+      </ui5-table-header-row>
+      <ui5-table-row row-key="1" movable>
+        <ui5-table-cell>Test 1</ui5-table-cell>
+        <ui5-table-cell>Test 2</ui5-table-cell>
+        <ui5-table-cell>Test 3</ui5-table-cell>
+      </ui5-table-row>
+      <ui5-table-row row-key="2" movable>
+        <ui5-table-cell>Test 4</ui5-table-cell>
+        <ui5-table-cell>Test 5</ui5-table-cell>
+        <ui5-table-cell>Test 6</ui5-table-cell>
+      </ui5-table-row>
+      <ui5-table-row row-key="3" movable>
+        <ui5-table-cell>Test 7</ui5-table-cell>
+        <ui5-table-cell>Test 8</ui5-table-cell>
+        <ui5-table-cell>Test 9</ui5-table-cell>
+      </ui5-table-row>
+    </ui5-table>
+
+	<script>
+		function treeMoveOver(e) {
+			e.preventDefault();
+		}
+
+		function listMoveOver(e) {
+			e.preventDefault();
+		}
+
+    function tableMoveOver(e) {
+      const { source, destination } = e.detail;
+
+      const sourceIndex = table.rows.indexOf(source.element);
+      const destinationIndex = table.rows.indexOf(destination.element);
+
+      if (sourceIndex === -1 || destinationIndex === -1) {
+        return;
+      }
+
+      if (source.element.hasAttribute("ui5-table-row") && destination.element.hasAttribute("ui5-table-row") && destination.placement !== "On") {
+        e.preventDefault();
+      }
+    }
+
+    function tableMove(e) {
+      const { source, destination } = e.detail;
+      reorderRow(source.element, destination.element, destination.placement);
+    }
+
+    function reorderRow(source, destination, placement) {
+      if (!table) {
+        return;
+      }
+
+      switch (placement) {
+        case "Before":
+          destination.insertAdjacentElement("beforebegin", source);
+          break;
+        case "After":
+          destination.insertAdjacentElement("afterend", source);
+          break;
+        default:
+          break;
+      }
+    }
+    
+    table.addEventListener('move-over', tableMoveOver);
+    table.addEventListener('move', tableMove);
+
+		tree.addEventListener('move-over', treeMoveOver);
+		list.addEventListener('move-over', listMoveOver);
+	</script>
+  </body>
+</html>

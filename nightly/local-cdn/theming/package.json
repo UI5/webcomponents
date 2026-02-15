@@ -1,0 +1,42 @@
+{
+  "name": "@ui5/webcomponents-theming",
+  "version": "2.20.0-rc.0",
+  "description": "UI5 Web Components: webcomponents.theming",
+  "author": "SAP SE (https://www.sap.com)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "keywords": [
+    "openui5",
+    "sapui5",
+    "ui5"
+  ],
+  "exports": {
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json",
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "clean": "wc-dev clean",
+    "build": "wc-dev build",
+    "generate": "wc-dev generate",
+    "start": "wc-dev start",
+    "verify": "node ./lib/verify-vars/index.js",
+    "prepublishOnly": "tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UI5/webcomponents.git",
+    "directory": "packages/theming"
+  },
+  "dependencies": {
+    "@sap-theming/theming-base-content": "11.33.0",
+    "@ui5/webcomponents-base": "2.20.0-rc.0"
+  },
+  "devDependencies": {
+    "@ui5/webcomponents-tools": "2.20.0-rc.0",
+    "globby": "^13.1.1",
+    "json-beautify": "^1.1.1",
+    "postcss": "^8.4.5",
+    "postcss-import": "^14.0.2"
+  }
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Focusable Elements</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+</head>
+
+<body class="card1auto">
+	<ui5-button id="buttonId">Open Dialog</ui5-button>
+
+	<ui5-dialog id="dialogId" header-text="Dialog Header">
+		<ui5-input tabindex="-1"></ui5-input>
+		<br />
+		<ui5-side-navigation>
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home"
+									  icon="home"
+									  title="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" expanded icon="group">
+				<ui5-side-navigation-sub-item selected text="Should be Focused When Open"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="Sub Item 2"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation>
+		<br />
+		<ui5-button>Close</ui5-button>
+	</ui5-dialog>
+	<script>
+		buttonId.onclick = () => {
+			dialogId.open = true;
+		};
+	</script>
+</body>

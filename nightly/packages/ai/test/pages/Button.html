@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>AI Button</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/Button.html-B2FspXK4.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-jFD-Bdt8.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Button-Bf7nPyKK.css">
+</head>
+
+<body>
+	<ui5-title level="H3">Regular AI Button with Menu</ui5-title>
+	<br/>
+
+	<ui5-ai-button id="myAiButton" state="generate">
+		<ui5-ai-button-state name="generate" text="Generate" icon="ai"></ui5-ai-button-state>
+		<ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
+		<ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
+	</ui5-ai-button>
+	<br/>
+	<br/>
+
+	<ui5-title level="H3">AI Button with split mode state</ui5-title>
+	<br/>
+
+	<ui5-ai-button id="myAiButtonSplit" state="generate">
+		<ui5-ai-button-state name="generate" text="Regenerate" icon="ai"></ui5-ai-button-state>
+		<ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
+		<ui5-ai-button-state name="revise" text="Regenerate" icon="ai" show-arrow-button></ui5-ai-button-state>
+	</ui5-ai-button>
+	<br/>
+	<br/>
+
+	<ui5-title level="H3">Icon-only AI Button with Menu</ui5-title>
+	<br/>
+
+	<ui5-ai-button id="myAiButtonIconOnly" state="generate">
+		<ui5-ai-button-state name="generate" icon="ai"></ui5-ai-button-state>
+		<ui5-ai-button-state name="generating" icon="stop"></ui5-ai-button-state>
+		<ui5-ai-button-state name="revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
+	</ui5-ai-button>
+
+	<ui5-menu id="menu">
+		<ui5-menu-item text="Regenerate"></ui5-menu-item>
+		<ui5-menu-item text="Fix Spelling & Grammar" starts-section></ui5-menu-item>
+		<ui5-menu-item text="Change Tone">
+			<ui5-menu-item text="Option 1"></ui5-menu-item>
+			<ui5-menu-item text="Option 2"></ui5-menu-item>
+			<ui5-menu-item text="Option 3"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Adjust Length">
+			<ui5-menu-item text="Shorten text"></ui5-menu-item>
+			<ui5-menu-item text="Lengthen text"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Bulleted List"></ui5-menu-item>
+		<ui5-menu-item text="Translate">
+			<ui5-menu-item text="English"></ui5-menu-item>
+			<ui5-menu-item text="German"></ui5-menu-item>
+			<ui5-menu-item text="Spanish"></ui5-menu-item>
+		</ui5-menu-item>
+	</ui5-menu>
+
+	<ui5-menu id="menuReg">
+		<ui5-menu-item text="Edit Prompt"></ui5-menu-item>
+		<ui5-menu-item text="Change Tone"></ui5-menu-item>
+	</ui5-menu>
+
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+	<!-- QUICK PROMPT PATTERNS SCENARIO -->
+
+	<ui5-title size="H2">Quick Prompt Pattern</ui5-title>
+	<ui5-card>
+		<ui5-card-header slot="header" title-text="Stoyan Kralimarkov" subtitle-text="Senior Sales Executive">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar">
+		</ui5-card-header>
+		<section class="quickPromptSection">
+			<ui5-label required>To: </ui5-label>
+			<div style="display: flex; gap: 0.125rem;">
+				<ui5-token selected text="Diana Mihaylova" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
+				<ui5-token selected text="DL Marketing Sector SAP" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
+			</div>
+			<div class="quickPromptLblBtn">
+				<ui5-label style="align-self: flex-end;" required>Offer: </ui5-label>
+				<ui5-ai-button id="quickPromptAiButton" class="quickPromptAiButton" state="generate">
+					<ui5-ai-button-state name="generate" text="Generate" icon="ai"></ui5-ai-button-state>
+					<ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
+					<ui5-ai-button-state name="reviseGenerating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
+					<ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
+				</ui5-ai-button>
+			</div>
+			<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+		</section>
+		<div class="quickPromptCardFooter">
+			<ui5-button id="footerBtnSend" design="Emphasized">Send</ui5-button>
+			<ui5-button id="footerBtnCancel" design="Transparent">Cancel</ui5-button>
+		</div>
+		<ui5-toast placement="MiddleCenter" id="quickPromptToast" duration="3000">Your message was sent successfully!</ui5-toast>
+	</ui5-card>
+
+	<ui5-menu id="menu1">
+		<ui5-menu-item text="Regenerate"></ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Fix Spelling & Grammar"></ui5-menu-item>
+		<ui5-menu-item text="Rewrite Text">
+			<ui5-menu-item text="Simplify"></ui5-menu-item>
+			<ui5-menu-item text="Expand"></ui5-menu-item>
+			<ui5-menu-item text="Rephrase"></ui5-menu-item>
+			<ui5-menu-item text="Summarize"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-item text="Make Bulleted List"></ui5-menu-item>
+		<ui5-menu-item text="Translate">
+			<ui5-menu-item text="Bulgarian"></ui5-menu-item>
+			<ui5-menu-item text="English"></ui5-menu-item>
+			<ui5-menu-item text="German"></ui5-menu-item>
+		</ui5-menu-item>
+		<ui5-menu-separator></ui5-menu-separator>
+		<ui5-menu-item text="Generate Error"></ui5-menu-item>
+		<ui5-menu-item text="Clear Error"></ui5-menu-item>
+	</ui5-menu>
+
+
+</body>
+</html>

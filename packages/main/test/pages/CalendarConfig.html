@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Calendar Type Configuration</title>
+
+
+	<script data-ui5-config type="application/json">
+        {
+            "calendarType": "Islamic",
+			"secondaryCalendarType": "Gregorian"
+        }
+    </script>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+		<section>
+			<ui5-title> Global config: "calendarType": "Islamic", "secondaryCalendarType": "Gregorian"</ui5-title>
+			<br><br>
+			<ui5-date-picker></ui5-date-picker>
+			<ui5-datetime-picker ></ui5-datetime-picker>
+			<ui5-daterange-picker></ui5-daterange-picker>
+			<br><br>
+			<ui5-calendar id="cal1"></ui5-calendar>
+		</section>
+
+		<section>
+			<br><br>
+			<ui5-title>  primary-calendar-type="Gregorian" secondary-calendar-type="Islamic"</ui5-title>
+			<ui5-date-picker id="dp1" primary-calendar-type="Gregorian" secondary-calendar-type="Islamic"></ui5-date-picker>
+
+			<br><br>
+			<ui5-title>  primary-calendar-type="Islamic" secondary-calendar-type="Gregorian"</ui5-title>
+			<ui5-date-picker primary-calendar-type="Islamic" secondary-calendar-type="Gregorian"></ui5-date-picker>
+
+			<br><br>
+			<ui5-title>  primary-calendar-type="Japanese" secondary-calendar-type="Islamic"</ui5-title>
+			<ui5-date-picker primary-calendar-type="Japanese" secondary-calendar-type="Islamic"></ui5-date-picker>
+
+			<br><br>
+			<ui5-title>  primary-calendar-type="Islamic" secondary-calendar-type="Japanese"</ui5-title>
+			<ui5-date-picker primary-calendar-type="Islamic" secondary-calendar-type="Japanese"></ui5-date-picker>
+		</section>
+</body>
+</html>

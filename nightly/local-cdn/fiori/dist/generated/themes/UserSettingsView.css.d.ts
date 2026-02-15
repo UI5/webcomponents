@@ -1,0 +1,2 @@
+declare const _default: ".ui5-user-settings-view-container{container-type:inline-size}.ui5-user-settings-view{padding:1rem}@container (width > 37.5rem){.ui5-user-settings-view{padding-inline:2rem}}\n";
+export default _default;

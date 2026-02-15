@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>List Drag and Drop</title>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/List-DKC_b0Qb.css">
+</head>
+
+<body class="list1auto">
+	<ui5-checkbox id="reorder" text="Movable items" checked></ui5-checkbox>
+	<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+
+	<section>
+		<h2>Drag and drop</h2>
+		<ui5-li-group id="listDnd1" header-text="List 1">
+			<ui5-li id="bg1" movable>1. Bulgaria</ui5-li>
+			<ui5-li id="de1" movable>1. Germany</ui5-li>
+			<ui5-li id="es1" movable>1. Spain</ui5-li>
+		</ui5-li-group>
+	</section>
+
+	<section class="largeTopMargin">
+		<ui5-li-group id="listDnd2" header-text="List 2">
+			<ui5-li id="bg2" movable>2. Bulgaria</ui5-li>
+			<ui5-li id="de2" movable data-allows-nesting>2. Germany (Allows nesting)</ui5-li>
+			<ui5-li id="es2" movable>2. Spain</ui5-li>
+		</ui5-li-group>
+	</section>
+
+	<script>
+		const list1 = document.getElementById("listDnd1");
+		const list2 = document.getElementById("listDnd2");
+		const handleBeforeItemMove = (e) => {
+			const { destination, source } = e.detail;
+
+			if (destination.placement === "Before" || destination.placement === "After") {
+				e.preventDefault();
+			}
+
+			if (destination.placement === "On" && "allowsNesting" in destination.element.dataset) {
+				e.preventDefault();
+			}
+
+			console.log(`Moving "${source.element.id}" ${destination.placement.toLowerCase()} "${destination.element.id}"`);
+		};
+
+		const list1HandleMoveOver = (e) => {
+			const { destination, source } = e.detail;
+
+			if (!list1.contains(source.element) && !list2.contains(source.element)) {
+				return;
+			}
+
+			handleBeforeItemMove(e);
+		};
+
+		const list2HandleMoveOver = (e) => {
+			handleBeforeItemMove(e);
+		};
+
+		const handleMove = (e) => {
+			const { destination, source } = e.detail;
+			const parent = destination.element.closest("[ui5-li-group]");
+
+			if (destination.placement === "Before") {
+				parent.insertBefore(
+					source.element,
+					destination.element
+				);
+			} else if (destination.placement === "After") {
+				const nextElement = Array.from(parent.children).at(Array.from(parent.children).indexOf(destination.element) + 1);
+
+				parent.insertBefore(
+					source.element,
+					nextElement,
+				);
+			} else if (destination.placement === "On") {
+				destination.element.prepend(source.element);
+			}
+		};
+
+		list1.addEventListener("ui5-move-over", list1HandleMoveOver);
+		list1.addEventListener("ui5-move", handleMove);
+		list2.addEventListener("ui5-move-over", list2HandleMoveOver);
+		list2.addEventListener("ui5-move", handleMove);
+
+		const densityCb = document.getElementById("density");
+		densityCb.addEventListener("ui5-change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		const reorderCb = document.getElementById("reorder");
+		reorderCb.addEventListener("ui5-change", e => {
+			list1.items.forEach((item) => item.movable = e.target.checked);
+			list2.items.forEach((item) => item.movable = e.target.checked);
+		});
+	</script>
+</body>
+
+</html>

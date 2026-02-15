@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="popover1auto">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Popover</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN",
+			"libs": "sap.ui.webc.main"
+		}
+	</script>
+
+
+
+
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Popover-Bmws32Vh.css">
+</head>
+
+<body class="popover2auto">
+	<ui5-button onclick="popoverAttr.open = true;" id="btnOpenWithAttr">Open with Attribute</ui5-button>
+	<ui5-popover id="popoverAttr"
+				 opener="btnOpenWithAttr">
+		<div style="width: 10rem; height: 10rem; overflow: auto">
+			<Text>
+				Note: The content of the prop will be rendered into a by assigning the
+				respective slot attribute (slot="footer"). Since you can't change the
+				DOM order of slots when declaring them within a prop, it might prove
+				beneficial to manually mount them as part of the component's children,
+				especially when facing problems with the reading order of screen
+				readers. Note: When passing a custom React component to this prop, you
+				have to make sure your component reads the slot prop and appends it to
+				the most outer element of your component. Learn more about it here.
+			</Text>
+		</div>
+		<ui5-button>Button</ui5-button>
+	</ui5-popover>
+
+	<ui5-button onclick="popoverAttr1.open = true;" id="btnOpenWithAttr1">Open with Attribute 2</ui5-button>
+	<ui5-popover id="popoverAttr1"
+				 style="width: 10rem; height: 10rem;"
+				 opener="btnOpenWithAttr1">
+		<div>
+			<Text>
+				Note: The content of the prop will be rendered into a by assigning the
+				respective slot attribute (slot="footer"). Since you can't change the
+				DOM order of slots when declaring them within a prop, it might prove
+				beneficial to manually mount them as part of the component's children,
+				especially when facing problems with the reading order of screen
+				readers. Note: When passing a custom React component to this prop, you
+				have to make sure your component reads the slot prop and appends it to
+				the most outer element of your component. Learn more about it here.
+			</Text>
+		</div>
+	</ui5-popover>
+<script>
+
+</script>
+</body>
+
+</html>

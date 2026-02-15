@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Lazy Loading</title>
+
+
+  <style>
+    .demo-container {
+      margin-top: 1rem;
+      border: 1px dashed red;
+      padding: 2rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .demo-container:first-child {
+      margin-top: 0;
+    }
+
+    .demo-container h1 {
+      font-size: 1.5rem;
+      font-weight: normal;
+    }
+
+    .devider {
+      border: 1px solid black;
+      margin: 1rem;
+    }
+  </style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+
+  <div class="demo-container">
+    <h1>Lazy loading items oninput</h1>
+
+    <ui5-input id="field" show-suggestions></ui5-input>
+  </div>
+
+  <div class="demo-container">
+    <h1>Lazy load items on first type in</h1>
+
+    <ui5-input id="first-type" show-suggestions></ui5-input>
+  </div>
+
+  <div class="demo-container">
+    <h1>Preload items</h1>
+
+    <ui5-input id="preload" show-suggestions></ui5-input>
+  </div>
+
+  <div class="demo-container">
+    <h1>Hardcoded items</h1>
+
+    <ui5-input show-suggestions>
+      <ui5-suggestion-item text="Dryanovo"></ui5-suggestion-item>
+      <ui5-suggestion-item text="Gabrovo"></ui5-suggestion-item>
+      <ui5-suggestion-item text="Sofia"></ui5-suggestion-item>
+      <ui5-suggestion-item text="Yablanitsa"></ui5-suggestion-item>
+      <ui5-suggestion-item text="New York"></ui5-suggestion-item>
+    </ui5-input>
+  </div>
+
+  <div class="demo-container">
+    <h1>Always show suggestions</h1>
+
+    <ui5-input id="field1" show-suggestions></ui5-input>
+  </div>
+
+  <div class="devider"></div>
+
+  <div class="demo-container">
+    <h1>Lazy loading items oninput</h1>
+
+    <ui5-combobox id="combo-field" show-suggestions></ui5-combobox>
+  </div>
+
+  <div class="demo-container">
+    <h1>Lazy load items on first type in</h1>
+
+    <ui5-combobox id="combo-first-type" show-suggestions></ui5-combobox>
+  </div>
+
+  <div class="demo-container">
+    <h1>Preload items</h1>
+
+    <ui5-combobox id="combo-preload" show-suggestions></ui5-combobox>
+  </div>
+
+  <div class="demo-container">
+    <h1>Hardcoded items</h1>
+
+    <ui5-combobox show-suggestions>
+      <ui5-cb-item text="Dryanovo"></ui5-cb-item>
+      <ui5-cb-item text="Gabrovo"></ui5-cb-item>
+      <ui5-cb-item text="Sofia"></ui5-cb-item>
+      <ui5-cb-item text="Yablanitsa"></ui5-cb-item>
+      <ui5-cb-item text="New York"></ui5-cb-item>
+    </ui5-combobox>
+  </div>
+
+
+  <script>
+    const entries = [{ key: "A", text: "A" }, { key: "Afg", text: "Afghanistan" }, { key: "Arg", text: "Argentina" }, { key: "Alb", text: "Albania" }, { key: "Arm", text: "Armenia" }, { key: "Alg", text: "Algeria" }, { key: "And", text: "Andorra" }, { key: "Ang", text: "Angola" }, { key: "Ast", text: "Austria" }, { key: "Aus", text: "Australia" }, { key: "Aze", text: "Azerbaijan" }, { key: "Aruba", text: "Aruba" }, { key: "Antigua", text: "Antigua and Barbuda" }, { key: "B", text: "B" }, { key: "Bel", text: "Belarus" }, { key: "Bel", text: "Belgium" }, { key: "Bg", text: "Bulgaria" }, { key: "Bra", text: "Brazil" }, { key: "C", text: "C" }, { key: "Ch", text: "China" }, { key: "Cub", text: "Cuba" }, { key: "Chil", text: "Chili" }, { key: "L", text: "L" }, { key: "Lat", text: "Latvia" }, { key: "Lit", text: "Litva" }, { key: "P", text: "P" }, { key: "Prt", text: "Portugal" }, { key: "S", text: "S" }, { key: "Sen", text: "Senegal" }, { key: "Ser", text: "Serbia" }, { key: "Sey", text: "Seychelles" }, { key: "Sierra", text: "Sierra Leone" }, { key: "Sgp", text: "Singapore" }, { key: "Sint", text: "Sint Maarten" }, { key: "Slv", text: "Slovakia" }, { key: "Slo", text: "Slovenia" }];
+
+
+    const fetchData = async () => {
+      // load data real API
+      // return (await (await fetch("https://restcountries.com/v3.1/all")).json());
+
+      // load data fake request
+      await new Promise(e => setTimeout(e, 1000));
+
+      return entries;
+    };
+
+    const clearChildren = element => {
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+    };
+
+    const fillItems = (itemsData, inputElement, tagName) => {
+      itemsData.forEach(data => {
+        const element = document.createElement(tagName);
+        element.setAttribute("text", data.text);
+
+        inputElement.appendChild(element);
+      });
+    };
+
+    const filterData = (data, value) => {
+      return data.filter(entry => {
+        return entry.text.toLowerCase().startsWith(value.toLowerCase())
+      });
+    };
+
+    const enableLazyLoadingOnInput = () => {
+      document.getElementById("field").addEventListener("ui5-input", async event => {
+        if (event.target.value === "") {
+          return clearChildren(event.target);
+        }
+
+        // load data
+        const data = await fetchData();
+
+        // filter data
+        const filteredData = filterData(data, event.target.value);
+
+        // cleanup old items
+        clearChildren(event.target);
+
+        // fill new items (posibly redux / react state)
+        fillItems(filteredData, event.target, "ui5-suggestion-item");
+      });
+    }
+
+    const enableFirsTypein = () => {
+      const field = document.getElementById("first-type");
+
+      field.addEventListener("ui5-input", async event => {
+        const { value, suggestionItems } = event.target;
+
+        if (value.length === 1 && !suggestionItems.length) {
+          const data = await fetchData();
+
+          // fill new items (posibly redux / react state)
+          fillItems(data, event.target, "ui5-suggestion-item");
+
+        } else if (!value.length && suggestionItems.length) {
+          clearChildren(event.target);
+        }
+      });
+    };
+
+    const enablePreload = async () => {
+      const data = await fetchData();
+
+      fillItems(data, document.getElementById("preload"), "ui5-suggestion-item");
+    };
+
+    const field = document.getElementById("field1");
+    const fetchSuggestions = (el) => {
+      let timeout;
+      return new Promise((resolve) => {
+        if (!timeout) {
+          timeout = setTimeout(() => {
+            Array.from(field.children).forEach((c) => {
+              field.removeChild(c);
+            });
+
+            setTimeout(() => {
+              resolve(Array(el.value.length).fill("Suggestion Item"));
+              timeout = undefined;
+            }, 0);
+          }, 0);
+        }
+      });
+    };
+
+    const addSuggestions = (arr) => {
+      arr.forEach((item, i) => {
+        const el = document.createElement("ui5-suggestion-item");
+        el.setAttribute("text", `${item} ${i}`);
+        field.appendChild(el);
+      });
+    };
+
+    field.addEventListener("ui5-input", (event) => {
+      fetchSuggestions(event.target).then((value) => {
+         addSuggestions(value);
+      });
+    });
+
+    enableLazyLoadingOnInput();
+    enableFirsTypein();
+    enablePreload();
+
+    const enableCbLazyOnInput = () => {
+      const cb = document.getElementById("combo-field");
+
+      cb.addEventListener("ui5-input", async event => {
+        const { value } = event.target;
+
+        const data = await fetchData();
+
+        // cleanup old items
+        clearChildren(event.target);
+
+        // fill new items (posibly redux / react state)
+        fillItems(data, event.target, "ui5-cb-item");
+      });
+    };
+
+    enableCbLazyOnInput();
+  </script>
+</body>
+
+</html>

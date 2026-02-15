@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Test Page - Table Popin</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+</head>
+
+<body>
+	<div class="section">
+		<ui5-table id="table0" style="width: 850px;" overflow-mode="Popin" accessible-name-ref="title" no-data-text="No data found">
+			<ui5-table-growing id="growing" mode="Button" text="Load More" subtext="More Items Loading..." slot="features"></ui5-table-growing>
+			<ui5-table-header-row slot="headerRow">
+				<ui5-table-header-cell id="colA" min-width="300px"><span>ColumnA</span></ui5-table-header-cell>
+				<ui5-table-header-cell id="colB" min-width="200px">Column B</ui5-table-header-cell>
+				<ui5-table-header-cell id="colC" min-width="200px">Column C</ui5-table-header-cell>
+				<ui5-table-header-cell id="colD" min-width="150px">Column D</ui5-table-header-cell>
+			</ui5-table-header-row>
+			<ui5-table-row id="row-1">
+				<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="row-2">
+				<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="row-3">
+				<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="row-4">
+				<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row id="row-5">
+				<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+				<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+			</ui5-table-row>
+		</ui5-table>
+		<ui5-input id="load-more-counter"></ui5-input>
+	</div>
+
+	<script>
+		const table = document.getElementById("table0");
+		const growing = document.getElementById("growing");
+		let counter = 0;
+		growing.addEventListener("ui5-load-more", (e) => {
+			counter++;
+			document.getElementById("load-more-counter").value = `${counter}`;
+			let count = table.rows.length;
+
+			if (table._skipRowCreation) {
+				return;
+			}
+
+			if (table._removeRows) {
+				let remove = [];
+				for (const child of table.children) {
+					if (child.tagName === "UI5-TABLE-ROW") {
+						remove.push(child);
+					}
+				}
+				remove.forEach((child) => {
+					table.removeChild(child);
+				});
+				count = 0;
+			}
+
+			for (let i = 0; i < 5; i++) {
+				const newRow = document.createElement("ui5-table-row");
+				newRow.id = `row-${count + i + 1}`;
+				newRow.innerHTML = `
+					<ui5-table-cell><ui5-label><b>Notebook Basic ${18 + count + i}</b><br>HT-100${2 + count + i}</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+					<ui5-table-cell><ui5-label style="color: #2b7c2b"><b>3.7</b> KG</ui5-label></ui5-table-cell>
+					<ui5-table-cell style="text-align: end;"><ui5-label style="text-align: end;"><b>29</b> EUR</ui5-label></ui5-table-cell>
+				`;
+				table.appendChild(newRow);
+			}
+		});
+
+	</script>
+</body>
+
+</html>

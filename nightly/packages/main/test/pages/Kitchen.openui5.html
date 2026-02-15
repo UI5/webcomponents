@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+	<title>ui5 webcomponents</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "en",
+			"theme": "sap_horizon"
+		}
+	</script>
+
+	<!-- https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js -->
+	<script
+		src='https://sdk.openui5.org/resources/sap-ui-core.js'
+		id='sap-ui-bootstrap'
+		data-sap-ui-libs="sap.m"
+		data-sap-ui-theme="sap_horizon_dark"
+	></script>
+	<script>
+		sap.ui.getCore().attachInit(function () {
+			new sap.m.DatePicker().placeAt("sapMDatePicker");
+		})
+	</script>
+
+
+
+
+	<style>
+		[ui5-avatar] img {
+			object-fit: contain;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/kitchen-scripts-BNO_EqH0.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Kitchen.openui5-RYpZkMXf.css">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/kitchen-styles-B_3keqft.css">
+</head>
+
+<body class="kitchen_openui51auto">
+	<div id="nav" class="navbar kitchen_openui52auto" >
+		<ui5-toggle-button id="menu-btn" icon="menu" type="Transparent"></ui5-toggle-button>
+		<ui5-title level="H5">UI5 webcomponents</ui5-title>
+		<ui5-toggle-button id="btnCompact">Compact</ui5-toggle-button>
+		<ui5-toggle-button id="btnRTL">RTL</ui5-toggle-button>
+		<ui5-toggle-button id="btnTheme">HCB/FIORI</ui5-toggle-button>
+	</div>
+
+	<div id="side-nav" class="sidenav">
+		<ui5-list id="side-nav-list" selection-mode="Single" separators="Inner">
+			<ui5-li type="Active" id="arg1" icon="developer-settings">ui5-button</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-card</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-checkbox</ui5-li>
+			<ui5-li type="Active" id="ch1" icon="developer-settings">ui5-date-picker</ui5-li>
+			<ui5-li type="Active" id="arg1" icon="developer-settings" selected>ui5-dialog</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-icon</ui5-li>
+			<ui5-li type="Active" id="arg1" icon="developer-settings">ui5-label</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-link</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-list</ui5-li>
+			<ui5-li type="Active" id="ch1" icon="developer-settings">ui5-li</ui5-li>
+			<ui5-li type="Active" id="arg1" icon="developer-settings">ui5-panel</ui5-li>
+			<ui5-li type="Active" id="arg1" icon="developer-settings">ui5-popover</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-radio-button</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-tabcontainer</ui5-li>
+			<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-textarea</ui5-li>
+		</ui5-list>
+	</div>
+
+	<div id="main-content" class="main">
+		<section class="row heading-row-centered">
+			<ui5-title size="H1" level="H1">UI5 webcomponents</ui5-title>
+		</section>
+
+		<section class="row heading-row-centered no-vertical-padding">
+			<ui5-title size="H3" level="H3">For better experience, for Fiori3 experience</ui5-title>
+		</section>
+
+		<section class="row heading-row-centered">
+			<ui5-button design="Emphasized">Getting started</ui5-button>
+			<ui5-button>Download</ui5-button>
+		</section>
+
+		<section class="row">
+			<ui5-card
+				class="kitchen_openui53auto">
+				<ui5-card-header slot="header" title-text="Wolly King" subtitle-text="Back-end developer" status="1 of 3">
+					<ui5-icon name="employee" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+
+				<ui5-list id="myList12" separators="Inner">
+					<ui5-li icon="source-code" icon-end>Java EE
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li icon="source-code" icon-end>Maven
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li icon="source-code" icon-end>Cloud computing
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+				</ui5-list>
+			</ui5-card>
+			<ui5-card
+				class="kitchen_openui53auto">
+				<ui5-card-header slot="header" title-text="Lee, Y.Song" subtitle-text="Full-stack developer" status="2 of 3">
+					<ui5-icon name="employee" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+
+				<ui5-list id="myList12" separators="Inner">
+					<ui5-li icon="source-code">C/C++
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li icon="source-code">Phyton
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li icon="source-code">Node JS
+						<ui5-avatar slot="image" shape="Square">
+							<img src="/webcomponents/nightly/assets/HT-1030-CXL_1nsN.jpg" alt="Woman image">
+						</ui5-avatar>
+					</ui5-li>
+				</ui5-list>
+			</ui5-card>
+			<ui5-card
+				class="kitchen_openui53auto">
+				<ui5-card-header slot="header" title-text="Anna P." subtitle-text="Visioner">
+					<ui5-icon name="employee" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+
+				<ui5-list id="myList13" separators="Inner">
+					<ui5-li icon="camera" icon-end>Photoshop</ui5-li>
+					<ui5-li icon="camera" icon-end>CorelDRAW</ui5-li>
+					<ui5-li icon="camera" icon-end>GIMP</ui5-li>
+				</ui5-list>
+			</ui5-card>
+			<ui5-card
+				class="kitchen_openui53auto">
+				<ui5-card-header slot="header" title-text="Medved I." subtitle-text="Enthusiast" status="3 of 3">
+					<ui5-icon name="employee" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+
+				<ui5-list id="myList13" separators="Inner">
+					<ui5-li icon="syntax">JavaScript</ui5-li>
+					<ui5-li icon="syntax">React</ui5-li>
+					<ui5-li icon="syntax">Algorithms</ui5-li>
+				</ui5-list>
+			</ui5-card>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-icon id="myIcon" name="add-equipment" class="icon-blue" ></ui5-icon>
+			<ui5-icon name="add-equipment" class="icon-blue icon-medium"></ui5-icon>
+			<ui5-icon name="add-equipment" class="icon-blue icon-small"></ui5-icon>
+			<ui5-icon name="add-employee" class="icon-red"></ui5-icon>
+			<ui5-icon name="add-employee" class="icon-red icon-medium"></ui5-icon>
+			<ui5-icon name="add-employee" class="icon-red icon-small"></ui5-icon>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-button design="Emphasized">Submit</ui5-button>
+			<ui5-button disabled>Not available</ui5-button>
+			<ui5-button>Edit</ui5-button>
+			<ui5-button design="Transparent">Apply</ui5-button>
+			<ui5-button design="Transparent">Cancel</ui5-button>
+			<ui5-button icon="nav-back">Back</ui5-button>
+			<ui5-button icon="feeder-arrow">Next</ui5-button>
+			<ui5-button design="Positive">Approve</ui5-button>
+			<ui5-button design="Negative">Decline</ui5-button>
+			<ui5-button end-icon="download">Download</ui5-button>
+			<ui5-button icon="download">Activate</ui5-button>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-toggle-button>Yes/No</ui5-toggle-button>
+			<ui5-toggle-button>I/O</ui5-toggle-button>
+			<ui5-toggle-button pressed>Toggle Button pressed</ui5-toggle-button>
+			<ui5-toggle-button type="Positive">On/Off</ui5-toggle-button>
+			<ui5-toggle-button pressed type="Negative" icon="menu">Menu</ui5-toggle-button>
+			<ui5-button id="openPopoverButton">Open Popover</ui5-button>
+			<ui5-popover header-text="Popover" id="hello-popover">
+				<div class="kitchen_openui54auto">
+					<ui5-title size="H2" level="H2">Hello World!</ui5-title>
+				</div>
+				<ui5-textarea
+					placeholder="Type some text"
+					max-length="2"
+					show-exceeded-text>
+				</ui5-textarea>
+				<div slot="footer" class="kitchen_openui55auto">
+					<div class="kitchen_openui56auto"></div>
+					<ui5-button id="closePopoverButton">Close</ui5-button>
+				</div>
+			</ui5-popover>
+
+			<ui5-button id="openDialogButton">Open Dialog</ui5-button>
+			<ui5-dialog id="hello-dialog" header-text="Dialog">
+				<div class="kitchen_openui54auto">
+					<ui5-title size="H2" level="H2">Hello World!</ui5-title>
+				</div>
+				<ui5-textarea
+					placeholder="Type some text"
+					max-length="2"
+					show-exceeded-text>
+				</ui5-textarea>
+				<div slot="footer" class="kitchen_openui55auto">
+					<div class="kitchen_openui56auto"></div>
+					<ui5-button id="closeDialogButton">Close</ui5-button>
+				</div>
+			</ui5-dialog>
+			<ui5-button id="openDialogStretched">Open Dialog Stretched</ui5-button>
+			<ui5-dialog id="hello-dialog2" header-text="Dialog" stretch>
+				<div class="kitchen_openui54auto">
+					<ui5-title size="H2" level="H2">Hello World!</ui5-title>
+				</div>
+				<ui5-textarea
+					placeholder="Type some text"
+					max-length="2"
+					show-exceeded-text>
+				</ui5-textarea>
+				<div slot="footer" class="kitchen_openui55auto">
+					<div class="kitchen_openui56auto"></div>
+					<ui5-button id="closeDialogStretched">Close</ui5-button>
+				</div>
+			</ui5-dialog>
+
+			<ui5-toggle-button pressed type="Negative">Euro/BGN</ui5-toggle-button>
+			<ui5-toggle-button>Light/Dark</ui5-toggle-button>
+			<ui5-toggle-button pressed>BG/EN</ui5-toggle-button>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-radio-button id="myRb1" checked text="Default"></ui5-radio-button>
+			<ui5-radio-button id="myRb2" read-only text="read only"></ui5-radio-button>
+			<ui5-radio-button id="myRb3" disabled text="disabled"></ui5-radio-button>
+			<ui5-radio-button id="myRb4" read-only text="read only" checked></ui5-radio-button>
+			<ui5-radio-button id="myRb5" disabled text="disabled" checked></ui5-radio-button>
+			<ui5-radio-button id="myRb6" value-state="Critical" checked text="warning"></ui5-radio-button>
+			<ui5-radio-button id="myRb7" value-state="Negative" checked text="error"></ui5-radio-button>
+			<ui5-radio-button id="myRb6" value-state="Critical" text="warning"></ui5-radio-button>
+			<ui5-radio-button id="myRb7" wrapping-type="None" value-state="Negative" text="error long text should truncate"></ui5-radio-button>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-checkbox id="myCb1" checked text="Default"></ui5-checkbox>
+			<ui5-checkbox id="myCb2" read-only text="read only"></ui5-checkbox>
+			<ui5-checkbox id="myCb3" disabled text="disabled long text might also wrap"></ui5-checkbox>
+			<ui5-checkbox id="myCb4" read-only text="read only" checked></ui5-checkbox>
+			<ui5-checkbox id="myCb5" disabled text="disabled" checked></ui5-checkbox>
+			<ui5-checkbox id="myCb6" value-state="Critical" checked text="warning"></ui5-checkbox>
+			<ui5-checkbox id="myCb7" value-state="Negative" checked text="error"></ui5-checkbox>
+			<ui5-checkbox id="myCb7" value-state="Negative" text="error long text should truncate"></ui5-checkbox>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-link href="https://gmail.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank">ui5 link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Subtle">subtle link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" disabled>disabled</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank">ui5 link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank">ui5 link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Subtle">subtle link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank">ui5 link</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" disabled>disabled</ui5-link>
+			<ui5-link href="https://gmail.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+		</section>
+
+		<section class="row">
+			<ui5-panel header-text="Panel">
+				<div class="kitchen_openui57auto" slot="header">
+					<ui5-title level="H5">Countries</ui5-title>
+					<ui5-button id="button1" icon="refresh">Reset</ui5-button>
+					<ui5-button design="Negative">Cencel</ui5-button>
+				</div>
+
+				<ui5-list id="myList" selection-mode="Delete">
+					<ui5-li type="Active" id="arg1">Argentina</ui5-li>
+					<ui5-li type="Active" id="bg1">Bulgaria</ui5-li>
+					<ui5-li type="Active" id="ch1">China</ui5-li>
+				</ui5-list>
+			</ui5-panel>
+			<ui5-panel header-text="Panel">
+				<div class="kitchen_openui57auto" slot="header">
+					<ui5-title level="H5">Quarks</ui5-title>
+					<ui5-button id="button2" icon="add">Add</ui5-button>
+					<ui5-button design="Negative" icon="delete">Remove</ui5-button>
+				</div>
+
+				<ui5-list id="myList2" selection-mode="SingleStart">
+					<ui5-li type="Active" id="arg2">Up</ui5-li>
+					<ui5-li type="Active" id="bg2">Down</ui5-li>
+					<ui5-li type="Active" id="ch2">Charm</ui5-li>
+				</ui5-list>
+			</ui5-panel>
+			<ui5-panel header-text="Panel">
+				<div class="kitchen_openui57auto" slot="header">
+						<ui5-title level="H5">Employees</ui5-title>
+						<ui5-button id="button3" icon="add">Add</ui5-button>
+						<ui5-button design="Negative" icon="delete">Remove</ui5-button>
+				</div>
+
+					<ui5-list id="myList3" selection-mode="Multiple">
+						<ui5-li type="Active" id="arg3">Manager</ui5-li>
+						<ui5-li type="Active" id="bg3">Developer</ui5-li>
+						<ui5-li type="Active" id="ch3">Product Owner</ui5-li>
+					</ui5-list>
+				</ui5-panel>
+		</section>
+
+		<section class="row">
+			<div class="kitchen_openui58auto">
+				<ui5-label required for="user">user:</ui5-label>
+				<ui5-input id="user" value-state="Critical" show-suggestions placeholder="username ...">
+					<ui5-icon id="user-icon" slot="icon" name="message-warning"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="kitchen_openui58auto">
+				<ui5-label required for="pass">pass:</ui5-label>
+				<ui5-input id="pass" value-state="Negative" type="Password" placeholder="pwd ...">
+						<ui5-icon slot="icon" name="message-error"></ui5-icon>
+				</ui5-input>
+			</div>
+		</section>
+
+		<section class="kitchen_openui59auto">
+			<div id="sapMDatePicker"></div>
+
+			<ui5-date-picker class="kitchen_openui510auto" id="myDatepicker" value="Jun 06, 2018"></ui5-date-picker>
+			<ui5-date-picker class="kitchen_openui510auto" id="myDatepicker"></ui5-date-picker>
+		</section>
+
+		<section class="row">
+			<ui5-tabcontainer class="kitchen_openui511auto" selected-key="item1">
+				<ui5-tab key="item1" text="Products" icon="product" icon-color="Negative">
+					<ui5-toggle-button pressed type="Positive">Cucumber</ui5-toggle-button>
+					<ui5-button>Banana</ui5-button>
+					<ui5-toggle-button pressed type="Negative">Tomato</ui5-toggle-button>
+				</ui5-tab>
+
+				<ui5-tab-separator></ui5-tab-separator>
+
+				<ui5-tab key="item2" text="Drinks" icon="pharmacy" design="Critical">
+					<ui5-button>Wine</ui5-button>
+				</ui5-tab>
+
+				<ui5-tab key="item3" text="Music" icon="widgets" design="Positive">
+					<ui5-button>Pop</ui5-button>
+				</ui5-tab>
+
+				<ui5-tab key="item4" text="Clothes" icon="basket">
+					<ui5-button>Dress</ui5-button>
+				</ui5-tab>
+
+				<ui5-tab key="item5" text="Team" icon="group" design="Neutral">
+					<ui5-button>Gravity</ui5-button>
+				</ui5-tab>
+			</ui5-tabcontainer>
+
+			<ui5-tabcontainer class="kitchen_openui511auto" selected-key="item2">
+					<ui5-tab key="item1" text="Products">
+						<ui5-toggle-button pressed type="Positive">Cucumber</ui5-toggle-button>
+						<ui5-button>Banana</ui5-button>
+						<ui5-toggle-button pressed type="Negative">Tomato</ui5-toggle-button>
+					</ui5-tab>
+
+					<ui5-tab key="item2" text="Drinks">
+						<ui5-button>Wine</ui5-button>
+					</ui5-tab>
+
+					<ui5-tab key="item3" text="Music">
+						<ui5-button>Pop</ui5-button>
+					</ui5-tab>
+
+					<ui5-tab key="item4" text="Clothes">
+						<ui5-button>Dress</ui5-button>
+					</ui5-tab>
+
+					<ui5-tab key="item5" text="Team">
+						<ui5-button>Gravity</ui5-button>
+					</ui5-tab>
+				</ui5-tabcontainer>
+		</section>
+
+		<section class="row">
+			<ui5-textarea id="myTextarea1"
+				placeholder="Type some text"
+				max-length="2"
+				class="kitchen_openui512auto"
+				show-exceeded-text
+			>
+			</ui5-textarea>
+			<ui5-textarea id="myTextarea2"
+				placeholder="Type some text"
+				max-length="5"
+				class="kitchen_openui512auto"
+				show-exceeded-text
+			>
+			</ui5-textarea>
+			<ui5-textarea
+				id="myTextarea3"
+				placeholder="Type some text"
+				max-length="10"
+				class="kitchen_openui512auto"
+				show-exceeded-text
+			>
+			</ui5-textarea>
+		</section>
+
+		<section class="row">
+			<ui5-list header-text="Products" selection-mode="SingleEnd">
+				<ui5-li-custom type="Active">
+					<div class="kitchen_openui513auto">
+						<span>Laptop HP 2GB RAM Dual-core</span>
+						<ui5-link>Go to SAP</ui5-link>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom type="Active">
+					<div class="kitchen_openui513auto">
+						<span>Laptop HP 2GB RAM Dual-core</span>
+						<ui5-link>Go to SAP</ui5-link>
+					</div>
+				</ui5-li-custom>
+				<ui5-li-custom type="Active">
+					<div class="kitchen_openui513auto">
+						<span>Laptop HP 2GB RAM Dual-core</span>
+						<ui5-link>Go to SAP</ui5-link>
+					</div>
+				</ui5-li-custom>
+			</ui5-list>
+
+			<ui5-list header-text="Products" selection-mode="Multiple">
+					<ui5-li-custom type="Active">
+						<div class="kitchen_openui513auto">
+							<span>Laptop HP 2GB RAM Dual-core</span>
+							<ui5-link>Go to SAP</ui5-link>
+						</div>
+					</ui5-li-custom>
+					<ui5-li-custom type="Active">
+						<div class="kitchen_openui513auto">
+							<span>Laptop HP 2GB RAM Dual-core</span>
+							<ui5-link>Go to SAP</ui5-link>
+						</div>
+					</ui5-li-custom>
+					<ui5-li-custom type="Active">
+						<div class="kitchen_openui513auto">
+							<span>Laptop HP 2GB RAM Dual-core</span>
+							<ui5-link>Go to SAP</ui5-link>
+						</div>
+					</ui5-li-custom>
+			</ui5-list>
+		</section>
+
+		<section class="row row-centered">
+			<ui5-label>This is a long long even longer text defined via the ui5-label and it wraps by default</ui5-label>
+			<ui5-label wrapping-type="None">This is a long long even longer text defined via the ui5-label, but this one is truncated</ui5-label>
+		</section>
+	</div>
+</body>
+</html>

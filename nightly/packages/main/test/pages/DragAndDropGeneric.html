@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Generic Drag and Drop Tests</title>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DragAndDropGeneric-B2-e2Hui.css">
+</head>
+
+<body class="tree1auto">
+	<section>
+		<h2>Events</h2>
+		<div class="events">
+			<div>
+				<h3>requested effects</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="reqDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="reqEffectAllowed"></span>
+				</div>
+			</div>
+			<div>
+				<h3>dragstart</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="dragstartDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="dragstartEffectAllowed"></span>
+				</div>
+			</div>
+			<div>
+				<h3>dragenter</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="dragenterDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="dragenterEffectAllowed"></span>
+				</div>
+			</div>
+			<div>
+				<h3>dragover</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="dragoverDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="dragoverEffectAllowed"></span>
+				</div>
+			</div>
+			<div>
+				<h3>dragend</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="dragendDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="dragendEffectAllowed"></span>
+				</div>
+			</div>
+			<div>
+				<h3>drop</h3>
+				<div>
+					<span class="label">dropEffect: </span><span id="dropDropEffect"></span>
+				</div>
+				<div>
+					<span class="label">effectAllowed: </span><span id="dropEffectAllowed"></span>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section>
+		<h2>Native Draggable Elements with Different Effects</h2>
+		<div id="nativeElemsCont"></div>
+	</section>
+	
+
+	<section>
+		<h2>UI5 Movable (Draggable) Elements</h2>
+		<h2>List</h2>
+		<ui5-list id="list">
+			<ui5-li movable>Item 1</ui5-li>
+			<ui5-li movable>Item 2</ui5-li>
+			<ui5-li movable>Item 3</ui5-li>
+		</ui5-list>
+		<h3>Tree</h3>
+		<ui5-tree id="tree">
+			<ui5-tree-item movable expanded text="Tree 1" icon="paste">
+				<ui5-title slot="content" expanded> 
+					<ui5-label>Tree 1</ui5-label>
+					<ui5-label>Tree 1</ui5-label>
+				</ui5-title>
+				<ui5-tree-item movable text="Tree 1.1.1"></ui5-tree-item>
+				<ui5-tree-item movable text="Tree 1.1.2"></ui5-tree-item>
+			<ui5-tree-item movable text="Tree 3">
+			</ui5-tree-item>
+		</ui5-tree>
+		<h3>TabContainer</h3>
+		<ui5-tabcontainer id="tabContainer" collapsed overflow-mode="StartAndEnd">
+			<ui5-tab movable text="One"></ui5-tab>
+			<ui5-tab movable text="Two"></ui5-tab>
+			<ui5-tab movable text="Three">
+				<ui5-tab slot="items" movable text="3.1"></ui5-tab>
+			</ui5-tab>
+		</ui5-tabcontainer>
+	</section>
+
+	<script>
+		const events = ["dragstart", "dragenter", "dragover", "dragend", "drop"];
+
+		function logDragEvent(evType) {
+			return (e) => {
+				document.getElementById(`${evType}DropEffect`).textContent = e.dataTransfer.dropEffect;
+				document.getElementById(`${evType}EffectAllowed`).textContent = e.dataTransfer.effectAllowed;
+			};
+		}
+
+		function resetLogs() {
+			events.forEach((evType) => {
+				document.getElementById(`${evType}DropEffect`).textContent = "";
+				document.getElementById(`${evType}EffectAllowed`).textContent = "";
+			});
+		}
+
+		events.forEach((evType) => {
+			document.documentElement.addEventListener(evType, logDragEvent(evType));
+		});
+
+		const nativeElementCont = document.getElementById("nativeElemsCont");
+		
+		["none", "copy", "copyLink", "copyMove", "link", "linkMove", "move", "all", "uninitialized"].forEach((effectAllowed) => {
+			const label = document.createElement("span");
+			label.textContent = `${effectAllowed}: `;
+			label.classList.add("label");
+			const link = document.createElement("a");
+			link.href = "http://sap.com";
+			link.textContent = "drag me";
+			const wrapper = document.createElement("div");
+			wrapper.appendChild(label);
+			wrapper.appendChild(link);
+
+			nativeElementCont.appendChild(wrapper)
+
+			link.addEventListener("dragstart", (e) => {
+				resetLogs();
+
+				e.dataTransfer.effectAllowed = effectAllowed;
+				document.getElementById("reqDropEffect").textContent = e.dataTransfer.dropEffect;
+				document.getElementById("reqEffectAllowed").textContent = e.dataTransfer.effectAllowed;
+			});
+		});
+
+		const handleMoveOver = (e) => {
+			const { destination, source } = e.detail;
+
+
+			if (destination.placement === "On") {
+				return;
+			}
+
+			e.preventDefault();
+		};
+
+		document.getElementById("tree").addEventListener("ui5-move-over", handleMoveOver);
+		document.getElementById("list").addEventListener("ui5-move-over", handleMoveOver);
+		document.getElementById("tabContainer").addEventListener("ui5-move-over", handleMoveOver);
+
+		[...document.querySelectorAll("[movable]"), document.getElementById("tabContainer")].forEach((el) => {
+			el.addEventListener("dragstart", (e) => {
+				resetLogs();
+				document.getElementById("reqDropEffect").textContent = e.dataTransfer.dropEffect;
+				document.getElementById("reqEffectAllowed").textContent = e.dataTransfer.effectAllowed;
+			});
+		});
+	</script>
+</body>
+
+</html>

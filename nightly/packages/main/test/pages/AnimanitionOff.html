@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Animations off</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"animationMode": "none"
+		}
+	</script>
+
+
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			panel1.addEventListener("ui5-toggle", function (event) {
+				console.log(event);
+				event.target.headerText = event.target.collapsed ? "Click to expand!" : "Click to collapse!";
+				field1.value = `${parseInt(field1.value) + 1}`;
+			});
+			panel2.addEventListener("ui5-toggle", function (event) {
+				field2.value = `${parseInt(field2.value) + 1}`;
+			});
+		});
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/AnimanitionOff-sS2gptZH.css">
+</head>
+
+<body class="animanitionoff1auto">
+	<ui5-panel id="panel1" collapsed header-text="Click to expand!" class="panel">
+		<ui5-title>This is a demo how to use the &quot;expand&quot; event.</ui5-title><br>
+		<ui5-label>Some short text.</ui5-label>
+	</ui5-panel>
+
+	<ui5-panel id="panel2" collapsed accessible-role="Complementary" class="panel">
+		<div slot="header" class="header">
+			<ui5-title>Expandable but not expanded</ui5-title>
+		</div>
+		<ui5-title>This is a demo how to use the &quot;expand&quot; event.</ui5-title><br>
+		<ui5-label>Some short text.</ui5-label>
+	</ui5-panel><br>
+
+	<ui5-input id="field1" value="0"></ui5-input>
+	<ui5-input id="field2" value="0"></ui5-input>
+</body>
+</html>

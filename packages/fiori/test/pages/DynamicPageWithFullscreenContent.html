@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta charset="utf-8" />
+
+        <title>Dynamic page</title>
+
+        <script>
+            // delete Document.prototype.adoptedStyleSheets
+        </script>
+
+
+
+        <style>
+            [ui5-dynamic-page]::part(fit-content) {
+                padding: 0;
+            }
+        </style>
+        
+      <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+      <link rel="stylesheet" crossorigin href="/webcomponents/assets/DynamicPage-C5KVsuMu.css">
+    </head>
+
+    <body class="fcl1auto">
+        <ui5-dynamic-page id="page" show-footer>
+            <ui5-dynamic-page-title slot="titleArea">
+                <ui5-breadcrumbs slot="breadcrumbs">
+                    <ui5-breadcrumbs-item href="https://www.sap.com"
+                        >Link1
+                    </ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item
+                        href="https://www.sap.com"
+                        target="_blank"
+                        >Link2</ui5-breadcrumbs-item
+                    >
+                    <ui5-breadcrumbs-item href="#">Link3</ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item href="#">Link4</ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item href="#">Link5</ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item href="#">Link6</ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item href="#">Link7</ui5-breadcrumbs-item>
+                    <ui5-breadcrumbs-item>Location</ui5-breadcrumbs-item>
+                </ui5-breadcrumbs>
+
+                <ui5-title slot="heading">Select page content: </ui5-title>
+
+
+                <div slot="content">
+                    <ui5-title level="H6"
+                        >Select content type from the dropdown</ui5-title
+                    >
+                </div>
+
+                <div slot="snappedSubheading">
+                    <ui5-title level="H6"
+                        >Select content type from the dropdown</ui5-title
+                    >
+                </div>
+
+                <ui5-select id="contentSelect" overflow-priority="NeverOverflow">
+                    <ui5-option value="templateDiv">div with height="100%"</ui5-option>
+                    <ui5-option value="tempalteTabContainer">TabContainer</ui5-option>
+                    <ui5-option value="templateIllustratedMsg">IllustratedMessage</ui5-option>
+                    <ui5-option value="templateDynamicSideContent">DynamicSideContent</ui5-option>
+                    <ui5-option value="templateMediaGallery">MediaGallery</ui5-option>
+                    <ui5-option value="templateProductSwitch">ProductSwitch</ui5-option>
+                    <ui5-option value="templateCaroussel">Carrousel</ui5-option>
+                    <ui5-option value="templateTable">Table</ui5-option>
+                    <ui5-option value="templateTableGrowingWithButton">Table growing with button</ui5-option>
+                    <ui5-option value="templateTableGrowingWithScroll">Table growing with scroll</ui5-option>
+                </ui5-select>
+
+                <ui5-toolbar slot="actionsBar">
+                    <ui5-toolbar-button id="toggleFooterBtn" text="Toggle Footer" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+                </ui5-toolbar>
+
+                <ui5-toolbar slot="navigationBar">
+                    <ui5-toolbar-button icon="full-screen"></ui5-toolbar-button>
+                    <ui5-toolbar-button icon="decline"></ui5-toolbar-button>
+                </ui5-toolbar>
+            </ui5-dynamic-page-title>
+            <ui5-dynamic-page-header slot="headerArea">
+                <div
+                    style="
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+                    "
+                >
+                    <div
+                        style="
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                        "
+                    >
+                        <ui5-avatar
+                            id="avatar"
+                            icon="laptop"
+                            color-scheme="Accent5"
+                            size="XL"
+                            style="margin: 0 1rem; min-width: 7rem"
+                        >
+                        </ui5-avatar>
+                        <div>
+                            <div class="productInfo">
+                                <ui5-title level="H5">Product:</ui5-title>
+                                <ui5-title level="H5" id="lblName"></ui5-title>
+                            </div>
+                            <br />
+                            <div class="productInfo">
+                                <ui5-title level="H5">Description:</ui5-title>
+                                <ui5-title level="H5" id="lblDesc"></ui5-title>
+                            </div>
+                            <br />
+                            <div class="productInfo">
+                                <ui5-title level="H5">Supplier:</ui5-title>
+                                <ui5-title level="H5" id="lblSupplier"
+                                    ><b>Titanium</b></ui5-title
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="productInfo" style="align-self: start">
+                        <ui5-title level="H5">Rating:</ui5-title>
+                        <ui5-rating-indicator
+                            id="productRating"
+                            accessible-name="Hello World"
+                            value="3.5"
+                        ></ui5-rating-indicator>
+                    </div>
+                    <span></span>
+                </div>
+            </ui5-dynamic-page-header>
+
+
+            <ui5-bar id="footer" slot="footerArea" design="FloatingFooter">
+                <ui5-button slot="endContent">Edit</ui5-button>
+                <ui5-button slot="endContent">Close</ui5-button>
+            </ui5-bar>
+        </ui5-dynamic-page>
+
+        <template id="templateDiv">
+            <div id="content" style="height:100%;display:flex;flex-direction:column;background-color: #00800037;">
+                <div>first item</div>
+                <div style="height:100%;"></div>
+                <div>last item</div>
+            </div>
+        </template>
+
+        <template id="tempalteTabContainer">
+            <ui5-tabcontainer style="height: 100%;">
+                <ui5-tab text="Tab 1">
+                    <div>
+                        <ui5-button>Button 11</ui5-button>
+                        <ui5-button>Button 12</ui5-button>
+                    </div>
+                </ui5-tab>
+                <ui5-tab text="Tab 2" selected>
+                    <ui5-list header-text="Products (13)" mode="SingleSelect">
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="47.00 EUR">10 inch Portable DVD</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="947.00 EUR">Astro Laptop 1516</ui5-li>
+                        <ui5-li description="HT-1251" icon="slim-arrow-right" icon-end additional-text="647.00 EUR">Astro Phone 6</ui5-li>
+                        <ui5-li description="HT-1252" icon="slim-arrow-right" icon-end additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="447.90 EUR">Beam Breaker B-1</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="647.50 EUR">Beam Breaker B-2</ui5-li>
+                        <ui5-li description="HT-6001" icon="slim-arrow-right" icon-end additional-text="847.80 EUR">Beam Breaker B-3</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="1,250.00 EUR">Beam Breaker B-4</ui5-li>
+                        <ui5-li description="HT-8001" icon="slim-arrow-right" icon-end additional-text="1,288.00 EUR">Camcorder View</ui5-li>
+                        <ui5-li description="HT-2001" icon="slim-arrow-right" icon-end additional-text="996.00 EUR">Benda Laptop 1408</ui5-li>
+                        <ui5-li description="HT-0003" icon="slim-arrow-right" icon-end additional-text="147.00 EUR">Cepat Tablet 10.5</ui5-li>
+                        <ui5-li description="HT-1001" icon="slim-arrow-right" icon-end additional-text="87.90 EUR">Gladiator MX</ui5-li>
+                    </ui5-list>
+                </ui5-tab>
+                <ui5-tab text="Tab 3">
+                    <ui5-button>Button 3</ui5-button>
+                </ui5-tab>
+            </ui5-tabcontainer>
+        </template>
+
+        <template id="templateIllustratedMsg">
+            <ui5-illustrated-message class="border">
+                <ui5-button>Action 1</ui5-button>
+            </ui5-illustrated-message>
+        </template>
+
+        <template id="templateDynamicSideContent">
+            <ui5-dynamic-side-content
+                class="content-padding">
+                <div>
+                    <h1>Main Content</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ex mi, elementum et ante commodo, semper sollicitudin magna. Sed dapibus ut tortor quis varius. Sed luctus sem at nunc porta vulputate. Suspendisse lobortis arcu est, quis ultrices ipsum fermentum a. Vestibulum a ipsum placerat ligula gravida fringilla at id ex. Etiam pellentesque lorem sed sagittis aliquam. Quisque semper orci risus, vel efficitur dui euismod aliquet. Morbi sapien sapien, rhoncus et rutrum nec, rhoncus id nisl. Cras non tincidunt enim, id eleifend neque.</p>
+                    <p>Sed mauris nunc, sollicitudin eget mi nec, tincidunt molestie diam. Aliquam orci dui, vestibulum quis blandit et, interdum vel arcu. Vestibulum sit amet quam ut sapien pulvinar consequat ac sed turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus quam diam, mattis vitae condimentum ac, ornare vel dui. Pellentesque orci tellus, tempor vel ex eget, luctus vehicula massa. Nullam laoreet, lacus ut vulputate maximus, quam sem molestie nunc, vitae convallis sem nisi nec magna.</p>
+                    <p>Nullam a felis odio. Curabitur quis tellus nec risus suscipit dictum vitae eget augue. Maecenas faucibus felis a arcu ultricies, sed tempor ante pellentesque. Ut hendrerit ipsum sit amet ligula bibendum, sit amet vehicula lacus condimentum. Morbi lacinia nibh eu placerat sollicitudin. Praesent accumsan pulvinar massa, eget finibus odio lacinia ullamcorper. Integer neque quam, pretium sed accumsan id, euismod non nibh.</p>
+                    <p>Quisque luctus non mi in mollis. Suspendisse id lectus felis. Aliquam elementum nibh nibh. Nullam eget condimentum dolor. Suspendisse id dui non lorem imperdiet iaculis. Pellentesque ex turpis, vehicula a arcu quis, mattis auctor tellus. In ornare, libero ac rhoncus eleifend, felis orci sagittis felis, ac molestie est lacus fermentum odio. Mauris et porta nibh. Integer tellus leo, laoreet nec odio non, rutrum bibendum magna.</p>
+                </div>
+                <div slot="sideContent">
+                    <h1>Side Content</h1>
+                    <p>Morbi lorem libero, imperdiet id condimentum ac, tempor ut velit. Integer a laoreet sem. Nunc at sagittis nisi. Sed placerat diam eu porttitor dignissim. Maecenas nec fringilla tortor. Pellentesque ut elit est. Curabitur quis elit at mauris ullamcorper fringilla. Nullam diam mi, porttitor dictum orci nec, molestie luctus metus. Nunc ut ex blandit, elementum erat eget, pulvinar sapien. Donec nec lorem eu nunc eleifend tempor at non tortor. In quam velit, ornare at rutrum ac, porta ac augue. Suspendisse venenatis semper lacus at venenatis. Praesent vestibulum ligula nulla, at tempus lorem consequat suscipit. Aenean consequat dapibus dui, at bibendum mauris porta a.</p>
+                    <p>Vivamus ut efficitur massa, ac porttitor dolor. Nullam nec elit quis urna convallis tincidunt. Suspendisse potenti. Phasellus dignissim eget mauris eu egestas. Phasellus accumsan pulvinar pharetra. Pellentesque egestas viverra ipsum. Maecenas a dapibus neque. Morbi tincidunt ultricies enim, ac vehicula elit dapibus sit amet. Donec vel felis at felis elementum sodales id id erat. Pellentesque rutrum placerat mollis. In hac habitasse platea dictumst. Sed eget quam aliquet, pretium ligula vitae, lobortis mauris. Aenean eget ipsum auctor, dapibus quam at, pharetra nunc.</p>
+                </div>
+            </ui5-dynamic-side-content>
+        </template>
+
+        <template id="templateMediaGallery">
+            <ui5-media-gallery>
+                <ui5-media-gallery-item>
+                     <img src="/webcomponents/assets/HT-1000-BiqZozDV.jpg">
+                     <img src="/webcomponents/assets/HT-1000-BiqZozDV.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item selected>
+                    <img src="/webcomponents/assets/HT-1010-CLTht4yo.jpg">
+                    <img src="/webcomponents/assets/HT-1010-CLTht4yo.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item>
+                    <img src="/webcomponents/assets/HT-1022-B7LJUf_K.jpg">
+                    <img src="/webcomponents/assets/HT-1022-B7LJUf_K.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item layout="Wide">
+                    <iframe src="https://www.youtube.com/embed/GxGZG2fv6Aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <img src="data:image/jpeg;base64,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" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item layout="Wide">
+                    <iframe allowfullscreen src="https://www.youtube.com/embed/r2-XOMtsbT0?rel=0&showinfo=0&autoplay=1"></iframe>
+                    <img src="https://www.plustechnologies.com/wp-content/uploads/2019/03/SAP.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item>
+                    <img src="/webcomponents/assets/HT-1030-CXL_1nsN.jpg">
+                    <img src="/webcomponents/assets/HT-1030-CXL_1nsN.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item>
+                    <img src="/webcomponents/assets/Overlayed%20mask-Dokok9YO.png">
+                    <img src="/webcomponents/assets/Overlayed%20mask-Dokok9YO.png" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item>
+                    <img src="/webcomponents/assets/HT-2002-F2pD6qrf.jpg">
+                    <img src="/webcomponents/assets/HT-2002-F2pD6qrf.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+                <ui5-media-gallery-item>
+                    <img src="/webcomponents/assets/HT-2026-Bts79zak.jpg">
+                    <img src="/webcomponents/assets/HT-2026-Bts79zak.jpg" slot="thumbnail">
+                </ui5-media-gallery-item>
+            </ui5-media-gallery>
+        </template>
+
+        <template id="templateProductSwitch">
+            <ui5-product-switch>
+                <ui5-product-switch-item id="firstItem" title-text="Home" subtitle-text="Central Home" icon="home"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Analytics Cloud" subtitle-text="Analytics Cloud" icon="business-objects-experience"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Catalog" subtitle-text="Ariba" icon="contacts"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Guided Buying" icon="credit-card"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Strategic Procurement" icon="cart-3"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Travel & Expense" subtitle-text="Concur" icon="flight"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Vendor Management" subtitle-text="Fieldglass" icon="shipping-status"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Human Capital Management" icon="customer"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Sales Cloud" subtitle-text="Sales Cloud" icon="sales-notification"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Commerce Cloud" subtitle-text="Commerce Cloud" icon="retail-store"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Marketing Cloud" subtitle-text="Marketing Cloud" icon="marketing-campaign"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Service Cloud" icon="family-care"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="Customer Data Cloud" icon="customer-briefing"></ui5-product-switch-item>
+                <ui5-product-switch-item title-text="S/4HANA" icon="batch-payments"></ui5-product-switch-item>
+            </ui5-product-switch>
+        </template>
+
+        <template id="templateCaroussel">
+            <ui5-carousel cyclic="true">
+                <ui5-button>Button 1</ui5-button>
+                <ui5-button>Button 2</ui5-button>
+                <ui5-button>Button 3</ui5-button>
+            </ui5-carousel>
+        </template>
+
+        <template id="templateTable">
+            <ui5-table class="demo-table" accessible-name-ref="tableLabel" id="tbl">
+                <!-- Columns -->
+                <ui5-table-column id="column-1" slot="columns" width="350px">
+                    <ui5-label>Product</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-2" slot="columns" min-width="800" popin-text="Supplier">
+                    <ui5-label>Supplier</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-3" slot="columns" min-width="600" popin-text="Dimensions" demand-popin popin-display="Inline">
+                    <div class="column-content">
+                        <ui5-label>Dimensions</ui5-label>
+                    </div>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-4" slot="columns" min-width="600" popin-text="Weight" demand-popin>
+                    <ui5-label>Weight</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-5" slot="columns">
+                    <ui5-label>Price</ui5-label>
+                </ui5-table-column>
+            </ui5-table>
+        </template>
+
+        <template id="templateTableGrowingWithButton">
+            <ui5-table id="tbl" growing="Button">
+                <ui5-table-column id="column-1" slot="columns" width="350px">
+                    <ui5-label>Product</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-2" slot="columns" min-width="800" popin-text="Supplier">
+                    <ui5-label>Supplier</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-3" slot="columns" min-width="600" popin-text="Dimensions" demand-popin>
+                    <div class="column-content">
+                        <ui5-label>Dimensions</ui5-label>
+                    </div>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-4" slot="columns" min-width="600" popin-text="Weight" demand-popin>
+                    <ui5-label>Weight</ui5-label>
+                </ui5-table-column>
+
+                <ui5-table-column id="column-5" slot="columns">
+                    <ui5-label>Price</ui5-label>
+                </ui5-table-column>
+            </ui5-table>
+        </template>
+
+        <template id="templateTableGrowingWithScroll">
+            <ui5-table id="tbl" growing="Scroll">
+				<ui5-table-column id="column-1" slot="columns" width="350px">
+					<ui5-label>Product</ui5-label>
+				</ui5-table-column>
+
+				<ui5-table-column id="column-2" slot="columns" min-width="800" popin-text="Supplier">
+					<ui5-label>Supplier</ui5-label>
+				</ui5-table-column>
+
+				<ui5-table-column id="column-3" slot="columns" min-width="600" popin-text="Dimensions" demand-popin>
+					<div class="column-content">
+						<ui5-label>Dimensions</ui5-label>
+					</div>
+				</ui5-table-column>
+
+				<ui5-table-column id="column-4" slot="columns" min-width="600" popin-text="Weight" demand-popin>
+					<ui5-label>Weight</ui5-label>
+				</ui5-table-column>
+
+				<ui5-table-column id="column-5" slot="columns">
+					<ui5-label>Price</ui5-label>
+				</ui5-table-column>
+			</ui5-table>
+        </template>
+
+        <script>
+            var products = {
+                "ProductCollection": [{
+                    "ProductId": "HT-1000",
+                    "Category": "Laptops",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Very Best Screens",
+                    "WeightMeasure": 4.2,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Basic 15 with 2,80 GHz quad core, 15\" LCD, 4 GB DDR3 RAM, 500 GB Hard Disc, Windows 8 Pro",
+                    "Name": "Notebook Basic 15",
+                    "DateOfSale": "2017-03-26",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1000.jpg",
+                    "Status": "Available",
+                    "Quantity": 10,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 956,
+                    "Width": 30,
+                    "Depth": 18,
+                    "Height": 3,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1001",
+                    "Category": "Laptops",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Very Best Screens",
+                    "WeightMeasure": 4.5,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Basic 17 with 2,80 GHz quad core, 17\" LCD, 4 GB DDR3 RAM, 500 GB Hard Disc, Windows 8 Pro",
+                    "Name": "Notebook Basic 17",
+                    "DateOfSale": "2017-04-17",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1001.jpg",
+                    "Status": "Available",
+                    "Quantity": 20,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 1249,
+                    "Width": 29,
+                    "Depth": 17,
+                    "Height": 3.1,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1002",
+                    "Category": "Laptops",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Very Best Screens",
+                    "WeightMeasure": 4.2,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Basic 18 with 2,80 GHz quad core, 18\" LCD, 8 GB DDR3 RAM, 1000 GB Hard Disc, Windows 8 Pro",
+                    "Name": "Notebook Basic 18",
+                    "DateOfSale": "2017-01-07",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1002.jpg",
+                    "Status": "Available",
+                    "Quantity": 10,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 1570,
+                    "Width": 28,
+                    "Depth": 19,
+                    "Height": 2.5,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1003",
+                    "Category": "Laptops",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Smartcards",
+                    "WeightMeasure": 4.2,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Basic 19 with 2,80 GHz quad core, 19\" LCD, 8 GB DDR3 RAM, 1000 GB Hard Disc, Windows 8 Pro",
+                    "Name": "Notebook Basic 19",
+                    "DateOfSale": "2017-04-09",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1003.jpg",
+                    "Status": "Available",
+                    "Quantity": 15,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 1650,
+                    "Width": 32,
+                    "Depth": 21,
+                    "Height": 4,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1007",
+                    "Category": "Accessories",
+                    "MainCategory": "Computer Components",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Technocom",
+                    "WeightMeasure": 0.2,
+                    "WeightUnit": "KG",
+                    "Description": "Digital Organizer with State-of-the-Art Storage Encryption",
+                    "Name": "ITelO Vault",
+                    "DateOfSale": "2017-05-17",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1007.jpg",
+                    "Status": "Available",
+                    "Quantity": 15,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 299,
+                    "Width": 32,
+                    "Depth": 22,
+                    "Height": 3,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1010",
+                    "Category": "Accessories",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Very Best Screens",
+                    "WeightMeasure": 4.3,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Professional 15 with 2,80 GHz quad core, 15\" Multitouch LCD, 8 GB DDR3 RAM, 500 GB SSD - DVD-Writer (DVD-R/+R/-RW/-RAM),Windows 8 Pro",
+                    "Name": "Notebook Professional 15",
+                    "DateOfSale": "2017-02-22",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1010.jpg",
+                    "Status": "Available",
+                    "Quantity": 16,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 1999,
+                    "Width": 33,
+                    "Depth": 20,
+                    "Height": 3,
+                    "DimUnit": "cm"
+                }, {
+                    "ProductId": "HT-1011",
+                    "Category": "Laptops",
+                    "MainCategory": "Computer Systems",
+                    "TaxTarifCode": "1",
+                    "SupplierName": "Very Best Screens",
+                    "WeightMeasure": 4.1,
+                    "WeightUnit": "KG",
+                    "Description": "Notebook Professional 17 with 2,80 GHz quad core, 17\" Multitouch LCD, 8 GB DDR3 RAM, 500 GB SSD - DVD-Writer (DVD-R/+R/-RW/-RAM),Windows 8 Pro",
+                    "Name": "Notebook Professional 17",
+                    "DateOfSale": "2017-01-02",
+                    "ProductPicUrl": "test-resources/sap/ui/documentation/sdk/images/HT-1011.jpg",
+                    "Status": "Available",
+                    "Quantity": 17,
+                    "UoM": "PC",
+                    "CurrencyCode": "EUR",
+                    "Price": 2299,
+                    "Width": 33,
+                    "Depth": 23,
+                    "Height": 2,
+                    "DimUnit": "cm"
+                }]
+            };
+            const page = document.getElementById("page"),
+                maxTableRowsCount = 20;
+
+            document.getElementById("contentSelect").addEventListener("ui5-change", (event) => {
+                const currentContent = page.getSlottedNodes("content")[0];
+                if (currentContent) {
+                    currentContent.remove();
+                }
+
+                const selectedTemplateId = event.detail.selectedOption.value,
+                    selectedTemplate = document.getElementById(selectedTemplateId);
+
+                page.appendChild(selectedTemplate.content.cloneNode(true).children[0]);
+
+                let table = document.querySelector("ui5-table");;
+                if (table) {
+                    addTableRows(table, 7);
+                    table.addEventListener("ui5-load-more", () => {
+                        if (!maxRowsLengthReached(table)) {
+                            addTableRows(table, 4);
+                        }
+                    });
+                }
+            });
+
+            document.getElementById("toggleFooterBtn").addEventListener("click", () => {
+                page.showFooter = !page.showFooter;
+            });
+
+            page.appendChild(templateDiv.content.cloneNode(true).children[0]);
+
+            function addTableRows(tbl, rows) {
+                tbl.busy = true;
+
+                var html = '';
+                products.ProductCollection.slice(0, rows).forEach(function (product, index, arr) {
+                    var test = "<ui5-table-row><ui5-table-cell><ui5-label>".concat(product.Name, "</ui5-label><ui5-label>").concat(product.ProductId, "</ui5-label></ui5-table-cell><ui5-table-cell><ui5-label>").concat(product.SupplierName, "</ui5-label></ui5-table-cell><ui5-table-cell><ui5-label >").concat(product.Width, " x ").concat(product.Depth, " x ").concat(product.Height, " ").concat(product.DimUnit, "</ui5-label></ui5-table-cell><ui5-table-cell><ui5-label>").concat(product.WeightMeasure, "</b> ").concat(product.WeightUnit, "</ui5-label></ui5-table-cell><ui5-table-cell><ui5-label>").concat(product.Price, "</b> ").concat(product.CurrencyCode, "</ui5-label></ui5-table-cell></ui5-table-row>");
+                    html += test;
+                });
+
+                tbl.insertAdjacentHTML('beforeend', html);
+
+                setTimeout(function() {
+                    tbl.busy = false;
+                }, 1500);
+            }
+
+            function maxRowsLengthReached(tbl) {
+                return tbl.querySelectorAll("ui5-table-row").length > maxTableRowsCount;
+            }
+
+        </script>
+    </body>
+</html>

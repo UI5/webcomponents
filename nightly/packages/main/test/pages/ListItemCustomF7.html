@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>F7/F2 Key Test</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 2rem;
+			font-family: "72", "72full", Arial, sans-serif;
+		}
+
+		.instructions {
+			padding: 1rem;
+			margin-bottom: 2rem;
+			border: 1px solid #ccc;
+			background: #f9f9f9;
+		}
+
+		.buttons {
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+		}
+
+		#test-list {
+			width: 400px;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<div class="instructions">
+		<h2>F7/F2 Key Test</h2>
+		<p><strong>F7 vs F2 Behavior:</strong></p>
+		<ul>
+			<li><strong>F2:</strong> Simple navigation - always goes to first focusable element</li>
+			<li><strong>F7:</strong> Smart navigation - remembers last focused element position across items</li>
+		</ul>
+
+		<p><strong>Test Steps:</strong></p>
+		<ol>
+			<li>Click on first list item</li>
+			<li>Press <strong>F7</strong> → should go to first button</li>
+			<li>Press <strong>TAB</strong> to move to second button</li>
+			<li>Press <strong>F7</strong> → should return to list item</li>
+			<li>Press <strong>ArrowDown</strong> → should go to second list item</li>
+			<li>Press <strong>F7</strong> → should go to SECOND button (maintains position!)</li>
+			<li>Test <strong>F2</strong> → should always go to first button (no memory)</li>
+		</ol>
+	</div>
+
+	<ui5-list id="test-list" header-text="List with Custom Items">
+		<ui5-li-custom>
+			<div class="buttons">
+				<ui5-button>First Button</ui5-button>
+				<ui5-button>Second Button</ui5-button>
+				<ui5-input placeholder="Input Field" style="width: 120px;"></ui5-input>
+			</div>
+		</ui5-li-custom>
+		<ui5-li-custom>
+			<div class="buttons">
+				<ui5-button>Button A</ui5-button>
+				<ui5-button>Button B</ui5-button>
+				<ui5-input placeholder="Text Input" style="width: 120px;"></ui5-input>
+			</div>
+		</ui5-li-custom>
+	</ui5-list>
+
+	<script>
+		document.addEventListener('focusin', function (e) {
+			const tag = e.target.tagName.toLowerCase();
+			let label = e.target.textContent?.trim() || e.target.placeholder || tag;
+
+			if (tag === 'ui5-li-custom') {
+				const index = Array.from(document.querySelectorAll('ui5-li-custom')).indexOf(e.target);
+				label = `Item ${index + 1}`;
+			}
+
+			console.log('Focus:', label);
+		});
+
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'F7') console.log('F7 pressed');
+			if (e.key === 'F2') console.log('F2 pressed');
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation Only</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<ui5-side-navigation style="height: 90vh; " id="sn1">
+		<!-- Items -->
+		<ui5-side-navigation-item text="Home"
+								  icon="home"
+								  href="#home"
+								  title="Home tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="People" href="#people" expanded icon="group">
+			<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" title="From My Team tooltip"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="From Other Teams" icon="employee-rejections"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#events" expanded text="Events.............................................................." icon="calendar">
+			<ui5-side-navigation-sub-item href="#page1" target="_self" text="Local.............................................................."></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item text="External Link" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="employee-rejections"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="home"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="employee-approvals"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="group"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="calendar"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="employee-rejections"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="save"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="male"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="female"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="action"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="employee"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="tnt-v3/aggregator"></ui5-side-navigation-item>
+		<ui5-side-navigation-item  disabled href="#locations" text="Locations" icon="tnt-v3/aggregator"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="SAP-icons-v5/navigation-right-arrow"></ui5-side-navigation-item>
+		<ui5-side-navigation-item  text="Locations" icon="SAP-icons-v4/slim-arrow-up"></ui5-side-navigation-item>
+		<ui5-side-navigation-item disabled text="Locations" icon="SAP-icons-v4/favorite"></ui5-side-navigation-item>
+		<ui5-side-navigation-item disabled text="External Link" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="Locations" icon="SAP-icons-v4/less"></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#page1" target="_self" text="Locations" icon="group">
+			<ui5-side-navigation-sub-item href="#page1" target="_self" text="Local.............................................................."></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="Others"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<!-- Fixed Items -->
+		<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link" title="Useful links tooltip">
+			<ui5-side-navigation-sub-item text="Vacation Tool" title="Vacation Tool tooltip"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="HR tool"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="External Link" href="https://sap.com" target="_blank"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="History" icon="history"></ui5-side-navigation-item>
+		<ui5-side-navigation-item text="External Link" icon="chain-link" href="https://sap.com" target="_blank"></ui5-side-navigation-item>
+	</ui5-side-navigation>
+
+	<div style="height: 48px;">
+		<ui5-checkbox id="collapsed" text="Collapsed"></ui5-checkbox>
+		<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+	</div>
+
+	<script>
+		const sn = document.getElementById("sn1");
+
+		const collapsedBtn = document.getElementById("collapsed");
+
+		collapsedBtn.addEventListener("change", e => {
+			sn.toggleAttribute("collapsed", e.target.checked);
+		});
+
+		const densityBtn = document.getElementById("density");
+		density.addEventListener("change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+	</script>
+</body>
+</html>

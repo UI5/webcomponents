@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>TextArea</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+
+		<script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+		<link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/TextArea-Cg2dAGD5.css">
+	</head>
+
+	<body class="textarea1auto">
+
+	<section class="group">
+		<ui5-title>Single Row TextArea with Exceeded Characters</ui5-title>
+		<br>
+		<ui5-textarea id="textarea-single-row"
+					  show-exceeded-text="true"
+					  maxlength="100"
+					  rows="1"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Value State Message</ui5-title>
+		<br>
+		<ui5-textarea id="textarea-value-state-msg" value="Test" value-state="Negative" growing rows="1" growing-max-rows="2">
+			<div id="value-state-msg" slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-textarea>
+
+		<br>
+		<ui5-textarea id="textarea-value-state-msg" value="Test" value-state="Positive" growing rows="1">
+			<div id="value-state-msg" slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Simple TextArea</ui5-title>
+		<ui5-textarea id="basic-textarea" placeholder="Basic text area">
+			<div slot="valueStateMessage">
+				This msg will not be displayed as no value-state is set.
+			</div>
+		</ui5-textarea>
+
+		<br>
+		<br>
+		<ui5-textarea rows="1" id="basic-textarea-error" placeholder="Placeholder" value-state="Negative">
+			<div slot="valueStateMessage">
+				This is a random value state message text with a <a href="#" _target="blank">Link</a>.
+			</div>
+		</ui5-textarea>
+
+		<br>
+		<br>
+		<ui5-textarea id="basic-textarea-warning"  placeholder="Placeholder" value-state="Critical"></ui5-textarea>
+		<br>
+		<br>
+
+		<ui5-textarea id="basic-textarea-success" value="Test" value-state="Positive"></ui5-textarea>
+		<br>
+		<br>
+
+		<br>
+		<br>
+		<ui5-textarea id="basic-textarea-info" value="Test" value-state="Information"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>TextArea with value</ui5-title>
+		<ui5-textarea id="fix-width-textarea" class="fixed-width" rows="8" value="Lorem ipsum dolor st amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+		magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+		gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+		elitr, sed diam nonumy eirmod tempor invidunt ut la	bore et dolore magna aliquyam erat, sed diam voluptua. Lorem
+		ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+		magna aliquyam erat"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Disabled TextArea</ui5-title>
+		<ui5-textarea id="disabled-textarea" show-exceeded-text class="fixed-width" disabled placeholder="Example of disabled text area"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Readonly TextArea</ui5-title>
+		<ui5-textarea id="readonly-textarea" class="fixed-width" readonly placeholder="Example of a read-only text area"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Required TextArea</ui5-title>
+		<ui5-textarea id="required-textarea" class="fixed-width" required placeholder="Example of a required text area"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: Growing</ui5-title>
+		<ui5-textarea class="fixed-width" growing placeholder="Growing Text Area"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: Growing with 8 initial rows</ui5-title>
+		<ui5-textarea id="eight-rows-textarea" class="fixed-width" growing placeholder="Growing Text Area" rows="8"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: Growing up to 4</ui5-title>
+		<ui5-textarea id="growing-ta-to-four" class="fixed-width" maxLength="100"  growing-max-rows="4" show-exceeded-text  growing placeholder="Growing Text Area"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: Growing with initial rows 4 and growing up to 12</ui5-title>
+		<ui5-textarea class="fixed-width" placeholder="Growing Text Area" rows="4" growing-max-rows="12" growing></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: growing with max length 20 characters </ui5-title>
+		<ui5-textarea id="ta-max-length" class="fixed-width" value-state="Negative" growing maxlength="20" placeholder="Max length"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: max length 20 characters </ui5-title>
+		<ui5-textarea id="ta-exceeded-text" value="Text longer then twenty characters" class="fixed-width" maxlength="20" show-exceeded-text growing growing-max-rows="1" rows="1" placeholder="Everything"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: showExceededText with maxlength</ui5-title>
+		<ui5-textarea value-state="Critical" id="show-max-length" class="fixed-width fixed-height" maxlength="20" show-exceeded-text placeholder="Max length and Show Exceeded Text"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: showExceededText with maxlength '0'</ui5-title>
+		<ui5-textarea id="show-max-length-0" class="fixed-width fixed-height" maxlength="0" show-exceeded-text placeholder="Max length and Show Exceeded Text"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: change event</ui5-title>
+		<ui5-textarea id="textarea-change" class="fixed-width fixed-height" placeholder="Test change event"></ui5-textarea>
+	</section>
+	<section class="group">
+		<ui5-input id="changeResult" class="fixed-width"></ui5-input>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: input event</ui5-title>
+		<ui5-textarea id="textarea-input" class="fixed-width fixed-height" placeholder="Test input event"></ui5-textarea>
+	</section>
+	<section class="group">
+		<ui5-input id="inputResult" class="fixed-width"></ui5-input>
+	</section>
+
+	<section class="group">
+		<ui5-textarea
+			class="customTextArea fixed-width fixed-height"
+			maxlength="20"
+			show-exceeded-text
+		>
+		</ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Growing: growing-max-rows="1"</ui5-title>
+		<br>
+		<ui5-textarea growing growing-max-rows="1" rows="1"></ui5-textarea>
+
+		<ui5-title>Growing: growing-max-rows="4"</ui5-title>
+		<br>
+		<ui5-textarea growing growing-max-rows="4"></ui5-textarea>
+	</section>
+
+	<section class="group sapUiSizeCompact">
+		<ui5-title>Growing: growing-max-rows="1" (compact)</ui5-title>
+		<br>
+		<ui5-textarea growing growing-max-rows="1" rows="1"></ui5-textarea>
+
+		<ui5-title>Growing: growing-max-rows="4" (compact)</ui5-title>
+		<br>
+		<ui5-textarea growing growing-max-rows="4"></ui5-textarea>
+	</section>
+
+	<section class="aria-label and aria-labelledby">
+		<span id="infoText">info text</span>
+		<ui5-textarea id="textAreaAriaLabel" accessible-name="Hello World"></ui5-textarea>
+		<ui5-textarea id="textAreaAriaLabelledBy" maxlength="20" show-exceeded-text accessible-name-ref="infoText" class="fixed-width fixed-height"></ui5-textarea>
+	</section>
+
+	<ui5-title>Readonly textarea with value state</ui5-title>
+	<br>
+	<ui5-textarea id="readonly-value-state-textarea" readonly value-state="Negative"></ui5-textarea>
+
+	<section class="group">
+		<ui5-label id="lblForTextAreaID" for="taWithLabelID">This should be in aria-label property of the text area</ui5-label>
+		<ui5-textarea id="taWithLabelID" class="textarea-width" placeholder="Enter some text here"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-label id="lblForTextAreaID2" for="taWithLabelID2">This should not be in aria-label property of the text area</ui5-label>
+		<ui5-textarea id="taWithLabelID2" class="textarea-width" placeholder="Enter some text here" accessible-name="Here aria label should be this one"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-label>Text Area: Escape Prevention</ui5-title>
+		<ui5-textarea id="textarea-prevent-escape" class="textarea-width" placeholder="Escape prevention test"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Text Area: Accessible Description</ui5-title>
+		<div id="external-desc">This is an external description element</div>
+		<div id="another-desc">Additional description text</div>
+		<ui5-textarea id="textarea-accessible-description" class="textarea-width" accessible-description="Direct accessible description" placeholder="TextArea with direct accessible description"></ui5-textarea>
+		<ui5-textarea id="textarea-accessible-description-ref" class="textarea-width" accessible-description-ref="external-desc" placeholder="TextArea with referenced accessible description"></ui5-textarea>
+		<ui5-textarea id="textarea-accessible-description-multiple-refs" class="textarea-width" accessible-description-ref="external-desc another-desc" placeholder="TextArea with multiple referenced descriptions"></ui5-textarea>
+		<ui5-textarea id="textarea-accessible-description-both" class="textarea-width" accessible-description="Direct description" accessible-description-ref="external-desc" placeholder="TextArea with both direct and referenced descriptions"></ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-textarea id="textareaForm" required maxlength="10" show-exceeded-text="true" rows="1"></ui5-textarea>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+	</section>
+		<br><br>
+
+	<script>
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const textareaForm = document.getElementById('textareaForm');
+
+		btnCheckFormValidity.addEventListener('click', function () {
+			checkFormValidity('textareaForm');
+		});
+
+		textareaForm.addEventListener('ui5-change', function () {
+			setTimeout(() => {
+				checkFormValidity('textareaForm', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+		var changeCounter = 0;
+		var inputCounter = 0;
+
+		document.getElementById('textarea-change').addEventListener("ui5-change", function (event) {
+			changeCounter += 1;
+			document.getElementById('changeResult').value = `${changeCounter}`;
+		});
+
+		document.getElementById('textarea-input').addEventListener("ui5-input", function (event) {
+			inputCounter += 1;
+			document.getElementById('inputResult').value = `${inputCounter}`;
+		});
+
+		document.getElementById('textarea-prevent-escape').addEventListener("ui5-input", function (event) {
+			if (event.detail.escapePressed) {
+				event.preventDefault();
+			}
+		});
+	</script>
+
+</body>
+</html>

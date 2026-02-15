@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Web components Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script data-ui5-config type="application/json">
+        {
+            "language": "EN"
+        }
+    </script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CmNrHCeo.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Table2-CUixf4JH.css">
+</head>
+
+
+
+<body class="table21auto">
+
+    <div></div>
+
+    <script>
+		var domString = '<ui5-table id="table" class="table22auto">' +
+			'<ui5-table-column slot="columns" id="col1">' +
+			'	<span >Column 1</span>' +
+			'</ui5-table-column>' +
+			'<ui5-table-column slot="columns" id="col2">' +
+			'	<span >Column 1</span>' +
+			'</ui5-table-column>' +
+			'<ui5-table-row  id="roll1">' +
+			'	<ui5-table-cell id="cell1">' +
+			'		<span>World</span>' +
+			'	</ui5-table-cell>' +
+			'	<ui5-table-cell id="cell2">' +
+			'		<span>World</span>' +
+			'	</ui5-table-cell>' +
+			'</ui5-table-row>' +
+			'</ui5-table>';
+
+		document.querySelector("body>div").innerHTML = domString;
+    </script>
+
+
+</body>
+
+</html>

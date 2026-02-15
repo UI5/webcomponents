@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>ViewSettingsDialog test page</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<style>
+		#vsd::part(header) {
+			--sapButton_Lite_TextColor: pink;
+		}
+	</style>
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ViewSettingsDialog-BB5-RMOG.css">
+</head>
+
+<body class="viewsettingsdialog1auto">
+
+	<ui5-button id="btnOpenGroup">Show VSD with group option</ui5-button>
+	<ui5-view-settings-dialog id="vsdGroup">
+		<ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
+		<ui5-group-item slot="groupItems" text="Title"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Author"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
+	</ui5-view-settings-dialog>
+
+	<h3> ViewSettingsDialog</h3>
+	<ui5-button id="btnOpenDialog">Show ViewSettingsDialog</ui5-button>
+	<ui5-button id="btnOpenDialogSort">Show Sort Only ViewSettingsDialog</ui5-button>
+	<ui5-button id="btnOpenDialogFilter">Show Filter Only ViewSettingsDialog</ui5-button>
+	<ui5-button id="btnChangeSettings">Set Settings to the first VSD</ui5-button>
+	<ui5-textarea id="vsdSettings" placeholder="Basic text area" value='{"sortOrder":"Ascending","sortBy":"Name","filters":[{"Filter 3":["Some filter 7"]}, {"Filter 1":["Some filter 1", "Some filter 2"]}]}'>
+	</ui5-textarea>
+	<br>
+	<br>
+	<ui5-view-settings-dialog id="vsd">
+
+		<ui5-sort-item slot="sortItems" text="Name"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Position"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Company"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Department"></ui5-sort-item>
+
+		<ui5-filter-item slot="filterItems" text="Filter 1">
+			<ui5-filter-item-option slot="values" text="Some filter 1"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 2"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 3"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 2">
+			<ui5-filter-item-option slot="values" text="Some filter 4"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 5"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 6"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 3">
+			<ui5-filter-item-option slot="values" text="Some filter 7"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 8"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 9"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 4">
+			<ui5-filter-item-option slot="values" text="Some filter 10"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 11"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 12"></ui5-filter-item-option>
+		</ui5-filter-item>
+	</ui5-view-settings-dialog>
+
+	<ui5-view-settings-dialog id="vsdSort">
+
+		<ui5-sort-item slot="sortItems" text="Name"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Position"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Company"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Department"></ui5-sort-item>
+	</ui5-view-settings-dialog>
+
+	<ui5-view-settings-dialog id="vsdFilter">
+		<ui5-filter-item slot="filterItems" text="Filter 1">
+			<ui5-filter-item-option slot="values" text="Some filter 1"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 2"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 3"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 2">
+			<ui5-filter-item-option slot="values" text="Some filter 4"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 5"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 6"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 3">
+			<ui5-filter-item-option slot="values" text="Some filter 7"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 8"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 9"></ui5-filter-item-option>
+		</ui5-filter-item>
+		<ui5-filter-item slot="filterItems" text="Filter 4">
+			<ui5-filter-item-option slot="values" text="Some filter 10"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 11"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Some filter 12"></ui5-filter-item-option>
+		</ui5-filter-item>
+	</ui5-view-settings-dialog>
+
+	<br>
+	<br>
+	<ui5-input id="sortByItem" style="display: none"></ui5-input>
+	<ui5-input id="sortOrder" style="display: none"></ui5-input>
+
+	<h3>ViewSettingsDialog with dataset properties</h3>
+
+	<ui5-button id="btnOpenDialogWithDataSet">Show ViewSettingsDialog</ui5-button>
+	<ui5-view-settings-dialog id="vsdWithDataSet">
+		<ui5-sort-item slot="sortItems" text="Name" data-key="sortName"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Position" data-key="sortPosition"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Company" data-key="sortCompany"></ui5-sort-item>
+
+		<ui5-filter-item slot="filterItems" text="Category" data-key="filterCategory">
+			<ui5-filter-item-option slot="values" text="Electronics" data-key="filterOptionElectronics" selected></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Clothing" data-key="filterOptionClothing"></ui5-filter-item-option>
+		</ui5-filter-item>
+
+		<ui5-filter-item slot="filterItems" text="Color" data-key="filterColor">
+			<ui5-filter-item-option slot="values" text="Red" data-key="filterOptionRed"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Blue" data-key="filterOptionBlue"></ui5-filter-item-option>
+		</ui5-filter-item>
+
+	</ui5-view-settings-dialog>
+
+	<script>
+		btnOpenGroup.addEventListener("click", function () {
+			vsdGroup.open = true;
+		});
+
+		vsdGroup.addEventListener("ui5-confirm", function (e) {
+			const groupByItem = e.detail.groupByItem;
+			const groupOrder = e.detail.groupDescending ? "Descending" : "Ascending";
+
+			const sortByItem = e.detail.sortByItem;
+			const sortOrder = e.detail.sortDescending ? "Descending" : "Ascending";
+
+			console.log("Group By Item: ", groupByItem);
+			console.log("Group Order: ", groupOrder);
+			console.log("Sort By Item: ", sortByItem);
+			console.log("Sort Order: ", sortOrder);
+		});
+
+		btnOpenDialogWithDataSet.addEventListener("click", function () {
+			vsdWithDataSet.open = true;
+		});
+
+		vsdWithDataSet.addEventListener("ui5-confirm", function(e) {
+			const filterItems = e.detail.filterItems || [];
+
+			// Get the first selected filter and its selected item
+			if (filterItems.length > 0 && filterItems[0].values.length > 0) {
+				console.log("First Selected Filter: ", filterItems[0]);
+				console.log("Selected item within the first filter: ", filterItems[0].values[0]);
+				console.log("Selected item key within the first filter: ", filterItems[0].values[0].dataset.key);
+			}
+			alert("OK button clicked, returned info is: " + JSON.stringify(e.detail));
+		});
+	
+		btnOpenDialog.addEventListener("click", function () {
+			vsd.open = true;
+		});
+		btnChangeSettings.addEventListener("click", function () {
+			vsd.setConfirmedSettings(JSON.parse(vsdSettings.value));
+		});
+		vsd.addEventListener("ui5-confirm", function(evt) {
+			var sortByItemTagName = evt.detail.sortByItem && evt.detail.sortByItem.tagName;
+			sortByItem.value = `${sortByItemTagName} with text ${evt.detail.sortBy}`;
+			sortOrder.value = `${evt.detail.sortDescending}`;
+			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
+		});
+
+		btnOpenDialogSort.addEventListener("click", function () {
+			vsdSort.open = true;
+		});
+		vsdSort.addEventListener("ui5-confirm", function(evt) {
+			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
+		});
+		btnOpenDialogFilter.addEventListener("click", function () {
+			vsdFilter.open = true;
+		});
+		vsdFilter.addEventListener("ui5-confirm", function(evt) {
+			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
+		});
+	</script>
+
+</body>
+</html>

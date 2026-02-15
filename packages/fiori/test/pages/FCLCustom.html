@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Flexible Column Layout</title>
+
+	<script>// delete Document.prototype.adoptedStyleSheets</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FCLCustom-An-juj4k.css">
+</head>
+
+<body class="fclcustom1auto">
+	<ui5-label show-colon>Select layout</ui5-label>
+	<ui5-select id="selectLayout">
+		<ui5-option>TwoColumnsStartExpanded</ui5-option>
+		<ui5-option>TwoColumnsMidExpanded</ui5-option>
+		<ui5-option selected>ThreeColumnsMidExpanded</ui5-option>
+		<ui5-option>ThreeColumnsEndExpanded</ui5-option>
+		<ui5-option>ThreeColumnsStartExpandedEndHidden</ui5-option>
+		<ui5-option>ThreeColumnsMidExpandedEndHidden</ui5-option>
+	</ui5-select>
+	<ui5-flexible-column-layout id="fcl3" layout="ThreeColumnsMidExpanded">
+		<!-- start column -->
+		<div class="fclcustom2auto" slot="startColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 1</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- mid column -->
+		<div class="fclcustom2auto" slot="midColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 2</ui5-title>
+			</div>
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+
+		<!-- end column -->
+		<div class="fclcustom2auto" slot="endColumn">
+			<div class="fclcustom3auto">
+				<ui5-title>Column 3</ui5-title>
+			</div>
+
+			<ui5-list>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+				<ui5-li>Hello worild!</ui5-li>
+			</ui5-list>
+		</div>
+	</ui5-flexible-column-layout>
+
+	<script>
+		const fcl = document.getElementById("fcl3");
+		fcl.layoutsConfiguration = {
+			desktop: {
+				"TwoColumnsStartExpanded": {
+					layout: ["75%", "25%", 0],
+				},
+				"TwoColumnsMidExpanded": {
+					layout: ["20%", "80%", 0],
+				},
+				"ThreeColumnsMidExpanded": {
+					layout: ["25%", "45%", "30%"],
+				},
+				"ThreeColumnsEndExpanded": {
+					layout: ["20%", "20%", "60%"],
+				},
+				"ThreeColumnsStartExpandedEndHidden": {
+					layout: ["80%", "20%", 0],
+				},
+				"ThreeColumnsMidExpandedEndHidden": {
+					layout: ["40%", "60%", 0],
+				},
+			},
+			tablet: {
+				"TwoColumnsStartExpanded": {
+					layout: ["60%", "40%", 0],
+				},
+				"TwoColumnsMidExpanded": {
+					layout: ["40%", "60%", 0],
+				},
+				"ThreeColumnsMidExpanded": {
+					layout: [0, "60%", "40%"],
+				},
+				"ThreeColumnsEndExpanded": {
+					layout: [0, "40%", "60%"],
+				},
+				"ThreeColumnsStartExpandedEndHidden": {
+					layout: ["60%", "40%", 0],
+				},
+				"ThreeColumnsMidExpandedEndHidden": {
+					layout: ["40%", "60%", 0],
+				},
+			},
+		};
+		const selectLayout = document.getElementById("selectLayout");
+		selectLayout.addEventListener("ui5-change", (e) => {
+			fcl.layout = e.detail.selectedOption.textContent;
+		});
+	</script>
+
+</body>
+</html>

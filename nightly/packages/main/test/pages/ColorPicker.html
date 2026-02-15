@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>ColorPicker Playground</title>
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ColorPicker-CWG9tHm6.css">
+</head>
+<body class="colorpicker1auto">
+
+	<ui5-color-picker id="cp1"></ui5-color-picker>
+	<ui5-step-input id="changeEventCounter" value="0"></ui5-step-input>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+
+
+	<ui5-color-picker id="change-event"></ui5-color-picker>
+
+	<ui5-input id="color-input"></ui5-input>
+
+	<br>
+	<br>
+
+	<ui5-color-picker id="cp3"></ui5-color-picker>
+
+	<br>
+	<br>
+
+	<ui5-title>Simplified Color Picker</ui5-title>
+	<br>
+	<ui5-color-picker id="cp-simplified" value="#dbf692" simplified></ui5-color-picker>
+
+	<br>
+	<br>
+
+	<ui5-title>HSL Color Picker</ui5-title>
+	<br>
+	<ui5-color-picker id="cp-hsl" value="rgba(220, 208, 255, 1)" ></ui5-color-picker>
+
+	<script>
+		var colorPicker = document.querySelector("#change-event"),
+			colorLabel = document.querySelector("#color-input"),
+			colorPicker1 = document.getElementById("cp1"),
+			colorPickerHSL = document.getElementById("cp-hsl"),
+			stepInput = document.getElementById("changeEventCounter");
+
+		colorPicker.addEventListener("ui5-change", (event) => {
+			colorLabel.value = event.target.value;
+		});
+
+		colorPicker1.addEventListener("ui5-change", function(event) {
+			stepInput.value += 1;
+		});
+
+		colorPickerHSL._displayHSL = true;
+	</script>
+</body>
+</html>

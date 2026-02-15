@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-option-custom</title>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/SelectCustom-CC9IHs_U.css">
+</head>
+
+<body class="selectCustom-bg">
+	<div class="selectCustom-app">
+
+		<label id="lblOpt"></label><br>
+		<label id="lbl"></label><br>
+		<label id="lblLive"></label><br>
+		<label id="lblOpen"></label><br>
+		<label id="lblClose"></label><br>
+		<label id="lblValue"></label><br>
+
+		<div class="app-inner">
+			<section>
+				<ui5-title>Select + OptionCustom</ui5-title><br>
+
+				<ui5-select id="sel">
+					<div class="selectLabel" slot="label">
+						<span id="mainText">Skirt [3]</span>
+						<ui5-avatar id="avatar" size="XS" initials="S"></ui5-avatar>
+					</div>
+
+					<ui5-option-custom data-display-text="T-shirt [1]" data-additional-text="S" accessible-name="T-shirt size S" value="tshirt">
+						<div class="selecOptionCustom">
+							T-shirt [1]
+							<div>
+								<ui5-icon name="accept"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom data-display-text="Dress [2]" value="dress" data-additional-text="M" accessible-name="Dress size M" style="background-color: red; color:yellow;">
+						<div class="selecOptionCustom selecOptionCustom--warning">
+							Dress [2]
+							<div>
+								<ui5-icon name="accept" class="selectCustomIcon--warning"></ui5-icon>
+								<ui5-icon name="employee" class="selectCustomIcon--warning"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom data-display-text="Skirt [3]" value="skirt" data-additional-text="L" accessible-name="Skirt size L" selected>
+						<div  class="selecOptionCustom">
+							Skirt [3]
+							<div>
+								<ui5-icon name="accept"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+				</ui5-select>
+
+				<ui5-select value-state="Negative">
+					<div slot="valueStateMessage">Information message. This is a <a href="#test1">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+
+					<ui5-option-custom selected display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+				</ui5-select>
+
+				<ui5-select value-state="Information">
+
+					<ui5-option-custom display-text="item text [1]" selected>
+						<div class="selecOptionCustom">
+							Item 1 Text
+							<div>
+								<ui5-icon name="accept"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="item text [2]">
+						<div class="selecOptionCustom">
+							Item 2 Text
+							<div>
+								<ui5-icon name="accept"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="item text [3]">
+						<div class="selecOptionCustom">
+							Item 3 Text
+							<div>
+								<ui5-icon name="accept"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+				</ui5-select>
+
+				<ui5-select value-state="Negative">
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+				</ui5-select>
+
+				<ui5-select readonly>
+					<ui5-option-custom display-text="Phone">
+						<div class="selecOptionCustom">
+							Phone
+							<div>
+								<ui5-icon name="phone"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Tablet">
+						<div class="selecOptionCustom">
+							Tablet
+							<div>
+								<ui5-icon name="ipad-2"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom display-text="Desktop">
+						<div class="selecOptionCustom">
+							Desktop
+							<div>
+								<ui5-icon name="laptop"></ui5-icon>
+								<ui5-icon name="employee"></ui5-icon>
+							</div>
+						</div>
+					</ui5-option-custom>
+
+				</ui5-select>
+			</section>
+
+
+			<section>
+				<ui5-title>Select+ OptionCustom Test setup</ui5-title><br>
+
+				<ui5-input id="testChange" placeholder="change fired 0"></ui5-input><br>
+				<ui5-input id="testPreview" placeholder="live-change fired 0"></ui5-input><br>
+				<ui5-input id="testOpen" placeholder="open fired 0"></ui5-input><br>
+				<ui5-input id="testClose" placeholder="close fired 0"></ui5-input><br>
+
+				<ui5-select id="selTest">
+					<ui5-option-custom id="selOption1" display-text="item1" value="item1">
+						<div>Item 1</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom id="selOption2" display-text="item2" value="item2">
+						<div>Item 2</div>
+					</ui5-option-custom>
+
+					<ui5-option-custom id="selOption3" display-text="item3" value="item3">
+						<div>Item 3</div>
+					</ui5-option-custom>
+				</ui5-select>
+
+
+				<ui5-button id="clearCounter">Reset counters</ui5-button>
+				<ui5-button id="btnFocusOut">Focus out</ui5-button>
+				<ui5-button id="btnSetValue">select.value = "item1"</ui5-button>
+				<ui5-button id="btnSetInvalidValue">select.value = "nan"</ui5-button>
+			</section>
+
+			<section>
+				<ui5-title>Select + Option</ui5-title><br>
+
+				<ui5-select id="selectPrevent">
+					<ui5-option-custom selected>Cozy</ui5-option-custom>
+					<ui5-option-custom selected>Compact</ui5-option-custom>
+					<ui5-option-custom selected>Condensed</ui5-option-custom>
+				</ui5-select>
+
+				<ui5-select id="errorSelect" value-state="Negative">
+					<ui5-option-custom selected>Cozy</ui5-option-custom>
+					<ui5-option-custom selected>Compact</ui5-option-custom>
+					<ui5-option-custom selected>Condensed</ui5-option-custom>
+				</ui5-select>
+			</section>
+
+
+		</div>
+	</div>
+
+	<script>
+		let counter = 0;
+		let liveCounter = 0;
+		let closeCounter = 0;
+		let openCounter = 0;
+
+		sel.addEventListener("ui5-change", function(e) {
+			lbl.innerHTML = "CHANGE EVENT :: " + e.detail.selectedOption.localName + " :: <" + e.detail.selectedOption.textContent + "> :: event counter :: <" + (++counter) + ">";
+			lblValue.innerHTML = "Select value :: " + sel.value;
+		});
+
+		sel.addEventListener("ui5-live-change", function(e) {
+			lblLive.innerHTML = "PREVIEW CHANGE EVENT :: " + e.detail.selectedOption.localName + " :: <" + e.detail.selectedOption.textContent + "> :: event counter :: <" + (++liveCounter) + ">";
+			lblValue.innerHTML = "Select value :: " + sel.value;
+			mainText.innerHTML = e.detail.selectedOption.getAttribute("data-display-text")
+			avatar.initials = e.detail.selectedOption.getAttribute("data-additional-text");
+		});
+
+		sel.addEventListener("ui5-close", function(e) {
+			lblClose.innerHTML = "CLOSE EVENT :: counter :: <" + (++closeCounter) + ">";
+		});
+
+		sel.addEventListener("ui5-open", function(e) {
+			lblOpen.innerHTML = "OPEN EVENT :: counter :: <"+ (++openCounter) + ">";
+		});
+
+		// Tests
+		let testChangeCounter = 0;
+		let testPreviewCounter = 0;
+		let testOpenCounter = 0;
+		let testCloseCounter = 0;
+
+		selTest.addEventListener("ui5-change", function(e) {
+			testChange.value = `${++testChangeCounter}`;
+		});
+		selTest.addEventListener("ui5-live-change", function(e) {
+			testPreview.value = `${++testPreviewCounter}`;
+		});
+		selTest.addEventListener("ui5-open", function(e) {
+			testOpen.value = `${++testOpenCounter}`;
+		});
+		selTest.addEventListener("ui5-close", function(e) {
+			testClose.value = `${++testCloseCounter}`;
+		});
+
+		clearCounter.addEventListener("click", function(e) {
+			testChangeCounter = 0;
+			testPreviewCounter = 0;
+			testOpenCounter = 0;
+			testCloseCounter = 0;
+
+			testChange.value = `${testChangeCounter}`;
+			testPreview.value = `${testPreviewCounter}`;
+			testOpen.value = `${testOpenCounter}`;
+			testClose.value = `${testCloseCounter}`;
+		});
+
+		btnSetValue.addEventListener("click", function(e) {
+			selTest.value = "item1";
+		});
+		btnSetInvalidValue.addEventListener("click", function(e) {
+			selTest.value = "nan";
+		});
+	</script>
+</html>

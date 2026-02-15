@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-input</title>
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body class="input1auto">
+	<ui5-title>Input</ui5-title>
+	<ui5-input></ui5-input>
+
+	<ui5-title>Input disabled</ui5-title>
+	<ui5-input class="input4auto" id="input-disabled" disabled placeholder="Disabled one ...">
+		<ui5-icon slot="icon" name="appointment-2"></ui5-icon>
+	</ui5-input>
+
+	<ui5-title> Input readonly</ui5-title>
+	<ui5-input id="input-readonly" value="Value can`t be changed" readonly></ui5-input>
+
+	<ui5-title> Input required</ui5-title>
+	<ui5-input id="input-required" value="This input is required" required></ui5-input>
+
+	<ui5-title> Input valueState Negative</ui5-title>
+	<ui5-input  value="input" value-state="Negative" placeholder="Negative state ..."></ui5-input>
+
+	<ui5-title> Input valueState Positive</ui5-title>
+	<ui5-input id="input3" value-state="Positive" placeholder="Positive state ..."></ui5-input>
+
+	<ui5-title> Input valueState Information</ui5-title>
+	<ui5-input value-state="Information" placeholder="Info state ..."></ui5-input>
+
+	<ui5-title> Input valueState Critical</ui5-title>
+	<ui5-input value-state="Critical" placeholder="Critical state ..."></ui5-input>
+
+	<ui5-title>Input suggestions with grouping</ui5-title>
+	<ui5-input id="myInputGrouping" show-suggestions class="input3auto">
+		<ui5-suggestion-item-group text="Content Density"></ui5-suggestion-item-group>
+		<ui5-suggestion-item text="Compact"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Condensed"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Cozy"></ui5-suggestion-item>
+		<ui5-suggestion-item-group text="Themes"></ui5-suggestion-item-group>
+		<ui5-suggestion-item type="Inactive" text="Inactive Quartz"></ui5-suggestion-item>
+		<ui5-suggestion-item type="Inactive" text="Inactive HCB"></ui5-suggestion-item>
+	</ui5-input>
+
+	<ui5-title>Input suggestions with highlighing</ui5-title>
+	<ui5-input id="myInputHighlighted" show-suggestions class="input3auto">
+		<ui5-suggestion-item text="Adam D" description="Administrative Support"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Aanya Sing" description="Administrative Support"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Allen K" description="Technical Support"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Alex" description="Technical Support"></ui5-suggestion-item>
+	</ui5-input>
+</body>
+</html>

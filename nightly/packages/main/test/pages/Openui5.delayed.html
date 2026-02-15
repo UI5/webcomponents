@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+	<title>OpenUI5 delayed loading</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>
+	window["sap-ui-config"] = {
+		onInit: function () {
+			console.log("The application has already defined onInit that must not be overwritten");
+		},
+		theme: "sap_horizon",
+		libs: "sap.m"
+	};
+	</script>
+	
+
+	<script>
+		setTimeout(() => {
+			var script = document.createElement("script");
+			script.id = "sap-ui-bootstrap";
+			// script.src = "https://sdk.openui5.org/resources/sap-ui-core.js";
+			script.src = "https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js";
+			script.async = true;
+			document.head.appendChild(script);
+			setTimeout(() => {
+				new sap.m.DatePicker().placeAt("sapMDatePicker");
+			}, 1000);
+		}, 1000);
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<div id="sapMDatePicker"></div>
+
+	<ui5-list id="side-nav-list" selection-mode="Single" separators="Inner">
+		<ui5-li type="Active" id="arg1" icon="developer-settings">ui5-button</ui5-li>
+		<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-card</ui5-li>
+		<ui5-li type="Active" id="bg1" icon="developer-settings">ui5-checkbox</ui5-li>
+	</ui5-list>
+</body>
+</html>

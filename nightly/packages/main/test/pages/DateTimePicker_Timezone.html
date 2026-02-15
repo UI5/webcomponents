@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>DateTimePicker Test Page</title>
+
+	<!-- <script id="sap-ui-bootstrap"
+		src="https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_horizon_dark"
+	></script> -->
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DateTimePicker-Be-EqUyp.css">
+</head>
+
+<body class="datetimepicker1auto">
+		<ui5-title>Local time</ui5-title><ui5-label id="localTime"></ui5-label>
+
+
+		<ui5-title>Timezones</ui5-title>
+		<div style="display: flex; align-items: center;">
+			<ui5-select id="sel" style="width: 300px">
+				<ui5-option data-timezone="Pacific/Honolulu">Pacific/Honolulu [-10:00]</ui5-option>
+				<ui5-option data-timezone="America/Los_Angeles">America/Los_Angeles [-8:00]</ui5-option>
+				<ui5-option data-timezone="America/New_York">America/New_York [-5:00]</ui5-option>
+				<ui5-option data-timezone="Europe/London">Europe/London [00:00]</ui5-option>
+				<ui5-option data-timezone="Europe/Sofia" selected>Europe/Sofia [02:00]</ui5-option>
+				<ui5-option data-timezone="Asia/Dubai">Asia/Dubai [04:00]</ui5-option>
+				<ui5-option data-timezone="Asia/Bishkek">Asia/Bishkek [06:00]</ui5-option>
+				<ui5-option data-timezone="Australia/Sydney">Australia/Sydney [10:00]</ui5-option>
+			</ui5-select>
+			<ui5-datetime-picker id="dtp" format-pattern="dd/MM/yyyy, HH:mm:ss" value="today"></ui5-datetime-picker>
+			<ui5-time-picker id="tp" format-pattern="HH:mm:ss"></ui5-time-picker>
+		</div>
+	
+		<script>
+			sel.addEventListener("change", async (e) => {
+				const config = window['sap-ui-webcomponents-bundle'].configuration;
+				await config.setTimezone(e.detail.selectedOption.getAttribute("data-timezone"));
+
+				dtp.value = "today";
+			});
+
+			localTime.textContent = new Date();
+
+
+			document.addEventListener("DOMContentLoaded", function(event) {
+				const Configuration = window["sap-ui-webcomponents-bundle"].configuration;
+				const configTimezone = Configuration.getTimezone();
+
+				if (configTimezone) {
+					setTimeout(() => {
+						const option = document.querySelector(`ui5-option[data-timezone="${configTimezone}"]`);
+						const selectedOption = document.querySelector(`ui5-option[selected]`);
+						if (selectedOption) {
+							selectedOption.selected = false;
+						}
+						if (option) {
+							option.selected = true;
+							console.log(option)
+						}
+					})
+				}
+			})
+		</script>
+</body>
+</html>

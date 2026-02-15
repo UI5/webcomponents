@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Busy Indicator</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/BusyIndicator-CDklv0xL.css">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Dialog-BGPpZ3q2.css">
+</head>
+
+<body class="busyindicator1auto">
+	<ui5-title>Large ui5-busy-indicator</ui5-title>
+	<ui5-busy-indicator active size="L"></ui5-busy-indicator>
+	<br/>
+	<br/>
+
+	<ui5-title>Default Medium ui5-busy-indicator</ui5-title>
+	<ui5-busy-indicator size="M" active id="indicator1"></ui5-busy-indicator>
+
+	<br />
+	<br />
+	<ui5-busy-indicator size="M" active id="indicator2"></ui5-busy-indicator>
+
+	<h2>With Text</h2>
+	<ui5-busy-indicator id="busy-indicator-text-placement-bottom" active text="Loading" class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Loading" text-placement="Top" active class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Very very very very very very very very very long text" active class="busyindicator2auto redBorder"></ui5-busy-indicator>
+	<ui5-busy-indicator id="busy-indicator-text-placement-top" text="Very very very very very very very very very long text" active class="redBorder"></ui5-busy-indicator>
+	<br />
+	<br />
+	<h2>With Text and Content (Not by Design)</h2>
+	<ui5-busy-indicator size="M" active text="Loading">
+		<ui5-checkbox text="Hello World"></ui5-checkbox>
+	</ui5-busy-indicator>
+	<br />
+	<br />
+	<ui5-busy-indicator size="M" active class="busyindicator6auto" text="Custom loading text">
+		<ui5-list class="busyindicator7auto">
+			<ui5-li>Item 1</ui5-li>
+			<ui5-li>Item 2</ui5-li>
+			<ui5-li>Item 3</ui5-li>
+		</ui5-list>
+	</ui5-busy-indicator>
+
+	<h2>Tab Chain</h2>
+	<div>
+		<ui5-button id="beforeIndicatorWithBtn">focus stop before</ui5-button>
+		<ui5-busy-indicator id="indicatorWithBtn" size="M" active>
+			<ui5-button>Hello World</ui5-button>
+		</ui5-busy-indicator>
+		<ui5-button id="afterIndicatorWithBtn" >focus stop after</ui5-button>
+	</div>
+
+	<br />
+	<br />
+
+	<h2>Sizes</h2>
+	<span>Medium (default) </span>
+	<br>
+	<br>
+
+	<ui5-busy-indicator active></ui5-busy-indicator>
+	<br>
+	<br>
+	<span>Small </span>
+
+	<br>
+	<br>
+	<ui5-busy-indicator size="S" active></ui5-busy-indicator>
+	<br>
+	<br>
+	<span>Medium </span>
+
+	<br>
+	<br>
+	<ui5-busy-indicator size="M" active></ui5-busy-indicator>
+	<br>
+	<br>
+	<span>Large </span>
+
+	<br>
+	<br>
+	<ui5-busy-indicator size="L" active></ui5-busy-indicator>
+	<br>
+	<br>
+
+	<h2>Dynamic Indicator</h2>
+	<ui5-button id="fetch-btn" class="busyindicator3auto">Fetch List Data</ui5-button>
+	<br>
+	<br>
+	<ui5-busy-indicator id="busy-container" class="busyindicator4auto" size="M" text="Loading">
+		<ui5-list id="fetch-list" no-data-text="No Data" header-text="Available Items" class="busyindicator5auto"></ui5-list>
+	</ui5-busy-indicator>
+
+	<br>
+	<br>
+	<ui5-busy-indicator id="busy-tree" class="busyindicator8auto" delay="0">
+		<ui5-tree id="treeDynamic">
+			<div slot="header">
+				<ui5-title>Dynamic tree</ui5-title>
+			</div>
+
+			<ui5-tree-item text="Has no children at all"></ui5-tree-item>
+
+			<ui5-tree-item text="Has preloaded children">
+				<ui5-tree-item text="Child 1"></ui5-tree-item>
+				<ui5-tree-item text="Child 2"></ui5-tree-item>
+			</ui5-tree-item>
+
+			<ui5-tree-item id="dynamicNode" text="Has children, but not yet loaded" has-children></ui5-tree-item>
+		</ui5-tree>
+	</ui5-busy-indicator>
+
+	<ui5-input value="0" id="tree-input"></ui5-input>
+
+	<br>
+	<br>
+
+	<ui5-button id="open-dialog-inactive-indicator">Open Dialog with Inactive Indicator</ui5-button>
+	<ui5-dialog id="dialog-inactive-indicator">
+		<div slot="header">Dialog with focus issue</div>
+		<div>
+			<div>Buttons are wrapped in busy indicator, which is inactive.</div>
+			<ui5-busy-indicator>
+				<ui5-button id="dialog-inactive-indicator-focused-button">button 1</ui5-button>
+				<ui5-button>button 2</ui5-button>
+				<ui5-button>button 3</ui5-button>
+			</ui5-busy-indicator>
+		</div>
+	</ui5-dialog>
+
+	<ui5-button id="open-dialog-active-indicator">Open Dialog with Active Indicator</ui5-button>
+	<ui5-dialog id="dialog-active-indicator">
+		<div slot="header">Dialog with focus issue</div>
+		<div>
+			<div>Buttons are wrapped in busy indicator, which is active.</div>
+			<ui5-busy-indicator active>
+				<ui5-button>button 1</ui5-button>
+				<ui5-button>button 2</ui5-button>
+				<ui5-button>button 3</ui5-button>
+			</ui5-busy-indicator>
+		</div>
+	</ui5-dialog>
+
+	<ui5-button id="open-dialog-loading-text">Open Dialog with loading text indicator</ui5-button>
+	<ui5-dialog id="dialog-loading-text"  header-text="Loading Data" initial-focus="btnOk">
+			<ui5-busy-indicator style="display: block;" active text="Loading data from backend server" text-placement="Top">
+			</ui5-busy-indicator>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="btnOk" design="Emphasized">OK</ui5-button>
+			</div>
+	</ui5-dialog>
+
+	<br>
+	<br>
+	<h2>With Delay</h2>
+	<div></div>
+	<ui5-button id="open-dialog-delayed-indicator">Open dialog</ui5-button>
+	<ui5-dialog id="dialog-delayed-indicator">
+		<ui5-busy-indicator id="dialog-delayed-indicator-indicator" delay="5000" >
+			<span>Will become busy after 5 seconds</span>
+			<span>Shouldn't attempt to focus the busy indicator</span>
+		</ui5-busy-indicator>
+		<ui5-button id="dialog-delayed-indicator-focus-stop">focus stop</ui5-button>
+	</ui5-dialog>
+
+	<br>
+	<br>
+	<h2>Height</h2>
+    <div style="display: flex;">
+      <div style="border: 1px solid black;">
+        <ui5-busy-indicator active style="height: 100%;">
+          <div style="background-color: orange; width: 200px; height: 100%;">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis
+            quasi, minus ullam aut eaque dolorem eos rem itaque unde, veritatis
+            consequuntur numquam! Repellat sunt, dignissimos fugit voluptate
+            animi repudiandae placeat?
+          </div>
+        </ui5-busy-indicator>
+      </div>
+      <div style="border: 1px solid black;">
+        <ui5-busy-indicator id="busy-indicator-height"  active style="height: 100%;">
+          <div style="background-color: orange; width: 200px; height: 100%;">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </div>
+        </ui5-busy-indicator>
+      </div>
+    </div>
+    <br />
+
+	<h2>Border Radius</h2>
+	<ui5-busy-indicator active>
+		<div class="circle">
+			<span>No border radius set (default)</span>
+		</div>
+	</ui5-busy-indicator>
+	<ui5-busy-indicator active class="busyIndicatorRadius50">
+		<div class="circle">
+			<span>With 50% border radius</span>
+		</div>
+	</ui5-busy-indicator>
+
+	<script>
+		document.getElementById("fetch-btn").addEventListener("click", function(event) {
+			var busyIndicator = document.getElementById("busy-container");
+			var list = document.getElementById("fetch-list");
+			busyIndicator.setAttribute("active", "");
+
+			setTimeout(function() {
+				var elements = ["UI5", "Web", "Components"].forEach(function(title) {
+					var el = document.createElement("ui5-li");
+					el.textContent = title;
+
+					list.appendChild(el);
+				});
+
+				list.noDataText = "";
+				busyIndicator.removeAttribute("active");
+			}, 2000);
+		});
+
+		var dynamicTree = document.getElementById("treeDynamic");
+		var busyIndicator = document.getElementById("busy-tree");
+		var input = document.getElementById("tree-input");
+		var inputValue = 0;
+
+		dynamicTree.addEventListener("ui5-item-toggle", function(event) {
+			var item = event.detail.item; // get the node that is toggled
+			console.log(item);
+			// Only for the dynamic node, only when it's empty
+			if (item.id === "dynamicNode" && item.children.length === 0) {
+				busyIndicator.active = true;
+				event.preventDefault(); // do not let the toggle button switch yet
+				setTimeout(function() {
+					var newItem = document.createElement("ui5-tree-item"); // Fetching from db....
+					newItem.text = "Node fetched from DB after 2 sec";
+					item.appendChild(newItem);
+					item.toggle(); // now manually switch
+					busyIndicator.active = false;
+				}, 2000);
+			}
+		});
+
+		dynamicTree.addEventListener("ui5-item-click", function(event) {
+			var item = event.detail.item; // get the node that is toggled
+
+			// Only for the dynamic node, only when it's empty
+			if (item.id === "dynamicNode") {
+				input.value = `${++inputValue}`;
+			}
+		});
+
+		document.getElementById("open-dialog-inactive-indicator").addEventListener("click", function () {
+			document.getElementById("dialog-inactive-indicator").open = true;
+		});
+
+		document.getElementById("open-dialog-active-indicator").addEventListener("click", function () {
+			document.getElementById("dialog-active-indicator").open = true;
+		});
+
+		document.getElementById("open-dialog-delayed-indicator").addEventListener("click", function () {
+			document.getElementById("dialog-delayed-indicator-indicator").active = true;
+			document.getElementById("dialog-delayed-indicator").open = true;
+		});
+
+		document.getElementById("open-dialog-loading-text").addEventListener("click", function () {
+			document.getElementById("dialog-loading-text").open = true;
+		});
+
+	</script>
+</body>
+
+</html>

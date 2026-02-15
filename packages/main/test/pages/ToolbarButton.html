@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <title>ToolbarButton</title>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta charset="utf-8" />
+
+      <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+    </head>
+    <body>
+        <ui5-label id="btn">Add</ui5-label>
+
+        <ui5-toolbar id="otb_d">
+            <ui5-toolbar-button
+                text="Back"
+                design="Emphasized"
+                disabled
+                icon="sap-icon://add"
+                end-icon="sap-icon://employee"
+                tooltip="Add"
+            ></ui5-toolbar-button>
+
+            <!-- accessible-name -->
+            <ui5-toolbar-button
+                icon="sap-icon://add"
+                accessible-name="Add"
+                accessible-name-ref="btn"
+            ></ui5-toolbar-button>
+        </ui5-toolbar>
+
+        <script>
+            const accButton = document.querySelector(
+                "ui5-toolbar-button[accessible-name]"
+            );
+            accButton.accessibilityAttributes = {
+                expanded: "true",
+                controls: "btn",
+                hasPopup: "dialog",
+            };
+        </script>
+    </body>
+</html>

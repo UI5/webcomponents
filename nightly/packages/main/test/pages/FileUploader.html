@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>FileUploader test page</title>
+
+
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/FileUploader-B6R_3sW6.css">
+</head>
+<body class="fileuploader1auto">
+
+	<div>
+		<div>
+			<ui5-label for="fileSelector1" required>Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector1" style="width: 350px;" multiple required>
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label>Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector2" style="width: 350px;" accessible-name="Choose Files" multiple value-state="Negative">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label id="labelForUploader3">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector3" style="width: 350px;" accessible-name-ref="labelForUploader3" multiple value-state="Positive">
+				<ui5-button>Upload</ui5-button>
+				<div slot="valueStateMessage">The selected files are uploaded successfully</div>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="fileSelector4">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector4" style="width: 350px;" multiple value-state="Critical">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="fileSelector5">Choose files:</ui5-label>
+			<ui5-file-uploader id="fileSelector5" style="width: 350px;" multiple value-state="Information">
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="buttonOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="buttonOnly" multiple hide-input>
+				<ui5-button>Upload</ui5-button>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="avatarOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="avatarOnly" multiple hide-input>
+				<ui5-avatar icon="product" interactive shape="Circle" size="XS"></ui5-avatar>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="iconOnly">Choose files:</ui5-label>
+			<ui5-file-uploader id="iconOnly" multiple hide-input>
+				<ui5-icon name="value-help" mode="Interactive"></ui5-icon>
+			</ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="noneFile">Choose files with maximum size of 1 MB:</ui5-label>
+			<ui5-file-uploader id="noneFile" style="width: 350px;" max-file-size="1" value-state="None"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="disabledFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="disabledFile" style="width: 350px;" disabled></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="negativeFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="negativeFile" style="width: 350px;" value-state="Negative"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="positiveFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="positiveFile" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Positive"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="criticalFile">Choose files:</ui5-label>
+			<ui5-file-uploader id="criticalFile" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Critical"></ui5-file-uploader>
+		</div>
+
+		<div>
+			<ui5-label for="infoInput">Choose files:</ui5-label>
+			<ui5-file-uploader id="infoInput" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Information"></ui5-file-uploader>
+		</div>
+		<div>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-label for="formFileUploader">Choose files:</ui5-label>
+				<ui5-file-uploader id="formFileUploader" placeholder="Upload your files here" style="width: 350px;" required></ui5-file-uploader>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</div>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const formFileUploader = document.getElementById('formFileUploader');
+
+			btnCheckFormValidity.addEventListener('click', function() {
+				checkFormValidity('formFileUploader');
+			});
+
+			formFileUploader.addEventListener('ui5-change', function() {
+				setTimeout(() => {
+					checkFormValidity('formFileUploader', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
+</body>
+</html>

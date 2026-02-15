@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Dialog with Bar/Toolbar test page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+</head>
+
+<style>
+	#dialog-bar::part(header),
+	#dialog-bar::part(footer) {
+		padding-inline: 0;
+	}
+
+	#dialog-custom-colors::part(header) {
+		--sapPageHeader_TextColor: blue; 
+		--sapPageHeader_Background: lightblue;     
+		--sapNegativeElementColor: blue;
+	}
+</style>
+
+<body class="bar1auto">
+	<ui5-button id="dialog-bar-open">Dialog with Bar in Footer</ui5-button>
+	<ui5-dialog resizable id="dialog-bar" header-text="Using bar with design=Footer as footer">
+		<ui5-bar slot="header" design="Header">
+			<ui5-title level="H5" slot="startContent">Sample Dialog with Bar</ui5-title>
+			<ui5-button
+			  design="Transparent"
+			  id="closeDialogButton"
+			  slot="endContent"
+			  icon="decline">
+			</ui5-button>
+		  </ui5-bar>
+		  <div>
+			Content
+		  </div>
+		<ui5-bar slot="footer" design="Footer">
+			<ui5-button id="dialog-bar-close" design="Emphasized" slot="endContent" style="min-width: 4rem;">Close</ui5-button>
+		</ui5-bar>
+	</ui5-dialog>
+
+	<ui5-button id="dialog-bar-state-open">Error Dialog with Bar in Header</ui5-button>
+	<ui5-dialog resizable id="dialog-bar-state" state="Negative">
+		<ui5-bar slot="header" design="Header">
+			<ui5-title level="H5" slot="startContent">
+			  Bar used in Header
+			</ui5-title>
+			<ui5-button
+			  design="Transparent"
+			  id="closeDialogStateButton"
+			  slot="endContent"
+			  icon="decline"
+			></ui5-button>
+		  </ui5-bar>	  
+		  <div>
+			Content
+		  </div>
+		<ui5-bar slot="footer" design="Footer">
+			<ui5-button id="dialog-bar-state-close" design="Emphasized" slot="endContent" style="min-width: 4rem;">Close</ui5-button>
+		</ui5-bar>
+	</ui5-dialog>
+
+	<ui5-button id="dialogOpener">Open Dialog with Toolbar and overstyled Header</ui5-button>
+    <ui5-dialog id="dialog-custom-colors" state="Negative" header-text="State :: Negative">
+        <ui5-text>Dialog with state</ui5-text>
+        <ui5-toolbar slot="footer">
+            <ui5-toolbar-button class="dialogCloser" text="Close"></ui5-toolbar-button>
+        </ui5-toolbar>
+    </ui5-dialog>
+
+	<script>
+		window["dialog-bar-open"].addEventListener("click", function () {
+			window["dialog-bar"].open = true;
+		});
+
+		window["dialog-bar-state-open"].addEventListener("click", function () {
+			window["dialog-bar-state"].open = true;
+		});
+
+		window["dialog-bar-close"].addEventListener("click", function () {
+			window["dialog-bar"].removeAttribute("open");
+		});
+
+		window["dialog-bar-state-close"].addEventListener("click", function () {
+			window["dialog-bar-state"].removeAttribute("open");
+		});
+
+		window["closeDialogButton"].addEventListener("click", function () {
+			window["dialog-bar"].removeAttribute("open");
+		});
+
+		window["closeDialogStateButton"].addEventListener("click", function () {
+			window["dialog-bar-state"].removeAttribute("open");
+		});
+
+		var dialogOpener = document.getElementById("dialogOpener");
+		var dialog = document.getElementById("dialog-custom-colors"); 
+		var dialogClosers = [...dialog.querySelectorAll(".dialogCloser")];
+
+
+		dialogOpener.addEventListener("click", () => {
+			dialog.open = true;
+		});
+		dialogClosers.forEach(btn => {
+			btn.addEventListener("click", () => {
+				dialog.open = false;
+			});
+		});
+	</script>
+</body>
+
+</html>

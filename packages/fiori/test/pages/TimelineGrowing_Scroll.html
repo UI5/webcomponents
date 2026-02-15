@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Timeline</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/TimelineGrowing_Button-BuuUOWeD.css">
+</head>
+
+<body class="timeline_auto">
+
+	<header class="header">
+		<h1 class="header-title">Timeline growing "Scroll"</h1>
+	</header>
+
+	<section>
+		<h2>Timeline - Vertical</h2>
+		<div class="timeline-vertical-container">
+			<ui5-timeline layout="Vertical" id="timelineVertical" growing="Scroll">
+				<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" name="Stanislava Baltova"
+					name-clickable></ui5-timeline-item>
+				<ui5-timeline-item title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)"
+					icon="calendar">
+					<ui5-label>MR SOF02 2.43</ui5-label>
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (13:30 - 14:00)"
+					icon="calendar"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+
+		<h2>Timeline - Horizontal</h2>
+		<div class="timeline-horizontal-container">
+			<ui5-timeline id="timelineHorizontal" layout="Horizontal" growing="Scroll">
+				<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="calendar"
+					name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+				<ui5-timeline-item title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)"
+					icon="calendar">
+					<ui5-label>MR SOF02 2.43</ui5-label>
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+				<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+					icon="calendar" name="Stanislava Baltova">
+					Online meeting
+				</ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+	</section>
+
+	<section>
+
+	</section>
+
+
+
+	<script>
+		const timelineVertical = document.getElementById("timelineVertical");
+		const timelineHorizontal = document.getElementById("timelineHorizontal");
+
+		timelineVertical.addEventListener("load-more", () => addElement(timelineVertical));
+		timelineHorizontal.addEventListener("load-more", () => addElement(timelineHorizontal));
+
+		function addElement(timeline) {
+			timeline.loading = true;
+
+			 setTimeout(() => {
+				for (let i = 0; i < 10; i++) {
+					const item = document.createElement("ui5-timeline-item");
+					item.setAttribute("title-text", "Video Conference Call");
+					item.setAttribute("subtitle-text", "31.01.2018 (12:00 - 13:00)");
+					item.setAttribute("icon", "calendar");
+					item.setAttribute("name", "tanislava Baltova");
+					item.textContent = "Online meeting";
+
+					timeline.appendChild(item);
+					timeline.loading = false;
+				}
+
+			}, 1500);
+		}
+	</script>
+</body>
+
+</html>

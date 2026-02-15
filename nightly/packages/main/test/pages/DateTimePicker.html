@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>DateTimePicker Test Page</title>
+
+    <script>
+		// delete Document.prototype.adoptedStyleSheets;
+    </script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/DateTimePicker-Be-EqUyp.css">
+</head>
+
+<body class="datetimepicker1auto">
+
+	<ui5-label for="dtpLabel">Deadline</ui5-label>
+	<ui5-datetime-picker id="dtpLabel"></ui5-datetime-picker>
+
+	<section>
+		<ui5-title>DateTimePicker</ui5-title><br>
+		<ui5-datetime-picker id="dt"></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>with shorter value format</ui5-title>
+		<ui5-datetime-picker value-format='yyyy-MM-dd HH:mm'
+		></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>DateTimePicker format pattern</ui5-title>
+
+		<br><ui5-label>Default format pattern</ui5-label><br>
+		<ui5-datetime-picker
+			id="defaultPattern"
+			value="13/04/2020, 03:16:16 AM"
+		></ui5-datetime-picker>
+		<ui5-button id="setButton" design="Default">Set date</ui5-button>
+
+		<br>
+
+		<br><ui5-label>d/MM/yyyy, hh:mm a</ui5-label><br>
+		<ui5-datetime-picker
+			id="dtMinutes"
+			format-pattern="dd/MM/yyyy, hh:mm a"
+			value="13/04/2020, 09:16 AM"
+		></ui5-datetime-picker>
+
+		<h3>display-fomat='medium' value-fomat='yyyy-MM-dd'</h3>
+		<ui5-datetime-picker id='dp12' display-format='medium' value-format='yyyy-MM-dd HH:mm:ss'></ui5-datetime-picker>
+
+		<br>
+
+		<br><ui5-label>d/MM/yyyy, hh:mm:ss a</ui5-label><br>
+		<ui5-datetime-picker
+			id="dtSeconds"
+			format-pattern="dd/MM/yyyy, hh:mm:ss a"
+			value="13/04/2020, 03:16:16 AM"
+		></ui5-datetime-picker>
+
+		<br>
+
+		<br><ui5-label>yyyy-MM-dd-hh:mm:ss a</ui5-label><br>
+		<ui5-datetime-picker
+			id="dtPreventDefault"
+			format-pattern="yyyy-MM-dd-hh:mm:ss a"
+		></ui5-datetime-picker>
+
+		<br>
+
+		<br><ui5-label>d/MM/yyyy, HH:mm:ss (24 hour format)</ui5-label><br>
+		<ui5-datetime-picker
+			format-pattern="dd/MM/yyyy, HH:mm:ss"
+			value="13/04/2020, 19:16:16"
+		></ui5-datetime-picker>
+
+		<br>
+
+		<br><ui5-label>d/MM/yyyy, H</ui5-label><br>
+		<ui5-datetime-picker
+			format-pattern="dd/MM/yyyy, H"
+			value="13/04/2020, 19"
+		></ui5-datetime-picker>
+
+		<br>
+
+		<br><ui5-label>d/MM/yyyy - no timeset</ui5-label><br>
+		<ui5-datetime-picker
+			format-pattern="dd/MM/yyyy"
+			value="Apr 10, 2020"
+		></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>DateTimePicker with no format pattern & min-max dates in ISO format</ui5-title><br>
+		<ui5-datetime-picker
+				id="dtMinMaxDatesISO"
+				min-date="2023-05-01"
+				max-date="2023-05-31"
+		></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>Test DateTimePicker change event on submit</ui5-title>
+		<br>
+
+		<ui5-datetime-picker id="dt1"></ui5-datetime-picker><br>
+		<br><ui5-label>Change counter</ui5-label><br>
+		<ui5-input
+			id="input1"
+			class="datetimepicker2auto">
+		</ui5-input>
+
+		<br><ui5-label>Changed value</ui5-label><br>
+		<ui5-input
+			id="input2"
+			class="datetimepicker2auto">
+		</ui5-input>
+	</section>
+
+	<section>
+		<ui5-title>Test DateTimePicker change event on cancel</ui5-title>
+		<br/>
+
+		<ui5-datetime-picker id="dt2"></ui5-datetime-picker><br>
+
+		<br><ui5-label>Change counter</ui5-label><br>
+		<ui5-input id="input3" class="datetimepicker2auto"></ui5-input>
+
+		<br><ui5-label>Changed value</ui5-label><br>
+		<ui5-input id="input4" class="datetimepicker2auto"></ui5-input>
+	</section>
+
+	<section>
+	<ui5-datetime-picker
+			id="dtTest12AM"
+			format-pattern="dd/MM/yyyy, hh:mm:ss a"
+			value="13/04/2020, 03:16:16 AM"
+		></ui5-datetime-picker>
+	</section>
+	<ui5-datetime-picker
+			id="dtTest12PM"
+			format-pattern="dd/MM/yyyy, hh:mm:ss a"
+			value="13/04/2020, 03:16:16 AM">
+		</ui5-datetime-picker>
+
+	<section>
+		<ui5-title>DateTimePicker states</ui5-title>
+		<ui5-datetime-picker value-state="Negative"></ui5-datetime-picker>
+		<ui5-datetime-picker value-state="Critical"></ui5-datetime-picker>
+		<ui5-datetime-picker value-state="Information"></ui5-datetime-picker>
+		<ui5-datetime-picker value-state="Positive"></ui5-datetime-picker>
+		<ui5-datetime-picker value-state="Negative">
+			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
+		</ui5-datetime-picker>
+		<br><br>
+		<ui5-datetime-picker readonly></ui5-datetime-picker>
+		<ui5-datetime-picker disabled></ui5-datetime-picker>
+	</section>
+
+	<section class="sapUiSizeCompact">
+		<ui5-title>DateTimePicker compact size</ui5-title>
+		<ui5-datetime-picker
+		></ui5-datetime-picker>
+
+		<br>
+		<ui5-datetime-picker
+			format-pattern="yyyy-MM-dd-hh:mm:ss a"
+			value="2020-04-13-04:16:16 AM"
+		></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>DateTimePicker with secondary calendar type</ui5-title>
+		<ui5-datetime-picker
+			id="secondaryCalendar"
+			value="Sha. 24, 1443 AH, 10:27:26 AM"
+			primary-calendar-type="Islamic"
+			secondary-calendar-type="Gregorian"
+		></ui5-datetime-picker>
+	</section>
+
+	<section>
+		<ui5-title>DateTimePicker with CalendarWeekNumbering ISO_8601</ui5-title>
+		<ui5-datetime-picker id="datetimepicker8" calendar-week-numbering="ISO_8601">
+		</ui5-datetime-picker>
+
+		<ui5-title>DateTimePicker with CalendarWeekNumbering MiddleEastern</ui5-title>
+		<ui5-datetime-picker id="datetimepicker9" calendar-week-numbering="MiddleEastern">
+		</ui5-datetime-picker>
+
+		<ui5-title>DateTimePicker with CalendarWeekNumbering WesternTraditional</ui5-title>
+		<ui5-datetime-picker id="datetimepicker10" calendar-week-numbering="WesternTraditional">
+		</ui5-datetime-picker>
+	</section>
+
+	<section>
+			<ui5-title>Form validation</ui5-title>
+			<form id="formValidation">
+				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+				<ui5-datetime-picker format-pattern="YYYY-MM-dd hh:mm:ss a" min-date="2022-01-05 08:00:00 am" max-date="2024-01-06 08:00:00 pm" required id="formDateTimePicker"></ui5-datetime-picker>
+				<br><br>
+				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+			</form>
+		</section>
+
+	<script>
+		let counter = 0;
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formDateRangePicker = document.getElementById('formDateTimePicker');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formDateTimePicker');
+		});
+
+		formDateRangePicker.addEventListener('ui5-change', function() {
+			setTimeout(() => {
+				checkFormValidity('formDateTimePicker', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			// Show result
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+			formValidationMessage.design = isValid ? "Positive" : "Negative";
+		}
+
+
+		dt1.addEventListener("ui5-change", function(event) {
+			input1.value = `${++counter}`;
+			input2.value = "{ value: " + event.detail.value + " , valid: " + event.detail.valid + " }";
+		});
+
+		dtPreventDefault.addEventListener("ui5-change", function(event) {
+			event.preventDefault();
+		});
+
+		const counter2 = 0;
+		dt2.addEventListener("ui5-change", function(event) {
+			input3.value = `${++counter2}`;
+			input4.value = "{ value: " + dt2.value + " , valid: " + event.detail.valid + " }";
+		});
+
+		const dtp = document.getElementById('defaultPattern');
+		document.getElementById('setButton').addEventListener("click", function(e) {
+			dtp.setAttribute("value", dtp.formatValue(new Date(2020, 3, 13, 3, 16, 16)));
+		});
+
+	</script>
+</body>
+</html>

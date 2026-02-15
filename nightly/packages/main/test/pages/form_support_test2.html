@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Button</title>
+    <script>
+    </script>
+    <style>
+        .group {
+            border: 1px solid red;
+            margin: 1rem;
+            padding: 1rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    </style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body class="button1auto">
+    <form>
+        <div class="group">
+            <h2>Alternative for ui5-button</h2>
+            <button>Test button</button>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-checkbox</h2>
+            <div>
+                <input type="checkbox" name="checkbox" id=" cb1" /> <label for="cb1">Test checkbox</label>
+            </div>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-color-picker</h2>
+            <input type="color" name="color" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-combobox</h2>
+            <input type="text" name="combobox" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-date-picker</h2>
+            <input type="date" name="date-picker" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-daterange-picker</h2>
+            <input type="date" name="daterange-picker" />
+            <input type="date" name="daterange-picker" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-datetime-picker</h2>
+            <input type="datetime-local" name="datetime-picker" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-file-uploader</h2>
+            <input type="file" name="file-uploader" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-input</h2>
+            <input type="text" name="input" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-multi-combobox</h2>
+            <select name="multi-combobox" multiple>
+                <option>Option 1</option>
+                <option>Option 2</option>
+                <option>Option 3</option>
+                <option>Option 4</option>
+                <option>Option 5</option>
+                <option>Option 6</option>
+            </select>
+            <input name="multi-combobox" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-multi-input</h2>
+            <select name="multi-input" multiple>
+                <option>Option 1</option>
+                <option>Option 2</option>
+                <option>Option 3</option>
+                <option>Option 4</option>
+                <option>Option 5</option>
+                <option>Option 6</option>
+            </select>
+            <input name="multi-input" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-radio-button</h2>
+            <div>
+                <input type="radio" id="radio1" name="radio-button" /> <label for="radio1">Test radio button 1</label>
+                <input type="radio" id="radio2" name="radio-button" /> <label for="radio2">Test radio button 2</label>
+                <input type="radio" id="radio3" name="radio-button" /> <label for="radio3">Test radio button 3</label>
+            </div>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-range-slider</h2>
+            <input type="range" name="range-slider" />
+            <input type="range" name="range-slider" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-segmented-button</h2>
+            <div>
+                <input type="radio" id="radio4" name="segmented-button" /> <label for="radio4">Test radio button
+                    1</label>
+                <input type="radio" id="radio5" name="segmented-button" /> <label for="radio5">Test radio button
+                    2</label>
+                <input type="radio" id="radio6" name="segmented-button" /> <label for="radio6">Test radio button
+                    3</label>
+            </div>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-select</h2>
+            <select name="select">
+                <option>Option 1</option>
+                <option>Option 2</option>
+                <option>Option 3</option>
+            </select>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-slider</h2>
+            <input type="range" name="slider" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-split-button</h2>
+            <button>Test button</button>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-switch</h2>
+            <div>
+                <input type="checkbox" id="cb2" name="switch" /> <label for="cb2">Test checkbox</label>
+            </div>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-textarea</h2>
+            <textarea name="textarea"></textarea>
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-time-picker</h2>
+            <input type="time" name="time-picker" />
+        </div>
+        <div class="group">
+            <h2>Alternative for ui5-step-input</h2>
+            <input type="number" name="step-input" />
+        </div>
+        <button name="prob22222ababa" value="testsstststststs">Send form</button>
+        <button type="submit" name="probababa" value="testsstststststs">Send form</button>
+    </form>
+
+    <script>
+        const elementsWithName = document.querySelectorAll("[name]");
+        const values = {};
+        [...elementsWithName].forEach(element => {
+            const name = element.getAttribute("name");
+
+            if (!values[name]) {
+                values[name] = [];
+            }
+
+            values[name].push(element.value);
+        })
+
+        console.log(values);
+    </script>
+</body>
+
+</html>

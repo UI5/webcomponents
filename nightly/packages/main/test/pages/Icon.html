@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Icon</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets;
+	</script>
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"language": "EN",
+			"xx-wc-size-compact": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/Icon.html-4Rhq441d.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Icon-Bt2NqJSj.css">
+</head>
+
+<body class="icon1auto">
+	<ui5-toggle-button id="myBtn">Fiori 3/Next</ui5-toggle-button>
+	<br>
+	<ui5-icon title="add equipment" class="icon2auto" id="myIcon" show-tooltip accessible-name="Hello SVG Icon" name="add-equipment"></ui5-icon>
+	<ui5-icon name="direction-arrows" class="icon-blue icon-medium"></ui5-icon>
+	<ui5-icon name="male" class="icon-blue icon-small"></ui5-icon>
+	<ui5-icon name="female" class="icon-red"></ui5-icon>
+	<ui5-icon name="accept" class="icon-red icon-medium"></ui5-icon>
+	<ui5-icon name="action" class="icon-red icon-small"></ui5-icon>
+	<ui5-icon show-tooltip name="message-error"></ui5-icon>
+
+	<h3>Icon semantic 'design' variants</h3>
+	<ui5-icon name="female" class="icon3auto" design="Contrast"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Critical"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Default"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Information"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Negative"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Neutral"></ui5-icon>
+	<ui5-icon name="female" class="icon3auto" design="Positive"></ui5-icon>
+
+	<h3>Icon with tooltip</h3>
+	<ui5-icon title="company view" class="icon3auto" show-tooltip accessible-name="This is the tooltip`s text" name="company-view"></ui5-icon>
+
+	<h3>API: mode="Interactive"</h3>
+	<ui5-icon mode="Interactive" class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
+	<ui5-icon
+		id="myInteractiveIcon"
+		mode="Interactive"
+		name="add-equipment"
+		class="icon3auto">
+	</ui5-icon>
+
+	<br>
+
+	<h3>API: mode="Image" (by default)</h3>
+	<ui5-icon class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
+	<ui5-icon
+		id="imageIcon"
+		name="add-equipment"
+		class="icon3auto">
+	</ui5-icon>
+
+	<br>
+
+	<h3>API: mode="Decorative"</h3>
+	<ui5-icon  mode="Decorative" class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
+	<ui5-icon
+		id="decorativeIcon"
+		mode="Decorative"
+		name="add-equipment"
+		class="icon3auto">
+	</ui5-icon>
+
+	<br>
+	<ui5-icon name="add-employee"></ui5-icon>
+	<br>
+	<ui5-icon class="icon4auto" name="add-employee"></ui5-icon>
+	<ui5-icon class="icon5auto" name="factory"></ui5-icon>
+	<br>
+
+	<ui5-button icon="add-equipment"></ui5-button>
+	<div id="content"></div>
+	<ui5-icon name="appointment-2"></ui5-icon>
+	<ui5-icon name="appointment-2"></ui5-icon>
+	<ui5-icon name="appointment-2"></ui5-icon>
+	<ui5-icon name="appointment-2"></ui5-icon>
+
+	<br />
+
+	<ui5-date-picker class="icon6auto" placeholder="test" value="Value State None">
+	</ui5-date-picker>
+
+	<ui5-date-picker class="icon6auto" value-state="Positive" value="Value State Positive">
+	</ui5-date-picker>
+
+	<ui5-date-picker class="icon6auto" value-state="Critical" value="Value State Critical">
+	</ui5-date-picker>
+
+	<ui5-date-picker class="icon6auto" value-state="Negative" value="Value State Error">
+	</ui5-date-picker>
+
+	<br/><br/>
+
+	<ui5-title>Tests "click" and "ui5-click" events</ui5-title>
+	<br/>
+	<ui5-icon id="interactive-icon" name="add-equipment" class="icon-blue icon-medium" mode="Interactive"></ui5-icon>
+	<ui5-label>"click"</ui5-label><ui5-input id="click-event" value="0"></ui5-input>
+	<ui5-label>"ui5-click"</ui5-label><ui5-input id="ui5-click-event" value="0"></ui5-input>
+	<br/>
+	<ui5-icon id="non-interactive-icon" name="add-equipment" class="icon-blue icon-medium"></ui5-icon>
+	<ui5-label>"click"</ui5-label><ui5-input id="click-event-2" value="0"></ui5-input>
+	<ui5-label>"ui5-click"</ui5-label><ui5-input id="ui5-click-event-2" value="0"></ui5-input>
+	<br/>
+
+	<ui5-button icon="overflow"></ui5-button>
+	<ui5-icon name="overflow" class="icon7auto"></ui5-icon>
+	<br>
+	<br>
+
+	<ui5-title>Some icons can display default tooltip</ui5-title>
+	<br>
+	<ui5-icon id="iconWithTooltip" name="save" show-tooltip></ui5-icon>
+	<ui5-icon name="overflow" show-tooltip></ui5-icon>
+	<ui5-icon name="settings" show-tooltip></ui5-icon>
+
+	<h3>Auto, SAP-icons, horizon</h3>
+	<ui5-icon name="company-view" class="icon-blue icon-medium"></ui5-icon>
+	<ui5-icon name="SAP-icons/company-view" class="icon-blue icon-medium"></ui5-icon>
+	<ui5-icon name="horizon/company-view" class="icon-blue icon-medium"></ui5-icon>
+
+	<h3>SAP Icons</h3>
+	<ui5-icon name="SAP-icons/appointment-2"></ui5-icon>
+	<ui5-icon name="SAP-icons/slim-arrow-down"></ui5-icon>
+	<ui5-icon name="SAP-icons/accept"></ui5-icon>
+	<ui5-icon name="SAP-icons/resize-corner"></ui5-icon>
+	<ui5-icon show-tooltip name="SAP-icons/error" id="iconError"></ui5-icon>
+	<ui5-icon show-tooltip name="SAP-icons/bookmark"></ui5-icon>
+	<ui5-icon show-tooltip name="SAP-icons/bookmark-2"></ui5-icon>
+
+
+	<h3>SAP Fiori Next Icons</h3>
+	<ui5-icon name="horizon/appointment-2"></ui5-icon>
+	<ui5-icon name="horizon/slim-arrow-down"></ui5-icon>
+	<ui5-icon name="horizon/accept"></ui5-icon>
+	<ui5-icon name="horizon/resize-corner"></ui5-icon>
+	<ui5-icon show-tooltip name="horizon/error"></ui5-icon>
+	<ui5-icon show-tooltip name="horizon/bookmark"></ui5-icon>
+	<ui5-icon show-tooltip name="horizon/bookmark-2"></ui5-icon>
+
+	<h3>SAP Fiori Tools Icons</h3>
+	<div class="snippet">
+		<ui5-icon class="samples-margin" name="tnt/actor"></ui5-icon>
+		<ui5-icon class="samples-margin" name="tnt/aggregator"></ui5-icon>
+		<ui5-icon class="samples-margin" name="tnt/association"></ui5-icon>
+		<ui5-icon class="samples-margin" name="tnt/network"></ui5-icon>
+		<ui5-icon class="samples-margin" name="tnt/repeater"></ui5-icon>
+	</div>
+
+	<h3>SAP business-suite Icons</h3>
+	<div class="snippet">
+		<ui5-icon class="samples-margin" name="business-suite/add-polygon"></ui5-icon>
+		<ui5-icon class="samples-margin" name="business-suite/2x1-grid-layout"></ui5-icon>
+		<ui5-icon class="samples-margin" name="business-suite/activate"></ui5-icon>
+		<ui5-icon class="samples-margin" name="business-suite/3d"></ui5-icon>
+		<ui5-icon class="samples-margin" name="business-suite/ab-testing"></ui5-icon>
+	</div>
+
+	<script>
+		var interactiveIcon = document.getElementById("interactive-icon"),
+			nonInteractiveIcon = document.getElementById("non-interactive-icon"),
+			inpClickEventIteractive = document.getElementById("click-event"),
+			inpUI5ClickEventIteractive = document.getElementById("ui5-click-event"),
+			inpClickEventNonIteractive = document.getElementById("click-event-2"),
+			inpUI5ClickEventNonIteractive = document.getElementById("ui5-click-event-2"),
+			interactiveIconClickCounter = 0,
+			interactiveIconUI5ClickCounter = 0,
+			nonInteractiveIconClickCounter = 0,
+			nonInteractiveIconUI5ClickCounter = 0;
+
+		interactiveIcon.addEventListener("click", function() {
+			inpClickEventIteractive.value = `${++interactiveIconClickCounter}`;
+		});
+		interactiveIcon.addEventListener("ui5-click", function() {
+			inpUI5ClickEventIteractive.value = `${++interactiveIconUI5ClickCounter}`;
+		});
+
+
+		nonInteractiveIcon.addEventListener("click", function() {
+			inpClickEventNonIteractive.value = `${++nonInteractiveIconClickCounter}`;
+		});
+		nonInteractiveIcon.addEventListener("ui5-click", function() {
+			inpUI5ClickEventNonIteractive.value = `${++nonInteractiveIconUI5ClickCounter}`;
+		});
+	</script>
+
+
+	<script nomodule>
+		window["sap-ui-webcomponents-bundle"].getIconNames().then(function(iconNames) {
+			iconNames.forEach(function(iconName) {
+				var icon = document.createElement("ui5-icon");
+				icon.name = iconName;
+				allIcons.appendChild(icon);
+			});
+		});
+	</script>
+
+
+	<section id="allIcons">
+		<h3>All icons</h3>
+	</section>
+
+	<section class="sectionLTR1" dir="ltr">
+		<h3>Icons in ltr</h3>
+		<ui5-icon name="accept"></ui5-icon>
+		<ui5-icon name="sales-document"></ui5-icon>
+		<ui5-icon name="sales-notification"></ui5-icon>
+		<ui5-icon name="search"></ui5-icon>
+		<ui5-icon name="simple-payment"></ui5-icon>
+		<ui5-icon name="sound-loud"></ui5-icon>
+		<ui5-icon name="sound-off"></ui5-icon>
+		<ui5-icon name="sound"></ui5-icon>
+		<ui5-icon name="sys-help"></ui5-icon>
+		<ui5-icon name="text-align-justified"></ui5-icon>
+		<ui5-icon name="text-align-center"></ui5-icon>
+		<ui5-icon name="text-align-left"></ui5-icon>
+		<ui5-icon name="text-align-right"></ui5-icon>
+		<ui5-icon name="text-formatting"></ui5-icon>
+		<ui5-icon name="line-chart-time-axis"></ui5-icon>
+		<br>
+		<ui5-checkbox checked></ui5-checkbox>
+	</section>
+
+	<section class="sectionRTLNotMirrored" dir="rtl">
+		<h3>Icons in RTL, but not mirrored</h3>
+		<ui5-icon name="accept"></ui5-icon>
+		<ui5-icon name="sales-document"></ui5-icon>
+		<ui5-icon name="sales-notification"></ui5-icon>
+		<ui5-icon name="search"></ui5-icon>
+		<ui5-icon name="simple-payment"></ui5-icon>
+		<ui5-icon name="sound-loud"></ui5-icon>
+		<ui5-icon name="sound-off"></ui5-icon>
+		<ui5-icon name="sound"></ui5-icon>
+		<ui5-icon name="sys-help"></ui5-icon>
+		<ui5-icon name="text-align-justified"></ui5-icon>
+		<ui5-icon name="text-align-center"></ui5-icon>
+		<ui5-icon name="text-align-left"></ui5-icon>
+		<ui5-icon name="text-align-right"></ui5-icon>
+		<ui5-icon name="text-formatting"></ui5-icon>
+		<ui5-icon name="line-chart-time-axis"></ui5-icon>
+		<br>
+		<ui5-checkbox checked></ui5-checkbox>
+	</section>
+
+	<section class="sectionLTR2" dir="ltr">
+		<h3>Icons in LTR</h3>
+		<ui5-icon name="slim-arrow-left"></ui5-icon>
+		<ui5-icon name="slim-arrow-right"></ui5-icon>
+		<ui5-icon name="media-play"></ui5-icon>
+		<ui5-icon name="media-reverse"></ui5-icon>
+		<ui5-icon name="nav-back"></ui5-icon>
+		<ui5-icon name="trend-down"></ui5-icon>
+		<ui5-icon name="trend-up"></ui5-icon>
+		<ui5-icon name="undo"></ui5-icon>
+		<ui5-icon name="step"></ui5-icon>
+	</section>
+
+	<section class="sectionRTLMirrored" dir="rtl">
+		<h3>Icons in RTL and mirrored</h3>
+		<ui5-icon name="slim-arrow-left"></ui5-icon>
+		<ui5-icon name="slim-arrow-right"></ui5-icon>
+		<ui5-icon name="media-play"></ui5-icon>
+		<ui5-icon name="media-reverse"></ui5-icon>
+		<ui5-icon name="nav-back"></ui5-icon>
+		<ui5-icon name="trend-down"></ui5-icon>
+		<ui5-icon name="trend-up"></ui5-icon>
+		<ui5-icon name="undo"></ui5-icon>
+		<ui5-icon name="step"></ui5-icon>
+	</section>
+
+	<script>
+		myBtn.addEventListener("click", function(event) {
+			var theme = event.target.pressed ? "sap_horizon" : "sap_fiori_3";
+			var Conf = window["sap-ui-webcomponents-bundle"].configuration;
+			Conf.setTheme(theme);
+		});
+	</script>
+</body>
+</html>

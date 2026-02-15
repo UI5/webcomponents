@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tab Container Drag and Drop</title>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/TabContainer-CvWcV8yH.css">
+</head>
+
+<body class="tabcontainer1auto">
+	<ui5-checkbox id="reorder" text="Movable tabs" checked></ui5-checkbox>
+	<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+
+	<section>
+		<h2>Max Nesting Level</h2>
+		<ui5-step-input id="maxNestingLevelInput" placeholder="maxNestingLevel"></ui5-step-input>
+		<br>
+		<div id="host1">
+			<template shadowrootmode="open">
+				<ui5-tabcontainer id="tabContainerDnd" collapsed overflow-mode="End">
+					<ui5-tab id="tabOne" movable design="Positive" text="One"></ui5-tab>
+					<ui5-tab id="tabTwo" movable design="Negative" text="Two" disabled>
+						<ui5-tab slot="items" movable text="2.1"></ui5-tab>
+					</ui5-tab>
+					<ui5-tab id="tabThree" movable design="Critical" text="Three">
+						<ui5-tab id="tabThree1" slot="items" movable design="Positive" text="3.1">
+							<ui5-button>Button 3.1</ui5-button>
+						</ui5-tab>
+						<ui5-tab id="tabThree2" slot="items" movable design="Positive" text="3.2">
+							<ui5-tab id="tabThree21" slot="items" movable design="Positive" text="3.2.1">
+								<ui5-button>Button 3.2.1</ui5-button>
+							</ui5-tab>
+							<ui5-tab id="tabThree22" slot="items" movable design="Positive" text="3.2.2">
+								<ui5-button>Button 3.2.2</ui5-button>
+							</ui5-tab>
+							<ui5-button>Button 3.2</ui5-button>
+						</ui5-tab>
+						<ui5-tab id="tabThree3" slot="items" movable design="Positive" text="3.3">
+							<ui5-button>Button 3.3</ui5-button>
+						</ui5-tab>
+						content
+					</ui5-tab>
+					<ui5-tab id="tabFour" movable text="Four (forbids nesting)"></ui5-tab>
+					<ui5-tab id="tabFive" movable text="Five">
+						<ui5-tab slot="items" movable text="nested in Five">
+							<ui5-tab slot="items" movable text="nested deeper in Five">text</ui5-tab>
+							text
+						</ui5-tab>
+					</ui5-tab>
+					<ui5-tab id="tabSix" movable text="Six"></ui5-tab>
+					<ui5-tab id="tabSeven" movable text="Seven"></ui5-tab>
+					<ui5-tab-separator></ui5-tab-separator>
+					<ui5-tab id="tabEight" movable design="Positive" text="Eight"></ui5-tab>
+					<ui5-tab id="tabNine" movable design="Negative" text="Nine"></ui5-tab>
+					<ui5-tab id="tabTen" movable design="Critical" text="Ten"></ui5-tab>
+					<ui5-tab id="tabEleven" movable text="Eleven"></ui5-tab>
+					<ui5-tab-separator></ui5-tab-separator>
+					<ui5-tab id="tabTwelve" movable text="Twelve"></ui5-tab>
+					<ui5-tab id="tabThirteen" movable text="Thirteen" selected></ui5-tab>
+					<ui5-tab id="tabFourteen" movable text="Fourteen"></ui5-tab>
+					<ui5-tab id="tabFifteen" movable text="Fifteen"></ui5-tab>
+					<ui5-tab id="tabSixteen" movable text="Sixteen"></ui5-tab>
+					<ui5-tab id="tabSeventeen" movable text="Seventeen (forbids nesting)"></ui5-tab>
+					<ui5-tab id="tabEighteen" movable text="Eighteen"></ui5-tab>
+					<ui5-tab-separator></ui5-tab-separator>
+					<ui5-tab id="tabNinteen" movable text="Nineteen"></ui5-tab>
+					<ui5-tab id="tabTwenty" movable text="Twenty"></ui5-tab>
+					<ui5-tab id="tabTwentyOne" movable text="Twenty One"></ui5-tab>
+					<ui5-tab id="tabTwentyTwo" movable text="Twenty Two"></ui5-tab>
+					<ui5-tab id="tabTwentyThree" movable text="Twenty Three"></ui5-tab>
+					<ui5-tab id="tabTwentyFour" movable text="Twenty Four"></ui5-tab>
+					<ui5-tab-separator></ui5-tab-separator>
+					<ui5-tab id="tabTwentyFive" movable text="Twenty Five"></ui5-tab>
+					<ui5-tab id="tabTwentySix" movable text="Twenty Six"></ui5-tab>
+					<ui5-tab id="tabTwentySeven" movable text="Twenty Seven"></ui5-tab>
+					<ui5-tab-separator></ui5-tab-separator>
+					<ui5-tab id="tabTwentyEight" movable text="Twenty Eight"></ui5-tab>
+					<ui5-tab id="tabTwentyNine" movable text="Twenty Nine"></ui5-tab>
+					<ui5-tab id="tabThirty" movable text="Thirty"></ui5-tab>
+				</ui5-tabcontainer>
+			</template>
+		</div>
+		<h2>Fixed Tabs</h2>
+		<div id="host2">
+			<template shadowrootmode="open">
+				<ui5-tabcontainer id="tabContainerDndFixedTabs" collapsed overflow-mode="End">
+					<ui5-tab id="fixedTabsTabOne" design="Positive" text="One" data-fixed="true"></ui5-tab>
+					<ui5-tab id="fixedTabsTabTwo" design="Negative" text="Two" disabled data-fixed="true"></ui5-tab>
+					<ui5-tab id="fixedTabsTabThree" design="Critical" text="Three" data-fixed="true"></ui5-tab>
+					<ui5-tab-separator id="fixedTabsSeparatorOne"></ui5-tab-separator>
+					<ui5-tab movable text="Four"></ui5-tab>
+					<ui5-tab movable text="Five"></ui5-tab>
+					<ui5-tab id="fixedTabsTabSix" movable text="Six"></ui5-tab>
+					<ui5-tab id="fixedTabsTabSeven" movable text="Seven"></ui5-tab>
+					<ui5-tab movable design="Positive" text="Eight"></ui5-tab>
+					<ui5-tab movable design="Negative" text="Nine"></ui5-tab>
+					<ui5-tab movable design="Critical" text="Ten"></ui5-tab>
+					<ui5-tab movable text="Eleven"></ui5-tab>
+					<ui5-tab movable text="Twelve"></ui5-tab>
+					<ui5-tab movable text="Thirteen" selected></ui5-tab>
+					<ui5-tab movable text="Fourteen"></ui5-tab>
+				</ui5-tabcontainer>
+			</template>
+		</div>
+	</section>
+
+	<script>
+		const tc = document.getElementById("host1").shadowRoot.querySelector("#tabContainerDnd");
+		const maxNestingLevelInput = document.getElementById("maxNestingLevelInput");
+		let maxNestingLevel = 3;
+		maxNestingLevelInput.value = maxNestingLevel;
+		const tcFixedTabs = document.getElementById("host2").shadowRoot.querySelector("#tabContainerDndFixedTabs");
+
+		const getTabLevel = (element) => {
+			if (element.hasAttribute("ui5-tabcontainer")) {
+				return 0;
+			}
+
+			return 1 + getTabLevel(element.parentElement);
+		};
+
+		tc.addEventListener("ui5-move-over", (e) => {
+			const { source, destination } = e.detail;
+
+			if (!tc.contains(source.element)) {
+				return;
+			}
+
+			console.log(`Dragging "${source.element.id}" ${destination.placement.toLowerCase()} "${destination.element.id}"`);
+
+			if (destination.placement === "On" && (destination.element.id === "tabFour" || destination.element.id === "tabSeventeen")) {
+				return;
+			}
+
+			let targetNestingLevel = getTabLevel(destination.element);
+
+			if (destination.placement === "On") {
+				targetNestingLevel += 1;
+			}
+
+			if (targetNestingLevel > maxNestingLevel) {
+				return;
+			}
+
+			e.preventDefault();
+		});
+
+		const handleMove = (e) => {
+			// TODO: validate source.element
+			const { destination, source } = e.detail;
+
+			switch (destination.placement) {
+				case "Before":
+					destination.element.before(source.element);
+					break;
+				case "After":
+					destination.element.after(source.element);
+					break;
+				case "On":
+					destination.element.prepend(source.element);
+					break;
+			}
+
+			const newParent = source.element.parentElement;
+
+			if (newParent.hasAttribute("ui5-tab")) {
+				source.element.slot = "items";
+			} else {
+				source.element.slot = "";
+			}
+		};
+
+		tc.addEventListener("ui5-move", handleMove);
+
+		const densityCb = document.getElementById("density");
+		densityCb.addEventListener("ui5-change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		const reorderCb = document.getElementById("reorder");
+		reorderCb.addEventListener("ui5-change", e => {
+			document.querySelectorAll("[ui5-tab]").forEach((tab) => tab.movable = e.target.checked);
+		});
+
+		maxNestingLevelInput.addEventListener("ui5-change", (e) => {
+			maxNestingLevel = e.target.value;
+		});
+
+		tcFixedTabs.addEventListener("ui5-move-over", (e) => {
+			const { source, destination } = e.detail;
+
+			if (!tcFixedTabs.contains(source.element)) {
+				return;
+			}
+
+			console.log(`Dragging "${source.element.id}" ${destination.placement.toLowerCase()} "${destination.element.id}"`);
+
+			if (destination.element.dataset.fixed) {
+				return;
+			}
+
+			e.preventDefault();
+		});
+		tcFixedTabs.addEventListener("ui5-move", handleMove);
+	</script>
+</body>
+
+</html>

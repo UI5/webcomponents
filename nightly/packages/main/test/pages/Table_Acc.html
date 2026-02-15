@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Accessibility Test Page for Table</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+	<meta charset="utf-8">
+
+
+	<style>
+		.no-data-slot {
+			padding: 2rem;
+			line-height: 2rem;
+			text-align: center;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<h1>ACC Test Page for Table</h1>
+	<ui5-bar design="SubHeader">
+		<div slot="endContent">
+			<ui5-label id="selectionModeLabel">Selection Mode:</ui5-label>
+			<ui5-select id="selectionModeSelect" accessible-name-ref="selectionModeLabel">
+				<ui5-option selected>Multi</ui5-option>
+				<ui5-option>Single</ui5-option>
+				<ui5-option>None</ui5-option>
+			</ui5-select>
+
+			<ui5-label id="overflowModeLabel">Overflow Mode:</ui5-label>
+			<ui5-select id="overflowModeSelect" accessible-name-ref="overflowModeLabel">
+				<ui5-option selected>Popin</ui5-option>
+				<ui5-option>Scroll</ui5-option>
+			</ui5-select>
+
+			<ui5-label id="showDataLabel">Data:</ui5-label>
+			<ui5-select id="showDataSelect" accessible-name-ref="showDataLabel">
+				<ui5-option selected>Show Data</ui5-option>
+				<ui5-option>No Data</ui5-option>
+				<ui5-option>No Data with Slot</ui5-option>
+			</ui5-select>
+
+			<ui5-label id="growingModeLabel">Growing Mode:</ui5-label>
+			<ui5-select id="growingModeSelect" accessible-name-ref="growingModeLabel">
+				<ui5-option selected>Scroll</ui5-option>
+				<ui5-option>Button</ui5-option>
+			</ui5-select>
+		</div>
+	</ui5-bar>
+	<ui5-bar design="Header">
+		<ui5-title tabindex="0" aria-level="2" role="heading" id="tableTitle" slot="startContent">Products</ui5-title>
+	</ui5-bar>
+
+	<div class="section" style="height: 400px; overflow: auto;">
+		<ui5-table id="productsTable" accessible-name-ref="tableTitle" overflow-mode="Popin" row-action-count="2">
+			<ui5-table-selection-multi id="selection" slot="features"></ui5-table-selection-multi>
+			<ui5-table-growing id="growing" mode="Scroll" slot="features"></ui5-table-growing>
+			
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell id="productCol" min-width="200px" sort-indicator="None">
+					<ui5-label required>Product Name</ui5-label>
+				</ui5-table-header-cell>
+				<ui5-table-header-cell id="supplierCol" min-width="200px">
+					</ui5-label>Supplier</ui5-label>
+					<ui5-table-header-cell-action-ai slot="action" id="ai1"></ui5-table-header-cell-action-ai>
+				</ui5-table-header-cell>
+				<ui5-table-header-cell id="categoryCol" importance="-1" min-width="150px">
+					<ui5-label required>Category</ui5-label>
+				</ui5-table-header-cell>
+				<ui5-table-header-cell id="stockCol" min-width="150px" popin-text="Stock" horizontal-align="Center">Stock Status</ui5-table-header-cell>
+				<ui5-table-header-cell id="priceCol" min-width="150px" horizontal-align="End" sort-indicator="Ascending">Price</ui5-table-header-cell>
+				<ui5-table-header-cell id="weightCol" min-width="120px" horizontal-align="End">Weight</ui5-table-header-cell>
+				<ui5-table-header-cell id="customInputCol" min-width="180px" horizontal-align="Center">Input Test</ui5-table-header-cell>
+			</ui5-table-header-row>
+
+			<ui5-table-row row-key="row1" interactive>
+				<ui5-table-cell><div><b><ui5-text>Wireless Charger Pad</ui5-text></b><ui5-link href="#">Product ID WC-4409</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ChargeIt</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Accessories</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>29.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.15</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-input id="input-row1" placeholder="Add Comment" accessible-name-ref="customInputCol"></ui5-input></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row2" navigated interactive>
+				<ui5-table-cell><div><b><ui5-text>USB-C Hub Adapter</ui5-text></b><ui5-link href="#">Product ID HB-5012</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ConnectPro</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Connectivity</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#b14e03" accessible-name="Warning">Low Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>34.50</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.08</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-select id="input-row2" accessible-name-ref="customInputCol"><ui5-option>1</ui5-option><ui5-option>2</ui5-option></ui5-select></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row3">
+				<ui5-table-cell><div><b><ui5-text>Bluetooth Speaker Mini</ui5-text></b><ui5-link href="#">Product ID BS-2203</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>SoundWave</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Audio</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>59.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.25</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-slider id="input-row3" value="2" min="0" max="10" step="1" show-tickmarks label-interval="5" accessible-name-ref="customInputCol"></ui5-slider></ui5-table-cell>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row4" interactive>
+				<ui5-table-cell><div><b><ui5-text>Wireless Mouse Pro</ui5-text></b><ui5-link href="#">Product ID MT-2001</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>TechGear Inc.</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Accessories</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>45.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.10</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-toggle-button id="input-row4_1" accessible-name-ref="customInputCol">Favourite</ui5-toggle-button><ui5-button id="input-row4_2" accessible-name-ref="customInputCol">Order</ui5-button></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row5">
+				<ui5-table-cell><div><b><ui5-text>4K Webcam HD</ui5-text></b><ui5-link href="#">Product ID WC-4001</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>VisionTech</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Video Devices</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>89.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.22</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-checkbox id="input-row5" checked accessible-name-ref="customInputCol"></ui5-checkbox></ui5-table-cell>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row6" interactive>
+				<ui5-table-cell><div><b><ui5-text>Wireless Earbuds X</ui5-text></b><ui5-link href="#">Product ID EB-3301</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>SoundWave</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Audio</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#b14e03" accessible-name="Warning">Low Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>79.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.02</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell>
+					<ui5-combobox id="input-row6" placeholder="Choose Country" accessible-name-ref="customInputCol">
+						<ui5-cb-item text="Austria"></ui5-cb-item>
+						<ui5-cb-item text="Bulgaria"></ui5-cb-item>
+						<ui5-cb-item text="Germany"></ui5-cb-item>
+						<ui5-cb-item text="Italy"></ui5-cb-item>
+						<ui5-cb-item text="Spain"></ui5-cb-item>
+					</ui5-combobox></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row7" interactive>
+				<ui5-table-cell><div><b><ui5-text>Portable Monitor 15.6"</ui5-text></b><ui5-link href="#">Product ID PM-1560</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ViewPlus</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Monitors</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>159.00</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>1.10</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-date-picker id="input-row7" accessible-name-ref="customInputCol"></ui5-date-picker></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row8" interactive>
+				<ui5-table-cell><div><b><ui5-text>Bluetooth Headset Pro</ui5-text></b><ui5-link href="#">Product ID BH-7200</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>SoundWave Audio</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Audio Equipment</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#d30505" accessible-name="Error">Out of Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>119.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.18</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-step-input id="input-row8" accessible-name-ref="customInputCol"></ui5-step-input></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row9" interactive>
+				<ui5-table-cell><div><b><ui5-text>External DVD Writer</ui5-text></b><ui5-link href="#">Product ID DW-2100</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>StoreFast</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Storage</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>29.00</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>0.30</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-input id="input-row9" placeholder="Add Comment" accessible-name-ref="customInputCol"></ui5-input></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<ui5-table-row row-key="row10" interactive>
+				<ui5-table-cell><div><b><ui5-text>Ergonomic Chair</ui5-text></b><ui5-link href="#">Product ID EC-900</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ComfortSeat</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Office</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text style="color:#b14e03" accessible-name="Warning">Low Stock</ui5-text></b></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>199.00</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+				<ui5-table-cell><b><ui5-text>15.00</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-toggle-button id="input-row10" accessible-name-ref="customInputCol">Favourite</ui5-toggle-button></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+		</ui5-table>
+	</div>
+	<script>
+		// Selection mode change handler
+		const table = document.getElementById("productsTable");
+
+		const selectionModeSelect = document.getElementById("selectionModeSelect");
+		selectionModeSelect.addEventListener("change", (e) => {
+			let selection = document.getElementById("selection");
+			if (selection) {
+				selection.remove();
+			}
+			if (e.target.selectedOption.textContent === "Single") {
+				selection = document.createElement("ui5-table-selection-single");
+				selection.setAttribute("id", "selection");
+				selection.setAttribute("slot", "features");
+				table.insertBefore(selection, table.firstChild);
+			} else if (e.target.selectedOption.textContent === "Multi") {
+				selection = document.createElement("ui5-table-selection-multi");
+				selection.setAttribute("id", "selection");
+				selection.setAttribute("slot", "features");
+				table.insertBefore(selection, table.firstChild);
+			}
+		});
+
+		const overflowSelect = document.getElementById("overflowModeSelect");
+		overflowSelect.addEventListener("change", (e) => {
+			table.overflowMode = e.target.value;
+		});
+
+		const showDataSelect = document.getElementById("showDataSelect");
+		let rows = [];
+		showDataSelect.addEventListener("change", (e) => {
+			if (e.target.selectedOption.textContent != "Show Data") {
+				if (rows.length === 0) {
+					rows = Array.from(table.querySelectorAll("ui5-table-row"));
+				}
+				table.querySelectorAll("ui5-table-row").forEach(row => {
+					table.removeChild(row);
+				});
+			} else {
+
+				rows.forEach(row => {
+					table.appendChild(row);
+				});
+				rows = [];
+			}
+
+			if (e.target.selectedOption.textContent === "No Data with Slot") {
+				const noDataSlot = document.createElement("div");
+				noDataSlot.setAttribute("slot", "noData");
+				noDataSlot.setAttribute("class", "no-data-slot");
+				noDataSlot.innerHTML = `
+					<ui5-title>No products available</ui5-title>
+					<ui5-text>Please change the table configuration to see products listed here</ui5-text>
+					<ui5-button id="addDataButton">Change Table Settings</ui5-button>
+				`;
+				table.appendChild(noDataSlot);
+			} else {
+				const noDataSlot = table.querySelector("[slot='noData']");
+				if (noDataSlot) {
+					table.removeChild(noDataSlot);
+				}
+			}
+		});
+		
+		let growing = document.getElementById("growing");
+		const MAX_GROW = 3;
+		let counter = 0;
+		growing.addEventListener("load-more", (e) => {
+			table.loading = true;
+			table.disabled = true;
+
+			const additionalProducts = [
+				{ name: 'Portable SSD 1TB', id: 'PS-1001', supplier: 'StoreFast', category: 'Storage', stock: 'In Stock', textColor: '#126d2c', price: 129.00, weight: 0.05 },
+				{ name: 'Mechanical Keyboard RGB', id: 'KB-3045', supplier: 'KeyMaster Ltd.', category: 'Input Devices', stock: 'Out of Stock', textColor: '#d30505', price: 129.99, weight: 1.20 },
+				{ name: 'Action Camera 4K', id: 'AC-8840', supplier: 'AdventureCam', category: 'Cameras', stock: 'Low Stock', textColor: '#b14e03', price: 199.00, weight: 0.18 },
+				{ name: 'Noise-Cancelling Headphones', id: 'HP-7890', supplier: 'SoundWave Audio', category: 'Audio Equipment', stock: 'In Stock', textColor: '#126d2c', price: 199.99, weight: 0.32 },
+				{ name: '27" LED Monitor', id: 'MN-2707', supplier: 'ViewPlus', category: 'Monitors', stock: 'Low Stock', textColor: '#b14e03', price: 219.00, weight: 4.20 },
+				{ name: 'Smartwatch Series 5', id: 'SW-5004', supplier: 'WristTech', category: 'Wearables', stock: 'Out of Stock', textColor: '#d30505', price: 249.99, weight: 0.04 },
+				{ name: 'Graphics Tablet Pro', id: 'GT-3308', supplier: 'DrawMaster', category: 'Peripherals', stock: 'In Stock', textColor: '#126d2c', price: 349.00, weight: 1.10 },
+				{ name: 'Drone Mini X', id: 'DR-9910', supplier: 'AeroTech', category: 'Drones', stock: 'Out of Stock', textColor: '#d30505', price: 429.00, weight: 0.95 },
+				{ name: 'UltraSlim Laptop 13"', id: 'UL-1301', supplier: 'SlimTech', category: 'Laptops', stock: 'In Stock', textColor: '#126d2c', price: 799.00, weight: 1.25 },
+				{ name: 'Gaming Laptop Pro', id: 'GL-5502', supplier: 'GameForge', category: 'Laptops', stock: 'Low Stock', textColor: '#b14e03', price: 1499.00, weight: 2.90 }
+			];
+
+			const startIndex = table.rows.length;
+
+			for (let i = 0; i < additionalProducts.length; i++) {
+				const p = additionalProducts[i];
+				const newRow = document.createElement("ui5-table-row");
+				// ensure unique row-key
+				newRow.setAttribute("row-key", `row${startIndex + i + 1}`);
+				newRow.setAttribute("interactive", "");
+				newRow.innerHTML = `
+					<ui5-table-cell>
+						<ui5-text><div><b><ui5-text>${p.name}</ui5-text></b><ui5-link href="#">Product ID ${p.id}</ui5-link></div></ui5-text>
+					</ui5-table-cell>
+					<ui5-table-cell><ui5-text>${p.supplier}</ui5-text></ui5-table-cell>
+					<ui5-table-cell><ui5-text>${p.category}</ui5-text></ui5-table-cell>
+					<ui5-table-cell><b><ui5-text style="color: ${p.textColor}" accessible-name="${p.stock === "In Stock" ? "Success" : (p.stock === "Out of Stock" ? "Error" : "Warning")}">${p.stock}</ui5-text></b></ui5-table-cell>
+					<ui5-table-cell><b><ui5-text>${p.price.toFixed(2)}</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
+					<ui5-table-cell><b><ui5-text>${p.weight.toFixed(2)}</ui5-text></b><ui5-text>&nbsp;kg</ui5-text></ui5-table-cell>
+					<ui5-table-cell><ui5-input id="input-row${startIndex + i + 1}" placeholder="Add Comment" accessible-name-ref="customInputCol"></ui5-input></ui5-table-cell>
+					<ui5-table-row-action slot="actions" icon="edit" text="Edit" accessible-name="Edit product"></ui5-table-row-action>
+					<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+				`;
+				table.appendChild(newRow);
+			}
+
+			setTimeout(() => {
+				table.loading = false;
+				table.disabled = false;
+			}, 500);
+
+			counter++;
+			if (counter >= MAX_GROW) {
+				table.removeChild(growing);
+				return;
+			}
+		});
+
+		const growingModeSelect = document.getElementById("growingModeSelect");
+		growingModeSelect.addEventListener("change", (e) => {
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				if (!(["row1", "row2", "row3", "row4", "row5", "row6", "row7", "row8", "row9", "row10"].includes(row.rowKey))) {
+					table.removeChild(row);
+				}
+			});
+			counter = 0;
+			
+			if (table.querySelector("ui5-table-growing")) {
+				table.removeChild(growing);
+			}
+			
+			table.insertBefore(growing, table.firstChild);
+			growing.mode = e.target.value;
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Playground</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Link-CqTVCna4.css">
+</head>
+
+<body class="link1auto">
+	<div class="group">
+		<ui5-link id="target-blank-link" tooltip="Link with standard design" class="samples-big-margin-right" href="https://www.sap.com" target="_blank">Standard Link</ui5-link>
+		<ui5-link class="samples-big-margin-right" href="https://www.sap.com" target="_blank" design="Subtle">Subtle link</ui5-link>
+		<ui5-link class="samples-big-margin-right" href="https://www.sap.com" target="_blank" disabled>Disabled</ui5-link>
+		<ui5-link class="samples-big-margin-right" href="https://www.sap.com" target="_blank" design="Emphasized">Emphasized</ui5-link>
+	</div>
+
+	<div class="group">
+		<ui5-link id="empty-link-1" class="samples-big-margin-right">Link with no href</ui5-link>
+		<ui5-link id="empty-link-2" class="samples-big-margin-right">Link with no target</ui5-link>
+	</div>
+
+	<section class="group">
+		<h2>cross-origin</h2>
+		<ui5-link href="https://www.google.com" target="_blank" id="link">link</ui5-link><span>native span</span>
+		<ui5-link href="https://www.google.com" target="_blank" id="linkAccName" accessible-name="more info" tooltip="more info">link with accessible-name</ui5-link><span>native span</span>
+	</section>
+
+	<section class="group">
+		<h2>prevent-default</h2>
+		<ui5-link href="https://www.google.com" target="_self" id="link-click-prevent-default">link click default prevented</ui5-link><span>native span</span>
+	</section>
+
+	<section class="group">
+		<h2>overstyle-link</h2>
+		<ui5-link href="https://www.google.com" target="_self" style="color: pink">link with different color</ui5-link><span>native span</span>
+	</section>
+
+	<section class="group">
+		<h2>Disabled link</h2>
+		<ui5-link href="https://www.google.com" target="_blank" id="disabled-link" disabled>Disabled link</ui5-link>
+	</section>
+
+	<section class="group">
+		<h2>Wrapping link</h2>
+		<ui5-link class="link2auto" id="wrapping-link">Eu enim consectetur do amet elit Lorem ipsum dolor, sit amet consectetur adipisicing elit.</ui5-link>
+		<ui5-link class="link2auto" id="non-wrapping-link" wrapping-type="None">Eu enim consectetur do amet elit Lorem ipsum dolor, sit amet consectetur adipisicing elit.</ui5-link>
+	</section>
+
+	<section class="group">
+		<h2>Links with icon and end-icon</h2>
+		<ui5-link id="wrapping-link" wrapping-type="Normal" icon="employee" interactive-area-size="Large">View employee profile</ui5-link> <br>
+		<ui5-link id="linkWithIcon" design="Subtle" icon="employee" interactive-area-size="Large">View employee profile</ui5-link> <br> <br>
+		<ui5-link id="non-wrapping-link" end-icon="cloud" interactive-area-size="Large">Weather today</ui5-link> <br>
+		<ui5-link class="link2auto" id="linkWithEndIcon" end-icon="cloud" wrapping-type="None" interactive-area-size="Large">Weather today</ui5-link>
+
+		<h2>Wrapping link with end-icon</h2>
+		<ui5-link class="link2auto" end-icon="cloud" id="wrapping-link">Eu enim consectetur do amet elit Lorem ipsum dolor, sit amet consectetur adipisicing elit adipisicing.</ui5-link>
+	</section>
+
+	<section class="group">
+		<h2>Link designs</h2>
+		<ui5-link design="Default">Eu enim consectetur do amet elit.</ui5-link><br>
+		<ui5-link design="Subtle">Eu enim consectetur do amet elit.</ui5-link><br>
+		<ui5-link design="Emphasized">Eu enim consectetur do amet elit.</ui5-link>
+	</section>
+
+	<section class="group">
+		<ui5-input id="helper-input" value="0"></ui5-input>
+	</section>
+
+	<section class="group">
+		<label id="lbl">Text from aria-labelledby</label> <br>
+		<ui5-link id="ariaLbl" accessible-name="Text from aria-label">Go to</ui5-link> <br>
+		<ui5-link id="ariaLblBy" accessible-name-ref="lbl">Go to</ui5-link> <br>
+		<label>Link with aria-description:</label> <br>
+		<ui5-link accessible-description="Text from aria-description">Go to</ui5-link>
+	</section>
+
+	<section class="group">
+		<h2>Collapsible text</h2>
+		<span id="collapsibleText">
+			Maxlines ... Lorem ipsum dolor st amet, consetetur sadipscing elitr, sed
+			diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+			erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+			rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+			dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+			sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+			erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing
+			elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+			aliquyam erat
+		</span>
+		<ui5-link id="collapseExpandLink">Less</ui5-link>
+	</section>
+
+	<section class="group">
+		<h2>Link opens a dialog</h2>
+		<ui5-link accessible-role="button" id="signInLink">Sign in</ui5-link>
+		<ui5-dialog id="signInDialog" header-text="Sign in form">
+			<ui5-bar slot="header" design="Header">
+				<ui5-title level="H5" slot="startContent">Bar used in Header and Footer</ui5-title>
+				<ui5-button class="dialogCloser" design="Transparent" id="closeDialogButton" slot="endContent"
+					icon="decline"></ui5-button>
+			</ui5-bar>
+			<section class="login-form">
+				<div>
+					<ui5-label for="email" type="Email" required>Email: </ui5-label>
+					<ui5-input id="email"></ui5-input>
+				</div>
+
+				<div>
+					<ui5-label for="password" required>Password: </ui5-label>
+					<ui5-input id="password" type="Password"></ui5-input>
+				</div>
+			</section>
+
+			<div slot="footer"	class="dialog-footer">
+				<div style="flex: 1;"></div>
+				<ui5-button id="closeDialogButton" design="Emphasized">Sign in</ui5-button>
+			</div>
+		</ui5-dialog>
+	</section>
+
+	<section class="group">
+		<h2>Link with prevent default and modifiers</h2>
+		<ui5-link accessible-role="button" id="modifierLink">Link 1</ui5-link>
+		<span id="modifierResult"></span>
+	</section>
+
+	<script>
+		var disLink = document.querySelector("#disabled-link");
+		var link = document.querySelector("#link");
+		var linkClickPreventDefault = document.querySelector("#link-click-prevent-default");
+		var input = document.querySelector("#helper-input");
+		var collapseExpandLink = document.getElementById("collapseExpandLink");
+		var collapsibleText = document.getElementById("collapsibleText");
+		var signInLink = document.getElementById("signInLink");
+		var singInDialog = document.getElementById("signInDialog");
+		var closeSignInDialogButton = document.getElementById("closeDialogButton");
+		var modifierLink = document.getElementById("modifierLink");
+		var modifierResult = document.getElementById("modifierResult");
+
+		[link, disLink].forEach(function(element) {
+			element.addEventListener("ui5-click", function(event) {
+				input.value = `${parseInt(input.value) + 1}`;
+			});
+		});
+
+		signInLink.addEventListener("ui5-click", function(event) {
+			singInDialog.open = true;
+		});
+
+		signInLink.accessibilityAttributes = {
+			hasPopup: "dialog"
+		};
+
+		closeSignInDialogButton.addEventListener("ui5-click", function(event) {
+			singInDialog.open = false;
+		});
+
+		linkClickPreventDefault.addEventListener("ui5-click", function(event) {
+			event.preventDefault();
+		});
+
+		collapseExpandLink.accessibilityAttributes = {
+			expanded: "true"
+		};
+
+		collapseExpandLink.addEventListener("ui5-click", function(event) {
+			collapseExpandLink.accessibilityAttributes = {
+				expanded: collapseExpandLink.accessibilityAttributes["expanded"] === "true" ? "false" : "true"
+			};
+			collapseExpandLink.innerText = collapseExpandLink.innerText === "More" ? "Less" : "More";
+			collapsibleText.style["display"] = collapsibleText.style["display"] === "-webkit-box" ? "" : "-webkit-box";
+			collapsibleText.style["-webkit-line-clamp"] = collapsibleText.style["-webkit-line-clamp"] === "2" ? "" : "2";
+			collapsibleText.style["-webkit-box-orient"] = collapsibleText.style["-webkit-box-orient"] === "vertical" ? "" : "vertical";
+			collapsibleText.style["overflow"] = collapsibleText.style["overflow"] === "hidden" ? "" : "hidden";
+		});
+
+		modifierLink.addEventListener("ui5-click", (event) => {
+			let keyText ='';
+
+			if(event.detail.ctrlKey) {
+				keyText += 'CTRL:';
+			}
+			if(event.detail.altKey) {
+				keyText += 'ALT:';
+			}
+			if(event.detail.shiftKey) {
+				keyText += 'SHIFT:';
+			}
+			if(event.detail.metaKey) {
+				keyText += 'META:';
+			}
+			event.preventDefault();
+			modifierResult.innerText = keyText + event.target.innerText;
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html dir="rtl">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Popover</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN",
+			"libs": "sap.ui.webc.main",
+			"rtl": true
+		}
+	</script>
+
+
+
+
+
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/Popover-Bmws32Vh.css">
+</head>
+
+<body>
+<style>
+
+	.center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		width: 100%;
+	}
+
+	body {
+		padding-top: 100px;
+	}
+</style>
+
+<span> Popover placement Top</span>
+<div class="center">
+	<ui5-button id="btn1">Open</ui5-button>
+</div>
+<br>
+
+<span> Popover placement Bottom</span>
+<div class="center">
+	<ui5-button id="btn2">Open</ui5-button>
+</div>
+<br>
+
+<span> Popover placement Start</span>
+<ui5-button id="btn3">Open</ui5-button>
+<br>
+
+<ui5-button id="btn4">Open</ui5-button>
+<span> Popover placement End</span>
+
+<div class="center">
+	<ui5-button id="btnPlacementStart">Placement Start</ui5-button>
+</div>
+<br>
+<div class="center">
+	<ui5-button id="btnPlacementEnd">Placement End</ui5-button>
+</div>
+<br>
+
+<ui5-popover id="respPopover1" opener="btn1" placement="Top">
+	<div class="popover-content">
+		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="respPopover2" opener="btn2" placement="Bottom">
+	<div class="popover-content">
+		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="respPopover3" opener="btn3" placement="Start">
+	<div class="popover-content">
+		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="respPopover4" opener="btn4" placement="End">
+	<div class="popover-content">
+		<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="popoverPlacementStart"
+			 header-text="Placement = Start"
+			 opener="btnPlacementStart"
+			 placement="Start">
+	<div class="popover-content">
+		<div>
+			Some content
+		</div>
+	</div>
+</ui5-popover>
+
+<ui5-popover id="popoverPlacementEnd"
+			 header-text="Placement = End"
+			 opener="btnPlacementEnd"
+			 placement="End">
+	<div class="popover-content">
+		<div>
+			Some content
+		</div>
+	</div>
+</ui5-popover>
+
+<div style="height: 200px;"></div>
+
+<script>
+	const btn1 = document.getElementById("btn1");
+	const respPopover1 = document.getElementById("respPopover1");
+
+	const btn2 = document.getElementById("btn2");
+	const respPopover2 = document.getElementById("respPopover2");
+
+	const btn3 = document.getElementById("btn3");
+	const respPopover3 = document.getElementById("respPopover3");
+
+
+	const btn4 = document.getElementById("btn4");
+	const respPopover4 = document.getElementById("respPopover4");
+
+
+	btn1.addEventListener("click", () => {
+		respPopover1.open = !respPopover1.open;
+	});
+
+	btn2.addEventListener("click", () => {
+		respPopover2.open = !respPopover2.open;
+	});
+
+	btn3.addEventListener("click", () => {
+		respPopover3.open = !respPopover3.open;
+	});
+
+	btn4.addEventListener("click", () => {
+		respPopover4.open = !respPopover4.open;
+	});
+
+	document.getElementById("btnPlacementStart").addEventListener("click", () => {
+		document.getElementById("popoverPlacementStart").open = true;
+	});
+
+	document.getElementById("btnPlacementEnd").addEventListener("click", () => {
+		document.getElementById("popoverPlacementEnd").open = true;
+	});
+</script>
+</body>
+
+</html>

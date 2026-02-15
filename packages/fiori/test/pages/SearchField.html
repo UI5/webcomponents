@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Search Field</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+	<style>
+		body {
+			background-color: var(--sapShellColor);
+		}
+	</style>
+
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-CFnFPq4o.js"></script>
+</head>
+
+<body class="search">
+	<ui5-label>Alignment of expanded and collapsed search:</ui5-label>
+	<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
+		<ui5-search-field accessible-name="Global Search" expanded></ui5-search-field>
+		<ui5-search-field accessible-name="Global Search" ></ui5-search-field>
+	</div>
+	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+		<ui5-label>Initially expanded search with clear icon, value</ui5-label>
+		<ui5-search-field id="search" value="Test" expanded show-clear-icon accessible-name="Global Search" ></ui5-search-field>
+	</div>
+	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+		<ui5-label>Initially expanded fixed search with scope and placeholder:</ui5-label>
+		<ui5-search-field accessible-name="Global Search" id="scoped-search" scope-value="apps" fixed expanded mode="Scoped" placeholder="Placeholder">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
+		</ui5-search-field>
+	</div>
+	<ui5-label>Advanced filtering search</ui5-label>
+	<ui5-search-field>
+			<ui5-button slot="filterButton" icon="filter"></ui5-button>
+	</ui5-search-field>
+	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+		<ui5-label>Search with loading state (click search icon)</ui5-label>
+		<ui5-search-field id="search-loading" placeholder="Search..." show-clear-icon></ui5-search-field>
+	</div>
+	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+		<ui5-label>Collapsed search</ui5-label>
+		<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
+			<ui5-search-field accessible-name="Global Search" ></ui5-search-field>
+		</div>
+	</div>
+	<div class="sapUiSizeCompact">
+		<ui5-title>Compact:</ui5-title>
+		<ui5-label>Alignment of expanded and collapsed search:</ui5-label>
+		<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
+			<ui5-search-field accessible-name="Global Search"  expanded></ui5-search-field>
+			<ui5-search-field accessible-name="Global Search" ></ui5-search-field>
+		</div>
+		<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+			<ui5-label>Initially expanded search with clear icon and placeholder</ui5-label>
+			<ui5-search-field accessible-name="Global Search" id="search" expanded show-clear-icon placeholder="Placeholder"></ui5-search-field>
+		</div>
+		<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+			<ui5-label>Initially expanded search with scope</ui5-label>
+			<ui5-search-field accessible-name="Global Search"  expanded mode="Scoped">
+				<ui5-search-scope text="All" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Apps" slot="scopes"></ui5-search-scope>
+				<ui5-search-scope text="Products" selected slot="scopes"></ui5-search-scope>
+			</ui5-search-field>
+		</div>
+		<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+			<ui5-label>Collapsed search</ui5-label>
+			<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
+				<ui5-search-field accessible-name="Global Search" ></ui5-search-field>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const search = document.getElementById('search');
+		const scopedSearch = document.getElementById('scoped-search');
+		search.addEventListener('ui5-search', (event) => {
+			console.log('search', event.target.value);
+		});
+		search.addEventListener('ui5-input', (event) => {
+			console.log('input', event.target.value);
+		});
+		scopedSearch.addEventListener('ui5-scope-change', (event) => {
+			console.log('scope-change', event.detail.scope);
+		});
+
+		const searchLoading = document.getElementById('search-loading');
+		searchLoading.addEventListener('ui5-search', async () => {
+			searchLoading.fieldLoading = true;
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			searchLoading.fieldLoading = false;
+		});
+	</script>
+</body>
+</html>

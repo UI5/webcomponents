@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form Basic</title>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body>
+	<div id="result"></div>
+
+	<script>
+		const result = document.getElementById("result");
+		const columns = [
+			1,
+			2,
+			3,
+			4,
+			5,
+			6
+		];
+		const arrays = [
+			[0],
+			[0, 1],
+			[0, 1, 2],
+			[0, 1, 2, 3],
+			[0, 1, 2, 3, 4],
+			[0, 1, 2, 3, 4, 5],
+			[0, 1, 2, 3, 4, 5, 6],
+			[0, 1, 2, 3, 4, 5, 6, 7],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+		];
+
+		const formItem = (value) => {
+			return `<ui5-form-item>
+<ui5-label required for="nameInp" slot="labelContent">${value}:</ui5-label>
+<ui5-input value="${value}"></ui5-input>
+</ui5-form-item>`
+		};
+
+		const form = (columns, items, newSolution) => {
+			const rows = Math.ceil(items.length / columns);
+
+			return `<ui5-form layout="S1 M2 L3 XL${columns}" header-text="${items.length} items, ${columns} x ${rows} (Columns x Rows)">
+	<ui5-form-group>
+		${items.map(formItem).join("\n")}
+	</ui5-form-group>
+</ui5-form>`
+		};
+
+		columns.forEach(column => {
+			arrays.forEach(items => {
+				result.innerHTML += form(column, items);
+			})
+		})
+
+	</script>
+</body>
+
+</html>

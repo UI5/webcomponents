@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "status-suspending";
+const pathData = "M209.5 158q0-16-10.5-27t-27.5-11q-16 0-27 11t-11 27v170q0 16 11 27t27 11q17 0 27.5-11t10.5-27V158zm180 316q35 0 59-24t24-59-24-59-59-24q-34 0-58.5 24t-24.5 59 24.5 59 58.5 24zm-85-354q-16 0-27 11t-11 27v98q-27 24-42.5 58t-15.5 72q0 55 31 100h-190q-20 0-34-14.5T1.5 437V49q0-20 14-34.5T49.5 0h389q20 0 34 14.5t14 34.5v194q-21-16-47-25t-55-9q-21 0-41 6v-57q0-16-11.5-27t-27.5-11zm85 150q25 0 47.5 9.5t39 26 26 38.5 9.5 47-9.5 47-26 38.5-39 26-47.5 9.5-47-9.5-38.5-26-26-38.5-9.5-47 9.5-47 26-38.5 38.5-26 47-9.5zm39 108q8 0 13 5.5t5 13.5-5 13.5-13 5.5h-39q-8 0-13.5-5.5t-5.5-13.5v-51q0-8 5.5-13.5t13.5-5.5 14 5.5 6 13.5v32h19z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/status-suspending";
+export { pathData, ltr, accData };

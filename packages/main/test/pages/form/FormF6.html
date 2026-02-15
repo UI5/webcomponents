@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>Form Basic</title>
+
+	<!-- <script id='sap-ui-bootstrap'
+		src='https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js'
+		data-sap-ui-theme='sap_horizon'
+		data-sap-ui-libs='sap.m, sap.ui.core, sap.ui.layout'
+		data-sap-ui-preload="async"
+	></script> -->
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BoxG8SM3.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/FormLayout-DrxiYO6l.css">
+</head>
+
+<body class="bg">
+	<ui5-slider id="slider" min="1" max="100" value="100" class="slider"></ui5-slider>
+	
+	<section id="container">
+		<div class="banner"><div class="banner-inner"></div></div>
+
+		<section>
+			<ui5-form class="addressForm" header-text="WebC Form :: Address">
+
+				<ui5-form-group header-text="Address">
+					<ui5-form-item>
+						<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+						<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+						<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+						<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+						<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+						<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+							<ui5-option>Australia</ui5-option>
+							<ui5-option selected>Germany</ui5-option>
+							<ui5-option>England</ui5-option>
+						</ui5-select>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+						<ui5-input value="sap.com" id="wsInp"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+						<ui5-input value="Newtown" id="delInp"></ui5-input>
+					</ui5-form-item>
+				</ui5-form-group>
+
+				<ui5-form-group header-text="Contact">
+					<ui5-form-item>
+						<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+						<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+						<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+						<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+						<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+						<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+							<ui5-option>Australia</ui5-option>
+							<ui5-option selected>Germany</ui5-option>
+							<ui5-option>England</ui5-option>
+						</ui5-select>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+						<ui5-input value="sap.com" id="wsInp"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+						<ui5-input value="Newtown" id="delInp"></ui5-input>
+					</ui5-form-item>
+
+				</ui5-form-group>
+			
+				<ui5-form-group header-text="Other info">
+					<ui5-form-item>
+						<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+						<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+						<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+						<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+						<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+						<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+					</ui5-form-item>
+					
+					<ui5-form-item>
+						<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+						<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+							<ui5-option>Australia</ui5-option>
+							<ui5-option selected>Germany</ui5-option>
+							<ui5-option>England</ui5-option>
+						</ui5-select>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+						<ui5-input value="sap.com" id="wsInp"></ui5-input>
+					</ui5-form-item>
+	
+					<ui5-form-item>
+						<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+						<ui5-input value="Newtown" id="delInp"></ui5-input>
+					</ui5-form-item>
+				</ui5-form-group>
+			</ui5-form>
+		</section>
+		
+		<section>
+			<ui5-form class="addressForm" header-text="WebC :: Edit">
+				<ui5-form-item>
+					<ui5-label for="nameInp" slot="labelContent">Name:</ui5-label>
+					<ui5-input value="Red Point Stores" id="nameInp"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="cityLbl" for="cityInp" slot="labelContent">ZIP Code/City:</ui5-label>
+					<ui5-input id="cityInp" value="411" accessible-name-ref="cityLbl"></ui5-input>
+					<ui5-input value="Maintown" accessible-name-ref="cityLbl"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label id="streetLbl" for="streetInp" slot="labelContent">Street:</ui5-label>
+					<ui5-input id="streetInp" value="Main St" accessible-name-ref="streetLbl"></ui5-input>
+					<ui5-input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl"></ui5-input>
+				</ui5-form-item>
+				
+				<ui5-form-item>
+					<ui5-label id="countryLbl" for="countrySel" slot="labelContent">Country:</ui5-label>
+					<ui5-select id="countrySel" accessible-name-ref="countryLbl">
+						<ui5-option>Australia</ui5-option>
+						<ui5-option selected>Germany</ui5-option>
+						<ui5-option>England</ui5-option>
+					</ui5-select>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="wsInp" slot="labelContent">WebSite:</ui5-label>
+					<ui5-input value="sap.com" id="wsInp"></ui5-input>
+				</ui5-form-item>
+
+				<ui5-form-item>
+					<ui5-label for="delInp" slot="labelContent">Delivery address:</ui5-label>
+					<ui5-input value="Newtown" id="delInp"></ui5-input>
+				</ui5-form-item>
+			</ui5-form>
+		</section>
+
+	</section>
+
+	<script>
+		slider.addEventListener("ui5-input", function (event) {
+			container.style.width = event.target.value + '%';
+		});
+	</script>
+</body>
+</html>

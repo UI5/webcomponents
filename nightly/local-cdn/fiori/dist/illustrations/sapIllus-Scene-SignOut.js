@@ -1,0 +1,21 @@
+export default `<svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" id="sapIllus-Scene-SignOut">
+<rect y="68.6001" width="320" height="138" rx="24" fill="var(--sapContent_Illustrative_Color20)"/>
+<g clip-path="url(#clip0_6848_476324)">
+<path d="M69.6001 155.997L173.014 157.15L211.022 186.932L142.33 185.283L69.6001 155.997Z" fill="var(--sapContent_Illustrative_Color21)"/>
+<path d="M204.052 186.932L206.287 54.4541H147.317V183.556L196.762 202.791H250.787L204.052 186.932Z" fill="var(--sapContent_Illustrative_Color27)"/>
+<path d="M142.181 47.9028H209.599V186.932H204.052V52.3985H146.074V185.282H142.33L142.181 47.9028Z" fill="var(--sapContent_Illustrative_Color15)"/>
+<path d="M146.074 52.3984L146.108 52.4454L146.074 185.282L148.339 183.081V55.8044H204.052V52.3984H146.074Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M211.022 47.9028H209.599V186.932H211.022V47.9028Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M146.074 52.3984V185.282L148.339 183.081L147.317 54.454L146.074 52.3984Z" fill="var(--sapContent_Illustrative_Color30)"/>
+<path d="M147.317 51.544V184.248L181.971 197.116V37.5996L147.317 51.544Z" fill="var(--sapContent_Illustrative_Color15)"/>
+<path d="M147.51 66.937H146.377C145.974 66.937 145.646 67.2642 145.646 67.6678V71.531C145.646 71.9346 145.974 72.2618 146.377 72.2618H147.51C147.913 72.2618 148.24 71.9346 148.24 71.531V67.6678C148.24 67.2642 147.913 66.937 147.51 66.937Z" fill="var(--sapContent_Illustrative_Color26)"/>
+<path d="M147.51 164.761H146.377C145.974 164.761 145.646 165.088 145.646 165.492V169.355C145.646 169.759 145.974 170.086 146.377 170.086H147.51C147.913 170.086 148.24 169.759 148.24 169.355V165.492C148.24 165.088 147.913 164.761 147.51 164.761Z" fill="var(--sapContent_Illustrative_Color26)"/>
+<path d="M184.266 37.5996H181.971V197.116L184.266 196.599V37.5996Z" fill="var(--sapContent_Illustrative_Color30)"/>
+<path d="M178.959 107.6C178.055 107.6 177.317 108.389 177.317 109.355V112.478C177.038 112.379 176.739 112.324 176.424 112.324C174.865 112.324 173.6 113.676 173.6 115.342C173.6 117.009 174.865 118.361 176.424 118.361C176.734 118.361 177.033 118.306 177.317 118.207V125.845C177.317 126.81 178.055 127.6 178.959 127.6C179.862 127.6 180.6 126.81 180.6 125.845V109.355C180.6 108.389 179.862 107.6 178.959 107.6Z" fill="var(--sapContent_Illustrative_Color26)"/>
+</g>
+<defs>
+<clipPath id="clip0_6848_476324">
+<rect width="181" height="165" fill="var(--sapContent_Illustrative_Color8)" transform="translate(70 38)"/>
+</clipPath>
+</defs>
+</svg>`;

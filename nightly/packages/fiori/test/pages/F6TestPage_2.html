@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>F6 Navigation</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-DP8TgC9g.js"></script>
+</head>
+
+<body>
+	<ui5-button id="insert_btn">Click me before testing</ui5-button>
+	<ui5-panel id="panel">
+		<ui5-button id="content-btn" data-sap-ui-fastnavgroup="true">Content button</ui5-button>
+		<ui5-button id="header-btn" data-sap-ui-fastnavgroup="true" slot="header">Header button</ui5-button>
+	</ui5-panel>
+
+	<script>
+		const insertBtn = document.getElementById("insert_btn");
+		const panel = document.getElementById("panel");
+
+		insertBtn.addEventListener("click", () => {
+			const btn = document.createElement("button");
+			const headerSlot = panel.shadowRoot.querySelector("slot[name='header']");
+
+			btn.setAttribute("data-sap-ui-fastnavgroup", "true");
+			btn.id = "template-btn";
+			btn.innerText = "Native button";
+
+			headerSlot.after(btn);
+		});
+	</script>
+</body>
+
+</html>

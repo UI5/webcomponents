@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Test Page - Table Selection</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-GcKhMNDV.js"></script>
+</head>
+
+<body>
+	<ui5-combobox id="types" value="Multiple">
+		<ui5-cb-item text="None"></ui5-cb-item>
+		<ui5-cb-item text="Single"></ui5-cb-item>
+		<ui5-cb-item text="Multiple"></ui5-cb-item>
+	</ui5-combobox>
+	<ui5-table id="table0" no-data-text="No data found">
+		<ui5-table-selection id="selection" slot="features"></ui5-table-selection>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="colA"><span>ColumnA</span></ui5-table-header-cell>
+			<ui5-table-header-cell id="colB">Column B</ui5-table-header-cell>
+			<ui5-table-header-cell id="colC">Column C</ui5-table-header-cell>
+			<ui5-table-header-cell id="colD">Column D</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<ui5-table-row row-key="0">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="1">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="2">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="3">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="4">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="5">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="6">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="7">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="8">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row row-key="9">
+			<ui5-table-cell><ui5-label>Cell A</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell C</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Cell D</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+
+	<script>
+		const combobox = document.getElementById("types");
+		const selection = document.getElementById("selection");
+
+		combobox.addEventListener("change", () => {
+			selection.mode = combobox.value;
+		});
+
+		selection.addEventListener("change", (evt) => {
+			console.log("change event");
+			console.log("-----");
+		})
+	</script>
+</body>
+
+</html>
