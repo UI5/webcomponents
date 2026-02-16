@@ -11,6 +11,7 @@
 	max-width: 100%;
 	background: var(--sapShellColor);
 	box-sizing: border-box;
+	box-shadow: inset 0 -.0625rem 0 0 var(--sapPageHeader_BorderColor);
 
 	/* CSS variable overrides for ui5-button */
 	--_ui5_button_base_height: var(--sapElement_Height);
@@ -34,7 +35,6 @@
 	display: flex;
 	align-items: center;
 	height: var(--_ui5_shellbar_root_height);
-	box-shadow: inset 0 -0.0625rem var(--sapShell_BorderColor);
 	position: relative;
 	font-size: var(--sapFontSize);
 	font-weight: normal;
