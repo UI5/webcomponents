@@ -528,6 +528,38 @@ describe("Slots", () => {
 			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
 		});
 
+		it("Test self-collapsible search field is collapsed initially at S breakpoint", () => {
+			cy.viewport(500, 1080);
+			cy.mount(
+				// needs some content to trigger the full width mode
+				<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+					<Button icon={navBack} slot="startButton"></Button>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Start Button 1</Button>
+
+					<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				</ShellBar>
+			);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
+			cy.get("#search").should("have.prop", "collapsed", true);
+		});
+
+		it("Test self-collapsible search field is collapsed at S breakpoint without showSearchField", () => {
+			cy.viewport(500, 1080);
+			cy.mount(
+				// needs some content to trigger the full width mode
+				<ShellBar id="shellbar" showNotifications={true} showProductSwitch={true}>
+					<Button icon={navBack} slot="startButton"></Button>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Start Button 1</Button>
+
+					<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				</ShellBar>
+			);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
+			cy.get("#search").should("have.prop", "collapsed", true);
+		});
+
 		it("Test search field added after delay still works with events", () => {
 			cy.mount(
 				<ShellBar id="shellbar" primaryTitle="Product Title" showNotifications={true}></ShellBar>

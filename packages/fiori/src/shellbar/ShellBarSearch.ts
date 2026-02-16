@@ -100,6 +100,11 @@ class ShellBarSearch implements IShellBarSearchController {
 			return;
 		}
 		if (isPhone()) {
+			// On initial render, don't auto-open the search dialog on phones
+			// to prevent the full-screen search from showing when page loads
+			if (this.initialRender) {
+				return;
+			}
 			search.open = this.getSearchState();
 		} else {
 			search.collapsed = !this.getSearchState();
