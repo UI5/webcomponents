@@ -39,6 +39,8 @@ import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
 	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
+	MENU_ITEM_END_CONTENT_ACCESSIBLE_NAME,
+	MENU_ITEM_LOADING,
 } from "./generated/i18n/i18n-defaults.js";
 import type { IMenuItem } from "./Menu.js";
 
@@ -397,6 +399,14 @@ class MenuItem extends ListItem implements IMenuItem {
 
 	get accessibleNameText() {
 		return MenuItem.i18nBundle.getText(MENU_POPOVER_ACCESSIBLE_NAME);
+	}
+
+	get endContentAccessibleName() {
+		return MenuItem.i18nBundle.getText(MENU_ITEM_END_CONTENT_ACCESSIBLE_NAME);
+	}
+
+	get loadingText() {
+		return MenuItem.i18nBundle.getText(MENU_ITEM_LOADING);
 	}
 
 	onBeforeRendering() {

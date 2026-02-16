@@ -59,7 +59,15 @@ function rightContent(this: MenuItem) {
 			</div>
 		);
 	case this.hasEndContent:
-		return <slot name="endContent" onKeyDown={this._endContentKeyDown}></slot>;
+		return (
+			<div
+				class="ui5-menu-item-end-content"
+				role="group"
+				aria-label={this.endContentAccessibleName}
+			>
+				<slot name="endContent" onKeyDown={this._endContentKeyDown}></slot>
+			</div>
+		);
 	case !!this.additionalText:
 		return (
 			<span
@@ -123,6 +131,7 @@ function listItemPostContent(this: MenuItem) {
 		<div
 			id={`${this._id}-menu-main`}
 			class={this.loading ? "menu-busy-indicator-main" : ""}
+			aria-busy={this.loading}
 		>
 			{
 				this.items.length ? (
@@ -150,6 +159,15 @@ function listItemPostContent(this: MenuItem) {
 				/>
 			}
 		</div >
+
+		{/* ARIA live region for loading state announcement */}
+		<span
+			class="ui5-hidden-text"
+			aria-live="polite"
+			aria-atomic="true"
+		>
+			{this.loading ? this.loadingText : ""}
+		</span>
 		{
 			this.isPhone && (
 				<div slot="footer" class="ui5-menu-dialog-footer">
