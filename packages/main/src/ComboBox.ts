@@ -237,11 +237,21 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	value = "";
 
 	/**
- 	 * Defines the selected item value.
- 	 * @default undefined
+	 * Defines the selected item's value.
+	 *
+	 * Use this property together with the `value` property on `ui5-cb-item` to:
+	 * - Select an item programmatically by its unique identifier
+	 * - Handle items with identical display text but different underlying values
+	 * - Submit machine-readable values in forms (the `value` property is submitted instead of the display text)
+	 *
+	 * When set, the ComboBox finds and selects the item whose `value` matches this property
+	 * and whose `text` matches the ComboBox's `value` (display text).
+	 *
+	 * **Note:** This replaces the deprecated `selected` property on `ui5-cb-item`.
+	 * @default undefined
 	 * @public
 	 * @since 2.19.0
- 	 */
+	 */
 	@property()
 	selectedValue?: string;
 
@@ -487,6 +497,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get formFormattedValue() {
+		// Find the selected item
+		const selectedItem = this._getItems().find(item => item.selected && !item.isGroupItem) as ComboBoxItem | undefined;
+
+		// If selected item has a value property, return it (like Select does)
+		if (selectedItem && selectedItem.value !== undefined) {
+			return selectedItem.value;
+		}
+
+		// Fallback to display text (backward compatibility)
 		return this.value;
 	}
 
@@ -1357,6 +1376,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = "";
+		if (this._useSelectedValue) {
+			this.selectedValue = undefined;
+		}
 		this.fireDecoratorEvent("input");
 
 		if (this._isPhone) {
