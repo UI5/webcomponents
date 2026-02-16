@@ -446,6 +446,7 @@ class Menu extends UI5Element {
 		const isTabNextPrevious = isTabNext(e) || isTabPrevious(e);
 		const isShowKey = isShow(e);
 		const item = e.target as MenuItem;
+		const isSplitButton = this._opener && isInstanceOfSplitButton(this._opener);
 
 		if (!isInstanceOfMenuItem(item)) {
 			return;
@@ -454,7 +455,7 @@ class Menu extends UI5Element {
 		const isEndContentNavigation = isRight(e) || isLeft(e);
 		const shouldOpenMenu = this.isRtl ? isLeft(e) : isRight(e);
 
-		if (isEnter(e) || isTabNextPrevious || isShowKey) {
+		if (isEnter(e) || isTabNextPrevious || (isShowKey && isSplitButton)) {
 			e.preventDefault();
 		}
 
@@ -464,7 +465,7 @@ class Menu extends UI5Element {
 
 		if (shouldOpenMenu) {
 			this._openItemSubMenu(item, false);
-		} else if (isTabNextPrevious || (isShowKey && this._opener && isInstanceOfSplitButton(this._opener))) {
+		} else if (isTabNextPrevious || (isShowKey && isSplitButton)) {
 			this._close();
 		}
 	}
