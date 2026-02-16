@@ -508,5 +508,4 @@ export type {
 	SplitButtonAccessibilityAttributes,
 };
 
-// Todo - change it to isInstanceOfMenuButton and change the function to check for the presence of opensMenu getter?
 export const isInstanceOfSplitButton = createInstanceChecker<SplitButton>("isSplitButton");
