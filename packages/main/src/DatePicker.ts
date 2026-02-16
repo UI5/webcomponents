@@ -370,7 +370,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Defines whether the clear icon of the input will be shown.
 	 * @default false
 	 * @public
-	 * @since 2.16.0
+	 * @since 2.20.0
 	 */
 	@property({ type: Boolean })
 	showClearIcon = false;
@@ -664,14 +664,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * The ui5-input "input" event handler - fire input even when the user types
 	 * @protected
 	 */
-	_onInputInput(e: CustomEvent) {
-		const inputValue = (e.target as DatePicker).value;
-		if (this.showClearIcon && inputValue === "" && e.detail.inputType === "") {
-			this._handleClearIconClick();
-
-			return;
-		}
-
+	_onInputInput(e: Event) {
 		this._updateValueAndFireEvents((e.target as DatePicker).value, false, ["input"], false);
 	}
 
