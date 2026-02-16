@@ -111,7 +111,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${geoLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${geoLocationDescr} Switch No`);
 
 	});
 
@@ -127,7 +127,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${gpsLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${gpsLocationDescr} Switch No`);
 	});
 
 	it("Should set correct correct tooltip on the root", () => {

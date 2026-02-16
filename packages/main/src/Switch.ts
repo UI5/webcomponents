@@ -15,7 +15,11 @@ import "@ui5/webcomponents-icons/dist/accept.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/less.js";
 import SwitchDesign from "./types/SwitchDesign.js";
-import { FORM_CHECKABLE_REQUIRED } from "./generated/i18n/i18n-defaults.js";
+import {
+	FORM_CHECKABLE_REQUIRED,
+	SWITCH_STATE_ON,
+	SWITCH_STATE_OFF,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Template
 import SwitchTemplate from "./SwitchTemplate.js";
@@ -308,11 +312,11 @@ class Switch extends UI5Element implements IFormInputElement {
 	}
 
 	get accessibilityOnText() {
-		return this._textOn;
+		return this._textOn ? Switch.i18nBundle.getText(SWITCH_STATE_ON, this._textOn) : "";
 	}
 
 	get accessibilityOffText() {
-		return this._textOff;
+		return this._textOff ? Switch.i18nBundle.getText(SWITCH_STATE_OFF, this._textOff) : "";
 	}
 
 	get hiddenText() {
