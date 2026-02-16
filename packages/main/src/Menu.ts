@@ -445,8 +445,8 @@ class Menu extends UI5Element {
 	_itemKeyDown(e: KeyboardEvent) {
 		const isTabNextPrevious = isTabNext(e) || isTabPrevious(e);
 		const isShowKey = isShow(e);
-		const item = e.target as MenuItem;
 		const isSplitButton = this._opener && isInstanceOfSplitButton(this._opener);
+		const item = e.target as MenuItem;
 
 		if (!isInstanceOfMenuItem(item)) {
 			return;
