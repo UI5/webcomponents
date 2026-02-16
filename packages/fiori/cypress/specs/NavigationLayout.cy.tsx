@@ -156,26 +156,14 @@ describe("Rendering and interaction", () => {
 
 	it("should fire item-click event on every item click", () => {
 		cy.mount(
-			<NavigationLayout>
-				<SideNavigation slot="sideContent">
+			<NavigationLayout onItemClick={cy.stub().as("itemClickNavLayout")}>
+				<SideNavigation slot="sideContent" onItemClick={cy.stub().as("itemClickSideNav")}>
 					<SideNavigationItem text="Item 1" />
 					<SideNavigationItem text="Item 2" />
 				</SideNavigation>
 				<div>Main content</div>
 			</NavigationLayout>
 		);
-
-		// Set up event listener to track calls
-		cy.get("[ui5-navigation-layout]")
-			.then($navigationLayout => {
-				$navigationLayout.get(0).addEventListener("item-click", cy.stub().as("itemClickNavLayout"));
-			});
-
-		// Also listen to SideNavigation to understand the event flow
-		cy.get("[ui5-side-navigation]")
-			.then($sideNav => {
-				$sideNav.get(0).addEventListener("item-click", cy.stub().as("itemClickSideNav"));
-			});
 
 		// Click the first item
 		cy.get("[ui5-side-navigation-item]").first().realClick();
@@ -243,9 +231,6 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 	});
 
 	it("should collapse SideNavigation when mode is not Auto", () => {
-		// Set mobile viewport (width < 600px)
-		cy.viewport(400, 800);
-
 		cy.mount(<NavigationLayout mode="Expanded">
 			<SideNavigation slot="sideContent">
 				<SideNavigationItem text="Home" />

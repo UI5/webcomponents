@@ -113,6 +113,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	template: SideNavigationTemplate,
 	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
+
 /**
  * Fired when the selection has changed via user interaction.
  *
@@ -123,6 +124,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	bubbles: true,
 	cancelable: true,
 })
+
 /**
  * Fired when an item is clicked.
  *
@@ -133,6 +135,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	bubbles: true,
 	cancelable: true,
 })
+
 class SideNavigation extends UI5Element {
 	eventDetails!: {
 		"selection-change": SideNavigationSelectionChangeEventDetail,
@@ -335,6 +338,10 @@ class SideNavigation extends UI5Element {
 
 	get overflowAccessibleName() {
 		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_OVERFLOW_ACCESSIBLE_NAME);
+	}
+
+	get _effectiveCollapsed() {
+		return this.collapsed && !this._isSmallScreen();
 	}
 
 	handlePopupItemClick(e: KeyboardEvent | PointerEvent) {
@@ -646,7 +653,7 @@ class SideNavigation extends UI5Element {
 			return;
 		}
 
-		if (!this._isSmallScreen() && this.collapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
+		if (this._effectiveCollapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
 			e.preventDefault();
 			this._isOverflow = false;
 

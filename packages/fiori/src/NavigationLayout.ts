@@ -54,10 +54,18 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
 	],
 	template: NavigationLayoutTemplate,
 })
+
+/**
+ * Fired when an item is clicked.
+ *
+ * @param {SideNavigationSelectableItemBase} item The clicked item.
+ * @public
+ */
 @event("item-click", {
 	bubbles: true,
 	cancelable: true,
 })
+
 class NavigationLayout extends UI5Element {
 	eventDetails!: {
 		"item-click": SideNavigationItemClickEventDetail
@@ -136,6 +144,7 @@ class NavigationLayout extends UI5Element {
 
 	onAfterRendering() {
 		this._sideNavigationItemClicked = false;
+		this._detachSideNavigationListeners();
 		this._attachSideNavigationListeners();
 	}
 
@@ -146,14 +155,14 @@ class NavigationLayout extends UI5Element {
 	private _attachSideNavigationListeners() {
 		const sideNavigation = this.sideContent[0];
 		if (sideNavigation) {
-			sideNavigation.addEventListener("item-click", this._itemClickHandler);
+			sideNavigation.addEventListener("ui5-item-click", this._itemClickHandler);
 		}
 	}
 
 	private _detachSideNavigationListeners() {
 		const sideNavigation = this.sideContent[0];
 		if (sideNavigation) {
-			sideNavigation.removeEventListener("item-click", this._itemClickHandler);
+			sideNavigation.removeEventListener("ui5-item-click", this._itemClickHandler);
 		}
 	}
 
