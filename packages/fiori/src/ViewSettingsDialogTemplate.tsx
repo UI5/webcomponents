@@ -164,6 +164,7 @@ function ViewSettingsDialogFilterTemplate(this: ViewSettingsDialog) {
 				<List
 					selectionMode="Multiple"
 					onSelectionChange={this._handleFilterValueItemClick} // checkboxes to select/deselect - use selectionChange
+					filter-options=""
 					accessibleNameRef={`${this._id}-label`}
 				>
 					{this._currentSettings.filters.filter(item => item.selected).map(item => (<>
@@ -177,6 +178,7 @@ function ViewSettingsDialogFilterTemplate(this: ViewSettingsDialog) {
 			) : ( // else
 				<List
 					onItemClick={this._changeCurrentFilter} // list item to drill down into the second-level menu - use click
+					filter-list=""
 					accessibleNameRef={`${this._id}-label`}
 				>
 					<ListItemGroup headerText={this._filterByLabel}>
