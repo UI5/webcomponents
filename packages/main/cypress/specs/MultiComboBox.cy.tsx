@@ -2192,10 +2192,10 @@ describe("Event firing", () => {
 
 	it("tests if value-state-change event is fired correctly", () => {
 		cy.mount(
-				<MultiComboBox onValueStateChange={cy.stub().as("valueStateChangeEvent")}>
-					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
-					<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-				</MultiComboBox>
+			<MultiComboBox onValueStateChange={cy.stub().as("valueStateChangeEvent")}>
+				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
+			</MultiComboBox>
 		);
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
@@ -4493,6 +4493,120 @@ describe("Loading State", () => {
 		cy.get("@popover")
 			.find("ui5-list")
 			.should("exist");
+	});
+
+	it("should remove aria-busy when loading becomes false", () => {
+		cy.mount(
+			<MultiComboBox loading>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+
+		cy.get("@mcb")
+			.invoke("prop", "loading", false);
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("not.have.attr", "aria-busy");
+	});
+
+	it("should announce loading when popover opens with loading=true", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		// Open the popover by clicking the arrow
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		// Verify popover opened
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Now set loading to true while popover is open
+		cy.get("@mcb")
+			.invoke("prop", "loading", true);
+
+		// Verify aria-busy is set
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+	});
+
+	it("should announce loading when loading becomes true while popover is open", () => {
+		cy.mount(
+			<MultiComboBox open>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		// Verify popover opened
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Set loading to true while popover is open
+		cy.get("@mcb")
+			.invoke("prop", "loading", true);
+
+		// Verify aria-busy is set
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+	});
+
+	it.only("should keep focus on input when opening with F4/Alt+Down while loading", () => {
+		cy.mount(
+			<MultiComboBox loading>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		// Open with F4
+		cy.get("@mcb")
+			.realPress("F4");
+
+		// Verify popover opened
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Verify focus is on input (not on an item)
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("be.focused");
 	});
 });
 

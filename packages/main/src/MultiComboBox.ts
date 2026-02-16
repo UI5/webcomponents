@@ -9,6 +9,8 @@ import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
 	isShow,
@@ -97,6 +99,7 @@ import {
 	MCB_SELECTED_ITEMS,
 	INPUT_CLEAR_ICON_ACC_NAME,
 	FORM_MIXED_TEXTFIELD_REQUIRED,
+	BUSY_INDICATOR_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Templates
@@ -1538,13 +1541,19 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (!isPhone() && !this._isOpenedByKeyboard) {
 			this._innerInput.focus();
-		} else if (this._isOpenedByKeyboard) {
+		} else if (this._isOpenedByKeyboard && !this.loading) {
+			// When loading, keep focus on input instead of trying to focus an item
 			this._itemToFocus?.focus();
 		} else {
 			this._getResponsivePopover().focus();
 		}
 
 		this.fireDecoratorEvent(action);
+
+		// Announce loading state when popover opens with loading already true
+		if (this.open && this.loading) {
+			announce(MultiComboBox.i18nBundle.getText(BUSY_INDICATOR_TITLE), InvisibleMessageMode.Polite);
+		}
 
 		this._previouslySelectedItems = this._getSelectedItems();
 		this._isOpenedByKeyboard = false;

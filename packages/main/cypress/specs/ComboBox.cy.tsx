@@ -1118,7 +1118,7 @@ describe("Accessibility", () => {
 		cy.mount(
 			<>
 				<label for="cb">Should be the aria-label</label>
-				<ComboBox id="cb"/>
+				<ComboBox id="cb" />
 			</>
 		);
 
@@ -2054,11 +2054,11 @@ describe("Event firing", () => {
 
 	it("tests change event after pressing enter key", () => {
 		cy.mount(
-				<ComboBox>
-					<ComboBoxItem text="Algeria"></ComboBoxItem>
-					<ComboBoxItem text="Argentina"></ComboBoxItem>
-					<ComboBoxItem text="Brazil"></ComboBoxItem>
-				</ComboBox>
+			<ComboBox>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+			</ComboBox>
 		);
 
 		cy.get("[ui5-combobox]")
@@ -2141,11 +2141,11 @@ describe("Event firing", () => {
 
 	it("tests change event on open picker and item navigation", () => {
 		cy.mount(
-				<ComboBox id="change-cb">
-					<ComboBoxItem text="Algeria"></ComboBoxItem>
-					<ComboBoxItem text="Argentina"></ComboBoxItem>
-					<ComboBoxItem text="Brazil"></ComboBoxItem>
-				</ComboBox>
+			<ComboBox id="change-cb">
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+			</ComboBox>
 		);
 
 		cy.get("#change-cb")
@@ -2588,7 +2588,7 @@ describe("Event firing", () => {
 			.realType("Bulgaria");
 
 		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.item.text === "Bulgaria";
+			return event.detail.item.text === "Bulgaria";
 		}));
 	});
 
@@ -3073,6 +3073,121 @@ describe("Loading State", () => {
 		cy.get("@popover")
 			.find("ui5-list")
 			.should("exist");
+	});
+
+	it("should remove aria-busy when loading becomes false", () => {
+		cy.mount(
+			<ComboBox loading>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+
+		cy.get("@combo")
+			.invoke("prop", "loading", false);
+
+		cy.get("@combo")
+			.shadow()
+			.find("input")
+			.should("not.have.attr", "aria-busy");
+	});
+
+	it("should announce loading when popover opens with loading=true", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo");
+
+		// Open the popover by clicking the arrow
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Now set loading to true while popover is open
+		cy.get("@combo")
+			.invoke("prop", "loading", true);
+
+		// Verify aria-busy is set
+		cy.get("@combo")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+	});
+
+	it("should announce loading when loading becomes true while popover is open", () => {
+		cy.mount(
+			<ComboBox open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo");
+
+		cy.get("@combo")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Set loading to true while popover is open
+		cy.get("@combo")
+			.invoke("prop", "loading", true);
+
+		// Verify aria-busy is set
+		cy.get("@combo")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-busy", "true");
+	});
+
+	it("should not set value from first item when opening with loading=true", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.should("have.prop", "value", "");
+
+		// Set loading before opening
+		cy.get("@combo")
+			.invoke("prop", "loading", true);
+
+		// Open with arrow icon click
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Value should still be empty (first item was not selected)
+		cy.get("@combo")
+			.should("have.prop", "value", "");
 	});
 });
 

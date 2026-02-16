@@ -38,6 +38,7 @@ export default function ComboBoxTemplate(this: ComboBox) {
 					aria-label={this.ariaLabelText}
 					aria-required={this.required}
 					aria-controls={this.responsivePopoverId}
+					aria-busy={this.loading ? "true" : undefined}
 					autocomplete="off"
 					data-sap-focus-ref
 				/>

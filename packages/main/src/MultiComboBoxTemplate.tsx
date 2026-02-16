@@ -84,6 +84,7 @@ export default function MultiComboBoxTemplate(this: MultiComboBox) {
 				aria-required={this.required}
 				aria-label={this.ariaLabelText}
 				aria-controls={this.responsivePopoverId}
+				aria-busy={this.loading ? "true" : undefined}
 				autocomplete="off"
 				data-sap-focus-ref
 			/>

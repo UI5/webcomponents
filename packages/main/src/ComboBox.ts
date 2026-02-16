@@ -64,6 +64,7 @@ import {
 	LIST_ITEM_GROUP_HEADER,
 	INPUT_CLEAR_ICON_ACC_NAME,
 	FORM_TEXTFIELD_REQUIRED,
+	BUSY_INDICATOR_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Templates
@@ -595,6 +596,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this.inner.focus();
 		this.fireDecoratorEvent("open");
 
+		if (this.loading) {
+			announce(ComboBox.i18nBundle.getText(BUSY_INDICATOR_TITLE), InvisibleMessageMode.Polite);
+		}
+
 		const allItems = this._getItems();
 		const currentItem = allItems.find(item => {
 			return item.selected || item.focused;
@@ -1009,8 +1014,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 				this._itemFocused = true;
 				selectedItem.focused = true;
 				this.focused = false;
-			} else if (this.open && this._filteredItems.length && !this.value.length) {
+			} else if (this.open && this._filteredItems.length && !this.value.length && !this.loading) {
 				// If no item is selected, select the first non-group item on "Show" (F4, Alt+Up/Down)
+			// Skip this when loading is true as there are no visible items
 				const firstNonGroupItem = this._getItems().findIndex(item => item._isVisible && !item.isGroupItem);
 				this._handleItemNavigation(e, firstNonGroupItem, true /* isForward */);
 			} else {
