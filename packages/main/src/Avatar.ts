@@ -320,19 +320,13 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _role() {
-		// interactive property takes precedence
 		if (this._interactive) {
 			return "button";
 		}
-		// Otherwise use mode
-		switch (this.mode) {
-		case AvatarMode.Decorative:
+		if (this.mode === AvatarMode.Decorative) {
 			return "presentation";
-		case AvatarMode.Interactive:
-			return "button";
-		default:
-			return "img";
 		}
+		return "img";
 	}
 
 	get effectiveAriaHidden() {
@@ -348,12 +342,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _interactive() {
-		// interactive property takes precedence when set to true
-		if (this.interactive && !this.disabled) {
-			return true;
-		}
-		// When interactive is false, mode property controls the behavior
-		return this.mode === AvatarMode.Interactive && !this.disabled;
+		return (this.interactive || this.mode === AvatarMode.Interactive) && !this.disabled;
 	}
 
 	get validInitials() {

@@ -173,6 +173,58 @@ describe("Accessibility", () => {
 			.should("have.attr", "tabindex", "0")
 			.should("not.have.attr", "aria-hidden");
 	});
+
+	it("interactive=true with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar 
+				interactive 
+				disabled 
+				initials="DI" 
+				id="disabled-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("mode='Interactive' with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar 
+				mode="Interactive"
+				disabled 
+				initials="DM" 
+				id="disabled-mode-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-mode-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("disabled interactive avatar doesn't fire click event with mode='Interactive'", () => {
+		cy.mount(
+			<div>
+				<Avatar mode="Interactive" disabled initials="DM" id="disabled-mode-click" onClick={increment}>
+				</Avatar>
+				<input value="0" id="mode-click-event" />
+			</div>
+		);
+
+		function increment() {
+			const input = document.getElementById("mode-click-event") as HTMLInputElement;
+			input.value = "1";
+		}
+		
+		cy.get("#disabled-mode-click").realClick();
+		cy.get("#mode-click-event").should("have.value", "0");
+	});
 });
 
 describe("Fallback Logic", () => {
