@@ -1,6 +1,8 @@
-# CLAUDE.md - UI5 Web Components Development Guide
+# AGENTS.md - UI5 Web Components Development Guide
 
 This file provides guidance for AI coding assistants when developing web components built on `@ui5/webcomponents-base`.
+
+> **Working in the ui5-webcomponents monorepo?** See the [root AGENTS.md](../../AGENTS.md) for repository commands, build flow, and commit guidelines.
 
 ## Component Architecture
 

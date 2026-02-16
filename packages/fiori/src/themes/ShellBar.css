@@ -53,22 +53,21 @@
 	background: var(--sapButton_Lite_Background);
 	color: var(--sapShell_TextColor);
 	box-sizing: border-box;
-	cursor: pointer;
 	border-radius: var(--_ui5_shellbar_button_border_radius);
 	font-weight: bold;
 }
 
 /* Button States - Hover */
-::slotted([ui5-button]:not([slot^="content"]):hover),
-::slotted([ui5-toggle-button]:not([slot^="content"]):hover) {
+::slotted([ui5-button]:not([slot^="content"]):not([disabled]):hover),
+::slotted([ui5-toggle-button]:not([slot^="content"]):not([disabled]):hover) {
 	background: var(--sapShell_Hover_Background);
 	border-color: var(--sapButton_Lite_Hover_BorderColor);
 	color: var(--sapShell_TextColor);
 }
 
 /* Button States - Active */
-::slotted([ui5-button]:not([slot^="content"])[active]),
-::slotted([ui5-toggle-button]:not([slot^="content"])[active]) {
+::slotted([ui5-button]:not([slot^="content"]):not([disabled])[active]),
+::slotted([ui5-toggle-button]:not([slot^="content"]):not([disabled])[active]) {
 	background: var(--sapShell_Active_Background);
 	border-color: var(--sapButton_Lite_Active_BorderColor);
 	color: var(--_ui5_shellbar_button_active_color);
