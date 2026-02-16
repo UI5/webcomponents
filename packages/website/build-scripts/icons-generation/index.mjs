@@ -131,29 +131,7 @@ const _generateIconsPage = (sourceDir, config) => {
 
     const classDef = `export default function ${config.componentName}() {
         return (
-                <div style={{
-                        padding: "2rem 2rem",
-                    }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                            <Heading as="h2" style={{ marginBottom: "0.125rem" }}>${config.title}</Heading>
-                            <Link to="${config.npmLink}">${config.npmPackage}</Link>
-                        </div>
-                        <div style={{ marginTop: "1rem" }}>
-                        <span role="presentation"></span>
-                        <input className="icons__search" type="search" placeholder="Filter icons..." aria-label="Filter icons" onInput={function (e) {
-                            [...document.querySelectorAll("[data-icon-name]")].forEach(iconWrapper => {
-                                const iconName = iconWrapper.getAttribute("data-icon-name").toLowerCase();
-                                iconWrapper.classList.toggle("hidden", !iconName.includes(e.target.value))
-                            })
-
-                            document
-                                .querySelector(".icon__not__found")
-                                .classList
-                                .toggle("hidden", ![...document.querySelectorAll("[data-icon-name]")].every(iconWrapper => iconWrapper.classList.contains("hidden")))
-                        }} />
-                    </div>
-                    </div>
+                <div>
                     <div className="icon__grid">
                         ${icons}
                     </div>

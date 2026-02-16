@@ -56,6 +56,7 @@ import {
 	DATEPICKER_PATTERN_MISSMATCH,
 	DATEPICKER_RANGE_UNDERFLOW,
 	DATEPICKER_RANGE_OVERFLOW,
+	TIMEPICKER_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateComponentBase from "./DateComponentBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -125,8 +126,8 @@ type Picker = "day" | "month" | "year";
  * Supported format options are pattern-based on Unicode LDML Date Format notation.
  * For more information, see [UTS #35: Unicode Locale Data Markup Language](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
  *
- * For example, if the `format-pattern` is "yyyy-MM-dd",
- * a valid value string is "2015-07-30" and the same is displayed in the input.
+ * For example, if the valueFormat is "yyyy-MM-dd", the displayFormat is "MMM d, y", and the used locale is English, a valid value string is "2015-07-30", which leads to an output of "Jul 30, 2015".
+ * If no placeholder is set to the DatePicker, the used displayFormat is displayed as a placeholder. If another placeholder is needed, it must be set.
  *
  * ### Keyboard Handling
  * The `ui5-date-picker` provides advanced keyboard handling.
@@ -939,6 +940,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get pickerAccessibleName() {
 		return DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
+	}
+
+	get btnCancelLabel() {
+		return DatePicker.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON);
 	}
 
 	/**

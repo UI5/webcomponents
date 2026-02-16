@@ -32,7 +32,7 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 					</div>
 				}
 				<div class="ui5-cp-item-container"
-					role="region"
+					role="group"
 					aria-label={this.colorContainerLabel}
 					onKeyDown={this._onColorContainerKeyDown}
 				>
