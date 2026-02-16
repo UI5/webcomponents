@@ -214,6 +214,132 @@ describe("Toolbar general interaction", () => {
 			.should("have.class", "ui5-tb-popover-item");
 	});
 
+	it("Should place AlwaysOverflow items in overflow from first render without flash", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Visible" icon="add" overflow-priority="NeverOverflow"></ToolbarButton>
+				<ToolbarButton text="Test 2" icon="employee" overflow-priority="AlwaysOverflow"></ToolbarButton>
+				<ToolbarButton text="Test 3" icon="decline" overflow-priority="AlwaysOverflow"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Verify state immediately after mount, before any waiting
+		// AlwaysOverflow items should already be in itemsToOverflow array
+		cy.get("[ui5-toolbar]").then($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar;
+			const alwaysBtn1 = document.querySelector("[ui5-toolbar-button][text='Test 2']") as ToolbarButton;
+			const alwaysBtn2 = document.querySelector("[ui5-toolbar-button][text='Test 3']") as ToolbarButton;
+			const neverBtn = document.querySelector("[ui5-toolbar-button][text='Visible']") as ToolbarButton;
+
+			// AlwaysOverflow items should be in itemsToOverflow from the start
+			expect(toolbar.itemsToOverflow).to.include(alwaysBtn1);
+			expect(toolbar.itemsToOverflow).to.include(alwaysBtn2);
+
+			// NeverOverflow item should NOT be in itemsToOverflow
+			expect(toolbar.itemsToOverflow).to.not.include(neverBtn);
+
+			// Verify standardItems only contains the NeverOverflow button
+			expect(toolbar.standardItems).to.have.length(1);
+			expect(toolbar.standardItems[0]).to.equal(neverBtn);
+		});
+
+		// Wait for any potential re-renders
+		cy.wait(500);
+
+		// Verify overflow button is visible (not hidden)
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("exist")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		// Verify the visible button is in the toolbar (not in overflow popover wrapper)
+		cy.get("[ui5-toolbar-button][text='Visible']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("not.have.class", "ui5-tb-popover-item");
+
+		// Open overflow popover
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		// Verify the AlwaysOverflow items are in the popover
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-popover-item")
+			.should("have.length", 2);
+
+		// Verify specific items are in overflow
+		cy.get("[ui5-toolbar-button][text='Test 2']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.class", "ui5-tb-popover-item");
+
+		cy.get("[ui5-toolbar-button][text='Test 3']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.class", "ui5-tb-popover-item");
+	});
+
+	it("Should place dynamically added AlwaysOverflow items in overflow without flash", () => {
+		// Start with a toolbar that already has an AlwaysOverflow item in overflow
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First Always" icon="employee" overflow-priority="AlwaysOverflow"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Wait for initial render to complete
+		cy.wait(500);
+
+		// Verify initial state - first AlwaysOverflow item is in overflow
+		cy.get("[ui5-toolbar-button][text='First Always']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.class", "ui5-tb-popover-item");
+
+		// Overflow button should be visible (not hidden)
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		// Now dynamically add ANOTHER AlwaysOverflow item while overflow is non-empty
+		cy.get("[ui5-toolbar]").then($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar;
+			const newButton = document.createElement("ui5-toolbar-button") as ToolbarButton;
+			newButton.text = "Dynamic Always";
+			newButton.icon = "decline";
+			newButton.overflowPriority = "AlwaysOverflow";
+			toolbar.appendChild(newButton);
+		});
+
+		// Verify the dynamically added item is placed in the overflow (has popover class)
+		cy.get("[ui5-toolbar-button][text='Dynamic Always']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.class", "ui5-tb-popover-item");
+
+		// The first AlwaysOverflow item should still be in overflow
+		cy.get("[ui5-toolbar-button][text='First Always']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.class", "ui5-tb-popover-item");
+
+		// Open overflow popover and verify both AlwaysOverflow items are there
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-popover-item")
+			.should("have.length", 2);
+	});
+
 	it("Should properly prevent the closing of the overflow menu when preventClosing = true", () => {
 		cy.mount(
 			<div style="width: 250px;">
