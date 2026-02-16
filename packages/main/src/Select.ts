@@ -968,12 +968,12 @@ class Select extends UI5Element implements IFormInputElement {
 		if (selectionChanged) {
 			const focusRef = this.getFocusDomRef() as HTMLElement;
 			const hiddenOptionSpan = this.shadowRoot?.querySelector(`#${this._id}-selectedOptionText`);
-			if (focusRef && hiddenOptionSpan && !this._isPickerOpen) {
+			if (focusRef && hiddenOptionSpan) {
 				(focusRef as any).ariaActiveDescendantElement = hiddenOptionSpan;
 				// Clear it after a short delay to avoid JAWS VPC mode
 				setTimeout(() => {
 					(focusRef as any).ariaActiveDescendantElement = null;
-				}, 100);
+				}, 200);
 			}
 		}
 		this.fireDecoratorEvent("close");
