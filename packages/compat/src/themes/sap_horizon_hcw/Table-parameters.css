@@ -1,6 +1,6 @@
 @import "../base/Table-parameters.css";
 
-:root {
+:host {
 	--ui5_table_header_row_outline_width: 0.125rem;
 	--ui5_table_header_row_font_family:  var(--sapFontSemiboldDuplexFamily);
 	--ui5_table_header_row_border_bottom_color: var(--sapList_HeaderBorderColor);

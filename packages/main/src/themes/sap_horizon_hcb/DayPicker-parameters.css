@@ -1,6 +1,6 @@
 @import "../base/DayPicker-parameters.css";
 
-:root {
+:host {
 	--_ui5_daypicker_item_border_radius: 0.4375rem;
 	--_ui5_daypicker_item_selected_border: 0.0625rem solid var(--sapList_SelectionBorderColor);
 	--_ui5_daypicker_item_not_selected_focus_border: 0.125rem solid var(--sapContent_FocusColor);

@@ -13,7 +13,7 @@ const filterOut = [
 ];
 
 const options = {
-	port: 8081,
+	cssVariablesTarget: "host",
 	portStep: 2,
 	dev: true,
 	fioriPackage: true,

@@ -1,6 +1,6 @@
 @import "../base/CalendarHeader-parameters.css";
 
-:root {
+:host {
 	--_ui5_calendar_header_middle_button_width: 5.75rem;
 	--_ui5_calendar_header_middle_button_flex: auto;
 	--_ui5_calendar_header_middle_button_focus_border_radius: 0.5rem;

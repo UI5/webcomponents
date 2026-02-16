@@ -1,5 +1,5 @@
 @import "../base/Select-parameters.css";
 
-:root {
+:host {
 	--_ui5_select_hover_icon_left_border: 0.0625rem solid var(--sapField_Hover_BorderColor);
 }

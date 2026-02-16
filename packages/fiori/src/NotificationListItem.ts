@@ -5,7 +5,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -18,6 +18,7 @@ import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.j
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import NotificationListItemImportance from "./types/NotificationListItemImportance.js";
 import NotificationListItemBase from "./NotificationListItemBase.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Icons
 import iconSysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -225,7 +226,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	avatar!: Array<HTMLElement>;
+	avatar!: Slot<HTMLElement>;
 
 	/**
 	* Defines the menu, displayed in the `ui5-li-notification`.
@@ -236,14 +237,14 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	menu!: Array<HTMLElement>;
+	menu!: Slot<HTMLElement>;
 
 	/**
 	* Defines the elements, displayed in the footer of the of the component.
 	* @public
 	*/
 	@slot({ type: HTMLElement, individualSlots: true })
-	footnotes!: Array<HTMLElement>;
+	footnotes!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content of the `ui5-li-notification`,
@@ -253,7 +254,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot({ type: Node, "default": true })
-	description!: Array<Node>;
+	description!: DefaultSlot<Node>;
 
 	@query(".ui5-nli-title-text")
 	titleTextDOM?: HTMLElement;

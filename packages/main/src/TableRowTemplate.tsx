@@ -15,7 +15,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					aria-colindex={ariaColIndex++}
 					data-ui5-table-selection-cell
 					data-ui5-table-cell-fixed
-					data-ui5-table-acc-text=""
+					data-ui5-acc-text=""
 				>
 					{ this._isMultiSelect ?
 						<CheckBox id="selection-component"
@@ -51,7 +51,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 			{ this._rowActionCount > 0 &&
 				<TableCell id="actions-cell"
 					aria-colindex={ariaColIndex++}
-					data-ui5-table-acc-text={this._actionCellAccText}
+					data-ui5-acc-text={this._actionCellAccText}
 				>
 					{ this._flexibleActions.map(action => (
 						<slot name={action._individualSlot}></slot>

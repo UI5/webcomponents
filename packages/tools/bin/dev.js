@@ -3,15 +3,20 @@
 const child_process = require("child_process");
 const { comma } = require("postcss/lib/list");
 
-let command = process.argv[2];
-const argument = process.argv[3];
+// Check for verbose flag
+const hasVerbose = process.argv.includes("--verbose") || process.argv.includes("-v");
+const args = process.argv.slice(2).filter(arg => arg !== "--verbose" && arg !== "-v");
+
+let command = args[0];
+const argument = args[1];
 
 if (command === "watch") {
 	if (["src", "test", "bundles", "styles", "templates", "samples"].includes(argument)) {
 		command = `watch.${argument}`;
 	}
 } else if (command === "test") {
-	command = ["test", ...process.argv.slice(3)].join(" ");
+	command = ["test", ...args.slice(1)].join(" ");
 }
 
-child_process.execSync(`ui5nps "${command}"`, {stdio: 'inherit'});
+const verboseFlag = hasVerbose ? " --verbose" : "";
+child_process.execSync(`ui5nps${verboseFlag} "${command}"`, {stdio: 'inherit'});

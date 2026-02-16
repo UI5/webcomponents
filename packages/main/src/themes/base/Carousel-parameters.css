@@ -1,4 +1,4 @@
-:root {
+:host {
     --ui5_carousel_background_color_solid: var(--sapGroup_ContentBackground);
     --ui5_carousel_background_color_translucent: var(--sapBackgroundColor);
     --ui5_carousel_button_size: 2.25rem;

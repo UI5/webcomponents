@@ -1,5 +1,6 @@
 :host {
     height: 40px;
+	border: none;
 }
 
 :host(:last-of-type) {

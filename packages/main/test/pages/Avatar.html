@@ -3,17 +3,11 @@
 
 <head>
 	<meta charset="utf-8">
-
 	<title>Avatar</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
-
-
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
-
-
 	<script>// delete Document.prototype.adoptedStyleSheets;</script>
-
 	<link rel="stylesheet" type="text/css" href="./styles/Avatar.css">
 </head>
 
@@ -27,16 +21,16 @@
 
 	<section>
 		<h3>Avatar - special characters in image path</h3>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John$$$ ' (_)Miller 100%25 &=.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John Miller.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="./img/John%20Miller.png" alt="John Miller">
 		</ui5-avatar>
-		<ui5-avatar class="avatar2auto">
+		<ui5-avatar>
 			<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="SAP Logo">
 		</ui5-avatar>
 	</section>
@@ -98,7 +92,8 @@
 	</section>
 
 	<section>
-		<h3>Avatar - Background colors [ Accent1, Accent2, Accent3, Accent4, Accent5, Accent6, Accent7, Accent8, Accent9, Accent10, Placeholder ]</h3>
+		<h3>Avatar - Background colors [ Accent1, Accent2, Accent3, Accent4, Accent5, Accent6, Accent7, Accent8,
+			Accent9, Accent10, Placeholder ]</h3>
 		<ui5-avatar color-scheme="Accent1" size="L"></ui5-avatar>
 		<ui5-avatar color-scheme="Accent2" size="L"></ui5-avatar>
 		<ui5-avatar color-scheme="Accent3" size="L"></ui5-avatar>
@@ -140,7 +135,6 @@
 
 	<section>
 		<h3>Avatar - test</h3>
-
 		<div class="section">
 			<ui5-avatar id="myAvatar1">
 				<img src="./img/woman_avatar_5.png" alt="Woman image">
@@ -157,7 +151,8 @@
 
 	<section>
 		<h3>Avatar - interactive disabled</h3>
-		<ui5-avatar id="interactive-disabled" disabled interactive initials="XS" size="XS" accessible-name="Interactive avatar"></ui5-avatar>
+		<ui5-avatar id="interactive-disabled" disabled interactive initials="XS" size="XS"
+			accessible-name="Interactive avatar"></ui5-avatar>
 		<br>
 		<ui5-input id="click-event-3"></ui5-input>
 		<h3>Avatar - non-interactive disabled</h3>
@@ -166,7 +161,8 @@
 
 	<section>
 		<h3>Avatar - interactive</h3>
-		<ui5-avatar id="interactive-avatar" interactive initials="XS" size="XS" accessible-name="Interactive avatar"></ui5-avatar>
+		<ui5-avatar id="interactive-avatar" interactive initials="XS" size="XS"
+			accessible-name="Interactive avatar"></ui5-avatar>
 		<ui5-avatar id="non-interactive-avatar" initials="S" size="S"></ui5-avatar>
 		<ui5-input id="click-event" value="0"></ui5-input>
 
@@ -176,94 +172,171 @@
 	</section>
 
 	<section>
-		<h3>Avatar - Visual affordance</h3>
-
-		<div class="section">
-			<ui5-avatar initials="AB" color-scheme="Accent1">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="accelerated"></ui5-icon>
-				</ui5-tag>
+		<h3>Avatar Badge - All Sizes</h3>
+		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
+			<ui5-avatar size="XS">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
 			</ui5-avatar>
-
-			<ui5-avatar interactive size="L" initials="CD" color-scheme="Accent2">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="accept"></ui5-icon>
-				</ui5-tag>
+			<ui5-avatar size="S">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
 			</ui5-avatar>
-
+			<ui5-avatar size="M">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<ui5-avatar size="L">
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
 			<ui5-avatar size="XL">
-				<img src="./img/John_Miller.png" alt="John Miller">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="bar-chart"></ui5-icon>
-				</ui5-tag>
-			</ui5-avatar>
-		</div>
-
-		<div class="section">
-			<ui5-avatar shape="Square" size="XS" initials="EF" color-scheme="Accent3">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="filter"></ui5-icon>
-				</ui5-tag>
-			</ui5-avatar>
-
-			<ui5-avatar interactive shape="Square" initials="GH" color-scheme="Accent4">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="add-employee"></ui5-icon>
-				</ui5-tag>
-			</ui5-avatar>
-
-			<ui5-avatar shape="Square" size="L">
-				<img src="./img/John_Miller.png" alt="John Miller">
-				<ui5-tag slot="badge">
-					<ui5-icon slot="icon" name="document"></ui5-icon>
-				</ui5-tag>
+				<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
 			</ui5-avatar>
 		</div>
 	</section>
 
 	<section>
-		<h3>Avatar - Custom visual affordance</h3>
-		<ui5-avatar initials="AB" color-scheme="Accent1">
-			<span slot="badge" class="custom-badge">1</span>
+		<h3>Avatar Badge - All Sizes with Value States (Circle)</h3>
+		<ui5-avatar size="XS">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
-		<br><br>
+		<ui5-avatar size="S">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="L">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="XL">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
 	</section>
 
-	<script>
-		var avatar = document.getElementById("interactive-avatar"),
-			interactiveDisabled = document.getElementById("interactive-disabled"),
-			myInteractiveAvatar = document.getElementById("myInteractiveAvatar"),
-			nonInteractiveAvatar = document.getElementById("non-interactive-avatar"),
-			input = document.getElementById("click-event"),
-			input2 = document.getElementById("click-event-2"),
-			input3 = document.getElementById("click-event-3"),
-			inputValue = 0;
-			inputValue2 = 0;
-			inputValue3 = 0;
+	<section>
+		<h3>Avatar Badge - All Sizes with Value States (Square)</h3>
+		<ui5-avatar size="XS" shape="Square">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="S" shape="Square">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M" shape="Square">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="L" shape="Square">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="XL" shape="Square">
+			<img src="./img/John_Miller.png" alt="John Miller">
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+	</section>
 
-		avatar.accessibilityAttributes = { hasPopup: "menu" };
-		avatar.addEventListener("ui5-click", function() {
-			input.value = `${++inputValue}`;
-		});
+	<section>
+		<h3>Avatar Badge - With Initials and Color Schemes</h3>
+		<ui5-avatar size="M" initials="AB" color-scheme="Accent1">
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M" initials="CD" color-scheme="Accent8">
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M" initials="EF" color-scheme="Accent7">
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M" initials="GH" color-scheme="Accent4">
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar size="M" initials="IJ" color-scheme="Accent5">
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+	</section>
 
+	<section>
+		<h3>Avatar Badge - With Icons</h3>
+		<ui5-avatar icon="employee" size="M">
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar icon="product" size="M" color-scheme="Accent10">
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar icon="supplier" size="M" color-scheme="Accent9">
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar icon="shipping-status" size="M" color-scheme="Accent4">
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+		<ui5-avatar icon="filter" size="M" color-scheme="Accent3">
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
+		</ui5-avatar>
+	</section>
 
-		interactiveDisabled.accessibilityAttributes = { hasPopup: "menu" };
-		interactiveDisabled.addEventListener("ui5-click", function() {
-			input3.value = `${++inputValue3}`;
-		});
+	<section>
+		<h3>Avatar Badge - Handling Invalid Icon Names</h3>
+		<p>The badge should not be displayed in the following cases:</p>
+		<ul>
+			<li>Empty icon name</li>
+			<li>Invalid icon name</li>
+			<li>No icon property set</li>
+		</ul>
+		<p>Only the last avatar should display the badge correctly.</p>
+		<br>
+		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Empty icon</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="invalid-icon-name" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Invalid icon</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">No icon property</p>
+			</div>
+			<div style="text-align: center;">
+				<ui5-avatar size="M">
+					<img src="./img/John_Miller.png" alt="John Miller">
+					<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+				</ui5-avatar>
+				<p style="font-size: 0.75rem;">Valid icon (reference)</p>
+			</div>
+		</div>
+	</section>
 
-		nonInteractiveAvatar.addEventListener("ui5-click", function() {
-			input.value = `${++inputValue}`;
-		});
+	<section>
+		<h3>Avatar Badge - Custom Badge in Slot</h3>
+		<div class="section">
+			<ui5-avatar size="M" initials="AB" color-scheme="Accent1">
+				<span slot="badge" class="custom-badge">1</span>
+			</ui5-avatar>
+			<ui5-avatar size="M" icon="product" color-scheme="Accent3">
+				<span slot="badge" class="custom-badge">!</span>
+			</ui5-avatar>
+			<ui5-avatar size="M" color-scheme="Accent2">
+				<img src="./img/woman_avatar_5.png" alt="Woman Avatar">
+				<span slot="badge" class="custom-badge">9+</span>
+			</ui5-avatar>
+		</div>
+	</section>
 
-		myInteractiveAvatar.accessibilityAttributes = { hasPopup: "menu" };
-		myInteractiveAvatar.addEventListener("ui5-click", function() {
-			input2.value = `${++inputValue2}`;
-		});
-	</script>
-
-	<link rel="stylesheet" type="text/css" href="./styles/Avatar.css">
-
+	<h3>Avatar with image and different object-fit</h3>
 	<ui5-avatar size="XL" shape="Circle">
 		<img src="./img/Lamp_avatar_01.jpg" alt="Woman 1" class="avatar-image">
 	</ui5-avatar>
@@ -282,9 +355,40 @@
 
 		<h3>Avatar with three overflowing initials - custom fallback icon should be shown</h3>
 		<ui5-avatar initials="WWW" fallback-icon="alert" color-scheme="Accent2" size="XL"></ui5-avatar>
-
 	</section>
 
+	<script>
+		var avatar = document.getElementById("interactive-avatar"),
+			interactiveDisabled = document.getElementById("interactive-disabled"),
+			myInteractiveAvatar = document.getElementById("myInteractiveAvatar"),
+			nonInteractiveAvatar = document.getElementById("non-interactive-avatar"),
+			input = document.getElementById("click-event"),
+			input2 = document.getElementById("click-event-2"),
+			input3 = document.getElementById("click-event-3"),
+			inputValue = 0;
+		inputValue2 = 0;
+		inputValue3 = 0;
 
+		avatar.accessibilityAttributes = { hasPopup: "menu" };
+		avatar.addEventListener("ui5-click", function () {
+			input.value = `${++inputValue}`;
+		});
+
+
+		interactiveDisabled.accessibilityAttributes = { hasPopup: "menu" };
+		interactiveDisabled.addEventListener("ui5-click", function () {
+			input3.value = `${++inputValue3}`;
+		});
+
+		nonInteractiveAvatar.addEventListener("ui5-click", function () {
+			input.value = `${++inputValue}`;
+		});
+
+		myInteractiveAvatar.accessibilityAttributes = { hasPopup: "menu" };
+		myInteractiveAvatar.addEventListener("ui5-click", function () {
+			input2.value = `${++inputValue2}`;
+		});
+	</script>
 </body>
+
 </html>

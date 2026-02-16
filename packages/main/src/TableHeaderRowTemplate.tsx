@@ -17,7 +17,7 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 					aria-colindex={ariaColIndex++}
 					data-ui5-table-selection-cell
 					data-ui5-table-cell-fixed
-					data-ui5-table-acc-text=""
+					data-ui5-acc-text=""
 				>
 					{ !this._isMultiSelect ?
 						<></>

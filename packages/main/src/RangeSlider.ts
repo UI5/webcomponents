@@ -1,7 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -1037,7 +1036,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			progress: {
 				"width": `${this._selectedRange! * 100}%`,
 				"transform-origin": `${this.directionStart} top`,
-				[this.directionStart]: `calc(${this._firstHandlePositionFromStart!}% + var(${getScopedVarName("--_ui5_slider_active_progress_left")}))`,
+				[this.directionStart]: `calc(${this._firstHandlePositionFromStart!}% + var(--_ui5_slider_active_progress_left))`,
 			},
 			startHandle: {
 				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,

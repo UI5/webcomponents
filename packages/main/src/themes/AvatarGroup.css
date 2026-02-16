@@ -5,10 +5,6 @@
 	width: 100%;
 }
 
-:host {
-	--_ui5_button_focused_border: var(--_ui5_avatar_group_button_focus_border);
-}
-
 .ui5-avatar-group-items:focus {
 	outline: none;
 }
@@ -51,6 +47,7 @@
 
 ::slotted([ui5-button]:not([hidden])),
 .ui5-avatar-group-overflow-btn:not([hidden]) {
+	--_ui5_button_focused_border: var(--_ui5_avatar_group_button_focus_border);
 	--_ui5_button_base_padding: 0;
 	border-radius: 50%;
 	display: inline-flex;

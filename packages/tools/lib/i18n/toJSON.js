@@ -58,7 +58,9 @@ const generate = async (agrv) => {
 	const files = await globby(messagesBundles.replace(/\\/g, "/"));
 	return Promise.all(files.map(file => convertToJSON(file, messagesJSONDist)))
 		.then(() => {
-			console.log("Message bundle JSON files generated.");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("Message bundle JSON files generated.");
+			}
 		});
 };
 

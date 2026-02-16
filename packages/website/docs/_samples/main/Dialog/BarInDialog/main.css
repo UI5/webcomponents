@@ -4,7 +4,6 @@
     padding-inline: 0;
 }
 
-
 /* Styles for Dialog with State */
 #dialogState::part(header),
 #dialogState::part(footer) {

@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import {
 	isLeft,
@@ -254,7 +255,7 @@ class Menu extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: Array<IMenuItem>;
+	items!: DefaultSlot<IMenuItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -350,7 +351,7 @@ class Menu extends UI5Element {
 		this.open = false;
 	}
 
-	_openItemSubMenu(item: MenuItem) {
+	_openItemSubMenu(item: MenuItem, openedByMouse = false) {
 		clearTimeout(this._timeout);
 
 		if (!item._popover || item._popover.open) {
@@ -364,6 +365,7 @@ class Menu extends UI5Element {
 		item._popover.opener = item;
 		item._popover.open = true;
 		item.selected = true;
+		item._openedByMouse = openedByMouse;
 	}
 
 	_itemMouseOver(e: MouseEvent) {
@@ -376,7 +378,7 @@ class Menu extends UI5Element {
 			return;
 		}
 
-		item.focus();
+		item.getFocusDomRef()?.focus();
 
 		// Opens submenu with 300ms delay
 		this._startOpenTimeout(item);
@@ -412,7 +414,7 @@ class Menu extends UI5Element {
 		this._timeout = setTimeout(() => {
 			this._closeOtherSubMenus(item);
 
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, true);
 		}, MENU_OPEN_DELAY);
 	}
 
@@ -454,7 +456,7 @@ class Menu extends UI5Element {
 		}
 
 		if (shouldOpenMenu) {
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, false);
 		} else if (isTabNextPrevious) {
 			this._close();
 		}

@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ClassMap, Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -55,7 +56,6 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import { getAssociatedLabelForTexts, getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBoxItem.js";
@@ -371,6 +371,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	required = false;
 
 	/**
+	 * Indicates whether a loading indicator should be shown in the picker.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	loading = false;
+
+	/**
 	 * Defines the filter type of the component.
 	 * @default "StartsWithPerTerm"
 	 * @public
@@ -516,7 +524,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	items!: Array<IMultiComboBoxItem>;
+	items!: DefaultSlot<IMultiComboBoxItem>;
 
 	/**
 	* Defines the icon to be displayed in the component.
@@ -524,7 +532,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	* @since 1.0.0-rc.9
 	*/
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<IIcon>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -538,7 +546,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	selectedValues: Array<IMultiComboBoxItem>;
 	_inputLastValue: string;
@@ -1437,8 +1445,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			innerInput.setSelectionRange(matchingItem.text!.length, matchingItem.text!.length);
 			this.open = false;
-		} else if (this._internals?.form) {
-			submitForm(this);
+		} else {
+			if (this._lastValue !== this.value) {
+				this._inputChange();
+			}
+
+			if (this._internals?.form) {
+				submitForm(this);
+			}
 		}
 	}
 
@@ -1787,7 +1801,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.tokenizerAvailable = this._getSelectedItems().length > 0;
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
 		if (!input || !value) {
 			this._getItems().forEach(item => {
@@ -1812,7 +1826,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (this._shouldFilterItems) {
-			this._filteredItems = this._filterItems(this._shouldAutocomplete || !!autoCompletedChars ? this.valueBeforeAutoComplete : value);
+			this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
 		} else {
 			this._filteredItems = this._getItems();
 		}
@@ -1863,8 +1877,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	storeResponsivePopoverWidth() {
-		if (this.open && !this._listWidth) {
-			this._listWidth = this.list!.offsetWidth;
+		if (this.open && !this._listWidth && this.list) {
+			this._listWidth = this.list.offsetWidth;
 		}
 	}
 

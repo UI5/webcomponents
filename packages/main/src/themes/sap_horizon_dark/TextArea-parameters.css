@@ -1,6 +1,6 @@
 @import "../base/TextArea-parameters.css";
 
-:root {
+:host {
 	--_ui5_textarea_hover_border: none;
 	--_ui5_textarea_focus_border_radius: 0.25rem;
 	--_ui5_textarea_line_height: 1.5;
@@ -18,7 +18,7 @@
 	--_ui5_textarea_value_state_focus_offset: 1px;
 	--_ui5_textarea_wrapper_padding: 0.0625rem;
 	--_ui5_textarea_success_wrapper_padding: 0.0625rem;
-	--_ui5_textarea_warning_error_wrapper_padding:  0.0625rem 0.0625rem 0.125rem 0.0625rem;
+	--_ui5_textarea_warning_error_wrapper_padding: 0.0625rem 0.0625rem 0.125rem 0.0625rem;
 	--_ui5_textarea_information_wrapper_padding: 0.0625rem 0.0625rem 0.125rem 0.0625rem;
 	--_ui5_textarea_inner_width: calc(100% - (2 * var(--_ui5_textarea_wrapper_padding)));
 	--_ui5_textarea_padding_top: 0.5rem;
@@ -34,17 +34,17 @@
 	--_ui5_textarea_readonly_border_style: dashed;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_textarea_padding_top: 0.1875rem;
-	--_ui5_textarea_padding_bottom: 0.125rem;
-	--_ui5_textarea_padding_bottom_readonly: 0.0625rem;
-	--_ui5_textarea_padding_top_error_warning: 0.1875rem;
-	--_ui5_textarea_padding_bottom_error_warning: 0.125rem;
-	--_ui5_textarea_padding_top_information: 0.1875rem;
-	--_ui5_textarea_padding_bottom_information: 0.125rem;
-	--_ui5_textarea_padding_right_and_left: 0.5rem;
-	--_ui5_textarea_padding_right_and_left_error_warning: 0.5rem;
-	--_ui5_textarea_padding_right_and_left_information: 0.5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_textarea_padding_top: 0.1875rem;
+		--_ui5_textarea_padding_bottom: 0.125rem;
+		--_ui5_textarea_padding_bottom_readonly: 0.0625rem;
+		--_ui5_textarea_padding_top_error_warning: 0.1875rem;
+		--_ui5_textarea_padding_bottom_error_warning: 0.125rem;
+		--_ui5_textarea_padding_top_information: 0.1875rem;
+		--_ui5_textarea_padding_bottom_information: 0.125rem;
+		--_ui5_textarea_padding_right_and_left: 0.5rem;
+		--_ui5_textarea_padding_right_and_left_error_warning: 0.5rem;
+		--_ui5_textarea_padding_right_and_left_information: 0.5rem;
+	}
 }

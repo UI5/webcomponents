@@ -1,5 +1,5 @@
 @import "../base/Panel-parameters.css";
 
-:root {
+:host {
 	--_ui5_panel_focus_border: 0.125rem dotted var(--sapContent_FocusColor);
 }

@@ -1,5 +1,5 @@
 @import "../base/AvatarGroup-parameters.css";
 
-:root {
+:host {
 	--_ui5_avatar_group_focus_border_radius: 0.375rem;
 }

@@ -39,7 +39,7 @@ const generate = async (argv) => {
 
     const processThemingPackageFile = async (f) => {
         const selector = ':root';
-        const result = await postcss().process(f.text);
+        const result = await postcss().process(f.text, { from: undefined });
 
         const newRule = postcss.rule({ selector });
 
@@ -59,7 +59,7 @@ const generate = async (argv) => {
             const result = await postcss([
                 combineDuplicatedSelectors,
                 postcssPlugin
-            ]).process(f.text);
+            ]).process(f.text, { from: undefined });
 
             return { css: result.css };
         }
@@ -67,7 +67,7 @@ const generate = async (argv) => {
 
         const combined = await postcss([
             combineDuplicatedSelectors,
-        ]).process(f.text);
+        ]).process(f.text, { from: undefined });
 
         return { css: scopeVariables(combined.css, packageJSON, f.path) };
     }
@@ -93,6 +93,7 @@ const generate = async (argv) => {
         minify: true,
         outdir: 'dist/css',
         outbase: 'src',
+        logLevel: process.env.UI5_VERBOSE === "true" ? "warning" : "error",
         plugins: [
             scopingPlugin,
         ],

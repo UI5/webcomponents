@@ -1,8 +1,9 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type SuggestionListItem from "./SuggestionListItem.js";
 import ListItemGroup from "./ListItemGroup.js";
 import ListBoxItemGroupTemplate from "./ListBoxItemGroupTemplate.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -27,7 +28,7 @@ class SuggestionItemGroup extends ListItemGroup {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	items!: Array<SuggestionListItem>;
+	items!: DefaultSlot<SuggestionListItem>;
 }
 
 SuggestionItemGroup.define();

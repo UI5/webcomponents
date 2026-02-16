@@ -1,6 +1,6 @@
 @import "../base/Tag-parameters.css";
 
-:root {
+:host {
 	--_ui5-tag-text-padding: 0.1875rem 0.25rem;
 	--_ui5-tag-padding-inline-icon-only: 0.313rem;
 	--_ui5-tag-text-transform: none;

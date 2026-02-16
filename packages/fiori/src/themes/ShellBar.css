@@ -9,13 +9,22 @@
 }
 
 :host {
+	box-shadow: inset 0 -0.0625rem 0 0 var(--sapPageHeader_BorderColor);
+}
+
+::slotted([ui5-input]) {
 	--_ui5_input_placeholder_color: var(--sapShell_InteractiveTextColor);
 	--_ui5_input_border_radius: var(--_ui5_shellbar_input_border_radius);
 	--_ui5_input_focus_border_radius: var(--_ui5_shellbar_input_focus_border_radius);
 	--_ui5_input_background_color: var(--_ui5_shellbar_input_background_color);
 	--_ui5_input_focus_outline_color: var(--_ui5_shellbar_input_focus_outline_color);
 	--_ui5_input_margin_top_bottom: 0;
-	box-shadow: inset 0 -0.0625rem 0 0 var(--sapPageHeader_BorderColor);
+}
+
+::slotted([ui5-button]),
+[ui5-button],
+::slotted([ui5-toggle-button]),
+[ui5-toggle-button] {
 	/* Overwrite the default button styles to fulfill no "compact" mode of ui5-shellbar */
 	--_ui5_button_base_min_width: 2.25rem;
 	--_ui5_button_base_padding: 0.5625rem;
@@ -48,7 +57,6 @@
 	outline-color: var(--_ui5_shellbar_logo_outline_color);
 	color: var(--sapShell_TextColor);
 	box-sizing: border-box;
-	cursor: pointer;
 	border-radius: var(--_ui5_shellbar_button_border_radius);
 	position: relative;
 	font-weight: bold;
@@ -72,12 +80,20 @@
 	margin-inline-start: 0;
 }
 
-::slotted([ui5-toggle-button]:hover),
-::slotted([ui5-button]:hover),
+.ui5-shellbar-menu-button,
+.ui5-shellbar-button,
+.ui5-shellbar-image-button,
+::slotted([ui5-toggle-button]:not([slot^="content"]):not([disabled])),
+::slotted([ui5-button]:not([slot^="content"]):not([disabled])) {
+	cursor: pointer;
+}
+
+::slotted([ui5-toggle-button]:not([disabled]):hover),
+::slotted([ui5-button]:not([disabled]):hover),
 .ui5-shellbar-menu-button.ui5-shellbar-menu-button--interactive:hover,
 .ui5-shellbar-button:hover,
 .ui5-shellbar-image-button:hover,
-::slotted([ui5-button][slot="midContent"]:hover) {
+::slotted([ui5-button][slot="midContent"]:not([disabled]):hover) {
 	background: var(--sapShell_Hover_Background);
 	border-color: var(--sapButton_Lite_Hover_BorderColor);
 	color: var(--sapShell_TextColor);
@@ -88,11 +104,11 @@
 	color: var(--sapShell_Assistant_ForegroundColor);
 }
 
-::slotted([ui5-toggle-button][active]),
-::slotted([ui5-button][active]),
+::slotted([ui5-toggle-button]:not([disabled])[active]),
+::slotted([ui5-button]:not([disabled])[active]),
 .ui5-shellbar-menu-button.ui5-shellbar-menu-button--interactive:active,
 .ui5-shellbar-button[active],
-.ui5-shellbar-image-button:active{
+.ui5-shellbar-image-button:active {
 	background: var(--sapShell_Active_Background);
 	border-color: var(--sapButton_Lite_Active_BorderColor);
 	color: var(--_ui5_shellbar_button_active_color);
@@ -243,7 +259,7 @@ slot[name="profile"] {
 	border-radius: var(--_ui5_shellbar_logo_border_radius);
 }
 
-.ui5-shellbar-overflow-container > .ui5-shellbar-logo:hover,
+.ui5-shellbar-overflow-container>.ui5-shellbar-logo:hover,
 .ui5-shellbar-logo-area:hover {
 	box-shadow: var(--_ui5_shellbar_button_box_shadow);
 	border-radius: var(--_ui5_shellbar_logo_border_radius);
@@ -282,11 +298,11 @@ slot[name="profile"] {
 	--_ui5_button_focused_border: var(--_ui5_shellbar_button_focused_border);
 }
 
-.ui5-shellbar-cancel-button{
+.ui5-shellbar-cancel-button {
 	color: var(--_ui5-shellbar_cancel-button-color);
 }
 
-.ui5-shellbar-cancel-button:hover{
+.ui5-shellbar-cancel-button:hover {
 	color: var(--_ui5-shellbar_cancel-button-color);
 }
 
@@ -307,7 +323,7 @@ slot[name="profile"] {
 	flex-shrink: 0;
 }
 
-.ui5-shellbar-overflow-container-left > :nth-child(n) {
+.ui5-shellbar-overflow-container-left> :nth-child(n) {
 	margin-inline-end: 0.5rem;
 }
 
@@ -402,15 +418,15 @@ slot[name="profile"] {
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
- 	padding-inline-start: var(--_ui5-shellbar-content-margin-start);
+	padding-inline-start: var(--_ui5-shellbar-content-margin-start);
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-bell-button [slot="badge"] {
-    inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
+	inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-custom-item [slot="badge"] {
-    inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
+	inset-inline-end: var(--_ui5_shellbar_notification_btn_count_offset);
 }
 
 .ui5-shellbar-menu-button {
@@ -425,7 +441,7 @@ slot[name="profile"] {
 	margin-inline-start: 0.5rem;
 }
 
-.ui5-shellbar-overflow-container-right-child > :first-child {
+.ui5-shellbar-overflow-container-right-child> :first-child {
 	margin-inline-start: 0;
 }
 

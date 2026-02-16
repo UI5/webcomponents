@@ -34,14 +34,14 @@
 
 .ui5-form-item-layout {
 	display: grid;
-	grid-template-columns: var(--ui5-form-item-layout);
+	grid-template-columns: var(--ui5-form-item-layout, 4fr 8fr 0fr);
 	align-items: center;
 }
 
 .ui5-form-item-label {
-	padding: var(--ui5-form-item-label-padding);
-	padding-inline-end: var(--ui5-form-item-label-padding-end);
-	justify-self: var(--ui5-form-item-label-justify);
+	padding: var(--ui5-form-item-label-padding, 0.125rem 0);
+	padding-inline-end: 0.85rem;
+	justify-self: var(--ui5-form-item-label-justify, end);
 }
 
 .ui5-form-item-content {

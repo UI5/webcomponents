@@ -1,6 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 
@@ -17,6 +17,7 @@ import valueStateMessageStyles from "@ui5/webcomponents/dist/generated/themes/Va
 
 // Templates
 import TextAreaTemplate from "./TextAreaTemplate.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type TextAreaVersionChangeEventDetail = {
 	backwards: boolean,
@@ -131,7 +132,7 @@ class TextArea extends BaseTextArea {
 	focused = false;
 
 	@slot({ type: HTMLElement })
-	menu!: Array<HTMLElement>;
+	menu!: Slot<HTMLElement>;
 
 	static i18nBundle: I18nBundle;
 

@@ -1,6 +1,6 @@
 @import "../base/Switch-parameters.css";
 
-:root {
+:host {
 	/* Switch */
 	--_ui5_switch_root_after_outline: none;
 	--_ui5_switch_focus_outline: 0.125rem dotted var(--sapContent_FocusColor);
