@@ -1,4 +1,5 @@
 import Button from "../../src/Button.js";
+import SplitButton from "../../src/SplitButton.js";
 import Menu from "../../src/Menu.js";
 import MenuItem from "../../src/MenuItem.js";
 import MenuItemGroup from "../../src/MenuItemGroup.js";
@@ -347,6 +348,93 @@ describe("Menu interaction", () => {
 
 		cy.get("[ui5-menu]")
 			.ui5MenuItemCheckShiftClickAndPress("[text='Outside']", "not.have.attr");
+	});
+
+	it("should close menu with Alt+ArrowDown when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress(["Alt", "ArrowDown"]);
+
+		cy.get("@menu")
+			.ui5MenuClosed();
+	});
+
+	it("should close menu with Alt+ArrowUp when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress(["Alt", "ArrowUp"]);
+
+		cy.get("@menu")
+			.ui5MenuClosed();
+	});
+
+	it("should close menu with F4 when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress("F4");
+
+		cy.get("@menu")
+			.ui5MenuClosed();
 	});
 
 	describe("Event firing", () => {
