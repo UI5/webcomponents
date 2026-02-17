@@ -513,7 +513,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
@@ -1444,6 +1444,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				});
 			} else {
 				this._previouslySelectedItems = this._getSelectedItems();
+				const previousSelectedValues = [...this.selectedValues];
 				matchingItem.selected = true;
 				this.value = "";
 				// during composition prevent _inputLiveChange for proper input clearing
@@ -1451,9 +1452,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 					this._suppressNextLiveChange = true;
 				}
 
+				if (this.selectedValues && matchingItem.value) {
+					this.selectedValues = [...this.selectedValues, matchingItem.value];
+				}
+
 				const changePrevented = this.fireSelectionChange();
 
 				if (changePrevented) {
+					this.selectedValues = previousSelectedValues;
 					this._revertSelection();
 				}
 			}
@@ -1606,11 +1612,16 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		// don't call selection change right after selection as user can cancel it on phone
 		if (!isPhone()) {
+			if (this.selectedValues) {
+				// Get values from all selected items (not just filtered ones)
+				this.selectedValues = this._getItems()
+					.filter((i): i is MultiComboBoxItem => isInstanceOfMultiComboBoxItem(i) && i.selected)
+					.map(i => i.value)
+					.filter((v): v is string => !!v);
+			}
+
 			changePrevented = this.fireSelectionChange();
 
-			if (this.selectedValues) {
-				this.selectedValues = e.detail.selectedItems.map(i => (i as MultiComboBoxItem).value || "");
-			}
 			if (changePrevented) {
 				e.preventDefault();
 				this._revertSelection();

@@ -48,8 +48,18 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	@property({ type: Boolean })
 	declare selected: boolean;
 
+	/**
+	 * Defines the value of the component.
+	 *
+	 * Use this property to associate a unique identifier with the item,
+	 * separate from the display text. This enables selecting items
+	 * programmatically via `selectedValues` on the parent MultiComboBox.
+	 * @default undefined
+	 * @public
+	 * @since 2.19.0
+	 */
 	@property()
-	value?: string;	// remove when cmb PR is reviewed
+	value?: string;
 
 	/**
 	 * Defines whether the item is filtered
