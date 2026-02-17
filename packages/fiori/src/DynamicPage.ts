@@ -292,9 +292,17 @@ class DynamicPage extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	set headerSnapped(snapped: boolean) {
-		if (snapped !== this._headerSnapped) {
-			this._toggleHeader();
+		if (snapped === this._headerSnapped) {
+			return;
 		}
+
+		if (!this.scrollContainer) {
+			this._headerSnapped = snapped;
+			this.showHeaderInStickArea = snapped;
+			return;
+		}
+
+		this._toggleHeader();
 	}
 
 	snapOnScroll() {

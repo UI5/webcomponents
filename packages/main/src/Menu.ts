@@ -10,6 +10,7 @@ import {
 	isEnter,
 	isTabNext,
 	isTabPrevious,
+	isShow,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import {
 	isPhone,
@@ -29,6 +30,7 @@ import type MenuItem from "./MenuItem.js";
 import { isInstanceOfMenuItem } from "./MenuItem.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
+import { isInstanceOfSplitButton } from "./SplitButton.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {
@@ -280,6 +282,10 @@ class Menu extends UI5Element {
 		return this.shadowRoot!.querySelector<List>("[ui5-list]");
 	}
 
+	get _opener() {
+		return typeof this.opener === "string" ? document.getElementById(this.opener) : this.opener;
+	}
+
 	/** Returns menu item groups */
 	get _menuItemGroups() {
 		return this.items.filter(isInstanceOfMenuItemGroup);
@@ -351,7 +357,7 @@ class Menu extends UI5Element {
 		this.open = false;
 	}
 
-	_openItemSubMenu(item: MenuItem) {
+	_openItemSubMenu(item: MenuItem, openedByMouse = false) {
 		clearTimeout(this._timeout);
 
 		if (!item._popover || item._popover.open) {
@@ -365,6 +371,7 @@ class Menu extends UI5Element {
 		item._popover.opener = item;
 		item._popover.open = true;
 		item.selected = true;
+		item._openedByMouse = openedByMouse;
 	}
 
 	_itemMouseOver(e: MouseEvent) {
@@ -377,7 +384,7 @@ class Menu extends UI5Element {
 			return;
 		}
 
-		item.focus();
+		item.getFocusDomRef()?.focus();
 
 		// Opens submenu with 300ms delay
 		this._startOpenTimeout(item);
@@ -413,7 +420,7 @@ class Menu extends UI5Element {
 		this._timeout = setTimeout(() => {
 			this._closeOtherSubMenus(item);
 
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, true);
 		}, MENU_OPEN_DELAY);
 	}
 
@@ -437,6 +444,8 @@ class Menu extends UI5Element {
 
 	_itemKeyDown(e: KeyboardEvent) {
 		const isTabNextPrevious = isTabNext(e) || isTabPrevious(e);
+		const isShowKey = isShow(e);
+		const isSplitButton = this._opener && isInstanceOfSplitButton(this._opener);
 		const item = e.target as MenuItem;
 
 		if (!isInstanceOfMenuItem(item)) {
@@ -446,7 +455,7 @@ class Menu extends UI5Element {
 		const isEndContentNavigation = isRight(e) || isLeft(e);
 		const shouldOpenMenu = this.isRtl ? isLeft(e) : isRight(e);
 
-		if (isEnter(e) || isTabNextPrevious) {
+		if (isEnter(e) || isTabNextPrevious || (isShowKey && isSplitButton)) {
 			e.preventDefault();
 		}
 
@@ -455,8 +464,8 @@ class Menu extends UI5Element {
 		}
 
 		if (shouldOpenMenu) {
-			this._openItemSubMenu(item);
-		} else if (isTabNextPrevious) {
+			this._openItemSubMenu(item, false);
+		} else if (isTabNextPrevious || (isShowKey && isSplitButton)) {
 			this._close();
 		}
 	}

@@ -23,7 +23,7 @@ import {
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
@@ -391,7 +391,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get accInfo(): InputAccInfo {
 		return {
 			"ariaRequired": this.required,
-			"ariaLabel": getEffectiveAriaLabelText(this),
+			"ariaLabel": getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this),
 		};
 	}
 
