@@ -26,6 +26,7 @@ export default function PanelTemplate(this: Panel) {
 						onClick={this._headerClick}
 						onKeyDown={this._headerKeyDown}
 						onKeyUp={this._headerKeyUp}
+						onTouchStart={this._isMobile}
 						class="ui5-panel-header"
 						tabindex={this.headerTabIndex}
 						role={this.accInfo.role}

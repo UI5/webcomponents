@@ -10,6 +10,7 @@ import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
 import { isSpace, isEnter, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
+import { supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
@@ -199,6 +200,9 @@ class Panel extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_pendingToggle = false;
 
+	@property({ type: Boolean })
+	_touched = false;
+
 	/**
 	 * Defines the component header area.
 	 *
@@ -230,6 +234,12 @@ class Panel extends UI5Element {
 
 	get shouldNotAnimate() {
 		return this.noAnimation || getAnimationMode() === AnimationMode.None;
+	}
+
+	_isMobile() {
+		if (supportsTouch()) {
+			this._touched = true;
+		}
 	}
 
 	_headerClick(e: MouseEvent) {
