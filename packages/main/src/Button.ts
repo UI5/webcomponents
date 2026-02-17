@@ -13,7 +13,11 @@ import {
 	isShift,
 	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getEffectiveAriaLabelText,
+	registerUI5Element,
+	deregisterUI5Element,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -376,6 +380,12 @@ class Button extends UI5Element implements IButton {
 	_isSpacePressed = false;
 
 	/**
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_accessibleNameText?: string;
+
+	/**
 	 * Defines the text of the component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -443,6 +453,12 @@ class Button extends UI5Element implements IButton {
 			this.addEventListener("click", this._onclickBound);
 			this._clickHandlerAttached = true;
 		}
+
+		registerUI5Element(this, this._updateAccessibleNameText.bind(this));
+	}
+
+	_updateAccessibleNameText() {
+		this._accessibleNameText = getEffectiveAriaLabelText(this);
 	}
 
 	onExitDOM() {
@@ -454,6 +470,8 @@ class Button extends UI5Element implements IButton {
 		if (activeButton === this) {
 			activeButton = null;
 		}
+
+		deregisterUI5Element(this);
 	}
 
 	async onBeforeRendering() {
@@ -655,7 +673,7 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get ariaLabelText() {
-		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || "";
+		const effectiveAriaLabelText = this._accessibleNameText || "";
 		const textContent = this.textContent || "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
