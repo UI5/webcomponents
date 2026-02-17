@@ -1595,7 +1595,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_getSelectedItems(): Array<MultiComboBoxItem> {
 		// Angular 2 way data binding
 		return this._getItems().filter(item => item.selected) as Array<MultiComboBoxItem>;
-		// return this.selectedValues as Array<MultiComboBoxItem>;
 	}
 
 	_listSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
@@ -2194,7 +2193,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		return getTokensCountText(this.selectedValues.length);
+		return getTokensCountText(this._getSelectedItems().length);
 	}
 
 	get _tokensCountTextId() {
