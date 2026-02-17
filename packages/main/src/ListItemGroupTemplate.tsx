@@ -7,8 +7,14 @@ export default function ListItemGroupTemplate(this: ListItemGroup) {
 	return (
 		<>
 			{this.hasHeader &&
-				<ListItemGroupHeader wrappingType={this.wrappingType} focused={this.focused} part="header" accessibleRole={ListItemAccessibleRole.ListItem}>
-					{ this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText }
+				<ListItemGroupHeader
+					wrappingType={this.wrappingType}
+					focused={this.focused}
+					part="header"
+					exportparts="title"
+					accessibleRole={ListItemAccessibleRole.ListItem}
+				>
+					{this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText}
 					<div
 						role="list"
 						slot="subItems"
@@ -26,7 +32,7 @@ export default function ListItemGroupTemplate(this: ListItemGroup) {
 
 				<slot></slot>
 
-				<DropIndicator orientation="Horizontal" ownerReference={this}/>
+				<DropIndicator orientation="Horizontal" ownerReference={this} />
 			</div>
 		</>
 
