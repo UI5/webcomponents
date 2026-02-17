@@ -1047,15 +1047,23 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
-		const cutToClipboard = (e: ClipboardEvent) => {
+		// Async clipboard API (works in secure contexts - HTTPS/localhost)
+		if (navigator.clipboard?.writeText && window.isSecureContext) {
 			navigator.clipboard.writeText(tokensTexts);
+			return;
+		}
 
+		// Fallback for HTTP: use ClipboardEvent with execCommand
+		const fillClipboardHandler = (e: ClipboardEvent) => {
+			if (e.clipboardData) {
+				e.clipboardData.setData("text/plain", tokensTexts);
+			}
 			e.preventDefault();
 		};
 
-		document.addEventListener(shortcutName, cutToClipboard);
+		document.addEventListener(shortcutName, fillClipboardHandler);
 		document.execCommand(shortcutName);
-		document.removeEventListener(shortcutName, cutToClipboard);
+		document.removeEventListener(shortcutName, fillClipboardHandler);
 	}
 
 	/**
