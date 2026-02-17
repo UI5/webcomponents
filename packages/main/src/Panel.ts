@@ -243,8 +243,6 @@ class Panel extends UI5Element {
 	}
 
 	_headerFocusOut() {
-		// Reset touched state when focus leaves, so next focus can be properly detected
-		// as either touch-initiated or keyboard-initiated
 		this._touched = false;
 	}
 
