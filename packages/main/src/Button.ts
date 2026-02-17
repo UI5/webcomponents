@@ -14,7 +14,7 @@ import {
 	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import {
-	getEffectiveAriaLabelText,
+	getAllAccessibleNameRefTexts,
 	registerUI5Element,
 	deregisterUI5Element,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
@@ -380,10 +380,11 @@ class Button extends UI5Element implements IButton {
 	_isSpacePressed = false;
 
 	/**
+	 * Constantly updated value of texts collected from the accessibleNameRef elements
 	 * @private
 	 */
 	@property({ noAttribute: true })
-	_accessibleNameText?: string;
+	_accessibleNameRefTexts?: string;
 
 	/**
 	 * Defines the text of the component.
@@ -454,11 +455,11 @@ class Button extends UI5Element implements IButton {
 			this._clickHandlerAttached = true;
 		}
 
-		registerUI5Element(this, this._updateAccessibleNameText.bind(this));
+		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
 	}
 
-	_updateAccessibleNameText() {
-		this._accessibleNameText = getEffectiveAriaLabelText(this);
+	_updateAccessibleNameRefTexts() {
+		this._accessibleNameRefTexts = getAllAccessibleNameRefTexts(this);
 	}
 
 	onExitDOM() {
@@ -673,7 +674,8 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get ariaLabelText() {
-		const effectiveAriaLabelText = this._accessibleNameText || "";
+		// Use accessibleNameRef texts (cached), then accessibleName (direct), then textContent as fallback
+		const effectiveAriaLabelText = this._accessibleNameRefTexts || this.accessibleName || "";
 		const textContent = this.textContent || "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
