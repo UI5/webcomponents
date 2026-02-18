@@ -960,6 +960,8 @@ class List extends UI5Element {
 				groupCount++;
 				// subtract group itself for proper group header item count
 				groupItemCount += groupItems.length - 1;
+			} else if (hasListItems(item)) {
+				item.assignedSlot && items.push(...item.listItems);
 			} else {
 				item.assignedSlot && items.push(item);
 			}
@@ -1559,6 +1561,15 @@ class List extends UI5Element {
 }
 
 List.define();
+
+type ListItemWrapper = {
+	hasListItems: boolean;
+	listItems: Array<ListItemBase>;
+}
+
+const hasListItems = (item: object): item is ListItemWrapper => {
+	return "hasListItems" in item && (item as ListItemWrapper).hasListItems;
+};
 
 export default List;
 export type {

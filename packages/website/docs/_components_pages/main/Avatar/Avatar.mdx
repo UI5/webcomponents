@@ -4,6 +4,7 @@ slug: ../Avatar
 
 import Basic from "../../../_samples/main/Avatar/Basic/Basic.md";
 import Interactive from "../../../_samples/main/Avatar/Interactive/Interactive.md";
+import Decorative from "../../../_samples/main/Avatar/Decorative/Decorative.md";
 import WithBadge from "../../../_samples/main/Avatar/WithBadge/WithBadge.md";
 import ColorSchemes from "../../../_samples/main/Avatar/ColorSchemes/ColorSchemes.md";
 import Sizes from "../../../_samples/main/Avatar/Sizes/Sizes.md";
@@ -31,10 +32,19 @@ The Avatar comes in several sizes (S to XL).
 
 <Sizes />
 
-### Interactive
-The Avatar can be interactive, e.g. responds to hover, focus and press.
+### Interactive Mode
+The Avatar can be made interactive in two ways:
+- `mode="Interactive"` - Sets the avatar to interactive mode with role="button", making it focusable and enabling keyboard interaction
+- `interactive` property - A boolean property that also makes the avatar interactive
+
+**Note:** The `interactive` property takes precedence over the `mode` property. When `interactive=true`, the `mode` property value is ignored, and the avatar behaves as interactive.
 
 <Interactive />
+
+### Decorative Mode
+The Avatar can be set to decorative mode with `mode="Decorative"`, making it purely visual without semantic content (role="presentation", aria-hidden="true"). This is useful when the avatar is used for visual purposes only and shouldn't be announced by screen readers.
+
+<Decorative />
 
 ### Color Schemes
 The Avatar can be displayed in multiple color schemes.
