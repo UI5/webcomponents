@@ -22,7 +22,9 @@ const handle = (slider: Slider) => {
 				tabIndex={slider.disabled ? -1 : 0}
 				disabled={slider.disabled}
 				aria-orientation="horizontal"
-				part="handle-container"
+				part="handle"
+				exportparts="icon: handle-icon"
+				role="slider"
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.value}
@@ -81,6 +83,8 @@ export default function SliderTemplate(this: Slider) {
 					labelInterval={this.labelInterval}
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
+					part="scale"
+					exportparts="inner: scale-inner, progress: progress"
 				>
 					{handle(this)}
 				</SliderScale>

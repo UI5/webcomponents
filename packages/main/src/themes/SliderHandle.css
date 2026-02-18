@@ -13,7 +13,6 @@
 	z-index: 2;
 	top: 0;
 	cursor: pointer;
-
 	margin-inline-start: calc(var(--_ui5_slider_handle_width) / -2 );
 	top: 50%;
 	transform: translateY(-50%);

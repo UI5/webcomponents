@@ -1007,3 +1007,47 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("@slider").should("have.value", 1);
 	});
 });
+
+describe("Properties synchronization and normalization", () => {
+	beforeEach(() => {
+		cy.get('[data-cy-root]')
+			.invoke('css', 'padding', '100px')
+	})
+
+	it("Should clamp value to min when value is below min", () => {
+		cy.mount(<Slider min={10} max={100} value={5} />);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		cy.get("@slider").should("have.value", 10);
+	});
+
+	it("Should clamp value to max when value is above max", () => {
+		cy.mount(<Slider min={0} max={50} value={100} />);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		cy.get("@slider").should("have.value", 50);
+	});
+
+	it("Should clamp value when min and max are both negative", () => {
+		cy.mount(<Slider min={-20} max={-10} value={0} />);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		cy.get("@slider").should("have.value", -10);
+	});
+
+	it("Should handle value updates when range changes", () => {
+		cy.mount(<Slider min={0} max={100} value={50} />);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		cy.get("@slider").should("have.value", 50);
+
+		// Change max to be less than current value
+		cy.get("@slider").invoke("prop", "max", 30);
+
+		cy.get("@slider").should("have.value", 30);
+	});
+});

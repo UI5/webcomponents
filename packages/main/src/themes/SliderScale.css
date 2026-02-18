@@ -4,6 +4,7 @@
 	width: 100%;
 	box-sizing: border-box;
 	user-select: none;
+	cursor: pointer;
 }
 
 .ui5-slider-scale-root {
@@ -84,7 +85,7 @@
 	content: "";
 	position: absolute;
 	top: 50%;
-	right: 0;
+	inset-inline-end: 0;
 	width: .5rem;
 	height: .5rem;
 	background-color: var(--sapContent_MeasureIndicatorColor);

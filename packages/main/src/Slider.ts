@@ -117,18 +117,14 @@ class Slider extends SliderBase implements IFormInputElement {
 	}
 
 	/**
-	 *
-	 * Check if the previously saved state is outdated. That would mean
-	 * either it is the initial rendering or that a property has been changed
-	 * programmatically - because the previous state is always updated in
-	 * the interaction handlers.
-	 *
-	 * Normalize current properties, update the previously stored state.
-	 * Update the visual UI representation of the Slider.
-	 *
+	 * The value is visually clamped to min/max but the property is not modified.
+	 * @private
 	 */
 	onBeforeRendering() {
-		this._updateHandleAndProgress(this.value);
+		// Clamp value visually without modifying the actual value property
+		const ctor = this.constructor as typeof Slider;
+		const clampedValue = ctor.clipValue(this.value, this.min, this.max);
+		this._updateHandleAndProgress(clampedValue);
 	}
 
 	onAfterRendering(): void {
@@ -164,8 +160,10 @@ class Slider extends SliderBase implements IFormInputElement {
 		// Do not yet update the Slider if press is over a handle. It will be updated if the user drags the mouse.
 		const ctor = this.constructor as typeof Slider;
 		if (!this._isHandlePressed(ctor.getPageXValueFromEvent(e))) {
+			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue);
 			this.value = newValue;
+			this.tooltipValue = newValue.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
@@ -209,6 +207,7 @@ class Slider extends SliderBase implements IFormInputElement {
 			return;
 		}
 
+		this.tooltipValueState = "None";
 		this.value = value;
 		this.fireDecoratorEvent("change");
 	}
@@ -249,10 +248,11 @@ class Slider extends SliderBase implements IFormInputElement {
 
 		const ctor = this.constructor as typeof Slider;
 		const newValue = ctor.getValueFromInteraction(e, this.step, this.min, this.max, this.getBoundingClientRect(), this.directionStart);
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 
 		this._updateHandleAndProgress(newValue);
 		this.value = newValue;
-		this.tooltipValue = newValue.toString();
+		this.tooltipValue = newValue.toFixed(stepPrecision);
 		this.updateStateStorageAndFireInputEvent("value");
 	}
 
@@ -309,9 +309,10 @@ class Slider extends SliderBase implements IFormInputElement {
 		const newValue = isEscape(e) ? this._valueInitial : ctor.clipValue(this._handleActionKeyPressBase(e, "value") + currentValue, min, max);
 
 		if (newValue !== currentValue) {
+			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue!);
 			this.value = newValue!;
-			this.tooltipValue = this.value.toString();
+			this.tooltipValue = this.value.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}

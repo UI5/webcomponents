@@ -7,7 +7,7 @@ export default function SliderHandleTemplate(this: SliderHandle) {
 		<div class="ui5-slider-handle-container">
 			<Icon name={directionArrows}
 				mode="Decorative"
-				part="icon-slider"
+				part="icon"
 				slider-icon
 			></Icon>
 		</div>

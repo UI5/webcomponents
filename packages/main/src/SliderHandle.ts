@@ -72,14 +72,13 @@ class SliderHandle extends UI5Element {
 	@property({ type: Boolean })
 	active = false;
 
+	/**
+	 * Defines the orientation of the slider handle.
+	 *
+	 * @private
+	 */
 	@property()
 	orientation: `${SliderScaleOrientation}` = "Horizontal";
-
-	get _handlePosition() {
-		const range = this.max - this.min;
-		const position = ((this.value - this.min) / range) * 100;
-		return position;
-	}
 
 	getFocusDomRef(): HTMLElement | undefined {
 		return this;

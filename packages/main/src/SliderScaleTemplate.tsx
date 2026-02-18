@@ -2,7 +2,7 @@ import type SliderScale from "./SliderScale.js";
 
 export default function SliderScaleTemplate(this: SliderScale) {
 	return (
-		<div class="ui5-slider-scale-root">
+		<div class="ui5-slider-scale-root" part="inner">
 			{this._tickmarks.length > 0 && (
 				<div class="ui5-slider-scale-tickmarks-container">
 					{this._tickmarks.map(tick => (
@@ -25,7 +25,7 @@ export default function SliderScaleTemplate(this: SliderScale) {
 					))}
 				</div>
 			)}
-			<div class="ui5-slider-scale-progress" style={this._progressStyle}></div>
+			<div class="ui5-slider-scale-progress" part="progress" style={this._progressStyle}></div>
 			<slot></slot>
 		</div>
 	);

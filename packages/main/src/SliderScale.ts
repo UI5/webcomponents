@@ -25,7 +25,7 @@ enum SliderScaleOrientation {
 
 	/**
 	 * Vertical orientation
-	 * @public
+	 * @private
 	 */
 	Vertical = "Vertical",
 }
@@ -37,30 +37,75 @@ enum SliderScaleOrientation {
 	template: SliderScaleTemplate,
 })
 class SliderScale extends UI5Element {
+	/**
+	 * Defines the start value of the progress bar.
+	 * @default 0
+	 * @private
+	 */
 	@property({ type: Number })
 	startValue = 0;
 
+	/**
+	 * Defines the end value of the progress bar.
+	 * @default 100
+	 * @private
+	 */
 	@property({ type: Number })
 	endValue = 100;
 
+	/**
+	 * Defines the minimum value of the scale.
+	 * @default 0
+	 * @private
+	 */
 	@property({ type: Number })
 	min = 0;
 
+	/**
+	 * Defines the maximum value of the scale.
+	 * @default 100
+	 * @private
+	 */
 	@property({ type: Number })
 	max = 100;
 
+	/**
+	 * Defines the step value for tickmarks.
+	 * @default 1
+	 * @private
+	 */
 	@property({ type: Number })
 	step = 1;
 
+	/**
+	 * Determines whether tickmarks should be displayed.
+	 * @default false
+	 * @private
+	 */
 	@property({ type: Boolean })
 	showTickmarks = false;
 
+	/**
+	 * Defines the orientation of the scale.
+	 * @default "Horizontal"
+	 * @private
+	 */
 	@property()
 	orientation: `${SliderScaleOrientation}` = "Horizontal";
 
+	/**
+	 * Defines custom tickmarks to be displayed on the scale.
+	 * @default []
+	 * @private
+	 */
 	@property({ type: Array })
 	tickmarks: Array<Tickmark> = [];
 
+	/**
+	 * Defines the interval for displaying labels on tickmarks.
+	 * @default 0
+	 * @private
+	 */
 	@property({ type: Number })
 	labelInterval = 0;
 
@@ -174,6 +219,10 @@ class SliderScale extends UI5Element {
 	}
 
 	get _tickmarksCount() {
+		if (this.step === 0) {
+			return 0;
+		}
+
 		return (this.max - this.min) / this.step;
 	}
 
@@ -212,6 +261,10 @@ class SliderScale extends UI5Element {
 
 		// Otherwise, generate tickmarks based on step
 		if (!this.showTickmarks) {
+			return [];
+		}
+
+		if (this.step === 0) {
 			return [];
 		}
 

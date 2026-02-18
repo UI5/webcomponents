@@ -3,7 +3,7 @@
 
 :host {
 	display: inline-block;
-	height: var(--_slider_height);
+	height: var(--_slider_height, 2.75rem);
 	width: 100%;
 }
 
