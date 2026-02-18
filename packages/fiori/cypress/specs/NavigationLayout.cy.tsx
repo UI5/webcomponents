@@ -246,7 +246,6 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 		// Click on a SideNavigationItem
 		cy.get("[ui5-side-navigation-item]").first().realClick();
 
-		// SideNavigation should remain expanded because mode is not Auto
 		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", true);
 	});
 });

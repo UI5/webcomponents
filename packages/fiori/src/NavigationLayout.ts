@@ -8,6 +8,7 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import NavigationLayoutMode from "./types/NavigationLayoutMode.js";
 import type SideNavigation from "./SideNavigation.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { isInstanceOfSideNavigation } from "./SideNavigation.js";
 
 // Template
 import NavigationLayoutTemplate from "./NavigationLayoutTemplate.js";
@@ -152,16 +153,20 @@ class NavigationLayout extends UI5Element {
 		this._detachSideNavigationListeners();
 	}
 
+	private _isSideNavigation(sideNavigation: HTMLElement | undefined): boolean {
+		return isInstanceOfSideNavigation(sideNavigation);
+	}
+
 	private _attachSideNavigationListeners() {
 		const sideNavigation = this.sideContent[0];
-		if (sideNavigation) {
+		if (this._isSideNavigation(sideNavigation)) {
 			sideNavigation.addEventListener("ui5-item-click", this._itemClickHandler);
 		}
 	}
 
 	private _detachSideNavigationListeners() {
 		const sideNavigation = this.sideContent[0];
-		if (sideNavigation) {
+		if (this._isSideNavigation(sideNavigation)) {
 			sideNavigation.removeEventListener("ui5-item-click", this._itemClickHandler);
 		}
 	}
@@ -179,7 +184,7 @@ class NavigationLayout extends UI5Element {
 
 	private _collapseSideNavigation() {
 		const sideNavigation = this.sideContent[0];
-		if (sideNavigation) {
+		if (this._isSideNavigation(sideNavigation)) {
 			sideNavigation.collapsed = true;
 			this.sideCollapsed = true;
 			this.mode = NavigationLayoutMode.Collapsed;

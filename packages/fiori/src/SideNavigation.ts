@@ -14,6 +14,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -741,6 +742,10 @@ class SideNavigation extends UI5Element {
 		return this._isOverflow;
 	}
 
+	get isSideNavigation() {
+		return true;
+	}
+
 	captureRef(ref: HTMLElement & { associatedItem?: UI5Element} | null) {
 		if (ref) {
 			ref.associatedItem = this;
@@ -752,6 +757,7 @@ const instanceOfItemOrGroup = createMultiInstanceChecker<SideNavigationItem | Si
 
 SideNavigation.define();
 
+export const isInstanceOfSideNavigation = createInstanceChecker<SideNavigation>("isSideNavigation");
 export default SideNavigation;
 
 export type {
