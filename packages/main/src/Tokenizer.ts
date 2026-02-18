@@ -1049,11 +1049,15 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		// Async clipboard API (works in secure contexts - HTTPS/localhost)
 		if (navigator.clipboard?.writeText && window.isSecureContext) {
-			navigator.clipboard.writeText(tokensTexts);
+			navigator.clipboard.writeText(tokensTexts).catch(() => {
+				// Silent fallback - user can retry
+			});
 			return;
 		}
 
 		// Fallback for HTTP: use ClipboardEvent with execCommand
+		// execCommand is deprecated but it is kept for compatibility reasons, as
+		// there is no other way to write to clipboard in non-secure contexts
 		const fillClipboardHandler = (e: ClipboardEvent) => {
 			if (e.clipboardData) {
 				e.clipboardData.setData("text/plain", tokensTexts);
