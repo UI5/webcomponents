@@ -1,0 +1,66 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./main.css">
+	<title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 400px;">
+<!-- playground-fold-end -->
+
+	<div class="filter-bar">
+		<div class="filter-input-container">
+			<ui5-input show-suggestions placeholder="Filter...">
+
+				<ui5-suggestion-item-group class="suggestion-item-group" header-text="Favorite Queries">
+						<ui5-suggestion-item-custom text="Favorite Queries">
+							<div class="suggestion-item">
+								<span>Overal status open and net value > 3000 EUR</span>
+								<ui5-icon name="favorite"></ui5-icon>
+							</div>
+						</ui5-suggestion-item-custom>
+				</ui5-suggestion-item-group>
+
+				<ui5-suggestion-item-group class="suggestion-item-group" header-text="Last Used Queries">
+						<ui5-suggestion-item-custom text="Last Used Queries">
+							<div class="suggestion-item">
+								<span>Overal status open and net value > 3000 EUR</span>
+								<ui5-button icon="add-favorite"></ui5-button>
+								<ui5-icon name="decline"></ui5-icon>
+							</div>
+						</ui5-suggestion-item-custom>
+				</ui5-suggestion-item-group>
+			</ui5-input>
+
+			<ui5-button icon="ai" design="Emphasized">Go</ui5-button>
+		</div>
+
+		<div class="filter-tags">
+			<ui5-icon style="color: var(--sapLinkColor)" name="ai"></ui5-icon>
+			<ui5-text style="color: var(--sapLinkColor)">Filters were created by AI:</ui5-text>
+			<ui5-tag hide-state-icon>
+				<span class="tag-key">Delivery Status:</span>
+				<span class="tag-value">Blocked</span>
+			</ui5-tag>
+			<ui5-tag hide-state-icon>
+				<span class="tag-key">Over Status:</span>
+				<span class="tag-value">Open</span>
+			</ui5-tag>
+			<ui5-tag hide-state-icon>
+				<span class="tag-key">Net value:></span>
+				<span class="tag-value">3000 Eur</span>
+			</ui5-tag>
+		</div>
+	</div>
+
+<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+
+</body>
+
+</html>
+<!-- playground-fold-end -->

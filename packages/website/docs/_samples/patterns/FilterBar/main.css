@@ -1,0 +1,56 @@
+/* Container styles */
+.filter-bar {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 1rem;
+}
+
+.filter-input-container {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.filter-input-container ui5-input {
+	flex: 1;
+}
+
+.filter-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+/* Customization of Suggestions */
+.suggestion-item {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
+	width: 100%;
+}
+
+.suggestion-item span {
+	flex: 1;
+}
+
+.suggestion-item ui5-icon {
+	color: var(--sapLinkColor);
+}
+
+.suggestion-item-group::part(header) {
+	background: #e8e8e8
+}
+
+/* Customization of Tag component */
+.tag-key {
+	color: var(--sapLinkColor);
+	font-weight: 600;
+}
+
+.tag-value {
+	color: var(--sapContent_LabelColor);
+	font-weight: normal;
+}
