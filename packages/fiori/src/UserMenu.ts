@@ -223,6 +223,16 @@ class UserMenu extends UI5Element {
 	})
 	accounts!: Slot<UserMenuAccount>;
 
+	/**
+	 * Defines custom footer content.
+	 *
+	 * **Note:** When provided, replaces the default "Sign Out" button. Use an empty element to hide the footer completely.
+	 * @public
+	 * @since 2.19.0
+	 */
+	@slot()
+	footer!: Slot<HTMLElement>;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -443,6 +453,14 @@ class UserMenu extends UI5Element {
 
 	get _ariaLabelledByActions() {
 		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
+	}
+
+	get _hasCustomFooter(): boolean {
+		return this.footer.length > 0 && this.footer[0]?.innerHTML.trim() !== "";
+	}
+
+	get _showDefaultFooter(): boolean {
+		return this.footer.length === 0;
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
