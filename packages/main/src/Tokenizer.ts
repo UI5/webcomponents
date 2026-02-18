@@ -1049,7 +1049,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		// Async clipboard API (works in secure contexts - HTTPS/localhost)
 		if (navigator.clipboard?.writeText && window.isSecureContext) {
-			navigator.clipboard.writeText(tokensTexts).catch(() => {
+			navigator.clipboard.writeText(tokensTexts)?.catch(() => {
 				// Silent fallback - user can retry
 			});
 			return;
