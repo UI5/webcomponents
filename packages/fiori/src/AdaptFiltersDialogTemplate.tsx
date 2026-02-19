@@ -77,7 +77,7 @@ export default function AdaptFiltersDialogTemplate(this: Readonly<AdaptFiltersDi
 							>
 								{/* Filter Bar Item with label and control */}
 								<div class="ui5-adapt-filter-item-content">
-									<slot name={item._individualSlot}></slot>
+									<slot name={this._getListSlotName(item)}></slot>
 								</div>
 
 								{/* Actions */}
@@ -168,9 +168,8 @@ export default function AdaptFiltersDialogTemplate(this: Readonly<AdaptFiltersDi
 									>
 										{/* Filter Bar Item with label and control */}
 										<div class="ui5-adapt-filter-item-content">
-											<slot name={item._individualSlot}></slot>
+											<slot name={this._getGroupsSlotName(item)}></slot>
 										</div>
-										
 
 										{/* Actions */}
 										<div class="ui5-adapt-filter-actions">

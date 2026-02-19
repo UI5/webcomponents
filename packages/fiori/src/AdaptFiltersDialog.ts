@@ -278,6 +278,30 @@ class AdaptFiltersDialog extends UI5Element {
 	}
 
 	/**
+	 * Get the slot name for an item in the list view.
+	 * If we're in groups view, the list slots are disabled.
+	 */
+	_getListSlotName(item: FilterBarItem): string {
+		const slotName = item._individualSlot || "";
+		if (this.viewMode === "groups") {
+			return `_disabled_list_${slotName}`;
+		}
+		return slotName;
+	}
+
+	/**
+	 * Get the slot name for an item in the groups view.
+	 * If we're in list view, the groups slots are disabled.
+	 */
+	_getGroupsSlotName(item: FilterBarItem): string {
+		const slotName = item._individualSlot || "";
+		if (this.viewMode === "list") {
+			return `_disabled_groups_${slotName}`;
+		}
+		return slotName;
+	}
+
+	/**
 	 * Get filter text
 	 */
 	_getFilterText(item: FilterBarItem): string {

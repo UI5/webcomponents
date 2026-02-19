@@ -138,43 +138,23 @@
 		</div>
 
 		<div class="example-section">
-			<h2>Example 3: Many Filters (Search Test)</h2>
+			<h2>Example 3: Many Filters with Groups (Search Test)</h2>
 			<div class="button-group">
 				<ui5-button id="openDialog3">Open Adapt Filters Dialog</ui5-button>
 			</div>
 			<div class="result" id="result3">Click the button to open dialog with many filters</div>
 
 			<ui5-adapt-filters-dialog id="dialog3">
-				<ui5-filterbar-item id="afi-accountNumber">
+				<!-- Account Group -->
+				<ui5-filterbar-item id="afi-accountNumber" group-name="Account" group-order="1">
 					<ui5-label slot="label">Account Number</ui5-label>
 					<ui5-input placeholder="Enter account number"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-balance">
+				<ui5-filterbar-item id="afi-balance" group-name="Account" group-order="1">
 					<ui5-label slot="label">Balance</ui5-label>
 					<ui5-input type="Number" placeholder="Enter balance"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-companyName">
-					<ui5-label slot="label">Company Name</ui5-label>
-					<ui5-input placeholder="Enter company name"></ui5-input>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-contactPerson">
-					<ui5-label slot="label">Contact Person</ui5-label>
-					<ui5-input placeholder="Enter contact person"></ui5-input>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-country">
-					<ui5-label slot="label">Country</ui5-label>
-					<ui5-select>
-						<ui5-option>USA</ui5-option>
-						<ui5-option>Germany</ui5-option>
-						<ui5-option>UK</ui5-option>
-						<ui5-option>France</ui5-option>
-					</ui5-select>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-createdDate">
-					<ui5-label slot="label">Created Date</ui5-label>
-					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-currency">
+				<ui5-filterbar-item id="afi-currency" group-name="Account" group-order="1">
 					<ui5-label slot="label">Currency</ui5-label>
 					<ui5-select>
 						<ui5-option>USD</ui5-option>
@@ -182,23 +162,13 @@
 						<ui5-option>GBP</ui5-option>
 					</ui5-select>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-customerId">
-					<ui5-label slot="label">Customer ID</ui5-label>
-					<ui5-input placeholder="Enter customer ID"></ui5-input>
+
+				<!-- Company Group -->
+				<ui5-filterbar-item id="afi-companyName" group-name="Company" group-order="2">
+					<ui5-label slot="label">Company Name</ui5-label>
+					<ui5-input placeholder="Enter company name"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-department">
-					<ui5-label slot="label">Department</ui5-label>
-					<ui5-input placeholder="Enter department"></ui5-input>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-email">
-					<ui5-label slot="label">Email Address</ui5-label>
-					<ui5-input type="Email" placeholder="Enter email"></ui5-input>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-fax">
-					<ui5-label slot="label">Fax Number</ui5-label>
-					<ui5-input type="Tel" placeholder="Enter fax number"></ui5-input>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-industry">
+				<ui5-filterbar-item id="afi-industry" group-name="Company" group-order="2">
 					<ui5-label slot="label">Industry</ui5-label>
 					<ui5-select>
 						<ui5-option>Technology</ui5-option>
@@ -207,15 +177,51 @@
 						<ui5-option>Retail</ui5-option>
 					</ui5-select>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-lastModified">
-					<ui5-label slot="label">Last Modified</ui5-label>
-					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+				<ui5-filterbar-item id="afi-department" group-name="Company" group-order="2">
+					<ui5-label slot="label">Department</ui5-label>
+					<ui5-input placeholder="Enter department"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-phone">
+				<ui5-filterbar-item id="afi-type" group-name="Company" group-order="2">
+					<ui5-label slot="label">Type</ui5-label>
+					<ui5-select>
+						<ui5-option>Direct</ui5-option>
+						<ui5-option>Indirect</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+
+				<!-- Contact Group -->
+				<ui5-filterbar-item id="afi-contactPerson" group-name="Contact" group-order="3">
+					<ui5-label slot="label">Contact Person</ui5-label>
+					<ui5-input placeholder="Enter contact person"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-email" group-name="Contact" group-order="3">
+					<ui5-label slot="label">Email Address</ui5-label>
+					<ui5-input type="Email" placeholder="Enter email"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-phone" group-name="Contact" group-order="3">
 					<ui5-label slot="label">Phone Number</ui5-label>
 					<ui5-input type="Tel" placeholder="Enter phone number"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-region">
+				<ui5-filterbar-item id="afi-fax" group-name="Contact" group-order="3">
+					<ui5-label slot="label">Fax Number</ui5-label>
+					<ui5-input type="Tel" placeholder="Enter fax number"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-salesRep" group-name="Contact" group-order="3">
+					<ui5-label slot="label">Sales Rep</ui5-label>
+					<ui5-input placeholder="Enter sales rep"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Location Group -->
+				<ui5-filterbar-item id="afi-country" group-name="Location" group-order="4">
+					<ui5-label slot="label">Country</ui5-label>
+					<ui5-select>
+						<ui5-option>USA</ui5-option>
+						<ui5-option>Germany</ui5-option>
+						<ui5-option>UK</ui5-option>
+						<ui5-option>France</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-region" group-name="Location" group-order="4">
 					<ui5-label slot="label">Region</ui5-label>
 					<ui5-select>
 						<ui5-option>North America</ui5-option>
@@ -224,9 +230,25 @@
 						<ui5-option>Latin America</ui5-option>
 					</ui5-select>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-salesRep">
-					<ui5-label slot="label">Sales Rep</ui5-label>
-					<ui5-input placeholder="Enter sales rep"></ui5-input>
+				<ui5-filterbar-item id="afi-zipCode" group-name="Location" group-order="4">
+					<ui5-label slot="label">ZIP Code</ui5-label>
+					<ui5-input placeholder="Enter ZIP code"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Dates Group -->
+				<ui5-filterbar-item id="afi-createdDate" group-name="Dates" group-order="5">
+					<ui5-label slot="label">Created Date</ui5-label>
+					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item id="afi-lastModified" group-name="Dates" group-order="5">
+					<ui5-label slot="label">Last Modified</ui5-label>
+					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
+				</ui5-filterbar-item>
+
+				<!-- Ungrouped (will show under "Basic") -->
+				<ui5-filterbar-item id="afi-customerId">
+					<ui5-label slot="label">Customer ID</ui5-label>
+					<ui5-input placeholder="Enter customer ID"></ui5-input>
 				</ui5-filterbar-item>
 				<ui5-filterbar-item id="afi-statusCode">
 					<ui5-label slot="label">Status Code</ui5-label>
@@ -240,17 +262,6 @@
 					<ui5-label slot="label">Tax ID</ui5-label>
 					<ui5-input placeholder="Enter tax ID"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-type">
-					<ui5-label slot="label">Type</ui5-label>
-					<ui5-select>
-						<ui5-option>Direct</ui5-option>
-						<ui5-option>Indirect</ui5-option>
-					</ui5-select>
-				</ui5-filterbar-item>
-				<ui5-filterbar-item id="afi-zipCode">
-					<ui5-label slot="label">ZIP Code</ui5-label>
-					<ui5-input placeholder="Enter ZIP code"></ui5-input>
-				</ui5-filterbar-item>
 			</ui5-adapt-filters-dialog>
 		</div>
 
@@ -263,23 +274,41 @@
 
 			<ui5-adapt-filters-dialog id="dialog4">
 				<!-- Basic Group (groupOrder=0, always first) -->
-				<ui5-filterbar-item text="Company Code" groupName="Basic" group-order="0" key="companyCode" required>
+				<ui5-filterbar-item text="Company Code" group-name="Basic" group-order="0" key="companyCode" required>
 					<ui5-label slot="label">Company Code *</ui5-label>
 					<ui5-multi-input placeholder="e.g., 1984">
 						<ui5-token text="1984"></ui5-token>
 						<ui5-token text="1995"></ui5-token>
 					</ui5-multi-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item text="Fiscal Year" groupName="Basic" group-order="0" key="fiscalYear">
+				<ui5-filterbar-item text="Fiscal Year" group-name="Basic" group-order="0" key="fiscalYear">
 					<ui5-label slot="label">Fiscal Year</ui5-label>
 					<ui5-multi-input placeholder="e.g., 2024">
 						<ui5-token text="1984"></ui5-token>
 						<ui5-token text="1995"></ui5-token>
 					</ui5-multi-input>
 				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Plant" group-name="Basic" group-order="0" key="plant">
+					<ui5-label slot="label">Plant</ui5-label>
+					<ui5-input placeholder="Enter plant code"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Ungrouped filters (will appear under "Basic" heading in Groups view) -->
+				<ui5-filterbar-item text="Customer Name" key="customerName">
+					<ui5-label slot="label">Customer Name</ui5-label>
+					<ui5-input placeholder="Enter customer name"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Vendor ID" key="vendorId">
+					<ui5-label slot="label">Vendor ID</ui5-label>
+					<ui5-input placeholder="Enter vendor ID"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Document Number" key="documentNumber">
+					<ui5-label slot="label">Document Number</ui5-label>
+					<ui5-input placeholder="Enter document number"></ui5-input>
+				</ui5-filterbar-item>
 
 				<!-- Fiscal Date Types Group (groupOrder=1) -->
-				<ui5-filterbar-item text="Fiscal Period" groupName="Fiscal Date Types" group-order="1" key="fiscalPeriod">
+				<ui5-filterbar-item text="Fiscal Period" group-name="Fiscal Date Types" group-order="1" key="fiscalPeriod">
 					<ui5-label slot="label">Fiscal Period</ui5-label>
 					<ui5-multi-input placeholder="e.g., 001">
 						<ui5-token text="0003"></ui5-token>
@@ -287,35 +316,98 @@
 						<ui5-token text="0001"></ui5-token>
 					</ui5-multi-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item text="Fiscal Quarter" groupName="Fiscal Date Types" group-order="1" key="fiscalQuarter" required>
+				<ui5-filterbar-item text="Fiscal Quarter" group-name="Fiscal Date Types" group-order="1" key="fiscalQuarter" required>
 					<ui5-label slot="label">Fiscal Quarter *</ui5-label>
 					<ui5-input placeholder="No value"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item text="Fiscal Year Period" groupName="Fiscal Date Types" group-order="1" key="fiscalYearPeriod">
+				<ui5-filterbar-item text="Fiscal Year Period" group-name="Fiscal Date Types" group-order="1" key="fiscalYearPeriod">
 					<ui5-label slot="label">Fiscal Year Period</ui5-label>
 					<ui5-input placeholder="Enter value"></ui5-input>
 				</ui5-filterbar-item>
-
-				<!-- Another very important Group (groupOrder=2) -->
-				<ui5-filterbar-item text="Company Code" groupName="Another very important Group" group-order="2" key="costCenter">
-					<ui5-label slot="label">Company Code</ui5-label>
-					<ui5-input placeholder="Enter code"></ui5-input>
+				<ui5-filterbar-item text="Posting Date" group-name="Fiscal Date Types" group-order="1" key="postingDate">
+					<ui5-label slot="label">Posting Date</ui5-label>
+					<ui5-date-picker placeholder="Select date"></ui5-date-picker>
 				</ui5-filterbar-item>
 
-				<!-- One more Group (groupOrder=3) -->
-				<ui5-filterbar-item text="One more Filter" groupName="One more Group" group-order="3" key="oneMoreFilter">
-					<ui5-label slot="label">One more Filter</ui5-label>
-					<ui5-input placeholder="Enter value"></ui5-input>
+				<!-- Financial Data Group (groupOrder=2) -->
+				<ui5-filterbar-item text="Amount" group-name="Financial Data" group-order="2" key="amount">
+					<ui5-label slot="label">Amount</ui5-label>
+					<ui5-input type="Number" placeholder="Enter amount"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Currency" group-name="Financial Data" group-order="2" key="currency">
+					<ui5-label slot="label">Currency</ui5-label>
+					<ui5-select>
+						<ui5-option>USD</ui5-option>
+						<ui5-option>EUR</ui5-option>
+						<ui5-option>GBP</ui5-option>
+						<ui5-option>JPY</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Cost Center" group-name="Financial Data" group-order="2" key="costCenter">
+					<ui5-label slot="label">Cost Center</ui5-label>
+					<ui5-input placeholder="Enter cost center"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Profit Center" group-name="Financial Data" group-order="2" key="profitCenter">
+					<ui5-label slot="label">Profit Center</ui5-label>
+					<ui5-input placeholder="Enter profit center"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Location Group (groupOrder=3) -->
+				<ui5-filterbar-item text="Country" group-name="Location" group-order="3" key="country">
+					<ui5-label slot="label">Country</ui5-label>
+					<ui5-select>
+						<ui5-option>USA</ui5-option>
+						<ui5-option>Germany</ui5-option>
+						<ui5-option>UK</ui5-option>
+						<ui5-option>France</ui5-option>
+						<ui5-option>Japan</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Region" group-name="Location" group-order="3" key="region">
+					<ui5-label slot="label">Region</ui5-label>
+					<ui5-select>
+						<ui5-option>North America</ui5-option>
+						<ui5-option>Europe</ui5-option>
+						<ui5-option>Asia Pacific</ui5-option>
+						<ui5-option>Latin America</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="City" group-name="Location" group-order="3" key="city">
+					<ui5-label slot="label">City</ui5-label>
+					<ui5-input placeholder="Enter city"></ui5-input>
+				</ui5-filterbar-item>
+
+				<!-- Status Group (groupOrder=4) -->
+				<ui5-filterbar-item text="Document Status" group-name="Status" group-order="4" key="docStatus">
+					<ui5-label slot="label">Document Status</ui5-label>
+					<ui5-select>
+						<ui5-option>Open</ui5-option>
+						<ui5-option>Closed</ui5-option>
+						<ui5-option>Pending</ui5-option>
+						<ui5-option>Cancelled</ui5-option>
+					</ui5-select>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item text="Approval Status" group-name="Status" group-order="4" key="approvalStatus">
+					<ui5-label slot="label">Approval Status</ui5-label>
+					<ui5-select>
+						<ui5-option>Approved</ui5-option>
+						<ui5-option>Rejected</ui5-option>
+						<ui5-option>Pending Approval</ui5-option>
+					</ui5-select>
 				</ui5-filterbar-item>
 
 				<!-- Available Filters that can be added -->
-				<ui5-filterbar-item slot="availableFilters" text="Country" groupName="Basic" group-order="0" key="country">
-					<ui5-label slot="label">Country</ui5-label>
-					<ui5-input placeholder="Enter country"></ui5-input>
+				<ui5-filterbar-item slot="availableFilters" text="Tax Code" group-name="Financial Data" group-order="2" key="taxCode">
+					<ui5-label slot="label">Tax Code</ui5-label>
+					<ui5-input placeholder="Enter tax code"></ui5-input>
 				</ui5-filterbar-item>
-				<ui5-filterbar-item slot="availableFilters" text="City" groupName="Basic" group-order="0" key="city">
-					<ui5-label slot="label">City</ui5-label>
-					<ui5-input placeholder="Enter city"></ui5-input>
+				<ui5-filterbar-item slot="availableFilters" text="Payment Terms" group-name="Financial Data" group-order="2" key="paymentTerms">
+					<ui5-label slot="label">Payment Terms</ui5-label>
+					<ui5-input placeholder="Enter payment terms"></ui5-input>
+				</ui5-filterbar-item>
+				<ui5-filterbar-item slot="availableFilters" text="Postal Code" group-name="Location" group-order="3" key="postalCode">
+					<ui5-label slot="label">Postal Code</ui5-label>
+					<ui5-input placeholder="Enter postal code"></ui5-input>
 				</ui5-filterbar-item>
 			</ui5-adapt-filters-dialog>
 		</div>
