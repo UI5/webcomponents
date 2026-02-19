@@ -23,6 +23,7 @@ export default function SelectPopoverTemplate(this: Select) {
 					horizontalAlign="Start"
 					hideArrow={true}
 					preventInitialFocus={true}
+					preventFocusRestore={true}
 					onOpen={this._afterOpen}
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}

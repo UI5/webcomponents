@@ -949,6 +949,17 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_afterClose() {
+		const focusRef = this.getFocusDomRef() as HTMLElement;
+		const selectionChanged = this._lastSelectedOption !== this.options[this._selectedIndex];
+
+		if (focusRef && selectionChanged) {
+			// Blur and hide the combobox from the accessibility tree before
+			// aria-expanded changes. This prevents JAWS from reading the value
+			// via its virtual buffer when it detects the state change.
+			focusRef.blur();
+			focusRef.setAttribute("aria-hidden", "true");
+		}
+
 		this.opened = false;
 		this._iconPressed = false;
 		this._listWidth = 0;
@@ -956,10 +967,24 @@ class Select extends UI5Element implements IFormInputElement {
 		if (this._escapePressed) {
 			this._select(this._selectedIndexBeforeOpen);
 			this._escapePressed = false;
-		} else if (this._lastSelectedOption !== this.options[this._selectedIndex]) {
+		} else if (selectionChanged) {
 			this._fireChangeEvent(this.options[this._selectedIndex]);
 			this._lastSelectedOption = this.options[this._selectedIndex];
 		}
+
+		if (focusRef && selectionChanged) {
+			// After the DOM updates (aria-expanded → false), restore the
+			// combobox in the accessibility tree and re-focus. Both NVDA and
+			// JAWS treat this as a fresh focus event and read the value once.
+			setTimeout(() => {
+				focusRef.removeAttribute("aria-hidden");
+				focusRef.focus();
+			}, 100);
+		} else if (focusRef) {
+			// No selection change — just restore focus immediately
+			focusRef.focus();
+		}
+
 		this.fireDecoratorEvent("close");
 	}
 
