@@ -1820,3 +1820,115 @@ describe("Select general interaction", () => {
 		cy.get("[ui5-select]").should("have.prop", "value", "C");
 	});
 });
+
+describe("Select - Accessibility on popover close", () => {
+	it("restores focus to the combobox after selection change and popover close", () => {
+		cy.mount(
+			<Select id="sel">
+				<Option value="First" selected>First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third">Third</Option>
+			</Select>
+		);
+
+		// Open, change selection, and close
+		cy.get("#sel").realClick();
+		cy.get("#sel").realPress("ArrowDown");
+		cy.get("#sel").realPress("Enter");
+
+		// After the popover closes, the combobox should regain focus
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused");
+	});
+
+	it("combobox has aria-expanded false and no aria-hidden after selection change and popover close", () => {
+		cy.mount(
+			<Select id="sel">
+				<Option value="First" selected>First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third">Third</Option>
+			</Select>
+		);
+
+		// Open, change selection, and close
+		cy.get("#sel").realClick();
+		cy.get("#sel").realPress("ArrowDown");
+		cy.get("#sel").realPress("Enter");
+
+		// Wait for the delayed focus restore
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// aria-hidden should be removed after the close sequence
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("not.have.attr", "aria-hidden");
+
+		// aria-expanded should be false
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-expanded", "false");
+	});
+
+	it("restores focus immediately when popover closes without selection change", () => {
+		cy.mount(
+			<Select id="sel">
+				<Option value="First" selected>First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third">Third</Option>
+			</Select>
+		);
+
+		// Open and close without changing selection (Escape)
+		cy.get("#sel").realClick();
+		cy.get("#sel").realPress("Escape");
+
+		// Focus should be restored immediately
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused");
+
+		// No aria-hidden should be present
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("not.have.attr", "aria-hidden");
+	});
+
+	it("displays the updated selected value after popover close", () => {
+		cy.mount(
+			<Select id="sel">
+				<Option value="First" selected>First</Option>
+				<Option value="Second">Second</Option>
+				<Option value="Third">Third</Option>
+			</Select>
+		);
+
+		// Open, navigate to "Second", confirm
+		cy.get("#sel").realClick();
+		cy.get("#sel").realPress("ArrowDown");
+		cy.get("#sel").realPress("Enter");
+
+		// Wait for the delayed focus restore
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// The displayed text should reflect the new selection
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "Second");
+
+		// The combobox should be focused with the correct state
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused")
+			.should("have.attr", "aria-expanded", "false");
+	});
+});
