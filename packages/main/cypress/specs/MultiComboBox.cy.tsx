@@ -4442,6 +4442,60 @@ describe("MultiComboBox Composition", () => {
 	});
 });
 
+describe("Loading State", () => {
+	it("should display busy indicator when loading is true", () => {
+		cy.mount(
+			<MultiComboBox loading open>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+
+	it("should hide busy indicator and show items when loading becomes false", () => {
+		cy.mount(
+			<MultiComboBox loading open>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@mcb")
+			.invoke("prop", "loading", false);
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("not.exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("exist");
+	});
+});
+
 describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
 		cy.mount(

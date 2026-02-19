@@ -1,4 +1,4 @@
-import { customElement, slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -13,6 +13,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
 } from "./generated/i18n/i18n-defaults.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -52,7 +53,7 @@ class TableRow extends TableRowBase<TableCell> {
 			slots: false,
 		},
 	})
-	cells!: Array<TableCell>;
+	cells!: DefaultSlot<TableCell>;
 
 	/**
 	 * Defines the actions of the component.
@@ -66,7 +67,7 @@ class TableRow extends TableRowBase<TableCell> {
 		type: HTMLElement,
 		individualSlots: true,
 	})
-	actions!: Array<TableRowActionBase>;
+	actions!: Slot<TableRowActionBase>;
 
 	/**
 	 * Unique identifier of the row.

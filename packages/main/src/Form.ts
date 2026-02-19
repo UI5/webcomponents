@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -343,8 +344,8 @@ class Form extends UI5Element {
 	 * **Note:** When a `header` is provided, the `headerText` property is ignored.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the component content - FormGroups or FormItems.
@@ -359,7 +360,7 @@ class Form extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<IFormItem>;
+	items!: DefaultSlot<IFormItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

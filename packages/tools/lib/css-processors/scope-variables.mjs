@@ -30,7 +30,9 @@ const getOverrideVersion = filePath => {
 	try {
 		overrideVersion = require(`${packageName}${path.sep}package.json`).version;
 	} catch (e) {
-		console.log(`Error requiring package ${packageName}: ${e.message}`);
+		if (process.env.UI5_VERBOSE === "true") {
+			console.log(`Error requiring package ${packageName}: ${e.message}`);
+		}
 	}
 
 	return overrideVersion;

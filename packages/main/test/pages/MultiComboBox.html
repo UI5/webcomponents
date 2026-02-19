@@ -575,6 +575,21 @@
 	</div>
 
 	<div class="demo-section">
+		<ui5-label>Toggle Loading State:</ui5-label>
+		<br />
+		<br />
+
+		<ui5-multi-combobox id="toggle-loading-mcb">
+			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br /><br />
+
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
 		<span>Placeholder test</span>
 
 		<br>
@@ -815,6 +830,11 @@
 		document.getElementById('form').addEventListener('submit', (e) => {
 			e.preventDefault();
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const mcb = document.getElementById("toggle-loading-mcb");
+			mcb.loading = !mcb.loading;
 		});
 	</script>
 

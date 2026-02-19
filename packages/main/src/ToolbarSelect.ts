@@ -1,7 +1,7 @@
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
@@ -13,6 +13,7 @@ import ToolbarItem from "./ToolbarItem.js";
 import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail;
 
@@ -93,7 +94,7 @@ class ToolbarSelect extends ToolbarItem {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	options!: Array<ToolbarSelectOption>;
+	options!: DefaultSlot<ToolbarSelectOption>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -102,7 +103,7 @@ class ToolbarSelect extends ToolbarItem {
 	 * @since 2.15.0
 	*/
 	@slot()
-	label!: Array<HTMLElement>;
+	label!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the value state of the component.

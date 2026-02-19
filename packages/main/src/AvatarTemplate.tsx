@@ -8,6 +8,7 @@ export default function AvatarTemplate(this: Avatar) {
 			tabindex={this.tabindex}
 			data-sap-focus-ref
 			role={this._role}
+			aria-hidden={this.effectiveAriaHidden}
 			aria-haspopup={this._ariaHasPopup}
 			aria-label={this.accessibleNameText}
 			onKeyUp={this._onkeyup}

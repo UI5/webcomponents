@@ -84,9 +84,17 @@ export default function UserMenuTemplate(this: UserMenu) {
 					</List>
 			}
 
-			<div slot="footer" class="ui5-user-menu-footer">
-				<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
-			</div>
+			{this._hasCustomFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<slot name="footer"></slot>
+				</div>
+			}
+
+			{this._showDefaultFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
+				</div>
+			}
 		</ResponsivePopover>
 	);
 }
@@ -95,7 +103,7 @@ function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
-				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} fallbackIcon={personPlaceholder} class="ui5-user-menu--selected-account-avatar" interactive>
+				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
 					{this._selectedAccount.avatarSrc &&
 						<img src={this._selectedAccount.avatarSrc} title={this.showEditButton ? this._editAvatarTooltip : undefined	}/>
 					}
@@ -159,7 +167,7 @@ function otherAccountsList(this: UserMenu) {
 					aria-label={account.titleText}
 				>
 					<div class="ui5-user-menu-other-accounts-content">
-						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder}>
+						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder} colorScheme={account.avatarColorScheme}>
 							{account.avatarSrc &&
 								<img src={account.avatarSrc}/>
 							}

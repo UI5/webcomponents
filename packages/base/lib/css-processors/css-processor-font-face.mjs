@@ -56,6 +56,7 @@ const generate = async () => {
         },
         bundle: true,
         minify: true,
+        logLevel: process.env.UI5_VERBOSE === "true" ? "warning" : "error",
         plugins: [
             fontfacePlugin,
         ],

@@ -6,6 +6,11 @@
 * The ratio can be changed via the labelSpan and the emptySpan properties.
 */
 
+:host {
+	--ui5-form-item-label-justify-internal: start;
+	--ui5-form-item-label-padding: 0.625rem 0.25rem 0 0.25rem;
+}
+
 @container (max-width: 600px) {
 	.ui5-form-item,
 	.ui5-form-group {
@@ -14,8 +19,8 @@
 
 	:host([label-span-s="12"]) .ui5-form-item,
 	:host([label-span-s="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
@@ -27,8 +32,8 @@
 
 	:host([label-span-m="12"]) .ui5-form-item,
 	:host([label-span-m="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
@@ -40,8 +45,8 @@
 
 	:host([label-span-l="12"]) .ui5-form-item,
 	:host([label-span-l="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
@@ -53,7 +58,7 @@
 
 	:host([label-span-xl="12"]) .ui5-form-item,
 	:host([label-span-xl="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }

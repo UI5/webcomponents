@@ -75,7 +75,9 @@ const generateIllustrations = async (argv) => {
 	await fs.mkdir(path.dirname(normalizedOutputFile), { recursive: true });
 	await fs.writeFile(normalizedOutputFile, contentDynamic);
 
-	console.log("Generated illustration imports.");
+	if (process.env.UI5_VERBOSE === "true") {
+		console.log("Generated illustration imports.");
+	}
 };
 
 if (require.main === module) {

@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 // Template
 import FormItemTemplate from "./FormItemTemplate.js";
@@ -66,7 +67,7 @@ class FormItem extends UI5Element implements IFormItem {
 	 * @public
 	 */
 	@slot()
-	labelContent!: Array<HTMLElement>;
+	labelContent!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the component,
@@ -78,7 +79,7 @@ class FormItem extends UI5Element implements IFormItem {
 		"default": true,
 		individualSlots: true,
 	})
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * @private

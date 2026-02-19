@@ -1,9 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ChangeInfo, DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -400,7 +400,7 @@ class Table extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	rows!: Array<ITableRow>;
+	rows!: DefaultSlot<ITableRow>;
 
 	/**
 	 * Defines the configuration for the columns of the component.
@@ -416,7 +416,7 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	columns!: Array<TableColumn>;
+	columns!: Slot<TableColumn>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

@@ -167,8 +167,35 @@
 		<ui5-input id="click-event" value="0"></ui5-input>
 
 		<br>
-		<ui5-avatar id="myInteractiveAvatar" interactive initials="L" size="L"></ui5-avatar>
+		<ui5-avatar id="myInteractiveAvatar" mode="Interactive" initials="L" size="L"></ui5-avatar>
 		<ui5-input id="click-event-2"></ui5-input>
+	</section>
+
+	<section>
+		<h3>Avatar - mode="Decorative"</h3>
+		<p>Decorative avatars are purely visual with role="presentation" and aria-hidden="true"</p>
+		<ui5-avatar mode="Decorative" initials="AB" size="S"></ui5-avatar>
+		<ui5-avatar mode="Decorative" icon="employee" size="S"></ui5-avatar>
+		<ui5-avatar mode="Decorative" size="S">
+			<img src="./img/John_Miller.png" alt="John Miller">
+		</ui5-avatar>
+		
+		<h3>Avatar - mode="Image" (default)</h3>
+		<p>Image mode avatars have role="img"</p>
+		<ui5-avatar mode="Image" initials="CD" size="S"></ui5-avatar>
+		
+		<h3>Avatar - mode="Interactive"</h3>
+		<p>Interactive mode avatars have role="button", are focusable, and support keyboard interaction</p>
+		<ui5-avatar mode="Interactive" initials="EF" size="S"></ui5-avatar>
+		
+		<h3>Avatar - interactive property</h3>
+		<p>The interactive property makes the avatar focusable with role="button" and supports keyboard interaction</p>
+		<ui5-avatar interactive initials="GH" size="S"></ui5-avatar>
+		
+		<h3>Avatar - interactive property precedence</h3>
+		<p>When interactive=true, it takes precedence over mode property (this avatar has mode="Decorative" but interactive=true)</p>
+		<ui5-avatar interactive mode="Decorative" initials="PR" size="S"></ui5-avatar>
+		<p>Should be interactive with role="button", not decorative</p>
 	</section>
 
 	<section>
@@ -196,23 +223,23 @@
 		<h3>Avatar Badge - All Sizes with Value States (Circle)</h3>
 		<ui5-avatar size="XS">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="S">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="L">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="XL">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 
@@ -220,61 +247,61 @@
 		<h3>Avatar Badge - All Sizes with Value States (Square)</h3>
 		<ui5-avatar size="XS" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="S" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="L" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="XL" shape="Square">
 			<img src="./img/John_Miller.png" alt="John Miller">
-			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 
 	<section>
 		<h3>Avatar Badge - With Initials and Color Schemes</h3>
 		<ui5-avatar size="M" initials="AB" color-scheme="Accent1">
-			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="CD" color-scheme="Accent8">
-			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="EF" color-scheme="Accent7">
-			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="GH" color-scheme="Accent4">
-			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar size="M" initials="IJ" color-scheme="Accent5">
-			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 
 	<section>
 		<h3>Avatar Badge - With Icons</h3>
 		<ui5-avatar icon="employee" size="M">
-			<ui5-avatar-badge icon="edit" value-state="None" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="product" size="M" color-scheme="Accent10">
-			<ui5-avatar-badge icon="sys-enter-2" value-state="Positive" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="supplier" size="M" color-scheme="Accent9">
-			<ui5-avatar-badge icon="error" value-state="Negative" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="shipping-status" size="M" color-scheme="Accent4">
-			<ui5-avatar-badge icon="alert" value-state="Critical" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 		<ui5-avatar icon="filter" size="M" color-scheme="Accent3">
-			<ui5-avatar-badge icon="information" value-state="Information" slot="badge"></ui5-avatar-badge>
+			<ui5-avatar-badge icon="information" state="Information" slot="badge"></ui5-avatar-badge>
 		</ui5-avatar>
 	</section>
 
