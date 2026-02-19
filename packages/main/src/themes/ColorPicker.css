@@ -64,7 +64,7 @@
     height: var(--_ui5_color_picker_slider_handle_height);
     background: transparent;
     box-sizing: border-box;
-    margin-inline-start: -.1875rem;
+    margin-inline-start: -.25rem;
 
 }
 
@@ -88,7 +88,7 @@
 
 [ui5-slider]::part(scale-inner) {
     background: transparent;
-    width: calc(100% - .625rem);
+    width: calc(100% - .5625rem);
 }
 
 [ui5-slider]::part(scale-inner)::before,
