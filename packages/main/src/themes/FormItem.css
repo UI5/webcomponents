@@ -35,7 +35,7 @@
 .ui5-form-item-layout {
 	display: grid;
 	grid-template-columns: var(--ui5-form-item-layout, 4fr 8fr 0fr);
-	align-items: baseline;
+	align-items: center;
 }
 
 .ui5-form-item-label {
