@@ -16,7 +16,7 @@ export default function StepInputTemplate(this: StepInput) {
 			onWheel={this._onMouseWheel}
 		>
 			{/* Decrement Icon */}
-			{!this.readonly &&
+			{!this.readonly && !this.numericMode &&
 			<div
 				class="ui5-step-icon ui5-step-dec"
 				title={this.decIconTitle}
@@ -66,7 +66,7 @@ export default function StepInputTemplate(this: StepInput) {
 			</Input>
 
 			{/* Increment Icon */}
-			{!this.readonly &&
+			{!this.readonly && !this.numericMode &&
 				<div
 					class="ui5-step-icon ui5-step-inc"
 					title={this.incIconTitle}

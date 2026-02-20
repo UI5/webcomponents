@@ -241,6 +241,16 @@ class StepInput extends UI5Element implements IFormInputElement {
 	valuePrecision = 0;
 
 	/**
+	 * Defines whether the component uses numeric input mode without thousand separators.
+	 * When set to true, the input type is "number" and values are displayed without grouping separators.
+	 * When set to false (default), the input type is "text" and values include thousand separators based on locale.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	numericMode = false;
+
+	/**
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
@@ -308,6 +318,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_languageChanged?: boolean = false;
 
+	_delimiter?: string;
+
+	_groupSeparator?: string;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -344,6 +358,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get type() {
+		// Always use text type to allow flexible input (e.g., starting with decimal separator)
+		// Numeric mode only controls formatting, not input type
 		return InputType.Text;
 	}
 
@@ -423,6 +439,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 			this._formatter = undefined;
 			this._languageChanged = true;
 
+			// Only clear separators if not in numeric mode
+			if (!this.numericMode) {
+				this._delimiter = undefined;
+				this._groupSeparator = undefined;
+			}
+
 			return Promise.resolve();
 		};
 		attachLanguageChange(this._languageChangeHandler);
@@ -439,10 +461,29 @@ class StepInput extends UI5Element implements IFormInputElement {
 		if (!this._formatter) {
 			this._formatter = NumberFormat.getFloatInstance({
 				decimals: this.valuePrecision,
+				groupingEnabled: !this.numericMode,
 			});
 		}
 
 		return this._formatter;
+	}
+
+	get delimiter() {
+		if (!this._delimiter) {
+			const localeData = getCachedLocaleDataInstance(getLocale());
+			this._delimiter = localeData.getNumberSymbol("decimal") || ".";
+		}
+
+		return this._delimiter;
+	}
+
+	get groupSeparator() {
+		if (!this._groupSeparator) {
+			const localeData = getCachedLocaleDataInstance(getLocale());
+			this._groupSeparator = localeData.getNumberSymbol("group") || ",";
+		}
+
+		return this._groupSeparator;
 	}
 
 	get input(): Input {
@@ -603,13 +644,11 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
-		const localeData = getCachedLocaleDataInstance(getLocale());
-		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = localeData.getNumberSymbol("decimal") || ".";
+		const delimiter = this.delimiter;
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
 		if (this.valuePrecision === 0 && !this.input?.value.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
-			// integers and zero will be formatted with toFixed, so thex y're always valid
+			// integers and zero will be formatted with toFixed, so they're always valid
 			return true;
 		}
 		const numberParts = this.input?.value?.split(delimiter);
@@ -620,7 +659,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
-		const inputValue = this._parseNumber(this.input.value);
+		
+		// Remove group separators only if not in numeric mode
+		const inputValue = this.numericMode 
+			? this._parseNumber(this.input.value)
+			: this._parseNumber(this._removeGroupSeparators(this.input.value));
+		
 		if (this._isValueChanged(inputValue)) {
 			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
 			this.innerInput.value = this.input.value;
@@ -730,7 +774,19 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	_getValueOnkeyDown(e: KeyboardEvent, inputValue: string, cursorPosition?: number) {
-		return `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		const typedValue = `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		
+		// Remove group separators only if not in numeric mode
+		if (!this.numericMode) {
+			return this._removeGroupSeparators(typedValue);
+		}
+		
+		return typedValue;
+	}
+
+	_removeGroupSeparators(value: string) {
+		const groupSeparator = this.groupSeparator;
+		return value.replaceAll(groupSeparator, "");
 	}
 
 	_isInputValueValid(typedValue: string, parsedValue: number) {
