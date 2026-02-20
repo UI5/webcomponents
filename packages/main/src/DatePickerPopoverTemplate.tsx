@@ -22,7 +22,7 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 	return (
 		<ResponsivePopover
 			id={`${this._id}-responsive-popover`}
-			class="ui5-date-picker-popover ui5-popover-with-value-state-header-phone"
+			class="ui5-date-picker-popover"
 			opener={this}
 			open={this.open}
 			allowTargetOverlap
