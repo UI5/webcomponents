@@ -44,6 +44,7 @@
 	box-sizing: border-box;
 	border: var(--_ui5_progress_indicator_bar_border_max);
 	border-radius: var(--_ui5_progress_indicator_bar_border_radius);
+	z-index: 1;
 }
 
 .ui5-progress-indicator-min-value .ui5-progress-indicator-bar,
