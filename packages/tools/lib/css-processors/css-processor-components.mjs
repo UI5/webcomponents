@@ -39,6 +39,7 @@ const generate = async (argv) => {
     const packageJSON = readPackageJson();
     const inputFilesGlob = "src/themes/*.css";
     const { watch } = parseArgs(argv);
+    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     /**
      * Processes a single output file from esbuild
@@ -47,7 +48,7 @@ const generate = async (argv) => {
         // Apply scoping if not targeting host
         let processedCss = config.cssVariablesTarget
             ? file.text
-            : scopeVariables(file.text, packageJSON);
+            : scopeVariables(file.text, basePackageJSON);
 
         // Replace --sap with --ui5-sap after scoping
         processedCss = processedCss.replaceAll('--sap', '--ui5-sap');

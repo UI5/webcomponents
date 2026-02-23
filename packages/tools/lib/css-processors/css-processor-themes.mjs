@@ -74,6 +74,9 @@ async function processThemingPackageFile(f) {
  * Applies selector combination, density handling, and scoping
  */
 const processComponentPackage = async (fileText, filePath, packageJSON, config) => {
+    const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
+
     // If targeting host, apply density plugin
     if (config.cssVariablesTarget) {
         const result = await postcss([
@@ -90,7 +93,7 @@ const processComponentPackage = async (fileText, filePath, packageJSON, config) 
         combineDuplicatedSelectors,
     ]).process(fileText, { from: undefined });
 
-    const scoped = scopeVariables(combined.css, packageJSON, filePath);
+    const scoped = scopeVariables(combined.css, basePackageJSON, f.path)
 
     // Replace --sap with --ui5-sap after scoping
     return scoped.replaceAll('--sap', '--ui5-sap');
