@@ -3299,4 +3299,40 @@ describe("SelectedValue API", () => {
 				expect(comboBox.formFormattedValue).to.equal("Germany");
 			});
 	});
+
+	it("should populate input value from selectedValue on initial render", () => {
+		cy.mount(
+			<ComboBox selectedValue="DE">
+				<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+				<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "Germany")
+			.should("have.prop", "selectedValue", "DE");
+
+		cy.get("[ui5-cb-item]").eq(1)
+			.should("have.prop", "selected", true);
+	});
+
+	it("should select correct item by selectedValue when multiple items have same text", () => {
+		cy.mount(
+			<ComboBox selectedValue="emp-205">
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-205");
+
+		// The second item (Engineering) should be selected, not the first
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", false);
+	});
 });

@@ -477,7 +477,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
-	_useSelectedValue: boolean = false;
+	_useSelectedValue = false;
 	_valueStateLinks: Array<HTMLElement> = [];
 	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
@@ -875,7 +875,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
-			this.selectedValue = isGroupItem ? "" : currentItem?.value;
+			this.selectedValue = isGroupItem ? undefined : currentItem.value;
 			this.focused = false;
 
 			currentItem.focused = true;
@@ -1246,19 +1246,24 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
 				if (isInstanceOfComboBoxItemGroup(item)) {
 					if (this._useSelectedValue) {
-						itemToBeSelected = item.items.find(i => i.value === valueToMatch && this.value === i.text);
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch && (this.value === "" || this.value === i.text));
 					} else {
 						itemToBeSelected = item.items?.find(i => i.text === this.value);
 					}
 				} else {
 					if (this._useSelectedValue) {
-						itemToBeSelected = this.items.find(i => i.value === valueToMatch && this.value === i.text);
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch && (this.value === "" || this.value === i.text));
 						return;
 					}
 					itemToBeSelected = item.text === this.value ? item : undefined;
 				}
 			}
 		});
+
+		// When selectedValue matched an item but value is empty (initial render), populate value from the item's text
+		if (itemToBeSelected && this._initialRendering && this.value === "") {
+			this.value = itemToBeSelected.text || "";
+		}
 
 		this._filteredItems = this._filteredItems.map(item => {
 			if (!isInstanceOfComboBoxItemGroup(item)) {
