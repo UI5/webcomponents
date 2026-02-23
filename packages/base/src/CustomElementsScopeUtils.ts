@@ -118,10 +118,21 @@ const getEffectiveScopingSuffixForTag = (tag: string) => {
 /**
  * @public
  * Used for getting a scoped name for a CSS variable using the same transformation used in the build
- * @name the name of the css variable as written in the code
+ * @param name the name of the css variable as written in the code
+ * @param withVersion whether to include the version in the scoped name
  * @returns a variable name with the current version inserted as available at runtime
+ * @deprecated As of version 2.19.0 this method is no longer required. Variables can now be defined at the component level
+ * and are automatically encapsulated within each component’s Shadow DOM.
+ * As a result, runtime scoping logic is no longer necessary.
+ *
+ * It is still needed for third-party packages that have not yet migrated to the
+ * component-level variable approach.
  */
-const getScopedVarName = (name: string) => {
+const getScopedVarName = (name: string, withVersion: boolean = false) => {
+	if (!withVersion) {
+		return name;
+	}
+
 	const versionStr = `v${VersionInfo.version.replaceAll(".", "-")}`;
 	const expr = /(--_?ui5)([^,:)\s]+)/g;
 	return name.replaceAll(expr, `$1-${versionStr}$2`);

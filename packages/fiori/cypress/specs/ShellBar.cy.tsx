@@ -419,8 +419,45 @@ describe("Slots", () => {
 				.find("div[id='content-6'] > .ui5-shellbar-separator-end")
 				.should("not.exist");
 		});
-	});
 
+		it("Should hide separators at S breakpoint regardless of content visibility", () => {
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar id="shellbar" primaryTitle="Product Title">
+					<Button slot="content">Start Button 1</Button>
+					<Button slot="content">Start Button 2</Button>
+					<ShellBarSpacer slot="content" />
+					<Button slot="content">End Button 1</Button>
+					<Button slot="content">End Button 2</Button>
+				</ShellBar>
+			);
+
+			// At large viewport, separators should be visible
+			cy.get("[ui5-shellbar]") // get the shellbar again to reset the DOM ref after remount
+				.shadow()
+				.find(".ui5-shellbar-content-items > .ui5-shellbar-separator-start")
+				.should("exist");
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-content-items > .ui5-shellbar-separator-end")
+				.should("exist");
+
+			// Resize to S breakpoint (< 600px)
+			cy.viewport(500, 1080);
+
+			// At S breakpoint, separators should be hidden even if content items are still visible
+			cy.get("[ui5-shellbar]").should("have.prop", "breakpointSize", "S");
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-content-items > .ui5-shellbar-separator-start")
+				.should("not.exist");
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-content-items > .ui5-shellbar-separator-end")
+				.should("not.exist");
+		});
+	});
 	describe("Search field slot", () => {
 		it("Test search button is not visible when the search field slot is empty", () => {
 			cy.mount(
