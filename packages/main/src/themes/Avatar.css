@@ -10,22 +10,27 @@
 	opacity: .7;
 }
 
-:host([interactive]:not([disabled])) {
+:host([interactive]:not([disabled])),
+:host([mode="Interactive"]:not([disabled])) {
 	cursor: pointer;
 }
 
-:host([interactive]:not([hidden]):active) {
+:host([interactive]:not([hidden]):active),
+:host([mode="Interactive"]:not([hidden]):active) {
 	background-color: var(--sapButton_Active_Background);
 	border-color: var(--sapButton_Active_BorderColor);
 	color: var(--sapButton_Active_TextColor);
 }
 
-:host([interactive]:not([hidden]):not([disabled]):not(:active):not([focused]):hover) {
+:host([interactive]:not([hidden]):not([disabled]):not(:active):not([focused]):hover),
+:host([mode="Interactive"]:not([hidden]):not([disabled]):not(:active):not([focused]):hover) {
 	box-shadow: var(--ui5-avatar-hover-box-shadow-offset);
 }
 
 :host([interactive][desktop]:not([hidden])) .ui5-avatar-root:focus,
-:host([interactive]:not([hidden])) .ui5-avatar-root:focus-visible {
+:host([interactive]:not([hidden])) .ui5-avatar-root:focus-visible,
+:host([mode="Interactive"][desktop]:not([hidden])) .ui5-avatar-root:focus,
+:host([mode="Interactive"]:not([hidden])) .ui5-avatar-root:focus-visible {
 	outline: var(--_ui5_avatar_outline);
 	outline-offset: var(--_ui5_avatar_focus_offset);
 }
@@ -146,7 +151,9 @@
 	border-color: var(--ui5-avatar-accent6-border-color);
 }
 :host([_color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent6"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent6"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_6_Hover_Background);
 }
 
@@ -158,7 +165,9 @@
 }
 
 :host([_color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent1"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent1"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_1_Hover_Background);
 }
 
@@ -170,7 +179,9 @@
 }
 
 :host([_color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent2"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent2"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_2_Hover_Background);
 }
 
@@ -182,7 +193,9 @@
 }
 
 :host([_color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent3"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent3"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_3_Hover_Background);
 }
 
@@ -194,7 +207,9 @@
 }
 
 :host([_color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent4"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent4"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_4_Hover_Background);
 }
 
@@ -206,7 +221,9 @@
 }
 
 :host([_color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent5"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent5"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_5_Hover_Background);
 }
 
@@ -218,7 +235,9 @@
 }
 
 :host([_color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent7"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent7"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_7_Hover_Background);
 }
 
@@ -230,7 +249,9 @@
 }
 
 :host([_color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent8"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent8"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_8_Hover_Background);
 }
 
@@ -242,7 +263,9 @@
 }
 
 :host([_color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent9"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent9"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_9_Hover_Background);
 }
 
@@ -254,7 +277,9 @@
 }
 
 :host([_color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent10"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent10"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_10_Hover_Background);
 }
 

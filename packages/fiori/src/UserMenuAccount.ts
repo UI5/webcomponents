@@ -16,7 +16,6 @@ import type AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorSch
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.5.0
  */

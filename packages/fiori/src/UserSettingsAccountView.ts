@@ -43,7 +43,6 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  *
  * @constructor
  * @extends UserSettingsView
- * @experimental
  * @public
  * @since 2.17.0
  */

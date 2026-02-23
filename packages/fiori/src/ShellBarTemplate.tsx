@@ -1,337 +1,259 @@
-import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
-import type ShellBar from "./ShellBar.js";
-import ShellBarPopoverTemplate from "./ShellBarPopoverTemplate.js";
-import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
+import Popover from "@ui5/webcomponents/dist/Popover.js";
+import List from "@ui5/webcomponents/dist/List.js";
+import type ShellBar from "./ShellBar.js";
+import ShellBarItem from "./ShellBarItem.js";
+
+import {
+	ShellBarSearchField,
+	ShellBarSearchFieldFullWidth
+} from "./shellbar/templates/ShellBarSearchTemplate.js";
+
+import {
+	ShellBarSearchField as ShellBarSearchFieldLegacy,
+	ShellBarSearchButton as ShellBarSearchButtonLegacy,
+	ShellBarSearchFieldFullWidth as ShellBarSearchFieldFullWidthLegacy,
+} from "./shellbar/templates/ShellBarSearchLegacyTemplate.js";
+
+import {
+	ShellBarLegacyBrandingArea,
+} from "./shellbar/templates/ShellBarLegacyTemplate.js";
 
 export default function ShellBarTemplate(this: ShellBar) {
+	const isLegacySearch = !this.isSelfCollapsibleSearch;
+
+	const SearchInBarTemplate = isLegacySearch ? ShellBarSearchFieldLegacy : ShellBarSearchField;
+	const SearchFullWidthTemplate = isLegacySearch ? ShellBarSearchFieldFullWidthLegacy : ShellBarSearchFieldFullWidth;
+
+	const profileAction = this.getAction("profile");
+	const overflowAction = this.getAction("overflow");
+	const assistantAction = this.getAction("assistant");
+	const notificationsAction = this.getAction("notifications");
+	const productSwitchAction = this.getAction("products");
+
+	const actionsAccInfo = this.actionsAccessibilityInfo;
+
 	return (
 		<>
-			<header
-				class={this.classes.wrapper}
-				aria-label={this._shellbarText}
-				onKeyDown={this._onKeyDown}
-				part="root">
-				<div class="ui5-shellbar-overflow-container ui5-shellbar-overflow-container-left">
-					{this.startButton.length > 0 && <slot name="startButton"></slot>}
+			<header class="ui5-shellbar-root" part="root" onKeyDown={this._onKeyDown} aria-label={this.texts.shellbar}>
+				{/* Full-width search overlay */}
+				{this.showFullWidthSearch && SearchFullWidthTemplate.call(this)}
 
-					{this.hasBranding && (
-						<slot name="branding"></slot>
-					)}
-
-					{this.hasMenuItems && !this.hasBranding && (
-						<>
-							{!this.showLogoInMenuButton && this.hasLogo && singleLogo.call(this)}
-							{this.showTitleInMenuButton && <h1 class="ui5-hidden-text">{this.primaryTitle}</h1>}
-							{this.showMenuButton && (
-								<>
-									<button
-										class={{
-											"ui5-shellbar-menu-button": true,
-											...this.classes.button,
-										}}
-										onClick={this._headerPress}
-										aria-haspopup="menu"
-										aria-expanded={this._menuPopoverExpanded}
-										aria-label={this._brandingText}
-										data-ui5-stable="menu"
-										tabIndex={0}>
-										{this.showLogoInMenuButton && (
-											<span class="ui5-shellbar-logo" aria-label={this._logoText} title={this._logoText}>
-												<slot name="logo"></slot>
-											</span>
-										)}
-										{this.showTitleInMenuButton && (
-											<div class="ui5-shellbar-menu-button-title">{this.primaryTitle}</div>
-										)}
-										<Icon class="ui5-shellbar-menu-button-arrow" name={slimArrowDown} />
-									</button>
-								</>
-							)}
-						</>
-					)}
-
-					{this.hasMenuItems && (
-						// The secondary title remains visible when both menu items and the branding slot are present,
-						// as the branding slot has higher priority and takes precedence in visibility.
-						<>
-							{this.secondaryTitle && !this.isSBreakPoint && (
-								<div style={{ display: "block" }} class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
-									{this.secondaryTitle}
-								</div>
-							)}
-						</>
-					)}
-
-					{!this.hasMenuItems && (
-						<>
-							{this.isSBreakPoint && this.hasLogo && !this.hasBranding && singleLogo.call(this)}
-							{!this.isSBreakPoint && (this.hasLogo || this.primaryTitle) && (
-								<>
-									{!this.hasBranding && combinedLogo.call(this)}
-									{this.secondaryTitle && (this.primaryTitle || this.hasBranding) && (
-										<h2 class="ui5-shellbar-secondary-title" data-ui5-stable="secondary-title">
-											{this.secondaryTitle}
-										</h2>
-									)}
-								</>
-							)}
-						</>
-					)}
-				</div>
-				{this.hasMidContent && (
-					<div class="ui5-shellbar-overflow-container ui5-shellbar-mid-content">
-						<slot name="midContent"></slot>
+				{this.enabledFeatures.startButton && (
+					<div class="ui5-shellbar-start-button ui5-shellbar-gap-end">
+						<slot name="startButton"></slot>
 					</div>
 				)}
-				<div class="ui5-shellbar-overflow-container ui5-shellbar-overflow-container-right">
-					<div class="ui5-shellbar-overflow-container-right-inner">
-						{this.hasContentItems && (
+
+				{this.enabledFeatures.branding && (
+					<div class="ui5-shellbar-branding-area">
+						<slot name="branding"></slot>
+					</div>
+				)}
+
+				{/* Legacy branding (logo + primaryTitle) when no menu items */}
+				{!this.enabledFeatures.branding && ShellBarLegacyBrandingArea.call(this)}
+
+				<div class="ui5-shellbar-overflow-container">
+					<div class="ui5-shellbar-overflow-container-inner">
+
+						{this.enabledFeatures.content && (
 							<div
-								class="ui5-shellbar-content-items"
-								role={this._contentItemsRole}
-								aria-label={this._contentItemsText}
+								class="ui5-shellbar-content-area ui5-shellbar-content-items"
+								role={this.contentRole}
+								aria-label={this.texts.contentItems}
 							>
-								{this.showStartSeparator && (
-									<div class={{
-										"ui5-shellbar-separator": true,
-										"ui5-shellbar-separator-start": true,
-									}}></div>
+								{/* Start separator */}
+								{this.separatorConfig.showStartSeparator && (
+									<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
 								)}
+
+								{/* Start content items */}
 								{this.startContent.map(item => {
-									const itemInfo = this._contentInfo.find(info => info.id === (item as any)._individualSlot);
+									const itemId = (item as any)._individualSlot as string;
+									const packedSep = this.getPackedSeparatorInfo(item, true);
 									return (
-										<div key={(item as any)._individualSlot} id={(item as any)._individualSlot} class={itemInfo?.classes}>
-											{this.shouldIncludeSeparator(itemInfo, this.startContentInfoSorted) && (
-												// never displayed, only "packed" with last item that was hidden, used for measurement purposes
-												<div class={{
-													"ui5-shellbar-separator": true,
-													"ui5-shellbar-separator-start": true,
-												}}></div>
+										<div
+											key={itemId}
+											id={itemId}
+											class={{
+												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
+												"ui5-shellbar-hidden": this.isHidden(itemId),
+											}}
+										>
+											{packedSep.shouldPack && (
+												<div class="ui5-shellbar-separator ui5-shellbar-separator-start"></div>
 											)}
 											<slot name={(item as any)._individualSlot}></slot>
 										</div>
 									);
 								})}
+
+								{/* Spacer: Grows to fill available space, used to measure if space is tight, should be in DOM always */}
 								<div class="ui5-shellbar-spacer"></div>
+
+								{/* End content items */}
 								{this.endContent.map(item => {
-									const itemInfo = this._contentInfo.find(info => info.id === (item as any)._individualSlot);
+									const itemId = (item as any)._individualSlot as string;
+									const packedSep = this.getPackedSeparatorInfo(item, false);
 									return (
-										<div key={(item as any)._individualSlot} id={(item as any)._individualSlot} class={itemInfo?.classes}>
-											<slot name={(item as any)._individualSlot}></slot>
-											{this.shouldIncludeSeparator(itemInfo, this.endContentInfoSorted) && (
-												// never displayed, only "packed" with last item that was hidden, used for measurement purposes
-												<div class={{
-													"ui5-shellbar-separator": true,
-													"ui5-shellbar-separator-end": true,
-												}}></div>
+										<div
+											key={itemId}
+											id={itemId}
+											class={{
+												"ui5-shellbar-content-item ui5-shellbar-gap-start": true,
+												"ui5-shellbar-hidden": this.isHidden(itemId),
+											}}
+										>
+											<slot name={itemId}></slot>
+											{packedSep.shouldPack && (
+												<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap-start"></div>
 											)}
 										</div>
 									);
 								})}
-								{this.showEndSeparator && (
-									<div class={{
-										"ui5-shellbar-separator": true,
-										"ui5-shellbar-separator-end": true,
-									}}></div>
+
+								{/* End separator */}
+								{this.separatorConfig.showEndSeparator && (
+									<div class="ui5-shellbar-separator ui5-shellbar-separator-end ui5-shellbar-gap-start"></div>
 								)}
 							</div>
 						)}
-						{!this.hasContentItems && <div class="ui5-shellbar-spacer"></div>}
-						<div class="ui5-shellbar-overflow-container-right-child" role={this._rightChildRole}>
-							{this.hasSearchField && (
-								<>
-									{this.showFullWidthSearch && (
-										<div class="ui5-shellbar-search-full-width-wrapper" style={this.styles.searchField}>
-											<div class="ui5-shellbar-search-full-field">
-												<slot name="searchField"></slot>
-											</div>
-											<Button
-												onClick={this._handleCancelButtonPress}
-												class="ui5-shellbar-button ui5-shellbar-cancel-button"
-												data-ui5-stable="cancel-search">
-												{this._cancelBtnText}
-											</Button>
-										</div>
-									)}
-									<div id={this.hasSelfCollapsibleSearch ? `${this._id}-item-1` : undefined} class={this.classes.searchField} style={this.styles.searchField}>
-										<slot name="searchField"></slot>
-									</div>
-									{!(this.hasSelfCollapsibleSearch || this.hideSearchButton) && (
-										<Button
-											id={`${this._id}-item-1`}
-											class={{
-												"ui5-shellbar-button": true,
-												"ui5-shellbar-search-button": true,
-												"ui5-shellbar-search-item-for-arrow-nav": true,
-												...this.classes.search,
-											}}
-											icon="sap-icon://search"
-											data-ui5-text="Search"
-											data-ui5-notifications-count={this.notificationsCount}
-											data-ui5-stable="toggle-search"
-											onClick={this._handleSearchIconPress}
-											tooltip={this._searchBtnOpen}
-											aria-label={this._searchBtnOpen}
-											aria-expanded={this.showSearchField}
-											accessibilityAttributes={this.accInfo.search.accessibilityAttributes}
-										/>
-									)}
-								</>
-							)}
-							{this.hasAssistant && (
-								<div id={`${this._id}-assistant`} class={this.classes.assistant}>
-									<slot name="assistant"></slot>
-								</div>
-							)}
-							{this.showNotifications && (
-								<Button
-									id={`${this._id}-item-2`}
-									class={{
-										"ui5-shellbar-button": true,
-										"ui5-shellbar-bell-button": true,
-										"ui5-shellbar-items-for-arrow-nav": true,
-										...this.classes.notification,
-									}}
-									icon="sap-icon://bell"
-									data-ui5-text="Notifications"
-									onClick={this._handleNotificationsPress}
-									tooltip={this._notificationsText}
-									accessibilityAttributes={this.accInfo.notifications.accessibilityAttributes}
-									data-ui5-stable="notifications"
-								>
-									{this.notificationsCount && (
-										<ButtonBadge slot="badge" design="OverlayText" text={this.notificationsCount} />
-									)}
-								</Button>
-							)}
-							{this.customItemsInfo.map(item => (
-								<Button
-									key={item.id}
-									id={item.id}
-									class={`${item.classes} ui5-shellbar-items-for-arrow-nav`}
-									icon={item.icon}
-									tooltip={item.tooltip}
-									data-ui5-notifications-count={this.notificationsCount}
-									data-ui5-external-action-item-id={item.refItemid}
-									data-ui5-stable={item.icon && !this.isIconHidden(item.icon) ? item.stableDomRef : undefined}
-									onClick={item.press}
-									accessibilityAttributes={item.accessibilityAttributes}
-								>
-									{item.count && (
-										<ButtonBadge slot="badge" design="OverlayText" text={item.count} />
-									)}
-								</Button>
-							))}
-						</div>
+
+						{this.enabledFeatures.search && SearchInBarTemplate.call(this)}
+						{this.enabledFeatures.search && isLegacySearch && ShellBarSearchButtonLegacy.call(this)}
+
+						{assistantAction && (
+							<div class={{
+								"ui5-shellbar-assistant-button ui5-shellbar-gap-start": true,
+								"ui5-shellbar-hidden": this.isHidden("assistant")
+							}}>
+								<slot name="assistant"></slot>
+							</div>
+						)}
+
+						{notificationsAction && (
+							<Button
+								data-ui5-stable={notificationsAction.stableDomRef}
+								class={{
+									"ui5-shellbar-bell-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("notifications")
+								}}
+								icon={notificationsAction.icon}
+								design="Transparent"
+								onClick={this.handleNotificationsClick}
+								tooltip={actionsAccInfo.notifications.title}
+								accessibilityAttributes={actionsAccInfo.notifications.accessibilityAttributes}
+							>
+								{notificationsAction?.count && (
+									<ButtonBadge slot="badge" design="OverlayText" text={notificationsAction?.count} />
+								)}
+							</Button>
+						)}
+
+						{/* Custom Items */}
+						{this.sortItems(this.items).map(item => (
+							<div
+								key={item._id}
+								class={{
+									"ui5-shellbar-custom-item ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden(item._id),
+								}}
+								data-ui5-stable={item.stableDomRef}
+							>
+								{!item.inOverflow ? <slot name={(item as any)._individualSlot}></slot> : null}
+							</div>
+						))}
+
+						{overflowAction && (
+							<Button
+								data-ui5-stable={overflowAction.stableDomRef}
+								id="ui5-shellbar-overflow-button"
+								class={{
+									"ui5-shellbar-overflow-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("overflow")
+								}}
+								icon={overflowAction.icon}
+								design="Transparent"
+								onClick={this.handleOverflowClick}
+								tooltip={actionsAccInfo.overflow.title}
+								accessibilityAttributes={actionsAccInfo.overflow.accessibilityAttributes}
+							>
+								{this.overflowBadge && (
+									<ButtonBadge
+										slot="badge"
+										design={this.overflowBadge === " " ? "AttentionDot" : "OverlayText"}
+										text={this.overflowBadge === " " ? "" : this.overflowBadge}
+									/>
+								)}
+							</Button>
+						)}
+
+						{profileAction && (
+							<Button
+								data-profile-btn
+								data-ui5-stable={profileAction.stableDomRef}
+								class={{
+									"ui5-shellbar-image-button ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("profile")
+								}}
+								design="Transparent"
+								onClick={this.handleProfileClick}
+								tooltip={actionsAccInfo.profile.title}
+								accessibilityAttributes={actionsAccInfo.profile.accessibilityAttributes}
+							>
+								<slot name="profile"></slot>
+							</Button>
+						)}
+
+						{productSwitchAction && (
+							<Button
+								data-ui5-stable={productSwitchAction.stableDomRef}
+								class={{
+									"ui5-shellbar-button-product-switch ui5-shellbar-action-button ui5-shellbar-gap-start": true,
+									"ui5-shellbar-hidden": this.isHidden("products")
+								}}
+								icon={productSwitchAction.icon}
+								design="Transparent"
+								onClick={this.handleProductSwitchClick}
+								tooltip={actionsAccInfo.products.title}
+								accessibilityAttributes={actionsAccInfo.products.accessibilityAttributes}
+							></Button>
+						)}
 					</div>
 				</div>
-				<Button
-					id={`${this._id}-item-5`}
-					class={{
-						"ui5-shellbar-button": true,
-						"ui5-shellbar-overflow-button": true,
-						"ui5-shellbar-items-for-arrow-nav": true,
-						...this.classes.overflow,
-					}}
-					icon="sap-icon://overflow"
-					onClick={this._handleOverflowPress}
-					tooltip={this._overflowText}
-					accessibilityAttributes={this.accInfo.overflow.accessibilityAttributes}
-					data-ui5-stable="overflow"
-				>
-					{this._overflowNotifications && (
-						<ButtonBadge
-							slot="badge"
-							design={this._overflowNotifications === " " ? "AttentionDot" : "OverlayText"}
-							text={this._overflowNotifications === " " ? "" : this._overflowNotifications}
-						/>
-					)}
-				</Button>
-
-				{this.hasProfile && profileButton.call(this)}
-				{this.showProductSwitch && (
-					<Button
-						id={`${this._id}-item-4`}
-						class="ui5-shellbar-no-overflow-button ui5-shellbar-button ui5-shellbar-button-product-switch ui5-shellbar-items-for-arrow-nav"
-						icon="sap-icon://grid"
-						data-ui5-text="Product Switch"
-						onClick={this._handleProductSwitchPress}
-						tooltip={this._productsText}
-						aria-label={this._productSwitchBtnText}
-						aria-haspopup="dialog"
-						aria-expanded={this.accInfo.products.accessibilityAttributes.expanded}
-						accessibilityAttributes={this.accInfo.products.accessibilityAttributes}
-						data-ui5-stable="product-switch"
-					/>
-				)}
 			</header>
-			{ShellBarPopoverTemplate.call(this)}
+
+			{/* Overflow Popover */}
+			<Popover
+				class="ui5-shellbar-overflow-popover"
+				open={this.overflowPopoverOpen}
+				onClose={this.onPopoverClose}
+				opener="ui5-shellbar-overflow-button"
+				placement="Bottom"
+				hideArrow={true}
+				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
+			>
+				<List separators="None" onClick={this.handleOverflowItemClick}>
+					{this.overflowItems.map(item => {
+						if (item.type === "action") {
+							const actionData = item.data;
+							return (
+								<ShellBarItem
+									key={item.id}
+									icon={actionData.icon ? `sap-icon://${actionData.icon}` : ""}
+									data-action-id={item.id}
+									count={actionData.count}
+									inOverflow={true}
+									text={this.getActionOverflowText(item.id)}
+								/>
+							);
+						}
+						return <slot key={item.id} name={item.data._individualSlot}></slot>;
+					})}
+				</List>
+			</Popover>
 		</>
-	);
-}
-
-function profileButton(this: ShellBar) {
-	return (
-		<Button
-			data-profile-btn
-			id={`${this._id}-item-3`}
-			onClick={this._handleProfilePress}
-			tooltip={this._profileText}
-			class="ui5-shellbar-button ui5-shellbar-image-button ui5-shellbar-no-overflow-button ui5-shellbar-items-for-arrow-nav"
-			aria-label={this.imageBtnText}
-			aria-haspopup="dialog"
-			accessibilityAttributes={this.accInfo.profile.accessibilityAttributes}
-			data-ui5-stable="profile"
-		>
-			<slot name="profile"></slot>
-		</Button>
-	);
-}
-
-function singleLogo(this: ShellBar) {
-	return (
-		<span
-			role={this.accLogoRole}
-			class="ui5-shellbar-logo"
-			aria-label={this._logoText}
-			title={this._logoText}
-			onClick={this._logoPress}
-			onKeyDown={this._logoKeydown}
-			onKeyUp={this._logoKeyup}
-			tabIndex={0}
-			data-ui5-stable="logo">
-			<slot name="logo"></slot>
-		</span>
-	);
-}
-
-function combinedLogo(this: ShellBar) {
-	return (
-		<div
-			role={this.accLogoRole}
-			class="ui5-shellbar-logo-area"
-			onClick={this._logoPress}
-			tabIndex={0}
-			onKeyDown={this._logoKeydown}
-			onKeyUp={this._logoKeyup}
-			aria-label={this.accessibilityAttributes.branding?.name || this._logoAreaText}>
-			{this.hasLogo && (
-				<span
-					class="ui5-shellbar-logo"
-					title={this._logoText}
-					data-ui5-stable="logo">
-					<slot name="logo"></slot>
-				</span>
-			)}
-			<div class="ui5-shellbar-headings">
-				{this.primaryTitle && (
-					<h1 class="ui5-shellbar-title">
-						<bdi>{this.primaryTitle}</bdi>
-					</h1>
-				)}
-			</div>
-		</div>
 	);
 }

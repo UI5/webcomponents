@@ -116,6 +116,24 @@ class ColorPalettePopover extends UI5Element {
 	defaultColor?: string;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
 	 * Defines the open | closed state of the popover.
 	 * @public
 	 * @default false
