@@ -42,57 +42,6 @@
 	color: var(--sapButton_Active_TextColor);
 }
 
-/* Hover background colors for each accent scheme in Group mode */
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent1"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent1"]:not([disabled])) {
-	background-color: var(--sapAvatar_1_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent2"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent2"]:not([disabled])) {
-	background-color: var(--sapAvatar_2_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent3"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent3"]:not([disabled])) {
-	background-color: var(--sapAvatar_3_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent4"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent4"]:not([disabled])) {
-	background-color: var(--sapAvatar_4_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent5"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent5"]:not([disabled])) {
-	background-color: var(--sapAvatar_5_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent6"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent6"]:not([disabled])) {
-	background-color: var(--sapAvatar_6_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent7"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent7"]:not([disabled])) {
-	background-color: var(--sapAvatar_7_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent8"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent8"]:not([disabled])) {
-	background-color: var(--sapAvatar_8_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent9"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent9"]:not([disabled])) {
-	background-color: var(--sapAvatar_9_Hover_Background);
-}
-
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][_color-scheme="Accent10"]:not([disabled])),
-:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar][color-scheme="Accent10"]:not([disabled])) {
-	background-color: var(--sapAvatar_10_Hover_Background);
-}
-
 /* Overflow button hover/active states in Group mode */
 :host([type="Group"]) .ui5-avatar-group-items:not(:active):hover .ui5-avatar-group-overflow-btn {
 	box-shadow: var(--ui5-avatar-hover-box-shadow-offset);
