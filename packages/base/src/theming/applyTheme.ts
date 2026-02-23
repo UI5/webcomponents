@@ -9,6 +9,7 @@ import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
 import { updateComponentStyles } from "./componentStyles.js";
+import { getSkipThemeBase } from "../config/ThemeLoading.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -27,9 +28,30 @@ const loadThemeBase = async (theme: string) => {
 		return;
 	}
 
-	const cssData = await getThemeProperties(BASE_THEME_PACKAGE, theme);
-	if (cssData) {
-		createOrUpdateStyle(cssData, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
+	// Load both default and scoped properties in parallel
+	const [defaultCss] = await Promise.all([
+		getThemeProperties(BASE_THEME_PACKAGE, theme),
+	]);
+
+	// Apply default variables (--sap* with stop-variables condition)
+	if (defaultCss) {
+		createOrUpdateStyle(defaultCss, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
+	}
+};
+
+const loadThemeBaseScoped = async (theme: string) => {
+	if (!isThemeBaseRegistered()) {
+		return;
+	}
+
+	// Load both default and scoped properties in parallel
+	const [scopedCss] = await Promise.all([
+		getThemeProperties(BASE_THEME_PACKAGE, `${theme}-scoped`),
+	]);
+
+	// Apply scoped variables (--ui5-sap* framework-scoped)
+	if (scopedCss) {
+		createOrUpdateStyle(scopedCss, "data-ui5-theme-properties-scoped", BASE_THEME_PACKAGE, theme);
 	}
 };
 
@@ -89,12 +111,16 @@ const applyTheme = async (theme: string) => {
 	// Manage stop-variables class based on external theme detection
 	// When an external theme is active, add stop-variables to prevent conflicts
 	// When no external theme is active, remove stop-variables to allow framework variables
-	if (hasExternalTheme) {
-		document.documentElement.classList.add("stop-variables");
+	const skipBase = getSkipThemeBase();
+
+	if (hasExternalTheme || skipBase) {
+		deleteThemeBase();
+	} else if (!skipBase) {
+		await loadThemeBase(theme);
 	}
 
-	// Always load theme_base properties
-	await loadThemeBase(theme);
+	// Always load scoped --ui5-sap* variables
+	await loadThemeBaseScoped(theme);
 
 	// Always load component packages properties. For non-registered themes, try with the base theme, if any
 	const externalThemeName = hasExternalTheme ? theme : undefined;

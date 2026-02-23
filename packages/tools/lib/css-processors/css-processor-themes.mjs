@@ -40,9 +40,9 @@ import {
  */
 async function processThemingPackageFile(f) {
     const rootSelector = ':root';
-    const stopVarsSelector = ':root:not(.stop-variables):not(:has(body.stop-variables))';
-    const rootRule = postcss.rule({ selector: rootSelector });
-    const stopVarsRule = postcss.rule({ selector: stopVarsSelector });
+    const stopVarsSelector = ':root';
+    const scopedRule = postcss.rule({ selector: rootSelector });
+    const rule = postcss.rule({ selector: stopVarsSelector });
     const result = await postcss().process(f.text);
 
     result.root.walkRules(rootSelector, rule => {
@@ -52,29 +52,32 @@ async function processThemingPackageFile(f) {
             } else if (decl.prop.startsWith('--sapFontUrl')) {
                 continue;
             } else if (!decl.prop.startsWith('--sap')) {
-                rootRule.append(decl.clone());
+                scopedRule.append(decl.clone());
             } else {
                 const originalProp = decl.prop;
                 const originalValue = decl.value;
 
                 // Add --ui5-sap variable to :root
-                rootRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
+                scopedRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
 
-                // Add original --sap variable to :root:not(.stop-variables):not(:has(body.stop-variables))
-                stopVarsRule.append(decl.clone());
+                // Add original --sap variable to :root
+                rule.append(decl.clone());
             }
         }
     });
 
-    return rootRule.toString() + '\n' + stopVarsRule.toString();
+    // Return object with two CSS outputs
+    return {
+        default: rule.toString(),  // Original --sap* variables
+        scoped: scopedRule.toString()        // Framework --ui5-sap* variables
+    };
 };
 
 /**
  * Processes component package files (@ui5/webcomponents, @ui5/webcomponents-fiori, etc.)
  * Applies selector combination, density handling, and scoping
  */
-const processComponentPackage = async (fileText, filePath, packageJSON, config) => {
-    const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+const processComponentPackage = async (fileText, filePath, config) => {
     const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     // If targeting host, apply density plugin
@@ -93,7 +96,7 @@ const processComponentPackage = async (fileText, filePath, packageJSON, config) 
         combineDuplicatedSelectors,
     ]).process(fileText, { from: undefined });
 
-    const scoped = scopeVariables(combined.css, basePackageJSON, f.path)
+    const scoped = scopeVariables(combined.css, basePackageJSON,filePath)
 
     // Replace --sap with --ui5-sap after scoping
     return scoped.replaceAll('--sap', '--ui5-sap');
@@ -115,19 +118,43 @@ const generate = async (argv) => {
         // Determine package type and apply appropriate processing
         const isThemingPackage = file.path.includes("packages/theming");
 
-        const processedCss = isThemingPackage
-            ? await processThemingPackageFile(file)
-            : await processComponentPackage(file.text, file.path, packageJSON, config);
+        if (isThemingPackage) {
+            // Handle theming package with dual output
+            const { default: defaultCss, scoped: scopedCss } = await processThemingPackageFile(file);
 
-        // Write to all output locations
-        await writeOutputFiles({
-            distPath: file.path,
-            css: processedCss,
-            packageName: packageJSON.name,
-            extension: config.extension,
-            includeJson: true, // Themes always generate JSON
-            includeDefaultTheme: false, // Themes don't include registration
-        });
+            // Write default variant (--sap* variables)
+            await writeOutputFiles({
+                distPath: file.path,
+                css: defaultCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                suffix: "",
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+
+            // Write scoped variant (--ui5-sap* variables)
+            await writeOutputFiles({
+                distPath: file.path,
+                css: scopedCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                suffix: ".scoped",
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+        } else {
+            // Component packages unchanged
+            const processedCss = await processComponentPackage(file.text, file.path, config);
+            await writeOutputFiles({
+                distPath: file.path,
+                css: processedCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+        }
     };
 
     /**

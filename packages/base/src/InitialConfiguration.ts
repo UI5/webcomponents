@@ -25,6 +25,7 @@ type InitialConfig = {
 	fetchDefaultLanguage: boolean,
 	defaultFontLoading: boolean,
 	enableDefaultTooltips: boolean,
+	skipThemeBase: boolean,
 };
 
 let initialConfig: InitialConfig = {
@@ -41,6 +42,7 @@ let initialConfig: InitialConfig = {
 	fetchDefaultLanguage: false,
 	defaultFontLoading: true,
 	enableDefaultTooltips: true,
+	skipThemeBase: false,
 };
 
 /* General settings */
@@ -125,6 +127,15 @@ const getTimezone = () => {
 const getFormatSettings = () => {
 	initConfiguration();
 	return initialConfig.formatSettings;
+};
+
+/**
+ * Returns if theme base loading should be skipped.
+ * @returns { boolean } true if theme base loading should be skipped
+ */
+const getSkipThemeBase = () => {
+	initConfiguration();
+	return initialConfig.skipThemeBase;
 };
 
 const booleanMapping = new Map();
@@ -257,4 +268,5 @@ export {
 	getDefaultFontLoading,
 	resetConfiguration,
 	getEnableDefaultTooltips,
+	getSkipThemeBase,
 };

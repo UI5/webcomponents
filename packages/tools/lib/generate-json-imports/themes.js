@@ -30,14 +30,26 @@ const generate = async (argv) => {
 	const dynamicImportJSONAttrLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle" */"../assets/themes/${theme}/parameters-bundle.css.json", {with: { type: 'json'}})).default;`).join("\n");
 	const fetchMetaResolveLines = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await fetch(new URL("../assets/themes/${theme}/parameters-bundle.css.json", import.meta.url))).json();`).join("\n");
 
+	// Scoped variant import lines
+	const dynamicImportLinesScoped = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle-scoped" */"../assets/themes/${theme}/parameters-bundle.scoped.css.json")).default;`).join("\n");
+	const dynamicImportJSONAttrLinesScoped = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await import(/* webpackChunkName: "${packageName.replace("@", "").replace("/", "-")}-${theme.replace("_", "-")}-parameters-bundle-scoped" */"../assets/themes/${theme}/parameters-bundle.scoped.css.json", {with: { type: 'json'}})).default;`).join("\n");
+	const fetchMetaResolveLinesScoped = themesOnFileSystem.map(theme => `\t\tcase "${theme}": return (await fetch(new URL("../assets/themes/${theme}/parameters-bundle.scoped.css.json", import.meta.url))).json();`).join("\n");
+
 	// dynamic imports file content
-	const contentDynamic = function (lines) {
+	const contentDynamic = function (linesDefault, linesScoped) {
 		return `// @ts-nocheck
 import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
 
 const loadThemeProperties = async (themeName) => {
 	switch (themeName) {
-${lines}
+${linesDefault}
+		default: throw "unknown theme"
+	}
+};
+
+const loadThemePropertiesScoped = async (themeName) => {
+	switch (themeName) {
+${linesScoped}
 		default: throw "unknown theme"
 	}
 };
@@ -50,16 +62,29 @@ const loadAndCheck = async (themeName) => {
 	return data;
 };
 
+const loadAndCheckScoped = async (themeName) => {
+	const data = await loadThemePropertiesScoped(themeName);
+	if (typeof data === "string" && data.endsWith(".json")) {
+		throw new Error(\`[themes] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the \"Assets\" documentation for more information.\`);
+	}
+	return data;
+};
+
 ${availableThemesArray}
-  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''}));
+  .forEach(themeName => {
+    // Register default loader (--sap* variables)
+    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''});
+    // Register scoped loader (--ui5-sap* variables) with "-scoped" suffix
+    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName + "-scoped", loadAndCheckScoped${CSS_VARIABLES_TARGET ? ', "host"' : ''});
+  });
 `;
 	}
 
 	await fs.mkdir(path.dirname(outputFileDynamic), { recursive: true });
 	return Promise.all([
-		fs.writeFile(outputFileDynamic, contentDynamic(dynamicImportLines)),
-		fs.writeFile(outputFileDynamicImportJSONAttr, contentDynamic(dynamicImportJSONAttrLines)),
-		fs.writeFile(outputFileFetchMetaResolve, contentDynamic(fetchMetaResolveLines)),
+		fs.writeFile(outputFileDynamic, contentDynamic(dynamicImportLines, dynamicImportLinesScoped)),
+		fs.writeFile(outputFileDynamicImportJSONAttr, contentDynamic(dynamicImportJSONAttrLines, dynamicImportJSONAttrLinesScoped)),
+		fs.writeFile(outputFileFetchMetaResolve, contentDynamic(fetchMetaResolveLines, fetchMetaResolveLinesScoped)),
 	]).
 		then(() => {
 			if (process.env.UI5_VERBOSE === "true") {
