@@ -84,16 +84,20 @@ const detectExternalTheme = async (theme: string) => {
 
 const applyTheme = async (theme: string) => {
 	const extTheme = await detectExternalTheme(theme);
+	const hasExternalTheme = extTheme && theme === extTheme.themeName;
 
-	// Only load theme_base properties if there is no externally loaded theme, or there is, but it is not being loaded
-	if (!extTheme || theme !== extTheme.themeName) {
-		await loadThemeBase(theme);
-	} else {
-		deleteThemeBase();
+	// Manage stop-variables class based on external theme detection
+	// When an external theme is active, add stop-variables to prevent conflicts
+	// When no external theme is active, remove stop-variables to allow framework variables
+	if (hasExternalTheme) {
+		document.documentElement.classList.add("stop-variables");
 	}
 
+	// Always load theme_base properties
+	await loadThemeBase(theme);
+
 	// Always load component packages properties. For non-registered themes, try with the base theme, if any
-	const externalThemeName = extTheme && extTheme.themeName === theme ? theme : undefined;
+	const externalThemeName = hasExternalTheme ? theme : undefined;
 	const baseThemeName = extTheme && extTheme.baseThemeName;
 	const effectiveThemeName = isThemeRegistered(theme) ? theme : (baseThemeName || DEFAULT_THEME);
 

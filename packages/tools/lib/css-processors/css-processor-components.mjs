@@ -1,101 +1,109 @@
+/**
+ * CSS Processor for Component Styles
+ *
+ * Processes individual component CSS files from src/themes
+ *
+ * Pipeline:
+ * - Glob CSS files from src/themes
+ * - Bundle and minify with esbuild
+ * - Apply version scoping (unless CSS_VARIABLES_TARGET=host)
+ * - Output to dist/css and src/generated
+ *
+ * Features:
+ * - Version scoping of CSS variables
+ * - Watch mode with automatic detection of new CSS files
+ * - TypeScript support
+ * - Default theme registration in generated modules
+ */
+
 import { globby } from "globby";
-import * as esbuild from 'esbuild'
-import * as fs from "fs";
-import * as path from "path";
-import { writeFile, mkdir } from "fs/promises";
-import chokidar from "chokidar";
-import scopeVariables from "./scope-variables.mjs";
-import { writeFileIfChanged, getFileContent } from "./shared.mjs";
+import * as esbuild from 'esbuild';
 import { pathToFileURL } from "url";
+import scopeVariables from "./scope-variables.mjs";
+import {
+    ProcessorConfig,
+    escapeCssForJs,
+    writeOutputFiles,
+    createEsbuildConfig,
+    setupWatchMode,
+    parseArgs,
+    createPlugin,
+    readPackageJson,
+} from "./processor-utils.mjs";
 
-
+/**
+ * Main processing function
+ */
 const generate = async (argv) => {
-    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
-    const tsMode = process.env.UI5_TS === "true";
-    const extension = tsMode ? ".css.ts" : ".css.js";
-
-    const packageJSON = JSON.parse(fs.readFileSync("./package.json"))
+    const config = new ProcessorConfig();
+    const packageJSON = readPackageJson();
     const inputFilesGlob = "src/themes/*.css";
-    const restArgs = argv.slice(2);
+    const { watch } = parseArgs(argv);
 
-    let customPlugin = {
-        name: 'ui5-tools',
-        setup(build) {
-            build.initialOptions.write = false;
+    /**
+     * Processes a single output file from esbuild
+     */
+    const processFile = async (file) => {
+        // Apply scoping if not targeting host
+        let processedCss = config.cssVariablesTarget
+            ? file.text
+            : scopeVariables(file.text, packageJSON);
 
-            build.onEnd(result => {
-                result.outputFiles.forEach(async f => {
-                    let newText
+        // Replace --sap with --ui5-sap after scoping
+        processedCss = processedCss.replaceAll('--sap', '--ui5-sap');
 
-                    if (CSS_VARIABLES_TARGET) {
-                        newText = f.text;
-                    } else {
-                        // scoping
-                        newText = scopeVariables(f.text, packageJSON);
-                    }
+        // Escape backslashes for JS string literals
+        processedCss = escapeCssForJs(processedCss);
 
-                    newText = newText.replaceAll(/\\/g, "\\\\"); // Escape backslashes as they might appear in css rules
-                    await mkdir(path.dirname(f.path), { recursive: true });
-                    writeFile(f.path, newText);
-
-                    // JS/TS
-                    const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                    const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`", true);
-                    writeFileIfChanged(jsPath, jsContent);
-                });
-            })
-        },
-    }
-
-    const getConfig = async () => {
-        const config = {
-            entryPoints: await globby(inputFilesGlob),
-            bundle: true,
-            minify: true,
-            outdir: 'dist/css',
-            outbase: 'src',
-            plugins: [
-                customPlugin,
-            ]
-        };
-        return config;
-    }
-
-    if (restArgs.includes("-w")) {
-        let ready;
-        let config = await getConfig();
-        let ctx = await esbuild.context(config);
-        await ctx.watch()
-        console.log('watching...')
-
-        // when new component css files are added, they do not trigger a build as no one directly imports them
-        // restart the watch mode with the new entry points if a css file is added.
-        const watcher = chokidar.watch(inputFilesGlob);
-        watcher.on("ready", () => {
-            ready = true; // Initial scan is over -> waiting for new files
+        // Write to all output locations
+        await writeOutputFiles({
+            distPath: file.path,
+            css: processedCss,
+            packageName: packageJSON.name,
+            extension: config.extension,
+            includeJson: false,
+            includeDefaultTheme: true, // Components include theme registration
         });
-        watcher.on("add", async path => {
-            if (ready) {
-                // new file
-                ctx.dispose();
-                config = await getConfig();
-                ctx = await esbuild.context(config);
-                ctx.watch();
-            }
+    };
+
+    /**
+     * Creates the esbuild plugin for components
+     */
+    const plugin = createPlugin('ui5-component-processor', processFile);
+
+    /**
+     * Creates esbuild configuration with current entry points
+     */
+    const getConfig = async () => {
+        return createEsbuildConfig({
+            entryPoints: await globby(inputFilesGlob),
+            plugin,
+            verbose: config.verbose,
+        });
+    };
+
+    // Execute build or watch mode
+    if (watch) {
+        const initialConfig = await getConfig();
+        await setupWatchMode({
+            config: initialConfig,
+            watchGlob: inputFilesGlob,
+            onNewFile: getConfig, // Regenerate config when new CSS files are added
         });
     } else {
-        const config = await getConfig();
-        const result = await esbuild.build(config);
+        const buildConfig = await getConfig();
+        await esbuild.build(buildConfig);
     }
-}
+};
 
+// CLI invocation support
 const filePath = process.argv[1];
 const fileUrl = pathToFileURL(filePath).href;
 
 if (import.meta.url === fileUrl) {
-    generate(process.argv)
+    generate(process.argv);
 }
 
 export default {
     _ui5mainFn: generate
-}
+};
