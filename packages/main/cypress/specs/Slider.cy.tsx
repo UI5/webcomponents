@@ -388,6 +388,57 @@ describe("Slider elements - tooltip, step, tickmarks, labels", () => {
 		cy.get("@sliderTooltipInput").should("have.value", "10");
 	});
 
+	it("Editable tooltip with empty value should reset to slider value on focusout", () => {
+		cy.mount(
+			<>
+				<Slider id="slider-editable" showTooltip editableTooltip min={0} max={20} value={10} />
+				<button id="outside-btn">Outside</button>
+			</>
+		);
+
+		cy.get("#slider-editable").as("slider");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.as("sliderHandle");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip]")
+			.as("sliderTooltip");
+
+		cy.get("@sliderTooltip")
+			.shadow()
+			.find("[ui5-input]")
+			.as("sliderTooltipInput");
+
+		// Focus handle to open tooltip
+		cy.get("@sliderHandle").realClick();
+		cy.get("@sliderHandle").should("be.focused");
+		cy.get("@sliderTooltipInput").should("have.value", "10");
+
+		// Focus the input and delete its value completely
+		cy.get("@sliderTooltipInput").realClick({ clickCount: 3 });
+		cy.get("@sliderTooltipInput").should("be.focused");
+		cy.realPress("Backspace");
+		cy.get("@sliderTooltipInput").should("have.value", "");
+
+		// Focus out to an external element - empty value is invalid (NaN), should reset
+		cy.get("#outside-btn").realClick();
+		cy.get("#outside-btn").should("be.focused");
+
+		// Focus the handle again to show tooltip
+		cy.get("@sliderHandle").realClick();
+		cy.get("@sliderHandle").should("be.focused");
+
+		// Tooltip should show reset value (10), not empty or NaN
+		cy.get("@sliderTooltipInput").should("have.value", "10");
+
+		// Slider value should remain unchanged
+		cy.get("@slider").should("have.value", 10);
+	});
+
 	it("Slider Tooltip should become hidden when slider loses focus", () => {
 		cy.mount(
 			<>

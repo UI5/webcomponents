@@ -87,6 +87,10 @@ export default function SliderTemplate(this: Slider) {
 					exportparts="inner: scale-inner, progress: progress"
 				>
 					{handle(this)}
+
+					{this.editableTooltip && <>
+						<span id="ui5-slider-InputDesc" class="ui5-hidden-text">{this._ariaDescribedByInputText}</span>
+					</>}
 				</SliderScale>
 			</div>
 		</>

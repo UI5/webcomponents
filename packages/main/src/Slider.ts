@@ -92,6 +92,16 @@ class Slider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	value = 0;
 
+	/**
+	 * Defines the size of the slider's selection intervals (e.g. min = 0, max = 10, step = 5 would result in possible selection of the values 0, 5, 10).
+	 *
+	 * **Note:** If set to 0 the slider handle movement is disabled.
+	 * @default 1
+	 * @public
+	 */
+	@property({ type: Number })
+	step = 1;
+
 	@property()
 	tooltipValueState: `${ValueState}` = "None";
 
@@ -199,7 +209,7 @@ class Slider extends SliderBase implements IFormInputElement {
 
 	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
 		const value = parseFloat(e.detail.value);
-		const isInvalid = value < this.min || value > this.max;
+		const isInvalid = (value < this.min || value > this.max) || Number.isNaN(value);
 
 		if (isInvalid) {
 			this.tooltipValueState = "Negative";
@@ -214,7 +224,7 @@ class Slider extends SliderBase implements IFormInputElement {
 
 	_onTooltipFocusChange() {
 		const value = parseFloat(this.tooltipValue);
-		const isInvalid = value < this.min || value > this.max;
+		const isInvalid = (value < this.min || value > this.max) || Number.isNaN(value);
 
 		if (isInvalid) {
 			this.tooltipValueState = "None";
