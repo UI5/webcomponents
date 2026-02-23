@@ -17,7 +17,7 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
  * ### Overview
  *
  * The `ui5-avatar-badge` component is used to display a badge on top of `ui5-avatar` component.
- * The badge can display an icon and supports different value states for visual affordance.
+ * The badge can display an icon and supports different states for visual affordance.
  *
  * ### Usage
  *
@@ -62,7 +62,7 @@ class AvatarBadge extends UI5Element {
 	icon?: string;
 
 	/**
-	 * Defines the value state of the badge, which determines its styling.
+	 * Defines the state of the badge, which determines its styling.
 	 *
 	 * Available options:
 	 * - `None` (default) - Standard appearance
@@ -75,7 +75,7 @@ class AvatarBadge extends UI5Element {
 	 * @public
 	 */
 	@property()
-	valueState: `${ValueState}` = ValueState.None;
+	state: `${ValueState}` = ValueState.None;
 
 	/**
 	 * @private

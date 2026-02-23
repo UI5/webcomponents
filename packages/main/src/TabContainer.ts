@@ -1,9 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
+import type { Slot, DefaultSlot, AccessibilityAttributes } from "@ui5/webcomponents-base";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -48,7 +48,7 @@ import type List from "./List.js";
 import type DropIndicator from "./DropIndicator.js";
 import type Tab from "./Tab.js";
 import type { TabInStrip, TabInOverflow } from "./Tab.js";
-import type { TabSeparatorInOverflow, TabSeparatorInStrip } from "./TabSeparator.js";
+import type { TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import TabContainerTabsPlacement from "./types/TabContainerTabsPlacement.js";
@@ -329,7 +329,7 @@ class TabContainer extends UI5Element {
 			slots: true,
 		},
 	})
-	items!: Array<ITab>;
+	items!: DefaultSlot<ITab>;
 
 	/**
 	 * Defines the button which will open the overflow menu. If nothing is provided to this slot,
@@ -338,7 +338,7 @@ class TabContainer extends UI5Element {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	overflowButton!: Array<IButton>;
+	overflowButton!: Slot<IButton>;
 
 	/**
 	 * Defines the button which will open the start overflow menu if available. If nothing is provided to this slot,
@@ -347,7 +347,7 @@ class TabContainer extends UI5Element {
 	 * @since 1.1.0
 	 */
 	@slot()
-	startOverflowButton!: Array<IButton>;
+	startOverflowButton!: Slot<IButton>;
 
 	_itemNavigation: ItemNavigation;
 	_itemsFlat: Array<ITab> = [];
@@ -632,11 +632,14 @@ class TabContainer extends UI5Element {
 		if (e.detail.originalEvent instanceof KeyboardEvent) {
 			const realTabReference = (source.element as TabInOverflow).realTabReference;
 			const siblings = this._findSiblings(realTabReference);
-			let items = siblings;
+
+			let items: Array<ITab> = siblings;
 
 			if (this.items.includes(realTabReference)) {
 				items = siblings.filter(sibling => {
-					return ((e.target as List).items as Array<TabInOverflow>).some(el => el.realTabReference === sibling);
+					return (e.target as List).items
+						.filter(isInstanceOfTab)
+						.some(el => el.realTabReference === sibling);
 				});
 			}
 
@@ -682,11 +685,13 @@ class TabContainer extends UI5Element {
 		if (e.detail.originalEvent instanceof KeyboardEvent) {
 			const realTabReference = (source.element as TabInOverflow).realTabReference;
 			const siblings = this._findSiblings(realTabReference);
-			let items = siblings;
+			let items: Array<ITab> = siblings;
 
 			if (this.items.includes(realTabReference)) {
 				items = siblings.filter(sibling => {
-					return ((e.target as List).items as Array<TabInOverflow>).some(el => el.realTabReference === sibling);
+					return ((e.target as List).items)
+						.filter(isInstanceOfTab)
+						.some(el => el.realTabReference === sibling);
 				});
 			}
 
@@ -796,7 +801,10 @@ class TabContainer extends UI5Element {
 			return undefined;
 		}
 
-		return ((this.responsivePopover!.content[0] as List).items as Array<TabInOverflow | TabSeparatorInOverflow>).find(item => item.realTabReference === realTab);
+		const listItems = (this.responsivePopover!.content[0] as List).items;
+		return listItems
+			.filter(isInstanceOfTab)
+			.find(item => item.realTabReference === realTab);
 	}
 
 	_onTabStripKeyDown(e: KeyboardEvent) {
@@ -1550,6 +1558,13 @@ const walk = (items: Array<ITab>, callback: (arg0: ITab, arg1: number) => void) 
 TabContainer.define();
 
 export default TabContainer;
+
+// TBD: currently, the createInstanceChecker could not be used
+// as it expects the checked property to be a boolean and true - (object[prop] === true);
+const isInstanceOfTab = (object: any): object is TabInOverflow => {
+	return object !== undefined && "realTabReference" in object;
+};
+
 export type {
 	TabContainerTabSelectEventDetail,
 	TabContainerMoveEventDetail,

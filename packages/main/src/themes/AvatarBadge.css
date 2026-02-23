@@ -14,25 +14,25 @@
 	display: none;
 }
 
-:host([value-state="Positive"]) {
+:host([state="Positive"]) {
 	background: var(--sapSuccessBackground);
 	border-color: var(--sapSuccessBorderColor);
 	color: var(--sapPositiveTextColor);
 }
 
-:host([value-state="Critical"]) {
+:host([state="Critical"]) {
 	background: var(--sapWarningBackground);
 	border-color: var(--sapWarningBorderColor);
 	color: var(--sapCriticalTextColor);
 }
 
-:host([value-state="Negative"]) {
+:host([state="Negative"]) {
 	background: var(--sapErrorBackground);
 	border-color: var(--sapErrorBorderColor);
 	color: var(--sapNegativeTextColor);
 }
 
-:host([value-state="Information"]) {
+:host([state="Information"]) {
 	background: var(--sapInformationBackground);
 	border-color: var(--sapInformationBorderColor);
 	color: var(--sapInformativeTextColor);

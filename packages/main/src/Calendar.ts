@@ -1,9 +1,9 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ChangeInfo, DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import transformDateToSecondaryType from "@ui5/webcomponents-localization/dist/dates/transformDateToSecondaryType.js";
 import convertMonthNumbersToMonthNames from "@ui5/webcomponents-localization/dist/dates/convertMonthNumbersToMonthNames.js";
@@ -321,7 +321,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	calendarLegend!: Array<CalendarLegend>;
+	calendarLegend!: Slot<CalendarLegend>;
 
 	/**
 	 * Defines the selected date or dates (depending on the `selectionMode` property)
@@ -330,7 +330,7 @@ class Calendar extends CalendarPart {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	dates!: Array<ICalendarSelectedDates>;
+	dates!: DefaultSlot<ICalendarSelectedDates>;
 
 	/**
 	 * Defines the special dates, visually emphasized in the calendar.
@@ -338,7 +338,7 @@ class Calendar extends CalendarPart {
 	 * @since 1.23.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	specialDates!: Array<SpecialCalendarDate>;
+	specialDates!: Slot<SpecialCalendarDate>;
 
 	/**
 	 * Defines the disabled date ranges that cannot be selected in the calendar.
@@ -348,7 +348,7 @@ class Calendar extends CalendarPart {
 	 * @since 2.16.0
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	disabledDates!: Array<CalendarDateRange>;
+	disabledDates!: Slot<CalendarDateRange>;
 
 	/**
 	 * Defines the selected item type of the calendar legend item (if such exists).

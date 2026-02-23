@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -30,6 +31,7 @@ import type Icon from "./Icon.js";
 import AvatarSize from "./types/AvatarSize.js";
 import type AvatarShape from "./types/AvatarShape.js";
 import type AvatarColorScheme from "./types/AvatarColorScheme.js";
+import AvatarMode from "./types/AvatarMode.js";
 
 // Icon
 import "@ui5/webcomponents-icons/dist/employee.js";
@@ -48,7 +50,7 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  *
  * ### Keyboard Handling
  *
- * - [Space] / [Enter] or [Return] - Fires the `click` event if the `interactive` property is set to true.
+ * - [Space] / [Enter] or [Return] - Fires the `click` event if the `mode` is set to `Interactive` or the deprecated `interactive` property is set to true.
  * - [Shift] - If [Space] is pressed, pressing [Shift] releases the component without triggering the click event.
  *
  * ### ES6 Module Import
@@ -94,13 +96,34 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines if the avatar is interactive (focusable and pressable).
 	 *
+	 * **Note:** When set to `true`, this property takes precedence over the `mode` property,
+	 * and the avatar will be rendered as interactive (role="button", focusable) regardless of the `mode` value.
+	 *
 	 * **Note:** This property won't have effect if the `disabled`
 	 * property is set to `true`.
 	 * @default false
 	 * @public
+	 * @deprecated Set `mode="Interactive"` instead for the same functionality with proper accessibility.
 	 */
 	@property({ type: Boolean })
 	interactive = false;
+
+	/**
+	 * Defines the mode of the component.
+	 *
+	 * **Note:**
+	 * - `Image` (default) - renders with role="img"
+	 * - `Decorative` - renders with role="presentation" and aria-hidden="true", making it purely decorative
+	 * - `Interactive` - renders with role="button", focusable (tabindex="0"), and supports keyboard interaction
+	 *
+	 * **Note:** This property is ignored when the `interactive` property is set to `true`.
+	 * In that case, the avatar will always be rendered as interactive.
+	 * @default "Image"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	mode: `${AvatarMode}` = "Image";
 
 	/**
 	 * Defines the name of the UI5 Icon, that will be displayed.
@@ -236,7 +259,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.0.0-rc.15
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	image!: Array<HTMLElement>;
+	image!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the optional badge that will be used for visual affordance.
@@ -247,7 +270,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @since 1.7.0
 	 */
 	@slot()
-	badge!: Array<HTMLElement>;
+	badge!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -297,7 +320,21 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _role() {
-		return this._interactive ? "button" : "img";
+		if (this._interactive) {
+			return "button";
+		}
+		if (this.mode === AvatarMode.Decorative) {
+			return "presentation";
+		}
+		return "img";
+	}
+
+	get effectiveAriaHidden() {
+		// interactive property takes precedence - never hidden when interactive
+		if (this.interactive) {
+			return undefined;
+		}
+		return this.mode === AvatarMode.Decorative ? "true" : undefined;
 	}
 
 	get _ariaHasPopup() {
@@ -305,7 +342,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get _interactive() {
-		return this.interactive && !this.disabled;
+		return (this.interactive || this.mode === AvatarMode.Interactive) && !this.disabled;
 	}
 
 	get validInitials() {
@@ -429,6 +466,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	_getAriaHasPopup() {
 		const ariaHaspopup = this.accessibilityAttributes.hasPopup;
 
+		// aria-haspopup only applies when avatar is interactive
 		if (!this._interactive || !ariaHaspopup) {
 			return;
 		}
@@ -500,7 +538,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	get accessibilityInfo() {
 		return {
 			role: this._role as AriaRole,
-			type: this.interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
+			type: this._interactive ? Avatar.i18nBundle.getText(AVATAR_TYPE_BUTTON) : Avatar.i18nBundle.getText(AVATAR_TYPE_IMAGE),
 			description: this.accessibleNameText,
 			disabled: this.disabled,
 		};

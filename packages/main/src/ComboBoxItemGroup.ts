@@ -1,10 +1,11 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemGroup from "./ListItemGroup.js";
 import type ComboBoxItem from "./ComboBoxItem.js";
 import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
-import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -33,7 +34,7 @@ class ComboBoxItemGroup extends ListItemGroup implements IComboBoxItem {
 		individualSlots: true,
 		type: HTMLElement,
 	})
-	items!: Array<ComboBoxItem>;
+	items!: DefaultSlot<ComboBoxItem>;
 
 	get isGroupItem(): boolean {
 		return true;

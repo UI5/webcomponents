@@ -1,9 +1,10 @@
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -80,8 +81,8 @@ class ProductSwitch extends UI5Element {
 	 * Defines the items of the `ui5-product-switch`.
 	 * @public
 	 */
-	@slot({ type: HTMLElement, "default": true })
-	items!: Array<IProductSwitchItem>
+	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true })
+	items!: DefaultSlot<IProductSwitchItem>
 
 	_itemNavigation: ItemNavigation;
 	_currentIndex: number;

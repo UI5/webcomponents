@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** handle header-snapped attribute initialization ([#13030](https://github.com/UI5/webcomponents/issues/13030)) ([7fdabb0](https://github.com/UI5/webcomponents/commit/7fdabb0f124de710d9bd92101a57d11f51838960)), closes [#13011](https://github.com/UI5/webcomponents/issues/13011)
+* **ui5-shellbar:** prevent hover and active styles on disabled slotted buttons ([#13076](https://github.com/UI5/webcomponents/issues/13076)) ([621fed1](https://github.com/UI5/webcomponents/commit/621fed1a99b6bc31f036396291908f0a6f4216f6)), closes [#13072](https://github.com/UI5/webcomponents/issues/13072)
+
+
+### Features
+
+* **ui5-user-menu:** add support for custom footer in user menu ([#13046](https://github.com/UI5/webcomponents/issues/13046)) ([9bfbe4b](https://github.com/UI5/webcomponents/commit/9bfbe4b710955811617e27bb32825b565921528e))
+
+
+
+
+
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **ui5-search-field:** correct bg and text colors ([#12732](https://github.com/UI5/webcomponents/issues/12732)) ([4870903](https://github.com/UI5/webcomponents/commit/487090343e47e6015f2a40883f9e205945e0fdd0)), closes [#12578](https://github.com/UI5/webcomponents/issues/12578)
+* **ui5-timeline:** add correct `accessibleName` to growing button ([#12963](https://github.com/UI5/webcomponents/issues/12963)) ([83901bf](https://github.com/UI5/webcomponents/commit/83901bf1d2209e9b65733e6de5aa0facdb518c68))
+* **ui5-user-menu:** avatar fix for vertical pictures ([#13017](https://github.com/UI5/webcomponents/issues/13017)) ([d28a19a](https://github.com/UI5/webcomponents/commit/d28a19aab0e9b6e8e90fb5ff2696510d8454b838))
+* **ui5-user-settings:** correct usage with scoping ([#12983](https://github.com/UI5/webcomponents/issues/12983)) ([a0c20d0](https://github.com/UI5/webcomponents/commit/a0c20d0b3674221d9aa704d34a4ba449ded8e90e))
+
+
+### Features
+
+* **framework:** move CSS variables to host element ([#12984](https://github.com/UI5/webcomponents/issues/12984)) ([3bd2b4a](https://github.com/UI5/webcomponents/commit/3bd2b4a78e1520c35029d001719186f3a0e3801d))
+* **ui5-user-menu:** add support for avatar schema color ([#13020](https://github.com/UI5/webcomponents/issues/13020)) ([65564f4](https://github.com/UI5/webcomponents/commit/65564f4e9599e6d5e50f4111a2cea60d5d764155))
+
+
+
+
+
 # [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
 
 

@@ -430,6 +430,73 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").find("[ui5-tag]").should("exist");
 		cy.get("@avatar").find("[ui5-tag]").should("have.length", 1);
 	});
+
+	it("tests avatarColorScheme default value", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "color-scheme", "Auto");
+	});
+
+	it("tests avatarColorScheme with custom value", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						avatarColorScheme="Accent3"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "color-scheme", "Accent3");
+	});
+
+	it("tests avatarColorScheme on other accounts", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showOtherAccounts={true}>
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="AC"
+						avatarColorScheme="Accent1"
+						titleText="Alain Chevalier 1"
+						selected={true}>
+					</UserMenuAccount>
+					<UserMenuAccount
+						slot="accounts"
+						avatarInitials="JD"
+						avatarColorScheme="Accent5"
+						titleText="John Doe">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-selected-account-avatar").as("selectedAvatar");
+		cy.get("@selectedAvatar").should("have.attr", "color-scheme", "Accent1");
+		cy.get("@userMenu").shadow().find("[ui5-panel]").shadow().find("[ui5-button]").click();
+		cy.get("@userMenu").shadow().find("[ui5-panel]").find("[ui5-avatar]").as("otherAvatars");
+		cy.get("@otherAvatars").eq(0).should("have.attr", "color-scheme", "Accent1");
+		cy.get("@otherAvatars").eq(1).should("have.attr", "color-scheme", "Accent5");
+	});
 });
 
 describe("Events", () => {
@@ -581,7 +648,7 @@ describe("Events", () => {
 		cy.get("@avatar").find("img").as("image");
 		cy.get("@image").should("have.length", 1);
 		cy.get("@image").should("have.attr", "src", "./../../test/pages/img/man_avatar_1.png");
-		cy.get("@avatar").should("have.class", "ui5-user-menu--selected-account-avatar");
+		cy.get("@avatar").should("have.class", "ui5-user-menu-selected-account-avatar");
 	});
 
 	it("tests item-click event", () => {
@@ -845,4 +912,77 @@ describe("Responsiveness", () => {
 			cy.get("@checked")
 				.should("have.been.calledOnce");
 		});
+});
+
+describe("Footer configuration", () => {
+	it("tests default footer with Sign Out button", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").as("footer");
+		cy.get("@footer").should("exist");
+		cy.get("@footer").find("[ui5-button]").should("have.length", 1);
+		cy.get("@footer").find("[ui5-button]").should("have.class", "ui5-user-menu-sign-out-btn");
+		cy.get("@footer").find("[ui5-button]").contains("Sign Out");
+	});
+
+	it("tests custom footer slot", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<div slot="footer">
+						<Button id="customBtn1">Custom Action</Button>
+						<Button id="customBtn2">Sign Out</Button>
+					</div>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").as("footer");
+		cy.get("@footer").should("exist");
+		cy.get("@userMenu").find("[slot='footer']").should("exist");
+		cy.get("@userMenu").find("#customBtn1").should("exist");
+		cy.get("@userMenu").find("#customBtn2").should("exist");
+		cy.get("@footer").find(".ui5-user-menu-sign-out-btn").should("not.exist");
+	});
+
+	it("tests empty footer slot hides footer", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<div slot="footer"></div>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").should("not.exist");
+	});
+
+	it("tests sign-out-click event fires with default footer", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").then($userMenu => {
+			$userMenu.get(0).addEventListener("sign-out-click", cy.stub().as("signOutClicked"));
+		});
+
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-sign-out-btn").click();
+		cy.get("@signOutClicked").should("have.been.calledOnce");
+	});
 });

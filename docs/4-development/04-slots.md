@@ -44,14 +44,15 @@ Defining a slot with the `slot` decorator means that this slot will be managed b
 - The library will invalidate this UI5 Web Component whenever its children are added, removed, or rearranged (and additionally when invalidated, if `invalidateOnChildChange` is set).
 
 ```ts
+import type { Slot} from "@ui5/webcomponents-base/dist/UI5Element.js"
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot()
-    mySlot!: Array<HTMLElement>;
+    mySlot!: Slot<HTMLElement>;
 }
 ```
 
@@ -63,12 +64,12 @@ The `type` option accepts a type constructor (e.g., `HTMLElement`, `Node`) and i
 ```ts
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement })
-    mySlot!: Array<HTMLElement>;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
 
@@ -90,14 +91,17 @@ The `"default"` option accepts a boolean value and is used to define whether thi
 ```ts
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, "default": true })
-    mySlot!: Array<HTMLElement>;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
+
+**Note:** The `Slot<T>` and `DefaultSlot<T>` marker types were introduced in version 2.20. In previous versions, slots were typed as `Array<T>` (e.g., `mySlot!: Array<HTMLElement>`). The new types enable better slot discoverability in TypeScript environments while the array is now part of the type itself.
+
 
 ### Individual Slots
 
@@ -106,12 +110,12 @@ The `individualSlots` option accepts a boolean value and determines whether each
 ```ts
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, individualSlots: true })
-    mySlot!: Array<HTMLElement>;
+    mySlot!: Slot<HTMLElement>;;
 }
 ```
 
@@ -138,17 +142,17 @@ The `invalidateOnChildChange` option accepts a boolean value or an object litera
 ```ts
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 
 @customElement("my-demo-component")
 class MyDemoComponent extends UI5Element {
     @slot({ type: HTMLElement, invalidateOnChildChange: true })
-    mySlot!: Array<HTMLElement>;
+    mySlot!: Slot<HTMLElement>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: true, slots: false }})
-    mySlot2!: Array<HTMLElement>;
+    mySlot2!: Slot<HTMLElement>;;
 
     @slot({ type: HTMLElement, invalidateOnChildChange: { properties: ["myProp"], slots: ["anotherSlot"] }})
-    mySlot3!: Array<HTMLElement>;
+    mySlot3!: Slot<HTMLElement>;;
 }
 ```

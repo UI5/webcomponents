@@ -2,6 +2,7 @@ import Button from "../../src/Button.js";
 import ColorPalettePopover from "../../src/ColorPalettePopover.js";
 import ColorPaletteItem from "../../src/ColorPaletteItem.js";
 import ColorPalette from "../../src/ColorPalette.js";
+import PopoverPlacement from "../../src/types/PopoverPlacement.js";
 
 type ColorPalettePopoverTemplateOptions = Partial<{
 	showDefaultColor: boolean;
@@ -11,15 +12,16 @@ type ColorPalettePopoverTemplateOptions = Partial<{
 	onItemClick: () => void;
 	onClose: () => void;
 	buttonId: string;
+	placement: PopoverPlacement;
 }>
 
 function ColorPalettePopoverSample(options: ColorPalettePopoverTemplateOptions) {
 	return (
 		<>
 		<Button id="btnOpen">Open</Button>
-		<ColorPalettePopover 
+		<ColorPalettePopover
 			{...options}
-			opener="btnOpen" 
+			opener="btnOpen"
 		>
 			<ColorPaletteItem value="violet"></ColorPaletteItem>
 			<ColorPaletteItem value="hotpink"></ColorPaletteItem>
@@ -181,7 +183,7 @@ describe("Color Popover Palette general interaction tests", () => {
         cy.get<ColorPalette>("@colorPalettePopover")
             .ui5GetColorPaletteInPopover()
             .as("colorPalette");
-        
+
         cy.get("@colorPalette")
             .ui5GetColorPaletteDefaultButton()
             .as("defaultColorButton");
@@ -200,7 +202,7 @@ describe("Color Popover Palette general interaction tests", () => {
 describe("Color Popover Palette events tests", () => {
     it("should fire itemClick with correct color when selecting 'Default Color'", () => {
         cy.mount(
-            <ColorPalettePopoverSample 
+            <ColorPalettePopoverSample
                 showDefaultColor={true}
                 defaultColor="lightsalmon"
                 onItemClick={cy.stub().as("itemClick")}
@@ -229,7 +231,7 @@ describe("Color Popover Palette events tests", () => {
 
     it("should fire itemClick when selecting a color from the ColorPalette", () => {
         cy.mount(
-            <ColorPalettePopoverSample 
+            <ColorPalettePopoverSample
                 onItemClick={cy.stub().as("itemClick")}
             />
         );
@@ -257,7 +259,7 @@ describe("Color Popover Palette events tests", () => {
 
     it("should fire close event when popover is closed after color selection", () => {
         cy.mount(
-            <ColorPalettePopoverSample 
+            <ColorPalettePopoverSample
                 onClose={cy.stub().as("popoverClose")}
             />
         );
@@ -286,7 +288,7 @@ describe("Color Popover Palette events tests", () => {
 
     it("should fire close event when popover is closed by pressing Escape", () => {
         cy.mount(
-            <ColorPalettePopoverSample 
+            <ColorPalettePopoverSample
                 onClose={cy.stub().as("popoverClose")}
             />
         );
@@ -349,14 +351,14 @@ describe("Color Popover Palette arrow keys navigation", () => {
         cy.focused()
             .should("have.attr", "aria-label")
             .and("include", "violet");
-        
+
         cy.focused()
             .realPress("ArrowRight");
-        
+
         cy.focused()
             .should("have.attr", "aria-label")
             .and("include", "hotpink");
-        
+
         cy.focused()
             .realPress("Enter");
 
@@ -701,4 +703,29 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
             .should("have.attr", "aria-label")
             .and("include", "purple");
     });
+});
+
+describe("ColorPalette Popover placement property tests", () => {
+	it("should pass different placement values to internal ResponsivePopover", () => {
+		const placements = [PopoverPlacement.Top, PopoverPlacement.Bottom, PopoverPlacement.Start, PopoverPlacement.End];
+
+		placements.forEach((placement, index) => {
+			cy.mount(
+				<SimplePalettePopover
+					placement={placement}
+					buttonId={`btn-${index}`}
+				/>
+			);
+
+			cy.get<ColorPalettePopover>("[ui5-color-palette-popover]")
+				.should("have.attr", "placement", placement)
+				.ui5ColorPalettePopoverOpen({ opener: `btn-${index}` });
+
+			// Verify internal ResponsivePopover has the same placement
+			cy.get<ColorPalettePopover>("[ui5-color-palette-popover]")
+				.shadow()
+				.find("[ui5-responsive-popover]")
+				.should("have.attr", "placement", placement);
+		});
+	});
 });

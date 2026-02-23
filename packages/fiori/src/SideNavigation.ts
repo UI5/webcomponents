@@ -1,4 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createMultiInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -7,7 +9,7 @@ import type NavigationMenu from "./NavigationMenu.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -152,7 +154,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<SideNavigationItemBase>;
+	items!: DefaultSlot<SideNavigationItemBase>;
 
 	/**
 	 * Defines the fixed items at the bottom of the component.
@@ -162,7 +164,7 @@ class SideNavigation extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	fixedItems!: Array<SideNavigationItemBase>;
+	fixedItems!: Slot<SideNavigationItemBase>;
 
 	/**
 	 * Defines the header of the `ui5-side-navigation`.
@@ -173,7 +175,7 @@ class SideNavigation extends UI5Element {
 	 * @since 1.0.0-rc.11
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * @private
@@ -218,8 +220,8 @@ class SideNavigation extends UI5Element {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
-		this._getAllItems(this.items as Array<SideNavigationItem | SideNavigationGroup>)
-			.concat(this._getAllItems(this.fixedItems as Array<SideNavigationItem | SideNavigationGroup>))
+		this._getAllItems(this.items)
+			.concat(this._getAllItems(this.fixedItems))
 			.forEach(item => {
 				item.sideNavCollapsed = this.collapsed;
 				item.inPopover = this.inPopover;
@@ -249,7 +251,7 @@ class SideNavigation extends UI5Element {
 		// item navigation index should be managed, because items are
 		// dynamically recreated and tabIndexes are not updated
 		const tree = this.getPickerTree();
-		const selectedItem = tree._findSelectedItem(tree.items as Array<SideNavigationItem | SideNavigationGroup>);
+		const selectedItem = tree._findSelectedItem(tree.items);
 		if (selectedItem) {
 			selectedItem.focus();
 		} else {
@@ -286,7 +288,7 @@ class SideNavigation extends UI5Element {
 			return;
 		}
 
-		const selectedItem = this._findSelectedItem(this.items as Array<SideNavigationItem | SideNavigationGroup>);
+		const selectedItem = this._findSelectedItem(this.items);
 
 		if (selectedItem) {
 			this.focusItem(selectedItem);
@@ -421,11 +423,11 @@ class SideNavigation extends UI5Element {
 	}
 
 	getEnabledFixedItems() : Array<ITabbable> {
-		return this.getEnabledItems(this.fixedItems as Array<SideNavigationItem | SideNavigationGroup>);
+		return this.getEnabledItems(this.fixedItems);
 	}
 
 	getEnabledFlexibleItems() : Array<ITabbable> {
-		const items = this.getEnabledItems(this.items as Array<SideNavigationItem | SideNavigationGroup>);
+		const items = this.getEnabledItems(this.items);
 
 		if (this._overflowItem) {
 			items.push(this._overflowItem);
@@ -434,7 +436,7 @@ class SideNavigation extends UI5Element {
 		return items;
 	}
 
-	getEnabledItems(items: Array<SideNavigationItem | SideNavigationGroup>) : Array<ITabbable> {
+	getEnabledItems(items: Array<SideNavigationItemBase>) : Array<ITabbable> {
 		const result = new Array<ITabbable>();
 
 		this._getFocusableItems(items).forEach(item => {
@@ -458,12 +460,12 @@ class SideNavigation extends UI5Element {
 
 	onAfterRendering() {
 		if (!this.getDomRef()?.matches(":focus-within")) {
-			let selectedItem = this._findSelectedItem(this.items as Array<SideNavigationItem | SideNavigationGroup>);
+			let selectedItem = this._findSelectedItem(this.items);
 			if (selectedItem) {
 				this._flexibleItemNavigation.setCurrentItem(selectedItem);
 			}
 
-			selectedItem = this._findSelectedItem(this.fixedItems as Array<SideNavigationItem | SideNavigationGroup>);
+			selectedItem = this._findSelectedItem(this.fixedItems);
 			if (selectedItem) {
 				this._fixedItemNavigation.setCurrentItem(selectedItem);
 			}
@@ -561,34 +563,34 @@ class SideNavigation extends UI5Element {
 		this._flexibleItemNavigation._init();
 	}
 
-	_findFocusedItem(items: Array<SideNavigationItem | SideNavigationGroup>) : SideNavigationItemBase | undefined {
+	_findFocusedItem(items: Array<SideNavigationItemBase>) : SideNavigationItemBase | undefined {
 		return this._getFocusableItems(items).find(item => item.forcedTabIndex === "0");
 	}
 
-	_getSelectableItems(items: Array<SideNavigationItem | SideNavigationGroup>) : Array<SideNavigationSelectableItemBase> {
-		return items.reduce((result, item) => {
+	_getSelectableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationSelectableItemBase> {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.selectableItems);
 		}, new Array<SideNavigationSelectableItemBase>());
 	}
 
-	_getFocusableItems(items: Array<SideNavigationItem | SideNavigationGroup>) : Array<SideNavigationItemBase> {
-		return items.reduce((result, item) => {
+	_getFocusableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.focusableItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_getAllItems(items: Array<SideNavigationItem | SideNavigationGroup>) : Array<SideNavigationItemBase> {
-		return items.reduce((result, item) => {
+	_getAllItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.allItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_findSelectedItem(items: Array<SideNavigationItem | SideNavigationGroup>) : SideNavigationSelectableItemBase | undefined {
+	_findSelectedItem(items: Array<SideNavigationItemBase>) : SideNavigationSelectableItemBase | undefined {
 		return this._getSelectableItems(items).find(item => item._selected);
 	}
 
 	get overflowItems() : Array<HTMLElement> {
-		return (this.items as Array<SideNavigationItem | SideNavigationGroup>).reduce((result, item) => {
+		return this.items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.overflowItems);
 		}, new Array<HTMLElement>());
 	}
@@ -687,8 +689,8 @@ class SideNavigation extends UI5Element {
 			return;
 		}
 
-		let items = this._getSelectableItems(this.items as Array<SideNavigationItem | SideNavigationGroup>);
-		items = items.concat(this._getSelectableItems(this.fixedItems as Array<SideNavigationItem | SideNavigationGroup>));
+		let items = this._getSelectableItems(this.items);
+		items = items.concat(this._getSelectableItems(this.fixedItems));
 
 		items.forEach(current => {
 			current.selected = false;
@@ -716,6 +718,8 @@ class SideNavigation extends UI5Element {
 		}
 	}
 }
+
+const instanceOfItemOrGroup = createMultiInstanceChecker<SideNavigationItem | SideNavigationGroup>(["isSideNavigationItem", "isSideNavigationGroup"]);
 
 SideNavigation.define();
 

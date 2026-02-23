@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **framework:** apply correct system css variables ([#13085](https://github.com/UI5/webcomponents/issues/13085)) ([123efed](https://github.com/UI5/webcomponents/commit/123efed9705ddde81aedf9f3571ce1e0b89e61c8))
+* **framework:** correct runtime compare ([#13105](https://github.com/UI5/webcomponents/issues/13105)) ([eb8cc19](https://github.com/UI5/webcomponents/commit/eb8cc1978db1f4f2352e2f0a77569d7216301c3e))
+
+
+
+
+
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **framework:** prevent redundant invalidations ([#12994](https://github.com/UI5/webcomponents/issues/12994)) ([b6c582c](https://github.com/UI5/webcomponents/commit/b6c582c93e5a260044fefc1612c8f037744aca97))
+* **input like:** correct form submission behaviour ([#12959](https://github.com/UI5/webcomponents/issues/12959)) ([cd02ead](https://github.com/UI5/webcomponents/commit/cd02ead56026bb69acc4661442d30b24ed81ff6c))
+
+
+
+
+
 # [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

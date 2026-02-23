@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, slot, property, eventStrict, i18n,
+	customElement, slotStrict as slot, property, eventStrict, i18n,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -277,7 +278,7 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	rows!: Array<TableRow>;
+	rows!: DefaultSlot<TableRow>;
 
 	/**
 	 * Defines the header row of the component.
@@ -287,7 +288,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: { properties: false, slots: true } })
-	headerRow!: Array<TableHeaderRow>;
+	headerRow!: Slot<TableHeaderRow>;
 
 	/**
 	 * Defines the custom visualization if there is no data available.
@@ -295,7 +296,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	noData!: Array<HTMLElement>;
+	noData!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the features of the component.
@@ -303,7 +304,7 @@ class Table extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	features!: Array<ITableFeature>;
+	features!: Slot<ITableFeature>;
 
 	/**
 	 * Defines the accessible ARIA name of the component.

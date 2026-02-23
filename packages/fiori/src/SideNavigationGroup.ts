@@ -1,6 +1,6 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import {
 	isSpace,
@@ -15,6 +15,7 @@ import SideNavigationItemBase from "./SideNavigationItemBase.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationGroupTemplate from "./SideNavigationGroupTemplate.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import {
 	SIDE_NAVIGATION_ICON_COLLAPSE,
@@ -67,7 +68,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<SideNavigationItem>;
+	items!: DefaultSlot<SideNavigationItem>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
