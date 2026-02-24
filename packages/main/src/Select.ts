@@ -962,7 +962,6 @@ class Select extends UI5Element implements IFormInputElement {
 			this._lastSelectedOption = this.options[this._selectedIndex];
 		}
 		this.fireDecoratorEvent("close");
-		this._applyFocus();
 	}
 
 	get hasCustomLabel() {
