@@ -37,6 +37,8 @@ const generate = async (argv) => {
 
 	// dynamic imports file content
 	const contentDynamic = function (linesDefault, linesScoped) {
+		const isScopedPackage = packageName === "@ui5/webcomponents-theming";
+
 		return `// @ts-nocheck
 import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
 
@@ -47,14 +49,14 @@ ${linesDefault}
 	}
 };
 
-const loadThemePropertiesScoped = async (themeName) => {
+${isScopedPackage ? `const loadThemePropertiesScoped = async (themeName) => {
 	switch (themeName) {
 ${linesScoped}
 		default: throw "unknown theme"
 	}
 };
 
-const loadAndCheck = async (themeName) => {
+` : ''}const loadAndCheck = async (themeName) => {
 	const data = await loadThemeProperties(themeName);
 	if (typeof data === "string" && data.endsWith(".json")) {
 		throw new Error(\`[themes] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the \"Assets\" documentation for more information.\`);
@@ -62,7 +64,7 @@ const loadAndCheck = async (themeName) => {
 	return data;
 };
 
-const loadAndCheckScoped = async (themeName) => {
+${isScopedPackage ? `const loadAndCheckScoped = async (themeName) => {
 	const data = await loadThemePropertiesScoped(themeName);
 	if (typeof data === "string" && data.endsWith(".json")) {
 		throw new Error(\`[themes] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the \"Assets\" documentation for more information.\`);
@@ -70,12 +72,12 @@ const loadAndCheckScoped = async (themeName) => {
 	return data;
 };
 
-${availableThemesArray}
+` : ''}${availableThemesArray}
   .forEach(themeName => {
     // Register default loader (--sap* variables)
-    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''});
+    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''});${isScopedPackage ? `
     // Register scoped loader (--ui5-sap* variables) with "-scoped" suffix
-    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName + "-scoped", loadAndCheckScoped${CSS_VARIABLES_TARGET ? ', "host"' : ''});
+    registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName + "-scoped", loadAndCheckScoped${CSS_VARIABLES_TARGET ? ', "host"' : ''});` : ''}
   });
 `;
 	}
