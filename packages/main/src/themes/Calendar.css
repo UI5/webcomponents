@@ -26,10 +26,13 @@
 
 .ui5-cal-root:has(.ui5-cal-content-multiple) {
     width: auto;
-	height: auto;
     min-width: calc(var(--_ui5_calendar_width) * 2 + 1rem + var(--_ui5_calendar_left_right_padding) * 2);
     overflow: visible;
 
+}
+
+.ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
+	height: calc(var(--_ui5_calendar_height) + var(--_ui5_calendar_header_height));
 }
 
 .ui5-cal-root .ui5-cal-content {
@@ -45,17 +48,17 @@
 }
 
 /* Portrait mode: Stack calendars vertically in mobile view */
-:host(.ui5-dt-cal--mobile) .ui5-cal-content-multiple {
+.ui5-cal-root.ui5-dt-cal--mobile .ui5-cal-content-multiple {
     flex-direction: column;
     gap: 0.5rem;
 }
 
-:host(.ui5-dt-cal--mobile) .ui5-cal-root:has(.ui5-cal-content-multiple) {
+.ui5-dt-cal--mobile.ui5-cal-root:has(.ui5-cal-content-multiple) {
     min-width: var(--_ui5_calendar_width);
     width: 100%;
 }
 
-:host(.ui5-dt-cal--mobile) .ui5-cal-content-multiple > * {
+.ui5-dt-cal--mobile .ui5-cal-content-multiple > * {
     width: 100%;
     min-width: auto;
     max-width: 100%;

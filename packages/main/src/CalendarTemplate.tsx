@@ -8,8 +8,6 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import Icon from "./Icon.js";
 import slimArrowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
-import ResponsivePopover from "./ResponsivePopover.js";
-import Dialog from "./Dialog.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this.monthsToShow > 1 && !this._isDayPickerHidden;
@@ -17,7 +15,11 @@ export default function CalendarTemplate(this: Calendar) {
 	return (
 		<>
 			<div
-				class="ui5-cal-root"
+				class={{
+					"ui5-cal-root": true,
+					"ui5-dt-cal--mobile": this._phoneView,
+					"ui5-dt-cal--portrait": this._portraitMode,
+				}}
 				onKeyDown={this._onkeydown}
 			>
 				{!showMultipleMonths && (
@@ -88,7 +90,7 @@ export default function CalendarTemplate(this: Calendar) {
 													}
 												</div>
 											</div>
-											{isLast && (
+											{((isLast && !this._portraitView) || (isFirst && this._portraitView)) && (
 												<div
 													data-ui5-cal-header-btn-next
 													class={{
@@ -104,17 +106,18 @@ export default function CalendarTemplate(this: Calendar) {
 													<Icon class="ui5-calheader-arrowicon" name={slimArrowRight}/>
 												</div>
 											)}
-											{!isLast && <div class="ui5-calheader-spacer"></div>}
+											{!isLast && !this._portraitView && <div class="ui5-calheader-spacer"></div>}
+											{isLast && this._portraitView && <div class="ui5-calheader-spacer"></div>}
 										</div>
 										<div class="ui5-cal-daypicker-wrapper">
 											<DayPicker
 												id={`${this._id}-daypicker-${index}`}
-												//hidden={this._isDayPickerHidden}
+												hidden={this._isDayPickerHidden}
 												formatPattern={this._formatPattern}
 												selectedDates={this._selectedDatesTimestamps}
 												specialCalendarDates={this._specialCalendarDates}
 												disabledDates={this._disabledDates}
-												//_hidden={this._isDayPickerHidden}
+												_hidden={this._isDayPickerHidden}
 												primaryCalendarType={this._primaryCalendarType}
 												secondaryCalendarType={this._secondaryCalendarType}
 												selectionMode={this.selectionMode}
@@ -209,7 +212,7 @@ export default function CalendarTemplate(this: Calendar) {
 					)}
 				</div>
 
-				{/* {showMultipleMonths && (
+				{showMultipleMonths && (
 					<div class={{
 						"ui5-cal-overlay-container": true,
 						//"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
@@ -229,7 +232,7 @@ export default function CalendarTemplate(this: Calendar) {
 							exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
 						/>
 					</div>
-				)} */}
+				)}
 			</div>
 
 			<div

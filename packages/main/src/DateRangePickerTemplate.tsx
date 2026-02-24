@@ -18,6 +18,7 @@ function content(this: DateRangePicker) {
 		<Calendar
 			class={{
 					"ui5-dt-cal--mobile": this._phoneView,
+					"ui5-dt-cal--portrait": this._portraitMode,
 			}}
 			id={`${this._id}-calendar`}
 			primaryCalendarType={this._primaryCalendarType}
