@@ -374,6 +374,55 @@ describe("List - Accessibility", () => {
 				.should("not.have.text", "Is Active");
 		});
 	});
+
+	it("has default aria-description when no accessibleDescription is set", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("have.attr", "aria-description")
+			.and("not.be.empty");
+
+		cy.get("[ui5-list]")
+			.should(($list) => {
+				const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+				expect(defaultText).to.not.be.empty;
+			});
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.equal(defaultText);
+					});
+			});
+	});
+
+	it("uses user-provided accessibleDescription over default", () => {
+		const customDescription = "Custom list description";
+
+		cy.mount(
+			<List accessibleDescription={customDescription}>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("have.attr", "aria-description", customDescription);
+	});
 });
 
 describe("List - Wrapping Behavior", () => {

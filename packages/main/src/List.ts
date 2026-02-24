@@ -64,6 +64,7 @@ import listCss from "./generated/themes/List.css.js";
 
 // Texts
 import {
+	LIST_ROLE_DESCRIPTION,
 	LIST_ROLE_LIST_GROUP_DESCRIPTION,
 	LIST_ROLE_LISTBOX_GROUP_DESCRIPTION,
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
@@ -739,7 +740,11 @@ class List extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups();
+		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups() || this.defaultAriaDescriptionText;
+	}
+
+	get defaultAriaDescriptionText() {
+		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
 	}
 
 	get growingButtonAriaLabel() {
