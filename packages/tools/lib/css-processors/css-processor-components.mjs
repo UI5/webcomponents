@@ -12,7 +12,6 @@
  * Features:
  * - Version scoping of CSS variables
  * - Watch mode with automatic detection of new CSS files
- * - TypeScript support
  * - Default theme registration in generated modules
  */
 

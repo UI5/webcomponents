@@ -11,8 +11,7 @@ attachConfigurationReset(() => {
  * Returns if theme base loading should be skipped.
  *
  * When set to "true", the framework will skip loading the base theme CSS variables (--sap*).
- * Only scoped CSS variables (--ui5-sap*) will be loaded.
- * When set to "false" (default), both base (--sap*) and scoped (--ui5-sap*) variables are loaded.
+ * When set to "false" (default), both base (--sap*) are loaded.
  *
  * This is useful when the application provides theme variables externally
  * and handles theming independently from the framework.
@@ -33,11 +32,9 @@ const getSkipThemeBase = (): boolean => {
  * Sets whether theme base loading should be skipped.
  *
  * - When set to "true", the framework will skip loading base theme CSS variables (--sap*).
- *   Only scoped CSS variables (--ui5-sap*) will be loaded.
- * - When set to "false" (default), both base (--sap*) and scoped (--ui5-sap*) variables will be loaded.
+ * - When set to "false" (default), both base (--sap*) variables will be loaded.
  *
- * **Note:** This setting takes effect on the next theme application.
- * To apply immediately, call `setTheme()` with the current theme after changing this setting.
+ * **Note:** This setting should be used as early as possible in the application lifecycle, ideally before any theme is applied, to ensure it takes effect.
  *
  * @public
  * @since 2.20.0

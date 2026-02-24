@@ -28,12 +28,12 @@ const loadThemeBase = async (theme: string) => {
 		return;
 	}
 
-	// Load both default and scoped properties in parallel
+	// Load default properties (--sap*) to avoid conflicts
 	const [defaultCss] = await Promise.all([
 		getThemeProperties(BASE_THEME_PACKAGE, theme),
 	]);
 
-	// Apply default variables (--sap* with stop-variables condition)
+	// Apply default variables (--sap*)
 	if (defaultCss) {
 		createOrUpdateStyle(defaultCss, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
 	}
@@ -44,7 +44,7 @@ const loadThemeBaseScoped = async (theme: string) => {
 		return;
 	}
 
-	// Load both default and scoped properties in parallel
+	// Load scoped properties (--ui5-sap* framework-scoped)
 	const [scopedCss] = await Promise.all([
 		getThemeProperties(BASE_THEME_PACKAGE, `${theme}-scoped`),
 	]);
@@ -108,11 +108,9 @@ const applyTheme = async (theme: string) => {
 	const extTheme = await detectExternalTheme(theme);
 	const hasExternalTheme = extTheme && theme === extTheme.themeName;
 
-	// Manage stop-variables class based on external theme detection
-	// When an external theme is active, add stop-variables to prevent conflicts
-	// When no external theme is active, remove stop-variables to allow framework variables
 	const skipBase = getSkipThemeBase();
 
+	// If an external theme is detected or skipBase is true, do not load the base theme to avoid conflicts.
 	if (hasExternalTheme || skipBase) {
 		deleteThemeBase();
 	} else if (!skipBase) {

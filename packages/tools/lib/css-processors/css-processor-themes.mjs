@@ -14,12 +14,10 @@
  * - Content density handling (cozy/compact modes)
  * - Version scoping of CSS variables
  * - JSON output for asset registry
- * - TypeScript support
  */
 
 import { globby } from "globby";
 import * as esbuild from 'esbuild';
-import path from "path";
 import { pathToFileURL } from "url";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js";
@@ -71,7 +69,6 @@ async function processThemingPackageFile(f) {
         }
     });
 
-    // Build CSS strings directly instead of using PostCSS to create nodes
     return {
         default: `:root{${defaultDecls.join(';')}}`,
         scoped: `:root{${scopedDecls.join(';')}}`
