@@ -408,7 +408,7 @@ describe("List - Accessibility", () => {
 			});
 	});
 
-	it("uses user-provided accessibleDescription over default", () => {
+	it("combines default aria-description with user-provided accessibleDescription", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
@@ -421,7 +421,16 @@ describe("List - Accessibility", () => {
 		cy.get("[ui5-list]")
 			.shadow()
 			.find(".ui5-list-ul")
-			.should("have.attr", "aria-description", customDescription);
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+						expect(ariaDesc).to.include(customDescription);
+						expect(ariaDesc).to.equal(`${defaultText} ${customDescription}`);
+					});
+			});
 	});
 });
 

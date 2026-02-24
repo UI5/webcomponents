@@ -740,7 +740,19 @@ class List extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups() || this.defaultAriaDescriptionText;
+		const parts = [this.defaultAriaDescriptionText];
+		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+
+		if (externalDescription) {
+			parts.push(externalDescription);
+		}
+
+		const groupDescription = this._getDescriptionForGroups();
+		if (groupDescription) {
+			parts.push(groupDescription);
+		}
+
+		return parts.join(" ");
 	}
 
 	get defaultAriaDescriptionText() {
