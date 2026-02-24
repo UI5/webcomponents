@@ -1,5 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import type { IOption } from "./Select.js";
 import ListItemBase from "./ListItemBase.js";
@@ -11,6 +11,7 @@ import OptionTemplate from "./OptionTemplate.js";
 import optionBaseCss from "./generated/themes/OptionBase.css.js";
 import listItemIconCss from "./generated/themes/ListItemIcon.css.js";
 import listItemAdditionalTextCss from "./generated/themes/ListItemAdditionalText.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -47,7 +48,7 @@ class Option extends ListItemBase implements IOption {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Node>;
 
 	/**
 	 * Defines the value of the `ui5-select` inside an HTML Form element when this component is selected.

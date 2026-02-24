@@ -1,6 +1,6 @@
 @import "../base/Select-parameters.css";
 
-:root {
+:host {
 	--_ui5_select_hover_icon_left_border: none;
 	--_ui5_select_icon_wrapper_height: calc(100% - 0.0625rem);
 	--_ui5_select_icon_wrapper_state_height: calc(100% - 0.125rem);

@@ -41,6 +41,7 @@
 @import "./SplitButton-parameters.css";
 @import "./Switch-parameters.css";
 @import "./TabContainer-parameters.css";
+@import "../base/Table-parameters.css";
 @import "./GrowingButton-parameters.css";
 @import "../base/Text-parameters.css";
 @import "./TextArea-parameters.css";
@@ -54,4 +55,4 @@
 @import "./SliderBase-parameters.css";
 @import "../base/StepInput-parameters.css";
 @import "./sizes-parameters.css";
-@import "../base/rtl-parameters.css";
+@import "./rtl-parameters.css";

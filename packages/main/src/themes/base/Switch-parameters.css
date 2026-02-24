@@ -1,4 +1,4 @@
-:root {
+:host {
 	/* switch */
 	--_ui5_switch_height: 2.75rem;
 	--_ui5_switch_width: 3.25rem;
@@ -57,7 +57,7 @@
 	--_ui5_switch_track_semantic_reject_border_color: var(--sapErrorBorderColor);
 	--_ui5_switch_track_semantic_hover_accept_border_color: var(--sapSuccessBorderColor);
 	--_ui5_switch_track_semantic_hover_reject_border_color: var(--sapErrorBorderColor);
-	
+
 	--_ui5_switch_track_transition: none;
 	--_ui5_switch_track_icon_display: none;
 
@@ -135,27 +135,27 @@
 	--_ui5_switch_icon_height: 0.75rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_switch_height: 2rem;
-	--_ui5_switch_width: 2.5rem;
-	--_ui5_switch_with_label_width: 100%;
-	--_ui5_switch_root_outline_top: 0;
-	--_ui5_switch_root_outline_bottom: 0;
-	--_ui5_switch_transform: translateX(100%) translateX(-1.5rem);
-	--_ui5_switch_transform_with_label: translateX(100%) translateX( -1.5rem);
-	--_ui5_switch_rtl_transform: translateX(1.5rem) translateX(-100%);
-	--_ui5_switch_rtl_transform_with_label: translateX(1.5rem) translateX(-100%);
-	--_ui5_switch_track_with_label_width: 100%;
-	--_ui5_switch_track_with_label_height: 1.375rem;
-	--_ui5_switch_track_width: 100%;
-	--_ui5_switch_track_height: 1.375rem;
-	--_ui5_switch_handle_width: 1.625rem;
-	--_ui5_switch_handle_height: 1.625rem;
-	--_ui5_switch_handle_with_label_width: 1.625rem;
-	--_ui5_switch_handle_with_label_height: 1.625rem;
-	--_ui5_switch_text_font_size: var(--sapFontSmallSize);
-	--_ui5_switch_text_width: none;
-	--_ui5_switch_text_active_left: calc(-100% + 1.625rem);
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_switch_height: 2rem;
+		--_ui5_switch_width: 2.5rem;
+		--_ui5_switch_with_label_width: 100%;
+		--_ui5_switch_root_outline_top: 0;
+		--_ui5_switch_root_outline_bottom: 0;
+		--_ui5_switch_transform: translateX(100%) translateX(-1.5rem);
+		--_ui5_switch_transform_with_label: translateX(100%) translateX(-1.5rem);
+		--_ui5_switch_rtl_transform: translateX(1.5rem) translateX(-100%);
+		--_ui5_switch_rtl_transform_with_label: translateX(1.5rem) translateX(-100%);
+		--_ui5_switch_track_with_label_width: 100%;
+		--_ui5_switch_track_with_label_height: 1.375rem;
+		--_ui5_switch_track_width: 100%;
+		--_ui5_switch_track_height: 1.375rem;
+		--_ui5_switch_handle_width: 1.625rem;
+		--_ui5_switch_handle_height: 1.625rem;
+		--_ui5_switch_handle_with_label_width: 1.625rem;
+		--_ui5_switch_handle_with_label_height: 1.625rem;
+		--_ui5_switch_text_font_size: var(--sapFontSmallSize);
+		--_ui5_switch_text_width: none;
+		--_ui5_switch_text_active_left: calc(-100% + 1.625rem);
+	}
 }

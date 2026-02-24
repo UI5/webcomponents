@@ -50,6 +50,7 @@ let options = {
 };
 let text;
 let dialogGenerationId;
+let generationStopped = false;
 
 function startGenerating() {
 	console.warn("startGenerating");
@@ -57,22 +58,50 @@ function startGenerating() {
 	busyIndicator.active = true;
 	output.value = "";
 	openDialogButton.state = "generating";
+	generationStopped = false;
+	sendButton.disabled = true;
+	output.disabled = true;
 
 	closeDialog();
 	
-	var generationId = setTimeout(() => {
-		stopGenerating(generationId)
-		output.value = text;
-	}, 3000);
+	// Delay before starting text streaming (to show busy indicator first, like QuickPrompt)
+	setTimeout(() => {
+		if (generationStopped) return;
+		
+		// Start text streaming - add words one at a time
+		const words = text.split(" ");
+		let currentWordIndex = 0;
+		
+		var generationId = setInterval(() => {
+			if (currentWordIndex < words.length && !generationStopped) {
+				output.value += words[currentWordIndex] + " ";
+				currentWordIndex++;
+			} else {
+				// Generation complete or stopped
+				if (!generationStopped) {
+					openDialogButton.state = "generate";
+				}
+				busyIndicator.active = false;
+				clearInterval(generationId);
+				sendButton.disabled = false;
+				output.disabled = false;
+			}
+		}, 75); // 75ms delay between words (same as QuickPrompt)
+		
+		dialogGenerationId = generationId;
+	}, 2000); // 2 second delay to show busy indicator first (same as QuickPrompt)
 
-	return generationId;
+	return null; // Return immediately, actual interval ID stored in dialogGenerationId after delay
 }
 
 function stopGenerating(generationId) {
 	console.warn("stopGenerating");
+	generationStopped = true;
 	busyIndicator.active = false;
 	openDialogButton.state = "generate";
-	clearTimeout(generationId);
+	clearInterval(generationId);
+	sendButton.disabled = false;
+	output.disabled = false;
 }
 
 function openDialogButtonClickHandler(evt) {

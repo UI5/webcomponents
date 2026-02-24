@@ -80,12 +80,14 @@ jobs:
           
           if (pr.state !== 'open') {
             console.log(`PR #${pr.number} was closed during build, skipping deployment`);
-            core.setOutput('should_deploy', 'false');
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `should_deploy=false\n`);
             return;
           }
           
           console.log(`PR #${pr.number} is still open, proceeding with deployment`);
-          core.setOutput('should_deploy', 'true');
+          const fs = require('fs');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `should_deploy=true\n`);
 
     - name: Config Netlify CORS
       if: steps.final-pr-check.outputs.should_deploy == 'true'

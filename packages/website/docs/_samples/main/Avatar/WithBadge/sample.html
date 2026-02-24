@@ -3,22 +3,34 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
 </head>
 
-<body style="background-color: var(--sapBackgroundColor)">
-    <!-- playground-fold-end -->
+<body style="background-color: var(--sapBackgroundColor); display: flex; align-items: center; column-gap: 0.5rem;">
+	<!-- playground-fold-end -->
 
-    <ui5-avatar initials="AB">
-        <ui5-tag slot="badge" wrapping-type="None">
-            <ui5-icon slot="icon" name="accelerated"></ui5-icon>
-        </ui5-tag>
-    </ui5-avatar>
+	<ui5-avatar size="M" initials="JD" color-scheme="Accent5">
+		<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
+	</ui5-avatar>
 
-    <!-- playground-fold -->
-    <script type="module" src="main.js"></script>
+	<ui5-avatar size="M" icon="employee" color-scheme="Accent10">
+		<ui5-avatar-badge icon="alert" state="Critical" slot="badge"></ui5-avatar-badge>
+	</ui5-avatar>
+
+	<ui5-avatar size="M">
+		<img src="../assets/images/avatars/man_avatar_1.png" alt="Man Avatar 1" />
+		<ui5-avatar-badge icon="sys-enter-2" state="Positive" slot="badge"></ui5-avatar-badge>
+	</ui5-avatar>
+
+	<ui5-avatar size="M" shape="Square">
+		<img src="../assets/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+		<ui5-avatar-badge icon="error" state="Negative" slot="badge"></ui5-avatar-badge>
+	</ui5-avatar>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
 </body>
 
 </html>

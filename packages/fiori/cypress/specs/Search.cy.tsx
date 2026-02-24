@@ -833,6 +833,31 @@ describe("Properties", () => {
 			.find(".ui5-search-item-selected-delete")
 			.should("be.focused");
 	});
+
+	it("SearchItemGroup has wrapping type set to Normal", () => {
+		cy.mount(
+			<Search>
+				<SearchItemGroup headerText="Very long group header text that should wrap when wrapping type is set to Normal">
+					<SearchItem text="List Item 1" icon={history}></SearchItem>
+					<SearchItem text="List Item 2" icon={searchIcon}></SearchItem>
+				</SearchItemGroup>
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.realPress("L");
+
+		// Verify that the header element has the correct wrapping-type attribute
+		cy.get("ui5-search-item-group")
+			.shadow()
+			.find("[ui5-li-group-header]")
+			.should("have.attr", "wrapping-type", "Normal");
+	});
 });
 
 describe("Events", () => {
@@ -1745,6 +1770,38 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-search]")
 			.should("be.focused");
+	});
+
+	it("should have aria-autocomplete='both' on the input element", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-autocomplete", "both");
+	});
+
+	it("should have aria-controls pointing to responsive popover", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.invoke("attr", "aria-controls")
+			.then((ariaControlsId) => {
+				cy.get("[ui5-search]")
+					.shadow()
+					.find("[ui5-responsive-popover]")
+					.should("have.attr", "id", ariaControlsId);
+			});
 	});
 });
 

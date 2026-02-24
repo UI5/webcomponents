@@ -1,4 +1,4 @@
-:root {
+:host {
     --_ui5_progress_indicator_background_none: var(--sapField_Background);
     --_ui5_progress_indicator_background_error: var(--sapField_Background);
     --_ui5_progress_indicator_background_warning: var(--sapField_Background);

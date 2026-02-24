@@ -1,9 +1,10 @@
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
@@ -15,7 +16,8 @@ import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 // Styles
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
-import type WrappingType from "./types/WrappingType.js";
+import WrappingType from "./types/WrappingType.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type ListItemGroupMoveEventDetail = {
 	source: {
@@ -37,6 +39,7 @@ type ListItemGroupMoveEventDetail = {
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/ListItemGroup.js";`
  * @csspart header - Used to style the header item of the group
+ * @csspart title - Used to style the title of the group header
  * @constructor
  * @extends UI5Element
  * @public
@@ -108,7 +111,7 @@ class ListItemGroup extends UI5Element {
 		invalidateOnChildChange: true,
 		type: HTMLElement,
 	})
-	items!: Array<ListItemBase>;
+	items!: DefaultSlot<ListItemBase>;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.
@@ -143,8 +146,8 @@ class ListItemGroup extends UI5Element {
 	* **Note:** Using this slot, the default header text of group and the value of `headerText` property will be overwritten.
 	* @public
 	*/
-	@slot({ type: HTMLElement })
-	header!: Array<ListItemBase>;
+	@slot()
+	header!: Slot<ListItemBase>;
 
 	_dragAndDropHandler: DragAndDropHandler;
 
@@ -207,14 +210,12 @@ class ListItemGroup extends UI5Element {
 	getFocusDomRef() {
 		return this.groupHeaderItem || this.items.at(0);
 	}
+
+	getGroupHeaderWrapping(): WrappingType { return WrappingType.None; }
 }
 
 ListItemGroup.define();
 
-const isInstanceOfListItemGroup = (object: any): object is ListItemGroup => {
-	return "isListItemGroup" in object;
-};
-
 export default ListItemGroup;
-export { isInstanceOfListItemGroup };
+export const isInstanceOfListItemGroup = createInstanceChecker<ListItemGroup>("isListItemGroup");
 export type { ListItemGroupMoveEventDetail };

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_step_input_input_error_background_color: var(--sapField_InvalidBackground);
 	--_ui5-step_input_button_state_hover_background_color: var(--sapField_Background);
 	--_ui5_step_input_border_style: 1px solid var(--sapField_BorderColor);

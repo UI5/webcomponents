@@ -1,6 +1,6 @@
 /* fiori 3 */
 
-:root {
+:host {
 	--_ui5_side_navigation_width: 15rem;
 	--_ui5_side_navigation_collapsed_width: 3rem;
 
@@ -67,11 +67,11 @@
 	--_ui5_side_navigation_active_text_color: var(--sapList_Active_TextColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
-	--_ui5_side_navigation_item_height: 2rem;
-	--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
-	--_ui5_side_navigation_item_margin: 0.5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
+		--_ui5_side_navigation_item_height: 2rem;
+		--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
+		--_ui5_side_navigation_item_margin: 0.5rem;
+	}
 }

@@ -1,5 +1,5 @@
 @import "../base/Menu-parameters.css";
 
-:root {
+:host {
 	--_ui5_menu_popover_border_radius: var(--sapPopover_BorderCornerRadius);
 }

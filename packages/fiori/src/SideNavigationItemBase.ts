@@ -5,6 +5,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type SideNavigation from "./SideNavigation.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type SideNavigationItemClickEventDetail = {
 	altKey: boolean;
@@ -154,12 +155,8 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	}
 }
 
-const isInstanceOfSideNavigationItemBase = (object: any): object is SideNavigationItemBase => {
-	return "isSideNavigationItemBase" in object;
-};
-
 export default SideNavigationItemBase;
 export type {
 	SideNavigationItemClickEventDetail,
 };
-export { isInstanceOfSideNavigationItemBase };
+export const isInstanceOfSideNavigationItemBase = createInstanceChecker<SideNavigationItemBase>("isSideNavigationItemBase");

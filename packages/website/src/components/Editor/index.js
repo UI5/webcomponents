@@ -43,7 +43,11 @@ const getProjectFromPool = () => {
   if (projectPool.length) {
     return projectPool.pop();
   } else {
-    return document.createElement("playground-project");
+    const plProject = document.createElement("playground-project");
+    if (process.env.NODE_ENV === "development") {
+      plProject.sandboxBaseUrl = window.location.origin + "/";
+    }
+    return plProject;
   }
 }
 

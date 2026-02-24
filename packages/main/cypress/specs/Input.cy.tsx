@@ -198,35 +198,6 @@ describe("Input Tests", () => {
 		cy.get("@change").should("have.been.calledOnce");
 	});
 
-	it("should not fire 'submit' event when there is more than one input field in a form", () => {
-		cy.mount(
-			<form>
-				<Input id="first-input" onChange={cy.stub().as("change")}></Input>
-				<Input></Input>
-			</form>
-		);
-
-		// spy submit event and prevent it
-		cy.get("form")
-			.then($form => {
-				$form.get(0).addEventListener("submit", cy.spy().as("submit"));
-			});
-
-		// check if submit is triggered after change
-		cy.get("#first-input")
-			.as("input")
-			.realClick();
-
-		cy.get("@input")
-			.should("be.focused");
-
-		cy.realType("test");
-
-		cy.realPress("Enter");
-
-		cy.get("@submit").should("have.not.been.called");
-	});
-
 	it("tests if pressing enter twice fires submit 2 times and change once", () => {
 		cy.mount(
 			<form>
@@ -556,21 +527,21 @@ describe("Input general interaction", () => {
 
 		cy.document().then(doc => {
 			const input = doc.querySelector<Input>("#threshold-input")!;
-			
+
 			input.addEventListener("input", () => {
 				const value = input.value;
-				
+
 				while (input.lastChild) {
 					input.removeChild(input.lastChild);
 				}
-				
+
 				if (value.length >= THRESHOLD) {
 					input.showSuggestions = true;
-					
-					const filtered = countries.filter(country => 
+
+					const filtered = countries.filter(country =>
 						country.toUpperCase().indexOf(value.toUpperCase()) === 0
 					);
-					
+
 					filtered.forEach(country => {
 						const item = document.createElement("ui5-suggestion-item");
 						item.setAttribute("text", country);
@@ -2911,5 +2882,349 @@ describe("Input Composition", () => {
 
 		cy.get("@input")
 			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.realType("Albania");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+
+	it("has correct validity for typeMismatch- Email", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="Email"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("email");
+
+		cy.get("@input")
+			.should("have.value", "email");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("email@gmail.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+		it("has correct validity for typeMismatch- URL", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="URL"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("google");
+
+		cy.get("@input")
+			.should("have.value", "google");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("https://www.google.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: false },
+				validity: { typeMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
+
+describe("Input built-in filtering", () => {
+	it("StartsWith filtering", () => {
+		cy.mount(
+			<Input showSuggestions filter="StartsWith" noTypeahead>
+				<SuggestionItem text="Iron"></SuggestionItem>
+				<SuggestionItem text="Gold"></SuggestionItem>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("G");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+	});
+	it("Contains filtering", () => {
+		cy.mount(
+			<Input showSuggestions filter="Contains" noTypeahead>
+				<SuggestionItem text="Iron"></SuggestionItem>
+				<SuggestionItem text="Gold"></SuggestionItem>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("o");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("l");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+	});
+	it("hides suggestion group when it has no matching items", () => {
+		cy.mount(
+			<Input showSuggestions filter="Contains" noTypeahead>
+				<SuggestionItemGroup headerText="Metals">
+					<SuggestionItem text="Iron"></SuggestionItem>
+					<SuggestionItem text="Gold"></SuggestionItem>
+				</SuggestionItemGroup>
+				<SuggestionItemGroup headerText="Fruits">
+					<SuggestionItem text="Apple"></SuggestionItem>
+					<SuggestionItem text="Orange"></SuggestionItem>
+				</SuggestionItemGroup>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("o");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(1)
+			.should("be.visible");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("l");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(1)
+			.should("have.attr", "hidden");
 	});
 });

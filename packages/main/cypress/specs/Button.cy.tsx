@@ -8,6 +8,8 @@ import employee from "@ui5/webcomponents-icons/dist/employee.js";
 
 import {
 	BUTTON_ARIA_TYPE_EMPHASIZED,
+	BUTTON_ROLE_DESCRIPTION,
+	LINK_ROLE_DESCRIPTION,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Button general interaction", () => {
@@ -589,6 +591,7 @@ describe("Accessibility", () => {
 				expect(info.description).to.include("Submit form");
 				expect(info.description).to.include(Button.i18nBundle.getText(BUTTON_ARIA_TYPE_EMPHASIZED));
 				expect(info.role).to.equal("button");
+				expect(info.type).to.equal(Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION));
 				expect(info.disabled).to.be.false;
 			});
 	});
@@ -602,6 +605,7 @@ describe("Accessibility", () => {
 				const info = button.accessibilityInfo;
 
 				expect(info.role).to.equal("link");
+				expect(info.type).to.equal(Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION));
 				expect(info.disabled).to.be.true;
 				expect(info.description).to.be.undefined;
 			});

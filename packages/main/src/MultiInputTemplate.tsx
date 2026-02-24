@@ -1,4 +1,5 @@
 import Icon from "./Icon.js";
+import multiSelectAll from "@ui5/webcomponents-icons/dist/multiselect-all.js";
 import InputTemplate from "./InputTemplate.js";
 import type MultiInput from "./MultiInput.js";
 import type { MultiInputTokenDeleteEventDetail } from "./MultiInput.js";
@@ -115,7 +116,7 @@ function multiInputMobileHeader(this: MultiInput) {
 		<ToggleButton
 			class="ui5-multi-input-mobile-dialog-button"
 			design="Transparent"
-			icon="multiselect-all"
+			icon={multiSelectAll}
 			accessibleName={this._filterButtonAccessibleName}
 			disabled={!this.tokens?.length}
 			pressed={this._effectiveShowTokensInSuggestions}

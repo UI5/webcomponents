@@ -1,5 +1,6 @@
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import {
@@ -112,6 +113,7 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
 })
 class Dialog extends Popup {
 	eventDetails!: Popup["eventDetails"];
+
 	/**
 	 * Defines the header text.
 	 *
@@ -195,6 +197,7 @@ class Dialog extends Popup {
 	_minWidth?: number;
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
+	_dragHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -206,7 +209,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -215,7 +218,7 @@ class Dialog extends Popup {
 	 * @public
 	 */
 	@slot()
-	footer!: Array<HTMLElement>;
+	footer!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -338,20 +341,6 @@ class Dialog extends Popup {
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
-	onEnterDOM() {
-		super.onEnterDOM();
-		this._attachScreenResizeHandler();
-
-		this.addEventListener("dragstart", this._dragStartHandler);
-	}
-
-	onExitDOM() {
-		super.onExitDOM();
-		this._detachScreenResizeHandler();
-
-		this.removeEventListener("dragstart", this._dragStartHandler);
-	}
-
 	/**
 	 * @override
 	 */
@@ -367,6 +356,16 @@ class Dialog extends Popup {
 		this._center();
 	}
 
+	_attachBrowserEvents() {
+		this._attachScreenResizeHandler();
+		this._registerDragHandler();
+	}
+
+	_detachBrowserEvents() {
+		this._detachScreenResizeHandler();
+		this._deregisterDragHandler();
+	}
+
 	_attachScreenResizeHandler() {
 		if (!this._screenResizeHandlerAttached) {
 			window.addEventListener("resize", this._screenResizeHandler);
@@ -378,6 +377,20 @@ class Dialog extends Popup {
 		if (this._screenResizeHandlerAttached) {
 			window.removeEventListener("resize", this._screenResizeHandler);
 			this._screenResizeHandlerAttached = false; // prevent dialog from repositioning during resizing
+		}
+	}
+
+	_registerDragHandler() {
+		if (!this._dragHandlerRegistered) {
+			this.addEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = true;
+		}
+	}
+
+	_deregisterDragHandler() {
+		if (this._dragHandlerRegistered) {
+			this.removeEventListener("dragstart", this._dragStartHandler);
+			this._dragHandlerRegistered = false;
 		}
 	}
 

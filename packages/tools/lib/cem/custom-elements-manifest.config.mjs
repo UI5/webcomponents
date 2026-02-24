@@ -17,6 +17,7 @@ import {
 	getTypeRefs,
 	normalizeDescription,
 	formatArrays,
+	formatSlotTypes,
 	isClass,
 	normalizeTagType,
 	logDocumentationError,
@@ -30,10 +31,37 @@ const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
 let aliasMap = {};
 
 const devMode = process.env.UI5_CEM_MODE === "dev";
+const isVerbose = process.env.UI5_VERBOSE === "true";
+
+/**
+ * Wraps a CEM plugin to suppress console output in quiet mode.
+ * @param {Object} plugin - The plugin to wrap
+ * @returns {Object} - Wrapped plugin with silent console during packageLinkPhase
+ */
+const wrapPluginForQuietMode = (plugin) => {
+	if (isVerbose) return plugin;
+
+	const originalPackageLinkPhase = plugin.packageLinkPhase;
+	if (!originalPackageLinkPhase) return plugin;
+
+	return {
+		...plugin,
+		packageLinkPhase(context) {
+			const originalLog = console.log;
+			console.log = () => {};
+			try {
+				return originalPackageLinkPhase.call(plugin, context);
+			} finally {
+				console.log = originalLog;
+			}
+		}
+	};
+};
+
 try {
 	aliasMap = JSON.parse(fs.readFileSync("./.ui5-cem-aliases.json"));
 } catch (e) {
-	if (devMode) {
+	if (devMode && isVerbose) {
 		console.warn("No .ui5-cem-aliases.json file found. Continuing without aliases.");
 	}
 }
@@ -168,6 +196,7 @@ function processClass(ts, classNode, moduleDoc) {
 
 			if (member.type?.text) {
 				member.type.text = formatArrays(member.type.text);
+				member.type.text = formatSlotTypes(member.type.text);
 			}
 
 			if (member.type && typeRefs.length) {
@@ -540,7 +569,7 @@ export default {
 				}
 			}
 		},
-		generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }),
-		customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })
+		wrapPluginForQuietMode(generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),
+		wrapPluginForQuietMode(customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }))
 	],
 };

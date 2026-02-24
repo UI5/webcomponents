@@ -5,55 +5,73 @@ import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
+import postcssPlugin from "./postcss-plugin.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
-import { scopeUi5Variables, scopeThemingVariables } from "./scope-variables.mjs";
+import scopeVariables from "./scope-variables.mjs";
 import { pathToFileURL } from "url";
 
-async function processThemingPackageFile(f) {
-    const selector = ':root';
-    const newRule = postcss.rule({ selector });
-    const result = await postcss().process(f.text);
-
-    result.root.walkRules(selector, rule => {
-        for (const decl of rule.nodes) {
-            if (decl.type !== 'decl' ) {
-                continue;
-            } else if (decl.prop.startsWith('--sapFontUrl')) {
-                continue;
-            } else if (!decl.prop.startsWith('--sap')) {
-                newRule.append(decl.clone());
-            } else {
-                const originalProp = decl.prop;
-                const originalValue = decl.value;
-
-                newRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
-            }
-        }
-    });
-
-    return newRule.toString();
-};
-
-async function processComponentPackageFile(f, packageJSON) {
-    let result = await postcss(combineDuplicatedSelectors).process(f.text);
-
-    result = scopeUi5Variables(result.css, packageJSON, f.path);
-
-    result = scopeThemingVariables(result);
-
-    return result;
-}
-
-async function generate(argv) {
+const generate = async (argv) => {
+    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
-    const packageJSON = JSON.parse(fs.readFileSync("./package.json"))
+    const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     const inputFiles = await globby([
         "src/**/parameters-bundle.css",
     ]);
     const restArgs = argv.slice(2);
+
+    const saveFiles = async (distPath, css, suffix = "") => {
+        await mkdir(path.dirname(distPath), { recursive: true });
+        writeFile(distPath.replace(".css", suffix + ".css"), css);
+
+        // JSON
+        const jsonPath = distPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", suffix + ".css.json");
+        await mkdir(path.dirname(jsonPath), { recursive: true });
+        writeFileIfChanged(jsonPath, JSON.stringify(css));
+
+        // JS/TS
+        const jsPath = distPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", suffix + extension);
+        const jsContent = getFileContent(packageJSON.name, "\`" + css + "\`");
+        writeFileIfChanged(jsPath, jsContent);
+    }
+
+    const processThemingPackageFile = async (f) => {
+        const selector = ':root';
+        const result = await postcss().process(f.text, { from: undefined });
+
+        const newRule = postcss.rule({ selector });
+
+        result.root.walkRules(selector, rule => {
+            rule.walkDecls(decl => {
+                if (!decl.prop.startsWith('--sapFontUrl')) {
+                    newRule.append(decl.clone());
+                }
+            });
+        });
+
+        return { css: newRule.toString() };
+    };
+
+    const processComponentPackageFile = async (f) => {
+        if (CSS_VARIABLES_TARGET) {
+            const result = await postcss([
+                combineDuplicatedSelectors,
+                postcssPlugin
+            ]).process(f.text, { from: undefined });
+
+            return { css: result.css };
+        }
+
+
+        const combined = await postcss([
+            combineDuplicatedSelectors,
+        ]).process(f.text, { from: undefined });
+
+        return { css: scopeVariables(combined.css, basePackageJSON, f.path) };
+    }
 
     let scopingPlugin = {
         name: 'scoping',
@@ -62,20 +80,9 @@ async function generate(argv) {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f, packageJSON);
+                    let { css } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
 
-                    await mkdir(path.dirname(f.path), { recursive: true });
-                    writeFile(f.path, newText);
-
-                    // JSON
-                    const jsonPath = f.path.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", ".css.json");
-                    await mkdir(path.dirname(jsonPath), { recursive: true });
-                    writeFileIfChanged(jsonPath, JSON.stringify(newText));
-
-                    // JS/TS
-                    const jsPath = f.path.replace(/dist[\/\\]css/, "src/generated/").replace(".css", extension);
-                    const jsContent = getFileContent(packageJSON.name, "\`" + newText + "\`");
-                    writeFileIfChanged(jsPath, jsContent);
+                    saveFiles(f.path, css);
                 });
             })
         },
@@ -87,6 +94,7 @@ async function generate(argv) {
         minify: true,
         outdir: 'dist/css',
         outbase: 'src',
+        logLevel: process.env.UI5_VERBOSE === "true" ? "warning" : "error",
         plugins: [
             scopingPlugin,
         ],
@@ -111,8 +119,4 @@ if (import.meta.url === fileUrl) {
 
 export default {
     _ui5mainFn: generate
-}
-
-export {
-    processComponentPackageFile
 }

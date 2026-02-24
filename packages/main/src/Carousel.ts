@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
@@ -320,7 +321,7 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -550,24 +551,32 @@ class Carousel extends UI5Element {
 		return this.content.every(item => observableContentSet.has(item));
 	}
 
-	_handleHome(e: KeyboardEvent) {
+	async _handleHome(e: KeyboardEvent) {
 		e.preventDefault();
 		this.navigateTo(0);
+		await renderFinished();
+		this.focusItem();
 	}
 
-	_handleEnd(e: KeyboardEvent) {
+	async _handleEnd(e: KeyboardEvent) {
 		e.preventDefault();
 		this.navigateTo(this.items.length - 1);
+		await renderFinished();
+		this.focusItem();
 	}
 
-	_handlePageUp(e: KeyboardEvent) {
+	async _handlePageUp(e: KeyboardEvent) {
 		e.preventDefault();
 		this.navigateTo(this._focusedItemIndex	+ this._pageStep < this.items.length ? this._focusedItemIndex + this._pageStep : this.items.length - 1);
+		await renderFinished();
+		this.focusItem();
 	}
 
-	_handlePageDown(e: KeyboardEvent) {
+	async _handlePageDown(e: KeyboardEvent) {
 		e.preventDefault();
 		this.navigateTo(this._focusedItemIndex	- this._pageStep > 0 ? this._focusedItemIndex - this._pageStep : 0);
+		await renderFinished();
+		this.focusItem();
 	}
 
 	get _backgroundDesign() {
@@ -586,7 +595,7 @@ class Carousel extends UI5Element {
 		return this._focusedItemIndex;
 	}
 
-	navigateLeft() {
+	async navigateLeft() {
 		this._resizing = false;
 
 		const previousSelectedIndex = this._focusedItemIndex;
@@ -605,11 +614,13 @@ class Carousel extends UI5Element {
 
 		if (previousSelectedIndex !== this._focusedItemIndex) {
 			this.skipToItem(this._focusedItemIndex, -1);
+			await renderFinished();
+			this.focusItem();
 			this.fireDecoratorEvent("navigate", { selectedIndex: this._focusedItemIndex });
 		}
 	}
 
-	navigateRight() {
+	async navigateRight() {
 		this._resizing = false;
 
 		const previousSelectedIndex = this._focusedItemIndex;
@@ -630,6 +641,8 @@ class Carousel extends UI5Element {
 
 		if (previousSelectedIndex !== this._focusedItemIndex) {
 			this.skipToItem(this._focusedItemIndex, 1);
+			await renderFinished();
+			this.focusItem();
 			this.fireDecoratorEvent("navigate", { selectedIndex: this._focusedItemIndex });
 		}
 	}
@@ -637,20 +650,24 @@ class Carousel extends UI5Element {
 	navigateArrowRight() {
 		if (this._focusedItemIndex === this._visibleItemsIndexes[0]) {
 			this.navigateTo(this._focusedItemIndex + 1);
+			this.focusItem();
 			this._moveToItem(this._currentSlideIndex + 1);
 		} else {
 			this._moveToItem(this._currentSlideIndex + 1);
 			this.navigateTo(this._focusedItemIndex);
+			this.focusItem();
 		}
 	}
 
 	navigateArrowLeft() {
 		if (this._focusedItemIndex > 0 && this._focusedItemIndex === this._visibleItemsIndexes[this._visibleItemsIndexes.length - 1]) {
 			this.navigateTo(this._focusedItemIndex - 1);
+			this.focusItem();
 			this._moveToItem(this._currentSlideIndex - 1);
 		} else {
 			this._moveToItem(this._currentSlideIndex === 0 ? this.pagesCount - 1 : this._currentSlideIndex - 1);
 			this.navigateTo(this._focusedItemIndex === 0 ? this.items.length - 1 : this._focusedItemIndex);
+			this.focusItem();
 		}
 	}
 
@@ -731,7 +748,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Changes the currently displayed page.
-	 * @param itemIndex The index of the target page
+	 * @param itemIndex The index of the target item
 	 * @since 1.0.0-rc.15
 	 * @public
 	 */
@@ -745,15 +762,15 @@ class Carousel extends UI5Element {
 		}
 		this._focusedItemIndex = itemIndex;
 		this._currentSlideIndex = itemIndex - this._itemIndicator;
+
 		if (this.isItemInViewport(itemIndex)) {
 			this._currentSlideIndex = this._visibleItemsIndexes[0];
-			this.focusItem();
-			return;
+		} else {
+			this.skipToItem(this._focusedItemIndex, 1);
 		}
-		this.skipToItem(this._focusedItemIndex, 1);
 	}
 
-	async skipToItem(focusIndex: number, offset: number) {
+	skipToItem(focusIndex: number, offset: number) {
 		if (!this.isItemInViewport(focusIndex)) {
 			let slideIndex = this._calculateItemSlideIndex(this._currentSlideIndex, offset);
 			if (focusIndex === 0) {
@@ -761,10 +778,6 @@ class Carousel extends UI5Element {
 			}
 			this._moveToItem(slideIndex);
 		}
-
-		await renderFinished();
-
-		this.focusItem();
 	}
 
 	/**

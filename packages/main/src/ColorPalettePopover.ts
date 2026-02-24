@@ -1,14 +1,15 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import ColorPalettePopoverTemplate from "./ColorPalettePopoverTemplate.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 
 // Styles
 import ColorPalettePopoverCss from "./generated/themes/ColorPalettePopover.css.js";
@@ -115,6 +116,24 @@ class ColorPalettePopover extends UI5Element {
 	defaultColor?: string;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
 	 * Defines the open | closed state of the popover.
 	 * @public
 	 * @default false
@@ -135,11 +154,20 @@ class ColorPalettePopover extends UI5Element {
 	opener?: HTMLElement | string | null;
 
 	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 * @since 2.19.0
+	 */
+	@property()
+	placement: `${PopoverPlacement}` = "Bottom";
+
+	/**
 	 * Defines the content of the component.
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, individualSlots: true })
-	colors!: Array<IColorPaletteItem>;
+	colors!: DefaultSlot<IColorPaletteItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -178,7 +206,7 @@ class ColorPalettePopover extends UI5Element {
 		// since height is dynamically determined by padding-block-start
 		colorPalette.allColorsInPalette.forEach((item: IColorPaletteItem) => {
 			const itemHeight = item.offsetHeight + 4; // adding 4px for the offsets on top and bottom
-			item.style.setProperty(getScopedVarName("--_ui5_color_palette_item_height"), `${itemHeight}px`);
+			item.style.setProperty("--_ui5_color_palette_item_height", `${itemHeight}px`);
 		});
 	}
 

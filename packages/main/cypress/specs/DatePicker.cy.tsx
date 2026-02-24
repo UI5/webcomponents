@@ -100,6 +100,23 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "value", "2018-05-05");
 	});
 
+	it("default valueFormat is ISO format (yyyy-MM-dd)", () => {
+		cy.mount(<DatePicker></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 1995")
+			.realPress("Enter");
+
+		cy.get("@datePicker")
+			.should("have.attr", "value", "1995-03-31");
+	});
+
 	it("value state", () => {
 		cy.mount(<DatePicker></DatePicker>);
 		cy.get("[ui5-date-picker]")
@@ -216,7 +233,7 @@ describe("Date Picker Tests", () => {
 			.realPress("Tab");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value", "Jan 1, 1999");
+			.should("have.attr", "value", "1999-01-01");
 	});
 
 	it("Select a date from the picker popover", () => {
@@ -917,7 +934,7 @@ describe("Date Picker Tests", () => {
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
 			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "e.g. Dec 31, 2025");
+			.should("have.attr", "placeholder", `e.g. Dec 31, ${new Date().getFullYear()}`);
 
 		cy.get<DatePicker>("@datePicker")
 			.should("not.have.attr", "placeholder");

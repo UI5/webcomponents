@@ -58,6 +58,7 @@
 	white-space: nowrap;
 	pointer-events: none;
 	display: inline-block;
+	font-size: var(--sapFontSize);
 }
 
 .ui5-menu-item-dummy-icon {
@@ -123,4 +124,12 @@
 .ui5-menu-item-icon-checked {
 	color: var(--sapContent_BusyColor);
 	padding-top: 0.25rem;
+}
+
+.ui5-menu-busy-indicator {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }

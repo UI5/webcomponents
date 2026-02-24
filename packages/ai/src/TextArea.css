@@ -20,26 +20,6 @@
 	flex-shrink: 0;
 }
 
-.ui5-ai-writing-assistant-footer-bar {
-	background: var(--_ui5_texteditor_toolbar_background, var(--sapPageFooter_Background));
-	width: 100%;
-	box-sizing: border-box;
-	box-shadow: none;
-	border-bottom: none;
-	border-top: none;
-}
-
 .ui5-ai-writing-assistant-footer-bar--with-border {
 	border-top: 1px solid var(--sapPageFooter_BorderColor);
-}
-
-.ui5-ai-writing-assistant-action-label {
-	margin-left: 0.5rem;
-	color: var(--sapContent_LabelColor);
-	font-size: var(--sapFontSmallSize);
-}
-
-#ai-menu-wrapper {
-	position: relative;
-	z-index: 1000;
 }

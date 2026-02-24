@@ -1,4 +1,4 @@
-import { customElement, property, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, property, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
 import { toggleAttribute } from "./TableUtils.js";
 import TableCellBase from "./TableCellBase.js";
 import TableHeaderCellTemplate from "./TableHeaderCellTemplate.js";
@@ -6,6 +6,7 @@ import TableHeaderCellStyles from "./generated/themes/TableHeaderCell.css.js";
 import SortOrder from "@ui5/webcomponents-base/dist/types/SortOrder.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import type TableHeaderCellActionBase from "./TableHeaderCellActionBase.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -120,10 +121,7 @@ class TableHeaderCell extends TableCellBase {
 	 * @since 2.8.0
 	 */
 	@slot()
-	action!: Array<TableHeaderCellActionBase>;
-
-	@property({ type: Boolean, noAttribute: true })
-	_popin = false;
+	action!: Slot<TableHeaderCellActionBase>;
 
 	@query("slot:not([name])")
 	_defaultSlot!: HTMLSlotElement;
@@ -136,10 +134,7 @@ class TableHeaderCell extends TableCellBase {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		if (this._individualSlot) {
-			// overwrite setting of TableCellBase so that the TableHeaderCell always uses the slot variable
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
-		}
+		this.style.justifyContent = this.horizontalAlign || "";
 		toggleAttribute(this, "aria-sort", this.sortIndicator !== SortOrder.None, this.sortIndicator.toLowerCase());
 	}
 

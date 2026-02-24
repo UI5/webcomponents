@@ -1,6 +1,6 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -13,16 +13,16 @@ import {
 	isHome,
 	isEnd,
 	isDown,
-	isEnter,
 
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import {
 	MULTIINPUT_ROLEDESCRIPTION_TEXT,
 	MULTIINPUT_VALUE_HELP_LABEL,
 	MULTIINPUT_VALUE_HELP,
+	FORM_MIXED_TEXTFIELD_REQUIRED,
 	MULTIINPUT_FILTER_BUTTON_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 import Input from "./Input.js";
@@ -37,6 +37,7 @@ import type Icon from "./Icon.js";
 import type {
 	InputSelectionChangeEventDetail as MultiInputSelectionChangeEventDetail,
 } from "./Input.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 interface IToken extends UI5Element, ITabbable {
 	text?: string;
@@ -149,10 +150,14 @@ class MultiInput extends Input implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	tokens!: Array<IToken>;
+	tokens!: Slot<IToken>;
 
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;
+
+	get formValidityMessage() {
+		return MultiInput.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
+	}
 
 	get formValidity(): ValidityStateFlags {
 		const tokens = (this.tokens || []);
@@ -230,8 +235,6 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	innerFocusIn() {
-		this.tokenizer._scrollToEndOnExpand = true;
-		this.tokenizer.expanded = true;
 		this.focused = true;
 
 		this.tokens.forEach(token => {
@@ -252,10 +255,6 @@ class MultiInput extends Input implements IFormInputElement {
 		if (isHomeInBeginning) {
 			this._skipOpenSuggestions = true; // Prevent input focus when navigating through the tokens
 			return this._focusFirstToken(e);
-		}
-
-		if (isEnter(e) && !!this._internals.form) {
-			e.preventDefault();
 		}
 
 		if (isLeft(e)) {
@@ -358,26 +357,29 @@ class MultiInput extends Input implements IFormInputElement {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 		this.tokenizerAvailable = this.tokens && this.tokens.length > 0;
 
 		if (this.tokenizer) {
 			this.tokenizer.readonly = this.readonly;
 		}
-
-		// Reset toggle state if there are tokens and dialog is about to open
-		if (this.tokens.length > 0 && !this._userToggledShowTokens) {
-			this._showTokensInSuggestions = true;
-		}
 	}
 
 	/**
-	 * Override the _handlePickerAfterOpen method to reset toggle state when dialog opens with tokens
+	 * Override the _handlePickerAfterOpen method to handle token display based on device type
 	 */
 	_handlePickerAfterOpen() {
 		if (this.tokens.length > 0) {
-			this._showTokensInSuggestions = true;
+			// On mobile: show tokens by default (for filter dialog feature)
+			// On desktop: keep showing suggestions (default behavior)
+			if (isPhone()) {
+				this._showTokensInSuggestions = true;
+			}
 			this._userToggledShowTokens = false;
+
+			// Expand tokenizer to show all tokens and prevent cut-off
+			this.tokenizer._scrollToEndOnExpand = true;
+			this.tokenizer.expanded = true;
 		}
 
 		super._handlePickerAfterOpen();
@@ -464,20 +466,15 @@ class MultiInput extends Input implements IFormInputElement {
 
 	/**
 	 * Computes the effective state for showing tokens in suggestions.
-	 * Defaults to true when tokens exist, but respects explicit user toggle.
+	 * Returns false (show suggestions) by default, true only when explicitly set.
 	 */
 	get _effectiveShowTokensInSuggestions() {
-		// If no tokens exist, always false
+		// If no tokens exist, always show suggestions
 		if (this.tokens.length === 0) {
 			return false;
 		}
 
-		// If user has never interacted with the toggle, default to true when tokens exist
-		if (!this._userToggledShowTokens) {
-			return true;
-		}
-
-		// If user has interacted, respect their choice
+		// Return the current state (will be true on mobile after picker opens, false otherwise)
 		return this._showTokensInSuggestions;
 	}
 }

@@ -31,9 +31,11 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				onKeyDown={this._handlePopoverKeydown}
 				onFocusOut={this._handlePopoverFocusout}
 			>
-				<BusyIndicator active={this.loading} class="ui5-combobox-busy"/>
+				{this.loading &&
+					<BusyIndicator active={true} class="ui5-combobox-busy"/>
+				}
 
-				{this._isPhone &&
+				{!this.loading && this._isPhone &&
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
@@ -79,7 +81,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				</div>
 				}
 
-				{!!this._filteredItems.length &&
+				{!this.loading && !!this._filteredItems.length &&
 				<List
 					class="ui5-combobox-items-list"
 					separators="None"

@@ -33,17 +33,19 @@ export default function WritingAssistantTemplate(this: WritingAssistant) {
 
 			<ToolbarSpacer />
 
-			<ToolbarButton
-				id="ai-menu-btn"
-				design="Transparent"
-				icon={this.loading ? "stop" : "ai"}
-				data-state={this.loading ? "generating" : "generate"}
-				onClick={this.handleButtonClick}
-				tooltip={this.loading ? this._stopTooltip : this._buttonTooltip}
-				accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
-				accessibleName={this._buttonAccessibleName}
-				overflowPriority="NeverOverflow"
-			/>
+			{this.focused && (
+				<ToolbarButton
+					id="ai-menu-btn"
+					design="Transparent"
+					icon={this.loading ? "stop" : "ai"}
+					data-state={this.loading ? "generating" : "generate"}
+					onClick={this.handleButtonClick}
+					tooltip={this.loading ? this._stopTooltip : this._buttonTooltip}
+					accessibilityAttributes={{ hasPopup: this.loading ? "false" : "menu" }}
+					accessibleName={this._buttonAccessibleName}
+					overflowPriority="NeverOverflow"
+				/>
+			)}
 		</Toolbar>
 	);
 }

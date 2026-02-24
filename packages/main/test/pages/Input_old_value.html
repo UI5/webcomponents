@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>ui5-input</title>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+</head>
+
+<body class="input1auto">
+	<input id="inp1"/>
+	<ui5-input id="inp2" type="Number"></ui5-input>
+	<script type="module">
+		let value = "";
+
+		let internalValue = "";
+
+		inp1.addEventListener("input", (e) => {
+			if (e.target.value.length <= 3) {
+				value = e.target.value;
+			}
+			inp1.value = value;
+			inp2.value = value;
+		});
+		inp2.addEventListener("input", (e) => {
+			if (e.target.value.length <= 3) {
+				value = e.target.value;
+			}
+			inp1.value = value;
+			inp2.value = value;
+		});
+	</script>
+</body>
+
+</html>

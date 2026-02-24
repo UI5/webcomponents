@@ -1,6 +1,6 @@
 @import "../base/SearchField-parameters.css";
 
-:root {
+:host {
 	--_ui5_search_icon_border_radius: 0.375rem;
 	--_ui5_search_input_border_radius: none;
 	--_ui5-search-border: var(--sapField_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);

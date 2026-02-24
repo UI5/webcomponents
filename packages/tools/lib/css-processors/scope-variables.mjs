@@ -9,9 +9,9 @@ const require = createRequire(import.meta.url);
  * @returns
  */
 const getOverrideVersion = filePath => {
-	if (!filePath) {
-		return;
-	}
+    if (!filePath) {
+        return;
+    }
 
 	if (!filePath.includes(`overrides${path.sep}`)) {
 		return; // The "overrides/" directory is the marker
@@ -30,27 +30,45 @@ const getOverrideVersion = filePath => {
 	try {
 		overrideVersion = require(`${packageName}${path.sep}package.json`).version;
 	} catch (e) {
-		console.log(`Error requiring package ${packageName}: ${e.message}`);
+		if (process.env.UI5_VERBOSE === "true") {
+			console.log(`Error requiring package ${packageName}: ${e.message}`);
+		}
 	}
 
 	return overrideVersion;
 }
 
-const scopeUi5Variables = (cssText, packageJSON, inputFile) => {
-	const escapeVersion = version => "v" + version?.replaceAll(/[^0-9A-Za-z\-_]/g, "-");
-	const versionStr = escapeVersion(getOverrideVersion(inputFile) || packageJSON.version);
-	const expr = /(--_?ui5)([^\,\:\)\s]+)/g;
-	let newText = cssText.replaceAll(expr, `$1-${versionStr}$2`);
+/**
+ * `packageJSON` should reference the `package.json` of the base package,
+ * as it serves as the starting point for every runtime and carries a unique version.
+ * The `getScopedVarName` function is also defined in the base package
+ * and is consumed by all other packages.
+ *
+ * Runtime (2.19.0)
+ * - base (2.19.0)
+ * - At least one of the following packages: ai / main / fiori / compat (2.19.0)
+ * - Custom package (x.x.x)
+ *
+ * It is not possible to have a runtime with the main package at version 2.19.0
+ * and the base package at a different version (e.g., 2.18.0),
+ * because the main package depends on the base package.
+ * Such a mismatch would create a new runtime.
+ *
+ * Therefore, we can safely assume that the base package version
+ * matches the runtime version and can be reliably used for scoping.
+ *
+ * It is still needed for third-party packages that have not yet migrated to the
+ * component-level variable approach.
+ */
 
-	return newText.replaceAll("--sap", `--ui5-sap`);
+const scopeVariables = (cssText, packageJSON, inputFile) => {
+    const escapeVersion = version => "v" + version?.replaceAll(/[^0-9A-Za-z\-_]/g, "-");
+    const versionStr = escapeVersion(getOverrideVersion(inputFile) || packageJSON.version);
+
+    const expr = /(--_?ui5)([^\,\:\)\s]+)/g;
+
+    return cssText.replaceAll(expr, `$1-${versionStr}$2`);
 }
 
-const scopeThemingVariables = (cssText) => {
-	return cssText.replaceAll("--sap", `--ui5-sap`);
-}
-
-export {
-	scopeUi5Variables,
-	scopeThemingVariables,
-};
+export default scopeVariables;
 
