@@ -1964,7 +1964,7 @@ describe("Input general interaction", () => {
 			.should("be.focused");
 
 		cy.get("@inputEl")
-			.realType("a");
+			.realType("A");
 
 		cy.get("@inputEl")
 			.should("have.value", "Adam D");
@@ -1985,7 +1985,7 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#input-custom-flat").shadow().find("input").as("input");
-		cy.get("@input").click().realType("a");
+		cy.get("@input").click().realType("A");
 
 		cy.get("@input").should("have.value", "Albania");
 		cy.get("@input").then($input => {
@@ -3226,5 +3226,204 @@ describe("Input built-in filtering", () => {
 			.find("[ui5-suggestion-item-group]")
 			.eq(1)
 			.should("have.attr", "hidden");
+	});
+
+	describe("Case-preserving suggestions", () => {
+		it("should preserve user's typed case during typeahead but use original suggestion case when accepted", () => {
+			cy.mount(
+				<Input id="case-test" showSuggestions>
+					<SuggestionItem text="Apple" />
+					<SuggestionItem text="Apricot" />
+					<SuggestionItem text="Avocado" />
+				</Input>
+			);
+
+			cy.get("#case-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type lowercase 'a' - should show 'apple' with user's lowercase 'a'
+			cy.get("@input")
+				.realClick()
+				.realType("a");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+
+			// Verify text selection (typeahead highlighting)
+			cy.get("@input")
+				.then($input => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(5);
+				});
+
+			// Press Enter to accept - should use original suggestion case "Apple"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "Apple");
+		});
+
+		it("should preserve uppercase typed characters during typeahead", () => {
+			cy.mount(
+				<Input id="case-test-upper" showSuggestions>
+					<SuggestionItem text="apple" />
+					<SuggestionItem text="apricot" />
+				</Input>
+			);
+
+			cy.get("#case-test-upper")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type uppercase 'A' - should show 'Apple' with user's uppercase 'A'
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Apple");
+
+			// Press Enter to accept - should use original suggestion case "apple"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+		});
+
+		it("should handle exact match with different case on Enter", () => {
+			cy.mount(
+				<Input id="exact-match-test" showSuggestions>
+					<SuggestionItem text="ap" />
+					<SuggestionItem text="Apple" />
+				</Input>
+			);
+
+			cy.get("#exact-match-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type "Ap" matching suggestion "ap"
+			cy.get("@input")
+				.realClick()
+				.realType("Ap");
+
+			// During typing, user's case is preserved
+			cy.get("@input")
+				.should("have.value", "Ap");
+
+			// Press Enter - should use original suggestion case "ap"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "ap");
+		});
+
+		it("should preserve original case through multiple characters typed", () => {
+			cy.mount(
+				<Input id="multi-char-test" showSuggestions>
+					<SuggestionItem text="BANANA" />
+					<SuggestionItem text="BERRY" />
+				</Input>
+			);
+
+			cy.get("#multi-char-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type "ban" with mixed case
+			cy.get("@input")
+				.realClick()
+				.realType("bAn");
+
+			// Should show suggestion with user's typed case
+			cy.get("@input")
+				.should("have.value", "bAnANA");
+
+			// Press Enter - should use original suggestion case "BANANA"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "BANANA");
+		});
+
+		it("should work with selection-change event and preserve original case", () => {
+			const onChangeSpy = cy.spy().as("onChange");
+			const onSelectionChangeSpy = cy.spy().as("onSelectionChange");
+
+			cy.mount(
+				<Input
+					id="selection-change-test"
+					showSuggestions
+					onChange={onChangeSpy}
+					onSelectionChange={onSelectionChangeSpy}
+				>
+					<SuggestionItem text="Orange" />
+					<SuggestionItem text="Olive" />
+				</Input>
+			);
+
+			cy.get("#selection-change-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type lowercase 'o'
+			cy.get("@input")
+				.realClick()
+				.realType("o");
+
+			cy.get("@input")
+				.should("have.value", "orange");
+
+			// Press Enter to trigger selection-change
+			cy.realPress("Enter");
+
+			// Value should be original suggestion case
+			cy.get("@input")
+				.should("have.value", "Orange");
+
+			// Verify both events were called
+			cy.get("@onChange").should("have.been.calledOnce");
+			cy.get("@onSelectionChange").should("have.been.calledOnce");
+		});
+
+		it("should clear matched item on Escape and restore typed value", () => {
+			cy.mount(
+				<Input id="escape-test" showSuggestions>
+					<SuggestionItem text="Apple" />
+				</Input>
+			);
+
+			cy.get("#escape-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type 'a' to trigger typeahead
+			cy.get("@input")
+				.realClick()
+				.realType("a");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+
+			// Press Escape to cancel autocomplete
+			cy.realPress("Escape");
+
+			cy.get("@input")
+				.should("have.value", "a");
+
+			// Now press Enter - should not select anything
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "a");
+		});
 	});
 });

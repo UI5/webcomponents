@@ -575,7 +575,7 @@ describe("MultiInput tokens", () => {
 			.realClick();
 
 		cy.get("@input")
-			.type("b");
+			.type("B");
 
 		cy.get("[ui5-multi-input]")
 			.should("have.attr", "value", "Bulgaria");
