@@ -19,6 +19,7 @@
 
 import { globby } from "globby";
 import * as esbuild from 'esbuild';
+import path from "path";
 import { pathToFileURL } from "url";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js";
@@ -40,9 +41,11 @@ import {
  */
 async function processThemingPackageFile(f) {
     const rootSelector = ':root';
-    const stopVarsSelector = ':root';
-    const scopedRule = postcss.rule({ selector: rootSelector });
-    const rule = postcss.rule({ selector: stopVarsSelector });
+
+    // Use arrays instead of PostCSS nodes to reduce memory overhead
+    const defaultDecls = [];
+    const scopedDecls = [];
+
     const result = await postcss().process(f.text);
 
     result.root.walkRules(rootSelector, rule => {
@@ -52,24 +55,26 @@ async function processThemingPackageFile(f) {
             } else if (decl.prop.startsWith('--sapFontUrl')) {
                 continue;
             } else if (!decl.prop.startsWith('--sap')) {
-                scopedRule.append(decl.clone());
+                // Non-SAP variables go to scoped variant only
+                scopedDecls.push(`${decl.prop}:${decl.value}`);
             } else {
                 const originalProp = decl.prop;
                 const originalValue = decl.value;
 
-                // Add --ui5-sap variable to :root
-                scopedRule.append(decl.clone({ prop: originalProp.replace("--sap", "--ui5-sap"), value: `var(${originalProp}, ${originalValue})` }));
+                // Add original --sap variable to default variant
+                defaultDecls.push(`${originalProp}:${originalValue}`);
 
-                // Add original --sap variable to :root
-                rule.append(decl.clone());
+                // Add --ui5-sap variable to scoped variant with fallback
+                const scopedProp = originalProp.replace("--sap", "--ui5-sap");
+                scopedDecls.push(`${scopedProp}:var(${originalProp}, ${originalValue})`);
             }
         }
     });
 
-    // Return object with two CSS outputs
+    // Build CSS strings directly instead of using PostCSS to create nodes
     return {
-        default: rule.toString(),  // Original --sap* variables
-        scoped: scopedRule.toString()        // Framework --ui5-sap* variables
+        default: `:root{${defaultDecls.join(';')}}`,
+        scoped: `:root{${scopedDecls.join(';')}}`
     };
 };
 
