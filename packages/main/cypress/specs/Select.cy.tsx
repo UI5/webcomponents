@@ -1819,4 +1819,69 @@ describe("Select general interaction", () => {
 			.should("have.attr", "selected");
 		cy.get("[ui5-select]").should("have.prop", "value", "C");
 	});
+
+	it("fires change event only once when pressing Enter on opened picker", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select")
+			.then(($select) => {
+				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
+			});
+
+		// Open the picker, navigate to a different option, and press Enter
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// The change event must fire exactly once (not twice due to both
+		// the list item click and the Select's own Enter key handler)
+		cy.get("@changeStub").should("have.been.calledOnce");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "Compact");
+	});
+
+	it("focuses the select root after the picker closes so screen readers can announce the selected value", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select");
+
+		// Open the picker and select a different option
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// After the picker closes, the select root should be focused
+		// so that screen readers like NVDA can announce the selected value
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("be.focused");
+	});
 });
