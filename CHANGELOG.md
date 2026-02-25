@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **framework:** apply correct system css variables ([#13085](https://github.com/UI5/webcomponents/issues/13085)) ([123efed](https://github.com/UI5/webcomponents/commit/123efed9705ddde81aedf9f3571ce1e0b89e61c8))
+* **framework:** correct runtime compare ([#13105](https://github.com/UI5/webcomponents/issues/13105)) ([eb8cc19](https://github.com/UI5/webcomponents/commit/eb8cc1978db1f4f2352e2f0a77569d7216301c3e))
+* **ui5-dynamic-page:** handle header-snapped attribute initialization ([#13030](https://github.com/UI5/webcomponents/issues/13030)) ([7fdabb0](https://github.com/UI5/webcomponents/commit/7fdabb0f124de710d9bd92101a57d11f51838960)), closes [#13011](https://github.com/UI5/webcomponents/issues/13011)
+* **ui5-menu:** close menu with f4, Alt + ArrowUp/Down ([#13087](https://github.com/UI5/webcomponents/issues/13087)) ([c611b9f](https://github.com/UI5/webcomponents/commit/c611b9fa4742c96eecb170f3dfaa00ae6071b779)), closes [#12922](https://github.com/UI5/webcomponents/issues/12922)
+* **ui5-panel:** remove focus outline on mobile devices ([#13102](https://github.com/UI5/webcomponents/issues/13102)) ([91ccf97](https://github.com/UI5/webcomponents/commit/91ccf9738510f4d4a29b21bb1e41ef21500fc6c7)), closes [#12811](https://github.com/UI5/webcomponents/issues/12811)
+* **ui5-shellbar:** prevent hover and active styles on disabled slotted buttons ([#13076](https://github.com/UI5/webcomponents/issues/13076)) ([621fed1](https://github.com/UI5/webcomponents/commit/621fed1a99b6bc31f036396291908f0a6f4216f6)), closes [#13072](https://github.com/UI5/webcomponents/issues/13072)
+* **ui5-table:** border visibility on firefox (compat) ([#13000](https://github.com/UI5/webcomponents/issues/13000)) ([86081ce](https://github.com/UI5/webcomponents/commit/86081ce43f71677227491341e58b37903f4b5281))
+* **ui5-toolbar:** prevent flash of AlwaysOverflow items on first render ([#13044](https://github.com/UI5/webcomponents/issues/13044)) ([4f03913](https://github.com/UI5/webcomponents/commit/4f03913354ec01896ea87885deef1679b9532b25))
+
+
+### Features
+
+* **ui5-avatar:** add mode property with three modes ([#13004](https://github.com/UI5/webcomponents/issues/13004)) ([914ed04](https://github.com/UI5/webcomponents/commit/914ed043f8891cb5317ad1a0d9b990dd6d8a37d3))
+* **ui5-li-group:** expose title CSS part for styling ([#13078](https://github.com/UI5/webcomponents/issues/13078)) ([e2178ae](https://github.com/UI5/webcomponents/commit/e2178aef2568811339a491e77271aaa5822d3de3)), closes [#13054](https://github.com/UI5/webcomponents/issues/13054)
+* **ui5-menu:** keep focus over hovered item ([#12921](https://github.com/UI5/webcomponents/issues/12921)) ([26b51ec](https://github.com/UI5/webcomponents/commit/26b51ec97442b4088be68ab939f96080e1f559d3))
+* **ui5-user-menu:** add support for custom footer in user menu ([#13046](https://github.com/UI5/webcomponents/issues/13046)) ([9bfbe4b](https://github.com/UI5/webcomponents/commit/9bfbe4b710955811617e27bb32825b565921528e))
+
+
+
+
+
 # [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
 
 

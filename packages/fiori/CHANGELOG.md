@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** handle header-snapped attribute initialization ([#13030](https://github.com/UI5/webcomponents/issues/13030)) ([7fdabb0](https://github.com/UI5/webcomponents/commit/7fdabb0f124de710d9bd92101a57d11f51838960)), closes [#13011](https://github.com/UI5/webcomponents/issues/13011)
+* **ui5-shellbar:** prevent hover and active styles on disabled slotted buttons ([#13076](https://github.com/UI5/webcomponents/issues/13076)) ([621fed1](https://github.com/UI5/webcomponents/commit/621fed1a99b6bc31f036396291908f0a6f4216f6)), closes [#13072](https://github.com/UI5/webcomponents/issues/13072)
+
+
+### Features
+
+* **ui5-user-menu:** add support for custom footer in user menu ([#13046](https://github.com/UI5/webcomponents/issues/13046)) ([9bfbe4b](https://github.com/UI5/webcomponents/commit/9bfbe4b710955811617e27bb32825b565921528e))
+
+
+
+
+
 # [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori
