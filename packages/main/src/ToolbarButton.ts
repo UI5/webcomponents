@@ -198,7 +198,7 @@ class ToolbarButton extends ToolbarItemBase {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		if (!prevented && !this.preventOverflowClosing) {
-			this.fireDecoratorEvent("close-overflow");
+			this.fireEvent("close-overflow", undefined, true, true);
 		}
 	}
 
