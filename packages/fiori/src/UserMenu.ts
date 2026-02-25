@@ -228,7 +228,7 @@ class UserMenu extends UI5Element {
 	 *
 	 * **Note:** When provided, replaces the default "Sign Out" button. Use an empty element to hide the footer completely.
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@slot()
 	footer!: Slot<HTMLElement>;
