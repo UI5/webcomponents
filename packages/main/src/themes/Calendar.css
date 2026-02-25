@@ -144,15 +144,6 @@
   box-sizing: border-box;
 }
 
-/* All pickers in overlay container should be positioned absolutely and take full space */
-.ui5-cal-overlay-container > * {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 .ui5-cal-overlay-hidden {
   display: none;
 }
