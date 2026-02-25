@@ -215,12 +215,14 @@ export default function CalendarTemplate(this: Calendar) {
 				{showMultipleMonths && (
 					<div class={{
 						"ui5-cal-overlay-container": true,
-						//"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
+						"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
 					}}>
 						<MonthPicker
 							id={`${this._id}-MP`}
+							hidden={this._isMonthPickerHidden}
 							formatPattern={this._formatPattern}
 							selectedDates={this._selectedDatesTimestamps}
+							_hidden={this._isMonthPickerHidden}
 							primaryCalendarType={this._primaryCalendarType}
 							secondaryCalendarType={this._secondaryCalendarType}
 							selectionMode={this.selectionMode}
@@ -230,6 +232,42 @@ export default function CalendarTemplate(this: Calendar) {
 							onChange={this.onSelectedMonthChange}
 							onNavigate={this.onNavigate}
 							exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
+						/>
+
+						<YearPicker
+							id={`${this._id}-YP`}
+							hidden={this._isYearPickerHidden}
+							formatPattern={this._formatPattern}
+							selectedDates={this._selectedDatesTimestamps}
+							_hidden={this._isYearPickerHidden}
+							primaryCalendarType={this._primaryCalendarType}
+							secondaryCalendarType={this._secondaryCalendarType}
+							selectionMode={this.selectionMode}
+							minDate={this.minDate}
+							maxDate={this.maxDate}
+							timestamp={this._timestamp}
+							_currentYearRange = {this._currentYearRange}
+							onChange={this.onSelectedYearChange}
+							onNavigate={this.onNavigate}
+							exportparts="year-cell, year-cell-selected, year-cell-selected-between, year-picker-root"
+						/>
+
+						<YearRangePicker
+							id={`${this._id}-YRP`}
+							hidden={this._isYearRangePickerHidden}
+							formatPattern={this._formatPattern}
+							selectedDates={this._selectedDatesTimestamps}
+							_showRangeSelection={this.selectionMode === CalendarSelectionMode.Range}
+							_hidden={this._isYearRangePickerHidden}
+							primaryCalendarType={this._primaryCalendarType}
+							secondaryCalendarType={this._secondaryCalendarType}
+							minDate={this.minDate}
+							maxDate={this.maxDate}
+							timestamp={this._timestamp}
+							_currentYearRange = {this._currentYearRange}
+							onChange={this.onSelectedYearRangeChange}
+							onNavigate={this.onNavigate}
+							exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
 						/>
 					</div>
 				)}

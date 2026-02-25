@@ -27,13 +27,7 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
-import { isPhone } from "@ui5/webcomponents-base";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-
 const DEFAULT_DELIMITER = "-";
-
-const PHONE_MODE_BREAKPOINT = 640; // px
 
 /**
  * @class
@@ -97,13 +91,6 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @default false
 	 * @private
 	 */
-	@property({ type: Boolean })
-	_phoneMode = false;
-
-	@property({ type: Boolean })
-	_portraitMode = false;
-
-	_handleResizeBound: ResizeObserverCallback;
 
 	private _prevDelimiter: string | null;
 
@@ -155,17 +142,6 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	constructor() {
 		super();
 		this._prevDelimiter = null;
-		this._handleResizeBound = this._handleResize.bind(this);
-	}
-
-	onEnterDOM() {
-		ResizeHandler.register(document.body, this._handleResizeBound);
-		// Initialize modes on first load
-		this._handleResize();
-	}
-
-	onExitDOM() {
-		ResizeHandler.deregister(document.body, this._handleResizeBound);
 	}
 
 	/**
@@ -228,36 +204,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return [];
 	}
 
-	get _phoneView() {
-		return isPhone() || this._phoneMode;
-	}
-
-	/**
-	 * Handles document resize to switch between `phoneMode` and `portraitMode`.
-	 * - `_phoneMode`: Only when it's an actual phone device (isPhone() returns true)
-	 * - `_portraitMode`: When resolution is under PHONE_MODE_BREAKPOINT (regardless of device type)
-	 */
-	_handleResize() {
-		const documentWidth = document.body.offsetWidth;
-		const underBreakpoint = documentWidth <= PHONE_MODE_BREAKPOINT;
-		const isActualPhone = isPhone();
-		
-		// Phone mode: only when it's an actual phone device
-		const toPhoneMode = isActualPhone;
-		const phoneModeChange = (toPhoneMode && !this._phoneMode) || (!toPhoneMode && this._phoneMode);
-		
-		if (phoneModeChange) {
-			this._phoneMode = toPhoneMode;
-		}
-
-		// Portrait mode: when resolution is under breakpoint (can be tablet, desktop in narrow window, etc.)
-		const toPortraitMode = underBreakpoint;
-		const portraitModeChange = (toPortraitMode && !this._portraitMode) || (!toPortraitMode && this._portraitMode);
-		
-		if (portraitModeChange) {
-			this._portraitMode = toPortraitMode;
-		}
-	}
+	
 
 
 	/**

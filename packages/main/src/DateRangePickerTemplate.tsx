@@ -16,10 +16,6 @@ export default function DateRangePickerTemplate(this: DateRangePicker) {
 function content(this: DateRangePicker) {
 	return (
 		<Calendar
-			class={{
-					"ui5-dt-cal--mobile": this._phoneView,
-					"ui5-dt-cal--portrait": this._portraitMode,
-			}}
 			id={`${this._id}-calendar`}
 			primaryCalendarType={this._primaryCalendarType}
 			secondaryCalendarType={this.secondaryCalendarType}

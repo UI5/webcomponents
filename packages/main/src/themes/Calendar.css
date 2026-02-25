@@ -32,7 +32,7 @@
 }
 
 .ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
-	height: calc(var(--_ui5_calendar_height) + var(--_ui5_calendar_header_height));
+	height: auto;
 }
 
 .ui5-cal-root .ui5-cal-content {
@@ -141,7 +141,16 @@
   background: var(--sapGroup_ContentBackground);
   border-radius: var(--_ui5_popup_border_radius);
   min-height: 2rem;
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* All pickers in overlay container should be positioned absolutely and take full space */
+.ui5-cal-overlay-container > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .ui5-cal-overlay-hidden {

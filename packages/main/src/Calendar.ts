@@ -836,6 +836,10 @@ class Calendar extends CalendarPart {
 	}
 
 	get _isDayPickerHidden() {
+		// In multi-calendar mode (monthsToShow > 1), keep day pickers visible even when other pickers are shown
+		if (this.monthsToShow > 1) {
+			return false;
+		}
 		return this._currentPicker !== "day";
 	}
 
