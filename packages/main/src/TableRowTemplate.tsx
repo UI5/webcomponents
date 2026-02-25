@@ -27,7 +27,6 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 						:
 						<RadioButton id="selection-component"
 							tabindex={-1}
-							name={this._tableId}
 							checked={this._isSelected}
 							onChange={this._onSelectionChange}
 							accessibleName={this._i18nRowSelector}
