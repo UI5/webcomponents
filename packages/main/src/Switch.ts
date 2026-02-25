@@ -17,8 +17,6 @@ import "@ui5/webcomponents-icons/dist/less.js";
 import SwitchDesign from "./types/SwitchDesign.js";
 import {
 	FORM_CHECKABLE_REQUIRED,
-	SWITCH_STATE_ON,
-	SWITCH_STATE_OFF,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -311,20 +309,8 @@ class Switch extends UI5Element implements IFormInputElement {
 		return this.disabled ? "true" : undefined;
 	}
 
-	get accessibilityOnText() {
-		return this._textOn ? Switch.i18nBundle.getText(SWITCH_STATE_ON, this._textOn) : "";
-	}
-
-	get accessibilityOffText() {
-		return this._textOff ? Switch.i18nBundle.getText(SWITCH_STATE_OFF, this._textOff) : "";
-	}
-
-	get hiddenText() {
-		return this.checked ? this.accessibilityOnText : this.accessibilityOffText;
-	}
-
 	get ariaLabelText() {
-		return [getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this), this.hiddenText].join(" ").trim();
+		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined;
 	}
 }
 
