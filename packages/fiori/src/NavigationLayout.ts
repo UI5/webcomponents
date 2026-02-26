@@ -56,17 +56,6 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
 	template: NavigationLayoutTemplate,
 })
 
-/**
- * Fired when an item is clicked.
- *
- * @param {SideNavigationSelectableItemBase} item The clicked item.
- * @public
- */
-@event("item-click", {
-	bubbles: true,
-	cancelable: true,
-})
-
 class NavigationLayout extends UI5Element {
 	eventDetails!: {
 		"item-click": SideNavigationItemClickEventDetail
