@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* CSS variables scoping to depend VersionInfo ([#13091](https://github.com/UI5/webcomponents/issues/13091)) ([d2e43ed](https://github.com/UI5/webcomponents/commit/d2e43ed692c63a0a36a9b14da59de354e2e7d0b0))
+
+
+
+
+
 # [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools
