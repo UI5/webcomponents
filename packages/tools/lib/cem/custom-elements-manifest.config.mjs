@@ -417,7 +417,7 @@ const processPublicAPI = object => {
 		return true;
 	}
 	for (const key of keys) {
-		if ((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) {
+		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && object?.kind !== "class") {
 			return true;
 		} else if (typeof object[key] === "object") {
 			if (key === "cssParts" || key === "attributes" || key === "_ui5implements") {
