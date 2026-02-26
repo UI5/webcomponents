@@ -65,7 +65,7 @@ type TimelineHeaderBarSortEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.8.0
+ * @since 2.20.0
  */
 @customElement({
 	tag: "ui5-timeline-header-bar",

@@ -1,7 +1,7 @@
 /**
  * Sort order for Timeline items.
  * @public
- * @since 2.8.0
+ * @since 2.20.0
  */
 enum TimelineSortOrder {
 	/**
