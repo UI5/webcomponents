@@ -1160,15 +1160,14 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Banana";
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("Space");
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Tab");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("ArrowUp");
-		cy.get("[ui5-select]").realPress("Tab");
-
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
@@ -1194,20 +1193,22 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Watermelon";
 
-		cy.get("[ui5-select]").eq(1).realClick();
-		cy.get("[ui5-select]").eq(1).realClick();
+		cy.get("[ui5-select]").eq(1).as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("Space");
+		cy.get("@select").realPress("ArrowDown");
+		cy.get("@select").realPress(["Shift", "Tab"]);
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("ArrowDown");
-		cy.get("[ui5-select]").eq(1).realPress(["Shift", "Tab"]);
-
-		cy.get("[ui5-select]").eq(1)
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
 
-		cy.get("[ui5-select]").eq(0).should("be.focused");
+		cy.get("[ui5-select]").eq(0)
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused");
 	});
 
 	it("tests selection does not cycle with ArrowDown", () => {
