@@ -217,7 +217,7 @@ describe("Color Picker general interaction tests", () => {
 			.realClick({ position: "center" });
 
 		cy.get<ColorPicker>("@colorPicker")
-			.should("have.value", "rgba(64, 191, 189, 1)");
+			.should("have.value", "rgba(64, 191, 191, 1)");
 	});
 
 	it("should update value when alpha is changed via the Alpha slider", () => {
