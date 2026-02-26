@@ -1001,30 +1001,27 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
 		cy.get("@select").should("not.have.attr", "opened");
 
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
-			.then(($labelRoot) => {
-				$labelRoot[0].focus();
-			});
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
 	
-		cy.get("@select").realPress("ArrowUp");
+		cy.get("@labelRoot").realPress("ArrowUp");
 	
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT2);
@@ -1053,41 +1050,35 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
+		// Closed-state arrow navigation with announcement
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
 		cy.get("@select").should("not.have.attr", "opened");
 
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
-			.focus();
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
 	
-		cy.get("@select").realPress("ArrowUp");
-
-		// Wait for selection to update before checking announcement
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
-			.should("contain.text", EXPECTED_SELECTION_TEXT1);
+		cy.get("@labelRoot").realPress("ArrowUp");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
-
-		// Wait for selection to update before checking announcement
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
-			.should("contain.text", EXPECTED_SELECTION_TEXT2);
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
+		// Open picker, navigate, escape (revert)
 		cy.get("@select").realClick();
 		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Escape");
 		cy.get("@select").should("not.have.attr", "opened");
 	
+		// Open picker, navigate, enter (confirm)
 		cy.get("@select").realClick();
 		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
@@ -1785,24 +1776,32 @@ describe("Select general interaction", () => {
 			</Select>
 		);
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realPress("s");
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+		cy.get("@select").realPress("s");
 
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", "Second");
 
-		cy.get("[ui5-select]").realPress("Enter");
+		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("t");
-
-		cy.get("[ui5-select]")
+		// After picker closes, focus the label root before type-to-select
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
+
+		cy.get("@labelRoot").realPress("t");
+
+		cy.get("@labelRoot")
 			.should("contain.text", "Third");
 
-		cy.get("[ui5-select]").should("have.prop", "value", "Third");
+		cy.get("@select").should("have.prop", "value", "Third");
 	});
 
 	it("navigates with ArrowDown when initial value does not match any option", () => {
