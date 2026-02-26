@@ -360,7 +360,8 @@ const validateJSDocComment = (fieldType, jsdocComment, node, moduleDoc) => {
         }
 
         if (!isValid) {
-            logDocumentationError(moduleDoc.path, `Incorrect use of @${tag.tag}. Ensure it is part of ${fieldType} JSDoc tags.`)
+            const nodeName = node ? ` in '${node}'` : '';
+            logDocumentationError(moduleDoc.path, `Incorrect use of @${tag.tag}${nodeName}. Ensure it is part of ${fieldType} JSDoc tags.`)
         }
 
         return !!isValid;

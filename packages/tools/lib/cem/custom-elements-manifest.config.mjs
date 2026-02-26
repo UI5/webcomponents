@@ -48,7 +48,7 @@ const wrapPluginForQuietMode = (plugin) => {
 		...plugin,
 		packageLinkPhase(context) {
 			const originalLog = console.log;
-			console.log = () => {};
+			console.log = () => { };
 			try {
 				return originalPackageLinkPhase.call(plugin, context);
 			} finally {
@@ -134,6 +134,13 @@ function processClass(ts, classNode, moduleDoc) {
 
 		if (currClass.superclass?.name === "UI5Element") {
 			currClass.customElement = true;
+		}
+	} else if (currClass.customElement && classNode?.heritageClauses) {
+		// Find the extends clause (not implements)
+		const extendsClause = classNode.heritageClauses.find(clause => clause.token === ts.SyntaxKind.ExtendsKeyword);
+		if (extendsClause?.types?.[0]?.expression?.text) {
+			const extendedClass = extendsClause.types[0].expression.text;
+			logDocumentationError(moduleDoc.path, `Class extends ${extendedClass} but @extends tag is missing in JSDoc`);
 		}
 	}
 
@@ -417,7 +424,7 @@ const processPublicAPI = object => {
 		return true;
 	}
 	for (const key of keys) {
-		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && object?.kind !== "class") {
+		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && !object.customElement) {
 			return true;
 		} else if (typeof object[key] === "object") {
 			if (key === "cssParts" || key === "attributes" || key === "_ui5implements") {
