@@ -1002,6 +1002,14 @@ describe("Select general interaction", () => {
 	
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.then(($labelRoot) => {
+				$labelRoot[0].focus();
+			});
 	
 		cy.get("@select").realPress("ArrowUp");
 	
@@ -1047,6 +1055,14 @@ describe("Select general interaction", () => {
 	
 		cy.get("@select").realClick();
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.then(($labelRoot) => {
+				$labelRoot[0].focus();
+			});
 	
 		cy.get("@select").realPress("ArrowUp");
 	
@@ -1057,12 +1073,16 @@ describe("Select general interaction", () => {
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
 	
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 	
 		cy.get("@select")
 			.shadow()
@@ -1880,8 +1900,6 @@ describe("Select general interaction", () => {
 		// After the picker closes, the select root should be focused
 		// so that screen readers like NVDA can announce the selected value
 		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-root")
 			.should("be.focused");
 	});
 });

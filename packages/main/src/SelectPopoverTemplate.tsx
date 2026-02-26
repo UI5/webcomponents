@@ -27,6 +27,7 @@ export default function SelectPopoverTemplate(this: Select) {
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}
 					onKeyDown={this._onkeydown}
+					onKeyPress={this._handleKeyboardNavigation}
 					accessibleName={this._isPhone ? this._headerTitleText : undefined}
 				>
 					{this._isPhone &&
