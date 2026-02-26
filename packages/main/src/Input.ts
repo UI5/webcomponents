@@ -803,7 +803,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 				}
 				this._selectMatchingItem(item);
 			} else {
-				// Clear matched item when there's no match
 				this._matchedSuggestionItem = undefined;
 			}
 		}
@@ -1032,8 +1031,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const suggestionItemPressed = !!(this.Suggestions?.onEnter(e));
 		const innerInput = this.getInputDOMRefSync()!;
 
-		// Try to find matching item - use stored matched item first (preserves original case),
-		// then fall back to case-insensitive search
 		let matchingItem = this._matchedSuggestionItem;
 		if (!matchingItem) {
 			matchingItem = this._selectableItems.find(item => {
@@ -1100,7 +1097,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const isAutoCompleted = innerInput.selectionEnd! - innerInput.selectionStart! > 0;
 
 		this.isTyping = false;
-		// Clear matched suggestion item when user escapes
 		this._matchedSuggestionItem = undefined;
 
 		if (this.value !== this.previousValue && this.value !== this.lastConfirmedValue && !this.open) {
@@ -1337,7 +1333,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_selectMatchingItem(item: IInputSuggestionItemSelectable) {
 		item.selected = true;
-		// Store the matched item to preserve original case when accepting
 		this._matchedSuggestionItem = item;
 	}
 
@@ -1391,15 +1386,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const suggestionText = item.text ? item.text : "";
 		const typedValue = this.typedInValue;
 
-		// Store the original matched item for later use when accepting the suggestion
-		this._matchedSuggestionItem = item;
-
 		// Preserve the user's typed input case during typing
-		// Example: user types "a", suggestion is "Apple" → show "apple" (with "pple" highlighted)
 		if (suggestionText.toLowerCase().startsWith(typedValue.toLowerCase())) {
 			this.value = typedValue + suggestionText.substring(typedValue.length);
-		} else {
-			this.value = suggestionText;
 		}
 
 		this._performTextSelection = true;
@@ -1551,10 +1540,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return;
 		}
 
-		// Use the original matched suggestion item's text if:
-		// 1. It's keyboard navigation AND matched item exists, OR
-		// 2. The passed item matches the matched item (case-insensitive)
-		// Otherwise, use the passed item (e.g., when clicking a different suggestion)
 		let originalItem = item;
 		if (this._matchedSuggestionItem) {
 			const matchedText = this._matchedSuggestionItem.text?.toLowerCase() || "";
@@ -1587,7 +1572,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		this.valueBeforeSelectionStart = "";
-		// Clear the matched item after accepting
 		this._matchedSuggestionItem = undefined;
 
 		this.isTyping = false;
