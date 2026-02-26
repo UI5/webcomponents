@@ -19,6 +19,7 @@ export default function CalendarTemplate(this: Calendar) {
 					"ui5-cal-root": true,
 					"ui5-dt-cal--mobile": this._phoneView,
 					"ui5-dt-cal--portrait": this._portraitMode,
+					"ui5-dt-cal--multiple": showMultipleMonths,
 				}}
 				onKeyDown={this._onkeydown}
 			>
@@ -33,7 +34,17 @@ export default function CalendarTemplate(this: Calendar) {
 				}}>
 					{showMultipleMonths ? (
 						<>
-							{Array.from({ length: this.monthsToShow }, (_, index) => {
+							{/* When pickers are active, show standard calendar header */}
+							{!this._isDefaultHeaderModeInMultipleMonths && (
+								<div class="ui5-calheader ui5-calheader-multiple ui5-calheader-default-multiple" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
+									{ CalendarHeaderTemplate.call(this) }
+								</div>
+							)}
+
+							<div class="ui5-cal-daypicker-overlay"></div>
+
+							<div class="ui5-cal-multiple-months-wrapper">
+								{Array.from({ length: this.monthsToShow }, (_, index) => {
 								const monthTimestamp = this._getMonthTimestamp(index);
 								const isFirst = index === 0;
 								const isLast = index === this.monthsToShow - 1;
@@ -41,7 +52,9 @@ export default function CalendarTemplate(this: Calendar) {
 								
 								return (
 									<div key={`calendar-month-${index}`} class="ui5-cal-month-container">
-										<div class="ui5-calheader ui5-calheader-multiple">
+										{/* Show per-calendar headers only in default mode (day picker) */}
+										{this._isDefaultHeaderModeInMultipleMonths && (
+											<div class="ui5-calheader ui5-calheader-multiple">
 											{isFirst && (
 												<div
 													data-ui5-cal-header-btn-prev
@@ -144,6 +157,7 @@ export default function CalendarTemplate(this: Calendar) {
 											{!isLast && !this._portraitView && <div class="ui5-calheader-spacer"></div>}
 											{isLast && this._portraitView && <div class="ui5-calheader-spacer"></div>}
 										</div>
+										)}
 										<div class="ui5-cal-daypicker-wrapper">
 											<DayPicker
 												id={`${this._id}-daypicker-${index}`}
@@ -165,11 +179,11 @@ export default function CalendarTemplate(this: Calendar) {
 												onNavigate={this.onNavigate}
 												exportparts="day-cell, day-cell-selected, day-cell-selected-between"
 											/>
-											<div class="ui5-cal-daypicker-overlay"></div>
 										</div>
 									</div>
 								);
 							})}
+							</div>
 						</>
 					) : (
 						<><DayPicker

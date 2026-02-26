@@ -24,14 +24,11 @@
     position: relative;
 }
 
-.ui5-cal-root:has(.ui5-cal-content-multiple) {
-    width: auto;
-    min-width: calc(var(--_ui5_calendar_width) * 2 + 1rem + var(--_ui5_calendar_left_right_padding) * 2);
-    overflow: visible;
-
+.ui5-dt-cal--multiple.ui5-cal-root {
+    width: calc(var(--_ui5_calendar_width) * 2 + var(--_ui5_calendar_left_right_padding) * 2);
 }
 
-.ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
+.ui5-dt-cal--portrait.ui5-dt-cal--multiple {
 	height: auto;
 }
 
@@ -41,14 +38,24 @@
 
 .ui5-cal-root .ui5-cal-content-multiple {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0;
     flex-wrap: nowrap;
     overflow: visible;
-	padding: 0;
+}
+
+.ui5-cal-multiple-months-wrapper {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap;
 }
 
 /* Portrait mode: Stack calendars vertically in mobile view */
 .ui5-cal-root.ui5-dt-cal--mobile .ui5-cal-content-multiple {
+    gap: 0;
+}
+
+.ui5-cal-root.ui5-dt-cal--mobile .ui5-cal-multiple-months-wrapper {
     flex-direction: column;
     gap: 0.5rem;
 }
@@ -62,13 +69,6 @@
     width: 100%;
     min-width: auto;
     max-width: 100%;
-}
-
-
-.ui5-cal-root .ui5-cal-content-multiple > * {
-    flex: 0 0 auto;
-    width: var(--_ui5_calendar_width);
-    min-width: var(--_ui5_calendar_width);
 }
 
 .ui5-cal-month-container {
@@ -111,14 +111,14 @@
 .ui5-cal-daypicker-overlay {
     background-color: var(--sapBlockLayer_Background);
     opacity: var(--sapBlockLayer_Opacity);
-    top: 0;
-    left: -0.5rem;
-    right: -0.5rem;
+    top: calc(var(--_ui5_calendar_header_height) + var(--_ui5_calendar_top_bottom_padding));
+    left: 0;
+    right: 0;
     bottom: 0;
     position: absolute;
     outline: 0 none;
     z-index: 11;
-    pointer-events: none;
+    pointer-events: all;
     display: none;
 }
 
@@ -127,7 +127,6 @@
 }
 
 .ui5-cal-overlay-container {
-	z-index: 13 !important;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -135,7 +134,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 13;
   pointer-events: all;
   width: 400px;
   background: var(--sapGroup_ContentBackground);
@@ -160,3 +159,7 @@
   outline: 0 none;
   z-index: 11;
 }
+
+.ui5-calheader-default-multiple, .ui5-calheader-default-multiple .ui5-calheader-root {
+	width: 100%;
+} 

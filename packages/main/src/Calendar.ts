@@ -855,6 +855,14 @@ class Calendar extends CalendarPart {
 		return this._currentPicker !== "yearrange";
 	}
 
+	get _isDefaultHeaderModeInMultipleMonths() {
+		return !this._isDayPickerHidden && this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden;
+	}
+
+	get _shouldShowOnePickerHeaderButtonInMultipleMonths() {
+		return !this._isMonthPickerHidden || !this._isYearPickerHidden;
+	}
+
 	get _currentYearRange(): CalendarYearRangeT {
 		const rangeSize = this.hasSecondaryCalendarType ? 8 : 20;
 		const yearsOffset = this.hasSecondaryCalendarType ? 2 : 9;
