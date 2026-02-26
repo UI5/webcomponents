@@ -47,9 +47,8 @@ interface IOverflowToolbarItem extends HTMLElement {
  *
  * The `ui5-toolbar-item` exposes the following CSS custom states for styling:
  *
- * | State | Description |
- * |-------|-------------|
- * | `:state(overflowed)` | Applied when the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed. |
+ * @cssState overflowed - When the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed.
+ * Since 2.20.0
  *
  * **Example:**
  * ```css
