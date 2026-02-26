@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* **ui5-side-navigation:** enhance Shell Bar in samples ([#13122](https://github.com/UI5/webcomponents/issues/13122)) ([daf9a11](https://github.com/UI5/webcomponents/commit/daf9a1173fac42fdb396b6bb31c993af5ceb96cc))
+
+
+### Features
+
+* **ui5-combobox:** introduce selectedValue property ([#12958](https://github.com/UI5/webcomponents/issues/12958)) ([623ffb2](https://github.com/UI5/webcomponents/commit/623ffb2eb6e56674734f0c6cabd066a48d322131))
+
+
+
+
+
 # [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
 
 

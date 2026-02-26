@@ -2626,6 +2626,56 @@ describe("Event firing", () => {
 		}));
 	});
 
+	it("fires selection-change when selectedValue changes via keyboard and input", () => {
+		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
+		cy.mount(
+			<ComboBox onSelectionChange={selectionChangeSpy}>
+				<ComboBoxItem text="Bulgaria" value="bg"></ComboBoxItem>
+				<ComboBoxItem text="Brazil" value="br"></ComboBoxItem>
+				<ComboBoxItem text="China" value="ch"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="de"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "bg")
+			.should("have.attr", "value", "Bulgaria");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "br")
+			.should("have.attr", "value", "Brazil");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledTwice");
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item.text === "Brazil";
+		}));
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get("[ui5-combobox]")
+		.should("have.attr", "value", "Brazi")
+			.should("not.have.attr", "selected-value");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledThrice");
+
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item === null;
+		}));
+	});
+
 	it("should check clear icon events", () => {
 		cy.mount(
 			<>
@@ -3127,5 +3177,162 @@ describe("Validation inside a form", () => {
 
 		cy.get("@submit")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("SelectedValue API", () => {
+	it("should clear selectedValue when clear icon is clicked", () => {
+		cy.mount(
+			<ComboBox value="Germany" selectedValue="DE" showClearIcon>
+				<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+				<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.should("have.attr", "selected-value", "DE")
+			.should("have.attr", "value", "Germany");
+
+		// Click the clear icon
+		cy.get("@combo")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "")
+			.should("not.have.attr", "selected-value");
+	});
+
+	it("should correctly select items with same text but different values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		// Open dropdown and click first John Smith (Sales)
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(0).realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "John Smith")
+			.should("have.attr", "selected-value", "emp-101");
+
+		// Open dropdown and click second John Smith (Engineering)
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(1).realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "John Smith")
+			.should("have.attr", "selected-value", "emp-205");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledTwice");
+	});
+
+	it("should return item value in formFormattedValue for form submission", () => {
+		cy.mount(
+			<form id="test-form">
+				<ComboBox name="country" value="Germany" selectedValue="DE">
+					<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+					<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+					<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+				</ComboBox>
+			</form>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				// formFormattedValue should return the item's value, not the display text
+				expect(comboBox.formFormattedValue).to.equal("DE");
+			});
+
+		// Change selection to France
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(2).realClick();
+
+		cy.get("@combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				expect(comboBox.formFormattedValue).to.equal("FR");
+			});
+	});
+
+	it("should fallback to display text in formFormattedValue when item has no value", () => {
+		cy.mount(
+			<form id="test-form">
+				<ComboBox name="country" value="Germany">
+					<ComboBoxItem text="Austria"></ComboBoxItem>
+					<ComboBoxItem text="Germany"></ComboBoxItem>
+					<ComboBoxItem text="France"></ComboBoxItem>
+				</ComboBox>
+			</form>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				// Without item values, formFormattedValue should return the display text
+				expect(comboBox.formFormattedValue).to.equal("Germany");
+			});
+	});
+
+	it("should populate input value from selectedValue on initial render", () => {
+		cy.mount(
+			<ComboBox selectedValue="DE">
+				<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+				<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "Germany")
+			.should("have.prop", "selectedValue", "DE");
+
+		cy.get("[ui5-cb-item]").eq(1)
+			.should("have.prop", "selected", true);
+	});
+
+	it("should select correct item by selectedValue when multiple items have same text", () => {
+		cy.mount(
+			<ComboBox selectedValue="emp-205">
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-205");
+
+		// The second item (Engineering) should be selected, not the first
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", false);
 	});
 });
