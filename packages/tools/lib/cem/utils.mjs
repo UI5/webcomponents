@@ -240,7 +240,7 @@ const allowedTags = {
     event: [...commonTags, "param", "native", "allowPreventDefault"],
     eventParam: [...commonTags],
     method: [...commonTags, "param", "returns", "override"],
-    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart"],
+    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart", "cssstate", "cssState"],
     enum: [...commonTags, "experimental",],
     enumMember: [...commonTags, "experimental",],
     interface: [...commonTags, "experimental",],
@@ -329,6 +329,9 @@ const validateJSDocTag = (tag) => {
         case "slot":
             return tag.type && tag.name && tag.description;
         case "csspart":
+            return !tag.type && tag.name && tag.description;
+        case "cssState":
+        case "cssstate":
             return !tag.type && tag.name && tag.description;
         case "since":
             return !tag.type && tag.name;

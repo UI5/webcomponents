@@ -20,23 +20,6 @@ interface IOverflowToolbarItem extends HTMLElement {
 	overflowCloseEvents?: string[] | undefined;
 	hasOverflow?: boolean | undefined;
 }
-/**
- * Fired when the overflow popover is closed.
- * @public
- * @since 1.17.0
- */
-@event("close-overflow", {
-	bubbles: true,
-	cancelable: true,
-})
-
-@customElement({
-	tag: "ui5-toolbar-item",
-	languageAware: true,
-	renderer: jsxRenderer,
-	template: ToolbarItemTemplate,
-	styles: ToolbarItemCss,
-})
 
 /**
  * @class
@@ -47,21 +30,28 @@ interface IOverflowToolbarItem extends HTMLElement {
  *
  * The `ui5-toolbar-item` exposes the following CSS custom states for styling:
  *
- * @cssState overflowed - When the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed.
- * Since 2.20.0
- *
- * **Example:**
- * ```css
- * ui5-toolbar-item:state(overflowed) {
- *     flex-direction: column;
- * }
- * ```
- *
+ * @cssState overflowed - When the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed. Available since 2.20.0.
  * @constructor
  * @extends UI5Element
  * @public
  * @since 1.17.0
  */
+@customElement({
+	tag: "ui5-toolbar-item",
+	languageAware: true,
+	renderer: jsxRenderer,
+	template: ToolbarItemTemplate,
+	styles: ToolbarItemCss,
+})
+/**
+ * Fired when the overflow popover is closed.
+ * @public
+ * @since 1.17.0
+ */
+@event("close-overflow", {
+	bubbles: true,
+	cancelable: true,
+})
 class ToolbarItem extends UI5Element {
 	// strictEvents: needed for parent class
 	eventDetails!: {

@@ -258,6 +258,23 @@ ${cssParts.map(cssPart => `| ${cssPart.name} | ${processDescription(cssPart.desc
     return result;
 }
 
+const getCssStatesTable = (declaration) => {
+    let result = `## CSS Custom States`
+    const cssStates = declaration.cssStates || [];
+
+    if (!cssStates.length) {
+        return `${result}
+No CSS custom states available for this component.`
+    }
+
+    result = `${result}
+| Name | Description |
+|------|-------------|
+${cssStates.map(cssState => `| ${cssState.name} | ${processDescription(cssState.description)} |`).join("\n")}`
+
+    return result;
+}
+
 
 
 const getEnumFieldsTables = (declaration) => {
@@ -287,6 +304,8 @@ const getTable = (kind, declaration) => {
             return getEventsTables(declaration);
         case "cssPart":
             return getCssPartsTable(declaration);
+        case "cssState":
+            return getCssStatesTable(declaration);
         case "slot":
             return getSlotsTables(declaration);
         case "enum":
@@ -403,7 +422,8 @@ ${parseDeclarationDescription(declaration.description)}`)
         "slot",
         "event",
         "method",
-        "cssPart"
+        "cssPart",
+        "cssState"
     ].map(fieldType => getTable(fieldType, declaration))
 
     fileContent = fileContent.replace("<%COMPONENT_METADATA%>", metadataSections.join("\n\n"));
