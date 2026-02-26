@@ -5,7 +5,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ButtonAccessibilityAttributes } from "./Button.js";
 import type ButtonDesign from "./types/ButtonDesign.js";
 
-import ToolbarItem from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -22,7 +22,7 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
  * `import "@ui5/webcomponents/dist/ToolbarButton.js";`
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -45,7 +45,7 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 	bubbles: true,
 	cancelable: true,
 })
-class ToolbarButton extends ToolbarItem {
+class ToolbarButton extends ToolbarItemBase {
 	/**
 	 * Defines if the action is disabled.
 	 *
@@ -198,7 +198,7 @@ class ToolbarButton extends ToolbarItem {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		if (!prevented && !this.preventOverflowClosing) {
-			this.fireDecoratorEvent("close-overflow");
+			this.fireEvent("close-overflow", undefined, true, true);
 		}
 	}
 
