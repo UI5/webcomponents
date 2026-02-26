@@ -42,10 +42,25 @@ interface IOverflowToolbarItem extends HTMLElement {
  * @class
  *
  * Represents an abstract class for items, used in the `ui5-toolbar`.
+ *
+ * ### CSS Custom States
+ *
+ * The `ui5-toolbar-item` exposes the following CSS custom states for styling:
+ *
+ * | State | Description |
+ * |-------|-------------|
+ * | `:state(overflowed)` | Applied when the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed. |
+ *
+ * **Example:**
+ * ```css
+ * ui5-toolbar-item:state(overflowed) {
+ *     flex-direction: column;
+ * }
+ * ```
+ *
  * @constructor
  * @extends UI5Element
  * @public
- * @experimental This module is experimental and its API might change significantly in future.
  * @since 1.17.0
  */
 class ToolbarItem extends UI5Element {
@@ -72,15 +87,28 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	preventOverflowClosing = false;
 
+	_isOverflowed: boolean = false;
+
+	get isOverflowed(): boolean {
+		return this._isOverflowed;
+	}
+
 	/**
 	 * Defines if the toolbar item is overflowed.
 	 * @default false
 	 * @protected
 	 * @since 2.11.0
 	 */
-
 	@property({ type: Boolean })
-	isOverflowed: boolean = false;
+	set isOverflowed(value: boolean) {
+		this._isOverflowed = value;
+
+		if (value) {
+			this._internals.states.add("overflowed");
+		} else {
+			this._internals.states.delete("overflowed");
+		}
+	}
 
 	_isRendering = true;
 	_maxWidth = 0;
