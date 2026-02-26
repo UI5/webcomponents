@@ -24,6 +24,8 @@ import { isDesktop, isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
@@ -636,6 +638,9 @@ class MenuItem extends ListItem implements IMenuItem {
 	_afterPopoverOpen() {
 		if (!this._openedByMouse) {
 			this._allMenuItems[0]?.focus();
+		}
+		if (this.loading) {
+			announce(MenuItem.i18nBundle.getText(MENU_ITEM_LOADING), InvisibleMessageMode.Polite);
 		}
 		this.fireDecoratorEvent("open");
 	}
