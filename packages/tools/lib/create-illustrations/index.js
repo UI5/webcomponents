@@ -125,6 +125,24 @@ const generate = async (argv) => {
 		// If no Dot is present, Spot will be imported as Dot
 		const hasDot = dotIllustrationNames.indexOf(illustrationName) !== -1 ? 'Dot' : 'Spot';
 
+		// For V4 TNT illustrations, also register loaders for V5 and V5/HC versions
+		// so that when the illustration is imported directly via "@ui5/webcomponents/dist/illustrations/tnt/IllustrationName"
+		// and the horizon themes are used, the correct illustration is loaded
+		// Note: Only TNT set has V5 illustrations, fiori set does not have V5 versions
+		const v5LoaderRegistration = collection === "V4" && illustrationSet === "tnt" ? `
+import { registerIllustrationLoader } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+
+const loadIllustrationV5 = async () => {
+	return (await import("../../illustrations-v5/${illustrationSet}/${illustrationName}.js")).default;
+};
+const loadIllustrationV5HC = async () => {
+	return (await import("../../illustrations-v5/${illustrationSet}/hc/${illustrationName}.js")).default;
+};
+
+registerIllustrationLoader("${illustrationSet}/V5/${illustrationName}", loadIllustrationV5);
+registerIllustrationLoader("${illustrationSet}/V5/HC/${illustrationName}", loadIllustrationV5HC);
+` : '';
+
 		return `import { unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import dialogSvg from "./${illustrationsPrefix}-Dialog-${illustrationName}.js";
 import sceneSvg from "./${illustrationsPrefix}-Scene-${illustrationName}.js";
@@ -132,7 +150,7 @@ import spotSvg from "./${illustrationsPrefix}-Spot-${illustrationName}.js";
 import dotSvg from "./${illustrationsPrefix}-${hasDot}-${illustrationName}.js";${defaultText ? `import {
 	IM_TITLE_${illustrationNameUpperCase},
 	IM_SUBTITLE_${illustrationNameUpperCase},
-} from "../generated/i18n/i18n-defaults.js";` : ``}
+} from "../generated/i18n/i18n-defaults.js";` : ``}${v5LoaderRegistration}
 
 const name = "${illustrationName}";
 const set = "${illustrationSet}";
