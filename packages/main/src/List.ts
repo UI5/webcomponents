@@ -740,7 +740,11 @@ class List extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		const parts = [this.defaultAriaDescriptionText];
+		const parts = [];
+
+		if (this.accessibleRole === ListAccessibleRole.List) {
+			parts.push(this.defaultAriaDescriptionText);
+		}
 		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
 
 		if (externalDescription) {
