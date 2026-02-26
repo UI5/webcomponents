@@ -669,15 +669,6 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		this._updateValueAndFireEvents((e.target as DatePicker).value, false, ["input"], false);
 	}
 
-	_handleClearIconClick() {
-		this.value = "";
-		this._dateTimeInput.value = "";
-		this._updateValueState();
-		this._dateTimeInput.focus();
-		this.fireDecoratorEvent("change", { value: this.value, valid: true });
-		this.fireDecoratorEvent("value-changed", { value: this.value, valid: true });
-	}
-
 	/**
 	 * Checks if the provided value is valid and within valid range.
 	 * @protected
