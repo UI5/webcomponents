@@ -390,6 +390,363 @@
 		</ui5-timeline>
 	</div>
 </section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Header Bar - Full Featured Demo</h2>
+	<p>Complete example with Search, Filter, and Sort - all features working together.</p>
+	<div style="margin-bottom: 1rem; padding: 0.5rem; background: #f5f5f5; border-radius: 4px;">
+		<strong>Event Log:</strong> <span id="fullDemoEventLog" style="font-style: italic; color: #666;">Interact with the header bar...</span>
+	</div>
+	<div style="margin-bottom: 1rem;">
+		<strong>Visible Items:</strong> <span id="fullDemoItemCount">6</span> of 6
+	</div>
+	<div style="width: 700px; height: 400px; border: 1px solid #ccc; border-radius: 4px;">
+		<ui5-timeline id="fullDemoTimeline" style="height: 100%;">
+			<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Category">
+				<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+			</ui5-timeline-header-bar>
+			<ui5-timeline-item data-category="Meetings" data-date="2024-03-10T09:00" title-text="Team Planning Meeting" subtitle-text="10.03.2024 09:00" icon="calendar" name="John Smith">
+				Quarterly planning session with the development team
+			</ui5-timeline-item>
+			<ui5-timeline-item data-category="Development" data-date="2024-03-10T11:30" title-text="Code Review Session" subtitle-text="10.03.2024 11:30" icon="developer-settings" name="Jane Doe">
+				Review pull request for authentication module
+			</ui5-timeline-item>
+			<ui5-timeline-item data-category="Meetings" data-date="2024-03-10T14:00" title-text="Client Call" subtitle-text="10.03.2024 14:00" icon="phone" name="Mike Johnson">
+				Discussion about project requirements
+			</ui5-timeline-item>
+			<ui5-timeline-item data-category="Development" data-date="2024-03-10T16:00" title-text="Documentation Update" subtitle-text="10.03.2024 16:00" icon="document" name="Sarah Wilson">
+				Update API documentation for new endpoints
+			</ui5-timeline-item>
+			<ui5-timeline-item data-category="Releases" data-date="2024-03-11T09:00" title-text="Production Deploy" subtitle-text="11.03.2024 09:00" icon="upload" name="DevOps Team">
+				Deploy hotfix v2.5.1 to production environment
+			</ui5-timeline-item>
+			<ui5-timeline-item data-category="Meetings" data-date="2024-03-11T10:00" title-text="Daily Standup" subtitle-text="11.03.2024 10:00" icon="group" name="All Team">
+				Daily standup meeting - sprint progress review
+			</ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Search Only</h2>
+	<p>Search filters items by title, name, and subtitle text in real-time.</p>
+	<div style="width: 600px;">
+		<ui5-timeline id="searchOnlyTimeline">
+			<ui5-timeline-header-bar slot="headerBar" show-search></ui5-timeline-header-bar>
+			<ui5-timeline-item title-text="Sprint Planning" subtitle-text="13.03.2024 09:00" icon="calendar" name="Scrum Master">
+				Plan next sprint tasks and assign story points
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Feature Implementation" subtitle-text="12.03.2024 09:00" icon="developer-settings" name="Dev Team">
+				New user dashboard feature with analytics
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Client Demo" subtitle-text="13.03.2024 15:00" icon="video" name="Product Owner">
+				Demo new features to client stakeholders
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Production Deploy" subtitle-text="14.03.2024 18:00" icon="upload" name="DevOps Team">
+				Deploy v2.5.0 to production environment
+			</ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Sort Only</h2>
+	<p>Click the sort button to toggle between ascending (oldest first) and descending (newest first) order.</p>
+	<div style="margin-bottom: 0.5rem;">
+		<strong>Current Order:</strong> <span id="sortOrderDisplay">None</span>
+	</div>
+	<div style="width: 600px;">
+		<ui5-timeline id="sortOnlyTimeline">
+			<ui5-timeline-header-bar slot="headerBar" show-sort></ui5-timeline-header-bar>
+			<ui5-timeline-item data-date="2024-03-16T09:00" title-text="Morning Standup" subtitle-text="16.03.2024 09:00" icon="meeting-room" name="Team Lead">
+				Daily standup - sprint day 3
+			</ui5-timeline-item>
+			<ui5-timeline-item data-date="2024-03-16T11:00" title-text="Design Review" subtitle-text="16.03.2024 11:00" icon="palette" name="UX Team">
+				Review new component designs
+			</ui5-timeline-item>
+			<ui5-timeline-item data-date="2024-03-16T14:00" title-text="Tech Discussion" subtitle-text="16.03.2024 14:00" icon="discussion" name="Architecture Team">
+				Discuss microservices migration
+			</ui5-timeline-item>
+			<ui5-timeline-item data-date="2024-03-16T16:00" title-text="Sprint Retrospective" subtitle-text="16.03.2024 16:00" icon="checklist" name="Scrum Master">
+				End of sprint retrospective
+			</ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Filter Only</h2>
+	<p>Filter items by priority level. Groups are hidden when they have no visible items.</p>
+	<div style="width: 600px;">
+		<ui5-timeline id="filterOnlyTimeline">
+			<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Priority">
+				<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="High"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Medium"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Low"></ui5-timeline-filter-option>
+			</ui5-timeline-header-bar>
+			<ui5-timeline-group-item group-name="Today">
+				<ui5-timeline-item data-priority="High" title-text="Critical Bug Fix" subtitle-text="Today 09:00" icon="error" name="Dev Team" state="Negative">
+					Fix authentication bypass vulnerability
+				</ui5-timeline-item>
+				<ui5-timeline-item data-priority="Medium" title-text="Feature Review" subtitle-text="Today 11:00" icon="inspect" name="QA Team" state="Information">
+					Review new search functionality
+				</ui5-timeline-item>
+				<ui5-timeline-item data-priority="Low" title-text="Documentation" subtitle-text="Today 15:00" icon="document" name="Tech Writer">
+					Update user guide for v2.5
+				</ui5-timeline-item>
+			</ui5-timeline-group-item>
+			<ui5-timeline-group-item group-name="Tomorrow">
+				<ui5-timeline-item data-priority="High" title-text="Release Deployment" subtitle-text="Tomorrow 10:00" icon="upload" name="DevOps" state="Critical">
+					Deploy v2.5.0 to production
+				</ui5-timeline-item>
+				<ui5-timeline-item data-priority="Medium" title-text="Team Sync" subtitle-text="Tomorrow 14:00" icon="group" name="All Team">
+					Weekly team synchronization
+				</ui5-timeline-item>
+			</ui5-timeline-group-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Combined Search and Filter</h2>
+	<p>Both search and filter work together - items must match both criteria to be visible.</p>
+	<div style="width: 600px;">
+		<ui5-timeline id="searchFilterTimeline">
+			<ui5-timeline-header-bar slot="headerBar" show-search show-filter filter-by="Type">
+				<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Task"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Event"></ui5-timeline-filter-option>
+				<ui5-timeline-filter-option text="Notification"></ui5-timeline-filter-option>
+			</ui5-timeline-header-bar>
+			<ui5-timeline-item data-type="Task" title-text="Complete API Integration" subtitle-text="Due: 15.03.2024" icon="task" name="Backend Team">
+				Integrate payment gateway API
+			</ui5-timeline-item>
+			<ui5-timeline-item data-type="Event" title-text="Product Launch Webinar" subtitle-text="18.03.2024 14:00" icon="video" name="Marketing">
+				Live product demonstration for customers
+			</ui5-timeline-item>
+			<ui5-timeline-item data-type="Notification" title-text="Server Maintenance" subtitle-text="20.03.2024 02:00" icon="alert" name="IT Operations" state="Critical">
+				Scheduled downtime for database upgrade
+			</ui5-timeline-item>
+			<ui5-timeline-item data-type="Task" title-text="Security Audit" subtitle-text="Due: 22.03.2024" icon="locked" name="Security Team">
+				Quarterly security assessment
+			</ui5-timeline-item>
+			<ui5-timeline-item data-type="Event" title-text="Team Building" subtitle-text="25.03.2024 12:00" icon="family-care" name="HR">
+				Outdoor team building activity
+			</ui5-timeline-item>
+			<ui5-timeline-item data-type="Notification" title-text="License Renewal" subtitle-text="30.03.2024" icon="message-warning" name="Admin" state="Information">
+				Software license expiring soon
+			</ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<script>
+	// ============================================
+	// Full Demo Timeline - Search, Filter, Sort
+	// ============================================
+	const fullDemoTimeline = document.getElementById("fullDemoTimeline");
+	const fullDemoEventLog = document.getElementById("fullDemoEventLog");
+	const fullDemoItemCount = document.getElementById("fullDemoItemCount");
+
+	// Store current filter state
+	let fullDemoState = {
+		searchValue: "",
+		filterCategory: "All",
+		sortOrder: "None"
+	};
+
+	// Get all items as array for sorting
+	function getFullDemoItems() {
+		return Array.from(fullDemoTimeline.querySelectorAll("[ui5-timeline-item]"));
+	}
+
+	// Apply all filters and sorting
+	function applyFullDemoFilters() {
+		const items = getFullDemoItems();
+		let visibleCount = 0;
+
+		items.forEach(item => {
+			const titleText = (item.titleText || "").toLowerCase();
+			const name = (item.name || "").toLowerCase();
+			const subtitleText = (item.subtitleText || "").toLowerCase();
+			const category = item.dataset.category || "";
+
+			// Check search match
+			const searchMatch = !fullDemoState.searchValue ||
+				titleText.includes(fullDemoState.searchValue) ||
+				name.includes(fullDemoState.searchValue) ||
+				subtitleText.includes(fullDemoState.searchValue);
+
+			// Check filter match
+			const filterMatch = fullDemoState.filterCategory === "All" ||
+				category === fullDemoState.filterCategory;
+
+			// Show item only if both conditions match
+			const isVisible = searchMatch && filterMatch;
+			item.hidden = !isVisible;
+
+			if (isVisible) visibleCount++;
+		});
+
+		// Update visible count
+		fullDemoItemCount.textContent = visibleCount;
+
+		// Apply sorting if needed
+		if (fullDemoState.sortOrder !== "None") {
+			sortFullDemoItems();
+		}
+	}
+
+	// Sort items by date
+	function sortFullDemoItems() {
+		const items = getFullDemoItems();
+		const container = fullDemoTimeline;
+
+		// Sort by data-date attribute
+		items.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+
+			if (fullDemoState.sortOrder === "Ascending") {
+				return dateA - dateB; // Oldest first
+			} else {
+				return dateB - dateA; // Newest first
+			}
+		});
+
+		// Re-append items in sorted order
+		items.forEach(item => container.appendChild(item));
+	}
+
+	fullDemoTimeline.addEventListener("search", (e) => {
+		fullDemoState.searchValue = e.detail.value.toLowerCase();
+		fullDemoEventLog.textContent = `Search: "${e.detail.value}"`;
+		applyFullDemoFilters();
+	});
+
+	fullDemoTimeline.addEventListener("filter", (e) => {
+		fullDemoState.filterCategory = e.detail.selectedOptions[0] || "All";
+		fullDemoEventLog.textContent = `Filter by ${e.detail.filterBy}: ${fullDemoState.filterCategory}`;
+		applyFullDemoFilters();
+	});
+
+	fullDemoTimeline.addEventListener("sort", (e) => {
+		fullDemoState.sortOrder = e.detail.sortOrder;
+		fullDemoEventLog.textContent = `Sort: ${e.detail.sortOrder} (by date)`;
+		applyFullDemoFilters();
+	});
+
+	// ============================================
+	// Search Only Timeline
+	// ============================================
+	const searchOnlyTimeline = document.getElementById("searchOnlyTimeline");
+
+	searchOnlyTimeline.addEventListener("search", (e) => {
+		const searchValue = e.detail.value.toLowerCase();
+		searchOnlyTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
+			const titleText = (item.titleText || "").toLowerCase();
+			const name = (item.name || "").toLowerCase();
+			const subtitleText = (item.subtitleText || "").toLowerCase();
+			const content = (item.textContent || "").toLowerCase();
+
+			const matches = !searchValue ||
+				titleText.includes(searchValue) ||
+				name.includes(searchValue) ||
+				subtitleText.includes(searchValue) ||
+				content.includes(searchValue);
+
+			item.hidden = !matches;
+		});
+	});
+
+	// ============================================
+	// Sort Only Timeline
+	// ============================================
+	const sortOnlyTimeline = document.getElementById("sortOnlyTimeline");
+	const sortOrderDisplay = document.getElementById("sortOrderDisplay");
+
+	sortOnlyTimeline.addEventListener("sort", (e) => {
+		const sortOrder = e.detail.sortOrder;
+		sortOrderDisplay.textContent = sortOrder === "Ascending" ? "Oldest First ↑" : "Newest First ↓";
+
+		const items = Array.from(sortOnlyTimeline.querySelectorAll("[ui5-timeline-item]"));
+
+		items.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
+
+		items.forEach(item => sortOnlyTimeline.appendChild(item));
+	});
+
+	// ============================================
+	// Filter Only Timeline (with Groups)
+	// ============================================
+	const filterOnlyTimeline = document.getElementById("filterOnlyTimeline");
+
+	filterOnlyTimeline.addEventListener("filter", (e) => {
+		const selectedPriority = e.detail.selectedOptions[0] || "All";
+
+		// Filter items
+		filterOnlyTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
+			const priority = item.dataset.priority || "";
+			const matches = selectedPriority === "All" || priority === selectedPriority;
+			item.hidden = !matches;
+		});
+
+		// Hide groups with no visible items
+		filterOnlyTimeline.querySelectorAll("[ui5-timeline-group-item]").forEach(group => {
+			const visibleItems = group.querySelectorAll("[ui5-timeline-item]:not([hidden])");
+			group.hidden = visibleItems.length === 0;
+		});
+	});
+
+	// ============================================
+	// Combined Search and Filter Timeline
+	// ============================================
+	const searchFilterTimeline = document.getElementById("searchFilterTimeline");
+
+	let searchFilterState = {
+		searchValue: "",
+		filterType: "All"
+	};
+
+	function applySearchFilterLogic() {
+		searchFilterTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
+			const titleText = (item.titleText || "").toLowerCase();
+			const name = (item.name || "").toLowerCase();
+			const content = (item.textContent || "").toLowerCase();
+			const type = item.dataset.type || "";
+
+			// Search match
+			const searchMatch = !searchFilterState.searchValue ||
+				titleText.includes(searchFilterState.searchValue) ||
+				name.includes(searchFilterState.searchValue) ||
+				content.includes(searchFilterState.searchValue);
+
+			// Filter match
+			const filterMatch = searchFilterState.filterType === "All" || type === searchFilterState.filterType;
+
+			// Both must match
+			item.hidden = !(searchMatch && filterMatch);
+		});
+	}
+
+	searchFilterTimeline.addEventListener("search", (e) => {
+		searchFilterState.searchValue = e.detail.value.toLowerCase();
+		applySearchFilterLogic();
+	});
+
+	searchFilterTimeline.addEventListener("filter", (e) => {
+		searchFilterState.filterType = e.detail.selectedOptions[0] || "All";
+		applySearchFilterLogic();
+	});
+</script>
 	</div>
 </body>
 
