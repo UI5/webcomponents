@@ -80,6 +80,7 @@ const generate = async (argv) => {
 	const fileNames = new Set();
 
 	let dotIllustrationNames = [];
+	let v5IllustrationNames = new Set();
 
 	try {
 		await fs.access(srcPath);
@@ -88,6 +89,24 @@ const generate = async (argv) => {
 			console.log(`The path ${srcPath} does not exist.`);
 		}
 		return Promise.resolve(null);
+	}
+
+	// For V4 TNT illustrations, check which ones have V5 versions available
+	// so we only register V5 loaders for illustrations that actually exist
+	if (collection === "V4" && illustrationSet === "tnt") {
+		const v5Path = srcPath.replace("/illustrations/", "/illustrations-v5/");
+		try {
+			const v5Files = await fs.readdir(path.normalize(v5Path));
+			const v5Pattern = new RegExp(`${illustrationsPrefix}-.+-(.+).svg`);
+			v5Files.forEach(file => {
+				const match = file.match(v5Pattern);
+				if (match) {
+					v5IllustrationNames.add(match[1]);
+				}
+			});
+		} catch (error) {
+			// V5 path doesn't exist, no V5 illustrations available
+		}
 	}
 
 	if (process.env.UI5_VERBOSE === "true") {
@@ -125,12 +144,13 @@ const generate = async (argv) => {
 		// If no Dot is present, Spot will be imported as Dot
 		const hasDot = dotIllustrationNames.indexOf(illustrationName) !== -1 ? 'Dot' : 'Spot';
 
-		// For V4 TNT illustrations, also register loaders for V5 and V5/HC versions
+		// For V4 TNT illustrations that have V5 versions, register loaders for V5 and V5/HC
 		// so that when the illustration is imported directly (e.g., "@ui5/webcomponents-fiori/dist/illustrations/tnt/NoApplications.js")
 		// and Horizon themes are used, the correct V5 illustration is loaded dynamically.
-		// Note: Only TNT set has V5 illustrations, fiori set does not have V5 versions.
+		// Note: Only TNT set has V5 illustrations, and not all TNT illustrations have V5 versions.
 		// The dynamic imports ensure that V5 SVGs are loaded lazily only when actually needed.
-		const v5LoaderRegistration = collection === "V4" && illustrationSet === "tnt" ? `
+		const hasV5Version = v5IllustrationNames.has(illustrationName);
+		const v5LoaderRegistration = collection === "V4" && illustrationSet === "tnt" && hasV5Version ? `
 import { registerIllustrationLoader } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 
 registerIllustrationLoader("${illustrationSet}/V5/${illustrationName}", async function loadIllustrationV5() {
