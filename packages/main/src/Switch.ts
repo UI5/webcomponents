@@ -102,7 +102,7 @@ class Switch extends UI5Element implements IFormInputElement {
 	 * @since 2.20.0
 	 */
 	@property({ type: Boolean })
-	readonly!: boolean;
+	readonly = false;
 
 	/**
 	 * Defines if the component is checked.
