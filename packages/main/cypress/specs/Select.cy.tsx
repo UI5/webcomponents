@@ -1060,15 +1060,25 @@ describe("Select general interaction", () => {
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
-			.then(($labelRoot) => {
-				$labelRoot[0].focus();
-			});
+			.focus();
 	
 		cy.get("@select").realPress("ArrowUp");
+
+		// Wait for selection to update before checking announcement
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
 		cy.get("@select").realPress("ArrowDown");
+
+		// Wait for selection to update before checking announcement
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
