@@ -1005,6 +1005,12 @@ class ShellBar extends UI5Element {
 	}
 
 	get separatorConfig() {
+		if (this.isSBreakPoint) {
+			return {
+				showStartSeparator: false,
+				showEndSeparator: false,
+			};
+		}
 		const { start, end } = this.splitContent(this.content);
 
 		return {
@@ -1206,6 +1212,7 @@ export {
 export type {
 	/* Event Types */
 	ShellBarProfileClickEventDetail,
+	ShellBarSearchButtonEventDetail,
 	ShellBarSearchFieldClearEventDetail,
 	ShellBarSearchFieldToggleEventDetail,
 	ShellBarProductSwitchClickEventDetail,

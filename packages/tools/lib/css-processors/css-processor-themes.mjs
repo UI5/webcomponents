@@ -15,7 +15,8 @@ const generate = async (argv) => {
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
-    const packageJSON = JSON.parse(fs.readFileSync("./package.json"))
+    const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     const inputFiles = await globby([
         "src/**/parameters-bundle.css",
@@ -69,7 +70,7 @@ const generate = async (argv) => {
             combineDuplicatedSelectors,
         ]).process(f.text, { from: undefined });
 
-        return { css: scopeVariables(combined.css, packageJSON, f.path) };
+        return { css: scopeVariables(combined.css, basePackageJSON, f.path) };
     }
 
     let scopingPlugin = {

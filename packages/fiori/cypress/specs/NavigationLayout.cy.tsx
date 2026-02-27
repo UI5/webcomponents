@@ -153,6 +153,32 @@ describe("Rendering and interaction", () => {
 		cy.get("[ui5-side-navigation]")
 			.should("have.prop", "collapsed", true);
 	});
+
+	it("should fire item-click event on every item click", () => {
+		cy.mount(
+			<NavigationLayout onItemClick={cy.stub().as("itemClickNavLayout")}>
+				<SideNavigation slot="sideContent" onItemClick={cy.stub().as("itemClickSideNav")}>
+					<SideNavigationItem text="Item 1" />
+					<SideNavigationItem text="Item 2" />
+				</SideNavigation>
+				<div>Main content</div>
+			</NavigationLayout>
+		);
+
+		// Click the first item
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+		
+		// Check how many times each event was fired
+		cy.get("@itemClickSideNav").should("have.been.calledOnce");
+		cy.get("@itemClickNavLayout").should("have.been.calledOnce");
+		
+		// Click the same item again
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+		
+		// Verify counts after second click
+		cy.get("@itemClickSideNav").should("have.been.calledTwice");
+		cy.get("@itemClickNavLayout").should("have.been.calledTwice");
+	});
 });
 
 describe("Navigation Layout on Small screens (599px or less)", () => {
@@ -202,5 +228,50 @@ describe("Navigation Layout on Small screens (599px or less)", () => {
 			.shadow()
 			.find(".ui5-nl-aside")
 			.should("be.visible");
+	});
+
+	it("should collapse SideNavigation when mode is not Auto", () => {
+		cy.mount(<NavigationLayout mode="Expanded">
+			<SideNavigation slot="sideContent">
+				<SideNavigationItem text="Home" />
+				<SideNavigationItem text="Products" />
+				<SideNavigationItem text="Settings" />
+			</SideNavigation>
+			<div>Main content</div>
+		</NavigationLayout>);
+
+		// In Expanded mode, SideNavigation should be visible even on mobile
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
+
+		// Click on a SideNavigationItem
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", true);
+	});
+});
+
+describe("Navigation Layout on Desktop screens (600px or more)", () => {
+	beforeEach(() => {
+		cy.viewport(1200, 800);
+	});
+
+	it("should not collapse SideNavigation on desktop when item is selected", () => {
+		cy.mount(<NavigationLayout mode="Auto">
+			<SideNavigation slot="sideContent">
+				<SideNavigationItem text="Home" />
+				<SideNavigationItem text="Products" />
+				<SideNavigationItem text="Settings" />
+			</SideNavigation>
+			<div>Main content</div>
+		</NavigationLayout>);
+
+		// On desktop in Auto mode, SideNavigation should not be collapsed
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
+
+		// Click on a SideNavigationItem
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+
+		// SideNavigation should remain not collapsed on desktop
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
 	});
 });

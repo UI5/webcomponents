@@ -292,7 +292,8 @@ describe("AvatarGroup Rendering and Events", () => {
 			})
 			.its("targetRef")
 			.then((targetRef) => {
-				expect(targetRef.tagName + "." + targetRef.className).to.equal("DIV.ui5-avatar-group-items");
+				expect(targetRef.tagName).to.equal("DIV");
+				expect(targetRef.className).to.contain("ui5-avatar-group-items");
 			});
 	});
 

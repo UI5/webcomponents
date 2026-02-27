@@ -1,0 +1,30 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor); height: 300px">
+<!-- playground-fold-end -->
+
+<div>
+	<ui5-label for="countrySelect">Country:</ui5-label>
+	<ui5-select id="countrySelect" value="DE">
+		<ui5-option value="US">United States</ui5-option>
+		<ui5-option value="DE">Germany</ui5-option>
+		<ui5-option value="FR">France</ui5-option>
+		<ui5-option value="UK">United Kingdom</ui5-option>
+	</ui5-select>
+</div>
+
+<div>
+	<ui5-label>Selected value: <ui5-text id="output">DE</ui5-text></ui5-label>
+</div>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->
