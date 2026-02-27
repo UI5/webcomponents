@@ -6,7 +6,7 @@ import {
 	eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import ListItemBase from "./ListItemBase.js";
-import CheckBox from "./CheckBox.js";
+import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
@@ -31,7 +31,6 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
 	tag: "ui5-mcb-item",
 	template: MultiComboBoxItemTemplate,
 	styles: [ListItemBaseCss, MultiComboBoxItemCss],
-	dependencies: [CheckBox],
 })
 
 @event("selection-requested", {
