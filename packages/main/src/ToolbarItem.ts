@@ -20,6 +20,25 @@ interface IOverflowToolbarItem extends HTMLElement {
 	overflowCloseEvents?: string[] | undefined;
 	hasOverflow?: boolean | undefined;
 }
+
+/**
+ * @class
+ *
+ * Represents an abstract class for items, used in the `ui5-toolbar`.
+ *
+ * @cssState overflowed - When the item is displayed in the overflow popover. Use this state to apply different styles when the item is overflowed. Available since 2.20.0.
+ * @constructor
+ * @extends UI5Element
+ * @public
+ * @since 1.17.0
+ */
+@customElement({
+	tag: "ui5-toolbar-item",
+	languageAware: true,
+	renderer: jsxRenderer,
+	template: ToolbarItemTemplate,
+	styles: ToolbarItemCss,
+})
 /**
  * Fired when the overflow popover is closed.
  * @public
@@ -29,25 +48,6 @@ interface IOverflowToolbarItem extends HTMLElement {
 	bubbles: true,
 	cancelable: true,
 })
-
-@customElement({
-	tag: "ui5-toolbar-item",
-	languageAware: true,
-	renderer: jsxRenderer,
-	template: ToolbarItemTemplate,
-	styles: ToolbarItemCss,
-})
-
-/**
- * @class
- *
- * Represents an abstract class for items, used in the `ui5-toolbar`.
- * @constructor
- * @extends UI5Element
- * @public
- * @experimental This module is experimental and its API might change significantly in future.
- * @since 1.17.0
- */
 class ToolbarItem extends UI5Element {
 	// strictEvents: needed for parent class
 	eventDetails!: {
@@ -72,15 +72,28 @@ class ToolbarItem extends UI5Element {
 	@property({ type: Boolean })
 	preventOverflowClosing = false;
 
+	_isOverflowed: boolean = false;
+
+	get isOverflowed(): boolean {
+		return this._isOverflowed;
+	}
+
 	/**
 	 * Defines if the toolbar item is overflowed.
 	 * @default false
 	 * @protected
 	 * @since 2.11.0
 	 */
-
 	@property({ type: Boolean })
-	isOverflowed: boolean = false;
+	set isOverflowed(value: boolean) {
+		this._isOverflowed = value;
+
+		if (value) {
+			this._internals.states.add("overflowed");
+		} else {
+			this._internals.states.delete("overflowed");
+		}
+	}
 
 	_isRendering = true;
 	_maxWidth = 0;
