@@ -228,6 +228,8 @@ describe("Date Picker Tests", () => {
 			.find(".ui5-input-clear-icon")
 			.should("not.exist");
 
+		cy.realPress("Tab");
+
 		cy.get<DatePicker>("@datePicker")
 			.should("have.value", "");
 	});
