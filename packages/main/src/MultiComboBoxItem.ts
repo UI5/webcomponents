@@ -56,7 +56,7 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	 * programmatically via `selectedValues` on the parent MultiComboBox.
 	 * @default undefined
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@property()
 	value?: string;
