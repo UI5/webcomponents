@@ -68,7 +68,7 @@ const getScripts = (options) => {
 
 	const scripts = {
 		__ui5envs: {
-			UI5_CEM_MODE: options.dev,
+			UI5_CEM_MODE: typeof options.dev === "boolean" ? (options.dev ? "dev" : undefined) : options.dev,
 			UI5_TS: `${tsOption}`,
 			CSS_VARIABLES_TARGET: options.cssVariablesTarget ?? "root",
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),

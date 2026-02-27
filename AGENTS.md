@@ -38,6 +38,12 @@ cd packages/main
 yarn test:cypress:single cypress/specs/Button.cy.tsx  # Single test file
 ```
 
+### Documentation Website
+```bash
+cd packages/website
+yarn start  # Starts Docusaurus on http://localhost:3000
+```
+
 ### Build & Test Flow
 
 **Build steps** (always run from root folder):

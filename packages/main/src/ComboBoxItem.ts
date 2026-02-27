@@ -64,7 +64,7 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@property()
 	value?: string;
