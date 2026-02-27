@@ -1,0 +1,5 @@
+@import "../base/SliderHandle-parameters.css";
+
+:host {
+	--ui5_slider_handle_outline: none;
+}

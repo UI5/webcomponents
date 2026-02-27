@@ -1567,6 +1567,240 @@ describe("Keyboard Handling", () => {
 	});
 });
 
+describe("Clipboard Operations", () => {
+	it("should copy single token text to clipboard when Ctrl+C is pressed", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="TokenText"></Token>
+				<Token text="Token2"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		// Stub the clipboard API for secure context
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			// Mock secure context
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "TokenText");
+	});
+
+	it("should copy multiple selected tokens text to clipboard separated by newlines", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		// Select first two tokens
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "ArrowRight"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Tokens should be joined with \r\n
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Andora\r\nBulgaria");
+	});
+
+	it("should copy all tokens text when all are selected", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="First"></Token>
+				<Token text="Second"></Token>
+				<Token text="Third"></Token>
+			</Tokenizer>
+		);
+
+		// Select all tokens using Ctrl+A
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "End"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "First\r\nSecond\r\nThird");
+	});
+
+	it("should use clipboardData.setData in non-secure context (HTTP fallback)", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="HttpToken"></Token>
+				<Token text="Token2"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		// Mock non-secure context (HTTP) - navigator.clipboard.writeText should not be called
+		cy.window().then((win) => {
+			Object.defineProperty(win, "isSecureContext", { value: false, writable: true });
+			// Spy on clipboard API to ensure it's NOT called in non-secure context
+			if (win.navigator.clipboard?.writeText) {
+				cy.spy(win.navigator.clipboard, "writeText").as("clipboardWriteSpy");
+			}
+		});
+
+		// Listen for copy event to verify clipboardData.setData is called
+		let setDataCalled = false;
+		let setDataValue = "";
+		cy.document().then((doc) => {
+			doc.addEventListener("copy", (e: ClipboardEvent) => {
+				// Track the original setData call
+				const originalSetData = e.clipboardData?.setData.bind(e.clipboardData);
+				if (e.clipboardData && originalSetData) {
+					e.clipboardData.setData = (format: string, data: string) => {
+						if (format === "text/plain") {
+							setDataCalled = true;
+							setDataValue = data;
+						}
+						return originalSetData(format, data);
+					};
+				}
+			}, { once: true, capture: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Verify setData was called with correct value
+		cy.then(() => {
+			expect(setDataCalled).to.be.true;
+			expect(setDataValue).to.equal("HttpToken");
+		});
+	});
+
+	it("should cut token and copy text to clipboard when Ctrl+X is pressed", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="CutMe"></Token>
+				<Token text="KeepMe"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Verify clipboard was filled with cut token text
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "CutMe");
+
+		// Verify token was deleted
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.attr", "text", "KeepMe");
+	});
+
+	it("should cut multiple selected tokens when Ctrl+X is pressed", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Cut1"></Token>
+				<Token text="Cut2"></Token>
+				<Token text="Keep"></Token>
+			</Tokenizer>
+		);
+
+		// Select first two tokens
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "ArrowRight"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Verify clipboard contains both tokens
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Cut1\r\nCut2");
+
+		// Verify tokens were deleted
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.attr", "text", "Keep");
+	});
+
+	it("should copy with Ctrl+Insert shortcut", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="InsertCopy"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "Insert"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "InsertCopy");
+	});
+
+	it("should cut with Shift+Delete shortcut", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="ShiftDeleteCut"></Token>
+				<Token text="Remaining"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Shift", "Delete"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "ShiftDeleteCut");
+		cy.get("[ui5-token]").should("have.length", 1);
+	});
+
+	it("should not copy unselected tokens", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Selected"></Token>
+				<Token text="NotSelected"></Token>
+				<Token text="AlsoNotSelected"></Token>
+			</Tokenizer>
+		);
+
+		// Only click first token (it will be selected)
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Only the selected token should be copied
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected");
+	});
+});
+
 describe("Tokenizer - getFocusDomRef Method", () => {
     it("should focus the last focused token on tokenizer focus if its visible", () => {
         const onButtonClick = () => {

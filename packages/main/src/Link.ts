@@ -291,7 +291,7 @@ class Link extends UI5Element implements ITabbable {
 	}
 
 	onBeforeRendering() {
-		const needsNoReferrer = this.target !== "_self"
+		const needsNoReferrer = this.target === "_blank"
 			&& this.href
 			&& this._isCrossOrigin(this.href);
 

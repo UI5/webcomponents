@@ -1,0 +1,11 @@
+:host {
+	--_slider_root_side_padding: 0 1rem;
+	--_slider_height: 2.75rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_slider_root_side_padding: 0 .75rem;
+		--_slider_height: 2rem;
+	}
+}
