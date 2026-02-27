@@ -185,7 +185,7 @@ class RatingIndicator extends UI5Element {
 	 * @since 2.20
 	 */
 	@property()
-	iconSelected = "favorite";
+	ratedIcon = "favorite";
 
 	/**
 	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
@@ -194,7 +194,7 @@ class RatingIndicator extends UI5Element {
 	 * @since 2.20
 	 */
 	@property()
-	iconUnselected = "unfavorite";
+	unratedIcon = "unfavorite";
 
 	/**
 	 * @private
