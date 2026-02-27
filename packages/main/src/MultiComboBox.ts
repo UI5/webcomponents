@@ -301,7 +301,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	 * @since 2.19.0
  	 */
 	@property({ type: Array })
-	selectedValues:Array<string> = [];
+	selectedValues: Array<string> = [];
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -558,7 +558,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	@slot()
 	valueStateMessage!: Slot<HTMLElement>;
 
-	// selectedValues: Array<IMultiComboBoxItem>;
 	_inputLastValue: string;
 	_deleting: boolean;
 	_validationTimeout: Timeout | null;
@@ -622,7 +621,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._filteredItems = [];
 		this.selectedItems = [];
 		this._previouslySelectedItems = [];
-		// this.selectedValues = [];
 		this._itemsBeforeOpen = [];
 		this._inputLastValue = "";
 		this._deleting = false;
