@@ -5,14 +5,15 @@ import {
 	property,
 	eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
-import ComboBoxItem from "./ComboBoxItem.js";
+import ListItemBase from "./ListItemBase.js";
 import CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
 } from "./generated/i18n/i18n-defaults.js";
 
-import styles from "./generated/themes/MultiComboBoxItem.css.js";
+import ListItemBaseCss from "./generated/themes/ListItemBase.css.js";
+import MultiComboBoxItemCss from "./generated/themes/MultiComboBoxItem.css.js";
 import MultiComboBoxItemTemplate from "./MultiComboBoxItemTemplate.js";
 import type { SelectionRequestEventDetail } from "./ListItem.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
@@ -22,24 +23,42 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
  * @class
  * The `ui5-mcb-item` represents the item for a `ui5-multi-combobox`.
  * @constructor
- * @extends ComboBoxItem
+ * @extends ListItemBase
  * @implements {IMultiComboBoxItem}
  * @public
  */
 @customElement({
 	tag: "ui5-mcb-item",
 	template: MultiComboBoxItemTemplate,
-	styles: [ComboBoxItem.styles, styles],
-	dependencies: [...ComboBoxItem.dependencies, CheckBox],
+	styles: [ListItemBaseCss, MultiComboBoxItemCss],
+	dependencies: [CheckBox],
 })
 
 @event("selection-requested", {
 	bubbles: true,
 })
-class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
-	eventDetails!: ComboBoxItem["eventDetails"] & {
+class MultiComboBoxItem extends ListItemBase implements IMultiComboBoxItem {
+	eventDetails!: ListItemBase["eventDetails"] & {
 		"selection-requested": SelectionRequestEventDetail,
 	}
+
+	/**
+	 * Defines the text of the component.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	text?: string;
+
+	/**
+	 * Defines the additional text of the component.
+	 * @default undefined
+	 * @since 1.0.0-rc.11
+	 * @public
+	 */
+	@property()
+	additionalText?: string;
+
 	/**
 	 * Defines the selected state of the component.
 	 * @default false

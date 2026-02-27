@@ -1,19 +1,23 @@
-:host([ui5-mcb-item]) {
+:host {
 	height: auto;
 	min-height: var(--_ui5_list_item_base_height);
 }
 
-:host([ui5-mcb-item]) .ui5-li-root {
+.ui5-li-root {
 	padding-inline-start: 0;
 	min-height: var(--_ui5_list_item_base_height);
 }
 
-:host([ui5-mcb-item]) .ui5-li-content {
+.ui5-li-content {
 	padding-bottom: .5rem;
 	padding-top: .5rem;
 	box-sizing: border-box;
 }
 
-:host([ui5-mcb-item]) [ui5-checkbox] {
+:host([text][additional-text]) .ui5-li-text-wrapper {
+	gap: 1rem;
+}
+
+[ui5-checkbox] {
 	overflow: visible;
 }

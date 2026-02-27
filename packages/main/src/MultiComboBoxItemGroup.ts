@@ -6,14 +6,14 @@ import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import type MultiComboBoxItem from "./MultiComboBoxItem.js";
 import MultiComboBoxItemGroupTemplate from "./MultiComboBoxItemGroupTemplate.js";
 import type ListItemGroupHeader from "./ListItemGroupHeader.js";
-import ComboBoxItemGroup from "./ComboBoxItemGroup.js";
+import ListItemGroup from "./ListItemGroup.js";
 
 /**
  * @class
  * The `ui5-mcb-item-group` is type of suggestion item,
  * that can be used to split the `ui5-multi-combobox` suggestions into groups.
  * @constructor
- * @extends ComboBoxItemGroup
+ * @extends ListItemGroup
  * @public
  * @implements {IMultiComboBoxItem}
  * @since 2.0.0
@@ -22,8 +22,8 @@ import ComboBoxItemGroup from "./ComboBoxItemGroup.js";
 	tag: "ui5-mcb-item-group",
 	template: MultiComboBoxItemGroupTemplate,
 })
-class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBoxItem {
-	eventDetails!: ComboBoxItemGroup["eventDetails"];
+class MultiComboBoxItemGroup extends ListItemGroup implements IMultiComboBoxItem {
+	eventDetails!: ListItemGroup["eventDetails"];
 	/**
 	 * Defines the items of the <code>ui5-mcb-item-group</code>.
 	 * @public
@@ -42,6 +42,10 @@ class MultiComboBoxItemGroup extends ComboBoxItemGroup implements IMultiComboBox
 	 */
 	get isGroupItem() {
 		return true;
+	}
+
+	get _isVisible() {
+		return this.items.some(item => item._isVisible);
 	}
 
 	get selected() {
