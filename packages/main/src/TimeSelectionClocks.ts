@@ -176,7 +176,7 @@ class TimeSelectionClocks extends TimePickerInternals {
 			// If Enter is pressed on AM/PM segmented button, apply the period change first
 			if (this._amPmFocused) {
 				const buttonAmPm = this._buttonAmPm();
-				const selectedItem = buttonAmPm?.items.find(item => item.selected);
+				const selectedItem = buttonAmPm?.selectedItems[0];
 				if (selectedItem?.textContent) {
 					this._calculatePeriodChange(selectedItem.textContent);
 				}
