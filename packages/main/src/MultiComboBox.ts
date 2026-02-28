@@ -295,11 +295,28 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	value = "";
 
 	/**
- 	 * Defines the values of the selected items.
- 	 * @default []
+	 * Defines the values of the selected items.
+	 *
+	 * Use this property to programmatically select items by their `value` property.
+	 * Each string in the array should match the `value` attribute of a `ui5-mcb-item`.
+	 *
+	 * **Note:** If an item doesn't have a `value` attribute set, it cannot be selected via this property.
+	 *
+	 * **Note:** Mixing the `selected` property of `ui5-mcb-item` and `selectedValues` is not supported.
+	 *
+	 * ### Example
+	 *
+	 * ```html
+	 * <ui5-multi-combobox selected-values='["apple", "cherry"]'>
+	 *   <ui5-mcb-item text="Apple" value="apple"></ui5-mcb-item>
+	 *   <ui5-mcb-item text="Banana" value="banana"></ui5-mcb-item>
+	 *   <ui5-mcb-item text="Cherry" value="cherry"></ui5-mcb-item>
+	 * </ui5-multi-combobox>
+	 * ```
+	 * @default []
 	 * @public
 	 * @since 2.20.0
- 	 */
+	 */
 	@property({ type: Array })
 	selectedValues: Array<string> = [];
 
