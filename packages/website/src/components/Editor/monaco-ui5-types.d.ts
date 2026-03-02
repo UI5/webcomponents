@@ -2096,6 +2096,171 @@ interface BarcodeScannerDialogProps extends UI5BaseProps {
   onScanError?: (event: CustomEvent<any>) => void;
 }
 
+/** AIButton component props */
+interface AIButtonProps extends UI5BaseProps {
+  design?: "Default" | "Positive" | "Negative" | "Transparent" | "Emphasized" | "Attention";
+  disabled?: boolean;
+  state?: string;
+  arrowButtonPressed?: boolean;
+  accessibilityAttributes?: object;
+  states?: React.ReactNode;
+  eventDetails?: any;
+  icon?: string;
+  endIcon?: string;
+  submits?: boolean;
+  tooltip?: string;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleDescription?: string;
+  type?: "Button" | "Submit" | "Reset";
+  accessibleRole?: "Button" | "Link";
+  loading?: boolean;
+  loadingDelay?: number;
+  text?: React.ReactNode;
+  badge?: React.ReactNode;
+  onClick?: (event: CustomEvent<any>) => void;
+  onArrowButtonClick?: (event: CustomEvent<any>) => void;
+  onActiveStateChange?: (event: CustomEvent<any>) => void;
+}
+
+/** AIButtonState component props */
+interface AIButtonStateProps extends UI5BaseProps {
+  name?: string;
+  text?: string;
+  icon?: string;
+  endIcon?: string;
+  showArrowButton?: boolean;
+}
+
+/** AIInput component props */
+interface AIInputProps extends UI5BaseProps {
+  currentVersion?: number;
+  totalVersions?: number;
+  loading?: boolean;
+  actions?: React.ReactNode;
+  eventDetails?: any;
+  isFocused?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  readonly?: boolean;
+  required?: boolean;
+  noTypeahead?: boolean;
+  type?: "Text" | "Email" | "Number" | "Password" | "Tel" | "URL" | "Search";
+  value?: string;
+  valueState?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  name?: string;
+  showSuggestions?: boolean;
+  maxlength?: number;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleDescription?: string;
+  accessibleDescriptionRef?: string;
+  showClearIcon?: boolean;
+  open?: boolean;
+  filter?: "StartsWithPerTerm" | "StartsWith" | "Contains" | "None";
+  suggestionItems?: React.ReactNode;
+  icon?: React.ReactNode;
+  valueStateMessage?: React.ReactNode;
+  hasSuggestionItemSelected?: boolean;
+  valueBeforeItemSelection?: string;
+  valueBeforeSelectionStart?: string;
+  previousValue?: string;
+  firstRendering?: boolean;
+  typedInValue?: string;
+  lastConfirmedValue?: string;
+  isTyping?: boolean;
+  onChange?: (event: CustomEvent<any>) => void;
+  onInput?: (event: CustomEvent<any>) => void;
+  onSelect?: (event: CustomEvent<any>) => void;
+  onRequestSubmit?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onTypeAhead?: (event: CustomEvent<any>) => void;
+  onSuggestionScroll?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
+}
+
+/** AITextArea component props */
+interface AITextAreaProps extends UI5BaseProps {
+  loading?: boolean;
+  promptDescription?: string;
+  currentVersion?: number;
+  totalVersions?: number;
+  eventDetails?: any;
+  focused?: boolean;
+  menu?: React.ReactNode;
+  value?: string;
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  valueState?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  rows?: number;
+  maxlength?: number;
+  showExceededText?: boolean;
+  growing?: boolean;
+  growingMaxRows?: number;
+  name?: string;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleDescription?: string;
+  accessibleDescriptionRef?: string;
+  valueStateMessage?: React.ReactNode;
+  previousValue?: string;
+  valueStatePopover?: any;
+  onChange?: (event: CustomEvent<any>) => void;
+  onInput?: (event: CustomEvent<any>) => void;
+  onSelect?: (event: CustomEvent<any>) => void;
+  onScroll?: (event: CustomEvent<any>) => void;
+  onValueChanged?: (event: CustomEvent<any>) => void;
+}
+
+/** AIPromptInput component props */
+interface AIPromptInputProps extends UI5BaseProps {
+  value?: string;
+  placeholder?: string;
+  label?: string;
+  showClearIcon?: boolean;
+  showExceededText?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  maxlength?: number;
+  valueState?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  showSuggestions?: boolean;
+  suggestionItems?: React.ReactNode;
+  valueStateMessage?: React.ReactNode;
+  eventDetails?: any;
+  required?: boolean;
+  noTypeahead?: boolean;
+  type?: "Text" | "Email" | "Number" | "Password" | "Tel" | "URL" | "Search";
+  name?: string;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleDescription?: string;
+  accessibleDescriptionRef?: string;
+  open?: boolean;
+  filter?: "StartsWithPerTerm" | "StartsWith" | "Contains" | "None";
+  icon?: React.ReactNode;
+  hasSuggestionItemSelected?: boolean;
+  valueBeforeItemSelection?: string;
+  valueBeforeSelectionStart?: string;
+  previousValue?: string;
+  firstRendering?: boolean;
+  typedInValue?: string;
+  lastConfirmedValue?: string;
+  isTyping?: boolean;
+  onSubmit?: (event: CustomEvent<any>) => void;
+  onInput?: (event: CustomEvent<any>) => void;
+  onChange?: (event: CustomEvent<any>) => void;
+  onSelect?: (event: CustomEvent<any>) => void;
+  onRequestSubmit?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onTypeAhead?: (event: CustomEvent<any>) => void;
+  onSuggestionScroll?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
+}
+
 // Module declarations for sample imports
 declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {
   export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
@@ -2780,6 +2945,31 @@ declare module "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js" {
   export default BarcodeScannerDialog;
 }
 
+declare module "@ui5/webcomponents-ai/dist/Button.js" {
+  const AIButton: { _jsxProps: AIButtonProps };
+  export default AIButton;
+}
+
+declare module "@ui5/webcomponents-ai/dist/ButtonState.js" {
+  const AIButtonState: { _jsxProps: AIButtonStateProps };
+  export default AIButtonState;
+}
+
+declare module "@ui5/webcomponents-ai/dist/Input.js" {
+  const AIInput: { _jsxProps: AIInputProps };
+  export default AIInput;
+}
+
+declare module "@ui5/webcomponents-ai/dist/TextArea.js" {
+  const AITextArea: { _jsxProps: AITextAreaProps };
+  export default AITextArea;
+}
+
+declare module "@ui5/webcomponents-ai/dist/PromptInput.js" {
+  const AIPromptInput: { _jsxProps: AIPromptInputProps };
+  export default AIPromptInput;
+}
+
 declare module "@ui5/webcomponents-icons/dist/*.js" {
   const icon: any;
   export default icon;
@@ -2921,3 +3111,8 @@ declare function UserMenu(props: UserMenuProps): JSX.Element;
 declare function UserMenuItem(props: UserMenuItemProps): JSX.Element;
 declare function UserMenuAccount(props: UserMenuAccountProps): JSX.Element;
 declare function BarcodeScannerDialog(props: BarcodeScannerDialogProps): JSX.Element;
+declare function AIButton(props: AIButtonProps): JSX.Element;
+declare function AIButtonState(props: AIButtonStateProps): JSX.Element;
+declare function AIInput(props: AIInputProps): JSX.Element;
+declare function AITextArea(props: AITextAreaProps): JSX.Element;
+declare function AIPromptInput(props: AIPromptInputProps): JSX.Element;

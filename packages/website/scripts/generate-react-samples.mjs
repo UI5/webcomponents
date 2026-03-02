@@ -235,42 +235,84 @@ function extractSampleContent(html) {
   return html.slice(startIdx + startMarker.length, endIdx).trim();
 }
 
-// Parse main.js to find component imports and event handlers
+// Parse main.js to find component imports, icon imports, and event handlers
 function parseMainJS(jsContent) {
   const imports = [];
+  const iconImports = [];
   const handlers = [];
+  const elementHandlers = new Map(); // Map element ID to array of {eventName, handlerName}
 
-  if (!jsContent) return { imports, handlers };
+  if (!jsContent) return { imports, iconImports, handlers, elementHandlers };
 
-  // Find component imports
+  // Find all imports
   const importRegex = /import\s+["']([^"']+)["']/g;
   let match;
   while ((match = importRegex.exec(jsContent)) !== null) {
-    imports.push(match[1]);
-  }
+    const importPath = match[1];
+    imports.push(importPath);
 
-  // Find event handler definitions (named functions that handle events)
-  // Look for patterns like: element.addEventListener("click", handler) or element.onclick = handler
-  const handlerRegex = /(?:addEventListener\s*\(\s*["']([^"']+)["']\s*,\s*(\w+)|\.on(\w+)\s*=\s*(\w+))/g;
-  while ((match = handlerRegex.exec(jsContent)) !== null) {
-    const eventName = match[1] || match[3];
-    const handlerName = match[2] || match[4];
-    if (eventName && handlerName) {
-      handlers.push({ eventName, handlerName });
+    // Collect icon imports separately (icons, icons-tnt, icons-business-suite)
+    if (importPath.includes("@ui5/webcomponents-icons")) {
+      iconImports.push(importPath);
     }
   }
 
-  // Also find inline function handlers in addEventListener
-  const inlineHandlerRegex = /addEventListener\s*\(\s*["']([^"']+)["']\s*,\s*(?:function\s*\([^)]*\)|(?:\([^)]*\)|[a-zA-Z_$][a-zA-Z0-9_$]*)\s*=>)\s*\{([^}]+)\}/g;
-  while ((match = inlineHandlerRegex.exec(jsContent)) !== null) {
-    const eventName = match[1];
-    const body = match[2].trim();
-    // Generate a handler name from event name
-    const handlerName = `handle${eventName.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join("")}`;
-    handlers.push({ eventName, handlerName, body });
+  // Find patterns like: document.getElementById("myBtn").addEventListener("click", handler)
+  // or: const btn = document.getElementById("myBtn"); btn.addEventListener("click", handler);
+  const getElementByIdRegex = /(?:const|let|var)\s+(\w+)\s*=\s*document\.getElementById\s*\(\s*["']([^"']+)["']\s*\)/g;
+  const elementVars = new Map(); // Map variable name to element ID
+  while ((match = getElementByIdRegex.exec(jsContent)) !== null) {
+    elementVars.set(match[1], match[2]);
   }
 
-  return { imports, handlers };
+  // Find direct getElementById().addEventListener patterns
+  const directHandlerRegex = /document\.getElementById\s*\(\s*["']([^"']+)["']\s*\)\s*\.addEventListener\s*\(\s*["']([^"']+)["']\s*,\s*(?:function\s*\([^)]*\)\s*\{([^}]*)\}|(\w+))/g;
+  while ((match = directHandlerRegex.exec(jsContent)) !== null) {
+    const elementId = match[1];
+    const eventName = match[2];
+    const inlineBody = match[3];
+    const handlerRef = match[4];
+
+    const handlerName = handlerRef || `handle${eventName.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join("")}`;
+
+    if (!elementHandlers.has(elementId)) {
+      elementHandlers.set(elementId, []);
+    }
+    elementHandlers.get(elementId).push({ eventName, handlerName });
+
+    if (inlineBody) {
+      handlers.push({ eventName, handlerName, body: inlineBody.trim() });
+    }
+  }
+
+  // Find variable.addEventListener patterns (including direct ID references like colorPaletteBtn.addEventListener)
+  // This handles both: 1) variables from getElementById, 2) direct ID references (browser auto-exposes IDs as globals)
+  const varHandlerRegex = /(\w+)\.addEventListener\s*\(\s*["']([^"']+)["']\s*,\s*(?:function\s*\([^)]*\)\s*\{([\s\S]*?)\}|(\([^)]*\)|[a-zA-Z_$][a-zA-Z0-9_$]*)\s*=>\s*\{([\s\S]*?)\}|(\w+))/g;
+  while ((match = varHandlerRegex.exec(jsContent)) !== null) {
+    const varName = match[1];
+    const eventName = match[2];
+    const inlineBody = match[3] || match[5]; // function body or arrow body
+    const handlerRef = match[6];
+
+    // Skip if var is "document" (already handled above)
+    if (varName === "document") continue;
+
+    // The element ID is either from a variable mapping or the varName itself (direct ID reference)
+    const elementId = elementVars.get(varName) || varName;
+
+    const handlerName = handlerRef || `handle${eventName.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join("")}`;
+
+    if (!elementHandlers.has(elementId)) {
+      elementHandlers.set(elementId, []);
+    }
+    elementHandlers.get(elementId).push({ eventName, handlerName });
+
+    if (inlineBody) {
+      handlers.push({ eventName, handlerName, body: inlineBody.trim() });
+    }
+  }
+
+  return { imports, iconImports, handlers, elementHandlers };
 }
 
 // Convert HTML attributes to JSX props
@@ -440,7 +482,7 @@ function applyCSSStyles(jsx, componentStyles, usedComponents) {
 }
 
 // Convert HTML to JSX
-function htmlToJsx(html, usedComponents) {
+function htmlToJsx(html, usedComponents, elementHandlers = new Map()) {
   let jsx = html;
 
   // Step 1: Convert class to className for all elements
@@ -486,7 +528,26 @@ function htmlToJsx(html, usedComponents) {
     }
 
     usedComponents.set(lowerTag, mapping);
-    const convertedAttrs = convertAttributes(attrsStr, lowerTag);
+    let convertedAttrs = convertAttributes(attrsStr, lowerTag);
+
+    // Check if this element has an ID and event handlers
+    const idMatch = attrsStr.match(/\bid\s*=\s*["']([^"']+)["']/);
+    if (idMatch) {
+      const elementId = idMatch[1];
+      const handlers = elementHandlers.get(elementId);
+      if (handlers && handlers.length > 0) {
+        // Add event handler props
+        for (const { eventName, handlerName } of handlers) {
+          // Convert event name to React prop: click -> onClick, selection-change -> onSelectionChange
+          const reactEventName = "on" + eventName
+            .split("-")
+            .map((part, i) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join("");
+          convertedAttrs += ` ${reactEventName}={${handlerName}}`;
+        }
+      }
+    }
+
     const propsStr = convertedAttrs ? ` ${convertedAttrs}` : "";
 
     // Keep the self-closing nature
@@ -541,18 +602,18 @@ function generateReactSample(sampleDir) {
   // Extract sample content
   const sampleContent = extractSampleContent(html);
 
+  // Parse JS for handlers and icon imports FIRST (need elementHandlers for JSX conversion)
+  const { handlers, iconImports, elementHandlers } = parseMainJS(js);
+
   // Track used components
   const usedComponents = new Map();
 
-  // Convert to JSX
-  let jsxContent = htmlToJsx(sampleContent, usedComponents);
+  // Convert to JSX, passing elementHandlers to inject event props
+  let jsxContent = htmlToJsx(sampleContent, usedComponents, elementHandlers);
 
   // Parse CSS and apply styles to components
   const componentStyles = parseCSS(css);
   jsxContent = applyCSSStyles(jsxContent, componentStyles, usedComponents);
-
-  // Parse JS for handlers
-  const { handlers } = parseMainJS(js);
 
   // Generate imports
   const imports = ['import { createReactComponent } from "@ui5/webcomponents-base";'];
@@ -566,6 +627,11 @@ function generateReactSample(sampleDir) {
   for (const [tag, mapping] of sortedComponents) {
     imports.push(`import ${mapping.name}Class from "${mapping.module}";`);
     componentDecls.push(`const ${mapping.name} = createReactComponent(${mapping.name}Class);`);
+  }
+
+  // Add icon imports (these are side-effect imports, no named export)
+  for (const iconImport of iconImports) {
+    imports.push(`import "${iconImport}";`);
   }
 
   // Check if we need useRef (for refs in handlers)

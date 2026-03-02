@@ -149,8 +149,20 @@ import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
 
+// Import AI package
+import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
+import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
+import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
+import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
+import AIPromptInputClass from "@ui5/webcomponents-ai/dist/PromptInput.js";
+
 // Import icons commonly used in samples
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
+import "@ui5/webcomponents-icons-tnt/dist/AllIcons.js";
+import "@ui5/webcomponents-icons-business-suite/dist/AllIcons.js";
+
+// Import illustrations for IllustratedMessage
+import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js";
 
 // Import localization for calendar/date components
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
@@ -186,11 +198,57 @@ const ComponentClasses: Record<string, any> = {
   ProductSwitchItemClass, ViewSettingsDialogClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
   SearchClass, SearchItemClass, SearchMessageAreaClass, UserMenuClass, UserMenuItemClass,
   UserMenuAccountClass, BarcodeScannerDialogClass,
+  // ai package
+  AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
 };
 
 interface ReactPlaygroundProps {
   code: string;
   editorVisible?: boolean;
+}
+
+// Error Boundary to catch render errors without crashing the page
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class PreviewErrorBoundary extends React.Component<
+  { children: React.ReactNode; onError?: (error: Error) => void },
+  ErrorBoundaryState
+> {
+  constructor(props: { children: React.ReactNode; onError?: (error: Error) => void }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("[ReactPlayground] Render error:", error, errorInfo);
+    this.props.onError?.(error);
+  }
+
+  // Reset error state when children change (new code)
+  componentDidUpdate(prevProps: { children: React.ReactNode }) {
+    if (prevProps.children !== this.props.children && this.state.hasError) {
+      this.setState({ hasError: false, error: null });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ color: "var(--sapNegativeColor)", padding: "1rem", fontFamily: "monospace", fontSize: "13px" }}>
+          <strong>Render Error:</strong> {this.state.error?.message || "Unknown error"}
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 // Monaco Editor and Babel - dynamically imported
@@ -205,11 +263,10 @@ if (ExecutionEnvironment.canUseDOM) {
   Babel = require("@babel/standalone");
 }
 
-// Transpile JSX code to JavaScript
-function transpileCode(code: string): string | null {
+// Transpile JSX code to JavaScript - returns { code, error }
+function transpileCode(code: string): { code: string | null; error: string | null } {
   if (!Babel) {
-    console.error("[ReactPlayground] Babel not available");
-    return null;
+    return { code: null, error: "Babel not available" };
   }
 
   try {
@@ -229,15 +286,16 @@ function transpileCode(code: string): string | null {
       presets: ["react", "typescript"],
       filename: "sample.tsx",
     });
-    return result.code;
+    return { code: result.code, error: null };
   } catch (error) {
-    console.error("[ReactPlayground] Transpile error:", error);
-    return null;
+    // Return error message instead of throwing
+    const message = (error as Error).message || "Unknown transpilation error";
+    return { code: null, error: message };
   }
 }
 
-// Execute transpiled code and return a React element
-function executeCode(transpiledCode: string): React.ReactNode {
+// Execute transpiled code and return a React element or error
+function executeCode(transpiledCode: string): { element: React.ReactNode | null; error: string | null } {
   try {
     // Build the scope - all component classes + createReactComponent + React
     const scopeNames = ["React", "createReactComponent", ...Object.keys(ComponentClasses)];
@@ -256,14 +314,10 @@ function executeCode(transpiledCode: string): React.ReactNode {
       `
     );
 
-    return fn(...scopeValues);
+    return { element: fn(...scopeValues), error: null };
   } catch (error) {
-    console.error("[ReactPlayground] Execution error:", error);
-    return (
-      <div style={{ color: "var(--sapNegativeColor)", padding: "1rem", fontFamily: "monospace" }}>
-        Error: {(error as Error).message}
-      </div>
-    );
+    const message = (error as Error).message || "Unknown execution error";
+    return { element: null, error: message };
   }
 }
 
@@ -292,18 +346,37 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
   // Babel is now imported synchronously, so it's always ready
   const babelReady = !!Babel;
 
-  // Compile and render preview
+  // Compile and render preview - catches errors gracefully
   const previewContent = useMemo(() => {
     if (!babelReady) {
       return <div style={{ padding: "1rem", color: "var(--sapNeutralTextColor)" }}>Loading...</div>;
     }
 
-    const transpiled = transpileCode(editorCode);
-    if (!transpiled) {
+    const transpileResult = transpileCode(editorCode);
+    if (transpileResult.error) {
+      // Show transpilation error inline, don't crash
+      return (
+        <div style={{ color: "var(--sapNegativeColor)", padding: "1rem", fontFamily: "monospace", fontSize: "13px", whiteSpace: "pre-wrap" }}>
+          <strong>Syntax Error:</strong> {transpileResult.error}
+        </div>
+      );
+    }
+
+    if (!transpileResult.code) {
       return <div style={{ padding: "1rem", color: "var(--sapNegativeColor)" }}>Transpilation failed</div>;
     }
 
-    return executeCode(transpiled);
+    const execResult = executeCode(transpileResult.code);
+    if (execResult.error) {
+      // Show execution error inline, don't crash
+      return (
+        <div style={{ color: "var(--sapNegativeColor)", padding: "1rem", fontFamily: "monospace", fontSize: "13px", whiteSpace: "pre-wrap" }}>
+          <strong>Error:</strong> {execResult.error}
+        </div>
+      );
+    }
+
+    return execResult.element;
   }, [editorCode, babelReady]);
 
   const monacoTheme = colorMode === "dark" ? "vs-dark" : "light";
@@ -394,7 +467,9 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
           className={`${styles.preview} ${contentDensity === "Compact" ? "ui5-content-density-compact" : ""}`}
           data-ui5-theme={theme}
         >
-          {previewContent}
+          <PreviewErrorBoundary key={editorCode}>
+            {previewContent}
+          </PreviewErrorBoundary>
         </div>
       </div>
       {editorVisible && MonacoEditor && (
@@ -422,6 +497,9 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
               acceptSuggestionOnEnter: "on",
               tabCompletion: "on",
               wordBasedSuggestions: "off",
+              scrollbar: {
+                alwaysConsumeMouseWheel: false,
+              },
             }}
             beforeMount={configureMonaco}
             onChange={(value: string | undefined) => setEditorCode(value || "")}

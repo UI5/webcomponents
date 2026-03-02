@@ -24,10 +24,11 @@ function extractEnumValues(enumName, packagesDir) {
     return enumCache.get(enumName);
   }
 
-  // Search for enum in main and fiori packages
+  // Search for enum in main, fiori, ai, and base packages
   const searchPaths = [
     path.join(packagesDir, "main", "src", "types", `${enumName}.ts`),
     path.join(packagesDir, "fiori", "src", "types", `${enumName}.ts`),
+    path.join(packagesDir, "ai", "src", "types", `${enumName}.ts`),
     path.join(packagesDir, "base", "src", "types", `${enumName}.ts`),
   ];
 
@@ -194,9 +195,12 @@ const COMPONENTS = [
   { name: "UserMenuItem", package: "fiori", tag: "ui5-user-menu-item" },
   { name: "UserMenuAccount", package: "fiori", tag: "ui5-user-menu-account" },
   { name: "BarcodeScannerDialog", package: "fiori", tag: "ui5-barcode-scanner-dialog" },
-  // ai package
-  { name: "AIButton", package: "ai", tag: "ui5-ai-button" },
-  { name: "AIPromptInput", package: "ai", tag: "ui5-ai-prompt-input" },
+  // ai package - these extend base components, so we inherit their props
+  { name: "AIButton", package: "ai", tag: "ui5-ai-button", className: "Button", extends: "Button" },
+  { name: "AIButtonState", package: "ai", tag: "ui5-ai-button-state", className: "ButtonState" },
+  { name: "AIInput", package: "ai", tag: "ui5-ai-input", className: "Input", extends: "Input" },
+  { name: "AITextArea", package: "ai", tag: "ui5-ai-textarea", className: "TextArea", extends: "TextArea" },
+  { name: "AIPromptInput", package: "ai", tag: "ui5-ai-prompt-input", className: "PromptInput", extends: "Input" },
 ];
 
 // Base class definitions - these are parsed once and reused
@@ -214,6 +218,7 @@ function parseBaseClass(baseClassName, packagesDir) {
   const searchPaths = [
     path.join(packagesDir, "main", "dist", `${baseClassName}.d.ts`),
     path.join(packagesDir, "fiori", "dist", `${baseClassName}.d.ts`),
+    path.join(packagesDir, "ai", "dist", `${baseClassName}.d.ts`),
     path.join(packagesDir, "base", "dist", `${baseClassName}.d.ts`),
   ];
 
@@ -369,7 +374,19 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
     });
   }
 
-  return { properties, events };
+  // Extract slot names from Slot<T> and DefaultSlot<T> declarations
+  const slots = [];
+  const slotRegex = /^\s{4}([a-z][a-zA-Z0-9]*)(?:\??):\s*(Default)?Slot<[^>]+>/gm;
+  while ((match = slotRegex.exec(classBody)) !== null) {
+    const slotName = match[1];
+    const isDefault = match[2] === "Default";
+    slots.push({
+      name: slotName,
+      isDefault,
+    });
+  }
+
+  return { properties, events, slots };
 }
 
 /**
@@ -563,11 +580,14 @@ interface UI5BaseProps {
   const fioriComponents = components.filter(c => c.tag && c.tag.includes("fiori"));
 
   for (const comp of components) {
-    const packageName = COMPONENTS.find(c => c.name === comp.name)?.package || "main";
+    const compConfig = COMPONENTS.find(c => c.name === comp.name);
+    const packageName = compConfig?.package || "main";
     const packagePath = packageName === "main" ? "@ui5/webcomponents" : `@ui5/webcomponents-${packageName}`;
+    // Use className if specified (for AI components where file name differs from type name)
+    const fileName = compConfig?.className || comp.name;
 
     // Each component module exports a class-like object with _jsxProps for type inference
-    output += `declare module "${packagePath}/dist/${comp.name}.js" {\n`;
+    output += `declare module "${packagePath}/dist/${fileName}.js" {\n`;
     output += `  const ${comp.name}: { _jsxProps: ${comp.name}Props };\n`;
     output += `  export default ${comp.name};\n`;
     output += `}\n\n`;
@@ -597,9 +617,12 @@ function main() {
 
   const componentInfos = [];
 
+  // First pass: collect all component infos
   for (const comp of COMPONENTS) {
     const packagePath = path.join(packagesDir, comp.package);
-    const dtsPath = path.join(packagePath, "dist", `${comp.name}.d.ts`);
+    // Use className if specified (for AI components where file name differs from type name)
+    const fileName = comp.className || comp.name;
+    const dtsPath = path.join(packagePath, "dist", `${fileName}.d.ts`);
 
     if (!fs.existsSync(dtsPath)) {
       console.log(`  ✗ ${comp.name} (not found: ${dtsPath})`);
@@ -607,16 +630,49 @@ function main() {
     }
 
     const dtsContent = fs.readFileSync(dtsPath, "utf-8");
-    const { properties, events } = parseDeclarationFile(dtsContent, comp.name, packagesDir, true);
+    const { properties, events, slots } = parseDeclarationFile(dtsContent, fileName, packagesDir, true);
 
     componentInfos.push({
       name: comp.name,
       tag: comp.tag,
       properties,
       events,
+      slots: slots || [],
+      extends: comp.extends,
     });
 
-    console.log(`  ✓ ${comp.name} (${properties.length} props, ${events.length} events)`);
+    console.log(`  ✓ ${comp.name} (${properties.length} props, ${events.length} events, ${(slots || []).length} slots)`);
+  }
+
+  // Second pass: merge inherited properties and slots from parent components
+  for (const comp of componentInfos) {
+    if (comp.extends) {
+      const parent = componentInfos.find(c => c.name === comp.extends);
+      if (parent) {
+        // Add parent properties that aren't already defined
+        const existingPropNames = new Set(comp.properties.map(p => p.name));
+        for (const prop of parent.properties) {
+          if (!existingPropNames.has(prop.name)) {
+            comp.properties.push(prop);
+          }
+        }
+        // Add parent events that aren't already defined
+        const existingEventNames = new Set(comp.events.map(e => e.name));
+        for (const event of parent.events) {
+          if (!existingEventNames.has(event.name)) {
+            comp.events.push(event);
+          }
+        }
+        // Add parent slots that aren't already defined
+        const existingSlotNames = new Set(comp.slots.map(s => s.name));
+        for (const slot of parent.slots || []) {
+          if (!existingSlotNames.has(slot.name)) {
+            comp.slots.push(slot);
+          }
+        }
+        console.log(`  → ${comp.name} inherits from ${comp.extends} (now ${comp.properties.length} props, ${comp.events.length} events, ${comp.slots.length} slots)`);
+      }
+    }
   }
 
   console.log(`\nGenerating Monaco types for ${componentInfos.length} components...`);

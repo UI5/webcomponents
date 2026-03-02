@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      <Button id="colorPaletteBtn">Open ColorPalettePopover</Button>
+      <Button id="colorPaletteBtn" onClick={handleClick}>Open ColorPalettePopover</Button>
         <ColorPalettePopover id="colorPalettePopover" opener="colorPaletteBtn">
             <ColorPaletteItem value="lightsalmon" />
             <ColorPaletteItem value="lightpink" />
