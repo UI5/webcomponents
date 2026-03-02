@@ -3405,14 +3405,14 @@ describe("Case-Insensitive Selection", () => {
 			.as("input");
 
 		cy.get("@input").realClick();
-		cy.get("@input").realPress("b");
-		cy.get("@input").realPress("u");
-		cy.get("@input").realPress("l");
-		cy.get("@input").realPress("g");
-		cy.get("@input").realPress("a");
-		cy.get("@input").realPress("r");
-		cy.get("@input").realPress("i");
-		cy.get("@input").realPress("a");
+		cy.get("@input").realType("b");
+		cy.get("@input").realType("u");
+		cy.get("@input").realType("l");
+		cy.get("@input").realType("g");
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("r");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("a");
 
 		cy.get("@combobox").should("have.prop", "value", "bulgaria");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
@@ -3434,19 +3434,19 @@ describe("Case-Insensitive Selection", () => {
 			.as("input");
 
 		cy.get("@input").realClick();
-		cy.get("@input").realPress("u");
-		cy.get("@input").realPress("n");
-		cy.get("@input").realPress("i");
-		cy.get("@input").realPress("t");
-		cy.get("@input").realPress("e");
-		cy.get("@input").realPress("d");
-		cy.get("@input").realPress(" ");
-		cy.get("@input").realPress("s");
-		cy.get("@input").realPress("t");
-		cy.get("@input").realPress("a");
-		cy.get("@input").realPress("t");
-		cy.get("@input").realPress("e");
-		cy.get("@input").realPress("s");
+		cy.get("@input").realType("u");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("d");
+		cy.get("@input").realType(" ");
+		cy.get("@input").realType("s");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("s");
 
 		cy.get("@combobox").should("have.prop", "value", "United States");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
@@ -3473,15 +3473,15 @@ describe("Case-Insensitive Selection", () => {
 			.as("input");
 
 		cy.get("@input").realClick();
-		cy.get("@input").realPress("a");
-		cy.get("@input").realPress("r");
-		cy.get("@input").realPress("g");
-		cy.get("@input").realPress("e");
-		cy.get("@input").realPress("n");
-		cy.get("@input").realPress("t");
-		cy.get("@input").realPress("i");
-		cy.get("@input").realPress("n");
-		cy.get("@input").realPress("a");
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("r");
+		cy.get("@input").realType("g");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("a");
 
 		cy.get("@combobox").should("have.prop", "value", "Argentina");
 		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", true);
@@ -3503,12 +3503,12 @@ describe("Case-Insensitive Selection", () => {
 			.as("input");
 
 		cy.get("@input").realClick();
-		cy.get("@input").realPress("i");
-		cy.get("@input").realPress("t");
-		cy.get("@input").realPress("e");
-		cy.get("@input").realPress("m");
-		cy.get("@input").realPress(" ");
-		cy.get("@input").realPress("2");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("m");
+		cy.get("@input").realType(" ");
+		cy.get("@input").realType("2");
 
 		cy.get("@combobox").should("have.prop", "value", "Item 2");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
@@ -3531,13 +3531,13 @@ describe("Case-Insensitive Selection", () => {
 			.as("input");
 
 		cy.get("@input").realClick();
-		cy.get("@input").realPress("B");
+		cy.get("@input").realType("B");
 		cy.get("@combobox").should("have.prop", "value", "Belgium");
 
-		cy.get("@input").realPress("u");
+		cy.get("@input").realType("u");
 		cy.get("@combobox").should("have.prop", "value", "Bulgaria");
 
-		cy.get("@input").realPress("l");
+		cy.get("@input").realType("l");
 		cy.get("@combobox").should("have.prop", "value", "Bulgaria");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
 	});
