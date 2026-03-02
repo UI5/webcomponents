@@ -7659,6 +7659,11 @@ __metadata:
     touch: "npm:^3.1.0"
     typescript: "npm:^5.6.2"
     vite: "npm:5.4.21"
+  peerDependencies:
+    react: ">=17"
+  peerDependenciesMeta:
+    react:
+      optional: true
   languageName: unknown
   linkType: soft
 

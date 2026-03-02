@@ -10,19 +10,40 @@
  * Note: This is for documentation samples only - for production React apps,
  * use the official @ui5/webcomponents-react library.
  */
+
 import * as React from "react";
-import { useRef, useEffect, forwardRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import {
+	useRef,
+	useEffect,
+	forwardRef,
+} from "react";
 import type UI5Element from "./UI5Element.js";
 
 type EventHandler<E = Event> = (event: E) => void;
 
 // Interface for UI5 Web Component classes with _jsxProps support
 interface UI5ComponentClass<T extends UI5Element = UI5Element> {
-  new (): T;
-  getMetadata(): {
-    getTag(): string;
-  };
+	new (): T;
+	getMetadata(): {
+		getTag(): string;
+	};
 }
+
+// Helper to convert event name
+const toEventName = (propName: string): string => {
+	return propName
+		.slice(2) // Remove "on"
+		.replace(/([A-Z])/g, (match: string, letter: string, index: number): string => {
+			return index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`;
+		});
+};
+
+// Helper to create cleanup function for event listener
+const createEventCleanup = (element: UI5Element, eventName: string, handler: EventHandler): (() => void) => {
+	element.addEventListener(eventName, handler);
+	return () => element.removeEventListener(eventName, handler);
+};
 
 /**
  * Creates a React component wrapper for a UI5 Web Component.
@@ -37,74 +58,72 @@ interface UI5ComponentClass<T extends UI5Element = UI5Element> {
  * // ReactButton props are typed based on Button's _jsxProps
  */
 export function createReactComponent<T extends UI5Element>(
-  ComponentClass: UI5ComponentClass<T>
+	ComponentClass: UI5ComponentClass<T>,
 ): React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<T["_jsxProps"] & { children?: ReactNode }> & React.RefAttributes<T>
+	React.PropsWithoutRef<T["_jsxProps"] & { children?: ReactNode }> & React.RefAttributes<T>
 > {
-  const tagName = ComponentClass.getMetadata().getTag();
+	const tagName = ComponentClass.getMetadata().getTag();
 
-  const Component = forwardRef<T, T["_jsxProps"] & { children?: ReactNode }>((props, ref) => {
-    const { children, ...restProps } = props;
-    const elementRef = useRef<T>(null);
+	const Component = forwardRef<T, T["_jsxProps"] & { children?: ReactNode }>((props, ref) => {
+		const { children, ...restProps } = props;
+		const elementRef = useRef<T>(null);
 
-    // Forward ref
-    useEffect(() => {
-      if (ref) {
-        if (typeof ref === "function") {
-          ref(elementRef.current);
-        } else {
-          ref.current = elementRef.current;
-        }
-      }
-    }, [ref]);
+		// Forward ref
+		useEffect(() => {
+			if (ref) {
+				if (typeof ref === "function") {
+					ref(elementRef.current);
+				} else {
+					ref.current = elementRef.current;
+				}
+			}
+		}, [ref]);
 
-    // Handle event props (convert onXxx to event listeners)
-    useEffect(() => {
-      const element = elementRef.current;
-      if (!element) return;
+		// Handle event props (convert onXxx to event listeners)
+		useEffect(() => {
+			const element = elementRef.current;
+			if (!element) {
+				return;
+			}
 
-      const eventCleanups: Array<() => void> = [];
+			const eventCleanups: Array<() => void> = [];
 
-      Object.keys(restProps).forEach((propName) => {
-        if (propName.startsWith("on") && typeof (restProps as any)[propName] === "function") {
-          // Convert React event naming (onClick, onSelectionChange) to DOM event naming
-          // onClick -> click, onSelectionChange -> selection-change
-          const eventName = propName
-            .slice(2) // Remove "on"
-            .replace(/([A-Z])/g, (match, letter, index) =>
-              index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`
-            );
+			Object.keys(restProps).forEach(propName => {
+				const propValue = (restProps as Record<string, unknown>)[propName];
+				if (propName.startsWith("on") && typeof propValue === "function") {
+					// Convert React event naming (onClick, onSelectionChange) to DOM event naming
+					// onClick -> click, onSelectionChange -> selection-change
+					const eventName = toEventName(propName);
+					const handler = propValue as EventHandler;
+					eventCleanups.push(createEventCleanup(element, eventName, handler));
+				}
+			});
 
-          const handler = (restProps as any)[propName] as EventHandler;
-          element.addEventListener(eventName, handler);
-          eventCleanups.push(() => element.removeEventListener(eventName, handler));
-        }
-      });
+			return () => {
+				eventCleanups.forEach(cleanup => cleanup());
+			};
+		}, [restProps]);
 
-      return () => {
-        eventCleanups.forEach((cleanup) => cleanup());
-      };
-    }, [restProps]);
+		// Filter out event handlers from DOM props
+		const domProps: Record<string, unknown> = {};
+		Object.keys(restProps).forEach(propName => {
+			const propValue = (restProps as Record<string, unknown>)[propName];
+			if (!propName.startsWith("on") || typeof propValue !== "function") {
+				// Convert camelCase to kebab-case for HTML attributes
+				const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
+				domProps[attrName] = propValue;
+			}
+		});
 
-    // Filter out event handlers from DOM props
-    const domProps: Record<string, any> = {};
-    Object.keys(restProps).forEach((propName) => {
-      if (!propName.startsWith("on") || typeof (restProps as any)[propName] !== "function") {
-        // Convert camelCase to kebab-case for HTML attributes
-        const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
-        domProps[attrName] = (restProps as any)[propName];
-      }
-    });
+		return React.createElement(tagName, { ref: elementRef, ...domProps }, children);
+	});
 
-    return React.createElement(tagName, { ref: elementRef, ...domProps }, children);
-  });
+	Component.displayName = tagName
+		.split("-")
+		.map(part => part.charAt(0).toUpperCase() + part.slice(1))
+		.join("");
 
-  Component.displayName = tagName
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join("");
-
-  return Component;
+	return Component;
 }
 
 export default createReactComponent;
