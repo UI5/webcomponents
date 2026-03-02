@@ -130,6 +130,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * Fired when an item is clicked.
  *
  * @param {SideNavigationSelectableItemBase} item The clicked item.
+ * @since 2.20.0
  * @public
  */
 @event("item-click", {

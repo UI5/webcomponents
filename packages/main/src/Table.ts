@@ -425,7 +425,7 @@ class Table extends UI5Element {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	_events = ["keydown", "keyup", "click", "focusin", "focusout", "dragstart", "dragenter", "dragleave", "dragover", "drop", "dragend"];
+	_events = ["keydown", "keyup", "click", "focusin", "focusout", "pointerdown", "dragstart", "dragenter", "dragleave", "dragover", "drop", "dragend"];
 	_onEventBound: (e: Event) => void;
 	_onResizeBound: ResizeObserverCallback;
 	_tableNavigation?: TableNavigation;
@@ -611,7 +611,7 @@ class Table extends UI5Element {
 		const virtualizer = this._getVirtualizer();
 		const headerStyleMap: Record<string, string> = {};
 		this.headerRow[0]?.cells.forEach(headerCell => {
-			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "normal";
+			headerStyleMap[`--halign-${headerCell._id}`] = headerCell.horizontalAlign || "initial";
 		});
 		return {
 			table: {

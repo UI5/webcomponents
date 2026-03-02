@@ -493,11 +493,13 @@ describe("Table - Popin Mode", () => {
 describe("Table - Horizontal alignment of cells", () => {
 	function check(id: string, index: number, alignment: string) {
 		cy.get(id)
-			.should("have.css", "justify-content", alignment);
+			.should("have.css", "justify-content", alignment)
+			.should("have.css", "text-align", alignment === "normal" ? "start" : alignment);
 
 		cy.get("ui5-table-row")
 			.get(`ui5-table-cell:nth-of-type(${index})`)
-			.should("have.css", "justify-content", alignment);
+			.should("have.css", "justify-content", alignment)
+			.should("have.css", "text-align", alignment === "normal" ? "start" : alignment);
 	}
 
 	beforeEach(() => {
@@ -948,6 +950,11 @@ describe("Table - Interactive Rows", () => {
 		cy.get("#row1").realPress("Enter");
 		cy.get("@rowClickHandler").should("not.have.been.called");
 
+		cy.get("#row2").realMouseDown();
+		cy.get("#row2").should("have.attr", "_active");
+		cy.get("#row1").realMouseUp();
+		cy.get("#row2").should("not.have.attr", "_active");
+
 		cy.get("#row2").realClick();
 		cy.get("@rowClickHandler").invoke("getCall", 0).its("args.0.detail.row").as("clickedRow");
 		cy.get("@clickedRow").should("have.attr", "id", "row2");
@@ -958,6 +965,10 @@ describe("Table - Interactive Rows", () => {
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
 
 		cy.get("#row2").find("ui5-button").as("row2button");
+		cy.get("@row2button").realMouseDown();
+		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("@row2button").realMouseUp();
+		cy.get("#row2").should("not.have.attr", "_active");
 		cy.get("@row2button").invoke("on", "click", cy.stub().as("buttonClickHandler"));
 		cy.get("@row2button").realClick();
 		cy.get("@buttonClickHandler").should("have.been.calledOnce");

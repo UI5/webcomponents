@@ -1,5 +1,6 @@
 import Toolbar from "../../src/Toolbar.js";
 import ToolbarItem from "../../src/ToolbarItem.js";
+import ToolbarButton from "../../src/ToolbarButton.js";
 import Button from "../../src/Button.js";
 import Switch from "../../src/Switch.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
@@ -9,6 +10,8 @@ import ComboBoxItem from "../../src/ComboBoxItem.js";
 import DatePicker from "../../src/DatePicker.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
+import CheckBox from "../../src/CheckBox.js";
+import add from "@ui5/webcomponents-icons/dist/add.js";
 
 describe("Toolbar Item Properties", () => {
 	it("Should render ui5-toolbar-item with correct properties and not suppress events", () => {
@@ -763,5 +766,28 @@ describe("Toolbar Item Closing Events - overflowCloseEvents functionality (IOver
 				// Should include the custom overflowCloseEvents
 				expect(closingEvents).to.include("extra-event");
 			});
+	});
+});
+
+describe("ToolbarItem CSS Custom State", () => {
+	it("Should set :state(overflowed) when item is in overflow", () => {
+		cy.mount(
+			<div style={{ width: "200px" }}>
+				<Toolbar>
+					<ToolbarButton text="Button 1" icon={add}></ToolbarButton>
+					<ToolbarItem id="test-item" overflow-priority="AlwaysOverflow">
+						<CheckBox text="Check"></CheckBox>
+					</ToolbarItem>
+				</Toolbar>
+			</div>
+		);
+
+		cy.wait(500);
+
+		cy.get("#test-item").then($item => {
+			const item = $item[0] as ToolbarItem;
+			// @ts-ignore
+			expect(item._internals.states.has("overflowed")).to.be.true;
+		});
 	});
 });

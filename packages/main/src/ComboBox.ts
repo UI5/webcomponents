@@ -250,7 +250,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * **Note:** This replaces the deprecated `selected` property on `ui5-cb-item`.
 	 * @default undefined
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@property()
 	selectedValue?: string;
