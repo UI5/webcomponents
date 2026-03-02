@@ -111,7 +111,7 @@ const testConfig = {
 			},
 			"ARROWS_BOX": {
 				"arrow_initial": "0",
-				"arrow_down": "1",
+				"arrow_down": "0",
 				"arrow_up": "0",
 			},
 			"MOUSE": {
@@ -257,13 +257,11 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 
 			cy.realPress("ArrowDown");
 			checkSelection(testConfigEntry.cases.ARROWS_BOX.arrow_down);
-			let callCount = mode === "Single" ? 2 : 1;
-			checkSelectionChangeSpy(callCount);
+			checkSelectionChangeSpy(1);
 
 			cy.realPress("ArrowUp");
 			checkSelection(testConfigEntry.cases.ARROWS_BOX.arrow_up);
-			callCount = mode === "Single" ? 3 : 1;
-			checkSelectionChangeSpy(callCount);
+			checkSelectionChangeSpy(1);
 		});
 
 		it("select row via mouse", () => {

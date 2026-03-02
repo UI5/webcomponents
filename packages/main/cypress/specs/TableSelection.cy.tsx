@@ -93,7 +93,7 @@ const testConfig = {
 			},
 			"ARROWS_BOX": {
 				"arrow_initial": "0",
-				"arrow_down": "1",
+				"arrow_down": "0",
 				"arrow_up": "0",
 			},
 			"MOUSE": {

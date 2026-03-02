@@ -752,7 +752,7 @@ class Carousel extends UI5Element {
 	 * @since 1.0.0-rc.15
 	 * @public
 	 */
-	navigateTo(itemIndex: number) {
+	navigateTo(itemIndex: number): void {
 		if (!this.isIndexInRange(itemIndex)) {
 			return;
 		}
@@ -998,10 +998,10 @@ class Carousel extends UI5Element {
 	/**
  	 * Returns only visible (non-hidden) content items.
 	 * Items with the 'hidden' attribute are automatically excluded from carousel navigation.
+	 * @default []
 	 * @private
-	 * @returns {Array<HTMLElement>}
 	 */
-	get _visibleItems() {
+	get _visibleItems(): Array<HTMLElement> {
 		return this.content.filter(x => !x.hasAttribute("hidden"));
 	}
 
