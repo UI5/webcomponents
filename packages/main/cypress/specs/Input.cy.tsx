@@ -3228,17 +3228,17 @@ describe("Input built-in filtering", () => {
 			.should("have.attr", "hidden");
 	});
 
-	describe("Case-preserving suggestions", () => {
-		it("should preserve user's typed case during typeahead but use original suggestion case when accepted", () => {
+	describe("Typeahead capitalization handling", () => {
+		it("should preserve user's typed capitalization during typeahead and use original suggestion capitalization when accepted", () => {
 			cy.mount(
-				<Input id="case-test" showSuggestions>
+				<Input id="capitalization-test" showSuggestions>
 					<SuggestionItem text="Apple" />
 					<SuggestionItem text="Apricot" />
 					<SuggestionItem text="Avocado" />
 				</Input>
 			);
 
-			cy.get("#case-test")
+			cy.get("#capitalization-test")
 				.shadow()
 				.find("input")
 				.as("input");
@@ -3259,22 +3259,22 @@ describe("Input built-in filtering", () => {
 					expect(input.selectionEnd).to.equal(5);
 				});
 
-			// Press Enter to accept - should use original suggestion case "Apple"
+			// Press Enter to accept - should use original suggestion capitalization "Apple"
 			cy.realPress("Enter");
 
 			cy.get("@input")
 				.should("have.value", "Apple");
 		});
 
-		it("should preserve uppercase typed characters during typeahead", () => {
+		it("should preserve uppercase typed letters during typeahead", () => {
 			cy.mount(
-				<Input id="case-test-upper" showSuggestions>
+				<Input id="capitalization-test-upper" showSuggestions>
 					<SuggestionItem text="apple" />
 					<SuggestionItem text="apricot" />
 				</Input>
 			);
 
-			cy.get("#case-test-upper")
+			cy.get("#capitalization-test-upper")
 				.shadow()
 				.find("input")
 				.as("input");
@@ -3287,14 +3287,14 @@ describe("Input built-in filtering", () => {
 			cy.get("@input")
 				.should("have.value", "Apple");
 
-			// Press Enter to accept - should use original suggestion case "apple"
+			// Press Enter to accept - should use original suggestion capitalization "apple"
 			cy.realPress("Enter");
 
 			cy.get("@input")
 				.should("have.value", "apple");
 		});
 
-		it("should handle exact match with different case on Enter", () => {
+		it("should match suggestions regardless of capitalization and use original on Enter", () => {
 			cy.mount(
 				<Input id="exact-match-test" showSuggestions>
 					<SuggestionItem text="ap" />
@@ -3312,18 +3312,18 @@ describe("Input built-in filtering", () => {
 				.realClick()
 				.realType("Ap");
 
-			// During typing, user's case is preserved
+			// During typing, user's capitalization is preserved
 			cy.get("@input")
 				.should("have.value", "Ap");
 
-			// Press Enter - should use original suggestion case "ap"
+			// Press Enter - should use original suggestion capitalization "ap"
 			cy.realPress("Enter");
 
 			cy.get("@input")
 				.should("have.value", "ap");
 		});
 
-		it("should preserve original case through multiple characters typed", () => {
+		it("should preserve user's typed capitalization through multiple characters", () => {
 			cy.mount(
 				<Input id="multi-char-test" showSuggestions>
 					<SuggestionItem text="BANANA" />
@@ -3336,23 +3336,23 @@ describe("Input built-in filtering", () => {
 				.find("input")
 				.as("input");
 
-			// Type "ban" with mixed case
+			// Type "bAn" with mixed capitalization
 			cy.get("@input")
 				.realClick()
 				.realType("bAn");
 
-			// Should show suggestion with user's typed case
+			// Should show suggestion with user's typed capitalization
 			cy.get("@input")
 				.should("have.value", "bAnANA");
 
-			// Press Enter - should use original suggestion case "BANANA"
+			// Press Enter - should use original suggestion capitalization "BANANA"
 			cy.realPress("Enter");
 
 			cy.get("@input")
 				.should("have.value", "BANANA");
 		});
 
-		it("should work with selection-change event and preserve original case", () => {
+		it("should work with selection-change event and preserve original capitalization", () => {
 			const onChangeSpy = cy.spy().as("onChange");
 			const onSelectionChangeSpy = cy.spy().as("onSelectionChange");
 
@@ -3384,7 +3384,7 @@ describe("Input built-in filtering", () => {
 			// Press Enter to trigger selection-change
 			cy.realPress("Enter");
 
-			// Value should be original suggestion case
+			// Value should be original suggestion capitalization
 			cy.get("@input")
 				.should("have.value", "Orange");
 
