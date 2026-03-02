@@ -1698,3 +1698,96 @@ describe("Event Registration", () => {
 		});
 	});
 });
+
+describe("Native drag-and-drop in draggable dialogs", () => {
+	it("_handleDragStart should NOT prevent default for content elements", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true} headerText="Test">
+				<div id="content-item">Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#test-dialog").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			const content = document.getElementById("content-item");
+
+			// Create a mock event
+			let preventDefaultCalled = false;
+			const mockEvent = {
+				target: content,
+				preventDefault: () => { preventDefaultCalled = true; },
+				defaultPrevented: false
+			} as unknown as DragEvent;
+
+			// Call the handler directly
+			dialog._handleDragStart(mockEvent);
+
+			expect(preventDefaultCalled).to.be.false;
+		});
+	});
+
+	it("_handleDragStart should prevent default for header element", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true} headerText="Test">
+				<div>Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#test-dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.then($header => {
+				const dialog = document.getElementById("test-dialog") as Dialog;
+				const header = $header.get(0) as HTMLElement;
+
+				// Create a mock event
+				let preventDefaultCalled = false;
+				const mockEvent = {
+					target: header,
+					preventDefault: () => { preventDefaultCalled = true; },
+					defaultPrevented: false
+				} as unknown as DragEvent;
+
+				// Call the handler directly
+				dialog._handleDragStart(mockEvent);
+
+				expect(preventDefaultCalled).to.be.true;
+			});
+	});
+
+	it("_handleDragStart should prevent default for custom header slot", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true}>
+				<div slot="header" id="custom-header">Header</div>
+				<div>Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#custom-header").then($header => {
+			const dialog = document.getElementById("test-dialog") as Dialog;
+			const header = $header.get(0) as HTMLElement;
+
+			// Create a mock event
+			let preventDefaultCalled = false;
+			const mockEvent = {
+				target: header,
+				preventDefault: () => { preventDefaultCalled = true; },
+				defaultPrevented: false
+			} as unknown as DragEvent;
+
+			// Call the handler directly
+			dialog._handleDragStart(mockEvent);
+
+			expect(preventDefaultCalled).to.be.true;
+		});
+	});
+});
