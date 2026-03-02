@@ -1,0 +1,81 @@
+/* ReactPlayground styles - matches HTML view layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Reload bar at top of preview - matches HTML/React toggle bar */
+.reloadBar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 40px;
+  padding: 0;
+  border-bottom: var(--playground-border, solid 1px #ddd);
+  box-sizing: content-box;
+}
+
+.reloadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--ifm-color-emphasis-800);
+  border-radius: 50%;
+}
+
+.reloadButton:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.previewContainer {
+  background: var(--sapBackgroundColor, var(--ifm-background-color));
+  min-height: 80px;
+}
+
+.preview {
+  margin: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: calc(100% - 16px);
+  box-sizing: border-box;
+}
+
+.preview > div {
+  width: 100%;
+}
+
+.editorContainer {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  overflow: hidden;
+}
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  background: var(--ifm-color-emphasis-100);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-family: var(--ifm-font-family-monospace);
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-background-color);
+  border: none;
+  border-right: 1px solid var(--ifm-color-emphasis-200);
+  cursor: default;
+}
+
+/* Ensure Monaco editor has proper theme colors */
+.editorContainer > section {
+  background: var(--ifm-code-background);
+}

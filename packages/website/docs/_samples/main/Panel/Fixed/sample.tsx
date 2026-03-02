@@ -1,0 +1,37 @@
+import { createReactComponent } from "@ui5/webcomponents-base";
+import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import PanelClass from "@ui5/webcomponents/dist/Panel.js";
+import TitleClass from "@ui5/webcomponents/dist/Title.js";
+
+const Label = createReactComponent(LabelClass);
+const Panel = createReactComponent(PanelClass);
+const Title = createReactComponent(TitleClass);
+
+function App() {
+
+  return (
+    <>
+      <Panel header-text="Collapsed, Fixed Panel" fixed={true} collapsed={true}>
+            <Title level="H5">Heading!</Title>
+    	    <Label>
+                Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.
+    		    Quis velit adipisicing excepteur do eu duis elit. Sunt ea pariatur nulla est laborum proident sunt labore
+    		    commodo Lorem laboris nisi Lorem.
+    	    </Label>
+        </Panel>
+
+        <br /><br />
+
+        <Panel header-text="Expanded, Fixed Panel" fixed={true}>
+            <Title level="H5">Heading!</Title>
+    	    <Label>
+                Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.
+    		    Quis velit adipisicing excepteur do eu duis elit. Sunt ea pariatur nulla est laborum proident sunt labore
+    		    commodo Lorem laboris nisi Lorem.
+    	    </Label>
+        </Panel>
+    </>
+  );
+}
+
+export default App;

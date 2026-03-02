@@ -1,0 +1,60 @@
+/* MonacoReactPreview styles - matches HTML view layout */
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.previewPane {
+  display: flex;
+  flex-direction: column;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-code-border-radius);
+  overflow: hidden;
+}
+
+/* Reload bar at top of preview */
+.reloadBar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.125rem 0.5rem;
+  background: var(--ifm-color-emphasis-100);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.reloadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--ifm-color-emphasis-600);
+  border-radius: 0.25rem;
+}
+
+.reloadButton:hover {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.iframe {
+  width: 100%;
+  min-height: 7rem;
+  border: none;
+  background: var(--sapBackgroundColor, white);
+}
+
+[data-theme="dark"] .iframe {
+  background: var(--sapBackgroundColor, #1e1e1e);
+}
+
+.editorPane {
+  margin-top: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-code-border-radius);
+  overflow: hidden;
+}

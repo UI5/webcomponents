@@ -1,0 +1,80 @@
+/* ReactCodeView styles */
+.container {
+  background: var(--ifm-code-background);
+  border-radius: 0;
+  overflow: hidden;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.875rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--playground-tab-bar-background, #eaeaea);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme="dark"] .header {
+  background: var(--playground-tab-bar-background, #1e1e1e);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+  border-radius: 0.25rem;
+}
+
+[data-theme="dark"] .badge {
+  background: var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-900);
+}
+
+.filename {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+  font-weight: 500;
+}
+
+.codeWrapper {
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.pre {
+  margin: 0;
+  padding: 0.75rem 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.line {
+  display: flex;
+  min-height: 1.5rem;
+  line-height: 1.5rem;
+}
+
+.lineNumber {
+  display: inline-block;
+  width: 3rem;
+  padding-right: 1rem;
+  text-align: right;
+  color: var(--ifm-color-emphasis-500);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.lineContent {
+  flex: 1;
+  padding-right: 1rem;
+  white-space: pre;
+}

@@ -1,0 +1,22 @@
+import { createReactComponent } from "@ui5/webcomponents-base";
+import ButtonClass from "@ui5/webcomponents/dist/Button.js";
+import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
+import LabelClass from "@ui5/webcomponents/dist/Label.js";
+
+const Button = createReactComponent(ButtonClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Label = createReactComponent(LabelClass);
+
+function App() {
+
+  return (
+    <>
+      <Label htmlFor="button-only-uploader">Choose file:</Label>
+        <FileUploader id="button-only-uploader" hide-input={true}>
+            <Button icon="upload" tabIndex="-1">Upload</Button>
+        </FileUploader>
+    </>
+  );
+}
+
+export default App;

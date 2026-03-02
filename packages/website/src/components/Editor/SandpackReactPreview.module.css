@@ -1,0 +1,18 @@
+/* SandpackReactPreview styles */
+.container {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.875rem;
+}
+
+.container [class*="sp-layout"] {
+  border: none;
+  border-radius: 0;
+}
+
+.container [class*="sp-code-editor"] {
+  border-radius: 0;
+}
+
+.container [class*="sp-preview"] {
+  border-radius: 0;
+}

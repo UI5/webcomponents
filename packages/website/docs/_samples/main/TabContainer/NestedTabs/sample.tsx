@@ -1,0 +1,52 @@
+import { createReactComponent } from "@ui5/webcomponents-base";
+import TabClass from "@ui5/webcomponents/dist/Tab.js";
+
+const Tab = createReactComponent(TabClass);
+
+function App() {
+
+  return (
+    <>
+      <ui5-tabcontainer>
+    	<Tab text="Notes">
+    		Notes go here ...
+    	</Tab>
+    	<Tab text="Products">
+    		Products go here ...
+    		<Tab slot="items" text="Computers">
+    			Computers go here ...
+    			<Tab slot="items" text="Laptops" selected={true}>
+    				Laptops go here ...
+    			</Tab>
+    			<Tab slot="items" text="Desktops">
+    				<Tab slot="items" text="Work Stations">
+    					Work Stations go here ...
+    				</Tab>
+    				<Tab slot="items" text="Game Stations">
+    					Game Stations go here ...
+    				</Tab>
+    				Desktops go here ...
+    			</Tab>
+    		</Tab>
+    		<Tab text="Phones" slot="items">
+    			<Tab text="Smartphones" slot="items">
+    				Smartphones go here ...
+    			</Tab>
+    			<Tab text="Tablets" slot="items">
+    				Tablets go here ...
+    			</Tab>
+    			Phones go here ...
+    		</Tab>
+    	</Tab>
+    	<Tab text="Orders">
+    		Orders go here ...
+    		<Tab slot="items" text="Attachments">
+    			Order attachments go here ...
+    		</Tab>
+    	</Tab>
+    </ui5-tabcontainer>
+    </>
+  );
+}
+
+export default App;
