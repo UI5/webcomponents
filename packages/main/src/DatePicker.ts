@@ -367,6 +367,15 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property()
 	accessibleDescriptionRef?: string;
 
+	/**
+	 * Defines whether the clear icon of the input will be shown.
+	 * @default false
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property({ type: Boolean })
+	showClearIcon = false;
+
 	@property({ type: Object })
 	_respPopoverConfig?: object;
 

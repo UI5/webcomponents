@@ -139,6 +139,32 @@ type ComboBoxSelectionChangeEventDetail = {
  * -  Drop-down arrow - expands\collapses the option list.
  * -  Option list - the list of available options.
  *
+ * ### Working with Values
+ *
+ * The ComboBox offers two ways to work with item selection:
+ *
+ * **1. Display Text Only (using `value`):**
+ * ```html
+ * <ui5-combobox value="Germany">
+ *   <ui5-cb-item text="Germany"></ui5-cb-item>
+ *   <ui5-cb-item text="France"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * Use this approach when the displayed text is sufficient for your needs.
+ *
+ * **2. Unique Identifiers - Recommended (using `selectedValue` and item `value`):**
+ * ```html
+ * <ui5-combobox value="Germany" selected-value="DE">
+ *   <ui5-cb-item text="Germany" value="DE"></ui5-cb-item>
+ *   <ui5-cb-item text="France" value="FR"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * This is the recommended approach when you need to work with unique identifiers (IDs, codes) separate from display text.
+ * The `selectedValue` property references the `value` property of the selected item.
+ * In forms, the item's `value` (e.g., "DE") will be submitted instead of the display text.
+ *
+ * **Important:** Do not mix the `selectedValue` approach with the deprecated `selected` property on items.
+ *
  * ### Keyboard Handling
  *
  * The `ui5-combobox` provides advanced keyboard handling.
@@ -237,17 +263,20 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	value = "";
 
 	/**
-	 * Defines the selected item's value.
+	 * Defines the value of the selected item (references the `value` property of `ui5-cb-item`).
 	 *
-	 * Use this property together with the `value` property on `ui5-cb-item` to:
-	 * - Select an item programmatically by its unique identifier
+	 * Use this property to work with unique identifiers (IDs, codes) instead of display text.
+	 * When set, the ComboBox finds and selects the item whose `value` property matches this property.
+	 *
+	 * **Benefits:**
+	 * - Select items programmatically by their unique identifier
 	 * - Handle items with identical display text but different underlying values
-	 * - Submit machine-readable values in forms (the `value` property is submitted instead of the display text)
+	 * - Submit machine-readable values in forms (the item's `value` is submitted instead of the display text)
 	 *
-	 * When set, the ComboBox finds and selects the item whose `value` matches this property
-	 * and whose `text` matches the ComboBox's `value` (display text).
+	 * **When to use `selectedValue` vs `value`:**
+	 * - **Recommended:** Use `selectedValue` + item `value` when you need unique identifiers separate from display text (e.g., country codes "DE", "FR" with display names "Germany", "France")
+	 * - Use only the ComboBox `value` property when the display text itself is sufficient for your use case
 	 *
-	 * **Note:** This replaces the deprecated `selected` property on `ui5-cb-item`.
 	 * @default undefined
 	 * @public
 	 * @since 2.20.0
