@@ -9,8 +9,8 @@ import type Select from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
-import ToolbarItem from "./ToolbarItem.js";
-import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -30,7 +30,7 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * `import "@ui5/webcomponents/dist/ToolbarSelectOption.js";` (comes with `ui5-toolbar-select`)
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -64,8 +64,8 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * @public
  */
 @event("close")
-class ToolbarSelect extends ToolbarItem {
-	eventDetails!: ToolbarItem["eventDetails"] & {
+class ToolbarSelect extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
@@ -167,32 +167,23 @@ class ToolbarSelect extends ToolbarItem {
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
-		if (prevented && !this.preventOverflowClosing) {
-			this.fireDecoratorEvent("close-overflow");
-		}
+		this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 	}
 
 	onOpen(e: Event): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("open", { targetRef: e.target as HTMLElement });
-		if (prevented) {
-			this.fireDecoratorEvent("close-overflow");
-		}
+		this.fireDecoratorEvent("open", { targetRef: e.target as HTMLElement });
 	}
 
 	onClose(e: Event): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("close", { targetRef: e.target as HTMLElement });
-		if (prevented) {
-			this.fireDecoratorEvent("close-overflow");
-		}
+		this.fireDecoratorEvent("close", { targetRef: e.target as HTMLElement });
 	}
 
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("change", { ...e.detail, targetRef: e.target as HTMLElement });
-		if (!prevented) {
+		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
 

@@ -6,6 +6,7 @@ import type { ButtonAccessibilityAttributes } from "./Button.js";
 import type ButtonDesign from "./types/ButtonDesign.js";
 
 import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -46,6 +47,9 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 	cancelable: true,
 })
 class ToolbarButton extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
+		click: ToolbarItemEventDetail;
+	}
 	/**
 	 * Defines if the action is disabled.
 	 *
@@ -198,7 +202,7 @@ class ToolbarButton extends ToolbarItemBase {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		if (!prevented && !this.preventOverflowClosing) {
-			this.fireEvent("close-overflow", undefined, true, true);
+			this.fireDecoratorEvent("close-overflow");
 		}
 	}
 

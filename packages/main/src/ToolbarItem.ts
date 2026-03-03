@@ -1,5 +1,4 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -7,15 +6,6 @@ import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
 import type { IEventOptions, IOverflowToolbarItem, ToolbarItemEventDetail } from "./ToolbarItemBase.js";
-/**
- * Fired when the overflow popover is closed.
- * @public
- * @since 1.17.0
- */
-@event("close-overflow", {
-	bubbles: true,
-	cancelable: true,
-})
 
 @customElement({
 	tag: "ui5-toolbar-item",
@@ -36,10 +26,6 @@ import type { IEventOptions, IOverflowToolbarItem, ToolbarItemEventDetail } from
  * @since 1.17.0
  */
 class ToolbarItem extends ToolbarItemBase {
-	// strictEvents: needed for parent class
-	eventDetails!: ToolbarItemBase["eventDetails"] & {
-		"close-overflow": void;
-	}
 	_wrapperChecked = false;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 

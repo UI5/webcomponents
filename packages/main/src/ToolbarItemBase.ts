@@ -1,5 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 type IEventOptions = {
@@ -16,6 +17,16 @@ interface IOverflowToolbarItem extends HTMLElement {
 }
 
 /**
+ * Fired when the overflow popover is closed.
+ * @public
+ * @since 1.17.0
+ */
+@event("close-overflow", {
+	bubbles: true,
+	cancelable: true,
+})
+
+/**
  * @class
  *
  * Represents an abstract base class for items, used in the `ui5-toolbar`.
@@ -29,6 +40,7 @@ abstract class ToolbarItemBase extends UI5Element {
 	// strictEvents: needed for parent class
 	eventDetails!: {
 		click: ToolbarItemEventDetail,
+		"close-overflow": void,
 	}
 
 	/**
