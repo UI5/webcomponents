@@ -308,7 +308,7 @@ class FlexibleColumnLayout extends UI5Element {
 	* @default undefined
 	* @private
 	*/
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_columnLayout?: FlexibleColumnLayoutColumnLayout;
 
 	/**

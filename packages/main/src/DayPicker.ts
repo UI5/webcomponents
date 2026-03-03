@@ -141,7 +141,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * An array of UTC timestamps representing the selected date or dates depending on the capabilities of the picker component.
 	 * @default []
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	selectedDates: Array<number> = [];
 
 	/**
@@ -170,10 +170,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_weeks: Array<Week> = [];
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_dayNames: Array<DayName> = [];
 
 	/**
@@ -187,14 +187,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * When selectionMode="Range" and the first day in the range is selected, this is the currently hovered (when using mouse) or focused (when using keyboard) day by the user
 	 * @private
 	 */
-	 @property({ type: Number })
+	 @property({ type: Number, noAttribute: true })
 	_secondTimestamp?: number;
 
 	/**
 	 * Array of special calendar dates (if such are passed) from the calendar.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	specialCalendarDates: Array<SpecialCalendarDateT> = [];
 
 	/**
@@ -202,7 +202,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Each range can have a start and/or end date value.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	disabledDates: Array<DisabledDateRangeT> = [];
 
 	@query("[data-sap-focus-ref]")
