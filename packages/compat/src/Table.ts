@@ -359,7 +359,7 @@ class Table extends UI5Element {
 	@property()
 	accessibleNameRef?: string;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_hiddenColumns?: Array<TableColumnInfo>;
 
 	@property({ type: Boolean })
