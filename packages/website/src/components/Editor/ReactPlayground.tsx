@@ -204,6 +204,16 @@ import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js";
 // Import localization for calendar/date components
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
+// Import DynamicDateRange options
+import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/Yesterday.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/Tomorrow.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/SingleDate.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/DateTimeRange.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";
+import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
+
 // Import theme assets for all packages - registers theme property loaders
 // so that setTheme() can actually apply themes
 import "@ui5/webcomponents/dist/Assets.js";
