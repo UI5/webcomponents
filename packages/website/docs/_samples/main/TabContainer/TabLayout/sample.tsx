@@ -3,18 +3,20 @@ import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import "@ui5/webcomponents-icons/dist/laptop.js";
 import "@ui5/webcomponents-icons/dist/video.js";
 import "@ui5/webcomponents-icons/dist/home.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
 
   return (
     <>
-      <ui5-tabcontainer tab-layout="Standard" collapsed>
+      <TabContainer tab-layout="Standard" collapsed>
         <Tab icon="laptop" text="Monitors" additional-text={10} />
         <Tab icon="video" text="Cameras" additional-text={2} selected={true} />
         <Tab icon="home" text="Rooms" additional-text={16} />
-    </ui5-tabcontainer>
+    </TabContainer>
     </>
   );
 }

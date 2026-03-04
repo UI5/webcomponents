@@ -5,6 +5,7 @@ import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import ExpandableTextClass from "@ui5/webcomponents/dist/ExpandableText.js";
 
 const Label = createReactComponent(LabelClass);
 const Table = createReactComponent(TableClass);
@@ -12,6 +13,7 @@ const TableCell = createReactComponent(TableCellClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
+const ExpandableText = createReactComponent(ExpandableTextClass);
 
 function App() {
 
@@ -27,8 +29,8 @@ function App() {
             <TableRow>
                 <TableCell><b>Notebook Basic 15</b></TableCell>
                 <TableCell>
-                    <ui5-expandable-text
-                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ui5-expandable-text>
+                    <ExpandableText
+                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
                 </TableCell>
                 <TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
                 <TableCell><Label><b>956</b> EUR</Label></TableCell>
@@ -36,8 +38,8 @@ function App() {
             <TableRow>
                 <TableCell><b>Notebook Basic 17</b></TableCell>
                 <TableCell>
-                    <ui5-expandable-text
-                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ui5-expandable-text>
+                    <ExpandableText
+                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
                 </TableCell>
                 <TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
                 <TableCell><Label><b>1249</b> EUR</Label></TableCell>

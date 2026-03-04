@@ -6,6 +6,7 @@ import ListItemCustomClass from "@ui5/webcomponents/dist/ListItemCustom.js";
 import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import ExpandableTextClass from "@ui5/webcomponents/dist/ExpandableText.js";
 
 const Avatar = createReactComponent(AvatarClass);
 const Label = createReactComponent(LabelClass);
@@ -14,6 +15,7 @@ const ListItemCustom = createReactComponent(ListItemCustomClass);
 const ListItemGroup = createReactComponent(ListItemGroupClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 const Title = createReactComponent(TitleClass);
+const ExpandableText = createReactComponent(ExpandableTextClass);
 
 function App() {
 
@@ -79,11 +81,11 @@ function App() {
     				</Avatar>
     				<div className="custom-list-item__content">
     					<Title size="H6" className="custom-list-item__title">Product with Expandable Description</Title>
-    					<ui5-expandable-text 
+    					<ExpandableText 
     						className="custom-list-item__description"
     						max-characters="120"
     						text="This custom list item uses ExpandableText to provide controlled expansion of lengthy content. Users can choose to read more when they need detailed information, keeping the list compact by default. This approach gives developers full control over the content layout and interaction while maintaining accessibility and user experience standards.">
-    					</ui5-expandable-text>
+    					</ExpandableText>
     					<Label className="custom-list-item__additional">Expandable</Label>
     				</div>
     			</div>
@@ -95,11 +97,11 @@ function App() {
     				</Avatar>
     				<div className="custom-list-item__content">
     					<Title size="H6" className="custom-list-item__title">Product with Expandable Description</Title>
-    					<ui5-expandable-text 
+    					<ExpandableText 
     						className="custom-list-item__description"
     						max-characters="120"
     						text="This custom list item uses ExpandableText to provide controlled expansion of lengthy content. Users can choose to read more when they need detailed information, keeping the list compact by default. This approach gives developers full control over the content layout and interaction while maintaining accessibility and user experience standards.">
-    					</ui5-expandable-text>
+    					</ExpandableText>
     					<Label className="custom-list-item__additional">Expandable</Label>
     				</div>
     			</div>

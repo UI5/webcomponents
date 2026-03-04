@@ -1,13 +1,15 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
 
   return (
     <>
-      <ui5-tabcontainer>
+      <TabContainer>
         <Tab text="Tab 1" />
         <Tab text="Tab 2" />
         <Tab text="Tab 3" />
@@ -31,7 +33,7 @@ function App() {
         <Tab text="Tab 21" />
         <Tab text="Tab 22" />
         <Tab text="Tab 23" />
-    </ui5-tabcontainer>
+    </TabContainer>
     </>
   );
 }

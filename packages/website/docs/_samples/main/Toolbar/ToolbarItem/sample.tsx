@@ -8,6 +8,8 @@ import MultiComboBoxClass from "@ui5/webcomponents/dist/MultiComboBox.js";
 import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
 import SwitchClass from "@ui5/webcomponents/dist/Switch.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
+import ToolbarItemClass from "@ui5/webcomponents/dist/ToolbarItem.js";
+import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
 
 const CheckBox = createReactComponent(CheckBoxClass);
 const ComboBox = createReactComponent(ComboBoxClass);
@@ -18,6 +20,8 @@ const MultiComboBox = createReactComponent(MultiComboBoxClass);
 const RadioButton = createReactComponent(RadioButtonClass);
 const Switch = createReactComponent(SwitchClass);
 const Toolbar = createReactComponent(ToolbarClass);
+const ToolbarItem = createReactComponent(ToolbarItemClass);
+const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 
 function App() {
 
@@ -33,55 +37,55 @@ function App() {
       `}</style>
       <Toolbar>
         {/* ToolbarItem wrapping Radio Buttons - displays in column when overflowed */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <div role="radiogroup" aria-label="Options" className="toolbar-item-group">
                 <RadioButton name="group1" text="Option 1" checked={true} />
                 <RadioButton name="group1" text="Option 2" />
                 <RadioButton name="group1" text="Option 3" />
             </div>
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping Checkboxes - displays in column when overflowed */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <div role="group" aria-label="Checkboxes" className="toolbar-item-group">
                 <CheckBox text="Checkbox 1" />
                 <CheckBox text="Checkbox 2" checked={true} />
                 <CheckBox text="Checkbox 3" />
             </div>
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping an Input Field */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <Input placeholder="Enter text" />
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping a ComboBox */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <ComboBox placeholder="Select an option">
                 <ComboBoxItem text="Option 1" />
                 <ComboBoxItem text="Option 2" />
                 <ComboBoxItem text="Option 3" />
             </ComboBox>
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping a MultiComboBox */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <MultiComboBox placeholder="Select options">
-                <ui5-mcb-item text="Item 1"></ui5-mcb-item>
-                <ui5-mcb-item text="Item 2"></ui5-mcb-item>
-                <ui5-mcb-item text="Item 3"></ui5-mcb-item>
+                <MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+                <MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+                <MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
             </MultiComboBox>
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping a Switch */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <Switch text-on="On" text-off="Off" />
-        </ui5-toolbar-item>
+        </ToolbarItem>
 
         {/* ToolbarItem wrapping a DatePicker */}
-        <ui5-toolbar-item>
+        <ToolbarItem>
             <DatePicker placeholder="Select a date" />
-        </ui5-toolbar-item>
+        </ToolbarItem>
     </Toolbar>
     </>
   );

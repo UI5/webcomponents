@@ -5,12 +5,14 @@ import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOptio
 import SortItemClass from "@ui5/webcomponents-fiori/dist/SortItem.js";
 import ViewSettingsDialogClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
+import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 
 const FilterItem = createReactComponent(FilterItemClass);
 const FilterItemOption = createReactComponent(FilterItemOptionClass);
 const SortItem = createReactComponent(SortItemClass);
 const ViewSettingsDialog = createReactComponent(ViewSettingsDialogClass);
 const Button = createReactComponent(ButtonClass);
+const ListItemGroup = createReactComponent(ListItemGroupClass);
 
 function App() {
   const vsd1Ref = useRef(null);
@@ -54,11 +56,11 @@ function App() {
                 <FilterItemOption slot="values" text="CPO" />
                 <FilterItemOption slot="values" text="VP" />
             </FilterItem>
-            <ui5-group-item slot="groupItems" text="Name" selected=""></ui5-group-item>
-            <ui5-group-item slot="groupItems" text="Position"></ui5-group-item>
-            <ui5-group-item slot="groupItems" text="Company"></ui5-group-item>
-            <ui5-group-item slot="groupItems" text="Department"></ui5-group-item>
-            <ui5-group-item slot="groupItems" text="(Not Grouped)"></ui5-group-item>
+            <ListItemGroup slot="groupItems" text="Name" selected=""></ListItemGroup>
+            <ListItemGroup slot="groupItems" text="Position"></ListItemGroup>
+            <ListItemGroup slot="groupItems" text="Company"></ListItemGroup>
+            <ListItemGroup slot="groupItems" text="Department"></ListItemGroup>
+            <ListItemGroup slot="groupItems" text="(Not Grouped)"></ListItemGroup>
         </ViewSettingsDialog>
         <br />
         <br />

@@ -1,15 +1,17 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
+import AvatarBadgeClass from "@ui5/webcomponents/dist/AvatarBadge.js";
 
 const Avatar = createReactComponent(AvatarClass);
+const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
 function App() {
 
   return (
     <>
       <Avatar mode="Interactive" size="M">
-    		<ui5-avatar-badge icon="edit" slot="badge"></ui5-avatar-badge>
+    		<AvatarBadge icon="edit" slot="badge"></AvatarBadge>
     	</Avatar>
     </>
   );

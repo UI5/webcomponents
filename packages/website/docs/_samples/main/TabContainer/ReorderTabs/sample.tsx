@@ -2,8 +2,10 @@ import { useRef, useEffect } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
   const tabContainerRef = useRef(null);
@@ -55,7 +57,7 @@ function App() {
 
   return (
     <>
-      <ui5-tabcontainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>
@@ -76,7 +78,7 @@ function App() {
         <Tab id="tab14" text="Tab 14" movable={true} />
         <Tab id="tab15" text="Tab 15" movable={true} />
         <Tab id="tab16" text="Tab 16" movable={true} />
-      </ui5-tabcontainer>
+      </TabContainer>
     </>
   );
 }

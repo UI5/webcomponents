@@ -13,11 +13,13 @@ import "@ui5/webcomponents-icons/dist/bold-text.js";
 import "@ui5/webcomponents-icons/dist/italic-text.js";
 import "@ui5/webcomponents-icons/dist/underline-text.js";
 import "@ui5/webcomponents-icons/dist/locked.js";
+import MenuItemGroupClass from "@ui5/webcomponents/dist/MenuItemGroup.js";
 
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 const MenuSeparator = createReactComponent(MenuSeparatorClass);
+const MenuItemGroup = createReactComponent(MenuItemGroupClass);
 
 function App() {
   const menuGroupsRef = useRef(null);
@@ -36,21 +38,21 @@ function App() {
 
     		<MenuSeparator />
 
-    		<ui5-menu-item-group check-mode="Single">
+    		<MenuItemGroup check-mode="Single">
     			<MenuItem text="Left Alignment" icon="text-align-left" checked={true} />
     			<MenuItem text="Center Alignment" icon="text-align-center" checked={true} />
     			<MenuItem text="Right Alignment" icon="text-align-right" checked={true} />
-    		</ui5-menu-item-group>
+    		</MenuItemGroup>
 
     		<MenuSeparator />
 
-    		<ui5-menu-item-group check-mode="Multiple">
+    		<MenuItemGroup check-mode="Multiple">
     			<MenuItem text="Bold" icon="bold-text" checked={true}>
     				<Button id="newLock2" slot="endContent" icon="locked" design="Transparent" />
     			</MenuItem>
     			<MenuItem text="Italic" icon="italic-text" additional-text="Cursive Text" checked={true} />
     			<MenuItem text="Underline" icon="underline-text" checked={true} />
-    		</ui5-menu-item-group>
+    		</MenuItemGroup>
 
     		<MenuSeparator />
 

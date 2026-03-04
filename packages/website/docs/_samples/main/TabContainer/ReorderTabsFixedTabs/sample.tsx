@@ -3,9 +3,11 @@ import { createReactComponent } from "@ui5/webcomponents-base";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import TabSeparatorClass from "@ui5/webcomponents/dist/TabSeparator.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Tab = createReactComponent(TabClass);
 const TabSeparator = createReactComponent(TabSeparatorClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
   const tabContainerRef = useRef(null);
@@ -63,7 +65,7 @@ function App() {
 
   return (
     <>
-      <ui5-tabcontainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
         <Tab design="Positive" text="One" data-fixed="true" />
         <Tab design="Negative" text="Two" data-fixed="true" />
         <Tab design="Critical" text="Three" data-fixed="true" />
@@ -79,7 +81,7 @@ function App() {
         <Tab movable={true} text="Twelve" />
         <Tab movable={true} text="Thirteen" selected={true} />
         <Tab movable={true} text="Fourteen" />
-      </ui5-tabcontainer>
+      </TabContainer>
     </>
   );
 }

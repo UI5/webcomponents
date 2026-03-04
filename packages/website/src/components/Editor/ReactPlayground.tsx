@@ -120,6 +120,12 @@ import TableSelectionClass from "@ui5/webcomponents/dist/TableSelection.js";
 import TableSelectionMultiClass from "@ui5/webcomponents/dist/TableSelectionMulti.js";
 import TableSelectionSingleClass from "@ui5/webcomponents/dist/TableSelectionSingle.js";
 import TableVirtualizerClass from "@ui5/webcomponents/dist/TableVirtualizer.js";
+import ExpandableTextClass from "@ui5/webcomponents/dist/ExpandableText.js";
+import TableRowActionClass from "@ui5/webcomponents/dist/TableRowAction.js";
+import TableRowActionNavigationClass from "@ui5/webcomponents/dist/TableRowActionNavigation.js";
+import TableHeaderCellActionAIClass from "@ui5/webcomponents/dist/TableHeaderCellActionAI.js";
+import ToolbarItemClass from "@ui5/webcomponents/dist/ToolbarItem.js";
+import DateRangeClass from "@ui5/webcomponents/dist/CalendarDateRange.js";
 
 // Import fiori package
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -226,6 +232,8 @@ const ComponentClasses: Record<string, any> = {
   SuggestionItemClass, SuggestionItemCustomClass, SuggestionItemGroupClass, CarouselClass, ToggleButtonClass, FormClass,
   FormItemClass, FormGroupClass, BarClass, DynamicDateRangeClass, TableGrowingClass,
   TableSelectionClass, TableSelectionMultiClass, TableSelectionSingleClass, TableVirtualizerClass,
+  ExpandableTextClass, TableRowActionClass, TableRowActionNavigationClass,
+  TableHeaderCellActionAIClass, ToolbarItemClass, DateRangeClass,
   // fiori package
   ShellBarClass, ShellBarItemClass, SideNavigationClass, SideNavigationItemClass,
   SideNavigationSubItemClass, SideNavigationGroupClass, NotificationListClass, NotificationListItemClass,

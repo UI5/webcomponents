@@ -4,10 +4,12 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Label = createReactComponent(LabelClass);
 const StepInput = createReactComponent(StepInputClass);
 const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
   const tabContainerRef = useRef(null);
@@ -84,7 +86,7 @@ function App() {
       <Label show-colon={true} htmlFor="maxNestingLevelInput">Max nesting level</Label>
       <StepInput style={{ width: "5rem" }} id="maxNestingLevelInput" placeholder="maxNestingLevel" value={1} min={1} onUi5Change={handleNestingLevelChange} />
 
-      <ui5-tabcontainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>
@@ -105,7 +107,7 @@ function App() {
         <Tab id="tab14" text="Tab 14" movable={true} />
         <Tab id="tab15" text="Tab 15" movable={true} />
         <Tab id="tab16" text="Tab 16" movable={true} />
-      </ui5-tabcontainer>
+      </TabContainer>
     </>
   );
 }

@@ -7,16 +7,18 @@ import "@ui5/webcomponents-icons/dist/activities.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/calendar.js";
 import "@ui5/webcomponents-icons/dist/menu.js";
+import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
 const Label = createReactComponent(LabelClass);
 const Tab = createReactComponent(TabClass);
 const TabSeparator = createReactComponent(TabSeparatorClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
 
   return (
     <>
-      <ui5-tabcontainer>
+      <TabContainer>
         <Tab icon="menu" text="Tab 1">
             <Label>Quibusdam, veniam! Architecto debitis iusto ad et, asperiores quisquam perferendis reprehenderit ipsa voluptate minus minima, perspiciatis cum. Totam harum necessitatibus numquam voluptatum.</Label>
         </Tab>
@@ -33,7 +35,7 @@ function App() {
         <Tab icon="action-settings" text="Tab 5">
             <Label>Explicabo laboriosam ab consequuntur, qui dignissimos inventore sapiente ullam quaerat ratione libero vero, beatae laudantium! Aperiam numquam tempore, laudantium perferendis recusandae autem.</Label>
         </Tab>
-    </ui5-tabcontainer>
+    </TabContainer>
     </>
   );
 }

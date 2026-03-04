@@ -12,6 +12,8 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/share.js";
 import "@ui5/webcomponents-icons/dist/heart.js";
 import "@ui5/webcomponents-icons/dist/delete.js";
+import TableRowActionClass from "@ui5/webcomponents/dist/TableRowAction.js";
+import TableRowActionNavigationClass from "@ui5/webcomponents/dist/TableRowActionNavigation.js";
 
 const Label = createReactComponent(LabelClass);
 const Table = createReactComponent(TableClass);
@@ -19,6 +21,8 @@ const TableCell = createReactComponent(TableCellClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
+const TableRowAction = createReactComponent(TableRowActionClass);
+const TableRowActionNavigation = createReactComponent(TableRowActionNavigationClass);
 
 const handlers = {
   onAdd: (row) => {
@@ -61,35 +65,35 @@ function App() {
     		<TableCell><Label><b>Notebook Basic 15</b><br /><a href="#">HT-1000</a></Label></TableCell>
     		<TableCell><Label>Very Best Screens</Label></TableCell>
     		<TableCell><Label><b>899.99</b> EUR</Label></TableCell>
-    		<ui5-table-row-action-navigation slot="actions"></ui5-table-row-action-navigation>
+    		<TableRowActionNavigation slot="actions"></TableRowActionNavigation>
     	</TableRow>
     {/* playground-fold-end */}
     	<TableRow row-key={2}>
     		<TableCell><Label><b>Astro Laptop 216</b><br /><a href="#">HT-1251</a></Label></TableCell>
     		<TableCell><Label>Technocom</Label></TableCell>
     		<TableCell><Label><b>679.99</b> EUR</Label></TableCell>
-    		<ui5-table-row-action slot="actions" icon="delete" text="Delete" handler="onDelete"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="add" text="Add" handler="onAdd"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="edit" text="Edit" handler="onEdit"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="share" text="Share" handler="onShare"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="heart" text="Like" handler="onLike"></ui5-table-row-action>
-    		<ui5-table-row-action-navigation slot="actions" handler="onNavigate" interactive></ui5-table-row-action-navigation>
+    		<TableRowAction slot="actions" icon="delete" text="Delete" handler="onDelete"></TableRowAction>
+    		<TableRowAction slot="actions" icon="add" text="Add" handler="onAdd"></TableRowAction>
+    		<TableRowAction slot="actions" icon="edit" text="Edit" handler="onEdit"></TableRowAction>
+    		<TableRowAction slot="actions" icon="share" text="Share" handler="onShare"></TableRowAction>
+    		<TableRowAction slot="actions" icon="heart" text="Like" handler="onLike"></TableRowAction>
+    		<TableRowActionNavigation slot="actions" handler="onNavigate" interactive></TableRowActionNavigation>
     	</TableRow>
     {/* playground-fold */}
     	<TableRow row-key={3} navigated={true}>
     		<TableCell><Label><b>Benda Laptop 1408</b><br /><a href="#">HT-6102</a></Label></TableCell>
     		<TableCell><Label>Ultrasonic United</Label></TableCell>
     		<TableCell><Label><b>699.99</b> EUR</Label></TableCell>
-    		<ui5-table-row-action slot="actions" icon="share" text="Share" handler="onShare"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="edit" text="Edit" handler="onEdit" invisible></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="heart" text="Like" handler="onLike"></ui5-table-row-action>
+    		<TableRowAction slot="actions" icon="share" text="Share" handler="onShare"></TableRowAction>
+    		<TableRowAction slot="actions" icon="edit" text="Edit" handler="onEdit" invisible></TableRowAction>
+    		<TableRowAction slot="actions" icon="heart" text="Like" handler="onLike"></TableRowAction>
     	</TableRow>
     	<TableRow row-key={4}>
     		<TableCell><Label><b>Broad Screen 22HD</b><br /><a href="#">HT-1255</a></Label></TableCell>
     		<TableCell><Label>Speaker Experts</Label></TableCell>
     		<TableCell><Label><b>399.99</b> EUR</Label></TableCell>
-    		<ui5-table-row-action slot="actions" icon="share" text="Share" handler="onShare"></ui5-table-row-action>
-    		<ui5-table-row-action slot="actions" icon="add" text="Add" handler="onAdd"></ui5-table-row-action>
+    		<TableRowAction slot="actions" icon="share" text="Share" handler="onShare"></TableRowAction>
+    		<TableRowAction slot="actions" icon="add" text="Add" handler="onAdd"></TableRowAction>
     	</TableRow>
     {/* playground-fold-end */}
     </Table>
