@@ -211,7 +211,7 @@ export {
 	attachThemeLoaded,
 	detachThemeLoaded,
 
-// UI5Element.ts
+	// UI5Element.ts
 	UI5Element,
 };
 
