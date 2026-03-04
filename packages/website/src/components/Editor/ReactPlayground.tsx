@@ -14,6 +14,11 @@ import generatedTypes from "!!raw-loader!./monaco-ui5-types.d.ts";
 
 import { createReactComponent } from "@ui5/webcomponents-base";
 
+// Theme support - apply theme changes to UI5 Web Components rendered in-document
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import { getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import applyDirection from "@ui5/webcomponents-base/dist/locale/applyDirection.js";
+
 // Import ALL component classes - main package
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadgeClass from "@ui5/webcomponents/dist/ButtonBadge.js";
@@ -342,6 +347,21 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
   useEffect(() => {
     setEditorCode(code);
   }, [code]);
+
+  // Apply theme changes to UI5 Web Components
+  useEffect(() => {
+    if (getTheme() !== theme) {
+      setTheme(theme);
+    }
+  }, [theme]);
+
+  // Apply text direction
+  useEffect(() => {
+    if (previewRef.current) {
+      previewRef.current.setAttribute("dir", textDirection === "RTL" ? "rtl" : "ltr");
+    }
+    applyDirection();
+  }, [textDirection]);
 
   // Babel is now imported synchronously, so it's always ready
   const babelReady = !!Babel;
