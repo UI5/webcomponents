@@ -7,7 +7,7 @@ import type ButtonDesign from "./types/ButtonDesign.js";
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { IToolbarItem } from "./ToolbarItemBase.js";
+import type { IToolbarItem, ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -57,7 +57,7 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 })
 class ToolbarButton extends ToolbarItemBase implements IToolbarItem {
 	eventDetails!: {
-		click: void,
+		click: ToolbarItemEventDetail,
 		"close-overflow": void;
 	}
 
@@ -229,7 +229,7 @@ class ToolbarButton extends ToolbarItemBase implements IToolbarItem {
 
 	onClick(e: Event) {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click");
+		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}

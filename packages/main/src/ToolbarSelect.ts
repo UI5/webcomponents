@@ -78,7 +78,7 @@ class ToolbarSelect extends ToolbarItemBase implements IToolbarItem {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
-		"click": void;
+		"click": ToolbarItemEventDetail;
 		"close-overflow": void;
 	}
 
@@ -197,7 +197,7 @@ class ToolbarSelect extends ToolbarItemBase implements IToolbarItem {
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click");
+		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		if (prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}

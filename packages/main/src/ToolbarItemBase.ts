@@ -3,10 +3,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
-type IEventOptions = {
-	preventClosing: boolean;
-}
-
 type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
@@ -158,7 +154,6 @@ class ToolbarItemBase extends UI5Element {
 }
 
 export type {
-	IEventOptions,
 	ToolbarItemEventDetail,
 	IToolbarItem,
 };
