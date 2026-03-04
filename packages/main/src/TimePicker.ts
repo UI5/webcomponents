@@ -487,19 +487,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		if (this._formatPattern) {
 			return this._formatPattern;
 		}
-
-		// @ts-ignore oFormatOptions is a private API of DateFormat
-		return this.getFormat().oFormatOptions.pattern as string;
 	}
 
 	get _valueFormat() {
 		if (this.valueFormat) {
 			return this.valueFormat;
-		}
-
-		// If displayFormat is explicitly set but valueFormat is not, default to ISO format
-		if (this.displayFormat) {
-			return "";
 		}
 
 		// For backward compatibility: when using deprecated formatPattern, use it for both display and value
