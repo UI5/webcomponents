@@ -281,7 +281,7 @@
 
 
 	<ui5-user-settings-dialog id="settings" header-text="Settings" show-search-field>
-		<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account">
+		<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" selected>
 			<ui5-user-settings-account-view show-manage-account="true">
 				<ui5-user-menu-account slot="account"
 									   avatar-src="../assets/images/avatars/man_avatar_3.png"
@@ -305,25 +305,25 @@
 			<ui5-user-settings-appearance-view text="Themes">
 				<div slot="additionalContent">
 					<div class="ui5-user-settings-appearance-view-additional-content-header">
-						<ui5-text>Optimize for Touch Input</ui5-text>
-						<ui5-switch></ui5-switch>
+						<ui5-text id="touch-input-label">Optimize for Touch Input</ui5-text>
+						<ui5-switch accessible-name-ref="touch-input-label"></ui5-switch>
 					</div>
 					<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
 						Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
 						This is useful for hybrid devices that combine touch and mouse events.
 					</ui5-text>
 				</div>
-				<ui5-user-settings-appearance-view-group header-text="SAP Horizon">
-					<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="SAP Morning Horizon"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="SAP Evening Horizon"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="SAP Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="SAP Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-group header-text="Horizon">
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="Morning Horizon" selected></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="Evening Horizon"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
 				</ui5-user-settings-appearance-view-group>
-				<ui5-user-settings-appearance-view-group header-text="SAP Quartz">
-					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="SAP Quartz Light"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="SAP Quartz Dark"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="SAP Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
-					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="SAP Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-group header-text="Quartz">
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="Quartz Light"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="Quartz Dark"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+					<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
 				</ui5-user-settings-appearance-view-group>
 			</ui5-user-settings-appearance-view>
 		</ui5-user-settings-item>
@@ -331,7 +331,7 @@
 		<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
 			<ui5-user-settings-view>
 				<div id="language-region-container" class="language-region-container">
-					<ui5-label class="language-region-label">Display Language:</ui5-label>
+					<ui5-label for="language" class="language-region-label">Display Language:</ui5-label>
 					<ui5-combobox id="language" class="language-region-control" placeholder="Language" value="English (United States)">
 						<ui5-cb-item text="Browser Language" selected additional-text="English"></ui5-cb-item>
 						<ui5-cb-item text="English (United Kingdom)" additional-text="English (United Kingdom)"></ui5-cb-item>
@@ -346,7 +346,7 @@
 						<ui5-cb-item text="Spanish (Mexico)" additional-text="Español (América Latina)"></ui5-cb-item>
 						<ui5-cb-item text="Spanish (Spain)" additional-text="Español (España)"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Region:</ui5-label>
+					<ui5-label for="region" class="language-region-label">Region:</ui5-label>
 					<ui5-combobox id="region" class="language-region-control" placeholder="Region" value="United States">
 						<ui5-cb-item text="United Kingdom" additional-text="GB"></ui5-cb-item>
 						<ui5-cb-item text="United States" additional-text="US"></ui5-cb-item>
@@ -360,7 +360,7 @@
 						<ui5-cb-item text="Spanish (Mexico)" additional-text="MX"></ui5-cb-item>
 						<ui5-cb-item text="Spanish (Spain)" additional-text="ES"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Date Format:</ui5-label>
+					<ui5-label for="dateFormat" class="language-region-label">Date Format:</ui5-label>
 					<ui5-combobox  id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
 						<ui5-cb-item text="MM/DD/YYYY" additional-text="e.g. 10/23/2025"></ui5-cb-item>
 						<ui5-cb-item text="MM.DD.YYYY" additional-text="e.g. 10.23.2025"></ui5-cb-item>
@@ -372,7 +372,7 @@
 						<ui5-cb-item text="YYYY.MM.DD" additional-text="e.g. 2025.10.23"></ui5-cb-item>
 						<ui5-cb-item text="YYYY-MM-DD" additional-text="e.g. 2025-10-23"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Time Format:</ui5-label>
+					<ui5-label for="timeFormat" class="language-region-label">Time Format:</ui5-label>
 					<ui5-combobox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
 						<ui5-cb-item text="24 Hour" additional-text="e.g. 12:05:10"></ui5-cb-item>
 						<ui5-cb-item text="12 Hour" additional-text="e.g. 12:05:10 PM"></ui5-cb-item>
@@ -380,7 +380,7 @@
 						<ui5-cb-item text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM"></ui5-cb-item>
 						<ui5-cb-item text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Time Zone:</ui5-label>
+					<ui5-label for="timeZone" class="language-region-label">Time Zone:</ui5-label>
 					<ui5-combobox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)">
 						<ui5-cb-item text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States"></ui5-cb-item>
 						<ui5-cb-item text="Mountain Time (UTC -07:00)" additional-text="Denver, United States"></ui5-cb-item>
@@ -407,7 +407,7 @@
 						<ui5-cb-item text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia"></ui5-cb-item>
 						<ui5-cb-item text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Currency:</ui5-label>
+					<ui5-label for="currency" class="language-region-label">Currency:</ui5-label>
 					<ui5-combobox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar">
 						<ui5-cb-item text="USD - United States Dollar" additional-text="USD" value="USD"></ui5-cb-item>
 						<ui5-cb-item text="Euro" additional-text="EUR"></ui5-cb-item>
@@ -430,7 +430,7 @@
 						<ui5-cb-item text="South Korean Won" additional-text="KRW"></ui5-cb-item>
 						<ui5-cb-item text="Turkish Lira" additional-text="TRY"></ui5-cb-item>
 					</ui5-combobox>
-					<ui5-label class="language-region-label">Number Format:</ui5-label>
+					<ui5-label for="numberFormat" class="language-region-label">Number Format:</ui5-label>
 					<ui5-combobox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56">
 						<ui5-cb-item text="1.234,56" additional-text="Germany"></ui5-cb-item>
 						<ui5-cb-item text="1,234.56" additional-text="US/UK"></ui5-cb-item>
