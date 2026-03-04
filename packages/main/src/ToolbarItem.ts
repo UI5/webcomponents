@@ -7,9 +7,17 @@ import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
-interface IOverflowToolbarItem extends HTMLElement {
-	overflowCloseEvents?: string[] | undefined;
-	hasOverflow?: boolean | undefined;
+/**
+ * Interface for the slotted item in `ui5-toolbar-item`.
+ *
+ * It could be any HTMLElement or UI5 Web Component with option to specify custom overflow closing events and overflow behavior.
+ *
+ * @public
+ * @since 2.20.0
+ */
+interface IToolbarItem extends HTMLElement {
+	overflowCloseEvents?: string[];
+	hasOverflow?: boolean;
 }
 
 /**
@@ -89,7 +97,7 @@ class ToolbarItem extends ToolbarItemBase {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true,
 	})
-	item!: DefaultSlot<HTMLElement>;
+	item!: DefaultSlot<IToolbarItem>;
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
@@ -110,13 +118,13 @@ class ToolbarItem extends ToolbarItemBase {
 
 	// We want to close the overflow popover, when closing event is being executed
 	getClosingEvents(): string[] {
-		const item = (Array.isArray(this.item) ? this.item[0] : this.item) as IOverflowToolbarItem;
+		const item = this.item[0];
 
 		const closeEvents = this.closeOverflowSet[this.itemTagName as keyof typeof this.closeOverflowSet] || [];
 		if (!item) {
 			return [...closeEvents];
 		}
-		const overflowCloseEvents = Array.isArray(item.overflowCloseEvents) ? item.overflowCloseEvents : [];
+		const overflowCloseEvents = item.overflowCloseEvents ? item.overflowCloseEvents : [];
 
 		return [...closeEvents, ...overflowCloseEvents];
 	}
@@ -142,17 +150,17 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	get itemTagName() {
-		const ctor = this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.constructor as typeof ToolbarItem;
-		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IOverflowToolbarItem>("item")[0]?.tagName;
+		const ctor = this.getSlottedNodes<IToolbarItem>("item")[0]?.constructor as typeof ToolbarItem;
+		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IToolbarItem>("item")[0]?.tagName;
 	}
 
 	get hasOverflow(): boolean {
-		return (this.item[0] as IOverflowToolbarItem)?.hasOverflow ?? false;
+		return this.item[0]?.hasOverflow ?? false;
 	}
 }
 
 export type {
-	IOverflowToolbarItem,
+	IToolbarItem,
 };
 ToolbarItem.define();
 
