@@ -626,6 +626,7 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
         <div className={styles.editorContainer} onKeyDown={(e) => { if (e.key === "/") e.stopPropagation(); }}>
           <div className={styles.tabBar}>
             <span className={styles.tab}>App.tsx</span>
+            <span className={styles.reactVersion}>React &gt;=18</span>
           </div>
           <MonacoEditor
             height="300px"

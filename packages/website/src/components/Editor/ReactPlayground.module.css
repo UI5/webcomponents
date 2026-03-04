@@ -85,6 +85,15 @@
   cursor: default;
 }
 
+.reactVersion {
+  padding: 0.2rem 0.5rem;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+  color: var(--ifm-color-emphasis-600);
+}
+
 /* Ensure Monaco editor has proper theme colors */
 .editorContainer > section {
   background: var(--ifm-code-background);
