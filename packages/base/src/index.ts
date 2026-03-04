@@ -106,7 +106,6 @@ import { addCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
 
-
 export default UI5Element;
 export {
 	// drag and drop
