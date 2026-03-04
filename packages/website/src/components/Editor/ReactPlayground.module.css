@@ -46,6 +46,16 @@
   align-items: flex-start;
   width: calc(100% - 16px);
   box-sizing: border-box;
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapTextColor);
+  line-height: normal;
+  -webkit-font-smoothing: auto;
+}
+
+/* Ensure slotted content inside web components inherits SAP theme fonts */
+.preview :global(*) {
+  font-family: inherit;
 }
 
 .preview > div {
