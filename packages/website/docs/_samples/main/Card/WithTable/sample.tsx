@@ -31,7 +31,7 @@ function App() {
         .status-success { color: #107e3e; }
       `}</style>
       <Card style={{ width: "40rem" }}>
-            <CardHeader slot="header" title-text="New Purchase Orders" subtitle-text="Today" additional-text="3 of 15" />
+            <CardHeader slot="header" titleText="New Purchase Orders" subtitleText="Today" additionalText="3 of 15" />
 
             <Table style={{ marginBlockEnd: "0.75rem" }}>
                 <TableColumn slot="columns">
@@ -43,7 +43,7 @@ function App() {
                 <TableColumn slot="columns">
                     <Label>Net Amount</Label>
                 </TableColumn>
-                <TableColumn slot="columns" min-width={450} popin-text="Status" demand-popin={true}>
+                <TableColumn slot="columns" min-width={450} popinText="Status" demandPopin={true}>
                     <Label>Status</Label>
                 </TableColumn>
 
@@ -58,7 +58,7 @@ function App() {
                         <Label>6k USD</Label>
                     </TableCell>
                     <TableCell>
-                        <Text className="status-success">Approved</Text>
+                        <Text class="status-success">Approved</Text>
                     </TableCell>
                 </TableRow>
                 <TableRow>
@@ -72,7 +72,7 @@ function App() {
                         <Label>2k USD</Label>
                     </TableCell>
                     <TableCell>
-                        <Text className="status-error">Rejected</Text>
+                        <Text class="status-error">Rejected</Text>
                     </TableCell>
                 </TableRow>
                 <TableRow>
@@ -86,7 +86,7 @@ function App() {
                         <Label>17k USD</Label>
                     </TableCell>
                     <TableCell>
-                        <Text className="status-warning">Pending</Text>
+                        <Text class="status-warning">Pending</Text>
                     </TableCell>
                 </TableRow>
             </Table>

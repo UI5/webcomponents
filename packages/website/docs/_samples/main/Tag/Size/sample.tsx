@@ -8,10 +8,10 @@ function App() {
   return (
     <>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "start", gap: "1rem" }}>
-            <Tag hide-state-icon={true} design="Neutral" size="L" wrapping-type="None">
+            <Tag hideStateIcon={true} design="Neutral" size="L" wrappingType="None">
     			Planned
     		</Tag>
-    		<Tag design="Negative" size="L" wrapping-type="None" />
+    		<Tag design="Negative" size="L" wrappingType="None" />
         </div>
     </>
   );

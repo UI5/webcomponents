@@ -27,11 +27,11 @@ function App() {
   return (
     <>
       <ComboBox id="employee-combo" placeholder="Select an employee" onSelectionChange={handleSelectionChange}>
-        <ComboBoxItem text="John Smith" additional-text="Sales" value="emp-101" />
-        <ComboBoxItem text="John Smith" additional-text="Engineering" value="emp-205" />
-        <ComboBoxItem text="John Smith" additional-text="Marketing" value="emp-342" />
-        <ComboBoxItem text="Jane Doe" additional-text="HR" value="emp-118" />
-        <ComboBoxItem text="Jane Doe" additional-text="Finance" value="emp-267" />
+        <ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101" />
+        <ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205" />
+        <ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342" />
+        <ComboBoxItem text="Jane Doe" additionalText="HR" value="emp-118" />
+        <ComboBoxItem text="Jane Doe" additionalText="Finance" value="emp-267" />
       </ComboBox>
 
       <div id="output" style={{ marginTop: "1rem", fontFamily: "var(--sapFontFamily)", color: "var(--sapTextColor)" }}>

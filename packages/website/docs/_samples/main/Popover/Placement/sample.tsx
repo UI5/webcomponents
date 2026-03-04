@@ -15,11 +15,11 @@ function App() {
   const popover2Ref = useRef(null);
 
   const handleBtn1Click = () => {
-    popover1Ref.current.open = !popover1Ref.current.open;
+    popover1Ref.current!.open = !popover1Ref.current!.open;
   };
 
   const handleBtn2Click = () => {
-    popover2Ref.current.open = !popover2Ref.current.open;
+    popover2Ref.current!.open = !popover2Ref.current!.open;
   };
 
   return (
@@ -29,9 +29,9 @@ function App() {
             <Button id="btn2" onClick={handleBtn2Click}>Open Popover to Left</Button>
         </div>
    
-        <Popover ref={popover1Ref} id="popover1" opener="btn1" header-text="Newsletter subscription" placement="Bottom">
+        <Popover ref={popover1Ref} id="popover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
+                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>
@@ -41,9 +41,9 @@ function App() {
             </div>
         </Popover>
 
-        <Popover ref={popover2Ref} id="popover2" opener="btn2" header-text="Newsletter subscription" placement="Start">
+        <Popover ref={popover2Ref} id="popover2" opener="btn2" headerText="Newsletter subscription" placement="Start">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
+                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>

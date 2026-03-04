@@ -20,7 +20,7 @@ function App() {
     const value = e.target.value;
     setSelectedValue(JSON.stringify(value));
 
-    const dates = ddrRef.current.toDates(value);
+    const dates = ddrRef.current!.toDates(value);
     setConvertedDates(dates.map((date: Date) => date.toLocaleString()).join(" - "));
   };
 

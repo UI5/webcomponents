@@ -11,13 +11,13 @@ function App() {
 
   return (
     <>
-      <Input filter="Contains" show-suggestions={true}>
-    		<SuggestionItemGroup header-text="Vegetables">
+      <Input filter="Contains" showSuggestions={true}>
+    		<SuggestionItemGroup headerText="Vegetables">
     			<SuggestionItem text="Cucumber" />
     			<SuggestionItem text="Carrot" />
     			<SuggestionItem text="Broccoli" />
     		</SuggestionItemGroup>
-    		<SuggestionItemGroup header-text="Fruits">
+    		<SuggestionItemGroup headerText="Fruits">
     			<SuggestionItem text="Apple" />
     			<SuggestionItem text="Banana" />
     			<SuggestionItem text="Orange" />

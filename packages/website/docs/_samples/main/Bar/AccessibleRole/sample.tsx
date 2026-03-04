@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <Label>Bar with two or more active items:</Label>
-        <Bar design="Header" accessible-role="Toolbar">
+        <Bar design="Header" accessibleRole="Toolbar">
             <Button icon="home" tooltip="Go home" design="Transparent" slot="startContent" />
             <Label id="basic-label">Content</Label>
             <Button icon="action-settings" tooltip="Go to settings" slot="endContent" />

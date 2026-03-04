@@ -6,7 +6,7 @@ const Text = createReactComponent(TextClass);
 function App() {
 
   return (
-    <Text empty-indicator-mode="On" />
+    <Text emptyIndicatorMode="On" />
   );
 }
 

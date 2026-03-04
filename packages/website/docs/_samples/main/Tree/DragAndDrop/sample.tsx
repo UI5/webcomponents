@@ -67,17 +67,17 @@ function App() {
 
   return (
     <>
-      <Tree ref={treeRef} id="tree" no-data-text="No data" mode="MultiSelect" accessible-name="Tree with accessibleName">
+      <Tree ref={treeRef} id="tree" noDataText="No data" mode="MultiSelect" accessibleName="Tree with accessibleName">
 
-        <TreeItem movable={true} text="Tree 1" icon="paste" additional-text="Available" indeterminate={true} selected={true} additional-text-state="Information" accessible-name="Tree item with accessibleName">
+        <TreeItem movable={true} text="Tree 1" icon="paste" additionalText="Available" indeterminate={true} selected={true} additionalTextState="Information" accessibleName="Tree item with accessibleName">
           <Title slot="content">
             <Label>Tree 1</Label>
             <Label>Tree 1</Label>
           </Title>
 
-          <TreeItem movable={true} expanded={true} text="Tree 1.1" additional-text="Re-stock" additional-text-state="Negative" indeterminate={true} selected={true}>
-            <TreeItem movable={true} text="Tree 1.1.1" additional-text="Required" additional-text-state="Critical" selected={true} />
-            <TreeItem movable={true} text="Tree 1.1.2" additional-text="Available" additional-text-state="Positive" />
+          <TreeItem movable={true} expanded={true} text="Tree 1.1" additionalText="Re-stock" additionalTextState="Negative" indeterminate={true} selected={true}>
+            <TreeItem movable={true} text="Tree 1.1.1" additionalText="Required" additionalTextState="Critical" selected={true} />
+            <TreeItem movable={true} text="Tree 1.1.2" additionalText="Available" additionalTextState="Positive" />
           </TreeItem>
         </TreeItem>
 

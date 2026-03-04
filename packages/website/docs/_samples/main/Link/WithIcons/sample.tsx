@@ -15,7 +15,7 @@ function App() {
 
         <br />
 
-        <Link href="https://www.sap.com" target="_blank" wrapping-type="Normal" end-icon="cloud">
+        <Link href="https://www.sap.com" target="_blank" wrappingType="Normal" endIcon="cloud">
             Check the weather
         </Link>
     </>

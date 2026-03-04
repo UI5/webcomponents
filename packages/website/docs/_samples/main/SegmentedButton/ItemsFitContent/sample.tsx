@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <SegmentedButton accessible-name="Font style" items-fit-content={true}>
+      <SegmentedButton accessibleName="Font style" itemsFitContent={true}>
             <SegmentedButtonItem selected={true}>Map</SegmentedButtonItem>
             <SegmentedButtonItem>Some Big Satellite</SegmentedButtonItem>
             <SegmentedButtonItem>Terrain</SegmentedButtonItem>

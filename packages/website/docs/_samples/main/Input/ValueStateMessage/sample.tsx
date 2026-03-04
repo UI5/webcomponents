@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <Input placeholder="Choose content density" value-state="Negative" show-suggestions={true}>
+      <Input placeholder="Choose content density" valueState="Negative" showSuggestions={true}>
             <div slot="valueStateMessage">This is an error message. Extra long text used as an error message.</div>
             <SuggestionItem text="Cozy" />
             <SuggestionItem text="Compact" />

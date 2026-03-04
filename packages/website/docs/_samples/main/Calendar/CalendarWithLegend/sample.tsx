@@ -41,7 +41,7 @@ function App() {
           <SpecialCalendarDate key={i} slot="specialDates" value={sd.value} type={sd.type} />
         ))}
 
-        <CalendarLegend slot="calendarLegend" id="calendarLegend" hide-today={true} hide-selected-day={true}>
+        <CalendarLegend slot="calendarLegend" id="calendarLegend" hideToday={true} hideSelectedDay={true}>
           <CalendarLegendItem type="Type05" text="Holiday" />
           <CalendarLegendItem type="Type07" text="School Vacation" />
           <CalendarLegendItem type="Type13" text="Wedding" />

@@ -34,7 +34,7 @@ function App() {
 
   return (
     <>
-      <ShellBar notifications-count={72} show-notifications={true} show-product-switch={true}>
+      <ShellBar notificationsCount={72} showNotifications={true} showProductSwitch={true}>
                 <Button icon="menu2" slot="startButton" />
                 <Button icon="nav-back" slot="startButton" />
 
@@ -42,7 +42,7 @@ function App() {
                     Product Identifier
                     <img slot="logo" src="/images/sap-logo-svg.svg" />
                 </ShellBarBranding>
-                <Tag design="Set2" color-scheme={7} slot="content">Trial</Tag>
+                <Tag design="Set2" colorScheme="7" slot="content">Trial</Tag>
                 <Text slot="content">30 days remaining</Text>
                 <ShellBarSpacer slot="content" />
                 <div slot="content" style={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
@@ -50,7 +50,7 @@ function App() {
                     <Label>Try Beta Version</Label>
                 </div>
 
-                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
+                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
                 <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />

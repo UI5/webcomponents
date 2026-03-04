@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <Table no-data-text="No data found">
+      <Table noDataText="No data found">
         <TableColumn slot="columns">
             <Text>Product</Text>
         </TableColumn>

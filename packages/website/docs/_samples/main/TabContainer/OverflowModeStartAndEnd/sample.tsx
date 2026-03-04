@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <TabContainer overflow-mode="StartAndEnd" collapsed>
+      <TabContainer overflowMode="StartAndEnd" collapsed>
         <Tab text="Tab 1" />
         <Tab text="Tab 2" />
         <Tab text="Tab 3" />

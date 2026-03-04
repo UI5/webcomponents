@@ -28,32 +28,32 @@ function App() {
         	background-color: var(--sapList_HeaderBackground);
         }
       `}</style>
-      <List selection-mode="Multiple">
-    		<ListItemGroup id="styled-group" header-text="Styled Header">
-    			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item 1
+      <List selectionMode="Multiple">
+    		<ListItemGroup id="styled-group" headerText="Styled Header">
+    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 1
     				<Avatar slot="image" shape="Square">
     					<img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
     				</Avatar>
     			</ListItemStandard>
-    			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item 2
+    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 2
     				<Avatar slot="image" shape="Square">
     					<img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
     				</Avatar>
     			</ListItemStandard>
-    			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item 3
+    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 3
     				<Avatar slot="image" shape="Square">
     					<img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
     				</Avatar>
     			</ListItemStandard>
     		</ListItemGroup>
 
-    		<ListItemGroup header-text="Normal Header">
-    			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item A
+    		<ListItemGroup headerText="Normal Header">
+    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item A
     				<Avatar slot="image" shape="Square">
     					<img src="/images/avatars/man_avatar_1.png" alt="Man image" />
     				</Avatar>
     			</ListItemStandard>
-    			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item B
+    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item B
     				<Avatar slot="image" shape="Square">
     					<img src="/images/avatars/man_avatar_2.png" alt="Man image" />
     				</Avatar>

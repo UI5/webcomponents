@@ -76,7 +76,7 @@ function App() {
   const handleDialogListItemClick = (e) => {
     const item = e.detail.item;
     if (valueHelpInputRef.current) {
-      valueHelpInputRef.current.setAttribute("value", item.innerHTML);
+      valueHelpInputRef.current!.setAttribute("value", item.innerHTML);
     }
     setDialogOpen(false);
   };
@@ -87,7 +87,7 @@ function App() {
 
   return (
     <>
-      <Input ref={valueHelpInputRef} id="valueHelpInput" placeholder="Enter product" show-suggestions={true} onInput={handleValueHelpInput}>
+      <Input ref={valueHelpInputRef} id="valueHelpInput" placeholder="Enter product" showSuggestions={true} onInput={handleValueHelpInput}>
         <Icon id="valueHelpIcon" slot="icon" name="value-help" onClick={handleValueHelpIconClick} />
         {suggestionItems.map((item) => (
           <SuggestionItem key={item} text={item} />

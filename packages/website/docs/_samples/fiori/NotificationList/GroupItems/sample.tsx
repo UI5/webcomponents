@@ -39,8 +39,8 @@ function App() {
   return (
     <>
       <NotificationList onItemClose={handleNotificationListItemClose}>
-            <NotificationListGroupItem title-text="Orders" >
-                <NotificationListItem show-close={true} importance="Important" title-text="New order (#2525) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Positive">
+            <NotificationListGroupItem titleText="Orders" >
+                <NotificationListItem showClose={true} importance="Important" titleText="New order (#2525) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Positive">
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>
@@ -53,7 +53,7 @@ function App() {
                     dolor,
                     nec elementum lectus turpis at nunc.
                 </NotificationListItem>
-                <NotificationListItem show-close={true} title-text="New order (#2526) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Critical">
+                <NotificationListItem showClose={true} titleText="New order (#2526) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Critical">
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>
@@ -67,8 +67,8 @@ function App() {
                     nec elementum lectus turpis at nunc.
                 </NotificationListItem>
             </NotificationListGroupItem>
-            <NotificationListGroupItem title-text="Deliveries" collapsed={true}>
-                <NotificationListItem show-close={true} title-text="New Delivery (#2900) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Information">
+            <NotificationListGroupItem titleText="Deliveries" collapsed={true}>
+                <NotificationListItem showClose={true} titleText="New Delivery (#2900) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Information">
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>
@@ -81,7 +81,7 @@ function App() {
                     nec elementum lectus turpis at nunc.
                 </NotificationListItem>
 
-                <NotificationListItem show-close={true} title-text="New Delivery (#29001) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="None">
+                <NotificationListItem showClose={true} titleText="New Delivery (#29001) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="None">
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>
@@ -95,8 +95,8 @@ function App() {
                 </NotificationListItem>
             </NotificationListGroupItem>
 
-            <NotificationListGroupItem collapsed={true} title-text="Meetings With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.">
-                <NotificationListItem show-close={true} title-text="New meeting at Building (#35001)" state="Positive" read={true}>
+            <NotificationListGroupItem collapsed={true} titleText="Meetings With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.">
+                <NotificationListItem showClose={true} titleText="New meeting at Building (#35001)" state="Positive" read={true}>
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>
@@ -106,7 +106,7 @@ function App() {
                     nec elementum lectus turpis at nunc.
                 </NotificationListItem>
 
-                <NotificationListItem show-close={true} title-text="New meeting at Building (#35001)" state="Information" read={true}>
+                <NotificationListItem showClose={true} titleText="New meeting at Building (#35001)" state="Information" read={true}>
                     <Avatar icon="employee" size="XS" slot="avatar" />
                     <span slot="footnotes">Office Notifications</span>
                     <span slot="footnotes">3 Days</span>

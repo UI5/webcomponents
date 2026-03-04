@@ -17,7 +17,7 @@ function App() {
 
   return (
     <>
-      <Table id="table" overflow-mode="Scroll">
+      <Table id="table" overflowMode="Scroll">
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol" width="200px">Supplier</TableHeaderCell>

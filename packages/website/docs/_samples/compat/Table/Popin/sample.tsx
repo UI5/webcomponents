@@ -17,19 +17,19 @@ function App() {
     <>
       <Table>
 
-        <TableColumn slot="columns" popin-display="Inline">
+        <TableColumn slot="columns" popinDisplay="Inline">
             <Text>Product</Text>
         </TableColumn>
-        <TableColumn slot="columns" min-width={600} popin-text="Supplier" demand-popin={true} popin-display="Inline">
+        <TableColumn slot="columns" min-width={600} popinText="Supplier" demandPopin={true} popinDisplay="Inline">
             <Text>Supplier</Text>
         </TableColumn>
-        <TableColumn slot="columns" min-width={800} popin-text="Dimensions" demand-popin={true} popin-display="Inline">
+        <TableColumn slot="columns" min-width={800} popinText="Dimensions" demandPopin={true} popinDisplay="Inline">
             <Text>Dimensions</Text>
         </TableColumn>
-        <TableColumn slot="columns" min-width={800} popin-text="Weight" demand-popin={true} popin-display="Inline">
+        <TableColumn slot="columns" min-width={800} popinText="Weight" demandPopin={true} popinDisplay="Inline">
             <Text>Weight</Text>
         </TableColumn>
-        <TableColumn slot="columns" popin-display="Inline">
+        <TableColumn slot="columns" popinDisplay="Inline">
             <Text>Price</Text>
         </TableColumn>
 

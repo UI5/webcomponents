@@ -12,9 +12,9 @@ function App() {
 
   return (
     <>
-        <RatingIndicator value={3} rated-icon="heart" unrated-icon="heart-2" /><br />
-        <RatingIndicator value={4} rated-icon="thumb-up" unrated-icon="border" /><br />
-        <RatingIndicator value="2.5" rated-icon="circle-task-2" unrated-icon="border" readonly={true} />
+        <RatingIndicator value={3} ratedIcon="heart" unratedIcon="heart-2" /><br />
+        <RatingIndicator value={4} ratedIcon="thumb-up" unratedIcon="border" /><br />
+        <RatingIndicator value="2.5" ratedIcon="circle-task-2" unratedIcon="border" readonly={true} />
     </>
   );
 }

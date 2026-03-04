@@ -31,13 +31,13 @@ function App() {
 
   const handleBtnAddOpenerDelayClick = useCallback(() => {
     if (delayMenuRef.current) {
-      delayMenuRef.current.open = !delayMenuRef.current.open;
+      delayMenuRef.current!.open = !delayMenuRef.current!.open;
     }
   }, []);
 
   const handleBtnOpenBasicClick = useCallback(() => {
     if (menuSubsRef.current) {
-      menuSubsRef.current.open = !menuSubsRef.current.open;
+      menuSubsRef.current!.open = !menuSubsRef.current!.open;
     }
   }, []);
 
@@ -57,16 +57,16 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenBasic" end-icon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button>
+      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button>
       <Button id="btnAddOpenerDelay" onClick={handleBtnAddOpenerDelayClick}>Delayed</Button> <br />
 
-      <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic" onUi5BeforeOpen={handleMenuSubsUi5BeforeOpen}>
+      <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic" onBeforeOpen={handleMenuSubsUi5BeforeOpen}>
         <MenuItem text="New File" icon="add-document" />
         <MenuItem text="New Folder" icon="add-folder" disabled={true} />
-        <MenuItem text="Open" icon="open-folder" loading-delay={100} loading={true} />
+        <MenuItem text="Open" icon="open-folder" loadingDelay={100} loading={true} />
       </Menu>
 
-      <Menu ref={delayMenuRef} id="delaymenu" loading-delay={100} loading={true} opener="btnAddOpenerDelay" onUi5BeforeOpen={handleDelaymenuUi5BeforeOpen} />
+      <Menu ref={delayMenuRef} id="delaymenu" loadingDelay={100} loading={true} opener="btnAddOpenerDelay" onBeforeOpen={handleDelaymenuUi5BeforeOpen} />
     </>
   );
 }

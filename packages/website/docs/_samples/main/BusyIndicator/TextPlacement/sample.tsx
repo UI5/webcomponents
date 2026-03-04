@@ -10,7 +10,7 @@ function App() {
       <BusyIndicator text="Loading data from backend server.." active={true}>
             <div style={{ height: "200px", width: "200px" }}></div>
         </BusyIndicator>
-        <BusyIndicator text="Loading data from backend server..." text-placement="Top" active={true}>
+        <BusyIndicator text="Loading data from backend server..." textPlacement="Top" active={true}>
             <div style={{ height: "200px", width: "200px" }}></div>
         </BusyIndicator>
     </>

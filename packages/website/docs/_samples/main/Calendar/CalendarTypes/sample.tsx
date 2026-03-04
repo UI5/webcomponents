@@ -6,7 +6,7 @@ const Calendar = createReactComponent(CalendarClass);
 function App() {
 
   return (
-    <Calendar primary-calendar-type="Japanese" secondary-calendar-type="Islamic" />
+    <Calendar primaryCalendarType="Japanese" secondaryCalendarType="Islamic" />
   );
 }
 

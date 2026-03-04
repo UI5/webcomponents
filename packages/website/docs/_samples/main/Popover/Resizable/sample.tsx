@@ -14,22 +14,22 @@ function App() {
   const popoverRef = useRef(null);
 
   const handlePopoverOpenerClick = () => {
-    popoverRef.current.open = true;
+    popoverRef.current!.open = true;
   };
 
   const handleBtnClick = () => {
-    popoverRef.current.open = false;
+    popoverRef.current!.open = false;
   };
 
   return (
     <>
       <Button id="popoverOpener" onClick={handlePopoverOpenerClick}>Open Popover</Button>
 
-        <Popover ref={popoverRef} id="popover" opener="popoverOpener" header-text="Resizable Popover" resizable={true}>
+        <Popover ref={popoverRef} id="popover" opener="popoverOpener" headerText="Resizable Popover" resizable={true}>
             <p>Resize this popover by dragging its resize handle.</p>
             <p>This feature is available only on desktop devices.</p>
             <Toolbar slot="footer">
-                <ToolbarButton className="popoverCloser" design="Emphasized" text="OK" />
+                <ToolbarButton class="popoverCloser" design="Emphasized" text="OK" />
             </Toolbar>
         </Popover>
     </>

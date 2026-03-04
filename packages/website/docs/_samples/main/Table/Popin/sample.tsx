@@ -39,7 +39,7 @@ function App() {
   const handleSizeBtnSelectionChange = (e) => {
     const selectedItem = e.detail.selectedItems[0];
     if (tableRef.current) {
-      tableRef.current.style.width = selectedItem.textContent;
+      tableRef.current!.style.width = selectedItem.textContent;
     }
   };
 
@@ -51,23 +51,23 @@ function App() {
   return (
     <>
       <Bar>
-    	<SegmentedButton id="sizeBtn" accessible-name="Switch Table Size" onSelectionChange={handleSizeBtnSelectionChange}>
+    	<SegmentedButton id="sizeBtn" accessibleName="Switch Table Size" onSelectionChange={handleSizeBtnSelectionChange}>
     		<SegmentedButtonItem>25%</SegmentedButtonItem>
     		<SegmentedButtonItem>50%</SegmentedButtonItem>
     		<SegmentedButtonItem>75%</SegmentedButtonItem>
     		<SegmentedButtonItem selected={true}>100%</SegmentedButtonItem>
     	</SegmentedButton>
-    	<SegmentedButton id="showHideDetailsBtn" slot="endContent" accessible-name="Show/Hide Details" onSelectionChange={handleShowHideDetailsBtnSelectionChange}>
+    	<SegmentedButton id="showHideDetailsBtn" slot="endContent" accessibleName="Show/Hide Details" onSelectionChange={handleShowHideDetailsBtnSelectionChange}>
     		<SegmentedButtonItem tooltip="Show Details" icon="detail-more" />
     		<SegmentedButtonItem tooltip="Hide Details" icon="detail-less" selected={true} />
     	</SegmentedButton>
     </Bar>
-    <Table ref={tableRef} id="table" overflow-mode="Popin">
+    <Table ref={tableRef} id="table" overflowMode="Popin">
     	<TableHeaderRow slot="headerRow">
     		<TableHeaderCell id="produtCol" min-width="300px"><span>Product</span></TableHeaderCell>
     		<TableHeaderCell id="supplierCol" min-width="200px">Supplier</TableHeaderCell>
-    		<TableHeaderCell id="dimensionsCol" importance="-1" min-width="200px" popin-hidden={true}>Dimensions</TableHeaderCell>
-    		<TableHeaderCell id="weightCol" importance="-1" min-width="100px" popin-hidden={true}>Weight</TableHeaderCell>
+    		<TableHeaderCell id="dimensionsCol" importance="-1" min-width="200px" popinHidden={true}>Dimensions</TableHeaderCell>
+    		<TableHeaderCell id="weightCol" importance="-1" min-width="100px" popinHidden={true}>Weight</TableHeaderCell>
     		<TableHeaderCell id="priceCol" min-width="150px">Price</TableHeaderCell>
     	</TableHeaderRow>
     {/* playground-fold */}

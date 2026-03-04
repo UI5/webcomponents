@@ -16,8 +16,8 @@ function App() {
       <Toolbar>
         <ToolbarButton icon="decline" text="Reject" />
     	<ToolbarButton icon="add" text="Add" />
-        <ToolbarButton icon="employee" text="Add more people" overflow-priority="AlwaysOverflow" />
-        <ToolbarButton icon="employee" text="Call me tomorrow" overflow-priority="AlwaysOverflow" />
+        <ToolbarButton icon="employee" text="Add more people" overflowPriority="AlwaysOverflow" />
+        <ToolbarButton icon="employee" text="Call me tomorrow" overflowPriority="AlwaysOverflow" />
     </Toolbar>
     </>
   );

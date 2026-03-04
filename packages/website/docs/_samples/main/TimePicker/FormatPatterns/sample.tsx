@@ -7,9 +7,9 @@ function App() {
 
   return (
     <>
-      <TimePicker format-pattern="hh:mm" />
-    <TimePicker format-pattern="hh:mm:ss" />
-    <TimePicker format-pattern="hh:mm:ss a" />
+      <TimePicker formatPattern="hh:mm" />
+    <TimePicker formatPattern="hh:mm:ss" />
+    <TimePicker formatPattern="hh:mm:ss a" />
     </>
   );
 }

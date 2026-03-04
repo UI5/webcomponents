@@ -52,7 +52,7 @@ function App() {
   return (
     <>
       <div style={{ height: "200px", overflow: "scroll" }}>
-        <Table growing={growing} busy={busy} busy-delay={0} onLoadMore={handleLoadMore}>
+        <Table growing={growing} busy={busy} busyDelay={0} onLoadMore={handleLoadMore}>
           <TableColumn slot="columns">
             <Text>Product</Text>
           </TableColumn>

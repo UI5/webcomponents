@@ -6,7 +6,7 @@ const Tag = createReactComponent(TagClass);
 function App() {
 
   return (
-    <Tag design="Positive" interactive={true} wrapping-type="None">
+    <Tag design="Positive" interactive={true} wrappingType="None">
         Success
     </Tag>
   );

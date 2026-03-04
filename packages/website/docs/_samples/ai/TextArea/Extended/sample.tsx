@@ -130,7 +130,7 @@ function App() {
       currentIndexRef.current = versionIndex;
       setTextValue(history[versionIndex].value);
       if (textareaRef.current) {
-        textareaRef.current.value = history[versionIndex].value;
+        textareaRef.current!.value = history[versionIndex].value;
       }
     }
 
@@ -171,14 +171,14 @@ function App() {
     const completedLabel = config?.completedLabel || "Action completed";
     const textarea = textareaRef.current;
 
-    versionHistoryRef.current.push({
+    versionHistoryRef.current!.push({
       value: textarea ? textarea.value : "",
       action,
       endAction: completedLabel,
       timestamp: new Date().toISOString(),
     });
 
-    currentIndexRef.current = versionHistoryRef.current.length - 1;
+    currentIndexRef.current = versionHistoryRef.current!.length - 1;
     currentActionRef.current = null;
 
     setHasHistory(true);
@@ -228,7 +228,7 @@ function App() {
     // Set loading state
     setIsLoading(true);
     if (textareaRef.current) {
-      textareaRef.current.value = "Analyzing request...";
+      textareaRef.current!.value = "Analyzing request...";
     }
     setPromptDescription(processingLabel);
 
@@ -259,14 +259,14 @@ function App() {
       const config = findActionConfig(action);
       const completedLabel = config?.completedLabel || "Action completed";
 
-      versionHistoryRef.current.push({
+      versionHistoryRef.current!.push({
         value: stoppedValue,
         action,
         endAction: completedLabel + " (stopped)",
         timestamp: new Date().toISOString(),
       });
 
-      currentIndexRef.current = versionHistoryRef.current.length - 1;
+      currentIndexRef.current = versionHistoryRef.current!.length - 1;
       setHasHistory(true);
       updateComponentState(null);
     }
@@ -319,7 +319,7 @@ function App() {
 
       if (configItem.children) {
         items.push(
-          <MenuItem key={configItem.text + index} text={configItem.text} starts-section={configItem.startsSection || false}>
+          <MenuItem key={configItem.text + index} text={configItem.text} startsSection={configItem.startsSection || false}>
             {configItem.children.map((child) => (
               <MenuItem
                 key={child.action}
@@ -337,7 +337,7 @@ function App() {
           <MenuItem
             key={(configItem.action || configItem.text) + index}
             text={configItem.text}
-            starts-section={configItem.startsSection || false}
+            startsSection={configItem.startsSection || false}
             data-action={configItem.action}
             data-processing-label={configItem.processingLabel}
             data-completed-label={configItem.completedLabel}

@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <Tokenizer style={{ width: "250px" }} id="delete-tokenizer" onUi5TokenDelete={handleTokenDelete}>
+      <Tokenizer style={{ width: "250px" }} id="delete-tokenizer" onTokenDelete={handleTokenDelete}>
         {tokens.map((t) => (
           <Token key={t} text={t} />
         ))}

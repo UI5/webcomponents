@@ -17,7 +17,7 @@ function App() {
 
   return (
     <>
-      <Table id="table" overflow-mode="Popin">
+      <Table id="table" overflowMode="Popin">
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol" width="200px">Supplier</TableHeaderCell>

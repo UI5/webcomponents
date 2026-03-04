@@ -55,7 +55,7 @@ function App() {
       });
   }, []);
 
-  const handleUploadCollectionUi5ItemDelete = useCallback((e) => {
+  const handleUploadCollectionItemDelete = useCallback((e) => {
     const deletedItem = e.detail.item;
     const fileId = deletedItem.dataset.fileId;
     if (fileId) {
@@ -83,29 +83,29 @@ function App() {
             margin: 0.25rem;
         }
       `}</style>
-      <UploadCollection ref={uploadCollectionRef} id="uploadCollection" accessible-name="Uploaded (2)" onUi5ItemDelete={handleUploadCollectionUi5ItemDelete}>
+      <UploadCollection ref={uploadCollectionRef} id="uploadCollection" accessibleName="Uploaded (2)" onItemDelete={handleUploadCollectionItemDelete}>
         <div slot="header" className="header">
           <Title>Uploaded (2)</Title>
-          <Label show-colon={true}>Add new files and press to start uploading pending files</Label>
+          <Label showColon={true}>Add new files and press to start uploading pending files</Label>
           <Button id="startUploading" onClick={handleStartUploadingClick}>Start</Button>
           <div className="spacer"></div>
-          <FileUploader id="fileUploader" hide-input={true} multiple={true} onChange={handleFileUploaderChange}>
+          <FileUploader id="fileUploader" hideInput={true} multiple={true} onChange={handleFileUploaderChange}>
             <Button icon="add" design="Transparent" />
           </FileUploader>
         </div>
 
-        <UploadCollectionItem file-name="LaptopHT-1000.jpg" file-name-clickable={true} upload-state="Complete">
+        <UploadCollectionItem fileName="LaptopHT-1000.jpg" fileNameClickable={true} uploadState="Complete">
           Uploaded By: David Keane · Uploaded On: 2014-07-26 · File Size: 35 KB
           <img src="/images/HT-1000.jpg" slot="thumbnail" />
         </UploadCollectionItem>
 
-        <UploadCollectionItem file-name="Notes.txt" upload-state="Complete">
+        <UploadCollectionItem fileName="Notes.txt" uploadState="Complete">
           Uploaded By: John Smith · Uploaded On: 2014-09-02 · File Size: 226.6 KB
           <Icon name="document-text" slot="thumbnail" />
         </UploadCollectionItem>
 
         {newFiles.map((f) => (
-          <UploadCollectionItem key={f.id} data-file-id={f.id} file-name={f.fileName} upload-state={f.uploadState}>
+          <UploadCollectionItem key={f.id} data-file-id={f.id} fileName={f.fileName} uploadState={f.uploadState}>
             {f.description}
             <Icon name="document" slot="thumbnail" />
           </UploadCollectionItem>

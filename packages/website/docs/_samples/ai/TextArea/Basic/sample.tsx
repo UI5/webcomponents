@@ -64,13 +64,13 @@ function App() {
     const textarea = textareaRef.current;
     const currentVal = textarea ? textarea.value : "";
 
-    versionHistoryRef.current.push({
+    versionHistoryRef.current!.push({
       value: currentVal,
       promptDescription: "Generated text",
       timestamp: new Date().toISOString(),
     });
 
-    currentVersionIndexRef.current = versionHistoryRef.current.length - 1;
+    currentVersionIndexRef.current = versionHistoryRef.current!.length - 1;
     updateComponentState();
     setIsLoading(false);
   }, [stopTypingAnimation, updateComponentState]);
@@ -127,13 +127,13 @@ function App() {
     const stoppedValue = textarea ? textarea.value : "";
 
     if (stoppedValue.trim()) {
-      versionHistoryRef.current.push({
+      versionHistoryRef.current!.push({
         value: stoppedValue,
         promptDescription: "Generated text (stopped)",
         timestamp: new Date().toISOString(),
       });
 
-      currentVersionIndexRef.current = versionHistoryRef.current.length - 1;
+      currentVersionIndexRef.current = versionHistoryRef.current!.length - 1;
       updateComponentState();
     }
 
@@ -149,7 +149,7 @@ function App() {
       const entry = history[currentVersionIndexRef.current];
       setTextValue(entry.value);
       if (textareaRef.current) {
-        textareaRef.current.value = entry.value;
+        textareaRef.current!.value = entry.value;
       }
       updateComponentState();
     } else if (!backwards && currentVersionIndexRef.current < history.length - 1) {
@@ -157,7 +157,7 @@ function App() {
       const entry = history[currentVersionIndexRef.current];
       setTextValue(entry.value);
       if (textareaRef.current) {
-        textareaRef.current.value = entry.value;
+        textareaRef.current!.value = entry.value;
       }
       updateComponentState();
     }

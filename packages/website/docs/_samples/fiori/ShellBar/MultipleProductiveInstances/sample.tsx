@@ -27,9 +27,9 @@ function App() {
                 <Button icon="menu2" slot="startButton" />
                 <img slot="logo" src="/images/sap-logo-svg.svg" />
 
-                <Tag design="Set2" color-scheme={10} slot="content">Region EMEA</Tag>
+                <Tag design="Set2" colorScheme="10" slot="content">Region EMEA</Tag>
 
-                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
+                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
 
                 <ShellBarItem icon="sys-help" text="Help" />
@@ -39,13 +39,13 @@ function App() {
                 </Avatar>
             </ShellBar>
 
-            <ShellBar primary-title="Product Identifier" notifications-count={72} show-notifications={true}>
+            <ShellBar primaryTitle="Product Identifier" notificationsCount={72} showNotifications={true}>
                 <Button icon="menu2" slot="startButton" />
                 <img slot="logo" src="/images/sap-logo-svg.svg" />
 
-                <Tag design="Set2" color-scheme={10} slot="content">Region APJ</Tag>
+                <Tag design="Set2" colorScheme="10" slot="content">Region APJ</Tag>
 
-                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
+                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
                 <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />

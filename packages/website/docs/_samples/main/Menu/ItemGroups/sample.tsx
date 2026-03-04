@@ -25,20 +25,20 @@ function App() {
   const menuGroupsRef = useRef(null);
 
   const handleBtnOpenGroupsClick = () => {
-    menuGroupsRef.current.opener = btnOpenGroups;
-	menuGroupsRef.current.open = !menuGroupsRef.current.open;
+    menuGroupsRef.current!.opener = btnOpenGroups;
+	menuGroupsRef.current!.open = !menuGroupsRef.current!.open;
   };
 
   return (
     <>
       <Button id="btnOpenGroups" onClick={handleBtnOpenGroupsClick}>Open Menu</Button>
-    	<Menu ref={menuGroupsRef} id="menuGroups" header-text="My ui5-menu">
+    	<Menu ref={menuGroupsRef} id="menuGroups" headerText="My ui5-menu">
     		<MenuItem text="New Paragraph" icon="add-document" />
     		<MenuItem text="New Text" />
 
     		<MenuSeparator />
 
-    		<MenuItemGroup check-mode="Single">
+    		<MenuItemGroup checkMode="Single">
     			<MenuItem text="Left Alignment" icon="text-align-left" checked={true} />
     			<MenuItem text="Center Alignment" icon="text-align-center" checked={true} />
     			<MenuItem text="Right Alignment" icon="text-align-right" checked={true} />
@@ -46,11 +46,11 @@ function App() {
 
     		<MenuSeparator />
 
-    		<MenuItemGroup check-mode="Multiple">
+    		<MenuItemGroup checkMode="Multiple">
     			<MenuItem text="Bold" icon="bold-text" checked={true}>
     				<Button id="newLock2" slot="endContent" icon="locked" design="Transparent" />
     			</MenuItem>
-    			<MenuItem text="Italic" icon="italic-text" additional-text="Cursive Text" checked={true} />
+    			<MenuItem text="Italic" icon="italic-text" additionalText="Cursive Text" checked={true} />
     			<MenuItem text="Underline" icon="underline-text" checked={true} />
     		</MenuItemGroup>
 

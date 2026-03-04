@@ -9,8 +9,8 @@ function App() {
     <>
       <Switch design="Graphical" />
     <Switch design="Graphical" disabled={true} />
-    <Switch design="Textual" text-on="On" text-off="Off" />
-    <Switch design="Textual" text-on="On" text-off="Off" disabled={true} />
+    <Switch design="Textual" textOn="On" textOff="Off" />
+    <Switch design="Textual" textOn="On" textOff="Off" disabled={true} />
     </>
   );
 }

@@ -35,7 +35,7 @@ function App() {
 
   return (
     <>
-      <Search id="filtering" show-clear-icon={true} placeholder="Start typing ..." onInput={handleFilteringInput}>
+      <Search id="filtering" showClearIcon={true} placeholder="Start typing ..." onInput={handleFilteringInput}>
     			<SearchMessageArea slot="messageArea" description={'Search for example "All my open Objects"'} text="Try This!" />
     			<Button design="Transparent" slot="action">Show all search results</Button>
           {items.map((item, index) => (

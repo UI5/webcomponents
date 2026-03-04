@@ -7,19 +7,19 @@ function App() {
 
   return (
     <>
-      <Avatar fallback-icon="employee" size="XS">
+      <Avatar fallbackIcon="employee" size="XS">
             <img alt="Woman" src="/images/avatars/woman_avatar_1.png" />
         </Avatar>
-        <Avatar fallback-icon="employee" size="S">
+        <Avatar fallbackIcon="employee" size="S">
             <img alt="Woman" src="/images/avatars/woman_avatar_1.png" />
         </Avatar>
-        <Avatar fallback-icon="employee" size="M">
+        <Avatar fallbackIcon="employee" size="M">
             <img alt="Woman" src="/images/avatars/woman_avatar_1.png" />
         </Avatar>
-        <Avatar fallback-icon="employee" size="L">
+        <Avatar fallbackIcon="employee" size="L">
             <img alt="Woman" src="/images/avatars/woman_avatar_1.png" />
         </Avatar>
-        <Avatar fallback-icon="employee" size="XL">
+        <Avatar fallbackIcon="employee" size="XL">
             <img alt="Woman" src="/images/avatars/woman_avatar_1.png" />
         </Avatar>
     </>

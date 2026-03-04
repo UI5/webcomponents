@@ -134,19 +134,19 @@ function App() {
   }, []);
 
   const handleStructureChange = useCallback((e) => {
-    optionsRef.current.structure = e.detail.selectedOption.value;
+    optionsRef.current!.structure = e.detail.selectedOption.value;
   }, []);
 
   const handleLanguageChange = useCallback((e) => {
-    optionsRef.current.language = e.detail.selectedOption.value;
+    optionsRef.current!.language = e.detail.selectedOption.value;
   }, []);
 
   const handleToneOfVoiceChange = useCallback((e) => {
     const value = e.detail.selectedItems[0].innerText;
     switch (value) {
-      case "Formal": optionsRef.current.toneOfVoice = 1; break;
-      case "Neutral": optionsRef.current.toneOfVoice = 2; break;
-      case "Casual": optionsRef.current.toneOfVoice = 3; break;
+      case "Formal": optionsRef.current!.toneOfVoice = 1; break;
+      case "Neutral": optionsRef.current!.toneOfVoice = 2; break;
+      case "Casual": optionsRef.current!.toneOfVoice = 3; break;
     }
   }, []);
 
@@ -209,7 +209,7 @@ function App() {
           width: 100%;
         }
       `}</style>
-      <Dialog open={dialogOpen} header-text="Improve Text">
+      <Dialog open={dialogOpen} headerText="Improve Text">
         <div className="content">
           <div className="guidedPromptForm">
             <div className="guidedPromptFormGroup">
@@ -221,7 +221,7 @@ function App() {
             </div>
             <div className="guidedPromptFormGroup">
               <Label>Length:</Label>
-              <RangeSlider min={50} max={150} start-value={75} end-value={125} show-tooltip={true} />
+              <RangeSlider min={50} max={150} startValue={75} endValue={125} showTooltip={true} />
             </div>
             <div className="guidedPromptFormGroup">
               <Label>Language:</Label>
@@ -248,7 +248,7 @@ function App() {
       </Dialog>
 
       <Card>
-        <CardHeader slot="header" title-text="Monique Legrand" subtitle-text="Senior Sales Executive">
+        <CardHeader slot="header" titleText="Monique Legrand" subtitleText="Senior Sales Executive">
           <img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" slot="avatar" />
         </CardHeader>
         <section className="guidedPromptSection">

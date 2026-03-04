@@ -54,22 +54,22 @@ function App() {
   const respPopoverRef = useRef(null);
 
   const handleMenuBtnClick = () => {
-    respPopoverRef.current.open = !respPopoverRef.current.open;
+    respPopoverRef.current!.open = !respPopoverRef.current!.open;
   };
 
   const handleSideNavigationSelectionChange = (e) => {
     if (e.detail.item.getAttribute("target")) {
-		respPopoverRef.current.open=false;
+		respPopoverRef.current!.open=false;
 		return;
     }
   };
 
   const handleQuickActionClick = () => {
-    quickActionDialogRef.current.open = true;
+    quickActionDialogRef.current!.open = true;
   };
 
   const handleQuickActionCloseBtnClick = () => {
-    quickActionDialogRef.current.open = false;
+    quickActionDialogRef.current!.open = false;
   };
 
   return (
@@ -104,13 +104,13 @@ function App() {
         }
       `}</style>
       <Page style={{ height: "500px" }}>
-    		<ShellBar notifications-count={72} show-notifications={true}>
+    		<ShellBar notificationsCount={72} showNotifications={true}>
                 <Button icon="menu2" slot="startButton" id="menuBtn" onClick={handleMenuBtnClick} />
                 <ShellBarBranding slot="branding">
                     Product Identifier
                     <img slot="logo" src="/images/sap-logo-svg.svg" />
                 </ShellBarBranding>
-                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
+                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
                 <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />
@@ -118,7 +118,7 @@ function App() {
                     <img src="/images/avatars/man_avatar_3.png"/>
                 </Avatar>
             </ShellBar>
-    		<ResponsivePopover ref={respPopoverRef} id="respPopover" opener="menuBtn" placement="Bottom" accessible-name="Main Navigation">
+    		<ResponsivePopover ref={respPopoverRef} id="respPopover" opener="menuBtn" placement="Bottom" accessibleName="Main Navigation">
     			<SideNavigation id="sideNavigation" onSelectionChange={handleSideNavigationSelectionChange}>
     				{/* Items */}
     				<SideNavigationItem text="Home" href="#contHome" icon="home" selected={true} />
@@ -208,7 +208,7 @@ function App() {
     			</div>
     		</div>
 
-    		<Dialog header-text="Create New Item" draggable={true} resizable={true} ref={quickActionDialogRef} id="quickActionDialog">
+    		<Dialog headerText="Create New Item" draggable={true} resizable={true} ref={quickActionDialogRef} id="quickActionDialog">
     			<Text>Create new item...</Text>
     			<Bar slot="footer" design="Footer">
     				<Button slot="endContent" design="Emphasized">Create</Button>

@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <Button onClick={() => { toastRef.current.open = true; }}>Show Toast</Button>
+      <Button onClick={() => { toastRef.current!.open = true; }}>Show Toast</Button>
       <Toast ref={toastRef} duration={5000}>Toast message, displayed for 5 seconds.</Toast>
     </>
   );

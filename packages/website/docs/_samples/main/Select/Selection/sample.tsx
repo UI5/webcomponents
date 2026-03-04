@@ -20,7 +20,7 @@ function App() {
   return (
     <>
       <div>
-    	<Label htmlFor="countrySelect">Country:</Label>
+    	<Label for="countrySelect">Country:</Label>
     	<Select id="countrySelect" value="DE" onChange={handleCountrySelectChange}>
     		<Option value="US">United States</Option>
     		<Option value="DE">Germany</Option>

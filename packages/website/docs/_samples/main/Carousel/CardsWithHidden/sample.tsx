@@ -31,8 +31,8 @@ function App() {
       `}</style>
       <Carousel style={{ width: "100%", maxWidth: "800px" }} items-per-page="S1 M2 L3 XL3" background-design="Solid" page-indicator-background-design="Transparent" page-indicator-border-design="None">
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard">
-    			<CardHeader slot="header" status="Item 1" title-text="Visible Card 1" subtitle-text="This card is visible" />
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard">
+    			<CardHeader slot="header" status="Item 1" titleText="Visible Card 1" subtitleText="This card is visible" />
     			<List separators="Inner">
     				<ListItemStandard icon="horizontal-bullet-chart">Marketing Overview</ListItemStandard>
     				<ListItemStandard icon="opportunity">Sales Performance</ListItemStandard>
@@ -40,8 +40,8 @@ function App() {
     			</List>
     		</Card>
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard" hidden={true}>
-    			<CardHeader slot="header" status="Item 2" title-text="Hidden Card 2" subtitle-text="This card is hidden via attribute">
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard" hidden={true}>
+    			<CardHeader slot="header" status="Item 2" titleText="Hidden Card 2" subtitleText="This card is hidden via attribute">
     				<Icon name="hide" slot="avatar" />
     			</CardHeader>
     			<List separators="Inner">
@@ -50,16 +50,16 @@ function App() {
     			</List>
     		</Card>
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard">
-    			<CardHeader slot="header" status="Item 3" title-text="Visible Card 3" subtitle-text="Visible card after hidden one" />
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard">
+    			<CardHeader slot="header" status="Item 3" titleText="Visible Card 3" subtitleText="Visible card after hidden one" />
     			<List separators="Inner">
     				<ListItemStandard icon="horizontal-bullet-chart">Customer Insights</ListItemStandard>
     				<ListItemStandard icon="opportunity">Campaign Performance</ListItemStandard>
     			</List>
     		</Card>
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard">
-    			<CardHeader slot="header" status="Item 4" title-text="Visible Card 4" subtitle-text="Visible item example" />
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard">
+    			<CardHeader slot="header" status="Item 4" titleText="Visible Card 4" subtitleText="Visible item example" />
     			<List separators="Inner">
     				<ListItemStandard icon="line-charts">Trend Analysis</ListItemStandard>
     				<ListItemStandard icon="customer">Customer Segments</ListItemStandard>
@@ -67,8 +67,8 @@ function App() {
     			</List>
     		</Card>
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard" hidden={true}>
-    			<CardHeader slot="header" status="Item 5" title-text="Hidden Card 5" subtitle-text="Another hidden example">
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard" hidden={true}>
+    			<CardHeader slot="header" status="Item 5" titleText="Hidden Card 5" subtitleText="Another hidden example">
     				<Icon name="hide" slot="avatar" />
     			</CardHeader>
     			<List separators="Inner">
@@ -77,8 +77,8 @@ function App() {
     			</List>
     		</Card>
 
-    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard">
-    			<CardHeader slot="header" status="Item 6" title-text="Visible Card 6" subtitle-text="End of visible sequence" />
+    		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} class="myCard">
+    			<CardHeader slot="header" status="Item 6" titleText="Visible Card 6" subtitleText="End of visible sequence" />
     			<List separators="Inner">
     				<ListItemStandard icon="horizontal-bullet-chart">Final Overview</ListItemStandard>
     				<ListItemStandard icon="opportunity">Closing Metrics</ListItemStandard>

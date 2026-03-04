@@ -13,25 +13,25 @@ function App() {
   const searchFieldRef = useRef(null);
 
   const handleSearch = async () => {
-    const query = searchFieldRef.current.value;
-    searchFieldRef.current.fieldLoading = true;
+    const query = searchFieldRef.current!.value;
+    searchFieldRef.current!.fieldLoading = true;
     setResultText(`Searching for "${query}"...`);
 
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    searchFieldRef.current.fieldLoading = false;
+    searchFieldRef.current!.fieldLoading = false;
     setResultText(`Search completed for "${query}". Found 5 results.`);
   };
 
   const handleInput = () => {
-    if (!searchFieldRef.current.value) {
+    if (!searchFieldRef.current!.value) {
       setResultText("Enter a search term and press Enter or click the search icon");
     }
   };
 
   return (
     <>
-      <SearchField ref={searchFieldRef} id="search-loading" placeholder="Search..." onSearch={handleSearch} onUi5Input={handleInput} />
+      <SearchField ref={searchFieldRef} id="search-loading" placeholder="Search..." onSearch={handleSearch} onInput={handleInput} />
 
     <Label style={{ marginTop: "1rem", display: "block" }}>Result:</Label>
     <Text id="result-text">{resultText}</Text>

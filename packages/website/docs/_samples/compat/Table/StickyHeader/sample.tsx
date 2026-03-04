@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <div style={{ height: "150px", overflow: "scroll" }}>
-        <Table sticky-column-header={true}>
+        <Table stickyColumnHeader={true}>
 
             <TableColumn slot="columns">
     			<Text>Product</Text>
@@ -24,13 +24,13 @@ function App() {
     		<TableColumn slot="columns" min-width={800}>
     			<Text>Supplier</Text>
     		</TableColumn>
-    		<TableColumn slot="columns" min-width={600} popin-text="Dimensions" demand-popin="" className="table-header-text-alignment">
+    		<TableColumn slot="columns" min-width={600} popinText="Dimensions" demandPopin="" class="table-header-text-alignment">
     			<Text>Dimensions</Text>
     		</TableColumn>
-    		<TableColumn slot="columns" min-width={600} popin-text="Weight" demand-popin="" className="table-header-text-alignment">
+    		<TableColumn slot="columns" min-width={600} popinText="Weight" demandPopin="" class="table-header-text-alignment">
     			<Text>Weight</Text>
     		</TableColumn>
-    		<TableColumn slot="columns" className="table-header-text-alignment">
+    		<TableColumn slot="columns" class="table-header-text-alignment">
     			<Text>Price</Text>
     		</TableColumn>
 

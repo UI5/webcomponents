@@ -14,17 +14,17 @@ function App() {
   const dialogRef = useRef(null);
 
   const handleOpenDialogButtonClick = () => {
-    dialogRef.current.open = true;
+    dialogRef.current!.open = true;
   };
 
   const handleCloseDialogButtonClick = () => {
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   return (
     <>
       <Button id="openDialogButton" onClick={handleOpenDialogButtonClick}>Open Dialog</Button>
-        <Dialog ref={dialogRef} id="hello-dialog" header-text="Error">
+        <Dialog ref={dialogRef} id="hello-dialog" headerText="Error">
             <IllustratedMessage name="UnableToLoad" />
             <Bar design="Footer" slot="footer">
                 <Button id="closeDialogButton" design="Emphasized" slot="endContent" onClick={handleCloseDialogButtonClick}>Close</Button>

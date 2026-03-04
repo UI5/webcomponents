@@ -13,11 +13,11 @@ function App() {
   return (
     <>
       <Select>
-            <Option additional-text="AT">Austria</Option>
-            <Option additional-text="BE">Belgium</Option>
-            <Option additional-text="BR">Brazil</Option>
-            <Option additional-text="BG">Bulgaria</Option>
-            <Option additional-text="CA">Canada</Option>
+            <Option additionalText="AT">Austria</Option>
+            <Option additionalText="BE">Belgium</Option>
+            <Option additionalText="BR">Brazil</Option>
+            <Option additionalText="BG">Bulgaria</Option>
+            <Option additionalText="CA">Canada</Option>
         </Select>
     </>
   );

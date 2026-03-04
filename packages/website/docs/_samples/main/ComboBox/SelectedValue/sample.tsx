@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-      <ComboBox id="country-combo" placeholder="Select a country" selected-value="DE" onSelectionChange={handleSelectionChange}>
+      <ComboBox id="country-combo" placeholder="Select a country" selectedValue="DE" onSelectionChange={handleSelectionChange}>
         <ComboBoxItem text="Austria" value="AT" />
         <ComboBoxItem text="Belgium" value="BE" />
         <ComboBoxItem text="France" value="FR" />

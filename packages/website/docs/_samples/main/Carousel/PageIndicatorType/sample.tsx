@@ -12,7 +12,7 @@ function App() {
             max-height: 30rem;
         }
       `}</style>
-      <Carousel page-indicator-type="Numeric">
+      <Carousel pageIndicatorType="Numeric">
             <img src="/images/sample1.jpg" alt="Landscape 1" />
             <img src="/images/sample2.jpg" alt="Landscape 2" />
             <img src="/images/sample3.jpg" alt="Bulb" />

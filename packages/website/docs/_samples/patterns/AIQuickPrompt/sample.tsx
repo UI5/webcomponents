@@ -150,11 +150,11 @@ function App() {
     const key = translationKeyRef.current;
     const tKey = currentTextKeyRef.current;
     const trimmed = outputValue.trim();
-    return trimmed !== textsRef.current.predefinedTexts?.[key]?.[tKey]
-      && trimmed !== textsRef.current.predefinedTextsExpanded?.[key]?.[tKey]
-      && trimmed !== textsRef.current.predefinedTextsBulleted?.[key]?.[tKey]
-      && trimmed !== textsRef.current.predefinedTextsRephrased?.[key]?.[tKey]
-      && trimmed !== textsRef.current.predefinedTextsSimplified?.[key]?.[tKey];
+    return trimmed !== textsRef.current!.predefinedTexts?.[key]?.[tKey]
+      && trimmed !== textsRef.current!.predefinedTextsExpanded?.[key]?.[tKey]
+      && trimmed !== textsRef.current!.predefinedTextsBulleted?.[key]?.[tKey]
+      && trimmed !== textsRef.current!.predefinedTextsRephrased?.[key]?.[tKey]
+      && trimmed !== textsRef.current!.predefinedTextsSimplified?.[key]?.[tKey];
   }, [outputValue]);
 
   const startTextGeneration = useCallback((state, textMap) => {
@@ -171,12 +171,12 @@ function App() {
 
   const handleMenuItemClick = useCallback((e) => {
     if (!textsRef.current) return;
-    const predefinedTexts = textsRef.current.predefinedTexts;
-    const predefinedTextsBulleted = textsRef.current.predefinedTextsBulleted;
-    const predefinedTextsExpanded = textsRef.current.predefinedTextsExpanded;
-    const predefinedTextsRephrased = textsRef.current.predefinedTextsRephrased;
-    const predefinedTextsSimplified = textsRef.current.predefinedTextsSimplified;
-    const predefinedTextsSummarized = textsRef.current.predefinedTextsSummarized;
+    const predefinedTexts = textsRef.current!.predefinedTexts;
+    const predefinedTextsBulleted = textsRef.current!.predefinedTextsBulleted;
+    const predefinedTextsExpanded = textsRef.current!.predefinedTextsExpanded;
+    const predefinedTextsRephrased = textsRef.current!.predefinedTextsRephrased;
+    const predefinedTextsSimplified = textsRef.current!.predefinedTextsSimplified;
+    const predefinedTextsSummarized = textsRef.current!.predefinedTextsSummarized;
 
     switch (e.detail.text) {
       case "Regenerate": {
@@ -278,7 +278,7 @@ function App() {
         }
       `}</style>
       <Card>
-        <CardHeader slot="header" title-text="Michael Adams" subtitle-text="Senior Sales Executive">
+        <CardHeader slot="header" titleText="Michael Adams" subtitleText="Senior Sales Executive">
           <img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar" />
         </CardHeader>
         <section className="quickPromptSection">
@@ -291,22 +291,22 @@ function App() {
             <Label style={{ alignSelf: "flex-end" }} required={true}>Offer: </Label>
             <AIButton
               ref={aiButtonRef}
-              className="quickPromptAiButton"
+              class="quickPromptAiButton"
               state={buttonState}
               onClick={handleAiButtonClick}
             >
               <AIButtonState name="generate" text="Generate" icon="ai" />
               <AIButtonState name="generating" text="Stop Generating" icon="stop" />
               <AIButtonState name="reviseGenerating" text="Stop Generating" icon="stop" />
-              <AIButtonState name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow" />
+              <AIButtonState name="revise" text="Revise" icon="ai" endIcon="navigation-down-arrow" />
             </AIButton>
           </div>
-          <BusyIndicator className="quickPromptBusyIndicator" active={busyActive}>
+          <BusyIndicator class="quickPromptBusyIndicator" active={busyActive}>
             <TextArea
               style={{ height: "100%" }}
               value={outputValue}
               disabled={outputDisabled}
-              value-state={outputValueState}
+              valueState={outputValueState}
             />
           </BusyIndicator>
         </section>
@@ -320,7 +320,7 @@ function App() {
       <Menu
         open={menuOpen}
         opener={aiButtonRef.current}
-        horizontal-align="End"
+        horizontalAlign="End"
         onItemClick={handleMenuItemClick}
         onClose={() => setMenuOpen(false)}
       >

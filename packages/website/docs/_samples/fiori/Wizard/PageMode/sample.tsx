@@ -35,7 +35,7 @@ function App() {
   const dialogRef = useRef(null);
 
   const handleButtonClick = () => {
-    dialogRef.current.open = true;
+    dialogRef.current!.open = true;
     const index = wizardWiz.getSelectedStepIndex();
     setButtonVisibility(index, wizardWiz.children.length);
   };
@@ -59,19 +59,19 @@ function App() {
   };
 
   const handleCancelClick = () => {
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   const handleWizFinalizeClick = () => {
     alert("Finalize");
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   return (
     <>
-      <Dialog ref={dialogRef} id="dialog" stretch={true} header-heading="Wizard">
-            <Wizard id="wiz" content-layout="SingleStep" onUi5StepChange={handleWizUi5StepChange}>
-                <WizardStep icon="product" title-text="Product type" selected={true}>
+      <Dialog ref={dialogRef} id="dialog" stretch={true} headerHeading="Wizard">
+            <Wizard id="wiz" contentLayout="SingleStep" onStepChange={handleWizUi5StepChange}>
+                <WizardStep icon="product" titleText="Product type" selected={true}>
                     <div style={{ display: "flex", minHeight: "200px", flexDirection: "column" }}>
                         <Title>1. Product Type</Title><br />
                         <MessageStrip>
@@ -89,7 +89,7 @@ function App() {
                         </Label>
                     </div>
                 </WizardStep>
-                <WizardStep icon="hint" title-text="Product Information" disabled={true}>
+                <WizardStep icon="hint" titleText="Product Information" disabled={true}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <Title>2. Product Information</Title><br />
                         <Label>
@@ -129,7 +129,7 @@ function App() {
                         </div>
                     </div>
                 </WizardStep>
-                <WizardStep icon="action-settings" title-text="Options" disabled={true}>
+                <WizardStep icon="action-settings" titleText="Options" disabled={true}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <Title>3. Options</Title><br />
                         <Label>

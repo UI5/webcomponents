@@ -12,14 +12,14 @@ function App() {
   const colorPalettePopoverRef = useRef(null);
 
   const handleColorPaletteBtnClick = () => {
-    colorPalettePopoverRef.current.open = !colorPalettePopoverRef.current.open;
+    colorPalettePopoverRef.current!.open = !colorPalettePopoverRef.current!.open;
   };
 
   return (
     <>
       <Button id="colorPaletteBtn" onClick={handleColorPaletteBtnClick}>Open ColorPalettePopover</Button>
 
-        <ColorPalettePopover ref={colorPalettePopoverRef} id="colorPalettePopover" opener="colorPaletteBtn" show-recent-colors={true} show-more-colors={true} show-default-color={true} default-color="orange"
+        <ColorPalettePopover ref={colorPalettePopoverRef} id="colorPalettePopover" opener="colorPaletteBtn" showRecentColors={true} showMoreColors={true} showDefaultColor={true} defaultColor="orange"
         >
             <ColorPaletteItem value="lightsalmon" />
             <ColorPaletteItem value="lightpink" />

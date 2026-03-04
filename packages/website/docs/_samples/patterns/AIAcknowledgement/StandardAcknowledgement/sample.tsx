@@ -23,7 +23,7 @@ function App() {
 
   return (
     <>
-      <Dialog open={dialogOpen} state="Information" header-text="Information">
+      <Dialog open={dialogOpen} state="Information" headerText="Information">
         <br />
         <Text>
           [ &lt;Application Help&gt; ] now provides embedded AI ("Artificial Intelligence") services. For more information, see <Link href="https://www.sap.com" target="_blank">&lt;link&gt;</Link>.

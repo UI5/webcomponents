@@ -100,18 +100,18 @@ function App() {
       >
         <div slot="header" className="header">
           <Title>Attachments</Title>
-          <Label show-colon={true}>Add new files and press to start uploading pending files</Label>
+          <Label showColon={true}>Add new files and press to start uploading pending files</Label>
           <Button onClick={handleStartUploadingClick}>Start</Button>
           <div className="spacer"></div>
-          <FileUploader hide-input={true} multiple={true} onChange={handleFileUploaderChange}>
+          <FileUploader hideInput={true} multiple={true} onChange={handleFileUploaderChange}>
             <Button icon="add" design="Transparent" />
           </FileUploader>
         </div>
         {items.map((item) => (
           <UploadCollectionItem
             key={item.id}
-            file-name={item.fileName}
-            upload-state={item.uploadState}
+            fileName={item.fileName}
+            uploadState={item.uploadState}
           >
             <Icon slot="thumbnail" name="document" />
             {item.description}

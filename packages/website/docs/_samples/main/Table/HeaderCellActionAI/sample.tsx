@@ -57,7 +57,7 @@ function App() {
 
   return (
     <>
-      <Table id="table" overflow-mode="Popin">
+      <Table id="table" overflowMode="Popin">
         <TableHeaderRow slot="headerRow">
           <TableHeaderCell id="produtCol" width="200px">
             <Label required={true}>Product</Label>
@@ -65,27 +65,27 @@ function App() {
           </TableHeaderCell>
           <TableHeaderCell id="supplierCol">Supplier</TableHeaderCell>
           <TableHeaderCell id="dimensionsCol" importance={-1}>Dimensions</TableHeaderCell>
-          <TableHeaderCell id="weightCol" popin-text="Weight">Weight</TableHeaderCell>
-          <TableHeaderCell id="priceCol" min-width="100px" horizontal-align="End" popin-text="Price in Popin" sort-indicator="Descending">
+          <TableHeaderCell id="weightCol" popinText="Weight">Weight</TableHeaderCell>
+          <TableHeaderCell id="priceCol" min-width="100px" horizontalAlign="End" popinText="Price in Popin" sortIndicator="Descending">
             <Label>Price</Label>
             <TableHeaderCellActionAI slot="action" id="aiActionPrice" ref={aiActionPriceRef}></TableHeaderCellActionAI>
           </TableHeaderCell>
         </TableHeaderRow>
-        <TableRow row-key={0}>
+        <TableRow rowKey={0}>
           <TableCell><Label><b>Notebook Basic 17</b><br />HT-1001</Label></TableCell>
           <TableCell><Label>Smartcards</Label></TableCell>
           <TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
           <TableCell><Label style={{ color: "#2b7c2b" }}><b>4.5</b> KG</Label></TableCell>
           <TableCell><Label><b>1249</b> EUR</Label></TableCell>
         </TableRow>
-        <TableRow row-key={1}>
+        <TableRow rowKey={1}>
           <TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
           <TableCell><Label>Very Best Screens</Label></TableCell>
           <TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
           <TableCell><Label style={{ color: "#2b7c2b" }}><b>4.2</b> KG</Label></TableCell>
           <TableCell><Label><b>956</b> EUR</Label></TableCell>
         </TableRow>
-        <TableRow row-key={2}>
+        <TableRow rowKey={2}>
           <TableCell><Label><b>Notebook Basic 18</b><br />HT-1002</Label></TableCell>
           <TableCell><Label>Technocom</Label></TableCell>
           <TableCell><Label>32 x 21 x 4 cm</Label></TableCell>

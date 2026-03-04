@@ -20,7 +20,7 @@ function App() {
             }
         }
       `}</style>
-      <MediaGallery layout="Horizontal" show-all-thumbnails={true} menu-horizontal-align="Right">
+      <MediaGallery layout="Horizontal" showAllThumbnails={true} menuHorizontalAlign="Right">
             <MediaGalleryItem>
                 <img src="/images/HT-1000.jpg" />
                 <img src="/images/HT-1000-small.jpg" slot="thumbnail" />

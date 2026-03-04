@@ -7,8 +7,8 @@ function App() {
 
   return (
     <>
-      <MessageStrip hide-close-button={true}>Message</MessageStrip><br /><br />
-        <MessageStrip hide-icon={true} hide-close-button={true}>Message</MessageStrip>
+      <MessageStrip hideCloseButton={true}>Message</MessageStrip><br /><br />
+        <MessageStrip hideIcon={true} hideCloseButton={true}>Message</MessageStrip>
     </>
   );
 }

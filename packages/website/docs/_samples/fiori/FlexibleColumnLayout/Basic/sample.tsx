@@ -108,7 +108,7 @@ function App() {
       return "OneColumn";
     }
     if (target === "col3close") {
-      if (fclRef.current && fclRef.current.media === "phone") {
+      if (fclRef.current && fclRef.current!.media === "phone") {
         endFullScreenRef.current = true;
       }
       if (endFullScreenRef.current) {
@@ -205,9 +205,9 @@ function App() {
           flex-wrap: wrap;
         }
       `}</style>
-      <FlexibleColumnLayout ref={fclRef} className="fcl" layout={layout}>
+      <FlexibleColumnLayout ref={fclRef} class="fcl" layout={layout}>
         <div className="col" slot="startColumn">
-          <ShellBar notifications-count="4" show-notifications={true} show-product-switch={true}>
+          <ShellBar notificationsCount="4" showNotifications={true} showProductSwitch={true}>
             <ShellBarBranding slot="branding">
               Smart Store, New York
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
@@ -216,20 +216,20 @@ function App() {
             <ShellBarItem icon="disconnected" text="Disconnect" />
             <ShellBarItem icon="incoming-call" text="Incoming Calls" />
           </ShellBar>
-          <List header-text="Products (13)" selection-mode="Single" onItemClick={handleCol1ItemClick}>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="47.00 EUR">10 inch Portable DVD</ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" icon-end={true} additional-text="947.00 EUR">Astro Laptop 1516</ListItemStandard>
-            <ListItemStandard description="HT-1251" icon="slim-arrow-right" icon-end={true} additional-text="647.00 EUR">Astro Phone 6</ListItemStandard>
-            <ListItemStandard description="HT-1252" icon="slim-arrow-right" icon-end={true} additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="447.90 EUR">Beam Breaker B-1</ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="647.50 EUR">Beam Breaker B-2</ListItemStandard>
-            <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="847.80 EUR">Beam Breaker B-3</ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="1,250.00 EUR">Beam Breaker B-4</ListItemStandard>
-            <ListItemStandard description="HT-8001" icon="slim-arrow-right" icon-end={true} additional-text="1,288.00 EUR">Camcorder View</ListItemStandard>
-            <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="996.00 EUR">Benda Laptop 1408</ListItemStandard>
-            <ListItemStandard description="HT-0003" icon="slim-arrow-right" icon-end={true} additional-text="147.00 EUR">Cepat Tablet 10.5</ListItemStandard>
-            <ListItemStandard description="HT-1001" icon="slim-arrow-right" icon-end={true} additional-text="87.90 EUR">Gladiator MX</ListItemStandard>
+          <List headerText="Products (13)" selectionMode="Single" onItemClick={handleCol1ItemClick}>
+            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="47.00 EUR">10 inch Portable DVD</ListItemStandard>
+            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ListItemStandard>
+            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="947.00 EUR">Astro Laptop 1516</ListItemStandard>
+            <ListItemStandard description="HT-1251" icon="slim-arrow-right" iconEnd={true} additionalText="647.00 EUR">Astro Phone 6</ListItemStandard>
+            <ListItemStandard description="HT-1252" icon="slim-arrow-right" iconEnd={true} additionalText="27.99 EUR">Audio/Video Cable Kit - 4m</ListItemStandard>
+            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="447.90 EUR">Beam Breaker B-1</ListItemStandard>
+            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="647.50 EUR">Beam Breaker B-2</ListItemStandard>
+            <ListItemStandard description="HT-6001" icon="slim-arrow-right" iconEnd={true} additionalText="847.80 EUR">Beam Breaker B-3</ListItemStandard>
+            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="1,250.00 EUR">Beam Breaker B-4</ListItemStandard>
+            <ListItemStandard description="HT-8001" icon="slim-arrow-right" iconEnd={true} additionalText="1,288.00 EUR">Camcorder View</ListItemStandard>
+            <ListItemStandard description="HT-2001" icon="slim-arrow-right" iconEnd={true} additionalText="996.00 EUR">Benda Laptop 1408</ListItemStandard>
+            <ListItemStandard description="HT-0003" icon="slim-arrow-right" iconEnd={true} additionalText="147.00 EUR">Cepat Tablet 10.5</ListItemStandard>
+            <ListItemStandard description="HT-1001" icon="slim-arrow-right" iconEnd={true} additionalText="87.90 EUR">Gladiator MX</ListItemStandard>
           </List>
         </div>
         <div className="col" slot="midColumn">
@@ -268,7 +268,7 @@ function App() {
               </div>
               <div className="productInfo" style={{ alignSelf: "start" }}>
                 <Title level="H5">Rating:</Title>
-                <RatingIndicator accessible-name="Hello World" value={ratingValue} />
+                <RatingIndicator accessibleName="Hello World" value={ratingValue} />
               </div>
               <span></span>
             </div>
@@ -276,18 +276,18 @@ function App() {
             <Title level="H3">Suppliers</Title>
             <br />
             <List onItemClick={handleCol2ItemClick}>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Titanium</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Technocom</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Red Point Stores</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Very Best Screens</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Smartcards</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Alpha Printers</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Printer for All</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Oxynum</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Fasttech</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Ultrasonic United</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Speaker Experts</ListItemStandard>
-              <ListItemStandard icon="slim-arrow-right" icon-end={true}>Brainsoft</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Titanium</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Technocom</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Red Point Stores</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Very Best Screens</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Smartcards</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Alpha Printers</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Printer for All</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Oxynum</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Fasttech</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Ultrasonic United</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Speaker Experts</ListItemStandard>
+              <ListItemStandard icon="slim-arrow-right" iconEnd={true}>Brainsoft</ListItemStandard>
             </List>
           </section>
         </div>
@@ -303,14 +303,14 @@ function App() {
           </div>
           <br /><br />
           <TabContainer collapsed={true}>
-            <Tab text="Products" additional-text="125" />
+            <Tab text="Products" additionalText="125" />
             <TabSeparator />
-            <Tab icon="sap-icon://menu2" text="Laptops" design="Positive" additional-text="25" />
-            <Tab icon="sap-icon://menu" text="Monitors" selected={true} design="Critical" additional-text="45" />
-            <Tab icon="sap-icon://menu2" text="Keyboards" design="Negative" additional-text="15" />
-            <Tab icon="sap-icon://menu2" disabled={true} text="Disabled" design="Negative" additional-text="40" />
-            <Tab icon="sap-icon://menu2" text="Neutral" design="Neutral" additional-text="40" />
-            <Tab icon="sap-icon://menu2" text="Default" additional-text="40" />
+            <Tab icon="sap-icon://menu2" text="Laptops" design="Positive" additionalText="25" />
+            <Tab icon="sap-icon://menu" text="Monitors" selected={true} design="Critical" additionalText="45" />
+            <Tab icon="sap-icon://menu2" text="Keyboards" design="Negative" additionalText="15" />
+            <Tab icon="sap-icon://menu2" disabled={true} text="Disabled" design="Negative" additionalText="40" />
+            <Tab icon="sap-icon://menu2" text="Neutral" design="Neutral" additionalText="40" />
+            <Tab icon="sap-icon://menu2" text="Default" additionalText="40" />
           </TabContainer>
           <section style={{ padding: "1rem 1rem", background: "var(--sapList_Background)" }}>
             <p>

@@ -6,7 +6,7 @@ const DateRangePicker = createReactComponent(DateRangePickerClass);
 function App() {
 
   return (
-    <DateRangePicker display-format="medium" value-format="yyyy-MM-dd" />
+    <DateRangePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />
   );
 }
 

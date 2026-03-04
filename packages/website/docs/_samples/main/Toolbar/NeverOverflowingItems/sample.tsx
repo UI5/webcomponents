@@ -14,10 +14,10 @@ function App() {
   return (
     <>
       <Toolbar>
-        <ToolbarButton icon="employee" text="add" overflow-priority="NeverOverflow" />
-        <ToolbarButton icon="employee" text="decline" overflow-priority="NeverOverflow" />
-        <ToolbarButton icon="employee" text="Add people" overflow-priority="NeverOverflow" />
-        <ToolbarButton icon="employee" text="Call me later" overflow-priority="NeverOverflow" />
+        <ToolbarButton icon="employee" text="add" overflowPriority="NeverOverflow" />
+        <ToolbarButton icon="employee" text="decline" overflowPriority="NeverOverflow" />
+        <ToolbarButton icon="employee" text="Add people" overflowPriority="NeverOverflow" />
+        <ToolbarButton icon="employee" text="Call me later" overflowPriority="NeverOverflow" />
     </Toolbar>
     </>
   );

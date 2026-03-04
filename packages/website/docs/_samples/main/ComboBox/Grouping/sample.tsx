@@ -12,17 +12,17 @@ function App() {
   return (
     <>
       <ComboBox placeholder="Grouping of items">
-        <ComboBoxItemGroup header-text="A">
+        <ComboBoxItemGroup headerText="A">
           <ComboBoxItem text="Argentina" />
           <ComboBoxItem text="Australia" />
           <ComboBoxItem text="Austria" />
         </ComboBoxItemGroup>
-        <ComboBoxItemGroup header-text="B">
+        <ComboBoxItemGroup headerText="B">
           <ComboBoxItem text="Bahrain" />
           <ComboBoxItem text="Belgium" />
           <ComboBoxItem text="Brazil" />
         </ComboBoxItemGroup>
-        <ComboBoxItemGroup header-text="C">
+        <ComboBoxItemGroup headerText="C">
           <ComboBoxItem text="Canada" />
           <ComboBoxItem text="Chile" />
         </ComboBoxItemGroup>

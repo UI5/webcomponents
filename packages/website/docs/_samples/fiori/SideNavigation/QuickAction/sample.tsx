@@ -28,7 +28,7 @@ function App() {
 
   useEffect(() => {
     if (quickActionRef.current) {
-      quickActionRef.current.accessibilityAttributes = {
+      quickActionRef.current!.accessibilityAttributes = {
         hasPopup: "dialog"
       };
     }
@@ -72,7 +72,7 @@ function App() {
         <SideNavigationItem slot="fixedItems" text="History" icon="history" />
       </SideNavigation>
 
-      <Dialog open={dialogOpen} header-text="Create New Item" draggable={true} resizable={true} id="quickActionDialog" onClose={() => setDialogOpen(false)}>
+      <Dialog open={dialogOpen} headerText="Create New Item" draggable={true} resizable={true} id="quickActionDialog" onClose={() => setDialogOpen(false)}>
         <Text>Create new item...</Text>
         <Bar slot="footer" design="Footer">
           <Button slot="endContent" design="Emphasized">Create</Button>

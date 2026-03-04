@@ -6,7 +6,7 @@ const ProgressIndicator = createReactComponent(ProgressIndicatorClass);
 function App() {
 
   return (
-    <ProgressIndicator value={25} display-value="1/4" />
+    <ProgressIndicator value={25} displayValue="1/4" />
   );
 }
 

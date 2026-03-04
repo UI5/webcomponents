@@ -26,7 +26,7 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" title-text="Team Space" subtitle-text="Direct Reports" additional-text="3 of 10">
+            <CardHeader slot="header" titleText="Team Space" subtitleText="Direct Reports" additionalText="3 of 10">
                 <Icon name="group" slot="avatar" />
                 <Button design="Transparent" slot="action">View All</Button>
             </CardHeader>

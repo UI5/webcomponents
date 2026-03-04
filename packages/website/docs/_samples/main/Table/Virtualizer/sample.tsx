@@ -76,19 +76,19 @@ function App() {
 
   return (
     <>
-      <Table id="table" loading-delay={100} style={{ height: "150px" }} className="ui5-content-density-compact">
-        <TableVirtualizer id="virtualizer" slot="features" row-count={1000} row-height={32} ref={virtualizerRef} onRangeChange={handleRangeChange} />
+      <Table id="table" loading-delay={100} style={{ height: "150px" }} class="ui5-content-density-compact">
+        <TableVirtualizer id="virtualizer" slot="features" rowCount={1000} rowHeight={32} ref={virtualizerRef} onRangeChange={handleRangeChange} />
       {/* playground-fold */}
         <TableSelection slot="features" />
         <TableHeaderRow slot="headerRow" sticky={true}>
           <TableHeaderCell min-width="150px">Product Name</TableHeaderCell>
           <TableHeaderCell>Dimensions</TableHeaderCell>
           <TableHeaderCell>Weight</TableHeaderCell>
-          <TableHeaderCell horizontal-align="Right">Price</TableHeaderCell>
+          <TableHeaderCell horizontalAlign="Right">Price</TableHeaderCell>
         </TableHeaderRow>
       {/* playground-fold-end */}
         {rows.map((row) => (
-          <TableRow key={row.product.key} position={row.position} row-key={row.product.key}>
+          <TableRow key={row.product.key} position={row.position} rowKey={row.product.key}>
             <TableCell>{row.product.name}</TableCell>
             <TableCell>{row.product.height}</TableCell>
             <TableCell>{row.product.weight}</TableCell>

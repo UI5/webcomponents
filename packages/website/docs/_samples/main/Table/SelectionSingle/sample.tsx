@@ -23,14 +23,14 @@ function App() {
 
   const handleSelectionChange = () => {
     if (selectionRef.current) {
-      console.log("Selected key", selectionRef.current.selected);
-      console.log("Selected row", selectionRef.current.getRowByKey(selectionRef.current.selected));
+      console.log("Selected key", selectionRef.current!.selected);
+      console.log("Selected row", selectionRef.current!.getRowByKey(selectionRef.current!.selected));
     }
   };
 
   const handleSelectionBehaviorChange = (e) => {
     if (selectionRef.current) {
-      selectionRef.current.behavior = e.target.text;
+      selectionRef.current!.behavior = e.target.text;
     }
   };
 
@@ -51,23 +51,23 @@ function App() {
     				<TableHeaderCell id="supplierCol" width="1fr">Supplier</TableHeaderCell>
     				<TableHeaderCell id="dimensionsCol" width="1fr">Dimensions</TableHeaderCell>
     				<TableHeaderCell id="weightCol" width="1fr">Weight</TableHeaderCell>
-    				<TableHeaderCell id="priceCol" width="1fr" horizontal-align="End">Price</TableHeaderCell>
+    				<TableHeaderCell id="priceCol" width="1fr" horizontalAlign="End">Price</TableHeaderCell>
     			</TableHeaderRow>
-    			<TableRow row-key="Row1">
+    			<TableRow rowKey="Row1">
     				<TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
     				<TableCell><Label>Very Best Screens</Label></TableCell>
     				<TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>4.2</b> KG</Label></TableCell>
     				<TableCell><Label><b>956</b> EUR</Label></TableCell>
     			</TableRow>
-    			<TableRow row-key="Row2">
+    			<TableRow rowKey="Row2">
     				<TableCell><Label><b>Notebook Basic 17</b><br />HT-1001</Label></TableCell>
     				<TableCell><Label>Smartcards</Label></TableCell>
     				<TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>4.5</b> KG</Label></TableCell>
     				<TableCell><Label><b>1249</b> EUR</Label></TableCell>
     			</TableRow>
-    			<TableRow row-key="Row3">
+    			<TableRow rowKey="Row3">
     				<TableCell><Label><b>Notebook Basic 18</b><br />HT-1002</Label></TableCell>
     				<TableCell><Label>Technocom</Label></TableCell>
     				<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>

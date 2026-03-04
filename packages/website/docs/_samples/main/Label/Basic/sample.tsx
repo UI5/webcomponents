@@ -11,7 +11,7 @@ function App() {
     <>
       <Label>Simple Label</Label><br />
 
-        <Label htmlFor="myInputSimple" show-colon={true}>Label</Label>
+        <Label htmlFor="myInputSimple" showColon={true}>Label</Label>
         <Input id="myInputSimple" placeholder="Type message" />
     </>
   );

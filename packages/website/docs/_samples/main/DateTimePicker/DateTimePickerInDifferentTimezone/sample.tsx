@@ -15,9 +15,9 @@ function App() {
 
   const handleSelectChange = (e: any) => {
     const dateFormat = DateFormat.getDateTimeInstance({ "style": "medium" });
-    const value = dateFormat.parse(dtpRef.current.value);
+    const value = dateFormat.parse(dtpRef.current!.value);
     setTimezone(e.detail.selectedOption.getAttribute("data-timezone"));
-    dtpRef.current.value = dateFormat.format(value);
+    dtpRef.current!.value = dateFormat.format(value);
   };
 
   return (
@@ -34,7 +34,7 @@ function App() {
           <Option data-timezone="Australia/Sydney">Australia/Sydney</Option>
           <Option data-timezone="Pacific/Apia">Pacific/Apia</Option>
         </Select>
-        <DateTimePicker ref={dtpRef} id="dtp" format-pattern="medium" value="today" />
+        <DateTimePicker ref={dtpRef} id="dtp" formatPattern="medium" value="today" />
       </div>
     </>
   );

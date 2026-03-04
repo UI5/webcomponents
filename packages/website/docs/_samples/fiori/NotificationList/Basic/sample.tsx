@@ -22,14 +22,14 @@ function App() {
   };
 
   const handleMenuWithActionsUi5ItemClick = (e) => {
-    toastRef.current.textContent = "Menu button '" + e.detail.text + "' pressed" + " on Notification List Item with id '" + e.target.parentElement.id + "'.";
-    toastRef.current.open = true;
+    toastRef.current!.textContent = "Menu button '" + e.detail.text + "' pressed" + " on Notification List Item with id '" + e.target.parentElement.id + "'.";
+    toastRef.current!.open = true;
   };
 
   return (
     <>
       <NotificationList onItemClose={handleNotificationListItemClose}>
-            <NotificationListItem id="firstNotificationListItem" title-text="New order (#2525) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Positive" importance="Important" show-close={true}>
+            <NotificationListItem id="firstNotificationListItem" titleText="New order (#2525) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Positive" importance="Important" showClose={true}>
                 <Avatar size="XS" slot="avatar">
                     <img src="/images/avatars/woman_avatar_1.png" />
                 </Avatar>
@@ -44,7 +44,7 @@ function App() {
                     <MenuItem icon="message-error" text="Reject" />
                 </Menu>
             </NotificationListItem>
-            <NotificationListItem show-close={true} title-text="New order (#2526) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Critical">
+            <NotificationListItem showClose={true} titleText="New order (#2526) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Critical">
                 <Avatar size="XS" slot="avatar">
                     <img src="/images/avatars/man_avatar_1.png" />
                 </Avatar>
@@ -52,7 +52,7 @@ function App() {
                 <span slot="footnotes">2 Days</span>
                 And with a very long description - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
             </NotificationListItem>
-            <NotificationListItem show-close={true} title-text="New order (#2525) With a short title" state="Information" read={true}>
+            <NotificationListItem showClose={true} titleText="New order (#2525) With a short title" state="Information" read={true}>
                 <Avatar size="XS" slot="avatar">
                     <img src="/images/avatars/man_avatar_2.png" />
                 </Avatar>

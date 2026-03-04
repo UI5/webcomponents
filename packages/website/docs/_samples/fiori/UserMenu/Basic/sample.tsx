@@ -86,9 +86,9 @@ function App() {
       >
         <UserMenuAccount
           slot="accounts"
-          avatar-src="/images/avatars/man_avatar_3.png"
-          title-text="Alaina Chevalier"
-          subtitle-text="aliana.chevalier@sap.com"
+          avatarSrc="/images/avatars/man_avatar_3.png"
+          titleText="Alaina Chevalier"
+          subtitleText="aliana.chevalier@sap.com"
           description="Delivery Manager"
           selected={true}
         />

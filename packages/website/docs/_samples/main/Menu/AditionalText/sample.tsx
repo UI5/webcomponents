@@ -18,20 +18,20 @@ function App() {
   const menuAdditionalTextRef = useRef(null);
 
   const handleBtnOpenAdditionalTextClick = () => {
-    menuAdditionalTextRef.current.open = !menuAdditionalTextRef.current.open;
+    menuAdditionalTextRef.current!.open = !menuAdditionalTextRef.current!.open;
   };
 
   return (
     <>
-      <Button id="btnOpenAdditionalText" end-icon="slim-arrow-down" onClick={handleBtnOpenAdditionalTextClick}>Open Menu</Button> <br />
+      <Button id="btnOpenAdditionalText" endIcon="slim-arrow-down" onClick={handleBtnOpenAdditionalTextClick}>Open Menu</Button> <br />
 
         <Menu ref={menuAdditionalTextRef} id="menuAdditionalText" opener="btnOpenAdditionalText">
-            <MenuItem text="New File" icon="add-document" additional-text="Ctrl+N" />
-            <MenuItem text="New Folder" icon="add-folder" additional-text="Ctrl+F" disabled={true} />
-            <MenuItem text="Open" icon="open-folder" starts-section={true} />
+            <MenuItem text="New File" icon="add-document" additionalText="Ctrl+N" />
+            <MenuItem text="New Folder" icon="add-folder" additionalText="Ctrl+F" disabled={true} />
+            <MenuItem text="Open" icon="open-folder" startsSection={true} />
             <MenuItem text="Close" />
-            <MenuItem text="Preferences" icon="action-settings" starts-section={true} />
-            <MenuItem text="Exit" icon="journey-arrive" additional-text="Ctrl+X" />
+            <MenuItem text="Preferences" icon="action-settings" startsSection={true} />
+            <MenuItem text="Exit" icon="journey-arrive" additionalText="Ctrl+X" />
         </Menu>
     </>
   );

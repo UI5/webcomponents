@@ -21,14 +21,14 @@ function App() {
 
   const handleSliderChange = (e) => {
     if (tableRef.current) {
-      tableRef.current.style.width = `${e.target.value}%`;
+      tableRef.current!.style.width = `${e.target.value}%`;
     }
   };
 
   return (
     <>
-      <Slider id="slider" value={100} max={100} min={0} label-interval={10} show-tickmarks={true} onChange={handleSliderChange} />
-      <Table ref={tableRef} id="table" overflow-mode="Popin">
+      <Slider id="slider" value={100} max={100} min={0} labelInterval={10} showTickmarks={true} onChange={handleSliderChange} />
+      <Table ref={tableRef} id="table" overflowMode="Popin">
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="productCol"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol" min-width="150px">Supplier</TableHeaderCell>

@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <Button onClick={() => { toastRef.current.open = true; }}>Show Toast</Button>
+      <Button onClick={() => { toastRef.current!.open = true; }}>Show Toast</Button>
       <Toast ref={toastRef} placement="MiddleCenter">Toast message, displayed in the "MiddleCenter".</Toast>
     </>
   );

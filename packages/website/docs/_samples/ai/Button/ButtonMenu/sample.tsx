@@ -72,8 +72,8 @@ function App() {
         break;
       case "revise":
         if (menuRef.current && buttonRef.current) {
-          menuRef.current.opener = buttonRef.current;
-          menuRef.current.open = true;
+          menuRef.current!.opener = buttonRef.current;
+          menuRef.current!.open = true;
           setMenuOpen(true);
         }
         break;
@@ -92,7 +92,7 @@ function App() {
       <AIButton ref={buttonRef} id="myAiButton" state={buttonState} onClick={handleButtonClick}>
         <AIButtonState name="generate" text="Generate" icon="ai" />
         <AIButtonState name="generating" text="Stop Generating" icon="stop" />
-        <AIButtonState name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow" />
+        <AIButtonState name="revise" text="Revise" icon="ai" endIcon="navigation-down-arrow" />
       </AIButton>
 
       <Menu ref={menuRef} id="menu" onItemClick={handleMenuItemClick}>

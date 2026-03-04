@@ -24,7 +24,7 @@ function App() {
         <TableColumn slot="columns">
             <Label>City</Label>
         </TableColumn>
-        <TableColumn slot="columns" min-width={500} popin-text="Supplier" demand-popin="">
+        <TableColumn slot="columns" min-width={500} popinText="Supplier" demandPopin="">
             <Label>Supplier</Label>
         </TableColumn>
         <TableColumn slot="columns" min-width={500}>

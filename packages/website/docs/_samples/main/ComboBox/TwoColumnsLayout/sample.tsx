@@ -10,12 +10,12 @@ function App() {
   return (
     <>
       <ComboBox placeholder="Two-column layout">
-        <ComboBoxItem text="Austria" additional-text="AT" />
-        <ComboBoxItem text="Belgium" additional-text="BE" />
-        <ComboBoxItem text="Brazil" additional-text="BR" />
-        <ComboBoxItem text="Bulgaria" additional-text="BG" />
-        <ComboBoxItem text="Canada" additional-text="CA" />
-        <ComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland" additional-text="UK" />
+        <ComboBoxItem text="Austria" additionalText="AT" />
+        <ComboBoxItem text="Belgium" additionalText="BE" />
+        <ComboBoxItem text="Brazil" additionalText="BR" />
+        <ComboBoxItem text="Bulgaria" additionalText="BG" />
+        <ComboBoxItem text="Canada" additionalText="CA" />
+        <ComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland" additionalText="UK" />
       </ComboBox>
     </>
   );

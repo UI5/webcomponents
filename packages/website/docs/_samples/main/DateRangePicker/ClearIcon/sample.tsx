@@ -6,7 +6,7 @@ const DateRangePicker = createReactComponent(DateRangePickerClass);
 function App() {
 
   return (
-    <DateRangePicker show-clear-icon={true} />
+    <DateRangePicker showClearIcon={true} />
   );
 }
 

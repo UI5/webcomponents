@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <div style={{ height: "250px", overflow: "scroll" }}>
-            <Panel header-text="Sticky header" sticky-header={true}>
+            <Panel headerText="Sticky header" stickyHeader={true}>
                 <Title level="H5">Heading!</Title>
                 <Label>
                     Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.

@@ -14,11 +14,11 @@ function App() {
 
   return (
     <>
-      <Avatar mode="Interactive" size="M" initials="JD" color-scheme="Accent5">
+      <Avatar mode="Interactive" size="M" initials="JD" colorScheme="Accent5">
     		<AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
     	</Avatar>
 
-    	<Avatar mode="Interactive" size="M" icon="employee" color-scheme="Accent10">
+    	<Avatar mode="Interactive" size="M" icon="employee" colorScheme="Accent10">
     		<AvatarBadge icon="alert" state="Critical" slot="badge"></AvatarBadge>
     	</Avatar>
 

@@ -29,9 +29,9 @@ function App() {
       });
     });
     setPopoverAvatars(avatars);
-    popoverRef.current.open = false;
-    popoverRef.current.opener = e.detail.targetRef;
-    popoverRef.current.open = true;
+    popoverRef.current!.open = false;
+    popoverRef.current!.opener = e.detail.targetRef;
+    popoverRef.current!.open = true;
   };
 
   const handleSliderInput = (e: any) => {
@@ -41,11 +41,11 @@ function App() {
   return (
     <>
       <div className="group">
-        <Popover ref={popoverRef} header-text="My people" className="peoplePopover" style={{ width: "400px" }} placement="Bottom">
+        <Popover ref={popoverRef} header-text="My people" class="peoplePopover" style={{ width: "400px" }} placement="Bottom">
           <div className="placeholder" style={{ display: "flex", flexWrap: "wrap" }}>
             {popoverAvatars.map((av, i) => (
               <div key={i} className="avatar-slot" style={{ padding: "5px" }}>
-                <Avatar interactive={true} icon={av.icon} initials={av.initials} color-scheme={av.colorScheme}>
+                <Avatar interactive={true} icon={av.icon} initials={av.initials} colorScheme={av.colorScheme}>
                   {av.imageSrc && <img src={av.imageSrc} />}
                 </Avatar>
               </div>

@@ -32,7 +32,7 @@ function App() {
   }, []);
 
   return (
-    <Input id="input" show-suggestions={true} placeholder="Type 'a'" onInput={handleInputInput}>
+    <Input id="input" showSuggestions={true} placeholder="Type 'a'" onInput={handleInputInput}>
       {suggestions.map((item) => (
         <SuggestionItem key={item} text={item} />
       ))}

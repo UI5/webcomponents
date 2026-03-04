@@ -31,7 +31,7 @@ function App() {
 
   return (
     <>
-      <Search id="search-scope" scope-value="all" show-clear-icon={true} placeholder="Search Apps, Products" onScopeChange={handleScopeChange}>
+      <Search id="search-scope" scopeValue="all" showClearIcon={true} placeholder="Search Apps, Products" onScopeChange={handleScopeChange}>
     			<SearchScope text="All" value="all" slot="scopes" />
     			<SearchScope text="Apps" value="apps" slot="scopes" />
     			<SearchScope text="Products" value="products" slot="scopes" />

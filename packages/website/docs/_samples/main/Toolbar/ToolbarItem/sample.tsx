@@ -79,7 +79,7 @@ function App() {
 
         {/* ToolbarItem wrapping a Switch */}
         <ToolbarItem>
-            <Switch text-on="On" text-off="Off" />
+            <Switch textOn="On" textOff="Off" />
         </ToolbarItem>
 
         {/* ToolbarItem wrapping a DatePicker */}

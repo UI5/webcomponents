@@ -72,7 +72,7 @@ function App() {
         break;
       case "regenerate":
         if (menuRef.current) {
-          menuRef.current.open = false;
+          menuRef.current!.open = false;
         }
         prevTriggerStateRef.current = "regenerate";
         setButtonState("generating");
@@ -83,8 +83,8 @@ function App() {
 
   const handleArrowButtonClick = useCallback(() => {
     if (menuRef.current && buttonRef.current) {
-      menuRef.current.opener = buttonRef.current;
-      menuRef.current.open = true;
+      menuRef.current!.opener = buttonRef.current;
+      menuRef.current!.open = true;
       setMenuOpen(true);
     }
   }, []);
@@ -121,7 +121,7 @@ function App() {
       >
         <AIButtonState name="generate" text="Generate" icon="ai" />
         <AIButtonState name="generating" text="Stop Generating" icon="stop" />
-        <AIButtonState name="regenerate" text="Regenerate" icon="ai" show-arrow-button={true} />
+        <AIButtonState name="regenerate" text="Regenerate" icon="ai" showArrowButton={true} />
       </AIButton>
 
       <Menu

@@ -24,7 +24,7 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" title-text="This header is interactive" subtitle-text="Click, press Enter or Space" additional-text="3 of 6" interactive={true}>
+            <CardHeader slot="header" titleText="This header is interactive" subtitleText="Click, press Enter or Space" additionalText="3 of 6" interactive={true}>
                 <Icon name="group" slot="avatar" />
             </CardHeader>
             <List style={{ marginBlockEnd: "0.75rem" }} separators="None">

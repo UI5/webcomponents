@@ -39,7 +39,7 @@ function App() {
     <Input
       id="input-threshold-3"
       placeholder="Start typing (threshold: 3 chars)"
-      show-suggestions={true}
+      showSuggestions={true}
       onInput={handleInput}
     >
       {suggestions.map((item) => (

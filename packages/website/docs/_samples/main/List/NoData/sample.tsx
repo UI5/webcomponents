@@ -6,7 +6,7 @@ const List = createReactComponent(ListClass);
 function App() {
 
   return (
-    <List selection-mode="None" header-text="No Data" no-data-text="No Data Available" />
+    <List selectionMode="None" headerText="No Data" noDataText="No Data Available" />
   );
 }
 

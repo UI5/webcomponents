@@ -6,7 +6,7 @@ const Input = createReactComponent(InputClass);
 function App() {
 
   return (
-    <Input value="Input" show-clear-icon={true} />
+    <Input value="Input" showClearIcon={true} />
   );
 }
 

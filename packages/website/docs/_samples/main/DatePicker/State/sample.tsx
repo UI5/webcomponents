@@ -7,12 +7,12 @@ function App() {
 
   return (
     <>
-      <DatePicker value="2024-02-29" value-state="Information">
+      <DatePicker value="2024-02-29" valueState="Information">
             <div slot="valueStateMessage">This date exists only once every four years!</div>
         </DatePicker>
-        <DatePicker value="2024-02-29" value-state="Positive" />
-        <DatePicker value="2024-02-29" value-state="Negative" />
-        <DatePicker value="2024-02-29" value-state="Critical" />
+        <DatePicker value="2024-02-29" valueState="Positive" />
+        <DatePicker value="2024-02-29" valueState="Negative" />
+        <DatePicker value="2024-02-29" valueState="Critical" />
     </>
   );
 }

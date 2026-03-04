@@ -21,21 +21,21 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
     <>
-      <Label show-colon={true}>Form Layout</Label><Text>S2 M2 L4 XL6</Text><br />
-    	<Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">XL</Text>
-        <Slider ref={sliderRef} id="slider" value={100} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Form Layout</Label><Text>S2 M2 L4 XL6</Text><br />
+    	<Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Label showColon={true}>Page Size</Label><Text id="txtLayout">XL</Text>
+        <Slider ref={sliderRef} id="slider" value={100} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1500px", overflowX: "auto" }}>
 
-    		<Form className="addressForm" header-text="With column span" layout="S2 M2 L4 XL6" label-span="S12 M12 L12 XL12">
-    			<FormGroup header-text="Address - column-span=1" column-span={1}>
+    		<Form class="addressForm" headerText="With column span" layout="S2 M2 L4 XL6" labelSpan="S12 M12 L12 XL12">
+    			<FormGroup headerText="Address - columnSpan=1" columnSpan={1}>
     				<FormItem>
     					<Label slot="labelContent">Name:</Label>
     					<Text>Red Point Stores</Text>
@@ -63,7 +63,7 @@ function App() {
     			</FormGroup>
 
 		
-    			<FormGroup header-text="Contact - column-span=2" column-span={2}>
+    			<FormGroup headerText="Contact - columnSpan=2" columnSpan={2}>
     				<FormItem>
     					<Label slot="labelContent">Name:</Label>
     					<Text>Red Point Stores</Text>
@@ -90,7 +90,7 @@ function App() {
     				</FormItem>
     			</FormGroup>
 
-    			<FormGroup header-text="Other Info - column-span=2" column-span={2}>
+    			<FormGroup headerText="Other Info - columnSpan=2" columnSpan={2}>
     				<FormItem>
     					<Label slot="labelContent">Twitter:</Label>
     					<Text>@sap</Text>

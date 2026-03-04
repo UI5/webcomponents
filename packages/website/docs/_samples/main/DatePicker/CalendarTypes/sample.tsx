@@ -6,7 +6,7 @@ const DatePicker = createReactComponent(DatePickerClass);
 function App() {
 
   return (
-    <DatePicker primary-calendar-type="Japanese" secondary-calendar-type="Islamic" />
+    <DatePicker primaryCalendarType="Japanese" secondaryCalendarType="Islamic" />
   );
 }
 

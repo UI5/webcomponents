@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <Search id="actions-search" show-clear-icon={true}>
+      <Search id="actions-search" showClearIcon={true}>
             <SearchItem text="List Item with Action" icon="globe" deletable={true}>
                 <Button slot="actions" design="Transparent" icon="share" tooltip="Share" />
             </SearchItem>

@@ -22,7 +22,7 @@ function App() {
         }
       `}</style>
       <div style={{ width: "1000px", overflowX: "scroll" }}>
-        <DynamicSideContent side-content-visibility="AlwaysShow" equal-split={true}  >
+        <DynamicSideContent sideContentVisibility="AlwaysShow" equalSplit={true}  >
             <div>
                 <Title level="h1">Main Content</Title>
                 <p className="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ex mi, elementum et ante

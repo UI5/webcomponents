@@ -7,13 +7,13 @@ function App() {
 
   return (
     <>
-      <DateTimePicker format-pattern="dd/MM/yyyy, hh:mm"
+      <DateTimePicker formatPattern="dd/MM/yyyy, hh:mm"
          />
 
-        <DateTimePicker format-pattern="dd/MM/yyyy, hh:mm:ss aa"
+        <DateTimePicker formatPattern="dd/MM/yyyy, hh:mm:ss aa"
          />
 
-        <DateTimePicker format-pattern="long" />
+        <DateTimePicker formatPattern="long" />
     </>
   );
 }

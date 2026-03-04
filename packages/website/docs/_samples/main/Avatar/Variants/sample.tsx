@@ -46,7 +46,7 @@ function App() {
       <div className="avatar-container">
         {/* Non-interactive Avatar */}
         <div className="variant-group">
-          <Avatar size="M" initials="AB" color-scheme="Accent1" />
+          <Avatar size="M" initials="AB" colorScheme="Accent1" />
           <div className="variant-description">
             <div className="variant-title">Non-interactive Avatar</div>
             <div className="variant-note">Decorative with initials - no interaction</div>
@@ -66,7 +66,7 @@ function App() {
 
         {/* Interactive Avatar */}
         <div className="variant-group">
-          <Avatar id="interactive-avt" size="M" mode="Interactive" initials="CD" color-scheme="Accent3" onClick={handleInteractiveAvtClick} />
+          <Avatar id="interactive-avt" size="M" mode="Interactive" initials="CD" colorScheme="Accent3" onClick={handleInteractiveAvtClick} />
           <div className="variant-description">
             <div className="variant-title">Interactive Avatar</div>
             <div className="variant-note">Clickable - supports user interaction and callbacks</div>
@@ -75,7 +75,7 @@ function App() {
 
         {/* Interactive Avatar with Badge */}
         <div className="variant-group">
-          <Avatar size="M" mode="Interactive" initials="EF" color-scheme="Accent5">
+          <Avatar size="M" mode="Interactive" initials="EF" colorScheme="Accent5">
             <AvatarBadge icon="edit" state="None" slot="badge" />
           </Avatar>
           <div className="variant-description">
@@ -91,7 +91,7 @@ function App() {
             size="M"
             mode="Interactive"
             initials="GH"
-            color-scheme="Accent7"
+            colorScheme="Accent7"
             aria-label="User profile - click to open menu"
             aria-haspopup="menu"
             onClick={handlePopupAvtClick}

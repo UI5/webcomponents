@@ -16,13 +16,13 @@ function App() {
   const splitBtnRef = useRef(null);
 
   const handleArrowClick = () => {
-    menuRef.current.open = !menuRef.current.open;
-    menuRef.current.opener = splitBtnRef.current;
-    splitBtnRef.current.activeArrowButton = menuRef.current.open;
+    menuRef.current!.open = !menuRef.current!.open;
+    menuRef.current!.opener = splitBtnRef.current;
+    splitBtnRef.current!.activeArrowButton = menuRef.current!.open;
   };
 
   const handleMenuClose = () => {
-    splitBtnRef.current.activeArrowButton = false;
+    splitBtnRef.current!.activeArrowButton = false;
   };
 
   return (

@@ -15,31 +15,31 @@ function App() {
 
   const handleSliderUi5Input = () => {
     const width = (slider.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
     <>
       <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "300px", overflowX: "auto" }}>
-            <Form className="addressForm" header-text="A very long header title for the form and more">
+            <Form class="addressForm" headerText="A very long header title for the form and more">
                 <FormItem>
                     <Label slot="labelContent">Name:</Label>
-                    <Text className="text">Red Point Stores</Text>
+                    <Text class="text">Red Point Stores</Text>
                 </FormItem>
             
                 <FormItem>
                     <Label slot="labelContent">ZIP Code/City:</Label>
-                    <Text className="text">411 Maintown</Text>
+                    <Text class="text">411 Maintown</Text>
                 </FormItem>
             
                 <FormItem>
                     <Label slot="labelContent">Street:</Label>
-                    <Text className="text">Main St 1618</Text>
+                    <Text class="text">Main St 1618</Text>
                 </FormItem>
 
                 <FormItem>
                     <Label slot="labelContent">Country:</Label>
-                    <Text className="text">Germany</Text>
+                    <Text class="text">Germany</Text>
                 </FormItem>
             </Form>
         </div>

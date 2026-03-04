@@ -7,10 +7,10 @@ function App() {
 
   return (
     <>
-      <ProgressIndicator value={25} value-state="Positive" />
-        <ProgressIndicator value={45} value-state="Information" />
-        <ProgressIndicator value={15} value-state="Critical" />
-        <ProgressIndicator value={65} value-state="Negative" />
+      <ProgressIndicator value={25} valueState="Positive" />
+        <ProgressIndicator value={45} valueState="Information" />
+        <ProgressIndicator value={15} valueState="Critical" />
+        <ProgressIndicator value={65} valueState="Negative" />
     </>
   );
 }

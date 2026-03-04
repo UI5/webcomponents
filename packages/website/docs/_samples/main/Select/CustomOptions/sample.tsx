@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <Select>
-        <OptionCustom display-text="AR">
+        <OptionCustom displayText="AR">
             <div className="optionContent">
                 <Icon name="soccer" />
                 Argentina
@@ -22,7 +22,7 @@ function App() {
             </div>
         </OptionCustom>
 
-        <OptionCustom display-text="BE">
+        <OptionCustom displayText="BE">
             <div className="optionContent">
                 <Icon name="soccer" />
                 Belgium
@@ -30,7 +30,7 @@ function App() {
             </div>
         </OptionCustom>
 
-        <OptionCustom display-text="BR">
+        <OptionCustom displayText="BR">
             <div className="optionContent">
                 <Icon name="soccer" />
                 Brazil

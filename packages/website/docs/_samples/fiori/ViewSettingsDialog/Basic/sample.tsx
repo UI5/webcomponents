@@ -19,19 +19,19 @@ function App() {
   const vsdResultsRef = useRef(null);
 
   const handleBtnOpenDialog1Click = () => {
-    vsdResultsRef.current.innerHTML = "";
-    vsd1Ref.current.open = true;
+    vsdResultsRef.current!.innerHTML = "";
+    vsd1Ref.current!.open = true;
   };
 
   const handleVsd1Confirm = (evt) => {
-    vsdResultsRef.current.innerHTML = JSON.stringify(evt.detail);
+    vsdResultsRef.current!.innerHTML = JSON.stringify(evt.detail);
   };
 
   return (
     <>
       <Button id="btnOpenDialog1" onClick={handleBtnOpenDialog1Click}>Open ViewSettingsDialog</Button>
 
-        <ViewSettingsDialog ref={vsd1Ref} id="vsd1" sort-descending={true} onConfirm={handleVsd1Confirm}>
+        <ViewSettingsDialog ref={vsd1Ref} id="vsd1" sortDescending={true} onConfirm={handleVsd1Confirm}>
             <SortItem slot="sortItems" text="Name" selected={true} />
             <SortItem slot="sortItems" text="Position" />
             <SortItem slot="sortItems" text="Company" />

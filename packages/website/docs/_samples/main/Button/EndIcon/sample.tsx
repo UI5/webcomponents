@@ -9,8 +9,8 @@ function App() {
 
   return (
     <>
-      <Button end-icon="navigation-down-arrow">Button with Icon at the end</Button>
-        <Button icon="home" end-icon="navigation-down-arrow">Button with two Icons</Button>
+      <Button endIcon="navigation-down-arrow">Button with Icon at the end</Button>
+        <Button icon="home" endIcon="navigation-down-arrow">Button with two Icons</Button>
     </>
   );
 }

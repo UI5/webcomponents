@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <MultiComboBox placeholder="Type your value" show-select-all={true}>
+      <MultiComboBox placeholder="Type your value" showSelectAll={true}>
             <MultiComboBoxItem text="Albania"></MultiComboBoxItem>
             <MultiComboBoxItem selected text="Argentina"></MultiComboBoxItem>
             <MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>

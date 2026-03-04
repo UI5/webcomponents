@@ -17,11 +17,11 @@ function App() {
 
   return (
     <>
-      <Table id="table" overflow-mode="Popin">
+      <Table id="table" overflowMode="Popin">
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
-    				<TableHeaderCell id="supplierCol" horizontal-align="Center" width="200px">Supplier</TableHeaderCell>
-    				<TableHeaderCell id="dimensionsCol" horizontal-align="Right" width="300px">Dimensions</TableHeaderCell>
+    				<TableHeaderCell id="supplierCol" horizontalAlign="Center" width="200px">Supplier</TableHeaderCell>
+    				<TableHeaderCell id="dimensionsCol" horizontalAlign="Right" width="300px">Dimensions</TableHeaderCell>
     				<TableHeaderCell id="weightCol" width="100px">Weight</TableHeaderCell>
     				<TableHeaderCell id="priceCol" width="220px">Price</TableHeaderCell>
     			</TableHeaderRow>
@@ -35,7 +35,7 @@ function App() {
     			<TableRow>
     				<TableCell><Label><b>Notebook Basic 17</b><br />HT-1001</Label></TableCell>
     				<TableCell><Label>Smartcards</Label></TableCell>
-    				<TableCell horizontal-align="Left"><Label>29 x 17 x 3.1 cm</Label></TableCell>
+    				<TableCell horizontalAlign="Left"><Label>29 x 17 x 3.1 cm</Label></TableCell>
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>4.5</b> KG</Label></TableCell>
     				<TableCell><Label><b>1249</b> EUR</Label></TableCell>
     			</TableRow>

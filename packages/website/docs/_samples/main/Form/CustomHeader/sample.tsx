@@ -43,7 +43,7 @@ function App() {
             
                 <FormItem>
                     <Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-                    <Select id="countrySel" accessible-name-ref="countryLbl">
+                    <Select id="countrySel" accessibleNameRef="countryLbl">
                         <Option>Australia</Option>
                         <Option selected={true}>Germany</Option>
                         <Option>England</Option>
@@ -52,8 +52,8 @@ function App() {
     
                 <FormItem>
                     <Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-                    <Input id="cityInp" value={411} accessible-name-ref="cityLbl" />
-                    <Input value="Maintown" accessible-name-ref="cityLbl" />
+                    <Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
+                    <Input value="Maintown" accessibleNameRef="cityLbl" />
                 </FormItem>
         
                 <FormItem>
@@ -63,8 +63,8 @@ function App() {
     
                 <FormItem>
                     <Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-                    <Input id="streetInp" value="Main St" accessible-name-ref="streetLbl" />
-                    <Input id="streetNumberInp" value={1618} accessible-name-ref="streetLbl" />
+                    <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+                    <Input id="streetNumberInp" value={1618} accessibleNameRef="streetLbl" />
                 </FormItem>
     
                 <FormItem>

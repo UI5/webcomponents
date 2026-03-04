@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <Panel header-text="Panel">
+      <Panel headerText="Panel">
             <Title level="H5">Heading!</Title>
     	    <Label>
                 Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.

@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <MultiComboBox placeholder="Choose your state" no-validation={true}>
+      <MultiComboBox placeholder="Choose your state" noValidation={true}>
             <MultiComboBoxItem text="None"></MultiComboBoxItem>
             <MultiComboBoxItem selected text="Positive"></MultiComboBoxItem>
             <MultiComboBoxItem text="Negative"></MultiComboBoxItem>

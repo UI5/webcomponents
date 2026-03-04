@@ -72,7 +72,7 @@ function App() {
   return (
     <>
       <Wizard onStepChange={handleStepChange}>
-        <WizardStep icon="product" title-text="Product type" selected={step1Selected}>
+        <WizardStep icon="product" titleText="Product type" selected={step1Selected}>
           <div style={{ display: "flex", minHeight: "200px", flexDirection: "column" }}>
             <Title>1. Product Type</Title><br />
             <MessageStrip>
@@ -91,7 +91,7 @@ function App() {
           </div>
           {!toStep2Hidden && <Button design="Emphasized" onClick={handleToStep2Click}>Step 2</Button>}
         </WizardStep>
-        <WizardStep icon="hint" title-text="Product Information" disabled={step2Disabled} selected={step2Selected}>
+        <WizardStep icon="hint" titleText="Product Information" disabled={step2Disabled} selected={step2Selected}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Title>2. Product Information</Title><br />
             <Label>
@@ -127,7 +127,7 @@ function App() {
           </div>
           {!toStep3Hidden && <Button design="Emphasized" onClick={handleToStep3Click}>Step 3</Button>}
         </WizardStep>
-        <WizardStep icon="action-settings" title-text="Options" disabled={step3Disabled} selected={step3Selected}>
+        <WizardStep icon="action-settings" titleText="Options" disabled={step3Disabled} selected={step3Selected}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Title>3. Options</Title><br />
             <Label>

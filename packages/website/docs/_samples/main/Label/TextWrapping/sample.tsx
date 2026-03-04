@@ -12,9 +12,9 @@ function App() {
             width: 200px;
         }
       `}</style>
-      <Label className="w200">Label that demonstrates how the long labels could be wrapped. To test the truncation, use wrapping-type="None"</Label>
+      <Label class="w200">Label that demonstrates how the long labels could be wrapped. To test the truncation, use wrappingType="None"</Label>
         <br /><br />
-        <Label className="w200" wrapping-type="None">Label that demonstrates truncation, the long labels will be truncated.</Label>
+        <Label class="w200" wrappingType="None">Label that demonstrates truncation, the long labels will be truncated.</Label>
     </>
   );
 }

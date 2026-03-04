@@ -11,11 +11,11 @@ function App() {
     <>
       <div style={{ display: "grid", gridTemplateColumns: "1fr", rowGap: "1rem" }}>
             <Title level="H5">Single</Title>
-            <Calendar selection-mode="Single" />
+            <Calendar selectionMode="Single" />
             <Title level="H5">Multiple</Title>
-            <Calendar selection-mode="Multiple" />
+            <Calendar selectionMode="Multiple" />
             <Title level="H5">Range</Title>
-            <Calendar selection-mode="Range" />
+            <Calendar selectionMode="Range" />
         </div>
     </>
   );

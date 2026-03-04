@@ -13,7 +13,7 @@ function App() {
   const toastRef = useRef(null);
 
   const handleAdvancedButtonClick = () => {
-    toastRef.current.open = true;
+    toastRef.current!.open = true;
   };
 
   return (

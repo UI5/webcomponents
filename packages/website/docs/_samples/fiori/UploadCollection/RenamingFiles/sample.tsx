@@ -36,7 +36,7 @@ function App() {
             </div>
 
             {files.map((file) => (
-              <UploadCollectionItem key={file.id} file-name={file.fileName} file-name-clickable={file.fileNameClickable || false} upload-state={file.uploadState} type={file.type}>
+              <UploadCollectionItem key={file.id} fileName={file.fileName} fileNameClickable={file.fileNameClickable || false} uploadState={file.uploadState} type={file.type}>
                 {file.description}
                 {file.thumbnail === "img" ? (
                   <img src={file.thumbnailSrc} slot="thumbnail" />

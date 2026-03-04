@@ -83,8 +83,8 @@ function App() {
 
   return (
     <>
-      <Label show-colon={true} htmlFor="maxNestingLevelInput">Max nesting level</Label>
-      <StepInput style={{ width: "5rem" }} id="maxNestingLevelInput" placeholder="maxNestingLevel" value={1} min={1} onUi5Change={handleNestingLevelChange} />
+      <Label showColon={true} htmlFor="maxNestingLevelInput">Max nesting level</Label>
+      <StepInput style={{ width: "5rem" }} id="maxNestingLevelInput" placeholder="maxNestingLevel" value={1} min={1} onChange={handleNestingLevelChange} />
 
       <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />

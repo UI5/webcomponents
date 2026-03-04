@@ -19,21 +19,21 @@ function App() {
     <>
       <Timeline layout="Vertical" id="testTimeline">
 
-            <TimelineGroupItem group-name="Events">
-                <TimelineItem id="testItem" className="group-item" title-text="Event" subtitle-text="18.06.2024 11:30" name="SAP D-com" />
-                <TimelineItem id="testItem" className="group-item" title-text="Event" subtitle-text="19.06.2024 12:30" icon="calendar" name="SAP Talk" />
-                <TimelineItem id="testItem" className="group-item" title-text="Event" subtitle-text="21.06.2024 18:30" name="SAP iXP Summer Party" />
+            <TimelineGroupItem groupName="Events">
+                <TimelineItem id="testItem" class="group-item" titleText="Event" subtitleText="18.06.2024 11:30" name="SAP D-com" />
+                <TimelineItem id="testItem" class="group-item" titleText="Event" subtitleText="19.06.2024 12:30" icon="calendar" name="SAP Talk" />
+                <TimelineItem id="testItem" class="group-item" titleText="Event" subtitleText="21.06.2024 18:30" name="SAP iXP Summer Party" />
             </TimelineGroupItem>
 
-            <TimelineGroupItem group-name="Meetings">
-                <TimelineItem id="testItem" className="group-item" title-text="coming up" subtitle-text="10.07.2024 11:30" icon="calendar" name="Team Balkan Meeting" />
-                <TimelineItem id="testItem" className="group-item" title-text="coming up" subtitle-text="20.08.2024 12:30" icon="calendar" name="Team Balkan Planning" />
-                <TimelineItem id="testItem" className="group-item" title-text="coming up" subtitle-text="22.08.2024 14:30" icon="calendar" name="Team Balkan Retrospective" />
+            <TimelineGroupItem groupName="Meetings">
+                <TimelineItem id="testItem" class="group-item" titleText="coming up" subtitleText="10.07.2024 11:30" icon="calendar" name="Team Balkan Meeting" />
+                <TimelineItem id="testItem" class="group-item" titleText="coming up" subtitleText="20.08.2024 12:30" icon="calendar" name="Team Balkan Planning" />
+                <TimelineItem id="testItem" class="group-item" titleText="coming up" subtitleText="22.08.2024 14:30" icon="calendar" name="Team Balkan Retrospective" />
             </TimelineGroupItem>
 
-            <TimelineGroupItem group-name="Calls">
-                <TimelineItem id="testItem" className="group-item" title-text="made group call" subtitle-text="20.09.2024 11:30" icon="calendar" name="John Doe" name-clickable={true} />
-                <TimelineItem id="testItem" className="group-item" subtitle-text="20.09.2024 12:30" name="John Doe" name-clickable={true}>
+            <TimelineGroupItem groupName="Calls">
+                <TimelineItem id="testItem" class="group-item" titleText="made group call" subtitleText="20.09.2024 11:30" icon="calendar" name="John Doe" nameClickable={true} />
+                <TimelineItem id="testItem" class="group-item" subtitleText="20.09.2024 12:30" name="John Doe" nameClickable={true}>
                     <Avatar initials="JD" />
                     <Label>Has ended the call</Label>
                 </TimelineItem>

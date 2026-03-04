@@ -11,10 +11,10 @@ function App() {
 
   return (
     <>
-      <Calendar format-pattern="dd/MM/yyyy">
+      <Calendar formatPattern="dd/MM/yyyy">
             <SpecialCalendarDate value="21/11/2024"></SpecialCalendarDate>
-            <DateRange slot="disabledDates" start-value="10/11/2024" end-value="19/11/2024"></DateRange>
-    		<DateRange slot="disabledDates" start-value="25/11/2024" end-value="27/11/2024"></DateRange>
+            <DateRange slot="disabledDates" startValue="10/11/2024" endValue="19/11/2024"></DateRange>
+    		<DateRange slot="disabledDates" startValue="25/11/2024" endValue="27/11/2024"></DateRange>
         </Calendar>
     </>
   );

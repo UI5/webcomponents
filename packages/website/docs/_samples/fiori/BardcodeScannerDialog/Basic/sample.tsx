@@ -13,22 +13,22 @@ function App() {
   const dlgScanRef = useRef(null);
 
   const handleBtnScanClick = () => {
-    dlgScanRef.current.open = true;
+    dlgScanRef.current!.open = true;
   };
 
   const handleDlgScanUi5ScanSuccess = (e) => {
     scanResult.innerHTML = e.detail.text;
-	dlgScanRef.current.open = false;
+	dlgScanRef.current!.open = false;
   };
 
   const handleDlgScanUi5ScanError = (e) => {
     scanError.innerHTML = e.detail.message;
-	dlgScanRef.current.open = false;
+	dlgScanRef.current!.open = false;
   };
 
   return (
     <>
-      <BarcodeScannerDialog ref={dlgScanRef} id="dlgScan" onUi5ScanSuccess={handleDlgScanUi5ScanSuccess} onUi5ScanError={handleDlgScanUi5ScanError} />
+      <BarcodeScannerDialog ref={dlgScanRef} id="dlgScan" onScanSuccess={handleDlgScanUi5ScanSuccess} onScanError={handleDlgScanUi5ScanError} />
 
         <Button id="btnScan" icon="camera" tooltip="Start Camera" onClick={handleBtnScanClick}>Scan</Button>
         <div>

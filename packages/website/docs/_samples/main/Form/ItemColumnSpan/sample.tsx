@@ -25,20 +25,20 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
     <>
-      <Label show-colon={true}>Form Layout</Label><Text>S2 M2 L2 XL2</Text><br />
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">М</Text>
-        <Slider ref={sliderRef} id="slider" value={53} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Form Layout</Label><Text>S2 M2 L2 XL2</Text><br />
+        <Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Label showColon={true}>Page Size</Label><Text id="txtLayout">М</Text>
+        <Slider ref={sliderRef} id="slider" value={53} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "800px", overflowX: "auto" }}>
-            <Form header-text="Personal Data" layout="S2 M2 L2 XL2" label-span="S12 M12 L12 XL12">
-                <FormItem column-span={2}>
+            <Form headerText="Personal Data" layout="S2 M2 L2 XL2" labelSpan="S12 M12 L12 XL12">
+                <FormItem columnSpan={2}>
                     <Label required={true} htmlFor="nameInp" slot="labelContent">Name:</Label>
                     <Input id="nameInp" />
                 </FormItem>
@@ -57,9 +57,9 @@ function App() {
                     </Select>
                 </FormItem>
 
-                <FormItem column-span={2}>
+                <FormItem columnSpan={2}>
                     <Label htmlFor="additionalCommentsInp" slot="labelContent">Additional Comments:</Label>
-                    <TextArea id="additionalCommentsInp" placeholder="Write your message here" show-exceeded-text={true} maxLength={10} />
+                    <TextArea id="additionalCommentsInp" placeholder="Write your message here" showExceededText={true} maxLength={10} />
                 </FormItem>
             </Form>
         </div>

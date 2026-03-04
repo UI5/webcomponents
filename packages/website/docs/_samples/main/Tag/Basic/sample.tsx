@@ -6,7 +6,7 @@ const Tag = createReactComponent(TagClass);
 function App() {
 
   return (
-    <Tag design="Set1" color-scheme={6}>
+    <Tag design="Set1" colorScheme="6">
         Tag Text
     </Tag>
   );

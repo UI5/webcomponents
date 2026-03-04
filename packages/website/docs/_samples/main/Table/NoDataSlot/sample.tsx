@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <Table id="table" overflow-mode="Popin">
+      <Table id="table" overflowMode="Popin">
     		<IllustratedMessage slot="noData" name="NoData" />
     {/* playground-fold */}
     		<TableHeaderRow slot="headerRow">

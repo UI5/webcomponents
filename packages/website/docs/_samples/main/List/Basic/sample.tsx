@@ -11,10 +11,10 @@ function App() {
   return (
     <>
       <List>
-            <ListItemStandard icon="nutrition-activity" description="Tropical plant with an edible fruit" additional-text="In-stock" additional-text-state="Positive">Pineapple</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="Occurs between red and yellow" additional-text="Expires" additional-text-state="Critical">Orange</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="The yellow lengthy fruit" additional-text="Re-stock" additional-text-state="Information">Blueberry</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="The tropical stone fruit" additional-text="Re-stock" additional-text-state="Negative">Mango</ListItemStandard>
+            <ListItemStandard icon="nutrition-activity" description="Tropical plant with an edible fruit" additionalText="In-stock" additionalTextState="Positive">Pineapple</ListItemStandard>
+            <ListItemStandard icon="nutrition-activity" description="Occurs between red and yellow" additionalText="Expires" additionalTextState="Critical">Orange</ListItemStandard>
+            <ListItemStandard icon="nutrition-activity" description="The yellow lengthy fruit" additionalText="Re-stock" additionalTextState="Information">Blueberry</ListItemStandard>
+            <ListItemStandard icon="nutrition-activity" description="The tropical stone fruit" additionalText="Re-stock" additionalTextState="Negative">Mango</ListItemStandard>
         </List>
     </>
   );

@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <CalendarLegend hide-today={true} hide-working-day={true} hide-non-working-day={true} hide-selected-day={true}>
+      <CalendarLegend hideToday={true} hideWorkingDay={true} hideNonWorkingDay={true} hideSelectedDay={true}>
             <CalendarLegendItem type="Type01" text="Type01" />
             <CalendarLegendItem type="Type02" text="Type02" />
             <CalendarLegendItem type="Type03" text="Type03" />

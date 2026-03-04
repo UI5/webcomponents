@@ -16,37 +16,37 @@ function App() {
 
   return (
     <>
-      <List selection-mode="Multiple">
-            <ListItemGroup header-text="Front End Developers">
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Jennifer
+      <List selectionMode="Multiple">
+            <ListItemGroup headerText="Front End Developers">
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Jennifer
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Lora
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Lora
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/woman_avatar_4.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Carlotta
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Carlotta
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/woman_avatar_5.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
             </ListItemGroup>
 
-            <ListItemGroup header-text="Back End Developers">
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Clark
+            <ListItemGroup headerText="Back End Developers">
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Clark
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Ellen
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Ellen
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Adam
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Adam
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
                     </Avatar>
@@ -58,12 +58,12 @@ function App() {
                     <span>Back End Developers</span>
                     <Icon name="navigation-right-arrow" />
                 </div>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Ellen
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Ellen
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
                     </Avatar>
                 </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" icon-end={true}>Adam
+                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Adam
                     <Avatar slot="image" shape="Square">
                         <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
                     </Avatar>

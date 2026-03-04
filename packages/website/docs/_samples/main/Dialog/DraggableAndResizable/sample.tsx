@@ -14,23 +14,23 @@ function App() {
   const dialogRef = useRef(null);
 
   const handleDialogOpenerClick = () => {
-    dialogRef.current.open = true;
+    dialogRef.current!.open = true;
   };
 
   const handleBtnClick = () => {
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   return (
     <>
       <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
 
-        <Dialog ref={dialogRef} id="dialog" header-text="Draggable/Resizable dialog" draggable={true} resizable={true}>
+        <Dialog ref={dialogRef} id="dialog" headerText="Draggable/Resizable dialog" draggable={true} resizable={true}>
             <div>Move this dialog around the screen by dragging it by its header.</div>
             <div>Resize this dialog by dragging it by its resize handle.</div>
             <div>These features are available only on Desktop.</div>
             <Toolbar slot="footer">
-                <ToolbarButton className="dialogCloser" design="Emphasized" text="OK" />
+                <ToolbarButton class="dialogCloser" design="Emphasized" text="OK" />
             </Toolbar>
         </Dialog>
     </>

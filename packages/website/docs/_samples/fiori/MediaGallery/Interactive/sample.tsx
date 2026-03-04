@@ -20,15 +20,15 @@ function App() {
   const mediaGalleryDialogRef = useRef(null);
 
   const handleCloseDialogButtonClick = () => {
-    mediaGalleryDialogRef.current.open = false;
+    mediaGalleryDialogRef.current!.open = false;
   };
 
   const handleMediaGalleryOverflowClick = () => {
-    mediaGalleryDialogRef.current.open = true;
+    mediaGalleryDialogRef.current!.open = true;
   };
 
   const handleMediaGalleryDisplayAreaClick = () => {
-    mediaGalleryDialogRef.current.open = true;
+    mediaGalleryDialogRef.current!.open = true;
   };
 
   return (
@@ -66,7 +66,7 @@ function App() {
         }
       `}</style>
       <div className="container">
-            <MediaGallery interactive-display-area={true}>
+            <MediaGallery interactiveDisplayArea={true}>
                 <MediaGalleryItem>
                     <img src="/images/HT-1000.jpg" />
                 </MediaGalleryItem>
@@ -108,11 +108,11 @@ function App() {
             </div>
         </div>
 
-        <Dialog ref={mediaGalleryDialogRef} id="mediaGalleryDialog" header-text="Item" stretch={true}>
+        <Dialog ref={mediaGalleryDialogRef} id="mediaGalleryDialog" headerText="Item" stretch={true}>
             <Bar design="Header" slot="header">
                 <Label>Item</Label>
             </Bar>
-            <MediaGallery show-all-thumbnails={true}>
+            <MediaGallery showAllThumbnails={true}>
                 <MediaGalleryItem>
                     <img src="/images/HT-1000.jpg" />
                 </MediaGalleryItem>

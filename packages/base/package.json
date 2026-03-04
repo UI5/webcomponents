@@ -61,14 +61,6 @@
     "@lit-labs/ssr-dom-shim": "^1.1.2",
     "lit-html": "^2.0.1"
   },
-  "peerDependencies": {
-    "react": ">=17"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@openui5/sap.ui.core": "1.120.17",

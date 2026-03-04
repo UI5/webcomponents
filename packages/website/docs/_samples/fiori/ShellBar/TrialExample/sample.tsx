@@ -25,13 +25,13 @@ function App() {
 
   return (
     <>
-      <ShellBar primary-title="Product Identifier" notifications-count={72} show-notifications={true}>
+      <ShellBar primaryTitle="Product Identifier" notificationsCount={72} showNotifications={true}>
                 <Button icon="menu2" slot="startButton" />
                 <img slot="logo" src="/images/sap-logo-svg.svg" />
 
-                <Tag design="Set2" color-scheme={7} slot="content">Trial</Tag>
+                <Tag design="Set2" colorScheme="7" slot="content">Trial</Tag>
                 <Text slot="content">30 days remaining</Text>
-                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
+                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
                 <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />

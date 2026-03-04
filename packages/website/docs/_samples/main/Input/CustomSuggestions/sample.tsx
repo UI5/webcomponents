@@ -47,7 +47,7 @@ function App() {
             flex-direction: column;
         }
       `}</style>
-      <Input placeholder="Type something ..." show-suggestions={true} onInput={handleInput}>
+      <Input placeholder="Type something ..." showSuggestions={true} onInput={handleInput}>
         {suggestions.map((country) => (
           <SuggestionItemCustom key={country} text={country}>
             <div className="item-content">

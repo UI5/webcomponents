@@ -53,21 +53,21 @@ function App() {
     				<TableHeaderCell id="weightCol">Weight</TableHeaderCell>
     				<TableHeaderCell id="priceCol">Price</TableHeaderCell>
     			</TableHeaderRow>
-    			<TableRow row-key={0}>
+    			<TableRow rowKey={0}>
     				<TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
     				<TableCell><Label>Very Best Screens</Label></TableCell>
     				<TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>4.2</b> KG</Label></TableCell>
     				<TableCell><Label><b>956</b> EUR</Label></TableCell>
     			</TableRow>
-    			<TableRow row-key={1}>
+    			<TableRow rowKey={1}>
     				<TableCell><Label><b>Notebook Basic 17</b><br />HT-1001</Label></TableCell>
     				<TableCell><Label>Smartcards</Label></TableCell>
     				<TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>4.5</b> KG</Label></TableCell>
     				<TableCell><Label><b>1249</b> EUR</Label></TableCell>
     			</TableRow>
-    			<TableRow row-key={2}>
+    			<TableRow rowKey={2}>
     				<TableCell><Label><b>Notebook Basic 18</b><br />HT-1002</Label></TableCell>
     				<TableCell><Label>Technocom</Label></TableCell>
     				<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
@@ -75,7 +75,7 @@ function App() {
     				<TableCell><Label><b>29</b> EUR</Label></TableCell>
     			</TableRow>
     			{extraRows.map((row) => (
-    				<TableRow row-key={row.key} key={row.key}>
+    				<TableRow rowKey={row.key} key={row.key}>
     					<TableCell><Label><b>{row.name}</b><br />{row.code}</Label></TableCell>
     					<TableCell><Label>Technocom</Label></TableCell>
     					<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>

@@ -21,13 +21,13 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" title-text="Upcoming Activities" subtitle-text="Today" />
+            <CardHeader slot="header" titleText="Upcoming Activities" subtitleText="Today" />
             <Timeline>
-                <TimelineItem title-text="called" timestamp={1487583000000} icon="phone" name="John Smith" name-clickable={true} />
-                <TimelineItem title-text="Weekly Sync - BTP Design" timestamp={1517349600000} icon="calendar">
+                <TimelineItem titleText="called" timestamp={1487583000000} icon="phone" name="John Smith" nameClickable={true} />
+                <TimelineItem titleText="Weekly Sync - BTP Design" timestamp={1517349600000} icon="calendar">
                     MR SOF02 2.43
                 </TimelineItem>
-                <TimelineItem title-text="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">
+                <TimelineItem titleText="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">
                     Online meeting
                 </TimelineItem>
             </Timeline>

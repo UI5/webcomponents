@@ -12,7 +12,7 @@ function App() {
   const dpRef = useRef(null);
 
   const handleSelectChange = (e: any) => {
-    dpRef.current.calendarWeekNumbering = e.detail.selectedOption.getAttribute("data-calendar-week-numbering");
+    dpRef.current!.calendarWeekNumbering = e.detail.selectedOption.getAttribute("data-calendar-week-numbering");
   };
 
   return (

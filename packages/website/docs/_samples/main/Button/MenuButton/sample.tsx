@@ -16,10 +16,10 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const openMenu = () => {
-    menuRef.current.opener = buttonRef.current;
-    menuRef.current.open = true;
+    menuRef.current!.opener = buttonRef.current;
+    menuRef.current!.open = true;
     setMenuOpen(true);
-    buttonRef.current.accessibilityAttributes = {
+    buttonRef.current!.accessibilityAttributes = {
       hasPopup: "menu",
       expanded: true,
     };
@@ -41,11 +41,11 @@ function App() {
 
   const handleMenuClose = () => {
     setMenuOpen(false);
-    buttonRef.current.accessibilityAttributes = {
+    buttonRef.current!.accessibilityAttributes = {
       hasPopup: "menu",
       expanded: false,
     };
-    buttonRef.current.focus();
+    buttonRef.current!.focus();
   };
 
   return (
@@ -54,7 +54,7 @@ function App() {
         ref={buttonRef}
         id="menuButton"
         icon="action-settings"
-        end-icon="navigation-down-arrow"
+        endIcon="navigation-down-arrow"
         onClick={handleMenuButtonClick}
         onKeyDown={handleMenuButtonKeydown}
       >

@@ -54,21 +54,21 @@ function App() {
 
   return (
     <>
-      <Table id="table" row-action-count={3} onRowActionClick={handleTableRowActionClick}>
+      <Table id="table" rowActionCount={3} onRowActionClick={handleTableRowActionClick}>
     {/* playground-fold */}
     	<TableHeaderRow slot="headerRow">
     		<TableHeaderCell>Product</TableHeaderCell>
     		<TableHeaderCell>Supplier</TableHeaderCell>
-    		<TableHeaderCell horizontal-align="End">Price</TableHeaderCell>
+    		<TableHeaderCell horizontalAlign="End">Price</TableHeaderCell>
     	</TableHeaderRow>
-    	<TableRow row-key={1} interactive={true}>
+    	<TableRow rowKey={1} interactive={true}>
     		<TableCell><Label><b>Notebook Basic 15</b><br /><a href="#">HT-1000</a></Label></TableCell>
     		<TableCell><Label>Very Best Screens</Label></TableCell>
     		<TableCell><Label><b>899.99</b> EUR</Label></TableCell>
     		<TableRowActionNavigation slot="actions"></TableRowActionNavigation>
     	</TableRow>
     {/* playground-fold-end */}
-    	<TableRow row-key={2}>
+    	<TableRow rowKey={2}>
     		<TableCell><Label><b>Astro Laptop 216</b><br /><a href="#">HT-1251</a></Label></TableCell>
     		<TableCell><Label>Technocom</Label></TableCell>
     		<TableCell><Label><b>679.99</b> EUR</Label></TableCell>
@@ -80,7 +80,7 @@ function App() {
     		<TableRowActionNavigation slot="actions" handler="onNavigate" interactive></TableRowActionNavigation>
     	</TableRow>
     {/* playground-fold */}
-    	<TableRow row-key={3} navigated={true}>
+    	<TableRow rowKey={3} navigated={true}>
     		<TableCell><Label><b>Benda Laptop 1408</b><br /><a href="#">HT-6102</a></Label></TableCell>
     		<TableCell><Label>Ultrasonic United</Label></TableCell>
     		<TableCell><Label><b>699.99</b> EUR</Label></TableCell>
@@ -88,7 +88,7 @@ function App() {
     		<TableRowAction slot="actions" icon="edit" text="Edit" handler="onEdit" invisible></TableRowAction>
     		<TableRowAction slot="actions" icon="heart" text="Like" handler="onLike"></TableRowAction>
     	</TableRow>
-    	<TableRow row-key={4}>
+    	<TableRow rowKey={4}>
     		<TableCell><Label><b>Broad Screen 22HD</b><br /><a href="#">HT-1255</a></Label></TableCell>
     		<TableCell><Label>Speaker Experts</Label></TableCell>
     		<TableCell><Label><b>399.99</b> EUR</Label></TableCell>

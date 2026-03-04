@@ -45,17 +45,17 @@ function App() {
   return (
     <>
       <Label>Search with Grouped Suggestions and Show More (N) Item</Label>
-        <Search id="searchShowMore" show-clear-icon={true} placeholder="Placeholder">
+        <Search id="searchShowMore" showClearIcon={true} placeholder="Placeholder">
             <SearchMessageArea slot="messageArea" description="You can try the following" text="Oh, there are no results" />
-            <SearchItemGroup id="group1" header-text="Group Header">
+            <SearchItemGroup id="group1" headerText="Group Header">
               {displayedItems.map((item, index) => (
                 <SearchItem key={item.text + index} text={item.text} icon={item.icon} deletable={true} onDelete={() => handleItemDelete(index)} />
               ))}
               {!expanded && hiddenCount > 0 && (
-                <SearchItemShowMore items-to-show-count={hiddenCount} onClick={handleShowMoreClick} />
+                <SearchItemShowMore itemsToShowCount={hiddenCount} onClick={handleShowMoreClick} />
               )}
             </SearchItemGroup>
-    		<SearchItemGroup id="group2" header-text="Group Header">
+    		<SearchItemGroup id="group2" headerText="Group Header">
     			<SearchItem text="List Item" icon="history" />
     			<SearchItem text="List Item" icon="history" />
     			<SearchItem text="List Item" icon="globe" />

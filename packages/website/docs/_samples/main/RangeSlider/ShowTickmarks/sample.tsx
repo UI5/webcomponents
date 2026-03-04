@@ -7,8 +7,8 @@ function App() {
 
   return (
     <>
-        <RangeSlider start-value={20} end-value={60} min={0} max={100} step={5} show-tickmarks={true} />
-        <RangeSlider start-value={20} end-value={60} min={0} max={100} step={5} show-tickmarks={true} label-interval={2} />
+        <RangeSlider startValue={20} endValue={60} min={0} max={100} step={5} showTickmarks={true} />
+        <RangeSlider startValue={20} endValue={60} min={0} max={100} step={5} showTickmarks={true} labelInterval={2} />
     </>
   );
 }

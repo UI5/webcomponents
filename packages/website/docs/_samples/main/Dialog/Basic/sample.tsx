@@ -18,11 +18,11 @@ function App() {
   const dialogRef = useRef(null);
 
   const handleDialogOpenerClick = () => {
-    dialogRef.current.open = true;
+    dialogRef.current!.open = true;
   };
 
   const handleBtnClick = () => {
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   return (
@@ -50,29 +50,29 @@ function App() {
       `}</style>
       <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
 
-        <Dialog ref={dialogRef} id="dialog" header-text="Register Form">
+        <Dialog ref={dialogRef} id="dialog" headerText="Register Form">
             <section className="login-form">
                 <div>
-                    <Label htmlFor="username" required={true} show-colon={true}>Username</Label>
+                    <Label htmlFor="username" required={true} showColon={true}>Username</Label>
                     <Input id="username" />
                 </div>
                 <div>
-                    <Label htmlFor="password" required={true} show-colon={true}>Password</Label>
-                    <Input id="password" type="Password" value-state="Negative" />
+                    <Label htmlFor="password" required={true} showColon={true}>Password</Label>
+                    <Input id="password" type="Password" valueState="Negative" />
                 </div>
                 <div>
-                    <Label htmlFor="email" type="Email" required={true} show-colon={true}>Email</Label>
+                    <Label htmlFor="email" type="Email" required={true} showColon={true}>Email</Label>
                     <Input id="email" />
                 </div>
                 <div>
-                    <Label htmlFor="address" show-colon={true}>Address</Label>
+                    <Label htmlFor="address" showColon={true}>Address</Label>
                     <Input id="address" />
                 </div>
             </section>
             <Toolbar slot="footer">
-                <ToolbarButton className="dialogCloser" design="Emphasized" text="Submit"
+                <ToolbarButton class="dialogCloser" design="Emphasized" text="Submit"
                  />
-                <ToolbarButton className="dialogCloser" design="Transparent" text="Cancel"
+                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel"
                  />
             </Toolbar>
         </Dialog>

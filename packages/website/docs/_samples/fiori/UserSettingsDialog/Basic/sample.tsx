@@ -90,7 +90,7 @@ function App() {
     switch (item) {
       case "setting":
         if (settingsDialogRef.current) {
-          settingsDialogRef.current.open = true;
+          settingsDialogRef.current!.open = true;
         }
         break;
     }
@@ -106,13 +106,13 @@ function App() {
 
   const handleResetAllButtonClick = useCallback(() => {
     if (additionalDialogRef.current) {
-      additionalDialogRef.current.open = true;
+      additionalDialogRef.current!.open = true;
     }
   }, []);
 
   const handleLanguageSelectionChange = useCallback(() => {
     if (additionalDialogRef.current) {
-      additionalDialogRef.current.open = true;
+      additionalDialogRef.current!.open = true;
     }
   }, []);
 
@@ -125,7 +125,7 @@ function App() {
 
   const handleDialogCloserClick = useCallback(() => {
     if (additionalDialogRef.current) {
-      additionalDialogRef.current.open = false;
+      additionalDialogRef.current!.open = false;
     }
   }, []);
 
@@ -135,27 +135,27 @@ function App() {
 
   const handleMobile1ButtonClick = useCallback(() => {
     if (mobileSecondPageRef.current) {
-      mobileSecondPageRef.current.selected = true;
-      mobileSecondPageRef.current.text = "iOS";
+      mobileSecondPageRef.current!.selected = true;
+      mobileSecondPageRef.current!.text = "iOS";
     }
   }, []);
 
   const handleMobile2ButtonClick = useCallback(() => {
     if (mobileSecondPageRef.current) {
-      mobileSecondPageRef.current.selected = true;
-      mobileSecondPageRef.current.text = "Android";
+      mobileSecondPageRef.current!.selected = true;
+      mobileSecondPageRef.current!.text = "Android";
     }
   }, []);
 
   const handleResetPersonalizationClick = useCallback(() => {
     if (toastResetRef.current) {
-      toastResetRef.current.open = true;
+      toastResetRef.current!.open = true;
     }
   }, []);
 
   const handleResetAllClick = useCallback(() => {
     if (toastResetAllRef.current) {
-      toastResetAllRef.current.open = true;
+      toastResetAllRef.current!.open = true;
     }
   }, []);
 
@@ -266,7 +266,7 @@ function App() {
         	font-size: var(--sapFontSmallSize);
         }
       `}</style>
-      <ShellBar id="shellbar" onUi5ProfileClick={handleShellbarUi5ProfileClick}>
+      <ShellBar id="shellbar" onProfileClick={handleShellbarUi5ProfileClick}>
         <ShellBarBranding slot="branding">
           Corporate Portal
           <img slot="logo" src="/images/sap-logo-svg.svg" />
@@ -276,26 +276,26 @@ function App() {
         </Avatar>
       </ShellBar>
       <UserMenu ref={userMenuRef} id="userMenuShellBar" onItemClick={handleUserMenuShellBarItemClick}>
-        <UserMenuAccount slot="accounts" avatar-src="/images/avatars/man_avatar_3.png" title-text="Alain Chevalier" subtitle-text="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" selected={true} />
+        <UserMenuAccount slot="accounts" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" selected={true} />
         <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
       </UserMenu>
 
       <UserSettingsDialog
         ref={settingsDialogRef}
         id="settings"
-        header-text="Settings"
-        show-search-field={true}
+        headerText="Settings"
+        showSearchField={true}
         onSelectionChange={handleSettingsSelectionChange}
         onOpen={handleSettingsOpen}
         onBeforeClose={handleSettingsBeforeClose}
         onClose={handleSettingsClose}
       >
-        <UserSettingsItem icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" onSelectionChange={handleSettingsDialogItemSelectionChange}>
-          <UserSettingsAccountView id="account" show-manage-account="true" onEditAccountsClick={handleAccountEditAccountsClick} onManageAccountClick={handleAccountManageAccountClick}>
-            <UserMenuAccount slot="account" avatar-src="/images/avatars/man_avatar_3.png" title-text="Alain Chevalier" subtitle-text="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" />
+        <UserSettingsItem icon="user-settings" text="User Account" tooltip="User Account" headerText="User Account" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+          <UserSettingsAccountView id="account" showManageAccount="true" onEditAccountsClick={handleAccountEditAccountsClick} onManageAccountClick={handleAccountManageAccountClick}>
+            <UserMenuAccount slot="account" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" />
             <Label htmlFor="reset-all-button">Personalization</Label><br />
             <Button id="reset-all-button" onClick={handleResetAllButtonClick}>Reset All Personalization</Button>
-            <Panel fixed={true} className="ua-panel">
+            <Panel fixed={true} class="ua-panel">
               <Text>
                 Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
               </Text>
@@ -303,148 +303,148 @@ function App() {
           </UserSettingsAccountView>
         </UserSettingsItem>
 
-        <UserSettingsItem icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+        <UserSettingsItem icon="palette" text="Appearance" tooltip="Appearance" headerText="Appearance" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsAppearanceView text="Themes" onSelectionChange={handleAppearanceViewSelectionChange}>
             <div slot="additionalContent">
               <div className="ui5-user-settings-appearance-view-additional-content-header">
                 <Text>Optimize for Touch Input</Text>
                 <Switch />
               </div>
-              <Text className="ui5-user-settings-appearance-view-additional-content-description">
+              <Text class="ui5-user-settings-appearance-view-additional-content-description">
                 Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
                 This is useful for hybrid devices that combine touch and mouse events.
               </Text>
             </div>
-            <UserSettingsAppearanceViewGroup header-text="SAP Horizon">
-              <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" />
-              <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" />
-              <UserSettingsAppearanceViewItem item-key="sap_horizon_hcb" text="SAP Horizon High Contrast Black" />
-              <UserSettingsAppearanceViewItem item-key="sap_horizon_hcw" text="SAP Horizon High Contrast White" />
+            <UserSettingsAppearanceViewGroup headerText="SAP Horizon">
+              <UserSettingsAppearanceViewItem itemKey="sap_horizon" text="SAP Morning Horizon" />
+              <UserSettingsAppearanceViewItem itemKey="sap_horizon_dark" text="SAP Evening Horizon" />
+              <UserSettingsAppearanceViewItem itemKey="sap_horizon_hcb" text="SAP Horizon High Contrast Black" />
+              <UserSettingsAppearanceViewItem itemKey="sap_horizon_hcw" text="SAP Horizon High Contrast White" />
             </UserSettingsAppearanceViewGroup>
-            <UserSettingsAppearanceViewGroup header-text="SAP Quartz">
-              <UserSettingsAppearanceViewItem item-key="sap_fiori_3" text="SAP Quartz Light" />
-              <UserSettingsAppearanceViewItem item-key="sap_fiori_3_dark" text="SAP Quartz Dark" />
-              <UserSettingsAppearanceViewItem item-key="sap_fiori_3_hcb" text="SAP Quartz High Contrast Black" />
-              <UserSettingsAppearanceViewItem item-key="sap_fiori_3_hcw" text="SAP Quartz High Contrast White" />
+            <UserSettingsAppearanceViewGroup headerText="SAP Quartz">
+              <UserSettingsAppearanceViewItem itemKey="sap_fiori_3" text="SAP Quartz Light" />
+              <UserSettingsAppearanceViewItem itemKey="sap_fiori_3_dark" text="SAP Quartz Dark" />
+              <UserSettingsAppearanceViewItem itemKey="sap_fiori_3_hcb" text="SAP Quartz High Contrast Black" />
+              <UserSettingsAppearanceViewItem itemKey="sap_fiori_3_hcw" text="SAP Quartz High Contrast White" />
             </UserSettingsAppearanceViewGroup>
           </UserSettingsAppearanceView>
         </UserSettingsItem>
 
-        <UserSettingsItem text="Language and Region" tooltip="Language and Region" header-text="Language and Region" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+        <UserSettingsItem text="Language and Region" tooltip="Language and Region" headerText="Language and Region" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsView>
             <div id="language-region-container" className="language-region-container">
-              <Label className="language-region-label">Display Language:</Label>
-              <ComboBox id="language" className="language-region-control" placeholder="Language" value="English (United States)" onSelectionChange={handleLanguageSelectionChange}>
-                <ComboBoxItem text="Browser Language" selected={true} additional-text="English" />
-                <ComboBoxItem text="English (United Kingdom)" additional-text="English (United Kingdom)" />
-                <ComboBoxItem text="English (United States)" additional-text="English (United States)" />
-                <ComboBoxItem text="French (France)" additional-text="Fran&ccedil;ais (France)" />
-                <ComboBoxItem text="French (Canada)" additional-text="Fran&ccedil;ais (Canada)" />
-                <ComboBoxItem text="German (Germany)" additional-text="Deutsch (Deutschland)" />
-                <ComboBoxItem text="German (Switzerland)" additional-text="Deutsch (Schweiz)" />
-                <ComboBoxItem text="Japanese" additional-text="&#26085;&#26412;&#35486; (&#26085;&#26412;)" />
-                <ComboBoxItem text="Portuguese (Brazil)" additional-text="Portugu&ecirc;s (Brasil)" />
-                <ComboBoxItem text="Simplified Chinese (China)" additional-text="&#31616;&#20307;&#20013;&#25991;&#65288;&#20013;&#22269;)" />
-                <ComboBoxItem text="Spanish (Mexico)" additional-text="Espa&ntilde;ol (Am&eacute;rica Latina)" />
-                <ComboBoxItem text="Spanish (Spain)" additional-text="Espa&ntilde;ol (Espa&ntilde;a)" />
+              <Label class="language-region-label">Display Language:</Label>
+              <ComboBox id="language" class="language-region-control" placeholder="Language" value="English (United States)" onSelectionChange={handleLanguageSelectionChange}>
+                <ComboBoxItem text="Browser Language" selected={true} additionalText="English" />
+                <ComboBoxItem text="English (United Kingdom)" additionalText="English (United Kingdom)" />
+                <ComboBoxItem text="English (United States)" additionalText="English (United States)" />
+                <ComboBoxItem text="French (France)" additionalText="Fran&ccedil;ais (France)" />
+                <ComboBoxItem text="French (Canada)" additionalText="Fran&ccedil;ais (Canada)" />
+                <ComboBoxItem text="German (Germany)" additionalText="Deutsch (Deutschland)" />
+                <ComboBoxItem text="German (Switzerland)" additionalText="Deutsch (Schweiz)" />
+                <ComboBoxItem text="Japanese" additionalText="&#26085;&#26412;&#35486; (&#26085;&#26412;)" />
+                <ComboBoxItem text="Portuguese (Brazil)" additionalText="Portugu&ecirc;s (Brasil)" />
+                <ComboBoxItem text="Simplified Chinese (China)" additionalText="&#31616;&#20307;&#20013;&#25991;&#65288;&#20013;&#22269;)" />
+                <ComboBoxItem text="Spanish (Mexico)" additionalText="Espa&ntilde;ol (Am&eacute;rica Latina)" />
+                <ComboBoxItem text="Spanish (Spain)" additionalText="Espa&ntilde;ol (Espa&ntilde;a)" />
               </ComboBox>
-              <Label className="language-region-label">Region:</Label>
-              <ComboBox id="region" className="language-region-control" placeholder="Region" value="United States" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="United Kingdom" additional-text="GB" />
-                <ComboBoxItem text="United States" additional-text="US" />
-                <ComboBoxItem text="French (France)" additional-text="FR" />
-                <ComboBoxItem text="French (Canada)" additional-text="CA" />
-                <ComboBoxItem text="German (Germany)" additional-text="DE" />
-                <ComboBoxItem text="German (Switzerland)" additional-text="CH" />
-                <ComboBoxItem text="Japanese" additional-text="JP" />
-                <ComboBoxItem text="Portuguese (Brazil)" additional-text="BR" />
-                <ComboBoxItem text="Simplified Chinese (China)" additional-text="CN" />
-                <ComboBoxItem text="Spanish (Mexico)" additional-text="MX" />
-                <ComboBoxItem text="Spanish (Spain)" additional-text="ES" />
+              <Label class="language-region-label">Region:</Label>
+              <ComboBox id="region" class="language-region-control" placeholder="Region" value="United States" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="United Kingdom" additionalText="GB" />
+                <ComboBoxItem text="United States" additionalText="US" />
+                <ComboBoxItem text="French (France)" additionalText="FR" />
+                <ComboBoxItem text="French (Canada)" additionalText="CA" />
+                <ComboBoxItem text="German (Germany)" additionalText="DE" />
+                <ComboBoxItem text="German (Switzerland)" additionalText="CH" />
+                <ComboBoxItem text="Japanese" additionalText="JP" />
+                <ComboBoxItem text="Portuguese (Brazil)" additionalText="BR" />
+                <ComboBoxItem text="Simplified Chinese (China)" additionalText="CN" />
+                <ComboBoxItem text="Spanish (Mexico)" additionalText="MX" />
+                <ComboBoxItem text="Spanish (Spain)" additionalText="ES" />
               </ComboBox>
-              <Label className="language-region-label">Date Format:</Label>
-              <ComboBox id="dateFormat" className="language-region-control" placeholder="Date Format" value="MM.DD.YYYY" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="MM/DD/YYYY" additional-text="e.g. 10/23/2025" />
-                <ComboBoxItem text="MM.DD.YYYY" additional-text="e.g. 10.23.2025" />
-                <ComboBoxItem text="MM-DD-YYYY" additional-text="e.g. 10-23-2025" />
-                <ComboBoxItem text="DD/MM/YYYY" additional-text="e.g. 23/10/2025" />
-                <ComboBoxItem text="DD.MM.YYYY" additional-text="e.g. 23.10.2025" />
-                <ComboBoxItem text="DD-MM-YYYY" additional-text="e.g. 23-10-2025" />
-                <ComboBoxItem text="YYYY/MM/DD" additional-text="e.g. 2025/10/23" />
-                <ComboBoxItem text="YYYY.MM.DD" additional-text="e.g. 2025.10.23" />
-                <ComboBoxItem text="YYYY-MM-DD" additional-text="e.g. 2025-10-23" />
+              <Label class="language-region-label">Date Format:</Label>
+              <ComboBox id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="MM/DD/YYYY" additionalText="e.g. 10/23/2025" />
+                <ComboBoxItem text="MM.DD.YYYY" additionalText="e.g. 10.23.2025" />
+                <ComboBoxItem text="MM-DD-YYYY" additionalText="e.g. 10-23-2025" />
+                <ComboBoxItem text="DD/MM/YYYY" additionalText="e.g. 23/10/2025" />
+                <ComboBoxItem text="DD.MM.YYYY" additionalText="e.g. 23.10.2025" />
+                <ComboBoxItem text="DD-MM-YYYY" additionalText="e.g. 23-10-2025" />
+                <ComboBoxItem text="YYYY/MM/DD" additionalText="e.g. 2025/10/23" />
+                <ComboBoxItem text="YYYY.MM.DD" additionalText="e.g. 2025.10.23" />
+                <ComboBoxItem text="YYYY-MM-DD" additionalText="e.g. 2025-10-23" />
               </ComboBox>
-              <Label className="language-region-label">Time Format:</Label>
-              <ComboBox id="timeFormat" className="language-region-control" placeholder="Time Format" value="12 Hour" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="24 Hour" additional-text="e.g. 12:05:10" />
-                <ComboBoxItem text="12 Hour" additional-text="e.g. 12:05:10 PM" />
-                <ComboBoxItem text="12 Hour (lowercase)" additional-text="e.g. 12:05:10 pm" />
-                <ComboBoxItem text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM" />
-                <ComboBoxItem text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm" />
+              <Label class="language-region-label">Time Format:</Label>
+              <ComboBox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="24 Hour" additionalText="e.g. 12:05:10" />
+                <ComboBoxItem text="12 Hour" additionalText="e.g. 12:05:10 PM" />
+                <ComboBoxItem text="12 Hour (lowercase)" additionalText="e.g. 12:05:10 pm" />
+                <ComboBoxItem text="Hours from 0 to 11" additionalText="e.g. 00:05:10 PM" />
+                <ComboBoxItem text="Hours from 0 to 11 (lowercase)" additionalText="e.g. 00:05:10 pm" />
               </ComboBox>
-              <Label className="language-region-label">Time Zone:</Label>
-              <ComboBox id="timeZone" className="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States" />
-                <ComboBoxItem text="Mountain Time (UTC -07:00)" additional-text="Denver, United States" />
-                <ComboBoxItem text="Central Time (UTC -06:00)" additional-text="Austin, United States" />
-                <ComboBoxItem text="Eastern Standard Time (UTC -05:00)" additional-text="Washington, United States" />
-                <ComboBoxItem text="Atlantic Time (UTC -04:00)" additional-text="Halifax, Canada" />
-                <ComboBoxItem text="Newfoundland Time (UTC -03:30)" additional-text="St. John's, Canada" />
-                <ComboBoxItem text="Brasilia Time (UTC -03:00)" additional-text="Bras&iacute;lia, Brazil" />
-                <ComboBoxItem text="Argentina Time (UTC -03:00)" additional-text="Buenos Aires, Argentina" />
-                <ComboBoxItem text="Greenwich Mean Time (UTC +00:00)" additional-text="London, United Kingdom" />
-                <ComboBoxItem text="Central European Time (UTC +01:00)" additional-text="Berlin, Germany" />
-                <ComboBoxItem text="Eastern European Time (UTC +02:00)" additional-text="Athens, Greece" />
-                <ComboBoxItem text="Turkey Time (UTC +03:00)" additional-text="Ankara, T&uuml;rkiye" />
-                <ComboBoxItem text="Arabian Time (UTC +04:00)" additional-text="Abu Dhabi, United Arab Emirates" />
-                <ComboBoxItem text="Pakistan Standard Time (UTC +05:00)" additional-text="Islamabad, Pakistan" />
-                <ComboBoxItem text="India Standard Time (UTC +05:30)" additional-text="New Delhi, India" />
-                <ComboBoxItem text="Bangladesh Standard Time (UTC +06:00)" additional-text="Dhaka, Bangladesh" />
-                <ComboBoxItem text="Indochina Time (UTC +07:00)" additional-text="Bangkok, Thailand" />
-                <ComboBoxItem text="China Standard Time (UTC +08:00)" additional-text="Beijing, China" />
-                <ComboBoxItem text="Singapore Time (UTC +08:00)" additional-text="Singapore, Singapore" />
-                <ComboBoxItem text="Hong Kong Time (UTC +08:00)" additional-text="Hong Kong, China" />
-                <ComboBoxItem text="Japan Standard Time (UTC +09:00)" additional-text="Tokyo, Japan" />
-                <ComboBoxItem text="Korea Standard Time (UTC +09:00)" additional-text="Seoul, South Korea" />
-                <ComboBoxItem text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia" />
-                <ComboBoxItem text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand" />
+              <Label class="language-region-label">Time Zone:</Label>
+              <ComboBox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="Pacific Time (UTC -08:00)" additionalText="Sacramento, United States" />
+                <ComboBoxItem text="Mountain Time (UTC -07:00)" additionalText="Denver, United States" />
+                <ComboBoxItem text="Central Time (UTC -06:00)" additionalText="Austin, United States" />
+                <ComboBoxItem text="Eastern Standard Time (UTC -05:00)" additionalText="Washington, United States" />
+                <ComboBoxItem text="Atlantic Time (UTC -04:00)" additionalText="Halifax, Canada" />
+                <ComboBoxItem text="Newfoundland Time (UTC -03:30)" additionalText="St. John's, Canada" />
+                <ComboBoxItem text="Brasilia Time (UTC -03:00)" additionalText="Bras&iacute;lia, Brazil" />
+                <ComboBoxItem text="Argentina Time (UTC -03:00)" additionalText="Buenos Aires, Argentina" />
+                <ComboBoxItem text="Greenwich Mean Time (UTC +00:00)" additionalText="London, United Kingdom" />
+                <ComboBoxItem text="Central European Time (UTC +01:00)" additionalText="Berlin, Germany" />
+                <ComboBoxItem text="Eastern European Time (UTC +02:00)" additionalText="Athens, Greece" />
+                <ComboBoxItem text="Turkey Time (UTC +03:00)" additionalText="Ankara, T&uuml;rkiye" />
+                <ComboBoxItem text="Arabian Time (UTC +04:00)" additionalText="Abu Dhabi, United Arab Emirates" />
+                <ComboBoxItem text="Pakistan Standard Time (UTC +05:00)" additionalText="Islamabad, Pakistan" />
+                <ComboBoxItem text="India Standard Time (UTC +05:30)" additionalText="New Delhi, India" />
+                <ComboBoxItem text="Bangladesh Standard Time (UTC +06:00)" additionalText="Dhaka, Bangladesh" />
+                <ComboBoxItem text="Indochina Time (UTC +07:00)" additionalText="Bangkok, Thailand" />
+                <ComboBoxItem text="China Standard Time (UTC +08:00)" additionalText="Beijing, China" />
+                <ComboBoxItem text="Singapore Time (UTC +08:00)" additionalText="Singapore, Singapore" />
+                <ComboBoxItem text="Hong Kong Time (UTC +08:00)" additionalText="Hong Kong, China" />
+                <ComboBoxItem text="Japan Standard Time (UTC +09:00)" additionalText="Tokyo, Japan" />
+                <ComboBoxItem text="Korea Standard Time (UTC +09:00)" additionalText="Seoul, South Korea" />
+                <ComboBoxItem text="Australian Eastern Time (UTC +10:00)" additionalText="Canberra, Australia" />
+                <ComboBoxItem text="New Zealand Time (UTC +12:00)" additionalText="Wellington, New Zealand" />
               </ComboBox>
-              <Label className="language-region-label">Currency:</Label>
-              <ComboBox id="currency" className="language-region-control" placeholder="Currency" value="USD - United States Dollar" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="USD - United States Dollar" additional-text="USD" value="USD" />
-                <ComboBoxItem text="Euro" additional-text="EUR" />
-                <ComboBoxItem text="British Pound" additional-text="GBP" />
-                <ComboBoxItem text="Japanese Yen" additional-text="JPY" />
-                <ComboBoxItem text="Swiss Franc" additional-text="CHF" />
-                <ComboBoxItem text="Canadian Dollar" additional-text="CAD" />
-                <ComboBoxItem text="Australian Dollar" additional-text="AUD" />
-                <ComboBoxItem text="New Zealand Dollar" additional-text="NZD" />
-                <ComboBoxItem text="Chinese Yuan Renminbi" additional-text="CNY" />
-                <ComboBoxItem text="Indian Rupee" additional-text="INR" />
-                <ComboBoxItem text="Brazilian Real" additional-text="BRL" />
-                <ComboBoxItem text="South African Rand" additional-text="ZAR" />
-                <ComboBoxItem text="Russian Ruble" additional-text="RUB" />
-                <ComboBoxItem text="Mexican Peso" additional-text="MXN" />
-                <ComboBoxItem text="Singapore Dollar" additional-text="SGD" />
-                <ComboBoxItem text="Hong Kong Dollar" additional-text="HKD" />
-                <ComboBoxItem text="Norwegian Krone" additional-text="NOK" />
-                <ComboBoxItem text="Swedish Krona" additional-text="SEK" />
-                <ComboBoxItem text="South Korean Won" additional-text="KRW" />
-                <ComboBoxItem text="Turkish Lira" additional-text="TRY" />
+              <Label class="language-region-label">Currency:</Label>
+              <ComboBox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="USD - United States Dollar" additionalText="USD" value="USD" />
+                <ComboBoxItem text="Euro" additionalText="EUR" />
+                <ComboBoxItem text="British Pound" additionalText="GBP" />
+                <ComboBoxItem text="Japanese Yen" additionalText="JPY" />
+                <ComboBoxItem text="Swiss Franc" additionalText="CHF" />
+                <ComboBoxItem text="Canadian Dollar" additionalText="CAD" />
+                <ComboBoxItem text="Australian Dollar" additionalText="AUD" />
+                <ComboBoxItem text="New Zealand Dollar" additionalText="NZD" />
+                <ComboBoxItem text="Chinese Yuan Renminbi" additionalText="CNY" />
+                <ComboBoxItem text="Indian Rupee" additionalText="INR" />
+                <ComboBoxItem text="Brazilian Real" additionalText="BRL" />
+                <ComboBoxItem text="South African Rand" additionalText="ZAR" />
+                <ComboBoxItem text="Russian Ruble" additionalText="RUB" />
+                <ComboBoxItem text="Mexican Peso" additionalText="MXN" />
+                <ComboBoxItem text="Singapore Dollar" additionalText="SGD" />
+                <ComboBoxItem text="Hong Kong Dollar" additionalText="HKD" />
+                <ComboBoxItem text="Norwegian Krone" additionalText="NOK" />
+                <ComboBoxItem text="Swedish Krona" additionalText="SEK" />
+                <ComboBoxItem text="South Korean Won" additionalText="KRW" />
+                <ComboBoxItem text="Turkish Lira" additionalText="TRY" />
               </ComboBox>
-              <Label className="language-region-label">Number Format:</Label>
-              <ComboBox id="numberFormat" className="language-region-control" placeholder="Number Format" value="1,234.56" onSelectionChange={handleSettingsItemSelectionChange}>
-                <ComboBoxItem text="1.234,56" additional-text="Germany" />
-                <ComboBoxItem text="1,234.56" additional-text="US/UK" />
-                <ComboBoxItem text="1 234,56" additional-text="France" />
-                <ComboBoxItem text="1'234.56" additional-text="Switzerland" />
-                <ComboBoxItem text="1234,56" additional-text="SI/SO Format" />
+              <Label class="language-region-label">Number Format:</Label>
+              <ComboBox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56" onSelectionChange={handleSettingsItemSelectionChange}>
+                <ComboBoxItem text="1.234,56" additionalText="Germany" />
+                <ComboBoxItem text="1,234.56" additionalText="US/UK" />
+                <ComboBoxItem text="1 234,56" additionalText="France" />
+                <ComboBoxItem text="1'234.56" additionalText="Switzerland" />
+                <ComboBoxItem text="1234,56" additionalText="SI/SO Format" />
               </ComboBox>
             </div>
           </UserSettingsView>
         </UserSettingsItem>
 
-        <UserSettingsItem icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+        <UserSettingsItem icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" headerText="SAP Mobile Start Application" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsView>
             <Button id="mobile1-button" onClick={handleMobile1ButtonClick}>iOS</Button>
             <Button id="mobile2-button" onClick={handleMobile2ButtonClick}>Android</Button>
@@ -458,13 +458,13 @@ function App() {
           </UserSettingsView>
         </UserSettingsItem>
 
-        <UserSettingsItem icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+        <UserSettingsItem icon="bell" text="Notifications" tooltip="Notifications" headerText="Notifications" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsView>
             <CheckBox checked={true} text="Show High-Priority Notification Alerts" />
           </UserSettingsView>
         </UserSettingsItem>
 
-        <UserSettingsItem icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings" onSelectionChange={handleSettingsDialogItemSelectionChange}>
+        <UserSettingsItem icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" headerText="Reset Settings" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsView text="Reset Personalization">
             <Button id="resetPersonalization" onClick={handleResetPersonalizationClick}>Reset Personalization content</Button>
             <Toast ref={toastResetRef} id="toastReset" design="Emphasized">Changes Reset.</Toast>
@@ -476,7 +476,7 @@ function App() {
         </UserSettingsItem>
       </UserSettingsDialog>
 
-      <Dialog ref={additionalDialogRef} id="additionalDialog" state="Information" header-text="Change Display Language">
+      <Dialog ref={additionalDialogRef} id="additionalDialog" state="Information" headerText="Change Display Language">
         <Text>Changing the display language to [New Language] will update the language across the user interface.</Text>
         <Toolbar slot="footer">
           <ToolbarButton design="Emphasized" text="Change Language" onClick={handleDialogCloserClick} />

@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <Timeline id="test-timeline">
-    		<TimelineGroupItem group-name="Build">
+    		<TimelineGroupItem groupName="Build">
     			<TimelineItem title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" name="Testing suite A" state="Positive">
     				Compilation succeeded.
     			</TimelineItem>
@@ -24,7 +24,7 @@ function App() {
     				Lint completed with minor issues.
     			</TimelineItem>
     		</TimelineGroupItem>
-    		<TimelineGroupItem group-name="Test">
+    		<TimelineGroupItem groupName="Test">
     			<TimelineItem title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
     				Unit tests failed.
     			</TimelineItem>

@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-      <Tokenizer style={{ width: "320px" }} id="clear-all" show-clear-all={true} multi-line={true} onUi5TokenDelete={handleTokenDelete}>
+      <Tokenizer style={{ width: "320px" }} id="clear-all" show-clear-all={true} multi-line={true} onTokenDelete={handleTokenDelete}>
         {tokens.map((t) => (
           <Token key={t} text={t} />
         ))}

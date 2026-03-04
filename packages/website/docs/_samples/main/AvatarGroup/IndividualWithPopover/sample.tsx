@@ -36,8 +36,8 @@ function App() {
         });
       });
       setHiddenAvatars(avatars);
-      peoplePopoverRef.current.opener = e.detail.targetRef;
-      peoplePopoverRef.current.open = true;
+      peoplePopoverRef.current!.opener = e.detail.targetRef;
+      peoplePopoverRef.current!.open = true;
     } else {
       const avatarRef = e.detail.targetRef;
       const avatarIndex = group.items.indexOf(avatarRef);
@@ -47,9 +47,9 @@ function App() {
         icon: avatarRef.icon,
         imageSrc: avatarRef.image.length > 0 ? avatarRef.image[0].src : null,
       });
-      personPopoverRef.current.open = false;
-      personPopoverRef.current.opener = avatarRef;
-      personPopoverRef.current.open = true;
+      personPopoverRef.current!.open = false;
+      personPopoverRef.current!.opener = avatarRef;
+      personPopoverRef.current!.open = true;
     }
   };
 
@@ -62,15 +62,15 @@ function App() {
       <div className="individual">
         <Popover
           ref={personPopoverRef}
-          header-text="Person Card"
+          headerText="Person Card"
           className="personPopover"
           style={{ width: "300px" }}
           placement="Bottom"
-          prevent-focus-restore=""
+          preventFocusRestore=""
         >
           <div className="avatar-slot" style={{ display: "inline-block" }}>
             <Avatar
-              color-scheme={popAvatar.colorScheme}
+              colorScheme={popAvatar.colorScheme}
               initials={popAvatar.initials}
               icon={popAvatar.icon}
             >
@@ -84,15 +84,15 @@ function App() {
         </Popover>
         <Popover
           ref={peoplePopoverRef}
-          header-text="My people"
-          className="peoplePopover"
+          headerText="My people"
+          class="peoplePopover"
           style={{ width: "400px" }}
           placement="Bottom"
         >
           <div className="placeholder" style={{ display: "flex", flexWrap: "wrap" }}>
             {hiddenAvatars.map((av, i) => (
               <div key={i} className="avatar-slot" style={{ padding: "5px" }}>
-                <Avatar interactive={true} icon={av.icon} initials={av.initials} color-scheme={av.colorScheme}>
+                <Avatar interactive={true} icon={av.icon} initials={av.initials} colorScheme={av.colorScheme}>
                   {av.imageSrc && <img src={av.imageSrc} />}
                 </Avatar>
               </div>

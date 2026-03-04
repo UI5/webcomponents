@@ -35,7 +35,7 @@ function App() {
     const separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter((t) => !!t);
     if (separatedTexts.length === 1) {
       if (multiInputRef.current) {
-        multiInputRef.current.value += separatedTexts[0];
+        multiInputRef.current!.value += separatedTexts[0];
       }
       return;
     }
@@ -64,8 +64,8 @@ function App() {
         ref={multiInputRef}
         id="multi-input"
         placeholder="Start typing country name"
-        show-suggestions={true}
-        value-state={valueState}
+        showSuggestions={true}
+        valueState={valueState}
         onTokenDelete={handleTokenDelete}
         onPaste={handlePaste}
         onChange={handleChange}

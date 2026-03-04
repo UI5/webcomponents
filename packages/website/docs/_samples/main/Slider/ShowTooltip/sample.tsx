@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-        <Slider value={20} min={0} max={100} step={5} show-tooltip={true} />
+        <Slider value={20} min={0} max={100} step={5} showTooltip={true} />
     </>
   );
 }

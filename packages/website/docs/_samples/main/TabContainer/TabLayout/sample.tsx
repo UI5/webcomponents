@@ -12,10 +12,10 @@ function App() {
 
   return (
     <>
-      <TabContainer tab-layout="Standard" collapsed>
-        <Tab icon="laptop" text="Monitors" additional-text={10} />
-        <Tab icon="video" text="Cameras" additional-text={2} selected={true} />
-        <Tab icon="home" text="Rooms" additional-text={16} />
+      <TabContainer tabLayout="Standard" collapsed>
+        <Tab icon="laptop" text="Monitors" additionalText={10} />
+        <Tab icon="video" text="Cameras" additionalText={2} selected={true} />
+        <Tab icon="home" text="Rooms" additionalText={16} />
     </TabContainer>
     </>
   );

@@ -70,7 +70,7 @@ function App() {
   }, []);
 
   const stopTextGeneration = useCallback(() => {
-    generationIntervalsRef.current.forEach(clearInterval);
+    generationIntervalsRef.current!.forEach(clearInterval);
     generationIntervalsRef.current = [];
     setBusyIndicator(false);
   }, [setBusyIndicator]);
@@ -94,7 +94,7 @@ function App() {
           resolve();
         }
       }, 50);
-      generationIntervalsRef.current.push(interval);
+      generationIntervalsRef.current!.push(interval);
     });
   }, []);
 
@@ -134,7 +134,7 @@ function App() {
   }, [aiButtonState, skipDialog, startGenerationHandler, stopTextGeneration]);
 
   const handleDialogProceed = useCallback(() => {
-    if (checkboxRef.current && checkboxRef.current.checked) {
+    if (checkboxRef.current && checkboxRef.current!.checked) {
       setSkipDialog(true);
     }
     setDialogOpen(false);
@@ -189,7 +189,7 @@ function App() {
           gap: 0.25rem;
         }
       `}</style>
-      <DynamicPage className="page">
+      <DynamicPage class="page">
         <DynamicPageHeader style={{ height: "9.375rem" }}>
           <ShellBar>
             <ShellBarBranding slot="branding">
@@ -216,8 +216,8 @@ function App() {
             <Title level="H2" size="H5">Informative Subtitle for Article 1</Title>
             <br />
             <hr />
-            <BusyIndicator delay={0} className="busy-indicator" active={busy1}>
-              <Text className="output-text">
+            <BusyIndicator delay={0} class="busy-indicator" active={busy1}>
+              <Text class="output-text">
                 {output1Text}
               </Text>
             </BusyIndicator>
@@ -225,8 +225,8 @@ function App() {
             <Title level="H2" size="H5">Informative Subtitle for Article 2</Title>
             <br />
             <hr />
-            <BusyIndicator delay={0} className="busy-indicator" active={busy2}>
-              <Text className="output-text">
+            <BusyIndicator delay={0} class="busy-indicator" active={busy2}>
+              <Text class="output-text">
                 {output2Text}
               </Text>
             </BusyIndicator>
@@ -234,7 +234,7 @@ function App() {
         </div>
       </DynamicPage>
 
-      <Dialog open={dialogOpen} state="Critical" header-text="Warning">
+      <Dialog open={dialogOpen} state="Critical" headerText="Warning">
         <Text>
           Regenerating will overwrite all fields with AI-generated content.<br />
           Do you want to continue?

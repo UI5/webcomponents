@@ -6,7 +6,7 @@ const TextArea = createReactComponent(TextAreaClass);
 function App() {
 
   return (
-    <TextArea growing={true} growing-max-rows={5} placeholder="Enter new rows..." />
+    <TextArea growing={true} growingMaxRows={5} placeholder="Enter new rows..." />
   );
 }
 

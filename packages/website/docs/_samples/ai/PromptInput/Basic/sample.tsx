@@ -41,12 +41,12 @@ function App() {
       <div style={{ height: "320px" }}>
         <AIPromptInput
           id="prompt-input"
-          show-clear-icon={true}
+          showClearIcon={true}
           placeholder="Ask me anything..."
           label="User prompt:"
           maxlength={10}
-          show-exceeded-text={true}
-          show-suggestions={true}
+          showExceededText={true}
+          showSuggestions={true}
           valueState={valueState}
           onInput={handleInput}
         >

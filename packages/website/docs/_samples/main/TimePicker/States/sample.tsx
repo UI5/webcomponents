@@ -9,11 +9,11 @@ function App() {
     <>
       <TimePicker disabled={true} />
     <TimePicker readonly={true} />
-    <TimePicker value-state="Positive" placeholder="Positive" />
-    <TimePicker value-state="Information" placeholder="Information" />
-    <TimePicker value-state="Critical" placeholder="Critical" />
-    <TimePicker value-state="Negative" placeholder="Negative" />
-    <TimePicker value-state="Negative" placeholder="Custom value-state message">
+    <TimePicker valueState="Positive" placeholder="Positive" />
+    <TimePicker valueState="Information" placeholder="Information" />
+    <TimePicker valueState="Critical" placeholder="Critical" />
+    <TimePicker valueState="Negative" placeholder="Negative" />
+    <TimePicker valueState="Negative" placeholder="Custom value-state message">
         <div slot="valueStateMessage">Please provide valid value</div>
     </TimePicker>
     </>

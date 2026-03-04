@@ -9,11 +9,11 @@ function App() {
     <>
       <StepInput disabled={true} value={5} /><br /><br />
     <StepInput readonly={true} value={5} /><br /><br />
-    <StepInput value-state="Positive" value={5} /><br /><br />
-    <StepInput value-state="Information" value={5} /><br /><br />
-    <StepInput value-state="Critical" value={5} /><br /><br />
-    <StepInput value-state="Negative" value={5} /><br /><br />
-    <StepInput value-state="Negative" value={5} placeholder="Custom value-state message">
+    <StepInput valueState="Positive" value={5} /><br /><br />
+    <StepInput valueState="Information" value={5} /><br /><br />
+    <StepInput valueState="Critical" value={5} /><br /><br />
+    <StepInput valueState="Negative" value={5} /><br /><br />
+    <StepInput valueState="Negative" value={5} placeholder="Custom value-state message">
         <div slot="valueStateMessage">Please provide valid value</div>
     </StepInput>
     </>

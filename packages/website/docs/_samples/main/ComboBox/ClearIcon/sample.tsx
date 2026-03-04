@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <ComboBox value="Denmark" show-clear-icon={true}>
+      <ComboBox value="Denmark" showClearIcon={true}>
             <ComboBoxItem text="Austria" />
             <ComboBoxItem text="Bulgaria" />
             <ComboBoxItem text="Germany" />

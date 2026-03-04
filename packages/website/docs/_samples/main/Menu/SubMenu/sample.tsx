@@ -20,17 +20,17 @@ function App() {
   const menuSubsRef = useRef(null);
 
   const handleBtnOpenBasicClick = () => {
-    menuSubsRef.current.open = !menuSubsRef.current.open;
+    menuSubsRef.current!.open = !menuSubsRef.current!.open;
   };
 
   return (
     <>
-      <Button id="btnOpenBasic" end-icon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button> <br />
+      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button> <br />
 
         <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic">
             <MenuItem text="New File" icon="add-document" />
             <MenuItem text="New Folder" icon="add-folder" disabled={true} />
-            <MenuItem text="Open" icon="open-folder" starts-section={true}>
+            <MenuItem text="Open" icon="open-folder" startsSection={true}>
                 <MenuItem text="Open Locally" icon="open-folder">
                     <MenuItem text="Open from C" />
                     <MenuItem text="Open from D" />
@@ -47,7 +47,7 @@ function App() {
                 <MenuItem text="Save on Cloud" icon="upload-to-cloud" />
             </MenuItem>
             <MenuItem text="Close" />
-            <MenuItem text="Preferences" icon="action-settings" starts-section={true} />
+            <MenuItem text="Preferences" icon="action-settings" startsSection={true} />
             <MenuItem text="Exit" icon="journey-arrive" />
         </Menu>
     </>

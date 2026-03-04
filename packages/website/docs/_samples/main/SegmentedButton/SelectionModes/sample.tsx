@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <SegmentedButton accessible-name="Font style" selection-mode="Single">
+      <SegmentedButton accessibleName="Font style" selectionMode="Single">
             <SegmentedButtonItem tooltip="Bold" icon="bold-text" selected={true} />
             <SegmentedButtonItem tooltip="Underline" icon="underline-text" />
             <SegmentedButtonItem tooltip="Italic" icon="italic-text" />
@@ -20,7 +20,7 @@ function App() {
 
         <br /><br />
 
-        <SegmentedButton accessible-name="Map style" selection-mode="Multiple">
+        <SegmentedButton accessibleName="Map style" selectionMode="Multiple">
             <SegmentedButtonItem>Map</SegmentedButtonItem>
             <SegmentedButtonItem selected={true}>Satellite</SegmentedButtonItem>
             <SegmentedButtonItem>Terrain</SegmentedButtonItem>

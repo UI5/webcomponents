@@ -16,15 +16,15 @@ function App() {
   return (
     <>
       <ProductSwitch>
-            <ProductSwitchItem title-text="SVG" subtitle-text="SVG">
-    			<Avatar slot="image" shape="Square" color-scheme="Transparent" fallback-icon="employee" size="S">
+            <ProductSwitchItem titleText="SVG" subtitleText="SVG">
+    			<Avatar slot="image" shape="Square" colorScheme="Transparent" fallbackIcon="employee" size="S">
     				<img alt="Woman" src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg.adapt.svg/1493030643828.svg" />
     			</Avatar>
     		</ProductSwitchItem>
-            <ProductSwitchItem title-text="Home" subtitle-text="Central Home" icon="home" />
-            <ProductSwitchItem title-text="Analytics Cloud" subtitle-text="Analytics Cloud" icon="business-objects-experience" />
-            <ProductSwitchItem title-text="Catalog" subtitle-text="Ariba" icon="contacts" />
-            <ProductSwitchItem title-text="Travel &amp; Expense" subtitle-text="Concur" icon="flight" />
+            <ProductSwitchItem titleText="Home" subtitleText="Central Home" icon="home" />
+            <ProductSwitchItem titleText="Analytics Cloud" subtitleText="Analytics Cloud" icon="business-objects-experience" />
+            <ProductSwitchItem titleText="Catalog" subtitleText="Ariba" icon="contacts" />
+            <ProductSwitchItem titleText="Travel &amp; Expense" subtitleText="Concur" icon="flight" />
         </ProductSwitch>
     </>
   );

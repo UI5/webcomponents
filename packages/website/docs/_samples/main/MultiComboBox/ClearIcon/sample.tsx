@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <MultiComboBox value="Italy" no-validation={true} show-clear-icon={true}>
+      <MultiComboBox value="Italy" noValidation={true} showClearIcon={true}>
             <MultiComboBoxItem text="Albania"></MultiComboBoxItem>
             <MultiComboBoxItem selected text="Argentina"></MultiComboBoxItem>
             <MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>

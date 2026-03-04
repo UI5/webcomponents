@@ -35,19 +35,19 @@ function App() {
   return (
     <>
       <div style={{ height: "300px" }}>
-    		<Timeline ref={timelineRef} id="growingTimeline" layout="Vertical" growing="Scroll" loading-delay={0} loading={loading} onLoadMore={handleGrowingTimelineLoadMore}>
-    			<TimelineItem title-text="called" subtitle-text="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" name-clickable={true} />
-    			<TimelineItem title-text="called" subtitle-text="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" />
+    		<Timeline ref={timelineRef} id="growingTimeline" layout="Vertical" growing="Scroll" loadingDelay={0} loading={loading} onLoadMore={handleGrowingTimelineLoadMore}>
+    			<TimelineItem titleText="called" subtitleText="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" nameClickable={true} />
+    			<TimelineItem titleText="called" subtitleText="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" />
 
-    			<TimelineItem title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)" icon="calendar">
+    			<TimelineItem titleText="Weekly Sync - CP Design" subtitleText="27.08.2017 (11:00 - 12:00)" icon="calendar">
     				<Label>MR SOF02 2.43</Label>
     			</TimelineItem>
 
-    			<TimelineItem title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
+    			<TimelineItem titleText="Video Conference Call - UI5" subtitleText="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
     				Online meeting
     			</TimelineItem>
           {extraItems.map((item, index) => (
-            <TimelineItem key={index} title-text={item.titleText} subtitle-text={item.subtitleText} icon={item.icon} />
+            <TimelineItem key={index} titleText={item.titleText} subtitleText={item.subtitleText} icon={item.icon} />
           ))}
     		</Timeline>
     	</div>

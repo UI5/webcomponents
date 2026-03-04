@@ -40,10 +40,10 @@ function App() {
       <div id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
         <Form
           id="editableForm"
-          header-text="Address"
+          headerText="Address"
           layout="S1 M2 L2 XL2"
-          item-spacing={editable ? "Normal" : "Large"}
-          accessible-mode={editable ? "Edit" : "Display"}
+          itemSpacing={editable ? "Normal" : "Large"}
+          accessibleMode={editable ? "Edit" : "Display"}
         >
           {editable ? (
             <>
@@ -54,7 +54,7 @@ function App() {
 
               <FormItem>
                 <Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-                <Select id="countrySel" accessible-name-ref="countryLbl">
+                <Select id="countrySel" accessibleNameRef="countryLbl">
                   <Option>Australia</Option>
                   <Option selected={true}>Germany</Option>
                   <Option>England</Option>
@@ -63,8 +63,8 @@ function App() {
 
               <FormItem>
                 <Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-                <Input id="cityInp" value="411" accessible-name-ref="cityLbl" />
-                <Input value="Maintown" accessible-name-ref="cityLbl" />
+                <Input id="cityInp" value="411" accessibleNameRef="cityLbl" />
+                <Input value="Maintown" accessibleNameRef="cityLbl" />
               </FormItem>
 
               <FormItem>
@@ -74,8 +74,8 @@ function App() {
 
               <FormItem>
                 <Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-                <Input id="streetInp" value="Main St" accessible-name-ref="streetLbl" />
-                <Input id="streetNumberInp" value="1618" accessible-name-ref="streetLbl" />
+                <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+                <Input id="streetNumberInp" value="1618" accessibleNameRef="streetLbl" />
               </FormItem>
 
               <FormItem>

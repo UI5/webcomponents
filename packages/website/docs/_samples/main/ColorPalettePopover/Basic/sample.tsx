@@ -12,7 +12,7 @@ function App() {
   const colorPalettePopoverRef = useRef(null);
 
   const handleColorPaletteBtnClick = () => {
-    colorPalettePopoverRef.current.open = !colorPalettePopoverRef.current.open;
+    colorPalettePopoverRef.current!.open = !colorPalettePopoverRef.current!.open;
   };
 
   return (

@@ -10,31 +10,31 @@ function App() {
 
   return (
     <>
-      <Select value-state="Positive" value="apple">
+      <Select valueState="Positive" value="apple">
         <Option value="apple" icon="meal">Apple</Option>
         <Option value="avocado" icon="meal">Avocado</Option>
         <Option value="mango" icon="meal">Mango</Option>
     </Select>
 
-    <Select value-state="Information" value="apple">
+    <Select valueState="Information" value="apple">
         <Option value="apple" icon="meal">Apple</Option>
         <Option value="avocado" icon="meal">Avocado</Option>
         <Option value="mango" icon="meal">Mango</Option>
     </Select>
 
-    <Select value-state="Critical" value="apple">
+    <Select valueState="Critical" value="apple">
         <Option value="apple" icon="meal">Apple</Option>
         <Option value="avocado" icon="meal">Avocado</Option>
         <Option value="mango" icon="meal">Mango</Option>
     </Select>
 
-    <Select value-state="Negative" value="apple">
+    <Select valueState="Negative" value="apple">
         <Option value="apple" icon="meal">Apple</Option>
         <Option value="avocado" icon="meal">Avocado</Option>
         <Option value="mango" icon="meal">Mango</Option>
     </Select>
 
-    <Select value-state="Negative" placeholder="Custom value-state message" value="apple">
+    <Select valueState="Negative" value="apple">
         <Option value="apple" icon="meal">Apple</Option>
         <Option value="avocado" icon="meal">Avocado</Option>
         <Option value="mango" icon="meal">Mango</Option>

@@ -144,17 +144,17 @@ function App() {
     const completedLabel = config?.completedLabel || "Action completed";
     const input = inputRef.current;
 
-    versionHistoryRef.current.push({
+    versionHistoryRef.current!.push({
       value: input ? input.value : "",
       action,
       endAction: completedLabel,
       timestamp: new Date().toISOString(),
     });
 
-    currentIndexRef.current = versionHistoryRef.current.length - 1;
+    currentIndexRef.current = versionHistoryRef.current!.length - 1;
     currentActionRef.current = null;
 
-    if (versionHistoryRef.current.length === 1) {
+    if (versionHistoryRef.current!.length === 1) {
       setMenuConfig(FULL_MENU_CONFIG);
     }
 
@@ -237,15 +237,15 @@ function App() {
     const input = inputRef.current;
 
     if (animationStartedRef.current) {
-      versionHistoryRef.current.push({
+      versionHistoryRef.current!.push({
         value: input ? input.value : "",
         action,
         endAction: completedLabel + " (stopped)",
         timestamp: new Date().toISOString(),
       });
 
-      currentIndexRef.current = versionHistoryRef.current.length - 1;
-      if (versionHistoryRef.current.length > 0) {
+      currentIndexRef.current = versionHistoryRef.current!.length - 1;
+      if (versionHistoryRef.current!.length > 0) {
         setMenuConfig(FULL_MENU_CONFIG);
       }
       updateComponentState(null);
@@ -294,7 +294,7 @@ function App() {
             key={item.text + index}
             text={item.text}
             slot={item.slot}
-            starts-section={item.startsSection || false}
+            startsSection={item.startsSection || false}
           >
             {item.children.map((child: any) => (
               <MenuItem
@@ -314,7 +314,7 @@ function App() {
           key={item.action + index}
           text={item.text}
           slot={item.slot}
-          starts-section={item.startsSection || false}
+          startsSection={item.startsSection || false}
           data-action={item.action}
           data-menu-action={item.action}
           data-processing-label={item.processingLabel}

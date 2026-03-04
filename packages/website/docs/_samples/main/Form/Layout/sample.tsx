@@ -21,8 +21,8 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
@@ -32,15 +32,15 @@ function App() {
         	background: var(--sapHoverColor);
         }
       `}</style>
-      <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Slider ref={sliderRef} id="slider" value={69} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Page Size</Label><Text id="txtLayout">L</Text>
+        <Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Slider ref={sliderRef} id="slider" value={69} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1035px", overflowX: "auto" }}>
 
-            <Form header-text="Form Layout: S1 M1 L2 XL3 (default)" label-span="S12 M12 L12 XL12">
+            <Form headerText="Form Layout: S1 M1 L2 XL3 (default)" labelSpan="S12 M12 L12 XL12">
 
-                <FormGroup header-text="Address">
+                <FormGroup headerText="Address">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -67,7 +67,7 @@ function App() {
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Contact">
+                <FormGroup headerText="Contact">
                     <FormItem>
                         <Label slot="labelContent">Twitter:</Label>
                         <Text>@sap</Text>
@@ -105,7 +105,7 @@ function App() {
 
                 </FormGroup>
         
-                <FormGroup header-text="Other info">
+                <FormGroup headerText="Other info">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -135,9 +135,9 @@ function App() {
 
             <br /><br />
 
-            <Form header-text="Form Layout: S1 M2 L3 XL5" layout="S1 M2 L3 XL5" label-span="S12 M12 L12 XL12">
+            <Form headerText="Form Layout: S1 M2 L3 XL5" layout="S1 M2 L3 XL5" labelSpan="S12 M12 L12 XL12">
 
-                <FormGroup header-text="Address">
+                <FormGroup headerText="Address">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -164,7 +164,7 @@ function App() {
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Contact">
+                <FormGroup headerText="Contact">
                     <FormItem>
                         <Label slot="labelContent">Twitter:</Label>
                         <Text>@sap</Text>
@@ -202,7 +202,7 @@ function App() {
 
                 </FormGroup>
         
-                <FormGroup header-text="Other info">
+                <FormGroup headerText="Other info">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -233,9 +233,9 @@ function App() {
             <br /><br />
 
 
-            <Form header-text="Form Layout: S1 M2 L4 XL6" layout="S1 M2 L4 XL6" label-span="S12 M12 L12 XL12">
+            <Form headerText="Form Layout: S1 M2 L4 XL6" layout="S1 M2 L4 XL6" labelSpan="S12 M12 L12 XL12">
 
-                <FormGroup header-text="Address">
+                <FormGroup headerText="Address">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -262,7 +262,7 @@ function App() {
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Contact">
+                <FormGroup headerText="Contact">
                     <FormItem>
                         <Label slot="labelContent">Twitter:</Label>
                         <Text>@sap</Text>
@@ -300,7 +300,7 @@ function App() {
 
                 </FormGroup>
         
-                <FormGroup header-text="Other info">
+                <FormGroup headerText="Other info">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -331,9 +331,9 @@ function App() {
 
             <br /><br />
 
-            <Form header-text="Form Layout: S2 M3 L5 XL7" layout="S2 M3 L5 XL7" label-span="S12 M12 L12 XL12">
+            <Form headerText="Form Layout: S2 M3 L5 XL7" layout="S2 M3 L5 XL7" labelSpan="S12 M12 L12 XL12">
 
-                <FormGroup header-text="Address">
+                <FormGroup headerText="Address">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>
@@ -360,7 +360,7 @@ function App() {
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Contact">
+                <FormGroup headerText="Contact">
                     <FormItem>
                         <Label slot="labelContent">Twitter:</Label>
                         <Text>@sap</Text>
@@ -398,7 +398,7 @@ function App() {
 
                 </FormGroup>
         
-                <FormGroup header-text="Other info">
+                <FormGroup headerText="Other info">
                     <FormItem>
                         <Label slot="labelContent">Name:</Label>
                         <Text>Red Point Stores</Text>

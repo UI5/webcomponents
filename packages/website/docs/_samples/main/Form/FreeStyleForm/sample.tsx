@@ -43,8 +43,8 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
@@ -64,14 +64,14 @@ function App() {
         	margin-inline-start: -0.5rem;
         }
       `}</style>
-      <Label show-colon={true}>Form Layout</Label><Text>S1 M2 L3 XL4</Text><br />
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider ref={sliderRef} id="slider" value={80} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Form Layout</Label><Text>S1 M2 L3 XL4</Text><br />
+        <Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Label showColon={true}>Page Size</Label><Text id="txtLayout">L</Text>
+        <Slider ref={sliderRef} id="slider" value={80} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
-            <Form header-text="Address" layout="S1 M2 L3 XL4" label-span="S12 M12 L12 XL12">
-                <FormGroup header-text="Group1 (Text Fields)" column-span={2}>
+            <Form headerText="Address" layout="S1 M2 L3 XL4" labelSpan="S12 M12 L12 XL12">
+                <FormGroup headerText="Group1 (Text Fields)" columnSpan={2}>
 
                     <FormItem>
                         <Label required={true} htmlFor="nameInp" slot="labelContent">Label:</Label>
@@ -88,7 +88,7 @@ function App() {
             
                     <FormItem>
                         <Label required={true} htmlFor="streetInp" slot="labelContent">Label:</Label>
-                        <TextArea id="streetInp" placeholder="Write your message here" show-exceeded-text={true} maxLength={10} />
+                        <TextArea id="streetInp" placeholder="Write your message here" showExceededText={true} maxLength={10} />
                     </FormItem>
                 
                     <FormItem>
@@ -100,7 +100,7 @@ function App() {
 
                     <FormItem>
                         <Label required={true} htmlFor="durationInp" slot="labelContent">Duration:</Label>
-                        <TimePicker id="durationInp" format-pattern="hh:mm:ss" value="12:00:01" />
+                        <TimePicker id="durationInp" formatPattern="hh:mm:ss" value="12:00:01" />
                     </FormItem>
     
                     <FormItem>
@@ -110,10 +110,10 @@ function App() {
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Group2 (Cb, Rb, Switch)">
+                <FormGroup headerText="Group2 (Cb, Rb, Switch)">
                     <FormItem>
                         <Label required={true} slot="labelContent" htmlFor="rbGroup">Label:</Label>
-                        <CheckBox className="margin--density-aware" text="Here comes your checkbox text" />
+                        <CheckBox class="margin--density-aware" text="Here comes your checkbox text" />
                     </FormItem>
 
                     <FormItem>
@@ -127,14 +127,14 @@ function App() {
 
                     <FormItem>
                         <Label required={true} slot="labelContent" htmlFor="swGroup">Label:</Label>
-                        <Switch id="swGrou" className="margin--fixed" checked={true} />
+                        <Switch id="swGrou" class="margin--fixed" checked={true} />
                     </FormItem>
                 </FormGroup>
 
-                <FormGroup header-text="Group3 (Select Fields)">
+                <FormGroup headerText="Group3 (Select Fields)">
                     <FormItem>
                         <Label required={true} htmlFor="countrySel" slot="labelContent">Label:</Label>
-                        <Select id="countrySel" accessible-name-ref="countryLbl">
+                        <Select id="countrySel" accessibleNameRef="countryLbl">
                             <Option>Australia</Option>
                             <Option selected={true}>Germany</Option>
                             <Option>England</Option>
@@ -143,7 +143,7 @@ function App() {
 
                     <FormItem>
                         <Label required={true} htmlFor="countrySel2" slot="labelContent">Label:</Label>
-                        <Select id="countrySel2" accessible-name-ref="countryLbl">
+                        <Select id="countrySel2" accessibleNameRef="countryLbl">
                             <Option>Australia</Option>
                             <Option>Germany</Option>
                             <Option selected={true}>England</Option>
@@ -152,7 +152,7 @@ function App() {
 
                     <FormItem>
                         <Label required={true} htmlFor="mcb-grouping1" slot="labelContent">Label:</Label>
-                        <MultiInput id="mcb-grouping1" show-value-help-icon={true}>
+                        <MultiInput id="mcb-grouping1" showValueHelpIcon={true}>
                             <Token slot="tokens" text="laboris" />
                             <Token slot="tokens" text="ipsum" />
                             <Token slot="tokens" text="esse" />

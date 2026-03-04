@@ -16,21 +16,21 @@ function App() {
   const dialogRef = useRef(null);
 
   const handleDialogOpenerClick = () => {
-    dialogRef.current.open = true;
+    dialogRef.current!.open = true;
   };
 
   const handleBtnClick = () => {
-    dialogRef.current.open = false;
+    dialogRef.current!.open = false;
   };
 
   return (
     <>
       <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
 
-        <Dialog ref={dialogRef} id="dialog" state="Negative" header-text="State :: Negative">
+        <Dialog ref={dialogRef} id="dialog" state="Negative" headerText="State :: Negative">
             <Text>Dialog with state</Text>
             <Toolbar slot="footer">
-                <ToolbarButton className="dialogCloser" text="Close" />
+                <ToolbarButton class="dialogCloser" text="Close" />
             </Toolbar>
         </Dialog>
     </>

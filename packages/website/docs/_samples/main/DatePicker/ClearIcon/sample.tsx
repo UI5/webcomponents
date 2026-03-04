@@ -6,7 +6,7 @@ const DatePicker = createReactComponent(DatePickerClass);
 function App() {
 
   return (
-    <DatePicker show-clear-icon={true} />
+    <DatePicker showClearIcon={true} />
   );
 }
 

@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <Panel header-text="Collapsed, Fixed Panel" fixed={true} collapsed={true}>
+      <Panel headerText="Collapsed, Fixed Panel" fixed={true} collapsed={true}>
             <Title level="H5">Heading!</Title>
     	    <Label>
                 Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.
@@ -22,7 +22,7 @@ function App() {
 
         <br /><br />
 
-        <Panel header-text="Expanded, Fixed Panel" fixed={true}>
+        <Panel headerText="Expanded, Fixed Panel" fixed={true}>
             <Title level="H5">Heading!</Title>
     	    <Label>
                 Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.

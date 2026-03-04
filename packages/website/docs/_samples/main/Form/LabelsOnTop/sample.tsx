@@ -23,19 +23,19 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
     <>
-      <Label show-colon={true}>Form Layout</Label><Text>S1 M3 L4 XL4</Text><br />
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider ref={sliderRef} id="slider" value={85} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Form Layout</Label><Text>S1 M3 L4 XL4</Text><br />
+        <Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Label showColon={true}>Page Size</Label><Text id="txtLayout">L</Text>
+        <Slider ref={sliderRef} id="slider" value={85} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
-            <Form id="testForm2" header-text="Labels on top" layout="S1 M2 L2 XL3" label-span="S12 M12 L12 XL12">
+            <Form id="testForm2" headerText="Labels on top" layout="S1 M2 L2 XL3" labelSpan="S12 M12 L12 XL12">
                 <FormItem>
                     <Label htmlFor="nameInp" slot="labelContent">Name:</Label>
                     <Input value="Red Point Stores" id="nameInp" />
@@ -43,19 +43,19 @@ function App() {
     
                 <FormItem>
                     <Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-                    <Input id="cityInp" value={411} accessible-name-ref="cityLbl" />
-                    <Input value="Maintown" accessible-name-ref="cityLbl" />
+                    <Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
+                    <Input value="Maintown" accessibleNameRef="cityLbl" />
                 </FormItem>
     
                 <FormItem>
                     <Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-                    <Input id="streetInp" value="Main St" accessible-name-ref="streetLbl" />
-                    <Input id="streetNumberInp" value={1618} accessible-name-ref="streetLbl" />
+                    <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+                    <Input id="streetNumberInp" value={1618} accessibleNameRef="streetLbl" />
                 </FormItem>
     
                 <FormItem>
                     <Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-                    <Select id="countrySel" accessible-name-ref="countryLbl">
+                    <Select id="countrySel" accessibleNameRef="countryLbl">
                         <Option>Australia</Option>
                         <Option selected={true}>Germany</Option>
                         <Option>England</Option>

@@ -9,11 +9,11 @@ function App() {
     <>
       <TextArea disabled={true} />
     <TextArea readonly={true} />
-    <TextArea value-state="Positive" placeholder="Positive" />
-    <TextArea value-state="Information" placeholder="Information" />
-    <TextArea value-state="Critical" placeholder="Critical" />
-    <TextArea value-state="Negative" placeholder="Negative" />
-    <TextArea value-state="Negative" placeholder="Custom value-state message">
+    <TextArea valueState="Positive" placeholder="Positive" />
+    <TextArea valueState="Information" placeholder="Information" />
+    <TextArea valueState="Critical" placeholder="Critical" />
+    <TextArea valueState="Negative" placeholder="Negative" />
+    <TextArea valueState="Negative" placeholder="Custom value-state message">
         <div slot="valueStateMessage">Please provide valid value</div>
     </TextArea>
     </>

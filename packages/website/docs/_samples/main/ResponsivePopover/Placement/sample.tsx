@@ -15,11 +15,11 @@ function App() {
   const respPopover2Ref = useRef(null);
 
   const handleBtn1Click = () => {
-    respPopover1Ref.current.open = !respPopover1Ref.current.open;
+    respPopover1Ref.current!.open = !respPopover1Ref.current!.open;
   };
 
   const handleBtn2Click = () => {
-    respPopover2Ref.current.open = !respPopover2Ref.current.open;
+    respPopover2Ref.current!.open = !respPopover2Ref.current!.open;
   };
 
   return (
@@ -29,9 +29,9 @@ function App() {
             <Button id="btn2" onClick={handleBtn2Click}>Open ResponsivePopover to Left</Button>
         </div>
    
-        <ResponsivePopover ref={respPopover1Ref} id="respPopover1" opener="btn1" header-text="Newsletter subscription" placement="Bottom">
+        <ResponsivePopover ref={respPopover1Ref} id="respPopover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
+                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>
@@ -41,9 +41,9 @@ function App() {
             </div>
         </ResponsivePopover>
 
-        <ResponsivePopover ref={respPopover2Ref} id="respPopover2" opener="btn2" header-text="Newsletter subscription" placement="Start">
+        <ResponsivePopover ref={respPopover2Ref} id="respPopover2" opener="btn2" headerText="Newsletter subscription" placement="Start">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
+                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>

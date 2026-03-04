@@ -46,28 +46,28 @@ function App() {
             padding-inline-end: 0;
         }
       `}</style>
-      <Carousel cyclic={true} items-per-page="S1 M2 L3 XL3" arrows-placement="Navigation">
-            <Card style={{ minWidth: "18rem" }} className="medium">
-                <CardHeader slot="header" title-text="Activities" subtitle-text="For Today" />
+      <Carousel cyclic={true} itemsPerPage="S1 M2 L3 XL3" arrowsPlacement="Navigation">
+            <Card style={{ minWidth: "18rem" }} class="medium">
+                <CardHeader slot="header" titleText="Activities" subtitleText="For Today" />
                 <Timeline>
-                    <TimelineItem id="test-item" title-text="called" timestamp={1487583000000} icon="phone" name="John Smith" name-clickable="" />
-                    <TimelineItem title-text="Weekly Sync - CP Design" timestamp={1517349600000} icon="calendar">MR
+                    <TimelineItem id="test-item" titleText="called" timestamp={1487583000000} icon="phone" name="John Smith" nameClickable="" />
+                    <TimelineItem titleText="Weekly Sync - CP Design" timestamp={1517349600000} icon="calendar">MR
                         SOF02 2.43</TimelineItem>
-                    <TimelineItem title-text="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">Online meeting</TimelineItem>
+                    <TimelineItem titleText="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">Online meeting</TimelineItem>
                 </Timeline>
             </Card>
-            <Card style={{ minWidth: "18rem" }} className="small">
-                <CardHeader slot="header" title-text="David Williams" subtitle-text="Sales Manager">
+            <Card style={{ minWidth: "18rem" }} class="small">
+                <CardHeader slot="header" titleText="David Williams" subtitleText="Sales Manager">
                     <img src="/images/avatars/man_avatar_1.png" alt="" slot="avatar" />
                 </CardHeader>
                 <List separators="Inner">
-                    <ListItemStandard icon="competitor" icon-end={true}>Personal Development</ListItemStandard>
-                    <ListItemStandard icon="wallet" icon-end={true}>Finance</ListItemStandard>
-                    <ListItemStandard icon="collaborate" icon-end={true}>Communications Skills</ListItemStandard>
+                    <ListItemStandard icon="competitor" iconEnd={true}>Personal Development</ListItemStandard>
+                    <ListItemStandard icon="wallet" iconEnd={true}>Finance</ListItemStandard>
+                    <ListItemStandard icon="collaborate" iconEnd={true}>Communications Skills</ListItemStandard>
                 </List>
             </Card>
-            <Card style={{ minWidth: "18rem" }} className="medium">
-                <CardHeader slot="header" title-text="Team Dolphins" subtitle-text="Direct Reports" status="1 of 2">
+            <Card style={{ minWidth: "18rem" }} class="medium">
+                <CardHeader slot="header" titleText="Team Dolphins" subtitleText="Direct Reports" status="1 of 2">
                     <Icon name="group" slot="avatar" />
                 </CardHeader>
                 <List separators="None">
@@ -88,8 +88,8 @@ function App() {
                     </ListItemStandard>
                 </List>
             </Card>
-            <Card style={{ minWidth: "18rem" }} className="medium">
-                <CardHeader slot="header" title-text="Team Bears" subtitle-text="Direct Reports" interactive={true} status="2 of 2">
+            <Card style={{ minWidth: "18rem" }} class="medium">
+                <CardHeader slot="header" titleText="Team Bears" subtitleText="Direct Reports" interactive={true} status="2 of 2">
                     <Icon name="group" slot="avatar" />
                 </CardHeader>
                 <List separators="None">

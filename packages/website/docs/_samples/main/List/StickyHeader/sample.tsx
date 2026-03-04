@@ -23,18 +23,18 @@ function App() {
         }
       `}</style>
       <div className="scrollContainer">
-            <Title size="H3" className="heading">Scroll down to see the sticky header in action</Title>
-            <List header-text="Sticky Header" sticky-header={true}>
-                <ListItemStandard icon="nutrition-activity" description="Tropical plant with an edible fruit" additional-text="In-stock" additional-text-state="Positive">Pineapple</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="Occurs between red and yellow" additional-text="Expires" additional-text-state="Critical">Orange</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="The yellow lengthy fruit" additional-text="Re-stock" additional-text-state="Information">Blueberry</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="The tropical stone fruit" additional-text="Re-stock" additional-text-state="Negative">Mango</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A sweet red or green pomaceous fruit" additional-text="In-stock" additional-text-state="Positive">Apple</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A long curved fruit with soft sweet flesh" additional-text="Expires" additional-text-state="Critical">Banana</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A small red fruit with seeds on the outside" additional-text="In-stock" additional-text-state="Positive">Strawberry</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A small juicy fruit growing in clusters" additional-text="Re-stock" additional-text-state="Information">Grape</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A tropical fruit with orange flesh and black seeds" additional-text="Re-stock" additional-text-state="Negative">Papaya</ListItemStandard>
-                <ListItemStandard icon="nutrition-activity" description="A small brown fruit with bright green flesh" additional-text="In-stock" additional-text-state="Positive">Kiwi</ListItemStandard>
+            <Title size="H3" class="heading">Scroll down to see the sticky header in action</Title>
+            <List headerText="Sticky Header" stickyHeader={true}>
+                <ListItemStandard icon="nutrition-activity" description="Tropical plant with an edible fruit" additionalText="In-stock" additionalTextState="Positive">Pineapple</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="Occurs between red and yellow" additionalText="Expires" additionalTextState="Critical">Orange</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="The yellow lengthy fruit" additionalText="Re-stock" additionalTextState="Information">Blueberry</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="The tropical stone fruit" additionalText="Re-stock" additionalTextState="Negative">Mango</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A sweet red or green pomaceous fruit" additionalText="In-stock" additionalTextState="Positive">Apple</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A long curved fruit with soft sweet flesh" additionalText="Expires" additionalTextState="Critical">Banana</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A small red fruit with seeds on the outside" additionalText="In-stock" additionalTextState="Positive">Strawberry</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A small juicy fruit growing in clusters" additionalText="Re-stock" additionalTextState="Information">Grape</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A tropical fruit with orange flesh and black seeds" additionalText="Re-stock" additionalTextState="Negative">Papaya</ListItemStandard>
+                <ListItemStandard icon="nutrition-activity" description="A small brown fruit with bright green flesh" additionalText="In-stock" additionalTextState="Positive">Kiwi</ListItemStandard>
             </List>
         </div>
     </>

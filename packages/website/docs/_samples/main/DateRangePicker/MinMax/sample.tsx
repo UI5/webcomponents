@@ -6,7 +6,7 @@ const DateRangePicker = createReactComponent(DateRangePickerClass);
 function App() {
 
   return (
-    <DateRangePicker format-pattern="dd/MM/yyyy" min-date="1/2/2024" max-date="1/7/2024"
+    <DateRangePicker formatPattern="dd/MM/yyyy" minDate="1/2/2024" maxDate="1/7/2024"
      />
   );
 }

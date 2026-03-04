@@ -95,10 +95,10 @@ function App() {
       <UserMenu
         open={menuOpen}
         opener={openerRef.current}
-        show-manage-account={true}
-        show-other-accounts={true}
-        show-edit-accounts={true}
-        show-edit-button={true}
+        showManageAccount={true}
+        showOtherAccounts={true}
+        showEditAccounts={true}
+        showEditButton={true}
         onItemClick={handleItemClick}
         onAvatarClick={handleAvatarClick}
         onManageAccountClick={handleManageAccountClick}
@@ -107,9 +107,9 @@ function App() {
         onSignOutClick={handleSignOutClick}
         onClose={() => setMenuOpen(false)}
       >
-        <UserMenuAccount slot="accounts" avatar-src="/images/avatars/man_avatar_3.png" title-text="Alain Chevalier 1" subtitle-text="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" selected={true} />
-        <UserMenuAccount slot="accounts" avatar-initials="SD" title-text="John Walker" subtitle-text="john.walker@sap.com" description="Project Manager" />
-        <UserMenuAccount slot="accounts" avatar-initials="DS" title-text="David Wilson" subtitle-text="davud,wilson@sap.com" description="Project Manager" />
+        <UserMenuAccount slot="accounts" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier 1" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" selected={true} />
+        <UserMenuAccount slot="accounts" avatarInitials="SD" titleText="John Walker" subtitleText="john.walker@sap.com" description="Project Manager" />
+        <UserMenuAccount slot="accounts" avatarInitials="DS" titleText="David Wilson" subtitleText="davud,wilson@sap.com" description="Project Manager" />
         <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
         <UserMenuItem icon="collaborate" text="Product-specific account action" data-id="product-action">
           <UserMenuItem text="Terms of Use" data-id="terms-of-use" />

@@ -107,7 +107,7 @@ function App() {
 
   const handleFclLayoutChange = useCallback((e) => {
     if (selectLayoutRef.current) {
-      selectLayoutRef.current.value = e.detail.layout;
+      selectLayoutRef.current!.value = e.detail.layout;
     }
   }, []);
 
@@ -134,7 +134,7 @@ function App() {
     if (fcl) {
       fcl.layout = "TwoColumnsMidExpanded";
       if (selectLayoutRef.current) {
-        selectLayoutRef.current.value = "TwoColumnsMidExpanded";
+        selectLayoutRef.current!.value = "TwoColumnsMidExpanded";
       }
       displayCustomLayoutConfigurationInfo();
     }
@@ -155,7 +155,7 @@ function App() {
       if (fcl) {
         fcl.layout = "ThreeColumnsMidExpanded";
         if (selectLayoutRef.current) {
-          selectLayoutRef.current.value = "ThreeColumnsMidExpanded";
+          selectLayoutRef.current!.value = "ThreeColumnsMidExpanded";
         }
         displayCustomLayoutConfigurationInfo();
       }
@@ -170,7 +170,7 @@ function App() {
     if (fcl) {
       fcl.layout = "TwoColumnsMidExpanded";
       if (selectLayoutRef.current) {
-        selectLayoutRef.current.value = "TwoColumnsMidExpanded";
+        selectLayoutRef.current!.value = "TwoColumnsMidExpanded";
       }
       displayCustomLayoutConfigurationInfo();
     }
@@ -235,8 +235,8 @@ function App() {
         }
       `}</style>
       <div className="layout-grid">
-        <Label show-colon={true}>Current layout</Label>
-        <Select ref={selectLayoutRef} id="selectLayout" onUi5Change={handleSelectLayoutUi5Change}>
+        <Label showColon={true}>Current layout</Label>
+        <Select ref={selectLayoutRef} id="selectLayout" onChange={handleSelectLayoutUi5Change}>
           <Option>OneColumn</Option>
           <Option>TwoColumnsStartExpanded</Option>
           <Option>TwoColumnsMidExpanded</Option>
@@ -245,12 +245,12 @@ function App() {
           <Option>ThreeColumnsStartExpandedEndHidden</Option>
           <Option>ThreeColumnsMidExpandedEndHidden</Option>
         </Select>
-        <Label show-colon={true}>Custom configuration for current layout</Label>
-        <Text className="configurationInfo">{configInfo}</Text>
+        <Label showColon={true}>Custom configuration for current layout</Label>
+        <Text class="configurationInfo">{configInfo}</Text>
       </div>
       <FlexibleColumnLayout
         ref={fclRef}
-        className="fcl"
+        class="fcl"
         onLayoutConfigurationChange={handleFclLayoutConfigurationChange}
         onLayoutChange={handleFclLayoutChange}
       >
@@ -258,26 +258,26 @@ function App() {
           <div className="colHeader">
             <Title>Categories</Title>
           </div>
-          <List onUi5ItemClick={handleCategoriesListUi5ItemClick}>
-            <ListItemStandard data-category="electronics" icon="slim-arrow-right" icon-end={true}>Electronics</ListItemStandard>
-            <ListItemStandard data-category="clothing" icon="slim-arrow-right" icon-end={true}>Clothing</ListItemStandard>
-            <ListItemStandard data-category="books" icon="slim-arrow-right" icon-end={true}>Books</ListItemStandard>
-            <ListItemStandard data-category="home" icon="slim-arrow-right" icon-end={true}>Home &amp; Garden</ListItemStandard>
-            <ListItemStandard data-category="sports" icon="slim-arrow-right" icon-end={true}>Sports</ListItemStandard>
+          <List onItemClick={handleCategoriesListUi5ItemClick}>
+            <ListItemStandard data-category="electronics" icon="slim-arrow-right" iconEnd={true}>Electronics</ListItemStandard>
+            <ListItemStandard data-category="clothing" icon="slim-arrow-right" iconEnd={true}>Clothing</ListItemStandard>
+            <ListItemStandard data-category="books" icon="slim-arrow-right" iconEnd={true}>Books</ListItemStandard>
+            <ListItemStandard data-category="home" icon="slim-arrow-right" iconEnd={true}>Home &amp; Garden</ListItemStandard>
+            <ListItemStandard data-category="sports" icon="slim-arrow-right" iconEnd={true}>Sports</ListItemStandard>
           </List>
         </div>
         <div className="col" slot="midColumn">
           <div className="colHeader">
             <Title>{categoryTitle}</Title>
           </div>
-          <List style={{ display: showProducts ? "block" : "none" }} onUi5ItemClick={handleProductsListUi5ItemClick}>
+          <List style={{ display: showProducts ? "block" : "none" }} onItemClick={handleProductsListUi5ItemClick}>
             {products.map((product) => (
               <ListItemStandard
                 key={product.id}
                 data-product-id={product.id}
                 data-category={Object.keys(categoryData).find((cat) => categoryData[cat].includes(product)) || ""}
                 icon="slim-arrow-right"
-                icon-end={true}
+                iconEnd={true}
               >
                 {product.name}
               </ListItemStandard>
@@ -297,10 +297,10 @@ function App() {
                 <Title level="H3">{selectedProduct.name}</Title>
                 <Text>{selectedProduct.description}</Text>
                 <br /><br />
-                <Label show-colon={true}>Category</Label>
+                <Label showColon={true}>Category</Label>
                 <Text>{selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</Text>
                 <br /><br />
-                <Label show-colon={true}>Product ID</Label>
+                <Label showColon={true}>Product ID</Label>
                 <Text>{selectedProduct.id}</Text>
               </div>
             ) : (

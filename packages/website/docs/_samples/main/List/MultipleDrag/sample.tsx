@@ -121,7 +121,7 @@ function App() {
                     Select multiple items and drag to move them together
                 </div>
 
-                <List id="list1" header-text="My Tasks" selection-mode="Multiple" onSelectionChange={handleSelectionChange1} onMoveOver={handleMoveOver} onMove={handleMove} onDragStart={handleDragStart1}>
+                <List id="list1" headerText="My Tasks" selectionMode="Multiple" onSelectionChange={handleSelectionChange1} onMoveOver={handleMoveOver} onMove={handleMove} onDragStart={handleDragStart1}>
                     {list1Items.map((item) => (
                       <ListItemStandard key={item.id} movable={true} icon={item.icon} data-id={item.id} selected={selected1.has(item.id)}>{item.text}</ListItemStandard>
                     ))}
@@ -134,7 +134,7 @@ function App() {
                     Drag items from the left list here
                 </div>
 
-                <List id="list2" header-text="Done" selection-mode="Multiple" onSelectionChange={handleSelectionChange2} onMoveOver={handleMoveOver} onMove={handleMove} onDragStart={handleDragStart2}>
+                <List id="list2" headerText="Done" selectionMode="Multiple" onSelectionChange={handleSelectionChange2} onMoveOver={handleMoveOver} onMove={handleMove} onDragStart={handleDragStart2}>
                     {list2Items.map((item) => (
                       <ListItemStandard key={item.id} movable={true} icon={item.icon} data-id={item.id} selected={selected2.has(item.id)}>{item.text}</ListItemStandard>
                     ))}

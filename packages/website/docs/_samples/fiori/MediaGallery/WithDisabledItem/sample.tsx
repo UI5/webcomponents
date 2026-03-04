@@ -20,7 +20,7 @@ function App() {
             }
         }
       `}</style>
-      <MediaGallery layout="Vertical" show-all-thumbnails={true}>
+      <MediaGallery layout="Vertical" showAllThumbnails={true}>
             <MediaGalleryItem disabled={true}>
                 <img src="/images/HT-1000.jpg" />
             </MediaGalleryItem>

@@ -22,7 +22,7 @@ function App() {
         }
       `}</style>
       <div style={{ width: "1000px", overflowX: "scroll" }}>
-        <DynamicSideContent side-content-visibility="AlwaysShow" side-content-position="Start"  >
+        <DynamicSideContent sideContentVisibility="AlwaysShow" sideContentPosition="Start"  >
             <div>
                 <Title level="h1">Main Content</Title>
                 <p className="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ex mi, elementum et ante

@@ -18,15 +18,15 @@ function App() {
   return (
     <>
       <Card>
-            <CardHeader slot="header" title-text="Upcoming Activities" subtitle-text="For Today" />
+            <CardHeader slot="header" titleText="Upcoming Activities" subtitleText="For Today" />
 
             <div style={{ padding: "2rem" }}>
                 <Timeline layout="Horizontal">
-                    <TimelineItem id="test-item" title-text="called" subtitle-text="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" name-clickable={true} />
-                    <TimelineItem title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)" icon="calendar">
+                    <TimelineItem id="test-item" titleText="called" subtitleText="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" nameClickable={true} />
+                    <TimelineItem titleText="Weekly Sync - CP Design" subtitleText="27.08.2017 (11:00 - 12:00)" icon="calendar">
                         <Label>MR SOF02 2.43</Label>
                     </TimelineItem>
-                    <TimelineItem title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
+                    <TimelineItem titleText="Video Conference Call - UI5" subtitleText="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
                         Online meeting
                     </TimelineItem>
                 </Timeline>

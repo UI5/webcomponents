@@ -6,7 +6,7 @@ const DatePicker = createReactComponent(DatePickerClass);
 function App() {
 
   return (
-    <DatePicker format-pattern="dd/MM/yyyy" min-date="1/1/2020" max-date="4/5/2020" />
+    <DatePicker formatPattern="dd/MM/yyyy" minDate="1/1/2020" maxDate="4/5/2020" />
   );
 }
 

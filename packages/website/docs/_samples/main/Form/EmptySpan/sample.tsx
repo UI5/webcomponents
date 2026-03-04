@@ -23,8 +23,8 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current.value / 100 * 1500);
-	containerRef.current.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100 * 1500);
+	containerRef.current!.style.width = `${width}px`;
   };
 
   return (
@@ -37,12 +37,12 @@ function App() {
         	background: var(--sapAvatar_1_Background);
         }
       `}</style>
-      <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider ref={sliderRef} id="slider" value={85} onUi5Input={handleSliderUi5Input} />
+      <Label showColon={true}>Page Size</Label><Text id="txtLayout">L</Text>
+        <Slider ref={sliderRef} id="slider" value={85} onInput={handleSliderUi5Input} />
 
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
 
-    		<Form header-text="Empty Span: S1 M1 L1 XL1" label-span="S4 M4 L4 XL4" empty-span="S1 M1 L1 XL1">
+    		<Form headerText="Empty Span: S1 M1 L1 XL1" labelSpan="S4 M4 L4 XL4" emptySpan="S1 M1 L1 XL1">
     			<FormItem>
     				<Label htmlFor="nameInp" slot="labelContent">Name:</Label>
     				<Input value="Red Point Stores" id="nameInp" />
@@ -50,7 +50,7 @@ function App() {
 			
     			<FormItem>
     				<Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-    				<Select id="countrySel" accessible-name-ref="countryLbl">
+    				<Select id="countrySel" accessibleNameRef="countryLbl">
     					<Option>Australia</Option>
     					<Option selected={true}>Germany</Option>
     					<Option>England</Option>
@@ -59,8 +59,8 @@ function App() {
 
     			<FormItem>
     				<Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-    				<Input id="cityInp" value={411} accessible-name-ref="cityLbl" />
-    				<Input value="Maintown" accessible-name-ref="cityLbl" />
+    				<Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
+    				<Input value="Maintown" accessibleNameRef="cityLbl" />
     			</FormItem>
 
     			<FormItem>
@@ -70,8 +70,8 @@ function App() {
 
     			<FormItem>
     				<Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-    				<Input id="streetInp" value="Main St" accessible-name-ref="streetLbl" />
-    				<Input id="streetNumberInp" value={1618} accessible-name-ref="streetLbl" />
+    				<Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+    				<Input id="streetNumberInp" value={1618} accessibleNameRef="streetLbl" />
     			</FormItem>
 
     			<FormItem>
@@ -82,7 +82,7 @@ function App() {
 
     		<br /><br />
 
-    		<Form header-text="Empty Span: S3 M3 L3 XL3" label-span="S4 M4 L4 XL4" empty-span="S3 M3 L3 XL3">
+    		<Form headerText="Empty Span: S3 M3 L3 XL3" labelSpan="S4 M4 L4 XL4" emptySpan="S3 M3 L3 XL3">
     			<FormItem>
     				<Label htmlFor="nameInp" slot="labelContent">Name:</Label>
     				<Input value="Red Point Stores" id="nameInp" />
@@ -90,7 +90,7 @@ function App() {
 			
     			<FormItem>
     				<Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-    				<Select id="countrySel" accessible-name-ref="countryLbl">
+    				<Select id="countrySel" accessibleNameRef="countryLbl">
     					<Option>Australia</Option>
     					<Option selected={true}>Germany</Option>
     					<Option>England</Option>
@@ -99,8 +99,8 @@ function App() {
 
     			<FormItem>
     				<Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-    				<Input id="cityInp" value={411} accessible-name-ref="cityLbl" />
-    				<Input value="Maintown" accessible-name-ref="cityLbl" />
+    				<Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
+    				<Input value="Maintown" accessibleNameRef="cityLbl" />
     			</FormItem>
 
     			<FormItem>
@@ -110,8 +110,8 @@ function App() {
 
     			<FormItem>
     				<Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-    				<Input id="streetInp" value="Main St" accessible-name-ref="streetLbl" />
-    				<Input id="streetNumberInp" value={1618} accessible-name-ref="streetLbl" />
+    				<Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+    				<Input id="streetNumberInp" value={1618} accessibleNameRef="streetLbl" />
     			</FormItem>
 
     			<FormItem>

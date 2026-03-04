@@ -22,14 +22,14 @@ function App() {
   const menuBasicRef = useRef(null);
 
   const handleBtnOpenBasicClick = () => {
-    menuBasicRef.current.open = !menuBasicRef.current.open;
+    menuBasicRef.current!.open = !menuBasicRef.current!.open;
   };
 
   return (
     <>
-      <Button id="btnOpenBasic" end-icon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button> <br />
+      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button> <br />
 
-        <Menu header-text="Basic Menu with Items" ref={menuBasicRef} id="menuBasic" opener="btnOpenBasic">
+        <Menu headerText="Basic Menu with Items" ref={menuBasicRef} id="menuBasic" opener="btnOpenBasic">
             <MenuItem text="New File" icon="add-document" />
             <MenuItem text="New Folder" icon="add-folder" disabled={true} />
             <MenuSeparator />

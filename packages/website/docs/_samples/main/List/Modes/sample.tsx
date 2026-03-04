@@ -10,35 +10,35 @@ function App() {
 
   return (
     <>
-      <List selection-mode="Single" header-text="Single Select Mode">
-            <ListItemStandard selected={true} icon="map" icon-end={true}>Argentina</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>Bulgaria</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>China</ListItemStandard>
-            <ListItemStandard type="Inactive" icon="map" icon-end={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
+      <List selectionMode="Single" headerText="Single Select Mode">
+            <ListItemStandard selected={true} icon="map" iconEnd={true}>Argentina</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>Bulgaria</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>China</ListItemStandard>
+            <ListItemStandard type="Inactive" icon="map" iconEnd={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
         </List>
         <br />
-        <List selection-mode="SingleStart" header-text="Single Select Begin Mode">
-            <ListItemStandard selected={true} icon="map" icon-end={true}>Argentina</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>Bulgaria</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>China</ListItemStandard>
-            <ListItemStandard type="Inactive" icon="map" icon-end={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
+        <List selectionMode="SingleStart" headerText="Single Select Begin Mode">
+            <ListItemStandard selected={true} icon="map" iconEnd={true}>Argentina</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>Bulgaria</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>China</ListItemStandard>
+            <ListItemStandard type="Inactive" icon="map" iconEnd={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
         </List>
         <br />
-        <List selection-mode="SingleEnd" header-text="Single Select End Mode">
-            <ListItemStandard selected={true} icon="map" icon-end={true}>Argentina</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>Bulgaria</ListItemStandard>
-            <ListItemStandard icon="map" icon-end={true}>China</ListItemStandard>
-            <ListItemStandard type="Inactive" icon="map" icon-end={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
+        <List selectionMode="SingleEnd" headerText="Single Select End Mode">
+            <ListItemStandard selected={true} icon="map" iconEnd={true}>Argentina</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>Bulgaria</ListItemStandard>
+            <ListItemStandard icon="map" iconEnd={true}>China</ListItemStandard>
+            <ListItemStandard type="Inactive" icon="map" iconEnd={true}>Denmark (ui5-li type='Inactive')</ListItemStandard>
         </List>
         <br />
-        <List selection-mode="Multiple" header-text="Multi Select Mode">
+        <List selectionMode="Multiple" headerText="Multi Select Mode">
             <ListItemStandard>Pineapple</ListItemStandard>
             <ListItemStandard selected={true}>Orange</ListItemStandard>
             <ListItemStandard>Banana</ListItemStandard>
             <ListItemStandard>Mango</ListItemStandard>
         </List>
         <br />
-        <List selection-mode="Delete" header-text="Delete Mode">
+        <List selectionMode="Delete" headerText="Delete Mode">
             <ListItemStandard>Argentina</ListItemStandard>
             <ListItemStandard>Bulgaria</ListItemStandard>
             <ListItemStandard>China</ListItemStandard>
