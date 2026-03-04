@@ -325,6 +325,7 @@ const ComponentClasses: Record<string, any> = {
 interface ReactPlaygroundProps {
   code: string;
   editorVisible?: boolean;
+  onCodeChange?: (code: string) => void;
 }
 
 // Error Boundary to catch render errors without crashing the page
@@ -441,7 +442,7 @@ function executeCode(transpiledCode: string): { element: React.ReactNode | null;
   }
 }
 
-export default function ReactPlayground({ code, editorVisible = false }: ReactPlaygroundProps) {
+export default function ReactPlayground({ code, editorVisible = false, onCodeChange }: ReactPlaygroundProps) {
   const themeCtx = useContext(ThemeContext);
   const densityCtx = useContext(ContentDensityContext);
   const directionCtx = useContext(TextDirectionContext);
@@ -653,7 +654,11 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
               },
             }}
             beforeMount={configureMonaco}
-            onChange={(value: string | undefined) => setEditorCode(value || "")}
+            onChange={(value: string | undefined) => {
+              const newCode = value || "";
+              setEditorCode(newCode);
+              onCodeChange?.(newCode);
+            }}
           />
         </div>
       )}

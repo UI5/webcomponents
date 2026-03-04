@@ -94,6 +94,8 @@ export default function Editor({ html, js, css, react, mainFile = "main.js", can
   const [activeExample, setActiveExample] = useState("");
   const [longURL, setLongURL] = useState("");
   const [shareBtnToggled, setShareBtnToggled] = useState(false);
+  const reactCodeRef = useRef(react || "");
+  const [reactCopied, setReactCopied] = useState(false);
 
   const [githubToken, setGithubToken] = useState("");
   const [githubUser, setGithubUser] = useState(null);
@@ -556,6 +558,21 @@ ${fixAssetPaths(_js)}`,
     };
   }, [copied]);
 
+  useEffect(() => {
+    let timeoutId;
+    if (reactCopied) {
+      timeoutId = setTimeout(() => {
+        setReactCopied(false);
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [reactCopied]);
+
   // automatic sign-out on token expiration
   useEffect(() => {
     const checkTokenValidity = () => {
@@ -773,6 +790,7 @@ ${fixAssetPaths(_js)}`,
             <ReactPlayground
               code={react}
               editorVisible={reactEditorVisible}
+              onCodeChange={(code) => { reactCodeRef.current = code; }}
             />
           ) : (
             <div style={{ padding: "1rem" }}>Loading React playground...</div>
@@ -803,6 +821,27 @@ ${fixAssetPaths(_js)}`,
                     Open in Playground
                   </button>
                 </>
+              )}
+
+              {viewMode === "react" && react && reactEditorVisible && (
+                <button
+                  className={`button button--secondary ${styles.previewResult__downloadSample}`}
+                  onClick={() => {
+                    navigator.clipboard.writeText(reactCodeRef.current);
+                    setReactCopied(true);
+                  }}
+                >
+                  {reactCopied
+                    ? <>&#x2714; Copied</>
+                    : <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className={`${styles["btn__icon--edit"]}`}>
+                          <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25z" />
+                          <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25z" />
+                        </svg>
+                        Copy
+                      </>
+                  }
+                </button>
               )}
 
               <button
