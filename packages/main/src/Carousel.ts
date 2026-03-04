@@ -343,7 +343,7 @@ class Carousel extends UI5Element {
 
 			this._currentSlideIndex = clamp(this._currentSlideIndex, 0, Math.max(0, this.items.length - this.effectiveItemsPerPage));
 			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - 1);
-			this.navigateTo(this._currentSlideIndex);
+			this._changeSlideIndex(this._currentSlideIndex, false);
 		});
 
 		this._scrollEnablement = new ScrollEnablement(this);
@@ -552,28 +552,28 @@ class Carousel extends UI5Element {
 
 	async _handleHome(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(0);
+		this._changeSlideIndex(0, true, true);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handleEnd(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(this.items.length - 1);
+		this._changeSlideIndex(this.items.length - 1, true, true);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handlePageUp(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(this._currentSlideIndex + this._pageStep);
+		this._changeSlideIndex(this._currentSlideIndex + this._pageStep, true, true);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handlePageDown(e: KeyboardEvent) {
 		e.preventDefault();
-		this.navigateTo(this._currentSlideIndex - this._pageStep);
+		this._changeSlideIndex(this._currentSlideIndex - this._pageStep, true, true);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -600,7 +600,7 @@ class Carousel extends UI5Element {
 			newFocusedItemIndex = this.items.length - 1;
 		}
 
-		this.focusItemIndex(newFocusedItemIndex);
+		this._changeFocusIndex(newFocusedItemIndex);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -611,7 +611,7 @@ class Carousel extends UI5Element {
 			newFocusedItemIndex = 0;
 		}
 
-		this.focusItemIndex(newFocusedItemIndex);
+		this._changeFocusIndex(newFocusedItemIndex);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -622,7 +622,7 @@ class Carousel extends UI5Element {
 			newCurrentSlideIndex = 0;
 		}
 
-		this.navigateTo(newCurrentSlideIndex);
+		this._changeSlideIndex(newCurrentSlideIndex);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -633,7 +633,7 @@ class Carousel extends UI5Element {
 			newCurrentSlideIndex = this.items.length - 1;
 		}
 
-		this.navigateTo(newCurrentSlideIndex);
+		this._changeSlideIndex(newCurrentSlideIndex);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -659,17 +659,29 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number): void {
+		this._changeSlideIndex(itemIndex, false);
+	}
+
+	_changeSlideIndex(itemIndex: number, fireEvent = true, moveFocusToNewIndex = false): void {
 		const newSlideIndex = clamp(itemIndex, 0, this.items.length - this.effectiveItemsPerPage);
+
+		if (moveFocusToNewIndex || (this._focusedItemIndex < newSlideIndex || this._focusedItemIndex > newSlideIndex + this.effectiveItemsPerPage - 1)) {
+			this._focusedItemIndex = clamp(itemIndex, 0, this.items.length - 1);
+		}
+
+		if (this._currentSlideIndex === newSlideIndex) {
+			return;
+		}
 
 		this._currentSlideIndex = newSlideIndex;
 		this._updateVisibleItems(newSlideIndex);
 
-		if (this._focusedItemIndex < newSlideIndex || this._focusedItemIndex > newSlideIndex + this.effectiveItemsPerPage - 1) {
-			this._focusedItemIndex = clamp(itemIndex, 0, this.items.length - 1);
+		if (fireEvent) {
+			this.fireDecoratorEvent("navigate", { selectedIndex: newSlideIndex });
 		}
 	}
 
-	focusItemIndex(itemIndex: number) {
+	_changeFocusIndex(itemIndex: number) {
 		itemIndex = clamp(itemIndex, 0, this.items.length - 1);
 		let newSlideIndex = this._currentSlideIndex;
 
@@ -679,8 +691,13 @@ class Carousel extends UI5Element {
 			newSlideIndex = itemIndex - this.effectiveItemsPerPage + 1;
 		}
 
-		this._currentSlideIndex = newSlideIndex;
-		this._updateVisibleItems(newSlideIndex);
+		if (this._currentSlideIndex !== newSlideIndex) {
+			this._currentSlideIndex = newSlideIndex;
+			this._updateVisibleItems(newSlideIndex);
+
+			this.fireDecoratorEvent("navigate", { selectedIndex: newSlideIndex });
+		}
+
 		this._focusedItemIndex = itemIndex;
 	}
 
