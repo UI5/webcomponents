@@ -199,7 +199,7 @@ class RatingIndicator extends UI5Element {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
 	/**
