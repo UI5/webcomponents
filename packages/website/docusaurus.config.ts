@@ -103,14 +103,18 @@ const config: Config = {
     ],
   ],
   plugins: [
-    function createReactComponentAlias() {
+    function resolveReact() {
       return {
-        name: 'create-react-component-alias',
+        name: 'resolve-react',
         configureWebpack() {
           return {
             resolve: {
               alias: {
-                '@ui5/webcomponents-base/dist/createReactComponent.js': path.resolve(__dirname, '../base/dist/createReactComponent.js'),
+                // Ensure 'react' resolves from the project's node_modules,
+                // not from a parent directory where it may not be installed.
+                // This is needed because @ui5/webcomponents-base re-exports
+                // createReactComponent which imports React.
+                'react': path.resolve(__dirname, '../../node_modules/react'),
               },
             },
           };

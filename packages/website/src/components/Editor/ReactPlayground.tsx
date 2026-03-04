@@ -12,9 +12,7 @@ import styles from "./ReactPlayground.module.css";
 // @ts-ignore - raw-loader import
 import generatedTypes from "!!raw-loader!./monaco-ui5-types.d.ts";
 
-// Import directly from the module file to avoid pulling React into all @ui5/webcomponents-base consumers
-// @ts-ignore - resolved via webpack alias in docusaurus.config.ts
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createReactComponent } from "@ui5/webcomponents-base";
 
 // Import ALL component classes - main package
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
