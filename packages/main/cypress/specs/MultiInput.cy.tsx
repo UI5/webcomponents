@@ -121,6 +121,38 @@ describe("MultiInput Web Component", () => {
 			.should("have.prop", "expanded", false);
 	});
 
+	it("expands tokenizer on input focus", () => {
+		cy.mount(
+			<MultiInput id="basic-overflow">
+				<Token slot="tokens" text="Amet"></Token>
+				<Token slot="tokens" text="Incididunt"></Token>
+				<Token slot="tokens" text="laboris"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		cy.get("@tokenizer")
+			.should("not.have.attr", "expanded");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@tokenizer")
+			.should("have.attr", "expanded");
+	});
+
 	it("tests opening of tokenizer Popover", () => {
 		cy.mount(
 			<MultiInput id="basic-overflow">
