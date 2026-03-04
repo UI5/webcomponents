@@ -3,6 +3,7 @@ import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/add-document.js";
 import "@ui5/webcomponents-icons/dist/add-folder.js";
 import "@ui5/webcomponents-icons/dist/open-folder.js";
@@ -16,6 +17,7 @@ import "@ui5/webcomponents-icons/dist/favorite.js";
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const menuEndContentRef = useRef(null);
@@ -48,7 +50,8 @@ function App() {
     			<Button id="newFavorite" slot="endContent" icon="favorite" design="Transparent" onClick={handleNewFavoriteClick} />
     		</MenuItem>
     		<MenuItem text="New Folder" additionalText="Ctrl+F" icon="add-folder" />
-    		<MenuItem text="Open" icon="open-folder" accessibleName="Choose platform" startsSection={true}>
+    		<MenuSeparator />
+    		<MenuItem text="Open" icon="open-folder" accessibleName="Choose platform">
     			<MenuItem text="Open Locally" icon="open-folder" additionalText="Ctrl+K" />
     			<MenuItem text="Open from SAP Cloud" additionalText="Ctrl+L" />
     		</MenuItem>
@@ -57,7 +60,8 @@ function App() {
     			<MenuItem text="Save on Cloud" icon="upload-to-cloud" />
     		</MenuItem>
     		<MenuItem text="Close" additionalText="Ctrl+W" />
-    		<MenuItem text="Preferences" icon="action-settings" startsSection={true} />
+    		<MenuSeparator />
+    		<MenuItem text="Preferences" icon="action-settings" />
     		<MenuItem text="Exit" icon="journey-arrive" />
     	</Menu>
     </>

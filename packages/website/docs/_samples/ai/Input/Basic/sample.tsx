@@ -2,11 +2,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
 const AIInput = createReactComponent(AIInputClass);
 const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 const SAMPLE_TEXTS: Record<string, string> = {
   en: "Innovation managers lead with creativity.",
@@ -43,7 +45,7 @@ const FULL_MENU_CONFIG = [
     processingLabel: "Fixing spelling and grammar",
     completedLabel: "Fixed spelling and grammar",
     textKey: "en",
-    startsSection: true,
+    separator: true,
     slot: "actions",
   },
   {
@@ -287,14 +289,15 @@ function App() {
   }, [executeAction]);
 
   const renderMenuItems = useCallback(() => {
-    return menuConfig.map((item: any, index: number) => {
+    const items: any[] = [];
+    menuConfig.forEach((item: any, index: number) => {
+      if (item.separator) items.push(<MenuSeparator key={"sep-" + index} slot={item.slot} />);
       if (item.children) {
-        return (
+        items.push(
           <MenuItem
             key={item.text + index}
             text={item.text}
             slot={item.slot}
-            startsSection={item.startsSection || false}
           >
             {item.children.map((child: any) => (
               <MenuItem
@@ -308,19 +311,22 @@ function App() {
             ))}
           </MenuItem>
         );
+      } else {
+        items.push(
+          <MenuItem
+            key={item.action + index}
+            text={item.text}
+            slot={item.slot}
+            data-action={item.action}
+            data-menu-action={item.action}
+            data-processing-label={item.processingLabel}
+            data-completed-label={item.completedLabel}
+            data-text-key={item.textKey}
+          />
+        );
       }
-      return (
-        <MenuItem
-          key={item.action + index}
-          text={item.text}
-          slot={item.slot}
-          startsSection={item.startsSection || false}
-          data-action={item.action}
-          data-menu-action={item.action}
-          data-processing-label={item.processingLabel}
-          data-completed-label={item.completedLabel}
-          data-text-key={item.textKey}
-        />
+    });
+    return items;
       );
     });
   }, [menuConfig]);

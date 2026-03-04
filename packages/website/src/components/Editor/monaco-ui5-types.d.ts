@@ -296,6 +296,13 @@ interface MenuItemProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   items?: React.ReactNode;
   endContent?: React.ReactNode;
+  onBeforeOpen?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onBeforeClose?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
+  onCloseMenu?: (event: CustomEvent<any>) => void;
+  onCheck?: (event: CustomEvent<any>) => void;
+  onExitEndContent?: (event: CustomEvent<any>) => void;
 }
 
 /** MenuSeparator component props */
@@ -544,11 +551,18 @@ interface DatePickerProps extends UI5BaseProps {
   accessibleNameRef?: string;
   accessibleDescription?: string;
   accessibleDescriptionRef?: string;
+  showClearIcon?: boolean;
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   liveValue?: string;
   isLiveUpdate?: boolean;
   responsivePopover?: any;
+  onChange?: (event: CustomEvent<any>) => void;
+  onValueChanged?: (event: CustomEvent<any>) => void;
+  onInput?: (event: CustomEvent<any>) => void;
+  onValueStateChange?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
 }
 
 /** TimePicker component props */
@@ -591,6 +605,7 @@ interface DateTimePickerProps extends UI5BaseProps {
   accessibleNameRef?: string;
   accessibleDescription?: string;
   accessibleDescriptionRef?: string;
+  showClearIcon?: boolean;
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   liveValue?: string;
@@ -613,6 +628,7 @@ interface DateRangePickerProps extends UI5BaseProps {
   accessibleNameRef?: string;
   accessibleDescription?: string;
   accessibleDescriptionRef?: string;
+  showClearIcon?: boolean;
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   liveValue?: string;
@@ -695,8 +711,8 @@ interface RatingIndicatorProps extends UI5BaseProps {
   accessibleNameRef?: string;
   required?: boolean;
   tooltip?: string;
-  iconSelected?: string;
-  iconUnselected?: string;
+  ratedIcon?: string;
+  unratedIcon?: string;
   eventDetails?: any;
   onChange?: (event: CustomEvent<any>) => void;
 }
@@ -1048,8 +1064,8 @@ interface ToolbarButtonProps extends UI5BaseProps {
   overflowPriority?: "Default" | "NeverOverflow" | "AlwaysOverflow";
   preventOverflowClosing?: boolean;
   item?: IOverflowToolbarItem[];
-  eventDetails?: any;
   isOverflowed?: boolean;
+  eventDetails?: any;
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   disabled?: boolean;
@@ -1070,8 +1086,8 @@ interface ToolbarSpacerProps extends UI5BaseProps {
   overflowPriority?: "Default" | "NeverOverflow" | "AlwaysOverflow";
   preventOverflowClosing?: boolean;
   item?: IOverflowToolbarItem[];
-  eventDetails?: any;
   isOverflowed?: boolean;
+  eventDetails?: any;
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   width?: string;
@@ -1082,8 +1098,8 @@ interface ToolbarSeparatorProps extends UI5BaseProps {
   overflowPriority?: "Default" | "NeverOverflow" | "AlwaysOverflow";
   preventOverflowClosing?: boolean;
   item?: IOverflowToolbarItem[];
-  eventDetails?: any;
   isOverflowed?: boolean;
+  eventDetails?: any;
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   visible?: boolean;
@@ -1094,8 +1110,8 @@ interface ToolbarSelectProps extends UI5BaseProps {
   overflowPriority?: "Default" | "NeverOverflow" | "AlwaysOverflow";
   preventOverflowClosing?: boolean;
   item?: IOverflowToolbarItem[];
-  eventDetails?: any;
   isOverflowed?: boolean;
+  eventDetails?: any;
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   width?: string;
@@ -1106,6 +1122,9 @@ interface ToolbarSelectProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   value?: string;
+  onChange?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
 }
 
 /** ToolbarSelectOption component props */
@@ -1238,6 +1257,7 @@ interface MultiComboBoxItemProps extends UI5BaseProps {
   focused?: boolean;
   selected?: boolean;
   selected?: boolean;
+  onSelectionRequested?: (event: CustomEvent<any>) => void;
 }
 
 /** MultiComboBoxItemGroup component props */
@@ -1309,6 +1329,8 @@ interface MultiInputProps extends UI5BaseProps {
   showValueHelpIcon?: boolean;
   name?: string;
   tokens?: React.ReactNode;
+  onValueHelpTrigger?: (event: CustomEvent<any>) => void;
+  onTokenDelete?: (event: CustomEvent<any>) => void;
 }
 
 /** Breadcrumbs component props */
@@ -1340,6 +1362,10 @@ interface CalendarProps extends UI5BaseProps {
   disabledDates?: React.ReactNode;
   selectedDates?: any;
   eventDetails?: any;
+  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onShowMonthView?: (event: CustomEvent<any>) => void;
+  onShowYearView?: (event: CustomEvent<any>) => void;
+  onShowYearRangeView?: (event: CustomEvent<any>) => void;
 }
 
 /** CalendarLegend component props */
@@ -1697,6 +1723,9 @@ interface NotificationListItemProps extends UI5BaseProps {
   titleTextDOM?: HTMLElement | string;
   menuButtonDOM?: HTMLElement | string;
   descriptionDOM?: HTMLElement | string;
+  onPress?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
 }
 
 /** NotificationListGroupItem component props */
@@ -1709,6 +1738,8 @@ interface NotificationListGroupItemProps extends UI5BaseProps {
   collapsed?: boolean;
   growing?: "Button" | "None";
   items?: React.ReactNode;
+  onToggle?: (event: CustomEvent<any>) => void;
+  onLoadMore?: (event: CustomEvent<any>) => void;
 }
 
 /** UploadCollection component props */
@@ -1748,6 +1779,13 @@ interface UploadCollectionItemProps extends UI5BaseProps {
   progress?: number;
   uploadState?: "Complete" | "Error" | "Ready" | "Uploading";
   thumbnail?: React.ReactNode;
+  onFileNameClick?: (event: CustomEvent<any>) => void;
+  onRename?: (event: CustomEvent<any>) => void;
+  onTerminate?: (event: CustomEvent<any>) => void;
+  onRetry?: (event: CustomEvent<any>) => void;
+  onFocusRequested?: (event: CustomEvent<any>) => void;
+  onUciDelete?: (event: CustomEvent<any>) => void;
+  onRequestDelete?: (event: CustomEvent<any>) => void;
 }
 
 /** Wizard component props */
@@ -2009,6 +2047,10 @@ interface SearchProps extends UI5BaseProps {
   illustration?: React.ReactNode;
   messageArea?: React.ReactNode;
   open?: boolean;
+  onSearch?: (event: CustomEvent<any>) => void;
+  onPopupActionPress?: (event: CustomEvent<any>) => void;
+  onOpen?: (event: CustomEvent<any>) => void;
+  onClose?: (event: CustomEvent<any>) => void;
 }
 
 /** SearchItem component props */
@@ -2024,6 +2066,7 @@ interface SearchItemProps extends UI5BaseProps {
   image?: React.ReactNode;
   actions?: React.ReactNode;
   highlightText?: string;
+  onDelete?: (event: CustomEvent<any>) => void;
 }
 
 /** SearchMessageArea component props */
@@ -2169,6 +2212,10 @@ interface AIInputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
+  onVersionChange?: (event: CustomEvent<any>) => void;
+  onStopGeneration?: (event: CustomEvent<any>) => void;
+  onButtonClick?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: CustomEvent<any>) => void;
   onChange?: (event: CustomEvent<any>) => void;
   onInput?: (event: CustomEvent<any>) => void;
   onSelect?: (event: CustomEvent<any>) => void;
@@ -2208,6 +2255,8 @@ interface AITextAreaProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   previousValue?: string;
   valueStatePopover?: any;
+  onVersionChange?: (event: CustomEvent<any>) => void;
+  onStopGeneration?: (event: CustomEvent<any>) => void;
   onChange?: (event: CustomEvent<any>) => void;
   onInput?: (event: CustomEvent<any>) => void;
   onSelect?: (event: CustomEvent<any>) => void;

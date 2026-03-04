@@ -282,7 +282,8 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
   const classBody = dtsContent.substring(startIndex, endIndex);
 
   // Extract eventDetails to get event names
-  const eventDetailsMatch = classBody.match(/eventDetails\s*:\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/);
+  // Match eventDetails: { ... } or eventDetails: ParentType["eventDetails"] & { ... }
+  const eventDetailsMatch = classBody.match(/eventDetails\s*:[^{]*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/);
   if (eventDetailsMatch) {
     const eventBody = eventDetailsMatch[1];
     // Match event names (kebab-case strings in quotes or simple identifiers)

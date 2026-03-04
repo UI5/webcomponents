@@ -3,10 +3,12 @@ import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactCo
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 
 const AITextArea = createReactComponent(AITextAreaClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 const SAMPLE_TEXTS: Record<string, string> = {
   en: "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.",
@@ -30,7 +32,7 @@ interface MenuConfigItem {
   completedLabel?: string;
   textKey?: string;
   replaces?: string;
-  startsSection?: boolean;
+  separator?: boolean;
   children?: MenuConfigItem[];
 }
 
@@ -49,7 +51,7 @@ const MENU_CONFIG: MenuConfigItem[] = [
     processingLabel: "Fixing spelling and grammar...",
     completedLabel: "Fixed spelling and grammar",
     textKey: "en",
-    startsSection: true,
+    separator: true,
   },
   {
     text: "Rewrite text",
@@ -318,8 +320,9 @@ function App() {
       if (configItem.replaces && !hasHistory) return;
 
       if (configItem.children) {
+        if (configItem.separator) items.push(<MenuSeparator key={"sep-" + index} />);
         items.push(
-          <MenuItem key={configItem.text + index} text={configItem.text} startsSection={configItem.startsSection || false}>
+          <MenuItem key={configItem.text + index} text={configItem.text}>
             {configItem.children.map((child) => (
               <MenuItem
                 key={child.action}
@@ -333,11 +336,11 @@ function App() {
           </MenuItem>
         );
       } else {
+        if (configItem.separator) items.push(<MenuSeparator key={"sep-" + index} />);
         items.push(
           <MenuItem
             key={(configItem.action || configItem.text) + index}
             text={configItem.text}
-            startsSection={configItem.startsSection || false}
             data-action={configItem.action}
             data-processing-label={configItem.processingLabel}
             data-completed-label={configItem.completedLabel}

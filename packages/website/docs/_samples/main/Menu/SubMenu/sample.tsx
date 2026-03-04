@@ -3,6 +3,7 @@ import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/add-document.js";
 import "@ui5/webcomponents-icons/dist/add-folder.js";
 import "@ui5/webcomponents-icons/dist/open-folder.js";
@@ -15,6 +16,7 @@ import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const menuSubsRef = useRef(null);
@@ -30,7 +32,8 @@ function App() {
         <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic">
             <MenuItem text="New File" icon="add-document" />
             <MenuItem text="New Folder" icon="add-folder" disabled={true} />
-            <MenuItem text="Open" icon="open-folder" startsSection={true}>
+            <MenuSeparator />
+            <MenuItem text="Open" icon="open-folder">
                 <MenuItem text="Open Locally" icon="open-folder">
                     <MenuItem text="Open from C" />
                     <MenuItem text="Open from D" />
@@ -47,7 +50,8 @@ function App() {
                 <MenuItem text="Save on Cloud" icon="upload-to-cloud" />
             </MenuItem>
             <MenuItem text="Close" />
-            <MenuItem text="Preferences" icon="action-settings" startsSection={true} />
+            <MenuSeparator />
+            <MenuItem text="Preferences" icon="action-settings" />
             <MenuItem text="Exit" icon="journey-arrive" />
         </Menu>
     </>

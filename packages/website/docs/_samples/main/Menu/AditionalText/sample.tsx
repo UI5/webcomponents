@@ -3,6 +3,7 @@ import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/add-document.js";
 import "@ui5/webcomponents-icons/dist/add-folder.js";
 import "@ui5/webcomponents-icons/dist/open-folder.js";
@@ -13,6 +14,7 @@ import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const menuAdditionalTextRef = useRef(null);
@@ -28,9 +30,11 @@ function App() {
         <Menu ref={menuAdditionalTextRef} id="menuAdditionalText" opener="btnOpenAdditionalText">
             <MenuItem text="New File" icon="add-document" additionalText="Ctrl+N" />
             <MenuItem text="New Folder" icon="add-folder" additionalText="Ctrl+F" disabled={true} />
-            <MenuItem text="Open" icon="open-folder" startsSection={true} />
+            <MenuSeparator />
+            <MenuItem text="Open" icon="open-folder" />
             <MenuItem text="Close" />
-            <MenuItem text="Preferences" icon="action-settings" startsSection={true} />
+            <MenuSeparator />
+            <MenuItem text="Preferences" icon="action-settings" />
             <MenuItem text="Exit" icon="journey-arrive" additionalText="Ctrl+X" />
         </Menu>
     </>
