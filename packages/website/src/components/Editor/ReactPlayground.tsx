@@ -463,6 +463,21 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
     setEditorCode(code);
   }, [code]);
 
+  // Suppress webpack-dev-server error overlay for eval'd sample code errors.
+  // React 18 dev mode re-throws caught errors to window, triggering the
+  // full-page overlay. We intercept and suppress errors originating from
+  // our executeCode eval context.
+  useEffect(() => {
+    const handler = (event: ErrorEvent) => {
+      if (event.error && String(event.error.stack || "").includes("executeCode")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
+    window.addEventListener("error", handler, true);
+    return () => window.removeEventListener("error", handler, true);
+  }, []);
+
   // Apply theme changes to UI5 Web Components
   useEffect(() => {
     if (getTheme() !== theme) {
@@ -608,7 +623,7 @@ export default function ReactPlayground({ code, editorVisible = false }: ReactPl
         </div>
       </div>
       {editorVisible && MonacoEditor && (
-        <div className={styles.editorContainer}>
+        <div className={styles.editorContainer} onKeyDown={(e) => { if (e.key === "/") e.stopPropagation(); }}>
           <div className={styles.tabBar}>
             <span className={styles.tab}>App.tsx</span>
           </div>

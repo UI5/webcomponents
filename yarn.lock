@@ -7702,7 +7702,7 @@ __metadata:
     typescript: "npm:^5.6.2"
     vite: "npm:5.4.21"
   peerDependencies:
-    react: ">=17"
+    react: ">=18"
   peerDependenciesMeta:
     react:
       optional: true
