@@ -8,8 +8,6 @@ type ToolbarItemEventDetail = {
 }
 
 /**
- * @interface
- *
  * Interface that defines the public API contract for interactive toolbar items.
  *
  * Interactive toolbar items (ToolbarButton, ToolbarSelect, ToolbarItem) implement this interface
