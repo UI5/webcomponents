@@ -78,6 +78,12 @@ interface UI5BaseProps {
   children?: React.ReactNode;
 }
 
+// Custom event type with typed currentTarget for UI5 components
+interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
+  readonly currentTarget: EventTarget & Target;
+  readonly target: EventTarget & Target;
+}
+
 /** Button component props */
 interface ButtonProps extends UI5BaseProps {
   design?: "Default" | "Positive" | "Negative" | "Transparent" | "Emphasized" | "Attention";
@@ -97,8 +103,8 @@ interface ButtonProps extends UI5BaseProps {
   text?: React.ReactNode;
   badge?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
-  onActiveStateChange?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<ButtonProps>) => void;
+  onActiveStateChange?: (event: UI5CustomEvent<ButtonProps>) => void;
 }
 
 /** ButtonBadge component props */
@@ -139,15 +145,15 @@ interface InputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onRequestSubmit?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onTypeAhead?: (event: CustomEvent<any>) => void;
-  onSuggestionScroll?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<InputProps>) => void;
+  onInput?: (event: UI5CustomEvent<InputProps>) => void;
+  onSelect?: (event: UI5CustomEvent<InputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<InputProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<InputProps>) => void;
+  onTypeAhead?: (event: UI5CustomEvent<InputProps>) => void;
+  onSuggestionScroll?: (event: UI5CustomEvent<InputProps>) => void;
+  onOpen?: (event: UI5CustomEvent<InputProps>) => void;
+  onClose?: (event: UI5CustomEvent<InputProps>) => void;
 }
 
 /** Label component props */
@@ -176,7 +182,7 @@ interface LinkProps extends UI5BaseProps {
   endIcon?: string;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<LinkProps>) => void;
 }
 
 /** CheckBox component props */
@@ -195,8 +201,8 @@ interface CheckBoxProps extends UI5BaseProps {
   name?: string;
   value?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<CheckBoxProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<CheckBoxProps>) => void;
 }
 
 /** Switch component props */
@@ -213,8 +219,8 @@ interface SwitchProps extends UI5BaseProps {
   name?: string;
   value?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<SwitchProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<SwitchProps>) => void;
 }
 
 /** Card component props */
@@ -236,7 +242,7 @@ interface CardHeaderProps extends UI5BaseProps {
   avatar?: React.ReactNode;
   action?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<CardHeaderProps>) => void;
 }
 
 /** Tag component props */
@@ -250,7 +256,7 @@ interface TagProps extends UI5BaseProps {
   text?: React.ReactNode;
   icon?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<TagProps>) => void;
 }
 
 /** Menu component props */
@@ -264,12 +270,12 @@ interface MenuProps extends UI5BaseProps {
   opener?: HTMLElement | string;
   items?: React.ReactNode;
   eventDetails?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onBeforeOpen?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onBeforeClose?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onCloseMenu?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<MenuProps>) => void;
+  onBeforeOpen?: (event: UI5CustomEvent<MenuProps>) => void;
+  onOpen?: (event: UI5CustomEvent<MenuProps>) => void;
+  onBeforeClose?: (event: UI5CustomEvent<MenuProps>) => void;
+  onClose?: (event: UI5CustomEvent<MenuProps>) => void;
+  onCloseMenu?: (event: UI5CustomEvent<MenuProps>) => void;
 }
 
 /** MenuItem component props */
@@ -296,13 +302,13 @@ interface MenuItemProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   items?: React.ReactNode;
   endContent?: React.ReactNode;
-  onBeforeOpen?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onBeforeClose?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onCloseMenu?: (event: CustomEvent<any>) => void;
-  onCheck?: (event: CustomEvent<any>) => void;
-  onExitEndContent?: (event: CustomEvent<any>) => void;
+  onBeforeOpen?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onOpen?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onBeforeClose?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onClose?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onCloseMenu?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onCheck?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onExitEndContent?: (event: UI5CustomEvent<MenuItemProps>) => void;
 }
 
 /** MenuSeparator component props */
@@ -337,12 +343,12 @@ interface SelectProps extends UI5BaseProps {
   eventDetails?: any;
   responsivePopover?: any;
   valueStatePopover?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onLiveChange?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onSelectedItemChanged?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<SelectProps>) => void;
+  onLiveChange?: (event: UI5CustomEvent<SelectProps>) => void;
+  onOpen?: (event: UI5CustomEvent<SelectProps>) => void;
+  onClose?: (event: UI5CustomEvent<SelectProps>) => void;
+  onSelectedItemChanged?: (event: UI5CustomEvent<SelectProps>) => void;
+  onInput?: (event: UI5CustomEvent<SelectProps>) => void;
 }
 
 /** Option component props */
@@ -391,15 +397,15 @@ interface ListProps extends UI5BaseProps {
   header?: React.ReactNode;
   eventDetails?: any;
   handleResizeCallback?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onItemClose?: (event: CustomEvent<any>) => void;
-  onItemToggle?: (event: CustomEvent<any>) => void;
-  onItemDelete?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onLoadMore?: (event: CustomEvent<any>) => void;
-  onItemFocused?: (event: CustomEvent<any>) => void;
-  onMoveOver?: (event: CustomEvent<any>) => void;
-  onMove?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<ListProps>) => void;
+  onItemClose?: (event: UI5CustomEvent<ListProps>) => void;
+  onItemToggle?: (event: UI5CustomEvent<ListProps>) => void;
+  onItemDelete?: (event: UI5CustomEvent<ListProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<ListProps>) => void;
+  onLoadMore?: (event: UI5CustomEvent<ListProps>) => void;
+  onItemFocused?: (event: UI5CustomEvent<ListProps>) => void;
+  onMoveOver?: (event: UI5CustomEvent<ListProps>) => void;
+  onMove?: (event: UI5CustomEvent<ListProps>) => void;
 }
 
 /** ListItemStandard component props */
@@ -451,8 +457,8 @@ interface ListItemGroupProps extends UI5BaseProps {
   wrappingType?: "None" | "Normal";
   header?: React.ReactNode;
   eventDetails?: any;
-  onMoveOver?: (event: CustomEvent<any>) => void;
-  onMove?: (event: CustomEvent<any>) => void;
+  onMoveOver?: (event: UI5CustomEvent<ListItemGroupProps>) => void;
+  onMove?: (event: UI5CustomEvent<ListItemGroupProps>) => void;
 }
 
 /** Dialog component props */
@@ -485,7 +491,7 @@ interface IconProps extends UI5BaseProps {
   showTooltip?: boolean;
   mode?: "Image" | "Decorative" | "Interactive";
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<IconProps>) => void;
 }
 
 /** Avatar component props */
@@ -505,7 +511,7 @@ interface AvatarProps extends UI5BaseProps {
   badge?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<AvatarProps>) => void;
 }
 
 /** AvatarGroup component props */
@@ -518,8 +524,8 @@ interface AvatarGroupProps extends UI5BaseProps {
   overflowButton?: React.ReactNode;
   eventDetails?: any;
   slotDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
-  onOverflow?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<AvatarGroupProps>) => void;
+  onOverflow?: (event: UI5CustomEvent<AvatarGroupProps>) => void;
 }
 
 /** AvatarBadge component props */
@@ -557,12 +563,12 @@ interface DatePickerProps extends UI5BaseProps {
   liveValue?: string;
   isLiveUpdate?: boolean;
   responsivePopover?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onValueStateChange?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onValueStateChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<DatePickerProps>) => void;
 }
 
 /** TimePicker component props */
@@ -583,11 +589,11 @@ interface TimePickerProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   tempValue?: string;
-  onChange?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<TimePickerProps>) => void;
 }
 
 /** DateTimePicker component props */
@@ -642,7 +648,7 @@ interface DynamicDateRangeProps extends UI5BaseProps {
   value?: any;
   options?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<DynamicDateRangeProps>) => void;
 }
 
 /** TextArea component props */
@@ -667,11 +673,11 @@ interface TextAreaProps extends UI5BaseProps {
   eventDetails?: any;
   previousValue?: string;
   valueStatePopover?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onScroll?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<TextAreaProps>) => void;
+  onInput?: (event: UI5CustomEvent<TextAreaProps>) => void;
+  onSelect?: (event: UI5CustomEvent<TextAreaProps>) => void;
+  onScroll?: (event: UI5CustomEvent<TextAreaProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<TextAreaProps>) => void;
 }
 
 /** RadioButton component props */
@@ -688,7 +694,7 @@ interface RadioButtonProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<RadioButtonProps>) => void;
 }
 
 /** ProgressIndicator component props */
@@ -714,7 +720,7 @@ interface RatingIndicatorProps extends UI5BaseProps {
   ratedIcon?: string;
   unratedIcon?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<RatingIndicatorProps>) => void;
 }
 
 /** Slider component props */
@@ -778,9 +784,9 @@ interface StepInputProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   focused?: boolean;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onValueStateChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<StepInputProps>) => void;
+  onInput?: (event: UI5CustomEvent<StepInputProps>) => void;
+  onValueStateChange?: (event: UI5CustomEvent<StepInputProps>) => void;
 }
 
 /** Popover component props */
@@ -831,7 +837,7 @@ interface ToastProps extends UI5BaseProps {
   placement?: "TopStart" | "TopCenter" | "TopEnd" | "MiddleStart" | "MiddleCenter" | "MiddleEnd" | "BottomStart" | "BottomCenter" | "BottomEnd";
   open?: boolean;
   eventDetails?: any;
-  onClose?: (event: CustomEvent<any>) => void;
+  onClose?: (event: UI5CustomEvent<ToastProps>) => void;
 }
 
 /** MessageStrip component props */
@@ -842,7 +848,7 @@ interface MessageStripProps extends UI5BaseProps {
   hideCloseButton?: boolean;
   icon?: React.ReactNode;
   eventDetails?: any;
-  onClose?: (event: CustomEvent<any>) => void;
+  onClose?: (event: UI5CustomEvent<MessageStripProps>) => void;
 }
 
 /** BusyIndicator component props */
@@ -867,9 +873,9 @@ interface TabContainerProps extends UI5BaseProps {
   startOverflowButton?: React.ReactNode;
   eventDetails?: any;
   responsivePopover?: any;
-  onTabSelect?: (event: CustomEvent<any>) => void;
-  onMoveOver?: (event: CustomEvent<any>) => void;
-  onMove?: (event: CustomEvent<any>) => void;
+  onTabSelect?: (event: UI5CustomEvent<TabContainerProps>) => void;
+  onMoveOver?: (event: UI5CustomEvent<TabContainerProps>) => void;
+  onMove?: (event: UI5CustomEvent<TabContainerProps>) => void;
 }
 
 /** Tab component props */
@@ -906,10 +912,10 @@ interface TableProps extends UI5BaseProps {
   eventDetails?: any;
   stickyTop?: string;
   dropIndicatorDOM?: any;
-  onRowClick?: (event: CustomEvent<any>) => void;
-  onMoveOver?: (event: CustomEvent<any>) => void;
-  onMove?: (event: CustomEvent<any>) => void;
-  onRowActionClick?: (event: CustomEvent<any>) => void;
+  onRowClick?: (event: UI5CustomEvent<TableProps>) => void;
+  onMoveOver?: (event: UI5CustomEvent<TableProps>) => void;
+  onMove?: (event: UI5CustomEvent<TableProps>) => void;
+  onRowActionClick?: (event: UI5CustomEvent<TableProps>) => void;
 }
 
 /** TableHeaderRow component props */
@@ -958,7 +964,7 @@ interface TableGrowingProps extends UI5BaseProps {
   text?: string;
   subtext?: string;
   eventDetails?: any;
-  onLoadMore?: (event: CustomEvent<any>) => void;
+  onLoadMore?: (event: UI5CustomEvent<TableGrowingProps>) => void;
 }
 
 /** TableSelection component props */
@@ -966,7 +972,7 @@ interface TableSelectionProps extends UI5BaseProps {
   mode?: "None" | "Single" | "Multiple";
   selected?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<TableSelectionProps>) => void;
 }
 
 /** Tree component props */
@@ -982,15 +988,15 @@ interface TreeProps extends UI5BaseProps {
   items?: React.ReactNode;
   header?: React.ReactNode;
   eventDetails?: any;
-  onItemToggle?: (event: CustomEvent<any>) => void;
-  onItemMouseover?: (event: CustomEvent<any>) => void;
-  onItemMouseout?: (event: CustomEvent<any>) => void;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onItemDelete?: (event: CustomEvent<any>) => void;
-  onItemFocus?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onMove?: (event: CustomEvent<any>) => void;
-  onMoveOver?: (event: CustomEvent<any>) => void;
+  onItemToggle?: (event: UI5CustomEvent<TreeProps>) => void;
+  onItemMouseover?: (event: UI5CustomEvent<TreeProps>) => void;
+  onItemMouseout?: (event: UI5CustomEvent<TreeProps>) => void;
+  onItemClick?: (event: UI5CustomEvent<TreeProps>) => void;
+  onItemDelete?: (event: UI5CustomEvent<TreeProps>) => void;
+  onItemFocus?: (event: UI5CustomEvent<TreeProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<TreeProps>) => void;
+  onMove?: (event: UI5CustomEvent<TreeProps>) => void;
+  onMoveOver?: (event: UI5CustomEvent<TreeProps>) => void;
 }
 
 /** TreeItem component props */
@@ -1041,7 +1047,7 @@ interface PanelProps extends UI5BaseProps {
   stickyHeader?: boolean;
   header?: React.ReactNode;
   eventDetails?: any;
-  onToggle?: (event: CustomEvent<any>) => void;
+  onToggle?: (event: UI5CustomEvent<PanelProps>) => void;
 }
 
 /** Toolbar component props */
@@ -1056,7 +1062,7 @@ interface ToolbarProps extends UI5BaseProps {
   itemsToOverflow?: React.ReactNode;
   itemsWidth?: number;
   minContentWidth?: number;
-  onMinContentWidthChange?: (event: CustomEvent<any>) => void;
+  onMinContentWidthChange?: (event: UI5CustomEvent<ToolbarProps>) => void;
 }
 
 /** ToolbarButton component props */
@@ -1122,9 +1128,9 @@ interface ToolbarSelectProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   value?: string;
-  onChange?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
+  onOpen?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
+  onClose?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
 }
 
 /** ToolbarSelectOption component props */
@@ -1144,7 +1150,7 @@ interface SegmentedButtonProps extends UI5BaseProps {
   items?: React.ReactNode;
   eventDetails?: any;
   hasPreviouslyFocusedItem?: boolean;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<SegmentedButtonProps>) => void;
 }
 
 /** SegmentedButtonItem component props */
@@ -1181,11 +1187,11 @@ interface ComboBoxProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   icon?: React.ReactNode;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<ComboBoxProps>) => void;
+  onInput?: (event: UI5CustomEvent<ComboBoxProps>) => void;
+  onOpen?: (event: UI5CustomEvent<ComboBoxProps>) => void;
+  onClose?: (event: UI5CustomEvent<ComboBoxProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<ComboBoxProps>) => void;
 }
 
 /** ComboBoxItem component props */
@@ -1240,12 +1246,12 @@ interface MultiComboBoxProps extends UI5BaseProps {
   valueStateHeader?: HTMLElement | string;
   list?: any;
   selectedItems?: React.ReactNode;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onValueStateChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onInput?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onOpen?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onClose?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onValueStateChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
 }
 
 /** MultiComboBoxItem component props */
@@ -1257,7 +1263,7 @@ interface MultiComboBoxItemProps extends UI5BaseProps {
   focused?: boolean;
   selected?: boolean;
   selected?: boolean;
-  onSelectionRequested?: (event: CustomEvent<any>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
 }
 
 /** MultiComboBoxItemGroup component props */
@@ -1273,8 +1279,8 @@ interface TokenProps extends UI5BaseProps {
   selected?: boolean;
   closeIcon?: React.ReactNode;
   eventDetails?: any;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onDelete?: (event: CustomEvent<any>) => void;
+  onSelect?: (event: UI5CustomEvent<TokenProps>) => void;
+  onDelete?: (event: UI5CustomEvent<TokenProps>) => void;
 }
 
 /** Tokenizer component props */
@@ -1288,10 +1294,10 @@ interface TokenizerProps extends UI5BaseProps {
   accessibleNameRef?: string;
   tokens?: React.ReactNode;
   eventDetails?: any;
-  onTokenDelete?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onShowMoreItemsPress?: (event: CustomEvent<any>) => void;
-  onBeforeMorePopoverOpen?: (event: CustomEvent<any>) => void;
+  onTokenDelete?: (event: UI5CustomEvent<TokenizerProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<TokenizerProps>) => void;
+  onShowMoreItemsPress?: (event: UI5CustomEvent<TokenizerProps>) => void;
+  onBeforeMorePopoverOpen?: (event: UI5CustomEvent<TokenizerProps>) => void;
 }
 
 /** MultiInput component props */
@@ -1329,8 +1335,8 @@ interface MultiInputProps extends UI5BaseProps {
   showValueHelpIcon?: boolean;
   name?: string;
   tokens?: React.ReactNode;
-  onValueHelpTrigger?: (event: CustomEvent<any>) => void;
-  onTokenDelete?: (event: CustomEvent<any>) => void;
+  onValueHelpTrigger?: (event: UI5CustomEvent<MultiInputProps>) => void;
+  onTokenDelete?: (event: UI5CustomEvent<MultiInputProps>) => void;
 }
 
 /** Breadcrumbs component props */
@@ -1340,7 +1346,7 @@ interface BreadcrumbsProps extends UI5BaseProps {
   items?: React.ReactNode;
   eventDetails?: any;
   responsivePopover?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<BreadcrumbsProps>) => void;
 }
 
 /** BreadcrumbsItem component props */
@@ -1362,10 +1368,10 @@ interface CalendarProps extends UI5BaseProps {
   disabledDates?: React.ReactNode;
   selectedDates?: any;
   eventDetails?: any;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onShowMonthView?: (event: CustomEvent<any>) => void;
-  onShowYearView?: (event: CustomEvent<any>) => void;
-  onShowYearRangeView?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<CalendarProps>) => void;
+  onShowMonthView?: (event: UI5CustomEvent<CalendarProps>) => void;
+  onShowYearView?: (event: UI5CustomEvent<CalendarProps>) => void;
+  onShowYearRangeView?: (event: UI5CustomEvent<CalendarProps>) => void;
 }
 
 /** CalendarLegend component props */
@@ -1376,8 +1382,8 @@ interface CalendarLegendProps extends UI5BaseProps {
   hideWorkingDay?: boolean;
   items?: React.ReactNode;
   eventDetails?: any;
-  onCalendarLegendSelectionChange?: (event: CustomEvent<any>) => void;
-  onCalendarLegendFocusOut?: (event: CustomEvent<any>) => void;
+  onCalendarLegendSelectionChange?: (event: UI5CustomEvent<CalendarLegendProps>) => void;
+  onCalendarLegendFocusOut?: (event: UI5CustomEvent<CalendarLegendProps>) => void;
 }
 
 /** CalendarLegendItem component props */
@@ -1400,7 +1406,7 @@ interface ColorPickerProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<ColorPickerProps>) => void;
 }
 
 /** ColorPalette component props */
@@ -1409,7 +1415,7 @@ interface ColorPaletteProps extends UI5BaseProps {
   accessibleNameRef?: string;
   colors?: React.ReactNode;
   eventDetails?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<ColorPaletteProps>) => void;
 }
 
 /** ColorPaletteItem component props */
@@ -1431,8 +1437,8 @@ interface ColorPalettePopoverProps extends UI5BaseProps {
   placement?: "Start" | "End" | "Top" | "Bottom";
   colors?: React.ReactNode;
   eventDetails?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<ColorPalettePopoverProps>) => void;
+  onClose?: (event: UI5CustomEvent<ColorPalettePopoverProps>) => void;
 }
 
 /** FileUploader component props */
@@ -1454,8 +1460,8 @@ interface FileUploaderProps extends UI5BaseProps {
   content?: React.ReactNode;
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
-  onChange?: (event: CustomEvent<any>) => void;
-  onFileSizeExceed?: (event: CustomEvent<any>) => void;
+  onChange?: (event: UI5CustomEvent<FileUploaderProps>) => void;
+  onFileSizeExceed?: (event: UI5CustomEvent<FileUploaderProps>) => void;
 }
 
 /** SplitButton component props */
@@ -1468,8 +1474,8 @@ interface SplitButtonProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   text?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
-  onArrowClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
+  onArrowClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
 }
 
 /** Title component props */
@@ -1525,7 +1531,7 @@ interface CarouselProps extends UI5BaseProps {
   arrowsPlacement?: "Content" | "Navigation";
   content?: React.ReactNode;
   eventDetails?: any;
-  onNavigate?: (event: CustomEvent<any>) => void;
+  onNavigate?: (event: UI5CustomEvent<CarouselProps>) => void;
 }
 
 /** ToggleButton component props */
@@ -1621,15 +1627,15 @@ interface ShellBarProps extends UI5BaseProps {
   itemNavigation?: any;
   overflow?: any;
   accessibility?: any;
-  onNotificationsClick?: (event: CustomEvent<any>) => void;
-  onProfileClick?: (event: CustomEvent<any>) => void;
-  onProductSwitchClick?: (event: CustomEvent<any>) => void;
-  onLogoClick?: (event: CustomEvent<any>) => void;
-  onMenuItemClick?: (event: CustomEvent<any>) => void;
-  onSearchButtonClick?: (event: CustomEvent<any>) => void;
-  onSearchFieldToggle?: (event: CustomEvent<any>) => void;
-  onSearchFieldClear?: (event: CustomEvent<any>) => void;
-  onContentItemVisibilityChange?: (event: CustomEvent<any>) => void;
+  onNotificationsClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onProfileClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onProductSwitchClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onLogoClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onMenuItemClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onSearchButtonClick?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onSearchFieldToggle?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onSearchFieldClear?: (event: UI5CustomEvent<ShellBarProps>) => void;
+  onContentItemVisibilityChange?: (event: UI5CustomEvent<ShellBarProps>) => void;
 }
 
 /** ShellBarItem component props */
@@ -1639,7 +1645,7 @@ interface ShellBarItemProps extends UI5BaseProps {
   count?: string;
   accessibilityAttributes?: object;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<ShellBarItemProps>) => void;
 }
 
 /** SideNavigation component props */
@@ -1650,8 +1656,8 @@ interface SideNavigationProps extends UI5BaseProps {
   fixedItems?: React.ReactNode;
   header?: React.ReactNode;
   eventDetails?: any;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onItemClick?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<SideNavigationProps>) => void;
+  onItemClick?: (event: UI5CustomEvent<SideNavigationProps>) => void;
 }
 
 /** SideNavigationItem component props */
@@ -1699,10 +1705,10 @@ interface NotificationListProps extends UI5BaseProps {
   items?: React.ReactNode;
   noDataText?: string;
   eventDetails?: any;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onItemClose?: (event: CustomEvent<any>) => void;
-  onItemToggle?: (event: CustomEvent<any>) => void;
-  onLoadMore?: (event: CustomEvent<any>) => void;
+  onItemClick?: (event: UI5CustomEvent<NotificationListProps>) => void;
+  onItemClose?: (event: UI5CustomEvent<NotificationListProps>) => void;
+  onItemToggle?: (event: UI5CustomEvent<NotificationListProps>) => void;
+  onLoadMore?: (event: UI5CustomEvent<NotificationListProps>) => void;
 }
 
 /** NotificationListItem component props */
@@ -1723,9 +1729,9 @@ interface NotificationListItemProps extends UI5BaseProps {
   titleTextDOM?: HTMLElement | string;
   menuButtonDOM?: HTMLElement | string;
   descriptionDOM?: HTMLElement | string;
-  onPress?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onPress?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
+  onClose?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
+  onClose?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
 }
 
 /** NotificationListGroupItem component props */
@@ -1738,8 +1744,8 @@ interface NotificationListGroupItemProps extends UI5BaseProps {
   collapsed?: boolean;
   growing?: "Button" | "None";
   items?: React.ReactNode;
-  onToggle?: (event: CustomEvent<any>) => void;
-  onLoadMore?: (event: CustomEvent<any>) => void;
+  onToggle?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
+  onLoadMore?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
 }
 
 /** UploadCollection component props */
@@ -1753,8 +1759,8 @@ interface UploadCollectionProps extends UI5BaseProps {
   items?: React.ReactNode;
   header?: React.ReactNode;
   eventDetails?: any;
-  onItemDelete?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
+  onItemDelete?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
 }
 
 /** UploadCollectionItem component props */
@@ -1779,13 +1785,13 @@ interface UploadCollectionItemProps extends UI5BaseProps {
   progress?: number;
   uploadState?: "Complete" | "Error" | "Ready" | "Uploading";
   thumbnail?: React.ReactNode;
-  onFileNameClick?: (event: CustomEvent<any>) => void;
-  onRename?: (event: CustomEvent<any>) => void;
-  onTerminate?: (event: CustomEvent<any>) => void;
-  onRetry?: (event: CustomEvent<any>) => void;
-  onFocusRequested?: (event: CustomEvent<any>) => void;
-  onUciDelete?: (event: CustomEvent<any>) => void;
-  onRequestDelete?: (event: CustomEvent<any>) => void;
+  onFileNameClick?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onRename?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onTerminate?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onRetry?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onFocusRequested?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onUciDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onRequestDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
 }
 
 /** Wizard component props */
@@ -1798,7 +1804,7 @@ interface WizardProps extends UI5BaseProps {
   previouslySelectedStepIndex?: number;
   selectionRequestedByClick?: boolean;
   selectionRequestedByScroll?: boolean;
-  onStepChange?: (event: CustomEvent<any>) => void;
+  onStepChange?: (event: UI5CustomEvent<WizardProps>) => void;
 }
 
 /** WizardStep component props */
@@ -1841,7 +1847,7 @@ interface TimelineProps extends UI5BaseProps {
   growingIntersectionObserver?: IntersectionObserver | null;
   timeLineEndObserved?: boolean;
   initialIntersection?: boolean;
-  onLoadMore?: (event: CustomEvent<any>) => void;
+  onLoadMore?: (event: UI5CustomEvent<TimelineProps>) => void;
 }
 
 /** TimelineItem component props */
@@ -1854,7 +1860,7 @@ interface TimelineItemProps extends UI5BaseProps {
   state?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   content?: React.ReactNode;
   eventDetails?: any;
-  onNameClick?: (event: CustomEvent<any>) => void;
+  onNameClick?: (event: UI5CustomEvent<TimelineItemProps>) => void;
 }
 
 /** TimelineGroupItem component props */
@@ -1863,7 +1869,7 @@ interface TimelineGroupItemProps extends UI5BaseProps {
   collapsed?: boolean;
   items?: React.ReactNode;
   eventDetails?: any;
-  onToggle?: (event: CustomEvent<any>) => void;
+  onToggle?: (event: UI5CustomEvent<TimelineGroupItemProps>) => void;
 }
 
 /** Page component props */
@@ -1893,8 +1899,8 @@ interface DynamicPageProps extends UI5BaseProps {
   isToggled?: boolean;
   scrollContainer?: HTMLElement | string;
   headerActions?: any;
-  onPinButtonToggle?: (event: CustomEvent<any>) => void;
-  onTitleToggle?: (event: CustomEvent<any>) => void;
+  onPinButtonToggle?: (event: UI5CustomEvent<DynamicPageProps>) => void;
+  onTitleToggle?: (event: UI5CustomEvent<DynamicPageProps>) => void;
 }
 
 /** DynamicPageTitle component props */
@@ -1910,7 +1916,7 @@ interface DynamicPageTitleProps extends UI5BaseProps {
   breadcrumbs?: React.ReactNode;
   eventDetails?: any;
   snapped?: boolean;
-  onToggleTitle?: (event: CustomEvent<any>) => void;
+  onToggleTitle?: (event: UI5CustomEvent<DynamicPageTitleProps>) => void;
 }
 
 /** DynamicPageHeader component props */
@@ -1929,7 +1935,7 @@ interface DynamicSideContentProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   sideContent?: React.ReactNode;
   eventDetails?: any;
-  onLayoutChange?: (event: CustomEvent<any>) => void;
+  onLayoutChange?: (event: UI5CustomEvent<DynamicSideContentProps>) => void;
 }
 
 /** FlexibleColumnLayout component props */
@@ -1944,8 +1950,8 @@ interface FlexibleColumnLayoutProps extends UI5BaseProps {
   eventDetails?: any;
   initialRendering?: boolean;
   separatorMovementSession?: SeparatorMovementSession | null;
-  onLayoutChange?: (event: CustomEvent<any>) => void;
-  onLayoutConfigurationChange?: (event: CustomEvent<any>) => void;
+  onLayoutChange?: (event: UI5CustomEvent<FlexibleColumnLayoutProps>) => void;
+  onLayoutConfigurationChange?: (event: UI5CustomEvent<FlexibleColumnLayoutProps>) => void;
 }
 
 /** MediaGallery component props */
@@ -1957,9 +1963,9 @@ interface MediaGalleryProps extends UI5BaseProps {
   menuVerticalAlign?: "Top" | "Bottom";
   items?: React.ReactNode;
   eventDetails?: any;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onOverflowClick?: (event: CustomEvent<any>) => void;
-  onDisplayAreaClick?: (event: CustomEvent<any>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<MediaGalleryProps>) => void;
+  onOverflowClick?: (event: UI5CustomEvent<MediaGalleryProps>) => void;
+  onDisplayAreaClick?: (event: UI5CustomEvent<MediaGalleryProps>) => void;
 }
 
 /** MediaGalleryItem component props */
@@ -1970,8 +1976,8 @@ interface MediaGalleryItemProps extends UI5BaseProps {
   content?: React.ReactNode;
   thumbnail?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: CustomEvent<any>) => void;
-  onItem?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<MediaGalleryItemProps>) => void;
+  onItem?: (event: UI5CustomEvent<MediaGalleryItemProps>) => void;
 }
 
 /** ProductSwitch component props */
@@ -1989,8 +1995,8 @@ interface ProductSwitchItemProps extends UI5BaseProps {
   image?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: CustomEvent<any>) => void;
-  onItem?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
+  onItem?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
 }
 
 /** ViewSettingsDialog component props */
@@ -2002,11 +2008,11 @@ interface ViewSettingsDialogProps extends UI5BaseProps {
   filterItems?: React.ReactNode;
   groupItems?: React.ReactNode;
   eventDetails?: any;
-  onConfirm?: (event: CustomEvent<any>) => void;
-  onCancel?: (event: CustomEvent<any>) => void;
-  onBeforeOpen?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onConfirm?: (event: UI5CustomEvent<ViewSettingsDialogProps>) => void;
+  onCancel?: (event: UI5CustomEvent<ViewSettingsDialogProps>) => void;
+  onBeforeOpen?: (event: UI5CustomEvent<ViewSettingsDialogProps>) => void;
+  onOpen?: (event: UI5CustomEvent<ViewSettingsDialogProps>) => void;
+  onClose?: (event: UI5CustomEvent<ViewSettingsDialogProps>) => void;
 }
 
 /** SortItem component props */
@@ -2047,10 +2053,10 @@ interface SearchProps extends UI5BaseProps {
   illustration?: React.ReactNode;
   messageArea?: React.ReactNode;
   open?: boolean;
-  onSearch?: (event: CustomEvent<any>) => void;
-  onPopupActionPress?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onSearch?: (event: UI5CustomEvent<SearchProps>) => void;
+  onPopupActionPress?: (event: UI5CustomEvent<SearchProps>) => void;
+  onOpen?: (event: UI5CustomEvent<SearchProps>) => void;
+  onClose?: (event: UI5CustomEvent<SearchProps>) => void;
 }
 
 /** SearchItem component props */
@@ -2066,7 +2072,7 @@ interface SearchItemProps extends UI5BaseProps {
   image?: React.ReactNode;
   actions?: React.ReactNode;
   highlightText?: string;
-  onDelete?: (event: CustomEvent<any>) => void;
+  onDelete?: (event: UI5CustomEvent<SearchItemProps>) => void;
 }
 
 /** SearchMessageArea component props */
@@ -2087,14 +2093,14 @@ interface UserMenuProps extends UI5BaseProps {
   accounts?: React.ReactNode;
   footer?: React.ReactNode;
   eventDetails?: any;
-  onAvatarClick?: (event: CustomEvent<any>) => void;
-  onManageAccountClick?: (event: CustomEvent<any>) => void;
-  onEditAccountsClick?: (event: CustomEvent<any>) => void;
-  onChangeAccount?: (event: CustomEvent<any>) => void;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onSignOutClick?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onAvatarClick?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onManageAccountClick?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onEditAccountsClick?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onChangeAccount?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onItemClick?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onSignOutClick?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onOpen?: (event: UI5CustomEvent<UserMenuProps>) => void;
+  onClose?: (event: UI5CustomEvent<UserMenuProps>) => void;
 }
 
 /** UserMenuItem component props */
@@ -2134,9 +2140,9 @@ interface BarcodeScannerDialogProps extends UI5BaseProps {
   footer?: React.ReactNode;
   open?: boolean;
   eventDetails?: any;
-  onClose?: (event: CustomEvent<any>) => void;
-  onScanSuccess?: (event: CustomEvent<any>) => void;
-  onScanError?: (event: CustomEvent<any>) => void;
+  onClose?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
+  onScanSuccess?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
+  onScanError?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
 }
 
 /** AIButton component props */
@@ -2161,9 +2167,9 @@ interface AIButtonProps extends UI5BaseProps {
   loadingDelay?: number;
   text?: React.ReactNode;
   badge?: React.ReactNode;
-  onClick?: (event: CustomEvent<any>) => void;
-  onArrowButtonClick?: (event: CustomEvent<any>) => void;
-  onActiveStateChange?: (event: CustomEvent<any>) => void;
+  onClick?: (event: UI5CustomEvent<AIButtonProps>) => void;
+  onArrowButtonClick?: (event: UI5CustomEvent<AIButtonProps>) => void;
+  onActiveStateChange?: (event: UI5CustomEvent<AIButtonProps>) => void;
 }
 
 /** AIButtonState component props */
@@ -2212,19 +2218,19 @@ interface AIInputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
-  onVersionChange?: (event: CustomEvent<any>) => void;
-  onStopGeneration?: (event: CustomEvent<any>) => void;
-  onButtonClick?: (event: CustomEvent<any>) => void;
-  onItemClick?: (event: CustomEvent<any>) => void;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onRequestSubmit?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onTypeAhead?: (event: CustomEvent<any>) => void;
-  onSuggestionScroll?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onVersionChange?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onStopGeneration?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onButtonClick?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onItemClick?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onChange?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onInput?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onSelect?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onTypeAhead?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onSuggestionScroll?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onOpen?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onClose?: (event: UI5CustomEvent<AIInputProps>) => void;
 }
 
 /** AITextArea component props */
@@ -2255,13 +2261,13 @@ interface AITextAreaProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   previousValue?: string;
   valueStatePopover?: any;
-  onVersionChange?: (event: CustomEvent<any>) => void;
-  onStopGeneration?: (event: CustomEvent<any>) => void;
-  onChange?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onScroll?: (event: CustomEvent<any>) => void;
-  onValueChanged?: (event: CustomEvent<any>) => void;
+  onVersionChange?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onStopGeneration?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onChange?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onInput?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onSelect?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onScroll?: (event: UI5CustomEvent<AITextAreaProps>) => void;
+  onValueChanged?: (event: UI5CustomEvent<AITextAreaProps>) => void;
 }
 
 /** AIPromptInput component props */
@@ -2298,16 +2304,16 @@ interface AIPromptInputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
-  onSubmit?: (event: CustomEvent<any>) => void;
-  onInput?: (event: CustomEvent<any>) => void;
-  onChange?: (event: CustomEvent<any>) => void;
-  onSelect?: (event: CustomEvent<any>) => void;
-  onRequestSubmit?: (event: CustomEvent<any>) => void;
-  onSelectionChange?: (event: CustomEvent<any>) => void;
-  onTypeAhead?: (event: CustomEvent<any>) => void;
-  onSuggestionScroll?: (event: CustomEvent<any>) => void;
-  onOpen?: (event: CustomEvent<any>) => void;
-  onClose?: (event: CustomEvent<any>) => void;
+  onSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onInput?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onSelect?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onTypeAhead?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onSuggestionScroll?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onOpen?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onClose?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
 }
 
 // Module declarations for sample imports

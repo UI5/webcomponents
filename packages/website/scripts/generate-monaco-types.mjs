@@ -545,6 +545,12 @@ interface UI5BaseProps {
   children?: React.ReactNode;
 }
 
+// Custom event type with typed currentTarget for UI5 components
+interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
+  readonly currentTarget: EventTarget & Target;
+  readonly target: EventTarget & Target;
+}
+
 `;
 
   // Generate interface for each component
@@ -559,7 +565,7 @@ interface UI5BaseProps {
 
     for (const event of comp.events) {
       const handlerName = `on${kebabToPascal(event.name)}`;
-      output += `  ${handlerName}?: (event: CustomEvent<any>) => void;\n`;
+      output += `  ${handlerName}?: (event: UI5CustomEvent<${comp.name}Props>) => void;\n`;
     }
 
     output += `}\n\n`;
