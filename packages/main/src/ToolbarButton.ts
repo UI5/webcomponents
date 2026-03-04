@@ -4,8 +4,10 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ButtonAccessibilityAttributes } from "./Button.js";
 import type ButtonDesign from "./types/ButtonDesign.js";
+import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
-import ToolbarItem from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { IToolbarItem } from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -22,7 +24,7 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
  * `import "@ui5/webcomponents/dist/ToolbarButton.js";`
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -45,7 +47,38 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 	bubbles: true,
 	cancelable: true,
 })
-class ToolbarButton extends ToolbarItem {
+
+/**
+ * Fired when the overflow popover is closed.
+ * @public
+ */
+@event("close-overflow", {
+	bubbles: true,
+})
+class ToolbarButton extends ToolbarItemBase implements IToolbarItem {
+	eventDetails!: {
+		click: void,
+		"close-overflow": void;
+	}
+
+	/**
+	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
+	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
+	* @private
+	* @default "Default"
+	*/
+	@property()
+	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
+
+	/**
+	 * Defines if the toolbar overflow popup should close upon interaction with the item.
+	 * It will close by default.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	preventOverflowClosing = false;
+
 	/**
 	 * Defines if the action is disabled.
 	 *
@@ -196,7 +229,7 @@ class ToolbarButton extends ToolbarItem {
 
 	onClick(e: Event) {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
+		const prevented = !this.fireDecoratorEvent("click");
 		if (!prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}

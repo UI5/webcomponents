@@ -4,13 +4,14 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
 import type Select from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
-import ToolbarItem from "./ToolbarItem.js";
-import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail, IToolbarItem } from "./ToolbarItemBase.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -30,7 +31,7 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * `import "@ui5/webcomponents/dist/ToolbarSelectOption.js";` (comes with `ui5-toolbar-select`)
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -64,12 +65,41 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * @public
  */
 @event("close")
-class ToolbarSelect extends ToolbarItem {
-	eventDetails!: ToolbarItem["eventDetails"] & {
+
+/**
+ * Fired when the overflow popover is closed.
+ * @public
+ */
+@event("close-overflow", {
+	bubbles: true,
+})
+class ToolbarSelect extends ToolbarItemBase implements IToolbarItem {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
+		"click": void;
+		"close-overflow": void;
 	}
+
+	/**
+	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
+	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
+	* @private
+	* @default "Default"
+	*/
+	@property()
+	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
+
+	/**
+	 * Defines if the toolbar overflow popup should close upon interaction with the item.
+	 * It will close by default.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	preventOverflowClosing = false;
+
 	/**
 	 * Defines the width of the select.
 	 *
@@ -167,7 +197,7 @@ class ToolbarSelect extends ToolbarItem {
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
+		const prevented = !this.fireDecoratorEvent("click");
 		if (prevented && !this.preventOverflowClosing) {
 			this.fireDecoratorEvent("close-overflow");
 		}
