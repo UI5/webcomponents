@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";

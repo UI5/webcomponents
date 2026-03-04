@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 import CalendarLegendClass from "@ui5/webcomponents/dist/CalendarLegend.js";
 import CalendarLegendItemClass from "@ui5/webcomponents/dist/CalendarLegendItem.js";

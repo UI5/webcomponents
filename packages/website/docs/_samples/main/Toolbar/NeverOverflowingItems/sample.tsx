@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarButtonClass from "@ui5/webcomponents/dist/ToolbarButton.js";
 import "@ui5/webcomponents-icons/dist/decline.js";

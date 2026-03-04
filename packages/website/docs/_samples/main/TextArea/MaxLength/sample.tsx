@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
 const TextArea = createReactComponent(TextAreaClass);

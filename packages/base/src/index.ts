@@ -106,14 +106,8 @@ import { addCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
 
-// React
-import { createReactComponent } from "./createReactComponent.js";
-
 export default UI5Element;
 export {
-	// React
-	createReactComponent,
-
 	// drag and drop
 	startMultipleDrag,
 

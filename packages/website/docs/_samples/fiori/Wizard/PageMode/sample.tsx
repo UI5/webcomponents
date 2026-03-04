@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import WizardClass from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import WizardStepClass from "@ui5/webcomponents-fiori/dist/WizardStep.js";

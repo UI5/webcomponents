@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import MediaGalleryClass from "@ui5/webcomponents-fiori/dist/MediaGallery.js";
 import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js";

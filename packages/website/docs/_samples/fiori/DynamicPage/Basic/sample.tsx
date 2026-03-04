@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageHeaderClass from "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js";

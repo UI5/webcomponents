@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/ai.js";

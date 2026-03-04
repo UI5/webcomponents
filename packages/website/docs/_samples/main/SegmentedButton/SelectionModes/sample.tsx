@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import SegmentedButtonClass from "@ui5/webcomponents/dist/SegmentedButton.js";
 import SegmentedButtonItemClass from "@ui5/webcomponents/dist/SegmentedButtonItem.js";
 import "@ui5/webcomponents-icons/dist/bold-text.js";

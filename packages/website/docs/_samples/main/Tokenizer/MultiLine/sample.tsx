@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import TokenizerClass from "@ui5/webcomponents/dist/Tokenizer.js";
 

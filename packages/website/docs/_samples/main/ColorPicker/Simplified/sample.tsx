@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ColorPickerClass from "@ui5/webcomponents/dist/ColorPicker.js";
 
 const ColorPicker = createReactComponent(ColorPickerClass);

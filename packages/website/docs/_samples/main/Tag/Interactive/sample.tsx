@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TagClass from "@ui5/webcomponents/dist/Tag.js";
 
 const Tag = createReactComponent(TagClass);

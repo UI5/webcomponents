@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
 import "@ui5/webcomponents-icons/dist/paste.js";

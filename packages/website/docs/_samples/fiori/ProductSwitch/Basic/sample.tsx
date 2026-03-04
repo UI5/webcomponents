@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import "@ui5/webcomponents-icons/dist/home.js";

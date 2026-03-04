@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineGroupItemClass from "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";

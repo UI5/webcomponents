@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ColorPaletteClass from "@ui5/webcomponents/dist/ColorPalette.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 

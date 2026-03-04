@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";

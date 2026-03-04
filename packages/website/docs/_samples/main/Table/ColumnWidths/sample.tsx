@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";

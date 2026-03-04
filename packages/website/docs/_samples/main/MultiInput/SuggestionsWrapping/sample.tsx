@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 

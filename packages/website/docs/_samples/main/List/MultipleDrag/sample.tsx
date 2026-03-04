@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { startMultipleDrag } from "@ui5/webcomponents-base/dist/DragAndDrop.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";

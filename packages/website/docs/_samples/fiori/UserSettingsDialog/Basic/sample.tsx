@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef, useCallback } from "react";
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";

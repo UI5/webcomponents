@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import BreadcrumbsClass from "@ui5/webcomponents/dist/Breadcrumbs.js";
 import BreadcrumbsItemClass from "@ui5/webcomponents/dist/BreadcrumbsItem.js";
 

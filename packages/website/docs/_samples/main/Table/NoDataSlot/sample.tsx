@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";

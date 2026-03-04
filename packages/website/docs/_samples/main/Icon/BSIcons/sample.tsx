@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import "@ui5/webcomponents-icons-business-suite/dist/add-polygon.js";
 import "@ui5/webcomponents-icons-business-suite/dist/2x1-grid-layout.js";

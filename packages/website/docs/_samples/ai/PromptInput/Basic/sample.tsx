@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AIPromptInputClass from "@ui5/webcomponents-ai/dist/PromptInput.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base";
+import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
