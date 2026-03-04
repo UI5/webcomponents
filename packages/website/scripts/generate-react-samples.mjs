@@ -643,7 +643,7 @@ function generateReactSample(sampleDir) {
   jsxContent = applyCSSStyles(jsxContent, componentStyles, usedComponents);
 
   // Generate imports
-  const imports = ['import { createReactComponent } from "@ui5/webcomponents-base";'];
+  const imports = ['import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";'];
   const componentDecls = [];
 
   // Sort components by module to group imports

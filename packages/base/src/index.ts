@@ -106,9 +106,6 @@ import { addCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
 
-// React integration
-import { createReactComponent } from "./createReactComponent.js";
-
 export default UI5Element;
 export {
 	// drag and drop
@@ -214,11 +211,8 @@ export {
 	attachThemeLoaded,
 	detachThemeLoaded,
 
-	// UI5Element.ts
+// UI5Element.ts
 	UI5Element,
-
-	// React integration
-	createReactComponent,
 };
 
 type TargetedCustomEvent<D, T> = Omit<CustomEvent<D>, "currentTarget"> & { currentTarget: T };

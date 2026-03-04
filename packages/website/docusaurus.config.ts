@@ -2,6 +2,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import packageJson from "./package.json";
+import path from 'path';
 
 
 console.log("DEPLOYMENT_TYPE", process.env.DEPLOYMENT_TYPE); // eslint-disable-line
@@ -102,6 +103,20 @@ const config: Config = {
     ],
   ],
   plugins: [
+    function createReactComponentAlias() {
+      return {
+        name: 'create-react-component-alias',
+        configureWebpack() {
+          return {
+            resolve: {
+              alias: {
+                '@ui5/webcomponents-base/dist/createReactComponent.js': path.resolve(__dirname, '../base/dist/createReactComponent.js'),
+              },
+            },
+          };
+        },
+      };
+    },
   ],
   themeConfig: {
     algolia: {
