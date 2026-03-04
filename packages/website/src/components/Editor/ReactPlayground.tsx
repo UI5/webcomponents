@@ -2,7 +2,7 @@
  * ReactPlayground - Live React editor with Monaco and UI5 component preview
  * Features: editable code, syntax highlighting, TS checks, autocomplete, live preview
  */
-import React, { useContext, useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useContext, useState, useEffect, useCallback, useMemo, useRef, forwardRef } from "react";
 import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
 import { ThemeContext, ContentDensityContext, TextDirectionContext } from "@site/src/theme/Root";
 import { useColorMode } from "@docusaurus/theme-common";
@@ -12,7 +12,65 @@ import styles from "./ReactPlayground.module.css";
 // @ts-ignore - raw-loader import
 import generatedTypes from "!!raw-loader!./monaco-ui5-types.d.ts";
 
-import { createReactComponent } from "@ui5/webcomponents-base";
+// createReactComponent - defined locally to avoid Webpack resolution issues
+// with the barrel export from @ui5/webcomponents-base (which imports react
+// from a path Webpack can't resolve during static analysis)
+const toEventName = (propName: string) => {
+  return propName
+    .slice(2)
+    .replace(/([A-Z])/g, (match: string, letter: string, index: number) => {
+      return index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`;
+    });
+};
+
+const createEventCleanup = (element: HTMLElement, eventName: string, handler: EventListener) => {
+  element.addEventListener(eventName, handler);
+  return () => element.removeEventListener(eventName, handler);
+};
+
+function createReactComponent(ComponentClass: any): any {
+  const tagName = ComponentClass.getMetadata().getTag();
+  const Component = forwardRef((props: any, ref: any) => {
+    const { children, ...restProps } = props;
+    const elementRef = useRef<any>(null);
+    useEffect(() => {
+      if (ref) {
+        if (typeof ref === "function") {
+          ref(elementRef.current);
+        } else {
+          ref.current = elementRef.current;
+        }
+      }
+    }, [ref]);
+    useEffect(() => {
+      const element = elementRef.current;
+      if (!element) return;
+      const eventCleanups: Array<() => void> = [];
+      Object.keys(restProps).forEach(propName => {
+        const propValue = restProps[propName];
+        if (propName.startsWith("on") && typeof propValue === "function") {
+          const eventName = toEventName(propName);
+          eventCleanups.push(createEventCleanup(element, eventName, propValue));
+        }
+      });
+      return () => { eventCleanups.forEach(cleanup => cleanup()); };
+    }, [restProps]);
+    const domProps: Record<string, any> = {};
+    Object.keys(restProps).forEach(propName => {
+      const propValue = restProps[propName];
+      if (!propName.startsWith("on") || typeof propValue !== "function") {
+        const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
+        domProps[attrName] = propValue;
+      }
+    });
+    return React.createElement(tagName, { ref: elementRef, ...domProps }, children);
+  });
+  Component.displayName = tagName
+    .split("-")
+    .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+  return Component;
+}
 
 // Theme support - apply theme changes to UI5 Web Components rendered in-document
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
