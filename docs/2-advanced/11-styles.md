@@ -47,6 +47,24 @@ ui5-card-header::part(status) {
 
 <b>Note:</b> All available shadow parts are described in the API reference as part of the "Overview" section of each component.
 
+## Usage of CSS Custom States
+
+Components can expose custom states that reflect their internal state using the [CSS custom state pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:state). This allows you to apply styles based on component-specific conditions without relying on classes or attributes.
+
+<b>For example:</b> You can style a component differently based on its custom state:
+
+```html
+<ui5-toolbar-item></ui5-toolbar-item>
+```
+
+```css
+ui5-toolbar-item:state(overflowed) {
+  flex-direction: column
+}
+```
+
+<b>Note:</b> All available custom states are described in the API reference as part of the "Overview" section of each component.
+
 ## Changing CSS Variables
 
 The UI5 WebComponents leverage CSS variables, so if you inspect the elements inside the Shadow DOM, you will probably find which variable you need to change. Check the list of all [Global CSS Variables](https://github.com/SAP/theming-base-content/blob/master/content/Base/baseLib/sap_horizon/css_variables.css) that we use in the component. Altering them will change the component appearance.

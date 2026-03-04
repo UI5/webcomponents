@@ -569,7 +569,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**

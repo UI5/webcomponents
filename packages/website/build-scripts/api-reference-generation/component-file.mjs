@@ -251,6 +251,9 @@ No CSS parts available for this component.`
     }
 
     result = `${result}
+
+For more information on how to use CSS shadow parts, see [Usage of CSS Shadow Parts](/docs/advanced/styles/#usage-of-css-shadow-parts).
+
 | Name | Description |
 |------|-------------|
 ${cssParts.map(cssPart => `| ${cssPart.name} | ${processDescription(cssPart.description)} |`).join("\n")}`
@@ -268,6 +271,9 @@ No CSS custom states available for this component.`
     }
 
     result = `${result}
+
+For more information on how to use CSS custom states, see [Usage of CSS Custom States](/docs/advanced/styles/#usage-of-css-custom-states).
+
 | Name | Description |
 |------|-------------|
 ${cssStates.map(cssState => `| ${cssState.name} | ${processDescription(cssState.description)} |`).join("\n")}`
