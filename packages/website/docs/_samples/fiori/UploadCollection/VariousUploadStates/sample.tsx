@@ -1,54 +1,56 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useState } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/document-text.js";
 
 const UploadCollection = createReactComponent(UploadCollectionClass);
 const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
 const Icon = createReactComponent(IconClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+const initialFiles = [
+  { id: "1", fileName: "LaptopHT-1000.jpg", uploadState: "Complete", description: 'uploadState="Complete"', thumbnail: "img", thumbnailSrc: "/images/HT-1000.jpg" },
+  { id: "2", fileName: "Laptop.jpg", uploadState: "Uploading", type: "Active", progress: 37, description: 'uploadState="Uploading"', thumbnail: "img", thumbnailSrc: "/images/HT-1000.jpg" },
+  { id: "3", fileName: "latest-reports.pdf", uploadState: "Error", type: "Active", progress: 59, description: 'uploadState="Error"', thumbnail: "icon", thumbnailName: "document-text" },
+  { id: "4", fileName: "Notes.txt", uploadState: "Ready", description: 'uploadState="Ready" (default)', thumbnail: "icon", thumbnailName: "document-text" },
+];
 
-  const handleRetry = (e) => {
+function App() {
+  const [files, setFiles] = useState(initialFiles);
+
+  const handleUploadCollectionRetry = (e) => {
     alert("Retry uploading: " + e.target.fileName);
   };
 
-  const handleTerminate = (e) => {
+  const handleUploadCollectionTerminate = (e) => {
     alert("Terminate uploading of: " + e.target.fileName);
   };
 
-  const handleUi5ItemDelete = (e) => {
-    uploadCollection.removeChild(e.detail.item);
+  const handleUploadCollectionItemDelete = (e) => {
+    const deletedItem = e.detail.item;
+    setFiles(prev => prev.filter(f => f.fileName !== deletedItem.fileName));
   };
 
   return (
     <>
-      <UploadCollection>
+      <UploadCollection onRetry={handleUploadCollectionRetry} onTerminate={handleUploadCollectionTerminate} onItemDelete={handleUploadCollectionItemDelete}>
             <div slot="header" className="header">
-                <Title>Attachments (2)</Title>
+                <Title>Attachments ({files.length})</Title>
             </div>
 
-            <UploadCollectionItem file-name="LaptopHT-1000.jpg" upload-state="Complete">
-                uploadState="Complete"
-                <img src="/images/HT-1000.jpg" slot="thumbnail" />
-            </UploadCollectionItem>
-
-            <UploadCollectionItem file-name="Laptop.jpg" upload-state="Uploading" type="Active" progress={37}>
-                uploadState="Uploading"
-                <img src="/images/HT-1000.jpg" slot="thumbnail" />
-            </UploadCollectionItem>
-
-            <UploadCollectionItem file-name="latest-reports.pdf" upload-state="Error" type="Active" progress={59}>
-                uploadState="Error"
-                <Icon name="document-text" slot="thumbnail" />
-            </UploadCollectionItem>
-
-            <UploadCollectionItem file-name="Notes.txt" upload-state="Ready">
-                uploadState="Ready" (default)
-                <Icon name="document-text" slot="thumbnail" />
-            </UploadCollectionItem>
+            {files.map((file) => (
+              <UploadCollectionItem key={file.id} file-name={file.fileName} upload-state={file.uploadState} type={file.type} progress={file.progress}>
+                {file.description}
+                {file.thumbnail === "img" ? (
+                  <img src={file.thumbnailSrc} slot="thumbnail" />
+                ) : (
+                  <Icon name={file.thumbnailName} slot="thumbnail" />
+                )}
+              </UploadCollectionItem>
+            ))}
         </UploadCollection>
     </>
   );

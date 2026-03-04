@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
@@ -14,19 +15,20 @@ const MenuItem = createReactComponent(MenuItemClass);
 const Toast = createReactComponent(ToastClass);
 
 function App() {
+  const toastRef = useRef(null);
 
-  const handleItemClose = (e) => {
+  const handleNotificationListItemClose = (e) => {
     e.detail.item.hidden = true;
   };
 
-  const handleUi5ItemClick = (e) => {
-    wcToast.textContent = "Menu button '" + e.detail.text + "' pressed" + " on Notification List Item with id '" + e.target.parentElement.id + "'.";
-    wcToast.open = true;
+  const handleMenuWithActionsUi5ItemClick = (e) => {
+    toastRef.current.textContent = "Menu button '" + e.detail.text + "' pressed" + " on Notification List Item with id '" + e.target.parentElement.id + "'.";
+    toastRef.current.open = true;
   };
 
   return (
     <>
-      <NotificationList>
+      <NotificationList onItemClose={handleNotificationListItemClose}>
             <NotificationListItem id="firstNotificationListItem" title-text="New order (#2525) With a very long title - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc." state="Positive" importance="Important" show-close={true}>
                 <Avatar size="XS" slot="avatar">
                     <img src="/images/avatars/woman_avatar_1.png" />
@@ -37,7 +39,7 @@ function App() {
                 adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec
                 elementum
                 lectus turpis at nunc.
-                <Menu id="menuWithActions" slot="menu">
+                <Menu id="menuWithActions" slot="menu" onItemClick={handleMenuWithActionsUi5ItemClick}>
                     <MenuItem icon="accept" text="Accept" />
                     <MenuItem icon="message-error" text="Reject" />
                 </Menu>
@@ -59,7 +61,7 @@ function App() {
                 And with a very long description - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat, turpis vel scelerisque pharetra, tellus odio vehicula dolor, nec elementum lectus turpis at nunc.
             </NotificationListItem>
         </NotificationList>
-        <Toast id="wcToast" duration={2000} />
+        <Toast ref={toastRef} id="wcToast" duration={2000} />
     </>
   );
 }

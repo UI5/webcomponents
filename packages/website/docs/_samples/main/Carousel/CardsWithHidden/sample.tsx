@@ -17,6 +17,18 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-card {
+            width: 300px;
+            height: 200px;
+            margin: 0.5rem;
+        }
+
+        ui5-carousel {
+            width: 100%;
+            max-width: 800px;
+        }
+      `}</style>
       <Carousel style={{ width: "100%", maxWidth: "800px" }} items-per-page="S1 M2 L3 XL3" background-design="Solid" page-indicator-background-design="Transparent" page-indicator-border-design="None">
 
     		<Card style={{ width: "300px", height: "200px", margin: "0.5rem" }} className="myCard">
@@ -73,7 +85,6 @@ function App() {
     			</List>
     		</Card>
     	</Carousel>
-        <script type="module" src="main.js"></script>
     </>
   );
 }

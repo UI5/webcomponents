@@ -4,6 +4,7 @@ import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
 const Avatar = createReactComponent(AvatarClass);
 const Icon = createReactComponent(IconClass);

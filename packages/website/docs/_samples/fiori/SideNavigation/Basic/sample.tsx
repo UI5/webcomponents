@@ -3,6 +3,13 @@ import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
 import SideNavigationItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import SideNavigationSubItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
+import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/chain-link.js";
+import "@ui5/webcomponents-icons/dist/group.js";
+import "@ui5/webcomponents-icons/dist/locate-me.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
+import "@ui5/webcomponents-icons/dist/history.js";
+import "@ui5/webcomponents-icons/dist/customer.js";
 
 const SideNavigation = createReactComponent(SideNavigationClass);
 const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
@@ -13,7 +20,12 @@ function App() {
 
   return (
     <>
-      <SideNavigation>
+      <style>{`
+        ui5-side-navigation {
+            height: 600px;
+        }
+      `}</style>
+      <SideNavigation style={{ height: "600px" }}>
     		<SideNavigationItem text="Home" icon="home" />
     		<SideNavigationGroup text="Group 1" expanded={true}>
     			<SideNavigationItem text="People" expanded={true} icon="group">

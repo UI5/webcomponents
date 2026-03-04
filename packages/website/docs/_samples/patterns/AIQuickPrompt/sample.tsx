@@ -1,280 +1,348 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useState, useRef, useCallback, useEffect } from "react";
+import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
+import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
+import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
+import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
-import TokenClass from "@ui5/webcomponents/dist/Token.js";
-import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
-import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
-import ButtonClass from "@ui5/webcomponents/dist/Button.js";
-import ToastClass from "@ui5/webcomponents/dist/Toast.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
-import AIButtonClass from "@ui5/webcomponents-ai/dist/AIButton.js";
-import AIButtonStateClass from "@ui5/webcomponents-ai/dist/AIButtonState.js";
+import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
+import ToastClass from "@ui5/webcomponents/dist/Toast.js";
+import TokenClass from "@ui5/webcomponents/dist/Token.js";
+import "@ui5/webcomponents-icons/dist/ai.js";
+import "@ui5/webcomponents-icons/dist/stop.js";
+import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 
-const Card = createReactComponent(CardClass);
-const CardHeader = createReactComponent(CardHeaderClass);
-const Label = createReactComponent(LabelClass);
-const Token = createReactComponent(TokenClass);
 const AIButton = createReactComponent(AIButtonClass);
 const AIButtonState = createReactComponent(AIButtonStateClass);
 const BusyIndicator = createReactComponent(BusyIndicatorClass);
-const TextArea = createReactComponent(TextAreaClass);
 const Button = createReactComponent(ButtonClass);
-const Toast = createReactComponent(ToastClass);
+const Card = createReactComponent(CardClass);
+const CardHeader = createReactComponent(CardHeaderClass);
+const Label = createReactComponent(LabelClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 const MenuSeparator = createReactComponent(MenuSeparatorClass);
-
-function aiQuickPromptButtonClickHandler(e) {
-	var button = e.target;
-	switch(button.state) {
-		case "":
-		case "generate":
-			button.state = "generating";
-			quickPromptBusyIndicator.active = true;
-			sendButton.disabled = true;
-			const keys = Object.keys(predefinedTexts[translationKey]);
-			const randomKey = keys[Math.floor(Math.random() * keys.length)];
-			currentTextKey = randomKey;
-			stopBusyIndicatorAndGenerateText(button, predefinedTexts);
-			break;
-		case "generating":
-			button.state = "revise";
-			stopQuickPromptGeneration(button);
-			break;
-		case "revise":
-			menu1.opener = button;
-			menu1.open = true;
-			break;
-		case "reviseGenerating":
-			button.state = "revise";
-			stopQuickPromptGeneration(button);
-			break;
-	}
-}
-function startQuickPromptGeneration(button) {
-	console.warn("startGeneration");
-	generationStopped = false;
-	generationId = setTimeout(function() {
-		console.warn("Generation completed");
-		button.state = "revise";
-	}, 2000);
-}
-function stopQuickPromptGeneration() {
-	console.warn("stopGeneration");
-	clearInterval(generationId);
-	generationStopped = true;
-	sendButton.disabled = false;
-	output.disabled = false;
-	quickPromptBusyIndicator.active = false;
-}
-function isTextWrong() {
-		return output.value.trim() !== predefinedTexts[translationKey][currentTextKey]
-			&& output.value.trim() !== predefinedTextsExpanded[translationKey][currentTextKey]
-			&& output.value.trim() !== predefinedTextsBulleted[translationKey][currentTextKey]
-			&& output.value.trim() !== predefinedTextsRephrased[translationKey][currentTextKey]
-			&& output.value.trim() !== predefinedTextsSimplified[translationKey][currentTextKey];
-	}
-function setStateAndGenerate(button, state, textKey, predefinedTexts) {
-	quickPromptBusyIndicator.active = true;
-	button.state = state;
-	stopBusyIndicatorAndGenerateText(button, predefinedTexts, textKey);
-
-}
-function startTextGeneration(button, state, predefinedTexts) {
-	quickPromptBusyIndicator.active = true;
-	button.state = state;
-	stopBusyIndicatorAndGenerateText(button, predefinedTexts);
-}
-function stopBusyIndicatorAndGenerateText(button, predefinedTexts, textKey) {
-	setTimeout(() => {
-		generateText(predefinedTexts[translationKey][textKey || currentTextKey], button);
-	}, 2000);
-	startQuickPromptGeneration(button);
- }
-function clearValueState(output) {
-	output.valueState = "None";
-}
-function setNegativeValueState(output) {
-	output.valueState = "Negative";
-	const div = document.createElement("div");
-	div.setAttribute("slot", "valueStateMessage");
-	div.textContent = "Something went wrong during the generation process. Please try again.";
-
-	if (!output.querySelector("[slot='valueStateMessage']")) {
-		output.appendChild(div);
-	}
-}
-function fixSpellingAndGrammar(button, output) {
-	if (isTextWrong()) {
-		setStateAndGenerate(button, "generating", currentTextKey, predefinedTexts);
-		setNegativeValueState(output);
-	} else {
-		output.valueState = "Positive";
-		setTimeout(() => {
-			output.valueState = "None";
-		}, 3000);
-	}
-}
-function generateText(text, button) {
-	if (generationId) {
-		clearInterval(generationId);
-	}
-
-	const output = document.getElementById("output");
-	const words = text.split(" ");
-	let currentWordIndex = 0;
-	output.value = "";
-	generationId = setInterval(() => {
-		if (currentWordIndex < words.length) {
-			output.value += words[currentWordIndex] + " ";
-			currentWordIndex++;
-			sendButton.disabled = true;
-			output.disabled = true;
-		} else {
-			if (!generationStopped) {
-				button.state = "revise";
-				button.accessibilityAttributes = {
-					root: {
-						hasPopup: "menu",
-						roleDescription: "Menu Button"
-					}
-				};
-				output.valueState = "None";
-				quickPromptBusyIndicator.active = false;
-			}
-			clearInterval(generationId);
-			sendButton.disabled = false;
-			output.disabled = false;
-			quickPromptBusyIndicator.active = false;
-		}
-	}, 75);
-}
-
+const TextArea = createReactComponent(TextAreaClass);
+const Toast = createReactComponent(ToastClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
-  const sendButtonRef = useRef(null);
-  const toastRef = useRef(null);
-  const quickPromptBusyIndicatorRef = useRef(null);
-  const outputRef = useRef(null);
-  const outputRef = useRef(null);
-  const outputRef = useRef(null);
-  const menu1Ref = useRef(null);
+  const [buttonState, setButtonState] = useState("generate");
+  const [busyActive, setBusyActive] = useState(false);
+  const [outputValue, setOutputValue] = useState("");
+  const [outputDisabled, setOutputDisabled] = useState(false);
+  const [outputValueState, setOutputValueState] = useState("None");
+  const [sendDisabled, setSendDisabled] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleSendButtonClick = () => {
-    const output = document.getElementById("outputRef.current");
-    if (outputRef.current.value) {
-    toastRef.current.open = true;
-    outputRef.current.valueState = "None";
-    outputRef.current.value = "";
+  const aiButtonRef = useRef(null);
+  const textsRef = useRef(null);
+  const generationIdRef = useRef(null);
+  const generationStoppedRef = useRef(false);
+  const translationKeyRef = useRef("en");
+  const currentTextKeyRef = useRef(null);
+
+  useEffect(() => {
+    fetch("../assets/data/predefinedTexts.json")
+      .then(res => res.json())
+      .then(data => {
+        textsRef.current = data;
+      });
+  }, []);
+
+  const stopGeneration = useCallback(() => {
+    if (generationIdRef.current) {
+      clearInterval(generationIdRef.current);
+      generationIdRef.current = null;
     }
-  };
+    generationStoppedRef.current = true;
+    setSendDisabled(false);
+    setOutputDisabled(false);
+    setBusyActive(false);
+  }, []);
 
-  const handleMenu1ItemClick = (e) => {
-    const button = menu1Ref.current.opener;
-    const output = document.getElementById("outputRef.current");
+  const generateText = useCallback((text, finalState) => {
+    if (generationIdRef.current) {
+      clearInterval(generationIdRef.current);
+    }
+    const words = text.split(" ");
+    let currentWordIndex = 0;
+    let accumulated = "";
+    setOutputValue("");
+
+    generationIdRef.current = setInterval(() => {
+      if (currentWordIndex < words.length) {
+        accumulated += words[currentWordIndex] + " ";
+        setOutputValue(accumulated);
+        currentWordIndex++;
+        setSendDisabled(true);
+        setOutputDisabled(true);
+      } else {
+        if (!generationStoppedRef.current) {
+          setButtonState("revise");
+          setOutputValueState("None");
+          setBusyActive(false);
+        }
+        clearInterval(generationIdRef.current);
+        generationIdRef.current = null;
+        setSendDisabled(false);
+        setOutputDisabled(false);
+        setBusyActive(false);
+      }
+    }, 75);
+  }, []);
+
+  const startQuickPromptGeneration = useCallback((finalState) => {
+    generationStoppedRef.current = false;
+    const timeoutId = setTimeout(() => {
+      setButtonState(finalState || "revise");
+    }, 2000);
+    generationIdRef.current = timeoutId;
+  }, []);
+
+  const stopBusyIndicatorAndGenerateText = useCallback((textMap, textKey) => {
+    if (!textsRef.current) return;
+    const key = translationKeyRef.current;
+    const tKey = textKey || currentTextKeyRef.current;
+    setTimeout(() => {
+      generateText(textMap[key][tKey], "revise");
+    }, 2000);
+    generationStoppedRef.current = false;
+  }, [generateText]);
+
+  const handleAiButtonClick = useCallback(() => {
+    switch (buttonState) {
+      case "":
+      case "generate": {
+        setButtonState("generating");
+        setBusyActive(true);
+        setSendDisabled(true);
+        const predefinedTexts = textsRef.current?.predefinedTexts;
+        if (!predefinedTexts) return;
+        const keys = Object.keys(predefinedTexts[translationKeyRef.current]);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        currentTextKeyRef.current = randomKey;
+        stopBusyIndicatorAndGenerateText(predefinedTexts);
+        break;
+      }
+      case "generating":
+        setButtonState("revise");
+        stopGeneration();
+        break;
+      case "revise":
+        setMenuOpen(true);
+        break;
+      case "reviseGenerating":
+        setButtonState("revise");
+        stopGeneration();
+        break;
+    }
+  }, [buttonState, stopGeneration, stopBusyIndicatorAndGenerateText]);
+
+  const isTextWrong = useCallback(() => {
+    if (!textsRef.current) return true;
+    const key = translationKeyRef.current;
+    const tKey = currentTextKeyRef.current;
+    const trimmed = outputValue.trim();
+    return trimmed !== textsRef.current.predefinedTexts?.[key]?.[tKey]
+      && trimmed !== textsRef.current.predefinedTextsExpanded?.[key]?.[tKey]
+      && trimmed !== textsRef.current.predefinedTextsBulleted?.[key]?.[tKey]
+      && trimmed !== textsRef.current.predefinedTextsRephrased?.[key]?.[tKey]
+      && trimmed !== textsRef.current.predefinedTextsSimplified?.[key]?.[tKey];
+  }, [outputValue]);
+
+  const startTextGeneration = useCallback((state, textMap) => {
+    setBusyActive(true);
+    setButtonState(state);
+    stopBusyIndicatorAndGenerateText(textMap);
+  }, [stopBusyIndicatorAndGenerateText]);
+
+  const setStateAndGenerate = useCallback((state, textKey, textMap) => {
+    setBusyActive(true);
+    setButtonState(state);
+    stopBusyIndicatorAndGenerateText(textMap, textKey);
+  }, [stopBusyIndicatorAndGenerateText]);
+
+  const handleMenuItemClick = useCallback((e) => {
+    if (!textsRef.current) return;
+    const predefinedTexts = textsRef.current.predefinedTexts;
+    const predefinedTextsBulleted = textsRef.current.predefinedTextsBulleted;
+    const predefinedTextsExpanded = textsRef.current.predefinedTextsExpanded;
+    const predefinedTextsRephrased = textsRef.current.predefinedTextsRephrased;
+    const predefinedTextsSimplified = textsRef.current.predefinedTextsSimplified;
+    const predefinedTextsSummarized = textsRef.current.predefinedTextsSummarized;
+
     switch (e.detail.text) {
-    case "Regenerate":
-    const keys = Object.keys(predefinedTexts[translationKey]);
-    const randomKey = keys[Math.floor(Math.random() * keys.length)];
-    currentTextKey = randomKey;
-    setStateAndGenerate(button, "generating", randomKey, predefinedTexts);
-    break;
-    case "Make Bulleted List":
-    startTextGeneration(button, "reviseGenerating", predefinedTextsBulleted);
-    break;
-    case "Clear Error":
-    clearValueState(outputRef.current);
-    break;
-    case "Fix Spelling and Grammar":
-    fixSpellingAndGrammar(button, outputRef.current);
-    break;
-    case "Generate Error":
-    setNegativeValueState(outputRef.current);
-    break;
-    case "Simplify":
-    startTextGeneration(button, "reviseGenerating", predefinedTextsSimplified);
-    break;
-    case "Expand":
-    startTextGeneration(button, "reviseGenerating", predefinedTextsExpanded);
-    break;
-    case "Rephrase":
-    startTextGeneration(button, "reviseGenerating", predefinedTextsRephrased);
-    break;
-    case "Summarize":
-    startTextGeneration(button, "reviseGenerating", predefinedTextsSummarized);
-    break;
-    case "Bulgarian":
-    translationKey = "bg";
-    startTextGeneration(button, "reviseGenerating", predefinedTexts);
-    break;
-    case "English":
-    translationKey = "en";
-    startTextGeneration(button, "reviseGenerating", predefinedTexts);
-    break;
-    case "German":
-    translationKey = "de";
-    startTextGeneration(button, "reviseGenerating", predefinedTexts);
-    break;
-    default:
-    return "";
+      case "Regenerate": {
+        const keys = Object.keys(predefinedTexts[translationKeyRef.current]);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        currentTextKeyRef.current = randomKey;
+        setStateAndGenerate("generating", randomKey, predefinedTexts);
+        break;
+      }
+      case "Make Bulleted List":
+        startTextGeneration("reviseGenerating", predefinedTextsBulleted);
+        break;
+      case "Clear Error":
+        setOutputValueState("None");
+        break;
+      case "Fix Spelling and Grammar":
+        if (isTextWrong()) {
+          setStateAndGenerate("generating", currentTextKeyRef.current, predefinedTexts);
+          setOutputValueState("Negative");
+        } else {
+          setOutputValueState("Positive");
+          setTimeout(() => {
+            setOutputValueState("None");
+          }, 3000);
+        }
+        break;
+      case "Generate Error":
+        setOutputValueState("Negative");
+        break;
+      case "Simplify":
+        startTextGeneration("reviseGenerating", predefinedTextsSimplified);
+        break;
+      case "Expand":
+        startTextGeneration("reviseGenerating", predefinedTextsExpanded);
+        break;
+      case "Rephrase":
+        startTextGeneration("reviseGenerating", predefinedTextsRephrased);
+        break;
+      case "Summarize":
+        startTextGeneration("reviseGenerating", predefinedTextsSummarized);
+        break;
+      case "Bulgarian":
+        translationKeyRef.current = "bg";
+        startTextGeneration("reviseGenerating", predefinedTexts);
+        break;
+      case "English":
+        translationKeyRef.current = "en";
+        startTextGeneration("reviseGenerating", predefinedTexts);
+        break;
+      case "German":
+        translationKeyRef.current = "de";
+        startTextGeneration("reviseGenerating", predefinedTexts);
+        break;
     }
-  };
+  }, [isTextWrong, setStateAndGenerate, startTextGeneration]);
+
+  const handleSendClick = useCallback(() => {
+    if (outputValue) {
+      setToastOpen(true);
+      setOutputValueState("None");
+      setOutputValue("");
+    }
+  }, [outputValue]);
 
   return (
     <>
-      <div style={{ width: "100%", height: "fit-content" }}>
-            <Card>
-            		<CardHeader slot="header" titleText="Michael Adams" subtitleText="Senior Sales Executive">
-            			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar" />
-            		</CardHeader>
-            		<section style={{ display: "flex", height: "450px", flexDirection: "column", justifyContent: "flex-end", padding: "1rem", borderStartStartRadius: "0.625rem", borderStartEndRadius: "0.625rem", gap: "0.5rem" }}>
-            			<Label required={true}>To: </Label>
-            			<div style={{ display: "flex", gap: "0.125rem" }}>
-            				<Token selected={true} text="Diana Mihaylova" style={{ width: "fit-content", marginBlockEnd: "1rem" }} />
-            				<Token selected={true} text="DL Marketing Sector SAP" style={{ width: "fit-content", marginBlockEnd: "1rem" }} />
-            			</div>
-            			<div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            				<Label style={{ alignSelf: "flex-end" }} required={true}>Offer: </Label>
-            				<AIButton id="quickPromptAiButton" style={{ alignSelf: "flex-end" }} state="generate">
-            					<AIButtonState name="generate" text="Generate" icon="ai" />
-            					<AIButtonState name="generating" text="Stop Generating" icon="stop" />
-            					<AIButtonState name="reviseGenerating" text="Stop Generating" icon="stop" />
-            					<AIButtonState name="revise" text="Revise" icon="ai" endIcon="navigation-down-arrow" />
-            				</AIButton>
-            			</div>
-            				<BusyIndicator style={{ width: "100%", height: "100%" }} id="quickPromptBusyIndicator" ref={quickPromptBusyIndicatorRef}>
-            				<TextArea id="output" ref={outputRef} ref={outputRef} ref={outputRef} style={{ height: "100%" }} />
-            		</section>
-            		<div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", gap: "0.25rem", padding: "0 0.75rem 0.75rem 0.75rem" }}>
-            			<Button id="footerBtnSend" ref={sendButtonRef} onClick={handleSendButtonClick} design="Emphasized">Send</Button>
-            			<Button id="footerBtnCancel" design="Transparent">Cancel</Button>
-            		</div>
-            		<Toast placement="MiddleCenter" id="quickPromptToast" ref={toastRef} duration={3000}>Your message was sent successfully!</Toast>
-            	</Card>
-            	<Menu id="menu1" ref={menu1Ref} onItemClick={handleMenu1ItemClick} horizontalAlign="End">
-            		<MenuItem text="Regenerate" />
-            		<MenuSeparator />
-            		<MenuItem text="Fix Spelling and Grammar" />
-            		<MenuItem text="Rewrite Text">
-            			<MenuItem text="Simplify" />
-            			<MenuItem text="Expand" />
-            			<MenuItem text="Rephrase" />
-            			<MenuItem text="Summarize" />
-            		</MenuItem>
-            		<MenuItem text="Make Bulleted List" />
-            		<MenuItem text="Translate">
-            			<MenuItem text="Bulgarian" />
-            			<MenuItem text="English" />
-            			<MenuItem text="German" />
-            		</MenuItem>
-            		<MenuSeparator />
-            		<MenuItem text="Generate Error" />
-            		<MenuItem text="Clear Error" />
-            	</Menu>
+      <style>{`
+        [ui5-card] {
+          width: 600px;
+        }
+        .quickPromptSection {
+          display: flex;
+          height: 450px;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 1rem;
+          border-start-start-radius: 0.625rem;
+          border-start-end-radius: 0.625rem;
+          gap: 0.5rem;
+        }
+        .quickPromptAiButton {
+          align-self: flex-end;
+        }
+        .quickPromptLblBtn {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+        .quickPromptCardFooter {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          gap: 0.25rem;
+          padding: 0 0.75rem 0.75rem 0.75rem;
+        }
+        .quickPromptBusyIndicator {
+          width: 100%;
+          height: 100%;
+        }
+      `}</style>
+      <Card>
+        <CardHeader slot="header" title-text="Michael Adams" subtitle-text="Senior Sales Executive">
+          <img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar" />
+        </CardHeader>
+        <section className="quickPromptSection">
+          <Label required={true}>To: </Label>
+          <div style={{ display: "flex", gap: "0.125rem" }}>
+            <Token style={{ width: "fit-content", marginBlockEnd: "1rem" }} selected={true} text="Diana Mihaylova" />
+            <Token style={{ width: "fit-content", marginBlockEnd: "1rem" }} selected={true} text="DL Marketing Sector SAP" />
           </div>
+          <div className="quickPromptLblBtn">
+            <Label style={{ alignSelf: "flex-end" }} required={true}>Offer: </Label>
+            <AIButton
+              ref={aiButtonRef}
+              className="quickPromptAiButton"
+              state={buttonState}
+              onClick={handleAiButtonClick}
+            >
+              <AIButtonState name="generate" text="Generate" icon="ai" />
+              <AIButtonState name="generating" text="Stop Generating" icon="stop" />
+              <AIButtonState name="reviseGenerating" text="Stop Generating" icon="stop" />
+              <AIButtonState name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow" />
+            </AIButton>
+          </div>
+          <BusyIndicator className="quickPromptBusyIndicator" active={busyActive}>
+            <TextArea
+              style={{ height: "100%" }}
+              value={outputValue}
+              disabled={outputDisabled}
+              value-state={outputValueState}
+            />
+          </BusyIndicator>
+        </section>
+        <div className="quickPromptCardFooter">
+          <Button design="Emphasized" disabled={sendDisabled} onClick={handleSendClick}>Send</Button>
+          <Button design="Transparent">Cancel</Button>
+        </div>
+        <Toast placement="MiddleCenter" open={toastOpen} duration={3000}>Your message was sent successfully!</Toast>
+      </Card>
+
+      <Menu
+        open={menuOpen}
+        opener={aiButtonRef.current}
+        horizontal-align="End"
+        onItemClick={handleMenuItemClick}
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem text="Regenerate" />
+        <MenuSeparator />
+        <MenuItem text="Fix Spelling and Grammar" />
+        <MenuItem text="Rewrite Text">
+          <MenuItem text="Simplify" />
+          <MenuItem text="Expand" />
+          <MenuItem text="Rephrase" />
+          <MenuItem text="Summarize" />
+        </MenuItem>
+        <MenuItem text="Make Bulleted List" />
+        <MenuItem text="Translate">
+          <MenuItem text="Bulgarian" />
+          <MenuItem text="English" />
+          <MenuItem text="German" />
+        </MenuItem>
+        <MenuSeparator />
+        <MenuItem text="Generate Error" />
+        <MenuItem text="Clear Error" />
+      </Menu>
     </>
   );
 }

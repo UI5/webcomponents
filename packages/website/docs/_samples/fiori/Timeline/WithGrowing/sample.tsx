@@ -1,26 +1,41 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef, useState } from "react";
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+const itemToLoad = 5;
 
-  const handleLoadMore = () => {
-    growingTimeline.loading = true;
+function App() {
+  const timelineRef = useRef(null);
+  const [extraItems, setExtraItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const itemsLoadedRef = useRef(0);
+
+  const handleGrowingTimelineLoadMore = () => {
+    setLoading(true);
 
     setTimeout(() => {
-        insertItems(growingTimeline);
-        growingTimeline.loading = false;
+        const newItems = [];
+        for (let i = itemsLoadedRef.current; i < itemsLoadedRef.current + itemToLoad; i++) {
+            newItems.push({ titleText: "Title text", subtitleText: "The subtitle text goes here " + i, icon: "calendar" });
+        }
+        itemsLoadedRef.current += itemToLoad;
+        setExtraItems(prev => [...prev, ...newItems]);
+        setLoading(false);
+    }, 1500);
   };
 
   return (
     <>
       <div style={{ height: "300px" }}>
-    		<Timeline id="growingTimeline" layout="Vertical" growing="Scroll" loading-delay={0}>
+    		<Timeline ref={timelineRef} id="growingTimeline" layout="Vertical" growing="Scroll" loading-delay={0} loading={loading} onLoadMore={handleGrowingTimelineLoadMore}>
     			<TimelineItem title-text="called" subtitle-text="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" name-clickable={true} />
     			<TimelineItem title-text="called" subtitle-text="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" />
 
@@ -31,6 +46,9 @@ function App() {
     			<TimelineItem title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
     				Online meeting
     			</TimelineItem>
+          {extraItems.map((item, index) => (
+            <TimelineItem key={index} title-text={item.titleText} subtitle-text={item.subtitleText} icon={item.icon} />
+          ))}
     		</Timeline>
     	</div>
     </>

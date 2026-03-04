@@ -1,40 +1,50 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef, useState } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/document-text.js";
 
 const UploadCollection = createReactComponent(UploadCollectionClass);
 const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
 const Icon = createReactComponent(IconClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+const initialFiles = [
+  { id: "1", fileName: "LaptopHT-1000.jpg", fileNameClickable: true, uploadState: "Complete", type: "Detail", description: "Uploaded By: David Keane \u00B7 Uploaded On: 2014-07-26 \u00B7 File Size: 35 KB", thumbnail: "img", thumbnailSrc: "/images/HT-1000.jpg" },
+  { id: "2", fileName: "Notes.txt", fileNameClickable: false, uploadState: "Complete", type: "Detail", description: "Uploaded By: John Smith \u00B7 Uploaded On: 2014-09-02 \u00B7 File Size: 226.6 KB", thumbnail: "icon", thumbnailName: "document-text" },
+];
 
-  const handleRename = (e) => {
-    alert("Rename e: " + e.target.fileName);
+function App() {
+  const [files, setFiles] = useState(initialFiles);
+
+  const handleUploadCollectionRename = (e) => {
+    alert("Rename event: " + e.target.fileName);
   };
 
-  const handleUi5ItemDelete = (e) => {
-    uploadCollection.removeChild(e.detail.item);
+  const handleUploadCollectionItemDelete = (e) => {
+    const deletedItem = e.detail.item;
+    setFiles(prev => prev.filter(f => f.fileName !== deletedItem.fileName));
   };
 
   return (
     <>
-      <UploadCollection>
+      <UploadCollection onRename={handleUploadCollectionRename} onItemDelete={handleUploadCollectionItemDelete}>
             <div slot="header" className="header">
-                <Title>Attachments (2)</Title>
+                <Title>Attachments ({files.length})</Title>
             </div>
 
-            <UploadCollectionItem file-name="LaptopHT-1000.jpg" file-name-clickable={true} upload-state="Complete" type="Detail">
-                Uploaded By: David Keane · Uploaded On: 2014-07-26 · File Size: 35 KB
-                <img src="/images/HT-1000.jpg" slot="thumbnail" />
-            </UploadCollectionItem>
-
-            <UploadCollectionItem file-name="Notes.txt" upload-state="Complete" type="Detail">
-                Uploaded By: John Smith · Uploaded On: 2014-09-02 · File Size: 226.6 KB
-                <Icon name="document-text" slot="thumbnail" />
-            </UploadCollectionItem>
+            {files.map((file) => (
+              <UploadCollectionItem key={file.id} file-name={file.fileName} file-name-clickable={file.fileNameClickable || false} upload-state={file.uploadState} type={file.type}>
+                {file.description}
+                {file.thumbnail === "img" ? (
+                  <img src={file.thumbnailSrc} slot="thumbnail" />
+                ) : (
+                  <Icon name={file.thumbnailName} slot="thumbnail" />
+                )}
+              </UploadCollectionItem>
+            ))}
         </UploadCollection>
     </>
   );

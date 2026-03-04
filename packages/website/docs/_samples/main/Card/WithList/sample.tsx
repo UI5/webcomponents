@@ -6,6 +6,7 @@ import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents-icons/dist/group.js";
 
 const Avatar = createReactComponent(AvatarClass);
 const Button = createReactComponent(ButtonClass);
@@ -19,6 +20,11 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-card {
+            width: 22rem;
+        }
+      `}</style>
       <Card style={{ width: "22rem" }}>
             <CardHeader slot="header" title-text="Team Space" subtitle-text="Direct Reports" additional-text="3 of 10">
                 <Icon name="group" slot="avatar" />

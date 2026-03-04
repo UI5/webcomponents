@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <style>
+      <style>{`
             [ui5-button] {
                 width: 10rem;
                 color: DarkSlateBlue;
@@ -18,7 +18,7 @@ function App() {
             [ui5-button]:hover {
                 background-color: #dad4f7;
             }
-        </style>
+        `}</style>
         <Button>Custom Button</Button>
     </>
   );

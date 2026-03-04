@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
@@ -12,20 +13,21 @@ const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
+  const dialogRef = useRef(null);
 
-  const handleClick = () => {
-    dialog.open = true;
+  const handleDialogOpenerClick = () => {
+    dialogRef.current.open = true;
   };
 
-  const handleClick = () => {
-    dialog.open = false;
+  const handleBtnClick = () => {
+    dialogRef.current.open = false;
   };
 
   return (
     <>
-      <Button id="dialogOpener">Open Dialog</Button>
+      <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
 
-        <Dialog id="dialog" state="Negative" header-text="State :: Negative">
+        <Dialog ref={dialogRef} id="dialog" state="Negative" header-text="State :: Negative">
             <Text>Dialog with state</Text>
             <Toolbar slot="footer">
                 <ToolbarButton className="dialogCloser" text="Close" />

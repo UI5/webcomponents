@@ -9,6 +9,18 @@ function App() {
 
   return (
     <>
+      <style>{`
+        .text {
+            display: inline-block;
+            font-size: var(--sapFontSize);
+            font-family: var(--sapFontFamily);
+            color: var(--sapTextColor);
+            line-height: normal;
+            white-space: pre-line;
+            word-wrap: break-word;
+            cursor: text;
+        }
+      `}</style>
       <div style={{ width: "1000px", overflowX: "scroll" }}>
         <DynamicSideContent side-content-visibility="AlwaysShow">
             <div>

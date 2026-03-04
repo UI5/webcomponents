@@ -7,11 +7,7 @@ function App() {
 
   return (
     <>
-      <!-- playground-hide-end -->
         <RangeSlider start-value={20} end-value={60} min={0} max={100} step={5} show-tooltip={true} />
-
-        <!-- playground-hide -->
-        <script type="module" src="main.js"></script>
     </>
   );
 }

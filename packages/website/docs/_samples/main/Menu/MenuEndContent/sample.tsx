@@ -1,40 +1,51 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import "@ui5/webcomponents-icons/dist/add-document.js";
+import "@ui5/webcomponents-icons/dist/add-folder.js";
+import "@ui5/webcomponents-icons/dist/open-folder.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
+import "@ui5/webcomponents-icons/dist/journey-arrive.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
+import "@ui5/webcomponents-icons/dist/add.js";
+import "@ui5/webcomponents-icons/dist/hint.js";
+import "@ui5/webcomponents-icons/dist/favorite.js";
 
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
+  const menuEndContentRef = useRef(null);
 
-  const handleClick = () => {
-    menuEndContent.opener = btnOpenEndContent;
-	menuEndContent.open = !menuEndContent.open;
+  const handleBtnOpenEndContentClick = () => {
+    menuEndContentRef.current.opener = btnOpenEndContent;
+	menuEndContentRef.current.open = !menuEndContentRef.current.open;
   };
 
-  const handleClick = () => {
+  const handleNewAddClick = () => {
     alert("Add button pressed");
   };
 
-  const handleClick = () => {
+  const handleNewHintClick = () => {
     alert("Hint button pressed");
   };
 
-  const handleClick = () => {
+  const handleNewFavoriteClick = () => {
     alert("Favorite button pressed");
   };
 
   return (
     <>
-      <Button id="btnOpenEndContent">Open Menu</Button>
+      <Button id="btnOpenEndContent" onClick={handleBtnOpenEndContentClick}>Open Menu</Button>
 
-    	<Menu id="menuEndContent" header-text="My ui5-menu">
+    	<Menu ref={menuEndContentRef} id="menuEndContent" header-text="My ui5-menu">
     		<MenuItem text="New File" accessible-name="Opens a file explorer" additional-text="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document">
-    			<Button id="newAdd" slot="endContent" icon="add" design="Transparent" />
-    			<Button id="newHint" slot="endContent" icon="hint" design="Transparent" />
-    			<Button id="newFavorite" slot="endContent" icon="favorite" design="Transparent" />
+    			<Button id="newAdd" slot="endContent" icon="add" design="Transparent" onClick={handleNewAddClick} />
+    			<Button id="newHint" slot="endContent" icon="hint" design="Transparent" onClick={handleNewHintClick} />
+    			<Button id="newFavorite" slot="endContent" icon="favorite" design="Transparent" onClick={handleNewFavoriteClick} />
     		</MenuItem>
     		<MenuItem text="New Folder" additional-text="Ctrl+F" icon="add-folder" />
     		<MenuItem text="Open" icon="open-folder" accessible-name="Choose platform" starts-section={true}>

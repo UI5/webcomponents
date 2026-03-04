@@ -9,6 +9,17 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-media-gallery-item:not(:defined) {
+            visibility: hidden;
+        }
+
+        @media (min-width: 600px) {
+            ui5-media-gallery {
+                height: 50rem;
+            }
+        }
+      `}</style>
       <MediaGallery id="media-gallery">
             <MediaGalleryItem layout="Wide">
                 <iframe src="https://www.youtube.com/embed/GxGZG2fv6Aw" title="YouTube video player" frameborder="0"

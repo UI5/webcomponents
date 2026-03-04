@@ -19,6 +19,15 @@ function App() {
 
   return (
     <>
+      <style>{`
+        .f {
+            display: flex;
+            flex-direction: column;
+        }
+        .f > :nth-child(2n) {
+            margin-bottom: 1.5rem;
+        }
+      `}</style>
       <div className="f">
             <Label htmlFor="myInput" required={true} show-colon={true}>First name</Label>
             <Input id="myInput" required={true} placeholder="Enter your name" />

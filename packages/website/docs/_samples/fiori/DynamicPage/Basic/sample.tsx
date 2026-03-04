@@ -1,9 +1,10 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import { useState } from "react";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageHeaderClass from "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js";
 import DynamicPageTitleClass from "@ui5/webcomponents-fiori/dist/DynamicPageTitle.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import BreadcrumbsClass from "@ui5/webcomponents/dist/Breadcrumbs.js";
 import BreadcrumbsItemClass from "@ui5/webcomponents/dist/BreadcrumbsItem.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -14,12 +15,15 @@ import TagClass from "@ui5/webcomponents/dist/Tag.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarButtonClass from "@ui5/webcomponents/dist/ToolbarButton.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
+import "@ui5/webcomponents-icons/dist/share.js";
+import "@ui5/webcomponents-icons/dist/laptop.js";
 
-const Bar = createReactComponent(BarClass);
 const DynamicPage = createReactComponent(DynamicPageClass);
 const DynamicPageHeader = createReactComponent(DynamicPageHeaderClass);
 const DynamicPageTitle = createReactComponent(DynamicPageTitleClass);
 const Avatar = createReactComponent(AvatarClass);
+const Bar = createReactComponent(BarClass);
 const Breadcrumbs = createReactComponent(BreadcrumbsClass);
 const BreadcrumbsItem = createReactComponent(BreadcrumbsItemClass);
 const Button = createReactComponent(ButtonClass);
@@ -32,18 +36,95 @@ const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
+  const [showFooter, setShowFooter] = useState(true);
 
-  const handleClick = () => {
-    dynamicPage.setAttribute("show-footer", true);
+  const handleEditButtonClick = () => {
+    setShowFooter(true);
   };
 
-  const handleClick = () => {
-    dynamicPage.removeAttribute("show-footer");
+  const handleFooterButtonClick = () => {
+    setShowFooter(false);
   };
 
   return (
     <>
-      <DynamicPage id="page" show-footer={true}>
+      <style>{`
+        .text {
+            display: inline-block;
+            font-size: var(--sapFontSize);
+            font-family: var(--sapFontFamily);
+            color: var(--sapTextColor);
+            line-height: normal;
+            white-space: pre-line;
+            word-wrap: break-word;
+            cursor: text;
+            margin: 0;
+        }
+
+        .text:nth-of-type(2) {
+            margin-left: 4rem;
+        }
+
+        .product-info {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .product-info [ui5-avatar],
+        .product-info .product-info-cell {
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-info-cell {
+            display: flex;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .product-description {
+            display: inline;
+            max-width: 300px;
+        }
+
+        .availability {
+           font-size: 1.2rem;
+           color: var(--sapPositiveTextColor);
+        }
+
+        .price {
+            font-size: 1.2rem;
+            color: var(--sapTextColor);
+        }
+
+        .actionsBar {
+            padding: 0.8rem 0 0 1rem;
+        }
+
+        .navigationBar{
+            padding: 0.8rem 0 0 0;
+        }
+
+        .snapped-title-heading {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .snapped-title-heading [ui5-avatar] {
+            position: absolute;
+            top: 0;
+        }
+        .snapped-title-heading [ui5-title] {
+            font-family: var(--sapObjectHeader_Title_FontFamily);
+            color: var(--sapObjectHeader_Title_TextColor);
+            padding: 0.3125rem 0 0 0;
+            font-size: var(--sapObjectHeader_Title_SnappedFontSize);
+            text-overflow: ellipsis;
+            min-width: 0;
+            margin-left: 4rem;
+        }`}
+      `}</style>
+      <DynamicPage id="page" show-footer={showFooter}>
 
             <DynamicPageTitle slot="titleArea">
                 <Breadcrumbs slot="breadcrumbs">
@@ -66,7 +147,7 @@ function App() {
 
                 <Toolbar className="actionsBar" id="actionsToolbar" slot="actionsBar" design="Transparent">
                     <ToolbarButton text="Create" />
-                    <ToolbarButton id="edit-button" design="Transparent" text="Edit" />
+                    <ToolbarButton id="edit-button" design="Transparent" text="Edit" onClick={handleEditButtonClick} />
                     <ToolbarButton design="Transparent" text="Paste" />
                 </Toolbar>
 
@@ -179,24 +260,12 @@ function App() {
                 <ListItemStandard description="HT-8001" icon="slim-arrow-right" icon-end={true} additional-text="1,288.00 EUR">Camcorder View</ListItemStandard>
                 <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="996.00 EUR">Benda Laptop 1408</ListItemStandard>
                 <ListItemStandard description="HT-0003" icon="slim-arrow-right" icon-end={true} additional-text="147.00 EUR">Cepat Tablet 10.5</ListItemStandard>
-                <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="47.00 EUR">10 inch Portable DVD</ListItemStandard>
-                <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="249.00 EUR">7 inch WidescreenPortable DVD Player w MP3</ListItemStandard>
-                <ListItemStandard description="HT-1251" icon="slim-arrow-right" icon-end={true} additional-text="947.00 EUR">Astro Laptop 1516</ListItemStandard>
-                <ListItemStandard description="HT-1251" icon="slim-arrow-right" icon-end={true} additional-text="647.00 EUR">Astro Phone 6</ListItemStandard>
-                <ListItemStandard description="HT-1252" icon="slim-arrow-right" icon-end={true} additional-text="27.99 EUR">Audio/Video Cable Kit - 4m</ListItemStandard>
-                <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="447.90 EUR">Beam Breaker B-1</ListItemStandard>
-                <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="647.50 EUR">Beam Breaker B-2</ListItemStandard>
-                <ListItemStandard description="HT-6001" icon="slim-arrow-right" icon-end={true} additional-text="847.80 EUR">Beam Breaker B-3</ListItemStandard>
-                <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="1,250.00 EUR">Beam Breaker B-4</ListItemStandard>
-                <ListItemStandard description="HT-8001" icon="slim-arrow-right" icon-end={true} additional-text="1,288.00 EUR">Camcorder View</ListItemStandard>
-                <ListItemStandard description="HT-2001" icon="slim-arrow-right" icon-end={true} additional-text="996.00 EUR">Benda Laptop 1408</ListItemStandard>
-                <ListItemStandard description="HT-0003" icon="slim-arrow-right" icon-end={true} additional-text="147.00 EUR">Cepat Tablet 10.5</ListItemStandard>
                 <ListItemStandard description="HT-1001" icon="slim-arrow-right" icon-end={true} additional-text="87.90 EUR">Gladiator MX</ListItemStandard>
             </List>
 
             <Bar slot="footerArea" design="FloatingFooter">
-                <Button id="save-edit" slot="endContent" design="Emphasized">Save</Button>
-                <Button id="cancel-edit" slot="endContent">Close</Button>
+                <Button id="save-edit" slot="endContent" design="Emphasized" onClick={handleFooterButtonClick}>Save</Button>
+                <Button id="cancel-edit" slot="endContent" onClick={handleFooterButtonClick}>Close</Button>
             </Bar>
         </DynamicPage>
     </>

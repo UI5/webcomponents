@@ -2,6 +2,8 @@ import { createReactComponent } from "@ui5/webcomponents-base";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
 
 const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
@@ -12,7 +14,7 @@ function App() {
   return (
     <>
       <Label>Bar with two or more active items:</Label>
-        <Bar design="Header" accessibleRole="Toolbar">
+        <Bar design="Header" accessible-role="Toolbar">
             <Button icon="home" tooltip="Go home" design="Transparent" slot="startContent" />
             <Label id="basic-label">Content</Label>
             <Button icon="action-settings" tooltip="Go to settings" slot="endContent" />

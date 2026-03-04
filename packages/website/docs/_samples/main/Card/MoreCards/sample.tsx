@@ -5,6 +5,9 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import LinkClass from "@ui5/webcomponents/dist/Link.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/competitor.js";
+import "@ui5/webcomponents-icons/dist/wallet.js";
+import "@ui5/webcomponents-icons/dist/collaborate.js";
 
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
@@ -17,6 +20,24 @@ function App() {
 
   return (
     <>
+      <style>{`
+        .content,
+        .content-group {
+            display: flex;
+            flex-direction: column;
+            padding-block-end: 1rem;
+        }
+        .content-padding {
+            padding: 0.5rem 1rem 0 1rem;
+            box-sizing: border-box;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 22rem);
+            grid-auto-rows: 1fr;
+            gap: 1rem;
+        }
+      `}</style>
       <Card>
                 <CardHeader slot="header" title-text="Donna Maria Moore" subtitle-text="Senior Sales Executive">
                     <img src="/images/avatars/man_avatar_1.png" slot="avatar" />

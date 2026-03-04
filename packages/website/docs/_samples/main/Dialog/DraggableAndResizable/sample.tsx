@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
@@ -10,20 +11,21 @@ const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
+  const dialogRef = useRef(null);
 
-  const handleClick = () => {
-    dialog.open = true;
+  const handleDialogOpenerClick = () => {
+    dialogRef.current.open = true;
   };
 
-  const handleClick = () => {
-    dialog.open = false;
+  const handleBtnClick = () => {
+    dialogRef.current.open = false;
   };
 
   return (
     <>
-      <Button id="dialogOpener">Open Dialog</Button>
+      <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
 
-        <Dialog id="dialog" header-text="Draggable/Resizable dialog" draggable={true} resizable={true}>
+        <Dialog ref={dialogRef} id="dialog" header-text="Draggable/Resizable dialog" draggable={true} resizable={true}>
             <div>Move this dialog around the screen by dragging it by its header.</div>
             <div>Resize this dialog by dragging it by its resize handle.</div>
             <div>These features are available only on Desktop.</div>

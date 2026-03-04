@@ -9,7 +9,18 @@ function App() {
 
   return (
     <>
-      <Title id="imgGallery" level="H4">Image Gallery</Title>
+      <style>{`
+        img {
+            max-height: 30rem;
+        }
+
+
+        ui5-title {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+      `}</style>
+      <Title style={{ textAlign: "center", marginBottom: "0.5rem" }} id="imgGallery" level="H4">Image Gallery</Title>
         <Carousel accessible-name-ref="imgGallery">
             <img src="/images/sample1.jpg" alt="Landscape 1" />
             <img src="/images/sample2.jpg" alt="Landscape 2" />

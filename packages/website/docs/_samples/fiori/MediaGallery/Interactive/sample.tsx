@@ -1,36 +1,70 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import { useRef } from "react";
 import MediaGalleryClass from "@ui5/webcomponents-fiori/dist/MediaGallery.js";
 import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Bar = createReactComponent(BarClass);
 const MediaGallery = createReactComponent(MediaGalleryClass);
 const MediaGalleryItem = createReactComponent(MediaGalleryItemClass);
+const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Dialog = createReactComponent(DialogClass);
 const Label = createReactComponent(LabelClass);
 const Title = createReactComponent(TitleClass);
 
 function App() {
+  const mediaGalleryDialogRef = useRef(null);
 
-  const handleClick = () => {
-    mediaGalleryDialog.open = false;
+  const handleCloseDialogButtonClick = () => {
+    mediaGalleryDialogRef.current.open = false;
   };
 
-  const handleOverflowClick = () => {
-    mediaGalleryDialog.open = true;
+  const handleMediaGalleryOverflowClick = () => {
+    mediaGalleryDialogRef.current.open = true;
   };
 
-  const handleDisplayAreaClick = () => {
-    mediaGalleryDialog.open = true;
+  const handleMediaGalleryDisplayAreaClick = () => {
+    mediaGalleryDialogRef.current.open = true;
   };
 
   return (
     <>
+      <style>{`
+        ui5-media-gallery-item:not(:defined) {
+            visibility: hidden;
+        }
+
+        @media (min-width: 600px) {
+            ui5-media-gallery {
+                height: 50rem;
+            }
+        }
+
+        @media (min-width: 612px) {
+            .container {
+                display: grid;
+                gap: 1rem;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .details {
+            background: var(--sapBaseColor);
+            padding: 1rem;
+            color: var(--sapTextColor);
+        }
+
+        .dialog-footer {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            padding: 0px 0.5rem 0px 0px;
+        }
+      `}</style>
       <div className="container">
             <MediaGallery interactive-display-area={true}>
                 <MediaGalleryItem>
@@ -73,9 +107,8 @@ function App() {
                 nulla. Proin quis elementum eros. Ut facilisis lacinia viverra.
             </div>
         </div>
-        </div>
 
-        <Dialog id="mediaGalleryDialog" header-text="Item" stretch={true}>
+        <Dialog ref={mediaGalleryDialogRef} id="mediaGalleryDialog" header-text="Item" stretch={true}>
             <Bar design="Header" slot="header">
                 <Label>Item</Label>
             </Bar>
@@ -101,7 +134,7 @@ function App() {
             </MediaGallery>
             <div slot="footer" className="dialog-footer">
                 <div style={{ flex: 1 }}></div>
-                <Button id="closeDialogButton">Close</Button>
+                <Button id="closeDialogButton" onClick={handleCloseDialogButtonClick}>Close</Button>
             </div>
         </Dialog>
     </>

@@ -5,6 +5,7 @@ import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents-icons/dist/group.js";
 
 const Avatar = createReactComponent(AvatarClass);
 const Card = createReactComponent(CardClass);
@@ -17,6 +18,11 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-card {
+            width: 22rem;
+        }
+      `}</style>
       <Card style={{ width: "22rem" }}>
             <CardHeader slot="header" title-text="This header is interactive" subtitle-text="Click, press Enter or Space" additional-text="3 of 6" interactive={true}>
                 <Icon name="group" slot="avatar" />

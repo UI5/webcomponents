@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -18,18 +19,28 @@ const Slider = createReactComponent(SliderClass);
 const Text = createReactComponent(TextClass);
 
 function App() {
+  const containerRef = useRef(null);
+  const sliderRef = useRef(null);
 
-  const handleUi5Input = () => {
-    const width = (slider.value / 100 * 1500);
-	container.style.width = `${width
+  const handleSliderUi5Input = () => {
+    const width = (sliderRef.current.value / 100 * 1500);
+	containerRef.current.style.width = `${width}px`;
   };
 
   return (
     <>
+      <style>{`
+        ui5-form-item::part(layout) {
+        	background: var(--sapHoverColor);
+        }
+        ui5-form-item::part(content) {
+        	background: var(--sapAvatar_1_Background);
+        }
+      `}</style>
       <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider id="slider" value={85} />
+        <Slider ref={sliderRef} id="slider" value={85} onUi5Input={handleSliderUi5Input} />
 
-        <div id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
+        <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
 
     		<Form header-text="Empty Span: S1 M1 L1 XL1" label-span="S4 M4 L4 XL4" empty-span="S1 M1 L1 XL1">
     			<FormItem>

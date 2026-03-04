@@ -1,8 +1,18 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
+import "@ui5/webcomponents-icons/dist/add-document.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
+import "@ui5/webcomponents-icons/dist/text-align-left.js";
+import "@ui5/webcomponents-icons/dist/text-align-center.js";
+import "@ui5/webcomponents-icons/dist/text-align-right.js";
+import "@ui5/webcomponents-icons/dist/bold-text.js";
+import "@ui5/webcomponents-icons/dist/italic-text.js";
+import "@ui5/webcomponents-icons/dist/underline-text.js";
+import "@ui5/webcomponents-icons/dist/locked.js";
 
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
@@ -10,16 +20,17 @@ const MenuItem = createReactComponent(MenuItemClass);
 const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
+  const menuGroupsRef = useRef(null);
 
-  const handleClick = () => {
-    menuGroups.opener = btnOpenGroups;
-	menuGroups.open = !menuGroups.open;
+  const handleBtnOpenGroupsClick = () => {
+    menuGroupsRef.current.opener = btnOpenGroups;
+	menuGroupsRef.current.open = !menuGroupsRef.current.open;
   };
 
   return (
     <>
-      <Button id="btnOpenGroups">Open Menu</Button>
-    	<Menu id="menuGroups" header-text="My ui5-menu">
+      <Button id="btnOpenGroups" onClick={handleBtnOpenGroupsClick}>Open Menu</Button>
+    	<Menu ref={menuGroupsRef} id="menuGroups" header-text="My ui5-menu">
     		<MenuItem text="New Paragraph" icon="add-document" />
     		<MenuItem text="New Text" />
 

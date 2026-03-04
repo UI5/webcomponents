@@ -1,6 +1,7 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/upload.js";
 
 const FileUploader = createReactComponent(FileUploaderClass);
 const Label = createReactComponent(LabelClass);

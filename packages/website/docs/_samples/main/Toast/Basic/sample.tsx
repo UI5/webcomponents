@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
@@ -6,15 +7,12 @@ const Button = createReactComponent(ButtonClass);
 const Toast = createReactComponent(ToastClass);
 
 function App() {
-
-  const handleClick = () => {
-    toast.open = true;
-  };
+  const toastRef = useRef(null);
 
   return (
     <>
-      <Button>Show Toast</Button>
-        <Toast>This is a Toast message.</Toast>
+      <Button onClick={() => { toastRef.current.open = true; }}>Show Toast</Button>
+      <Toast ref={toastRef}>This is a Toast message.</Toast>
     </>
   );
 }

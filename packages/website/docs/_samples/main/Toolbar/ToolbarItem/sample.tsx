@@ -23,31 +23,39 @@ function App() {
 
   return (
     <>
+      <style>{`
+        /* Use :state(overflowed) to style items differently when in overflow popover */
+        ui5-toolbar-item:state(overflowed) .toolbar-item-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+      `}</style>
       <Toolbar>
-        <!-- ToolbarItem wrapping Radio Buttons -->
+        {/* ToolbarItem wrapping Radio Buttons - displays in column when overflowed */}
         <ui5-toolbar-item>
-            <div>
+            <div role="radiogroup" aria-label="Options" className="toolbar-item-group">
                 <RadioButton name="group1" text="Option 1" checked={true} />
                 <RadioButton name="group1" text="Option 2" />
                 <RadioButton name="group1" text="Option 3" />
             </div>
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping Checkboxes -->
+        {/* ToolbarItem wrapping Checkboxes - displays in column when overflowed */}
         <ui5-toolbar-item>
-            <div>
+            <div role="group" aria-label="Checkboxes" className="toolbar-item-group">
                 <CheckBox text="Checkbox 1" />
                 <CheckBox text="Checkbox 2" checked={true} />
                 <CheckBox text="Checkbox 3" />
             </div>
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping an Input Field -->
+        {/* ToolbarItem wrapping an Input Field */}
         <ui5-toolbar-item>
             <Input placeholder="Enter text" />
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping a ComboBox -->
+        {/* ToolbarItem wrapping a ComboBox */}
         <ui5-toolbar-item>
             <ComboBox placeholder="Select an option">
                 <ComboBoxItem text="Option 1" />
@@ -56,7 +64,7 @@ function App() {
             </ComboBox>
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping a MultiComboBox -->
+        {/* ToolbarItem wrapping a MultiComboBox */}
         <ui5-toolbar-item>
             <MultiComboBox placeholder="Select options">
                 <ui5-mcb-item text="Item 1"></ui5-mcb-item>
@@ -65,12 +73,12 @@ function App() {
             </MultiComboBox>
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping a Switch -->
+        {/* ToolbarItem wrapping a Switch */}
         <ui5-toolbar-item>
             <Switch text-on="On" text-off="Off" />
         </ui5-toolbar-item>
 
-        <!-- ToolbarItem wrapping a DatePicker -->
+        {/* ToolbarItem wrapping a DatePicker */}
         <ui5-toolbar-item>
             <DatePicker placeholder="Select a date" />
         </ui5-toolbar-item>

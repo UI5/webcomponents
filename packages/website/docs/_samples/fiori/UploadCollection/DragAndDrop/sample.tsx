@@ -1,61 +1,123 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useState, useRef, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
+import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
+import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/document-text.js";
+import "@ui5/webcomponents-icons/dist/add.js";
 
 const UploadCollection = createReactComponent(UploadCollectionClass);
+const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
 const Button = createReactComponent(ButtonClass);
 const FileUploader = createReactComponent(FileUploaderClass);
+const Icon = createReactComponent(IconClass);
 const Label = createReactComponent(LabelClass);
 const Title = createReactComponent(TitleClass);
 
 function App() {
+  const [items, setItems] = useState([]);
+  const fileIdCounter = useRef(0);
 
-  const handleChange = (e) => {
-    var files = e.detail.files;
-    for (var i = 0; i < files.length; i++) {
-        uploadCollection.appendChild(createUCI(files[i]));
-  };
+  const addFiles = useCallback((files) => {
+    const newItems = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      newItems.push({
+        id: fileIdCounter.current++,
+        file: file,
+        fileName: file.name,
+        description: "Last modified: " + file.lastModifiedDate + ", size: " + file.size,
+        uploadState: "Ready",
+      });
+    }
+    setItems(prev => [...prev, ...newItems]);
+  }, []);
 
-  const handleClick = () => {
-    uploadCollection.items
-        .filter(item => item.uploadState === "Ready" && item.file)
-        .forEach(item => {
-            item.uploadState = "Uploading";
+  const handleFileUploaderChange = useCallback((e) => {
+    addFiles(e.detail.files);
+  }, [addFiles]);
 
-            fetch("/upload", {
-                method: "POST",
-                body: item.file
-  };
+  const handleStartUploadingClick = useCallback(() => {
+    setItems(prev => prev.map(item => {
+      if (item.uploadState === "Ready" && item.file) {
+        const updatedItem = { ...item, uploadState: "Uploading" };
 
-  const handleDrop = (e) => {
+        fetch("/upload", {
+          method: "POST",
+          body: item.file
+        }).then(res => {
+          setItems(prevItems => prevItems.map(i =>
+            i.id === item.id
+              ? { ...i, uploadState: res.status === 200 ? "Complete" : "Error" }
+              : i
+          ));
+        });
+
+        return updatedItem;
+      }
+      return item;
+    }));
+  }, []);
+
+  const handleDrop = useCallback((e) => {
     e.preventDefault();
+    addFiles(e.dataTransfer.files);
+  }, [addFiles]);
 
-    var files = e.dataTransfer.files;
-    // Take the files from the drop e and create <ui5-upload-collection-item> from them
-    for (var i = 0; i < files.length; i++) {
-        uploadCollection.appendChild(createUCI(files[i]));
-  };
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault();
+  }, []);
 
-  const handleUi5ItemDelete = (e) => {
-    uploadCollection.removeChild(e.detail.item);
-  };
+  const handleItemDelete = useCallback((e) => {
+    const deletedItem = e.detail.item;
+    setItems(prev => prev.filter(item => item.fileName !== deletedItem.fileName));
+  }, []);
 
   return (
     <>
-      <UploadCollection>
-            <div slot="header" className="header">
-                <Title>Attachments</Title>
-                <Label show-colon={true}>Add new files and press to start uploading pending files</Label>
-                <Button id="startUploading">Start</Button>
-                <div className="spacer"></div>
-                <FileUploader id="fileUploader" hide-input={true} multiple={true}>
-                    <Button icon="add" design="Transparent" />
-                </FileUploader>
-            </div>
-        </UploadCollection>
+      <style>{`
+        .header {
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+          flex-wrap: wrap;
+        }
+        .spacer {
+          flex: 1 1 auto;
+        }
+        .header > * {
+          margin: 0.25rem;
+        }
+      `}</style>
+      <UploadCollection
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onItemDelete={handleItemDelete}
+      >
+        <div slot="header" className="header">
+          <Title>Attachments</Title>
+          <Label show-colon={true}>Add new files and press to start uploading pending files</Label>
+          <Button onClick={handleStartUploadingClick}>Start</Button>
+          <div className="spacer"></div>
+          <FileUploader hide-input={true} multiple={true} onChange={handleFileUploaderChange}>
+            <Button icon="add" design="Transparent" />
+          </FileUploader>
+        </div>
+        {items.map((item) => (
+          <UploadCollectionItem
+            key={item.id}
+            file-name={item.fileName}
+            upload-state={item.uploadState}
+          >
+            <Icon slot="thumbnail" name="document" />
+            {item.description}
+          </UploadCollectionItem>
+        ))}
+      </UploadCollection>
     </>
   );
 }

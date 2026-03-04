@@ -2,6 +2,7 @@ import { createReactComponent } from "@ui5/webcomponents-base";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/nutrition-activity.js";
 
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
@@ -11,6 +12,16 @@ function App() {
 
   return (
     <>
+      <style>{`
+        .scrollContainer {
+        	height: 300px;
+        	overflow: auto;
+        }
+
+        .heading {
+        	margin: 2rem 0 2rem 1rem;
+        }
+      `}</style>
       <div className="scrollContainer">
             <Title size="H3" className="heading">Scroll down to see the sticky header in action</Title>
             <List header-text="Sticky Header" sticky-header={true}>

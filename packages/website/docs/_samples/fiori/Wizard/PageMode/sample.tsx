@@ -1,7 +1,8 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import { useRef } from "react";
 import WizardClass from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import WizardStepClass from "@ui5/webcomponents-fiori/dist/WizardStep.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
@@ -12,10 +13,13 @@ import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import SwitchClass from "@ui5/webcomponents/dist/Switch.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/product.js";
+import "@ui5/webcomponents-icons/dist/hint.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
 
-const Bar = createReactComponent(BarClass);
 const Wizard = createReactComponent(WizardClass);
 const WizardStep = createReactComponent(WizardStepClass);
+const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const DatePicker = createReactComponent(DatePickerClass);
 const Dialog = createReactComponent(DialogClass);
@@ -28,44 +32,45 @@ const Switch = createReactComponent(SwitchClass);
 const Title = createReactComponent(TitleClass);
 
 function App() {
+  const dialogRef = useRef(null);
 
-  const handleClick = () => {
-    dialog.open = true;
+  const handleButtonClick = () => {
+    dialogRef.current.open = true;
     const index = wizardWiz.getSelectedStepIndex();
     setButtonVisibility(index, wizardWiz.children.length);
   };
 
-  const handleUi5StepChange = () => {
+  const handleWizUi5StepChange = () => {
     const index = wizardWiz.getSelectedStepIndex();
     setButtonVisibility(index, wizardWiz.children.length)
   };
 
-  const handleClick = () => {
+  const handleNextButtonClick = () => {
     const index = wizardWiz.getSelectedStepIndex();
     setNextStep(wizardWiz, index, index + 1);
     setButtonVisibility(index + 1, wizardWiz.children.length)
   };
 
-  const handleClick = () => {
+  const handlePrevButtonClick = () => {
     const index = wizardWiz.getSelectedStepIndex();
     deselectAll(wizardWiz);
     setPreviousStep(wizardWiz, index, index - 1);
     setButtonVisibility(index - 1, wizardWiz.children.length)
   };
 
-  const handleClick = () => {
-    dialog.open = false;
+  const handleCancelClick = () => {
+    dialogRef.current.open = false;
   };
 
-  const handleClick = () => {
+  const handleWizFinalizeClick = () => {
     alert("Finalize");
-    dialog.open = false;
+    dialogRef.current.open = false;
   };
 
   return (
     <>
-      <Dialog id="dialog" stretch={true} header-heading="Wizard">
-            <Wizard id="wiz" content-layout="SingleStep">
+      <Dialog ref={dialogRef} id="dialog" stretch={true} header-heading="Wizard">
+            <Wizard id="wiz" content-layout="SingleStep" onUi5StepChange={handleWizUi5StepChange}>
                 <WizardStep icon="product" title-text="Product type" selected={true}>
                     <div style={{ display: "flex", minHeight: "200px", flexDirection: "column" }}>
                         <Title>1. Product Type</Title><br />
@@ -151,13 +156,13 @@ function App() {
                 </WizardStep>
             </Wizard>
             <Bar id="footer" slot="footer" design="Footer">
-                <Button id="prevButton" design="Emphasized" slot="endContent">Previous Step</Button>
-                <Button id="nextButton" design="Emphasized" slot="endContent">Next step</Button>
-                <Button id="wiz-finalize" design="Emphasized" slot="endContent">Finalize</Button>
-                <Button id="cancel" design="Transparent" slot="endContent">Cancel</Button>
+                <Button id="prevButton" design="Emphasized" slot="endContent" onClick={handlePrevButtonClick}>Previous Step</Button>
+                <Button id="nextButton" design="Emphasized" slot="endContent" onClick={handleNextButtonClick}>Next step</Button>
+                <Button id="wiz-finalize" design="Emphasized" slot="endContent" onClick={handleWizFinalizeClick}>Finalize</Button>
+                <Button id="cancel" design="Transparent" slot="endContent" onClick={handleCancelClick}>Cancel</Button>
             </Bar>
         </Dialog>
-        <Button id="button">Open dialog</Button>
+        <Button id="button" onClick={handleButtonClick}>Open dialog</Button>
     </>
   );
 }

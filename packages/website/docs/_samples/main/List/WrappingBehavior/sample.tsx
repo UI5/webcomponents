@@ -19,15 +19,47 @@ function App() {
 
   return (
     <>
+      <style>{`
+        .custom-list-item {
+        	display: flex;
+        	align-items: flex-start;
+        	gap: 1rem;
+        	padding: 0.5rem;
+        }
+
+        .custom-list-item__avatar {
+        	flex-shrink: 0;
+        }
+
+        .custom-list-item__content {
+        	flex: 1;
+        	display: flex;
+        	flex-direction: column;
+        	gap: 0.25rem;
+        }
+
+        .custom-list-item__title {
+        	margin: 0;
+        }
+
+        .custom-list-item__description {
+        	color: var(--sapNeutralTextColor);
+        }
+
+        .custom-list-item__additional {
+        	font-size: 0.875rem;
+        	color: var(--sapNeutralTextColor);
+        }
+      `}</style>
       <List header-text="List Item Wrapping Examples">
-    		<!-- Default Behavior (Truncating) -->
+    		{/* Default Behavior (Truncating) */}
     		<ListItemStandard text="Long list item title that gets truncated when it exceeds the width of the container. This allows users to see the beginning of the text and understand what the item is about. Long list item title that gets truncated when it exceeds the width of the container. This allows users to see the beginning of the text and understand what the item is about." description="This description is truncated by default and shows an ellipsis at the end when the text is too long to fit in a single line. This description is truncated by default and shows an ellipsis at the end when the text is too long to fit in a single line." additional-text="Truncated">
     			<Avatar slot="image">
     				<img src="/images/avatars/man_avatar_1.png" alt="Man image" />
     			</Avatar>
     		</ListItemStandard>
 
-    		<!-- Wrapped Behavior -->
+    		{/* Wrapped Behavior */}
     		<ListItemStandard wrapping-type="Normal" text="Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction. Long list item title that gets wrapped when it exceeds the width of the container. This allows users to read the full title without requiring interaction." description="This description gets wrapped when the 'wrappingType' property is set to 'Normal', and the content flows to multiple lines instead of being truncated. This allows users to read lengthy descriptions without requiring interaction. This description gets wrapped when the 'wrappingType' property is set to 'Normal', and the content flows to multiple lines instead of being truncated. This allows users to read lengthy descriptions without requiring interaction." additional-text="Wrapped">
     			<Avatar slot="image">
     				<img src="/images/avatars/man_avatar_2.png" alt="Man image" />
@@ -39,7 +71,7 @@ function App() {
     	<br />
 
     	<List header-text="Custom List Item with Wrapping">
-    		<!-- Custom Behavior with ExpandableText -->
+    		{/* Custom Behavior with ExpandableText */}
     		<ListItemCustom>
     			<div className="custom-list-item">
     				<Avatar className="custom-list-item__avatar">
@@ -72,7 +104,8 @@ function App() {
     				</div>
     			</div>
     		</ListItemCustom>
-	
+    	</List>
+
     		<br />
     		<br />
 

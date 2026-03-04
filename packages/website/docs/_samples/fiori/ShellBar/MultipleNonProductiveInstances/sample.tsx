@@ -8,6 +8,10 @@ import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import TagClass from "@ui5/webcomponents/dist/Tag.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import ToggleButtonClass from "@ui5/webcomponents/dist/ToggleButton.js";
+import "@ui5/webcomponents-icons/dist/menu2.js";
+import "@ui5/webcomponents-icons/dist/sys-help.js";
+import "@ui5/webcomponents-icons/dist/customer.js";
+import "@ui5/webcomponents-icons/dist/da.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);

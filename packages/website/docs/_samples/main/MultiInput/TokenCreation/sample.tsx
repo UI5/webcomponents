@@ -1,48 +1,83 @@
+import { useState, useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
+import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
 const MultiInput = createReactComponent(MultiInputClass);
+const Token = createReactComponent(TokenClass);
 const SuggestionItem = createReactComponent(SuggestionItemClass);
 
+const suggestions = [
+  "Argentina", "Bulgaria", "England", "Finland", "Germany",
+  "Hungary", "Italy", "Luxembourg", "Mexico", "Philippines", "Sweden", "USA",
+];
+
 function App() {
+  const [tokens, setTokens] = useState([]);
+  const [valueState, setValueState] = useState("None");
+  const multiInputRef = useRef(null);
 
   const handleTokenDelete = (e) => {
-    const tokens = e.detail?.tokens;
-
-	if (tokens) {
-		tokens.forEach(token => token.remove());
+    const deletedTokens = e.detail?.tokens;
+    if (deletedTokens) {
+      const deletedTexts = deletedTokens.map((t) => t.text);
+      setTokens((prev) => prev.filter((t) => !deletedTexts.includes(t)));
+    }
   };
 
   const handlePaste = (e) => {
     e.preventDefault();
-    let pastedText = (e.clipboardData || window.clipboardData).getData('text/plain');;
+    const pastedText = (e.clipboardData || window.clipboardData).getData("text/plain");
     if (!pastedText) {
-        return;
+      return;
+    }
+    const separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter((t) => !!t);
+    if (separatedTexts.length === 1) {
+      if (multiInputRef.current) {
+        multiInputRef.current.value += separatedTexts[0];
+      }
+      return;
+    }
+    setTokens((prev) => [...prev, ...separatedTexts.filter(Boolean)]);
   };
 
   const handleChange = (e) => {
     if (!e.target.value) {
-        return;
+      return;
+    }
+    const isDuplicate = tokens.some((t) => t === e.target.value);
+    if (isDuplicate) {
+      setValueState("Negative");
+      setTimeout(() => {
+        setValueState("None");
+      }, 2000);
+      return;
+    }
+    setTokens((prev) => [...prev, e.target.value]);
+    e.target.value = "";
   };
 
   return (
     <>
-      <MultiInput id="multi-input" placeholder="Start typing country name" show-suggestions={true}>
-            <SuggestionItem text="Argentina" />
-            <SuggestionItem text="Bulgaria" />
-            <SuggestionItem text="England" />
-            <SuggestionItem text="Finland" />
-            <SuggestionItem text="Germany" />
-            <SuggestionItem text="Hungary" />
-            <SuggestionItem text="Italy" />
-            <SuggestionItem text="Luxembourg" />
-            <SuggestionItem text="Mexico" />
-            <SuggestionItem text="Philippines" />
-            <SuggestionItem text="Sweden" />
-            <SuggestionItem text="USA" />
-            <div slot="valueStateMessage">Token is already in the list</div>
-        </MultiInput>
+      <MultiInput
+        ref={multiInputRef}
+        id="multi-input"
+        placeholder="Start typing country name"
+        show-suggestions={true}
+        value-state={valueState}
+        onTokenDelete={handleTokenDelete}
+        onPaste={handlePaste}
+        onChange={handleChange}
+      >
+        {tokens.map((t, i) => (
+          <Token key={`${t}-${i}`} slot="tokens" text={t} />
+        ))}
+        {suggestions.map((s) => (
+          <SuggestionItem key={s} text={s} />
+        ))}
+        <div slot="valueStateMessage">Token is already in the list</div>
+      </MultiInput>
     </>
   );
 }

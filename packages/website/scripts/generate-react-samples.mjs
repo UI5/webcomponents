@@ -265,6 +265,21 @@ function parseMainJS(jsContent) {
     elementVars.set(match[1], match[2]);
   }
 
+  // Helper to create unique handler name from element ID and event name
+  const makeHandlerName = (elementId, eventName) => {
+    // Convert element ID to PascalCase: "dialog-opener" -> "DialogOpener", "myBtn" -> "MyBtn"
+    const idPart = elementId
+      .split(/[-_]/)
+      .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+      .join("");
+    // Convert event name to PascalCase: "click" -> "Click", "selection-change" -> "SelectionChange"
+    const eventPart = eventName
+      .split("-")
+      .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+      .join("");
+    return `handle${idPart}${eventPart}`;
+  };
+
   // Find direct getElementById().addEventListener patterns
   const directHandlerRegex = /document\.getElementById\s*\(\s*["']([^"']+)["']\s*\)\s*\.addEventListener\s*\(\s*["']([^"']+)["']\s*,\s*(?:function\s*\([^)]*\)\s*\{([^}]*)\}|(\w+))/g;
   while ((match = directHandlerRegex.exec(jsContent)) !== null) {
@@ -273,7 +288,13 @@ function parseMainJS(jsContent) {
     const inlineBody = match[3];
     const handlerRef = match[4];
 
-    const handlerName = handlerRef || `handle${eventName.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join("")}`;
+    // Only wire up handlers with inline bodies - skip external function references
+    // (we can't reliably extract external function dependencies)
+    if (!inlineBody && handlerRef) {
+      continue;
+    }
+
+    const handlerName = makeHandlerName(elementId, eventName);
 
     if (!elementHandlers.has(elementId)) {
       elementHandlers.set(elementId, []);
@@ -297,10 +318,16 @@ function parseMainJS(jsContent) {
     // Skip if var is "document" (already handled above)
     if (varName === "document") continue;
 
+    // Only wire up handlers with inline bodies - skip external function references
+    // (we can't reliably extract external function dependencies)
+    if (!inlineBody && handlerRef) {
+      continue;
+    }
+
     // The element ID is either from a variable mapping or the varName itself (direct ID reference)
     const elementId = elementVars.get(varName) || varName;
 
-    const handlerName = handlerRef || `handle${eventName.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join("")}`;
+    const handlerName = makeHandlerName(elementId, eventName);
 
     if (!elementHandlers.has(elementId)) {
       elementHandlers.set(elementId, []);

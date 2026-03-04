@@ -5,6 +5,13 @@ import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import "@ui5/webcomponents/dist/TableRowAction.js";
+import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
+import "@ui5/webcomponents-icons/dist/add.js";
+import "@ui5/webcomponents-icons/dist/edit.js";
+import "@ui5/webcomponents-icons/dist/share.js";
+import "@ui5/webcomponents-icons/dist/heart.js";
+import "@ui5/webcomponents-icons/dist/delete.js";
 
 const Label = createReactComponent(LabelClass);
 const Table = createReactComponent(TableClass);
@@ -13,16 +20,38 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+const handlers = {
+  onAdd: (row) => {
+    console.log(`Add action of row ${row.rowKey} is clicked`);
+  },
+  onEdit: (row) => {
+    console.log(`Edit action of row ${row.rowKey} is clicked`);
+  },
+  onLike: (row) => {
+    console.log(`Like action of row ${row.rowKey} is clicked`);
+  },
+  onDelete: (row) => {
+    console.log(`Delete action of row ${row.rowKey} is clicked`);
+  },
+  onShare: (row) => {
+    console.log(`Share action of row ${row.rowKey} is clicked`);
+  },
+  onNavigate: (row) => {
+    console.log(`Navigate action of row ${row.rowKey} is clicked`);
+  },
+};
 
-  const handleRowActionClick = () => {
-    const { action, row
+function App() {
+  const handleTableRowActionClick = (e) => {
+    const { action, row } = e.detail;
+    const handler = action.getAttribute("handler");
+    handlers[handler]?.(row);
   };
 
   return (
     <>
-      <Table id="table" row-action-count={3}>
-    <!-- playground-fold -->
+      <Table id="table" row-action-count={3} onRowActionClick={handleTableRowActionClick}>
+    {/* playground-fold */}
     	<TableHeaderRow slot="headerRow">
     		<TableHeaderCell>Product</TableHeaderCell>
     		<TableHeaderCell>Supplier</TableHeaderCell>
@@ -34,7 +63,7 @@ function App() {
     		<TableCell><Label><b>899.99</b> EUR</Label></TableCell>
     		<ui5-table-row-action-navigation slot="actions"></ui5-table-row-action-navigation>
     	</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     	<TableRow row-key={2}>
     		<TableCell><Label><b>Astro Laptop 216</b><br /><a href="#">HT-1251</a></Label></TableCell>
     		<TableCell><Label>Technocom</Label></TableCell>
@@ -46,7 +75,7 @@ function App() {
     		<ui5-table-row-action slot="actions" icon="heart" text="Like" handler="onLike"></ui5-table-row-action>
     		<ui5-table-row-action-navigation slot="actions" handler="onNavigate" interactive></ui5-table-row-action-navigation>
     	</TableRow>
-    <!-- playground-fold -->
+    {/* playground-fold */}
     	<TableRow row-key={3} navigated={true}>
     		<TableCell><Label><b>Benda Laptop 1408</b><br /><a href="#">HT-6102</a></Label></TableCell>
     		<TableCell><Label>Ultrasonic United</Label></TableCell>
@@ -62,7 +91,7 @@ function App() {
     		<ui5-table-row-action slot="actions" icon="share" text="Share" handler="onShare"></ui5-table-row-action>
     		<ui5-table-row-action slot="actions" icon="add" text="Add" handler="onAdd"></ui5-table-row-action>
     	</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     </Table>
     </>
   );

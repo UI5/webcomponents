@@ -15,7 +15,7 @@ function App() {
     <>
       <Table id="table" overflow-mode="Popin">
     		<IllustratedMessage slot="noData" name="NoData" />
-    <!-- playground-fold -->
+    {/* playground-fold */}
     		<TableHeaderRow slot="headerRow">
     			<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
     			<TableHeaderCell id="supplierCol" width="200px">Supplier</TableHeaderCell>
@@ -23,7 +23,7 @@ function App() {
     			<TableHeaderCell id="weightCol" width="100px">Weight</TableHeaderCell>
     			<TableHeaderCell id="priceCol" width="220px">Price</TableHeaderCell>
     		</TableHeaderRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     	</Table>
     </>
   );

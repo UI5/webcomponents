@@ -3,6 +3,7 @@ import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
 const Avatar = createReactComponent(AvatarClass);
 const List = createReactComponent(ListClass);
@@ -13,6 +14,20 @@ function App() {
 
   return (
     <>
+      <style>{`
+        /* Style the group header title using CSS Shadow Parts */
+        #styled-group::part(title) {
+        	color: var(--sapButton_Emphasized_TextColor);
+        	background-color: var(--sapButton_Emphasized_Background);
+        	padding: 0.5rem;
+        	border-radius: 0.25rem;
+        }
+
+        /* Style the entire header container */
+        #styled-group::part(header) {
+        	background-color: var(--sapList_HeaderBackground);
+        }
+      `}</style>
       <List selection-mode="Multiple">
     		<ListItemGroup id="styled-group" header-text="Styled Header">
     			<ListItemStandard icon-end={true} icon="navigation-right-arrow">Item 1

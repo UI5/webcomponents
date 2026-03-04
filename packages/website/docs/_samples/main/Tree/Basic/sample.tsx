@@ -1,6 +1,8 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
+import "@ui5/webcomponents-icons/dist/paste.js";
+import "@ui5/webcomponents-icons/dist/copy.js";
 
 const Tree = createReactComponent(TreeClass);
 const TreeItem = createReactComponent(TreeItemClass);

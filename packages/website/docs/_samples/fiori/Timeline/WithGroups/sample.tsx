@@ -4,6 +4,8 @@ import TimelineGroupItemClass from "@ui5/webcomponents-fiori/dist/TimelineGroupI
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineGroupItem = createReactComponent(TimelineGroupItemClass);

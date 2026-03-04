@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -15,21 +16,36 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+const MAX_GROW = 3;
 
-  const handleLoadMore = () => {
+function App() {
+  const [extraRows, setExtraRows] = useState<Array<{ key: number; name: string; code: string }>>([]);
+  const [counter, setCounter] = useState(0);
+  const [showGrowing, setShowGrowing] = useState(true);
+
+  const handleGrowingLoadMore = () => {
+    const baseCount = 3 + extraRows.length;
+    const newRows = [];
     for (let i = 0; i < 2; i++) {
-		const newRow = document.createElement("ui5-table-row");
-		newRow.setAttribute("key", table.rows.length + i);
-		newRow.innerHTML = `
-			<ui5-table-cell><ui5-label><b>Notebook Basic ${18 + table.rows.length + i
+      newRows.push({
+        key: baseCount + i,
+        name: `Notebook Basic ${18 + baseCount + i}`,
+        code: `HT-100${2 + baseCount + i}`,
+      });
+    }
+    setExtraRows((prev) => [...prev, ...newRows]);
+    const newCounter = counter + 1;
+    setCounter(newCounter);
+    if (newCounter >= MAX_GROW) {
+      setShowGrowing(false);
+    }
   };
 
   return (
     <>
       <Table id="table">
-    			<TableGrowing id="growing" mode="Button" slot="features" />
-    <!-- playground-fold -->
+    			{showGrowing && <TableGrowing id="growing" mode="Button" slot="features" onLoadMore={handleGrowingLoadMore} />}
+    {/* playground-fold */}
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol">Supplier</TableHeaderCell>
@@ -58,7 +74,16 @@ function App() {
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
     				<TableCell><Label><b>29</b> EUR</Label></TableCell>
     			</TableRow>
-    <!-- playground-fold-end -->
+    			{extraRows.map((row) => (
+    				<TableRow row-key={row.key} key={row.key}>
+    					<TableCell><Label><b>{row.name}</b><br />{row.code}</Label></TableCell>
+    					<TableCell><Label>Technocom</Label></TableCell>
+    					<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
+    					<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
+    					<TableCell><Label><b>29</b> EUR</Label></TableCell>
+    				</TableRow>
+    			))}
+    {/* playground-fold-end */}
     		</Table>
     </>
   );

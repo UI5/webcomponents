@@ -2,6 +2,8 @@ import { createReactComponent } from "@ui5/webcomponents-base";
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);

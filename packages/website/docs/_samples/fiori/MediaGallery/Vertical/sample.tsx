@@ -9,6 +9,17 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-media-gallery-item:not(:defined) {
+            visibility: hidden;
+        }
+
+        @media (min-width: 600px) {
+            ui5-media-gallery {
+                height: 50rem;
+            }
+        }
+      `}</style>
       <MediaGallery layout="Vertical" show-all-thumbnails={true}>
             <MediaGalleryItem disabled={true}>
                 <img src="/images/HT-1000.jpg" />

@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -14,20 +15,42 @@ const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
+  const dialogRef = useRef(null);
 
-  const handleClick = () => {
-    dialog.open = true;
+  const handleDialogOpenerClick = () => {
+    dialogRef.current.open = true;
   };
 
-  const handleClick = () => {
-    dialog.open = false;
+  const handleBtnClick = () => {
+    dialogRef.current.open = false;
   };
 
   return (
     <>
-      <Button id="dialogOpener">Open Dialog</Button>
+      <style>{`
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: flex-start;
+            margin: 3rem 6rem;
+        }
 
-        <Dialog id="dialog" header-text="Register Form">
+        .login-form > div {
+            display: grid;
+            width: 15rem;
+            margin-bottom: .5rem;
+        }
+
+        @media(max-width: 600px) {
+            .login-form {
+                margin: 3rem 1rem;
+            }
+        }
+      `}</style>
+      <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
+
+        <Dialog ref={dialogRef} id="dialog" header-text="Register Form">
             <section className="login-form">
                 <div>
                     <Label htmlFor="username" required={true} show-colon={true}>Username</Label>

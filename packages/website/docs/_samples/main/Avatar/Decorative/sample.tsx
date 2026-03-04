@@ -9,14 +9,14 @@ function App() {
 
   return (
     <>
-      <style>
+      <style>{`
             .example-row {
                 display: flex;
                 align-items: center;
                 gap: 1rem;
                 margin-bottom: 1rem;
             }
-        </style>
+        `}</style>
 
         <div className="example-row">
             <Avatar mode="Decorative" initials="AB" />

@@ -1,5 +1,10 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import RatingIndicatorClass from "@ui5/webcomponents/dist/RatingIndicator.js";
+import "@ui5/webcomponents-icons/dist/heart.js";
+import "@ui5/webcomponents-icons/dist/heart-2.js";
+import "@ui5/webcomponents-icons/dist/thumb-up.js";
+import "@ui5/webcomponents-icons/dist/border.js";
+import "@ui5/webcomponents-icons/dist/circle-task-2.js";
 
 const RatingIndicator = createReactComponent(RatingIndicatorClass);
 
@@ -7,12 +12,9 @@ function App() {
 
   return (
     <>
-      <!-- playground-hide-end -->
-        <RatingIndicator value={3} icon-selected="heart" icon-unselected="heart-2" /></br>
-        <RatingIndicator value={4} icon-selected="thumb-up" icon-unselected="border" /></br>
-        <RatingIndicator value="2.5" icon-selected="circle-task-2" icon-unselected="border" readonly={true} />
-        <!-- playground-hide -->
-        <script type="module" src="main.js"></script>
+        <RatingIndicator value={3} rated-icon="heart" unrated-icon="heart-2" /><br />
+        <RatingIndicator value={4} rated-icon="thumb-up" unrated-icon="border" /><br />
+        <RatingIndicator value="2.5" rated-icon="circle-task-2" unrated-icon="border" readonly={true} />
     </>
   );
 }

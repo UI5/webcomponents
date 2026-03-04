@@ -44,10 +44,10 @@ function App() {
                 <Text>30 x 18 x 3cm</Text>
             </TableCell>
             <TableCell>
-                <Text>4.2</b>KG</Text>
+                <Text><b>4.2</b>KG</Text>
             </TableCell>
             <TableCell>
-                <Text>956</b>EUR</Text>
+                <Text><b>956</b>EUR</Text>
             </TableCell>
         </TableRow>
 
@@ -62,10 +62,10 @@ function App() {
                 <Text>10 x 12 x 3cm</Text>
             </TableCell>
             <TableCell>
-                <Text>150</b>G</Text>
+                <Text><b>150</b>G</Text>
             </TableCell>
             <TableCell>
-                <Text>800</b>EUR</Text>
+                <Text><b>800</b>EUR</Text>
             </TableCell>
         </TableRow>
 
@@ -80,10 +80,10 @@ function App() {
                 <Text>12 x 12 x 3cm</Text>
             </TableCell>
             <TableCell>
-                <Text>250</b>G</Text>
+                <Text><b>250</b>G</Text>
             </TableCell>
             <TableCell>
-                <Text>1200</b>EUR</Text>
+                <Text><b>1200</b>EUR</Text>
             </TableCell>
         </TableRow>
 

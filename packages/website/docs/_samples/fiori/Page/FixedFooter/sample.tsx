@@ -1,11 +1,13 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
 
-const Bar = createReactComponent(BarClass);
 const Page = createReactComponent(PageClass);
+const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 

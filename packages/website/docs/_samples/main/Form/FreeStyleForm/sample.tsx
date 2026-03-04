@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
@@ -38,20 +39,37 @@ const TimePicker = createReactComponent(TimePickerClass);
 const Token = createReactComponent(TokenClass);
 
 function App() {
+  const containerRef = useRef(null);
+  const sliderRef = useRef(null);
 
-  const handleUi5Input = () => {
-    const width = (slider.value / 100 * 1500);
-	container.style.width = `${width
+  const handleSliderUi5Input = () => {
+    const width = (sliderRef.current.value / 100 * 1500);
+	containerRef.current.style.width = `${width}px`;
   };
 
   return (
     <>
-      <Label show-colon={true}>Form Layout</Label><Text>S1 M2 L3 XL4</Text></br>
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text></br>
-        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider id="slider" value={80} />
+      <style>{`
+        :root {
+        	--my-margin: -0.6875rem;
+        }
+        .ui5-content-density-compact {
+        	--my-margin: -0.5rem;
+        }
 
-        <div id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
+        .margin--density-aware {
+        	margin-inline-start: var(--my-margin);
+        }
+        .margin--fixed {
+        	margin-inline-start: -0.5rem;
+        }
+      `}</style>
+      <Label show-colon={true}>Form Layout</Label><Text>S1 M2 L3 XL4</Text><br />
+        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
+        <Label show-colon={true}>Page Size</Label><Text id="txtLayout">L</Text>
+        <Slider ref={sliderRef} id="slider" value={80} onUi5Input={handleSliderUi5Input} />
+
+        <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
             <Form header-text="Address" layout="S1 M2 L3 XL4" label-span="S12 M12 L12 XL12">
                 <FormGroup header-text="Group1 (Text Fields)" column-span={2}>
 

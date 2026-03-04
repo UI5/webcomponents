@@ -1,39 +1,70 @@
+import { useState, useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
 
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleClick = () => {
-    openMenu(myMenu, menuButton);
+  const openMenu = () => {
+    menuRef.current.opener = buttonRef.current;
+    menuRef.current.open = true;
+    setMenuOpen(true);
+    buttonRef.current.accessibilityAttributes = {
+      hasPopup: "menu",
+      expanded: true,
+    };
   };
 
-  const handleKeydown = (e) => {
+  const handleMenuButtonClick = () => {
+    openMenu();
+  };
+
+  const handleMenuButtonKeydown = (e: any) => {
     const F4Key = !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "F4";
-	const AltArrowDownKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowDown";
-	const AltArrowUpKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowUp";
+    const AltArrowDownKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowDown";
+    const AltArrowUpKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowUp";
 
-	if (F4Key || AltArrowDownKey || AltArrowUpKey) {
-		openMenu(myMenu, menuButton);
+    if (F4Key || AltArrowDownKey || AltArrowUpKey) {
+      openMenu();
+    }
   };
 
-  const handleClose = () => {
-    closeMenu(menuButton);
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+    buttonRef.current.accessibilityAttributes = {
+      hasPopup: "menu",
+      expanded: false,
+    };
+    buttonRef.current.focus();
   };
 
   return (
     <>
-      <Button id="menuButton" icon="action-settings" end-icon="navigation-down-arrow">Menu</Button>
-    	<Menu id="myMenu">
-    		<MenuItem text="Item 1" />
-    		<MenuItem text="Item 2" />
-    		<MenuItem text="Item 3" />
-    	</Menu>
+      <Button
+        ref={buttonRef}
+        id="menuButton"
+        icon="action-settings"
+        end-icon="navigation-down-arrow"
+        onClick={handleMenuButtonClick}
+        onKeyDown={handleMenuButtonKeydown}
+      >
+        Menu
+      </Button>
+      <Menu ref={menuRef} id="myMenu" onClose={handleMenuClose}>
+        <MenuItem text="Item 1" />
+        <MenuItem text="Item 2" />
+        <MenuItem text="Item 3" />
+      </Menu>
     </>
   );
 }

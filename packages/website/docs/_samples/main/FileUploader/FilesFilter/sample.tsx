@@ -1,27 +1,41 @@
+import { useState } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/upload.js";
 
 const FileUploader = createReactComponent(FileUploaderClass);
 const Label = createReactComponent(LabelClass);
 
 function App() {
+  const [images, setImages] = useState<string[]>([]);
 
-  const handleChange = (e) => {
+  const handleFileUploaderChange = (e: any) => {
     const files = e.target.files;
 
     if (!files.length) {
-        resultDiv.innerHTML = "<ui5-label>No Files Selected</ui5-label>";
+      setImages([]);
+    } else {
+      const urls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        urls.push(URL.createObjectURL(files[i]));
+      }
+      setImages(urls);
+    }
   };
 
   return (
     <>
       <div style={{ height: "100px" }}>
             <Label htmlFor="image-uploader">Upload images:</Label>
-            <FileUploader id="image-uploader" accept="image/*" multiple={true} />
+            <FileUploader id="image-uploader" accept="image/*" multiple={true} onChange={handleFileUploaderChange} />
         </div>
 
-        <div id="result"></div>
+        <div id="result" style={images.length > 0 ? { marginTop: "1rem" } : undefined}>
+            {images.length === 0 ? null : images.map((src, index) => (
+                <img key={index} src={src} width={100} height={100} onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
+            ))}
+        </div>
     </>
   );
 }

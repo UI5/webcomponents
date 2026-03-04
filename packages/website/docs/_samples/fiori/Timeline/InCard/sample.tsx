@@ -4,6 +4,8 @@ import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);

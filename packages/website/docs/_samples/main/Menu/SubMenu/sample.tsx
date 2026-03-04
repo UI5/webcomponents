@@ -1,23 +1,33 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
+import "@ui5/webcomponents-icons/dist/add-document.js";
+import "@ui5/webcomponents-icons/dist/add-folder.js";
+import "@ui5/webcomponents-icons/dist/open-folder.js";
+import "@ui5/webcomponents-icons/dist/save.js";
+import "@ui5/webcomponents-icons/dist/upload-to-cloud.js";
+import "@ui5/webcomponents-icons/dist/action-settings.js";
+import "@ui5/webcomponents-icons/dist/journey-arrive.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 
 const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
+  const menuSubsRef = useRef(null);
 
-  const handleClick = () => {
-    menuSubs.open = !menuSubs.open;
+  const handleBtnOpenBasicClick = () => {
+    menuSubsRef.current.open = !menuSubsRef.current.open;
   };
 
   return (
     <>
-      <Button id="btnOpenBasic" end-icon="slim-arrow-down">Open Menu</Button> <br />
+      <Button id="btnOpenBasic" end-icon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button> <br />
 
-        <Menu id="menuSubs" opener="btnOpenBasic">
+        <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic">
             <MenuItem text="New File" icon="add-document" />
             <MenuItem text="New Folder" icon="add-folder" disabled={true} />
             <MenuItem text="Open" icon="open-folder" starts-section={true}>

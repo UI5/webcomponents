@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -20,23 +21,26 @@ const TableRow = createReactComponent(TableRowClass);
 const TableSelection = createReactComponent(TableSelectionClass);
 
 function App() {
+  const selectionRef = useRef(null);
 
-  const handleChange = (e) => {
-    selectionFeature.selected = "";
-	selectionFeature.mode = e.target.text;
+  const handleSelectionGroupChange = (e) => {
+    if (selectionRef.current) {
+      selectionRef.current.selected = "";
+      selectionRef.current.mode = e.target.text;
+    }
   };
 
   return (
     <>
-      <div id="selectionGroup" role="radiogroup">
+      <div id="selectionGroup" role="radiogroup" onChange={handleSelectionGroupChange}>
     			<RadioButton name="selection" text="Multiple" checked={true} />
     			<RadioButton name="selection" text="Single" />
     			<RadioButton name="selection" text="None" />
     		</div>
 
     		<Table id="table" accessible-name-ref="title" no-data-text="No data found">
-    			<TableSelection id="selection" slot="features" />
-    <!-- playground-fold -->
+    			<TableSelection ref={selectionRef} id="selection" slot="features" />
+    {/* playground-fold */}
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol">Supplier</TableHeaderCell>
@@ -65,7 +69,7 @@ function App() {
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
     				<TableCell style={{ textAlign: "end" }}><Label style={{ textAlign: "end" }}><b>29</b> EUR</Label></TableCell>
     			</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     		</Table>
     </>
   );

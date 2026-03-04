@@ -1,6 +1,7 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/employee.js";
 
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);

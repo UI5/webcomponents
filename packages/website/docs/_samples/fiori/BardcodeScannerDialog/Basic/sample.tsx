@@ -1,33 +1,36 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents-icons/dist/camera.js";
 
 const BarcodeScannerDialog = createReactComponent(BarcodeScannerDialogClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 
 function App() {
+  const dlgScanRef = useRef(null);
 
-  const handleClick = () => {
-    dlgScan.open = true;
+  const handleBtnScanClick = () => {
+    dlgScanRef.current.open = true;
   };
 
-  const handleUi5ScanSuccess = (e) => {
+  const handleDlgScanUi5ScanSuccess = (e) => {
     scanResult.innerHTML = e.detail.text;
-	dlgScan.open = false;
+	dlgScanRef.current.open = false;
   };
 
-  const handleUi5ScanError = (e) => {
+  const handleDlgScanUi5ScanError = (e) => {
     scanError.innerHTML = e.detail.message;
-	dlgScan.open = false;
+	dlgScanRef.current.open = false;
   };
 
   return (
     <>
-      <BarcodeScannerDialog id="dlgScan" />
+      <BarcodeScannerDialog ref={dlgScanRef} id="dlgScan" onUi5ScanSuccess={handleDlgScanUi5ScanSuccess} onUi5ScanError={handleDlgScanUi5ScanError} />
 
-        <Button id="btnScan" icon="camera" tooltip="Start Camera">Scan</Button>
+        <Button id="btnScan" icon="camera" tooltip="Start Camera" onClick={handleBtnScanClick}>Scan</Button>
         <div>
             <Label id="scanResult" />
             <Label id="scanError" />

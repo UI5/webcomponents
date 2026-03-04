@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -6,16 +7,19 @@ const Avatar = createReactComponent(AvatarClass);
 const Label = createReactComponent(LabelClass);
 
 function App() {
+  const counterRef = useRef(0);
+  const [labelText, setLabelText] = useState("");
 
-  const handleClick = () => {
-    label.innerHTML = `Avatar clicked! :: ${++counter
+  const handleAvtClick = () => {
+    counterRef.current++;
+    setLabelText(`Avatar clicked! :: ${counterRef.current}`);
   };
 
   return (
     <>
-      <Avatar id="avt" mode="Interactive" initials="FJ" />
+      <Avatar id="avt" mode="Interactive" initials="FJ" onClick={handleAvtClick} />
 
-        <Label id="lbl" />
+        <Label id="lbl">{labelText}</Label>
     </>
   );
 }

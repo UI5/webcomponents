@@ -1,5 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
@@ -23,9 +23,14 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-bar {
+        	box-shadow: none;
+        }
+      `}</style>
       <Form style={{ width: "800px" }} layout="S1 M2 L2 XL2" item-spacing="Large">
 
-                <Bar design="Subheader" slot="header">
+                <Bar style={{ boxShadow: "none" }} design="Subheader" slot="header">
                     <Title level="H4" slot="startContent">Address</Title>
                     <Button slot="endContent">Action 1</Button>
                     <Button slot="endContent">Action 2</Button>

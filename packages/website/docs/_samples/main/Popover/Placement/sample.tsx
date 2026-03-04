@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -10,23 +11,25 @@ const Label = createReactComponent(LabelClass);
 const Popover = createReactComponent(PopoverClass);
 
 function App() {
+  const popover1Ref = useRef(null);
+  const popover2Ref = useRef(null);
 
-  const handleClick = () => {
-    popover1.open = !popover1.open;
+  const handleBtn1Click = () => {
+    popover1Ref.current.open = !popover1Ref.current.open;
   };
 
-  const handleClick = () => {
-    popover2.open = !popover2.open;
+  const handleBtn2Click = () => {
+    popover2Ref.current.open = !popover2Ref.current.open;
   };
 
   return (
     <>
       <div className="center">
-            <Button id="btn1">Open Popover to Bottom</Button>
-            <Button id="btn2">Open Popover to Left</Button>
+            <Button id="btn1" onClick={handleBtn1Click}>Open Popover to Bottom</Button>
+            <Button id="btn2" onClick={handleBtn2Click}>Open Popover to Left</Button>
         </div>
    
-        <Popover id="popover1" opener="btn1" header-text="Newsletter subscription" placement="Bottom">
+        <Popover ref={popover1Ref} id="popover1" opener="btn1" header-text="Newsletter subscription" placement="Bottom">
             <div className="popover-content">
                 <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
@@ -38,7 +41,7 @@ function App() {
             </div>
         </Popover>
 
-        <Popover id="popover2" opener="btn2" header-text="Newsletter subscription" placement="Start">
+        <Popover ref={popover2Ref} id="popover2" opener="btn2" header-text="Newsletter subscription" placement="Start">
             <div className="popover-content">
                 <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />

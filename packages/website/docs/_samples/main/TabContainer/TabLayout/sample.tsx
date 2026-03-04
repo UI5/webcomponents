@@ -1,5 +1,8 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
+import "@ui5/webcomponents-icons/dist/laptop.js";
+import "@ui5/webcomponents-icons/dist/video.js";
+import "@ui5/webcomponents-icons/dist/home.js";
 
 const Tab = createReactComponent(TabClass);
 

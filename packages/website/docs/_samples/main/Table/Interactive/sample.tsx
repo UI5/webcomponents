@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -16,16 +17,20 @@ const TableRow = createReactComponent(TableRowClass);
 const Toast = createReactComponent(ToastClass);
 
 function App() {
+  const toastRef = useRef(null);
 
-  const handleRowClick = (e) => {
-    toast.textContent = `Row with key "${e.detail.row.key
+  const handleTableRowClick = (e) => {
+    if (toastRef.current) {
+      toastRef.current.textContent = `Row with key "${e.detail.row.key}" was pressed!`;
+      toastRef.current.open = true;
+    }
   };
 
   return (
     <>
-      <Toast id="message" />
-    	<Table id="table">
-    <!-- playground-fold -->
+      <Toast ref={toastRef} id="message" />
+    	<Table id="table" onRowClick={handleTableRowClick}>
+    {/* playground-fold */}
     		<TableHeaderRow slot="headerRow">
     			<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
     			<TableHeaderCell id="supplierCol" width="200px">Supplier</TableHeaderCell>
@@ -33,7 +38,7 @@ function App() {
     			<TableHeaderCell id="weightCol" width="100px">Weight</TableHeaderCell>
     			<TableHeaderCell id="priceCol" width="220px">Price</TableHeaderCell>
     		</TableHeaderRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     		<TableRow row-key="a" interactive={true}>
     			<TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
     			<TableCell><Label>Very Best Screens</Label></TableCell>

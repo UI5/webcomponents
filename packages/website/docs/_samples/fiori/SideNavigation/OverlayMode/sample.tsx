@@ -1,29 +1,47 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import { useRef } from "react";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
+import ShellBarSearchClass from "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
 import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
 import SideNavigationItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import SideNavigationSubItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import ToggleButtonClass from "@ui5/webcomponents/dist/ToggleButton.js";
+import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/chain-link.js";
+import "@ui5/webcomponents-icons/dist/group.js";
+import "@ui5/webcomponents-icons/dist/locate-me.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
+import "@ui5/webcomponents-icons/dist/history.js";
+import "@ui5/webcomponents-icons/dist/customer.js";
+import "@ui5/webcomponents-icons/dist/menu2.js";
+import "@ui5/webcomponents-icons/dist/write-new.js";
+import "@ui5/webcomponents-icons/dist/widgets.js";
+import "@ui5/webcomponents-icons/dist/compare.js";
+import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/sys-help.js";
 
-const Bar = createReactComponent(BarClass);
 const Page = createReactComponent(PageClass);
 const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const ShellBarItem = createReactComponent(ShellBarItemClass);
+const ShellBarSearch = createReactComponent(ShellBarSearchClass);
 const SideNavigation = createReactComponent(SideNavigationClass);
 const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
 const SideNavigationItem = createReactComponent(SideNavigationItemClass);
 const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
 const Avatar = createReactComponent(AvatarClass);
+const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Dialog = createReactComponent(DialogClass);
 const ResponsivePopover = createReactComponent(ResponsivePopoverClass);
@@ -32,35 +50,67 @@ const Title = createReactComponent(TitleClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
+  const quickActionDialogRef = useRef(null);
+  const respPopoverRef = useRef(null);
 
-  const handleClick = () => {
-    respPopover.open = !respPopover.open;
+  const handleMenuBtnClick = () => {
+    respPopoverRef.current.open = !respPopoverRef.current.open;
   };
 
-  const handleSelectionChange = (e) => {
+  const handleSideNavigationSelectionChange = (e) => {
     if (e.detail.item.getAttribute("target")) {
-		respPopover.open=false;
+		respPopoverRef.current.open=false;
 		return;
+    }
   };
 
-  const handleClick = () => {
-    quickActionDialog.open = true;
+  const handleQuickActionClick = () => {
+    quickActionDialogRef.current.open = true;
   };
 
-  const handleClick = () => {
-    quickActionDialog.open = false;
+  const handleQuickActionCloseBtnClick = () => {
+    quickActionDialogRef.current.open = false;
   };
 
   return (
     <>
+      <style>{`
+        #respPopover::part(content) {
+        	padding: 0;
+        	overflow-x: visible;
+        	overflow-y: hidden
+        }
+
+        .content {
+        	padding: 2rem;
+        }
+
+        .contentItem {
+        	display: none;
+        }
+
+        .contentItemVisible {
+        	display: block;
+        }
+
+        #sideNavigation {
+        	width: 18rem;
+        	box-shadow: none;
+        	border-inline-end: none;
+        }
+
+        ui5-page::part(content) {
+        	padding: 0;
+        }
+      `}</style>
       <Page style={{ height: "500px" }}>
     		<ShellBar notifications-count={72} show-notifications={true}>
-                <Button icon="menu2" slot="startButton" id="menuBtn" />
-                <ui5-shellbar-branding slot="branding">
+                <Button icon="menu2" slot="startButton" id="menuBtn" onClick={handleMenuBtnClick} />
+                <ShellBarBranding slot="branding">
                     Product Identifier
                     <img slot="logo" src="/images/sap-logo-svg.svg" />
-                </ui5-shellbar-branding>
-                <ui5-shellbar-search slot="searchField" show-clear-icon placeholder="Search Apps, Products"></ui5-shellbar-search>
+                </ShellBarBranding>
+                <ShellBarSearch slot="searchField" show-clear-icon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
                 <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />
@@ -68,9 +118,9 @@ function App() {
                     <img src="/images/avatars/man_avatar_3.png"/>
                 </Avatar>
             </ShellBar>
-    		<ResponsivePopover id="respPopover" opener="menuBtn" placement="Bottom" accessible-name="Main Navigation">
-    			<SideNavigation id="sideNavigation">
-    				<!-- Items -->
+    		<ResponsivePopover ref={respPopoverRef} id="respPopover" opener="menuBtn" placement="Bottom" accessible-name="Main Navigation">
+    			<SideNavigation id="sideNavigation" onSelectionChange={handleSideNavigationSelectionChange}>
+    				{/* Items */}
     				<SideNavigationItem text="Home" href="#contHome" icon="home" selected={true} />
     				<SideNavigationGroup text="Group 1" expanded={true}>
     					<SideNavigationItem text="People" href="#contItem1" icon="group">
@@ -86,8 +136,8 @@ function App() {
     						<SideNavigationSubItem text="Others" href="#contSubitem4" />
     					</SideNavigationItem>
     				</SideNavigationGroup>
-    				<!-- Fixed Items -->
-    				<SideNavigationItem slot="fixedItems" id="quickAction" text="Create" design="Action" unselectable={true} icon="write-new" />
+    				{/* Fixed Items */}
+    				<SideNavigationItem slot="fixedItems" id="quickAction" text="Create" design="Action" unselectable={true} icon="write-new" onClick={handleQuickActionClick} />
     				<SideNavigationItem slot="fixedItems" text="App Finder" href="https://openui5.hana.ondemand.com/demoapps" target="_blank" icon="widgets" />
     				<SideNavigationItem slot="fixedItems" text="Legal" href="https://www.sap.com/about/legal/impressum.html" target="_blank" icon="compare" />
     			</SideNavigation>
@@ -158,11 +208,11 @@ function App() {
     			</div>
     		</div>
 
-    		<Dialog header-text="Create New Item" draggable={true} resizable={true} id="quickActionDialog">
+    		<Dialog header-text="Create New Item" draggable={true} resizable={true} ref={quickActionDialogRef} id="quickActionDialog">
     			<Text>Create new item...</Text>
     			<Bar slot="footer" design="Footer">
     				<Button slot="endContent" design="Emphasized">Create</Button>
-    				<Button slot="endContent" id="quickActionCloseBtn">Close</Button>
+    				<Button slot="endContent" id="quickActionCloseBtn" onClick={handleQuickActionCloseBtnClick}>Close</Button>
     			</Bar>
     		</Dialog>
     	</Page>

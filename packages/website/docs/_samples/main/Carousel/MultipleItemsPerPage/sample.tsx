@@ -8,6 +8,12 @@ import CarouselClass from "@ui5/webcomponents/dist/Carousel.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
+import "@ui5/webcomponents-icons/dist/competitor.js";
+import "@ui5/webcomponents-icons/dist/wallet.js";
+import "@ui5/webcomponents-icons/dist/collaborate.js";
+import "@ui5/webcomponents-icons/dist/group.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
@@ -23,8 +29,25 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-carousel::part(content) {
+            padding-block: 0.75rem;
+        }
+
+        ui5-card {
+            min-width: 18rem;
+        }
+
+        ui5-card ui5-list:last-child {
+            margin-block-end: 0.75rem;
+        }
+
+        ui5-li::part(icon) {
+            padding-inline-end: 0;
+        }
+      `}</style>
       <Carousel cyclic={true} items-per-page="S1 M2 L3 XL3" arrows-placement="Navigation">
-            <Card className="medium">
+            <Card style={{ minWidth: "18rem" }} className="medium">
                 <CardHeader slot="header" title-text="Activities" subtitle-text="For Today" />
                 <Timeline>
                     <TimelineItem id="test-item" title-text="called" timestamp={1487583000000} icon="phone" name="John Smith" name-clickable="" />
@@ -33,7 +56,7 @@ function App() {
                     <TimelineItem title-text="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">Online meeting</TimelineItem>
                 </Timeline>
             </Card>
-            <Card className="small">
+            <Card style={{ minWidth: "18rem" }} className="small">
                 <CardHeader slot="header" title-text="David Williams" subtitle-text="Sales Manager">
                     <img src="/images/avatars/man_avatar_1.png" alt="" slot="avatar" />
                 </CardHeader>
@@ -43,7 +66,7 @@ function App() {
                     <ListItemStandard icon="collaborate" icon-end={true}>Communications Skills</ListItemStandard>
                 </List>
             </Card>
-            <Card className="medium">
+            <Card style={{ minWidth: "18rem" }} className="medium">
                 <CardHeader slot="header" title-text="Team Dolphins" subtitle-text="Direct Reports" status="1 of 2">
                     <Icon name="group" slot="avatar" />
                 </CardHeader>
@@ -65,7 +88,7 @@ function App() {
                     </ListItemStandard>
                 </List>
             </Card>
-            <Card className="medium">
+            <Card style={{ minWidth: "18rem" }} className="medium">
                 <CardHeader slot="header" title-text="Team Bears" subtitle-text="Direct Reports" interactive={true} status="2 of 2">
                     <Icon name="group" slot="avatar" />
                 </CardHeader>

@@ -7,13 +7,13 @@ function App() {
 
   return (
     <>
-      <style>
+      <style>{`
             ui5-input {
                 width: 300px;
                 color: darkorange;
                 background-color: #ffeded;
             }
-        </style>
+        `}</style>
         <Input value="Styled input" />
     </>
   );

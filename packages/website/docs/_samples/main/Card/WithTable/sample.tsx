@@ -1,26 +1,35 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import TableClass from "@ui5/webcomponents/dist/Table.js";
+import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
+import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
-import TableClass from "@ui5/webcomponents-compat/dist/Table.js";
-import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
-import TableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
-import TableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 
+const TableColumn = createReactComponent(TableColumnClass);
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
 const Label = createReactComponent(LabelClass);
-const Text = createReactComponent(TextClass);
 const Table = createReactComponent(TableClass);
-const TableColumn = createReactComponent(TableColumnClass);
-const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
+const TableRow = createReactComponent(TableRowClass);
+const Text = createReactComponent(TextClass);
 
 function App() {
 
   return (
     <>
+      <style>{`
+        ui5-card {
+            width: 40rem;
+        }
+
+        .status-error { color: #b00; }
+        .status-warning { color: #e9730c; }
+        .status-success { color: #107e3e; }
+      `}</style>
       <Card style={{ width: "40rem" }}>
             <CardHeader slot="header" title-text="New Purchase Orders" subtitle-text="Today" additional-text="3 of 15" />
 

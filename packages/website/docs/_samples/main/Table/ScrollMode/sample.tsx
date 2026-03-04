@@ -25,7 +25,7 @@ function App() {
     				<TableHeaderCell id="weightCol" width="100px">Weight</TableHeaderCell>
     				<TableHeaderCell id="priceCol" min-width="220px">Price</TableHeaderCell>
     			</TableHeaderRow>
-    <!-- playground-fold -->
+    {/* playground-fold */}
     			<TableRow>
     				<TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
     				<TableCell><Label>Very Best Screens</Label></TableCell>
@@ -47,7 +47,7 @@ function App() {
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
     				<TableCell><Label><b>29</b> EUR</Label></TableCell>
     			</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     		</Table>
     </>
   );

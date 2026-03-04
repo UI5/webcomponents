@@ -1,5 +1,7 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
+import "@ui5/webcomponents-icons/dist/edit.js";
+import "@ui5/webcomponents-icons/dist/employee.js";
 
 const Button = createReactComponent(ButtonClass);
 

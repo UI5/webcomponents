@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 import ColorPalettePopoverClass from "@ui5/webcomponents/dist/ColorPalettePopover.js";
@@ -8,15 +9,16 @@ const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
 const ColorPalettePopover = createReactComponent(ColorPalettePopoverClass);
 
 function App() {
+  const colorPalettePopoverRef = useRef(null);
 
-  const handleClick = () => {
-    colorPalettePopover.open = !colorPalettePopover.open;
+  const handleColorPaletteBtnClick = () => {
+    colorPalettePopoverRef.current.open = !colorPalettePopoverRef.current.open;
   };
 
   return (
     <>
-      <Button id="colorPaletteBtn" onClick={handleClick}>Open ColorPalettePopover</Button>
-        <ColorPalettePopover id="colorPalettePopover" opener="colorPaletteBtn">
+      <Button id="colorPaletteBtn" onClick={handleColorPaletteBtnClick}>Open ColorPalettePopover</Button>
+        <ColorPalettePopover ref={colorPalettePopoverRef} id="colorPalettePopover" opener="colorPaletteBtn">
             <ColorPaletteItem value="lightsalmon" />
             <ColorPaletteItem value="lightpink" />
             <ColorPaletteItem value="rgb(216,124,172)" />

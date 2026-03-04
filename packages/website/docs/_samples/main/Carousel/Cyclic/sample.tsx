@@ -7,6 +7,11 @@ function App() {
 
   return (
     <>
+      <style>{`
+        img {
+            max-height: 30rem;
+        }
+      `}</style>
       <Carousel cyclic={true}>
             <img src="/images/sample1.jpg" alt="Landscape 1" />
             <img src="/images/sample2.jpg" alt="Landscape 2" />

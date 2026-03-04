@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -10,17 +11,18 @@ const Label = createReactComponent(LabelClass);
 const Popover = createReactComponent(PopoverClass);
 
 function App() {
+  const popoverRef = useRef(null);
 
-  const handleClick = () => {
-    popover.open = !popover.open;
+  const handleBtnClick = () => {
+    popoverRef.current.open = !popoverRef.current.open;
   };
 
   return (
     <>
-      <Button id="btn">Open Popover</Button>
+      <Button id="btn" onClick={handleBtnClick}>Open Popover</Button>
 
-        <Popover opener="btn" header-text="Newsletter subscription">
- 
+        <Popover ref={popoverRef} opener="btn" header-text="Newsletter subscription">
+
             <div className="popover-content">
                 <Label htmlFor="emailInput" required={true} show-colon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />

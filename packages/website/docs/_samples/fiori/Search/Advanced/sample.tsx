@@ -1,31 +1,47 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
+import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchMessageAreaClass from "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 
 const Search = createReactComponent(SearchClass);
+const SearchItem = createReactComponent(SearchItemClass);
 const SearchMessageArea = createReactComponent(SearchMessageAreaClass);
 const Button = createReactComponent(ButtonClass);
 
+const data = [
+	{ name: "Red Apple", category: "Fruit" },
+	{ name: "Apple", category: "Fruit" },
+	{ name: "Cucumber", category: "Vegetable" },
+	{ name: "Orange", category: "Fruit" },
+	{ name: "Tomato", category: "Vegetable" },
+];
+
 function App() {
+  const [items, setItems] = useState(data);
 
-  const handleUi5Input = (e) => {
+  const handleFilteringInput = (e) => {
     const value = e.target.value.toLowerCase();
-	const filteredData = data.filter((item) =>
-		item.name.toLowerCase().includes(value)
-	);
+    const filteredData = data.filter((item) =>
+      item.name.toLowerCase().includes(value)
+    );
+    setItems(filteredData);
+  };
 
-	filtering.items.forEach((item) => {
-		item.remove();
+  const handleItemDelete = (e, index) => {
+    setItems(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
     <>
-      <Search id="filtering" show-clear-icon={true} placeholder="Start typing ...">
-    			<SearchMessageArea slot="messageArea" description="Search for example “All my open Objects”" text="Try This!" />
+      <Search id="filtering" show-clear-icon={true} placeholder="Start typing ..." onInput={handleFilteringInput}>
+    			<SearchMessageArea slot="messageArea" description={'Search for example "All my open Objects"'} text="Try This!" />
     			<Button design="Transparent" slot="action">Show all search results</Button>
+          {items.map((item, index) => (
+            <SearchItem key={item.name + index} text={item.name} icon="search" onDelete={() => handleItemDelete(null, index)} />
+          ))}
     		</Search>
-    	</div>
     </>
   );
 }

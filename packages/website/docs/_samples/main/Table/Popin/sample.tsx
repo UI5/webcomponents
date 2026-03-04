@@ -1,5 +1,6 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
-import BarClass from "@ui5/webcomponents-fiori/dist/Bar.js";
+import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import SegmentedButtonClass from "@ui5/webcomponents/dist/SegmentedButton.js";
 import SegmentedButtonItemClass from "@ui5/webcomponents/dist/SegmentedButtonItem.js";
@@ -8,6 +9,8 @@ import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import "@ui5/webcomponents-icons/dist/detail-more.js";
+import "@ui5/webcomponents-icons/dist/detail-less.js";
 
 const Bar = createReactComponent(BarClass);
 const Label = createReactComponent(LabelClass);
@@ -19,33 +22,47 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+const HIDDEN_COLUMNS = ["dimensionsCol", "weightCol"];
 
-  const handleSelectionChange = (e) => {
-    const selectedItem = e.detail.selectedItems[0];
-	table.style.width = selectedItem.textContent;
+function App() {
+  const tableRef = useRef(null);
+
+  const setPopinState = (hideDetails) => {
+    HIDDEN_COLUMNS.forEach((columnId) => {
+      const headerCell = document.getElementById(columnId);
+      if (headerCell) {
+        headerCell.popinHidden = hideDetails;
+      }
+    });
   };
 
-  const handleSelectionChange = (e) => {
+  const handleSizeBtnSelectionChange = (e) => {
     const selectedItem = e.detail.selectedItems[0];
-	setPopinState(selectedItem.tooltip === "Hide Details");
+    if (tableRef.current) {
+      tableRef.current.style.width = selectedItem.textContent;
+    }
+  };
+
+  const handleShowHideDetailsBtnSelectionChange = (e) => {
+    const selectedItem = e.detail.selectedItems[0];
+    setPopinState(selectedItem.tooltip === "Hide Details");
   };
 
   return (
     <>
       <Bar>
-    	<SegmentedButton id="sizeBtn" accessible-name="Switch Table Size">
+    	<SegmentedButton id="sizeBtn" accessible-name="Switch Table Size" onSelectionChange={handleSizeBtnSelectionChange}>
     		<SegmentedButtonItem>25%</SegmentedButtonItem>
     		<SegmentedButtonItem>50%</SegmentedButtonItem>
     		<SegmentedButtonItem>75%</SegmentedButtonItem>
     		<SegmentedButtonItem selected={true}>100%</SegmentedButtonItem>
     	</SegmentedButton>
-    	<SegmentedButton id="showHideDetailsBtn" slot="endContent" accessible-name="Show/Hide Details">
+    	<SegmentedButton id="showHideDetailsBtn" slot="endContent" accessible-name="Show/Hide Details" onSelectionChange={handleShowHideDetailsBtnSelectionChange}>
     		<SegmentedButtonItem tooltip="Show Details" icon="detail-more" />
     		<SegmentedButtonItem tooltip="Hide Details" icon="detail-less" selected={true} />
     	</SegmentedButton>
     </Bar>
-    <Table id="table" overflow-mode="Popin">
+    <Table ref={tableRef} id="table" overflow-mode="Popin">
     	<TableHeaderRow slot="headerRow">
     		<TableHeaderCell id="produtCol" min-width="300px"><span>Product</span></TableHeaderCell>
     		<TableHeaderCell id="supplierCol" min-width="200px">Supplier</TableHeaderCell>
@@ -53,7 +70,7 @@ function App() {
     		<TableHeaderCell id="weightCol" importance="-1" min-width="100px" popin-hidden={true}>Weight</TableHeaderCell>
     		<TableHeaderCell id="priceCol" min-width="150px">Price</TableHeaderCell>
     	</TableHeaderRow>
-    <!-- playground-fold -->
+    {/* playground-fold */}
     			<TableRow>
     				<TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
     				<TableCell><Label>Very Best Screens</Label></TableCell>
@@ -75,7 +92,7 @@ function App() {
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
     				<TableCell><Label><b>29</b> EUR</Label></TableCell>
     			</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     </Table>
     </>
   );

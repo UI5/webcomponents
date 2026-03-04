@@ -3,6 +3,8 @@ import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
+import "@ui5/webcomponents-icons/dist/phone.js";
+import "@ui5/webcomponents-icons/dist/calendar.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
@@ -13,6 +15,11 @@ function App() {
 
   return (
     <>
+      <style>{`
+        ui5-card {
+            width: 22rem;
+        }
+      `}</style>
       <Card style={{ width: "22rem" }}>
             <CardHeader slot="header" title-text="Upcoming Activities" subtitle-text="Today" />
             <Timeline>

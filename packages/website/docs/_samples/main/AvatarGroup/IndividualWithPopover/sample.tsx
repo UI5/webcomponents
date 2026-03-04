@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
@@ -12,89 +13,123 @@ const Slider = createReactComponent(SliderClass);
 const Title = createReactComponent(TitleClass);
 
 function App() {
+  const personPopoverRef = useRef(null);
+  const peoplePopoverRef = useRef(null);
+  const avatarGroupRef = useRef(null);
+  const [groupWidth, setGroupWidth] = useState("60%");
+  const [popAvatar, setPopAvatar] = useState<any>({ icon: "", initials: "", colorScheme: "", imageSrc: null });
+  const [hiddenAvatars, setHiddenAvatars] = useState<any[]>([]);
 
-  const handleClick = (e) => {
+  const handleAvatarGroupClick = (e: any) => {
+    const group = avatarGroupRef.current;
     if (e.detail.overflowButtonClicked) {
-        onButtonClicked(e.detail.targetRef);
+      const items = group.hiddenItems;
+      const firstHiddenIndex = group.items.length - items.length;
+      const avatars: any[] = [];
+      items.forEach((avatar: any, index: number) => {
+        const color = group.colorScheme[firstHiddenIndex + index];
+        avatars.push({
+          icon: avatar.icon,
+          initials: avatar.initials,
+          colorScheme: color,
+          imageSrc: avatar.image.length > 0 ? avatar.image[0].src : null,
+        });
+      });
+      setHiddenAvatars(avatars);
+      peoplePopoverRef.current.opener = e.detail.targetRef;
+      peoplePopoverRef.current.open = true;
+    } else {
+      const avatarRef = e.detail.targetRef;
+      const avatarIndex = group.items.indexOf(avatarRef);
+      setPopAvatar({
+        colorScheme: group.colorScheme[avatarIndex],
+        initials: avatarRef.initials,
+        icon: avatarRef.icon,
+        imageSrc: avatarRef.image.length > 0 ? avatarRef.image[0].src : null,
+      });
+      personPopoverRef.current.open = false;
+      personPopoverRef.current.opener = avatarRef;
+      personPopoverRef.current.open = true;
+    }
   };
 
-  const handleInput = (e) => {
-    avatarGroup.style.width = e.target.value + "%";
+  const handleSliderInput = (e: any) => {
+    setGroupWidth(e.target.value + "%");
   };
 
   return (
     <>
       <div className="individual">
-            <Popover style={{ width: "300px" }} header-text="Person Card" className="personPopover" placement="Bottom" prevent-focus-restore=""
+        <Popover
+          ref={personPopoverRef}
+          header-text="Person Card"
+          className="personPopover"
+          style={{ width: "300px" }}
+          placement="Bottom"
+          prevent-focus-restore=""
+        >
+          <div className="avatar-slot" style={{ display: "inline-block" }}>
+            <Avatar
+              color-scheme={popAvatar.colorScheme}
+              initials={popAvatar.initials}
+              icon={popAvatar.icon}
             >
-                <div className="avatar-slot" style={{ display: "inline-block" }}>
-                    <Avatar id="popAvatar" />
-                </div>
-                <div className="title-slot" style={{ display: "inline-block" }}>
-                    <Title level="H5">John Doe</Title>
-                    <Title level="H5">Software Developer</Title>
-                </div>
-            </Popover>
-            <Popover style={{ width: "400px" }} header-text="My people" className="peoplePopover" placement="Bottom"
-            >
-                <div
-                    className="placeholder"
-                    style={{ display: "flex", flexWrap: "wrap" }}
-                ></div>
-            </Popover>
-            <Slider id="sliderIndividual" min={1} max={100} value={60}
-             />
-            <AvatarGroup type="Individual">
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" initials="JD" />
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/woman_avatar_5.png"
-                        alt="Woman Avatar 5"
-                    />
+              {popAvatar.imageSrc && <img src={popAvatar.imageSrc} />}
+            </Avatar>
+          </div>
+          <div className="title-slot" style={{ display: "inline-block" }}>
+            <Title level="H5">John Doe</Title>
+            <Title level="H5">Software Developer</Title>
+          </div>
+        </Popover>
+        <Popover
+          ref={peoplePopoverRef}
+          header-text="My people"
+          className="peoplePopover"
+          style={{ width: "400px" }}
+          placement="Bottom"
+        >
+          <div className="placeholder" style={{ display: "flex", flexWrap: "wrap" }}>
+            {hiddenAvatars.map((av, i) => (
+              <div key={i} className="avatar-slot" style={{ padding: "5px" }}>
+                <Avatar interactive={true} icon={av.icon} initials={av.initials} color-scheme={av.colorScheme}>
+                  {av.imageSrc && <img src={av.imageSrc} />}
                 </Avatar>
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/man_avatar_3.png"
-                        alt="Man Avatar 3"
-                    />
-                </Avatar>
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" initials="JD" />
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/woman_avatar_5.png"
-                        alt="Woman Avatar 5"
-                    />
-                </Avatar>
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/man_avatar_3.png"
-                        alt="Man Avatar 3"
-                    />
-                </Avatar>
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" icon="employee" />
-                <Avatar size="M" initials="JD" />
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/woman_avatar_5.png"
-                        alt="Woman Avatar 5"
-                    />
-                </Avatar>
-                <Avatar size="M">
-                    <img
-                        src="/images/avatars/man_avatar_3.png"
-                        alt="Man Avatar 3"
-                    />
-                </Avatar>
-            </AvatarGroup>
-            <script>
-           
-            </script>
-        </div>
+              </div>
+            ))}
+          </div>
+        </Popover>
+        <Slider id="sliderIndividual" min={1} max={100} value={60} onInput={handleSliderInput} />
+        <AvatarGroup ref={avatarGroupRef} type="Individual" style={{ width: groupWidth }} onClick={handleAvatarGroupClick}>
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" initials="JD" />
+          <Avatar size="M">
+            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+          </Avatar>
+          <Avatar size="M">
+            <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
+          </Avatar>
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" initials="JD" />
+          <Avatar size="M">
+            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+          </Avatar>
+          <Avatar size="M">
+            <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
+          </Avatar>
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" icon="employee" />
+          <Avatar size="M" initials="JD" />
+          <Avatar size="M">
+            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+          </Avatar>
+          <Avatar size="M">
+            <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
+          </Avatar>
+        </AvatarGroup>
+      </div>
     </>
   );
 }

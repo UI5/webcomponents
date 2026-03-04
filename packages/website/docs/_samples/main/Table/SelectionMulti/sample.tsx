@@ -1,47 +1,83 @@
+import { useRef } from "react";
 import { createReactComponent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
+import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import TableSelectionMultiClass from "@ui5/webcomponents/dist/TableSelectionMulti.js";
 
 const Label = createReactComponent(LabelClass);
+const RadioButton = createReactComponent(RadioButtonClass);
 const Table = createReactComponent(TableClass);
 const TableCell = createReactComponent(TableCellClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
+const TableSelectionMulti = createReactComponent(TableSelectionMultiClass);
 
 function App() {
+  const selectionRef = useRef(null);
+  const oldSelectedSetRef = useRef(null);
 
-  const handleChange = () => {
+  const handleSelectionChange = () => {
+    const selectionFeature = selectionRef.current;
+    if (!selectionFeature) return;
+
     console.log("Selected keys", selectionFeature.selected);
 
-	const newSelectedSet = selectionFeature.getSelectedAsSet();
-	const recentlySelectedRowKeys = [...newSelectedSet.difference(oldSelectedSet)];
-	const recentlyDeselectedRowKeys = [...oldSelectedSet.difference(newSelectedSet)];
-	oldSelectedSet = newSelectedSet;
+    const newSelectedSet = selectionFeature.getSelectedAsSet();
+    if (oldSelectedSetRef.current) {
+      const recentlySelectedRowKeys = [...newSelectedSet.difference(oldSelectedSetRef.current)];
+      const recentlyDeselectedRowKeys = [...oldSelectedSetRef.current.difference(newSelectedSet)];
 
-	if (recentlySelectedRowKeys.length > 0) {
-		const recentlySelectedRows = recentlySelectedRowKeys.map((key) => selectionFeature.getRowByKey(key));
-		console.log("Recently selected row-keys", recentlySelectedRowKeys);
-		console.log("Recently selected rows", recentlySelectedRows);
+      if (recentlySelectedRowKeys.length > 0) {
+        const recentlySelectedRows = recentlySelectedRowKeys.map((key) => selectionFeature.getRowByKey(key));
+        console.log("Recently selected row-keys", recentlySelectedRowKeys);
+        console.log("Recently selected rows", recentlySelectedRows);
+      }
+
+      if (recentlyDeselectedRowKeys.length > 0) {
+        const recentlyDeselectedRows = recentlyDeselectedRowKeys.map((key) => selectionFeature.getRowByKey(key));
+        console.log("Recently deselected row-keys", recentlyDeselectedRowKeys);
+        console.log("Recently deselected rows", recentlyDeselectedRows);
+      }
+    }
+    oldSelectedSetRef.current = newSelectedSet;
   };
 
-  const handleChange = (e) => {
-    selectionFeature.behavior = e.target.text;
+  const handleSelectionBehaviorChange = (e) => {
+    if (selectionRef.current) {
+      selectionRef.current.behavior = e.target.text;
+    }
   };
 
-  const handleChange = (e) => {
-    selectionFeature.headerSelector = e.target.text;
+  const handleHeaderSelectorChange = (e) => {
+    if (selectionRef.current) {
+      selectionRef.current.headerSelector = e.target.text;
+    }
   };
 
   return (
     <>
-      <Table id="table">
-    			<ui5-table-selection-multi id="selection" slot="features" selected="Row1 Row3"></ui5-table-selection-multi>
-    <!-- playground-fold -->
+      <div style={{ display: "flex", alignItems: "center" }}>
+    			<Label>Selection Behavior: </Label>
+    			<span id="selectionBehavior" role="radiogroup" onChange={handleSelectionBehaviorChange}>
+    				<RadioButton name="selectionBehavior" text="RowSelector" checked={true} />
+    				<RadioButton name="selectionBehavior" text="RowOnly" />
+    			</span>
+    			<div style={{ flexGrow: 1 }}></div>
+    			<Label>Header Selector: </Label>
+    			<span id="headerSelector" role="radiogroup" onChange={handleHeaderSelectorChange}>
+    				<RadioButton name="headerSelector" text="SelectAll" checked={true} />
+    				<RadioButton name="headerSelector" text="ClearAll" />
+    			</span>
+    		</div>
+    		<Table id="table">
+    			<TableSelectionMulti ref={selectionRef} id="selection" slot="features" selected="Row1 Row3" onChange={handleSelectionChange} />
+    {/* playground-fold */}
     			<TableHeaderRow slot="headerRow">
     				<TableHeaderCell id="produtCol" width="1fr"><span>Product</span></TableHeaderCell>
     				<TableHeaderCell id="supplierCol" width="1fr">Supplier</TableHeaderCell>
@@ -70,7 +106,7 @@ function App() {
     				<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
     				<TableCell><Label><b>29</b> EUR</Label></TableCell>
     			</TableRow>
-    <!-- playground-fold-end -->
+    {/* playground-fold-end */}
     		</Table>
     </>
   );

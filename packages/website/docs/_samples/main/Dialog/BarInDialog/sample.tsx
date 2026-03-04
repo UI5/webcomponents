@@ -1,8 +1,10 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
+import "@ui5/webcomponents-icons/dist/decline.js";
 
 const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
@@ -10,28 +12,47 @@ const Dialog = createReactComponent(DialogClass);
 const Title = createReactComponent(TitleClass);
 
 function App() {
+  const dialogRef = useRef(null);
+  const dialogStateRef = useRef(null);
 
-  const handleClick = () => {
-    dialog.open = true;
+  const handleDialogOpenerClick = () => {
+    dialogRef.current.open = true;
   };
 
-  const handleClick = () => {
-    dialog.open = false;
+  const handleBtnClick = () => {
+    dialogRef.current.open = false;
   };
 
-  const handleClick = () => {
-    dialogState.open = true;
+  const handleDialogStateOpenerClick = () => {
+    dialogStateRef.current.open = true;
   };
 
-  const handleClick = () => {
-    dialogState.open = false;
+  const handleCloseDialogStateButtonClick = () => {
+    dialogStateRef.current.open = false;
   };
 
   return (
     <>
-      <Button id="dialogOpener">Open Dialog</Button>
+      <style>{`
+        /* Styles for Dialog */
+        #dialog::part(header),
+        #dialog::part(footer) {
+            padding-inline: 0;
+        }
 
-        <Dialog id="dialog">
+        /* Styles for Dialog with State */
+        #dialogState::part(header),
+        #dialogState::part(footer) {
+            padding-inline-end: 0;
+        }
+
+        #bar::part(startContent) {
+            padding-inline-start: 0;
+        }
+      `}</style>
+      <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
+
+        <Dialog ref={dialogRef} id="dialog">
             <Bar slot="header" design="Header">
                 <Title level="H5" slot="startContent">Bar used in Header and Footer</Title>
                 <Button className="dialogCloser" design="Transparent" slot="endContent" icon="decline" />
@@ -42,15 +63,15 @@ function App() {
             </Bar>
         </Dialog>
 
-         <Button id="dialogStateOpener">Open Dialog with State</Button>
+         <Button id="dialogStateOpener" onClick={handleDialogStateOpenerClick}>Open Dialog with State</Button>
 
-        <Dialog id="dialogState" state="Critical">
+        <Dialog ref={dialogStateRef} id="dialogState" state="Critical">
             <Bar id="bar" slot="header" design="Header">
                 <Title level="H5" slot="startContent">Bar used in Header and Footer</Title>
             </Bar>
             <div>Custom styles are applied to adjust the paddings when a ui5-bar is placed in the header or footer of a dialog with state.</div>
             <Bar slot="footer" design="Footer">
-                <Button style={{ minWidth: "4rem" }} design="Emphasized" id="closeDialogStateButton" slot="endContent">OK</Button>
+                <Button style={{ minWidth: "4rem" }} design="Emphasized" id="closeDialogStateButton" slot="endContent" onClick={handleCloseDialogStateButtonClick}>OK</Button>
             </Bar>
         </Dialog>
     </>

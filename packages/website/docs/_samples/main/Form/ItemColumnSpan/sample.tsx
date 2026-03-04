@@ -1,4 +1,5 @@
 import { createReactComponent } from "@ui5/webcomponents-base";
+import { useRef } from "react";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -20,20 +21,22 @@ const Text = createReactComponent(TextClass);
 const TextArea = createReactComponent(TextAreaClass);
 
 function App() {
+  const containerRef = useRef(null);
+  const sliderRef = useRef(null);
 
-  const handleUi5Input = () => {
-    const width = (slider.value / 100 * 1500);
-	container.style.width = `${width
+  const handleSliderUi5Input = () => {
+    const width = (sliderRef.current.value / 100 * 1500);
+	containerRef.current.style.width = `${width}px`;
   };
 
   return (
     <>
-      <Label show-colon={true}>Form Layout</Label><Text>S2 M2 L2 XL2</Text></br>
-        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text></br>
+      <Label show-colon={true}>Form Layout</Label><Text>S2 M2 L2 XL2</Text><br />
+        <Label show-colon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
         <Label show-colon={true}>Page Size</Label><Text id="txtLayout">М</Text>
-        <Slider id="slider" value={53} />
+        <Slider ref={sliderRef} id="slider" value={53} onUi5Input={handleSliderUi5Input} />
 
-        <div id="container" style={{ maxWidth: "1500px", width: "800px", overflowX: "auto" }}>
+        <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "800px", overflowX: "auto" }}>
             <Form header-text="Personal Data" layout="S2 M2 L2 XL2" label-span="S12 M12 L12 XL12">
                 <FormItem column-span={2}>
                     <Label required={true} htmlFor="nameInp" slot="labelContent">Name:</Label>
