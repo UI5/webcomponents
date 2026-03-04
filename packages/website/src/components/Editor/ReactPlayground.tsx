@@ -113,6 +113,13 @@ import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import FormGroupClass from "@ui5/webcomponents/dist/FormGroup.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
+import DynamicDateRangeClass from "@ui5/webcomponents/dist/DynamicDateRange.js";
+import SuggestionItemGroupClass from "@ui5/webcomponents/dist/SuggestionItemGroup.js";
+import TableGrowingClass from "@ui5/webcomponents/dist/TableGrowing.js";
+import TableSelectionClass from "@ui5/webcomponents/dist/TableSelection.js";
+import TableSelectionMultiClass from "@ui5/webcomponents/dist/TableSelectionMulti.js";
+import TableSelectionSingleClass from "@ui5/webcomponents/dist/TableSelectionSingle.js";
+import TableVirtualizerClass from "@ui5/webcomponents/dist/TableVirtualizer.js";
 
 // Import fiori package
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -153,6 +160,21 @@ import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
+import NavigationLayoutClass from "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
+import SearchFieldClass from "@ui5/webcomponents-fiori/dist/SearchField.js";
+import SearchItemGroupClass from "@ui5/webcomponents-fiori/dist/SearchItemGroup.js";
+import SearchItemShowMoreClass from "@ui5/webcomponents-fiori/dist/SearchItemShowMore.js";
+import SearchScopeClass from "@ui5/webcomponents-fiori/dist/SearchScope.js";
+import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
+import ShellBarSearchClass from "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
+import ShellBarSpacerClass from "@ui5/webcomponents-fiori/dist/ShellBarSpacer.js";
+import UserSettingsDialogClass from "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+import UserSettingsItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
+import UserSettingsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
+import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
+import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
+import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
+import UserSettingsAppearanceViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
 
 // Import AI package
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
@@ -160,6 +182,10 @@ import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import AIPromptInputClass from "@ui5/webcomponents-ai/dist/PromptInput.js";
+
+// Import compat package
+import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
+import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 
 // Import icons commonly used in samples
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
@@ -197,8 +223,9 @@ const ComponentClasses: Record<string, any> = {
   BreadcrumbsItemClass, CalendarClass, CalendarLegendClass, CalendarLegendItemClass,
   SpecialCalendarDateClass, ColorPickerClass, ColorPaletteClass, ColorPaletteItemClass,
   ColorPalettePopoverClass, FileUploaderClass, SplitButtonClass, TitleClass, TextClass,
-  SuggestionItemClass, SuggestionItemCustomClass, CarouselClass, ToggleButtonClass, FormClass,
-  FormItemClass, FormGroupClass, BarClass,
+  SuggestionItemClass, SuggestionItemCustomClass, SuggestionItemGroupClass, CarouselClass, ToggleButtonClass, FormClass,
+  FormItemClass, FormGroupClass, BarClass, DynamicDateRangeClass, TableGrowingClass,
+  TableSelectionClass, TableSelectionMultiClass, TableSelectionSingleClass, TableVirtualizerClass,
   // fiori package
   ShellBarClass, ShellBarItemClass, SideNavigationClass, SideNavigationItemClass,
   SideNavigationSubItemClass, SideNavigationGroupClass, NotificationListClass, NotificationListItemClass,
@@ -208,9 +235,15 @@ const ComponentClasses: Record<string, any> = {
   FlexibleColumnLayoutClass, MediaGalleryClass, MediaGalleryItemClass, ProductSwitchClass,
   ProductSwitchItemClass, ViewSettingsDialogClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
   SearchClass, SearchItemClass, SearchMessageAreaClass, UserMenuClass, UserMenuItemClass,
-  UserMenuAccountClass, BarcodeScannerDialogClass,
+  UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
+  SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
+  ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
+  UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,
+  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass,
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
+  // compat package
+  TableColumnClass, TableGroupRowClass,
 };
 
 interface ReactPlaygroundProps {
