@@ -185,7 +185,7 @@ class RatingIndicator extends UI5Element {
 	 * @since 2.20
 	 */
 	@property()
-	iconSelected?: string;
+	ratedIcon = "favorite";
 
 	/**
 	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
@@ -194,12 +194,12 @@ class RatingIndicator extends UI5Element {
 	 * @since 2.20
 	 */
 	@property()
-	iconUnselected?: string;
+	unratedIcon = "unfavorite";
 
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
 	/**
@@ -359,14 +359,6 @@ class RatingIndicator extends UI5Element {
 
 	get ariaReadonly() {
 		return this.readonly ? "true" : undefined;
-	}
-
-	get effectiveIconSelected() {
-		return this.iconSelected || "favorite";
-	}
-
-	get effectiveIconUnselected() {
-		return this.iconUnselected || "unfavorite";
 	}
 }
 

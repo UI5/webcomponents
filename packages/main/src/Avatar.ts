@@ -264,6 +264,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the optional badge that will be used for visual affordance.
 	 *
+	 * **Recommendation:** While badges are supported on all avatars, it is recommended
+	 * to use them with interactive avatars (via `mode="Interactive"` or `interactive` attribute)
+	 * to provide better user experience and accessibility.
+	 *
 	 * **Note:** While the slot allows for custom badges, to achieve
 	 * the Fiori design, use the `ui5-avatar-badge` component.
 	 * @public
