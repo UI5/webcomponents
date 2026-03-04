@@ -411,6 +411,27 @@ class MenuItem extends ListItem implements IMenuItem {
 		return MenuItem.i18nBundle.getText(MENU_ITEM_LOADING);
 	}
 
+	/**
+	 * Returns the text for aria-describedby, including loading state for iOS VoiceOver support.
+	 * When a menu item with a submenu is focused and is in loading state, the loading text
+	 * will be announced by screen readers.
+	 */
+	get ariaSelectedText() {
+		const texts: Array<string> = [];
+		const parentAriaSelectedText = super.ariaSelectedText;
+
+		if (parentAriaSelectedText) {
+			texts.push(parentAriaSelectedText);
+		}
+
+		// Add loading text when the menu item has a submenu and is loading
+		if (this.hasSubmenu && this.loading) {
+			texts.push(this.loadingText);
+		}
+
+		return texts.length ? texts.join(" ") : undefined;
+	}
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 

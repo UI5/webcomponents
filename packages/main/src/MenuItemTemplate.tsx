@@ -160,14 +160,6 @@ function listItemPostContent(this: MenuItem) {
 			}
 		</div >
 
-		{/* ARIA live region for loading state announcement */}
-		<span
-			class="ui5-hidden-text"
-			aria-live="polite"
-			aria-atomic="true"
-		>
-			{this.loading ? this.loadingText : ""}
-		</span>
 		{
 			this.isPhone && (
 				<div slot="footer" class="ui5-menu-dialog-footer">
