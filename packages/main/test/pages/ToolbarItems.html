@@ -188,7 +188,44 @@
             </ui5-toolbar-item>
         </ui5-toolbar>
     </section>
+
+		<!-- Test section for CSS custom state :state(overflowed) -->
+		<ui5-title level="H3">Toolbar with :state(overflowed) CSS Custom State (resize to test)</ui5-title>
+		<br />
+		<style>
+			/* Use CSS custom state :state(overflowed) to style items when in overflow popover */
+			#overflow-state-toolbar [ui5-toolbar-item]:state(overflowed) {
+				/* When overflowed, change checkboxes and radio buttons to column layout */
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* Visual indicator for the test */
+			#overflow-state-toolbar [ui5-toolbar-item]:state(overflowed)::before {
+				content: "Overflowed:";
+				font-size: 0.75rem;
+				color: var(--sapNeutralTextColor);
+				margin-bottom: 0.25rem;
+			}
+		</style>
+		<section>
+			<ui5-toolbar id="overflow-state-toolbar" style="max-width: 400px;">
+				<ui5-toolbar-button icon="add" text="Add"></ui5-toolbar-button>
+				<!-- Toolbar Item with Radio Buttons - should display in column when overflowed -->
+				<ui5-toolbar-item id="overflow-state-radio-item">
+					<ui5-radio-button name="overflow-group" text="Option A" selected></ui5-radio-button>
+					<ui5-radio-button name="overflow-group" text="Option B"></ui5-radio-button>
+					<ui5-radio-button name="overflow-group" text="Option C"></ui5-radio-button>
+				</ui5-toolbar-item>
+				<!-- Toolbar Item with Checkboxes - should display in column when overflowed -->
+				<ui5-toolbar-item id="overflow-state-checkbox-item">
+					<ui5-checkbox text="Check A"></ui5-checkbox>
+					<ui5-checkbox text="Check B" checked></ui5-checkbox>
+					<ui5-checkbox text="Check C"></ui5-checkbox>
+				</ui5-toolbar-item>
+				<ui5-toolbar-button icon="decline" text="Remove"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</section>
 	</div>
 </body>
-
 </html>

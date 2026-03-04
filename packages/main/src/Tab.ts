@@ -492,7 +492,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 
 	_ondragstart(e: DragEvent) {
 		if (e.target instanceof HTMLElement) {
-			DragRegistry.setDraggedElement(this);
+			DragRegistry.setDraggedElement(this, e);
 			e.target.setAttribute("data-moving", "");
 		}
 	}

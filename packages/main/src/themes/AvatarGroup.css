@@ -31,6 +31,30 @@
 	cursor: pointer;
 }
 
+/* In Group mode: apply hover/active states to ALL avatars when container is hovered/active */
+:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover ::slotted([ui5-avatar]:not([disabled])) {
+	box-shadow: var(--ui5-avatar-hover-box-shadow-offset);
+}
+
+:host([type="Group"]) .ui5-avatar-group-items:active ::slotted([ui5-avatar]) {
+	background-color: var(--sapButton_Active_Background);
+	border-color: var(--sapButton_Active_BorderColor);
+	color: var(--sapButton_Active_TextColor);
+}
+
+/* Overflow button hover/active states in Group mode */
+:host([type="Group"]) .ui5-avatar-group-items:not(:active):hover .ui5-avatar-group-overflow-btn {
+	box-shadow: var(--ui5-avatar-hover-box-shadow-offset);
+	background-color: var(--sapButton_Lite_Hover_Background);
+}
+
+:host([type="Group"]) .ui5-avatar-group-items:active .ui5-avatar-group-overflow-btn {
+	background-color: var(--sapButton_Active_Background);
+	border-color: var(--sapButton_Active_BorderColor);
+	color: var(--sapButton_Active_TextColor);
+}
+
+/* Prevent individual avatars and buttons from intercepting clicks/focus in Group mode */
 :host([type="Group"]) ::slotted([ui5-button]),
 :host([type="Group"]) ::slotted([ui5-avatar]),
 :host([type="Group"]) .ui5-avatar-group-overflow-btn {

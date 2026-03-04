@@ -100,6 +100,7 @@ const SKIP_ITEMS_SIZE = 10;
 interface IComboBoxItem extends UI5Element {
 	text?: string,
 	headerText?: string,
+	value?: string,
 	focused: boolean,
 	isGroupItem?: boolean,
 	selected?: boolean,
@@ -137,6 +138,32 @@ type ComboBoxSelectionChangeEventDetail = {
  * -  Input field - displays the selected option or a custom user entry. Users can type to narrow down the list or enter their own value.
  * -  Drop-down arrow - expands\collapses the option list.
  * -  Option list - the list of available options.
+ *
+ * ### Working with Values
+ *
+ * The ComboBox offers two ways to work with item selection:
+ *
+ * **1. Display Text Only (using `value`):**
+ * ```html
+ * <ui5-combobox value="Germany">
+ *   <ui5-cb-item text="Germany"></ui5-cb-item>
+ *   <ui5-cb-item text="France"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * Use this approach when the displayed text is sufficient for your needs.
+ *
+ * **2. Unique Identifiers - Recommended (using `selectedValue` and item `value`):**
+ * ```html
+ * <ui5-combobox value="Germany" selected-value="DE">
+ *   <ui5-cb-item text="Germany" value="DE"></ui5-cb-item>
+ *   <ui5-cb-item text="France" value="FR"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * This is the recommended approach when you need to work with unique identifiers (IDs, codes) separate from display text.
+ * The `selectedValue` property references the `value` property of the selected item.
+ * In forms, the item's `value` (e.g., "DE") will be submitted instead of the display text.
+ *
+ * **Important:** Do not mix the `selectedValue` approach with the deprecated `selected` property on items.
  *
  * ### Keyboard Handling
  *
@@ -234,6 +261,28 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	value = "";
+
+	/**
+	 * Defines the value of the selected item (references the `value` property of `ui5-cb-item`).
+	 *
+	 * Use this property to work with unique identifiers (IDs, codes) instead of display text.
+	 * When set, the ComboBox finds and selects the item whose `value` property matches this property.
+	 *
+	 * **Benefits:**
+	 * - Select items programmatically by their unique identifier
+	 * - Handle items with identical display text but different underlying values
+	 * - Submit machine-readable values in forms (the item's `value` is submitted instead of the display text)
+	 *
+	 * **When to use `selectedValue` vs `value`:**
+	 * - **Recommended:** Use `selectedValue` + item `value` when you need unique identifiers separate from display text (e.g., country codes "DE", "FR" with display names "Germany", "France")
+	 * - Use only the ComboBox `value` property when the display text itself is sufficient for your use case
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	selectedValue?: string;
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -366,7 +415,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_iconPressed = false;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_filteredItems: Array<IComboBoxItem> = [];
 
 	@property({ type: Number, noAttribute: true })
@@ -403,7 +452,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_linksListenersArray: Array<(args: any) => void> = [];
 
 	/**
@@ -457,6 +506,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
+	_useSelectedValue = false;
 	_valueStateLinks: Array<HTMLElement> = [];
 	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
@@ -476,6 +526,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get formFormattedValue() {
+		// Find the selected item
+		const selectedItem = this._getItems().find(item => item.selected && !item.isGroupItem) as ComboBoxItem | undefined;
+
+		// If selected item has a value property, return it (like Select does)
+		if (selectedItem && selectedItem.value !== undefined) {
+			return selectedItem.value;
+		}
+
+		// Fallback to display text (backward compatibility)
 		return this.value;
 	}
 
@@ -510,6 +569,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.valueStateOpen = true;
 		} else {
 			this.valueStateOpen = false;
+		}
+
+		if (this.selectedValue) {
+			this._useSelectedValue = true;
 		}
 
 		this._selectMatchingItem();
@@ -841,12 +904,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
+			this.selectedValue = isGroupItem ? undefined : currentItem.value;
 			this.focused = false;
 
 			currentItem.focused = true;
 		} else {
 			this.focused = true;
 			this.value = isGroupItem ? nextItem.text! : currentItem.text!;
+			this.selectedValue = currentItem.value;
 			currentItem.focused = false;
 		}
 
@@ -1162,7 +1227,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const matchingItems: Array<IComboBoxItem> = this._startsWithMatchingItems(current);
 
 		if (matchingItems.length) {
-			const exactMatch = matchingItems.find(item => item.text === current);
+			let exactMatch;
+			if (this._useSelectedValue) {
+				exactMatch = matchingItems.find(item => item.value === (currentlyFocusedItem?.value || this.selectedValue) && item.text?.toLowerCase() === current.toLowerCase());
+			} else {
+				exactMatch = matchingItems.find(item => item.text?.toLowerCase() === current.toLowerCase());
+			}
+
 			return exactMatch ?? matchingItems[0];
 		}
 	}
@@ -1171,13 +1242,22 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const value = (item && item.text) || "";
 
 		this.inner.value = value;
-		this.inner.setSelectionRange(filterValue.length, value.length);
+
+		// select the whole value if it doesn't start with the filterValue, otherwise select only the autocompleted part
+		const startsWithFilter = value.toLowerCase().startsWith(filterValue.toLowerCase());
+		const selectionStart = startsWithFilter ? filterValue.length : 0;
+		this.inner.setSelectionRange(selectionStart, value.length);
 		this.value = value;
+
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value;
+		}
 	}
 
 	_selectMatchingItem() {
 		const currentlyFocusedItem = this.items.find(item => item.focused);
 		const shouldSelectionBeCleared = currentlyFocusedItem && currentlyFocusedItem.isGroupItem;
+		const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
 		let itemToBeSelected: IComboBoxItem | undefined;
 		let previouslySelectedItem: IComboBoxItem | undefined;
 
@@ -1197,9 +1277,26 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._filteredItems.forEach(item => {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
-				itemToBeSelected = ((!item.isGroupItem && (item.text === this.value)) ? item : item?.items?.find(i => i.text === this.value));
+				if (isInstanceOfComboBoxItemGroup(item)) {
+					if (this._useSelectedValue) {
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch && (this.value === "" || i.text?.toLowerCase() === this.value.toLowerCase()));
+					} else {
+						itemToBeSelected = item.items?.find(i => i.text?.toLowerCase() === this.value.toLowerCase());
+					}
+				} else {
+					if (this._useSelectedValue) {
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch && (this.value === "" || i.text?.toLowerCase() === this.value.toLowerCase()));
+						return;
+					}
+					itemToBeSelected = item.text?.toLowerCase() === this.value.toLowerCase() ? item : undefined;
+				}
 			}
 		});
+
+		// When selectedValue matched an item but value is empty (initial render), populate value from the item's text
+		if (itemToBeSelected && this._initialRendering && this.value === "") {
+			this.value = itemToBeSelected.text || "";
+		}
 
 		this._filteredItems = this._filteredItems.map(item => {
 			if (!isInstanceOfComboBoxItemGroup(item)) {
@@ -1213,6 +1310,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 			return item;
 		});
+
+		if (!itemToBeSelected && this._useSelectedValue) {
+			this.selectedValue = undefined;
+		} else {
+			this.selectedValue = itemToBeSelected?.value;
+		}
 
 		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
 		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
@@ -1266,6 +1369,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value;
+		}
 
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {
@@ -1303,11 +1409,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_clear() {
 		const selectedItem = this.items.find(item => item.selected);
 
-		if (selectedItem?.text === this.value) {
+		if (selectedItem?.text?.toLowerCase() === this.value.toLowerCase()) {
 			this.fireDecoratorEvent("change");
 		}
 
 		this.value = "";
+		if (this._useSelectedValue) {
+			this.selectedValue = undefined;
+		}
 		this.fireDecoratorEvent("input");
 
 		if (this._isPhone) {

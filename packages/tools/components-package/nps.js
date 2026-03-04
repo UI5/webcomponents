@@ -68,7 +68,7 @@ const getScripts = (options) => {
 
 	const scripts = {
 		__ui5envs: {
-			UI5_CEM_MODE: options.dev,
+			UI5_CEM_MODE: typeof options.dev === "boolean" ? (options.dev ? "dev" : undefined) : options.dev,
 			UI5_TS: `${tsOption}`,
 			CSS_VARIABLES_TARGET: options.cssVariablesTarget ?? "root",
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
@@ -86,7 +86,7 @@ const getScripts = (options) => {
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
-			default: `ui5nps clean prepare.all copy copyProps prepare.typescript generateAPI`,
+			default: `ui5nps clean prepare.all copy copyProps prepare.typescript`,
 			all: `ui5nps-p build.templates build.i18n prepare.styleRelated build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
@@ -165,9 +165,9 @@ const getScripts = (options) => {
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {
-			default: tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM" : "",
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
+			mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
 		},
 	};
 

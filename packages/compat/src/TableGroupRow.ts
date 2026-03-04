@@ -56,7 +56,7 @@ class TableGroupRow extends UI5Element implements ITableRow {
 	@property()
 	mode: `${TableMode}` = "None";
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_columnsInfo?: Array<TableColumnInfo>;
 
 	@property()

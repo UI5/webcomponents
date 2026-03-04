@@ -20,19 +20,17 @@
 	}
 }
 
-:host([_interactive]:active),
 :host([_interactive][_active]),
-:host([_interactive][aria-selected=true]:active),
 :host([_interactive][aria-selected=true][_active]) {
 	background: var(--sapList_Active_Background);
 }
 
-:host([position]) {
-	height: var(--row-height);
-}
-
 :host([_interactive]) {
 	cursor: pointer;
+}
+
+:host([position]) {
+	height: var(--row-height);
 }
 
 #popin-cell {

@@ -36,6 +36,7 @@
 	align-items: center;
 	height: var(--_ui5_shellbar_root_height);
 	position: relative;
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 }
@@ -145,7 +146,7 @@
 	display: flex;
 	align-items: center;
 	min-width: 0;
-	overflow: hidden;
+	overflow: visible;
 	position: relative;
 }
 
