@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import SegmentedButtonClass from "@ui5/webcomponents/dist/SegmentedButton.js";
@@ -12,15 +12,15 @@ import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents-icons/dist/detail-more.js";
 import "@ui5/webcomponents-icons/dist/detail-less.js";
 
-const Bar = createReactComponent(BarClass);
-const Label = createReactComponent(LabelClass);
-const SegmentedButton = createReactComponent(SegmentedButtonClass);
-const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
-const Table = createReactComponent(TableClass);
-const TableCell = createReactComponent(TableCellClass);
-const TableHeaderCell = createReactComponent(TableHeaderCellClass);
-const TableHeaderRow = createReactComponent(TableHeaderRowClass);
-const TableRow = createReactComponent(TableRowClass);
+const Bar = createComponent(BarClass);
+const Label = createComponent(LabelClass);
+const SegmentedButton = createComponent(SegmentedButtonClass);
+const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
+const Table = createComponent(TableClass);
+const TableCell = createComponent(TableCellClass);
+const TableHeaderCell = createComponent(TableHeaderCellClass);
+const TableHeaderRow = createComponent(TableHeaderRowClass);
+const TableRow = createComponent(TableRowClass);
 
 const HIDDEN_COLUMNS = ["dimensionsCol", "weightCol"];
 

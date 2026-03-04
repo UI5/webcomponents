@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
@@ -6,12 +6,12 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemCustomClass from "@ui5/webcomponents/dist/TreeItemCustom.js";
 
-const Button = createReactComponent(ButtonClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Title = createReactComponent(TitleClass);
-const Tree = createReactComponent(TreeClass);
-const TreeItemCustom = createReactComponent(TreeItemCustomClass);
+const Button = createComponent(ButtonClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Title = createComponent(TitleClass);
+const Tree = createComponent(TreeClass);
+const TreeItemCustom = createComponent(TreeItemCustomClass);
 
 function App() {
 

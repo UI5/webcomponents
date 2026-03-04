@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
-const MultiInput = createReactComponent(MultiInputClass);
-const Token = createReactComponent(TokenClass);
+const MultiInput = createComponent(MultiInputClass);
+const Token = createComponent(TokenClass);
 
 function App() {
   const [tokens, setTokens] = useState(["Argentina", "Mexico", "Philippines", "Sweden", "USA"]);

@@ -1,15 +1,15 @@
 import { useRef, useEffect } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 
-const Label = createReactComponent(LabelClass);
-const Title = createReactComponent(TitleClass);
-const Tree = createReactComponent(TreeClass);
-const TreeItem = createReactComponent(TreeItemClass);
+const Label = createComponent(LabelClass);
+const Title = createComponent(TitleClass);
+const Tree = createComponent(TreeClass);
+const TreeItem = createComponent(TreeItemClass);
 
 function App() {
   const treeRef = useRef(null);

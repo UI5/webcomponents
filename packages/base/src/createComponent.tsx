@@ -54,10 +54,10 @@ const createEventCleanup = (element: UI5Element, eventName: string, handler: Eve
  *
  * @example
  * import Button from "@ui5/webcomponents/dist/Button.js";
- * const ReactButton = createReactComponent(Button);
+ * const ReactButton = createComponent(Button);
  * // ReactButton props are typed based on Button's _jsxProps
  */
-export function createReactComponent<T extends UI5Element>(
+export function createComponent<T extends UI5Element>(
 	ComponentClass: UI5ComponentClass<T>,
 ): React.ForwardRefExoticComponent<
 	React.PropsWithoutRef<T["_jsxProps"] & { children?: ReactNode }> & React.RefAttributes<T>
@@ -126,4 +126,4 @@ export function createReactComponent<T extends UI5Element>(
 	return Component;
 }
 
-export default createReactComponent;
+export default createComponent;

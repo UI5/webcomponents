@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
@@ -7,12 +7,12 @@ import ViewSettingsDialogClass from "@ui5/webcomponents-fiori/dist/ViewSettingsD
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 
-const FilterItem = createReactComponent(FilterItemClass);
-const FilterItemOption = createReactComponent(FilterItemOptionClass);
-const SortItem = createReactComponent(SortItemClass);
-const ViewSettingsDialog = createReactComponent(ViewSettingsDialogClass);
-const Button = createReactComponent(ButtonClass);
-const ListItemGroup = createReactComponent(ListItemGroupClass);
+const FilterItem = createComponent(FilterItemClass);
+const FilterItemOption = createComponent(FilterItemOptionClass);
+const SortItem = createComponent(SortItemClass);
+const ViewSettingsDialog = createComponent(ViewSettingsDialogClass);
+const Button = createComponent(ButtonClass);
+const ListItemGroup = createComponent(ListItemGroupClass);
 
 function App() {
   const vsd1Ref = useRef(null);

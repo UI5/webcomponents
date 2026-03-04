@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -6,10 +6,10 @@ import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/document-text.js";
 
-const UploadCollection = createReactComponent(UploadCollectionClass);
-const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
-const Icon = createReactComponent(IconClass);
-const Title = createReactComponent(TitleClass);
+const UploadCollection = createComponent(UploadCollectionClass);
+const UploadCollectionItem = createComponent(UploadCollectionItemClass);
+const Icon = createComponent(IconClass);
+const Title = createComponent(TitleClass);
 
 const initialFiles = [
   { id: "1", fileName: "LaptopHT-1000.jpg", uploadState: "Complete", description: 'uploadState="Complete"', thumbnail: "img", thumbnailSrc: "/images/HT-1000.jpg" },

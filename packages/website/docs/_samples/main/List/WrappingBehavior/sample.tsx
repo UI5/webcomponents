@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -8,14 +8,14 @@ import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import ExpandableTextClass from "@ui5/webcomponents/dist/ExpandableText.js";
 
-const Avatar = createReactComponent(AvatarClass);
-const Label = createReactComponent(LabelClass);
-const List = createReactComponent(ListClass);
-const ListItemCustom = createReactComponent(ListItemCustomClass);
-const ListItemGroup = createReactComponent(ListItemGroupClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
-const Title = createReactComponent(TitleClass);
-const ExpandableText = createReactComponent(ExpandableTextClass);
+const Avatar = createComponent(AvatarClass);
+const Label = createComponent(LabelClass);
+const List = createComponent(ListClass);
+const ListItemCustom = createComponent(ListItemCustomClass);
+const ListItemGroup = createComponent(ListItemGroupClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
+const Title = createComponent(TitleClass);
+const ExpandableText = createComponent(ExpandableTextClass);
 
 function App() {
 

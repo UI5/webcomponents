@@ -1,8 +1,8 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 
-const Button = createReactComponent(ButtonClass);
+const Button = createComponent(ButtonClass);
 
 function App() {
 

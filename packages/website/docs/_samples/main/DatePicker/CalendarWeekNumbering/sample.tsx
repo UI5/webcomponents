@@ -1,12 +1,12 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 
-const DatePicker = createReactComponent(DatePickerClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
+const DatePicker = createComponent(DatePickerClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
 
 function App() {
   const dpRef = useRef(null);

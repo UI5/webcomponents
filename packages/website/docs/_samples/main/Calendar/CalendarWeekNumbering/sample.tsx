@@ -1,12 +1,12 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 
-const Calendar = createReactComponent(CalendarClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
+const Calendar = createComponent(CalendarClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
 
 function App() {
   const calRef = useRef(null);

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -8,13 +8,13 @@ import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 
-const Label = createReactComponent(LabelClass);
-const Slider = createReactComponent(SliderClass);
-const Table = createReactComponent(TableClass);
-const TableCell = createReactComponent(TableCellClass);
-const TableHeaderCell = createReactComponent(TableHeaderCellClass);
-const TableHeaderRow = createReactComponent(TableHeaderRowClass);
-const TableRow = createReactComponent(TableRowClass);
+const Label = createComponent(LabelClass);
+const Slider = createComponent(SliderClass);
+const Table = createComponent(TableClass);
+const TableCell = createComponent(TableCellClass);
+const TableHeaderCell = createComponent(TableHeaderCellClass);
+const TableHeaderRow = createComponent(TableHeaderRowClass);
+const TableRow = createComponent(TableRowClass);
 
 function App() {
   const tableRef = useRef(null);

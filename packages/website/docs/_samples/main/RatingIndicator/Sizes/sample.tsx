@@ -1,9 +1,9 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import RatingIndicatorClass from "@ui5/webcomponents/dist/RatingIndicator.js";
 import "@ui5/webcomponents-icons/dist/favorite.js";
 import "@ui5/webcomponents-icons/dist/unfavorite.js";
 
-const RatingIndicator = createReactComponent(RatingIndicatorClass);
+const RatingIndicator = createComponent(RatingIndicatorClass);
 
 function App() {
 

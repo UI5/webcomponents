@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Label = createReactComponent(LabelClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Text = createReactComponent(TextClass);
+const Label = createComponent(LabelClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Text = createComponent(TextClass);
 
 function App() {
   const [selectedValue, setSelectedValue] = useState("DE");

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -16,19 +16,19 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
-const AIButton = createReactComponent(AIButtonClass);
-const AIButtonState = createReactComponent(AIButtonStateClass);
-const DynamicPage = createReactComponent(DynamicPageClass);
-const DynamicPageHeader = createReactComponent(DynamicPageHeaderClass);
-const ShellBar = createReactComponent(ShellBarClass);
-const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
-const Avatar = createReactComponent(AvatarClass);
-const BusyIndicator = createReactComponent(BusyIndicatorClass);
-const Button = createReactComponent(ButtonClass);
-const CheckBox = createReactComponent(CheckBoxClass);
-const Dialog = createReactComponent(DialogClass);
-const Text = createReactComponent(TextClass);
-const Title = createReactComponent(TitleClass);
+const AIButton = createComponent(AIButtonClass);
+const AIButtonState = createComponent(AIButtonStateClass);
+const DynamicPage = createComponent(DynamicPageClass);
+const DynamicPageHeader = createComponent(DynamicPageHeaderClass);
+const ShellBar = createComponent(ShellBarClass);
+const ShellBarBranding = createComponent(ShellBarBrandingClass);
+const Avatar = createComponent(AvatarClass);
+const BusyIndicator = createComponent(BusyIndicatorClass);
+const Button = createComponent(ButtonClass);
+const CheckBox = createComponent(CheckBoxClass);
+const Dialog = createComponent(DialogClass);
+const Text = createComponent(TextClass);
+const Title = createComponent(TitleClass);
 
 const DEFAULT_OUTPUT1 = "Discover the ultimate solution for home organization with our versatile storage bins. These durable containers come in various sizes to fit any space, from closets to garages. Their stackable design maximizes your storage capacity while keeping your items easily accessible. Each bin features a transparent body, allowing you to quickly identify contents without opening them. Perfect for seasonal items, toys, or tools, these storage bins are the key to a clutter-free home. Start organizing today and enjoy a more spacious and tidy living environment.";
 const DEFAULT_OUTPUT2 = "Experience the future of cooking with our state-of-the-art smart oven. This innovative appliance offers a range of features to enhance your culinary skills, including precise temperature control and multiple cooking modes. The smart oven connects to your smartphone, allowing you to monitor and adjust settings remotely. With its sleek design and intuitive interface, cooking has never been easier or more enjoyable. Whether you're baking, roasting, or broiling, this smart oven ensures perfect results every time. Upgrade your kitchen and transform the way you cook.";

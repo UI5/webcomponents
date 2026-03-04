@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import SplitButtonClass from "@ui5/webcomponents/dist/SplitButton.js";
@@ -7,9 +7,9 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/save.js";
 import "@ui5/webcomponents-icons/dist/delete.js";
 
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
-const SplitButton = createReactComponent(SplitButtonClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
+const SplitButton = createComponent(SplitButtonClass);
 
 function App() {
   const menuRef = useRef(null);

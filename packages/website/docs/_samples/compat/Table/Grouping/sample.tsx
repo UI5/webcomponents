@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -7,13 +7,13 @@ import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const TableColumn = createReactComponent(TableColumnClass);
-const TableGroupRow = createReactComponent(TableGroupRowClass);
-const Label = createReactComponent(LabelClass);
-const Table = createReactComponent(TableClass);
-const TableCell = createReactComponent(TableCellClass);
-const TableRow = createReactComponent(TableRowClass);
-const Text = createReactComponent(TextClass);
+const TableColumn = createComponent(TableColumnClass);
+const TableGroupRow = createComponent(TableGroupRowClass);
+const Label = createComponent(LabelClass);
+const Table = createComponent(TableClass);
+const TableCell = createComponent(TableCellClass);
+const TableRow = createComponent(TableRowClass);
+const Text = createComponent(TextClass);
 
 function App() {
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
-const TextArea = createReactComponent(TextAreaClass);
+const TextArea = createComponent(TextAreaClass);
 
 function App() {
   const [valueState, setValueState] = useState("None");

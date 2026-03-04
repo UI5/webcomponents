@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 
-const Button = createReactComponent(ButtonClass);
-const CheckBox = createReactComponent(CheckBoxClass);
+const Button = createComponent(ButtonClass);
+const CheckBox = createComponent(CheckBoxClass);
 
 function App() {
   const formRef = useRef<HTMLFormElement>(null);

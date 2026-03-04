@@ -1,13 +1,13 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
 import "@ui5/webcomponents-icons/dist/filter.js";
 
-const Search = createReactComponent(SearchClass);
-const Button = createReactComponent(ButtonClass);
-const Toast = createReactComponent(ToastClass);
+const Search = createComponent(SearchClass);
+const Button = createComponent(ButtonClass);
+const Toast = createComponent(ToastClass);
 
 function App() {
   const toastRef = useRef(null);

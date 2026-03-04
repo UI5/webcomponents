@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
@@ -10,15 +10,15 @@ import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
-const Form = createReactComponent(FormClass);
-const FormItem = createReactComponent(FormItemClass);
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Slider = createReactComponent(SliderClass);
-const Text = createReactComponent(TextClass);
-const TextArea = createReactComponent(TextAreaClass);
+const Form = createComponent(FormClass);
+const FormItem = createComponent(FormItemClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Slider = createComponent(SliderClass);
+const Text = createComponent(TextClass);
+const TextArea = createComponent(TextAreaClass);
 
 function App() {
   const containerRef = useRef(null);

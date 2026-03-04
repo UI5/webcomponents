@@ -1,12 +1,12 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import SegmentedButtonClass from "@ui5/webcomponents/dist/SegmentedButton.js";
 import SegmentedButtonItemClass from "@ui5/webcomponents/dist/SegmentedButtonItem.js";
 import "@ui5/webcomponents-icons/dist/bold-text.js";
 import "@ui5/webcomponents-icons/dist/underline-text.js";
 import "@ui5/webcomponents-icons/dist/italic-text.js";
 
-const SegmentedButton = createReactComponent(SegmentedButtonClass);
-const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
+const SegmentedButton = createComponent(SegmentedButtonClass);
+const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
 
 function App() {
 

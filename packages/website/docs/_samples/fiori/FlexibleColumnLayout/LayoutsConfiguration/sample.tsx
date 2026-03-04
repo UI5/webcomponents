@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useRef, useEffect, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -12,15 +12,15 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
-const FlexibleColumnLayout = createReactComponent(FlexibleColumnLayoutClass);
-const Button = createReactComponent(ButtonClass);
-const Label = createReactComponent(LabelClass);
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Text = createReactComponent(TextClass);
-const Title = createReactComponent(TitleClass);
+const FlexibleColumnLayout = createComponent(FlexibleColumnLayoutClass);
+const Button = createComponent(ButtonClass);
+const Label = createComponent(LabelClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Text = createComponent(TextClass);
+const Title = createComponent(TitleClass);
 
 const categoryData = {
   electronics: [

@@ -1,12 +1,12 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 import ColorPalettePopoverClass from "@ui5/webcomponents/dist/ColorPalettePopover.js";
 
-const Button = createReactComponent(ButtonClass);
-const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
-const ColorPalettePopover = createReactComponent(ColorPalettePopoverClass);
+const Button = createComponent(ButtonClass);
+const ColorPaletteItem = createComponent(ColorPaletteItemClass);
+const ColorPalettePopover = createComponent(ColorPalettePopoverClass);
 
 function App() {
   const colorPalettePopoverRef = useRef(null);

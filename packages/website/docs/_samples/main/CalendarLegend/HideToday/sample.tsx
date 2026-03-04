@@ -1,9 +1,9 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import CalendarLegendClass from "@ui5/webcomponents/dist/CalendarLegend.js";
 import CalendarLegendItemClass from "@ui5/webcomponents/dist/CalendarLegendItem.js";
 
-const CalendarLegend = createReactComponent(CalendarLegendClass);
-const CalendarLegendItem = createReactComponent(CalendarLegendItemClass);
+const CalendarLegend = createComponent(CalendarLegendClass);
+const CalendarLegendItem = createComponent(CalendarLegendItemClass);
 
 function App() {
 

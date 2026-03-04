@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef, useState } from "react";
 import NavigationLayoutClass from "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -32,20 +32,20 @@ import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 
-const NavigationLayout = createReactComponent(NavigationLayoutClass);
-const ShellBar = createReactComponent(ShellBarClass);
-const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
-const ShellBarItem = createReactComponent(ShellBarItemClass);
-const ShellBarSearch = createReactComponent(ShellBarSearchClass);
-const SideNavigation = createReactComponent(SideNavigationClass);
-const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
-const SideNavigationItem = createReactComponent(SideNavigationItemClass);
-const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
-const Avatar = createReactComponent(AvatarClass);
-const Button = createReactComponent(ButtonClass);
-const Text = createReactComponent(TextClass);
-const Title = createReactComponent(TitleClass);
-const ToggleButton = createReactComponent(ToggleButtonClass);
+const NavigationLayout = createComponent(NavigationLayoutClass);
+const ShellBar = createComponent(ShellBarClass);
+const ShellBarBranding = createComponent(ShellBarBrandingClass);
+const ShellBarItem = createComponent(ShellBarItemClass);
+const ShellBarSearch = createComponent(ShellBarSearchClass);
+const SideNavigation = createComponent(SideNavigationClass);
+const SideNavigationGroup = createComponent(SideNavigationGroupClass);
+const SideNavigationItem = createComponent(SideNavigationItemClass);
+const SideNavigationSubItem = createComponent(SideNavigationSubItemClass);
+const Avatar = createComponent(AvatarClass);
+const Button = createComponent(ButtonClass);
+const Text = createComponent(TextClass);
+const Title = createComponent(TitleClass);
+const ToggleButton = createComponent(ToggleButtonClass);
 
 const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 

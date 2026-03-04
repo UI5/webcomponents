@@ -1,11 +1,11 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import PanelClass from "@ui5/webcomponents/dist/Panel.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Label = createReactComponent(LabelClass);
-const Panel = createReactComponent(PanelClass);
-const Title = createReactComponent(TitleClass);
+const Label = createComponent(LabelClass);
+const Panel = createComponent(PanelClass);
+const Title = createComponent(TitleClass);
 
 function App() {
 

@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 
-const AITextArea = createReactComponent(AITextAreaClass);
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
+const AITextArea = createComponent(AITextAreaClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
 
 const SAMPLE_TEXT = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.";
 

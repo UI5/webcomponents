@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useRef, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -10,13 +10,13 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/document-text.js";
 import "@ui5/webcomponents-icons/dist/add.js";
 
-const UploadCollection = createReactComponent(UploadCollectionClass);
-const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
-const Button = createReactComponent(ButtonClass);
-const FileUploader = createReactComponent(FileUploaderClass);
-const Icon = createReactComponent(IconClass);
-const Label = createReactComponent(LabelClass);
-const Title = createReactComponent(TitleClass);
+const UploadCollection = createComponent(UploadCollectionClass);
+const UploadCollectionItem = createComponent(UploadCollectionItemClass);
+const Button = createComponent(ButtonClass);
+const FileUploader = createComponent(FileUploaderClass);
+const Icon = createComponent(IconClass);
+const Label = createComponent(LabelClass);
+const Title = createComponent(TitleClass);
 
 function App() {
   const [items, setItems] = useState([]);

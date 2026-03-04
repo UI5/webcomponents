@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
@@ -7,9 +7,9 @@ import "@ui5/webcomponents-icons/dist/business-objects-experience.js";
 import "@ui5/webcomponents-icons/dist/contacts.js";
 import "@ui5/webcomponents-icons/dist/flight.js";
 
-const ProductSwitch = createReactComponent(ProductSwitchClass);
-const ProductSwitchItem = createReactComponent(ProductSwitchItemClass);
-const Avatar = createReactComponent(AvatarClass);
+const ProductSwitch = createComponent(ProductSwitchClass);
+const ProductSwitchItem = createComponent(ProductSwitchItemClass);
+const Avatar = createComponent(AvatarClass);
 
 function App() {
 

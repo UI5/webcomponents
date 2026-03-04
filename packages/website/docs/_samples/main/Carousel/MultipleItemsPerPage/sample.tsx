@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
@@ -15,15 +15,15 @@ import "@ui5/webcomponents-icons/dist/wallet.js";
 import "@ui5/webcomponents-icons/dist/collaborate.js";
 import "@ui5/webcomponents-icons/dist/group.js";
 
-const Timeline = createReactComponent(TimelineClass);
-const TimelineItem = createReactComponent(TimelineItemClass);
-const Avatar = createReactComponent(AvatarClass);
-const Card = createReactComponent(CardClass);
-const CardHeader = createReactComponent(CardHeaderClass);
-const Carousel = createReactComponent(CarouselClass);
-const Icon = createReactComponent(IconClass);
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
+const Timeline = createComponent(TimelineClass);
+const TimelineItem = createComponent(TimelineItemClass);
+const Avatar = createComponent(AvatarClass);
+const Card = createComponent(CardClass);
+const CardHeader = createComponent(CardHeaderClass);
+const Carousel = createComponent(CarouselClass);
+const Icon = createComponent(IconClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
 

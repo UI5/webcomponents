@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
@@ -10,15 +10,15 @@ import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableSelectionClass from "@ui5/webcomponents/dist/TableSelection.js";
 
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const RadioButton = createReactComponent(RadioButtonClass);
-const Table = createReactComponent(TableClass);
-const TableCell = createReactComponent(TableCellClass);
-const TableHeaderCell = createReactComponent(TableHeaderCellClass);
-const TableHeaderRow = createReactComponent(TableHeaderRowClass);
-const TableRow = createReactComponent(TableRowClass);
-const TableSelection = createReactComponent(TableSelectionClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const RadioButton = createComponent(RadioButtonClass);
+const Table = createComponent(TableClass);
+const TableCell = createComponent(TableCellClass);
+const TableHeaderCell = createComponent(TableHeaderCellClass);
+const TableHeaderRow = createComponent(TableHeaderRowClass);
+const TableRow = createComponent(TableRowClass);
+const TableSelection = createComponent(TableSelectionClass);
 
 function App() {
   const selectionRef = useRef(null);

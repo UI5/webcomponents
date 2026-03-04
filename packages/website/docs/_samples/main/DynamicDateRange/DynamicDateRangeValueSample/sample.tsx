@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import DynamicDateRangeClass from "@ui5/webcomponents/dist/DynamicDateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Yesterday.js";
@@ -9,7 +9,7 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
 
-const DynamicDateRange = createReactComponent(DynamicDateRangeClass);
+const DynamicDateRange = createComponent(DynamicDateRangeClass);
 
 function App() {
   const ddrRef = useRef(null);

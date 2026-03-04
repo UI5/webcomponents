@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
 import SideNavigationItemClass from "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
@@ -12,10 +12,10 @@ import "@ui5/webcomponents-icons/dist/area-chart.js";
 import "@ui5/webcomponents-icons/dist/message-information.js";
 import "@ui5/webcomponents-icons/dist/history.js";
 
-const SideNavigation = createReactComponent(SideNavigationClass);
-const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
-const SideNavigationItem = createReactComponent(SideNavigationItemClass);
-const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
+const SideNavigation = createComponent(SideNavigationClass);
+const SideNavigationGroup = createComponent(SideNavigationGroupClass);
+const SideNavigationItem = createComponent(SideNavigationItemClass);
+const SideNavigationSubItem = createComponent(SideNavigationSubItemClass);
 
 function App() {
 

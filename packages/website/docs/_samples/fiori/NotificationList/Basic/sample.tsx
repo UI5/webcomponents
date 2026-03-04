@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
@@ -7,12 +7,12 @@ import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
 
-const NotificationList = createReactComponent(NotificationListClass);
-const NotificationListItem = createReactComponent(NotificationListItemClass);
-const Avatar = createReactComponent(AvatarClass);
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
-const Toast = createReactComponent(ToastClass);
+const NotificationList = createComponent(NotificationListClass);
+const NotificationListItem = createComponent(NotificationListItemClass);
+const Avatar = createComponent(AvatarClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
+const Toast = createComponent(ToastClass);
 
 function App() {
   const toastRef = useRef(null);

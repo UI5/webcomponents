@@ -1,9 +1,9 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ComboBoxClass from "@ui5/webcomponents/dist/ComboBox.js";
 import ComboBoxItemClass from "@ui5/webcomponents/dist/ComboBoxItem.js";
 
-const ComboBox = createReactComponent(ComboBoxClass);
-const ComboBoxItem = createReactComponent(ComboBoxItemClass);
+const ComboBox = createComponent(ComboBoxClass);
+const ComboBoxItem = createComponent(ComboBoxItemClass);
 
 function App() {
 

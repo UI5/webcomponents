@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef, useState } from "react";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
@@ -23,12 +23,12 @@ import "@ui5/webcomponents-icons/dist/batch-payments.js";
 import "@ui5/webcomponents-icons/dist/cart-3.js";
 import "@ui5/webcomponents-icons/dist/credit-card.js";
 
-const ProductSwitch = createReactComponent(ProductSwitchClass);
-const ProductSwitchItem = createReactComponent(ProductSwitchItemClass);
-const ShellBar = createReactComponent(ShellBarClass);
-const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
-const Popover = createReactComponent(PopoverClass);
-const ToggleButton = createReactComponent(ToggleButtonClass);
+const ProductSwitch = createComponent(ProductSwitchClass);
+const ProductSwitchItem = createComponent(ProductSwitchItemClass);
+const ShellBar = createComponent(ShellBarClass);
+const ShellBarBranding = createComponent(ShellBarBrandingClass);
+const Popover = createComponent(PopoverClass);
+const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
   const popoverRef = useRef(null);

@@ -1,14 +1,14 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarButtonClass from "@ui5/webcomponents/dist/ToolbarButton.js";
 
-const Button = createReactComponent(ButtonClass);
-const Dialog = createReactComponent(DialogClass);
-const Toolbar = createReactComponent(ToolbarClass);
-const ToolbarButton = createReactComponent(ToolbarButtonClass);
+const Button = createComponent(ButtonClass);
+const Dialog = createComponent(DialogClass);
+const Toolbar = createComponent(ToolbarClass);
+const ToolbarButton = createComponent(ToolbarButtonClass);
 
 function App() {
   const dialogRef = useRef(null);

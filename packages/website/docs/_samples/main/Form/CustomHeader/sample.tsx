@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
@@ -9,15 +9,15 @@ import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Bar = createReactComponent(BarClass);
-const Button = createReactComponent(ButtonClass);
-const Form = createReactComponent(FormClass);
-const FormItem = createReactComponent(FormItemClass);
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Title = createReactComponent(TitleClass);
+const Bar = createComponent(BarClass);
+const Button = createComponent(ButtonClass);
+const Form = createComponent(FormClass);
+const FormItem = createComponent(FormItemClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Title = createComponent(TitleClass);
 
 function App() {
 

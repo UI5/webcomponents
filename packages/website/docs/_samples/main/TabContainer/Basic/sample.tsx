@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import TabSeparatorClass from "@ui5/webcomponents/dist/TabSeparator.js";
@@ -9,10 +9,10 @@ import "@ui5/webcomponents-icons/dist/calendar.js";
 import "@ui5/webcomponents-icons/dist/menu.js";
 import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
-const Label = createReactComponent(LabelClass);
-const Tab = createReactComponent(TabClass);
-const TabSeparator = createReactComponent(TabSeparatorClass);
-const TabContainer = createReactComponent(TabContainerClass);
+const Label = createComponent(LabelClass);
+const Tab = createComponent(TabClass);
+const TabSeparator = createComponent(TabSeparatorClass);
+const TabContainer = createComponent(TabContainerClass);
 
 function App() {
 

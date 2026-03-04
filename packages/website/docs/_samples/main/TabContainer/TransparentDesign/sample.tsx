@@ -1,11 +1,11 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
-const Tab = createReactComponent(TabClass);
-const Text = createReactComponent(TextClass);
-const TabContainer = createReactComponent(TabContainerClass);
+const Tab = createComponent(TabClass);
+const Text = createComponent(TextClass);
+const TabContainer = createComponent(TabContainerClass);
 
 function App() {
 

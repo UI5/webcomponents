@@ -1,9 +1,9 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import MultiComboBoxClass from "@ui5/webcomponents/dist/MultiComboBox.js";
 import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
 
-const MultiComboBox = createReactComponent(MultiComboBoxClass);
-const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
+const MultiComboBox = createComponent(MultiComboBoxClass);
+const MultiComboBoxItem = createComponent(MultiComboBoxItemClass);
 
 function App() {
 

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
@@ -9,12 +9,12 @@ import "@ui5/webcomponents-icons/dist/employee.js";
 import "@ui5/webcomponents-icons/dist/message-error.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 
-const NotificationList = createReactComponent(NotificationListClass);
-const NotificationListGroupItem = createReactComponent(NotificationListGroupItemClass);
-const NotificationListItem = createReactComponent(NotificationListItemClass);
-const Avatar = createReactComponent(AvatarClass);
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
+const NotificationList = createComponent(NotificationListClass);
+const NotificationListGroupItem = createComponent(NotificationListGroupItemClass);
+const NotificationListItem = createComponent(NotificationListItemClass);
+const Avatar = createComponent(AvatarClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
 
 function App() {
 

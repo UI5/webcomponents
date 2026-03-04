@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemCustomClass from "@ui5/webcomponents/dist/SuggestionItemCustom.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 
-const Input = createReactComponent(InputClass);
-const SuggestionItemCustom = createReactComponent(SuggestionItemCustomClass);
-const Icon = createReactComponent(IconClass);
+const Input = createComponent(InputClass);
+const SuggestionItemCustom = createComponent(SuggestionItemCustomClass);
+const Icon = createComponent(IconClass);
 
 const countries = [
   "Albania", "Andorra", "Austria", "Belarus",

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 
-const BusyIndicator = createReactComponent(BusyIndicatorClass);
-const Button = createReactComponent(ButtonClass);
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
+const BusyIndicator = createComponent(BusyIndicatorClass);
+const Button = createComponent(ButtonClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
   const [busy, setBusy] = useState(false);

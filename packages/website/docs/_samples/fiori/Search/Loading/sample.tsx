@@ -1,12 +1,12 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useRef } from "react";
 import SearchFieldClass from "@ui5/webcomponents-fiori/dist/SearchField.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const SearchField = createReactComponent(SearchFieldClass);
-const Label = createReactComponent(LabelClass);
-const Text = createReactComponent(TextClass);
+const SearchField = createComponent(SearchFieldClass);
+const Label = createComponent(LabelClass);
+const Text = createComponent(TextClass);
 
 function App() {
   const [resultText, setResultText] = useState("Enter a search term and press Enter or click the search icon");

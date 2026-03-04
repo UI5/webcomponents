@@ -1,14 +1,14 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 
-const Button = createReactComponent(ButtonClass);
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const ResponsivePopover = createReactComponent(ResponsivePopoverClass);
+const Button = createComponent(ButtonClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const ResponsivePopover = createComponent(ResponsivePopoverClass);
 
 function App() {
   const respPopover1Ref = useRef(null);

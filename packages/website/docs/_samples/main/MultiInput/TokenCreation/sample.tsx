@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const MultiInput = createReactComponent(MultiInputClass);
-const Token = createReactComponent(TokenClass);
-const SuggestionItem = createReactComponent(SuggestionItemClass);
+const MultiInput = createComponent(MultiInputClass);
+const Token = createComponent(TokenClass);
+const SuggestionItem = createComponent(SuggestionItemClass);
 
 const suggestions = [
   "Argentina", "Bulgaria", "England", "Finland", "Germany",

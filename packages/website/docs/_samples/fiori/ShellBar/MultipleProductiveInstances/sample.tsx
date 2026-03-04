@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
 import ShellBarSearchClass from "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
@@ -11,13 +11,13 @@ import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 
-const ShellBar = createReactComponent(ShellBarClass);
-const ShellBarItem = createReactComponent(ShellBarItemClass);
-const ShellBarSearch = createReactComponent(ShellBarSearchClass);
-const Avatar = createReactComponent(AvatarClass);
-const Button = createReactComponent(ButtonClass);
-const Tag = createReactComponent(TagClass);
-const ToggleButton = createReactComponent(ToggleButtonClass);
+const ShellBar = createComponent(ShellBarClass);
+const ShellBarItem = createComponent(ShellBarItemClass);
+const ShellBarSearch = createComponent(ShellBarSearchClass);
+const Avatar = createComponent(AvatarClass);
+const Button = createComponent(ButtonClass);
+const Tag = createComponent(TagClass);
+const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
 

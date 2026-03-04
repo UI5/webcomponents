@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -15,14 +15,14 @@ import "@ui5/webcomponents-icons/dist/delete.js";
 import TableRowActionClass from "@ui5/webcomponents/dist/TableRowAction.js";
 import TableRowActionNavigationClass from "@ui5/webcomponents/dist/TableRowActionNavigation.js";
 
-const Label = createReactComponent(LabelClass);
-const Table = createReactComponent(TableClass);
-const TableCell = createReactComponent(TableCellClass);
-const TableHeaderCell = createReactComponent(TableHeaderCellClass);
-const TableHeaderRow = createReactComponent(TableHeaderRowClass);
-const TableRow = createReactComponent(TableRowClass);
-const TableRowAction = createReactComponent(TableRowActionClass);
-const TableRowActionNavigation = createReactComponent(TableRowActionNavigationClass);
+const Label = createComponent(LabelClass);
+const Table = createComponent(TableClass);
+const TableCell = createComponent(TableCellClass);
+const TableHeaderCell = createComponent(TableHeaderCellClass);
+const TableHeaderRow = createComponent(TableHeaderRowClass);
+const TableRow = createComponent(TableRowClass);
+const TableRowAction = createComponent(TableRowActionClass);
+const TableRowActionNavigation = createComponent(TableRowActionNavigationClass);
 
 const handlers = {
   onAdd: (row) => {

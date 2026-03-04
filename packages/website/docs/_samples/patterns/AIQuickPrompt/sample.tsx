@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -17,19 +17,19 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 
-const AIButton = createReactComponent(AIButtonClass);
-const AIButtonState = createReactComponent(AIButtonStateClass);
-const BusyIndicator = createReactComponent(BusyIndicatorClass);
-const Button = createReactComponent(ButtonClass);
-const Card = createReactComponent(CardClass);
-const CardHeader = createReactComponent(CardHeaderClass);
-const Label = createReactComponent(LabelClass);
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
-const MenuSeparator = createReactComponent(MenuSeparatorClass);
-const TextArea = createReactComponent(TextAreaClass);
-const Toast = createReactComponent(ToastClass);
-const Token = createReactComponent(TokenClass);
+const AIButton = createComponent(AIButtonClass);
+const AIButtonState = createComponent(AIButtonStateClass);
+const BusyIndicator = createComponent(BusyIndicatorClass);
+const Button = createComponent(ButtonClass);
+const Card = createComponent(CardClass);
+const CardHeader = createComponent(CardHeaderClass);
+const Label = createComponent(LabelClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
+const MenuSeparator = createComponent(MenuSeparatorClass);
+const TextArea = createComponent(TextAreaClass);
+const Toast = createComponent(ToastClass);
+const Token = createComponent(TokenClass);
 
 function App() {
   const [buttonState, setButtonState] = useState("generate");

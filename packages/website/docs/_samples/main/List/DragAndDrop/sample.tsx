@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import "@ui5/webcomponents-icons/dist/checklist-item.js";
 
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
   const [items, setItems] = useState([

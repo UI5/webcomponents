@@ -12,7 +12,7 @@ import styles from "./ReactPlayground.module.css";
 // @ts-ignore - raw-loader import
 import generatedTypes from "!!raw-loader!./monaco-ui5-types.d.ts";
 
-// createReactComponent - defined locally to avoid Webpack resolution issues
+// createComponent - defined locally to avoid Webpack resolution issues
 // with the barrel export from @ui5/webcomponents-base (which imports react
 // from a path Webpack can't resolve during static analysis)
 const toEventName = (propName: string) => {
@@ -28,7 +28,7 @@ const createEventCleanup = (element: HTMLElement, eventName: string, handler: Ev
   return () => element.removeEventListener(eventName, handler);
 };
 
-function createReactComponent(ComponentClass: any): any {
+function createComponent(ComponentClass: any): any {
   const tagName = ComponentClass.getMetadata().getTag();
   const Component = forwardRef((props: any, ref: any) => {
     const { children, ...restProps } = props;
@@ -395,7 +395,7 @@ function transpileCode(code: string): { code: string | null; error: string | nul
       .replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, "")
       .replace(/^import\s+['"].*?['"];?\s*$/gm, "");
 
-    // Keep createReactComponent declarations - they will use our provided classes
+    // Keep createComponent declarations - they will use our provided classes
 
     // Remove export statements
     cleanedCode = cleanedCode
@@ -417,9 +417,9 @@ function transpileCode(code: string): { code: string | null; error: string | nul
 // Execute transpiled code and return a React element or error
 function executeCode(transpiledCode: string): { element: React.ReactNode | null; error: string | null } {
   try {
-    // Build the scope - all component classes + createReactComponent + React
-    const scopeNames = ["React", "createReactComponent", ...Object.keys(ComponentClasses)];
-    const scopeValues = [React, createReactComponent, ...Object.values(ComponentClasses)];
+    // Build the scope - all component classes + createComponent + React
+    const scopeNames = ["React", "createComponent", ...Object.keys(ComponentClasses)];
+    const scopeValues = [React, createComponent, ...Object.values(ComponentClasses)];
 
     const fn = new Function(
       ...scopeNames,

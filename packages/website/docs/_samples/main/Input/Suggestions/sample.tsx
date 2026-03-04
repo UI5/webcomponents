@@ -1,11 +1,11 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useCallback } from "react";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";
 
-const Input = createReactComponent(InputClass);
-const SuggestionItem = createReactComponent(SuggestionItemClass);
+const Input = createComponent(InputClass);
+const SuggestionItem = createComponent(SuggestionItemClass);
 
 const ui5_database_entries = [
   "Argentina", "Albania", "Algeria", "Angola",

@@ -567,13 +567,13 @@ interface UI5BaseProps {
 
   // Generate module declarations for imports used in samples
   output += `// Module declarations for sample imports\n`;
-  output += `declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {\n`;
-  output += `  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `declare module "@ui5/webcomponents-base/dist/createComponent.js" {\n`;
+  output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `}\n\n`;
 
   // Also declare the short path that samples use
   output += `declare module "@ui5/webcomponents-base" {\n`;
-  output += `  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `}\n\n`;
 
   // Generate module for each component's import

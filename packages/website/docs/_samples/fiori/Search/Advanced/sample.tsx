@@ -1,14 +1,14 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchMessageAreaClass from "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 
-const Search = createReactComponent(SearchClass);
-const SearchItem = createReactComponent(SearchItemClass);
-const SearchMessageArea = createReactComponent(SearchMessageAreaClass);
-const Button = createReactComponent(ButtonClass);
+const Search = createComponent(SearchClass);
+const SearchItem = createComponent(SearchItemClass);
+const SearchMessageArea = createComponent(SearchMessageAreaClass);
+const Button = createComponent(ButtonClass);
 
 const data = [
 	{ name: "Red Apple", category: "Fruit" },

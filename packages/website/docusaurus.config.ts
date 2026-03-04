@@ -113,7 +113,7 @@ const config: Config = {
                 // Ensure 'react' resolves from the project's node_modules,
                 // not from a parent directory where it may not be installed.
                 // This is needed because @ui5/webcomponents-base re-exports
-                // createReactComponent which imports React.
+                // createComponent which imports React.
                 'react': path.resolve(__dirname, '../../node_modules/react'),
               },
             },

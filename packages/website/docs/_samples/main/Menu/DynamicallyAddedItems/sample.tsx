@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef, useCallback } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
@@ -8,9 +8,9 @@ import "@ui5/webcomponents-icons/dist/add-folder.js";
 import "@ui5/webcomponents-icons/dist/open-folder.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 
-const Button = createReactComponent(ButtonClass);
-const Menu = createReactComponent(MenuClass);
-const MenuItem = createReactComponent(MenuItemClass);
+const Button = createComponent(ButtonClass);
+const Menu = createComponent(MenuClass);
+const MenuItem = createComponent(MenuItemClass);
 
 function App() {
   const menuSubsRef = useRef(null);

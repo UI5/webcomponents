@@ -1,11 +1,11 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const TableColumn = createReactComponent(TableColumnClass);
-const Table = createReactComponent(TableClass);
-const Text = createReactComponent(TextClass);
+const TableColumn = createComponent(TableColumnClass);
+const Table = createComponent(TableClass);
+const Text = createComponent(TextClass);
 
 function App() {
 

@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import CarouselClass from "@ui5/webcomponents/dist/Carousel.js";
@@ -6,12 +6,12 @@ import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 
-const Card = createReactComponent(CardClass);
-const CardHeader = createReactComponent(CardHeaderClass);
-const Carousel = createReactComponent(CarouselClass);
-const Icon = createReactComponent(IconClass);
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
+const Card = createComponent(CardClass);
+const CardHeader = createComponent(CardHeaderClass);
+const Carousel = createComponent(CarouselClass);
+const Icon = createComponent(IconClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
 

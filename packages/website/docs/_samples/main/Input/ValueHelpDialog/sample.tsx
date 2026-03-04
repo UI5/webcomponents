@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
@@ -11,14 +11,14 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/value-help.js";
 import "@ui5/webcomponents-icons/dist/search.js";
 
-const Button = createReactComponent(ButtonClass);
-const Dialog = createReactComponent(DialogClass);
-const Icon = createReactComponent(IconClass);
-const Input = createReactComponent(InputClass);
-const List = createReactComponent(ListClass);
-const ListItemStandard = createReactComponent(ListItemStandardClass);
-const SuggestionItem = createReactComponent(SuggestionItemClass);
-const Title = createReactComponent(TitleClass);
+const Button = createComponent(ButtonClass);
+const Dialog = createComponent(DialogClass);
+const Icon = createComponent(IconClass);
+const Input = createComponent(InputClass);
+const List = createComponent(ListClass);
+const ListItemStandard = createComponent(ListItemStandardClass);
+const SuggestionItem = createComponent(SuggestionItemClass);
+const Title = createComponent(TitleClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);

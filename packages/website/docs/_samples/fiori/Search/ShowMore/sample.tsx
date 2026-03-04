@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
@@ -9,12 +9,12 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 import "@ui5/webcomponents-icons/dist/history.js";
 
-const Search = createReactComponent(SearchClass);
-const SearchItem = createReactComponent(SearchItemClass);
-const SearchItemGroup = createReactComponent(SearchItemGroupClass);
-const SearchItemShowMore = createReactComponent(SearchItemShowMoreClass);
-const SearchMessageArea = createReactComponent(SearchMessageAreaClass);
-const Label = createReactComponent(LabelClass);
+const Search = createComponent(SearchClass);
+const SearchItem = createComponent(SearchItemClass);
+const SearchItemGroup = createComponent(SearchItemGroupClass);
+const SearchItemShowMore = createComponent(SearchItemShowMoreClass);
+const SearchMessageArea = createComponent(SearchMessageAreaClass);
+const Label = createComponent(LabelClass);
 
 const allItems = [
   { text: "List Item 1", icon: "history" },

@@ -2311,12 +2311,12 @@ interface AIPromptInputProps extends UI5BaseProps {
 }
 
 // Module declarations for sample imports
-declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {
-  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+declare module "@ui5/webcomponents-base/dist/createComponent.js" {
+  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
 }
 
 declare module "@ui5/webcomponents-base" {
-  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
 }
 
 declare module "@ui5/webcomponents/dist/Button.js" {

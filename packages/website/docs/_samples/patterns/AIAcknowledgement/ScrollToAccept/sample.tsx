@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef, useState, useCallback, useEffect } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
@@ -9,14 +9,14 @@ import PanelClass from "@ui5/webcomponents/dist/Panel.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Button = createReactComponent(ButtonClass);
-const CheckBox = createReactComponent(CheckBoxClass);
-const Dialog = createReactComponent(DialogClass);
-const Icon = createReactComponent(IconClass);
-const Link = createReactComponent(LinkClass);
-const Panel = createReactComponent(PanelClass);
-const Text = createReactComponent(TextClass);
-const Title = createReactComponent(TitleClass);
+const Button = createComponent(ButtonClass);
+const CheckBox = createComponent(CheckBoxClass);
+const Dialog = createComponent(DialogClass);
+const Icon = createComponent(IconClass);
+const Link = createComponent(LinkClass);
+const Panel = createComponent(PanelClass);
+const Text = createComponent(TextClass);
+const Title = createComponent(TitleClass);
 
 function App() {
   const dialogRef = useRef(null);

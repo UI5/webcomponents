@@ -1,13 +1,13 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LinkClass from "@ui5/webcomponents/dist/Link.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const IllustratedMessage = createReactComponent(IllustratedMessageClass);
-const Button = createReactComponent(ButtonClass);
-const Link = createReactComponent(LinkClass);
-const Title = createReactComponent(TitleClass);
+const IllustratedMessage = createComponent(IllustratedMessageClass);
+const Button = createComponent(ButtonClass);
+const Link = createComponent(LinkClass);
+const Title = createComponent(TitleClass);
 
 function App() {
 

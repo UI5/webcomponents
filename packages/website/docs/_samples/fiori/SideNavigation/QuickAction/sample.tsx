@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useState, useCallback, useEffect, useRef } from "react";
 import SideNavigationClass from "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import SideNavigationGroupClass from "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js";
@@ -13,14 +13,14 @@ import "@ui5/webcomponents-icons/dist/group.js";
 import "@ui5/webcomponents-icons/dist/history.js";
 import "@ui5/webcomponents-icons/dist/write-new.js";
 
-const SideNavigation = createReactComponent(SideNavigationClass);
-const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
-const SideNavigationItem = createReactComponent(SideNavigationItemClass);
-const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
-const Bar = createReactComponent(BarClass);
-const Button = createReactComponent(ButtonClass);
-const Dialog = createReactComponent(DialogClass);
-const Text = createReactComponent(TextClass);
+const SideNavigation = createComponent(SideNavigationClass);
+const SideNavigationGroup = createComponent(SideNavigationGroupClass);
+const SideNavigationItem = createComponent(SideNavigationItemClass);
+const SideNavigationSubItem = createComponent(SideNavigationSubItemClass);
+const Bar = createComponent(BarClass);
+const Button = createComponent(ButtonClass);
+const Dialog = createComponent(DialogClass);
+const Text = createComponent(TextClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);

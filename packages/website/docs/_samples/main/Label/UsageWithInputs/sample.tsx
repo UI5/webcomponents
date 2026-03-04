@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -7,13 +7,13 @@ import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
-const CheckBox = createReactComponent(CheckBoxClass);
-const DatePicker = createReactComponent(DatePickerClass);
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const TextArea = createReactComponent(TextAreaClass);
+const CheckBox = createComponent(CheckBoxClass);
+const DatePicker = createComponent(DatePickerClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const TextArea = createComponent(TextAreaClass);
 
 function App() {
 

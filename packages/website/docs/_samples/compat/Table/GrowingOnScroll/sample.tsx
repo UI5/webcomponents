@@ -1,16 +1,16 @@
 import { useState, useCallback } from "react";
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import TableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import TableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import TableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Table = createReactComponent(TableClass);
-const TableRow = createReactComponent(TableRowClass);
-const TableColumn = createReactComponent(TableColumnClass);
-const TableCell = createReactComponent(TableCellClass);
-const Text = createReactComponent(TextClass);
+const Table = createComponent(TableClass);
+const TableRow = createComponent(TableRowClass);
+const TableColumn = createComponent(TableColumnClass);
+const TableCell = createComponent(TableCellClass);
+const Text = createComponent(TextClass);
 
 const ROWS_PER_LOAD = 2;
 

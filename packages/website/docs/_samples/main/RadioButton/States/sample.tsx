@@ -1,7 +1,7 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
 
-const RadioButton = createReactComponent(RadioButtonClass);
+const RadioButton = createComponent(RadioButtonClass);
 
 function App() {
 

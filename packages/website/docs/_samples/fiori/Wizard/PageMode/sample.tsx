@@ -1,4 +1,4 @@
-import { createReactComponent } from "@ui5/webcomponents-base/dist/createReactComponent.js";
+import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { useRef } from "react";
 import WizardClass from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import WizardStepClass from "@ui5/webcomponents-fiori/dist/WizardStep.js";
@@ -17,19 +17,19 @@ import "@ui5/webcomponents-icons/dist/product.js";
 import "@ui5/webcomponents-icons/dist/hint.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 
-const Wizard = createReactComponent(WizardClass);
-const WizardStep = createReactComponent(WizardStepClass);
-const Bar = createReactComponent(BarClass);
-const Button = createReactComponent(ButtonClass);
-const DatePicker = createReactComponent(DatePickerClass);
-const Dialog = createReactComponent(DialogClass);
-const Input = createReactComponent(InputClass);
-const Label = createReactComponent(LabelClass);
-const MessageStrip = createReactComponent(MessageStripClass);
-const Option = createReactComponent(OptionClass);
-const Select = createReactComponent(SelectClass);
-const Switch = createReactComponent(SwitchClass);
-const Title = createReactComponent(TitleClass);
+const Wizard = createComponent(WizardClass);
+const WizardStep = createComponent(WizardStepClass);
+const Bar = createComponent(BarClass);
+const Button = createComponent(ButtonClass);
+const DatePicker = createComponent(DatePickerClass);
+const Dialog = createComponent(DialogClass);
+const Input = createComponent(InputClass);
+const Label = createComponent(LabelClass);
+const MessageStrip = createComponent(MessageStripClass);
+const Option = createComponent(OptionClass);
+const Select = createComponent(SelectClass);
+const Switch = createComponent(SwitchClass);
+const Title = createComponent(TitleClass);
 
 function App() {
   const dialogRef = useRef(null);
