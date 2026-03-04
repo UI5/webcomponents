@@ -162,4 +162,12 @@
 
 .ui5-calheader-default-multiple, .ui5-calheader-default-multiple .ui5-calheader-root {
 	width: 100%;
-} 
+}
+
+.ui5-calheader-multiple .ui5-calheader-middlebtn {
+	flex:none;
+}
+
+.ui5-dt-cal--portrait.ui5-dt-cal--multiple .ui5-cal-overlay-container  {
+	width: 100%;
+}

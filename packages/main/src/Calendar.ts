@@ -856,11 +856,11 @@ class Calendar extends CalendarPart {
 	}
 
 	get _isDefaultHeaderModeInMultipleMonths() {
-		return !this._isDayPickerHidden && this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden;
+		return !this._isDayPickerHidden && this._isYearPickerHidden;
 	}
 
 	get _shouldShowOnePickerHeaderButtonInMultipleMonths() {
-		return !this._isMonthPickerHidden || !this._isYearPickerHidden;
+		return !this._isDayPickerHidden && !this._isYearPickerHidden;
 	}
 
 	get _currentYearRange(): CalendarYearRangeT {
