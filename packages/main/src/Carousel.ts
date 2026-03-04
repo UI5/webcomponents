@@ -595,25 +595,45 @@ class Carousel extends UI5Element {
 	}
 
 	async navigateLeft() {
-		this.focusItemIndex(this._focusedItemIndex - 1);
+		let newFocusedItemIndex = this._focusedItemIndex - 1;
+		if (this.cyclic && newFocusedItemIndex < 0) {
+			newFocusedItemIndex = this.items.length - 1;
+		}
+
+		this.focusItemIndex(newFocusedItemIndex);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async navigateRight() {
-		this.focusItemIndex(this._focusedItemIndex + 1);
+		let newFocusedItemIndex = this._focusedItemIndex + 1;
+		if (this.cyclic && newFocusedItemIndex > this.items.length - 1) {
+			newFocusedItemIndex = 0;
+		}
+
+		this.focusItemIndex(newFocusedItemIndex);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async navigateArrowRight() {
-		this.navigateTo(this._currentSlideIndex + 1);
+		let newCurrentSlideIndex = this._currentSlideIndex + 1;
+		if (this.cyclic && newCurrentSlideIndex > this.items.length - this.effectiveItemsPerPage) {
+			newCurrentSlideIndex = 0;
+		}
+
+		this.navigateTo(newCurrentSlideIndex);
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async navigateArrowLeft() {
-		this.navigateTo(this._currentSlideIndex - 1);
+		let newCurrentSlideIndex = this._currentSlideIndex - 1;
+		if (this.cyclic && newCurrentSlideIndex < 0) {
+			newCurrentSlideIndex = this.items.length - 1;
+		}
+
+		this.navigateTo(newCurrentSlideIndex);
 		await renderFinished();
 		this.focusItem();
 	}
@@ -624,18 +644,11 @@ class Carousel extends UI5Element {
 
 	_navButtonClick(e: UI5CustomEvent<Icon, "click">) {
 		const target = e.target as Icon;
-		if (this._visibleItemsIndexes.length > 1) {
-			if (target.hasAttribute("data-ui5-arrow-forward")) {
-				this.navigateArrowRight();
-			} else {
-				this.navigateArrowLeft();
-			}
-		} else if (this._visibleItemsIndexes.length <= 1) {
-			if (target.hasAttribute("data-ui5-arrow-forward")) {
-				this.navigateRight();
-			} else {
-				this.navigateLeft();
-			}
+
+		if (target.hasAttribute("data-ui5-arrow-forward")) {
+			this.navigateArrowRight();
+		} else {
+			this.navigateArrowLeft();
 		}
 	}
 
