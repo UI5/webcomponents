@@ -80,6 +80,8 @@ type TimePickerChangeInputEventDetail = {
 type TimePickerChangeEventDetail = TimePickerChangeInputEventDetail;
 type TimePickerInputEventDetail = TimePickerChangeInputEventDetail;
 
+const DEFAULT_ISO_FORMAT = "HH:mm:ss";
+
 /**
  * @class
  *
@@ -494,8 +496,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 			return this.valueFormat;
 		}
 
-		// For backward compatibility: when using deprecated formatPattern, use it for both display and value
-		if (this._formatPattern) {
+		if (this.formatPattern) {
 			return this._formatPattern;
 		}
 
@@ -801,13 +802,18 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		if (!this._isoFormatInstance) {
 			this._isoFormatInstance = DateFormat.getTimeInstance({
 				strictParsing: true,
-				pattern: "HH:mm:ss",
+				pattern: DEFAULT_ISO_FORMAT,
 			});
 		}
 		return this._isoFormatInstance;
 	}
 
 	getDisplayFormat() {
+		// If no displayFormat is set, use the deprecated getFormat() for backward compatibility
+		if (!this._displayFormat) {
+			return this.getFormat();
+		}
+
 		return this._isDisplayFormatPattern
 			? DateFormat.getDateInstance({
 				strictParsing: true,
