@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <Search id="advancedFiltering" placeholder="Start typing ...">
-    		<Button id="advancedButton" slot="filterButton" icon="sap-icon://filter" onClick={handleAdvancedButtonClick} />
+    		<Button id="advancedButton" slot="filterButton" icon="filter" onClick={handleAdvancedButtonClick} />
     	</Search>
     	<Toast ref={toastRef} id="advancedFilterToast" placement="BottomCenter">Search refined using advanced filters</Toast>
     </>

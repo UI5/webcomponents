@@ -32,7 +32,7 @@ const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
   const popoverRef = useRef(null);
-  const [assistantIcon, setAssistantIcon] = useState("sap-icon://da");
+  const [assistantIcon, setAssistantIcon] = useState("da");
 
   const handleShellbarProductSwitchClick = (event) => {
     if (popoverRef.current!.open) {
@@ -46,7 +46,7 @@ function App() {
 
   const handleToggleButtonClick = (e) => {
     const toggleButton = e.target;
-    setAssistantIcon(toggleButton.pressed ? "sap-icon://da-2" : "sap-icon://da");
+    setAssistantIcon(toggleButton.pressed ? "da-2" : "da");
   };
 
   return (

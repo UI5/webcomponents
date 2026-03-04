@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Button>Press</Button>
-        <Button icon="sap-icon://edit">Edit</Button>
+        <Button icon="edit">Edit</Button>
         <Button disabled={true}>Merge</Button>
     </>
   );

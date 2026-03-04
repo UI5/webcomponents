@@ -17,21 +17,21 @@ function App() {
     <>
       <Timeline id="test-timeline">
     		<TimelineGroupItem groupName="Build">
-    			<TimelineItem title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" name="Testing suite A" state="Positive">
+    			<TimelineItem title="Compile" subtitle="Testing suite A" icon="accept" name="Testing suite A" state="Positive">
     				Compilation succeeded.
     			</TimelineItem>
-    			<TimelineItem title="Lint" subtitle="Testing suite B" icon="sap-icon://message-information" name="Testing suite B" state="Information">
+    			<TimelineItem title="Lint" subtitle="Testing suite B" icon="message-information" name="Testing suite B" state="Information">
     				Lint completed with minor issues.
     			</TimelineItem>
     		</TimelineGroupItem>
     		<TimelineGroupItem groupName="Test">
-    			<TimelineItem title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
+    			<TimelineItem title="Unit Test" subtitle="Testing suite C" icon="decline" name="Testing suite C" state="Negative">
     				Unit tests failed.
     			</TimelineItem>
-    			<TimelineItem title="Integration Test" subtitle="Testing suite D" icon="sap-icon://message-warning" name="Testing suite D" state="Critical">
+    			<TimelineItem title="Integration Test" subtitle="Testing suite D" icon="message-warning" name="Testing suite D" state="Critical">
     				Integration tests have warnings.
     			</TimelineItem>
-    			<TimelineItem title="E2E Test" subtitle="Testing suite E" icon="sap-icon://accept" name="Testing suite E" state="Positive">
+    			<TimelineItem title="E2E Test" subtitle="Testing suite E" icon="accept" name="Testing suite E" state="Positive">
     				End-to-end tests passed.
     			</TimelineItem>
     		</TimelineGroupItem>

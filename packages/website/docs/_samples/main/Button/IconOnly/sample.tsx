@@ -9,8 +9,8 @@ function App() {
 
   return (
     <>
-      <Button icon="sap-icon://edit" design="Default" tooltip="Edit Button" />
-        <Button icon="sap-icon://account" design="Transparent" tooltip="Account Button" />
+      <Button icon="edit" design="Default" tooltip="Edit Button" />
+        <Button icon="account" design="Transparent" tooltip="Account Button" />
     </>
   );
 }

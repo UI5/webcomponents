@@ -110,7 +110,7 @@ function App() {
                 <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
 
                 <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="sap-icon://da" tooltip="Joule" slot="assistant" />
+                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
                 <Avatar slot="profile">
                     <img src="/images/avatars/man_avatar_3.png"/>
                 </Avatar>

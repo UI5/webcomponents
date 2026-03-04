@@ -66,7 +66,7 @@ function App() {
   const [ratingValue, setRatingValue] = useState("3.5");
   const [midFullscreenIcon, setMidFullscreenIcon] = useState("full-screen");
   const [endFullscreenIcon, setEndFullscreenIcon] = useState("full-screen");
-  const [toggleIcon, setToggleIcon] = useState("sap-icon://da");
+  const [toggleIcon, setToggleIcon] = useState("da");
 
   const midFullScreenRef = useRef(false);
   const endFullScreenRef = useRef(false);
@@ -172,7 +172,7 @@ function App() {
 
   const handleToggleClick = useCallback((e) => {
     const pressed = e.target.pressed;
-    setToggleIcon(pressed ? "sap-icon://da-2" : "sap-icon://da");
+    setToggleIcon(pressed ? "da-2" : "da");
   }, []);
 
   return (
@@ -305,12 +305,12 @@ function App() {
           <TabContainer collapsed={true}>
             <Tab text="Products" additionalText="125" />
             <TabSeparator />
-            <Tab icon="sap-icon://menu2" text="Laptops" design="Positive" additionalText="25" />
-            <Tab icon="sap-icon://menu" text="Monitors" selected={true} design="Critical" additionalText="45" />
-            <Tab icon="sap-icon://menu2" text="Keyboards" design="Negative" additionalText="15" />
-            <Tab icon="sap-icon://menu2" disabled={true} text="Disabled" design="Negative" additionalText="40" />
-            <Tab icon="sap-icon://menu2" text="Neutral" design="Neutral" additionalText="40" />
-            <Tab icon="sap-icon://menu2" text="Default" additionalText="40" />
+            <Tab icon="menu2" text="Laptops" design="Positive" additionalText="25" />
+            <Tab icon="menu" text="Monitors" selected={true} design="Critical" additionalText="45" />
+            <Tab icon="menu2" text="Keyboards" design="Negative" additionalText="15" />
+            <Tab icon="menu2" disabled={true} text="Disabled" design="Negative" additionalText="40" />
+            <Tab icon="menu2" text="Neutral" design="Neutral" additionalText="40" />
+            <Tab icon="menu2" text="Default" additionalText="40" />
           </TabContainer>
           <section style={{ padding: "1rem 1rem", background: "var(--sapList_Background)" }}>
             <p>

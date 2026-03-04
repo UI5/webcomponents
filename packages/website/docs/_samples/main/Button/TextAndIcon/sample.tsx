@@ -9,8 +9,8 @@ function App() {
 
   return (
     <>
-      <Button icon="sap-icon://edit">Edit</Button>
-        <Button icon="sap-icon://account">Account</Button>
+      <Button icon="edit">Edit</Button>
+        <Button icon="account">Account</Button>
     </>
   );
 }
