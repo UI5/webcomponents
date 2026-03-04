@@ -15,7 +15,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base";
  * @public
  * @since 2.20.0
  */
-interface IToolbarItem extends HTMLElement {
+interface IToolbarItemContent extends HTMLElement {
 	overflowCloseEvents?: string[];
 	hasOverflow?: boolean;
 }
@@ -97,7 +97,7 @@ class ToolbarItem extends ToolbarItemBase {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true,
 	})
-	item!: DefaultSlot<IToolbarItem>;
+	item!: DefaultSlot<IToolbarItemContent>;
 
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
@@ -150,8 +150,8 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	get itemTagName() {
-		const ctor = this.getSlottedNodes<IToolbarItem>("item")[0]?.constructor as typeof ToolbarItem;
-		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IToolbarItem>("item")[0]?.tagName;
+		const ctor = this.getSlottedNodes<IToolbarItemContent>("item")[0]?.constructor as typeof ToolbarItem;
+		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IToolbarItemContent>("item")[0]?.tagName;
 	}
 
 	get hasOverflow(): boolean {
@@ -160,7 +160,7 @@ class ToolbarItem extends ToolbarItemBase {
 }
 
 export type {
-	IToolbarItem,
+	IToolbarItemContent,
 };
 ToolbarItem.define();
 
