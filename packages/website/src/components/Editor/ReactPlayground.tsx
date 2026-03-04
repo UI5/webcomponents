@@ -172,6 +172,12 @@ import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js";
 // Import localization for calendar/date components
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
+// Import theme assets for all packages - registers theme property loaders
+// so that setTheme() can actually apply themes
+import "@ui5/webcomponents/dist/Assets.js";
+import "@ui5/webcomponents-fiori/dist/Assets.js";
+import "@ui5/webcomponents-ai/dist/Assets.js";
+
 // Map component class names to their classes for dynamic lookup
 const ComponentClasses: Record<string, any> = {
   // main package
