@@ -28,7 +28,6 @@ import type ToolbarDesign from "./types/ToolbarDesign.js";
 import ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 import type ToolbarItemBase from "./ToolbarItemBase.js";
-import type { IToolbarItem } from "./ToolbarItemBase.js";
 import type ToolbarSeparator from "./ToolbarSeparator.js";
 
 import type Button from "./Button.js";
@@ -156,7 +155,7 @@ class Toolbar extends UI5Element {
 	@slot({
 		"default": true, type: HTMLElement, invalidateOnChildChange: true, individualSlots: true,
 	})
-	items!: DefaultSlot<IToolbarItem>
+	items!: DefaultSlot<ToolbarItemBase>
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;

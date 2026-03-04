@@ -7,7 +7,7 @@ import type ButtonDesign from "./types/ButtonDesign.js";
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { IToolbarItem, ToolbarItemEventDetail } from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -55,16 +55,15 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 @event("close-overflow", {
 	bubbles: true,
 })
-class ToolbarButton extends ToolbarItemBase implements IToolbarItem {
-	eventDetails!: {
+class ToolbarButton extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		click: ToolbarItemEventDetail,
-		"close-overflow": void;
 	}
 
 	/**
 	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
 	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
-	* @private
+	* @public
 	* @default "Default"
 	*/
 	@property()
@@ -74,7 +73,7 @@ class ToolbarButton extends ToolbarItemBase implements IToolbarItem {
 	 * Defines if the toolbar overflow popup should close upon interaction with the item.
 	 * It will close by default.
 	 * @default false
-	 * @private
+	 * @public
 	 */
 	@property({ type: Boolean })
 	preventOverflowClosing = false;

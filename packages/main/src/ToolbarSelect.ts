@@ -4,14 +4,13 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
 import type Select from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { ToolbarItemEventDetail, IToolbarItem } from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -73,32 +72,13 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
 @event("close-overflow", {
 	bubbles: true,
 })
-class ToolbarSelect extends ToolbarItemBase implements IToolbarItem {
+class ToolbarSelect extends ToolbarItemBase {
 	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
 		"click": ToolbarItemEventDetail;
-		"close-overflow": void;
 	}
-
-	/**
-	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
-	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
-	* @private
-	* @default "Default"
-	*/
-	@property()
-	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
-
-	/**
-	 * Defines if the toolbar overflow popup should close upon interaction with the item.
-	 * It will close by default.
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean })
-	preventOverflowClosing = false;
 
 	/**
 	 * Defines the width of the select.

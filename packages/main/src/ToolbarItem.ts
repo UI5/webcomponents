@@ -2,12 +2,9 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { IToolbarItem } from "./ToolbarItemBase.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
 interface IOverflowToolbarItem extends HTMLElement {
@@ -55,29 +52,7 @@ interface IOverflowToolbarItem extends HTMLElement {
 	bubbles: true,
 	cancelable: true,
 })
-class ToolbarItem extends ToolbarItemBase implements IToolbarItem {
-	eventDetails!: {
-		"close-overflow": void;
-	}
-
-	/**
-	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
-	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
-	* @private
-	* @default "Default"
-	*/
-	@property()
-	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
-
-	/**
-	 * Defines if the toolbar overflow popup should close upon interaction with the item.
-	 * It will close by default.
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean })
-	preventOverflowClosing = false;
-
+class ToolbarItem extends ToolbarItemBase {
 	_maxWidth = 0;
 	_wrapperChecked = false;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
