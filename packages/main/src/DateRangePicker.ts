@@ -14,6 +14,9 @@ import {
 	DATERANGE_PATTERN_MISMATCH,
 	DATERANGE_UNDERFLOW,
 	DATERANGE_OVERFLOW,
+	CALENDAR_HEADER_TITLE,
+	CALENDAR_FOOTER_CANCEL_BUTTON,
+	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateRangePickerTemplate from "./DateRangePickerTemplate.js";
 
@@ -27,6 +30,7 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
+import { isPhone } from "@ui5/webcomponents-base";
 const DEFAULT_DELIMITER = "-";
 
 /**
@@ -205,7 +209,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	
-
+	get _isPhone() {
+		return isPhone();
+	}
 
 	/**
 	 * Returns the start date of the currently selected range as JavaScript Date instance.
@@ -251,6 +257,21 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 
 		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
 		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
+	}
+	
+	/**
+	 * @override
+	 */
+	get _headerTitleText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_HEADER_TITLE);
+	}
+
+	get _cancelButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_CANCEL_BUTTON);
+	}
+
+	get _okButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
 	}
 
 	/**

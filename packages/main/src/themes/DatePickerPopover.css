@@ -43,3 +43,12 @@
 .ui5-dt-picker-action {
 	margin: 0.25rem;
 }
+
+.ui5-daterange-calendar-mobile-header {
+	flex-direction: row;
+	font-weight: bold;
+}
+
+.ui5-daterange-calendar-mobile-footer {
+	height: auto;
+}
