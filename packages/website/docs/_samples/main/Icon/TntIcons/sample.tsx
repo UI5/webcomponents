@@ -9,14 +9,13 @@ import "@ui5/webcomponents-icons-tnt/dist/repeater.js";
 const Icon = createComponent(IconClass);
 
 function App() {
-
   return (
     <>
       <Icon name="tnt/actor" />
-        <Icon name="tnt/aggregator" />
-        <Icon name="tnt/association" />
-        <Icon name="tnt/network" />
-        <Icon name="tnt/repeater" />
+      <Icon name="tnt/aggregator" />
+      <Icon name="tnt/association" />
+      <Icon name="tnt/network" />
+      <Icon name="tnt/repeater" />
     </>
   );
 }

@@ -10,7 +10,6 @@ const Toolbar = createComponent(ToolbarClass);
 const ToolbarButton = createComponent(ToolbarButtonClass);
 
 function App() {
-
   return (
     <>
       <Toolbar align-content="Start">
@@ -18,14 +17,14 @@ function App() {
         <ToolbarButton icon="add" text="Add" />
         <ToolbarButton icon="employee" text="Add people" />
         <ToolbarButton icon="employee" text="Call me later" />
-    </Toolbar>
+      </Toolbar>
 
-    <Toolbar align-content="End">
+      <Toolbar align-content="End">
         <ToolbarButton icon="decline" text="Decline" />
         <ToolbarButton icon="add" text="Add" />
         <ToolbarButton icon="employee" text="Add people" />
         <ToolbarButton icon="employee" text="Call me later" />
-    </Toolbar>
+      </Toolbar>
     </>
   );
 }

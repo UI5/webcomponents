@@ -5,11 +5,10 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
       <ToggleButton>Toggle</ToggleButton>
-        <ToggleButton icon="edit">Edit</ToggleButton>
+      <ToggleButton icon="edit">Edit</ToggleButton>
     </>
   );
 }

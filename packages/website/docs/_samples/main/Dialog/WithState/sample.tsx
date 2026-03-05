@@ -17,14 +17,26 @@ function App() {
 
   return (
     <>
-      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>
+        Open Dialog
+      </Button>
 
-        <Dialog open={dialogOpen} id="dialog" state="Negative" headerText="State :: Negative" onClose={() => setDialogOpen(false)}>
-            <Text>Dialog with state</Text>
-            <Toolbar slot="footer">
-                <ToolbarButton class="dialogCloser" text="Close" onClick={() => setDialogOpen(false)} />
-            </Toolbar>
-        </Dialog>
+      <Dialog
+        open={dialogOpen}
+        id="dialog"
+        state="Negative"
+        headerText="State :: Negative"
+        onClose={() => setDialogOpen(false)}
+      >
+        <Text>Dialog with state</Text>
+        <Toolbar slot="footer">
+          <ToolbarButton
+            class="dialogCloser"
+            text="Close"
+            onClick={() => setDialogOpen(false)}
+          />
+        </Toolbar>
+      </Dialog>
     </>
   );
 }

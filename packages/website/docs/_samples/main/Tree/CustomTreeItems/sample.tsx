@@ -14,34 +14,39 @@ const Tree = createComponent(TreeClass);
 const TreeItemCustom = createComponent(TreeItemCustomClass);
 
 function App() {
-
   return (
     <>
       <Tree>
-
         <div slot="header">
-    		<Title level="H5">Tree with custom items</Title>
-    	</div>
+          <Title level="H5">Tree with custom items</Title>
+        </div>
 
-        <TreeItemCustom expanded={true} showToggleButton={true} hideSelectionElement={true} type="Active" level={1}
+        <TreeItemCustom
+          expanded={true}
+          showToggleButton={true}
+          hideSelectionElement={true}
+          type="Active"
+          level={1}
         >
-        <Button slot="content">Level 1</Button>
+          <Button slot="content">Level 1</Button>
 
-        <TreeItemCustom type="Active" showToggleButton={true} level={2} expanded={true}
-        >
+          <TreeItemCustom
+            type="Active"
+            showToggleButton={true}
+            level={2}
+            expanded={true}
+          >
             <Select slot="content">
-                <Option>Level 2</Option>
-                <Option>Option 2.1</Option>
-                <Option>Option 2.3</Option>
+              <Option>Level 2</Option>
+              <Option>Option 2.1</Option>
+              <Option>Option 2.3</Option>
             </Select>
-            <TreeItemCustom hideSelectionElement={true} type="Active" level={3}
-            >
-                <Button slot="content">Level 3</Button>
+            <TreeItemCustom hideSelectionElement={true} type="Active" level={3}>
+              <Button slot="content">Level 3</Button>
             </TreeItemCustom>
+          </TreeItemCustom>
         </TreeItemCustom>
-    </TreeItemCustom>
-
-    </Tree>
+      </Tree>
     </>
   );
 }

@@ -9,14 +9,19 @@ const Option = createComponent(OptionClass);
 const Select = createComponent(SelectClass);
 
 function App() {
-
   return (
     <>
       <Select value="tablet">
-            <Option value="desktop" icon="laptop">Desktop</Option>
-            <Option value="tablet" icon="ipad">Tablet</Option>
-            <Option value="phone" icon="iphone">Phone</Option>
-        </Select>
+        <Option value="desktop" icon="laptop">
+          Desktop
+        </Option>
+        <Option value="tablet" icon="ipad">
+          Tablet
+        </Option>
+        <Option value="phone" icon="iphone">
+          Phone
+        </Option>
+      </Select>
     </>
   );
 }

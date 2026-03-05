@@ -6,49 +6,63 @@ const Breadcrumbs = createComponent(BreadcrumbsClass);
 const BreadcrumbsItem = createComponent(BreadcrumbsItemClass);
 
 function App() {
-
   return (
     <>
       <div>
-            <Breadcrumbs separators="BackSlash">
-                <BreadcrumbsItem href="https://www.sap.com">Root Page
-                </BreadcrumbsItem>
-                <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-                <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-            </Breadcrumbs>
-        </div>
-        <div>
-            <Breadcrumbs separators="DoubleBackSlash">
-                <BreadcrumbsItem href="https://www.sap.com">Root Page
-                </BreadcrumbsItem>
-                <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-                <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-            </Breadcrumbs>
-        </div>
-        <div>
-            <Breadcrumbs separators="DoubleGreaterThan">
-                <BreadcrumbsItem href="https://www.sap.com">Root Page
-                </BreadcrumbsItem>
-                <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-                <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-            </Breadcrumbs>
-        </div>
-        <div>
-            <Breadcrumbs separators="DoubleSlash">
-                <BreadcrumbsItem href="https://www.sap.com">Root Page
-                </BreadcrumbsItem>
-                <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-                <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-            </Breadcrumbs>
-        </div>
-        <div>
-            <Breadcrumbs separators="GreaterThan">
-                <BreadcrumbsItem href="https://www.sap.com">Root Page
-                </BreadcrumbsItem>
-                <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-                <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-            </Breadcrumbs>
-        </div>
+        <Breadcrumbs separators="BackSlash">
+          <BreadcrumbsItem href="https://www.sap.com">
+            Root Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem href="https://www.sap.com">
+            Parent Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+        </Breadcrumbs>
+      </div>
+      <div>
+        <Breadcrumbs separators="DoubleBackSlash">
+          <BreadcrumbsItem href="https://www.sap.com">
+            Root Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem href="https://www.sap.com">
+            Parent Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+        </Breadcrumbs>
+      </div>
+      <div>
+        <Breadcrumbs separators="DoubleGreaterThan">
+          <BreadcrumbsItem href="https://www.sap.com">
+            Root Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem href="https://www.sap.com">
+            Parent Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+        </Breadcrumbs>
+      </div>
+      <div>
+        <Breadcrumbs separators="DoubleSlash">
+          <BreadcrumbsItem href="https://www.sap.com">
+            Root Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem href="https://www.sap.com">
+            Parent Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+        </Breadcrumbs>
+      </div>
+      <div>
+        <Breadcrumbs separators="GreaterThan">
+          <BreadcrumbsItem href="https://www.sap.com">
+            Root Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem href="https://www.sap.com">
+            Parent Page
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+        </Breadcrumbs>
+      </div>
     </>
   );
 }

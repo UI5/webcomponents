@@ -15,7 +15,7 @@ function App() {
   const dtpRef = useRef(null);
 
   const handleSelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
-    const dateFormat = DateFormat.getDateTimeInstance({ "style": "medium" });
+    const dateFormat = DateFormat.getDateTimeInstance({ style: "medium" });
     const value = dateFormat.parse(dtpRef.current!.value);
     setTimezone(e.detail.selectedOption.getAttribute("data-timezone"));
     dtpRef.current!.value = dateFormat.format(value);
@@ -24,18 +24,32 @@ function App() {
   return (
     <>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Select style={{ width: "300px" }} id="sel" onChange={handleSelectChange}>
+        <Select
+          style={{ width: "300px" }}
+          id="sel"
+          onChange={handleSelectChange}
+        >
           <Option data-timezone="Pacific/Honolulu">Pacific/Honolulu</Option>
-          <Option data-timezone="America/Los_Angeles">America/Los_Angeles</Option>
+          <Option data-timezone="America/Los_Angeles">
+            America/Los_Angeles
+          </Option>
           <Option data-timezone="America/New_York">America/New_York</Option>
           <Option data-timezone="Europe/London">Europe/London</Option>
-          <Option data-timezone="Europe/Sofia" selected={true}>Europe/Sofia</Option>
+          <Option data-timezone="Europe/Sofia" selected={true}>
+            Europe/Sofia
+          </Option>
           <Option data-timezone="Asia/Dubai">Asia/Dubai</Option>
           <Option data-timezone="Asia/Bishkek">Asia/Bishkek</Option>
           <Option data-timezone="Australia/Sydney">Australia/Sydney</Option>
           <Option data-timezone="Pacific/Apia">Pacific/Apia</Option>
         </Select>
-        <DateTimePicker ref={dtpRef} id="dtp" formatPattern="medium" value="today" />
+        <DateTimePicker
+          ref={dtpRef}
+          id="dtp"
+          valueFormat="medium"
+          displayFormat="medium"
+          value="today"
+        />
       </div>
     </>
   );

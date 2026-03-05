@@ -12,8 +12,15 @@ const SuggestionItemCustom = createComponent(SuggestionItemCustomClass);
 const Icon = createComponent(IconClass);
 
 const countries = [
-  "Albania", "Andorra", "Austria", "Belarus",
-  "Belgium", "Bulgaria", "Croatia", "Germany", "Denmark",
+  "Albania",
+  "Andorra",
+  "Austria",
+  "Belarus",
+  "Belgium",
+  "Bulgaria",
+  "Croatia",
+  "Germany",
+  "Denmark",
 ];
 
 function App() {
@@ -21,10 +28,14 @@ function App() {
   const [inputValue, setInputValue] = useState("");
 
   const handleInput = (e: UI5CustomEvent<InputClass, "input">) => {
-    const value = e.target.value;
+    const value = e.currentTarget.value;
     setInputValue(value);
     if (value) {
-      setSuggestions(countries.filter(c => c.toLowerCase().startsWith(value.toLowerCase())));
+      setSuggestions(
+        countries.filter((c) =>
+          c.toLowerCase().startsWith(value.toLowerCase()),
+        ),
+      );
     } else {
       setSuggestions([]);
     }
@@ -48,7 +59,11 @@ function App() {
             flex-direction: column;
         }
       `}</style>
-      <Input placeholder="Type something ..." showSuggestions={true} onInput={handleInput}>
+      <Input
+        placeholder="Type something ..."
+        showSuggestions={true}
+        onInput={handleInput}
+      >
         {suggestions.map((country) => (
           <SuggestionItemCustom key={country} text={country}>
             <div className="item-content">
@@ -57,7 +72,9 @@ function App() {
                 <span>{country}</span>
                 <small>EU</small>
               </div>
-              <span className="green"><b>EU</b></span>
+              <span className="green">
+                <b>EU</b>
+              </span>
             </div>
           </SuggestionItemCustom>
         ))}

@@ -7,15 +7,42 @@ const List = createComponent(ListClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <List>
-            <ListItemStandard icon="nutrition-activity" description="Tropical plant with an edible fruit" additionalText="In-stock" additionalTextState="Positive">Pineapple</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="Occurs between red and yellow" additionalText="Expires" additionalTextState="Critical">Orange</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="The yellow lengthy fruit" additionalText="Re-stock" additionalTextState="Information">Blueberry</ListItemStandard>
-            <ListItemStandard icon="nutrition-activity" description="The tropical stone fruit" additionalText="Re-stock" additionalTextState="Negative">Mango</ListItemStandard>
-        </List>
+        <ListItemStandard
+          icon="nutrition-activity"
+          description="Tropical plant with an edible fruit"
+          additionalText="In-stock"
+          additionalTextState="Positive"
+        >
+          Pineapple
+        </ListItemStandard>
+        <ListItemStandard
+          icon="nutrition-activity"
+          description="Occurs between red and yellow"
+          additionalText="Expires"
+          additionalTextState="Critical"
+        >
+          Orange
+        </ListItemStandard>
+        <ListItemStandard
+          icon="nutrition-activity"
+          description="The yellow lengthy fruit"
+          additionalText="Re-stock"
+          additionalTextState="Information"
+        >
+          Blueberry
+        </ListItemStandard>
+        <ListItemStandard
+          icon="nutrition-activity"
+          description="The tropical stone fruit"
+          additionalText="Re-stock"
+          additionalTextState="Negative"
+        >
+          Mango
+        </ListItemStandard>
+      </List>
     </>
   );
 }

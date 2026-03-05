@@ -6,11 +6,10 @@ import "@ui5/webcomponents-icons/dist/account.js";
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
       <Button icon="edit">Edit</Button>
-        <Button icon="account">Account</Button>
+      <Button icon="account">Account</Button>
     </>
   );
 }

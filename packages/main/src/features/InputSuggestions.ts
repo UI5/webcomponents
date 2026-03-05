@@ -387,7 +387,7 @@ class Suggestions {
 	_deselectItems() {
 		const items = this._getItems();
 		items.forEach(item => {
-			if (item.hasAttribute("ui5-suggestion-item")) {
+			if (item.hasAttribute("ui5-suggestion-item") || item.hasAttribute("ui5-suggestion-item-custom")) {
 				(item as SuggestionItem).selected = false;
 			}
 

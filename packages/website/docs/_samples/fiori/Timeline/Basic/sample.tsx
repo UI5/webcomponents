@@ -10,21 +10,40 @@ const TimelineItem = createComponent(TimelineItemClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
       <Timeline>
-            <TimelineItem titleText="called" subtitleText="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" nameClickable={true} />
-            <TimelineItem titleText="called" subtitleText="20.02.2017 11:30" icon="phone" name="Stanislava Baltova" />
+        <TimelineItem
+          titleText="called"
+          subtitleText="20.02.2017 11:30"
+          icon="phone"
+          name="Stanislava Baltova"
+          nameClickable={true}
+        />
+        <TimelineItem
+          titleText="called"
+          subtitleText="20.02.2017 11:30"
+          icon="phone"
+          name="Stanislava Baltova"
+        />
 
-            <TimelineItem titleText="Weekly Sync - CP Design" subtitleText="27.08.2017 (11:00 - 12:00)" icon="calendar">
-                <Label>MR SOF02 2.43</Label>
-            </TimelineItem>
+        <TimelineItem
+          titleText="Weekly Sync - CP Design"
+          subtitleText="27.08.2017 (11:00 - 12:00)"
+          icon="calendar"
+        >
+          <Label>MR SOF02 2.43</Label>
+        </TimelineItem>
 
-            <TimelineItem titleText="Video Conference Call - UI5" subtitleText="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
-                Online meeting
-            </TimelineItem>
-        </Timeline>
+        <TimelineItem
+          titleText="Video Conference Call - UI5"
+          subtitleText="31.01.2018 (12:00 - 13:00)"
+          icon="calendar"
+          name="Stanislava Baltova"
+        >
+          Online meeting
+        </TimelineItem>
+      </Timeline>
     </>
   );
 }

@@ -4,10 +4,7 @@ import InputClass from "@ui5/webcomponents/dist/Input.js";
 const Input = createComponent(InputClass);
 
 function App() {
-
-  return (
-    <Input value="Input" />
-  );
+  return <Input value="Input" />;
 }
 
 export default App;

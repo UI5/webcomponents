@@ -10,18 +10,27 @@ const SearchItem = createComponent(SearchItemClass);
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
       <Search id="actions-search" showClearIcon={true}>
-            <SearchItem text="List Item with Action" icon="globe" deletable={true}>
-                <Button slot="actions" design="Transparent" icon="share" tooltip="Share" />
-            </SearchItem>
-            <SearchItem text="List Item with Action" icon="globe" deletable={true}>
-                <Button slot="actions" design="Transparent" icon="share" tooltip="Copy" />
-            </SearchItem>
-            <SearchItem text="List Item with no Actions" icon="globe" />
-        </Search>
+        <SearchItem text="List Item with Action" icon="globe" deletable={true}>
+          <Button
+            slot="actions"
+            design="Transparent"
+            icon="share"
+            tooltip="Share"
+          />
+        </SearchItem>
+        <SearchItem text="List Item with Action" icon="globe" deletable={true}>
+          <Button
+            slot="actions"
+            design="Transparent"
+            icon="share"
+            tooltip="Copy"
+          />
+        </SearchItem>
+        <SearchItem text="List Item with no Actions" icon="globe" />
+      </Search>
     </>
   );
 }

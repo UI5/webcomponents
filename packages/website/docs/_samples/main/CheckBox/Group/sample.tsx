@@ -32,15 +32,17 @@ function App() {
         }
       `}</style>
       <form ref={formRef} id="form" method="post" onSubmit={handleFormSubmit}>
-            <div className="checkbox-group">
-                <CheckBox id="js" text="JavaScript" value="js" name="languages" />
-                <CheckBox id="python" text="Python" value="python" name="languages" />
-                <CheckBox id="java" text="Java" value="java" name="languages" />
-                <CheckBox id="csharp" text="C#" value="csharp" name="languages" />
-            </div>
-            <Button type="Submit" design="Emphasized">Submit Form</Button>
-        </form>
-        <div id="output">{output}</div>
+        <div className="checkbox-group">
+          <CheckBox id="js" text="JavaScript" value="js" name="languages" />
+          <CheckBox id="python" text="Python" value="python" name="languages" />
+          <CheckBox id="java" text="Java" value="java" name="languages" />
+          <CheckBox id="csharp" text="C#" value="csharp" name="languages" />
+        </div>
+        <Button type="Submit" design="Emphasized">
+          Submit Form
+        </Button>
+      </form>
+      <div id="output">{output}</div>
     </>
   );
 }

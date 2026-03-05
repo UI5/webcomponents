@@ -11,25 +11,40 @@ const SearchItemGroup = createComponent(SearchItemGroupClass);
 const Avatar = createComponent(AvatarClass);
 
 function App() {
-
   return (
     <>
       <Search showClearIcon={true} placeholder="Type D to search ...">
-    			<SearchItemGroup headerText="Suppliers (4)">
-    				<SearchItem text="Danish Fishing Trading Company (100000043)" icon="customer-and-supplier" description="Byline" />
-    				<SearchItem text="Daily Update Ltd. (290210057)" icon="customer-and-supplier" description="Byline" />
-    				<SearchItem text="Damian United (120001884)" icon="customer-and-supplier" description="Byline" />
-    				<SearchItem text="Troda Tech (100230044)" icon="customer-and-supplier" description="Byline" />
-    			</SearchItemGroup>
+        <SearchItemGroup headerText="Suppliers (4)">
+          <SearchItem
+            text="Danish Fishing Trading Company (100000043)"
+            icon="customer-and-supplier"
+            description="Byline"
+          />
+          <SearchItem
+            text="Daily Update Ltd. (290210057)"
+            icon="customer-and-supplier"
+            description="Byline"
+          />
+          <SearchItem
+            text="Damian United (120001884)"
+            icon="customer-and-supplier"
+            description="Byline"
+          />
+          <SearchItem
+            text="Troda Tech (100230044)"
+            icon="customer-and-supplier"
+            description="Byline"
+          />
+        </SearchItemGroup>
 
-    			<SearchItemGroup headerText="People (4)">
-    				<SearchItem text="John Doe" description="Byline">
-    					<Avatar slot="image" size="XS">
-    						<img src="/images/avatars/man_avatar_3.png" alt="John Miller" />
-    					</Avatar>
-    				</SearchItem>
-    			</SearchItemGroup>
-    		</Search>
+        <SearchItemGroup headerText="People (4)">
+          <SearchItem text="John Doe" description="Byline">
+            <Avatar slot="image" size="XS">
+              <img src="/images/avatars/man_avatar_3.png" alt="John Miller" />
+            </Avatar>
+          </SearchItem>
+        </SearchItemGroup>
+      </Search>
     </>
   );
 }

@@ -9,15 +9,14 @@ const SegmentedButton = createComponent(SegmentedButtonClass);
 const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
 
 function App() {
-
   return (
     <>
       <SegmentedButton accessibleName="Font style" itemsFitContent={true}>
-            <SegmentedButtonItem selected={true}>Map</SegmentedButtonItem>
-            <SegmentedButtonItem>Some Big Satellite</SegmentedButtonItem>
-            <SegmentedButtonItem>Terrain</SegmentedButtonItem>
-            <SegmentedButtonItem tooltip="Italic" icon="italic-text" />
-        </SegmentedButton>
+        <SegmentedButtonItem selected={true}>Map</SegmentedButtonItem>
+        <SegmentedButtonItem>Some Big Satellite</SegmentedButtonItem>
+        <SegmentedButtonItem>Terrain</SegmentedButtonItem>
+        <SegmentedButtonItem tooltip="Italic" icon="italic-text" />
+      </SegmentedButton>
     </>
   );
 }

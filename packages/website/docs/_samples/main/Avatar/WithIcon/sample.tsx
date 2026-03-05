@@ -9,14 +9,13 @@ import "@ui5/webcomponents-icons/dist/shipping-status.js";
 const Avatar = createComponent(AvatarClass);
 
 function App() {
-
   return (
     <>
       <Avatar icon="filter" size="XS" />
-        <Avatar icon="employee" size="S" />
-        <Avatar icon="product" size="M" />
-        <Avatar icon="supplier" size="L" />
-        <Avatar icon="shipping-status" size="XL" />
+      <Avatar icon="employee" size="S" />
+      <Avatar icon="product" size="M" />
+      <Avatar icon="supplier" size="L" />
+      <Avatar icon="shipping-status" size="XL" />
     </>
   );
 }

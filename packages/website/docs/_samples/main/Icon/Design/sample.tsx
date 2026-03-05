@@ -5,17 +5,16 @@ import "@ui5/webcomponents-icons/dist/da-2.js";
 const Icon = createComponent(IconClass);
 
 function App() {
-
   return (
     <>
       <Icon name="da-2" design="Default" />
-        <Icon name="da-2" design="Contrast" />
-        <Icon name="da-2" design="Critical" />
-        <Icon name="da-2" design="Negative" />
-        <Icon name="da-2" design="Positive" />
-        <Icon name="da-2" design="Information" />
-        <Icon name="da-2" design="Neutral" />
-        <Icon name="da-2" design="NonInteractive" />
+      <Icon name="da-2" design="Contrast" />
+      <Icon name="da-2" design="Critical" />
+      <Icon name="da-2" design="Negative" />
+      <Icon name="da-2" design="Positive" />
+      <Icon name="da-2" design="Information" />
+      <Icon name="da-2" design="Neutral" />
+      <Icon name="da-2" design="NonInteractive" />
     </>
   );
 }

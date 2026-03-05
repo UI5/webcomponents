@@ -6,7 +6,6 @@ const MediaGallery = createComponent(MediaGalleryClass);
 const MediaGalleryItem = createComponent(MediaGalleryItemClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -21,25 +20,25 @@ function App() {
         }
       `}</style>
       <MediaGallery id="media-gallery" showAllThumbnails={true}>
-            <MediaGalleryItem>
-                <img src="/images/HT-1000.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem>
-                <img src="/images/HT-1010.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem>
-                <img src="/images/HT-1022.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem>
-                <img src="/images/HT-1030.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem>
-                <img src="/images/HT-2002.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem>
-                <img src="/images/HT-2026.jpg" />
-            </MediaGalleryItem>
-        </MediaGallery>
+        <MediaGalleryItem>
+          <img src="/images/HT-1000.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem>
+          <img src="/images/HT-1010.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem>
+          <img src="/images/HT-1022.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem>
+          <img src="/images/HT-1030.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem>
+          <img src="/images/HT-2002.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem>
+          <img src="/images/HT-2026.jpg" alt="Product" />
+        </MediaGalleryItem>
+      </MediaGallery>
     </>
   );
 }

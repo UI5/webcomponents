@@ -16,14 +16,16 @@ function App() {
   ]);
 
   const handleChange = (e: UI5CustomEvent<MultiInputClass, "change">) => {
-    const inputValue = e.target.value;
+    const inputValue = e.currentTarget.value;
     if (inputValue) {
       setTokens((prev) => [...prev, { text: inputValue, selected: false }]);
-      e.target.value = "";
+      e.currentTarget.value = "";
     }
   };
 
-  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
+  const handleTokenDelete = (
+    e: UI5CustomEvent<MultiInputClass, "token-delete">,
+  ) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);
@@ -33,9 +35,18 @@ function App() {
 
   return (
     <>
-      <MultiInput id="multi-input" onChange={handleChange} onTokenDelete={handleTokenDelete}>
+      <MultiInput
+        id="multi-input"
+        onChange={handleChange}
+        onTokenDelete={handleTokenDelete}
+      >
         {tokens.map((t, i) => (
-          <Token key={`${t.text}-${i}`} text={t.text} selected={t.selected} slot="tokens" />
+          <Token
+            key={`${t.text}-${i}`}
+            text={t.text}
+            selected={t.selected}
+            slot="tokens"
+          />
         ))}
       </MultiInput>
     </>

@@ -9,14 +9,13 @@ const Tab = createComponent(TabClass);
 const TabContainer = createComponent(TabContainerClass);
 
 function App() {
-
   return (
     <>
       <TabContainer tabLayout="Standard" collapsed>
-        <Tab icon="laptop" text="Monitors" additionalText={10} />
-        <Tab icon="video" text="Cameras" additionalText={2} selected={true} />
-        <Tab icon="home" text="Rooms" additionalText={16} />
-    </TabContainer>
+        <Tab icon="laptop" text="Monitors" additionalText="10" />
+        <Tab icon="video" text="Cameras" additionalText="2" selected={true} />
+        <Tab icon="home" text="Rooms" additionalText="16" />
+      </TabContainer>
     </>
   );
 }

@@ -90,9 +90,8 @@ setCustomElementsScopingSuffix("demo");
 setCustomElementsScopingRules({include: [/^ui5-/], exclude: [/^ui5-my-/, /-test-/]});
 ```
 
-By default, all UI5 Web Components starting with `ui5-` are scoped when you call `setCustomElementsScopingSuffix`.
-However, you have full control over which tags are scoped and which not. In the example above, tags starting with `ui5-my-` and tags
-having the word `-test-` in their name are not scoped.
+By default, all tags registered by the current runtime are scoped when you call `setCustomElementsScopingSuffix`.
+You can use `setCustomElementsScopingRules` to control which tags are scoped and which are not. In the example above, only tags starting with `ui5-` are scoped, and among those, tags starting with `ui5-my-` and tags having the word `-test-` in their name are excluded.
 
 Setting scoping rules is handy if, for example, your library uses both standard and custom UI5 Web Components and you don't want
-to scope the custom ones (as no disambiguation will be necessary for them).
+to scope some of them (as no disambiguation will be necessary for them).

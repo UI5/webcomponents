@@ -30,9 +30,20 @@ function App() {
   };
 
   const handleMenuButtonKeydown = (e: KeyboardEvent) => {
-    const F4Key = !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "F4";
-    const AltArrowDownKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowDown";
-    const AltArrowUpKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowUp";
+    const F4Key =
+      !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "F4";
+    const AltArrowDownKey =
+      e.altKey &&
+      !e.shiftKey &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      e.key === "ArrowDown";
+    const AltArrowUpKey =
+      e.altKey &&
+      !e.shiftKey &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      e.key === "ArrowUp";
 
     if (F4Key || AltArrowDownKey || AltArrowUpKey) {
       openMenu();

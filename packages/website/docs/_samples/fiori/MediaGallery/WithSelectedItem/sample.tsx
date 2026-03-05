@@ -6,7 +6,6 @@ const MediaGallery = createComponent(MediaGalleryClass);
 const MediaGalleryItem = createComponent(MediaGalleryItemClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -21,13 +20,13 @@ function App() {
         }
       `}</style>
       <MediaGallery layout="Horizontal">
-            <MediaGalleryItem>
-                <img src="/images/HT-1000.jpg" />
-            </MediaGalleryItem>
-            <MediaGalleryItem selected={true}>
-                <img src="/images/HT-1010.jpg" />
-            </MediaGalleryItem>
-        </MediaGallery>
+        <MediaGalleryItem>
+          <img src="/images/HT-1000.jpg" alt="Product" />
+        </MediaGalleryItem>
+        <MediaGalleryItem selected={true}>
+          <img src="/images/HT-1010.jpg" alt="Product" />
+        </MediaGalleryItem>
+      </MediaGallery>
     </>
   );
 }

@@ -7,12 +7,11 @@ const Avatar = createComponent(AvatarClass);
 const AvatarBadge = createComponent(AvatarBadgeClass);
 
 function App() {
-
   return (
     <>
       <Avatar mode="Interactive" size="M">
-    		<AvatarBadge icon="edit" slot="badge"></AvatarBadge>
-    	</Avatar>
+        <AvatarBadge icon="edit" slot="badge"></AvatarBadge>
+      </Avatar>
     </>
   );
 }

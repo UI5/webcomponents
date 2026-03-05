@@ -9,14 +9,13 @@ import "@ui5/webcomponents-icons-business-suite/dist/ab-testing.js";
 const Icon = createComponent(IconClass);
 
 function App() {
-
   return (
     <>
       <Icon name="business-suite/add-polygon" />
-        <Icon name="business-suite/2x1-grid-layout" />
-        <Icon name="business-suite/activate" />
-        <Icon name="business-suite/3d" />
-        <Icon name="business-suite/ab-testing" />
+      <Icon name="business-suite/2x1-grid-layout" />
+      <Icon name="business-suite/activate" />
+      <Icon name="business-suite/3d" />
+      <Icon name="business-suite/ab-testing" />
     </>
   );
 }
